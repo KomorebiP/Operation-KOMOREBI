@@ -2,6 +2,10 @@
 
 **EULER-CASE-002 · 29 October 2026 · same-assistant review**
 
+This review concerns the local-arithmetic expansion published at
+`43cf4337f21cc3dbcdba9d93ff4432334bd54e12`. The later infinite-matrix,
+base-change and supercongruence claims are reviewed in `PROOF_REVIEW_MATRICES.md`.
+
 ## Claim card and verdict
 
 The added statements concern rational formal power series, integer sequences

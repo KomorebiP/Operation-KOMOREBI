@@ -914,7 +914,7 @@ Finished reader/visual sets with scoped arguments, exact reductions and finite c
 
 **Active development** · Lean: **No Lean claim** · Confidence basis: **Written / finite evidence**
 
-Written finite-difference/FIR identities and separately recorded exact controls. The extended Euler case adds formal-series and local arithmetic derivations, explicit truncation theorems, a written self-review and bounded library comparisons. Broader Euler-branch classification remains outside that scope.
+Written finite-difference/FIR identities and separately recorded exact controls. The Euler case adds formal-series and local arithmetic derivations, infinite coefficient-transform laws, explicit supercongruences, base changes and congruence precision, with written self-review and bounded library comparisons. Broader Euler-branch classification remains outside that scope.
 
 **Next step:** Independent mathematical review and any broader arithmetic classification require their own hypotheses and evidence. Keep finite tests, written self-review, externally cited theorem inputs and any future formalization distinct.
 

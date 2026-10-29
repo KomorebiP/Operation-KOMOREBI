@@ -82,3 +82,22 @@ these definitions and source entries establishes neither that the combined
 exposition is unprecedented nor that another mathematical language cannot express
 it. The example's contribution is the complete connected derivation, failure
 witnesses, exact reconstruction, and inspectable computational checks.
+
+## Matrix and congruence expansion
+
+At checkpoint `0a1d2c6265885f22011e6717c5ddf3f3a627f462`, additionally read
+the beginning of the pinned Paper IX arithmetic chapter, especially
+`def:arith-euler`, `eq:arith-triangular`, `prop:arith-denominator` and
+`ex:arith-bernoulli`. These identify the normalized congruential families,
+their addresses and the boundary specialization, **known after translation
+of notation**. The ordinary-degree and normalized coefficient conventions
+are preserved.
+
+The infinite coefficient matrices, factorial conjugation, Pascal sampling,
+local chart-change cocycle, precision-loss estimate and coprime residue
+combination are derived directly from finite coefficient algebra in the page.
+The Euler index-shift statement modulo p^2 is a **formal corollary not stated**
+in the checked odd-length reconstruction subsection: the page supplies the
+unit-residue argument and its essential positive even starting-degree
+hypothesis. This classification concerns that checked source, not priority.
+No new external theorem or global novelty claim is introduced by these steps.

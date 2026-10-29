@@ -2,7 +2,7 @@
 
 **An extended hand-worked Komorebi example · Komorebi P. · 29 October 2026**
 
-[Machine-native mathematics essay](../essays/MACHINE_NATIVE_MATHEMATICS.md) · [Sequence experiments](SEQUENCE_SHAPES.md) · [Run the exact checks](#run-the-exact-checks)
+[Machine-native mathematics essay](../essays/MACHINE_NATIVE_MATHEMATICS.md) · [Sequence experiments](SEQUENCE_SHAPES.md) · [Coefficient matrices](#write-the-coefficient-transform-as-an-infinite-matrix) · [Supercongruences](#state-the-supercongruences-and-check-an-euler-index-shift) · [Run the exact checks](#run-the-exact-checks)
 
 We will reconstruct the Euler secant numbers through a different sequence, turn the calculation into polynomial identities, and then use the same Euler data in a refinement calculation. At each change of coordinates we will write the transfer explicitly. When a shortcut fails, we will calculate the residual that explains the failure.
 
@@ -1220,6 +1220,434 @@ For the fixed row \(E_8\), the four nonconstant term weights are
 
 They are distinct and increase strictly. In each nonempty tail there is a unique term of least valuation, so it cannot be cancelled by terms divisible by a higher power of two. This proves the exact error valuations \(5,8,13,15\) in the table. The uniform bound and the stronger precision of a particular row answer different questions.
 
+## State the supercongruences and check an Euler index shift
+
+The proved local truncation laws can be written as explicit supercongruences. For an odd prime \(p\), every \(n,L\geq0\) satisfies
+
+\[
+E_{2n}\equiv T_L^{(p)}(n)\pmod{p^{2L+2}}.
+\]
+
+For the separate dyadic source,
+
+\[
+E_{2n}\equiv T_L^{(2)}(n)\pmod{2^{4L+3}}
+\quad\text{in }\mathbb Z_{(2)}.
+\]
+
+Both statements include exact equality at full depth. The word supercongruence here refers to the proved powers of the prime in the reconstruction error. It does not remove the source, depth, or coefficient-domain hypotheses.
+
+For \(E_8\), the guaranteed moduli and resulting residues are
+
+| Depth \(L\) | Odd modulus \(3^{2L+2}\) | Residue | Dyadic modulus \(2^{4L+3}\) | Residue |
+|---:|---:|---:|---:|---:|
+| 0 | 9 | 8 | 8 | 1 |
+| 1 | 81 | 8 | 128 | 105 |
+| 2 | 729 | 656 | 2048 | 1385 |
+| 3 | 6561 | 1385 | 32768 | 1385 |
+
+Each residue can be obtained from the corresponding partial sum, using a modular inverse for the odd dyadic denominator. The actual error table gives stronger row-specific dyadic precision at the first three depths. The uniform bound remains sharp across all Euler rows.
+
+There is also a useful supercongruence between Euler indices. For an odd prime \(p\) and an even integer \(m\geq2\),
+
+\[
+\boxed{E_{m+p(p-1)}\equiv E_m\pmod{p^2}.}
+\]
+
+Here is a proof from the depth-zero source. We already know \(E_m\equiv A_{p,m}\pmod{p^2}\). If \(u\) is not divisible by \(p\), multiplication by \(u\) permutes the nonzero residues modulo \(p\). Multiplying them and cancelling their invertible product proves \(u^{p-1}\equiv1\pmod p\). Write \(u^{p-1}=1+pb\). Raising to the \(p\)-th power shows \(u^{p(p-1)}\equiv1\pmod{p^2}\).
+
+Apply this to each odd integer \(2a+1\) in the source window. The one divisible by \(p\) contributes zero modulo \(p^2\), because both exponents are at least two. Every other term is unchanged when the exponent increases by \(p(p-1)\). The two source sums, and therefore the two Euler numbers, are congruent modulo \(p^2\).
+
+At \(p=3,m=2\),
+
+\[
+E_8-E_2=1385-(-1)=1386=9\cdot154.
+\]
+
+Its three-adic valuation is exactly two. The starting-index restriction matters: \(E_6-E_0=-62\) is not divisible by three. Deeper index-shift claims must also control the binomial weights in the retained correction terms. The depth-zero argument alone does not supply them.
+
+## Write the coefficient transform as an infinite matrix
+
+The local reconstruction formulas are rows of one infinite coefficient transform. Let
+
+\[
+K_q(t)=\sum_{r\geq0}q_r\frac{t^{2r}}{(2r)!},\qquad q_0=1,
+\]
+
+and let \(A(t)\) have even EGF coefficients \(A_0,A_1,\ldots\), so that its coefficient at \(t^{2j}/(2j)!\) is \(A_j\). Multiplication by \(K_q\) transforms these coefficients through the matrix
+
+\[
+\mathsf C(q)_{n,j}=
+\begin{cases}
+\displaystyle\binom{2n}{2j}q_{n-j},&0\leq j\leq n,\\
+0,&j>n.
+\end{cases}
+\]
+
+Its opening rows are
+
+\[
+\mathsf C(q)=
+\begin{pmatrix}
+1&0&0&0&0&\cdots\\
+q_1&1&0&0&0&\cdots\\
+q_2&6q_1&1&0&0&\cdots\\
+q_3&15q_2&15q_1&1&0&\cdots\\
+q_4&28q_3&70q_2&28q_1&1&\cdots\\
+\vdots&\vdots&\vdots&\vdots&\vdots&\ddots
+\end{pmatrix}.
+\]
+
+The row index is the output's compressed degree. The column index is the source's compressed degree. Both refer to ordinary degrees twice as large. If \(\boldsymbol A=(A_0,A_1,\ldots)^T\), then the transformed vector is \(\mathsf C(q)\boldsymbol A\).
+
+This infinite matrix acts on every rational coefficient sequence. Row \(n\) contains only \(n+1\) possible nonzero entries. Each output is therefore a finite sum. No convergence condition or summability prescription is being imposed on the infinite column.
+
+For the odd chart at three, put \(q_r=\gamma_r3^{2r}\), and call the resulting matrix \(\mathsf C_3\). Its block with rows and columns zero through four is
+
+\[
+\mathsf C_3^{[4]}=
+\begin{pmatrix}
+1&0&0&0&0\\
+-18&1&0&0&0\\
+1296&-108&1&0&0\\
+-198288&19440&-270&1&0\\
+52068096&-5552064&90720&-504&1
+\end{pmatrix}.
+\]
+
+The entire five-degree calculation is
+
+\[
+\mathsf C_3^{[4]}
+\begin{pmatrix}1\\17\\545\\14897\\384065\end{pmatrix}
+=\begin{pmatrix}1\\-1\\5\\-61\\1385\end{pmatrix}.
+\]
+
+For instance, the degree-four row gives \(1296-108\cdot17+545=5\). The final row is the earlier five-term reconstruction of \(E_8\), written in ascending source degree. Its column index \(j\) corresponds to correction index \(r=4-j\).
+
+For the dyadic chart, use \(q_r=\kappa_r\). The corresponding block is
+
+\[
+\mathsf C_2^{[4]}=
+\begin{pmatrix}
+1&0&0&0&0\\
+-\frac83&1&0&0&0\\
+\frac{128}{5}&-16&1&0&0\\
+-\frac{10240}{21}&384&-40&1&0\\
+\frac{229376}{15}&-\frac{40960}{3}&1792&-\frac{224}{3}&1
+\end{pmatrix}.
+\]
+
+It acts on the different source vector:
+
+\[
+\mathsf C_2^{[4]}
+\begin{pmatrix}1\\5/3\\91/15\\205/7\\7381/45\end{pmatrix}
+=\begin{pmatrix}1\\-1\\5\\-61\\1385\end{pmatrix}.
+\]
+
+The same Euler vector has two different coefficient descriptions. Their source vectors and transform matrices must be kept together.
+
+## Compose, invert, and truncate the coefficient matrices
+
+Multiplying two kernels corresponds exactly to composing their matrices. For another normalized kernel sequence \(r\), define the EGF convolution
+
+\[
+(q\star r)_m=\sum_{\ell=0}^m\binom{2m}{2\ell}q_{m-\ell}r_\ell.
+\]
+
+Then
+
+\[
+\boxed{\mathsf C(q)\mathsf C(r)=\mathsf C(q\star r).}
+\]
+
+To verify the entry in row \(n\), column \(k\), only intermediate indices \(k\leq j\leq n\) occur. Use
+
+\[
+\binom{2n}{2j}\binom{2j}{2k}
+=\binom{2n}{2k}\binom{2n-2k}{2j-2k}.
+\]
+
+The product entry becomes
+
+\[
+\binom{2n}{2k}
+\sum_{\ell=0}^{n-k}\binom{2(n-k)}{2\ell}
+q_{n-k-\ell}r_\ell,
+\]
+
+which is the claimed entry of \(\mathsf C(q\star r)\). All sums used in the proof are finite.
+
+If the series with coefficients \(r\) is the reciprocal of \(K_q\), their convolution is \((1,0,0,\ldots)\). Therefore
+
+\[
+\mathsf C(q)^{-1}=\mathsf C(r).
+\]
+
+For the odd chart at three, the inverse kernel has coefficients \(1,18,648,\ldots\). The first three rows give an explicit check:
+
+\[
+\begin{pmatrix}
+1&0&0\\-18&1&0\\1296&-108&1
+\end{pmatrix}
+\begin{pmatrix}
+1&0&0\\18&1&0\\648&108&1
+\end{pmatrix}
+=I_3.
+\]
+
+The lower-left entry is \(1296-1944+648=0\). The next entry in that row is \(-108+108=0\). Thus the inverse restores the source coefficients, rather than merely reproducing one chosen Euler vector.
+
+Finite leading blocks are exact here. Let \(\pi_N\) retain coordinates zero through \(N\), and let \(\mathsf C(q)^{[N]}\) be the corresponding square block. Lower triangularity gives
+
+\[
+\pi_N\mathsf C(q)=\mathsf C(q)^{[N]}\pi_N.
+\]
+
+Every product entry in these rows uses intermediate indices at most \(N\), so composition and inversion also commute with taking this block. Each block has diagonal one and determinant one. The infinitely many blocks are compatible finite coefficient calculations. No input coefficient beyond \(N\) can change an output coefficient at or below \(N\).
+
+## Change the local coefficient basis and track congruence precision
+
+Let \(\boldsymbol A^{(p)}\) denote the local source vector, with entries \(A_{p,2n}\) for odd \(p\), and \(R_{2n}\) for \(p=2\). Both reconstruct the same Euler vector through \(\boldsymbol e=\mathsf C_p\boldsymbol A^{(p)}\). The exact change from source chart \(p\) to source chart \(q\) is
+
+\[
+\boxed{
+\boldsymbol A^{(q)}=\mathsf B_{q\leftarrow p}\boldsymbol A^{(p)},
+\qquad
+\mathsf B_{q\leftarrow p}=\mathsf C_q^{-1}\mathsf C_p.}
+\]
+
+These lower-triangular matrices satisfy
+
+\[
+\mathsf B_{p\leftarrow p}=I,\qquad
+\mathsf B_{r\leftarrow q}\mathsf B_{q\leftarrow p}
+=\mathsf B_{r\leftarrow p}.
+\]
+
+The intervening factors \(\mathsf C_q\mathsf C_q^{-1}\) cancel, and every matrix entry uses finitely many terms. Changing coordinates directly or through an intermediate chart gives the same result.
+
+For odd source lengths three and five, the scalar kernel of \(\mathsf B_{5\leftarrow3}\) is \(\cosh^2(5t)\operatorname{sech}^2(3t)\). Its first coefficients are \(1,32,896,\ldots\). Thus
+
+\[
+\mathsf B_{5\leftarrow3}^{[2]}=
+\begin{pmatrix}1&0&0\\32&1&0\\896&192&1\end{pmatrix},
+\qquad
+\mathsf B_{5\leftarrow3}^{[2]}
+\begin{pmatrix}1\\17\\545\end{pmatrix}
+=\begin{pmatrix}1\\49\\4705\end{pmatrix}.
+\]
+
+The last source value also follows directly from \(1-3^4+5^4-7^4+9^4=4705\). Reducing the input coefficients modulo 81 gives \((1,17,59)\). The final transformed row is
+
+\[
+5+30\cdot17+59=574\equiv7\pmod{81},
+\]
+
+which agrees with \(4705\equiv7\pmod{81}\). Odd-chart base changes have integer entries and integer inverses, so they preserve coefficientwise congruences for every positive integer modulus. Choosing a new chart does not by itself choose a new modulus.
+
+More generally, consider a finite block \(B\) at a fixed prime \(\ell\), with integers \(d\geq0\) and \(h\). If every entry has valuation at least \(-d\), and an input error vector has every coordinate of valuation at least \(h\), then
+
+\[
+v_\ell\bigl((B\,\delta\boldsymbol A)_n\bigr)\geq h-d.
+\]
+
+Each summand has that bound, so its finite sum does too. Integral matrices have \(d=0\). A denominator divisible by the working prime can cause a loss of precision.
+
+For a concrete loss, change from the three-chart to the dyadic source. The first kernel coefficients of \(\mathsf B_{2\leftarrow3}\) are
+
+\[
+1,\quad \frac83-18=-\frac{46}{3},\quad
+\frac{256}{15}-288+1296=\frac{15376}{15}.
+\]
+
+The entry taking source degree four to output degree eight is
+
+\[
+(\mathsf B_{2\leftarrow3})_{4,2}
+=\binom84\frac{15376}{15}=\frac{215264}{3}.
+\]
+
+If only that input coordinate is perturbed by nine, the output perturbation is
+
+\[
+\delta R_8=\frac{215264}{3}\cdot9=645792,
+\qquad v_3(\delta R_8)=1.
+\]
+
+The input error had valuation two. This contribution loses one ternary digit. Some dyadic-source values themselves have denominators divisible by three, so this statement is about the valuation of their difference, not an ordinary residue of each value modulo nine.
+
+At the prime two, the dyadic and odd-chart matrices and their inverses all have odd denominators. Their base changes therefore preserve coefficientwise dyadic precision. An exact rational change of basis and its behavior at a specified prime are related facts that must both be checked.
+
+## Separate factorial normalization from ordinary Toeplitz multiplication
+
+The binomial weights arise from a diagonal change of coordinates. Set \(x=t^2\), and define ordinary coefficients
+
+\[
+k_r=\frac{q_r}{(2r)!},\qquad
+\widehat A_j=\frac{A_j}{(2j)!}.
+\]
+
+Multiplication in ordinary \(x\)-coefficients is the lower-triangular Toeplitz matrix
+
+\[
+\mathsf L(k)_{n,j}=k_{n-j}\quad(j\leq n),
+\]
+
+with zero entries above the diagonal. Its diagonals are constant. Introduce
+
+\[
+\mathsf F=\operatorname{diag}(0!,2!,4!,6!,\ldots).
+\]
+
+The EGF matrix is its factorial conjugate:
+
+\[
+\boxed{\mathsf C(q)=\mathsf F\mathsf L(k)\mathsf F^{-1}.}
+\]
+
+Indeed, its \((n,j)\) entry is
+
+\[
+\frac{(2n)!}{(2j)!}\frac{q_{n-j}}{(2n-2j)!}
+=\binom{2n}{2j}q_{n-j}.
+\]
+
+For the Euler output, write \(\widehat e_n=E_{2n}/(2n)!\). At the first nonconstant coefficient of the three-chart example, ordinary multiplication gives
+
+\[
+\widehat e_1=-9\cdot1+\frac{17}{2}=-\frac12.
+\]
+
+Multiplying by \(2!\) recovers \(E_2=-1\). Using the ordinary Toeplitz row on the unnormalized EGF numerators would instead give \(-9+17=8\). The kernel has not changed, but the coordinate convention has been mixed.
+
+The diagonal conjugation is valid over \(\mathbb Q\), where all factorials are invertible. It does not justify cancelling factorials modulo a prime that divides them. The integral odd-chart matrices and the dyadic matrices over \(\mathbb Z_{(2)}\) retain the coefficient domains established earlier.
+
+## Read the packet matrix as an infinite block operator
+
+The earlier two-by-two matrix has formal series as entries. It also represents an infinite matrix of scalar coefficients. To see the relation, write
+
+\[
+g(x)=\sum_{n\geq0}\frac{(-1)^n x^n}{(2n)!}
+=C(x^2)+xD(x^2),\qquad x=t^2.
+\]
+
+Group the coefficients of any \(f(x)=\sum f_nx^n\) into two packets:
+
+\[
+\Pi f=\left(\sum_{j\geq0}f_{2j}u^j,
+\sum_{j\geq0}f_{2j+1}u^j\right),\qquad u=x^2.
+\]
+
+The scalar multiplication operator becomes
+
+\[
+\boxed{
+\Pi\mathsf L_x(g)\Pi^{-1}
+=\begin{pmatrix}
+\mathsf L_u(C)&\mathsf L_u(uD)\\
+\mathsf L_u(D)&\mathsf L_u(C)
+\end{pmatrix}.}
+\]
+
+Here each block is an ordinary coefficient Toeplitz operator in its indicated variable. The formula follows by multiplying \((C+xD)(A+xB)\) and assigning its even and odd powers of \(x\) to the two packets. Each scalar row in each block has finite support. The top-right block starts one degree later because of the factor \(u\).
+
+For the first two coefficients of each packet, use the vector order \((f_0,f_2,f_1,f_3)^T\). The block matrix is
+
+\[
+\begin{pmatrix}
+1&0&0&0\\
+\frac1{24}&1&-\frac12&0\\
+-\frac12&0&1&0\\
+-\frac1{720}&-\frac12&\frac1{24}&1
+\end{pmatrix}.
+\]
+
+The entry \(-1/2\) in row two, column three is the first returning carry. The corresponding entry in row one is zero. For the secant input, \([u^0]B=1/2\), so this carry contributes \(-1/4\) to the order-\(u\) first output. It is exactly the interaction missing in the earlier coarse calculation.
+
+For \(h\geq1\), retaining \(h\) coefficients in each packet is exactly the quotient calculation modulo \(u^h\), or modulo \(x^{2h}\) before regrouping. Thus the two-by-two formal matrix and its infinite scalar block operator describe the same operation at their stated resolutions.
+
+## Keep the congruential family and its address visible
+
+There is another kind of base change in the Euler work: changing the family index or its address. Paper IX defines normalized congruential coefficients by
+
+\[
+\left(j!\sum_{n\geq0}\frac{t^{Nn}}{(Nn+j)!}\right)^{-1}
+=\sum_{n\geq0}C_{N,j}(n)\frac{t^{Nn}}{(Nn)!},
+\quad N\geq1,\quad0\leq j<N.
+\]
+
+The normalization makes \(C_{N,j}(0)=1\). Removing it gives the original coefficients \(U_{N,j}(n)=j!C_{N,j}(n)\), whose constant is \(j!\).
+
+Clearing factorials gives an infinite triangular system:
+
+\[
+\sum_{q=0}^n\binom{Nn+j}{Nq}C_{N,j}(q)=\delta_{n0}.
+\]
+
+Its diagonal entry is \(\binom{Nn+j}{Nn}\). Unlike the unit diagonals of the local coefficient matrices, this need not be one. Its divisibility determines where denominators can enter.
+
+For the first nonconstant coefficient,
+
+\[
+C_{N,j}(1)=-\binom{N+j}{N}^{-1}.
+\]
+
+At \(N=4\), the four addresses give \(-1,-1/5,-1/15,-1/35\). In particular, the address-one coefficient can be reduced modulo powers of two using its odd denominator, but cannot be treated as an integral residue modulo five.
+
+A general denominator bound follows directly from the triangular recurrence. Put
+
+\[
+D_{N,j}(n)=\prod_{r=1}^n\binom{Nr+j}{Nr}.
+\]
+
+Then \(D_{N,j}(n)C_{N,j}(n)\) is an integer. For the induction step, \(D_{N,j}(n-1)\) clears every earlier coefficient's denominator, and the next diagonal factor clears the division in the recurrence. The empty product at \(n=0\) is one.
+
+Two specializations explain how this family meets the preceding example:
+
+\[
+C_{2,0}(n)=E_{2n},\qquad
+C_{4,0}(n)=(-1)^nb_n.
+\]
+
+The second identity follows because the denominator is the earlier \(C(u)=\sum u^n/(4n)!\), while the quartic carrier denominator uses alternating signs. Consequently,
+
+\[
+(C_{4,0}(n))_{n\geq0}=(1,-1,69,-33661,60376809,\ldots).
+\]
+
+The coarse inverse \(C(u)^{-1}\) was a valid member of this different family. It failed when used as the classical Euler first packet, whose numerators are \(1,5,1385,2702765,\ldots\). Changing the family index does not automatically preserve the original sequence.
+
+There is also a Bernoulli boundary address. At \(N=2,j=1\), the inverse is \(t/\sinh t\). If \(B(t)=t/(e^t-1)\), then a common-denominator calculation gives \(2B(t)-B(2t)=t/\sinh t\). Thus
+
+\[
+C_{2,1}(n)=(2-2^{2n})B_{2n}.
+\]
+
+This identifies another exact coefficient family while keeping its normalization and modular denominator obligations visible.
+
+## Combine supercongruences with coprime moduli
+
+A coordinate change can preserve a known modulus. Replacing that modulus by an unrelated one requires additional information. For example, 1 and 82 agree modulo 81 but differ modulo 25. There is no well-defined conversion of that residue class alone into a class modulo 25.
+
+The odd and dyadic reconstructions supply the additional information here. The depth-one odd calculation gives \(E_8\equiv8\pmod{81}\). The row-specific dyadic error bound gives \(E_8\equiv9\pmod{32}\). Solve both conditions by writing
+
+\[
+x=9+32t,\qquad32t\equiv-1\pmod{81}.
+\]
+
+Since \(32\cdot38-81\cdot15=1\), the inverse of 32 modulo 81 is 38. Therefore
+
+\[
+t\equiv-38\equiv43\pmod{81},
+\qquad x\equiv9+32\cdot43=1385\pmod{2592}.
+\]
+
+Any two solutions differ by a multiple of both 81 and 32, hence by their product 2592. The unique combined residue is 1385 modulo 2592. It agrees with the exact reconstruction already obtained. A residue alone would still need a separate size bound to identify an arbitrary integer uniquely.
+
+We have now distinguished an exact change of source coordinates, a change of congruential family and address, and the combination of independent modular information. Each uses a different map and retains its own hypotheses.
+
 ## Use a residual to certify and improve a finite reciprocal
 
 Return to a formal unit \(D\). For a candidate inverse \(B\), define the reciprocal residual by
@@ -1493,6 +1921,97 @@ d_{1,1}=2(-2)+3(8)-80=-60,
 
 which agrees with \(a(3)-a(1)=-61-(-1)=-60\). Offset and spacing are both part of the transfer.
 
+## Conjugate sampling by the Pascal coefficient transform
+
+The change from sequence values to Newton coefficients is another infinite matrix pair. Define lower-triangular matrices
+
+\[
+\mathsf P_{n,j}=\binom nj,\qquad
+\mathsf Q_{n,j}=(-1)^{n-j}\binom nj
+\quad(0\leq j\leq n),
+\]
+
+with zero entries for \(j>n\). For the value vector \(\boldsymbol a\) and difference vector \(\boldsymbol c\),
+
+\[
+\boldsymbol a=\mathsf P\boldsymbol c,
+\qquad
+\boldsymbol c=\mathsf Q\boldsymbol a.
+\]
+
+To verify the inverse, use \(\binom nj\binom jk=\binom nk\binom{n-k}{j-k}\). The \((n,k)\) entry of \(\mathsf P\mathsf Q\) becomes \(\binom nk\) times an alternating binomial sum. It vanishes for \(n>k\) and is one for \(n=k\). The same argument in the reverse order gives \(\mathsf Q\mathsf P=I\).
+
+Let \(\mathsf R_{M,s}\) be the selector matrix whose row \(q\) has a single one in column \(Mq+s\). This is sampling in value coordinates. Sampling in difference coordinates is its Pascal conjugate:
+
+\[
+\boxed{\mathsf T_{M,s}=\mathsf Q\mathsf R_{M,s}\mathsf P.}
+\]
+
+The rightmost matrix reconstructs values. The middle one selects a lane. The leftmost one forms the lane's differences. Row \(k\) of the product is finite because \(\mathsf Q\) uses only rows \(0,\ldots,k\), the selector reaches at most \(Mk+s\), and \(\mathsf P\) uses only the preceding input columns.
+
+Its entries are
+
+\[
+\begin{aligned}
+(\mathsf T_{M,s})_{k,j}
+&=\sum_{q=0}^k(-1)^{k-q}\binom kq\binom{Mq+s}{j}\\
+&=[z^j](1+z)^s\bigl((1+z)^M-1\bigr)^k.
+\end{aligned}
+\]
+
+Thus the infinite matrix product recovers exactly the previously derived kernel, including its offset and finite support.
+
+For \(M=2,s=0\), the opening rows are
+
+\[
+\mathsf T_{2,0}=
+\begin{pmatrix}
+1&0&0&0&0&0&0&\cdots\\
+0&2&1&0&0&0&0&\cdots\\
+0&0&4&4&1&0&0&\cdots\\
+0&0&0&8&12&6&1&\cdots\\
+\vdots&\vdots&\vdots&\vdots&\vdots&\vdots&\vdots&\ddots
+\end{pmatrix}.
+\]
+
+This matrix is row-finite but is not lower triangular. Its third row needs five input difference coefficients. For the Euler data,
+
+\[
+\begin{pmatrix}
+1&0&0&0&0\\
+0&2&1&0&0\\
+0&0&4&4&1
+\end{pmatrix}
+\begin{pmatrix}1\\-2\\8\\-80\\1664\end{pmatrix}
+=\begin{pmatrix}1\\4\\1376\end{pmatrix}.
+\]
+
+Cutting the matrix down to three columns instead would give \((1,4,32)^T\). The missing contribution to the third output is
+
+\[
+4c_3+c_4=-320+1664=1344,
+\qquad32+1344=1376.
+\]
+
+In general, outputs through difference order \(K\) require input coefficients through index \(MK+s\). The correct finite calculation therefore uses \(K+1\) rows and \(MK+s+1\) columns. A square cutoff is valid for the earlier lower-triangular coefficient transforms. It cannot be applied to a sampling matrix without checking this larger support.
+
+There is a further infinite-matrix distinction. Every square leading block of \(\mathsf T_{2,0}\) is upper triangular with diagonal \(1,2,4,8,\ldots\), so it is invertible over \(\mathbb Q\). Nevertheless, the infinite operator is not injective on arbitrary coefficient sequences. Consider
+
+\[
+\boldsymbol v=(0,-2,4,-8,16,-32,\ldots)^T,
+\qquad v_j=(-2)^j\quad(j\geq1).
+\]
+
+Its first output is zero because \(v_0=0\). For every row \(k\geq1\), the constant kernel coefficient is zero, so the remaining finite sum can be evaluated as a polynomial:
+
+\[
+(\mathsf T_{2,0}\boldsymbol v)_k
+=K_{2,0,k}(-2)
+=\bigl(2(-2)+(-2)^2\bigr)^k=0.
+\]
+
+Thus a nonzero infinite vector lies in the kernel, despite all those nonsingular square blocks. Its later coordinates supply cancellations that a square cutoff discards. This vector is the difference-coordinate form of the bounded signal \((-1)^n-1\), whose even samples are all zero. We will return to that signal below.
+
 ## Compose two refinements and recover the same answer
 
 Sample the lane \(R_{M,s}a\) again, now with spacing \(L\) and offset \(r\). Direct substitution gives
@@ -1510,13 +2029,15 @@ R_{L,r}R_{M,s}=R_{ML,s+Mr}.
 
 The offsets compose as well as the spacings. When \(s<M\) and \(r<L\), the new offset lies between zero and \(ML-1\).
 
-The same equality holds in difference coordinates. If \(T_{M,s}\) denotes the transfer whose row \(k\) is the coefficient row of \(K_{M,s,k}\), then
+The same equality holds in difference coordinates. The Pascal conjugation makes it
 
 \[
-T_{L,r}T_{M,s}=T_{ML,s+Mr}.
+\mathsf T_{L,r}\mathsf T_{M,s}
+=\mathsf Q\mathsf R_{L,r}(\mathsf P\mathsf Q)\mathsf R_{M,s}\mathsf P
+=\mathsf T_{ML,s+Mr}.
 \]
 
-To verify it, substitute \((1+z)^M-1\) for the difference variable of the second transfer and multiply its offset factor by \((1+z)^s\). The product is
+All matrices here are row-finite, so their products can be associated using finite sums. To verify the same identity directly from the kernels, substitute \((1+z)^M-1\) for the difference variable of the second transfer and multiply its offset factor by \((1+z)^s\). The product is
 
 \[
 (1+z)^{Mr+s}\bigl((1+z)^{ML}-1\bigr)^k,
@@ -1735,6 +2256,10 @@ Secant numbers: 1, 1, 5, 61, 1385, 50521, 2702765
 Quartic reciprocal: 1, 1, 69, 33661, 60376809
 Odd-length and dyadic reconstructions: E_8 = 1385
 Dyadic E_8 tail valuations: 5, 8, 13, 15, exact
+Matrix checks: inverse, composition, factorial normalization, packets, Pascal sampling
+Sampling cutoff control: 3 columns give 32; 5 columns give 1376
+Base changes: exact cocycle; prime-dependent precision checked
+Supercongruence combination: 8 mod 81 and 9 mod 32 give 1385 mod 2592
 Signed Euler difference coordinates: 1, -2, 8, -80, 1664
 Spacing-two lane: 1, 5, 1385; differences: 1, 4, 1376
 Refinement: 2*4 + 1376 = 1384
@@ -1751,7 +2276,9 @@ python -B euler_packets.py --output my-euler-results
 
 The program refuses to replace existing result files. The CSV values retain integers and rational numbers, including the ordinary coefficients and their factorial normalization.
 
-You can also inspect the published [coefficient table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/euler-coefficients.csv), [parameter-polynomial table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/power-polynomials.csv), [local reconstruction and error table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/local-reconstruction.csv), [exact results](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/results.json), and [source identities](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/source-record.json).
+You can also inspect the published [coefficient table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/euler-coefficients.csv), [parameter-polynomial table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/power-polynomials.csv), [local reconstruction and error table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/local-reconstruction.csv), [matrix-entry table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/coefficient-matrices.csv), [supercongruence table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/congruence-ladders.csv), [exact results](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/results.json), and [source identities](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/source-record.json).
+
+The matrix table contains twelve-by-twelve blocks of each forward and inverse local transform for charts 2, 3, 5 and 7, the Pascal pair, the displayed three-by-five sampling block, and five-by-five base changes from chart three to charts five and two. These finite tables can be inspected entry by entry. The formulas and proofs above define the infinite operators.
 
 The checks use several different routes:
 
@@ -1767,19 +2294,27 @@ The checks use several different routes:
 | Alternating powers | Direct finite sums against telescoped Euler-polynomial values | Degrees 0–12, lengths 0, 1, 2, 3, 5, 6, and starts \(-1/2,0,1,3/2\) |
 | Local Euler charts | Direct power sums or rational sources against formal-series multiplication, reconstruction, and inverse transfer | Charts 1, 2, 3, 5, 7, 9, every even degree 0–20 |
 | Local precision | Every finite depth against the exact tail, plus the Bernoulli kernel and first omitted dyadic row | Prime charts 2, 3, 5, 7 through degree 20, sharp dyadic depths 0–9 |
+| Infinite coefficient transforms | Both inverse orders, kernel composition, factorial conjugation, and compatible leading blocks | Twelve-by-twelve local blocks, charts 2, 3, 5, 7 |
+| Packet block operator | Entrywise comparison with regrouped scalar multiplication | Six coefficients per packet, modulo \(x^{12}\) |
+| Pascal sampling | Selector conjugation against polynomial kernels and direct Euler lanes | Spacings 1–3, every lane, orders 0–3, all required input columns |
+| Local base changes | Source-vector transfer, every chart triple's composition, and coefficient-domain controls | Charts 2, 3, 5, 7, every eight-by-eight block |
+| Supercongruences | Exact partial-sum residues, the precision-loss witness, and coprime combination | Displayed \(E_8\) ladders, modulo 81 and 32 combination |
+| Congruential families | Ordinary inversion against the triangular recurrence and denominator clearing | \(N=1,\ldots,6\), every address, indices 0–8 |
 | Sequence transfer | Direct sampled differences against polynomial kernels | Spacings 1–5, every lane, orders 0–5, three specified integer sequences |
 | Refinement composition | Every coefficient of composed and direct kernel rows | Both spacings 1–4, every lane, orders 0–3 |
 | Prime residuals | Integer polynomial coefficients and application to the three sequences | Primes 2, 3, 5, 7, and 11 |
 
 The permutation control uses a different definition of the numbers. At length \(m\), keep the number of admissible permutations ending at each possible rank. If the next comparison is an ascent, sum the preceding counts below the new rank. For a descent, sum those at or above it. Repeating the prescribed pattern gives the total. The program also enumerates the small permutation sets directly to check this dynamic program. It does not infer a universal enumeration theorem from those samples.
 
-The [bounded run manifest](../../verification/euler-packets/run-002/manifest.json) records the command, Python version, source hashes before and after execution, time limit, observed completion, and result hashes. The [original proof self-review](../../verification/euler-packets/PROOF_REVIEW.md) and [expansion self-review](../../verification/euler-packets/PROOF_REVIEW_EXPANSION.md) concern the written algebra separately. There is no new Lean run for this example.
+The [bounded run manifest](../../verification/euler-packets/run-003/manifest.json) records the command, Python version, source hashes before and after execution, time limit, observed completion, and result hashes. The [matrix and coefficient-transform self-review](../../verification/euler-packets/PROOF_REVIEW_MATRICES.md) links the preceding proof reviews and checks the added arguments separately. There is no new Lean run for this example.
 
 A separate check compares 605 reciprocal coefficient values with the pinned Komorebi Math source, using both its integer sequence API and its logarithmic reciprocal-power implementation. It also makes 1,012 comparisons in the local Euler charts: 220 source, kernel and reconstruction values, 528 truncation values and errors, and 264 row weights, across prime charts 2, 3, 5 and 7 through ordinary degree twenty. Its [comparison record](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/library-comparison.json) retains the source identity and declared ranges.
 
+That supplementary checker also verifies twelve complete rows of the infinite sampling-kernel witness and 18 Euler index-shift supercongruences, for primes 3, 5 and 7 with even starting degree 2–12. It retains the failing degree-zero boundary as a negative control. The universal statements have the written proofs above.
+
 ## What the example establishes
 
-The written calculation gives exact reciprocal recurrences, the two-packet multiplication law and its coarsening obstruction, the quartic reconstruction and enumeration identities, reciprocal parameter polynomials, Euler-polynomial power sums, odd-length and dyadic local reconstructions with proved precision bounds, formal residual correction, and sequence-refinement kernels with their composition and prime correction.
+The written calculation gives exact reciprocal recurrences, the two-packet multiplication law and its coarsening obstruction, the quartic reconstruction and enumeration identities, reciprocal parameter polynomials, Euler-polynomial power sums, odd-length and dyadic local supercongruences, infinite coefficient matrices and inverse transforms, prime-dependent base changes, congruential families with explicit addresses, coprime modular reconstruction, formal residual correction, and sequence-refinement kernels with their Pascal conjugation, composition and prime correction.
 
 The finite program checks implementations of these laws in its declared ranges. Its deliberately wrong controls expose missing carry factors, wrong factorial normalization, discarded residuals, and an invalid composite-number generalization.
 

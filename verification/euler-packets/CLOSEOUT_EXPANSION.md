@@ -2,6 +2,9 @@
 
 **EULER-CASE-002 · 29 October 2026 · Codex in this chat**
 
+The later matrix, base-change and supercongruence expansion is recorded in
+`CLOSEOUT_MATRICES.md`.
+
 The mathematical development and full-page proofreading phase is complete for
 the expansion target in `TARGET_AND_ROUTES.md`, starting at collection commit
 `9987ef468dcbfa49a256ea6da2b249d577da0a88`. The maintained page now contains

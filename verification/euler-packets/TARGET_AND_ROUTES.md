@@ -108,3 +108,29 @@ against transferred coordinates for the complementary examples. Success is
 closed written arguments under explicit hypotheses, a fresh completed primary
 run and library comparison, and source-bound published downloads. No result is
 declared new, and no Lean execution is part of this phase.
+
+## Infinite-matrix checkpoint EULER-CASE-003
+
+The requested coefficient-transform expansion starts at collection revision
+`0a1d2c6265885f22011e6717c5ddf3f3a627f462`. Make the infinite local Euler
+matrices, their inverse and composition, factorial normalization, packet block
+operator, and Pascal conjugation of sampling explicit. Every matrix product
+must be row-finite, or supplied with the finite-support argument it needs.
+
+Distinguish stable leading blocks of lower-triangular coefficient transforms
+from sampling transforms, whose row k can require input through Mk+s. Include
+the concrete bad-cutoff output 32 versus the correct 1376. Supply exact finite
+blocks and a downloadable matrix-entry table. Universal statements require
+written algebra, with fresh bounded execution records and a focused self-review.
+The mathematical library pin and the existing local-chart comparison ranges
+remain unchanged. No analytic infinite sum, new theorem priority, performance
+advantage or Lean execution is claimed.
+
+The expanded request also includes explicit supercongruences, exact local
+chart base changes and their prime-dependent precision, normalized congruential
+families with their addresses, and coprime combination of modular information.
+Distinguish a coordinate change of the same Euler vector from changing the
+family itself or changing the working modulus. Include the degree-zero
+counterexample to the stated Euler-index supercongruence, and the concrete
+loss of a ternary digit through a dyadic coordinate coefficient. These extend
+the same checkpoint and must be proved and checked within its final evidence.

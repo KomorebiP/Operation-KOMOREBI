@@ -274,6 +274,46 @@ def composition_count(spacing, blocks):
     return result
 
 
+def toeplitz_matrix(coefficients, size):
+    """Leading block of multiplication in ordinary coefficient coordinates."""
+    return [[F(coefficients[n-j]) if j <= n else F(0)
+             for j in range(size)] for n in range(size)]
+
+
+def coefficient_matrix(kernel, size):
+    """Leading block in even exponential coefficient coordinates."""
+    return [[F(comb(2*n,2*j))*kernel[n-j] if j <= n else F(0)
+             for j in range(size)] for n in range(size)]
+
+
+def matrix_product(a, b):
+    if not a or not b or any(len(row) != len(b) for row in a):
+        raise ValueError('Compatible nonempty matrices are required')
+    if any(len(row) != len(b[0]) for row in b):
+        raise ValueError('The right matrix must be rectangular')
+    return [[sum((x*y for x,y in zip(row,column)),F(0))
+             for column in zip(*b)] for row in a]
+
+
+def matrix_vector(a, vector):
+    if any(len(row) != len(vector) for row in a):
+        raise ValueError('Matrix and vector dimensions differ')
+    return [sum((x*y for x,y in zip(row,vector)),F(0)) for row in a]
+
+
+def pascal_matrix(size, inverse=False):
+    return [[F(choose(n,j)*((-1)**(n-j) if inverse and j <= n else 1))
+             for j in range(size)] for n in range(size)]
+
+
+def congruential_packet(spacing, address, count):
+    """Normalized positive-section Euler coefficients C_(N,j)(n)."""
+    if spacing < 1 or not 0 <= address < spacing:
+        raise ValueError('Require N>=1 and 0<=address<N')
+    denominator=[F(factorial(address),factorial(spacing*n+address)) for n in range(count)]
+    return [value*factorial(spacing*n) for n,value in enumerate(inverse(denominator,count))]
+
+
 def compute():
     counts = {}
 
@@ -465,6 +505,179 @@ def compute():
         check('failure_controls',False)
     check('failure_controls',sum((-1)**a for a in range(2)) == 0)
 
+    # Infinite transforms tested through their declared, exact finite blocks.
+    matrix_size=12
+    identity=[[F(n == j) for j in range(matrix_size)] for n in range(matrix_size)]
+    matrices={}
+    for chart in (2,3,5,7):
+        kernel=local_kernel(chart,matrix_size)
+        inverse_coefficients=local_inverse_kernel(chart,matrix_size)
+        forward=coefficient_matrix(kernel,matrix_size)
+        backward=coefficient_matrix(inverse_coefficients,matrix_size)
+        matrices[chart]=forward
+        for product in (matrix_product(forward,backward),matrix_product(backward,forward)):
+            for n in range(matrix_size):
+                for j in range(matrix_size):
+                    check('local_matrix_inverse_entries',product[n][j] == identity[n][j])
+        source=[local_source(chart,2*n) for n in range(matrix_size)]
+        target=[(-1)**n*s[n] for n in range(matrix_size)]
+        for actual,expected_value in zip(matrix_vector(forward,source),target):
+            check('local_matrix_reconstruction',actual == expected_value)
+        for actual,expected_value in zip(matrix_vector(backward,target),source):
+            check('local_matrix_inverse_reconstruction',actual == expected_value)
+        ordinary=toeplitz_matrix([v/factorial(2*n) for n,v in enumerate(kernel)],matrix_size)
+        for n in range(matrix_size):
+            for j in range(matrix_size):
+                check('factorial_matrix_conjugation',forward[n][j]
+                      == F(factorial(2*n),factorial(2*j))*ordinary[n][j])
+        for length in range(1,matrix_size+1):
+            block=lambda a:[row[:length] for row in a[:length]]
+            check('stable_triangular_prefixes',matrix_product(block(forward),block(backward)) == block(identity))
+    for left,right in ((2,3),(3,5),(5,2)):
+        a,b_kernel=local_kernel(left,matrix_size),local_kernel(right,matrix_size)
+        convolution=[sum(comb(2*n,2*r)*a[r]*b_kernel[n-r] for r in range(n+1))
+                     for n in range(matrix_size)]
+        product=matrix_product(matrices[left],matrices[right])
+        combined=coefficient_matrix(convolution,matrix_size)
+        for n in range(matrix_size):
+            for j in range(matrix_size):
+                check('coefficient_matrix_composition',product[n][j] == combined[n][j])
+    p,q=pascal_matrix(matrix_size),pascal_matrix(matrix_size,inverse=True)
+    product=matrix_product(p,q)
+    for n in range(matrix_size):
+        for j in range(matrix_size):
+            check('pascal_inverse_entries',product[n][j] == identity[n][j])
+    euler_vector=[as_integer((-1)**n*s[n]) for n in range(matrix_size)]
+    differences=difference_coefficients(euler_vector)
+    for actual,expected_value in zip(matrix_vector(q,euler_vector),differences):
+        check('pascal_coefficient_coordinates',actual == expected_value)
+    for actual,expected_value in zip(matrix_vector(p,differences),euler_vector):
+        check('pascal_coefficient_coordinates',actual == expected_value)
+    for spacing in range(1,4):
+        for offset in range(spacing):
+            count=3*spacing+offset+1
+            selector=[[F(j == spacing*k+offset) for j in range(count)] for k in range(4)]
+            conjugated=matrix_product(matrix_product(pascal_matrix(4,inverse=True),selector),pascal_matrix(count))
+            for k in range(4):
+                weights=transfer_row(spacing,offset,k)
+                expected_row=list(weights)+[F(0)]*(count-len(weights))
+                for actual,expected_value in zip(conjugated[k],expected_row):
+                    check('sampling_pascal_conjugation',actual == expected_value)
+            lane=[euler_vector[spacing*k+offset] for k in range(4)]
+            direct=difference_coefficients(lane)
+            for actual,expected_value in zip(matrix_vector(conjugated,differences[:count]),direct):
+                check('sampling_matrix_application',actual == expected_value)
+    sampling=[list(transfer_row(2,0,k))+[F(0)]*(5-len(transfer_row(2,0,k))) for k in range(3)]
+    correct_cutoff=matrix_vector(sampling,differences[:5])
+    wrong_cutoff=matrix_vector([row[:3] for row in sampling],differences[:3])
+    check('sampling_cutoff_counterexample',correct_cutoff == [1,4,1376] and wrong_cutoff == [1,4,32])
+    wrong_ordinary=toeplitz_matrix([v/factorial(2*r) for r,v in enumerate(local_kernel(3,2))],2)
+    check('matrix_normalization_counterexample',matrix_vector(wrong_ordinary,[1,17]) == [1,8])
+
+    # Regroup a scalar infinite Toeplitz operator into two packet blocks.
+    packet_size=6
+    cosine_coefficients=[F((-1)**n,factorial(2*n)) for n in range(2*packet_size)]
+    scalar_operator=toeplitz_matrix(cosine_coefficients,2*packet_size)
+    permutation=list(range(0,2*packet_size,2))+list(range(1,2*packet_size,2))
+    regrouped=[[scalar_operator[n][j] for j in permutation] for n in permutation]
+    packet_c=[F(1,factorial(4*n)) for n in range(packet_size)]
+    packet_d=[-F(1,factorial(4*n+2)) for n in range(packet_size)]
+    cc=toeplitz_matrix(packet_c,packet_size)
+    dd=toeplitz_matrix(packet_d,packet_size)
+    ud=toeplitz_matrix([F(0)]+packet_d[:-1],packet_size)
+    block_operator=[cc[n]+ud[n] for n in range(packet_size)]+[dd[n]+cc[n] for n in range(packet_size)]
+    for n in range(2*packet_size):
+        for j in range(2*packet_size):
+            check('infinite_packet_block_entries',regrouped[n][j] == block_operator[n][j])
+    original=[s[n]/factorial(2*n) for n in range(2*packet_size)]
+    packet_vector=[original[n] for n in permutation]
+    for n,value in enumerate(matrix_vector(block_operator,packet_vector)):
+        check('packet_block_inverse_application',value == (n == 0))
+    matrix_examples=dict(local_size=matrix_size,
+        odd_three=[[str(v) for v in row[:5]] for row in matrices[3][:5]],
+        dyadic=[[str(v) for v in row[:5]] for row in matrices[2][:5]],
+        odd_three_inverse=[[str(v) for v in row[:5]] for row in coefficient_matrix(local_inverse_kernel(3,matrix_size),matrix_size)[:5]],
+        sampling_two=[[str(v) for v in row] for row in sampling],
+        correct_sampling_cutoff=[str(v) for v in correct_cutoff],wrong_sampling_cutoff=[str(v) for v in wrong_cutoff])
+
+    # Exact base changes between local source coordinates, before modular reduction.
+    base_size=8
+    charts=(2,3,5,7)
+    base_changes={}
+    for source_chart in charts:
+        for target_chart in charts:
+            inverse_target=coefficient_matrix(local_inverse_kernel(target_chart,base_size),base_size)
+            forward_source=[row[:base_size] for row in matrices[source_chart][:base_size]]
+            change=matrix_product(inverse_target,forward_source)
+            base_changes[source_chart,target_chart]=change
+            source_vector=[local_source(source_chart,2*n) for n in range(base_size)]
+            target_vector=[local_source(target_chart,2*n) for n in range(base_size)]
+            for actual,expected_value in zip(matrix_vector(change,source_vector),target_vector):
+                check('local_base_change_values',actual == expected_value)
+            for row in change:
+                for value in row:
+                    check('dyadic_integral_base_change',value.denominator % 2 == 1)
+                    if source_chart != 2 and target_chart != 2:
+                        check('odd_integral_base_change',value.denominator == 1)
+    for source_chart in charts:
+        for intermediate in charts:
+            for target_chart in charts:
+                composed=matrix_product(base_changes[intermediate,target_chart],base_changes[source_chart,intermediate])
+                direct=base_changes[source_chart,target_chart]
+                for n in range(base_size):
+                    for j in range(base_size):
+                        check('base_change_cocycle_entries',composed[n][j] == direct[n][j])
+    loss_entry=base_changes[3,2][4][2]
+    perturbation=[F(0)]*base_size
+    perturbation[2]=9
+    output_error=matrix_vector(base_changes[3,2],perturbation)[4]
+    check('base_change_precision_loss',loss_entry == F(215264,3))
+    check('base_change_precision_loss',output_error == 645792 and valuation(output_error,3) == 1)
+    check('base_change_precision_loss',valuation(loss_entry,3) == -1 and valuation(loss_entry,2) == 5)
+    ladders=[]
+    for chart in (2,3):
+        rows=local_row_record(chart,4)['rows']
+        for depth in range(4):
+            modulus=chart**(4*depth+3 if chart==2 else 2*depth+2)
+            partial=F(rows[depth]['partial'])
+            residue=rational_residue(partial,modulus)
+            check('displayed_supercongruence_ladders',residue == 1385 % modulus)
+            ladders.append(dict(chart=chart,depth=depth,modulus=modulus,partial=str(partial),
+                                residue=residue,error=rows[depth]['error'],valuation=rows[depth]['valuation']))
+    odd_source=[local_source(3,2*n) for n in range(5)]
+    changed=matrix_vector([row[:5] for row in base_changes[3,5][:5]],odd_source)
+    check('odd_chart_modulus_transport',rational_residue(changed[2],81) == 7)
+    check('odd_chart_modulus_transport',F(896)+192*17+545 == changed[2] == 4705)
+    check('modulus_change_counterexample',1 % 81 == 82 % 81 and 1 % 25 != 82 % 25)
+    crt_residue=9+32*((8-9)*pow(32,-1,81) % 81)
+    check('coprime_supercongruence_combination',32*38-81*15 == 1)
+    check('coprime_supercongruence_combination',crt_residue == 1385 and crt_residue % 81 == 8 and crt_residue % 32 == 9)
+    for spacing in range(1,7):
+        for address in range(spacing):
+            packet=congruential_packet(spacing,address,9)
+            triangular=[F(1)]
+            clearing=1
+            for n in range(9):
+                if n:
+                    diagonal=comb(spacing*n+address,spacing*n)
+                    triangular.append(-sum(comb(spacing*n+address,spacing*j)*triangular[j] for j in range(n))/F(diagonal))
+                    clearing*=diagonal
+                check('congruential_family_routes',packet[n] == triangular[n])
+                check('congruential_denominator_clearing',(clearing*packet[n]).denominator == 1)
+    family_four=congruential_packet(4,0,9)
+    family_two=congruential_packet(2,0,9)
+    family_boundary=congruential_packet(2,1,9)
+    for n in range(9):
+        check('congruential_family_specializations',family_four[n] == (-1)**n*b[n])
+        check('congruential_family_specializations',family_two[n] == (-1)**n*s[n])
+        check('congruential_family_specializations',family_boundary[n] == (2-2**(2*n))*bernoulli[2*n])
+    base_change_examples=dict(size=base_size,
+        three_to_five=[[str(v) for v in row[:5]] for row in base_changes[3,5][:5]],
+        three_to_two=[[str(v) for v in row[:5]] for row in base_changes[3,2][:5]],
+        three_adic_loss_entry=str(loss_entry),input_error=9,output_error=str(output_error),
+        congruence_ladders=ladders,crt=dict(moduli=[81,32],residues=[8,9],residue=crt_residue,modulus=81*32),
+        family_four=[str(v) for v in family_four[:5]])
+
     # The same signed Euler data, now in integer finite-difference coordinates.
     signed = [as_integer((-1)**n*s[n]) for n in range(41)]
     signals = [signed, [n**3-2*n*n+7 for n in range(41)],
@@ -532,6 +745,8 @@ def compute():
         reciprocal_power_polynomials=[[str(c) for c in p] for p in polynomials],
         euler_polynomials=[[str(c) for c in p] for p in euler_polynomials[:7]],
         local_reconstructions=[odd_example,dyadic_example],
+        matrix_examples=matrix_examples,
+        base_change_examples=base_change_examples,
         references=REFERENCES,
         bounds=dict(reciprocal_spacing=[2,6],reciprocal_index=[0,10],
             reciprocal_parameters=[str(r) for r in parameters],
@@ -543,6 +758,10 @@ def compute():
             alternating_power_lengths=[0,1,2,3,5,6],alternating_power_starts=['-1/2','0','1','3/2'],
             local_charts=[1,2,3,5,7,9],local_even_degree=[0,20],
             dyadic_sharp_depth=[0,9],bernoulli_degree=[0,20],
+            local_matrix_size=12,packet_block_size=6,pascal_matrix_size=12,
+            sampling_matrix_spacings=[1,3],sampling_matrix_orders=[0,3],
+            base_change_charts=[2,3,5,7],base_change_matrix_size=8,base_change_all_triples=True,
+            congruential_family_spacing=[1,6],congruential_addresses='every 0<=j<N',congruential_index=[0,8],
             difference_spacing=[1,5],difference_offsets='all 0 <= s < M',difference_order=[0,5],
             composition_spacings=[1,4],composition_offsets='all admitted offsets',composition_order=[0,3],
             primes=[2,3,5,7,11]),
@@ -556,7 +775,7 @@ def compute():
 def save_results(directory, report):
     directory.mkdir(parents=True,exist_ok=True)
     paths = [directory/'results.json',directory/'euler-coefficients.csv',directory/'power-polynomials.csv',
-             directory/'local-reconstruction.csv']
+             directory/'local-reconstruction.csv',directory/'coefficient-matrices.csv',directory/'congruence-ladders.csv']
     if any(p.exists() for p in paths):
         raise FileExistsError('Choose a directory with no existing result files')
     paths[0].write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8',newline='\n')
@@ -579,6 +798,27 @@ def save_results(directory, report):
             for row in example['rows']:
                 writer.writerow([example['chart'],example['ordinary_degree'],row['depth'],row['term'],
                                  row['partial'],row['error'],'infinity' if row['valuation'] is None else row['valuation']])
+    with paths[4].open('w',encoding='utf-8',newline='') as stream:
+        writer=csv.writer(stream,lineterminator='\n')
+        writer.writerow(['transform','chart','row','column','value','coordinates'])
+        def write_matrix(name,chart,matrix,coordinates):
+            for n,row in enumerate(matrix):
+                for j,value in enumerate(row):
+                    writer.writerow([name,chart,n,j,str(value),coordinates])
+        for chart in (2,3,5,7):
+            for name,kernel in [('local_forward',local_kernel(chart,12)),
+                                ('local_inverse',local_inverse_kernel(chart,12))]:
+                write_matrix(name,chart,coefficient_matrix(kernel,12),'even EGF numerators')
+        write_matrix('pascal_reconstruction','',pascal_matrix(12),'sequence from differences')
+        write_matrix('pascal_difference','',pascal_matrix(12,inverse=True),'differences from sequence')
+        write_matrix('sampling_M2_s0','',report['matrix_examples']['sampling_two'],'Newton differences')
+        write_matrix('source_base_change','3_to_5',report['base_change_examples']['three_to_five'],'even EGF source numerators')
+        write_matrix('source_base_change','3_to_2',report['base_change_examples']['three_to_two'],'even EGF source numerators')
+    with paths[5].open('w',encoding='utf-8',newline='') as stream:
+        writer=csv.writer(stream,lineterminator='\n')
+        writer.writerow(['chart','depth','proved_modulus','partial','residue','error','exact_error_valuation'])
+        for row in report['base_change_examples']['congruence_ladders']:
+            writer.writerow([row[key] for key in ('chart','depth','modulus','partial','residue','error','valuation')])
 
 
 def main():
@@ -592,6 +832,10 @@ def main():
     print('Quartic reciprocal:', ', '.join(map(str,report['quartic'][:5])))
     print('Odd-length and dyadic reconstructions: E_8 = 1385')
     print('Dyadic E_8 tail valuations: 5, 8, 13, 15, exact')
+    print('Matrix checks: inverse, composition, factorial normalization, packets, Pascal sampling')
+    print('Sampling cutoff control: 3 columns give 32; 5 columns give 1376')
+    print('Base changes: exact cocycle; prime-dependent precision checked')
+    print('Supercongruence combination: 8 mod 81 and 9 mod 32 give 1385 mod 2592')
     print('Signed Euler difference coordinates:', ', '.join(map(str,report['difference_coordinates'])))
     print('Spacing-two lane: 1, 5, 1385; differences: 1, 4, 1376')
     print('Refinement: 2*4 + 1376 = 1384')

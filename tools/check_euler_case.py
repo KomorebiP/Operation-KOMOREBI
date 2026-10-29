@@ -13,7 +13,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT/'examples/euler_packets.py'
 PAGE = ROOT/'docs/demonstrations/EULER_PACKETS.md'
-RUN = ROOT/'verification/euler-packets/run-002'
+RUN = ROOT/'verification/euler-packets/run-003'
 
 
 def digest(path):
@@ -122,6 +122,23 @@ def check(math_root=None,git='git'):
     assert text.count(r'\(')==text.count(r'\)')
     assert 'A000364' in text and 'A211212' in text
 
+    # A nonzero infinite vector has zero sampled output although square leading
+    # blocks have nonzero diagonal. Check complete finite rows, not square cuts.
+    for order in range(12):
+        weights=example.transfer_row(2,0,order)
+        values=[0]+[(-2)**j for j in range(1,len(weights))]
+        assert sum(w*v for w,v in zip(weights,values))==0
+        assert weights[order]==2**order
+    index_values=example.reciprocal_recurrence(2,1,28)
+    index_values=[example.as_integer((-1)**n*v) for n,v in enumerate(index_values)]
+    index_cases=0
+    for prime in (3,5,7):
+        for degree in range(2,14,2):
+            difference=index_values[(degree+prime*(prime-1))//2]-index_values[degree//2]
+            assert difference % (prime*prime)==0
+            index_cases+=1
+    assert (index_values[3]-index_values[0]) % 3 != 0
+
     # A separate check of the packet elimination and displayed Schur coefficients.
     from math import factorial
     length=12
@@ -144,6 +161,8 @@ def check(math_root=None,git='git'):
                 manuscript_sha256=digest(PAGE),accepted_manifest_sha256=digest(RUN/'manifest.json'),
                 finite_results_reproduced=True,displayed_cli_matches=True,
                 schur_packet_coefficients=24,schur_displayed_coefficients=True,
+                sampling_infinite_kernel_rows=12,
+                euler_index_supercongruence_cases=index_cases,euler_zero_index_counterexample=True,
                 library_comparison=check_library(example,math_root,git) if math_root else None,
                 scope='Executed finite calculations, displayed-output correspondence and source identities. Written proof self-review is separate.')
     return result
