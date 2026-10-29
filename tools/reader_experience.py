@@ -11,6 +11,7 @@ GUIDED_DEMONSTRATIONS = {
     'docs/demonstrations/REFINEMENT.md': ('Refine a signal', ['paper-ii','paper-v']),
     'docs/demonstrations/RECOVERY.md': ('Test recovery from a summary', ['paper-iii','realization-boundaries']),
     'docs/demonstrations/SEQUENCE_SHAPES.md': ('Komorebi sequence shapes', ['paper-iv','monographs-special-functions']),
+    'docs/demonstrations/EULER_PACKETS.md': ('Euler packets, polynomials and residuals', ['paper-iii','paper-iv','paper-ix','euler-signal-bridge','machine-native-mathematics-essay']),
 }
 
 

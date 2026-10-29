@@ -7,6 +7,11 @@ weights in the Special Functions sequence atlas. The code runs the published
 Komorebi Math package. Each plot has an exact CSV export, editable parameters,
 and routes back to its mathematical sources.
 
+For a complete hand derivation, read [Euler numbers through packets, polynomials,
+and residuals](EULER_PACKETS.md). It reconstructs secant numbers through the
+quartic family, explains a failed coarsening and its exact repair, and carries
+the signed Euler data into polyphase difference coordinates.
+
 ## Reciprocal growth
 
 [Run reciprocal growth](https://KomorebiP.github.io/Operation-KOMOREBI/playground.html#sequence-growth)

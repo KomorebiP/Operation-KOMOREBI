@@ -318,7 +318,9 @@ class Site:
                         if key=='collection' and not is_image:
                             local=self.reader.resolve(relative,page,parts.fragment)
                             if local:return local
-            if target.startswith(BASE_URL):return self.rel(target[len(BASE_URL):].split('#')[0] or 'index.html',page)+('#'+parts.fragment if parts.fragment else '')
+            base=urlsplit(BASE_URL)
+            if parts.scheme in {'http','https'} and parts.netloc.lower()==base.netloc.lower() and parts.path.startswith(base.path):
+                return self.rel(parts.path[len(base.path):] or 'index.html',page)+('?'+parts.query if parts.query else '')+('#'+parts.fragment if parts.fragment else '')
             return target
         resolved=posixpath.normpath(posixpath.join(posixpath.dirname(path),unquote(parts.path))) if parts.path else path
         if resolved.startswith('../') or resolved.startswith('/'):
@@ -331,6 +333,8 @@ class Site:
                     return self.rel(edition['file_url'], page)+('#'+parts.fragment if parts.fragment else '')
         if repo=='collection' and resolved=='examples/komorebi_demonstrations.py':
             return self.rel('read/demonstrations.html',page)+('#'+parts.fragment if parts.fragment else '')
+        if repo=='collection' and resolved=='examples/euler_packets.py':
+            return self.rel('read/euler-packets.html',page)+('#'+parts.fragment if parts.fragment else '')
         if repo=='collection' and not is_image:
             reader_url=self.reader.resolve(resolved,page,parts.fragment)
             if reader_url:return reader_url
@@ -538,6 +542,8 @@ class Site:
         verify_pdf_runtime(self.pdfjs_root)
         shutil.copytree(self.pdfjs_root,self.output/'assets/pdfjs')
         self.publish_editorial_editions()
+        from euler_case import publish as publish_euler_case
+        publish_euler_case(self)
         self.markdown_pages()
         self.reader.render()
         self.bundles()

@@ -60,6 +60,7 @@ These files include test contracts, source records, run outputs, publication rec
 - [manifests/source-inventory-reconciliation-2026-10-27.json](../manifests/source-inventory-reconciliation-2026-10-27.json)
 - [verification/source-publication-2026-10-27.json](../verification/source-publication-2026-10-27.json)
 - [manifests/machine-native-reading-edition-2026-10-29.json](../manifests/machine-native-reading-edition-2026-10-29.json)
+- [manifests/euler-packets-worked-example-2026-10-29.json](../manifests/euler-packets-worked-example-2026-10-29.json)
 
 ## Reading and updating a record
 

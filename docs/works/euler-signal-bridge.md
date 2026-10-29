@@ -8,15 +8,15 @@
 
 **Completion:** Active development · **Lean:** No Lean claim · **Confidence:** Written / finite evidence
 
-Written finite-difference and FIR identities with exact controls. Broader Euler congruences require separate proofs.
+An extended Euler derivation connects reciprocal polynomials, residue packets, exact residual repair, and finite-difference/FIR transfer.
 
 ## Before you start
 
 **Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
 
-**Recorded results and limits:** Written FIR/operator identities and 395 finite exact assertions. No universal congruence or novelty is inferred from the finite run.
+**Recorded results and limits:** Written finite-difference/FIR identities and separately recorded exact controls. The extended Euler case adds formal-series derivations, a written self-review and bounded library comparisons. Universal Euler congruences remain outside that scope.
 
-**Remaining work:** Review the universal written identities separately and specify any proposed arithmetic congruence with its full hypotheses.
+**Remaining work:** Independent mathematical review and any broader arithmetic congruence require their own hypotheses and evidence. Keep finite tests, written self-review and any future formalization distinct.
 
 The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
 
@@ -27,6 +27,7 @@ Use the links below to read this work and its supporting files. Ctrl+click (Comm
 ## Read
 
 For reading files, open the [complete file listing under Evidence](#evidence).
+- [Maintained edition guide](../demonstrations/EULER_PACKETS.md)
 
 [Back to work navigation](#work-navigation)
 
@@ -46,7 +47,7 @@ No Lean source or guide is linked here. See the Lean status above and the [evide
 
 ## Code
 
-These links include code, examples, checks, or build tools. Read the [reading files](#read) for setup instructions and what each command does. All software is beta and work in progress.
+These links include code, examples, checks, or build tools. Read the [maintained edition guide](../demonstrations/EULER_PACKETS.md) for setup instructions and what each command does. All software is beta and work in progress.
 
 - [Script: verify_bridge.py](../../research/euler-signal-bridge/verify_bridge.py)
 

@@ -18,6 +18,14 @@ exposes a limitation, and links to papers, proofs, Lean coverage and code.
 The [project map](PROJECT_MAP.md) places these introductory examples in the
 wider collection.
 
+## An extended derivation with Euler numbers
+
+[Euler numbers through packets, polynomials, and residuals](demonstrations/EULER_PACKETS.md)
+follows one calculation through reciprocal series, a residue-packet matrix,
+quartic sequence reconstruction, parameter polynomials, exact residual repair,
+and finite-difference refinement. It includes the full hand calculations, failure
+witnesses, and a standalone exact Python checker with downloadable tables.
+
 ## Run in your browser
 
 [Open the Python playground](https://KomorebiP.github.io/Operation-KOMOREBI/playground.html).

@@ -29,6 +29,8 @@ These introductory calculations lead into this work’s subject. The source and 
 - [9. Round a binary number](../examples/09_BINARY_ROUNDING.md) · [Terms and source routes](../LEARNING_MAP.md#rounding)
 - [13. Reconstruct from residues](../examples/13_MODULAR_RECONSTRUCTION.md) · [Terms and source routes](../LEARNING_MAP.md#modular)
 
+**Complete demonstration with runnable code:** [Euler packets, polynomials and residuals](../demonstrations/EULER_PACKETS.md).
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

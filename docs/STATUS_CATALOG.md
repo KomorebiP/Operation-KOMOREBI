@@ -914,11 +914,13 @@ Finished reader/visual sets with scoped arguments, exact reductions and finite c
 
 **Active development** · Lean: **No Lean claim** · Confidence basis: **Written / finite evidence**
 
-Written FIR/operator identities and 395 finite exact assertions. No universal congruence or novelty is inferred from the finite run.
+Written finite-difference/FIR identities and separately recorded exact controls. The extended Euler case adds formal-series derivations, a written self-review and bounded library comparisons. Universal Euler congruences remain outside that scope.
 
-**Next step:** Review the universal written identities separately and specify any proposed arithmetic congruence with its full hypotheses.
+**Next step:** Independent mathematical review and any broader arithmetic congruence require their own hypotheses and evidence. Keep finite tests, written self-review and any future formalization distinct.
 
 [Return to this work: paper, proofs, Lean, and code](works/euler-signal-bridge.md)
+
+[Edition and reader guide](demonstrations/EULER_PACKETS.md)
 
 [Source directory](../research/euler-signal-bridge) · [READ_ME.txt](../research/euler-signal-bridge/READ_ME.txt) · [exact_results.json](../research/euler-signal-bridge/exact_results.json) · [computation_manifest.json](../research/euler-signal-bridge/computation_manifest.json)
 

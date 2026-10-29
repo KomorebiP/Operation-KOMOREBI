@@ -51,6 +51,9 @@ def inline_targets(text):
     # Inline code is an example, not a rendered link. Heading code text is kept
     # separately by anchors(), since it still contributes to a heading slug.
     text = re.sub(r'(`+)(?!`)(.*?)\1(?!`)', '', text)
+    # Coefficient/evaluation notation such as \bigl[Sa\bigr](0) is math,
+    # not an inline Markdown link to a file named "0".
+    text = re.sub(r'\\\[(.*?)\\\]|\\\((.*?)\\\)', '', text, flags=re.S)
     pattern = r'\]\(\s*(<[^>\n]+>|(?:[^\s()\\]|\\.|\([^()]*\))+)(?:\s+[\"\'][^\n]*?[\"\'])?\s*\)'
     for match in re.finditer(pattern, text):
         target = match[1]

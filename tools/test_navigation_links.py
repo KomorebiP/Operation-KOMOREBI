@@ -40,6 +40,13 @@ class NavigationLinkTests(unittest.TestCase):
         self.assertEqual(result['source_fragments_not_checked'],1)
         self.assertEqual(result['checked_fragments'],0)
 
+    def test_tex_evaluation_brackets_do_not_become_markdown_file_links(self):
+        content = (r'\[\bigl[S^s a\bigr](0)\]'+'\n'
+                   r'Inline \([P](0)\) stays mathematical.'+'\n'
+                   '[Actual guide](guide.md)')
+        result=check_links({'README.md':content},{'guide.md'})
+        self.assertEqual(result['relative_links'],1)
+
 
 if __name__ == '__main__':
     unittest.main()

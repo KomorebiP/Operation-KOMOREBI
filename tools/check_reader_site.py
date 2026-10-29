@@ -250,7 +250,9 @@ def inspect_site(root):
     assert len(code)==demo['size'] and hashlib.sha256(code).hexdigest()==demo['sha256']
     from reader_documents import source_lines
     assert source_lines(code.decode('utf-8')) in (root/demo['reader_url']).read_text(encoding='utf-8')
-    return dict(status='PASS',html_pages=len(pages),local_links=links,fragments=fragments,
+    from euler_case import verify_site as verify_euler_case
+    euler_cases=verify_euler_case(root,pages)
+    return dict(status='PASS',html_pages=len(pages),local_links=links,fragments=fragments,euler_worked_examples=euler_cases,
                 search_pages=len(index),reading_bundles=len(bundles),checked_bundle_files=zipped_files,
                 reading_documents=len(documents['files']),pdfs=pdf_count,editorial_editions=len(editions),readable_math_expressions=readable_math,atlas=atlas,notation=notation,
                 scope='Static navigation, HTML structure and ZIP source identities. Not WCAG certification or mathematical review.')

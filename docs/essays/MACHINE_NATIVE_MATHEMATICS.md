@@ -4,7 +4,7 @@
 
 Revised reading edition · 29 October 2026
 
-[Download the monograph PDF](../../website/assets/publications/machine-native-mathematics.pdf) · [Edition history and scope](../components/MACHINE_NATIVE_MATHEMATICS.md)
+[Download the monograph PDF](../../website/assets/publications/machine-native-mathematics.pdf) · [Extended Euler worked example](../demonstrations/EULER_PACKETS.md) · [Edition history and scope](../components/MACHINE_NATIVE_MATHEMATICS.md)
 
 ## Author's note
 
