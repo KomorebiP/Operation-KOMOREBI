@@ -50,7 +50,9 @@ jobs:
       - name: Install documentation dependencies and the Python library
         run: python -m pip install -r website/requirements.txt ./.reader-libraries/math
       - name: Test website safeguards
-        run: python -B -m unittest discover -s tools -p 'test_*python.py' -v
+        run: |
+          python -c "from komorebi_math.sequences import reciprocal_coefficients, fubini_sequence"
+          python -B -m unittest discover -s tools -p 'test_*python.py' -v
       - name: Test reader rendering safeguards
         run: python -B -m unittest discover -s tools -p 'test_reader_site.py' -v
       - name: Verify the manuscript claim index

@@ -10,7 +10,14 @@ from pathlib import Path
 import sys
 import unittest
 
-from komorebi_math.sequences import reciprocal_coefficients
+try:
+    from komorebi_math.sequences import reciprocal_coefficients
+except ModuleNotFoundError as error:
+    if error.name != 'komorebi_math':
+        raise
+    raise unittest.SkipTest(
+        'Sequence integration tests require the pinned Komorebi Math library. '
+        'The Reader website workflow installs it and requires these tests.') from error
 from sequence_presets import SEQUENCE_PRESETS
 
 ROOT = Path(__file__).resolve().parents[1]
