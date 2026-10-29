@@ -7,7 +7,7 @@ import posixpath
 import re
 from urllib.parse import quote, unquote, urlsplit
 
-TEXT_SUFFIXES = {'.md', '.tex', '.txt', '.json', '.lean', '.py', '.bib', '.c', '.h'}
+TEXT_SUFFIXES = {'.md', '.tex', '.txt', '.json', '.lean', '.py', '.bib', '.bbl', '.c', '.h'}
 
 
 def page_path(work, path):
@@ -121,6 +121,8 @@ class ReadingDocuments:
                 for child in included:
                     self.add(child)
                 done.add(path)
+        from readable_chapters import prepare
+        prepare(self)
 
     def primary_pdf(self, work):
         return next((r for r in self.records.values() if r['work'] == work and r['format'] == 'pdf' and r['title'] == 'Read PDF'), None)
@@ -167,6 +169,9 @@ class ReadingDocuments:
         hub = 'collection/works/'+work+'.html'
         pdf = self.primary_pdf(work)
         routes = [('Paper overview', hub)]
+        if work == 'paper-ii':
+            from readable_chapters import PAGE
+            routes.append(('Readable chapter', PAGE))
         if pdf: routes.append(('Read PDF', pdf['url']))
         if work in self.manuscript_roots: routes.append(('Claims', 'claims.html#'+work))
         routes += [('Written proofs', hub+'#written-proofs'), ('Lean', hub+'#lean'), ('Code', hub+'#code')]
@@ -289,6 +294,10 @@ class ReadingDocuments:
                     pdf = self.primary_pdf(work)
                     if pdf:
                         body += '<p><a class="button" href="'+self.site.rel(pdf['url'], page)+'">Read the typeset paper</a></p>'
+                    from readable_chapters import readable_url
+                    readable = readable_url(path)
+                    if readable:
+                        body += '<p><a class="button" href="'+self.site.rel(readable,page)+'">Read this chapter with formatted equations</a></p>'
                     body += source_lines(text, self.source_annotations(path, page))
                 limit = 15000 if record['format'] == 'markdown' else 4000
                 self.site.search.append(dict(title=title+' / '+record['title'], group='Collection', kind=self.search_kind(record), work_ids=[work], url=page, text=re.sub(r'\s+', ' ', text)[:limit]))
@@ -296,6 +305,8 @@ class ReadingDocuments:
                 body += '<section><h2>Other PDFs for this work</h2><ul>'+''.join('<li><a href="'+self.site.rel(r['url'], page)+'">'+e(r['title'])+'</a></li>' for r in siblings)+'</ul></section>'
             body += '<details class="document-provenance"><summary>Original file and source record</summary><p>This copy matches the recorded source file. Its publication here does not change the work’s review status.</p><p>SHA-256: <code>'+record['sha256']+'</code></p><p><a href="'+github(self.site.repos['collection'], self.site.revision, path)+'">Original source on GitHub</a></p></details><p><a href="'+work_url+'">Back to '+e(title)+'</a></p>'
             self.site.page(page, title+' / '+record['title'], body, github(self.site.repos['collection'], self.site.revision, path))
+        from readable_chapters import render
+        render(self)
         records = sorted(self.records.values(), key=lambda r: (r['work'], r['url']))
         self.site.write('documents/index.json', json.dumps(dict(source_revision=self.site.revision, files=records, images=list(self.images.values())), ensure_ascii=False, indent=2)+'\n')
 

@@ -194,6 +194,7 @@ def validate_claims(root, known_paths):
 
 def render_claim_index(site):
     import html
+    from readable_chapters import readable_url, PAGE
     e = html.escape
     records = site.claims['records']
     proof_search = {}
@@ -226,6 +227,7 @@ def render_claim_index(site):
         routes = [('Read PDF',pdf['url']),('Paper overview',hub),('Lean guide',guide or hub+'#lean'),
                   ('Lean coverage',hub+'#lean'),('Code',hub+'#code'),('Evidence',hub+'#evidence'),
                   ('Worked examples',hub+'#worked-examples-for-this-work')]
+        if wid == 'paper-ii': routes.insert(0, ('Readable chapter', PAGE))
         body += ''.join('<a href="'+url+'">'+label+'</a>' for label,url in routes)
         body += '<a href="'+hub+'#written-proofs">Written proofs</a><a href="search.html?work='+wid+'">Search this paper</a></nav><p class="status">'+('The original record keeps its status and scope. A mapped module does not imply that every statement in this paper has been formalized.' if work['mode']=='correspondence' else 'Statement types are taken from the manuscript. Conjectures, definitions, classical inputs and certificates remain distinct. Lean mappings for individual claims are not assigned by this index.')+'</p>'
         for row in rows:
@@ -251,6 +253,9 @@ def render_claim_index(site):
             if wid == 'paper-i': body += '<p>'+e(row['scope'])+'</p>'
             if row.get('labels'): body += '<p class="status">Source labels: '+e(', '.join(row['labels']))+'</p>'
             body += '<p><a href="'+statement+'">Written statement</a>'+(' · <a href="'+proof+'">'+('Written proof' if wid=='paper-i' else 'Following proof block')+'</a>' if proof else ' · No separate proof block indexed')+'</p>'
+            readable = readable_url(row['statement_path'], row['statement_line'])
+            if readable:
+                body += '<p><a href="'+readable+'">Read formatted statement</a>'+(' · <a href="'+readable_url(row['statement_path'],row['proof_line'])+'">Read formatted proof</a>' if proof else '')+'</p>'
             if row['lean']:
                 body += '<details><summary>'+str(len(row['lean']))+' recorded Lean declarations</summary><ul>'
                 for d in row['lean']:

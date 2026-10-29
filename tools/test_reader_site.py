@@ -11,9 +11,47 @@ from check_reader_site import Page, check_search_targets
 from reader_documents import ReadingDocuments, page_path, source_lines, tex_includes
 from fetch_pdf_runtime import extract
 from claim_navigation import statements, manuscript_sources, validate_claims, PAPERS
+from readable_chapters import Chapter, expand_math, plain_math, readable_url
 
 
 class ReaderSiteTests(unittest.TestCase):
+    def test_readable_chapter_preserves_math_order_and_resolves_forward_references(self):
+        source = ('\\section{Coordinates}\\label{sec:coordinates}\n'
+                  'See \\cref{thm:identity}.\n'
+                  '\\begin{theorem}[Identity]\\label{thm:identity}\n'
+                  '$x<y$ and \\[A_{i,j}=\\sum_k B_{i,k}C_{k,j}.\\]\n\\end{theorem}\n'
+                  '\\begin{proof}Use $I_X$.\\end{proof}')
+        chapter = Chapter(source, {}, 2)
+        rendered = ''.join(chapter.paragraphs(n['body']) for n in chapter.nodes)
+        self.assertEqual(chapter.labels['thm:identity']['number'], '3.1')
+        self.assertIn('href="#L3"', rendered)
+        self.assertIn('x&lt;y', rendered)
+        self.assertEqual(chapter.math, ['x<y','A_{i,j}=\\sum_k B_{i,k}C_{k,j}.','I_X'])
+        self.assertEqual(chapter.references,['thm:identity'])
+
+    def test_readable_chapter_stops_for_unsupported_or_unresolved_source(self):
+        for source in ('\\begin{unknown}lost\\end{unknown}', '\\section{One}\n\\input{secret}',
+                       '\\section{One}\n\\cref{missing}', '\\section{One}\n$x', '\\section{One}\n{unhandled}'):
+            with self.subTest(source=source), self.assertRaises((ValueError,KeyError)):
+                chapter = Chapter(source,{})
+                for node in chapter.nodes: chapter.paragraphs(node['body'])
+
+    def test_readable_math_macros_have_boundaries_and_do_not_change_operators(self):
+        self.assertEqual(expand_math(r'\Pcal_i+\PcalOther=\Acal', {'Pcal':r'\mathcal P','Acal':r'\mathcal A'}),
+                         r'{\mathcal P}_i+\PcalOther={\mathcal A}')
+        with self.assertRaises(ValueError): expand_math(r'\loop', {'loop':r'\loop'})
+        self.assertIsNone(readable_url('another/paper.tex',4))
+        text, names = plain_math(r'\rho:J\longrightarrow I')
+        self.assertIn('ρ',text)
+        self.assertIn('rho',names)
+
+    def test_readable_search_preview_keeps_math_and_resolves_reference_names(self):
+        chapter=Chapter('\\section{One}\n\\begin{theorem}[Example]\\label{thm:a}True.\\end{theorem}',{})
+        parts=chapter.preview(r'By \cref{thm:a}, $P_\alpha=\sum_\beta Q_\beta$ holds.')
+        self.assertEqual(parts,[{'type':'text','text':'By theorem 1.1, '},
+                                {'type':'math','text':r'P_\alpha=\sum_\beta Q_\beta'},
+                                {'type':'text','text':' holds.'}])
+
     def test_source_backlinks_keep_exact_claim_and_counterpart_locations(self):
         reader = ReadingDocuments.__new__(ReadingDocuments)
         reader.site = SimpleNamespace(rel=lambda target,page:'../../'+target)

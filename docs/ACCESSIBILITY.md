@@ -51,6 +51,18 @@ jump links remain readable. The browser’s Find command is also available.
 
 ## Mathematics and figures
 
+Paper II has a [readable chapter](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-ii/refinement-and-residue-coordinates.html)
+covering refinement and residue coordinates. It includes the original prose,
+equations and three figures, with chapter contents and linked references.
+Statements and proofs link to each other, their claim records and the original
+source lines. The surrounding chapters remain available as source and PDF.
+This is a reading pilot for sections 3 and 4, not a new mathematical review.
+
+Search includes passages from this chapter, equation previews and highlighted
+matching words. Common Greek symbols can be searched by name or character,
+such as **rho** or **ρ**. Mathematical previews retain the source expression.
+Wide equations have a separate scroll area that can receive keyboard focus.
+
 The HTML guides use a locally served, pinned MathJax runtime. Its menu and
 accessibility components are enabled, including assistive MathML and expression
 exploration. Open an expression's context menu for the available math options.
@@ -74,7 +86,8 @@ Document pages link back to the work, written proofs, Lean coverage, code and
 available worked examples. Edition READMEs are rendered as HTML. Linked
 manuscript and program sources have selectable text and line links. TeX source
 is shown as source, with links to included manuscript sections where available.
-Use the PDF for its typeset equations.
+The Paper II pilot also has a formatted HTML chapter. Use the PDF for other
+typeset manuscript sections.
 
 Reading ZIPs include a contents manifest, source revision, checksums and
 available license notices. They contain selected reading files, not complete

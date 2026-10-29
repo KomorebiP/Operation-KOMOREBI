@@ -7,6 +7,7 @@ from html.parser import HTMLParser
 import json
 from pathlib import Path, PurePosixPath
 import posixpath
+import re
 from urllib.parse import parse_qs, unquote, urlsplit
 import zipfile
 
@@ -45,6 +46,42 @@ def check_search_targets(index, pages):
         assert path in pages,('Missing search page',item['url'])
         if target.fragment:
             assert unquote(target.fragment) in pages[path].ids,('Missing search fragment',item['url'])
+
+
+def check_readable_chapter(root, documents, pages):
+    from readable_chapters import SOURCE, MAIN, PAGE, clean_tex, expand_math, manuscript_macros
+    records = {r['repository_path']:r for r in documents['files']}
+    raw = (root/records[SOURCE]['file_url']).read_bytes()
+    main = (root/records[MAIN]['file_url']).read_text(encoding='utf-8-sig')
+    text = clean_tex(raw.decode('utf-8-sig'))
+    report = json.loads((root/'documents/readable-paper-ii.json').read_bytes())
+    expressions = [m[1] if m[1] is not None else m[2] for m in re.finditer(r'\$(.*?)\$|\\\[(.*?)\\\]',text,re.S)]
+    assert report['source_sha256'] == hashlib.sha256(raw).hexdigest()
+    assert report['source'] == SOURCE and report['url'] == PAGE
+    assert report['math_expressions'] == len(expressions)
+    assert report['math_sequence_sha256'] == hashlib.sha256(json.dumps(expressions,ensure_ascii=False).encode()).hexdigest()
+    assert report['macros'] == manuscript_macros(main)
+    assert not report['new_proof_review'] and not report['new_lean_execution']
+    for node in report['nodes']:
+        assert 'L'+str(node['line']) in pages[PAGE].ids
+        assert 'L'+str(node['line']) in pages[records[SOURCE]['url']].ids
+    class MathText(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.depth=0; self.expressions=[]
+        def handle_starttag(self,tag,attrs):
+            if self.depth: self.depth+=1
+            elif 'arithmatex' in dict(attrs).get('class','').split():
+                self.depth=1
+                self.expressions.append('')
+        def handle_endtag(self,tag):
+            if self.depth: self.depth-=1
+        def handle_data(self,data):
+            if self.depth: self.expressions[-1]+=data
+    rendered=MathText()
+    rendered.feed((root/PAGE).read_text(encoding='utf-8'))
+    assert [x[2:-2] for x in rendered.expressions] == [expand_math(x,report['macros']) for x in expressions], 'HTML mathematical sequence differs from source'
+    return len(expressions)
 
 
 def inspect_site(root):
@@ -122,9 +159,10 @@ def inspect_site(root):
         raw=(root/record['file_url']).read_bytes()
         assert len(raw)==record['size'] and hashlib.sha256(raw).hexdigest()==record['sha256'],record['repository_path']
         assert hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest()==record['git_blob_sha1']
+    readable_math = check_readable_chapter(root,documents,pages)
     return dict(status='PASS',html_pages=len(pages),local_links=links,fragments=fragments,
                 search_pages=len(index),reading_bundles=len(bundles),checked_bundle_files=zipped_files,
-                reading_documents=len(documents['files']),pdfs=pdf_count,
+                reading_documents=len(documents['files']),pdfs=pdf_count,readable_math_expressions=readable_math,
                 scope='Static navigation, HTML structure and ZIP source identities. Not WCAG certification or mathematical review.')
 
 

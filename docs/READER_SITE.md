@@ -64,6 +64,23 @@ The build writes `documents/index.json` with the published file paths and source
 identities. The site checker verifies those copies, embedded reader targets,
 linked images and runtime integrity, in addition to HTML links and reading ZIPs.
 
+## Readable chapter pilot
+
+[The bounded chapter renderer](../tools/readable_chapters.py) publishes Paper II's
+`02_coordinates.tex` as readable HTML alongside its original source page. It
+handles that chapter's prose, statement environments, references, equations and
+receipt-bound figures. Unsupported prose commands and unresolved references stop
+the build. It does not execute TeX. Mathematical macros come from the retained
+main manuscript, with the first definition preserved for `providecommand`.
+
+The build compares the full sequence of mathematical expressions with the source
+and writes `documents/readable-paper-ii.json` with source identity, locations,
+macro definitions and conversion counts. Original line URLs and claim records
+remain available. Search adds chapter passages and exact equation excerpts.
+Extend this pilot only after checking a new chapter's syntax, source fidelity,
+figures, navigation and rendered mathematics. Passing these checks does not
+establish mathematical correctness or new Lean coverage.
+
 ## Publication
 
 The [reader website workflow](../.github/workflows/reader-site.yml) builds and

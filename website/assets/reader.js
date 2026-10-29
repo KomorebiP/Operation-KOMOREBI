@@ -1,10 +1,23 @@
 "use strict";
 
 function normalized(value) {
+  const symbols = {α:"alpha",β:"beta",γ:"gamma",ρ:"rho",ω:"omega",η:"eta",δ:"delta",ℓ:"ell"};
+  value = value.replace(/[αβγρωηδℓ]/gu, symbol => " " + symbols[symbol] + " ");
   return value.normalize("NFKD").replace(/\p{M}/gu, "").toLocaleLowerCase()
     .replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 }
 function wordsFor(value) { return normalized(value).split(/\s+/).filter(Boolean); }
+function highlightedText(element, value, words) {
+  // Text nodes keep source snippets inert. Highlight whole matching words,
+  // including accents and symbol names handled by the search normalizer.
+  for (const part of value.split(/([\p{L}\p{N}\p{M}]+)/u)) {
+    if (part && words.some(word => normalized(part).includes(word))) {
+      const mark = document.createElement("mark");
+      mark.textContent = part;
+      element.append(mark);
+    } else element.append(document.createTextNode(part));
+  }
+}
 function saveParams(values, clearHash = false) {
   const url = new URL(location.href);
   for (const [key, value] of Object.entries(values)) {
@@ -110,14 +123,16 @@ if (form) {
   const results = document.querySelector("#search-results");
   const more = document.querySelector("#search-more");
   let indexPromise, found = [], displayed = 0, generation = 0, queryWords = [];
+  let mathQueue = Promise.resolve();
   function renderMore(focusNew = false) {
     const previous = displayed;
+    const equations = [];
     for (const item of found.slice(displayed, displayed + 40)) {
       const li = document.createElement("li");
       const heading = document.createElement("h2");
       const link = document.createElement("a");
       link.href = item.url;
-      link.textContent = item.title;
+      highlightedText(link, item.title, queryWords);
       heading.append(link);
       const context = document.createElement("p");
       context.className = "status";
@@ -126,8 +141,28 @@ if (form) {
       const preview = item.preview || item.text;
       const at = preview.toLocaleLowerCase().indexOf(queryWords[0] || "");
       const start = Math.max(0, at - 70);
-      excerpt.textContent = (start ? "…" : "") + preview.slice(start, start + 240) + (preview.length > start + 240 ? "…" : "");
+      if (item.preview_parts) {
+        for (const part of item.preview_parts) {
+          if (part.type === "math") {
+            const math = document.createElement("span");
+            math.className = "arithmatex";
+            math.textContent = "\\(" + part.text + "\\)";
+            excerpt.append(math);
+            equations.push(math);
+          } else highlightedText(excerpt, part.text, queryWords);
+        }
+      } else highlightedText(excerpt, (start ? "…" : "") + preview.slice(start, start + 240) + (preview.length > start + 240 ? "…" : ""), queryWords);
       li.append(heading, context, excerpt);
+      if (item.math_preview) {
+        const equation = document.createElement("div");
+        equation.className = "arithmatex search-equation";
+        equation.tabIndex = 0;
+        equation.setAttribute("role", "group");
+        equation.setAttribute("aria-label", "Equation excerpt. Scroll horizontally if needed.");
+        equation.textContent = "\\[" + item.math_preview + "\\]";
+        li.append(equation);
+        equations.push(equation);
+      }
       results.append(li);
       displayed++;
     }
@@ -135,6 +170,13 @@ if (form) {
       "No results. Try fewer words, clear the filters or browse the glossary.";
     more.hidden = displayed >= found.length;
     if (focusNew && results.children[previous]) results.children[previous].querySelector("a").focus();
+    mathQueue = mathQueue.then(async () => {
+      if (window.MathJax && window.MathJax.startup) {
+        await window.MathJax.startup.promise;
+        const visible = equations.filter(element => element.isConnected);
+        if (visible.length) await window.MathJax.typesetPromise(visible);
+      }
+    }).catch(() => { /* The exact TeX excerpt remains readable if MathJax fails. */ });
   }
   async function search(event) {
     if (event) event.preventDefault();
@@ -145,6 +187,7 @@ if (form) {
     const workId = work.value;
     const words = wordsFor(query);
     saveParams({q: query, repository, type, work: workId});
+    if (window.MathJax && window.MathJax.typesetClear) window.MathJax.typesetClear([results]);
     results.replaceChildren();
     more.hidden = true;
     results.removeAttribute("aria-busy");
@@ -179,6 +222,7 @@ if (form) {
   more.addEventListener("click", () => renderMore(true));
   form.addEventListener("reset", () => {
     ++generation;
+    if (window.MathJax && window.MathJax.typesetClear) window.MathJax.typesetClear([results]);
     results.replaceChildren();
     results.removeAttribute("aria-busy");
     more.hidden = true;
