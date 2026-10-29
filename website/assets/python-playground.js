@@ -27,7 +27,7 @@ let stderr = "";
 let selectedExample;
 
 function select() {
-  const selected = examples.some(x => "#"+x.id === location.hash) ? location.hash.slice(1) : "packets";
+  const selected = examples.some(x => "#"+x.id === location.hash) ? location.hash.slice(1) : "sequence-growth";
   const changed = selectedExample !== selected;
   if (active && changed) terminate("Stopped because the example changed.");
   preset.value = selected;

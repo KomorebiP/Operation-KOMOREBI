@@ -26,6 +26,12 @@ You can edit the code, stop a calculation and reset the original example.
 Python loads on the first run. No account or local installation is needed.
 The playground also includes a tested introductory Komorebi Math example.
 
+For examples drawn directly from the sequence work, use
+[Komorebi sequence shapes](demonstrations/SEQUENCE_SHAPES.md). These presets
+plot Paper IV's reciprocal coefficients and factorial normalization, compare
+the family in 3D, and explore the Special Functions atlas's factorial-weighted
+Stirling sums. Each includes exact data downloads and source links.
+
 ## Run without installing a library
 
 Use Python 3.10 or later. The program uses only the standard library and exact

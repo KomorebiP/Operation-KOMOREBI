@@ -16,7 +16,11 @@ EXAMPLES = {
     'recovery': ('Test recovery from a summary', 'RECOVERY', ['paper-iii', 'realization-boundaries']),
     'library': ('Use Komorebi Math', None, ['paper-i', 'paper-ii']),
 }
-EXAMPLES.update({name: (spec['title'], None, []) for name, spec in PRESETS.items()})
+EXAMPLES = {**{name: (spec['title'], None, spec.get('works', []))
+              for name, spec in PRESETS.items() if spec.get('works')},
+            **EXAMPLES,
+            **{name: (spec['title'], None, [])
+               for name, spec in PRESETS.items() if not spec.get('works')}}
 
 
 def sha(raw):
@@ -83,15 +87,16 @@ def build(site, runtime_root):
                   library_files=files, runtime_version=runtime['version'], packages=runtime['packages'],
                   plotly_js=runtime['plotly_js'], helper_url='downloads/komorebi_browser.py',
                   helper_sha256=sha(helper), examples={})
-    body = '''<h1>Python playground</h1><p class="lede">Run a small calculation, change the code and compare the result with its written explanation.</p>
+    body = '''<h1>Python playground</h1><p class="lede">Explore Komorebi's sequences, factorial normalizations and worked calculations. Change the inputs, inspect the graphs and follow the links to the written mathematics.</p>
 <p>Python starts when you press Run. The first run downloads about 13 MB of runtime files. The library example also loads NumPy and Komorebi Math. Calculations run in your browser. Use Save draft to keep edited code in this browser, or download it as a Python file. Unsaved code and selected data may be lost when you leave or reload the page.</p>
 <div id="python-picker" class="python-picker" hidden><label for="python-preset">Preload an example</label><select id="python-preset" aria-describedby="python-preset-help">
-<optgroup label="Worked examples"><option value="packets">Reconstruct an operator</option><option value="refinement">Refine a signal</option><option value="recovery">Test recovery from a summary</option></optgroup>
+RESEARCH_OPTIONS<optgroup label="Worked examples"><option value="packets">Reconstruct an operator</option><option value="refinement">Refine a signal</option><option value="recovery">Test recovery from a summary</option></optgroup>
 <optgroup label="Library preset"><option value="library">Komorebi Math with NumPy</option></optgroup>EXTRA_OPTIONS</select><p id="python-preset-help">Choose a preset to load its code, source links and expected output. Switching presets keeps your edits on this page. Python and any required libraries load when you press Run.</p></div>
 <nav id="python-example-links" class="document-routes" aria-label="Choose a Python example">'''
     groups = dict.fromkeys(spec['group'] for spec in PRESETS.values())
     options = ''.join('<optgroup label="'+group+'">'+''.join('<option value="'+name+'">'+html.escape(spec['title'])+'</option>' for name, spec in PRESETS.items() if spec['group']==group)+'</optgroup>' for group in groups)
-    body = body.replace('EXTRA_OPTIONS', options)
+    research = '<optgroup label="Komorebi sequence research">'+''.join('<option value="'+name+'">'+html.escape(spec['title'])+'</option>' for name, spec in PRESETS.items() if spec.get('works'))+'</optgroup>'
+    body = body.replace('RESEARCH_OPTIONS', research).replace('EXTRA_OPTIONS', options.replace(research, ''))
     body += ''.join('<a href="#'+key+'">'+html.escape(value[0])+'</a>' for key, value in EXAMPLES.items())+'</nav>'
     body += '''<noscript><p>Enable JavaScript to run Python here. The explanations, source and downloads below remain available.</p></noscript>
 <p id="python-help">The editor is a plain text field. Tab moves to the next control. Run uses a fresh Python namespace. Stop ends the runtime. Reset restores the selected preset. Fixed expected values may need updating when you change an input.</p>
@@ -117,19 +122,24 @@ def build(site, runtime_root):
         if doc:
             body += '<p><a href="collection/demonstrations/'+doc+'.html">Hand calculation, expected output and source connections</a></p>'
         elif name in PRESETS:
-            body += '<p>'+html.escape(PRESETS[name]['description'])+'</p><p><a href="#python-features-help">Plotting, data and saving guide</a></p>'
+            body += '<p>'+html.escape(PRESETS[name]['description'])+'</p>'
+            if PRESETS[name].get('guide'):
+                body += '<p><a href="collection/demonstrations/SEQUENCE_SHAPES.html#'+PRESETS[name]['guide']+'">Definitions, exact values and how to read this plot</a> · <a href="math/sequences_oeis.html">Komorebi Math sequence API</a></p>'
+            body += '<p><a href="#python-features-help">Plotting, data and saving guide</a></p>'
         else:
-            body += '<p>This uses the published Komorebi Math library for packet reconstruction and exact rational coordinate changes. These two operations are the tested browser scope. Optional backends and the rest of the library have not been qualified here.</p><p><a href="collection/FIRST_RUN.html">Installation and expected output</a> · <a href="math/index.html">Komorebi Math guide</a></p>'
+            body += '<p>This uses the published Komorebi Math library for packet reconstruction and exact rational coordinate changes. These two operations are tested here. The sequence research presets separately test reciprocal coefficients and Fubini row sums in their documented finite ranges. Optional backends and other operations remain outside that scope.</p><p><a href="collection/FIRST_RUN.html">Installation and expected output</a> · <a href="math/index.html">Komorebi Math guide</a></p>'
         body += '<nav class="document-routes" aria-label="'+title+' sources">' if works else ''
         for work in works:
             label = work.replace('paper-', 'Paper ').replace('realization-boundaries', 'Realization Boundaries').replace('iii', 'III').replace('ii', 'II')
             if work == 'paper-i': label = 'Paper I'
             if work == 'paper-v': label = 'Paper V'
+            if work == 'paper-iv': label = 'Paper IV'
+            if work == 'monographs-special-functions': label = 'Special Functions'
             base = 'collection/works/'+work+'.html'
             body += '<a href="'+base+'">'+label+'</a><a href="'+base+'#written-proofs">'+label+' proofs</a><a href="'+base+'#lean">'+label+' Lean coverage</a><a href="'+base+'#code">'+label+' code</a>'
             if work.startswith('paper-'): body += '<a href="claims.html#'+work+'">'+label+' claims</a>'
         body += ('</nav>' if works else '')+'<label for="code-'+name+'">Python code: '+title+'</label><textarea id="code-'+name+'" class="python-code" spellcheck="false" autocapitalize="off" autocomplete="off" aria-describedby="python-help" rows="14">'+html.escape(source)+'</textarea>'
-        body += '<div class="python-actions"><button type="button" data-run="'+name+'">Run '+({'packets':'packet reconstruction','refinement':'signal refinement','recovery':'recovery check','library':'Komorebi Math','plot-2d':'2D plot','surface-3d':'3D surface','curve-3d':'3D curve','matplotlib':'Matplotlib','symbolic':'SymPy','scientific':'SciPy','data':'data plot'}.get(name,title))+'</button><button type="button" data-reset="'+name+'">Reset code</button><a download href="'+download+'">Download original code</a><a href="#python-output-title">Jump to results</a><button type="button" data-download-code="'+name+'">Download edited code</button></div><div class="python-actions"><button type="button" data-save="'+name+'">Save draft</button><button type="button" data-restore="'+name+'">Restore draft</button><button type="button" data-forget="'+name+'">Delete saved draft</button></div>'
+        body += '<div class="python-actions"><button type="button" data-run="'+name+'">Run '+({'packets':'packet reconstruction','refinement':'signal refinement','recovery':'recovery check','library':'Komorebi Math','plot-2d':'2D plot','surface-3d':'3D surface','curve-3d':'3D curve','matplotlib':'Matplotlib','symbolic':'SymPy','scientific':'SciPy','data':'data plot'}.get(name,PRESETS.get(name, {}).get('run_label',title)))+'</button><button type="button" data-reset="'+name+'">Reset code</button><a download href="'+download+'">Download original code</a><a href="#python-output-title">Jump to results</a><button type="button" data-download-code="'+name+'">Download edited code</button></div><div class="python-actions"><button type="button" data-save="'+name+'">Save draft</button><button type="button" data-restore="'+name+'">Restore draft</button><button type="button" data-forget="'+name+'">Delete saved draft</button></div>'
         body += '<details class="python-expected"><summary>Expected output for the published preset</summary><pre>'+html.escape(expected)+'</pre><p>This is the original example\'s output. Your edits may change it.</p></details></section>'
         site.search.append(dict(title='Run Python: '+title,group='Collection',kind='Code',work_ids=works,url='playground.html#'+name,text='Python browser playground editable runnable example NumPy Komorebi Math '+title))
     body += '''<div class="python-results"><h2 id="python-output-title">Output</h2><button type="button" id="python-stop" disabled>Stop Python</button>

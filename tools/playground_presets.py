@@ -1,6 +1,8 @@
-"""Small, self-contained browser plotting and calculation presets."""
+"""Komorebi research presets followed by general plotting tutorials."""
+from sequence_presets import SEQUENCE_PRESETS
 
 PRESETS = {
+    **SEQUENCE_PRESETS,
     'plot-2d': dict(title='Plot a signal in 2D', group='Graphs', packages=['numpy'],
         description='Two sine waves and their sum. Zoom or inspect individual samples. This is a plotting tutorial, not a claim about a paper.',
         expected='Plotted 201 samples of two waves and their sum.\n',

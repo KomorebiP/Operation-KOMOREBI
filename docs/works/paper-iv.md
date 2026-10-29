@@ -28,6 +28,8 @@ These introductory calculations lead into this work’s subject. The source and 
 
 - [16. Split reciprocal coefficients into cyclic packets](../examples/16_CYCLIC_RECIPROCALS.md) · [Terms and source routes](../LEARNING_MAP.md#cyclic-reciprocals)
 
+**Complete demonstration with runnable code:** [Komorebi sequence shapes](../demonstrations/SEQUENCE_SHAPES.md).
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

@@ -187,8 +187,9 @@ sources, expected output and library revision. The static checker validates this
 record, the runtime and all source links. The workflow checks the extracted
 examples against their published output.
 
-The tested browser library scope is packet reconstruction and exact rational
-coordinate changes. NumPy is included. Optional packages, native backends and the
+The tested browser library scope includes packet reconstruction, exact rational
+coordinate changes, and the finite reciprocal and Fubini sequence experiments
+described in [Komorebi sequence shapes](demonstrations/SEQUENCE_SHAPES.md). NumPy is included. Optional packages, native backends and the
 rest of the library have not been qualified in the browser. A passing example
 does not establish a general theorem, execute Lean or change any proof status.
 
@@ -222,4 +223,26 @@ The helper limits interactive figures to 50,000 samples, messages to 2 MB and
 combined figures and exports to 8 MB per run. Unsupported graphics or unavailable
 WebGL leave a visible error and downloadable data. Source-linked mathematical
 examples retain their existing evidence labels. The broader Komorebi Math
-library remains qualified only for the introductory operations already tested.
+library remains outside the tested scope except for the documented introductory
+operations and sequence experiments.
+
+## Komorebi sequence experiments
+
+The playground opens with the source-linked sequence research group. It includes
+reciprocal coefficient growth, a 3D comparison after factorial normalization,
+and the factorial-weighted Stirling rows from the Special Functions sequence
+atlas. General plotting tutorials remain available further down the menu.
+
+`tools/sequence_presets.py` defines the programs, parameter bounds, expected
+output, related works and reading links. Reciprocal presets call the pinned
+library's `reciprocal_coefficients`. The factorial preset checks its row sums
+against `fubini_sequence`. Exact exports use integer and rational text to avoid
+losing large integer digits through JavaScript numbers. Only plotted coordinates
+use floating-point logarithms. The 3D sequence views preserve the discrete
+parameter domains. They do not interpolate a continuous family.
+
+`tools/test_sequence_python.py` compares 448 reciprocal coefficients with
+independent ordinary rational-series inversion and 190 weighted Stirling entries
+with inclusion-exclusion. It also checks preset outputs and exact export
+normalization. The existing website workflow discovers these tests. Source
+records and proof assessments retain their previous scope.

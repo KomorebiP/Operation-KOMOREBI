@@ -10,6 +10,7 @@ GUIDED_DEMONSTRATIONS = {
     'docs/demonstrations/PACKETS.md': ('Reconstruct an operator', ['paper-i']),
     'docs/demonstrations/REFINEMENT.md': ('Refine a signal', ['paper-ii','paper-v']),
     'docs/demonstrations/RECOVERY.md': ('Test recovery from a summary', ['paper-iii','realization-boundaries']),
+    'docs/demonstrations/SEQUENCE_SHAPES.md': ('Komorebi sequence shapes', ['paper-iv','monographs-special-functions']),
 }
 
 
