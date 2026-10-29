@@ -224,34 +224,29 @@ class Renderer:
 
 **Komorebi P. · Work in progress**
 
-[Open the reading website](https://KomorebiP.github.io/Operation-KOMOREBI/) · [Choose a reading route](docs/READING_ROUTES.md) · [Hand-worked examples](docs/HAND_WORKED_EXAMPLES.md) · [Glossary](docs/GLOSSARY.md) · [Download one work](docs/DOWNLOADS.md)
+Komorebi studies how mathematical objects can be represented in parts, transformed through those parts, and reconstructed. It asks what a change of representation preserves, what it loses, and how the difference can be measured.
 
-[Understand the project](docs/START_HERE.md) · [See how the works fit together](docs/PROJECT_MAP.md) · [Follow a complete demonstration](docs/DEMONSTRATIONS.md)
+Realization Calculus develops the mathematics of decomposition, transfer, refinement, and reconstruction. Komorebi Space provides a setting for comparing realizations and the conditions under which they are compatible.
 
-[Browse all works](docs/BROWSE.md) · [Read papers](docs/browse/PAPERS.md) · [Find proofs](docs/browse/PROOFS.md) · [Lean sources](docs/browse/LEAN.md) · [Code](docs/browse/CODE.md)
+[Open the reading website](https://KomorebiP.github.io/Operation-KOMOREBI/).
 
-[Accessibility and reading options](docs/ACCESSIBILITY.md) · [Report an accessibility or reading problem](https://github.com/KomorebiP/Operation-KOMOREBI/issues/new?template=04-accessibility.md)
+## A first example
 
-> **Author’s note:** This work is still in progress. Much of it has been rushed because of circumstances introduced by OpenAI. I am continuing to correct, verify, and organize it.
+A matrix with rows `(1, 2)` and `(3, 4)` sends the column vector `(2, 3)` to `(8, 18)`. Splitting the vector into its two coordinate parts lets us recover the same answer from four smaller contributions. Leaving out the final contribution changes the result to `(8, 6)`, exposing exactly what is missing.
 
-The [public project and authorship statement](docs/PROJECT_STATEMENT.md#current-state-and-publication-circumstances) explains this context. Each work is at a different stage of completion and review. All executable software remains **beta and work in progress**.
-
-Realization Calculus studies how mathematical structure behaves under decomposition, coordinate change, transfer, and refinement. Its basic objects include packets, operator blocks, compatible realizations, and explicit residuals.
-
-Komorebi Space provides a setting for comparing these constructions through realizations, projections, transfers, compatibility conditions, and obstructions.
+The [packet demonstration](docs/demonstrations/PACKETS.md) walks through this calculation, explains why reconstruction works, and checks it with an exact Python program. You can also [run and edit the example in your browser](https://KomorebiP.github.io/Operation-KOMOREBI/playground.html#packets).
 
 ## Start here
 
-| Goal | Starting point |
+| What would you like to do? | Begin here |
 |---|---|
-| Open a paper, proof, Lean source, or code file | [Browse by work](docs/BROWSE.md), with direct links to files and evidence for each edition. |
-| Understand the framework | [Reading guide](docs/START_HERE.md), then the foundations below. |
-| Read the main developments | [Twelve core papers](papers/README.md) and [monographs](monographs/README.md). |
-| Choose by readiness | [Completion stage, Lean coverage, and confidence](docs/COMPLETION_STATUS.md), with links to exact evidence. |
-| Run or reproduce something | [Small example](#run-a-small-example), [software guide](docs/LIBRARIES.md), and [verification guide](docs/VERIFICATION.md). |
-| Help finish the collection | [Finalization queue](docs/FINALIZATION_QUEUE.md) and [contribution guide](CONTRIBUTING.md). |
+| Understand the ideas | [Read the introduction](docs/START_HERE.md), then explore the [complete demonstrations](docs/DEMONSTRATIONS.md). |
+| Read the mathematics | [Browse the works](docs/BROWSE.md), with links to papers, monographs, source files, and evidence. |
+| Use the software | [Install a library and run a first example](docs/FIRST_RUN.md), or explore the [software guide](docs/LIBRARIES.md). |
 
-The [authorship statement](docs/PROJECT_STATEMENT.md) explains the pseudonym, the use of AI assistance, and how to assess the evidence.
+> **Author’s note:** This work is still in progress. Much of it has been rushed because of circumstances introduced by OpenAI. I am continuing to correct, verify, and organize it.
+
+The [public project and authorship statement](docs/PROJECT_STATEMENT.md) explains the pseudonym, AI assistance, and publication circumstances. Each work is at a different stage of completion and review. All executable software remains **beta and work in progress**.
 
 ## Foundations
 
@@ -310,6 +305,14 @@ The [formalization guide](formal/README.md) explains the Lean projects and the c
 Lean is optional: a sound written argument can support a result without formalization. The [records guide](docs/RECORDS.md) collects dated reviews, claim coverage, test reports, and the source revisions they refer to. Entries awaiting sufficient implementation support are listed in the [incubator](docs/INCUBATOR.md).
 
 A finished reading edition can contain open conjectures. A passing collection check verifies its stated integrity and tooling scope. Use the [status catalogue](docs/STATUS_CATALOG.md) for each component's exact evidence and the [finalization queue](docs/FINALIZATION_QUEUE.md) for remaining work.
+
+## Find a specific resource
+
+[Reading routes](docs/READING_ROUTES.md) · [Project map](docs/PROJECT_MAP.md) · [Glossary](docs/GLOSSARY.md) · [Completion and confidence](docs/COMPLETION_STATUS.md)
+
+[Hand-worked examples](docs/HAND_WORKED_EXAMPLES.md) · [Papers](docs/browse/PAPERS.md) · [Written proofs](docs/browse/PROOFS.md) · [Lean sources](docs/browse/LEAN.md) · [Code](docs/browse/CODE.md) · [Downloads](docs/DOWNLOADS.md)
+
+[Accessibility and reading options](docs/ACCESSIBILITY.md) · [Report an accessibility or reading problem](https://github.com/KomorebiP/Operation-KOMOREBI/issues/new?template=04-accessibility.md)
 
 ## Repository map
 
