@@ -31,11 +31,15 @@ input packet j, apply the operator, then select output packet i. The packet
 dimensions are 5, 6 and 7. Numbers are rounded to one decimal place; darker
 cells indicate larger norms.
 
-| Output packet | Input 1 | Input 2 | Input 3 |
-| --- | ---: | ---: | ---: |
-| 1 | 5.0 | 5.0 | 8.1 |
-| 2 | 5.7 | 6.2 | 6.0 |
-| 3 | 5.7 | 6.3 | 7.3 |
+<table>
+<caption>Figure 2: transfer-block Frobenius norms</caption>
+<thead><tr><th scope="col">Output packet</th><th scope="col">Input 1</th><th scope="col">Input 2</th><th scope="col">Input 3</th></tr></thead>
+<tbody>
+<tr><th scope="row">Output 1</th><td>5.0</td><td>5.0</td><td>8.1</td></tr>
+<tr><th scope="row">Output 2</th><td>5.7</td><td>6.2</td><td>6.0</td></tr>
+<tr><th scope="row">Output 3</th><td>5.7</td><td>6.3</td><td>7.3</td></tr>
+</tbody>
+</table>
 
 Diagonal blocks act within a packet. Off-diagonal blocks transfer between
 different packets. A norm gives the size of a block; it does not retain the
