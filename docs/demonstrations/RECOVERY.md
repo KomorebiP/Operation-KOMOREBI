@@ -2,6 +2,8 @@
 
 [All demonstrations](../DEMONSTRATIONS.md) · [Project map](../PROJECT_MAP.md#limits-and-repair) · [Glossary: obstruction](../GLOSSARY.md#obstruction)
 
+[Run and edit this example in your browser](https://KomorebiP.github.io/Operation-KOMOREBI/playground.html#recovery)
+
 **Question:** If a summary keeps only the sum of two coordinates, can it recover
 the first coordinate? This example needs only addition and the idea of a function.
 

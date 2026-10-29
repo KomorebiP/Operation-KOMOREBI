@@ -1,5 +1,7 @@
 # Run a first example
 
+[Try the Komorebi Math example in your browser](https://KomorebiP.github.io/Operation-KOMOREBI/playground.html#library). The browser example checks packet reconstruction and exact rational coordinates. For the full local environment, follow the steps below.
+
 Choose one of the paths below. Each example has a small, explicit expected
 result. Record the source revision with `git rev-parse HEAD` before running it.
 All software remains beta and work in progress.

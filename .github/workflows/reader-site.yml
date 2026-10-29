@@ -50,6 +50,8 @@ jobs:
       - name: Install documentation dependencies and the Python library
         run: python -m pip install -r website/requirements.txt ./.reader-libraries/math
       - name: Test website safeguards
+        run: python -B -m unittest discover -s tools -p 'test_*python.py' -v
+      - name: Test reader rendering safeguards
         run: python -B -m unittest discover -s tools -p 'test_reader_site.py' -v
       - name: Verify the manuscript claim index
         run: python -B tools/claim_navigation.py --check
@@ -82,8 +84,10 @@ jobs:
         run: python -B tools/fetch_reader_runtime.py --output .reader-build/mathjax
       - name: Obtain the pinned PDF reader
         run: python -B tools/fetch_pdf_runtime.py --output .reader-build/pdfjs
+      - name: Obtain the pinned Python runtime
+        run: python -B tools/fetch_python_runtime.py --output .reader-build/python
       - name: Build the reader site and reading ZIPs
-        run: python -B tools/build_reader_site.py --math-root .reader-libraries/math --polyphase-root .reader-libraries/polyphase --mathjax-root .reader-build/mathjax --pdfjs-root .reader-build/pdfjs --revision '${{ github.sha }}' --output reader-site
+        run: python -B tools/build_reader_site.py --math-root .reader-libraries/math --polyphase-root .reader-libraries/polyphase --mathjax-root .reader-build/mathjax --pdfjs-root .reader-build/pdfjs --python-root .reader-build/python --revision '${{ github.sha }}' --output reader-site
       - name: Check HTML links, access features and all reading ZIPs
         run: python -B tools/check_reader_site.py --site reader-site
       - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b

@@ -139,7 +139,7 @@ class Rewriter(HTMLParser):
 
 
 class Site:
-    def __init__(self,root,math_root,poly_root,output,revision,source_cache=None,mathjax_root=None,pdfjs_root=None):
+    def __init__(self,root,math_root,poly_root,output,revision,source_cache=None,mathjax_root=None,pdfjs_root=None,python_root=None):
         self.root=root
         self.roots={'collection':root,'math':math_root,'polyphase':poly_root}
         self.output=output
@@ -147,6 +147,7 @@ class Site:
         self.cache=source_cache
         self.mathjax_root=mathjax_root
         self.pdfjs_root=pdfjs_root
+        self.python_root=python_root
         self.registry=json.loads((root/'manifests/browse-resources.json').read_bytes())
         self.status=json.loads((root/'manifests/project-status.json').read_bytes())
         self.assessments={c['id']:c for c in self.status['components']}
@@ -170,7 +171,7 @@ class Site:
     def page(self,path,title,body,source=None):
         esc=html.escape
         root=self.rel('index.html',path)
-        nav=[('Overview','collection/START_HERE.html'),('Reading routes','collection/READING_ROUTES.html'),('Works','works.html'),('Papers and PDFs','documents.html'),('Examples','collection/HAND_WORKED_EXAMPLES.html'),('Software','software.html'),('Glossary','collection/GLOSSARY.html'),('Claims','claims.html'),('Downloads','downloads.html')]
+        nav=[('Overview','collection/START_HERE.html'),('Reading routes','collection/READING_ROUTES.html'),('Works','works.html'),('Papers and PDFs','documents.html'),('Examples','collection/HAND_WORKED_EXAMPLES.html'),('Run Python','playground.html'),('Software','software.html'),('Glossary','collection/GLOSSARY.html'),('Claims','claims.html'),('Downloads','downloads.html')]
         nav_html=''.join('<a href="'+self.rel(p,path)+'"'+(' aria-current="page"' if p==path else '')+'>'+t+'</a>' for t,p in nav)
         source_html=('<a href="'+esc(source,quote=True)+'">Source on GitHub</a> · ') if source else ''
         doc='''<!doctype html>
@@ -321,7 +322,7 @@ class Site:
             held=s.get('reader_listing',{}).get('placement')=='incubator'
             body+='<article class="work" data-group="'+c['group']+'" data-search="'+e((c['title']+' '+s.get('reader_summary',c['summary'])).lower(),quote=True)+'"><p class="eyebrow">'+e(c['group'])+(' · Incubator' if held else '')+'</p><h2><a href="collection/works/'+c['id']+'.html">'+e(c['title'])+'</a></h2><p>'+e(s.get('reader_summary',c['summary']))+'</p><p class="status">'+e(status)+'</p></article>'
         self.page('works.html','Browse works',body+'</div><noscript><p>All works are shown. Use your browser’s Find command to locate a title.</p></noscript>')
-        self.page('software.html','Software','<h1>Run a small calculation</h1><p>Start with the platform instructions and expected output. All software remains beta.</p><p><a class="button" href="collection/FIRST_RUN.html">First runs and expected output</a></p><div class="route-grid"><a class="route" href="math/index.html"><h2>Komorebi Math</h2><p>Python. Finite operators, coordinates, signals and arithmetic.</p></a><a class="route" href="polyphase/index.html"><h2>Polyphase Float</h2><p>C on the supported Linux baseline. Arbitrary-precision binary arithmetic.</p></a></div><p><a href="collection/LIBRARIES.html">Library checks and source revisions</a></p>')
+        self.page('software.html','Software','<h1>Run a small calculation</h1><p><a class="button" href="playground.html#library">Try Komorebi Math in your browser</a></p><p>Start with the platform instructions and expected output. All software remains beta.</p><p><a class="button" href="collection/FIRST_RUN.html">First runs and expected output</a></p><div class="route-grid"><a class="route" href="math/index.html"><h2>Komorebi Math</h2><p>Python. Finite operators, coordinates, signals and arithmetic.</p></a><a class="route" href="polyphase/index.html"><h2>Polyphase Float</h2><p>C on the supported Linux baseline. Arbitrary-precision binary arithmetic.</p></a></div><p><a href="collection/LIBRARIES.html">Library checks and source revisions</a></p>')
         work_options=''.join('<option value="'+c['id']+'">'+e(self.components[c['id']]['title'])+'</option>' for c in self.registry['components'])
         self.page('search.html','Search the collection','<h1>Search the collection</h1><p>Find a work, a claim, a written proof location, Lean guidance, code or a worked example. Choose one work to keep its related material together. Open a PDF and use its reader search to find words throughout that document.</p><form id="site-search" data-index="search-index.json?v='+e(self.revision)+'"><label for="search-query">Word, symbol name or question</label><input id="search-query" type="search" name="q" autocomplete="off"><label for="search-group">Repository</label><select id="search-group"><option value="">All repositories</option><option>Collection</option><option>Komorebi Math</option><option>Polyphase Float</option></select><label for="search-work">Work</label><select id="search-work"><option value="">All works</option>'+work_options+'</select><label for="search-kind">Result type</label><select id="search-kind"><option value="">All result types</option><option>Claims</option><option>Written proofs</option><option>Lean</option><option>Code</option><option>Glossary</option><option>Examples</option><option>Papers and source</option><option>Guides</option></select><button type="submit">Search</button><button type="reset">Clear search</button></form><p id="search-status" role="status" aria-live="polite">Enter a search term.</p><ol id="search-results"></ol><button id="search-more" type="button" hidden>Show more results</button><noscript><p>Search needs JavaScript. You can still <a href="works.html">browse all works</a> and use the <a href="collection/GLOSSARY.html">glossary</a>.</p></noscript>')
         self.claim_index()
@@ -353,7 +354,7 @@ class Site:
         record=dict(source=path,source_revision=self.revision,url=download,size=len(raw),sha256=digest(raw),
                     reader_url='read/demonstrations.html',scope='Three fixed exact teaching examples. No Lean execution or general theorem verification.')
         self.write('downloads/demonstration-source.json',json.dumps(record,indent=2)+'\n')
-        body='<h1>Program for the three demonstrations</h1><p>Exact integer calculations using Python 3.10 or later and its standard library. The program checks reconstruction, refinement and a recovery witness.</p><nav class="document-routes" aria-label="Demonstration routes"><a href="../collection/DEMONSTRATIONS.html">Setup and scope</a><a href="../collection/demonstrations/PACKETS.html">Operator reconstruction</a><a href="../collection/demonstrations/REFINEMENT.html">Signal refinement</a><a href="../collection/demonstrations/RECOVERY.html">Recovery witness</a></nav><p><a class="button" download href="../'+download+'">Download Python program</a> <a href="../downloads/demonstration-source.json">Revision and checksum</a></p>'
+        body='<h1>Program for the three demonstrations</h1><p><a class="button" href="../playground.html">Run and edit these examples in your browser</a></p><p>Exact integer calculations using Python 3.10 or later and its standard library. The program checks reconstruction, refinement and a recovery witness.</p><nav class="document-routes" aria-label="Demonstration routes"><a href="../collection/DEMONSTRATIONS.html">Setup and scope</a><a href="../collection/demonstrations/PACKETS.html">Operator reconstruction</a><a href="../collection/demonstrations/REFINEMENT.html">Signal refinement</a><a href="../collection/demonstrations/RECOVERY.html">Recovery witness</a></nav><p><a class="button" download href="../'+download+'">Download Python program</a> <a href="../downloads/demonstration-source.json">Revision and checksum</a></p>'
         body+='<p>From the download folder, run <code>python -B komorebi_demonstrations.py all</code>. Each demonstration page provides its expected output and mathematical explanation.</p>'
         body+=source_lines(text)
         self.page('read/demonstrations.html','Program for the three demonstrations',body,github(REPOSITORY,self.revision,path))
@@ -378,6 +379,8 @@ class Site:
         self.bundles()
         self.reader.catalog()
         self.demonstration_program()
+        from browser_python import build as build_python
+        build_python(self,self.python_root)
         self.indexes()
         self.write('.nojekyll','')
         result=dict(collection_revision=self.revision,library_revisions=self.revisions,html_guides=len(self.documents),works=len(self.registry['components']),claim_records=len(self.claims['records']),reading_bundles=len(self.bundle_records),bundle_bytes=sum(x['archive_bytes'] for x in self.bundle_records),new_proof_review=False,new_lean_execution=False)
@@ -396,9 +399,10 @@ def main():
     p.add_argument('--source-cache',type=Path)
     p.add_argument('--mathjax-root',type=Path,required=True)
     p.add_argument('--pdfjs-root',type=Path,required=True)
+    p.add_argument('--python-root',type=Path,required=True)
     args=p.parse_args()
     if not re.fullmatch(r'[0-9a-f]{40}',args.revision):p.error('A full collection commit is required')
-    Site(args.root.resolve(),args.math_root.resolve(),args.polyphase_root.resolve(),args.output.resolve(),args.revision,args.source_cache,args.mathjax_root,args.pdfjs_root).build()
+    Site(args.root.resolve(),args.math_root.resolve(),args.polyphase_root.resolve(),args.output.resolve(),args.revision,args.source_cache,args.mathjax_root,args.pdfjs_root,args.python_root).build()
 
 
 if __name__=='__main__':main()

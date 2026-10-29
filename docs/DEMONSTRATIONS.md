@@ -18,6 +18,14 @@ exposes a limitation, and links to papers, proofs, Lean coverage and code.
 The [project map](PROJECT_MAP.md) places these introductory examples in the
 wider collection.
 
+## Run in your browser
+
+[Open the Python playground](https://KomorebiP.github.io/Operation-KOMOREBI/playground.html).
+Choose a demonstration, press Run and compare its output with the hand calculation.
+You can edit the code, stop a calculation and reset the original example.
+Python loads on the first run. No account or local installation is needed.
+The playground also includes a tested introductory Komorebi Math example.
+
 ## Run without installing a library
 
 Use Python 3.10 or later. The program uses only the standard library and exact

@@ -147,6 +147,46 @@ def inspect_site(root):
             assert 'collection-notices/LICENSE.md' in z.namelist()
     from fetch_pdf_runtime import verify
     verify(root/'assets/pdfjs')
+    from fetch_python_runtime import verify as verify_python
+    runtime = verify_python(root/'assets/python')
+    assert json.loads((root/'assets/python/SOURCE.json').read_bytes()) == runtime
+    python = json.loads((root/'downloads/python-playground.json').read_bytes())
+    build = json.loads((root/'build-info.json').read_bytes())
+    assert python['collection_revision'] == build['collection_revision']
+    assert python['library_revision'] == build['library_revisions']['math']
+    assert python['runtime_version'] == runtime['version']
+    assert set(python['examples']) == {'packets', 'refinement', 'recovery', 'library'}
+    for name, example in python['examples'].items():
+        assert example['url'] == 'downloads/python-'+name+'.py'
+        assert hashlib.sha256((root/example['url']).read_bytes()).hexdigest() == example['sha256']
+        assert example['expected_output'].endswith('\n')
+    assert python['library_url'] == 'downloads/komorebi-math-browser.zip'
+    library = root/python['library_url']
+    assert hashlib.sha256(library.read_bytes()).hexdigest() == python['library_sha256']
+    with zipfile.ZipFile(library) as archive:
+        assert set(archive.namelist()) == {f['archive_path'] for f in python['library_files']}
+        assert len(archive.namelist()) == len(python['library_files'])
+        for entry in python['library_files']:
+            name = entry['archive_path']
+            assert name == entry['path'].removeprefix('src/')
+            assert name == 'LICENSE.md' or name.startswith('komorebi_math/')
+            assert '..' not in PurePosixPath(name).parts and '\\' not in name
+            raw = archive.read(name)
+            assert hashlib.sha256(raw).hexdigest() == entry['sha256']
+            assert hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest() == entry['git_blob_sha1']
+    class Editors(HTMLParser):
+        def __init__(self, text):
+            super().__init__(); self.current = None; self.codes = {}; self.feed(text)
+        def handle_starttag(self, tag, attrs):
+            if tag == 'textarea':
+                self.current = dict(attrs)['id']; self.codes[self.current] = ''
+        def handle_data(self, text):
+            if self.current: self.codes[self.current] += text
+        def handle_endtag(self, tag):
+            if tag == 'textarea': self.current = None
+    editors = Editors((root/'playground.html').read_text(encoding='utf-8')).codes
+    for name, entry in python['examples'].items():
+        assert editors['code-'+name] == (root/entry['url']).read_text(encoding='utf-8')
     documents=json.loads((root/'documents/index.json').read_bytes())
     assert len(documents['files'])==len({r['repository_path'] for r in documents['files']})
     pdf_count=0

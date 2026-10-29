@@ -41,13 +41,14 @@ python -B tools/claim_navigation.py --check
 python -B tools/update_completion_status.py --check
 python -B tools/fetch_reader_runtime.py --output ../reader-runtime
 python -B tools/fetch_pdf_runtime.py --output ../pdf-reader-runtime
-python -B tools/build_reader_site.py --math-root ../komorebi-math --polyphase-root ../polyphase-float --mathjax-root ../reader-runtime --pdfjs-root ../pdf-reader-runtime --revision FULL_COLLECTION_COMMIT --output ../reader-site
+python -B tools/fetch_python_runtime.py --output ../python-reader-runtime
+python -B tools/build_reader_site.py --math-root ../komorebi-math --polyphase-root ../polyphase-float --mathjax-root ../reader-runtime --pdfjs-root ../pdf-reader-runtime --python-root ../python-reader-runtime --revision FULL_COLLECTION_COMMIT --output ../reader-site
 python -B tools/check_reader_site.py --site ../reader-site
 python -m http.server 8765 --directory ../reader-site
 ```
 
 Replace `FULL_COLLECTION_COMMIT` with the output of `git rev-parse HEAD`.
-The runtime fetches verify pinned digests before unpacking MathJax and PDF.js.
+The runtime fetches verify pinned digests before installing MathJax, PDF.js and Python.
 The finished site serves both runtimes and its selected documents locally.
 Source receipt mismatches or
 missing reading files fail the build. The ZIPs identify their selected files
@@ -157,3 +158,32 @@ file has been selected for on-site reading.
 
 The site checker validates search work identifiers and every result’s local
 page and fragment. Claim types and existing evidence assessments are unchanged.
+
+## Browser Python
+
+The [Python playground](https://KomorebiP.github.io/Operation-KOMOREBI/playground.html)
+runs the three teaching demonstrations and the pinned Komorebi Math introductory
+example. Python starts on demand in a disposable module worker. Stop terminates
+the worker, including an infinite loop. Reset also restores the selected source.
+Each run uses a fresh namespace. A two minute timeout and an output limit keep
+ordinary mistakes manageable. The plain text editors support keyboard navigation.
+
+`website/python-runtime.json` pins Pyodide, Python and the NumPy wheel with byte
+counts and SHA-256 checksums. `tools/fetch_python_runtime.py` verifies those files
+before the build copies them to the site. Pass their directory as `--python-root`
+to the site builder. Runtime files load from the same site. The reader does not
+upload editor contents or store them after leaving the page. Edited Python can
+still use browser networking, so this is not an isolated service for untrusted code.
+
+`tools/browser_python.py` extracts the teaching functions without rewriting their
+bodies. It checks every library file against the pinned Git tree and produces a
+deterministic ZIP containing the package and its license. The worker verifies the
+ZIP checksum before loading it. `downloads/python-playground.json` records the
+sources, expected output and library revision. The static checker validates this
+record, the runtime and all source links. The workflow checks the extracted
+examples against their published output.
+
+The tested browser library scope is packet reconstruction and exact rational
+coordinate changes. NumPy is included. Optional packages, native backends and the
+rest of the library have not been qualified in the browser. A passing example
+does not establish a general theorem, execute Lean or change any proof status.

@@ -2,6 +2,8 @@
 
 [All demonstrations](../DEMONSTRATIONS.md) · [Project map](../PROJECT_MAP.md#foundations) · [Glossary: transfer block](../GLOSSARY.md#transfer-block)
 
+[Run and edit this example in your browser](https://KomorebiP.github.io/Operation-KOMOREBI/playground.html#packets)
+
 **Question:** Can we reproduce a matrix operation by calculating its action
 between smaller pieces? You need only multiplication of two by two matrices.
 
