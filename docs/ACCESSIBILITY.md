@@ -51,14 +51,20 @@ jump links remain readable. The browser’s Find command is also available.
 
 ## Mathematics and figures
 
-Paper II has a [readable chapter](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-ii/refinement-and-residue-coordinates.html)
-covering refinement and residue coordinates. It includes the original prose,
-equations and three figures, with chapter contents and linked references.
-Statements and proofs link to each other, their claim records and the original
-source lines. The surrounding chapters remain available as source and PDF.
-This is a reading pilot for sections 3 and 4, not a new mathematical review.
+The main chapters of [Paper II](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-ii/index.html)
+and [Paper III](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-iii/index.html)
+are available as readable HTML. They retain the original prose, equations,
+figures, tables and code examples. Each paper has chapter contents, previous
+and next links, cross references and a bibliography. Paper II also includes its
+separate current verification snapshot.
 
-Search includes passages from this chapter, equation previews and highlighted
+Statements and proofs link to each other, their claim records and the original
+source lines. Reading pages connect to the paper's recorded Lean coverage, code
+and worked examples. Paper III retains the manuscript's distinctions between
+its finite formal contract, inherited results and formalization targets.
+These reading editions add no mathematical review or Lean verification.
+
+Search includes passages from these chapters, equation previews and highlighted
 matching words. Common Greek symbols can be searched by name or character,
 such as **rho** or **ρ**. Mathematical previews retain the source expression.
 Wide equations have a separate scroll area that can receive keyboard focus.
@@ -86,8 +92,9 @@ Document pages link back to the work, written proofs, Lean coverage, code and
 available worked examples. Edition READMEs are rendered as HTML. Linked
 manuscript and program sources have selectable text and line links. TeX source
 is shown as source, with links to included manuscript sections where available.
-The Paper II pilot also has a formatted HTML chapter. Use the PDF for other
-typeset manuscript sections.
+Papers II and III also have formatted HTML chapters. Their separate visual
+atlases remain available through the on-site PDF reader. Use the PDF for
+typeset manuscript sections that have not yet been converted to HTML.
 
 Reading ZIPs include a contents manifest, source revision, checksums and
 available license notices. They contain selected reading files, not complete

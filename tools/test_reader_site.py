@@ -11,10 +11,80 @@ from check_reader_site import Page, check_search_targets
 from reader_documents import ReadingDocuments, page_path, source_lines, tex_includes
 from fetch_pdf_runtime import extract
 from claim_navigation import statements, manuscript_sources, validate_claims, PAPERS
-from readable_chapters import Chapter, expand_math, plain_math, readable_url
+from readable_chapters import Chapter, expand_math, plain_math, readable_url, original_math, render_table, bibliography, formal_note_labels
 
 
 class ReaderSiteTests(unittest.TestCase):
+    def test_readable_macro_expansion_preserves_matrix_row_separators(self):
+        self.assertEqual(expand_math(r'A\\N+\N',{'N':r'\mathbb N'}),r'A\\N+{\mathbb N}')
+        self.assertEqual(expand_math(r'A\\\N',{'N':r'\mathbb N'}),r'A\\{\mathbb N}')
+
+    def test_readable_math_keeps_double_primes_and_accent_groups(self):
+        self.assertEqual(expand_math(r"F''(x)+\text{\'e}",{}),"F''(x)+\\text{é}")
+        chapter=Chapter('',{})
+        self.assertEqual(chapter.preview("The derivative $F''(x)$ exists.")[1]['text'],"F''(x)")
+
+    def test_readable_chapter_ids_are_unique_for_same_line_heading_and_prose(self):
+        chapter=Chapter(r'\section{One}\paragraph{Convention.} Same-line prose.',{})
+        self.assertEqual([n['id'] for n in chapter.nodes],['L1','L1-2','L1-3'])
+        self.assertEqual([n['line'] for n in chapter.nodes],[1,1,1])
+
+    def test_readable_cross_chapter_reference_and_appendix_numbering(self):
+        first=Chapter('\\section{One}\n\\begin{theorem}[Exact]\\label{thm:exact}True.\\end{theorem}',{})
+        second=Chapter('\\section{Two}\nSee \\cref{thm:exact}.\n\\appendix\n\\section{Notation}\n\\subsection*{Conventions}\n\\subsection{Symbols}',{},state={'section':first.section},check_refs=False)
+        second.url='read/book/second.html'
+        first.labels['thm:exact']['url']='read/book/first.html'
+        second.labels.update(first.labels)
+        second.validate_references()
+        self.assertIn('href="first.html#L2"',second.inline(r'\cref{thm:exact}'))
+        self.assertEqual([n['number'] for n in second.nodes if n['kind'] in {'section','subsection'}],['2','A','','A.1'])
+
+    def test_readable_lists_align_and_labeled_equations_keep_expression_order(self):
+        source=r'\begin{enumerate}[label=(\alph*)]\item $x$\item \[y=1\label{eq:y}\]\end{enumerate}'+'\n'+r'\begin{align*}a&=b\\c&=d\end{align*}'
+        chapter=Chapter('',{})
+        rendered=chapter.paragraphs(source)
+        self.assertIn('<ol type="a">',rendered)
+        self.assertEqual(chapter.math,original_math(source))
+        self.assertNotIn('label{eq:y}',rendered)
+        self.assertIn(r'\begin{aligned}',rendered)
+
+    def test_readable_tables_preserve_columns_and_math_cells(self):
+        node={'kind':'longtable','body':r'{llll}\toprule A & B & C & D \\\midrule $x$ & $y$ & {group} & four \\\bottomrule'}
+        # Grouping in prose is intentionally unsupported, even inside a cell.
+        with self.assertRaises(ValueError): render_table(node,Chapter('',{}))
+        node['body']=node['body'].replace('{group}','group')
+        chapter=Chapter('',{})
+        rendered=render_table(node,chapter)
+        self.assertEqual(rendered.count('<th scope="col">'),4)
+        self.assertEqual(rendered.count('<td>'),4)
+        self.assertEqual(chapter.math,['x','y'])
+
+    def test_readable_citations_keep_optional_location_and_literal_key(self):
+        chapter=Chapter('',{})
+        chapter.citations={'Current1990':('Current1990','references.html#ref-Current1990')}
+        rendered=chapter.inline(r'\cite[Chapter~VII, \S4]{Current1990}')
+        self.assertIn('[Current1990]',rendered)
+        self.assertIn('Chapter\u00a0VII, §4',rendered)
+        entries=bibliography('@book{Current1990,author={{An Author}},year={1990}}')
+        self.assertEqual(entries[0]['fields']['author'],'{An Author}')
+        with self.assertRaises(ValueError): bibliography('@string{unexpected="not a supported record"}')
+
+    def test_readable_formal_notes_preserve_scope_without_creating_a_mapping(self):
+        chapter=Chapter('',{})
+        chapter.formal_labels=formal_note_labels(r'\newcommand{\statusroadmap}[1]{\par\textbf{Outside the finite formal contract.} #1}')
+        rendered=chapter.inline(r'\statusroadmap{Candidate \leanname{Example.notYetProved}.}')
+        self.assertIn('Outside the finite formal contract.',rendered)
+        self.assertIn('<code>Example.notYetProved</code>',rendered)
+        self.assertNotIn('href=',rendered)
+        preview=chapter.preview(r'\statusroadmap{Candidate \leanname{Example.notYetProved}.}')
+        self.assertEqual(preview,[{'type':'text','text':'Outside the finite formal contract. Candidate Example.notYetProved.'}])
+
+    def test_readable_preview_preserves_parenthesized_math(self):
+        self.assertEqual(Chapter('',{}).preview(r'Use \(F\prime\) here.')[1],{'type':'math','text':r'F\prime'})
+
+    def test_original_math_excludes_algorithm_literals(self):
+        self.assertEqual(original_math('$x$\n'+r'\begin{lstlisting}cost = "$5" # 50%\end{lstlisting}'+'\n'+r'\(y\)'),['x','y'])
+
     def test_readable_chapter_preserves_math_order_and_resolves_forward_references(self):
         source = ('\\section{Coordinates}\\label{sec:coordinates}\n'
                   'See \\cref{thm:identity}.\n'

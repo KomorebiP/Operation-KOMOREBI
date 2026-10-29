@@ -49,22 +49,10 @@ def check_search_targets(index, pages):
 
 
 def check_readable_chapter(root, documents, pages):
-    from readable_chapters import SOURCE, MAIN, PAGE, clean_tex, expand_math, manuscript_macros
+    from readable_chapters import BOOKS, CHAPTERS, original_math, expand_math, manuscript_macros
     records = {r['repository_path']:r for r in documents['files']}
-    raw = (root/records[SOURCE]['file_url']).read_bytes()
-    main = (root/records[MAIN]['file_url']).read_text(encoding='utf-8-sig')
-    text = clean_tex(raw.decode('utf-8-sig'))
-    report = json.loads((root/'documents/readable-paper-ii.json').read_bytes())
-    expressions = [m[1] if m[1] is not None else m[2] for m in re.finditer(r'\$(.*?)\$|\\\[(.*?)\\\]',text,re.S)]
-    assert report['source_sha256'] == hashlib.sha256(raw).hexdigest()
-    assert report['source'] == SOURCE and report['url'] == PAGE
-    assert report['math_expressions'] == len(expressions)
-    assert report['math_sequence_sha256'] == hashlib.sha256(json.dumps(expressions,ensure_ascii=False).encode()).hexdigest()
-    assert report['macros'] == manuscript_macros(main)
-    assert not report['new_proof_review'] and not report['new_lean_execution']
-    for node in report['nodes']:
-        assert 'L'+str(node['line']) in pages[PAGE].ids
-        assert 'L'+str(node['line']) in pages[records[SOURCE]['url']].ids
+    reports = json.loads((root/'documents/readable-chapters.json').read_bytes())
+    assert [r['source'] for r in reports] == [c['source'] for c in CHAPTERS]
     class MathText(HTMLParser):
         def __init__(self):
             super().__init__()
@@ -78,10 +66,28 @@ def check_readable_chapter(root, documents, pages):
             if self.depth: self.depth-=1
         def handle_data(self,data):
             if self.depth: self.expressions[-1]+=data
-    rendered=MathText()
-    rendered.feed((root/PAGE).read_text(encoding='utf-8'))
-    assert [x[2:-2] for x in rendered.expressions] == [expand_math(x,report['macros']) for x in expressions], 'HTML mathematical sequence differs from source'
-    return len(expressions)
+    count=0
+    for report,spec in zip(reports,CHAPTERS):
+        source,page=spec['source'],spec['url']
+        main_path=BOOKS[spec['work']]['main']
+        main=(root/records[main_path]['file_url']).read_text(encoding='utf-8-sig')
+        assert report['macro_source']==main_path
+        raw=(root/records[source]['file_url']).read_bytes()
+        expressions=original_math(raw.decode('utf-8-sig'))
+        assert report['source_sha256']==hashlib.sha256(raw).hexdigest()
+        assert report['url']==page
+        assert report['math_expressions']==len(expressions)
+        assert report['math_sequence_sha256']==hashlib.sha256(json.dumps(expressions,ensure_ascii=False).encode()).hexdigest()
+        assert report['macros']==manuscript_macros(main)
+        assert not report['new_proof_review'] and not report['new_lean_execution']
+        for node in report['nodes']:
+            assert node['id'] in pages[page].ids
+            assert 'L'+str(node['line']) in pages[records[source]['url']].ids
+        rendered=MathText()
+        rendered.feed((root/page).read_text(encoding='utf-8'))
+        assert [x[2:-2] for x in rendered.expressions]==[expand_math(x,report['macros']) for x in expressions], ('HTML mathematical sequence differs from source',source)
+        count+=len(expressions)
+    return count
 
 
 def inspect_site(root):

@@ -194,7 +194,7 @@ def validate_claims(root, known_paths):
 
 def render_claim_index(site):
     import html
-    from readable_chapters import readable_url, PAGE
+    from readable_chapters import readable_url, BOOKS
     e = html.escape
     records = site.claims['records']
     proof_search = {}
@@ -227,7 +227,7 @@ def render_claim_index(site):
         routes = [('Read PDF',pdf['url']),('Paper overview',hub),('Lean guide',guide or hub+'#lean'),
                   ('Lean coverage',hub+'#lean'),('Code',hub+'#code'),('Evidence',hub+'#evidence'),
                   ('Worked examples',hub+'#worked-examples-for-this-work')]
-        if wid == 'paper-ii': routes.insert(0, ('Readable chapter', PAGE))
+        if wid in BOOKS: routes.insert(0, ('Read chapters', BOOKS[wid]['index']))
         body += ''.join('<a href="'+url+'">'+label+'</a>' for label,url in routes)
         body += '<a href="'+hub+'#written-proofs">Written proofs</a><a href="search.html?work='+wid+'">Search this paper</a></nav><p class="status">'+('The original record keeps its status and scope. A mapped module does not imply that every statement in this paper has been formalized.' if work['mode']=='correspondence' else 'Statement types are taken from the manuscript. Conjectures, definitions, classical inputs and certificates remain distinct. Lean mappings for individual claims are not assigned by this index.')+'</p>'
         for row in rows:

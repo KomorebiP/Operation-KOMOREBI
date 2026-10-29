@@ -169,9 +169,9 @@ class ReadingDocuments:
         hub = 'collection/works/'+work+'.html'
         pdf = self.primary_pdf(work)
         routes = [('Paper overview', hub)]
-        if work == 'paper-ii':
-            from readable_chapters import PAGE
-            routes.append(('Readable chapter', PAGE))
+        from readable_chapters import BOOKS
+        if work in BOOKS:
+            routes.append(('Read chapters', BOOKS[work]['index']))
         if pdf: routes.append(('Read PDF', pdf['url']))
         if work in self.manuscript_roots: routes.append(('Claims', 'claims.html#'+work))
         routes += [('Written proofs', hub+'#written-proofs'), ('Lean', hub+'#lean'), ('Code', hub+'#code')]

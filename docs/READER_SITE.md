@@ -64,22 +64,32 @@ The build writes `documents/index.json` with the published file paths and source
 identities. The site checker verifies those copies, embedded reader targets,
 linked images and runtime integrity, in addition to HTML links and reading ZIPs.
 
-## Readable chapter pilot
+## Readable chapters
 
-[The bounded chapter renderer](../tools/readable_chapters.py) publishes Paper II's
-`02_coordinates.tex` as readable HTML alongside its original source page. It
-handles that chapter's prose, statement environments, references, equations and
-receipt-bound figures. Unsupported prose commands and unresolved references stop
-the build. It does not execute TeX. Mathematical macros come from the retained
-main manuscript, with the first definition preserved for `providecommand`.
+[The chapter renderer](../tools/readable_chapters.py) publishes the main chapters
+of Papers II and III as readable HTML alongside their original source pages.
+Paper II's current verification snapshot has its own reading page. Each paper
+has a chapter index and bibliography, with links between chapters and recorded
+claim locations. Visual atlases remain available as on-site PDFs.
+
+The renderer handles the selected manuscripts' prose, statement environments,
+references, equations, tables, code listings and receipt-bound figures. Its book
+configuration is explicit. The build checks chapter order against the main TeX
+file. Unsupported prose commands and unresolved references stop the build.
+It does not execute TeX. Mathematical macros and formal scope labels come from
+the retained main manuscript, with the first definition preserved for
+`providecommand`. Bibliography links use citation keys from each current BibTeX
+source so that they do not depend on a historical compiled bibliography.
 
 The build compares the full sequence of mathematical expressions with the source
-and writes `documents/readable-paper-ii.json` with source identity, locations,
-macro definitions and conversion counts. Original line URLs and claim records
-remain available. Search adds chapter passages and exact equation excerpts.
-Extend this pilot only after checking a new chapter's syntax, source fidelity,
-figures, navigation and rendered mathematics. Passing these checks does not
-establish mathematical correctness or new Lean coverage.
+and writes `documents/readable-chapters.json` with source identities, locations,
+macro definitions and conversion counts. The site checker also compares every
+rendered math input with its source expansion. The original pilot's
+`documents/readable-paper-ii.json` remains available. Original line URLs and claim
+records are preserved. Search includes chapter passages and equation excerpts.
+Extend the selected books only after checking syntax, source fidelity, figures,
+navigation and rendered mathematics. Passing these checks does not establish
+mathematical correctness or new Lean coverage.
 
 ## Publication
 
