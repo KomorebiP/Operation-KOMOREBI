@@ -1,7 +1,7 @@
 """Regression cases for notation extraction and source fidelity."""
 import unittest
 from notation_index import (passages, symbol_tokens, index_document, macro_definitions,
-                            aliases, display_math, symbol_id, context_for)
+                            aliases, display_math, symbol_id, context_for,table_preview)
 
 
 class NotationTests(unittest.TestCase):
@@ -65,6 +65,19 @@ $x+\alpha$ % $WRONG$
         text=r'Cost \$5. Row\\$x$ and $y\$z$.'
         found=passages(text,'.tex')
         self.assertEqual([p[2] for p in found],['x',r'y\ z'])
+
+    def test_table_preview_retains_the_whole_subject_not_its_index_letters(self):
+        row=r'$\Pcal=(P_\alpha)$ & Packet system & Pairwise annihilating idempotents.'
+        result=table_preview(row,{'Pcal':r'\mathcal{P}'})
+        self.assertEqual(result['tex'],r'\Pcal=(P_\alpha)')
+        self.assertEqual(result['label'],'Packet system')
+        self.assertEqual(result['meaning'],'Pairwise annihilating idempotents.')
+
+    def test_two_column_table_does_not_invent_a_name(self):
+        result=table_preview(r'$x_i$ & The coordinate indexed by $i$.',{})
+        self.assertEqual(result['label'],'')
+        self.assertEqual(result['tex'],'x_i')
+        self.assertIsNone(table_preview('Ordinary prose without a table.',{}))
 
 
 if __name__=='__main__':unittest.main()

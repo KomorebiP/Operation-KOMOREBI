@@ -348,14 +348,39 @@ def preview_occurrences(data,entry):
     return result
 
 
+def table_preview(context,macros):
+    """Read a table's own symbol/name/meaning cells without defining its atoms."""
+    clean=context
+    for start,end,_ in reversed(passages(context,'.tex')):
+        clean=clean[:start]+blank(clean[start:end])+clean[end:]
+    breaks=[m.start() for m in re.finditer(r'(?<!\\)&',clean)]
+    if not breaks:return None
+    bounds=[-1,*breaks,len(context)]
+    cells=[context[a+1:b].strip() for a,b in zip(bounds,bounds[1:])]
+    math=passages(cells[0],'.tex')
+    if not math or len(cells) not in (2,3):return None
+    symbol=', '.join(item[2].strip() for item in math)
+    label=context_text(cells[1],macros) if len(cells)==3 else ''
+    meaning=context_text(cells[-1],macros)
+    if len(label)>100 or len(symbol)>300:return None
+    return dict(tex=symbol,display=display_math(symbol,macros),label=label,meaning=meaning[:450])
+
+
+def symbol_names(tex,display):
+    # Whole-symbol aliases rank above words which merely occur in its context.
+    return sorted({s for s in (tex,plain(tex),plain(display) if display else '',
+                              re.sub(r'\\(?=[A-Za-z])','',tex)) if s})
+
+
 def build(site):
     e=html.escape
     config=json.loads((site.root/'manifests/notation-sources.json').read_bytes())
-    all_entries=[];works=[]
+    all_entries=[];works=[];contexts=[];context_ids={};search_entries=[]
     totals=collections.Counter()
     script_hash=hashlib.sha256((site.root/'website/assets/notation.js').read_bytes()).hexdigest()[:12]
     def script(page):
-        return '<script defer src="'+site.rel('assets/notation.js',page)+'?v='+script_hash+'"></script>'
+        search_hash=hashlib.sha256((site.root/'website/assets/notation-search.js').read_bytes()).hexdigest()[:12]
+        return '<script defer src="'+site.rel('assets/notation-search.js',page)+'?v='+search_hash+'"></script><script defer src="'+site.rel('assets/notation.js',page)+'?v='+script_hash+'"></script>'
     for component in site.registry['components']:
         work=component['id'];data=extract_work(site,work)
         page='notation/'+work+'.html';data_url='notation/data/'+work+'.json'
@@ -364,6 +389,7 @@ def build(site):
         row=dict(id=work,title=data['title'],url=page,data_url=data_url,sources=len(data['sources']),
                  passages=npass,symbols=count,pdfs=len(data['pdfs']),
                  data_sha256=hashlib.sha256((site.output/data_url).read_bytes()).hexdigest())
+        row['short_title']=data['title'].split(':',1)[0] if work.startswith('paper-') else data['title']
         works.append(row)
         totals.update({k:row[k] for k in ('sources','passages','symbols')})
         body='<p class="eyebrow">Notation by work</p><h1>'+e(data['title'])+'</h1>'
@@ -384,6 +410,15 @@ def build(site):
             item=dict(work=work,url=url,tex=entry['tex'],aliases=entry['aliases'],display=entry['display'],
                       kind=entry['kind'],excerpt=excerpts[0][:350],count=len(entry['occurrences']))
             all_entries.append(item)
+            primary=data['passages'][sample[0]];source=data['sources'][primary['source']]
+            key=(work,source['repository_path'],primary['context'])
+            if key not in context_ids:
+                context_ids[key]=len(contexts)
+                contexts.append(dict(work=work,excerpt=excerpts[0][:450],source_url=source_url(source,primary['line']),
+                    source_label=PurePosixPath(source['repository_path']).name+', line '+str(primary['line']),
+                    table=table_preview(primary['context'],source['macros']) if primary['kind']=='notation-table' else None))
+            search_entries.append({k:v for k,v in item.items() if k!='excerpt'} |
+                                  dict(context=context_ids[key],names=symbol_names(entry['tex'],entry['display'])))
             body+='<details class="notation-entry" id="'+entry['id']+'" data-kind="'+entry['kind']+'" data-search="'+e(search,quote=True)+'"><summary><code>'+e(entry['tex'])+'</code><span>'+KINDS[entry['kind']]+' · '+str(len(entry['occurrences']))+' passages</span></summary>'
             if entry['display']:
                 body+='<p class="notation-display" data-math="'+e(entry['display'],quote=True)+'"></p>'
@@ -410,12 +445,15 @@ def build(site):
                                 work_ids=[work],text='Symbols definitions notation TeX '+data['title']+' '+' '.join(x['tex']+' '+x['aliases'] for x in data['entries'])))
     manifest=dict(version=VERSION,source_revision=site.revision,scope=config['scope'],totals=dict(totals),works=works,entries=all_entries)
     site.write('notation/index.json',json.dumps(manifest,ensure_ascii=False,separators=(',',':'))+'\n')
-    body='<p class="eyebrow">A reference across the collection</p><h1>Notation index</h1><p class="lede">Look up a symbol, find where it is introduced, and keep the paper’s assumptions in view.</p>'
-    body+='<p>'+f'{totals["symbols"]:,}'+' symbol spellings counted separately across '+str(len(works))+' works, from '+f'{totals["passages"]:,}'+' mathematical passages. Each work has a permanent index and links to its papers, claims, proofs, Lean, code and examples.</p>'
-    body+='<p>Try a symbol such as <code>Φ</code>, a name such as <code>alpha</code>, TeX such as <code>\\mathcal{R}</code>, or a word such as <code>packet</code>. Names are search aids. Exact TeX and the original source preserve distinctions that plain text cannot.</p><p><a href="collection/GLOSSARY.html">Glossary of terms</a> · <a href="#works">Browse by work</a> · <a href="#coverage">Coverage and limits</a></p>'
-    body+='<form id="notation-search" data-index="notation/index.json?v='+site.revision+'"><label for="notation-query">Symbol, TeX spelling or words from an excerpt</label><input id="notation-query" name="q" type="search" autocomplete="off" placeholder="Φ, alpha, \\mathcal{R}, packet"><label for="notation-work">Work</label><select id="notation-work"><option value="">All works</option>'+''.join('<option value="'+w['id']+'">'+e(w['title'])+'</option>' for w in works)+'</select><label for="notation-kind">Passage type</label><select id="notation-kind"><option value="">All passages</option>'+''.join('<option value="'+k+'">'+v+'</option>' for k,v in KINDS.items())+'</select><label for="notation-exact"><input id="notation-exact" type="checkbox" name="exact"> Match the exact TeX spelling, including case</label><button type="submit">Find notation</button><button type="reset">Clear search</button></form><p id="notation-status" role="status" aria-live="polite">Choose a work or enter a symbol to search.</p><ol id="notation-results"></ol><button type="button" id="notation-more" hidden>Show more results</button><noscript><p>Search needs JavaScript. Every work index below remains readable without it.</p></noscript>'
-    body+='<section id="works"><h2>Browse by work</h2><div class="notation-work-list">'+''.join('<article><h3><a href="'+w['url']+'">'+e(w['title'])+'</a></h3><p>'+str(w['symbols'])+' spellings · '+str(w['sources'])+' text sources'+(' · Manual notation pass needed' if not w['symbols'] else '')+'</p></article>' for w in works)+'</div></section>'
-    body+='<section id="coverage"><h2>Coverage and limits</h2><p>This is an occurrence index of the selected reading sources, with source passages prioritized when they appear in notation tables, definition environments or introductory sentences. It is not a claim that every symbol has a reviewed definition.</p><p>'+e(config['scope'])+'</p><p>All '+str(len(works))+' works are listed, including those with no detected notation. PDF glyphs, illustrations, unusual TeX syntax and notation written outside math delimiters still need manual coverage. The source list on each work page records exactly what was scanned.</p><p>Repeated letters retain their different contexts. An indexed formula may mention symbols defined elsewhere. The original source is authoritative, and existing completion and confidence assessments are unchanged.</p><p><a download href="notation/index.json">Download the collection index (JSON)</a> · <a href="collection/NOTATION_INDEX.html">How the index is maintained</a></p></section>'+script('notation.html')
+    site.write('notation/search.json',json.dumps(dict(version=2,source_revision=site.revision,works=works,
+               contexts=contexts,entries=search_entries),ensure_ascii=False,separators=(',',':'))+'\n')
+    body='<div class="notation-heading"><p class="eyebrow">Across the collection</p><h1>Notation index</h1><p>Find a symbol and read it in context.</p><p class="notation-links"><a href="collection/GLOSSARY.html">Glossary</a> · <a href="#works">Browse by work</a> · <a href="#coverage">Coverage</a></p></div>'
+    options='<option value="">All works</option>'
+    for label,core in [('Core papers',True),('Books and other works',False)]:
+        options+='<optgroup label="'+label+'">'+''.join('<option value="'+w['id']+'">'+e(w['short_title'])+'</option>' for w in works if w['id'].startswith('paper-')==core)+'</optgroup>'
+    body+='<form id="notation-search" class="notation-search-clean" data-index="notation/search.json?v='+site.revision+'"><div class="notation-query-row"><div><label for="notation-query">Symbol, name or phrase</label><input id="notation-query" name="q" type="search" autocomplete="off" placeholder="α, alpha, packet…" aria-describedby="notation-help"></div><button type="submit">Search</button></div><div class="notation-controls"><div class="notation-work-control"><label for="notation-work">Work</label><select id="notation-work">'+options+'</select></div><details id="notation-options"><summary>More options</summary><label for="notation-kind">Passage type</label><select id="notation-kind"><option value="">All passages</option>'+''.join('<option value="'+k+'">'+v+'</option>' for k,v in KINDS.items())+'</select><label for="notation-exact"><input id="notation-exact" type="checkbox" name="exact"> Exact TeX spelling and case</label></details><button type="reset" class="notation-clear">Clear</button></div><p id="notation-help">Try <button type="button" class="notation-example" data-query="alpha">alpha</button>, <button type="button" class="notation-example" data-query="P_\\alpha">P_α</button> or <button type="button" class="notation-example" data-query="packet">packet</button>. Repeated passages are grouped together.</p></form><p id="notation-status" role="status" aria-live="polite">Enter a symbol or choose a work.</p><ol id="notation-results"></ol><button type="button" id="notation-more" hidden>Show more results</button><noscript><p>Search needs JavaScript. Every work index below remains readable without it.</p></noscript>'
+    body+='<details id="works" class="notation-browse"><summary>Browse all '+str(len(works))+' works</summary><div class="notation-work-list">'+''.join('<article><h3><a href="'+w['url']+'">'+e(w['title'])+'</a></h3><p>'+str(w['symbols'])+' spellings · '+str(w['sources'])+' text sources'+(' · Manual notation pass needed' if not w['symbols'] else '')+'</p></article>' for w in works)+'</div></details>'
+    body+='<details id="coverage" class="notation-browse"><summary>Coverage and how to read the results</summary><p>'+f'{totals["symbols"]:,}'+' spellings across '+str(len(works))+' works, from '+f'{totals["passages"]:,}'+' mathematical passages.</p><p>Exact symbol matches come first. Results that share a source passage are grouped within their work. Open the matching entries to follow each spelling individually. A notation table is quoted as a whole row, so letters mentioned in that row do not acquire the row’s definition.</p><p>'+e(config['scope'])+'</p><p>PDF glyphs, illustrations, unusual TeX syntax and notation outside math delimiters still need manual coverage. Each work lists the files scanned. Source passages remain authoritative and existing confidence assessments are unchanged.</p><p><a download href="notation/index.json">Download the full index (JSON)</a> · <a href="collection/NOTATION_INDEX.html">How the index is maintained</a></p></details>'+script('notation.html')
     site.page('notation.html','Notation index',body)
     site.search.append(dict(title='Notation index',group='Collection',kind='Notation',work_ids=[],url='notation.html',text='Complete notation source coverage symbols Greek letters TeX mathematical definitions'))
     return dict(works=len(works),**dict(totals))
@@ -468,4 +506,13 @@ def verify(root,documents,pages):
         source=indexed[(entry['work'],entry['tex'])]
         assert entry['url']=='notation/'+entry['work']+'.html#'+source['id']
         assert entry['count']==len(source['occurrences'])
+    search=json.loads((root/'notation/search.json').read_bytes())
+    assert search['version']==2 and search['source_revision']==manifest['source_revision']
+    assert len(search['entries'])==len(manifest['entries'])
+    assert {e['url'] for e in search['entries']}=={e['url'] for e in manifest['entries']}
+    for entry in search['entries']:
+        assert search['contexts'][entry['context']]['work']==entry['work']
+    for context in search['contexts']:
+        path,fragment=context['source_url'].split('#',1)
+        assert path in pages and fragment in pages[path].ids
     return dict(works=len(manifest['works']),**dict(totals))

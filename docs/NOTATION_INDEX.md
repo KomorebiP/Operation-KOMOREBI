@@ -6,6 +6,10 @@ The notation index gathers mathematical symbols from the selected reading source
 
 Each entry provides the original spelling, a source excerpt and links to its mathematical passages. The work navigation connects it to the paper, claims, written proofs, Lean, code and worked examples. Links to Lean or code retain the work's existing scope and status.
 
+Search results group matching entries that share a source passage within one work. This keeps a notation table row from appearing repeatedly for every letter it mentions. Open “matching entries in this passage” to follow individual spellings. Exact symbol matches come first, and short queries do not match incidental letters in surrounding prose. A quoted table row retains its whole symbol expression and the source's own name or description.
+
+Choose a work to narrow the results. Passage filters and exact TeX matching are under “More options”. The complete work catalogue and coverage notes can be expanded below the results. The full downloadable index still contains every entry.
+
 ## How to read an entry
 
 The index keeps meanings local to each work. A base symbol and its forms with subscripts or superscripts have separate entries. Repeated uses retain their source locations, including different contexts within the same paper.
