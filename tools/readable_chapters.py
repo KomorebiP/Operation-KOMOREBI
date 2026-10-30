@@ -111,11 +111,14 @@ BOOKS['paper-iv'] = dict(work='paper-iv', label='Paper IV', base=FOURTH_BASE, ma
                         atlas_index='read/paper-iv/atlas/index.html',
                         html_inputs={'atlas-pages': dict(url='read/paper-iv/atlas/index.html',title='Explore the 26 atlas plates in HTML',note='')})
 CHAPTERS += FOURTH_CHAPTERS
+from paper_vi_reading import BOOK as SIXTH_BOOK
+BOOKS['paper-vi'] = SIXTH_BOOK
+CHAPTERS += SIXTH_BOOK['chapters']
 from paper_ix_reading import register as register_paper_ix
 register_paper_ix(BOOKS, CHAPTERS)
 BY_SOURCE = {c['source']:c for c in reversed(CHAPTERS)}
-NUMBERED = {'definition', 'theorem', 'proposition', 'lemma', 'corollary', 'remark', 'example', 'standardfact', 'certificate','boundary','roadmap','construction','classicalinput'}
-KIND_NAMES = {'standardfact':'Standard fact','certificate':'Numerical certificate','text':'Passage','roadmap':'Formalization target','classicalinput':'Classical input'}
+NUMBERED = {'definition', 'theorem', 'proposition', 'lemma', 'corollary', 'remark', 'example', 'standardfact', 'certificate','boundary','roadmap','construction','classicalinput','classical','conjecture'}
+KIND_NAMES = {'standardfact':'Standard fact','certificate':'Numerical certificate','text':'Passage','roadmap':'Formalization target','classicalinput':'Classical input','classical':'Classical input'}
 HEADINGS = {'part':2,'section':2,'subsection':3,'subsubsection':4,'paragraph':5}
 MATH_PATTERN = re.compile(r'(?<!\\)\$(.*?)(?<!\\)\$|\\\[(.*?)\\\]|(\\begin\{align\*\}.*?\\end\{align\*\})|\\\((.*?)\\\)',re.S)
 PANELS = {'keyidea': 'The central idea', 'interpretation': 'How to read the result',
@@ -149,17 +152,22 @@ def presentation_tex(text):
     """Mask known print-only layout, preserving all source line numbers."""
     mask = lambda m: ''.join('\n' if c == '\n' else ' ' for c in m[0])
     text = re.sub(r'\\(?:begin|end)\{center\}|\\begin\{multicols\}\{2\}|\\end\{multicols\}', mask, text)
-    text = re.sub(r'\\addcontentsline\{toc\}\{section\}\{[^{}]*\}', mask, text)
+    text = re.sub(r'\\addcontentsline\{toc\}\{(?:section|part)\}\{[^{}]*\}', mask, text)
     text = re.sub(r'\\fontsize\{[\d.]+\}\{[\d.]+\}|\\setstretch\{[\d.]+\}|\\selectfont\b', mask, text)
     text = re.sub(r'\\setlength\{\\(?:parindent|parskip)\}\{[^{}]*\}', mask, text)
     text = re.sub(r'\\(?:begin|end)\{document\}|\\(?:KomorebiCover|tableofcontents|listoffigures)\b|\\pagenumbering\{arabic\}', mask, text)
     # This exact wrapper only changes spacing in the printed bibliography.
     text = re.sub(r'\\let\\prscbibliography\\thebibliography\s*\\renewcommand\{\\thebibliography\}\[1\]\{\\prscbibliography\{#1\}\\setlength\{\\itemsep\}\{0pt\}\\setlength\{\\parsep\}\{0pt\}\}', mask, text)
     text = re.sub(r'\\bibliographystyle\{alpha\}', mask, text)
+    text = re.sub(r'\\graphicspath\{\{(?:core_figures|extension_figures)/\}\}', mask, text)
+    text = re.sub(r'\\(?:FloatBarrier|listoftables|large|par)\b', mask, text)
+    text = re.sub(r'\\setcounter\{(?:section|figure|table)\}\{0\}', mask, text)
+    text = re.sub(r'\\renewcommand\{\\(?:thesection|theHsection|thefigure|theHfigure|thetable|theHtable)\}\{[ER]\.?\\arabic\{(?:section|figure|table)\}\}', mask, text)
     text = text.replace(r'\begin{abstract}', r'\begin{readerroadmap}[title={Abstract}]').replace(r'\end{abstract}', r'\end{readerroadmap}')
     while (match := re.search(r'\\KomorebiOpeningNote\{', text)):
         value,end = group(text, match.end()-1)
         text = text[:match.start()] + r'\begin{readerroadmap}[title={Reading orientation}]' + value + r'\end{readerroadmap}' + text[end:]
+    text = text.replace(r'\fbox{\begin{minipage}{0.93\textwidth}', r'\begin{readerroadmap}').replace(r'\end{minipage}}', r'\end{readerroadmap}')
     while (match := re.search(r'\\modelfigure\{', text)):
         path,end = group(text, match.end()-1)
         caption,end = group(text, end)
@@ -217,7 +225,7 @@ def manuscript_macros(main, required=None):
         result[m[2]] = value
     if required is None:
         required = {'CC','Dfun','Thetafun','Pcal','id'} if r'\newcommand{\Dfun}' in main else {'Pcal', 'Qcal', 'Rcal', 'Scal', 'End', 'id', 'bbk'}
-    if not required <= set(result):
+    if not set(required) <= set(result):
         raise ValueError('Missing manuscript macro definitions')
     # Only the literal, one-argument math wrappers used by the reading editions.
     for name in ('cl', 'closure', 'norm', 'mat', 'abs'):
@@ -226,6 +234,12 @@ def manuscript_macros(main, required=None):
             value, _ = group(main, match.end())
             if re.search(r'#(?!1)', value): raise ValueError('Unsupported math macro argument')
             result[name] = dict(arguments=1, body=value)
+    # The retained Paper VI source uses this literal two-argument inner product.
+    match = re.search(r'\\newcommand\{\\ip\}\[2\]', main)
+    if match:
+        value, _ = group(main, match.end())
+        if value != r'\left\langle#1,#2\right\rangle': raise ValueError('Unsupported inner-product macro')
+        result['ip'] = dict(arguments=2, body=value)
     return result
 
 
@@ -256,16 +270,28 @@ def expand_math(tex, macros):
             value=macros.get(match[1])
             pos=match.end()
             if isinstance(value, dict):
-                while pos<len(tex) and tex[pos].isspace(): pos+=1
-                if tex[pos:pos+1]!='{': raise ValueError('Math macro requires a braced argument: '+match[1])
-                argument,pos=group(tex,pos)
-                pieces.append('{'+value['body'].replace('#1',argument)+'}')
+                body=value['body']
+                for index in range(1,value['arguments']+1):
+                    while pos<len(tex) and tex[pos].isspace(): pos+=1
+                    if tex[pos:pos+1]=='{': argument,pos=group(tex,pos)
+                    else:
+                        token=re.match(r'\\[A-Za-z]+|\\.|[^{}]',tex[pos:])
+                        if not token: raise ValueError('Missing math macro argument: '+match[1])
+                        argument=token[0];pos+=token.end()
+                    # Macro substitution joins tokens, not command-name strings.
+                    # Separate a control word from a following literal letter.
+                    def substitute(marker):
+                        left=' ' if re.search(r'\\[A-Za-z]+$',body[:marker.start()]) and re.match(r'[A-Za-z]',argument) else ''
+                        right=' ' if re.search(r'\\[A-Za-z]+$',argument) and re.match(r'[A-Za-z]',body[marker.end():]) else ''
+                        return left+argument+right
+                    body=re.sub('#'+str(index),substitute,body)
+                pieces.append('{'+body+'}')
             else: pieces.append('{'+value+'}' if value is not None else match[0])
         pieces.append(tex[pos:])
         expanded=''.join(pieces)
         # unicode-math's upright alphabet has the same presentation here as
         # MathJax's supported upright command; retain the original in receipts.
-        if expanded == tex: return re.sub(r'\\symup\b', r'\\mathrm', tex)
+        if expanded == tex: return re.sub(r'\\bm\b',r'\\boldsymbol',re.sub(r'\\symup\b', r'\\mathrm', tex))
         tex = expanded
     raise ValueError('Recursive manuscript macro')
 
@@ -297,6 +323,10 @@ class Chapter:
         self.references = []
         state = state or {}
         self.section = state.get('section',section_offset)
+        self.section_prefix = state.get('section_prefix','')
+        self.number_floats = state.get('number_floats',False)
+        self.figure = state.get('figure',0)
+        self.table = state.get('table',0)
         self.part = state.get('part',0)
         self.appendix = state.get('appendix',False)
         self.subsection = self.subsubsection = self.counter = 0
@@ -306,7 +336,7 @@ class Chapter:
         if check_refs: self.validate_references()
 
     def section_number(self):
-        return chr(64+self.section) if self.appendix else str(self.section)
+        return chr(64+self.section) if self.appendix else self.section_prefix+str(self.section)
 
     def line(self, pos): return self.text.count('\n', 0, pos)+1
 
@@ -366,6 +396,10 @@ class Chapter:
                 if kind in NUMBERED:
                     self.counter += 1
                     number = self.section_number()+'.'+str(self.counter)
+                if self.number_floats and (kind=='figure' or kind in {'table','longtable'} and r'\caption' in body):
+                    counter='figure' if kind=='figure' else 'table'
+                    setattr(self,counter,getattr(self,counter)+1)
+                    number=self.section_prefix+str(getattr(self,counter))
                 node = dict(kind=kind, title=title, number=number, body=body)
             else:
                 match = re.search(r'\\(?:part|section|subsection|subsubsection|paragraph)\*?\{|\\appendix\b|\\begin\{(?:'+
@@ -430,8 +464,8 @@ class Chapter:
                     out.append('§' if name=='S' else '’')
                     if text[pos:pos+1]==' ': pos+=1
                     continue
-                if name=='newline':
-                    out.append('<br>')
+                if name in {'newline','quad','qquad'}:
+                    out.append('<br>' if name=='newline' else ' ')
                     continue
                 option = None
                 if text[pos:pos+1]=='[': option,pos=group(text,pos,'[',']')
@@ -512,7 +546,7 @@ class Chapter:
         listing = re.search(r'\\begin\{(enumerate|itemize)\}(?:\[([^\]]*)\])?(.*?)\\end\{\1\}',text,re.S)
         if listing:
             option=listing[2] or ''
-            options={'':'',r'label=(\alph*)':'a',r'label=(\roman*)':'i',r'label=\textbf{S\arabic*.},leftmargin=3.2em':'S',
+            options={'':'',r'leftmargin=2em':'',r'label=(\alph*)':'a',r'label=(\roman*)':'i',r'label=\textbf{S\arabic*.},leftmargin=3.2em':'S',
                      r'label=\textbf{I.\arabic*.},leftmargin=*,itemsep=0.3em,topsep=0.4em':'I'}
             if option not in options: raise ValueError('Unsupported list labels '+option)
             items=re.split(r'\\item\b',listing[3])
@@ -595,7 +629,7 @@ def validate_monolithic(main, config):
         if i and specs[i-1]['end_line']+1!=spec['start_line']: raise ValueError('Reading ranges have a gap or overlap')
         text=chapter_text(main,spec)
         headings=re.findall(r'\\section\{([^{}]+)\}',text)
-        if headings!=([spec['title']] if i else []): raise ValueError('Manuscript section order changed: '+spec['title'])
+        if headings!=([spec['title']] if i and spec.get('section_heading',True) else []): raise ValueError('Manuscript section order changed: '+spec['title'])
     if [m for s in specs for m in original_math(chapter_text(main,s))]!=original_math(main.split(r'\begin{document}',1)[1]):
         raise ValueError('Manuscript mathematics omitted by chapter ranges')
 
@@ -649,8 +683,10 @@ def prepare(reader):
         macros=manuscript_macros(main, config.get('required_macros'))
         chapters=[]
         labels={}
-        state={}
+        state={'number_floats':config.get('number_floats',False)}
         for spec in config['chapters']:
+            if 'section_prefix' in spec:
+                state.update(section=0,appendix=False,figure=0,table=0,section_prefix=spec['section_prefix'])
             reader.add(spec['source'])
             raw=reader.site.read_source(reader.records[spec['source']])
             chapter=Chapter(chapter_text(raw.decode('utf-8-sig'),spec),macros,state=state,check_refs=False)
@@ -665,7 +701,7 @@ def prepare(reader):
                 if label in labels: raise ValueError('Duplicate book label '+label)
                 node['url']=chapter.url
                 labels[label]=node
-            state={'section':chapter.section,'appendix':chapter.appendix,'part':chapter.part}
+            state={'section':chapter.section,'appendix':chapter.appendix,'part':chapter.part,'section_prefix':chapter.section_prefix,'figure':chapter.figure,'table':chapter.table,'number_floats':chapter.number_floats}
             chapters.append((spec,raw,chapter))
         bib_text=reader.site.read_source(reader.records[config['bib']]).decode('utf-8-sig')
         references=[] if config.get('bibliography_source_only') else (manuscript_bibliography if config.get('inline_bibliography') else bibliography)(bib_text)
@@ -707,10 +743,11 @@ def render_table(node,chapter,reading_aid=None):
     caption=''
     if node['kind']=='table':
         content=re.sub(r'^\\centering\s*','',content)
-        if not content.startswith(r'\caption'): raise ValueError('Table caption is missing')
-        caption,end=group(content,len(r'\caption'))
-        content=content[end:].strip()
-        content=re.sub(r'^\\label\{[^{}]+\}\s*','',content)
+        caption_match=re.search(r'\\caption\{',content)
+        if not caption_match: raise ValueError('Table caption is missing')
+        caption,end=group(content,caption_match.end()-1)
+        content=(content[:caption_match.start()]+content[end:]).strip()
+        content=re.sub(r'\\label\{[^{}]+\}\s*','',content).strip()
         start=re.match(r'\\begin\{(tabularx|tabular)\}',content)
         if not start: raise ValueError('Unsupported table environment')
         pos=start.end()
@@ -741,7 +778,7 @@ def render_table(node,chapter,reading_aid=None):
         if normalize(first_header)!=normalize(repeated) or original_math(repeated):
             raise ValueError('Unsupported repeated table header')
         content=first+tail
-    content=re.sub(r'\\(?:toprule|midrule|bottomrule|endfirsthead|endhead|addlinespace)\b','',content)
+    content=re.sub(r'\\(?:toprule|midrule|bottomrule|endfirsthead|endhead|endfoot|addlinespace)\b','',content)
     rows=[split_cells(row,'&') for row in split_cells(content,r'\\') if row.strip()]
     if not rows or any(len(row)!=len(rows[0]) for row in rows): raise ValueError('Unexpected table column structure')
     row_header=None
@@ -857,6 +894,8 @@ def render_book(reader,book):
     reports=[]
     descriptions=json.loads((site.root/config['figure_descriptions']).read_bytes()) if config.get('figure_descriptions') else {}
     described=set()
+    previews=json.loads((site.root/config['figure_previews']).read_bytes())['figures'] if config.get('figure_previews') else {}
+    used_previews=set()
     table_aids=config.get('table_reading_aids',{})
     aided_tables=set()
     for spec,raw,chapter in book['chapters']:
@@ -892,13 +931,25 @@ def render_book(reader,book):
                 reading_links=' · '.join(filter(None,[section_links,reading_links]))
                 body+=passage_links(links,reading_links)
             elif kind=='figure':
-                match=re.match(r'\s*\\centering\s*\\includegraphics\[width=0?\.9[68]\\(?:textwidth|linewidth)\]\{([^}]+)\}\s*\\caption',node['body'])
+                match=re.match(r'\s*\\centering\s*\\includegraphics\[width=(?:0?\.[0-9]+)\\(?:textwidth|linewidth)\]\{([^}]+)\}\s*\\caption',node['body'])
                 if not match: raise ValueError('Unsupported figure')
                 caption,end=group(node['body'],match.end())
                 if re.sub(r'\\label\{[^}]+\}','',node['body'][end:]).strip(): raise ValueError('Unhandled figure content')
-                path=config['base']+'figures/'+match[1].removesuffix('.pdf')+'.png'
+                image_name=match[1].removesuffix('.pdf')+'.png'
+                path=config['base']+(image_name if '/' in image_name else spec.get('figure_directory',config.get('figure_directory','figures'))+'/'+image_name)
                 image=reader.image_url(path,page)
-                if not image: raise ValueError('Missing receipt-bound figure '+path)
+                if not image:
+                    pdf_path=path.removesuffix('.png')+'.pdf'
+                    preview=previews.get(pdf_path)
+                    if not preview: raise ValueError('Missing receipt-bound figure '+path)
+                    original=site.read_source(reader.owned[pdf_path])
+                    preview_raw=(site.root/'website'/preview['asset']).read_bytes()
+                    if hashlib.sha256(original).hexdigest()!=preview['source_sha256'] or hashlib.sha256(preview_raw).hexdigest()!=preview['asset_sha256']:
+                        raise ValueError('Review the PDF figure preview: '+pdf_path)
+                    dest=site.output/preview['asset']
+                    dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(preview_raw)
+                    image=site.rel(preview['asset'],page)
+                    used_previews.add(pdf_path)
                 alt=plain_math(caption.replace('$',''))[0]
                 description_link=''
                 if config.get('figure_descriptions'):
@@ -909,7 +960,11 @@ def render_book(reader,book):
                     described.add(name)
                     alt=description['alt']
                     description_link='<p><a href="'+site.rel(config['diagram_guide'],page)+'#'+description['anchor']+'">Text description of this figure</a></p>'
-                dimensions=reader.images[path]
+                if path in reader.images: dimensions=reader.images[path]
+                else:
+                    from reader_documents import png_dimensions
+                    width,height=png_dimensions(preview_raw)
+                    dimensions=dict(width=width,height=height)
                 size=' width="'+str(dimensions['width'])+'" height="'+str(dimensions['height'])+'"'
                 body+='<figure id="'+node['id']+'" tabindex="-1"><img src="'+image+'"'+size+' alt="'+e(alt,quote=True)+'" loading="lazy"><figcaption>'+chapter.inline(caption)+'</figcaption>'+description_link+passage_links(links)+'</figure>'
             elif kind in {'table','longtable','tabularx'}:
@@ -968,6 +1023,7 @@ def render_book(reader,book):
         reports.append(report)
         if 'start_line' in spec: report.update(start_line=spec['start_line'],end_line=spec['end_line'])
         if source==SOURCE: site.write('documents/readable-paper-ii.json',json.dumps(report,ensure_ascii=False,indent=2)+'\n')
+    if used_previews!=set(previews): raise ValueError('Unused PDF figure previews for '+work)
     if described!=set(descriptions): raise ValueError('Unused figure descriptions for '+work)
     if aided_tables!=set(table_aids): raise ValueError('Review unused table reading aids for '+work)
     render_book_index(reader,book,reports)
@@ -993,6 +1049,9 @@ def render_book_index(reader,book,reports):
     abstract=re.search(r'\\begin\{abstract\}(.*?)\\end\{abstract\}',book['main'],re.S)
     if abstract:
         parser=Chapter('',book['macros'])
+        parser.url=page
+        parser.labels=book['chapters'][0][2].labels
+        parser.citations={r['key']:(r['key'],parser.relative(config['bib_page'])+'#ref-'+r['key']) for r in book['references']}
         body+='<section><h2>Abstract</h2>'+parser.paragraphs(abstract[1])+'</section>'
     body+='<h2>PDF and companion guides</h2><ul>'
     for record in reader.records.values():

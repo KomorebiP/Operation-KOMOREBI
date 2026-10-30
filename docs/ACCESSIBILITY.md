@@ -32,7 +32,7 @@ so the next Tab continues from that section. These section links also work
 without JavaScript. Work pages keep their existing paper, proof, Lean, code
 and example routes. Readable chapters keep their chapter contents.
 
-The HTML chapters of Papers I–IV open with repeated source and reference links
+The HTML chapters of Papers I–IV and VI open with repeated source and reference links
 hidden from the reading flow. **Show source and reference links** reveals each
 passage’s permalink, source line, claim record and related resources. The choice
 is remembered in this browser when local storage is available. **Read proof**,
@@ -348,3 +348,11 @@ retained Apache 2.0 license. The build verifies the pinned viewer and each
 published document against its source identity. PDF scripting is disabled.
 
 [Reading routes](READING_ROUTES.md) · [Glossary](GLOSSARY.md) · [Project statement](PROJECT_STATEMENT.md)
+
+Paper VI has 46 manuscript sections across Parts I–III, orientation pages and
+a bibliography in HTML. Its ordinary, E and R section numbering follows the
+retained edition. Statements link to their recorded proofs and source lines.
+The formalization ledger has a caption and row headers for its 33 scoped
+results. Figures keep the original captions; 15 PDF-only figures have
+source-bound web previews. The worked visual atlas remains in the PDF. These
+reading changes do not add a proof audit or a fresh Lean replay.
