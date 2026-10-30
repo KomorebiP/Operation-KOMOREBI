@@ -255,7 +255,11 @@ Jump to a work:
 ### [Special Functions](../works/monographs-special-functions.md#written-proofs)
 
 - [Read PDF](../../monographs/special-functions/books/Special_Functions.pdf)
+- [Packet Realization Core and correction register (PDF)](../../monographs/special-functions/series/Komorebi_Special_Functions_Consolidated_Manuscript_v0.1.pdf)
+- [Original Series Collected Reader (PDF)](../../monographs/special-functions/series/Komorebi_Special_Functions_Complete_Reader_v0.1.pdf)
 - [Manuscript text (TeX)](../../monographs/special-functions/monograph/main.tex)
+- [Proof map and appendices (TeX)](../../monographs/special-functions/monograph/sections/proof_map.tex)
+- [Coupled formal claim map](../../monographs/special-functions/formalization/Block01/CLAIM_MAP.json)
 - [Return to this work’s written proofs section](../works/monographs-special-functions.md#written-proofs)
 - [Work overview](../works/monographs-special-functions.md)
 - [Status and evidence](../STATUS_CATALOG.md#monographs-special-functions)

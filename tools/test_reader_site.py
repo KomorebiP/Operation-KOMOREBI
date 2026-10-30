@@ -622,6 +622,34 @@ class ReaderSiteTests(unittest.TestCase):
         self.assertIn('Skowroński.',rendered)
         self.assertIn('<a href="https://doi.org/example">Original DOI</a>',rendered)
 
+    def test_authored_figures_retain_captions_and_intrinsic_dimensions(self):
+        rewrite=Rewriter(lambda value,image:value)
+        rewrite.feed('<figure><img src="plot.png" width="1820" height="884" '
+                     'loading="lazy" alt="Two coupled functions" onerror="bad()">'
+                     '<figcaption>Original scientific plate.</figcaption></figure>')
+        rendered=''.join(rewrite.out)
+        self.assertIn('<figure>',rendered)
+        self.assertIn('<figcaption>Original scientific plate.</figcaption></figure>',rendered)
+        self.assertIn('width="1820" height="884"',rendered)
+        self.assertIn('loading="lazy"',rendered)
+        self.assertNotIn('onerror',rendered)
+
+    def test_paper_vi_table_reading_aids_cover_every_retained_table(self):
+        import re
+        from paper_vi_reading import BOOK
+        source=(Path(__file__).resolve().parents[1]/BOOK['main']).read_text(encoding='utf-8-sig')
+        tables=list(re.finditer(r'\\begin\{(?:table|longtable)\}',source))
+        aids=BOOK['table_reading_aids']
+        self.assertEqual(set(aids), {'L'+str(source.count('\n',0,m.start())+1) for m in tables})
+        for match in tables:
+            key='L'+str(source.count('\n',0,match.start())+1)
+            header=source[source.index(r'\toprule',match.end())+len(r'\toprule'):].lstrip().splitlines()[0]
+            cells=[cell.strip() for cell in header.removesuffix(r'\\').split('&')]
+            self.assertEqual(cells,aids[key]['headers'])
+            self.assertEqual(aids[key]['row_header_column'],0)
+            if match[0]==r'\begin{table}':
+                self.assertNotIn('caption',aids[key])
+
     def test_navigation_has_nested_relative_links_and_current_page(self):
         from html.parser import HTMLParser
         class Links(HTMLParser):
@@ -635,8 +663,11 @@ class ReaderSiteTests(unittest.TestCase):
         self.assertEqual([a['href'] for a in links if a.get('aria-current')=='page'], ['GLOSSARY.html'])
         self.assertIn('../search.html', [a['href'] for a in links])
         self.assertIn('PHYSICS_COLLECTION.html', [a['href'] for a in links])
-        self.assertEqual(len(links),15)
-        self.assertEqual(len({a['href'] for a in links}),15)
+        self.assertEqual(len(links),16)
+        self.assertEqual(len({a['href'] for a in links}),16)
+        self.assertIn('SPECIAL_FUNCTIONS.html', [a['href'] for a in links])
+        special=Links(site_navigation('collection/SPECIAL_FUNCTIONS.html')).links
+        self.assertEqual([a['href'] for a in special if a.get('aria-current')=='page'], ['SPECIAL_FUNCTIONS.html'])
         physics=Links(site_navigation('collection/PHYSICS_COLLECTION.html')).links
         self.assertEqual([a['href'] for a in physics if a.get('aria-current')=='page'], ['PHYSICS_COLLECTION.html'])
         search=Links(site_navigation('search.html')).links
