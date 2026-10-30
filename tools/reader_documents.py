@@ -10,6 +10,17 @@ from urllib.parse import quote, unquote, urlsplit
 TEXT_SUFFIXES = {'.md', '.tex', '.txt', '.json', '.lean', '.py', '.bib', '.bbl', '.c', '.h'}
 
 
+def png_dimensions(raw):
+    """Read the intrinsic size without decoding or changing a retained image."""
+    if len(raw)<33 or raw[:16]!=b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR':
+        raise ValueError('A PNG image must have its complete IHDR header')
+    width=int.from_bytes(raw[16:20],'big')
+    height=int.from_bytes(raw[20:24],'big')
+    if not 0<width<2**31 or not 0<height<2**31:
+        raise ValueError('Invalid PNG image dimensions')
+    return width,height
+
+
 def page_path(work, path):
     name = re.sub(r'[^a-z0-9]+', '-', PurePosixPath(path).stem.lower()).strip('-')[:70] or 'document'
     identity = hashlib.sha256(path.encode()).hexdigest()[:12]
@@ -154,6 +165,9 @@ class ReadingDocuments:
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(raw)
         self.images[path] = {**entry, 'file_url': dest}
+        if PurePosixPath(path).suffix.lower()=='.png':
+            width,height=png_dimensions(raw)
+            self.images[path].update(width=width,height=height)
         return quote(self.site.rel(dest, page), safe='/')
 
     def resolve(self, path, page, fragment=''):

@@ -193,6 +193,8 @@ figures and the formalization ledger. The build checks all 1,041 mathematical
 expressions in the main document, in their original order. Chapter links keep
 the line numbers from the single TeX manuscript.
 The preserved formal release and its stated scope remain unchanged.
+Chapter figures and atlas drawings reserve their image dimensions during loading,
+helping keep linked passages in place as the diagrams appear.
 
 The [Paper IV formalization ledger](https://komorebip.github.io/Operation-KOMOREBI/read/paper-iv/formalization-ledger.html#L2988)
 has a named table with manuscript records marked as row headers, so assistive

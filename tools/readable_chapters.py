@@ -875,7 +875,9 @@ def render_book(reader,book):
                     described.add(name)
                     alt=description['alt']
                     description_link='<p><a href="'+site.rel(config['diagram_guide'],page)+'#'+description['anchor']+'">Text description of this figure</a></p>'
-                body+='<figure id="'+node['id']+'" tabindex="-1"><img src="'+image+'" alt="'+e(alt,quote=True)+'" loading="lazy"><figcaption>'+chapter.inline(caption)+'</figcaption>'+description_link+passage_links(links)+'</figure>'
+                dimensions=reader.images[path]
+                size=' width="'+str(dimensions['width'])+'" height="'+str(dimensions['height'])+'"'
+                body+='<figure id="'+node['id']+'" tabindex="-1"><img src="'+image+'"'+size+' alt="'+e(alt,quote=True)+'" loading="lazy"><figcaption>'+chapter.inline(caption)+'</figcaption>'+description_link+passage_links(links)+'</figure>'
             elif kind in {'table','longtable','tabularx'}:
                 aid=table_aids.get(node['id'])
                 if aid: aided_tables.add(node['id'])

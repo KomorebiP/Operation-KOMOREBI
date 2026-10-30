@@ -10,6 +10,7 @@ from readable_chapters import (Chapter, FOURTH_BASE, HEADINGS, PANELS, MATH_PATT
                                expand_math, group, manuscript_macros, original_math,
                                passage_links, plain_math, reading_options, render_table)
 from paper_iv_atlas_descriptions import FIGURES
+from reader_documents import png_dimensions
 
 SOURCE=FOURTH_BASE+'atlas-pages.tex'
 DEFINITIONS=FOURTH_BASE+'atlas-definitions.tex'
@@ -106,7 +107,8 @@ def prepare(reader):
         if digest(source)!=receipt['source_sha256'] or digest(image)!=receipt['image_sha256']:
             raise ValueError('Atlas drawing or rendered image changed: '+name)
         nodes=drawing_nodes(source.decode('utf-8-sig'))
-        figures[name]=dict(receipt=receipt,nodes=nodes,description=description,order=transcript_order(description,nodes))
+        width,height=png_dimensions(image)
+        figures[name]=dict(receipt=receipt,nodes=nodes,description=description,order=transcript_order(description,nodes),width=width,height=height)
     used=[name for p in selected for name in re.findall(r'\\vfig\{([^{}]+)\}',p['body'])]
     if sorted(used)!=sorted(FIGURES): raise ValueError('Every atlas drawing must appear once')
     references={}
@@ -182,7 +184,8 @@ def render_drawing(figure, chapter, reader):
         value=MATH_PATTERN.sub(display,value)
         return '<div id="drawing-label-'+str(index)+'">'+chapter.paragraphs(value)+'</div>'
     image=reader.site.rel(record['image'],chapter.url)
-    body='<figure class="atlas-drawing"><img src="'+image+'" alt="'+e(info['alt'],quote=True)+'" loading="lazy"><figcaption>Original drawing. A text description and its labels follow.</figcaption></figure>'
+    size=' width="'+str(figure['width'])+'" height="'+str(figure['height'])+'"'
+    body='<figure class="atlas-drawing"><img src="'+image+'"'+size+' alt="'+e(info['alt'],quote=True)+'" loading="lazy"><figcaption>Original drawing. A text description and its labels follow.</figcaption></figure>'
     body+='<section aria-labelledby="drawing-description"><h2 id="drawing-description">Reading the drawing</h2><p>'+e(info['description'])+'</p>'
     for block in info['blocks']:
         if block['kind']=='text':
@@ -274,6 +277,7 @@ def render(reader):
 
 def verify(root, documents, pages):
     """Re-derive displayed math from retained sources and check label coverage."""
+    from check_reader_site import check_png_image_sizes
     report=json.loads((root/REPORT).read_bytes())
     records={r['repository_path']:r for r in documents['files']}
     read=lambda path:(root/records[path]['file_url']).read_bytes()
@@ -315,6 +319,7 @@ def verify(root, documents, pages):
     assert linked_plates==set(range(1,27))
     count=0
     for plate,record in zip(selected,report['plates']):
+        check_png_image_sizes(root,plate['url'],pages[plate['url']].images)
         assert record['number']==plate['number'] and record['url']==plate['url']
         assert (record['start_line'],record['end_line'])==(plate['line'],plate['end_line'])
         expected=expected_math(plate,figures)

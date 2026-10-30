@@ -15,6 +15,26 @@ from readable_chapters import Chapter, expand_math, plain_math, readable_url, or
 
 
 class ReaderSiteTests(unittest.TestCase):
+    def test_png_dimensions_reject_missing_or_invalid_intrinsic_sizes(self):
+        from reader_documents import png_dimensions
+        header=b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR'
+        image=header+(1200).to_bytes(4,'big')+(450).to_bytes(4,'big')+bytes(9)
+        self.assertEqual(png_dimensions(image),(1200,450))
+        for invalid in (b'',image[:24],b'JPEG'+image[4:],
+                        header+bytes(4)+image[20:],header+(2**31).to_bytes(4,'big')+image[20:]):
+            with self.assertRaises(ValueError): png_dimensions(invalid)
+
+    def test_reading_image_size_checks_match_published_bytes(self):
+        from check_reader_site import check_png_image_sizes
+        image=b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR'+(1200).to_bytes(4,'big')+(450).to_bytes(4,'big')+bytes(9)
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder); (root/'figure.png').write_bytes(image)
+            page=Page('<img src="../figure.png" width="1200" height="450" alt="A drawing" loading="lazy">')
+            check_png_image_sizes(root,'read/plate.html',page.images)
+            for attrs in ({}, {'width':'1200','height':'451'}):
+                with self.assertRaisesRegex(AssertionError,'dimensions differ'):
+                    check_png_image_sizes(root,'read/plate.html',[dict(src='../figure.png',**attrs)])
+
     def test_table_regions_use_readable_caption_names_and_retain_markup(self):
         rewrite=Rewriter(lambda value,image:value)
         rewrite.feed('<table><caption id="transfer-caption">Transfer <em>norms</em> '
@@ -159,11 +179,12 @@ class ReaderSiteTests(unittest.TestCase):
         from reader_atlas import render_drawing
         from paper_iv_atlas_descriptions import figure,table
         drawing=dict(description=figure('Two values','Description',table('Values',['Term','Value'],[['First',0],['Second',1]])),
-                     receipt=dict(image='image.png',source='figure.tex'),nodes=[dict(text='$x$'),dict(text='$y$')])
+                     receipt=dict(image='image.png',source='figure.tex'),nodes=[dict(text='$x$'),dict(text='$y$')],width=1200,height=450)
         reader=SimpleNamespace(site=SimpleNamespace(rel=lambda path,page:path),resolve=lambda path,page:'source.html')
         chapter=Chapter('',{})
         rendered=render_drawing(drawing,chapter,reader)
         self.assertEqual(chapter.math,['x','y'])
+        self.assertIn('width="1200" height="450"',rendered)
         self.assertIn('<caption>Values</caption>',rendered)
         self.assertEqual(rendered.count('scope="col"'),2)
         self.assertEqual(rendered.count('scope="row"'),2)
@@ -194,7 +215,7 @@ class ReaderSiteTests(unittest.TestCase):
         formula=r'\frac{\partial^{12}f}{\partial x^{12}}+\frac{1}{123456789}'
         drawing=dict(description=figure('A formula','Description',text(0,1)),
                      receipt=dict(image='image.png',source='figure.tex'),
-                     nodes=[dict(text='Value $'+formula+'$.'),dict(text='$x$')])
+                     nodes=[dict(text='Value $'+formula+'$.'),dict(text='$x$')],width=1200,height=450)
         reader=SimpleNamespace(site=SimpleNamespace(rel=lambda path,page:path),resolve=lambda path,page:'source.html')
         chapter=Chapter('',{})
         rendered=render_drawing(drawing,chapter,reader)
