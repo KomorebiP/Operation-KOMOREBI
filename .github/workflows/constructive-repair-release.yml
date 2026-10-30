@@ -48,8 +48,6 @@ jobs:
     defaults:
       run:
         shell: bash
-    env:
-      QUALIFY_DIR: ${{ runner.temp }}/constructive-repair-${{ matrix.id }}
     steps:
       - name: Preserve source bytes and allow long paths
         run: |
@@ -74,12 +72,14 @@ jobs:
       - name: Check distribution gate rejection controls
         run: python -B -m unittest discover -s tools -p 'test_constructive_repair_release.py' -v
       - name: Build and qualify the exact distribution
+        env:
+          QUALIFY_DIR: ${{ runner.temp }}/constructive-repair-${{ matrix.id }}
         run: python -B tools/constructive_repair_release.py qualify --root "$GITHUB_WORKSPACE" --revision "$GITHUB_SHA" --output "$QUALIFY_DIR"
       - name: Preserve qualified artifacts
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: constructive-repair-qualified-${{ matrix.id }}
-          path: ${{ env.QUALIFY_DIR }}/artifacts/*
+          path: ${{ runner.temp }}/constructive-repair-${{ matrix.id }}/artifacts/*
           if-no-files-found: error
           retention-days: 30
       - name: Preserve diagnostics
@@ -88,13 +88,13 @@ jobs:
         with:
           name: constructive-repair-diagnostics-${{ matrix.id }}
           path: |
-            ${{ env.QUALIFY_DIR }}/qualification.json
-            ${{ env.QUALIFY_DIR }}/build-wheel.log
-            ${{ env.QUALIFY_DIR }}/acceptance.log
-            ${{ env.QUALIFY_DIR }}/raw-acceptance/*.json
-            ${{ env.QUALIFY_DIR }}/raw-acceptance/*.log
-            ${{ env.QUALIFY_DIR }}/raw-acceptance/platform_acceptance/*.json
-            ${{ env.QUALIFY_DIR }}/raw-acceptance/platform_acceptance/*.log
+            ${{ runner.temp }}/constructive-repair-${{ matrix.id }}/qualification.json
+            ${{ runner.temp }}/constructive-repair-${{ matrix.id }}/build-wheel.log
+            ${{ runner.temp }}/constructive-repair-${{ matrix.id }}/acceptance.log
+            ${{ runner.temp }}/constructive-repair-${{ matrix.id }}/raw-acceptance/*.json
+            ${{ runner.temp }}/constructive-repair-${{ matrix.id }}/raw-acceptance/*.log
+            ${{ runner.temp }}/constructive-repair-${{ matrix.id }}/raw-acceptance/platform_acceptance/*.json
+            ${{ runner.temp }}/constructive-repair-${{ matrix.id }}/raw-acceptance/platform_acceptance/*.log
           if-no-files-found: ignore
           retention-days: 30
   publish:
@@ -108,7 +108,6 @@ jobs:
       actions: read
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      RELEASE_DIR: ${{ runner.temp }}/constructive-repair-release
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -124,8 +123,12 @@ jobs:
           pattern: constructive-repair-qualified-*
           path: release-inputs
       - name: Verify both archives and bind the same accepted wheel
+        env:
+          RELEASE_DIR: ${{ runner.temp }}/constructive-repair-release
         run: python -B tools/constructive_repair_release.py assemble --inputs release-inputs --output "$RELEASE_DIR" --revision "$GITHUB_SHA"
       - name: Publish a new prerelease without replacing older artifacts
+        env:
+          RELEASE_DIR: ${{ runner.temp }}/constructive-repair-release
         shell: bash
         run: |
           tag="constructive-repair-1.0.0rc3-qualified-${GITHUB_SHA:0:12}"
