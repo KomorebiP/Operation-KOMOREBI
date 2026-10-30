@@ -70,6 +70,36 @@ BOOKS = {'paper-i': dict(work='paper-i', label='Paper I', base=FIRST_BASE,
                         figure_descriptions='website/paper-i-figure-descriptions.json',
                         pdf_inputs={'visual_atlas.tex': 'Read the 22-plate visual atlas in the PDF'}), **BOOKS}
 CHAPTERS = FIRST_CHAPTERS + CHAPTERS
+BOOKS['paper-i']['table_reading_aids']={
+    ('01_orientation.tex','L4'): dict(caption='Statement status classes',
+        headers=[r'\textbf{Status class}',r'\textbf{Meaning}'],row_header_column=0),
+    ('01_orientation.tex','L41'): dict(caption='Questions and formal objects',
+        headers=[r'\textbf{Question}',r'\textbf{Formal object}',r'\textbf{Principal answer}'],row_header_column=0),
+    ('01_orientation.tex','L56'): dict(caption='Notation and object reference',
+        headers=[r'\textbf{Symbol}',r'\textbf{Name}',r'\textbf{Meaning}'],row_header_column=0),
+    ('04_transport.tex','L510'): dict(caption='Paper I exports and later uses',
+        headers=[r'\textbf{Paper I export}',r'\textbf{Primary users}',r'\textbf{Later role}'],row_header_column=0),
+    ('05_worked_models.tex','L418'): dict(
+        headers=['Realization','Seed','Operator grammar','Packets','Completion or quotient'],row_header_column=0),
+    ('05_worked_models.tex','L484'): dict(headers=['Quantity','Result'],row_header_column=0),
+    ('05_worked_models.tex','L592'): dict(caption='Common distinctions',
+        headers=[r'\textbf{Do not conflate}',r'\textbf{Correct distinction}'],row_header_column=0),
+    ('06_reference.tex','L31'): dict(caption='Proof dependency concordance',
+        headers=[r'\textbf{Canonical record}',r'\textbf{Immediate proof dependencies}'],row_header_column=0),
+    ('06_reference.tex','L81'): dict(caption='Statement identifiers and locations',
+        headers=['Stable identifier','No.','Statement'],row_header_column=0),
+    ('06_reference.tex','L196'): dict(caption='Routes through the visual atlas',
+        headers=['Plate','Route through the examples'],row_header_column=0),
+}
+BOOKS['paper-ii']['table_reading_aids']={
+    ('chapters/06_models.tex','L108'): dict(headers=['Check','Result'],row_header_column=0),
+    ('chapters/06_models.tex','L173'): dict(caption='Notation for refinement and transfer',
+        headers=['Symbol','Meaning'],row_header_column=0),
+}
+BOOKS['paper-iii']['table_reading_aids']={
+    ('chapters/02_connections_obstructions.tex','L923'): dict(caption='Formalization status and boundaries',
+        headers=['Topic','Status','Declaration or roadmap target','Exact boundary'],row_header_column=0),
+}
 FOURTH_BASE = 'papers/paper-iv/current/Paper_IV_Verification_Closeout_v1.1.0/publication_baseline/editable/traditional/'
 FOURTH_MAIN = FOURTH_BASE+'Paper_IV_Traditional_Final.tex'
 # Inclusive, contiguous source ranges. Boundaries are checked before conversion;
@@ -779,6 +809,14 @@ def split_cells(text, separator):
     return result
 
 
+def table_reading_aid(config,source,identifier):
+    """Keep line identifiers in separate source files from sharing a reading aid."""
+    aids=config.get('table_reading_aids',{})
+    scoped=(source.removeprefix(config['base']),identifier)
+    key=scoped if scoped in aids else identifier
+    return key,aids.get(key)
+
+
 def render_table(node,chapter,reading_aid=None):
     content=node['body'].strip()
     caption=''
@@ -843,8 +881,10 @@ def render_table(node,chapter,reading_aid=None):
     if reading_aid:
         if [' '.join(cell.split()) for cell in rows[0]]!=reading_aid['headers']:
             raise ValueError('Review the table reading aid: column headers changed')
-        if caption: raise ValueError('A table reading aid must not replace an authored caption')
-        caption=reading_aid['caption']
+        if 'caption' in reading_aid:
+            if caption: raise ValueError('A table reading aid must not replace an authored caption')
+            caption=reading_aid['caption']
+        if not caption: raise ValueError('A table reading aid must provide or retain a caption')
         row_header=reading_aid['row_header_column']
         if type(row_header) is not int or not 0<=row_header<len(rows[0]):
             raise ValueError('Invalid table row-header column')
@@ -1041,8 +1081,9 @@ def render_book(reader,book):
                 size=' width="'+str(dimensions['width'])+'" height="'+str(dimensions['height'])+'"'
                 body+='<figure id="'+node['id']+'" tabindex="-1"><img src="'+image+'"'+size+' alt="'+e(alt,quote=True)+'" loading="lazy"><figcaption>'+chapter.inline(caption)+'</figcaption>'+description_link+passage_links(links)+'</figure>'
             elif kind in {'table','longtable','tabularx','tabular'}:
-                aid=table_aids.get(node['id'])
-                if aid: aided_tables.add(node['id'])
+                aid_key,aid=table_reading_aid(config,source,node['id'])
+                if table_aids and not aid: raise ValueError('Review the table reading aid for '+source+'#'+node['id'])
+                if aid: aided_tables.add(aid_key)
                 body+='<section id="'+node['id']+'">'+render_table(node,chapter,aid)+passage_links(links)+'</section>'
             elif kind=='conceptchain':
                 body+='<section id="'+node['id']+'"><div class="table-scroll" tabindex="0" role="region" aria-label="Conceptual diagram. Scroll horizontally if needed.">'+chapter.paragraphs(node['body'])+'</div>'+passage_links(links)+'</section>'
