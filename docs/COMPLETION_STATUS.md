@@ -20,9 +20,9 @@ Entries deferred from the main reading lists remain in the [incubator](INCUBATOR
 
 | Stage | Primary entries | Meaning |
 |---|---|---|
-| Scoped release | 9 | The release record marks the stated mathematical or executable requirements as complete. The scope below defines what is covered. |
+| Scoped release | 10 | The release record marks the stated mathematical or executable requirements as complete. The scope below defines what is covered. |
 | Reading edition complete | 41 | The stated manuscript or reader set is released. Formal coverage, review depth and wider research can remain incomplete. |
-| Active development | 20 | A candidate, working manuscript or bounded research milestone with identified unfinished work. |
+| Active development | 19 | A candidate, working manuscript or bounded research milestone with identified unfinished work. |
 | Experiment / prototype | 12 | A research instrument, implementation or experiment whose tested scope does not establish a general scientific endpoint. |
 | Reader available, source qualification pending | 1 | The PDF edition and reading scope have been identified. Matching editable sources, full page review, and reproducible build qualification remain pending. |
 | Needs assessment | 7 | Available material lacks a sufficient assessed source/status record for a stronger label. |
@@ -60,7 +60,7 @@ Confidence labels identify the **strongest recorded evidence for the stated subs
 
 All executable software remains **beta / work in progress**, including implementations attached to completed mathematical releases. See [LICENSE.md](../LICENSE.md) for the current reuse terms. Older undecided notices remain part of the historical record.
 
-## Scoped release (9)
+## Scoped release (10)
 
 | Project and exact scope | Lean | Confidence basis |
 |---|---|---|
@@ -70,6 +70,7 @@ All executable software remains **beta / work in progress**, including implement
 | [Proof Path Theory](STATUS_CATALOG.md#proof-path-theory) | Selected results recorded | Recorded formal evidence |
 | [Large Signal Model](STATUS_CATALOG.md#monographs-large-signal-model) | Declared contract recorded | Recorded formal evidence |
 | [Certified Inference](STATUS_CATALOG.md#certified-inference) | Declared contract recorded | Recorded formal evidence |
+| [Constructive Repair](STATUS_CATALOG.md#constructive-repair) | Selected results recorded | Recorded formal evidence |
 | [Komorebi Space](STATUS_CATALOG.md#komorebi-space) | Declared contract recorded | Recorded formal evidence |
 | [Realization Boundaries](STATUS_CATALOG.md#realization-boundaries) | Declared contract recorded | Recorded formal evidence |
 | [Machine Native Reasoning](STATUS_CATALOG.md#monographs-machine-native-reasoning) | Declared contract recorded | Recorded formal evidence |
@@ -120,11 +121,10 @@ All executable software remains **beta / work in progress**, including implement
 | [Stratified Universality](STATUS_CATALOG.md#stratified-universality) | Source available, no current pass | Recorded written review |
 | [Strong Artin: source and evidence](STATUS_CATALOG.md#strong-artin-reader) | Inherited / related evidence | Historical formal evidence |
 
-## Active development (20)
+## Active development (19)
 
 | Project and exact scope | Lean | Confidence basis |
 |---|---|---|
-| [Constructive Repair](STATUS_CATALOG.md#constructive-repair) | Selected results recorded | Recorded formal evidence |
 | [Information Realization](STATUS_CATALOG.md#information-realization) | Selected results recorded | Recorded formal evidence |
 | [KZFC and Residual Reflection](STATUS_CATALOG.md#kzfc-multiverse) | Selected results recorded | Recorded formal evidence |
 | [Logical Resolution](STATUS_CATALOG.md#logical-resolution) | Selected results recorded | Recorded formal evidence |

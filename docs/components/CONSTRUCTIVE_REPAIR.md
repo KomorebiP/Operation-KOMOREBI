@@ -1,12 +1,50 @@
 # Constructive Repair: package and verification guide
 
-**1.0.0rc3 · Beta / work in progress · Updated 27 October 2026**
+**1.0.0rc3 · Qualified beta distribution · Updated 30 October 2026**
 
-[Source and original release records](../../packages/constructive-repair/) · [Public API](../../packages/constructive-repair/docs/PUBLIC_API.md) · [Windows evidence](../../verification/constructive-repair/windows-2026-10-27/summary.json)
+[Download the qualified beta](https://github.com/KomorebiP/Operation-KOMOREBI/releases/tag/constructive-repair-1.0.0rc3-qualified-e58a66e5e5fc) · [Source and original release records](../../packages/constructive-repair/) · [Public API](../../packages/constructive-repair/docs/PUBLIC_API.md) · [Qualification summary](../../verification/constructive-repair/qualified-2026-10-30/summary.json)
 
-Constructive Repair provides exact rational repair certificates, a Python API and CLI, and separately recorded Lean proofs. **Python certificate validity and Lean kernel acceptance are separate results.** The current completion label remains **Active development**.
+Constructive Repair provides exact rational repair certificates, a Python API and CLI, and separately recorded Lean proofs. **Python certificate validity and Lean kernel acceptance are separate results.** The Python distribution has completed its stated Linux and Windows qualification.
 
-## Fresh Windows check
+## Qualified distribution — 30 October 2026
+
+The [qualified beta release](https://github.com/KomorebiP/Operation-KOMOREBI/releases/tag/constructive-repair-1.0.0rc3-qualified-e58a66e5e5fc) contains a dependency-free wheel and two complete source/evidence archives. Both platforms accepted byte-identical wheel bytes. All 2,254 imported component files match their recorded hashes, and all seven wheel runtime files match those sources.
+
+| Executed configuration | Release tests | Engine tests | Installed acceptance |
+|---|---|---|---|
+| Ubuntu 24.04 x86_64 / CPython 3.13.5 | 100 passed | 134 passed | 72 cases, 369 probe checks, 24 platform checks |
+| Windows Server 2025 x86_64 / CPython 3.13.5 | 97 passed, 3 named POSIX-only skips | 134 passed | 72 cases, 369 probe checks, 20 platform checks |
+
+**Both symlink rejection controls executed and passed on both platforms.** The final gate verified both source archives and the matching wheel before publication. All seven public assets were downloaded and their hashes checked; both extracted archives then passed their included verifier on Windows 11 / CPython 3.12.14.
+
+The accepted wheel SHA-256 is:
+
+```text
+0fa16e0d1d9a346b55a5692f27ac9b994a4fd16037217d5e7e71a71b884f63a1
+```
+
+The wheel carries the current MIT code license, collection reuse notice, and release README. A separate build overlay records those metadata changes; the imported component retains its original bytes. Qualification uses setuptools 84.1.0 and wheel 0.48.0, with canonical wheel metadata/ZIP encoding and source-bound acceptance.
+
+The [qualification summary](../../verification/constructive-repair/qualified-2026-10-30/summary.json), [Linux receipt](../../verification/constructive-repair/qualified-2026-10-30/qualification-linux-py3135.json), [Windows receipt](../../verification/constructive-repair/qualified-2026-10-30/qualification-windows-py3135.json), and [release record](../../verification/constructive-repair/qualified-2026-10-30/release-record.json) bind the exact source revision, runtime files, wheel, platform results, and published assets. The [workflow run](https://github.com/KomorebiP/Operation-KOMOREBI/actions/runs/41014446732) retains the executed jobs and diagnostics.
+
+## Install or reproduce the qualified beta
+
+Follow the [current installation and reproduction guide](../../publication/constructive-repair/README.md). Each source archive includes offline installation commands, full checksums, an independent distribution-verification command, and the qualifier used to build it.
+
+From a collection checkout, use a new output directory and record the exact Git revision:
+
+```text
+python -m pip install setuptools==84.1.0 wheel==0.48.0
+python -B tools/constructive_repair_release.py qualify --root . --revision <exact-commit> --output <new-output-directory>
+```
+
+The [release workflow](../../.github/workflows/constructive-repair-release.yml) runs both pinned environments, checks both archives and the wheel agreement, and publishes a new prerelease after all gates pass. Pull requests and manual runs qualify artifacts without publishing.
+
+The qualification checks historical proof-source, axiom-record, lineage, and monograph bindings. It performs no fresh Lean replay. The existing formal evidence keeps its recorded scope.
+
+<a id="fresh-windows-check"></a>
+
+## Earlier Windows 11 check — 27 October 2026
 
 The following checks used the committed source at [ef52463dbe47](https://github.com/KomorebiP/Operation-KOMOREBI/commit/ef52463dbe476bcf0c027ed00c68c6d6fb2fdfb3), Windows 11 on AMD64, and CPython 3.12.14. All **2,254 selected source files** matched their SHA-256 import receipt before the run and remained unchanged afterward. Work ran in a separate copy.
 
@@ -21,7 +59,7 @@ The following checks used the committed source at [ef52463dbe47](https://github.
 
 Both release-test errors were `WinError 1314`: the executing Windows account could not create a symlink. They occurred in `PathsAndBindings.test_symlink_rejected` and `WheelBinding.test_symlink_wheel`. These are unresolved fixture prerequisites, not successful negative controls or demonstrated checker failures. The tests were not rewritten or converted into passing skips.
 
-The overall result is **partial Python qualification**. It does not establish complete Windows release acceptance, support for other interpreters or platforms, or new mathematical proof coverage.
+The earlier run is recorded as **partial Python qualification**. It does not establish complete Windows release acceptance, support for other interpreters or platforms, or new mathematical proof coverage.
 
 ## Which wheel was checked
 
@@ -35,7 +73,11 @@ It is not byte-identical to the wheel named in the historical Linux acceptance r
 
 The [evidence directory](../../verification/constructive-repair/windows-2026-10-27/) retains the build, engine, release-test, and installed-workflow logs. Published receipts replace local workspace/interpreter paths with placeholders and normalize line endings to LF. Counts, outcomes, errors, timings, platform details, and content hashes are preserved. The summary records this transformation.
 
-## Reproduce in a new copy
+<a id="reproduce-in-a-new-copy"></a>
+
+## Reproduce the earlier source checks
+
+For the qualified distribution, use the current reproduction guide above. The following commands retain the earlier package-level workflow.
 
 Use the Python interpreter being evaluated, a fresh output directory, and a disposable copy of the source component. Local setuptools 77 or later is needed for the existing build script. Record the actual build-tool versions and wheel hash.
 
@@ -50,9 +92,11 @@ Run the engine command with the component's `python` directory on the import pat
 
 The original archive-wide `release_gate.py` expects the original complete distribution, wheel, and sealed manifest. A source-only checkout or a new wheel requires its own distribution and evidence binding. Adding a rebuilt wheel does not make the old artifact gate pass.
 
-## Remaining finalization work
+<a id="remaining-finalization-work"></a>
 
-F08 remains open. Re-run the two symlink controls where their fixtures can be created, complete an artifact-release gate for the intended distribution and current metadata, and retain the exact source/wheel/receipt relationship. Any fresh Lean verification uses the separately pinned runtime and must produce its own receipt.
+## Qualification scope and future work
+
+F08 is complete for the qualified beta on the two recorded CPython 3.13.5 environments. Other interpreters, operating systems, architectures, library integration, and any fresh Lean replay need their own evidence. The earlier Windows 11 / CPython 3.12.14 record retains its partial qualification.
 
 The [current collection reuse terms](../../LICENSE.md) apply to covered original work and explain the retained historical undecided-license notices. The original package's `PUBLICATION_DECISION.json` and old no-publication statements remain dated records. They do not describe today's GitHub availability. All executable software remains beta / work in progress.
 

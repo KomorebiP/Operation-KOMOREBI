@@ -50,7 +50,7 @@ The [public project and authorship statement](docs/PROJECT_STATEMENT.md) explain
 - [Additional packages](packages/README.md): research implementations and their worked examples.
 - [Experimental laboratories](experiments/README.md): computational models, protocols, and recorded results.
 
-The [software guide](docs/LIBRARIES.md) links documentation and instructions for checking each package, including [Constructive Repair’s current Windows results and remaining release checks](docs/components/CONSTRUCTIVE_REPAIR.md). Each project in this collection has its own setup instructions and supported environment.
+The [software guide](docs/LIBRARIES.md) links documentation and instructions for checking each package, including [Constructive Repair’s qualified beta and platform results](docs/components/CONSTRUCTIVE_REPAIR.md). Each project in this collection has its own setup instructions and supported environment.
 
 <a id="run-a-small-example"></a>
 

@@ -54,7 +54,7 @@ For direct PDFs, manuscript text, Lean, and code, use the [clickable browse hub]
 | Component | Completion | Lean | Confidence basis | Source files | Receipt |
 |---|---|---|---|---|---|
 | [Certified Inference](works/certified-inference.md) | [Scoped release](STATUS_CATALOG.md#certified-inference) | Declared contract recorded | Recorded formal evidence | 939 | [file record](../manifests/source-imports/certified-inference.json) |
-| [Constructive Repair](works/constructive-repair.md) | [Active development](STATUS_CATALOG.md#constructive-repair) | Selected results recorded | Recorded formal evidence | 2,254 | [file record](../manifests/source-imports/constructive-repair.json) |
+| [Constructive Repair](works/constructive-repair.md) | [Scoped release](STATUS_CATALOG.md#constructive-repair) | Selected results recorded | Recorded formal evidence | 2,254 | [file record](../manifests/source-imports/constructive-repair.json) |
 | [RRCT](works/packages-rrct.md) | [Experiment / prototype](STATUS_CATALOG.md#packages-rrct) | No Lean claim | Experimental evidence | 185 | [file record](../manifests/source-imports/packages-rrct.json) |
 | [Universal Generative Deformation Calculus](works/universal-generative-deformation.md) | [Experiment / prototype](STATUS_CATALOG.md#universal-generative-deformation) | No Lean claim | Experimental evidence | 144 | [file record](../manifests/source-imports/universal-generative-deformation.json) |
 | [Large Signal Model software](works/large-signal-model.md) | [Needs assessment](STATUS_CATALOG.md#large-signal-model) | Not assessed | Unassessed | 443 | [file record](../manifests/source-imports/large-signal-model.json) |
