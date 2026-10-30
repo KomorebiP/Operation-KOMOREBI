@@ -75,6 +75,35 @@ works**. Each side opens its available reading edition, PDF or work overview.
 The works can be different. Their chapters, proof links and related material
 remain independent, and **Copy link to this pair** shares the chosen documents.
 
+### Save and resume a reading session
+
+**Save and resume reading** keeps sessions in this browser and on this device.
+With **Remember my last reading session** enabled, a plain visit to the reader
+resumes the last pair, reading positions, pane layout and focus view. Shared
+links open their requested documents. **Resume last reading session** lets you
+return to the pair from before you opened that link.
+Refreshing the same pair also restores its saved positions.
+
+Enter a **Session name** and select **Save session** to keep a named bookmark.
+Choose it under **Saved sessions**, then select **Open saved session**. Reusing
+a name updates that bookmark. Up to 50 named sessions can be kept. **Delete
+saved session** removes the selected bookmark. An unavailable edition stays
+listed so you can identify and delete its old bookmark.
+
+HTML sessions remember a nearby passage and the position within it. After a
+window-size change, the reader uses that passage to approximate the same place.
+PDF sessions keep the viewer's page, zoom, position and rotation once it is
+loaded. Each pane restores when it becomes visible.
+
+Turning off automatic remembering clears the automatic session and keeps named
+bookmarks. Clearing browser site data removes all sessions. If storage is
+blocked or full, the reader explains that saving failed. Ordinary reading and
+**Copy link to this pair** remain available. Shared links keep document addresses
+and HTML anchors. PDF toolbar settings and saved scroll positions remain in the
+browser's sessions rather than in shared links.
+
+### Follow references and adjust the view
+
 Open **Related material** above either document to find that work's paper,
 claims, written proofs, Lean, code, notation, evidence and available examples.
 Choosing a link opens it in the other pane and keeps the current document in

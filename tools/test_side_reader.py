@@ -2,7 +2,7 @@ import tempfile
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
-from side_reader import catalogue, pane, pair_link, check_pair_links, check_work_routes, work_picker
+from side_reader import catalogue, pane, pair_link, check_pair_links, check_work_routes, work_picker, session_controls
 from urllib.parse import parse_qs, urlsplit
 from check_reader_site import Page
 
@@ -60,7 +60,7 @@ class SideReaderTests(unittest.TestCase):
             self.assertEqual(data['works'][0]['routes'],[{'label':'Paper overview','url':'collection/works/work.html'}])
 
     def test_both_panes_have_distinct_labels_and_named_frames(self):
-        page=Page(pane('left')+pane('right')+work_picker())
+        page=Page(pane('left')+pane('right')+work_picker()+session_controls())
         self.assertEqual(len(page.ids),len(set(page.ids)))
         self.assertEqual(len(page.iframes),2)
         for frame in page.iframes:
