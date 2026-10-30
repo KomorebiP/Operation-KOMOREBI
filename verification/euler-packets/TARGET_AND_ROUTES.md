@@ -151,3 +151,20 @@ iteration versus Green-kernel reconstruction; ordinary formal-unit inversion
 versus target recurrence. Contracts 004 declare the finite ranges before runs.
 Same-assistant proof review and mathematical proofreading are separate from
 execution. Earlier contracts and captured evidence are retained historically.
+
+## Literature extension EULER-CASE-005
+
+Target fixed before execution at collection revision
+`2dc495d16c5c76d2e55e04f73b9e9872193fd4c2`. Sources checked: Paper IX
+companion-jump theorem, Fibonacci/Lucas specialization, corrected integral
+matrix precision amplification and explicit C^12 and C^24 examples; pinned
+Komorebi Math typed-expression example and polynomial calculus implementation.
+
+Add the exact sampled recurrence and its parity control, finite integral
+binomial packet expansions with depth-dependent congruences and a sharp
+dyadic example, the simultaneous-prime jump, and a complete polynomial
+antiderivative/change-of-basis/derivative round trip with integral covector.
+Distinguish source statements from newly written formal corollaries (the
+144 factor, sharpness and composition with the Euler transfer). No new global
+literature/novelty claim or Lean execution. Source authentication, extraction,
+application, proof self-review and finite execution are separate evidence.

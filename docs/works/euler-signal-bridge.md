@@ -8,13 +8,13 @@
 
 **Completion:** Active development · **Lean:** No Lean claim · **Confidence:** Written / finite evidence
 
-An extended Euler derivation connects infinite coefficient matrices, reciprocal polynomials, residue packets, supercongruences, local base changes, exact precision, Fibonacci coordinate and sequence transfers, and finite-difference/FIR transfer.
+An extended Euler derivation connects packets, reciprocal polynomials, infinite matrices, local supercongruences, Fibonacci coordinate and sequence transfers, source-checked Lucas packets, congruence refinement and polynomial calculus.
 
 ## Before you start
 
 **Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
 
-**Recorded results and limits:** Written finite-difference/FIR identities and separately recorded exact controls. The Euler case adds formal-series and local arithmetic derivations, infinite coefficient-transform laws, explicit supercongruences, base changes and congruence precision, Fibonacci polynomial connections, recurrence defects and a reversible sequence map, with written self-review and bounded library comparisons. Broader Euler-branch classification remains outside that scope.
+**Recorded results and limits:** Written identities and bounded exact controls. The maintained example adds formal-series and local arithmetic derivations, infinite coefficient laws, Fibonacci polynomial/recurrence/sequence transforms, and source-checked packet precision and typed polynomial calculus. Same-assistant reviews and pinned API comparisons are separate evidence. No broader Euler-branch classification or new formalization is asserted.
 
 **Remaining work:** Independent mathematical review and any broader arithmetic classification require their own hypotheses and evidence. Keep finite tests, written self-review, externally cited theorem inputs and any future formalization distinct.
 

@@ -2630,6 +2630,344 @@ Finally, the target obeys \((S^2-S-I)g=0\). Pulling that operation back to the E
 
 This is the transported recurrence. Applying \(S^2-S-I\) directly to \(a\) produces the nonzero defect stream already calculated. The coordinate matrix, inverse, recurrence, and boundary term together specify what the transfer preserves.
 
+## Sample Fibonacci packets and derive their Lucas recurrence
+
+[Paper IX](../works/paper-ix.md) develops companion jumps and the Fibonacci specialization. Its [companion-jump theorem and Fibonacci consequence](https://github.com/KomorebiP/Operation-KOMOREBI/blob/2dc495d16c5c76d2e55e04f73b9e9872193fd4c2/papers/paper-ix/current/sources/main/parts/10_foundations.tex#L406) let us continue the transfer calculation at a coarser sampling step.
+
+Use the state order of the polynomial companion at \(x=1\):
+
+\[
+\mathsf C=\begin{pmatrix}1&1\\1&0\end{pmatrix},\qquad
+w_n=\binom{F_{n+1}}{F_n}=\mathsf C^nw_0,\qquad w_0=\binom10.
+\]
+
+Fix a step \(N\geq1\) and an address \(j\geq0\). The packet state is
+
+\[
+w_{Nk+j}=\mathsf C^j(\mathsf C^N)^kw_0.
+\]
+
+Its transition is \(\mathsf C^N\). For example,
+
+\[
+\mathsf C^2=\begin{pmatrix}2&1\\1&1\end{pmatrix},\qquad
+\mathsf C^3=\begin{pmatrix}3&2\\2&1\end{pmatrix}.
+\]
+
+To derive the scalar recurrence, define Lucas numbers independently by
+\(L_0=2\), \(L_1=1\), and \(L_{n+2}=L_{n+1}+L_n\). Since \(\mathsf C^2=\mathsf C+I\), the traces \(\operatorname{tr}(\mathsf C^n)\) satisfy this recurrence and these initial values. Hence
+
+\[
+\operatorname{tr}(\mathsf C^N)=L_N,\qquad
+\det(\mathsf C^N)=(-1)^N.
+\]
+
+Every two-by-two matrix \(J\) satisfies
+\(J^2-(\operatorname{tr}J)J+(\det J)I=0\), as direct multiplication of its four entries verifies. Apply this to \(J=\mathsf C^N\), then take the second component of the packet state:
+
+\[
+\boxed{F_{N(k+2)+j}=L_NF_{N(k+1)+j}-(-1)^NF_{Nk+j}.}
+\]
+
+For \(N=3\), \(L_3=4\), so every address obeys \(u_{k+2}=4u_{k+1}+u_k\):
+
+| Address | First six packet values |
+|---|---|
+| \(j=0\) | \(0,2,8,34,144,610\) |
+| \(j=1\) | \(1,3,13,55,233,987\) |
+| \(j=2\) | \(1,5,21,89,377,1597\) |
+
+For the last row, \(21=4(5)+1\), \(89=4(21)+5\), and \(377=4(89)+21\). The first two values and this recurrence determine every subsequent packet value by induction.
+
+The parity sign matters. At step two, the recurrence is
+\(u_{k+2}=3u_{k+1}-u_k\). The packet \(F_{2k+1}=1,2,5,13,34,\ldots\) gives \(5=3(2)-1\). Replacing the minus with a plus gives the wrong value seven. The formula also has a consistent zero-step boundary: \(L_0=2\), and a constant packet satisfies \(u=2u-u\).
+
+We can compose this sampling with the earlier Euler transfer. If \(\mathsf R_{2,0}\) selects even entries, then
+
+\[
+\mathsf R_{2,0}\mathsf L(H)a
+=(F_1,F_3,F_5,F_7,\ldots)^{\mathsf T}.
+\]
+
+The first three rows of the composed map are
+
+\[
+\begin{pmatrix}
+1&0&0&0&0\\
+-1&2&1&0&0\\
+-1200&53&-1&2&1
+\end{pmatrix}
+\begin{pmatrix}1\\-1\\5\\-61\\1385\end{pmatrix}
+=\begin{pmatrix}1\\2\\5\end{pmatrix}.
+\]
+
+Each retained row is complete. The target now follows the step-two Lucas recurrence. This is the composition of a reversible sequence encoding with a sampling operation. Recovering the full Fibonacci stream also requires the omitted lane or equivalent extra data.
+
+## Refine a Fibonacci packet and increase its congruence precision
+
+Paper IX's [matrix precision amplification and dyadic Fibonacci example](https://github.com/KomorebiP/Operation-KOMOREBI/blob/2dc495d16c5c76d2e55e04f73b9e9872193fd4c2/papers/paper-ix/current/sources/main/parts/72_recovered.tex#L2363) start from an explicit integral jump:
+
+\[
+\mathsf C^{12}=\begin{pmatrix}233&144\\144&89\end{pmatrix}
+=I+8\mathsf B_0,\qquad
+\mathsf B_0=\begin{pmatrix}29&18\\18&11\end{pmatrix}.
+\]
+
+Set \(H_a=12\cdot2^a\). We claim that
+
+\[
+\mathsf C^{H_a}=I+2^{a+3}\mathsf B_a,
+\qquad \mathsf B_a\in M_2(\mathbb Z).
+\]
+
+The displayed jump proves the base case. Squaring proves the next step and gives the factor itself:
+
+\[
+\boxed{\mathsf B_{a+1}=\mathsf B_a+2^{a+2}\mathsf B_a^2.}
+\]
+
+For example,
+
+\[
+\mathsf B_0^2=\begin{pmatrix}1165&720\\720&445\end{pmatrix},
+\qquad
+\mathsf B_1=\begin{pmatrix}4689&2898\\2898&1791\end{pmatrix},
+\]
+
+and indeed \(\mathsf C^{24}=I+16\mathsf B_1\). Every entry remains integral. More generally, if \(X=I+p^LB\) with integral \(B\) and \(L\geq1\), the binomial expansion of \(X^p\) shows \(X^p=I+p^{L+1}B'\) for integral \(B'\). Iteration gives the analogous refinement at any prime. The positive exponent and integral coefficient domain are part of this statement.
+
+Define the step difference by \(\Delta_Hf_n=f_{n+H}-f_n\). Repeated differences of a matrix orbit give
+
+\[
+\Delta_{H_a}^{\,r}F_n
+=2^{(a+3)r}e_2^{\mathsf T}\mathsf C^n\mathsf B_a^rw_0,
+\qquad e_2=\binom01.
+\]
+
+This follows by applying \(\mathsf C^{H_a}-I\) once for each difference. All factors commute because \(\mathsf C^{H_a}-I\) is a polynomial in \(\mathsf C\). Thus
+
+\[
+\boxed{\Delta_{12\cdot2^a}^{\,r}F_n\equiv0\pmod{2^{(a+3)r}}.}
+\]
+
+Here \(a,n,r\geq0\), and all states and observations are integral. No assertion about arbitrary rational observation vectors is needed.
+
+This bound is sharp at \(n=1\). The base factor satisfies \(\mathsf B_0\equiv I\pmod2\), and its refinement recurrence preserves that property. Therefore
+\(e_2^{\mathsf T}\mathsf C\mathsf B_a^rw_0\equiv F_1=1\pmod2\). We have the exact valuation
+
+\[
+\boxed{v_2\!\left(\Delta_{12\cdot2^a}^{\,r}F_1\right)=(a+3)r.}
+\]
+
+The refinement bound is a source statement. This sharpness calculation is a direct consequence of the displayed factor's parity. At the first step,
+
+\[
+\begin{aligned}
+\Delta_{12}F_1&=233-1=232=8(29),\\
+\Delta_{12}^2F_1&=75025-2(233)+1=74560=64(1165),\\
+\Delta_{12}^3F_1&=24157817-3(75025)+3(233)-1\\
+&=23933440=512(46745).
+\end{aligned}
+\]
+
+The three remaining factors are odd, giving valuations three, six, and nine exactly.
+
+## Reconstruct a large Fibonacci value through the precision ladder
+
+The same jump gives a finite binomial expansion. For integers \(x,j\geq0\),
+
+\[
+\boxed{
+F_{H_ax+j}=\sum_{r=0}^x\binom xr
+2^{(a+3)r}e_2^{\mathsf T}\mathsf C^j\mathsf B_a^rw_0.
+}
+\]
+
+Indeed, expand \((I+2^{a+3}\mathsf B_a)^x\), then apply the indicated state and observation. If we retain only \(r<L\), every omitted term is divisible by \(2^{(a+3)L}\). When \(L>x\), no term is omitted and the answer is exact.
+
+Take \(a=0\), \(j=1\), and \(x=3\). This reconstructs \(F_{37}\). The normalized difference coefficients just calculated are \(1,29,1165,46745\), so
+
+\[
+\begin{aligned}
+F_{37}
+&=1+\binom31 8(29)+\binom32 64(1165)+\binom33 512(46745)\\
+&=1+696+223680+23933440\\
+&=\boxed{24157817}.
+\end{aligned}
+\]
+
+The intermediate answers carry a precise meaning:
+
+| Retained terms | Partial answer | Exact error | Guaranteed modulus | Actual error valuation |
+|---|---:|---:|---:|---:|
+| \(r=0\) | 1 | 24157816 | \(8\) | 3 |
+| \(r=0,1\) | 697 | 24157120 | \(64\) | 6 |
+| \(r=0,1,2\) | 224377 | 23933440 | \(512\) | 9 |
+| \(r=0,1,2,3\) | 24157817 | 0 | Exact | \(\infty\) |
+
+For example, the second row means \(F_{37}\equiv697\equiv57\pmod{64}\). The third means \(F_{37}\equiv224377\equiv121\pmod{512}\). Doubling the packet step would increase the guaranteed exponent per omitted depth from three to four. The state factor records why that extra precision is available.
+
+This is an exact finite expansion at nonnegative integer indices. Extending it to other arguments would require a stated domain and convergence argument.
+
+## Obtain simultaneous congruences from one integral jump
+
+Paper IX also gives a [simultaneous Fibonacci jump](https://github.com/KomorebiP/Operation-KOMOREBI/blob/2dc495d16c5c76d2e55e04f73b9e9872193fd4c2/papers/paper-ix/current/sources/main/parts/72_recovered.tex#L1739):
+
+\[
+\mathsf C^{24}-I
+=24\begin{pmatrix}3126&1932\\1932&1194\end{pmatrix}.
+\]
+
+This proves \(\Delta_{24}^{\,r}F_n\equiv0\pmod{24^r}\) by the same matrix-difference calculation. In this particular matrix, the remaining entries share a factor six. Factoring it out yields the stronger explicit statement
+
+\[
+\mathsf C^{24}-I
+=144\mathsf P,\qquad
+\mathsf P=\begin{pmatrix}521&322\\322&199\end{pmatrix},
+\]
+
+and therefore
+
+\[
+\boxed{\Delta_{24}^{\,r}F_n\equiv0\pmod{144^r}.}
+\]
+
+This improvement follows from the displayed entries. The two prime consequences are divisibility by \(2^{4r}\) and by \(3^{2r}\). They hold simultaneously, since \(144^r=2^{4r}3^{2r}\).
+
+For a hand check at \(n=1\),
+
+\[
+\begin{aligned}
+\Delta_{24}F_1&=75025-1=75024=144(521),\\
+\Delta_{24}^2F_1&=7778742049-2(75025)+1\\
+&=7778592000=144^2(375125).
+\end{aligned}
+\]
+
+For the second equality, \(\mathsf P^2\) has upper-left entry
+\(521^2+322^2=375125\), which is the scalar observed by \(e_2^{\mathsf T}\mathsf C\mathsf P^2w_0\). The ordinary recurrence, integer matrix calculation, and congruence agree on the same quantity.
+
+## Carry differentiation across the Euler and Fibonacci bases
+
+The [typed-expression example in Komorebi Math](https://github.com/KomorebiP/komorebi-math/blob/a3aa04ac18a523f30c50c7f5dba709f88e904eff/docs/TYPED_EXPRESSION_EXAMPLE.md) supplies a second continuation. It carries a polynomial through actual operations in both bases. We can write its matrices in the conventions already used here.
+
+Let \(\mathcal P_d^F\) and \(\mathcal P_d^E\) denote polynomials of degree at most \(d\), expressed in the Fibonacci and Euler bases. They have dimension \(d+1\). Write \(\mathsf C_d:\mathcal P_d^E\to\mathcal P_d^F\) for the connection matrix derived above.
+
+Euler polynomials form an Appell family, so differentiation from degree four to degree three is
+
+\[
+\mathsf D_E=
+\begin{pmatrix}
+0&1&0&0&0\\0&0&2&0&0\\0&0&0&3&0\\0&0&0&0&4
+\end{pmatrix}.
+\]
+
+To apply this physical operation in Fibonacci coordinates, change the input to Euler coordinates and the output back:
+
+\[
+\boxed{\mathsf D_F=\mathsf C_3\mathsf D_E\mathsf C_4^{-1}}
+=\begin{pmatrix}
+0&1&0&-1&0\\0&0&2&0&-2\\0&0&0&3&0\\0&0&0&0&4
+\end{pmatrix}.
+\]
+
+This is a rectangular transport: the input and output degree bounds differ. Each column can be checked by differentiating its basis polynomial. For instance,
+
+\[
+B_3'=3x^2+2=3B_2-B_0,\qquad
+B_4'=4x^3+6x=4B_3-2B_1.
+\]
+
+Using the Euler derivative matrix directly on Fibonacci coefficients would instead turn \(B_3\) into \(3B_2=3x^2+3\), missing the constant correction. The connection must accompany the operation.
+
+## Complete an integration and differentiation round trip
+
+Let \(J_0p(x)=\int_0^x p(t)\,dt\). Its matrix from \(\mathcal P_3^F\) to \(\mathcal P_4^F\) is
+
+\[
+\mathsf J_F=
+\begin{pmatrix}
+0&-\tfrac12&0&-\tfrac12\\
+1&0&\tfrac13&0\\
+0&\tfrac12&0&\tfrac14\\
+0&0&\tfrac13&0\\
+0&0&0&\tfrac14
+\end{pmatrix}.
+\]
+
+Every column is obtained by integrating one \(B_k\), expressing the result in the degree-four Fibonacci basis, and imposing value zero at the basepoint. For example, the last column reconstructs
+\(-B_0/2+B_2/4+B_4/4=x^4/4+x^2\), which vanishes at zero.
+
+Start with \(p=B_3=x^3+2x\), represented by \(v_0=(0,0,0,1)^{\mathsf T}\). Integration gives
+
+\[
+v_1=\mathsf J_Fv_0
+=\begin{pmatrix}-1/2\\0\\1/4\\0\\1/4\end{pmatrix}.
+\]
+
+The inverse degree-four connection is
+
+\[
+\mathsf C_4^{-1}=
+\begin{pmatrix}
+1&\tfrac12&\tfrac32&\tfrac32&3\\
+0&1&1&\tfrac72&5\\
+0&0&1&\tfrac32&6\\
+0&0&0&1&2\\
+0&0&0&0&1
+\end{pmatrix}.
+\]
+
+Changing to Euler coordinates, differentiating there, and returning to Fibonacci coordinates gives
+
+\[
+v_2=\mathsf C_4^{-1}v_1
+=\begin{pmatrix}5/8\\3/2\\7/4\\1/2\\1/4\end{pmatrix},\qquad
+v_3=\mathsf D_Ev_2
+=\begin{pmatrix}3/2\\7/2\\3/2\\1\end{pmatrix},\qquad
+v_4=\mathsf C_3v_3
+=\begin{pmatrix}0\\0\\0\\1\end{pmatrix}.
+\]
+
+For a direct check of the middle vector,
+\(\tfrac32\mathcal E_0+\tfrac72\mathcal E_1+\tfrac32\mathcal E_2+\mathcal E_3=x^3+2x\).
+The whole operator is exactly
+
+\[
+\boxed{\mathsf C_3\mathsf D_E\mathsf C_4^{-1}\mathsf J_F=I_4.}
+\]
+
+The identity holds for every polynomial of degree at most three. It follows from \((J_0p)'=p\), and can also be verified by multiplying these four matrices.
+
+The reverse order retains a boundary defect. Since \(J_0p'=p-p(0)\), its degree-four Fibonacci matrix is
+
+\[
+\boxed{
+\mathsf J_F\mathsf D_F
+=I_5-
+\begin{pmatrix}1\\0\\0\\0\\0\end{pmatrix}
+\begin{pmatrix}1&0&1&0&1\end{pmatrix}.
+}
+\]
+
+The row \((1,0,1,0,1)\) evaluates the Fibonacci basis at zero. It is not merely the first coefficient of a Fibonacci coordinate column. For example, \(B_2(0)=1\), so the reverse operation sends \(B_2\) to \(B_2-B_0=x^2\). On the constant polynomial it gives zero. These checks expose the boundary term that a false reverse-identity claim would lose.
+
+Finally, integrate the recovered polynomial on \([0,1]\). The integration covectors in degree three are
+
+\[
+\ell_F=\begin{pmatrix}1&1/2&4/3&5/4\end{pmatrix},\qquad
+\ell_E=\begin{pmatrix}1&0&-1/6&0\end{pmatrix}.
+\]
+
+Their entries are the integrals of the corresponding basis polynomials. They satisfy the exact dual-coordinate law \(\ell_F\mathsf C_3=\ell_E\). Thus both paths give
+
+\[
+\ell_Fv_4=\frac54,\qquad
+\ell_Ev_3=\frac32-\frac16\frac32=\frac54,
+\]
+
+in agreement with \(\int_0^1(x^3+2x)\,dx=1/4+1\). The coefficient columns, operator matrices, degree bounds, and scalar observation have all moved together.
+
 ## Run the exact checks
 
 Download the [standalone checker](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/euler_packets.py), or the [complete source and results bundle](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/source-and-checks.zip). From the download directory, run:
@@ -2653,6 +2991,9 @@ Supercongruence combination: 8 mod 81 and 9 mod 32 give 1385 mod 2592
 Fibonacci polynomial coordinates: E_4(x) = 2 B_0 + 5 B_1 - 3 B_2 - 2 B_3 + B_4
 Fibonacci recurrence defects: 5, -65, 1441, -51845
 Reversible sequence transfer: 1, -1, 5, -61, 1385 -> 1, 1, 2, 3, 5
+Paper IX Fibonacci packets: step 3 gives u[k+2] = 4*u[k+1] + u[k]
+Fibonacci precision ladder: F_37 = 24157817; tail valuations 3, 6, 9, exact
+Euler/Fibonacci calculus: full round trip is I_4; integral = 5/4
 Signed Euler difference coordinates: 1, -2, 8, -80, 1664
 Spacing-two lane: 1, 5, 1385; differences: 1, 4, 1376
 Refinement: 2*4 + 1376 = 1384
@@ -2669,7 +3010,7 @@ python -B euler_packets.py --output my-euler-results
 
 The program refuses to replace existing result files. The CSV values retain integers and rational numbers, including the ordinary coefficients and their factorial normalization.
 
-You can also inspect the published [coefficient table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/euler-coefficients.csv), [parameter-polynomial table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/power-polynomials.csv), [local reconstruction and error table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/local-reconstruction.csv), [matrix-entry table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/coefficient-matrices.csv), [supercongruence table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/congruence-ladders.csv), [Fibonacci transfer matrices](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/fibonacci-transfer.csv), [exact results](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/results.json), and [source identities](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/source-record.json).
+You can also inspect the published [coefficient table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/euler-coefficients.csv), [parameter-polynomial table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/power-polynomials.csv), [local reconstruction and error table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/local-reconstruction.csv), [matrix-entry table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/coefficient-matrices.csv), [supercongruence table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/congruence-ladders.csv), [Fibonacci transfer matrices](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/fibonacci-transfer.csv), [Fibonacci precision ladders](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/fibonacci-precision.csv), [polynomial calculus matrices](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/polynomial-calculus.csv), [exact results](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/results.json), and [source identities](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/source-record.json).
 
 The matrix table contains twelve-by-twelve blocks of each forward and inverse local transform for charts 2, 3, 5 and 7, the Pascal pair, the displayed three-by-five sampling block, and five-by-five base changes from chart three to charts five and two. The Fibonacci table adds the degree-twelve polynomial connection and its inverse, and sixteen-by-sixteen recurrence analysis, synthesis, ordinary sequence transfer and inverse matrices. These finite tables can be inspected entry by entry. The formulas and proofs above define the infinite operators.
 
@@ -2697,19 +3038,22 @@ The checks use several different routes:
 | Refinement composition | Every coefficient of composed and direct kernel rows | Both spacings 1–4, every lane, orders 0–3 |
 | Fibonacci polynomial basis | Closed ballot coefficients against descending monic elimination, inverse products, centered recovery, and polynomial companion powers | Degrees and powers 0–12 |
 | Fibonacci sequence coordinates | Defect analysis and synthesis, companion evolution, moving-state increments, Green-kernel sums, reversible Toeplitz transfer, and full commutator rows | Sixteen even Euler values, states 0–14, all required matrix columns |
+| Fibonacci packet recurrence | Independent Lucas trace, determinant parity, direct Fibonacci values and jump matrices | Steps 0–12, addresses 0–5, coarse indices 0–8 |
+| Fibonacci congruence ladders | Matrix factors against direct scalar differences, full finite binomial reconstructions and every truncation | Refinements 0–4, bases 0–6, difference orders 0–5, reconstruction addresses 0–3 and coarse indices 0–6 |
+| Polynomial calculus | Direct monomial integration and differentiation against transported operators, round-trip identity, reverse boundary defect and dual covector | Source degrees 0–8 |
 | Prime residuals | Integer polynomial coefficients and application to the three sequences | Primes 2, 3, 5, 7, and 11 |
 
 The permutation control uses a different definition of the numbers. At length \(m\), keep the number of admissible permutations ending at each possible rank. If the next comparison is an ascent, sum the preceding counts below the new rank. For a descent, sum those at or above it. Repeating the prescribed pattern gives the total. The program also enumerates the small permutation sets directly to check this dynamic program. It does not infer a universal enumeration theorem from those samples.
 
-The [bounded run manifest](../../verification/euler-packets/run-004/manifest.json) records the command, Python version, source hashes before and after execution, time limit, observed completion, and result hashes. The [Fibonacci and coordinate-transfer self-review](../../verification/euler-packets/PROOF_REVIEW_FIBONACCI.md) links the preceding proof reviews and checks the added arguments separately. There is no new Lean run for this example.
+The [bounded run manifest](../../verification/euler-packets/run-005/manifest.json) records the command, Python version, source hashes before and after execution, time limit, observed completion, and result hashes. The [source extension and calculus self-review](../../verification/euler-packets/PROOF_REVIEW_LITERATURE.md) links the preceding proof reviews and checks the added arguments separately. There is no new Lean run for this example.
 
 A separate check compares 605 reciprocal coefficient values with the pinned Komorebi Math source, using both its integer sequence API and its logarithmic reciprocal-power implementation. It also makes 1,012 comparisons in the local Euler charts: 220 source, kernel and reconstruction values, 528 truncation values and errors, and 264 row weights, across prime charts 2, 3, 5 and 7 through ordinary degree twenty. Its [comparison record](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/library-comparison.json) retains the source identity and declared ranges.
 
-That supplementary checker also verifies twelve complete rows of the infinite sampling-kernel witness and 18 Euler index-shift supercongruences, for primes 3, 5 and 7 with even starting degree 2–12. It retains the failing degree-zero boundary as a negative control. It also makes 921 Fibonacci comparisons with the pinned library: 169 polynomial connection entries, 52 polynomial companion entries, 13 centered Euler values, 512 recurrence matrix entries, 150 recurrence checks, and 25 full-index records. The full and even-index streams are checked separately at every prefix length from two through twenty-six. The universal statements have the written proofs above.
+That supplementary checker also verifies twelve complete rows of the infinite sampling-kernel witness and 18 Euler index-shift supercongruences, for primes 3, 5 and 7 with even starting degree 2–12. It retains the failing degree-zero boundary as a negative control. It also makes 921 Fibonacci comparisons with the pinned library: 169 polynomial connection entries, 52 polynomial companion entries, 13 centered Euler values, 512 recurrence matrix entries, 150 recurrence checks, and 25 full-index records. The full and even-index streams are checked separately at every prefix length from two through twenty-six. A further 3,506 comparisons check the new literature examples against pinned APIs: 780 packet values, 1,560 packet-state coordinates, 68 jump-matrix entries, and 1,098 polynomial-calculus entries. The [source check](../../verification/euler-packets/LITERATURE_FIBONACCI.md) records the exact source statements and distinguishes their written consequences. The universal statements have the written proofs above.
 
 ## What the example establishes
 
-The written calculation gives exact reciprocal recurrences, the two-packet multiplication law and its coarsening obstruction, the quartic reconstruction and enumeration identities, reciprocal parameter polynomials, Euler-polynomial power sums, odd-length and dyadic local supercongruences, infinite coefficient matrices and inverse transforms, prime-dependent base changes, congruential families with explicit addresses, coprime modular reconstruction, formal residual correction, sequence-refinement kernels with their Pascal conjugation, composition and prime correction, and explicit Euler-to-Fibonacci polynomial, recurrence and sequence transfers with their inverses and transported operation.
+The written calculation gives exact reciprocal recurrences, the two-packet multiplication law and its coarsening obstruction, the quartic reconstruction and enumeration identities, reciprocal parameter polynomials, Euler-polynomial power sums, odd-length and dyadic local supercongruences, infinite coefficient matrices and inverse transforms, prime-dependent base changes, congruential families with explicit addresses, coprime modular reconstruction, formal residual correction, sequence-refinement kernels with their Pascal conjugation, composition and prime correction, and explicit Euler-to-Fibonacci polynomial, recurrence and sequence transfers with their inverses and transported operation. The continuation derives Lucas packet recurrences, dyadic and simultaneous-prime Fibonacci precision ladders, and a complete Euler/Fibonacci polynomial calculus round trip.
 
 The finite program checks implementations of these laws in its declared ranges. Its deliberately wrong controls expose missing carry factors, wrong factorial normalization, discarded residuals, and an invalid composite-number generalization.
 
@@ -2719,6 +3063,8 @@ The method keeps the representation, operation, preserved data, and remaining de
 
 ## Sources and further reading
 
+- [Paper IX: Euler Congruences](../works/paper-ix.md), for companion jumps, Fibonacci packets, and integral matrix precision amplification. Exact source identities and the distinction between source statements and new worked consequences appear in the [source check](../../verification/euler-packets/LITERATURE_FIBONACCI.md).
+- [Komorebi Math typed-expression example](https://github.com/KomorebiP/komorebi-math/blob/a3aa04ac18a523f30c50c7f5dba709f88e904eff/docs/TYPED_EXPRESSION_EXAMPLE.md), for the polynomial integration, basis changes, derivative, boundary defect, and integral covector.
 - [NIST DLMF, Euler numbers and polynomials](https://dlmf.nist.gov/24.2#ii), including the signed convention and polynomial generating function, and the [secant expansion](https://dlmf.nist.gov/4.19.E5).
 - [NIST DLMF, von Staudt–Clausen theorem](https://dlmf.nist.gov/24.10.E1), for the precise Bernoulli denominator input in the dyadic kernel valuation.
 - [OEIS A000364](https://oeis.org/A000364) and its [coefficient table](https://oeis.org/A000364/b000364.txt), for the positive secant sequence and offset.

@@ -13,7 +13,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT/'examples/euler_packets.py'
 PAGE = ROOT/'docs/demonstrations/EULER_PACKETS.md'
-RUN = ROOT/'verification/euler-packets/run-004'
+RUN = ROOT/'verification/euler-packets/run-005'
 
 
 def digest(path):
@@ -42,7 +42,11 @@ def check_library(example, math_root, git):
     from komorebi_math.arithmetic.euler import EulerLocalCoordinates
     from komorebi_math.coordinates.polynomials import (
         euler_to_fibonacci_transform, fibonacci_companion_power,
-        secant_euler_from_fibonacci_coordinates)
+        secant_euler_from_fibonacci_coordinates, fibonacci_polynomial_family,
+        euler_polynomial_family)
+    from komorebi_math.coordinates.calculus import (
+        integral_coordinate_operator, derivative_coordinate_operator)
+    from komorebi_math.arithmetic.recurrence import LinearRecurrence
     from komorebi_math.coordinates.recurrence import (
         analyze_recurrence_coordinates, euler_fibonacci_coordinates,
         recurrence_analysis_transform, recurrence_synthesis_transform,
@@ -87,7 +91,8 @@ def check_library(example, math_root, git):
                 local_checks['truncations']+=2
                 assert coordinates.row_weight(degree,depth)==example.valuation(terms[depth],prime)
                 local_checks['row_weights']+=1
-    fib=example.compute()['fibonacci']
+    computed=example.compute()
+    fib=computed['fibonacci']
     connection=euler_to_fibonacci_transform(12).matrix
     fib_checks=dict(connection_entries=0,polynomial_companion_entries=0,
                     centered_euler_values=0,recurrence_matrix_entries=0,
@@ -126,6 +131,46 @@ def check_library(example, math_root, git):
                     for j in range(length):
                         assert matrix[i][j]==F(fib[key][i][j])
                         fib_checks['recurrence_matrix_entries']+=1
+    literature=computed['literature']
+    lit_checks=dict(packet_values=0,packet_state_coordinates=0,jump_entries=0,calculus_entries=0)
+    fib_values=[0,1]
+    for _ in range(1400):
+        fib_values.append(fib_values[-1]+fib_values[-2])
+    recurrence=LinearRecurrence((1,1),(0,1))
+    for step in range(1,13):
+        jump=recurrence.jump_matrix(step)
+        expected_jump=literature['jumps'][step]
+        for i in range(2):
+            for j in range(2):
+                assert jump[i,j]==expected_jump[1-i][1-j]
+                lit_checks['jump_entries']+=1
+        for address in range(step):
+            packet=recurrence.residue_packet(step,address)
+            for k in range(10):
+                assert packet.term(k)==fib_values[step*k+address]
+                lit_checks['packet_values']+=1
+                for i,value in enumerate(packet.state(k)):
+                    assert value==fib_values[step*k+address+i]
+                    lit_checks['packet_state_coordinates']+=1
+    for row in literature['dyadic_factors']:
+        step,divisor=row['step'],row['divisor']
+        jump=recurrence.jump_matrix(step)
+        for i in range(2):
+            for j in range(2):
+                assert jump[i,j]==int(i==j)+divisor*row['factor'][1-i][1-j]
+                lit_checks['jump_entries']+=1
+    for degree in range(9):
+        record=literature['calculus'][str(degree)]
+        matrices=[(integral_coordinate_operator(fibonacci_polynomial_family(),degree).matrix,record['integral']),
+                  (derivative_coordinate_operator(fibonacci_polynomial_family(),degree+1).matrix,
+                   record['derivative']+[['0']*(degree+2)]),
+                  (derivative_coordinate_operator(euler_polynomial_family(),degree+1).matrix,
+                   record['euler_derivative']+[['0']*(degree+2)])]
+        for actual,wanted in matrices:
+            for i,row in enumerate(actual):
+                for j,value in enumerate(row):
+                    assert value==F(wanted[i][j])
+                    lit_checks['calculus_entries']+=1
     sources=[]
     for name,module in sorted(sys.modules.items()):
         filename=getattr(module,'__file__',None)
@@ -144,6 +189,7 @@ def check_library(example, math_root, git):
                 local_charts=[2,3,5,7],local_even_degree=[0,20],
                 local_comparisons=local_checks,local_chart_comparisons=sum(local_checks.values()),
                 fibonacci_comparisons=fib_checks,fibonacci_total_comparisons=sum(fib_checks.values()),
+                literature_comparisons=lit_checks,literature_total_comparisons=sum(lit_checks.values()),
                 scope='Exact numeric library outputs in the declared finite range. Not a proof of the complete Python implementation.')
 
 

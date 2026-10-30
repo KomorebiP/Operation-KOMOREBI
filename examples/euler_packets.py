@@ -448,6 +448,141 @@ def fibonacci_examples(euler_polynomials, signed, check):
         target=[int(c) for c in target])
 
 
+def matrix_power(matrix, exponent):
+    result=[[F(i==j) for j in range(len(matrix))] for i in range(len(matrix))]
+    base=matrix
+    while exponent:
+        if exponent%2:
+            result=matrix_product(result,base)
+        base=matrix_product(base,base)
+        exponent//=2
+    return result
+
+
+def literature_examples(euler_polynomials, check):
+    fib=[0,1]
+    for _ in range(1400):
+        fib.append(fib[-1]+fib[-2])
+    lucas=[2,1]
+    for _ in range(12):
+        lucas.append(lucas[-1]+lucas[-2])
+    companion=[[F(1),F(1)],[F(1),F(0)]]
+    identity=[[F(1),F(0)],[F(0),F(1)]]
+    jumps=[]
+    for step in range(13):
+        jump=matrix_power(companion,step)
+        jumps.append([[int(c) for c in row] for row in jump])
+        check('literature_lucas_trace',jump[0][0]+jump[1][1]==lucas[step])
+        check('literature_determinant_parity',jump[0][0]*jump[1][1]-jump[0][1]*jump[1][0]==(-1)**step)
+        char=matrix_product(jump,jump)
+        check('literature_jump_characteristic',all(char[i][j]-lucas[step]*jump[i][j]+(-1)**step*identity[i][j]==0
+                                                 for i in range(2) for j in range(2)))
+        for address in range(6):
+            for k in range(9):
+                check('literature_sampled_recurrence',fib[step*(k+2)+address]
+                      ==lucas[step]*fib[step*(k+1)+address]-(-1)**step*fib[step*k+address])
+    check('literature_parity_control',fib[5]!=3*fib[3]+fib[1])
+    check('literature_jump_control',matrix_power(companion,2)!=companion)
+
+    precision=[]
+    ladder=[]
+    for refinement in range(5):
+        step=12*2**refinement
+        jump=matrix_power(companion,step)
+        divisor=2**(refinement+3)
+        factor=[[ (jump[i][j]-identity[i][j])/divisor for j in range(2)] for i in range(2)]
+        check('literature_dyadic_refinement',all(c.denominator==1 for row in factor for c in row))
+        check('literature_dyadic_factor_parity',all(int(factor[i][j])%2==int(i==j) for i in range(2) for j in range(2)))
+        for n in range(7):
+            for order in range(6):
+                direct=sum((-1)**(order-j)*comb(order,j)*fib[n+step*j] for j in range(order+1))
+                projected=matrix_vector(matrix_product(matrix_power(companion,n),matrix_power(factor,order)),[1,0])[1]
+                check('literature_matrix_difference',direct==divisor**order*projected)
+                check('literature_dyadic_divisibility',direct%(divisor**order)==0)
+                if n==1:
+                    check('literature_dyadic_sharpness',valuation(direct,2)==(refinement+3)*order)
+        for address in range(4):
+            for coarse in range(7):
+                terms=[]
+                for order in range(coarse+1):
+                    projected=matrix_vector(matrix_product(matrix_power(companion,address),matrix_power(factor,order)),[1,0])[1]
+                    terms.append(comb(coarse,order)*divisor**order*projected)
+                check('literature_packet_binomial',sum(terms)==fib[step*coarse+address])
+                for depth in range(coarse+2):
+                    partial=sum(terms[:depth])
+                    error=fib[step*coarse+address]-partial
+                    check('literature_packet_precision',error%(divisor**depth)==0)
+                    if address==1 and coarse==3:
+                        precision.append(dict(step=step,refinement=refinement,depth=depth,
+                            target=fib[step*coarse+address],partial=int(partial),error=int(error),
+                            modulus=divisor**depth,valuation=valuation(error,2)))
+        ladder.append(dict(step=step,power=refinement,divisor=divisor,
+                           factor=[[int(c) for c in row] for row in factor]))
+    check('literature_display',ladder[0]['factor']==[[29,18],[18,11]])
+    jump24=matrix_power(companion,24)
+    factor144=[[(jump24[i][j]-identity[i][j])/144 for j in range(2)] for i in range(2)]
+    check('literature_simultaneous_factor',factor144==[[521,322],[322,199]])
+    for n in range(7):
+        for order in range(6):
+            direct=sum((-1)**(order-j)*comb(order,j)*fib[n+24*j] for j in range(order+1))
+            projected=matrix_vector(matrix_product(matrix_power(companion,n),matrix_power(factor144,order)),[1,0])[1]
+            check('literature_simultaneous_differences',direct==144**order*projected)
+            check('literature_simultaneous_moduli',direct%(144**order)==0 and direct%(24**order)==0)
+    check('literature_display',sum((-1)**(2-j)*comb(2,j)*fib[1+24*j] for j in range(3))==7778592000)
+    # Actual composition of the existing ordinary Euler transfer with a selector.
+    a=[(-1)**n*v for n,v in enumerate(reciprocal_recurrence(2,1,16))]
+    kernel=inverse(mul(a,[1,-1,-1],16),16)
+    selector_rows=[toeplitz_matrix(kernel,16)[2*k] for k in range(8)]
+    check('literature_euler_packet_composition',matrix_vector(selector_rows,a)==[fib[2*k+1] for k in range(8)])
+
+    calculus={}
+    for degree in range(9):
+        source=fibonacci_polynomials(degree+1)
+        target=fibonacci_polynomials(degree+2)
+        primitives=[[F(0)]+[value/F(i+1) for i,value in enumerate(poly)] for poly in source]
+        integral=list(map(list,zip(*(monic_coordinates(poly,target) for poly in primitives))))
+        derivative=list(map(list,zip(*(monic_coordinates([F(j)*poly[j] for j in range(1,len(poly))] or [F(0)],source)
+                                       for poly in target))))
+        c=list(map(list,zip(*(monic_coordinates(poly,source) for poly in euler_polynomials[:degree+1]))))
+        c_inverse=list(map(list,zip(*(monic_coordinates(poly,euler_polynomials[:degree+2]) for poly in target))))
+        d_euler=[[F(j) if i==j-1 else F(0) for j in range(degree+2)] for i in range(degree+1)]
+        conjugate=matrix_product(matrix_product(c,d_euler),c_inverse)
+        check('literature_derivative_conjugacy',conjugate==derivative)
+        combined=matrix_product(conjugate,integral)
+        check('literature_calculus_round_trip',combined==[[F(i==j) for j in range(degree+1)] for i in range(degree+1)])
+        reverse=matrix_product(integral,derivative)
+        evaluation=[poly[0] for poly in target]
+        check('literature_calculus_boundary',reverse==[[F(i==j)-(evaluation[j] if i==0 else 0)
+                                                       for j in range(degree+2)] for i in range(degree+2)])
+        moment=lambda poly:sum(value/F(i+1) for i,value in enumerate(poly))
+        fib_moments=[moment(poly) for poly in source]
+        euler_moments=[moment(poly) for poly in euler_polynomials[:degree+1]]
+        check('literature_integral_covector',matrix_product([fib_moments],c)==[euler_moments])
+        calculus[str(degree)]=dict(integral=integral,derivative=derivative,
+            euler_derivative=d_euler,connection=c,inverse_connection=c_inverse,
+            fib_moments=fib_moments,euler_moments=euler_moments)
+    display=calculus['3']
+    v0=[F(0),F(0),F(0),F(1)]
+    v1=matrix_vector(display['integral'],v0)
+    v2=matrix_vector(display['inverse_connection'],v1)
+    v3=matrix_vector(display['euler_derivative'],v2)
+    v4=matrix_vector(display['connection'],v3)
+    check('literature_display',v1==[F(-1,2),0,F(1,4),0,F(1,4)])
+    check('literature_display',v2==[F(5,8),F(3,2),F(7,4),F(1,2),F(1,4)])
+    check('literature_display',v3==[F(3,2),F(7,2),F(3,2),1] and v4==v0)
+    check('literature_display',sum(x*y for x,y in zip(display['fib_moments'],v4))==F(5,4))
+    check('literature_wrong_operator_control',matrix_vector(display['euler_derivative'],[0,0,0,1,0])
+          !=matrix_vector(display['derivative'],[0,0,0,1,0]))
+    def strings(obj):
+        if isinstance(obj,F):return str(obj)
+        if isinstance(obj,list):return [strings(x) for x in obj]
+        if isinstance(obj,dict):return {k:strings(v) for k,v in obj.items()}
+        return obj
+    return dict(jumps=jumps,lucas=lucas[:13],packet_three=[[fib[3*k+j] for k in range(6)] for j in range(3)],
+        dyadic_factors=ladder,precision=precision,simultaneous_factor=[[int(c) for c in row] for row in factor144],
+        calculus=strings(calculus),calculus_vectors=strings([v0,v1,v2,v3,v4]))
+
+
 def compute():
     counts = {}
 
@@ -868,6 +1003,7 @@ def compute():
     # No field-valued quotient or division by a non-unit is used in the modular check.
 
     fibonacci=fibonacci_examples(euler_polynomials,signed,check)
+    literature=literature_examples(euler_polynomials,check)
     polynomials = reciprocal_polynomials(2,6)
     report = dict(status='PASS',arithmetic='exact integers and fractions',
         python=platform.python_version(),randomness=False,checks=counts,
@@ -883,6 +1019,7 @@ def compute():
         matrix_examples=matrix_examples,
         base_change_examples=base_change_examples,
         fibonacci=fibonacci,
+        literature=literature,
         references=REFERENCES,
         bounds=dict(reciprocal_spacing=[2,6],reciprocal_index=[0,10],
             reciprocal_parameters=[str(r) for r in parameters],
@@ -900,6 +1037,9 @@ def compute():
             congruential_family_spacing=[1,6],congruential_addresses='every 0<=j<N',congruential_index=[0,8],
             fibonacci_polynomial_degree=[0,12],fibonacci_sequence_length=16,
             fibonacci_companion_power=[0,12],fibonacci_state_index=[0,14],
+            literature_packet_step=[0,12],literature_packet_address=[0,5],literature_packet_index=[0,8],
+            literature_dyadic_refinement=[0,4],literature_difference_base=[0,6],literature_difference_order=[0,5],
+            literature_binomial_address=[0,3],literature_binomial_index=[0,6],literature_calculus_degree=[0,8],
             difference_spacing=[1,5],difference_offsets='all 0 <= s < M',difference_order=[0,5],
             composition_spacings=[1,4],composition_offsets='all admitted offsets',composition_order=[0,3],
             primes=[2,3,5,7,11]),
@@ -914,7 +1054,7 @@ def save_results(directory, report):
     directory.mkdir(parents=True,exist_ok=True)
     paths = [directory/'results.json',directory/'euler-coefficients.csv',directory/'power-polynomials.csv',
              directory/'local-reconstruction.csv',directory/'coefficient-matrices.csv',directory/'congruence-ladders.csv',
-             directory/'fibonacci-transfer.csv']
+             directory/'fibonacci-transfer.csv',directory/'fibonacci-precision.csv',directory/'polynomial-calculus.csv']
     if any(p.exists() for p in paths):
         raise FileExistsError('Choose a directory with no existing result files')
     paths[0].write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8',newline='\n')
@@ -966,6 +1106,20 @@ def save_results(directory, report):
             for i,row in enumerate(report['fibonacci'][name]):
                 for j,value in enumerate(row):
                     writer.writerow([name,i,j,value])
+    with paths[7].open('w',encoding='utf-8',newline='') as stream:
+        writer=csv.writer(stream,lineterminator='\n')
+        keys=['step','refinement','depth','target','partial','error','modulus','valuation']
+        writer.writerow(keys)
+        for row in report['literature']['precision']:
+            writer.writerow(['infinity' if row[key] is None else row[key] for key in keys])
+    with paths[8].open('w',encoding='utf-8',newline='') as stream:
+        writer=csv.writer(stream,lineterminator='\n')
+        writer.writerow(['source_degree','operator','row','column','value'])
+        for degree,record in report['literature']['calculus'].items():
+            for name in ('integral','derivative','euler_derivative','connection','inverse_connection'):
+                for i,row in enumerate(record[name]):
+                    for j,value in enumerate(row):
+                        writer.writerow([degree,name,i,j,value])
 
 
 def main():
@@ -986,6 +1140,9 @@ def main():
     print('Fibonacci polynomial coordinates: E_4(x) = 2 B_0 + 5 B_1 - 3 B_2 - 2 B_3 + B_4')
     print('Fibonacci recurrence defects: 5, -65, 1441, -51845')
     print('Reversible sequence transfer: 1, -1, 5, -61, 1385 -> 1, 1, 2, 3, 5')
+    print('Paper IX Fibonacci packets: step 3 gives u[k+2] = 4*u[k+1] + u[k]')
+    print('Fibonacci precision ladder: F_37 = 24157817; tail valuations 3, 6, 9, exact')
+    print('Euler/Fibonacci calculus: full round trip is I_4; integral = 5/4')
     print('Signed Euler difference coordinates:', ', '.join(map(str,report['difference_coordinates'])))
     print('Spacing-two lane: 1, 5, 1385; differences: 1, 4, 1376')
     print('Refinement: 2*4 + 1376 = 1384')
