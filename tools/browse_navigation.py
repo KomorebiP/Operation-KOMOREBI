@@ -103,13 +103,16 @@ class Browser:
 
     def resources(self, c, kinds, page):
         corrected = CORRECTED_CODE.get(c['id']) if 'code' in kinds else None
+        formal = self.assessments[c['id']].get('formal_verification') if 'lean' in kinds else None
         result = []
+        if formal:
+            result += [link('Checked formal companion: source and reproduction', formal['source_root']+'/README.md', page)]
         if corrected:
             result += [link(corrected[0],corrected[1],page),
                        link('Repair details and recorded checks',corrected[2],page)]
         selected = [a for a in self.rows[c['id']]['resources'] if a['kind'] in kinds]
         selected.sort(key=lambda a: a['kind']!='lean_setup')
-        result += [link(('Preserved original edition: ' if corrected and a['kind']=='code' else '')+a['label'],
+        result += [link(('Preserved original edition: ' if (corrected and a['kind']=='code') or (formal and a['kind']=='lean') else '')+a['label'],
                         c['destination']+'/'+a['path'],page)
                    for a in selected]
         return result
@@ -209,6 +212,8 @@ class Browser:
             text += '- '+link('Latest recorded written review',s['review_report'],page)+'\n'
         if s.get('software_verification'):
             text += '- '+link('Recorded software checks',s['software_verification']['path'],page)+'\n'
+        if s.get('formal_verification'):
+            text += '- '+link('Separate Lean companion replay and scope',s['formal_verification']['path'],page)+'\n'
         if s.get('current_counterpart'):
             other = next(v for v in self.components if v['id']==s['current_counterpart'])
             text += '- '+link('Current counterpart: '+other['title'],card_path(other),page)+'\n'

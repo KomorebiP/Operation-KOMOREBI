@@ -38,6 +38,7 @@ Use these guides to find works, software, and project records. Each dated review
 - [The Possibility for a Machine-Native Mathematics](components/MACHINE_NATIVE_MATHEMATICS.md)
 - [Constructive Repair: package and verification guide](components/CONSTRUCTIVE_REPAIR.md)
 - [Hilbert 12 ambient dual slice: reading note](components/H12_AMBIENT_DUAL_SLICE.md)
+- [Resolution Semantics: checked Lean subset](components/RESOLUTION_SEMANTICS_LEAN.md)
 
 ## Maintaining these pages
 
