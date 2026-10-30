@@ -58,7 +58,10 @@ def site_navigation(page):
     def link(title, target):
         current = ' aria-current="page"' if target == page else ''
         url = posixpath.relpath(target, posixpath.dirname(page) or '.')
-        return '<a href="'+html.escape(url, quote=True)+'"'+current+'>'+html.escape(title)+'</a>'
+        icon = ('<svg class="site-search-icon" viewBox="0 0 20 20" width="17" height="17" '
+                'aria-hidden="true" focusable="false"><circle cx="8.5" cy="8.5" r="5.5"/>'
+                '<path d="m12.5 12.5 4 4"/></svg>') if target == 'search.html' else ''
+        return '<a href="'+html.escape(url, quote=True)+'"'+current+'>'+icon+html.escape(title)+'</a>'
     groups = [
         ('Read', [('Reading routes', 'collection/READING_ROUTES.html'),
                   ('Physics collection', 'collection/PHYSICS_COLLECTION.html'),
@@ -76,10 +79,13 @@ def site_navigation(page):
         for title, links in groups)
     return ('<nav class="site-navigation" aria-label="Main navigation">'
             '<div class="site-navigation-bar">'+link('Collection', 'works.html')+
-            link('About the project', 'collection/START_HERE.html')+link('Search', 'search.html')+
+            link('About', 'collection/START_HERE.html')+link('Search', 'search.html')+
             link('Glossary', 'collection/GLOSSARY.html')+
             '<button id="site-menu-toggle" type="button" aria-expanded="true" '
-            'aria-controls="site-menu-panel" hidden>Browse <span aria-hidden="true">▾</span></button></div>'
+            'aria-controls="site-menu-panel" hidden><svg class="site-browse-icon" viewBox="0 0 20 20" '
+            'width="16" height="16" aria-hidden="true" focusable="false"><path '
+            'd="M3 3h5v5H3zm9 0h5v5h-5zM3 12h5v5H3zm9 0h5v5h-5z"/></svg>'
+            'Browse <span aria-hidden="true">▾</span></button></div>'
             '<div id="site-menu-panel" class="site-menu-panel">'+panel+'</div></nav>')
 
 
@@ -330,7 +336,7 @@ class Site:
 <link rel="stylesheet" href="'''+self.rel('assets/side-reader.css',path)+'?v='+hashlib.sha256((self.root/'website/assets/side-reader.css').read_bytes()).hexdigest()[:12]+'''">
 <script defer src="'''+self.rel('assets/mathjax-config.js',path)+'''"></script><script defer src="'''+self.rel('assets/mathjax/tex-svg-full.js',path)+'''"></script>
 <script defer src="'''+self.rel('assets/reader.js',path)+'?v='+hashlib.sha256((self.root/'website/assets/reader.js').read_bytes()).hexdigest()[:12]+'''"></script>'''+glossary_script+'''</head><body class="open-research'''+(' home-page' if path == 'index.html' else '')+'''">
-<a class="skip-link" href="#main">Skip to main content</a><header class="site-header"><a class="brand" href="'''+root+'''">Komorebi<span>Mathematics · proofs · software</span></a>'''+nav_html+'''</header>
+<a class="skip-link" href="#main">Skip to main content</a><header class="site-header"><a class="brand" href="'''+root+'''"><svg class="brand-mark" viewBox="0 0 48 48" width="48" height="48" aria-hidden="true" focusable="false"><rect class="brand-canopy" x="1" y="1" width="46" height="46" rx="12"/><path class="brand-leaf" d="M12 12h5c9.4 0 17 7.6 17 17h-5c-9.4 0-17-7.6-17-17Z"/><path class="brand-light" d="M14 34 33 15"/><circle class="brand-sun" cx="34" cy="34" r="3"/></svg><span class="brand-wordmark">Komorebi<small>Mathematics · proofs · software</small></span></a>'''+nav_html+'''</header>
 <main id="main" tabindex="-1">'''+body+'''</main><footer><div class="footer-inner"><nav class="footer-links" aria-label="Project information">'''+source_html+'''<a href="'''+self.rel('collection/PROJECT_STATEMENT.html',path)+'''">Project and authorship statement</a><a href="'''+self.rel('collection/ACCESSIBILITY.html',path)+'''">Accessibility and reporting problems</a></nav><a class="footer-github" href="https://github.com/'''+REPOSITORY+'''">Return to GitHub <span aria-hidden="true">↗</span></a></div></footer></body></html>'''
         self.write(path,doc)
     def collect_documents(self):
