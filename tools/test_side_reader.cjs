@@ -21,6 +21,18 @@ assert.equal(api.filter(data.entries,'cafe seed rank','one','').length,1);
 assert.equal(api.filter(data.entries,'reconstruction','two','Examples').length,1);
 assert.equal(api.filter(data.entries,'proof','one','').length,0);
 assert.equal(api.filter(data.entries,'','two','').length,2);
+assert.deepEqual(api.workIds('read/one.html#L12',data),['one']);
+assert.deepEqual(api.workIds('collection/examples/a.html#calculation',data),['one','two'],'Shared examples keep all recorded work associations');
+assert.deepEqual(api.workIds('search.html?work=two&q=operator',data),['two']);
+assert.deepEqual(api.workIds('claims.html?paper=two#record',data),['two']);
+assert.deepEqual(api.workIds('claims.html#two',data),['two']);
+assert.deepEqual(api.workIds('claims.html?paper=unknown',data),[]);
+assert.deepEqual(api.workIds('unrelated.html',data),[]);
+assert.deepEqual(api.workIds(null,data),[]);
+const companion={left:'read/one.html#L12',right:'collection/examples/a.html',view:'both',width:50};
+const companionURL=new URL(api.pairURL(base,companion));
+assert.equal(companionURL.searchParams.get('left'),'read/one.html#L12','Opening related material preserves the originating passage');
+assert.equal(companionURL.searchParams.get('right'),'collection/examples/a.html');
 let state=api.parsePair(base+'side-by-side.html?left=read%2Ftwo.html%23L13',base,data,false);
 assert.equal(state.right,'claims.html#two','The companion follows the originating work');
 assert.equal(state.left,'read/two.html#L13');
@@ -41,4 +53,4 @@ for (const value of [paired.replace('right=','unknown='),paired+'&left=read/one.
   'read/one.html?left=read/one.html&right=read/two.html']) {
   assert.equal(api.linkedPair(value,base,data.pages),null,value);
 }
-console.log('PASS: local target restrictions, search, work association, mobile defaults, pair-link round trip and nested pair routing');
+console.log('PASS: local target restrictions, search, shared work associations, companion links, mobile defaults, pair-link round trip and nested pair routing');

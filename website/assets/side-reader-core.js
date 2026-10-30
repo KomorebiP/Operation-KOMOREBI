@@ -31,6 +31,17 @@
     return entries.filter(row => (!work || row.works.includes(work)) && (!kind || row.kind === kind) &&
       wanted.every(word => words(row.title + " " + row.text).join(" ").includes(word)));
   }
+  function workIds(value, data) {
+    if (typeof value !== "string") return [];
+    const path = value.split(/[?#]/u)[0];
+    const params = new URLSearchParams(value.split("#")[0].split("?")[1] || "");
+    const explicit = path === "search.html" ? params.get("work") : path === "claims.html" ? params.get("paper") || value.split("#")[1] : "";
+    const known = new Set(data.works.map(work => work.id));
+    if (known.has(explicit)) return [explicit];
+    const exact = data.entries.filter(row => row.url === value);
+    const rows = exact.length ? exact : data.entries.filter(row => row.url.split(/[?#]/u)[0] === path);
+    return [...new Set(rows.flatMap(row => row.works))].filter(id => known.has(id));
+  }
   function pairURL(base, state) {
     const url = new URL("side-by-side.html", base);
     for (const side of ["left", "right"]) if (state[side]) url.searchParams.set(side, state[side]);
@@ -41,10 +52,9 @@
   function parsePair(href, base, data, narrow) {
     const params = new URL(href).searchParams;
     const first = canonical(params.get("left") || "", base, data.pages);
-    const associated = data.entries.find(row => row.url === first) ||
-      data.entries.find(row => first && row.url.split("#")[0] === first.split("#")[0]);
+    const associated = workIds(first, data);
     const work = data.works.find(row => row.id === params.get("work")) ||
-      data.works.find(row => associated?.works.includes(row.id)) || data.works[0];
+      data.works.find(row => associated.includes(row.id)) || data.works[0];
     const left = canonical(params.get("left") || work.left, base, data.pages);
     const right = canonical(params.get("right") || work.right, base, data.pages);
     const requested = params.get("view");
@@ -54,7 +64,7 @@
       width: [35,40,45,50,55,60,65].includes(width) ? width : 50,
       invalid: Boolean((params.has("left") && !left) || (params.has("right") && !right))};
   }
-  const api = {canonical, words, filter, pairURL, parsePair, linkedPair};
+  const api = {canonical, words, filter, pairURL, parsePair, linkedPair, workIds};
   if (typeof module === "object" && module.exports) module.exports = api;
   else root.KomorebiSideReader = api;
 })(globalThis);

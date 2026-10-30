@@ -62,6 +62,13 @@ anchor. Each pane has a document picker with work, type and text filters.
 Papers, claims, proof locations, Lean sources, code, notation and examples can
 be read together. Each document keeps its existing evidence and scope notes.
 
+Open **Related material** above either document to find that work's paper,
+claims, written proofs, Lean, code, notation, evidence and available examples.
+Choosing a link opens it in the other pane and keeps the current document in
+place. On a narrow screen, the other pane becomes visible. For an example or
+guide shared by several works, **Work for these links** lets you choose which
+work to follow. Links use the same recorded routes as the individual work pages.
+
 **Read statement and proof side by side** opens the recorded passages directly
 from the claim index, readable chapters and annotated source files. Formatted
 chapters are used where available. Other papers open at the original source

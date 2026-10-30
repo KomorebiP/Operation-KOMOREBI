@@ -2,12 +2,23 @@ import tempfile
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
-from side_reader import catalogue, pane, pair_link, check_pair_links
+from side_reader import catalogue, pane, pair_link, check_pair_links, check_work_routes
 from urllib.parse import parse_qs, urlsplit
 from check_reader_site import Page
 
 
 class SideReaderTests(unittest.TestCase):
+    def test_related_routes_reject_missing_passages_and_wrong_work_searches(self):
+        pages={'search.html':Page('<h1>Search</h1>'),'claims.html':Page('<h2 id="one">Claims</h2>')}
+        works=[{'id':'one','routes':[{'label':'Claims','url':'claims.html#one'},
+                                   {'label':'Search this work','url':'search.html?work=one'}]}]
+        self.assertEqual(check_work_routes(works,pages),2)
+        for bad in ['claims.html#missing','missing.html','search.html?work=other',
+                    'search.html?work=one&work=other','search.html?work=one&extra=value',
+                    'https://example.test/search.html','claims.html?work=one']:
+            works[0]['routes']=[{'label':'Related','url':bad}]
+            with self.subTest(target=bad),self.assertRaises(AssertionError):check_work_routes(works,pages)
+
     def test_pair_links_keep_statement_and_proof_anchors_from_nested_pages(self):
         link=pair_link('read/paper/one.html#L45','read/paper/one.html#L60','read/paper/one.html')
         href=Page(link).links[0]
@@ -38,13 +49,15 @@ class SideReaderTests(unittest.TestCase):
                 search=[dict(url='read/work/main.html#L3',title='A claim',kind='Claims',work_ids=['work'],text='Source text'),
                         dict(url='missing.html',title='Missing')],
                 components={'work':{'title':'Work'}},registry={'components':[{'id':'work'}]},
-                reader=SimpleNamespace(primary_pdf=lambda work:None),editorial_editions={})
+                reader=SimpleNamespace(primary_pdf=lambda work:None,
+                    work_route_targets=lambda work:[('Paper overview','collection/works/'+work+'.html')]),editorial_editions={})
             data=catalogue(site)
             self.assertEqual(set(data['pages']),{'read/work/main.html','collection/works/work.html'})
             self.assertEqual(data['pages']['read/work/main.html'],'A & B')
             self.assertEqual(data['entries'][0]['url'],'read/work/main.html#L3')
             self.assertNotIn('missing.html',[row['url'] for row in data['entries']])
             self.assertEqual(data['works'][0]['right'],'collection/works/work.html#written-proofs')
+            self.assertEqual(data['works'][0]['routes'],[{'label':'Paper overview','url':'collection/works/work.html'}])
 
     def test_both_panes_have_distinct_labels_and_named_frames(self):
         page=Page(pane('left')+pane('right'))

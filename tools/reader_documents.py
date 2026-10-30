@@ -194,7 +194,7 @@ class ReadingDocuments:
             shortcut = ('<aside class="document-shortcut"><a class="button" href="'+self.site.rel(pdf['url'], page)+'">Read the paper here</a> <a href="'+self.site.rel('documents.html', page)+'">Browse papers and PDFs</a></aside>') if pdf else ''
         return shortcut+self.work_routes(work, page)
 
-    def work_routes(self, work, page):
+    def work_route_targets(self, work):
         hub = 'collection/works/'+work+'.html'
         pdf = self.primary_pdf(work)
         routes = [('Paper overview', hub)]
@@ -215,8 +215,11 @@ class ReadingDocuments:
         if any(work in t['works'] for t in self.learning.get('learning_topics', [])):
             routes.append(('Worked examples', hub+'#worked-examples-for-this-work'))
         routes += [('Notation', 'notation/'+work+'.html'), ('Evidence', hub+'#evidence'), ('Search this work', 'search.html?work='+quote(work))]
+        return routes
+
+    def work_routes(self, work, page):
         return '<nav class="document-routes" aria-label="Reading routes for this work">'+''.join(
-            '<a href="'+self.site.rel(url, page)+'">'+label+'</a>' for label, url in routes)+'</nav>'
+            '<a href="'+self.site.rel(url, page)+'">'+label+'</a>' for label, url in self.work_route_targets(work))+'</nav>'
 
     def source_annotations(self, path, page):
         from side_reader import pair_link

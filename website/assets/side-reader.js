@@ -24,14 +24,47 @@
   const pending = {};
   const timers = {};
   const focusAfterLoad = {};
-  const workFor = url => data.entries.find(row => row.url === url)?.works[0] ||
-    data.entries.find(row => row.url.split("#")[0] === url.split("#")[0])?.works[0] || "";
+  const positions = {};
+  const workFor = url => api.workIds(url, data)[0] || "";
   const titleFor = url => data.entries.find(row => row.url === url)?.title || data.pages[url.split(/[?#]/u)[0]] || "Document";
 
+  function relatedMaterial() {
+    for (const side of sides) {
+      const destination = other(side);
+      const ids = api.workIds(state[side], data);
+      const select = $(side + "-related-work");
+      const previous = select.value;
+      const shared = api.workIds(state[destination], data).find(id => ids.includes(id));
+      const chosen = ids.includes(previous) ? previous : shared || ids[0];
+      select.replaceChildren();
+      for (const id of ids) select.add(new Option(data.works.find(work => work.id === id).title, id));
+      if (chosen) select.value = chosen;
+      const work = data.works.find(row => row.id === chosen);
+      const links = $(side + "-related-links");
+      links.replaceChildren();
+      for (const route of work?.routes || []) {
+        const target = api.canonical(route.url, base, data.pages);
+        if (!target) continue;
+        const link = document.createElement("a");
+        const view = state.view === "both" ? "both" : destination;
+        link.href = api.pairURL(base, {...state, [destination]:target, view});
+        link.dataset.relatedTarget = target;
+        link.textContent = route.label;
+        link.setAttribute("aria-label", route.label + " in the " + destination + " pane");
+        links.append(link);
+      }
+      $(side + "-related").hidden = !links.childElementCount;
+      $(side + "-related-choice").hidden = ids.length < 2;
+      $(side + "-related-title").hidden = ids.length > 1;
+      $(side + "-related-title").textContent = work?.title || "";
+      $(side + "-related-description").textContent = "Open in the " + destination + " pane and keep this document here.";
+    }
+  }
   function save(push = false) {
     const url = api.pairURL(base, state);
     if (location.href !== url) history[push ? "pushState" : "replaceState"](null, "", url);
     $("side-share-fallback").hidden = true;
+    relatedMaterial();
   }
   function layout() {
     root.dataset.view = state.view;
@@ -39,7 +72,22 @@
     $("side-width").value = state.width;
     $("side-width-value").value = state.width + "%";
     for (const button of root.querySelectorAll("[data-side-view]")) button.setAttribute("aria-pressed", String(button.dataset.sideView === state.view));
-    for (const side of sides) $(side + "-pane").hidden = state.view !== "both" && state.view !== side;
+    for (const side of sides) {
+      const pane = $(side + "-pane");
+      const frame = $(side + "-frame");
+      const hidden = state.view !== "both" && state.view !== side;
+      if (!pane.hidden && hidden && loaded[side] && !pending[side]) {
+        try { positions[side] = {url:loaded[side], x:frame.contentWindow.scrollX, y:frame.contentWindow.scrollY}; } catch {}
+      }
+      const revealing = pane.hidden && !hidden;
+      pane.hidden = hidden;
+      if (revealing) requestAnimationFrame(() => {
+        if (pane.hidden || pending[side] || loaded[side] !== state[side]) return;
+        const position = positions[side];
+        if (position?.url === state[side]) frame.contentWindow.scrollTo(position.x, position.y);
+        else positionPane(side);
+      });
+    }
   }
   function positionPane(side, focus = false) {
     const frame = $(side + "-frame");
@@ -192,7 +240,7 @@
       navigate(side, state[side].split("#")[0] + "#L" + line.valueAsNumber);
       focusPane(side);
     }, true);
-    // Source line forms and existing reading controls can change the hash directly.
+    // Reading controls and filters can change the document address directly.
     const updateAddress = () => {
       const current = api.canonical(frame.contentWindow.location.href, base, data.pages);
       if (!current || current === state[side]) return;
@@ -202,7 +250,7 @@
       save();
     };
     frame.contentWindow.addEventListener("hashchange", updateAddress);
-    doc.addEventListener("submit", () => setTimeout(updateAddress, 0));
+    for (const event of ["submit", "input", "change", "reset"]) doc.addEventListener(event, () => setTimeout(updateAddress, 0));
     if (focusAfterLoad[side]) {
       focusAfterLoad[side] = false;
       focusPane(side);
@@ -227,6 +275,21 @@
     $(side + "-form").querySelector("button[type=submit]").disabled = !matches.length;
   }
   for (const side of sides) {
+    $(side + "-related-work").addEventListener("change", relatedMaterial);
+    $(side + "-related-links").addEventListener("click", event => {
+      if (event.defaultPrevented || event.button || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+      const link = event.target.closest("a[data-related-target]");
+      if (!link) return;
+      event.preventDefault();
+      const destination = other(side);
+      focusAfterLoad[destination] = true;
+      navigate(destination, link.dataset.relatedTarget);
+      $(destination + "-work").value = $(side + "-related-work").value;
+      $(destination + "-query").value = "";
+      $(destination + "-kind").value = "";
+      refresh(destination);
+      status.textContent = "Opened " + link.textContent + " in the " + destination + " pane. Your " + side + " document stays in place.";
+    });
     for (const work of data.works) $(side + "-work").add(new Option(work.title, work.id));
     for (const kind of [...new Set(data.entries.map(row => row.kind))].sort()) $(side + "-kind").add(new Option(kind, kind));
     $(side + "-work").value = workFor(state[side]);
@@ -276,6 +339,7 @@
   window.addEventListener("popstate", () => {
     state = api.parsePair(location.href, base, data, matchMedia("(max-width: 800px)").matches);
     layout();
+    relatedMaterial();
     for (const side of sides) load(side);
   });
   root.hidden = false;

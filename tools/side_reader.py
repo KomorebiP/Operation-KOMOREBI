@@ -48,6 +48,23 @@ def check_pair_links(pages):
     return dict(targets=links, pairs=pairs)
 
 
+def check_work_routes(works, pages):
+    from check_reader_site import check_search_targets
+    count = 0
+    for work in works:
+        routes = work['routes']
+        assert routes and len({row['label'] for row in routes}) == len(routes)
+        for route in routes:
+            parts = urlsplit(route['url'])
+            assert not parts.scheme and not parts.netloc, route['url']
+            if parts.query:
+                assert (parts.path == 'search.html' and not parts.fragment and
+                        parse_qs(parts.query, keep_blank_values=True) == {'work':[work['id']]}), route['url']
+            check_search_targets([{'url':parts.path+('#'+parts.fragment if parts.fragment else '')}], pages)
+            count += 1
+    return count
+
+
 def catalogue(site):
     pages = {}
     for file in sorted(site.output.rglob('*.html')):
@@ -82,7 +99,8 @@ def catalogue(site):
         if edition:
             left = edition['manuscript_url']
         works.append(dict(id=work, title=site.components[work]['title'],
-                          left=left, right=hub+'#written-proofs'))
+                          left=left, right=hub+'#written-proofs',
+                          routes=[dict(label=label, url=url) for label, url in site.reader.work_route_targets(work)]))
     return dict(schema=1, revision=site.revision, pages=pages, works=works, entries=entries)
 
 
@@ -93,6 +111,12 @@ def pane(side):
 <div class="side-pane-actions"><button type="button" id="{side}-read" disabled>Read {side} pane</button>
 <a id="{side}-standalone" target="_blank" rel="noopener" hidden>Open on its own <span class="side-new-tab">(new tab)</span></a></div></div>
 <p class="side-current" id="{side}-current">Choose a document</p>
+<details class="side-related" id="{side}-related" hidden><summary>Related material</summary>
+<p id="{side}-related-description"></p>
+<div id="{side}-related-choice" hidden><label for="{side}-related-work">Work for these links</label>
+<select id="{side}-related-work"></select></div>
+<p class="side-related-title" id="{side}-related-title"></p>
+<nav id="{side}-related-links" aria-label="Related material from the {side} document"></nav></details>
 <details class="side-picker" id="{side}-picker" open><summary>Choose a document for the {side} pane</summary>
 <form id="{side}-form"><div class="side-filter-grid"><div>
 <label for="{side}-work">Work</label><select id="{side}-work"><option value="">All works and guides</option></select></div><div>
@@ -125,6 +149,8 @@ def build(site):
 <label for="side-width">Left pane width <output id="side-width-value" for="side-width">50%</output></label>
 <input type="range" id="side-width" min="35" max="65" value="50" step="5">
 <p>Each pane scrolls independently. Use its document picker to change what you read.
+<strong>Related material</strong> opens this work's claims, proofs, Lean, code and other reading routes in the other pane.
+For material shared by several works, choose <strong>Work for these links</strong>.
 To follow a reference without moving the current page, turn on <strong>Open links from this document in the other pane</strong>.
 External links and the full PDF viewer open in a new tab. PDF toolbar links stay within the PDF viewer.</p>
 <p>Use <strong>Read left pane</strong> or <strong>Read right pane</strong> to move keyboard focus into a document.
@@ -157,4 +183,5 @@ def check(root, pages):
     page = pages['side-by-side.html']
     assert len(page.iframes) == 2
     assert {'side-reader','side-swap','side-share','side-width','left-document','right-document'} <= set(page.ids)
-    return dict(pages=len(data['pages']), entries=len(data['entries']), works=len(data['works']), paired_links=check_pair_links(pages))
+    return dict(pages=len(data['pages']), entries=len(data['entries']), works=len(data['works']),
+                related_routes=check_work_routes(data['works'], pages), paired_links=check_pair_links(pages))
