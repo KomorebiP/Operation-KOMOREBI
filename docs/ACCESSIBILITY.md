@@ -44,6 +44,8 @@ chapters and work routes retain their named navigation regions.
 
 In-page links to chapters, statements, proofs and source lines also move keyboard
 focus to the destination. Any enclosing contents disclosure opens when needed.
+Direct passage links and browser Back/Forward navigation also move focus to the
+linked passage. Opening a page preserves focus if you have already moved to a control.
 
 Use Tab and Shift+Tab to move between controls, Enter to follow a link or
 activate a button, and Space or Enter to open a contents disclosure. Browser

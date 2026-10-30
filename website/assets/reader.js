@@ -49,6 +49,28 @@ function focusReadingTarget(target, hash) {
   target.focus({preventScroll: true});
   target.scrollIntoView();
 }
+function linkedReadingTarget() {
+  try { return document.getElementById(decodeURIComponent(location.hash.slice(1))); }
+  catch { return null; }
+}
+
+// Direct passage links and browser history need the same focus movement as
+// links activated within the page. Wait for load so other reading controls
+// have revealed their target, and preserve focus if the reader has moved it.
+window.addEventListener("load", () => {
+  const target = linkedReadingTarget();
+  if (target && (!document.activeElement || document.activeElement === document.body ||
+      document.activeElement === document.documentElement)) focusReadingTarget(target, location.hash);
+}, {once: true});
+window.addEventListener("hashchange", () => {
+  const hash = location.hash;
+  // Claim and notation filters may reveal the destination in their own handler.
+  setTimeout(() => {
+    const target = location.hash === hash && linkedReadingTarget();
+    if (target) focusReadingTarget(target, hash);
+  }, 0);
+});
+
 document.addEventListener("click", event => {
   if (event.defaultPrevented || event.button || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
   const link = event.target.closest("a[href]");
