@@ -496,6 +496,18 @@ class ReaderSiteTests(unittest.TestCase):
         self.assertIn('Skowroński.',rendered)
         self.assertIn('<a href="https://doi.org/example">Original DOI</a>',rendered)
 
+    def test_authored_figures_retain_captions_and_intrinsic_dimensions(self):
+        rewrite=Rewriter(lambda value,image:value)
+        rewrite.feed('<figure><img src="plot.png" width="1820" height="884" '
+                     'loading="lazy" alt="Two coupled functions" onerror="bad()">'
+                     '<figcaption>Original scientific plate.</figcaption></figure>')
+        rendered=''.join(rewrite.out)
+        self.assertIn('<figure>',rendered)
+        self.assertIn('<figcaption>Original scientific plate.</figcaption></figure>',rendered)
+        self.assertIn('width="1820" height="884"',rendered)
+        self.assertIn('loading="lazy"',rendered)
+        self.assertNotIn('onerror',rendered)
+
     def test_navigation_has_nested_relative_links_and_current_page(self):
         from html.parser import HTMLParser
         class Links(HTMLParser):

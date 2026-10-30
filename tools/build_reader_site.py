@@ -186,9 +186,9 @@ from claim_navigation import validate_claims, render_claim_index
 
 class Rewriter(HTMLParser):
     """Rewrite Markdown links and discard active content in source documents."""
-    allowed=set('a p div span h1 h2 h3 h4 h5 h6 ul ol li dl dt dd pre code blockquote strong em b i s del table caption thead tbody tr th td br hr img sup sub details summary kbd abbr'.split())
+    allowed=set('a p div span h1 h2 h3 h4 h5 h6 ul ol li dl dt dd pre code blockquote strong em b i s del table caption thead tbody tr th td br hr img figure figcaption sup sub details summary kbd abbr'.split())
     void={'br','hr','img'}
-    attrs={'id','class','title','href','src','alt','colspan','rowspan','scope','start','open','aria-label','role','tabindex'}
+    attrs={'id','class','title','href','src','alt','colspan','rowspan','scope','start','open','aria-label','role','tabindex','width','height','loading'}
     def __init__(self, resolve):
         super().__init__(convert_charrefs=False)
         self.resolve=resolve
