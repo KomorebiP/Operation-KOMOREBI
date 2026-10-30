@@ -186,6 +186,10 @@ expressions in the main document, in their original order. Chapter links keep
 the line numbers from the single TeX manuscript.
 The preserved formal release and its stated scope remain unchanged.
 
+The [Paper IV formalization ledger](https://komorebip.github.io/Operation-KOMOREBI/read/paper-iv/formalization-ledger.html#L2988)
+has a named table with manuscript records marked as row headers, so assistive
+table navigation can keep each compiled-scope entry associated with its records.
+
 The [Paper IV diagram descriptions](PAPER_IV_DIAGRAMS.md) also provide formatted
 equations with the site's math-reading controls. Longer formulas have their own
 keyboard-scrollable areas, and the coefficient table uses descriptive row names.

@@ -15,6 +15,52 @@ from readable_chapters import Chapter, expand_math, plain_math, readable_url, or
 
 
 class ReaderSiteTests(unittest.TestCase):
+    def test_paper_iv_ledger_row_headers_preserve_every_cell_and_equation(self):
+        from html.parser import HTMLParser
+        from readable_chapters import BOOKS
+        config=BOOKS['paper-iv']
+        source=(Path(__file__).resolve().parents[1]/FOURTH_MAIN).read_text(encoding='utf-8-sig')
+        tables=[node for spec in FOURTH_CHAPTERS
+                for node in Chapter(chapter_text(source,spec),{},check_refs=False).nodes
+                if node['kind'] in {'table','longtable','tabularx'}]
+        self.assertEqual(set(config['table_reading_aids']),{n['id'] for n in tables})
+        class Cells(HTMLParser):
+            def __init__(self,markup):
+                super().__init__(); self.cells=[]; self.active=False; self.feed(markup)
+            def handle_starttag(self,tag,attrs):
+                if tag in {'td','th'}: self.cells.append(''); self.active=True
+            def handle_endtag(self,tag):
+                if tag in {'td','th'}: self.active=False
+            def handle_data(self,data):
+                if self.active: self.cells[-1]+=data
+        for node in tables:
+            chapter=Chapter('',{})
+            original=render_table(node,Chapter('',{}))
+            rendered=render_table(node,chapter,config['table_reading_aids'][node['id']])
+            self.assertEqual(Cells(original).cells,Cells(rendered).cells)
+            self.assertEqual(chapter.math,original_math(node['body']))
+            self.assertEqual(rendered.count('scope="row"'),15)
+            self.assertEqual(rendered.count('scope="col"'),2)
+            self.assertIn('<caption>Formalization ledger for version 1.0.0</caption>',rendered)
+            self.assertIn('aria-label="Formalization ledger for version 1.0.0"',rendered)
+
+    def test_table_reading_aids_require_reviewed_headers_and_nonempty_row_labels(self):
+        aid=dict(caption='Reviewed ledger',headers=['Records','Scope'],row_header_column=0)
+        node=dict(kind='tabularx',body=r'{\textwidth}{ll}Records & Scope\\3.1 & $x$\\')
+        rendered=render_table(node,Chapter('',{}),aid)
+        self.assertIn('<th scope="row">3.1</th><td>',rendered)
+        self.assertNotIn('scope="row"',render_table(node,Chapter('',{})))
+        for body in (node['body'].replace('Records','New column'),
+                     node['body'].replace('3.1 &',' &')):
+            with self.assertRaises(ValueError):
+                render_table(dict(node,body=body),Chapter('',{}),aid)
+        for column in (-1,2,True):
+            with self.assertRaises(ValueError):
+                render_table(node,Chapter('',{}),dict(aid,row_header_column=column))
+        captioned=dict(kind='table',body=r'\caption{Authored caption}\begin{tabular}{ll}Records & Scope\\3.1 & $x$\\\end{tabular}')
+        with self.assertRaisesRegex(ValueError,'authored caption'):
+            render_table(captioned,Chapter('',{}),aid)
+
     def test_authored_tables_retain_captions_and_both_header_axes(self):
         rewrite=Rewriter(lambda value,image:value)
         rewrite.feed('<table><caption>Transfer norms</caption><thead><tr>'
