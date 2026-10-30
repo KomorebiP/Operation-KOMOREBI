@@ -276,6 +276,9 @@ source lines. Reading pages connect to the paper's recorded Lean coverage, code
 and worked examples. Paper III retains the manuscript's distinctions between
 its finite formal contract, inherited results and formalization targets.
 These reading editions add no mathematical review or Lean verification.
+The manuscript tables in Papers I–III have descriptive captions and row headers
+for notation, comparisons, recorded checks and reference entries. Their original
+captions, cells, mathematical notation and links are preserved.
 
 Search includes passages from these chapters, equation previews and highlighted
 matching words. Common Greek symbols can be searched by name or character,

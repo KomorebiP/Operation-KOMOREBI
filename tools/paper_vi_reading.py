@@ -343,6 +343,10 @@ BOOK = {'work': 'paper-vi',
  'figure_previews': 'website/paper-vi-figure-previews.json',
  'reading_introduction': 'Read the 46 manuscript sections across Parts I, II and III, with separate orientation '
                 'pages, the bibliography and a link to the worked visual atlas in the PDF.',
- 'table_reading_aids': {'L1887': {'caption': 'Inherited formalization ledger: 33 scoped results',
+ 'table_reading_aids': {'L1632': {'headers': ['Realization', 'Seed', 'Transfer', 'Packet/reconstruction law'], 'row_header_column': 0},
+                        'L1708': {'headers': ['Certificate', 'Value'], 'row_header_column': 0},
+                        'L2018': {'headers': ['Realization', 'Transfer', 'Exact coarse condition'], 'row_header_column': 0},
+                        'L5102': {'headers': ['Identity', 'Typical residual'], 'row_header_column': 0},
+                        'L1887': {'caption': 'Inherited formalization ledger: 33 scoped results',
                                   'headers': ['Result', 'Manuscript statement', 'Lean scope'],
                                   'row_header_column': 0}}}

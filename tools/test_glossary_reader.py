@@ -45,21 +45,29 @@ class GlossaryLookupTests(unittest.TestCase):
         for term in terms:
             self.assertIn('<a id="'+term['id']+'"></a>', reference)
             self.assertIn(term['definition'], reference)
-        import markdown
+        self.assertIn('hidden', result.elements['glossary-form'])
+        self.assertIn('hidden', result.elements['glossary-matches'])
+        self.assertEqual(result.elements['glossary-status']['role'], 'status')
+
+    def test_return_links_preserve_the_complete_rendered_reference(self):
+        try:
+            import markdown
+        except ModuleNotFoundError:
+            self.skipTest('Rendered glossary checks require the website Markdown dependency; the Reader website workflow installs it.')
         from build_reader_site import Rewriter, slugify
+        root = Path(__file__).resolve().parents[1]
+        config = json.loads((root/'manifests/reader-experience.json').read_bytes())
+        reference = render_glossary(config)
         rendered = markdown.markdown(reference, extensions=['tables', 'toc'], extension_configs={'toc':{'slugify':slugify}})
         rewrite = Rewriter(lambda target, image: target)
         rewrite.feed(rendered)
         original = ''.join(rewrite.out)
         enhanced = glossary_return_links(original, config)
         return_link = '<p class="glossary-return"><a href="#glossary-lookup">Back to glossary lookup</a></p>'
-        self.assertEqual(enhanced.count(return_link), len(terms))
+        self.assertEqual(enhanced.count(return_link), len(config['glossary']))
         self.assertEqual(enhanced.replace(return_link, ''), original, 'Only return links are added to the full reference')
         with self.assertRaises(ValueError):
             glossary_return_links(original.replace('id="power-series"', 'id="missing"'), config)
-        self.assertIn('hidden', result.elements['glossary-form'])
-        self.assertIn('hidden', result.elements['glossary-matches'])
-        self.assertEqual(result.elements['glossary-status']['role'], 'status')
 
     def test_untrusted_text_is_escaped_in_text_and_attributes(self):
         config = dict(glossary_sections=[dict(id='test',title='Test & examples')],

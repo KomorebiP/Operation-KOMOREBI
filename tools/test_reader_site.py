@@ -14,6 +14,31 @@ from claim_navigation import statements, manuscript_sources, validate_claims, PA
 from readable_chapters import Chapter, expand_math, plain_math, readable_url, original_math, render_table, bibliography, formal_note_labels, manuscript_bibliography, presentation_tex, passage_links, reading_options, chapter_text, validate_monolithic, FOURTH_MAIN, FOURTH_CHAPTERS
 
 
+def manuscript_table_fixtures(root,work):
+    from readable_chapters import BOOKS, manuscript_macros
+    config=BOOKS[work]
+    main=(root/config['main']).read_text(encoding='utf-8-sig')
+    macros=manuscript_macros(main,config.get('required_macros'))
+    state={'number_floats':config.get('number_floats',False)}
+    chapters=[]; labels={}
+    for spec in config['chapters']:
+        raw=(root/spec['source']).read_text(encoding='utf-8-sig')
+        chapter=Chapter(chapter_text(raw,spec),macros,state=state,check_refs=False)
+        chapter.url=spec['url']; chapter.base=config['base']
+        chapter.formal_labels=formal_note_labels(main)
+        for label,node in chapter.labels.items():
+            node['url']=chapter.url; labels[label]=node
+        state={key:getattr(chapter,key) for key in ('section','appendix','part','section_prefix','figure','table','number_floats')}
+        chapters.append((spec,chapter))
+    references=(manuscript_bibliography if config.get('inline_bibliography') else bibliography)((root/config['bib']).read_text(encoding='utf-8-sig'))
+    for spec,chapter in chapters:
+        chapter.labels=labels
+        chapter.citations={r['key']:(r['key'],chapter.relative(config['bib_page'])+'#ref-'+r['key']) for r in references}
+        chapter.validate_references()
+        for node in chapter.nodes:
+            if node['kind'] in {'table','longtable','tabularx'}:yield spec,node,chapter
+
+
 class ReaderSiteTests(unittest.TestCase):
     def test_quantum_parts_keep_printed_numbers_and_unnumbered_supplements(self):
         source=r'\section{Seeds}\begin{theorem}A.\end{theorem} Text.\setcounter{section}{14}\section{Conclusion}\begin{statement}B.\end{statement}'
@@ -35,6 +60,75 @@ class ReaderSiteTests(unittest.TestCase):
               r'\begin{minipage}[t]{0.48\textwidth}\includegraphics[width=\textwidth]{b.pdf}\captionof{figure}{Second $y$.}\end{minipage}')
         self.assertEqual(figure_items(pair),[('a.pdf','First $x$.'),('b.pdf','Second $y$.')])
         with self.assertRaises(ValueError):figure_items(pair+'Unrecognized figure text')
+
+    def test_generated_chapter_checks_require_table_captions_and_both_header_axes(self):
+        from check_reader_site import check_table_reading_aids
+        aid=dict(caption='Reviewed table',headers=['Name','Value'],row_header_column=0)
+        node=dict(kind='tabularx',body=r'{\textwidth}{ll}Name & Value\\First & $x$\\')
+        markup='<section id="L4">'+render_table(node,Chapter('',{}),aid)+'</section>'
+        check_table_reading_aids(markup,{'L4':aid})
+        for broken in (markup.replace('scope="row"',''),markup.replace('scope="col"','',1),
+                       markup.replace('<caption>Reviewed table</caption>',''),markup.replace('id="L4"','id="L5"')):
+            with self.assertRaises(AssertionError):check_table_reading_aids(broken,{'L4':aid})
+
+    def test_chapter_table_aids_are_scoped_to_source_files(self):
+        from readable_chapters import table_reading_aid, BOOKS
+        first=dict(caption='First table'); second=dict(caption='Second table')
+        config=dict(base='book/',table_reading_aids={('a.tex','L4'):first,('b.tex','L4'):second})
+        self.assertIs(table_reading_aid(config,'book/a.tex','L4')[1],first)
+        self.assertIs(table_reading_aid(config,'book/b.tex','L4')[1],second)
+        self.assertIsNone(table_reading_aid(config,'book/c.tex','L4')[1])
+        fourth=BOOKS['paper-iv']
+        self.assertIs(table_reading_aid(fourth,fourth['main'],'L2988')[1],fourth['table_reading_aids']['L2988'])
+
+    def test_row_header_aids_retain_authored_captions(self):
+        aid=dict(headers=['Name','Value'],row_header_column=0)
+        node=dict(kind='table',body=r'\caption{Authored caption}\begin{tabular}{ll}Name & Value\\First & $x$\\\end{tabular}')
+        chapter=Chapter('',{})
+        rendered=render_table(node,chapter,aid)
+        self.assertEqual(rendered.count('<caption>Authored caption</caption>'),1)
+        self.assertIn('<th scope="row">First</th>',rendered)
+        self.assertEqual(chapter.math,['x'])
+        with self.assertRaisesRegex(ValueError,'provide or retain a caption'):
+            render_table(dict(kind='tabularx',body=r'{\textwidth}{ll}Name & Value\\First & $x$\\'),Chapter('',{}),aid)
+
+    def test_papers_i_to_iii_table_aids_preserve_source_cells_math_and_links(self):
+        from copy import copy
+        from html.parser import HTMLParser
+        from readable_chapters import BOOKS, table_reading_aid
+        class Cells(HTMLParser):
+            def __init__(self,markup):
+                super().__init__(); self.cells=[]; self.links=[]; self.active=False; self.caption=False; self.caption_text=''; self.feed(markup)
+            def handle_starttag(self,tag,attrs):
+                if tag in {'td','th'}:self.cells.append('');self.active=True
+                if tag=='a':self.links.append(dict(attrs).get('href'))
+                if tag=='caption':self.caption=True
+            def handle_endtag(self,tag):
+                if tag in {'td','th'}:self.active=False
+                if tag=='caption':self.caption=False
+            def handle_data(self,data):
+                if self.active:self.cells[-1]+=data
+                if self.caption:self.caption_text+=data
+        root=Path(__file__).resolve().parents[1]; tables=authored=0
+        for work in ('paper-i','paper-ii','paper-iii'):
+            config=BOOKS[work]; seen=set()
+            for spec,node,template in manuscript_table_fixtures(root,work):
+                key,aid=table_reading_aid(config,spec['source'],node['id'])
+                self.assertIsNotNone(aid); seen.add(key)
+                before=copy(template); after=copy(template); before.math=[]; after.math=[]
+                original=render_table(node,before); rendered=render_table(node,after,aid)
+                a=Cells(original); b=Cells(rendered)
+                self.assertEqual(a.cells,b.cells); self.assertEqual(a.links,b.links)
+                self.assertEqual(before.math,after.math)
+                self.assertTrue(b.caption_text.strip())
+                if 'caption' not in aid:
+                    authored+=1; self.assertEqual(a.caption_text,b.caption_text)
+                self.assertEqual(rendered.count('scope="row"'),rendered.count('<tr>')-1)
+                self.assertEqual(rendered.count('scope="col"'),len(aid['headers']))
+                tables+=1
+            self.assertEqual(seen,set(config['table_reading_aids']))
+        self.assertEqual((tables,authored),(13,3))
+
     def test_paper_vi_preserves_ranges_records_and_printed_numbering(self):
         import re
         from paper_vi_reading import BOOK
@@ -507,6 +601,22 @@ class ReaderSiteTests(unittest.TestCase):
         self.assertIn('width="1820" height="884"',rendered)
         self.assertIn('loading="lazy"',rendered)
         self.assertNotIn('onerror',rendered)
+
+    def test_paper_vi_table_reading_aids_cover_every_retained_table(self):
+        import re
+        from paper_vi_reading import BOOK
+        source=(Path(__file__).resolve().parents[1]/BOOK['main']).read_text(encoding='utf-8-sig')
+        tables=list(re.finditer(r'\\begin\{(?:table|longtable)\}',source))
+        aids=BOOK['table_reading_aids']
+        self.assertEqual(set(aids), {'L'+str(source.count('\n',0,m.start())+1) for m in tables})
+        for match in tables:
+            key='L'+str(source.count('\n',0,match.start())+1)
+            header=source[source.index(r'\toprule',match.end())+len(r'\toprule'):].lstrip().splitlines()[0]
+            cells=[cell.strip() for cell in header.removesuffix(r'\\').split('&')]
+            self.assertEqual(cells,aids[key]['headers'])
+            self.assertEqual(aids[key]['row_header_column'],0)
+            if match[0]==r'\begin{table}':
+                self.assertNotIn('caption',aids[key])
 
     def test_navigation_has_nested_relative_links_and_current_page(self):
         from html.parser import HTMLParser
