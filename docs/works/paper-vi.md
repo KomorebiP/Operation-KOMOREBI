@@ -33,8 +33,6 @@ Use the links below to read this work and its supporting files. Ctrl+click (Comm
 
 ## Read
 
-- [Read the manuscript chapters online](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vi/index.html)
-
 - [Edition README](../../papers/paper-vi/current/README.md)
 - [Read PDF](../../papers/paper-vi/current/papers/Paper_VI_Traditional_Final.pdf)
 - [Visual guide (PDF)](../../papers/paper-vi/current/papers/Paper_VI_Visual_Guide_Final.pdf)
