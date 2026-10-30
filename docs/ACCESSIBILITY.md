@@ -220,8 +220,10 @@ description and a complete transcript of its labels. Matrix entries, coefficient
 values and root certificates use tables with row and column headers. Wide tables
 can be scrolled with the keyboard. Each drawing table's scrolling region is named
 by its visible caption. Equations use the same MathJax reading controls
-as the manuscript. Each plate links to its manuscript statements and original
-PDF page, and to the previous and next plates.
+as the manuscript. The route guide (V1), object reference (V2) and evidence
+summary (V26) also have descriptive table captions and row headers. Their
+original cells, formulas and links are retained. Each plate links to its
+manuscript statements and original PDF page, and to the previous and next plates.
 
 Paper IV's reading menu includes **Visual atlas**. Referenced manuscript
 sections and statements link back to the relevant plates, using each plate's

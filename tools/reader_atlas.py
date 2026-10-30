@@ -18,6 +18,14 @@ INDEX='read/paper-iv/atlas/index.html'
 RECEIPTS='assets/atlas/paper-iv/figures.json'
 REPORT='documents/paper-iv-atlas.json'
 REFERENCE_PATTERN=re.compile(r'(Section|Definition|Theorem|Proposition|Corollary|Example) (\d+(?:\.\d+)?) \(p\. (\d+)\)')
+TABLE_READING_AIDS={
+    (1,'L11'): dict(caption='Routes through the Paper IV visual atlas',
+                   headers=['Route','Pages and question'],row_header_column=0),
+    (2,'L27'): dict(caption='Objects and normalizations in the Paper IV visual atlas',
+                   headers=['Object','Definition and role'],row_header_column=0),
+    (26,'L474'): dict(caption='Evidence layers and their stated scope',
+                     headers=[r'\textbf{Evidence layer}',r'\textbf{What it supports}'],row_header_column=0),
+}
 
 
 def digest(raw): return hashlib.sha256(raw).hexdigest()
@@ -220,6 +228,7 @@ def expected_math(plate, figures):
 
 def render(reader):
     atlas=reader.atlas; site=reader.site; e=html.escape; reports=[]
+    aided_tables=set()
     pdf=next(r for r in reader.records.values() if r['work']=='paper-iv' and r.get('title')=='Visual guide (PDF)')
     for plate in atlas['plates']:
         page=plate['url']; title='Paper IV atlas / V'+str(plate['number'])+': '+plate['title']
@@ -244,7 +253,10 @@ def render(reader):
             elif kind=='figure':
                 body+='<div id="'+identifier+'">'+render_drawing(atlas['figures'][node['body']],chapter,reader)+'</div>'
             elif kind in {'table','tabularx'}:
-                body+='<section id="'+identifier+'">'+render_table(node,chapter)+passage_links(links)+'</section>'
+                key=(plate['number'],identifier)
+                if key not in TABLE_READING_AIDS: raise ValueError('Review the new atlas reference table: '+str(key))
+                aided_tables.add(key)
+                body+='<section id="'+identifier+'">'+render_table(node,chapter,TABLE_READING_AIDS[key])+passage_links(links)+'</section>'
             elif kind=='text' or kind in PANELS:
                 body+='<section id="'+identifier+'" class="reading-block '+kind+'">'
                 if kind in PANELS: body+='<h3>'+chapter.inline(label or PANELS[kind])+'</h3>'
@@ -262,6 +274,7 @@ def render(reader):
                             source_math_expressions=len(original_math(plate['body'])),math_expressions=len(expected),
                             math_sequence_sha256=digest(json.dumps(expected,ensure_ascii=False).encode()),
                             nodes=[{k:n[k] for k in ('kind','id','line','end_line')} for n in chapter.nodes]))
+    if aided_tables!=set(TABLE_READING_AIDS): raise ValueError('Atlas table reading aids differ from source tables')
     report=dict(source=SOURCE,source_sha256=atlas['source_sha256'],definitions=DEFINITIONS,
                 definitions_sha256=atlas['definitions_sha256'],macro_source=reader.readable_books['paper-iv']['config']['main'],
                 macros=atlas['macros'],plates=reports,manuscript_backlinks=atlas['backlinks'],figures={name:dict(**f['receipt'],node_order=f['order'],nodes=f['nodes']) for name,f in atlas['figures'].items()},
@@ -318,7 +331,7 @@ def verify(root, documents, pages):
             assert posixpath.relpath(target,posixpath.dirname(plate['url'])) in pages[plate['url']].links
             linked_plates.add(plate['number']); return_links+=1
     assert linked_plates==set(range(1,27))
-    count=0
+    count=0; checked_tables=set()
     for plate,record in zip(selected,report['plates']):
         check_png_image_sizes(root,plate['url'],pages[plate['url']].images)
         assert record['number']==plate['number'] and record['url']==plate['url']
@@ -326,11 +339,22 @@ def verify(root, documents, pages):
         expected=expected_math(plate,figures)
         assert record['source_math_expressions']==len(original_math(plate['body']))
         assert record['math_expressions']==len(expected) and record['math_sequence_sha256']==digest(json.dumps(expected,ensure_ascii=False).encode())
-        parsed=Maths(); parsed.feed((root/plate['url']).read_text(encoding='utf-8'))
+        markup=(root/plate['url']).read_text(encoding='utf-8')
+        parsed=Maths(); parsed.feed(markup)
         assert [m[2:-2] for m in parsed.expressions]==[expand_math(m,macros) for m in expected],plate['url']
+        chapter=Chapter(atlas_tex(plate['body']),macros)
+        chapter.url=plate['url']
+        chapter.command_links={'pagerefV':{str(p['number']):(p['url'],'V'+str(p['number'])) for p in selected}}
+        for node in chapter.nodes:
+            if node['kind'] in {'table','tabularx'}:
+                key=(plate['number'],node['id'])
+                assert key in TABLE_READING_AIDS,('Unreviewed atlas reference table',key)
+                assert render_table(node,chapter,TABLE_READING_AIDS[key]) in markup,('Missing atlas table reading aid',key)
+                checked_tables.add(key)
         for node in record['nodes']:
             assert node['id'] in pages[plate['url']].ids
             assert 'L'+str(node['line']) in pages[records[SOURCE]['url']].ids
         count+=len(expected)
+    assert checked_tables==set(TABLE_READING_AIDS)
     return dict(plates=26,drawings=24,math_expressions=count,
                 manuscript_targets=len(report['manuscript_backlinks']),return_links=return_links)

@@ -15,6 +15,43 @@ from readable_chapters import Chapter, expand_math, plain_math, readable_url, or
 
 
 class ReaderSiteTests(unittest.TestCase):
+    def test_atlas_reference_tables_preserve_cells_math_and_links_with_reading_aids(self):
+        from html.parser import HTMLParser
+        from reader_atlas import SOURCE, DEFINITIONS, TABLE_READING_AIDS, atlas_tex, plates
+        from readable_chapters import manuscript_macros
+        root=Path(__file__).resolve().parents[1]
+        selected=plates((root/SOURCE).read_text(encoding='utf-8-sig'))
+        macros=manuscript_macros((root/FOURTH_MAIN).read_text(encoding='utf-8-sig')+'\n'+
+                                 (root/DEFINITIONS).read_text(encoding='utf-8-sig'))
+        class Cells(HTMLParser):
+            def __init__(self,markup):
+                super().__init__(); self.cells=[]; self.active=False; self.links=[]; self.feed(markup)
+            def handle_starttag(self,tag,attrs):
+                if tag in {'td','th'}: self.cells.append(''); self.active=True
+                if tag=='a': self.links.append(dict(attrs).get('href'))
+            def handle_endtag(self,tag):
+                if tag in {'td','th'}: self.active=False
+            def handle_data(self,data):
+                if self.active: self.cells[-1]+=data
+        seen=set(); expected_rows={1:3,2:10,26:6}
+        for plate in selected:
+            for node in Chapter(atlas_tex(plate['body']),macros).nodes:
+                if node['kind'] not in {'table','tabularx'}: continue
+                key=(plate['number'],node['id']); seen.add(key)
+                original=Chapter('',macros); aided=Chapter('',macros)
+                for chapter in (original,aided):
+                    chapter.url=plate['url']
+                    chapter.command_links={'pagerefV':{str(p['number']):(p['url'],'V'+str(p['number'])) for p in selected}}
+                before=render_table(node,original)
+                after=render_table(node,aided,TABLE_READING_AIDS[key])
+                self.assertEqual(Cells(before).cells,Cells(after).cells)
+                self.assertEqual(Cells(before).links,Cells(after).links)
+                self.assertEqual(original.math,aided.math)
+                self.assertEqual(after.count('scope="row"'),expected_rows[plate['number']])
+                self.assertEqual(after.count('scope="col"'),2)
+                self.assertIn('<caption>'+TABLE_READING_AIDS[key]['caption']+'</caption>',after)
+        self.assertEqual(seen,set(TABLE_READING_AIDS))
+
     def test_png_dimensions_reject_missing_or_invalid_intrinsic_sizes(self):
         from reader_documents import png_dimensions
         header=b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR'
