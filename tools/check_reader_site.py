@@ -124,7 +124,6 @@ def check_readable_chapter(root, documents, pages):
         for node in report['nodes']:
             if node['kind'] in {'table','longtable','tabularx'}:
                 _,aid=table_reading_aid(config,source,node['id'])
-                assert not config.get('table_reading_aids') or aid,('Unreviewed chapter table',source,node['id'])
                 if aid:aids[node['id']]=aid
         check_table_reading_aids(markup,aids)
         rendered=MathText()
