@@ -15,6 +15,78 @@ from readable_chapters import Chapter, expand_math, plain_math, readable_url, or
 
 
 class ReaderSiteTests(unittest.TestCase):
+    def test_quantum_parts_keep_printed_numbers_and_unnumbered_supplements(self):
+        source=r'\section{Seeds}\begin{theorem}A.\end{theorem} Text.\setcounter{section}{14}\section{Conclusion}\begin{statement}B.\end{statement}'
+        chapter=Chapter(source,{},state={'part':1,'part_numbering':True})
+        self.assertEqual([n['number'] for n in chapter.nodes if n['kind']=='section'],['I.1','I.15'])
+        self.assertEqual(next(n for n in chapter.nodes if n['kind']=='theorem')['number'],'I.1.1')
+        self.assertEqual(next(n for n in chapter.nodes if n['kind']=='statement')['number'],'')
+
+    def test_quantum_inner_products_preserve_argument_order_and_ket_tokens(self):
+        macros={'ip':dict(arguments=2,body=r'\langle#1,#2\rangle'),
+                'ket':dict(arguments=1,body=r'|#1\rangle',token_arguments=True)}
+        self.assertEqual(expand_math(r'\ip{x}{y}',macros),r'{\langle x,y\rangle}')
+        self.assertEqual(expand_math(r'\ket\psi',macros),r'{|\psi\rangle}')
+        with self.assertRaises(ValueError):expand_math(r'\ip{x}',macros)
+
+    def test_quantum_paired_figures_keep_both_captions_and_reject_unknown_content(self):
+        from paper_vii_reading import figure_items
+        pair=(r'\centering\begin{minipage}[t]{0.48\textwidth}\includegraphics[width=\textwidth]{a.pdf}\captionof{figure}{First $x$.}\end{minipage}\hfill'
+              r'\begin{minipage}[t]{0.48\textwidth}\includegraphics[width=\textwidth]{b.pdf}\captionof{figure}{Second $y$.}\end{minipage}')
+        self.assertEqual(figure_items(pair),[('a.pdf','First $x$.'),('b.pdf','Second $y$.')])
+        with self.assertRaises(ValueError):figure_items(pair+'Unrecognized figure text')
+    def test_paper_vi_preserves_ranges_records_and_printed_numbering(self):
+        import re
+        from paper_vi_reading import BOOK
+        from readable_chapters import manuscript_macros
+        root=Path(__file__).resolve().parents[1]
+        main=(root/BOOK['main']).read_text(encoding='utf-8-sig')
+        validate_monolithic(main,BOOK)
+        self.assertEqual(len(BOOK['chapters']),50)
+        self.assertEqual([x for c in BOOK['chapters'] for x in original_math(chapter_text(main,c))],original_math(main.split(r'\begin{document}',1)[1]))
+        macros=manuscript_macros(main,BOOK['required_macros'])
+        labels={};nodes=[];state={'number_floats':True}
+        for spec in BOOK['chapters']:
+            if 'section_prefix' in spec:
+                state.update(section=0,appendix=False,figure=0,table=0,section_prefix=spec['section_prefix'])
+            chapter=Chapter(chapter_text(main,spec),macros,state=state,check_refs=False)
+            labels.update(chapter.labels);nodes+=chapter.nodes
+            state={key:getattr(chapter,key) for key in ('section','appendix','part','section_prefix','figure','table','number_floats')}
+        aux=(root/BOOK['base']/'Paper_VI_Traditional_Final.aux').read_text(encoding='utf-8-sig')
+        printed=dict(re.findall(r'\\newlabel\{([^{}]+)\}\{\{([^{}]+)\}',aux))
+        records={k:v for k,v in printed.items() if ':record:' in k and not k.endswith('@cref')}
+        self.assertEqual(len(records),184)
+        for label,number in records.items(): self.assertEqual(labels[label]['number'],number,label)
+        for label,node in labels.items():
+            if node['kind'] in {'figure','table'} and label in printed:
+                self.assertEqual(node['number'],printed[label],label)
+        self.assertEqual(sum(n['kind']=='proof' for n in nodes),140)
+        self.assertEqual(sum(n['kind']=='conjecture' for n in nodes),3)
+
+    def test_paper_vi_math_arguments_and_bottom_table_captions(self):
+        from readable_chapters import manuscript_macros
+        from paper_vi_reading import BOOK
+        main=(Path(__file__).resolve().parents[1]/BOOK['main']).read_text(encoding='utf-8-sig')
+        macros=manuscript_macros(main,BOOK['required_macros'])
+        value=expand_math(r'\norm A + \abs{x} + \ip{u}{v}',macros)
+        self.assertNotIn('#',value)
+        self.assertIn(r'\lVert A\right\rVert',value)
+        self.assertIn(r'\langle u,v\right\rangle',value)
+        self.assertNotIn(r'\norm',value)
+        chapter=Chapter(r'\begin{table}\centering\begin{tabular}{ll}Name & Value\\A & $x$\\\end{tabular}\caption{Original caption}\end{table}',{})
+        table=render_table(chapter.nodes[0],chapter)
+        self.assertIn('<caption>Original caption</caption>',table)
+        self.assertEqual(chapter.math,['x'])
+        self.assertIn('<th scope="col">Name</th>',table)
+
+    def test_paper_vi_figure_previews_bind_sources_and_assets(self):
+        from paper_vi_reading import BOOK
+        root=Path(__file__).resolve().parents[1]
+        previews=json.loads((root/BOOK['figure_previews']).read_bytes())['figures']
+        self.assertEqual(len(previews),15)
+        for source,record in previews.items():
+            self.assertEqual(hashlib.sha256((root/source).read_bytes()).hexdigest(),record['source_sha256'])
+            self.assertEqual(hashlib.sha256((root/'website'/record['asset']).read_bytes()).hexdigest(),record['asset_sha256'])
     def test_atlas_reference_tables_preserve_cells_math_and_links_with_reading_aids(self):
         from html.parser import HTMLParser
         from reader_atlas import SOURCE, DEFINITIONS, TABLE_READING_AIDS, atlas_tex, plates
@@ -384,7 +456,7 @@ class ReaderSiteTests(unittest.TestCase):
                 'mat':dict(arguments=1,body=r'\begin{pmatrix}#1\end{pmatrix}'), 'R':r'\mathbb R'}
         self.assertEqual(expand_math(r'\norm{\mat{1&2\\3&\R}}',macros),
                          r'{\left\lVert{\begin{pmatrix}1&2\\3&{\mathbb R}\end{pmatrix}}\right\rVert}')
-        with self.assertRaises(ValueError): expand_math(r'\norm x',macros)
+        self.assertEqual(expand_math(r'\norm x',macros),r'{\left\lVert x\right\rVert}')
 
     def test_paper_i_print_metadata_keeps_source_lines_and_statement_labels(self):
         source=('\\section{One}\n\\begin{theorem}Statement $x$.\\end{theorem}\n'
@@ -436,8 +508,11 @@ class ReaderSiteTests(unittest.TestCase):
         links=Links(site_navigation('collection/GLOSSARY.html')).links
         self.assertEqual([a['href'] for a in links if a.get('aria-current')=='page'], ['GLOSSARY.html'])
         self.assertIn('../search.html', [a['href'] for a in links])
-        self.assertEqual(len(links),14)
-        self.assertEqual(len({a['href'] for a in links}),14)
+        self.assertIn('PHYSICS_COLLECTION.html', [a['href'] for a in links])
+        self.assertEqual(len(links),15)
+        self.assertEqual(len({a['href'] for a in links}),15)
+        physics=Links(site_navigation('collection/PHYSICS_COLLECTION.html')).links
+        self.assertEqual([a['href'] for a in physics if a.get('aria-current')=='page'], ['PHYSICS_COLLECTION.html'])
         search=Links(site_navigation('search.html')).links
         self.assertEqual([a['href'] for a in search if a.get('aria-current')=='page'], ['search.html'])
 

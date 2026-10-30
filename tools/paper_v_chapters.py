@@ -52,6 +52,10 @@ CHAPTERS = [dict(source=MAIN, url='read/paper-v/'+slug+'.html', title=title, wor
                  heading_title=title if heading else None,
                  figure_roots=['', 'extension_figures/' if start>=1590 else 'core_figures/'])
             for i,(start,slug,title,heading) in enumerate(SECTIONS)]
+for chapter in CHAPTERS:
+    if chapter['start_line'] in (217,1590):
+        chapter['section_prefix']='E' if chapter['start_line']==1590 else ''
+
 BOOK = dict(work='paper-v', label='Paper V', base=BASE, main=MAIN,
             bib=BASE+'references.bib', index='read/paper-v/index.html',
             bib_page='read/paper-v/references.html', title='Multiresolution Signal Calculus',

@@ -67,8 +67,16 @@ linked images and runtime integrity, in addition to HTML links and reading ZIPs.
 
 ## Readable chapters
 
+Paper VII now has eleven reading pages: the opening orientation, three exact
+finite models, and all nine mathematical source parts. The pages retain the
+I, II and III numbering, the supplementary statements, 107 proof environments
+and 1,820 mathematical expressions. The 38 original figure PDFs can be opened
+inside the chapters or in the PDF reader. The worked visual atlas remains in
+the original monograph and visual guide. This presentation adds no proof
+assessment or Lean execution.
+
 [The chapter renderer](../tools/readable_chapters.py) publishes the main chapters
-of Papers I, II, III and IV as readable HTML alongside their original source pages.
+of Papers I, II, III, IV and VII as readable HTML alongside their original source pages.
 Paper II's current verification snapshot has its own reading page. Each paper
 has a chapter index and bibliography, with links between chapters and recorded
 claim locations. Paper IV's atlas also has HTML plates; the original visual
@@ -302,3 +310,4 @@ records and proof assessments retain their previous scope.
 The [notation index](NOTATION_INDEX.md) provides symbol search and a source inventory for every work. Entries link to exact source lines and retain the paper’s own context. Its JSON downloads record every detected occurrence in the selected TeX, Markdown and text sources. PDF and image notation remain explicit coverage limits.
 
 `tools/notation_index.py` builds the reference. `manifests/notation-sources.json` declares additional manuscript entrypoints. The reader follows their literal includes and checks source receipts before indexing. Parser regression tests and the site checker validate extraction, source positions, counts and links.
+

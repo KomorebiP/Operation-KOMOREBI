@@ -77,6 +77,8 @@ class PaperVReadingTests(unittest.TestCase):
         state={};parsed=[]
         macros=chapters.manuscript_macros(source,BOOK['required_macros'])
         for spec in CHAPTERS:
+            if 'section_prefix' in spec:
+                state.update(section=0,appendix=False,section_prefix=spec['section_prefix'])
             chapter=chapters.Chapter(chapters.chapter_text(source,spec),macros,state=state,check_refs=False)
             parsed+=chapter.nodes
             state=dict(section=chapter.section,appendix=chapter.appendix,part=chapter.part,section_prefix=chapter.section_prefix)
@@ -146,7 +148,7 @@ class PaperVReadingTests(unittest.TestCase):
         self.assertIn(r'\boldsymbol{x}',chapters.expand_math(r'\bm x',macros))
         self.assertIn(r'\boldsymbol{\Gamma}',chapters.expand_math(r'\bm\Gamma',macros))
         self.assertIn(r'\boldsymbol{x+y}',chapters.expand_math(r'\bm{x+y}',macros))
-        with self.assertRaises(ValueError):chapters.expand_math(r'\norm x',{'norm':dict(arguments=1,body='#1')})
+        self.assertEqual(chapters.expand_math(r'\norm x',{'norm':dict(arguments=1,body='#1')}),'{x}')
         node=dict(kind='table',body=r'\caption{Record}\begin{tabular}{lll}Case&A&B\\one&\multicolumn{2}{c}{$x$}\\\end{tabular}\label{tab:record}')
         chapter=chapters.Chapter('',{})
         markup=chapters.render_table(node,chapter)

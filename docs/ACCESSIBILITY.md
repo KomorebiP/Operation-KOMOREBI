@@ -13,7 +13,7 @@ screens. Wide tables and code blocks can be scrolled with the keyboard.
 In HTML guides, captioned tables use their visible captions as the names of
 their scrolling regions, so screen-reader region navigation identifies the table.
 
-The header keeps **Collection**, **About the project** and **Search** visible.
+The header keeps **Collection**, **About the project**, **Search** and **Glossary** visible.
 **Browse** opens links grouped
 under **Read**, **Look up** and **Use**. The current page is marked in its link.
 The expanded navigation stays above the content and does not cover it. Press
@@ -32,7 +32,7 @@ so the next Tab continues from that section. These section links also work
 without JavaScript. Work pages keep their existing paper, proof, Lean, code
 and example routes. Readable chapters keep their chapter contents.
 
-The HTML chapters of Papers I–V open with repeated source and reference links
+The HTML chapters of Papers I–VII open with repeated source and reference links
 hidden from the reading flow. **Show source and reference links** reveals each
 passage’s permalink, source line, claim record and related resources. The choice
 is remembered in this browser when local storage is available. **Read proof**,
@@ -186,7 +186,7 @@ jump links remain readable. The browser’s Find command is also available.
 The [HTML reading catalogue](https://KomorebiP.github.io/Operation-KOMOREBI/read/index.html)
 brings together the main chapters of [Paper I](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-i/index.html),
 [Paper II](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-ii/index.html),
-[Paper III](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-iii/index.html),
+[Paper III](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-iii/index.html)
 [Paper IV](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-iv/index.html),
 and [Paper V](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-v/index.html).
 These editions retain the original prose, equations,
@@ -303,6 +303,15 @@ exploration. Open an expression's context menu for the available math options.
 Support varies with the browser and assistive technology.
 
 The [glossary](GLOSSARY.md) includes prose explanations of introductory symbols.
+Its website link is always visible in the main navigation. The glossary's quick
+lookup searches maintained terms, definitions and reading notes, with an optional
+subject filter. Exact term names appear first. Result counts are announced without
+moving focus while typing; submitting moves focus to the matching terms heading.
+Each result links to its complete entry, examples and related terms. Every entry
+has a **Back to glossary lookup** link that preserves the search. The lookup
+address can be shared, and the full reference, subject links and alphabetical
+index remain available without JavaScript. **Read side by side** can keep the
+glossary beside a manuscript.
 The original papers retain their own definitions. Text descriptions and source
 files are linked where available. This does not establish that every diagram
 or every mathematical expression in the collection has an adequate spoken
@@ -320,7 +329,7 @@ Document pages link back to the work, written proofs, Lean coverage, code and
 available worked examples. Edition READMEs are rendered as HTML. Linked
 manuscript and program sources have selectable text and line links. TeX source
 is shown as source, with links to included manuscript sections where available.
-Papers I, II, III, IV and V also have formatted HTML chapters. Paper IV's visual atlas
+Papers I–VII also have formatted HTML chapters. Paper IV's visual atlas
 has HTML plates; all original visual atlases remain available through the on-site PDF reader. Use the PDF for
 typeset manuscript sections that have not yet been converted to HTML.
 
@@ -361,3 +370,11 @@ retained Apache 2.0 license. The build verifies the pinned viewer and each
 published document against its source identity. PDF scripting is disabled.
 
 [Reading routes](READING_ROUTES.md) · [Glossary](GLOSSARY.md) · [Project statement](PROJECT_STATEMENT.md)
+
+Paper VI has 46 manuscript sections across Parts I–III, orientation pages and
+a bibliography in HTML. Its ordinary, E and R section numbering follows the
+retained edition. Statements link to their recorded proofs and source lines.
+The formalization ledger has a caption and row headers for its 33 scoped
+results. Figures keep the original captions; 15 PDF-only figures have
+source-bound web previews. The worked visual atlas remains in the PDF. These
+reading changes do not add a proof audit or a fresh Lean replay.
