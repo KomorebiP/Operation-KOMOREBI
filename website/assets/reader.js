@@ -236,10 +236,16 @@ if (form) {
   const group = document.querySelector("#search-group");
   const kind = document.querySelector("#search-kind");
   const work = document.querySelector("#search-work");
+  const facets = {
+    discipline: document.querySelector("#search-discipline"),
+    stage: document.querySelector("#search-stage"),
+    lean: document.querySelector("#search-lean"),
+    evidence: document.querySelector("#search-evidence")
+  };
   const status = document.querySelector("#search-status");
   const results = document.querySelector("#search-results");
   const more = document.querySelector("#search-more");
-  let indexPromise, found = [], displayed = 0, generation = 0, queryWords = [];
+  let indexPromise, facetPromise, found = [], displayed = 0, generation = 0, queryWords = [];
   let mathQueue = Promise.resolve();
   function renderMore(focusNew = false) {
     const previous = displayed;
@@ -302,13 +308,18 @@ if (form) {
     const repository = group.value;
     const type = kind.value;
     const workId = work.value;
+    const selectedFacets = Object.fromEntries(
+      Object.entries(facets).map(([name, control]) => [name, control.value]));
+    const hasWorkFacets = Object.values(selectedFacets).some(Boolean);
     const words = wordsFor(query);
-    saveParams({q: query, repository, type, work: workId});
+    saveParams({q: query, repository, type, work: workId, ...selectedFacets});
     if (window.MathJax && window.MathJax.typesetClear) window.MathJax.typesetClear([results]);
     results.replaceChildren();
     more.hidden = true;
     results.removeAttribute("aria-busy");
-    if (!words.length && !type && !repository && !workId) { status.textContent = "Enter a term, choose a work or choose a result type."; return; }
+    if (!words.length && !type && !repository && !workId && !hasWorkFacets) {
+      status.textContent = "Enter a term or choose a filter."; return;
+    }
     status.textContent = "Searching…";
     results.setAttribute("aria-busy", "true");
     try {
@@ -317,10 +328,24 @@ if (form) {
         return response.json();
       }).then(rows => rows.map(item => ({...item, normalizedTitle: normalized(item.title),
         normalizedText: normalized(item.title + " " + item.text)}))).catch(error => { indexPromise = null; throw error; });
-      const index = await indexPromise;
+      if (hasWorkFacets && !facetPromise) {
+        facetPromise = fetch(form.dataset.facets).then(response => {
+          if (!response.ok) throw new Error("Work facets could not be loaded");
+          return response.json();
+        }).catch(error => { facetPromise = null; throw error; });
+      }
+      const [index, subjectIndex] = await Promise.all([
+        indexPromise, hasWorkFacets ? facetPromise : Promise.resolve(null)
+      ]);
       if (request !== generation) return;
+      const matchesWorkFacets = item => !hasWorkFacets || (item.work_ids || []).some(id => {
+        const record = subjectIndex.works[id];
+        return record && Object.entries(selectedFacets).every(([name, code]) =>
+          !code || record[name === "evidence" ? "evidence" : name] === code);
+      });
       found = index.filter(item => (!repository || item.group === repository) &&
-        (!type || item.kind === type) && (!workId || (item.work_ids || []).includes(workId)) && words.every(word => item.normalizedText.includes(word)));
+        (!type || item.kind === type) && (!workId || (item.work_ids || []).includes(workId)) &&
+        matchesWorkFacets(item) && words.every(word => item.normalizedText.includes(word)));
       const score = item => (normalized(query) === item.normalizedTitle ? 100 : 0) +
         words.filter(word => item.normalizedTitle.includes(word)).length * 10 +
         (item.kind === "Claims" || item.kind === "Glossary" ? 1 : 0);
@@ -336,6 +361,7 @@ if (form) {
   group.addEventListener("change", search);
   kind.addEventListener("change", search);
   work.addEventListener("change", search);
+  for (const control of Object.values(facets)) control.addEventListener("change", search);
   more.addEventListener("click", () => renderMore(true));
   form.addEventListener("reset", () => {
     ++generation;
@@ -343,8 +369,9 @@ if (form) {
     results.replaceChildren();
     results.removeAttribute("aria-busy");
     more.hidden = true;
-    status.textContent = "Enter a term, choose a work or choose a result type.";
-    saveParams({q: "", repository: "", type: "", work: ""});
+    status.textContent = "Enter a term or choose a filter.";
+    saveParams({q: "", repository: "", type: "", work: "",
+      discipline: "", stage: "", lean: "", evidence: ""});
     setTimeout(() => input.focus(), 0);
   });
   const params = new URLSearchParams(location.search);
@@ -352,7 +379,11 @@ if (form) {
   group.value = params.get("repository") || "";
   kind.value = params.get("type") || "";
   work.value = params.get("work") || "";
-  if (input.value || group.value || kind.value || work.value) search();
+  for (const [name, control] of Object.entries(facets)) {
+    control.value = params.get(name) || "";
+  }
+  if (input.value || group.value || kind.value || work.value ||
+      Object.values(facets).some(control => control.value)) search();
 }
 
 for (const pre of document.querySelectorAll("pre")) {
