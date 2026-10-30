@@ -763,6 +763,59 @@ def atlas_examples(check):
         logarithmic_ordinary=[str(v) for v in logarithmic],derivative_pullback=[str(v) for v in shift])
 
 
+def edge_examples(check):
+    kernel=local_kernel(2,70)
+    beta=[kernel[m]/(4**m*factorial(2*m)) for m in range(70)]
+    euler=[(-1)**n*v for n,v in enumerate(reciprocal_recurrence(2,1,70))]
+    carries=[]
+    for r in range(1,256):
+        cutoff=(r.bit_count()-1)//3
+        weights=[3*q+(r+q).bit_count()-r.bit_count() for q in range(cutoff+1)]
+        minimum=min(weights)
+        addresses=[q for q,w in enumerate(weights) if w==minimum]
+        direct=[3*q+(r+q).bit_count()-r.bit_count() for q in range(257)]
+        check('edge_carry_cutoff',minimum==min(direct) and addresses==[q for q,w in enumerate(direct) if w==minimum])
+        if r in (1,3,7,15,31,63,127,254,255):
+            reduction=[0]
+            for q in addresses:
+                polynomial=[1]
+                for i in range(q):polynomial=mul(polynomial,[-i,1])
+                reduction=add(reduction,polynomial)
+            carries.append(dict(r=r,binary_ones=r.bit_count(),cutoff=cutoff,mu=minimum,
+                                minimizing_addresses=addresses,reduction_mod_2=[int(c)%2 for c in trim(reduction)]))
+    rows=[]
+    for r,offsets in [(r,range(9)) for r in range(1,9)]+[(r,range(7)) for r in (15,31,63)]:
+        for x in offsets:
+            n=r+x
+            terms=[kernel[m]*comb(2*n,2*m)*local_source(2,2*(n-m)) for m in range(n+1)]
+            check('edge_direct_euler_reconstruction',sum(terms)==euler[n])
+            partial=sum(terms[:r])
+            tail=euler[n]-partial
+            h=F(0)
+            polynomial=1
+            for q in range(x+1):
+                if q:polynomial*=(x-q+1)*(2*x-(2*q-1))
+                h+=8**q*beta[r+q]/beta[r]*polynomial*local_source(2,2*(x-q))
+            factor=kernel[r]*comb(2*n,2*r)
+            check('edge_finite_factorization',tail==factor*h)
+            hv=valuation(h,2)
+            tv=valuation(tail,2)
+            binomial_weight=valuation(comb(n,r),2)
+            check('edge_binomial_weight',binomial_weight==valuation(comb(2*n,2*r),2))
+            check('edge_valuation_identity',tv is None if hv is None else tv==4*r-1+binomial_weight+hv)
+            if r.bit_count()<=3:
+                check('edge_sparse_binary_family',hv==0 and tv==4*r-1+binomial_weight)
+            if x==0:check('edge_uniform_sharpness',h==1 and tail==kernel[r] and tv==4*r-1)
+            rows.append(dict(r=r,N=n,x=x,retained_depth=r-1,partial=str(partial),tail=str(tail),
+                H=str(h),H_valuation=hv,tail_valuation=tv,binomial_valuation=binomial_weight,
+                minimum_summand_valuation=min(valuation(t,2) for t in terms[r:]),
+                omitted_weights=[valuation(t,2) for t in terms[r:]]))
+    witness=next(row for row in rows if row['r']==15 and row['x']==1)
+    check('edge_cancellation_witness',witness['tail_valuation']>witness['minimum_summand_valuation'])
+    return dict(carries=carries,rows=rows,cancellation_witness=witness,
+                kernel={str(r):str(kernel[r]) for r in list(range(1,9))+[15,31]})
+
+
 def compute():
     counts = {}
 
@@ -1185,6 +1238,7 @@ def compute():
     fibonacci=fibonacci_examples(euler_polynomials,signed,check)
     literature=literature_examples(euler_polynomials,check)
     atlas=atlas_examples(check)
+    edge=edge_examples(check)
     polynomials = reciprocal_polynomials(2,6)
     report = dict(status='PASS',arithmetic='exact integers and fractions',
         python=platform.python_version(),randomness=False,checks=counts,
@@ -1202,6 +1256,7 @@ def compute():
         fibonacci=fibonacci,
         literature=literature,
         atlas=atlas,
+        edge=edge,
         references=REFERENCES,
         bounds=dict(reciprocal_spacing=[2,6],reciprocal_index=[0,10],
             reciprocal_parameters=[str(r) for r in parameters],
@@ -1226,6 +1281,8 @@ def compute():
             quartic_displacement_base=[0,8],quartic_displacement_step=[1,16],quartic_modular_index=[0,255],quartic_modulus=8192,
             residue_permutation_bits=[1,8],isometry_pair_indices=[0,31],period_precision=[0,8],inverse_bits=6,
             mode_primes=[3,5,7],mode_full_degree=[0,24],stirling_degree=16,log_derivative_input_degree=17,
+            edge_small_r=[1,8],edge_small_x=[0,8],edge_large_r=[15,31,63],edge_large_x=[0,6],edge_max_full_degree=138,
+            edge_carry_r=[1,255],edge_carry_q=[0,256],
             difference_spacing=[1,5],difference_offsets='all 0 <= s < M',difference_order=[0,5],
             composition_spacings=[1,4],composition_offsets='all admitted offsets',composition_order=[0,3],
             primes=[2,3,5,7,11]),
@@ -1241,7 +1298,8 @@ def save_results(directory, report):
     paths = [directory/'results.json',directory/'euler-coefficients.csv',directory/'power-polynomials.csv',
              directory/'local-reconstruction.csv',directory/'coefficient-matrices.csv',directory/'congruence-ladders.csv',
              directory/'fibonacci-transfer.csv',directory/'fibonacci-precision.csv',directory/'polynomial-calculus.csv',
-             directory/'quartic-addresses.csv',directory/'dyadic-inverse.csv',directory/'euler-coordinate-atlas.csv']
+             directory/'quartic-addresses.csv',directory/'dyadic-inverse.csv',directory/'euler-coordinate-atlas.csv',
+             directory/'dyadic-edge-tails.csv']
     if any(p.exists() for p in paths):
         raise FileExistsError('Choose a directory with no existing result files')
     paths[0].write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8',newline='\n')
@@ -1329,6 +1387,11 @@ def save_results(directory, report):
                 report['atlas']['logarithmic_euler'][n] if n<17 else '',
                 report['atlas']['logarithmic_ordinary'][n] if n<17 else '',
                 *[row['values'][n] for row in report['atlas']['modes']]])
+    with paths[12].open('w',encoding='utf-8',newline='') as stream:
+        keys=['r','N','x','retained_depth','partial','tail','H','H_valuation','tail_valuation','binomial_valuation','minimum_summand_valuation']
+        writer=csv.writer(stream,lineterminator='\n')
+        writer.writerow(keys)
+        for row in report['edge']['rows']:writer.writerow(['infinity' if row[k] is None else row[k] for k in keys])
 
 
 def main():
@@ -1356,6 +1419,7 @@ def main():
     print('Dyadic inverse: address 2, target 13 mod 64 -> index',report['atlas']['inverse_index'])
     print('Finite mode inverse mod 5: weights 1, 1, -1, -1, 1')
     print('Logarithmic Euler coordinates: 1, 0, -1, 3, -6, 0, 90, -630, 2520')
+    print('Dyadic edge: exact tail factorization and sparse-binary row valuations checked')
     print('Signed Euler difference coordinates:', ', '.join(map(str,report['difference_coordinates'])))
     print('Spacing-two lane: 1, 5, 1385; differences: 1, 4, 1376')
     print('Refinement: 2*4 + 1376 = 1384')

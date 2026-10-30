@@ -1220,6 +1220,162 @@ For the fixed row \(E_8\), the four nonconstant term weights are
 
 They are distinct and increase strictly. In each nonempty tail there is a unique term of least valuation, so it cannot be cancelled by terms divisible by a higher power of two. This proves the exact error valuations \(5,8,13,15\) in the table. The uniform bound and the stronger precision of a particular row answer different questions.
 
+## Factor the omitted dyadic tail exactly
+
+The uniform boundary is already optimal. There is nevertheless more information about the error at an individual row. Paper IX's [classical-tail appendix](https://github.com/KomorebiP/Operation-KOMOREBI/blob/9cc61ba61d42a885b4912e6e1acd97e2d6f5f396/papers/paper-ix/current/sources/root_scope.tex) gives an exact factorization.
+
+Write \(r=L+1\) for the first omitted index, and let
+
+\[
+\mathcal R_{r-1}(N)=E_{2N}-T_{r-1}^{(2)}(N),\qquad N=r+x,\quad x\geq0.
+\]
+
+Here \(\mathcal R\) denotes the error, while \(T\) remains the retained partial sum. Define
+
+\[
+P_q(x)=\prod_{i=0}^{q-1}(x-i)(2x-(2i+1)),\qquad P_0(x)=1,
+\]
+
+and retain the earlier source \(A(n)=R_{2n}\). With
+\((z/\sinh z)^2=\sum_{m\geq0}\beta_m z^{2m}\), put
+
+\[
+H_r(x)=\sum_{q=0}^{x}8^q\frac{\beta_{r+q}}{\beta_r}P_q(x)A(x-q).
+\]
+
+At these nonnegative integer arguments the expression is a finite rational sum. The exact tail is
+
+\[
+\boxed{\mathcal R_{r-1}(N)=\kappa_r\binom{2N}{2r}H_r(N-r).}
+\]
+
+To verify it, substitute \(m=r+q\) in the omitted terms. The coefficient ratio simplifies to
+
+\[
+\frac{\kappa_{r+q}\binom{2N}{2r+2q}}
+     {\kappa_r\binom{2N}{2r}}
+=4^q\frac{\beta_{r+q}}{\beta_r}\frac{(2x)!}{(2x-2q)!}
+=8^q\frac{\beta_{r+q}}{\beta_r}P_q(x).
+\]
+
+The last equality separates each consecutive even and odd factor. This proves the factorization without an infinite-sum argument. At \(x=0\), \(H_r(0)=A(0)=1\), recovering the sharp first-omitted-row error \(\kappa_r\).
+
+Legendre's binary formula gives
+\(v_2((2m)!)=2m-s_2(m)\), where \(s_2(m)\) counts binary ones. Combining this with the already proved \(v_2(\kappa_m)=4m-1\) yields
+
+\[
+v_2(\beta_m)=s_2(m)-1\qquad(m\geq1).
+\]
+
+Also \(v_2\binom{2N}{2r}=v_2\binom Nr\). Consequently the factorization gives the exact valuation identity
+
+\[
+\boxed{
+v_2(\mathcal R_{r-1}(N))
+=4r-1+v_2\binom Nr+v_2H_r(N-r).
+}
+\]
+
+The equality includes zero errors by taking their valuation to be infinity. The binomial factor accounts for one source of extra precision. The remaining factor records the cancellations that the uniform bound cannot resolve.
+
+## Find exact row precision from binary carries
+
+The scalar coefficient at offset \(q\) in \(H_r\) has valuation
+
+\[
+\lambda_r(q)=3q+s_2(r+q)-s_2(r).
+\]
+
+Since \(r+q>0\), this is at least \(3q+1-s_2(r)\). Thus a minimum can occur only at
+
+\[
+0\leq q\leq\left\lfloor\frac{s_2(r)-1}{3}\right\rfloor.
+\]
+
+This is a proved finite cutoff, not an empirical search limit. In particular, if \(s_2(r)\leq3\), every \(q\geq1\) has positive weight. At an integer \(x\geq0\), the \(q=0\) term is the odd unit \(A(x)\), and every later term is even. Hence \(H_r(x)\) is a unit, giving the exact all-row law
+
+\[
+\boxed{
+s_2(r)\leq3\quad\Longrightarrow\quad
+v_2(\mathcal R_{r-1}(N))=4r-1+v_2\binom Nr
+\quad(N\geq r).
+}
+\]
+
+Every first omitted index from one through fourteen belongs to this family. It explains the earlier \(E_8\) error table directly: for \(r=1,2,3,4\),
+
+\[
+3+v_2\binom41=5,\quad
+7+v_2\binom42=8,\quad
+11+v_2\binom43=13,\quad
+15+v_2\binom44=15.
+\]
+
+This strengthens particular rows while retaining the same sharp uniform boundary.
+
+For general \(r\), define \(\mu_r=\min_q\lambda_r(q)\) and let \(J_r\) be the set of minimizing offsets. Some representative carry calculations are
+
+| First omitted index \(r\) | \(s_2(r)\) | Search cutoff | \(\mu_r\) | \(J_r\) |
+|---:|---:|---:|---:|---|
+| 7 | 3 | 0 | 0 | \(\{0\}\) |
+| 15 | 4 | 1 | 0 | \(\{0,1\}\) |
+| 31 | 5 | 1 | \(-1\) | \(\{1\}\) |
+| 63 | 6 | 1 | \(-2\) | \(\{1\}\) |
+| 254 | 7 | 2 | 0 | \(\{0,2\}\) |
+
+For example, at \(r=15\), the two weights are \(0\) and \(3+1-4=0\). At \(r=31\), the second weight becomes \(3+1-5=-1\). The binary carry into the next power of two changes which offset controls the normalized factor.
+
+## Check a cancellation beyond the uniform boundary
+
+The first omitted index with four binary ones is \(r=15\), corresponding to retained depth fourteen. At the next row, \(N=16\), precisely two terms remain. Both have valuation 63:
+
+\[
+v_2\!\left(\kappa_{15}\binom{32}{30}A(1)\right)=59+4=63,
+\qquad v_2(\kappa_{16})=63.
+\]
+
+Their sum has greater precision. Since \(P_1(1)=1\), the remaining factor is
+
+\[
+\begin{aligned}
+H_{15}(1)
+&=\frac53+8\frac{\beta_{16}}{\beta_{15}}\\
+&=\frac{50983795750606688}{63714146236056975}\\
+&=32\frac{1593243617206459}{63714146236056975}.
+\end{aligned}
+\]
+
+Both integers in the final fraction are odd, so \(v_2(H_{15}(1))=5\). The exact tail valuation is therefore
+
+\[
+\boxed{v_2\!\left(E_{32}-T_{14}^{(2)}(16)\right)=59+4+5=68.}
+\]
+
+The uniform guarantee at depth fourteen is only 59. The row's binomial weight raises the termwise lower bound to 63, and cancellation adds five more digits. None of this permits a stronger uniform exponent: at \(N=15\), the error is exactly \(\kappa_{15}\), with valuation 59.
+
+## State the remaining boundary precisely
+
+The appendix goes further than the finite integer-row identity. It constructs a restricted 2-adic series extending the source, then normalizes
+\(G_r=2^{-\mu_r}H_r\). Its coefficient reduction is the finite polynomial
+
+\[
+\overline G_r(X)=\sum_{q\in J_r}X^{\underline q}\quad\text{in }\mathbb F_2[X].
+\]
+
+It proves an exact preparation \(G_r=W_rU_r\), where \(W_r\) is monic of degree \(\max J_r\), and \(U_r\) is an invertible restricted series congruent to one modulo two. Thus
+
+\[
+v_2(\mathcal R_{r-1}(N))
+=4r-1+v_2\binom Nr+\mu_r+v_2W_r(N-r),
+\qquad
+\deg W_r\leq\left\lfloor\frac{s_2(r)-1}{3}\right\rfloor.
+\]
+
+For the carry rows above, the reductions are respectively
+\(1\), \(1+X\), \(X\), \(X\), and \(1+X+X^2\). These are reductions modulo two, not complete formulas for the 2-adic preparation polynomials.
+
+The sharp uniform boundary, finite carry cutoff, exact factorization, and finite-polynomial reduction are proved results. A universal explicit classification of those polynomials and a proof that every dyadic root is simple remain open in the checked source. The appendix resolves particular families, but those results do not settle the universal statement. This remaining cancellation problem is separate from the already proved optimal uniform bound.
+
 ## State the supercongruences and check an Euler index shift
 
 The proved local truncation laws can be written as explicit supercongruences. For an odd prime \(p\), every \(n,L\geq0\) satisfies
@@ -3399,6 +3555,7 @@ Quartic address gains: normalized 1, 1, 4, 2; original 1, 1, 5, 3
 Dyadic inverse: address 2, target 13 mod 64 -> index 21
 Finite mode inverse mod 5: weights 1, 1, -1, -1, 1
 Logarithmic Euler coordinates: 1, 0, -1, 3, -6, 0, 90, -630, 2520
+Dyadic edge: exact tail factorization and sparse-binary row valuations checked
 Signed Euler difference coordinates: 1, -2, 8, -80, 1664
 Spacing-two lane: 1, 5, 1385; differences: 1, 4, 1376
 Refinement: 2*4 + 1376 = 1384
@@ -3415,7 +3572,7 @@ python -B euler_packets.py --output my-euler-results
 
 The program refuses to replace existing result files. The CSV values retain integers and rational numbers, including the ordinary coefficients and their factorial normalization.
 
-You can also inspect the published [coefficient table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/euler-coefficients.csv), [parameter-polynomial table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/power-polynomials.csv), [local reconstruction and error table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/local-reconstruction.csv), [matrix-entry table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/coefficient-matrices.csv), [supercongruence table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/congruence-ladders.csv), [Fibonacci transfer matrices](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/fibonacci-transfer.csv), [Fibonacci precision ladders](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/fibonacci-precision.csv), [polynomial calculus matrices](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/polynomial-calculus.csv), [quartic address coefficients](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/quartic-addresses.csv), [binary inversion trace](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/dyadic-inverse.csv), [Euler coordinate table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/euler-coordinate-atlas.csv), [exact results](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/results.json), and [source identities](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/source-record.json).
+You can also inspect the published [coefficient table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/euler-coefficients.csv), [parameter-polynomial table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/power-polynomials.csv), [local reconstruction and error table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/local-reconstruction.csv), [matrix-entry table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/coefficient-matrices.csv), [supercongruence table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/congruence-ladders.csv), [Fibonacci transfer matrices](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/fibonacci-transfer.csv), [Fibonacci precision ladders](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/fibonacci-precision.csv), [polynomial calculus matrices](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/polynomial-calculus.csv), [quartic address coefficients](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/quartic-addresses.csv), [binary inversion trace](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/dyadic-inverse.csv), [Euler coordinate table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/euler-coordinate-atlas.csv), [exact dyadic tails](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/dyadic-edge-tails.csv), [exact results](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/results.json), and [source identities](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/source-record.json).
 
 The matrix table contains twelve-by-twelve blocks of each forward and inverse local transform for charts 2, 3, 5 and 7, the Pascal pair, the displayed three-by-five sampling block, and five-by-five base changes from chart three to charts five and two. The Fibonacci table adds the degree-twelve polynomial connection and its inverse, and sixteen-by-sixteen recurrence analysis, synthesis, ordinary sequence transfer and inverse matrices. These finite tables can be inspected entry by entry. The formulas and proofs above define the infinite operators.
 
@@ -3450,15 +3607,18 @@ The checks use several different routes:
 | Finite dyadic coordinates | Modular recurrence against rational values, residue permutations, pairwise distance, period criteria and unique binary lift | Coefficients 0–255 modulo 8192, permutation precisions 1–8, pair inputs 0–31, period precisions 0–8, six inverse digits |
 | Finite Hurwitz modes | Cyclic group inversion, nilpotence, direct Hurwitz multiplication and Euler coefficients | Primes 3, 5, 7 and full degrees 0–24 |
 | Logarithmic coordinates | Both Stirling inverse products, log/exp substitution, rational closed form, integer recurrence and conjugated derivative | Stirling matrices through degree 16, derivative output through degree 16 using input through degree 17 |
+| Exact dyadic tails | Direct reconstruction against finite factorization and exact valuations; certified carry cutoff against a larger finite search | First omitted indices 1–8 with offsets 0–8 and 15, 31, 63 with offsets 0–6; carry indices 1–255 and offsets 0–256 |
 | Prime residuals | Integer polynomial coefficients and application to the three sequences | Primes 2, 3, 5, 7, and 11 |
 
 The permutation control uses a different definition of the numbers. At length \(m\), keep the number of admissible permutations ending at each possible rank. If the next comparison is an ascent, sum the preceding counts below the new rank. For a descent, sum those at or above it. Repeating the prescribed pattern gives the total. The program also enumerates the small permutation sets directly to check this dynamic program. It does not infer a universal enumeration theorem from those samples.
 
-The [bounded run manifest](../../verification/euler-packets/run-006/manifest.json) records the command, Python version, source hashes before and after execution, time limit, observed completion, and result hashes. The [quartic and coefficient-atlas self-review](../../verification/euler-packets/PROOF_REVIEW_ATLAS.md) links the preceding proof reviews and checks the added arguments separately. There is no new Lean run for this example.
+The [bounded run manifest](../../verification/euler-packets/run-007/manifest.json) records the command, Python version, source hashes before and after execution, time limit, observed completion, and result hashes. The [dyadic-tail self-review](../../verification/euler-packets/PROOF_REVIEW_EDGE.md) links the preceding proof reviews and checks the added arguments separately. There is no new Lean run for this example.
 
 A separate check compares 605 reciprocal coefficient values with the pinned Komorebi Math source, using both its integer sequence API and its logarithmic reciprocal-power implementation. It also makes 1,012 comparisons in the local Euler charts: 220 source, kernel and reconstruction values, 528 truncation values and errors, and 264 row weights, across prime charts 2, 3, 5 and 7 through ordinary degree twenty. Its [comparison record](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/library-comparison.json) retains the source identity and declared ranges.
 
 That supplementary checker also verifies twelve complete rows of the infinite sampling-kernel witness and 18 Euler index-shift supercongruences, for primes 3, 5 and 7 with even starting degree 2–12. It retains the failing degree-zero boundary as a negative control. It also makes 921 Fibonacci comparisons with the pinned library: 169 polynomial connection entries, 52 polynomial companion entries, 13 centered Euler values, 512 recurrence matrix entries, 150 recurrence checks, and 25 full-index records. The full and even-index streams are checked separately at every prefix length from two through twenty-six. A further 3,506 comparisons check the new literature examples against pinned APIs: 780 packet values, 1,560 packet-state coordinates, 68 jump-matrix entries, and 1,098 polynomial-calculus entries. The [source check](../../verification/euler-packets/LITERATURE_FIBONACCI.md) records the exact source statements and distinguishes their written consequences. The coordinate atlas adds 1,164 comparisons: 96 quartic coefficients, 150 modular Hurwitz inverse/product values, 578 Stirling entries, 51 formal-coordinate values, and 289 substitution entries. Its [source record](../../verification/euler-packets/LITERATURE_ATLAS.md) identifies the all-row theorem used in the universal displacement proof. The universal statements have the written proofs or checked source inputs above.
+
+The tail continuation adds 234 library comparisons: 46 partial sums, 46 exact errors, 132 omitted-term weights, and ten kernel values. The [tail source check](../../verification/euler-packets/LITERATURE_EDGE.md) records the finite-polynomial result and its remaining simplicity boundary.
 
 ## What the example establishes
 

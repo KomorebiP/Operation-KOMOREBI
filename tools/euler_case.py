@@ -47,19 +47,20 @@ def publish(site):
                 raise ValueError('Euler run output differs: '+entry['path'])
     downloads={
         'euler_packets.py':'examples/euler_packets.py',
-        'results.json':'verification/euler-packets/run-006/results.json',
-        'euler-coefficients.csv':'verification/euler-packets/run-006/euler-coefficients.csv',
-        'power-polynomials.csv':'verification/euler-packets/run-006/power-polynomials.csv',
-        'local-reconstruction.csv':'verification/euler-packets/run-006/local-reconstruction.csv',
-        'coefficient-matrices.csv':'verification/euler-packets/run-006/coefficient-matrices.csv',
-        'congruence-ladders.csv':'verification/euler-packets/run-006/congruence-ladders.csv',
-        'fibonacci-transfer.csv':'verification/euler-packets/run-006/fibonacci-transfer.csv',
-        'fibonacci-precision.csv':'verification/euler-packets/run-006/fibonacci-precision.csv',
-        'polynomial-calculus.csv':'verification/euler-packets/run-006/polynomial-calculus.csv',
-        'quartic-addresses.csv':'verification/euler-packets/run-006/quartic-addresses.csv',
-        'dyadic-inverse.csv':'verification/euler-packets/run-006/dyadic-inverse.csv',
-        'euler-coordinate-atlas.csv':'verification/euler-packets/run-006/euler-coordinate-atlas.csv',
-        'library-comparison.json':'verification/euler-packets/cross-check-006/results.json',
+        'results.json':'verification/euler-packets/run-007/results.json',
+        'euler-coefficients.csv':'verification/euler-packets/run-007/euler-coefficients.csv',
+        'power-polynomials.csv':'verification/euler-packets/run-007/power-polynomials.csv',
+        'local-reconstruction.csv':'verification/euler-packets/run-007/local-reconstruction.csv',
+        'coefficient-matrices.csv':'verification/euler-packets/run-007/coefficient-matrices.csv',
+        'congruence-ladders.csv':'verification/euler-packets/run-007/congruence-ladders.csv',
+        'fibonacci-transfer.csv':'verification/euler-packets/run-007/fibonacci-transfer.csv',
+        'fibonacci-precision.csv':'verification/euler-packets/run-007/fibonacci-precision.csv',
+        'polynomial-calculus.csv':'verification/euler-packets/run-007/polynomial-calculus.csv',
+        'quartic-addresses.csv':'verification/euler-packets/run-007/quartic-addresses.csv',
+        'dyadic-inverse.csv':'verification/euler-packets/run-007/dyadic-inverse.csv',
+        'euler-coordinate-atlas.csv':'verification/euler-packets/run-007/euler-coordinate-atlas.csv',
+        'dyadic-edge-tails.csv':'verification/euler-packets/run-007/dyadic-edge-tails.csv',
+        'library-comparison.json':'verification/euler-packets/cross-check-007/results.json',
     }
     output=site.output/PREFIX
     output.mkdir(parents=True,exist_ok=True)

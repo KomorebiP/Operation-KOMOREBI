@@ -8,7 +8,7 @@
 
 **Completion:** Active development · **Lean:** No Lean claim · **Confidence:** Written / finite evidence
 
-An extended Euler derivation connects reciprocal packets, infinite transforms, local supercongruences, Fibonacci transfers, polynomial calculus, exact quartic periods and binary inverses, finite Hurwitz modes and logarithmic/Stirling coordinates.
+An extended Euler derivation connects reciprocal packets, infinite transforms, local supercongruences, Fibonacci transfers, polynomial calculus, exact quartic periods and binary inverses, finite Hurwitz modes and logarithmic/Stirling coordinates. The dyadic edge continuation includes exact tail factors, finite carries, row-specific cancellation and the remaining simplicity boundary.
 
 ## Before you start
 

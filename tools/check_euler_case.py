@@ -13,7 +13,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT/'examples/euler_packets.py'
 PAGE = ROOT/'docs/demonstrations/EULER_PACKETS.md'
-RUN = ROOT/'verification/euler-packets/run-006'
+RUN = ROOT/'verification/euler-packets/run-007'
 
 
 def digest(path):
@@ -39,7 +39,7 @@ def check_library(example, math_root, git, computed=None):
     sys.path.insert(0,str(math_root/'src'))
     from komorebi_math.sequences import reciprocal_coefficients as integral
     from komorebi_math.analytic.reciprocal import reciprocal_coefficients as analytic
-    from komorebi_math.arithmetic.euler import EulerLocalCoordinates
+    from komorebi_math.arithmetic.euler import EulerLocalCoordinates, signed_euler_number
     from komorebi_math.coordinates.polynomials import (
         euler_to_fibonacci_transform, fibonacci_companion_power,
         secant_euler_from_fibonacci_coordinates, fibonacci_polynomial_family,
@@ -214,6 +214,23 @@ def check_library(example, math_root, git, computed=None):
         for k in range(17):
             assert substitution[n][k]*factorial(n)/factorial(k)==atlas['stirling_first'][n][k]
             atlas_checks['formal_substitution_entries']+=1
+    edge_checks=dict(partials=0,errors=0,row_weights=0,kernel_values=0)
+    dyadic=EulerLocalCoordinates(2)
+    for row in computed['edge']['rows']:
+        r,x,n=row['r'],row['x'],row['N']
+        if not ((r<=8 and x<=4) or (r in (15,31) and x<=2)):
+            continue
+        partial=dyadic.reconstruct(2*n,depth=r-1)
+        assert partial==F(row['partial'])
+        edge_checks['partials']+=1
+        assert signed_euler_number(2*n)-partial==F(row['tail'])
+        edge_checks['errors']+=1
+        for offset,weight in enumerate(row['omitted_weights']):
+            assert dyadic.row_weight(2*n,r+offset)==weight
+            edge_checks['row_weights']+=1
+    for r,value in computed['edge']['kernel'].items():
+        assert dyadic.kernel(int(r))==F(value)
+        edge_checks['kernel_values']+=1
     sources=[]
     for name,module in sorted(sys.modules.items()):
         filename=getattr(module,'__file__',None)
@@ -234,6 +251,7 @@ def check_library(example, math_root, git, computed=None):
                 fibonacci_comparisons=fib_checks,fibonacci_total_comparisons=sum(fib_checks.values()),
                 literature_comparisons=lit_checks,literature_total_comparisons=sum(lit_checks.values()),
                 atlas_comparisons=atlas_checks,atlas_total_comparisons=sum(atlas_checks.values()),
+                edge_comparisons=edge_checks,edge_total_comparisons=sum(edge_checks.values()),
                 scope='Exact numeric library outputs in the declared finite range. Not a proof of the complete Python implementation.')
 
 

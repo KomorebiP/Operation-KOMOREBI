@@ -184,3 +184,13 @@ substitution and rational closed form. Universal all-row input is checked from
 the exact source, not inferred from finite runs. Other displayed consequences
 receive written derivations and self-review. No new Lean, global novelty,
 speed claim, or extension of a modulo-prime observation to higher powers.
+
+## Optimal-boundary continuation EULER-CASE-007
+
+Base: `9cc61ba61d42a885b4912e6e1acd97e2d6f5f396`. Add only genuinely missing
+material from Paper IX sources/root_scope.tex: finite exact tail factorization,
+carry cutoff, sparse-binary all-row valuation consequence, cancellation witness,
+and precise finite-polynomial/open-simplicity boundary. Do not relabel the
+proved uniform 4M+3 tower as open, or claim a universal root classification.
+Written finite algebra and source-checked restricted-series results are separate
+from bounded exact checks. Contracts 007 precede accepted execution.
