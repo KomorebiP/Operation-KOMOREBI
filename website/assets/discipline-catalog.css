@@ -1,16 +1,16 @@
 /* Four editorial research sections. Labels are textual rather than colored status badges. */
 .catalog-intro { max-width: 67rem; font-size: 1.07rem; line-height: 1.65; }
 .discipline-overview {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
-  gap: .9rem; margin: 1.6rem 0 2rem;
+  display: flex; flex-wrap: wrap; gap: .55rem; margin: 1rem 0;
 }
 .discipline-link {
-  display: flex; flex-direction: column; gap: .4rem; padding: 1.15rem;
+  display: flex; align-items: center; gap: .65rem; padding: .55rem .8rem;
   border: 1px solid var(--line); border-radius: .25rem; background: var(--surface);
   color: var(--ink); text-decoration: none;
 }
 .discipline-link:hover, .discipline-link:focus-visible { border-color: var(--green); text-decoration: none; }
-.discipline-name { font-family: var(--display); font-size: 1.42rem; line-height: 1.2; }
+.discipline-link[aria-current] { border-color: var(--green); box-shadow: inset 0 -2px var(--green); }
+.discipline-name { font-size: .95rem; line-height: 1.3; font-weight: 600; }
 .discipline-count { font-size: .82rem; color: var(--green); font-weight: 650; }
 .discipline-detail { font-size: .84rem; line-height: 1.5; color: var(--muted); }
 .catalog-filters {
@@ -27,18 +27,28 @@
 }
 .catalog-filters .catalog-reset { justify-content: end; }
 .catalog-filters button { min-height: 2.8rem; }
-.catalog-notice { max-width: 70rem; margin: 1.4rem 0; font-size: .87rem; color: var(--muted); line-height: 1.55; }
-#catalog-count { margin: 1.6rem 0 .5rem; font-weight: 650; }
-.catalog-section { margin-block: 2.1rem 2.6rem; }
+.catalog-notice { max-width: 70rem; margin: .6rem 0; font-size: .87rem; color: var(--muted); line-height: 1.55; }
+.catalog-notice summary, .catalog-proof summary { cursor: pointer; padding: .4rem 0; }
+.catalog-results-toolbar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .5rem 1rem; margin-top: 1rem; }
+#catalog-count { margin: .5rem 0; font-weight: 650; scroll-margin-top: 1rem; }
+.catalog-pagination { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: .7rem; margin: .5rem 0; }
+.catalog-pagination button { min-height: 2.75rem; padding: .4rem .75rem; }
+.catalog-pagination button:disabled { opacity: .5; cursor: default; }
+.catalog-page-status { font-size: .85rem; white-space: nowrap; }
+.catalog-section { margin-block: 1rem 1.5rem; }
 .catalog-section h2 { border-bottom: 1px solid var(--line); padding-bottom: .55rem; }
 .catalog-section h2 small { font: 400 .75rem system-ui, sans-serif; color: var(--muted); margin-left: .6rem; }
 .catalog-items { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: .85rem; }
 .catalog-item {
-  padding: 1.05rem 1.2rem; border: 1px solid var(--line); border-radius: .2rem;
+  padding: .8rem 1rem; border: 1px solid var(--line); border-radius: .2rem;
   background: var(--surface); min-width: 0;
 }
 .catalog-item h3 { font-size: 1.1rem; line-height: 1.35; margin: .3rem 0 .6rem; }
 .catalog-item > p { margin: .5rem 0; line-height: 1.5; }
+.catalog-summary { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+.catalog-stage-label { font-size: .82rem; color: var(--green); font-weight: 600; }
+.catalog-proof { font-size: .83rem; }
+.catalog-proof .catalog-assessment { margin-top: .3rem; }
 .catalog-type { color: var(--muted); font-size: .77rem; font-weight: 650; letter-spacing: .025em; }
 .catalog-related { font-size: .82rem; color: var(--muted); }
 .catalog-assessment { border-top: 1px solid var(--line); margin: 1rem 0 .7rem; padding-top: .5rem; }
@@ -46,14 +56,8 @@
 .catalog-assessment dt { color: var(--muted); font-weight: 550; }
 .catalog-assessment dd { margin: 0; }
 .catalog-item-links { font-size: .83rem; }
-.catalog-section[hidden], .catalog-item[hidden], #catalog-empty[hidden] { display: none !important; }
+.catalog-section[hidden], .catalog-item[hidden], #catalog-empty[hidden], .catalog-pagination[hidden] { display: none !important; }
 @media (max-width: 40rem) {
-  .discipline-overview { grid-template-columns: 1fr 1fr; }
-  .discipline-link { padding: .9rem; }
-  .discipline-name { font-size: 1.2rem; }
   .catalog-filters { grid-template-columns: 1fr; }
   .catalog-assessment > div { grid-template-columns: 6rem minmax(0, 1fr); }
-}
-@media (max-width: 28rem) {
-  .discipline-overview { grid-template-columns: 1fr; }
 }

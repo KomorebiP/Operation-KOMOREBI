@@ -5,6 +5,7 @@ This module neither changes source files nor infers mathematical correctness.
 """
 from collections import Counter
 from html import escape
+import hashlib
 import json
 
 CATALOG_PATH = 'manifests/discipline-catalog.json'
@@ -62,13 +63,22 @@ def facet_records(root, registry, assessments):
 
 
 def render_works_catalog(root, registry, components, assessments, status):
-    """Render four accessible sections, then add independent client-side facets."""
+    """Render a compact catalogue with progressive filtering and pagination."""
     data, subjects = load_catalog(root, registry, assessments)
     labels = status['labels']
     indexed = [components[row['id']] for row in registry['components']]
-    by_id = {row['id']: row for row in indexed}
     counts = Counter(subjects[row['id']]['primary'] for row in indexed)
     e = lambda value: escape(str(value), quote=True)
+
+    def asset(name):
+        version = hashlib.sha256((root/'website/assets'/name).read_bytes()).hexdigest()[:12]
+        return 'assets/' + name + '?v=' + version
+
+    def pagination(position):
+        return ('<nav class="catalog-pagination" aria-label="Collection pages (' + position + ')" hidden>'
+                '<button type="button" data-catalog-page="previous">Previous</button>'
+                '<span class="catalog-page-status"></span>'
+                '<button type="button" data-catalog-page="next">Next</button></nav>')
 
     def choices(kind, prompt, values):
         return ('<option value="">' + e(prompt) + '</option>' +
@@ -81,22 +91,20 @@ def render_works_catalog(root, registry, components, assessments, status):
     confidence = {assessments[c['id']]['confidence'] for c in indexed}
 
     out = [
-        '<link rel="stylesheet" href="assets/discipline-catalog.css">',
+        '<link rel="stylesheet" href="' + asset('discipline-catalog.css') + '">',
         '<h1>Explore the research collection</h1>',
         '<p><a href="search.html">Search documents, proof references, Lean and code</a> · '
         '<a href="claims.html">Find individual statements by paper and type</a></p>',
-        '<p class="catalog-intro">Browse by discipline and narrow by manuscript completion, '
-        'recorded Lean coverage, and the strongest recorded evidence. These are separate '
-        'dimensions: a completed reading edition need not prove an open conjecture.</p>',
+        '<p class="catalog-intro">Browse eight works at a time, or narrow the whole collection by subject, completion and proof evidence.</p>',
         '<nav class="discipline-overview" aria-label="Choose a discipline">',
     ]
     for key, subject in data['disciplines'].items():
         out.append(
             '<a class="discipline-link" href="works.html?discipline=' + e(key) +
-            '#catalog-results"><span class="discipline-name">' + e(subject['label']) +
+            '#catalog-results" data-discipline-choice="' + e(key) + '" title="' +
+            e(subject['description']) + '"><span class="discipline-name">' + e(subject['label']) +
             '</span><span class="discipline-count">' + str(counts[key]) +
-            ' primary works</span><span class="discipline-detail">' +
-            e(subject['description']) + '</span></a>'
+            '</span></a>'
         )
     out.append('</nav>')
     out += [
@@ -120,16 +128,21 @@ def render_works_catalog(root, registry, components, assessments, status):
                 for key, label in GROUP_LABELS.items()) + '</select></div>',
         '<div class="catalog-reset"><button type="reset">Clear all filters</button></div>',
         '</form>',
-        '<p class="catalog-notice">Subject assignments are editorial finding aids, '
+        '<details class="catalog-notice"><summary>About completion and proof evidence</summary><p>'
+        'Completion and proof evidence are separate: a completed reading edition need not prove an open conjecture. '
+        'Subject assignments are editorial finding aids, '
         'not evaluations. The completion and evidence labels reproduce the existing '
         'recorded assessments; a Lean contract covers only its declared claims. '
         'Read the <a href="collection/COMPLETION_STATUS.html">status guide</a> before '
         'interpreting them. Cross-disciplinary subjects have one primary home and '
-        'may list related fields.</p>',
+        'may list related fields.</p></details>',
         '<div id="catalog-results">',
+        '<div class="catalog-results-toolbar">',
         '<p id="catalog-count" role="status" aria-live="polite">' +
         str(len(indexed)) + ' primary works · evidence status recorded ' +
         e(status.get('as_of', 'in the project manifest')) + '</p>',
+        pagination('top'),
+        '</div>',
         '<p id="catalog-empty" hidden>No matches. Try broader terms or clear a filter.</p>',
     ]
     for key, subject in data['disciplines'].items():
@@ -161,7 +174,9 @@ def render_works_catalog(root, registry, components, assessments, status):
                 '<p class="catalog-type">' + e(GROUP_LABELS[component['group']]) +
                 (' · Incubator' if incubator else '') + '</p>'
                 '<h3><a href="collection/works/' + e(identifier) + '.html">' +
-                e(component['title']) + '</a></h3><p>' + e(summary) + '</p>' +
+                e(component['title']) + '</a></h3><p class="catalog-summary">' + e(summary) + '</p>' +
+                '<p class="catalog-stage-label">' + e(stage) + '</p>' +
+                '<details class="catalog-proof"><summary>Proof and evidence</summary>' +
                 ('<p class="catalog-related">Related field: ' + e(related) + '</p>' if related else '') +
                 '<dl class="catalog-assessment"><div><dt>Completion</dt><dd>' +
                 e(stage) + '</dd></div><div><dt>Lean coverage</dt><dd>' +
@@ -169,13 +184,14 @@ def render_works_catalog(root, registry, components, assessments, status):
                 e(evidence_name) + '</dd></div></dl>'
                 '<p class="catalog-item-links"><a href="collection/STATUS_CATALOG.html#' +
                 e(identifier) + '">Evidence record</a> · <a href="search.html?work=' +
-                e(identifier) + '">Search within work</a></p></article>'
+                e(identifier) + '">Search within work</a></p></details></article>'
             )
         out.append('</div></section>')
     out += [
+        pagination('bottom'),
         '</div>',
         '<noscript><p>All works are listed by primary discipline. Filtering needs '
         'JavaScript, but every work and evidence record remains linked.</p></noscript>',
-        '<script defer src="assets/discipline-catalog.js"></script>'
+        '<script defer src="' + asset('discipline-catalog.js') + '"></script>'
     ]
     return '\n'.join(out)
