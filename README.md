@@ -16,7 +16,7 @@ Realization Calculus develops the mathematics of decomposition, transfer, refine
 | Read the mathematics | [Browse the works](docs/BROWSE.md), with links to papers, monographs, source files, and evidence. |
 | Use the software | [Install a library and run a first example](docs/FIRST_RUN.md), or explore the [software guide](docs/LIBRARIES.md). |
 
-> **Author’s note:** This work is still in progress. Much of it has been rushed because of circumstances introduced by OpenAI. I am continuing to correct, verify, and organize it.
+> **Author’s note:** This work remains in progress and has, in many respects, been rushed because of circumstances shaped by the AI industry. I am continuing to correct, verify, and organize it.
 
 The [public project and authorship statement](docs/PROJECT_STATEMENT.md) explains the pseudonym, AI assistance, and publication circumstances. Each work is at a different stage of completion and review. All executable software remains **beta and work in progress**.
 
