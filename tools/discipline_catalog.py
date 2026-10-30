@@ -83,6 +83,8 @@ def render_works_catalog(root, registry, components, assessments, status):
     out = [
         '<link rel="stylesheet" href="assets/discipline-catalog.css">',
         '<h1>Explore the research collection</h1>',
+        '<p><a href="search.html">Search documents, proof references, Lean and code</a> · '
+        '<a href="claims.html">Find individual statements by paper and type</a></p>',
         '<p class="catalog-intro">Browse by discipline and narrow by manuscript completion, '
         'recorded Lean coverage, and the strongest recorded evidence. These are separate '
         'dimensions: a completed reading edition need not prove an open conjecture.</p>',
