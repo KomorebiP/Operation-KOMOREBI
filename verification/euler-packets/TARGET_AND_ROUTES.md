@@ -168,3 +168,19 @@ Distinguish source statements from newly written formal corollaries (the
 144 factor, sharpness and composition with the Euler transfer). No new global
 literature/novelty claim or Lean execution. Source authentication, extraction,
 application, proof self-review and finite execution are separate evidence.
+
+## Exact quartic and coordinate atlas EULER-CASE-006
+
+Target fixed before execution at collection revision
+`4b1afc89549ae9c8e101f32459fb514203baaabd`. Sources: Paper IX's four-address
+all-row difference theorem, Newton dominance, exact displacement and least
+periods, isometric continuation, finite Hurwitz mode algebra, and formal
+Amice derivative conjugacy. Distinguish quartic C_(4,j) from classical E_(2n).
+
+Routes: exact rational recurrence against ordinary inversion; modular recurrence
+and digit-lifting permutations against finite search; finite group algebra
+inversion against Hurwitz recurrence; Stirling transfer against direct log
+substitution and rational closed form. Universal all-row input is checked from
+the exact source, not inferred from finite runs. Other displayed consequences
+receive written derivations and self-review. No new Lean, global novelty,
+speed claim, or extension of a modulo-prime observation to higher powers.

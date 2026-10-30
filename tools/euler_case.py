@@ -47,16 +47,19 @@ def publish(site):
                 raise ValueError('Euler run output differs: '+entry['path'])
     downloads={
         'euler_packets.py':'examples/euler_packets.py',
-        'results.json':'verification/euler-packets/run-005/results.json',
-        'euler-coefficients.csv':'verification/euler-packets/run-005/euler-coefficients.csv',
-        'power-polynomials.csv':'verification/euler-packets/run-005/power-polynomials.csv',
-        'local-reconstruction.csv':'verification/euler-packets/run-005/local-reconstruction.csv',
-        'coefficient-matrices.csv':'verification/euler-packets/run-005/coefficient-matrices.csv',
-        'congruence-ladders.csv':'verification/euler-packets/run-005/congruence-ladders.csv',
-        'fibonacci-transfer.csv':'verification/euler-packets/run-005/fibonacci-transfer.csv',
-        'fibonacci-precision.csv':'verification/euler-packets/run-005/fibonacci-precision.csv',
-        'polynomial-calculus.csv':'verification/euler-packets/run-005/polynomial-calculus.csv',
-        'library-comparison.json':'verification/euler-packets/cross-check-005/results.json',
+        'results.json':'verification/euler-packets/run-006/results.json',
+        'euler-coefficients.csv':'verification/euler-packets/run-006/euler-coefficients.csv',
+        'power-polynomials.csv':'verification/euler-packets/run-006/power-polynomials.csv',
+        'local-reconstruction.csv':'verification/euler-packets/run-006/local-reconstruction.csv',
+        'coefficient-matrices.csv':'verification/euler-packets/run-006/coefficient-matrices.csv',
+        'congruence-ladders.csv':'verification/euler-packets/run-006/congruence-ladders.csv',
+        'fibonacci-transfer.csv':'verification/euler-packets/run-006/fibonacci-transfer.csv',
+        'fibonacci-precision.csv':'verification/euler-packets/run-006/fibonacci-precision.csv',
+        'polynomial-calculus.csv':'verification/euler-packets/run-006/polynomial-calculus.csv',
+        'quartic-addresses.csv':'verification/euler-packets/run-006/quartic-addresses.csv',
+        'dyadic-inverse.csv':'verification/euler-packets/run-006/dyadic-inverse.csv',
+        'euler-coordinate-atlas.csv':'verification/euler-packets/run-006/euler-coordinate-atlas.csv',
+        'library-comparison.json':'verification/euler-packets/cross-check-006/results.json',
     }
     output=site.output/PREFIX
     output.mkdir(parents=True,exist_ok=True)

@@ -13,7 +13,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT/'examples/euler_packets.py'
 PAGE = ROOT/'docs/demonstrations/EULER_PACKETS.md'
-RUN = ROOT/'verification/euler-packets/run-005'
+RUN = ROOT/'verification/euler-packets/run-006'
 
 
 def digest(path):
@@ -27,7 +27,7 @@ def load_example():
     return module
 
 
-def check_library(example, math_root, git):
+def check_library(example, math_root, git, computed=None):
     expected=json.loads((ROOT/'manifests/reader-site-libraries.json').read_bytes())['math']['revision']
     revision=subprocess.check_output([git,'rev-parse','HEAD'],cwd=math_root,text=True).strip()
     # Documentation-only checkout changes are allowed, but every tracked source
@@ -47,6 +47,10 @@ def check_library(example, math_root, git):
     from komorebi_math.coordinates.calculus import (
         integral_coordinate_operator, derivative_coordinate_operator)
     from komorebi_math.arithmetic.recurrence import LinearRecurrence
+    from komorebi_math.analytic.appell import congruential_inverse
+    from komorebi_math.arithmetic.hurwitz import hurwitz_inverse, hurwitz_product
+    from komorebi_math.coordinates.combinatorial import stirling_first_signed, stirling_second
+    from komorebi_math.coordinates.formal import FormalCoordinateChange
     from komorebi_math.coordinates.recurrence import (
         analyze_recurrence_coordinates, euler_fibonacci_coordinates,
         recurrence_analysis_transform, recurrence_synthesis_transform,
@@ -91,7 +95,7 @@ def check_library(example, math_root, git):
                 local_checks['truncations']+=2
                 assert coordinates.row_weight(degree,depth)==example.valuation(terms[depth],prime)
                 local_checks['row_weights']+=1
-    computed=example.compute()
+    computed=example.compute() if computed is None else computed
     fib=computed['fibonacci']
     connection=euler_to_fibonacci_transform(12).matrix
     fib_checks=dict(connection_entries=0,polynomial_companion_entries=0,
@@ -171,6 +175,45 @@ def check_library(example, math_root, git):
                 for j,value in enumerate(row):
                     assert value==F(wanted[i][j])
                     lit_checks['calculus_entries']+=1
+    atlas=computed['atlas']
+    atlas_checks=dict(quartic_values=0,hurwitz_values=0,stirling_entries=0,
+                      formal_values=0,formal_substitution_entries=0)
+    for address in range(4):
+        actual=congruential_inverse(4,address,23)
+        for n,value in enumerate(actual):
+            assert value==F(atlas['quartic'][address][n])
+            atlas_checks['quartic_values']+=1
+    for mode in atlas['modes']:
+        prime=mode['prime']
+        q=[int(n%2==0) for n in range(25)]
+        actual=hurwitz_inverse(q,24,modulus=prime)
+        product=hurwitz_product(q,actual,degree=24,modulus=prime)
+        for n in range(25):
+            assert actual[n]==mode['values'][n]
+            assert product[n]==int(n==0)
+            atlas_checks['hurwitz_values']+=2
+    for n in range(17):
+        for k in range(17):
+            assert stirling_first_signed(n,k)==atlas['stirling_first'][n][k]
+            assert stirling_second(n,k)==atlas['stirling_second'][n][k]
+            atlas_checks['stirling_entries']+=2
+    from math import factorial
+    log=(F(0),)+tuple(F((-1)**(n+1),n) for n in range(1,17))
+    chart=FormalCoordinateChange('log(1+T)',log)
+    for coefficients,wanted in (
+        ([F(atlas['full_euler'][n],factorial(n)) for n in range(17)],atlas['logarithmic_ordinary']),
+        ([F(atlas['full_euler'][n+1],factorial(n)) for n in range(17)],atlas['derivative_pullback'])):
+        for value,expected_value in zip(chart.pullback_coefficients(coefficients),wanted):
+            assert value==F(expected_value)
+            atlas_checks['formal_values']+=1
+    for n,value in enumerate(chart.inverse().coefficients):
+        assert value==(F(0) if n==0 else F(1,factorial(n)))
+        atlas_checks['formal_values']+=1
+    substitution=chart.substitution_transform().matrix
+    for n in range(17):
+        for k in range(17):
+            assert substitution[n][k]*factorial(n)/factorial(k)==atlas['stirling_first'][n][k]
+            atlas_checks['formal_substitution_entries']+=1
     sources=[]
     for name,module in sorted(sys.modules.items()):
         filename=getattr(module,'__file__',None)
@@ -190,6 +233,7 @@ def check_library(example, math_root, git):
                 local_comparisons=local_checks,local_chart_comparisons=sum(local_checks.values()),
                 fibonacci_comparisons=fib_checks,fibonacci_total_comparisons=sum(fib_checks.values()),
                 literature_comparisons=lit_checks,literature_total_comparisons=sum(lit_checks.values()),
+                atlas_comparisons=atlas_checks,atlas_total_comparisons=sum(atlas_checks.values()),
                 scope='Exact numeric library outputs in the declared finite range. Not a proof of the complete Python implementation.')
 
 
@@ -256,7 +300,7 @@ def check(math_root=None,git='git'):
                 schur_packet_coefficients=24,schur_displayed_coefficients=True,
                 sampling_infinite_kernel_rows=12,
                 euler_index_supercongruence_cases=index_cases,euler_zero_index_counterexample=True,
-                library_comparison=check_library(example,math_root,git) if math_root else None,
+                library_comparison=check_library(example,math_root,git,fresh) if math_root else None,
                 scope='Executed finite calculations, displayed-output correspondence and source identities. Written proof self-review is separate.')
     return result
 

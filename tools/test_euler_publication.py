@@ -19,27 +19,30 @@ class EulerPublicationTests(unittest.TestCase):
         contents={
             'examples/euler_packets.py':raw,
             'docs/demonstrations/EULER_PACKETS.md':b'# Euler\n',
-            'verification/euler-packets/run-005/fibonacci-transfer.csv':b'transform,row,column,value\nconnection,0,0,1\n',
-            'verification/euler-packets/run-005/fibonacci-precision.csv':b'step,depth,modulus\n12,1,8\n',
-            'verification/euler-packets/run-005/polynomial-calculus.csv':b'operator,row,column,value\nD,0,0,0\n',
-            'verification/euler-packets/run-005/results.json':b'{}\n',
-            'verification/euler-packets/run-005/congruence-ladders.csv':b'chart,depth,modulus,residue\n3,0,9,8\n',
-            'verification/euler-packets/run-005/coefficient-matrices.csv':b'transform,row,column,value\nlocal,0,0,1\n',
-            'verification/euler-packets/run-005/local-reconstruction.csv':b'chart,depth,error\n2,4,0\n',
-            'verification/euler-packets/run-005/euler-coefficients.csv':b'n,s\n0,1\n',
-            'verification/euler-packets/run-005/power-polynomials.csv':b'n,r\n0,1\n',
-            'verification/euler-packets/cross-check-005/results.json':b'{}\n',
+            'verification/euler-packets/run-006/fibonacci-transfer.csv':b'transform,row,column,value\nconnection,0,0,1\n',
+            'verification/euler-packets/run-006/fibonacci-precision.csv':b'step,depth,modulus\n12,1,8\n',
+            'verification/euler-packets/run-006/polynomial-calculus.csv':b'operator,row,column,value\nD,0,0,0\n',
+            'verification/euler-packets/run-006/quartic-addresses.csv':b'address,index,value\n0,0,1\n',
+            'verification/euler-packets/run-006/dyadic-inverse.csv':b'bits,index,residue\n0,0,0\n',
+            'verification/euler-packets/run-006/euler-coordinate-atlas.csv':b'degree,euler,logarithmic\n0,1,1\n',
+            'verification/euler-packets/run-006/results.json':b'{}\n',
+            'verification/euler-packets/run-006/congruence-ladders.csv':b'chart,depth,modulus,residue\n3,0,9,8\n',
+            'verification/euler-packets/run-006/coefficient-matrices.csv':b'transform,row,column,value\nlocal,0,0,1\n',
+            'verification/euler-packets/run-006/local-reconstruction.csv':b'chart,depth,error\n2,4,0\n',
+            'verification/euler-packets/run-006/euler-coefficients.csv':b'n,s\n0,1\n',
+            'verification/euler-packets/run-006/power-polynomials.csv':b'n,r\n0,1\n',
+            'verification/euler-packets/cross-check-006/results.json':b'{}\n',
         }
         digest=hashlib.sha256(raw).hexdigest()
         run=dict(run=dict(status=status,exit_status=0),input_artifacts=[
             dict(path='examples/euler_packets.py',sha256='0'*64 if wrong_input else digest,
                  sha256_after=digest)],outputs=[])
-        for name in ('run-005','cross-check-005'):
+        for name in ('run-006','cross-check-006'):
             contents['verification/euler-packets/'+name+'/manifest.json']=json.dumps(run).encode()
         for path,content in contents.items():
             target=root/path; target.parent.mkdir(parents=True,exist_ok=True); target.write_bytes(content)
         record=dict(title='Euler example',work_ids=['paper-iv'],scope='Test fixture',
-            accepted_runs=['verification/euler-packets/'+n+'/manifest.json' for n in ('run-005','cross-check-005')],
+            accepted_runs=['verification/euler-packets/'+n+'/manifest.json' for n in ('run-006','cross-check-006')],
             files=[dict(path=p,sha256=hashlib.sha256(b).hexdigest()) for p,b in contents.items()])
         (root/RECORD).parent.mkdir(parents=True,exist_ok=True)
         (root/RECORD).write_text(json.dumps(record))

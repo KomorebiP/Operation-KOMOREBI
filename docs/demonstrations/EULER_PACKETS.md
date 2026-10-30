@@ -2,7 +2,7 @@
 
 **An extended hand-worked Komorebi example · Komorebi P. · 29 October 2026**
 
-[Machine-native mathematics essay](../essays/MACHINE_NATIVE_MATHEMATICS.md) · [Sequence experiments](SEQUENCE_SHAPES.md) · [Coefficient matrices](#write-the-coefficient-transform-as-an-infinite-matrix) · [Supercongruences](#state-the-supercongruences-and-check-an-euler-index-shift) · [Fibonacci transfer](#change-euler-polynomials-to-fibonacci-coordinates) · [Run the exact checks](#run-the-exact-checks)
+[Machine-native mathematics essay](../essays/MACHINE_NATIVE_MATHEMATICS.md) · [Sequence experiments](SEQUENCE_SHAPES.md) · [Coefficient matrices](#write-the-coefficient-transform-as-an-infinite-matrix) · [Supercongruences](#state-the-supercongruences-and-check-an-euler-index-shift) · [Fibonacci transfer](#change-euler-polynomials-to-fibonacci-coordinates) · [Quartic coordinates](#work-with-all-four-quartic-addresses) · [Logarithmic transform](#change-to-logarithmic-euler-coordinates-with-stirling-matrices) · [Run the exact checks](#run-the-exact-checks)
 
 We will reconstruct the Euler secant numbers through a different sequence, turn the calculation into polynomial identities, and then use the same Euler data in a refinement calculation. At each change of coordinates we will write the transfer explicitly. When a shortcut fails, we will calculate the residual that explains the failure.
 
@@ -2968,6 +2968,407 @@ Their entries are the integrals of the corresponding basis polynomials. They sat
 
 in agreement with \(\int_0^1(x^3+2x)\,dx=1/4+1\). The coefficient columns, operator matrices, degree bounds, and scalar observation have all moved together.
 
+## Work with all four quartic addresses
+
+The four-address results in [Paper IX](../works/paper-ix.md) concern \(C_{4,j}\). These differ from the classical signed Euler numbers, which belong to \(C_{2,0}\). Keep the modulus and address attached to the coefficients:
+
+\[
+K_j(t)=j!\sum_{n\geq0}\frac{t^{4n}}{(4n+j)!},\qquad
+K_j(t)^{-1}=\sum_{n\geq0}C_j(n)\frac{t^{4n}}{(4n)!},\qquad
+U_j(n)=j!C_j(n),\quad 0\leq j<4.
+\]
+
+The [defining triangular system](https://github.com/KomorebiP/Operation-KOMOREBI/blob/4b1afc89549ae9c8e101f32459fb514203baaabd/papers/paper-ix/current/sources/main/parts/20_arithmetic.tex#L11) becomes
+
+\[
+\boxed{
+C_j(n)=-\binom{4n+j}{4n}^{-1}
+\sum_{q=0}^{n-1}\binom{4n+j}{4q}C_j(q),\qquad C_j(0)=1.
+}
+\]
+
+For these four addresses the diagonal is odd. More explicitly,
+
+\[
+\binom{4n+j}{4n}^{-1}=
+\begin{cases}
+1,&j=0,\\
+(4n+1)^{-1},&j=1,\\
+((4n+1)(2n+1))^{-1},&j=2,\\
+3((4n+1)(2n+1)(4n+3))^{-1},&j=3.
+\end{cases}
+\]
+
+Induction therefore shows that every \(C_j(n)\) is a rational number with odd denominator. Reduction modulo \(2^r\) means inverting that denominator modulo \(2^r\). The first rows are
+
+| Address | \(C_j(0)\) | \(C_j(1)\) | \(C_j(2)\) |
+|---|---:|---:|---:|
+| 0 | 1 | \(-1\) | 69 |
+| 1 | 1 | \(-1/5\) | \(121/45\) |
+| 2 | 1 | \(-1/15\) | \(13/45\) |
+| 3 | 1 | \(-1/35\) | \(59/1155\) |
+
+For instance, at address two and row two,
+
+\[
+C_2(2)=-\binom{10}{8}^{-1}
+\left(1+\binom{10}{4}\left(-\frac1{15}\right)\right)
+=-\frac1{45}(1-14)=\frac{13}{45}.
+\]
+
+At address zero, \(C_0(n)=(-1)^n b_n\), where \(b_n\) is the quartic carrier already reconstructed from the secant sequence. The other three addresses now give further arithmetic coordinates for the same reciprocal-section construction.
+
+## Use the all-row bound to isolate a dominant Newton coefficient
+
+Paper IX proves the [all-row dyadic difference bound](https://github.com/KomorebiP/Operation-KOMOREBI/blob/4b1afc89549ae9c8e101f32459fb514203baaabd/papers/paper-ix/current/sources/main/parts/20_arithmetic.tex#L470): for \(n,k\geq0\) and positive integer \(u\),
+
+\[
+v_2\!\left(\Delta_u^k C_j(n)\right)\geq k\bigl(1+v_2(u)\bigr).
+\]
+
+Zero differences have valuation infinity. We use this theorem as an input. Its source proof controls the triangular inverse at every row, including row zero. The following finite calculation shows how that bound leads to an exact displacement law.
+
+Set \(a_{j,k}=\Delta_1^kC_j(0)\). The first Newton coefficients are
+
+\[
+(a_{0,1},a_{1,1},a_{2,1},a_{3,1})
+=\left(-2,-\frac65,-\frac{16}{15},-\frac{36}{35}\right).
+\]
+
+Their valuations are \((c_0,c_1,c_2,c_3)=(1,1,4,2)\). Already at order two we can calculate
+
+\[
+\begin{aligned}
+a_{0,2}&=69-2(-1)+1=72,\\
+a_{1,2}&=\frac{121}{45}+\frac25+1=\frac{184}{45},\\
+a_{2,2}&=\frac{13}{45}+\frac2{15}+1=\frac{64}{45},\\
+a_{3,2}&=\frac{59}{1155}+\frac2{35}+1=\frac{256}{231}.
+\end{aligned}
+\]
+
+Continuing the same rational recurrence gives the finite initial data used in Paper IX's Newton-dominance argument:
+
+| Address | Further orders | Exact valuations at those orders |
+|---|---|---|
+| 0 | 2 | 3 |
+| 1 | 2 | 3 |
+| 2 | 2, 3, 4, 5, 6 | 6, 9, 13, 16, 22 |
+| 3 | 2, 3, 4 | 8, 8, 15 |
+
+These values and the universal bound \(v_2(a_{j,k})\geq k\) establish
+
+\[
+\boxed{v_2(a_{j,k})\geq c_j+1+\lfloor\log_2k\rfloor\qquad(k\geq2).}
+\]
+
+Only the displayed initial orders require separate checking. Beyond them, \(c_j+1+\lfloor\log_2k\rfloor\leq k\). Thus a finite initial computation and a proved uniform estimate cover every order.
+
+Finite Newton translation gives
+
+\[
+\Delta_1^kC_j(n)=\sum_{i=0}^n\binom ni a_{j,k+i}.
+\]
+
+For \(k\geq2\), the same logarithmic valuation envelope survives translation. For \(k=1\), every term after \(a_{j,1}\) has strictly higher valuation. Consequently \(v_2(\Delta_1C_j(n))=c_j\) at every row.
+
+Now expand a positive displacement \(T\):
+
+\[
+C_j(n+T)-C_j(n)
+=T\Delta_1C_j(n)+\sum_{k=2}^T\binom Tk\Delta_1^kC_j(n).
+\]
+
+The identity \(k\binom Tk=T\binom{T-1}{k-1}\) implies
+\(v_2\binom Tk\geq v_2(T)-v_2(k)\). Each term in the remaining sum therefore has valuation at least \(v_2(T)+c_j+1\). The leading term has exact valuation \(v_2(T)+c_j\), so it cannot be canceled by that sum.
+
+## Determine the least periods of the quartic packets
+
+We have recovered Paper IX's [exact displacement law](https://github.com/KomorebiP/Operation-KOMOREBI/blob/4b1afc89549ae9c8e101f32459fb514203baaabd/papers/paper-ix/current/sources/main/parts/20_arithmetic.tex#L654):
+
+\[
+\boxed{v_2\!\left(C_j(n+T)-C_j(n)\right)=v_2(T)+c_j.}
+\]
+
+The difference is nonzero for every \(n\geq0\) and \(T>0\). Multiplication by \(j!\) gives the corresponding law for the original coefficients:
+
+\[
+\boxed{v_2\!\left(U_j(n+T)-U_j(n)\right)=v_2(T)+d_j,}
+\qquad(d_0,d_1,d_2,d_3)=(1,1,5,3).
+\]
+
+For example,
+
+\[
+U_2(1)-U_2(0)=-\frac2{15}-2=-\frac{32}{15},\qquad
+U_2(2)-U_2(0)=\frac{26}{45}-2=-\frac{64}{45}.
+\]
+
+Their valuations are five and six. This is the predicted one-digit gain when the displacement changes from one to two.
+
+A positive integer \(T\) is a period modulo \(2^r\) precisely when
+
+\[
+v_2(T)+d_j\geq r
+\quad\Longleftrightarrow\quad
+2^{\max(0,r-d_j)}\mid T.
+\]
+
+Hence the least positive period is exactly \(2^{\max(0,r-d_j)}\). At precision \(2^{10}\), the four periods are
+
+| Address | Gain \(d_j\) | Least packet period | Half that period | Valuation of the half-period displacement |
+|---|---:|---:|---:|---:|
+| 0 | 1 | 512 | 256 | 9 |
+| 1 | 1 | 512 | 256 | 9 |
+| 2 | 5 | 32 | 16 | 9 |
+| 3 | 3 | 128 | 64 | 9 |
+
+Each proposed half-period fails modulo \(1024\) at every row. The exact law classifies all positive periods, including non-powers of two. It also gives \(U_2(n)\equiv2\pmod{32}\) and \(U_3(n)\equiv6\pmod8\) for all \(n\).
+
+These are periods in the compressed index \(n\). Their corresponding supported degree displacements are \(4T\). Changing the address is a different operation.
+
+## Invert a quartic packet one binary digit at a time
+
+Normalize the exact gain by setting
+
+\[
+\Phi_j(n)=\frac{U_j(n)-j!}{2^{d_j}}.
+\]
+
+The displacement law gives \(\Phi_j(n)\in\mathbb Z_2\), \(\Phi_j(0)=0\), and
+
+\[
+v_2\!\left(\Phi_j(n)-\Phi_j(m)\right)=v_2(n-m)\qquad(n\ne m).
+\]
+
+This is the [isometric coordinate map](https://github.com/KomorebiP/Operation-KOMOREBI/blob/4b1afc89549ae9c8e101f32459fb514203baaabd/papers/paper-ix/current/sources/main/parts/20_arithmetic.tex#L1043) from Paper IX. It has a constructive inverse. Modulo \(2^s\), its value depends only on the input residue, and two distinct input residues have distinct output residues. Since there are \(2^s\) of each, it permutes them.
+
+At the next precision, an input \(n_s\) has two possible children: \(n_s\) and \(n_s+2^s\). Their images agree modulo \(2^s\) and differ by exactly the next binary digit. Exactly one child matches any prescribed target modulo \(2^{s+1}\).
+
+Take address two and solve \(\Phi_2(n)\equiv13\pmod{64}\). The complete lift is
+
+| Modulus | Lower child | Its image | Upper child | Its image | Retained index |
+|---:|---:|---:|---:|---:|---:|
+| 2 | 0 | 0 | 1 | 1 | 1 |
+| 4 | 1 | 1 | 3 | 3 | 1 |
+| 8 | 1 | 1 | 5 | 5 | 5 |
+| 16 | 5 | 13 | 13 | 5 | 5 |
+| 32 | 5 | 29 | 21 | 13 | 21 |
+| 64 | 21 | 13 | 53 | 45 | 21 |
+
+Every image in a row is reduced modulo that row's modulus, as is the target thirteen. Thus \(n\equiv21\pmod{64}\) is the unique answer. The first nonzero coordinate can be checked directly:
+\(\Phi_2(1)=(-2/15-2)/32=-1/15\), which is one modulo two and modulo four.
+
+We can also inspect the final coefficient calculation. At row 21, the triangular diagonal is \(\binom{86}{84}=3655\), whose inverse modulo 2048 is 887. The 21 terms \(\binom{86}{4q}C_2(q)\), reduced modulo 2048, are
+
+| \(q\) | Term | \(q\) | Term | \(q\) | Term |
+|---:|---:|---:|---:|---:|---:|
+| 0 | 1 | 7 | 1736 | 14 | 1400 |
+| 1 | 1107 | 8 | 1954 | 15 | 520 |
+| 2 | 1250 | 9 | 614 | 16 | 829 |
+| 3 | 1838 | 10 | 1964 | 17 | 295 |
+| 4 | 465 | 11 | 1268 | 18 | 962 |
+| 5 | 1243 | 12 | 1098 | 19 | 270 |
+| 6 | 1080 | 13 | 1358 | 20 | 1285 |
+
+They sum to \(22537\equiv9\pmod{2048}\). Therefore
+
+\[
+C_2(21)\equiv-887(9)\equiv209\pmod{2048},\qquad
+U_2(21)\equiv418=2+32(13)\pmod{2048}.
+\]
+
+Dividing the last difference by 32 gives \(\Phi_2(21)\equiv13\pmod{64}\), exactly as the lifting table predicts.
+
+For a full 2-adic target, repeat the lift indefinitely. The compatible input residues define one element of \(\mathbb Z_2\), and the isometry passes to the limit. This proves the continuous extension is a bijective isometry. Consequently the image of the original packet is exactly
+
+\[
+\boxed{j!+2^{d_j}\mathbb Z_2,}
+\]
+
+with one preimage for each point of that image. The statement concerns 2-adic coordinates; no complex-analytic continuation is being inferred.
+
+## Invert the Euler source in a finite Hurwitz mode algebra
+
+Another part of [Paper IX](https://github.com/KomorebiP/Operation-KOMOREBI/blob/4b1afc89549ae9c8e101f32459fb514203baaabd/papers/paper-ix/current/sources/main/parts/72_recovered.tex#L121) keeps coefficient multiplication meaningful in finite characteristic. For sequences over a ring, define
+
+\[
+(a\star b)_n=\sum_{k=0}^n\binom nk a_kb_{n-k},\qquad
+\delta=(1,0,0,\ldots).
+\]
+
+This is Hurwitz multiplication. Over \(\mathbb Q\) it corresponds to multiplying exponential generating functions. Over \(\mathbb F_p\) it is defined by the displayed integer binomial coefficients, without dividing by factorials.
+
+For \(u\in\mathbb F_p\), let \(\epsilon_u=(u^n)_{n\geq0}\), with \(0^0=1\). The binomial theorem gives
+
+\[
+\epsilon_u\star\epsilon_v=\epsilon_{u+v}.
+\]
+
+Thus finite mode weights multiply by cyclic convolution on the additive group \(\mathbb F_p\). Their representation is faithful: the first \(p\) sequence entries form a Vandermonde system on the distinct field elements, with nonzero determinant.
+
+If a mode combination \(x\) has total weight one, then \(x^p=\delta\). Indeed, Frobenius removes mixed terms, each field coefficient satisfies \(c^p=c\), and \(\epsilon_u^p=\epsilon_{pu}=\epsilon_0=\delta\). Therefore \(N=x-\delta\) satisfies \(N^p=0\), giving a finite inverse:
+
+\[
+\boxed{x^{-1}=\delta-N+N^2-\cdots+(-N)^{p-1}.}
+\]
+
+The normalized cosh source at an odd prime is
+
+\[
+q=\frac12(\epsilon_1+\epsilon_{-1}).
+\]
+
+Its total weight is one. The signed full-index Euler sequence is its Hurwitz inverse, since its defining binomial recurrence says \(q\star E=\delta\).
+
+At \(p=5\), the source weights at \(u=0,1,2,3,4\) are \((0,3,0,0,3)\). The finite inverse gives
+
+\[
+\boxed{(1,1,-1,-1,1).}
+\]
+
+The cyclic convolution can be checked in five entries. At zero it is \(3(1+1)=1\pmod5\). At every other address it is \(3(1-1)=0\). Hence, at every full index \(n\geq0\),
+
+\[
+\boxed{E_n\equiv0^n+1^n-2^n-3^n+4^n\pmod5.}
+\]
+
+For example, at \(n=6\),
+\(1-64-729+4096=3304\equiv4\equiv-61\pmod5\). This finite five-mode expression reproduces every coefficient modulo five. It is a formula in the Hurwitz ring, not a truncated exponential series in which \(5!\) has been inverted.
+
+## Keep the degree-zero mode when stating a period
+
+The mode \(\epsilon_0\) in the preceding formula is concentrated at index zero. It is essential:
+
+\[
+E_0\equiv1\pmod5,\qquad E_4=5\equiv0\pmod5.
+\]
+
+For positive indices, every remaining base has fourth power one modulo five. The full-index sequence therefore has period four on its positive tail. Its first values are
+
+\[
+(E_n\bmod5)_{n=0}^8=(1,0,4,0,0,0,4,0,0).
+\]
+
+Deleting the degree-zero mode would change the initial value. Extending the tail period to row zero would make a false statement. In the compressed even stream, the same distinction is a period of two for \(E_{2n}\) at \(n\geq1\), with the exceptional initial value still retained.
+
+This also explains why the finite-characteristic calculation used Hurwitz coordinates. Factorial conjugation is available over \(\mathbb Q\), but \(5!\) is zero modulo five. A normalization valid over the rationals cannot simply be inverted in this field.
+
+## Change to logarithmic Euler coordinates with Stirling matrices
+
+Paper IX's [formal Amice pullback](https://github.com/KomorebiP/Operation-KOMOREBI/blob/4b1afc89549ae9c8e101f32459fb514203baaabd/papers/paper-ix/current/sources/main/parts/72_recovered.tex#L1769) gives another exact coordinate system. Here the coefficient domain is \(\mathbb Q\), and all substitutions are formal. Put
+
+\[
+\widehat F(T)=F(\log(1+T)).
+\]
+
+Define signed Stirling numbers by
+\(x(x-1)\cdots(x-n+1)=\sum_k s(n,k)x^k\). They satisfy
+\(s(n+1,k)=s(n,k-1)-ns(n,k)\). The formal identity
+
+\[
+\frac{\log(1+T)^k}{k!}
+=\sum_{n\geq k}s(n,k)\frac{T^n}{n!}
+\]
+
+follows from the same recurrence: differentiate the left side and multiply by \(1+T\). Therefore, if \(F(t)=\sum a_nt^n/n!\) and \(\widehat F(T)=\sum b_nT^n/n!\), then
+
+\[
+\boxed{b_n=\sum_{k=0}^n s(n,k)a_k.}
+\]
+
+The inverse substitution is \(T=e^t-1\). Differentiating \((e^t-1)^k/k!\) gives the recurrence \(S(n+1,k)=S(n,k-1)+kS(n,k)\), with \(S(0,0)=1\) and zero outside the triangular range. These are the Stirling numbers of the second kind, giving
+
+\[
+\boxed{a_n=\sum_{k=0}^n S(n,k)b_k.}
+\]
+
+These are inverse lower-triangular infinite matrices, with a finite sum in every row. The first transformation begins
+
+\[
+\begin{pmatrix}
+1&0&0&0&0\\
+0&1&0&0&0\\
+0&-1&1&0&0\\
+0&2&-3&1&0\\
+0&-6&11&-6&1
+\end{pmatrix}
+\begin{pmatrix}E_0\\E_1\\E_2\\E_3\\E_4\end{pmatrix}
+=\begin{pmatrix}1\\0\\-1\\3\\-6\end{pmatrix}.
+\]
+
+Use the full-index Euler coefficients here, including their odd zeros. Substituting the compressed even stream would give a different object.
+
+For \(F(t)=\operatorname{sech}t\), the transformed series is rational:
+
+\[
+\boxed{
+\widehat F(T)=\operatorname{sech}(\log(1+T))
+=\frac{2(1+T)}{(1+T)^2+1}
+=\frac{1+T}{1+T+T^2/2}.
+}
+\]
+
+This follows by writing \(2\cosh t=e^t+e^{-t}\) and substituting \(e^t=1+T\). Comparing coefficients of the last rational identity gives an integer recurrence for its Hurwitz numerators:
+
+\[
+b_0=1,\qquad b_1=0,\qquad
+\boxed{b_n=-n b_{n-1}-\binom n2 b_{n-2}\quad(n\geq2).}
+\]
+
+The first coefficients are
+
+| \(n\) | Signed Euler \(E_n\) | Logarithmic numerator \(b_n\) | Ordinary coefficient \(b_n/n!\) |
+|---:|---:|---:|---:|
+| 0 | 1 | 1 | 1 |
+| 1 | 0 | 0 | 0 |
+| 2 | \(-1\) | \(-1\) | \(-1/2\) |
+| 3 | 0 | 3 | \(1/2\) |
+| 4 | 5 | \(-6\) | \(-1/4\) |
+| 5 | 0 | 0 | 0 |
+| 6 | \(-61\) | 90 | \(1/8\) |
+| 7 | 0 | \(-630\) | \(-1/8\) |
+| 8 | 1385 | 2520 | \(1/16\) |
+
+For example, \(b_6=90\), \(b_7=-7(90)=-630\), and \(b_8=-8(-630)-28(90)=2520\). The inverse Stirling row then reconstructs the familiar value:
+
+\[
+\begin{aligned}
+E_8
+&=127(-1)+966(3)+1701(-6)+266(90)+28(-630)+2520\\
+&=-127+2898-10206+23940-17640+2520\\
+&=\boxed{1385}.
+\end{aligned}
+\]
+
+The omitted terms have zero \(b_k\). Thus the same Euler coefficient has now been recovered from a rational logarithmic series and two inverse integer coefficient transforms.
+
+## Transport the derivative through the logarithmic coordinate
+
+The coordinate change also carries differentiation. Formal chain differentiation gives
+
+\[
+\boxed{\widehat{F'}(T)=(1+T)\frac{d}{dT}\widehat F(T).}
+\]
+
+Write \(\mathsf S\) for the signed Stirling matrix and \(\mathsf R\) for its inverse. Let \(\mathsf D\) shift Hurwitz coefficients forward, \((\mathsf D a)_n=a_{n+1}\), and let \(\mathsf N\) be diagonal with \((\mathsf Nb)_n=nb_n\). Then
+
+\[
+\boxed{\mathsf S\mathsf D\mathsf R=\mathsf D+\mathsf N.}
+\]
+
+Indeed, differentiating \(\sum b_nT^n/n!\) gives \(b_{n+1}\), and multiplying its derivative by \(T\) contributes \(nb_n\). Every resulting coefficient uses finitely many input entries.
+
+For the Euler example, the first transported derivative coefficients are
+
+\[
+b_{n+1}+nb_n=0,-1,1,3,-24,90,-90,-1890,\ldots.
+\]
+
+For instance, at row three the value is \(-6+3(3)=3\). Directly transforming the derivative's coefficients \((E_1,E_2,E_3,E_4,\ldots)\) gives
+\(s(3,1)E_2+s(3,2)E_3+s(3,3)E_4=2(-1)-3(0)+5=3\).
+
+The rational form, Stirling matrices, and conjugated derivative describe the same formal object. No convergence claim is needed for these coefficient identities. Evaluating the infinite series at a 2-adic or complex argument would require the appropriate convergence conditions separately.
+
 ## Run the exact checks
 
 Download the [standalone checker](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/euler_packets.py), or the [complete source and results bundle](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/source-and-checks.zip). From the download directory, run:
@@ -2994,6 +3395,10 @@ Reversible sequence transfer: 1, -1, 5, -61, 1385 -> 1, 1, 2, 3, 5
 Paper IX Fibonacci packets: step 3 gives u[k+2] = 4*u[k+1] + u[k]
 Fibonacci precision ladder: F_37 = 24157817; tail valuations 3, 6, 9, exact
 Euler/Fibonacci calculus: full round trip is I_4; integral = 5/4
+Quartic address gains: normalized 1, 1, 4, 2; original 1, 1, 5, 3
+Dyadic inverse: address 2, target 13 mod 64 -> index 21
+Finite mode inverse mod 5: weights 1, 1, -1, -1, 1
+Logarithmic Euler coordinates: 1, 0, -1, 3, -6, 0, 90, -630, 2520
 Signed Euler difference coordinates: 1, -2, 8, -80, 1664
 Spacing-two lane: 1, 5, 1385; differences: 1, 4, 1376
 Refinement: 2*4 + 1376 = 1384
@@ -3010,7 +3415,7 @@ python -B euler_packets.py --output my-euler-results
 
 The program refuses to replace existing result files. The CSV values retain integers and rational numbers, including the ordinary coefficients and their factorial normalization.
 
-You can also inspect the published [coefficient table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/euler-coefficients.csv), [parameter-polynomial table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/power-polynomials.csv), [local reconstruction and error table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/local-reconstruction.csv), [matrix-entry table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/coefficient-matrices.csv), [supercongruence table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/congruence-ladders.csv), [Fibonacci transfer matrices](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/fibonacci-transfer.csv), [Fibonacci precision ladders](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/fibonacci-precision.csv), [polynomial calculus matrices](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/polynomial-calculus.csv), [exact results](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/results.json), and [source identities](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/source-record.json).
+You can also inspect the published [coefficient table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/euler-coefficients.csv), [parameter-polynomial table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/power-polynomials.csv), [local reconstruction and error table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/local-reconstruction.csv), [matrix-entry table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/coefficient-matrices.csv), [supercongruence table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/congruence-ladders.csv), [Fibonacci transfer matrices](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/fibonacci-transfer.csv), [Fibonacci precision ladders](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/fibonacci-precision.csv), [polynomial calculus matrices](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/polynomial-calculus.csv), [quartic address coefficients](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/quartic-addresses.csv), [binary inversion trace](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/dyadic-inverse.csv), [Euler coordinate table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/euler-coordinate-atlas.csv), [exact results](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/results.json), and [source identities](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/source-record.json).
 
 The matrix table contains twelve-by-twelve blocks of each forward and inverse local transform for charts 2, 3, 5 and 7, the Pascal pair, the displayed three-by-five sampling block, and five-by-five base changes from chart three to charts five and two. The Fibonacci table adds the degree-twelve polynomial connection and its inverse, and sixteen-by-sixteen recurrence analysis, synthesis, ordinary sequence transfer and inverse matrices. These finite tables can be inspected entry by entry. The formulas and proofs above define the infinite operators.
 
@@ -3041,19 +3446,23 @@ The checks use several different routes:
 | Fibonacci packet recurrence | Independent Lucas trace, determinant parity, direct Fibonacci values and jump matrices | Steps 0–12, addresses 0–5, coarse indices 0–8 |
 | Fibonacci congruence ladders | Matrix factors against direct scalar differences, full finite binomial reconstructions and every truncation | Refinements 0–4, bases 0–6, difference orders 0–5, reconstruction addresses 0–3 and coarse indices 0–6 |
 | Polynomial calculus | Direct monomial integration and differentiation against transported operators, round-trip identity, reverse boundary defect and dual covector | Source degrees 0–8 |
+| Four quartic addresses | Ordinary reciprocal against triangular recurrence, exact differences and displacement valuations | Indices 0–47, difference bases 0–6, steps 1–8, orders 0–5, displacement bases 0–8 and steps 1–16 |
+| Finite dyadic coordinates | Modular recurrence against rational values, residue permutations, pairwise distance, period criteria and unique binary lift | Coefficients 0–255 modulo 8192, permutation precisions 1–8, pair inputs 0–31, period precisions 0–8, six inverse digits |
+| Finite Hurwitz modes | Cyclic group inversion, nilpotence, direct Hurwitz multiplication and Euler coefficients | Primes 3, 5, 7 and full degrees 0–24 |
+| Logarithmic coordinates | Both Stirling inverse products, log/exp substitution, rational closed form, integer recurrence and conjugated derivative | Stirling matrices through degree 16, derivative output through degree 16 using input through degree 17 |
 | Prime residuals | Integer polynomial coefficients and application to the three sequences | Primes 2, 3, 5, 7, and 11 |
 
 The permutation control uses a different definition of the numbers. At length \(m\), keep the number of admissible permutations ending at each possible rank. If the next comparison is an ascent, sum the preceding counts below the new rank. For a descent, sum those at or above it. Repeating the prescribed pattern gives the total. The program also enumerates the small permutation sets directly to check this dynamic program. It does not infer a universal enumeration theorem from those samples.
 
-The [bounded run manifest](../../verification/euler-packets/run-005/manifest.json) records the command, Python version, source hashes before and after execution, time limit, observed completion, and result hashes. The [source extension and calculus self-review](../../verification/euler-packets/PROOF_REVIEW_LITERATURE.md) links the preceding proof reviews and checks the added arguments separately. There is no new Lean run for this example.
+The [bounded run manifest](../../verification/euler-packets/run-006/manifest.json) records the command, Python version, source hashes before and after execution, time limit, observed completion, and result hashes. The [quartic and coefficient-atlas self-review](../../verification/euler-packets/PROOF_REVIEW_ATLAS.md) links the preceding proof reviews and checks the added arguments separately. There is no new Lean run for this example.
 
 A separate check compares 605 reciprocal coefficient values with the pinned Komorebi Math source, using both its integer sequence API and its logarithmic reciprocal-power implementation. It also makes 1,012 comparisons in the local Euler charts: 220 source, kernel and reconstruction values, 528 truncation values and errors, and 264 row weights, across prime charts 2, 3, 5 and 7 through ordinary degree twenty. Its [comparison record](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/library-comparison.json) retains the source identity and declared ranges.
 
-That supplementary checker also verifies twelve complete rows of the infinite sampling-kernel witness and 18 Euler index-shift supercongruences, for primes 3, 5 and 7 with even starting degree 2–12. It retains the failing degree-zero boundary as a negative control. It also makes 921 Fibonacci comparisons with the pinned library: 169 polynomial connection entries, 52 polynomial companion entries, 13 centered Euler values, 512 recurrence matrix entries, 150 recurrence checks, and 25 full-index records. The full and even-index streams are checked separately at every prefix length from two through twenty-six. A further 3,506 comparisons check the new literature examples against pinned APIs: 780 packet values, 1,560 packet-state coordinates, 68 jump-matrix entries, and 1,098 polynomial-calculus entries. The [source check](../../verification/euler-packets/LITERATURE_FIBONACCI.md) records the exact source statements and distinguishes their written consequences. The universal statements have the written proofs above.
+That supplementary checker also verifies twelve complete rows of the infinite sampling-kernel witness and 18 Euler index-shift supercongruences, for primes 3, 5 and 7 with even starting degree 2–12. It retains the failing degree-zero boundary as a negative control. It also makes 921 Fibonacci comparisons with the pinned library: 169 polynomial connection entries, 52 polynomial companion entries, 13 centered Euler values, 512 recurrence matrix entries, 150 recurrence checks, and 25 full-index records. The full and even-index streams are checked separately at every prefix length from two through twenty-six. A further 3,506 comparisons check the new literature examples against pinned APIs: 780 packet values, 1,560 packet-state coordinates, 68 jump-matrix entries, and 1,098 polynomial-calculus entries. The [source check](../../verification/euler-packets/LITERATURE_FIBONACCI.md) records the exact source statements and distinguishes their written consequences. The coordinate atlas adds 1,164 comparisons: 96 quartic coefficients, 150 modular Hurwitz inverse/product values, 578 Stirling entries, 51 formal-coordinate values, and 289 substitution entries. Its [source record](../../verification/euler-packets/LITERATURE_ATLAS.md) identifies the all-row theorem used in the universal displacement proof. The universal statements have the written proofs or checked source inputs above.
 
 ## What the example establishes
 
-The written calculation gives exact reciprocal recurrences, the two-packet multiplication law and its coarsening obstruction, the quartic reconstruction and enumeration identities, reciprocal parameter polynomials, Euler-polynomial power sums, odd-length and dyadic local supercongruences, infinite coefficient matrices and inverse transforms, prime-dependent base changes, congruential families with explicit addresses, coprime modular reconstruction, formal residual correction, sequence-refinement kernels with their Pascal conjugation, composition and prime correction, and explicit Euler-to-Fibonacci polynomial, recurrence and sequence transfers with their inverses and transported operation. The continuation derives Lucas packet recurrences, dyadic and simultaneous-prime Fibonacci precision ladders, and a complete Euler/Fibonacci polynomial calculus round trip.
+The written calculation gives exact reciprocal recurrences, the two-packet multiplication law and its coarsening obstruction, the quartic reconstruction and enumeration identities, reciprocal parameter polynomials, Euler-polynomial power sums, odd-length and dyadic local supercongruences, infinite coefficient matrices and inverse transforms, prime-dependent base changes, congruential families with explicit addresses, coprime modular reconstruction, formal residual correction, sequence-refinement kernels with their Pascal conjugation, composition and prime correction, and explicit Euler-to-Fibonacci polynomial, recurrence and sequence transfers with their inverses and transported operation. The continuation derives Lucas packet recurrences, dyadic and simultaneous-prime Fibonacci precision ladders, and a complete Euler/Fibonacci polynomial calculus round trip. The quartic continuation derives exact displacement and period laws, binary inverse coordinates, finite-characteristic Euler mode inversion, and logarithmic/Stirling coordinates with a transported derivative.
 
 The finite program checks implementations of these laws in its declared ranges. Its deliberately wrong controls expose missing carry factors, wrong factorial normalization, discarded residuals, and an invalid composite-number generalization.
 
@@ -3063,6 +3472,7 @@ The method keeps the representation, operation, preserved data, and remaining de
 
 ## Sources and further reading
 
+- [Quartic and coefficient-atlas source check](../../verification/euler-packets/LITERATURE_ATLAS.md), for the exact four-address, isometry, Hurwitz-mode and formal-logarithmic source statements and their uses here.
 - [Paper IX: Euler Congruences](../works/paper-ix.md), for companion jumps, Fibonacci packets, and integral matrix precision amplification. Exact source identities and the distinction between source statements and new worked consequences appear in the [source check](../../verification/euler-packets/LITERATURE_FIBONACCI.md).
 - [Komorebi Math typed-expression example](https://github.com/KomorebiP/komorebi-math/blob/a3aa04ac18a523f30c50c7f5dba709f88e904eff/docs/TYPED_EXPRESSION_EXAMPLE.md), for the polynomial integration, basis changes, derivative, boundary defect, and integral covector.
 - [NIST DLMF, Euler numbers and polynomials](https://dlmf.nist.gov/24.2#ii), including the signed convention and polynomial generating function, and the [secant expansion](https://dlmf.nist.gov/4.19.E5).

@@ -583,6 +583,186 @@ def literature_examples(euler_polynomials, check):
         calculus=strings(calculus),calculus_vectors=strings([v0,v1,v2,v3,v4]))
 
 
+def compose_series(outer, inner, count):
+    result=[F(0)]*count
+    term=[F(1)]+[F(0)]*(count-1)
+    for coefficient in outer[:count]:
+        result=add(result,scale(term,coefficient),count)
+        term=mul(term,inner,count)
+    return result
+
+
+def stirling_tables(size):
+    first=[[0]*size for _ in range(size)]
+    second=[[0]*size for _ in range(size)]
+    first[0][0]=second[0][0]=1
+    for n in range(1,size):
+        for k in range(1,n+1):
+            first[n][k]=first[n-1][k-1]-(n-1)*first[n-1][k]
+            second[n][k]=second[n-1][k-1]+k*second[n-1][k]
+    return first,second
+
+
+def cyclic_product(a,b,prime):
+    return [sum(a[j]*b[(i-j)%prime] for j in range(prime))%prime for i in range(prime)]
+
+
+def atlas_examples(check):
+    gains=[1,1,4,2]
+    original_gains=[1,1,5,3]
+    packets=[]
+    for address in range(4):
+        values=congruential_packet(4,address,48)
+        triangular=[F(1)]
+        for n in range(1,48):
+            triangular.append(-sum(comb(4*n+address,4*k)*triangular[k] for k in range(n))
+                              /F(comb(4*n+address,4*n)))
+        check('atlas_quartic_recurrence',triangular==values)
+        check('atlas_quartic_integrality',all(v.denominator%2 for v in values))
+        for n in range(7):
+            for step in range(1,9):
+                for order in range(6):
+                    difference=sum((-1)**(order-k)*comb(order,k)*values[n+step*k] for k in range(order+1))
+                    weight=valuation(difference,2)
+                    check('atlas_all_row_bounds',weight is None or weight>=order*(1+valuation(step,2)))
+        for n in range(9):
+            for step in range(1,17):
+                difference=values[n+step]-values[n]
+                check('atlas_exact_displacement',valuation(difference,2)==valuation(step,2)+gains[address])
+        packets.append(values)
+    newton=[difference_coefficients(values[:13]) for values in packets]
+    for address,orders,expected in [(0,[2],[3]),(1,[2],[3]),(2,[2,3,4,5,6],[6,9,13,16,22]),(3,[2,3,4],[8,8,15])]:
+        check('atlas_newton_prefix',[valuation(newton[address][k],2) for k in orders]==expected)
+    check('atlas_display',[newton[j][1] for j in range(4)]==[F(-2),F(-6,5),F(-16,15),F(-36,35)])
+
+    # All source diagonals are odd, so modular recurrence needs no rational division.
+    modulus=8192
+    binomial=[[comb(4*n,4*k)%modulus for k in range(n+1)] for n in range(256)]
+    modular=[]
+    permutations=[]
+    phi_tables=[]
+    periods=[]
+    for address in range(4):
+        g=[pow(comb(4*k+address,address),-1,modulus) for k in range(256)]
+        values=[1]
+        for n in range(1,256):
+            values.append(-sum(binomial[n][k]*g[k]*values[n-k] for k in range(1,n+1))%modulus)
+        modular.append(values)
+        for n,exact in enumerate(packets[address]):
+            check('atlas_exact_modular_agreement',values[n]==exact.numerator*pow(exact.denominator,-1,modulus)%modulus)
+        factor=factorial(address)
+        d=original_gains[address]
+        original=[factor*v%modulus for v in values]
+        check('atlas_affine_image_residue',all((v-factor)%2**d==0 for v in original))
+        phi=[((v-factor)//2**d)%256 for v in original]
+        phi_tables.append(phi)
+        for bits in range(1,9):
+            precision=2**bits
+            residues=[value%precision for value in phi[:precision]]
+            check('atlas_residue_permutation',sorted(residues)==list(range(precision)))
+            permutations.append(dict(address=address,bits=bits,size=precision,bijection=True))
+        for n in range(32):
+            for m in range(n):
+                check('atlas_finite_isometry',valuation(phi[n]-phi[m],2)==valuation(n-m,2))
+        for bits in range(9):
+            period=2**max(0,bits-d)
+            periods.append(dict(address=address,bits=bits,least_period=period))
+            for n in range(9):
+                check('atlas_least_period',original[n+period]%(2**bits)==original[n]%(2**bits))
+                for step in range(1,17):
+                    actual=(original[n+step]-original[n])%(2**bits)==0
+                    check('atlas_period_classification',actual==(step%period==0))
+            if period>1:
+                check('atlas_half_period_control',(original[period//2]-original[0])%(2**bits)!=0)
+    trace=[]
+    address,target,index=2,13,0
+    phi=phi_tables[address]
+    for bits in range(6):
+        low=index
+        high=index+2**bits
+        mod=2**(bits+1)
+        candidates=[value for value in (low,high) if phi[value]%mod==target%mod]
+        check('atlas_binary_lifting',len(candidates)==1)
+        index=candidates[0]
+        trace.append(dict(bits=bits+1,modulus=mod,low=low,low_image=phi[low]%mod,
+            high=high,high_image=phi[high]%mod,target=target%mod,chosen=index))
+    check('atlas_inverse_search',[n for n in range(64) if phi[n]%64==13]==[index])
+    row_modulus=2048
+    diagonal=comb(4*index+address,4*index)
+    summands=[comb(4*index+address,4*k)*modular[address][k]%row_modulus for k in range(index)]
+    row_sum=sum(summands)%row_modulus
+    recovered_c=-row_sum*pow(diagonal,-1,row_modulus)%row_modulus
+    recovered_u=factorial(address)*recovered_c%row_modulus
+    check('atlas_inverse_row_witness',recovered_c==modular[address][index]%row_modulus)
+    check('atlas_inverse_row_witness',recovered_u==418)
+    row_witness=dict(index=index,address=address,modulus=row_modulus,diagonal=diagonal,
+        inverse_diagonal=pow(diagonal,-1,row_modulus),summands=summands,
+        sum=row_sum,normalized=recovered_c,original=recovered_u)
+
+    signed_even=[(-1)**n*v for n,v in enumerate(reciprocal_recurrence(2,1,13))]
+    full=[int(signed_even[n//2]) if n%2==0 else 0 for n in range(25)]
+    modes=[]
+    for prime in (3,5,7):
+        unit=[1]+[0]*(prime-1)
+        source=[0]*prime
+        source[1]=source[-1]=pow(2,-1,prime)
+        nilpotent=[(x-y)%prime for x,y in zip(source,unit)]
+        term=unit
+        inverse_weights=[0]*prime
+        for r in range(prime):
+            inverse_weights=[(a+(-1)**r*b)%prime for a,b in zip(inverse_weights,term)]
+            term=cyclic_product(term,nilpotent,prime)
+        check('atlas_mode_nilpotence',term==[0]*prime)
+        check('atlas_mode_inverse',cyclic_product(source,inverse_weights,prime)==unit)
+        check('atlas_mode_inverse',cyclic_product(inverse_weights,source,prime)==unit)
+        values=[sum(weight*pow(u,n,prime) for u,weight in enumerate(inverse_weights))%prime for n in range(25)]
+        check('atlas_modes_euler_values',values==[v%prime for v in full])
+        q=[(1+(-1)**n)*pow(2,-1,prime)%prime for n in range(25)]
+        for n in range(25):
+            product=sum(comb(n,k)*q[k]*values[n-k] for k in range(n+1))%prime
+            check('atlas_modes_hurwitz_product',product==int(n==0))
+        modes.append(dict(prime=prime,source=source,weights=inverse_weights,values=values))
+    check('atlas_display',modes[1]['weights']==[1,1,4,4,1])
+    check('atlas_positive_tail_control',full[0]%5!=full[4]%5)
+    check('atlas_factorial_nonunit',factorial(5)%5==0)
+
+    size=17
+    first,second=stirling_tables(size)
+    identity=[[int(i==j) for j in range(size)] for i in range(size)]
+    check('atlas_stirling_inverse',matrix_product(first,second)==identity)
+    check('atlas_stirling_inverse',matrix_product(second,first)==identity)
+    log=[F(0)]+[F((-1)**(n+1),n) for n in range(1,size)]
+    exponential=[F(0)]+[F(1,factorial(n)) for n in range(1,size)]
+    identity_series=[F(0),F(1)]+[F(0)]*(size-2)
+    check('atlas_log_exp_inverse',compose_series(log,exponential,size)==identity_series)
+    check('atlas_log_exp_inverse',compose_series(exponential,log,size)==identity_series)
+    egf=[F(full[n],factorial(n)) for n in range(size)]
+    logarithmic=compose_series(egf,log,size)
+    transformed=matrix_vector(first,full[:size])
+    check('atlas_log_stirling',transformed==[logarithmic[n]*factorial(n) for n in range(size)])
+    check('atlas_stirling_recovery',matrix_vector(second,transformed)==full[:size])
+    rational=mul([1,1],inverse([1,1,F(1,2)],size),size)
+    check('atlas_log_rational_form',logarithmic==rational)
+    shift=compose_series([F(full[n+1],factorial(n)) for n in range(size)],log,size)
+    extra_log=log+[F((-1)**(size+1),size)]
+    extra_composed=compose_series([F(full[n],factorial(n)) for n in range(size+1)],extra_log,size+1)
+    extra_rational=mul([1,1],inverse([1,1,F(1,2)],size+1),size+1)
+    check('atlas_log_extra_degree',extra_composed[-1]==extra_rational[-1])
+    extended=transformed+[extra_rational[-1]*factorial(size)]
+    theta=[extended[n+1]+n*transformed[n] for n in range(size)]
+    check('atlas_transported_derivative',theta==[shift[n]*factorial(n) for n in range(size)])
+    for n in range(2,size):
+        check('atlas_log_integer_recurrence',transformed[n]==-n*transformed[n-1]-comb(n,2)*transformed[n-2])
+    check('atlas_display',transformed[:9]==[1,0,-1,3,-6,0,90,-630,2520])
+    return dict(quartic=[[str(c) for c in values] for values in packets],newton_prefix=[[str(c) for c in row] for row in newton],
+        gains=gains,original_gains=original_gains,modular_coefficients=modular,modulus=modulus,
+        phi_residues=phi_tables,permutations=permutations,periods=periods,inverse_trace=trace,
+        inverse_address=2,inverse_target=13,inverse_bits=6,inverse_index=index,modes=modes,
+        inverse_row_witness=row_witness,
+        stirling_first=first,stirling_second=second,full_euler=full,logarithmic_euler=[int(v) for v in transformed],
+        logarithmic_ordinary=[str(v) for v in logarithmic],derivative_pullback=[str(v) for v in shift])
+
+
 def compute():
     counts = {}
 
@@ -1004,6 +1184,7 @@ def compute():
 
     fibonacci=fibonacci_examples(euler_polynomials,signed,check)
     literature=literature_examples(euler_polynomials,check)
+    atlas=atlas_examples(check)
     polynomials = reciprocal_polynomials(2,6)
     report = dict(status='PASS',arithmetic='exact integers and fractions',
         python=platform.python_version(),randomness=False,checks=counts,
@@ -1020,6 +1201,7 @@ def compute():
         base_change_examples=base_change_examples,
         fibonacci=fibonacci,
         literature=literature,
+        atlas=atlas,
         references=REFERENCES,
         bounds=dict(reciprocal_spacing=[2,6],reciprocal_index=[0,10],
             reciprocal_parameters=[str(r) for r in parameters],
@@ -1040,6 +1222,10 @@ def compute():
             literature_packet_step=[0,12],literature_packet_address=[0,5],literature_packet_index=[0,8],
             literature_dyadic_refinement=[0,4],literature_difference_base=[0,6],literature_difference_order=[0,5],
             literature_binomial_address=[0,3],literature_binomial_index=[0,6],literature_calculus_degree=[0,8],
+            quartic_exact_index=[0,47],quartic_difference_base=[0,6],quartic_difference_step=[1,8],quartic_difference_order=[0,5],
+            quartic_displacement_base=[0,8],quartic_displacement_step=[1,16],quartic_modular_index=[0,255],quartic_modulus=8192,
+            residue_permutation_bits=[1,8],isometry_pair_indices=[0,31],period_precision=[0,8],inverse_bits=6,
+            mode_primes=[3,5,7],mode_full_degree=[0,24],stirling_degree=16,log_derivative_input_degree=17,
             difference_spacing=[1,5],difference_offsets='all 0 <= s < M',difference_order=[0,5],
             composition_spacings=[1,4],composition_offsets='all admitted offsets',composition_order=[0,3],
             primes=[2,3,5,7,11]),
@@ -1054,7 +1240,8 @@ def save_results(directory, report):
     directory.mkdir(parents=True,exist_ok=True)
     paths = [directory/'results.json',directory/'euler-coefficients.csv',directory/'power-polynomials.csv',
              directory/'local-reconstruction.csv',directory/'coefficient-matrices.csv',directory/'congruence-ladders.csv',
-             directory/'fibonacci-transfer.csv',directory/'fibonacci-precision.csv',directory/'polynomial-calculus.csv']
+             directory/'fibonacci-transfer.csv',directory/'fibonacci-precision.csv',directory/'polynomial-calculus.csv',
+             directory/'quartic-addresses.csv',directory/'dyadic-inverse.csv',directory/'euler-coordinate-atlas.csv']
     if any(p.exists() for p in paths):
         raise FileExistsError('Choose a directory with no existing result files')
     paths[0].write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8',newline='\n')
@@ -1120,6 +1307,28 @@ def save_results(directory, report):
                 for i,row in enumerate(record[name]):
                     for j,value in enumerate(row):
                         writer.writerow([degree,name,i,j,value])
+    with paths[9].open('w',encoding='utf-8',newline='') as stream:
+        writer=csv.writer(stream,lineterminator='\n')
+        writer.writerow(['address','index','normalized_C','original_U','newton_coefficient','modulus','modular_C','phi_mod_256'])
+        atlas=report['atlas']
+        for address in range(4):
+            for n in range(256):
+                exact=atlas['quartic'][address][n] if n<48 else ''
+                original=str(factorial(address)*F(exact)) if exact else ''
+                newton=atlas['newton_prefix'][address][n] if n<13 else ''
+                writer.writerow([address,n,exact,original,newton,8192,atlas['modular_coefficients'][address][n],atlas['phi_residues'][address][n]])
+    with paths[10].open('w',encoding='utf-8',newline='') as stream:
+        writer=csv.DictWriter(stream,fieldnames=['bits','modulus','low','low_image','high','high_image','target','chosen'],lineterminator='\n')
+        writer.writeheader()
+        writer.writerows(report['atlas']['inverse_trace'])
+    with paths[11].open('w',encoding='utf-8',newline='') as stream:
+        writer=csv.writer(stream,lineterminator='\n')
+        writer.writerow(['full_degree','signed_euler','logarithmic_hurwitz','logarithmic_ordinary','mod_3','mod_5','mod_7'])
+        for n in range(25):
+            writer.writerow([n,report['atlas']['full_euler'][n],
+                report['atlas']['logarithmic_euler'][n] if n<17 else '',
+                report['atlas']['logarithmic_ordinary'][n] if n<17 else '',
+                *[row['values'][n] for row in report['atlas']['modes']]])
 
 
 def main():
@@ -1143,6 +1352,10 @@ def main():
     print('Paper IX Fibonacci packets: step 3 gives u[k+2] = 4*u[k+1] + u[k]')
     print('Fibonacci precision ladder: F_37 = 24157817; tail valuations 3, 6, 9, exact')
     print('Euler/Fibonacci calculus: full round trip is I_4; integral = 5/4')
+    print('Quartic address gains: normalized 1, 1, 4, 2; original 1, 1, 5, 3')
+    print('Dyadic inverse: address 2, target 13 mod 64 -> index',report['atlas']['inverse_index'])
+    print('Finite mode inverse mod 5: weights 1, 1, -1, -1, 1')
+    print('Logarithmic Euler coordinates: 1, 0, -1, 3, -6, 0, 90, -630, 2520')
     print('Signed Euler difference coordinates:', ', '.join(map(str,report['difference_coordinates'])))
     print('Spacing-two lane: 1, 5, 1385; differences: 1, 4, 1376')
     print('Refinement: 2*4 + 1376 = 1384')

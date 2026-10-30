@@ -8,13 +8,13 @@
 
 **Completion:** Active development · **Lean:** No Lean claim · **Confidence:** Written / finite evidence
 
-An extended Euler derivation connects packets, reciprocal polynomials, infinite matrices, local supercongruences, Fibonacci coordinate and sequence transfers, source-checked Lucas packets, congruence refinement and polynomial calculus.
+An extended Euler derivation connects reciprocal packets, infinite transforms, local supercongruences, Fibonacci transfers, polynomial calculus, exact quartic periods and binary inverses, finite Hurwitz modes and logarithmic/Stirling coordinates.
 
 ## Before you start
 
 **Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
 
-**Recorded results and limits:** Written identities and bounded exact controls. The maintained example adds formal-series and local arithmetic derivations, infinite coefficient laws, Fibonacci polynomial/recurrence/sequence transforms, and source-checked packet precision and typed polynomial calculus. Same-assistant reviews and pinned API comparisons are separate evidence. No broader Euler-branch classification or new formalization is asserted.
+**Recorded results and limits:** Written identities and bounded exact controls with checked source inputs. The maintained example includes formal-series and local arithmetic derivations, Fibonacci and polynomial operator transport, quartic displacement/period/isometry laws, and finite-mode/logarithmic Euler encodings. Same-assistant reviews and pinned API comparisons are separate evidence. No new formalization, independent review or global classification is asserted.
 
 **Remaining work:** Independent mathematical review and any broader arithmetic classification require their own hypotheses and evidence. Keep finite tests, written self-review, externally cited theorem inputs and any future formalization distinct.
 
