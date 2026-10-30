@@ -145,6 +145,19 @@ class BrowseNavigationTests(unittest.TestCase):
                              '- [Previous: Next work](next-work.md)')
             self.assertEqual(browser.neighbours(state['components'][1],'docs/works/held-work.md'),'')
 
+    def test_special_functions_online_link_survives_page_regeneration(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);registry,state,status,tracked=self.fixture(root)
+            for data in (registry,state,status):
+                for component in data['components']:
+                    if component['id']=='open-work':component['id']='monographs-special-functions'
+            receipt=root/'manifests/source-imports/open-work.json'
+            contents=json.loads(receipt.read_bytes());contents['component']='monographs-special-functions'
+            receipt.write_text(json.dumps(contents),encoding='utf-8')
+            (root/REGISTRY).write_text(json.dumps(registry),encoding='utf-8')
+            text=Browser(root,state,status,tracked).render()['docs/works/monographs-special-functions.md']
+            self.assertIn('[Read online: chapters, proof appendices, figures and glossary](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/index.html)',text)
+
     def test_no_resource_selection_does_not_claim_proofs_or_sources_absent(self):
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp); registry,state,status,tracked=self.fixture(root)
