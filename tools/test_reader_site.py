@@ -81,7 +81,9 @@ class ReaderSiteTests(unittest.TestCase):
         fourth=BOOKS['paper-iv']
         self.assertIs(table_reading_aid(fourth,fourth['main'],'L2988')[1],fourth['table_reading_aids']['L2988'])
         sixth=BOOKS['paper-vi']
-        self.assertIsNone(table_reading_aid(sixth,sixth['main'],'L1632')[1])
+        self.assertEqual(table_reading_aid(sixth,sixth['main'],'L1632')[1]['headers'],
+                         ['Realization','Seed','Transfer','Packet/reconstruction law'])
+        self.assertIsNone(table_reading_aid(sixth,sixth['main'],'L99999')[1])
         for work in ('paper-i','paper-ii','paper-iii'):
             with self.assertRaisesRegex(ValueError,'Review the table reading aid'):
                 table_reading_aid(BOOKS[work],BOOKS[work]['main'],'L999999')

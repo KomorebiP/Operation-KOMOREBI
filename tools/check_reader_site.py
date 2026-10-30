@@ -276,6 +276,8 @@ def inspect_site(root):
     readable_math = check_readable_chapter(root,documents,pages)
     from reader_atlas import verify as verify_atlas
     atlas = verify_atlas(root,documents,pages)
+    from paper_vi_atlas import verify as verify_paper_vi_atlas
+    paper_vi_atlas = verify_paper_vi_atlas(root,documents,pages)
     from notation_index import verify as verify_notation
     notation = verify_notation(root,documents,pages)
     demo=json.loads((root/'downloads/demonstration-source.json').read_bytes())
@@ -294,7 +296,7 @@ def inspect_site(root):
     side_reader=check_side_reader(root,pages)
     return dict(status='PASS',html_pages=len(pages),local_links=links,fragments=fragments,euler_worked_examples=euler_cases,
                 search_pages=len(index),reading_bundles=len(bundles),checked_bundle_files=zipped_files,download_selection=download_selection,side_reader=side_reader,
-                reading_documents=len(documents['files']),pdfs=pdf_count,editorial_editions=len(editions),readable_math_expressions=readable_math,atlas=atlas,notation=notation,
+                reading_documents=len(documents['files']),pdfs=pdf_count,editorial_editions=len(editions),readable_math_expressions=readable_math,atlas=atlas,paper_vi_atlas=paper_vi_atlas,notation=notation,
                 scope='Static navigation, HTML structure and ZIP source identities. Not WCAG certification or mathematical review.')
 
 

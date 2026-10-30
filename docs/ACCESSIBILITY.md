@@ -364,7 +364,11 @@ published document against its source identity. PDF scripting is disabled.
 Paper VI has 46 manuscript sections across Parts I–III, orientation pages and
 a bibliography in HTML. Its ordinary, E and R section numbering follows the
 retained edition. Statements link to their recorded proofs and source lines.
-The formalization ledger has a caption and row headers for its 33 scoped
-results. Figures keep the original captions; 15 PDF-only figures have
-source-bound web previews. The worked visual atlas remains in the PDF. These
+The manuscript dictionaries and numerical tables have row headers. The
+formalization ledger has a caption and row headers for its 33 scoped results. Figures keep the original captions; 15 PDF-only figures have
+source-bound web previews. The worked visual atlas has an index of all 42
+plates. V1–V6 now have HTML
+reading pages with original drawings, selectable equations, text descriptions
+and complete drawing-label transcripts. Matrices and bar values use tables
+with row and column headers. V7–V42 open at their exact PDF pages. These
 reading changes do not add a proof audit or a fresh Lean replay.
