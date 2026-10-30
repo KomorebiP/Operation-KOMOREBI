@@ -110,6 +110,8 @@ BOOKS['paper-iv'] = dict(work='paper-iv', label='Paper IV', base=FOURTH_BASE, ma
                         atlas_index='read/paper-iv/atlas/index.html',
                         html_inputs={'atlas-pages': dict(url='read/paper-iv/atlas/index.html',title='Explore the 26 atlas plates in HTML',note='')})
 CHAPTERS += FOURTH_CHAPTERS
+from paper_ix_reading import register as register_paper_ix
+register_paper_ix(BOOKS, CHAPTERS)
 BY_SOURCE = {c['source']:c for c in reversed(CHAPTERS)}
 NUMBERED = {'definition', 'theorem', 'proposition', 'lemma', 'corollary', 'remark', 'example', 'standardfact', 'certificate','boundary','roadmap','construction','classicalinput'}
 KIND_NAMES = {'standardfact':'Standard fact','certificate':'Numerical certificate','text':'Passage','roadmap':'Formalization target','classicalinput':'Classical input'}
@@ -138,7 +140,7 @@ def clean_tex(text):
         parts[i] = re.sub(r'\\(?:Needspace|enlargethispage)\{[^{}]*\}',lambda m:' '*len(m[0]),parts[i])
         parts[i] = re.sub(r'\\phantomsection\b',lambda m:' '*len(m[0]),parts[i])
         parts[i] = re.sub(r'\\setlength\{\\(?:above|below)displayskip\}\{[^{}]*\}',lambda m:' '*len(m[0]),parts[i])
-        parts[i] = re.sub(r'\\(?:clearpage|medskip|noindent|small|normalsize|begingroup|endgroup)\b',lambda m:' '*len(m[0]),parts[i])
+        parts[i] = re.sub(r'\\(?:clearpage|medskip|noindent|small|normalsize|begingroup|endgroup|raggedright|par)\b',lambda m:' '*len(m[0]),parts[i])
     return ''.join(parts)
 
 
@@ -205,18 +207,19 @@ def group(text, start, opening='{', closing='}'):
     raise ValueError('Unclosed group')
 
 
-def manuscript_macros(main):
+def manuscript_macros(main, required=None):
     result = {}
     for m in re.finditer(r'\\(newcommand|providecommand)\{\\([A-Za-z]+)\}', main):
         if m[2] in result or main[m.end():m.end()+1] != '{': continue
         value, _ = group(main, m.end())
         if '#' in value: raise ValueError('Argument macro is outside the reading pilot')
         result[m[2]] = value
-    required = {'CC','Dfun','Thetafun','Pcal','id'} if r'\newcommand{\Dfun}' in main else {'Pcal', 'Qcal', 'Rcal', 'Scal', 'End', 'id', 'bbk'}
+    if required is None:
+        required = {'CC','Dfun','Thetafun','Pcal','id'} if r'\newcommand{\Dfun}' in main else {'Pcal', 'Qcal', 'Rcal', 'Scal', 'End', 'id', 'bbk'}
     if not required <= set(result):
         raise ValueError('Missing manuscript macro definitions')
     # Only the literal, one-argument math wrappers used by the reading editions.
-    for name in ('cl', 'closure', 'norm', 'mat'):
+    for name in ('cl', 'closure', 'norm', 'mat', 'abs'):
         match = re.search(r'\\newcommand\{\\'+name+r'\}\[1\]', main)
         if match:
             value, _ = group(main, match.end())
@@ -438,8 +441,8 @@ class Chapter:
                     if value not in self.command_links[name]: raise ValueError('Unresolved reading link: '+name+' '+value)
                     target,label=self.command_links[name][value]
                     out.append('<a href="'+html.escape(self.relative(target),quote=True)+'">'+html.escape(label)+'</a>')
-                elif name in {'textbf','emph','textit','texttt','leanname','path','nolinkurl'}:
-                    tag = {'textbf':'strong','texttt':'code','leanname':'code','path':'code','nolinkurl':'code'}.get(name,'em')
+                elif name in {'textbf','emph','textit','texttt','leanname','lean','path','nolinkurl'}:
+                    tag = {'textbf':'strong','texttt':'code','leanname':'code','lean':'code','path':'code','nolinkurl':'code'}.get(name,'em')
                     content=html.escape(value.replace(r'\_','_')) if tag=='code' else self.inline(value)
                     out.append('<'+tag+'>'+content+'</'+tag+'>')
                 elif name in {'statusleanthree','statusleanprior','statusroadmap'}:
@@ -451,7 +454,7 @@ class Chapter:
                     links = []
                     for key in value.split(','):
                         node = self.labels[key]
-                        label = KIND_NAMES.get(node['kind'],node['kind'].capitalize())+' '+node['number']
+                        label = node.get('reference_label') or KIND_NAMES.get(node['kind'],node['kind'].capitalize())+' '+node['number']
                         url = self.relative(node.get('url',''))+'#'+node['id']
                         links.append('<a href="'+url+'" title="'+html.escape(typography(node['title']),quote=True)+'">'+label+'</a>')
                     out.append(', '.join(links))
@@ -536,14 +539,14 @@ class Chapter:
         """Return inert text/math pieces, keeping formulas intact at the excerpt boundary."""
         text = re.sub(r'\\label\{[^}]+\}', '', text).strip()
         def reference(match):
-            return ', '.join(self.labels[key]['kind']+' '+self.labels[key]['number'] for key in match[1].split(','))
+            return ', '.join(self.labels[key].get('reference_label') or self.labels[key]['kind']+' '+self.labels[key]['number'] for key in match[1].split(','))
         text = re.sub(r'\\(?:c|C|eq)?ref\{([^}]+)\}', reference, text)
         text = re.sub(r'\\cite(?:\[([^\]]*)\])?\{([^}]+)\}',lambda m:', '.join('['+str(self.citations[k][0])+']' for k in m[2].split(','))+(', '+m[1] if m[1] else ''),text)
         while (note:=re.search(r'\\(statusleanthree|statusleanprior|statusroadmap)\{',text)):
             value,end=group(text,note.end()-1)
             if note[1] not in self.formal_labels: raise ValueError('Missing manuscript scope label: '+note[1])
             text=text[:note.start()]+self.formal_labels[note[1]]+' '+value+text[end:]
-        text = re.sub(r'\\(?:textbf|emph|textit|texttt|leanname|path|nolinkurl)\{([^{}]*)\}',r'\1',text)
+        text = re.sub(r'\\(?:textbf|emph|textit|texttt|leanname|lean|path|nolinkurl)\{([^{}]*)\}',r'\1',text)
         text = text.replace(r'\textquotesingle ', '’').replace(r'\S','§')
         parts = []
         size = 0
@@ -638,9 +641,11 @@ def prepare(reader):
         if config.get('monolithic'): validate_monolithic(main,config)
         else:
             declared=re.findall(r'\\input\{('+re.escape(config.get('chapter_prefix','chapters/'))+r'[^}]+)\}',clean_tex(main).split(r'\begin{document}',1)[-1])
-            if [config['base']+p for p in declared] != [c['source'] for c in config['chapters'][:config['main_chapters']]]:
+            selected = [c['source'] for c in config['chapters'][:config['main_chapters']]]
+            declared = [config['base']+p+('' if p.endswith('.tex') else '.tex') for p in declared]
+            if (declared[:len(selected)] if config.get('partial') else declared) != selected:
                 raise ValueError(config['label']+' chapter order changed. Review the readable edition.')
-        macros=manuscript_macros(main)
+        macros=manuscript_macros(main, config.get('required_macros'))
         chapters=[]
         labels={}
         state={}
@@ -662,7 +667,12 @@ def prepare(reader):
             state={'section':chapter.section,'appendix':chapter.appendix,'part':chapter.part}
             chapters.append((spec,raw,chapter))
         bib_text=reader.site.read_source(reader.records[config['bib']]).decode('utf-8-sig')
-        references=(manuscript_bibliography if config.get('inline_bibliography') else bibliography)(bib_text)
+        references=[] if config.get('bibliography_source_only') else (manuscript_bibliography if config.get('inline_bibliography') else bibliography)(bib_text)
+        if config.get('source_references'):
+            from paper_ix_reading import source_references
+            for key,node in source_references(reader,config).items():
+                if key in labels: raise ValueError('Duplicate source reference '+key)
+                labels[key]=node
         for spec,raw,chapter in chapters:
             chapter.labels=labels
             chapter.validate_references()
@@ -784,7 +794,8 @@ def render_reading_index(reader):
     page='read/index.html'
     body='<p class="eyebrow">HTML reading editions</p><h1>Read the papers online</h1><p>Read at your own pace with chapter contents, selectable equations, and direct links between statements, proofs and their sources. Start with Paper I for the foundations, or choose the paper you need.</p><div class="work-list">'
     for work,config in BOOKS.items():
-        body+='<section class="work"><p class="eyebrow">'+config['label']+'</p><h2>'+html.escape(config['title'])+'</h2><p>'+str(config['main_chapters'])+' main chapters</p><nav aria-label="'+config['label']+' reading formats">'
+        body+='<section class="work"><p class="eyebrow">'+config['label']+'</p><h2>'+html.escape(config['title'])+'</h2><p>'+str(config['main_chapters'])+(' opening chapters' if config.get('partial') else ' main chapters')+'</p><nav aria-label="'+config['label']+' reading formats">'
+        if config.get('partial'): body+='<p>Opening chapters are available in HTML; continue in the PDF or linked sources.</p>'
         body+='<a class="button" href="'+site.rel(config['chapters'][0]['url'],page)+'">Start '+config['label']+'</a><a href="'+site.rel(config['index'],page)+'">Chapter contents</a>'
         pdf=reader.primary_pdf(work)
         if pdf: body+='<a href="'+site.rel(pdf['url'],page)+'">Read PDF</a>'
@@ -945,11 +956,17 @@ def render_book_index(reader,book,reports):
     site=reader.site
     config=book['config']
     page,work,label=config['index'],config['work'],config['label']
-    body='<p class="eyebrow">Read '+label+'</p><h1>'+html.escape(config['title'])+'</h1><p>Read the '+str(config['main_chapters'])+' main manuscript chapters in order, or choose a topic below.</p>'+reader.work_routes(work,page)
+    introduction=(config.get('reading_introduction') or 'Read the '+str(config['main_chapters'])+' main manuscript chapters in order, or choose a topic below.')
+    body='<p class="eyebrow">Read '+label+'</p><h1>'+html.escape(config['title'])+'</h1><p>'+html.escape(introduction)+'</p>'+reader.work_routes(work,page)
     body+='<nav class="chapter-contents" aria-label="'+label+' chapters"><h2>Contents</h2><ol>'
     for spec,report in zip(config['chapters'],reports):
         body+='<li><a href="'+site.rel(spec['url'],page)+'">'+html.escape(spec['title'])+'</a></li>'
     body+='<li><a href="references.html">Bibliography</a></li></ol></nav>'
+    if config.get('continuation_sources'):
+        body+='<h2>Continue in the manuscript sources</h2><p>These chapters are available as selectable TeX, with line links. The complete typeset edition is available below.</p><ul>'
+        for path,title in config['continuation_sources']:
+            body+='<li><a href="'+reader.resolve(path,page)+'">'+html.escape(title)+'</a></li>'
+        body+='</ul>'
     abstract=re.search(r'\\begin\{abstract\}(.*?)\\end\{abstract\}',book['main'],re.S)
     if abstract:
         parser=Chapter('',book['macros'])
@@ -971,6 +988,10 @@ def render_bibliography(reader,book):
     config=book['config']
     page,work,label=config['bib_page'],config['work'],config['label']
     body='<h1>'+label+' bibliography</h1>'+reader.work_routes(work,page)
+    if config.get('bibliography_source_only'):
+        body+='<p>The complete bibliography, including the recovered historical references, remains in the original manuscript and its linked TeX sources.</p><p><a href="'+reader.resolve(config['bib'],page)+'">Read the bibliography in the manuscript source</a></p>'
+        site.page(page,label+' bibliography',body)
+        return
     body+='<p>Entries follow the retained bibliography source. Citation keys keep references stable without relying on older generated bibliography numbering. These links do not establish what a cited source proves.</p>'
     for entry in book['references']:
         body+='<section id="ref-'+entry['key']+'"><h2>'+html.escape(entry['key'])+'</h2><dl>'

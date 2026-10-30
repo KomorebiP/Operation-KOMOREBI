@@ -159,6 +159,15 @@ figures, tables and code examples. Each paper has chapter contents, previous
 and next links, cross references and a bibliography. Paper II also includes its
 separate current verification snapshot.
 
+The [Paper IX opening chapters](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-ix/index.html)
+provide **Scope and conventions** and **Arithmetic packets and coefficient
+transport** in HTML. Their original equations, statements, proofs and Lean
+declaration notes are retained. Forward references to later material link to
+the exact headings in the selectable manuscript sources. The contents page
+links to the complete PDF and source continuations; the rest of Paper IX
+has not yet been converted to formatted HTML. This adds no proof review or
+Lean execution.
+
 Paper I includes its orientation, foundations, packet and graph results,
 transport, worked models, notation ledger, statement concordance and bibliography.
 Its ten manuscript figures retain their captions and have short text alternatives

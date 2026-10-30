@@ -96,7 +96,7 @@ def check_readable_chapter(root, documents, pages):
         assert report['url']==page
         assert report['math_expressions']==len(expressions)
         assert report['math_sequence_sha256']==hashlib.sha256(json.dumps(expressions,ensure_ascii=False).encode()).hexdigest()
-        assert report['macros']==manuscript_macros(main)
+        assert report['macros']==manuscript_macros(main,BOOKS[spec['work']].get('required_macros'))
         assert not report['new_proof_review'] and not report['new_lean_execution']
         for node in report['nodes']:
             assert node['id'] in pages[page].ids
