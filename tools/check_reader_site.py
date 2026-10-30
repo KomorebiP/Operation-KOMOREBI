@@ -85,7 +85,7 @@ def check_readable_chapter(root, documents, pages):
         assert report['url']==page
         assert report['math_expressions']==len(expressions)
         assert report['math_sequence_sha256']==hashlib.sha256(json.dumps(expressions,ensure_ascii=False).encode()).hexdigest()
-        assert report['macros']==manuscript_macros(main)
+        assert report['macros']==manuscript_macros(main,BOOKS[spec['work']].get('macro_contract'))
         assert not report['new_proof_review'] and not report['new_lean_execution']
         for node in report['nodes']:
             assert node['id'] in pages[page].ids
@@ -237,6 +237,9 @@ def inspect_site(root):
         raw=(root/record['file_url']).read_bytes()
         assert len(raw)==record['size'] and hashlib.sha256(raw).hexdigest()==record['sha256'],record['repository_path']
         assert hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest()==record['git_blob_sha1']
+        if record.get('source'):
+            sources={r['repository_path']:r for r in documents['files']}
+            assert sources[record['source']]['sha256']==record['source_sha256']
     readable_math = check_readable_chapter(root,documents,pages)
     from reader_atlas import verify as verify_atlas
     atlas = verify_atlas(root,documents,pages)
