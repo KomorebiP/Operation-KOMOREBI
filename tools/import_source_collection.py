@@ -70,6 +70,8 @@ def omission_reason(relative_path: str) -> str | None:
     if "/formal_preservation/objects/sha256/" in "/" + path + "/":
         return "duplicate-formal-object-store"
     name = parts[-1].lower()
+    if name == "ai_contribution_disclosure.md":
+        return "redundant-standalone-ai-disclosure"
     if (name == ".env" or name.startswith(".env.")) and name not in (".env.example", ".env.sample"):
         return "environment-secret-file"
     if name.endswith((".pem", ".key", ".p12")):

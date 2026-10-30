@@ -46,6 +46,5 @@ The [current reading edition of *The Possibility for a Machine-Native Mathematic
 - [Machine-Native Mathematics: current author's note](essays/MACHINE_NATIVE_MATHEMATICS.md#authors-note).
 - [Stratified Relational Workspace: AI assistance disclosure](../research/stratified-relational-workspace/docs/AI_ASSISTANCE_DISCLOSURE.md), including authorship, responsibility, and external review boundaries.
 - [Realization Boundaries: assistance and provenance](../monographs/realization-boundaries/publication/monograph_source/ASSISTANCE_AND_PROVENANCE.md), including the scope of AI-assisted review and its limitations.
-- [Paper II: language-model contribution disclosure](../papers/paper-ii/current/source/annals_expanded/AI_CONTRIBUTION_DISCLOSURE.md). Its statement about author checking applies to that article and is not a collection-wide certification.
 
 [Start reading](START_HERE.md) · [Project status](COMPLETION_STATUS.md) · [Collection](../README.md)
