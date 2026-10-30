@@ -10,6 +10,8 @@ The website provides a skip-to-content link, named navigation regions, visible
 keyboard focus, descriptive links, a glossary and search. Work pages keep
 completion, Lean coverage and confidence in text. The layout adapts to smaller
 screens. Wide tables and code blocks can be scrolled with the keyboard.
+In HTML guides, captioned tables use their visible captions as the names of
+their scrolling regions, so screen-reader region navigation identifies the table.
 
 The header keeps **Collection**, **About the project** and **Search** visible.
 **Browse** opens links grouped

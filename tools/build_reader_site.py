@@ -191,6 +191,7 @@ class Rewriter(HTMLParser):
         self.out=[]
         self.blocked=0
         self.tables=0
+        self.table_stack=[]
         self.ids=set()
         self.heading_stack=[]
         self.h1_count=0
@@ -199,6 +200,7 @@ class Rewriter(HTMLParser):
             self.blocked+=1
             return
         if self.blocked or tag not in self.allowed:return
+        if tag in {'br','p','div'}:self._caption_text(' ')
         if re.fullmatch(r'h[1-6]',tag):
             rendered_tag='h2' if tag=='h1' and self.h1_count else tag
             if tag=='h1':self.h1_count+=1
@@ -216,7 +218,11 @@ class Rewriter(HTMLParser):
             values.append(' '+key+('="'+html.escape(value,quote=True)+'"' if value is not None else ''))
         if tag=='table':
             self.tables+=1
+            self.table_stack.append(dict(wrapper=len(self.out),caption=None,seen_caption=False))
             self.out.append('<div class="table-scroll" role="region" aria-label="Scrollable table '+str(self.tables)+'" tabindex="0">')
+        elif tag=='caption' and self.table_stack and not self.table_stack[-1]['seen_caption']:
+            self.table_stack[-1]['caption']=[]
+            self.table_stack[-1]['seen_caption']=True
         if tag=='th' and 'scope' not in dict(attrs):values.append(' scope="col"')
         # Wide display math and code remain keyboard-scrollable without scripts.
         original = dict(attrs)
@@ -232,16 +238,35 @@ class Rewriter(HTMLParser):
             self.blocked=max(0,self.blocked-1)
             return
         if not self.blocked and tag in self.allowed and tag not in self.void:
+            if tag in {'p','div'}:self._caption_text(' ')
             if re.fullmatch(r'h[1-6]',tag) and self.heading_stack:
                 tag=self.heading_stack.pop()
             self.out.append('</'+tag+'>')
-            if tag=='table':self.out.append('</div>')
+            if tag=='caption' and self.table_stack:
+                table=self.table_stack[-1]
+                if table['caption'] is not None:
+                    name=' '.join(html.unescape(''.join(table['caption'])).split())
+                    if name:
+                        self.out[table['wrapper']]='<div class="table-scroll" role="region" aria-label="'+html.escape(name,quote=True)+'" tabindex="0">'
+                    table['caption']=None
+            if tag=='table':
+                self.out.append('</div>')
+                if self.table_stack:self.table_stack.pop()
+    def _caption_text(self,text):
+        if self.table_stack and self.table_stack[-1]['caption'] is not None:
+            self.table_stack[-1]['caption'].append(text)
     def handle_data(self,data):
-        if not self.blocked:self.out.append(data)
+        if not self.blocked:
+            self.out.append(data)
+            self._caption_text(data)
     def handle_entityref(self,name):
-        if not self.blocked:self.out.append('&'+name+';')
+        if not self.blocked:
+            self.out.append('&'+name+';')
+            self._caption_text('&'+name+';')
     def handle_charref(self,name):
-        if not self.blocked:self.out.append('&#'+name+';')
+        if not self.blocked:
+            self.out.append('&#'+name+';')
+            self._caption_text('&#'+name+';')
 
 
 class Site:

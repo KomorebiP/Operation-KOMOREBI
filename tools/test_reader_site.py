@@ -15,6 +15,43 @@ from readable_chapters import Chapter, expand_math, plain_math, readable_url, or
 
 
 class ReaderSiteTests(unittest.TestCase):
+    def test_table_regions_use_readable_caption_names_and_retain_markup(self):
+        rewrite=Rewriter(lambda value,image:value)
+        rewrite.feed('<table><caption id="transfer-caption">Transfer <em>norms</em> '
+                     '&amp; &#x3B1; "values"</caption><thead><tr><th>Input</th></tr></thead>'
+                     '<tbody><tr><th scope="row">Output 1</th><td>5.0</td></tr></tbody></table>')
+        rendered=''.join(rewrite.out)
+        self.assertIn('role="region" aria-label="Transfer norms &amp; α &quot;values&quot;" tabindex="0"',rendered)
+        self.assertIn('<caption id="transfer-caption">Transfer <em>norms</em> &amp; &#x3B1; "values"</caption>',rendered)
+        self.assertIn('<th scope="row">Output 1</th><td>5.0</td>',rendered)
+
+    def test_nested_table_regions_keep_their_own_names_and_numbered_fallback(self):
+        rewrite=Rewriter(lambda value,image:value)
+        rewrite.feed('<table><caption>Outer values</caption><tr><td>'
+                     '<table><caption>Inner values</caption><tr><td>1</td></tr></table>'
+                     '</td></tr></table><table><tr><td>2</td></tr></table>')
+        rendered=''.join(rewrite.out)
+        self.assertEqual(rendered.count('aria-label="Outer values"'),1)
+        self.assertEqual(rendered.count('aria-label="Inner values"'),1)
+        self.assertEqual(rendered.count('aria-label="Scrollable table 3"'),1)
+        self.assertEqual(rendered.count('tabindex="0"'),3)
+
+    def test_empty_and_blocked_table_captions_keep_numbered_fallbacks(self):
+        rewrite=Rewriter(lambda value,image:value)
+        rewrite.feed('<table><caption> <script>Hidden label</script> </caption></table>'
+                     '<table><caption>&nbsp;\n </caption></table>')
+        rendered=''.join(rewrite.out)
+        self.assertIn('aria-label="Scrollable table 1"',rendered)
+        self.assertIn('aria-label="Scrollable table 2"',rendered)
+        self.assertNotIn('Hidden label',rendered)
+
+    def test_table_caption_names_escape_literal_markup_and_collapse_whitespace(self):
+        rewrite=Rewriter(lambda value,image:value)
+        rewrite.feed('<table><caption>  Values<br>&lt;input&gt;<p>  &amp;amp; </p></caption></table>')
+        rendered=''.join(rewrite.out)
+        self.assertIn('aria-label="Values &lt;input&gt; &amp;amp;"',rendered)
+        self.assertNotIn('<input>',rendered)
+
     def test_paper_iv_ledger_row_headers_preserve_every_cell_and_equation(self):
         from html.parser import HTMLParser
         from readable_chapters import BOOKS
