@@ -42,7 +42,7 @@ Choose new environment and result directories. Keep them outside the extracted a
 |---|---|
 | Imported source | All 2,254 files match the recorded source hashes. |
 | Linux x86_64 / CPython 3.13.5 | All 100 release tests, 134 engine tests, and 72 installed acceptance cases pass. |
-| Windows x86_64 / CPython 3.12.14 | 97 release tests pass, with only the three named POSIX-specific tests skipped; 134 engine tests and 72 installed cases pass. |
+| Windows x86_64 / CPython 3.13.5 | 97 release tests pass, with only the three named POSIX-specific tests skipped; 134 engine tests and 72 installed cases pass. |
 | Symlink rejection controls | Both controls execute and pass on both platforms. |
 | Wheel/source binding | Every one of the seven runtime files matches the imported source. |
 | Current metadata | The wheel includes this README, the MIT code license, and the collection reuse notice. |
