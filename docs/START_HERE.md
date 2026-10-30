@@ -23,7 +23,7 @@ Start with the subject or kind of work that interests you. Each route leads to t
 | Understand the common language | [Realization Calculus](works/realization-calculus-book.md) and [Komorebi Space](works/komorebi-space.md) |
 | Study the individual developments | [Papers I–XII](../papers/README.md) |
 | Understand limits of representation | [Realization Boundaries](works/realization-boundaries.md) |
-| Read a small formal example | [Research Preview 1](../formal/research-preview-1/README.md) |
+| Explore the research preview | [Euler numbers through packets, polynomials, and residuals](demonstrations/EULER_PACKETS.md) |
 | Follow an application | [Monographs and companion volumes](../monographs/README.md) |
 | Explore an open mathematical program | [Research programs and their scope](../research/README.md) |
 | Work with executable mathematics | [Software guide](LIBRARIES.md) and [experimental laboratories](../experiments/README.md) |
@@ -58,17 +58,21 @@ Each route includes a worked calculation, expected program output, and links to 
 
 <a id="a-concrete-arithmetic-example"></a>
 
-## Run the arithmetic preview
+<a id="run-the-arithmetic-preview"></a>
 
-[Research Preview 1](../formal/research-preview-1/README.md) studies prime-power Cartier systems. An integer polynomial mask determines a formal series at fixed prime-power precision. A finite linear machine computes coefficients from digit words. Its minimum-cardinality statement concerns the declared finite linear realization class, coefficient ring, and alphabet.
+## Research preview: Euler numbers
 
-From that component directory, run:
+[Euler numbers through packets, polynomials, and residuals](demonstrations/EULER_PACKETS.md) follows one extended derivation through reciprocal series, polynomial coordinates, exact transfer matrices, and residual correction. The page includes hand calculations, failure controls, source references, and downloadable results.
 
-```bash
-python -B demo.py
+Read the derivation [on the website](https://komorebip.github.io/Operation-KOMOREBI/collection/demonstrations/EULER_PACKETS.html), or run the exact checker from the collection root:
+
+```text
+python -B examples/euler_packets.py
 ```
 
-For proof reproduction, follow its [pinned Lean environment](../formal/research-preview-1/REPRODUCE.md). The [workflow guide](WORKFLOWS.md) explains the separate collection checks and manual proof replay.
+Python 3.10 or later is sufficient; the checker uses only the standard library. A successful run ends with `PASS: Euler packets, polynomials and residuals`. You can also download the [standalone checker](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/euler_packets.py) or the [complete source and results bundle](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/source-and-checks.zip).
+
+The example records its sources and tested ranges. The [workflow guide](WORKFLOWS.md) explains the collection's verification commands.
 
 ## Interpret the evidence
 

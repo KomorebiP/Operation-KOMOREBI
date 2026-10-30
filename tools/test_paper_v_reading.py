@@ -75,7 +75,7 @@ class PaperVReadingTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'section order changed'):
             chapters.validate_monolithic(source.replace(r'\section{Introduction}',r'\section{Changed introduction}'),BOOK)
         state={};parsed=[]
-        macros=chapters.manuscript_macros(source,BOOK['macro_contract'])
+        macros=chapters.manuscript_macros(source,BOOK['required_macros'])
         for spec in CHAPTERS:
             chapter=chapters.Chapter(chapters.chapter_text(source,spec),macros,state=state,check_refs=False)
             parsed+=chapter.nodes
@@ -142,7 +142,7 @@ class PaperVReadingTests(unittest.TestCase):
 
     def test_bold_tokens_and_spanning_table_cells_retain_math(self):
         source=(ROOT/MAIN).read_text(encoding='utf-8-sig')
-        macros=chapters.manuscript_macros(source,BOOK['macro_contract'])
+        macros=chapters.manuscript_macros(source,BOOK['required_macros'])
         self.assertIn(r'\boldsymbol{x}',chapters.expand_math(r'\bm x',macros))
         self.assertIn(r'\boldsymbol{\Gamma}',chapters.expand_math(r'\bm\Gamma',macros))
         self.assertIn(r'\boldsymbol{x+y}',chapters.expand_math(r'\bm{x+y}',macros))

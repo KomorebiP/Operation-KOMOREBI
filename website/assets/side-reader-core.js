@@ -49,6 +49,12 @@
     if (state.width !== 50) url.searchParams.set("width", String(state.width));
     return url.href;
   }
+  function workPair(leftId, rightId, base, data) {
+    const selected = [leftId, rightId].map(id => data.works.find(work => work.id === id));
+    if (selected.some(work => !work)) return null;
+    const targets = selected.map(work => canonical(work.left, base, data.pages));
+    return targets.every(Boolean) ? {left:targets[0], right:targets[1]} : null;
+  }
   function parsePair(href, base, data, narrow) {
     const params = new URL(href).searchParams;
     const first = canonical(params.get("left") || "", base, data.pages);
@@ -64,7 +70,7 @@
       width: [35,40,45,50,55,60,65].includes(width) ? width : 50,
       invalid: Boolean((params.has("left") && !left) || (params.has("right") && !right))};
   }
-  const api = {canonical, words, filter, pairURL, parsePair, linkedPair, workIds};
+  const api = {canonical, words, filter, pairURL, parsePair, linkedPair, workIds, workPair};
   if (typeof module === "object" && module.exports) module.exports = api;
   else root.KomorebiSideReader = api;
 })(globalThis);

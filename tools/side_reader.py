@@ -131,14 +131,41 @@ def pane(side):
 </section>'''
 
 
+def work_picker():
+    return '''<details class="side-work-picker" id="side-work-picker"><summary>Compare papers and monographs</summary>
+<p>Choose a work for each side. Each choice opens its reading edition, PDF or work overview.</p>
+<form id="side-works-form"><div class="side-work-grid"><div>
+<label for="side-left-work">Work on the left</label><select id="side-left-work" required></select></div><div>
+<label for="side-right-work">Work on the right</label><select id="side-right-work" required></select></div></div>
+<button type="submit">Open these works</button></form>
+<p>Use each pane's document picker to choose a chapter, proof, Lean source, program or example.</p></details>'''
+
+
+def session_controls():
+    return '''<div class="side-session-resume" id="side-session-resume" hidden>
+<button type="button" id="side-session-resume-button">Resume last reading session</button>
+<p id="side-session-last"></p></div>
+<details class="side-sessions" id="side-sessions"><summary>Save and resume reading</summary>
+<p>Sessions are kept in this browser. They include both documents, reading positions, layout and PDF page and zoom.</p>
+<label class="side-send" for="side-session-remember"><input type="checkbox" id="side-session-remember" checked>Remember my last reading session</label>
+<p class="status">Turn this off to clear the automatic session. Named sessions stay until you delete them.</p>
+<form id="side-session-save"><label for="side-session-name">Session name</label>
+<input id="side-session-name" type="text" maxlength="80" required placeholder="For example, packets and refinement">
+<button type="submit">Save session</button><p class="status">Saving an existing name updates that session. You can keep up to 50 named sessions.</p></form>
+<label for="side-session-list">Saved sessions</label><select id="side-session-list"><option value="">Choose a saved session</option></select>
+<div class="side-session-actions"><button type="button" id="side-session-open" disabled>Open saved session</button>
+<button type="button" id="side-session-delete" class="side-secondary" disabled>Delete saved session</button></div>
+<p id="side-session-status" role="status" aria-live="polite">Saved sessions stay on this browser and device. Clearing site data removes them.</p></details>'''
+
+
 def build(site):
     data = catalogue(site)
     site.write('side-reader-index.json', json.dumps(data, ensure_ascii=False)+'\n')
     body = '''<div class="side-heading"><h1>Read side by side</h1>
-<p>Keep a paper open while you follow a claim, written proof, Lean source, program or worked example.</p></div>
+<p>Read different papers or monographs together, or keep a paper open while you follow a claim, proof, Lean source, program or example.</p></div>
 <noscript><p>This workspace needs JavaScript. You can still open <a href="documents.html">papers</a>,
 <a href="claims.html">claims</a> and <a href="collection/HAND_WORKED_EXAMPLES.html">worked examples</a> in separate tabs.</p></noscript>
-<div id="side-reader" data-index="side-reader-index.json?v='''+site.revision+'''" hidden>
+<div id="side-reader" data-index="side-reader-index.json?v='''+site.revision+'''" hidden>'''+session_controls()+work_picker()+'''
 <div class="side-toolbar"><div class="side-view" role="group" aria-label="Visible reading panes">
 <button type="button" data-side-view="both" aria-pressed="true">Both panes</button>
 <button type="button" data-side-view="left" aria-pressed="false">Left only</button>
@@ -156,13 +183,15 @@ External links and the full PDF viewer open in a new tab. PDF toolbar links stay
 <p>Use <strong>Read left pane</strong> or <strong>Read right pane</strong> to move keyboard focus into a document.
 Its <strong>Return to pane controls</strong> links bring you back. The browser Back button restores earlier pairs.
 On small screens, show either pane at full width, or choose Both panes to stack them.</p>
-<p>Pair links keep the document addresses and HTML passage anchors. PDF toolbar page and zoom changes are not included.
+<p>Saved sessions also keep your reading positions and PDF page and zoom in this browser.
+Pair links keep the document addresses and HTML passage anchors. PDF toolbar page and zoom changes are not included in shared links.
 These reading links do not change the recorded proof or Lean status.</p></details></div>
 <div id="side-share-fallback" hidden><label for="side-share-url">Link to this pair</label><input id="side-share-url" type="url" readonly></div>
 <div class="side-panes" id="side-panes">'''+pane('left')+pane('right')+'''</div></div>
 <p id="side-status" role="status" aria-live="polite">Loading the document list…</p>
 <p><a href="documents.html">Browse papers and PDFs</a> · <a href="collection/ACCESSIBILITY.html">Reading and accessibility help</a></p>
 <script defer src="assets/side-reader-core.js?v='''+site.revision+'''"></script>
+<script defer src="assets/side-reader-sessions.js?v='''+site.revision+'''"></script>
 <script defer src="assets/side-reader.js?v='''+site.revision+'''"></script>'''
     site.page('side-by-side.html', 'Read side by side', body)
     return dict(pages=len(data['pages']), entries=len(data['entries']), works=len(data['works']))
@@ -182,6 +211,8 @@ def check(root, pages):
     assert {row['kind'] for row in data['entries']} >= {'Claims','Written proofs','Lean','Code','Examples'}
     page = pages['side-by-side.html']
     assert len(page.iframes) == 2
-    assert {'side-reader','side-swap','side-share','side-width','left-document','right-document'} <= set(page.ids)
+    assert {'side-reader','side-swap','side-share','side-width','left-document','right-document',
+            'side-works-form','side-left-work','side-right-work','side-session-name',
+            'side-session-list','side-session-remember','side-session-resume-button'} <= set(page.ids)
     return dict(pages=len(data['pages']), entries=len(data['entries']), works=len(data['works']),
                 related_routes=check_work_routes(data['works'], pages), paired_links=check_pair_links(pages))

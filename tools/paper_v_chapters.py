@@ -56,7 +56,7 @@ BOOK = dict(work='paper-v', label='Paper V', base=BASE, main=MAIN,
             bib=BASE+'references.bib', index='read/paper-v/index.html',
             bib_page='read/paper-v/references.html', title='Multiresolution Signal Calculus',
             chapters=CHAPTERS, main_chapters=33, monolithic=True,
-            macro_contract=['Pcal','Qcal','Rcal','Scal','id','bbC','bbZ'],
+            required_macros=['Pcal','Qcal','Rcal','Scal','id','bbC','bbZ'],
             figure_descriptions='website/paper-v-figure-descriptions.json',
             figure_receipts='assets/figures/paper-v/figures.json',
             pdf_inputs={'atlas-pages.tex':'Read the forty worked visual plates in the PDF'})

@@ -33,6 +33,17 @@ const companion={left:'read/one.html#L12',right:'collection/examples/a.html',vie
 const companionURL=new URL(api.pairURL(base,companion));
 assert.equal(companionURL.searchParams.get('left'),'read/one.html#L12','Opening related material preserves the originating passage');
 assert.equal(companionURL.searchParams.get('right'),'collection/examples/a.html');
+assert.deepEqual(api.workPair('one','two',base,data),{left:'read/one.html',right:'read/two.html'},'Each selected work opens its own reading edition');
+assert.deepEqual(api.workPair('two','one',base,data),{left:'read/two.html',right:'read/one.html'});
+assert.deepEqual(api.workPair('one','one',base,data),{left:'read/one.html',right:'read/one.html'},'The same work can be read at different places');
+assert.equal(api.workPair('one','missing',base,data),null);
+assert.equal(api.workPair(null,'two',base,data),null);
+const unavailable={...data,works:[{...data.works[0],left:'https://evil.test/one.html'},data.works[1]]};
+assert.equal(api.workPair('one','two',base,unavailable),null,'Work choices stay within the verified reading catalogue');
+const selectedWorks={...api.workPair('one','two',base,data),view:'both',width:50};
+const sharedWorks=api.parsePair(api.pairURL(base,selectedWorks),base,data,false);
+assert.equal(sharedWorks.left,'read/one.html');
+assert.equal(sharedWorks.right,'read/two.html','Sharing keeps the independently chosen second work');
 let state=api.parsePair(base+'side-by-side.html?left=read%2Ftwo.html%23L13',base,data,false);
 assert.equal(state.right,'claims.html#two','The companion follows the originating work');
 assert.equal(state.left,'read/two.html#L13');

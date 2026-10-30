@@ -2,7 +2,7 @@
 
 Start with the task you want to complete. These routes are editorial suggestions and do not change the recorded status of any work.
 
-For the collection as a whole, read the [project overview](START_HERE.md) and [project map](PROJECT_MAP.md). For a concrete introduction, choose one of the [three complete demonstrations](DEMONSTRATIONS.md).
+For the collection as a whole, read the [project overview](START_HERE.md) and [project map](PROJECT_MAP.md). For the research preview, follow [Euler numbers through packets, polynomials, and residuals](demonstrations/EULER_PACKETS.md). The [elementary demonstrations](DEMONSTRATIONS.md) offer shorter introductions.
 
 - [New to Komorebi](routes/NEW_READER.md)
 - [Read the mathematics](routes/MATHEMATICS.md)

@@ -84,7 +84,7 @@ def site_navigation(page):
 def home_page():
     """The Open research introduction keeps each reading route a plain link."""
     routes = [
-        ('Understand the project', 'Begin with a small example and a guide to the vocabulary.', 'NEW_READER'),
+        ('Understand the project', 'Read the introduction and follow the Euler research example.', 'NEW_READER'),
         ('Read the mathematics', 'Explore the papers and books, with their assumptions in view.', 'MATHEMATICS'),
         ('Examine a proof', 'Follow statements, formal sources, and recorded evidence.', 'PROOF_REVIEW'),
         ('Try the software', 'Run a worked example and compare the expected output.', 'SOFTWARE'),
@@ -108,6 +108,7 @@ def home_page():
 <dt><a href="polyphase/index.html">Polyphase Float</a></dt><dd>A C library for arbitrary-precision binary floating-point arithmetic.</dd></dl>
 <h3>What connects the work?</h3><p>Describe an object in parts, transfer operations through those parts, and account for what a change of representation preserves or loses.</p>
 <ul><li><a href="collection/PROJECT_MAP.html">See the project map</a> — explore the twelve core papers, related books and documented connections.</li>
+<li><a href="collection/demonstrations/EULER_PACKETS.html">Research preview: Euler numbers</a> — follow an extended derivation through packets, coordinate changes and exact residual correction.</li>
 <li><a href="collection/DEMONSTRATIONS.html">Follow a complete demonstration</a> — work through a calculation, run its program and follow the source evidence.</li></ul></div></details>
 <details class="home-status"><summary>What does “work in progress” mean?</summary><p>The collection records completion, formal coverage, and confidence separately. A linked file does not mean every claim has been verified. Software is beta.</p><p><a href="collection/COMPLETION_STATUS.html">Read the guide to evidence and status</a></p></details>'''
 
@@ -190,6 +191,7 @@ class Rewriter(HTMLParser):
         self.out=[]
         self.blocked=0
         self.tables=0
+        self.table_stack=[]
         self.ids=set()
         self.heading_stack=[]
         self.h1_count=0
@@ -198,6 +200,7 @@ class Rewriter(HTMLParser):
             self.blocked+=1
             return
         if self.blocked or tag not in self.allowed:return
+        if tag in {'br','p','div'}:self._caption_text(' ')
         if re.fullmatch(r'h[1-6]',tag):
             rendered_tag='h2' if tag=='h1' and self.h1_count else tag
             if tag=='h1':self.h1_count+=1
@@ -215,7 +218,11 @@ class Rewriter(HTMLParser):
             values.append(' '+key+('="'+html.escape(value,quote=True)+'"' if value is not None else ''))
         if tag=='table':
             self.tables+=1
+            self.table_stack.append(dict(wrapper=len(self.out),caption=None,seen_caption=False))
             self.out.append('<div class="table-scroll" role="region" aria-label="Scrollable table '+str(self.tables)+'" tabindex="0">')
+        elif tag=='caption' and self.table_stack and not self.table_stack[-1]['seen_caption']:
+            self.table_stack[-1]['caption']=[]
+            self.table_stack[-1]['seen_caption']=True
         if tag=='th' and 'scope' not in dict(attrs):values.append(' scope="col"')
         # Wide display math and code remain keyboard-scrollable without scripts.
         original = dict(attrs)
@@ -231,16 +238,35 @@ class Rewriter(HTMLParser):
             self.blocked=max(0,self.blocked-1)
             return
         if not self.blocked and tag in self.allowed and tag not in self.void:
+            if tag in {'p','div'}:self._caption_text(' ')
             if re.fullmatch(r'h[1-6]',tag) and self.heading_stack:
                 tag=self.heading_stack.pop()
             self.out.append('</'+tag+'>')
-            if tag=='table':self.out.append('</div>')
+            if tag=='caption' and self.table_stack:
+                table=self.table_stack[-1]
+                if table['caption'] is not None:
+                    name=' '.join(html.unescape(''.join(table['caption'])).split())
+                    if name:
+                        self.out[table['wrapper']]='<div class="table-scroll" role="region" aria-label="'+html.escape(name,quote=True)+'" tabindex="0">'
+                    table['caption']=None
+            if tag=='table':
+                self.out.append('</div>')
+                if self.table_stack:self.table_stack.pop()
+    def _caption_text(self,text):
+        if self.table_stack and self.table_stack[-1]['caption'] is not None:
+            self.table_stack[-1]['caption'].append(text)
     def handle_data(self,data):
-        if not self.blocked:self.out.append(data)
+        if not self.blocked:
+            self.out.append(data)
+            self._caption_text(data)
     def handle_entityref(self,name):
-        if not self.blocked:self.out.append('&'+name+';')
+        if not self.blocked:
+            self.out.append('&'+name+';')
+            self._caption_text('&'+name+';')
     def handle_charref(self,name):
-        if not self.blocked:self.out.append('&#'+name+';')
+        if not self.blocked:
+            self.out.append('&#'+name+';')
+            self._caption_text('&#'+name+';')
 
 
 class Site:

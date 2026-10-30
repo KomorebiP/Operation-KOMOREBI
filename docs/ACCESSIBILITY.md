@@ -10,6 +10,8 @@ The website provides a skip-to-content link, named navigation regions, visible
 keyboard focus, descriptive links, a glossary and search. Work pages keep
 completion, Lean coverage and confidence in text. The layout adapts to smaller
 screens. Wide tables and code blocks can be scrolled with the keyboard.
+In HTML guides, captioned tables use their visible captions as the names of
+their scrolling regions, so screen-reader region navigation identifies the table.
 
 The header keeps **Collection**, **About the project** and **Search** visible.
 **Browse** opens links grouped
@@ -38,6 +40,11 @@ is remembered in this browser when local storage is available. **Read proof**,
 **Skip contents and start reading** moves directly to the chapter text. Without
 JavaScript, all passage links remain visible and usable.
 
+In Paper IV, open **Statements and proofs** within a chapter's contents to find
+its numbered definitions, results, remarks and examples. Each entry links to the
+record, with **Read proof** beside it when a proof is recorded. The list works
+with the keyboard and without JavaScript.
+
 Section controls are ordinary links within the chapter, so they do not add a
 repeated navigation landmark for every heading. Chapter contents, neighbouring
 chapters and work routes retain their named navigation regions.
@@ -61,6 +68,41 @@ The page you were reading opens on the left, including its current HTML passage
 anchor. Each pane has a document picker with work, type and text filters.
 Papers, claims, proof locations, Lean sources, code, notation and examples can
 be read together. Each document keeps its existing evidence and scope notes.
+
+**Compare papers and monographs** provides separate **Work on the left** and
+**Work on the right** choices. Choose any two works, then select **Open these
+works**. Each side opens its available reading edition, PDF or work overview.
+The works can be different. Their chapters, proof links and related material
+remain independent, and **Copy link to this pair** shares the chosen documents.
+
+### Save and resume a reading session
+
+**Save and resume reading** keeps sessions in this browser and on this device.
+With **Remember my last reading session** enabled, a plain visit to the reader
+resumes the last pair, reading positions, pane layout and focus view. Shared
+links open their requested documents. **Resume last reading session** lets you
+return to the pair from before you opened that link.
+Refreshing the same pair also restores its saved positions.
+
+Enter a **Session name** and select **Save session** to keep a named bookmark.
+Choose it under **Saved sessions**, then select **Open saved session**. Reusing
+a name updates that bookmark. Up to 50 named sessions can be kept. **Delete
+saved session** removes the selected bookmark. An unavailable edition stays
+listed so you can identify and delete its old bookmark.
+
+HTML sessions remember a nearby passage and the position within it. After a
+window-size change, the reader uses that passage to approximate the same place.
+PDF sessions keep the viewer's page, zoom, position and rotation once it is
+loaded. Each pane restores when it becomes visible.
+
+Turning off automatic remembering clears the automatic session and keeps named
+bookmarks. Clearing browser site data removes all sessions. If storage is
+blocked or full, the reader explains that saving failed. Ordinary reading and
+**Copy link to this pair** remain available. Shared links keep document addresses
+and HTML anchors. PDF toolbar settings and saved scroll positions remain in the
+browser's sessions rather than in shared links.
+
+### Follow references and adjust the view
 
 Open **Related material** above either document to find that work's paper,
 claims, written proofs, Lean, code, notation, evidence and available examples.
@@ -152,6 +194,15 @@ figures, tables and code examples. Each paper has chapter contents, previous
 and next links, cross references and a bibliography. Paper II also includes its
 separate current verification snapshot.
 
+The [Paper IX opening chapters](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-ix/index.html)
+provide **Scope and conventions** and **Arithmetic packets and coefficient
+transport** in HTML. Their original equations, statements, proofs and Lean
+declaration notes are retained. Forward references to later material link to
+the exact headings in the selectable manuscript sources. The contents page
+links to the complete PDF and source continuations; the rest of Paper IX
+has not yet been converted to formatted HTML. This adds no proof review or
+Lean execution.
+
 Paper I includes its orientation, foundations, packet and graph results,
 transport, worked models, notation ledger, statement concordance and bibliography.
 Its ten manuscript figures retain their captions and have short text alternatives
@@ -186,6 +237,8 @@ figures and the formalization ledger. The build checks all 1,041 mathematical
 expressions in the main document, in their original order. Chapter links keep
 the line numbers from the single TeX manuscript.
 The preserved formal release and its stated scope remain unchanged.
+Chapter figures and atlas drawings reserve their image dimensions during loading,
+helping keep linked passages in place as the diagrams appear.
 
 The [Paper IV formalization ledger](https://komorebip.github.io/Operation-KOMOREBI/read/paper-iv/formalization-ledger.html#L2988)
 has a named table with manuscript records marked as row headers, so assistive
@@ -200,9 +253,12 @@ also have HTML pages. They retain the source prose and equations, with 24
 drawings rendered from the unchanged TikZ files. Each drawing has a text
 description and a complete transcript of its labels. Matrix entries, coefficient
 values and root certificates use tables with row and column headers. Wide tables
-can be scrolled with the keyboard. Equations use the same MathJax reading controls
-as the manuscript. Each plate links to its manuscript statements and original
-PDF page, and to the previous and next plates.
+can be scrolled with the keyboard. Each drawing table's scrolling region is named
+by its visible caption. Equations use the same MathJax reading controls
+as the manuscript. The route guide (V1), object reference (V2) and evidence
+summary (V26) also have descriptive table captions and row headers. Their
+original cells, formulas and links are retained. Each plate links to its
+manuscript statements and original PDF page, and to the previous and next plates.
 
 Paper IV's reading menu includes **Visual atlas**. Referenced manuscript
 sections and statements link back to the relevant plates, using each plate's

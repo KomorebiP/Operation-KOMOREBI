@@ -15,6 +15,100 @@ from readable_chapters import Chapter, expand_math, plain_math, readable_url, or
 
 
 class ReaderSiteTests(unittest.TestCase):
+    def test_atlas_reference_tables_preserve_cells_math_and_links_with_reading_aids(self):
+        from html.parser import HTMLParser
+        from reader_atlas import SOURCE, DEFINITIONS, TABLE_READING_AIDS, atlas_tex, plates
+        from readable_chapters import manuscript_macros
+        root=Path(__file__).resolve().parents[1]
+        selected=plates((root/SOURCE).read_text(encoding='utf-8-sig'))
+        macros=manuscript_macros((root/FOURTH_MAIN).read_text(encoding='utf-8-sig')+'\n'+
+                                 (root/DEFINITIONS).read_text(encoding='utf-8-sig'))
+        class Cells(HTMLParser):
+            def __init__(self,markup):
+                super().__init__(); self.cells=[]; self.active=False; self.links=[]; self.feed(markup)
+            def handle_starttag(self,tag,attrs):
+                if tag in {'td','th'}: self.cells.append(''); self.active=True
+                if tag=='a': self.links.append(dict(attrs).get('href'))
+            def handle_endtag(self,tag):
+                if tag in {'td','th'}: self.active=False
+            def handle_data(self,data):
+                if self.active: self.cells[-1]+=data
+        seen=set(); expected_rows={1:3,2:10,26:6}
+        for plate in selected:
+            for node in Chapter(atlas_tex(plate['body']),macros).nodes:
+                if node['kind'] not in {'table','tabularx'}: continue
+                key=(plate['number'],node['id']); seen.add(key)
+                original=Chapter('',macros); aided=Chapter('',macros)
+                for chapter in (original,aided):
+                    chapter.url=plate['url']
+                    chapter.command_links={'pagerefV':{str(p['number']):(p['url'],'V'+str(p['number'])) for p in selected}}
+                before=render_table(node,original)
+                after=render_table(node,aided,TABLE_READING_AIDS[key])
+                self.assertEqual(Cells(before).cells,Cells(after).cells)
+                self.assertEqual(Cells(before).links,Cells(after).links)
+                self.assertEqual(original.math,aided.math)
+                self.assertEqual(after.count('scope="row"'),expected_rows[plate['number']])
+                self.assertEqual(after.count('scope="col"'),2)
+                self.assertIn('<caption>'+TABLE_READING_AIDS[key]['caption']+'</caption>',after)
+        self.assertEqual(seen,set(TABLE_READING_AIDS))
+
+    def test_png_dimensions_reject_missing_or_invalid_intrinsic_sizes(self):
+        from reader_documents import png_dimensions
+        header=b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR'
+        image=header+(1200).to_bytes(4,'big')+(450).to_bytes(4,'big')+bytes(9)
+        self.assertEqual(png_dimensions(image),(1200,450))
+        for invalid in (b'',image[:24],b'JPEG'+image[4:],
+                        header+bytes(4)+image[20:],header+(2**31).to_bytes(4,'big')+image[20:]):
+            with self.assertRaises(ValueError): png_dimensions(invalid)
+
+    def test_reading_image_size_checks_match_published_bytes(self):
+        from check_reader_site import check_png_image_sizes
+        image=b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR'+(1200).to_bytes(4,'big')+(450).to_bytes(4,'big')+bytes(9)
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder); (root/'figure.png').write_bytes(image)
+            page=Page('<img src="../figure.png" width="1200" height="450" alt="A drawing" loading="lazy">')
+            check_png_image_sizes(root,'read/plate.html',page.images)
+            for attrs in ({}, {'width':'1200','height':'451'}):
+                with self.assertRaisesRegex(AssertionError,'dimensions differ'):
+                    check_png_image_sizes(root,'read/plate.html',[dict(src='../figure.png',**attrs)])
+
+    def test_table_regions_use_readable_caption_names_and_retain_markup(self):
+        rewrite=Rewriter(lambda value,image:value)
+        rewrite.feed('<table><caption id="transfer-caption">Transfer <em>norms</em> '
+                     '&amp; &#x3B1; "values"</caption><thead><tr><th>Input</th></tr></thead>'
+                     '<tbody><tr><th scope="row">Output 1</th><td>5.0</td></tr></tbody></table>')
+        rendered=''.join(rewrite.out)
+        self.assertIn('role="region" aria-label="Transfer norms &amp; α &quot;values&quot;" tabindex="0"',rendered)
+        self.assertIn('<caption id="transfer-caption">Transfer <em>norms</em> &amp; &#x3B1; "values"</caption>',rendered)
+        self.assertIn('<th scope="row">Output 1</th><td>5.0</td>',rendered)
+
+    def test_nested_table_regions_keep_their_own_names_and_numbered_fallback(self):
+        rewrite=Rewriter(lambda value,image:value)
+        rewrite.feed('<table><caption>Outer values</caption><tr><td>'
+                     '<table><caption>Inner values</caption><tr><td>1</td></tr></table>'
+                     '</td></tr></table><table><tr><td>2</td></tr></table>')
+        rendered=''.join(rewrite.out)
+        self.assertEqual(rendered.count('aria-label="Outer values"'),1)
+        self.assertEqual(rendered.count('aria-label="Inner values"'),1)
+        self.assertEqual(rendered.count('aria-label="Scrollable table 3"'),1)
+        self.assertEqual(rendered.count('tabindex="0"'),3)
+
+    def test_empty_and_blocked_table_captions_keep_numbered_fallbacks(self):
+        rewrite=Rewriter(lambda value,image:value)
+        rewrite.feed('<table><caption> <script>Hidden label</script> </caption></table>'
+                     '<table><caption>&nbsp;\n </caption></table>')
+        rendered=''.join(rewrite.out)
+        self.assertIn('aria-label="Scrollable table 1"',rendered)
+        self.assertIn('aria-label="Scrollable table 2"',rendered)
+        self.assertNotIn('Hidden label',rendered)
+
+    def test_table_caption_names_escape_literal_markup_and_collapse_whitespace(self):
+        rewrite=Rewriter(lambda value,image:value)
+        rewrite.feed('<table><caption>  Values<br>&lt;input&gt;<p>  &amp;amp; </p></caption></table>')
+        rendered=''.join(rewrite.out)
+        self.assertIn('aria-label="Values &lt;input&gt; &amp;amp;"',rendered)
+        self.assertNotIn('<input>',rendered)
+
     def test_paper_iv_ledger_row_headers_preserve_every_cell_and_equation(self):
         from html.parser import HTMLParser
         from readable_chapters import BOOKS
@@ -122,16 +216,40 @@ class ReaderSiteTests(unittest.TestCase):
         from reader_atlas import render_drawing
         from paper_iv_atlas_descriptions import figure,table
         drawing=dict(description=figure('Two values','Description',table('Values',['Term','Value'],[['First',0],['Second',1]])),
-                     receipt=dict(image='image.png',source='figure.tex'),nodes=[dict(text='$x$'),dict(text='$y$')])
+                     receipt=dict(image='image.png',source='figure.tex'),nodes=[dict(text='$x$'),dict(text='$y$')],width=1200,height=450)
         reader=SimpleNamespace(site=SimpleNamespace(rel=lambda path,page:path),resolve=lambda path,page:'source.html')
         chapter=Chapter('',{})
         rendered=render_drawing(drawing,chapter,reader)
         self.assertEqual(chapter.math,['x','y'])
-        self.assertIn('<caption>Values</caption>',rendered)
+        self.assertIn('width="1200" height="450"',rendered)
+        self.assertIn('<caption id="drawing-table-caption-1">Values</caption>',rendered)
+        self.assertIn('role="region" aria-labelledby="drawing-table-caption-1"',rendered)
         self.assertEqual(rendered.count('scope="col"'),2)
         self.assertEqual(rendered.count('scope="row"'),2)
         self.assertIn('tabindex="0" role="region"',rendered)
         self.assertIn('id="drawing-label-1"',rendered)
+
+    def test_atlas_table_names_reference_distinct_captions_and_preserve_caption_math(self):
+        import re
+        from reader_atlas import render_drawing
+        from paper_iv_atlas_descriptions import figure,table
+        drawing=dict(description=figure('Two tables','Description',
+                         table(0,['Term','Value'],[['First',1]]),
+                         table(2,['Term','Value'],[['Second',3]])),
+                     receipt=dict(image='image.png',source='figure.tex'),
+                     nodes=[dict(text='First $a$'),dict(text='$x$'),
+                            dict(text='Second $b$'),dict(text='$y$')],width=1200,height=450)
+        reader=SimpleNamespace(site=SimpleNamespace(rel=lambda path,page:path),resolve=lambda path,page:'source.html')
+        chapter=Chapter('',{})
+        rendered=render_drawing(drawing,chapter,reader)
+        references=re.findall(r'role="region" aria-labelledby="([^"]+)"',rendered)
+        captions=re.findall(r'<caption id="([^"]+)"',rendered)
+        self.assertEqual(references,captions)
+        self.assertEqual(len(set(references)),2)
+        self.assertEqual(chapter.math,['a','x','b','y'])
+        self.assertEqual(rendered.count('id="drawing-label-'),4)
+        self.assertEqual(rendered.count('tabindex="0" role="region"'),2)
+        self.assertNotIn('aria-label="Drawing values',rendered)
 
     def test_atlas_return_links_follow_only_explicit_references_and_deduplicate(self):
         from reader_atlas import manuscript_backlinks
@@ -157,7 +275,7 @@ class ReaderSiteTests(unittest.TestCase):
         formula=r'\frac{\partial^{12}f}{\partial x^{12}}+\frac{1}{123456789}'
         drawing=dict(description=figure('A formula','Description',text(0,1)),
                      receipt=dict(image='image.png',source='figure.tex'),
-                     nodes=[dict(text='Value $'+formula+'$.'),dict(text='$x$')])
+                     nodes=[dict(text='Value $'+formula+'$.'),dict(text='$x$')],width=1200,height=450)
         reader=SimpleNamespace(site=SimpleNamespace(rel=lambda path,page:path),resolve=lambda path,page:'source.html')
         chapter=Chapter('',{})
         rendered=render_drawing(drawing,chapter,reader)
@@ -701,5 +819,48 @@ class ReaderSiteTests(unittest.TestCase):
         self.assertTrue(result.endswith('#page=8'))
         self.assertIn('&work=',result)
 
+
+    def test_statement_navigation_uses_recorded_proofs_without_repeating_math(self):
+        from readable_chapters import statement_navigation
+        chapter=Chapter('\\section{Model}\n\\begin{theorem}[Case $N=2$]Value $x$.\\end{theorem}\n'
+                        '\\begin{proof}Argument $y$.\\end{proof}\n\\begin{remark}Context.\\end{remark}',{})
+        theorem=next(n for n in chapter.nodes if n['kind']=='theorem')
+        proof=next(n for n in chapter.nodes if n['kind']=='proof')
+        chapter.math=['existing expression']
+        rows={theorem['line']:dict(proof_line=proof['line'])}
+        markup=statement_navigation(chapter,rows)
+        self.assertIn('<summary>Statements and proofs (2)</summary>',markup)
+        self.assertIn('Theorem 1.1: Case N=2</a>',markup)
+        self.assertIn('aria-label="Read proof of Theorem 1.1"',markup)
+        self.assertNotIn('$',markup)
+        self.assertEqual(chapter.math,['existing expression'])
+        self.assertNotIn('Read proof',statement_navigation(chapter,{}),'Adjacent proofs are not guessed')
+        self.assertEqual(statement_navigation(Chapter('Only prose.',{}),{}),'')
+        with self.assertRaisesRegex(ValueError,'no recorded proof target'):
+            statement_navigation(chapter,{theorem['line']:dict(proof_line=999)})
+
+    def test_paper_iv_statement_navigation_covers_all_records_and_recorded_proofs(self):
+        from readable_chapters import NUMBERED, statement_navigation
+        root=Path(__file__).resolve().parents[1]
+        source=(root/FOURTH_MAIN).read_text(encoding='utf-8-sig')
+        claims=json.loads((root/'manifests/claim-navigation.json').read_bytes())['records']
+        rows={r['statement_line']:r for r in claims if r['statement_path']==FOURTH_MAIN}
+        state={}; record_count=proof_count=0
+        for spec in FOURTH_CHAPTERS:
+            chapter=Chapter(chapter_text(source,spec),{},state=state,check_refs=False)
+            state={'section':chapter.section,'appendix':chapter.appendix,'part':chapter.part}
+            markup=statement_navigation(chapter,rows)
+            expected=[]
+            for node in chapter.nodes:
+                if node['kind'] not in NUMBERED: continue
+                expected.append('#'+node['id']); record_count+=1
+                row=rows.get(node['line'])
+                if row and row['proof_line']:
+                    expected.append('#L'+str(row['proof_line'])); proof_count+=1
+            self.assertEqual(Page(markup).links,expected)
+            self.assertNotIn(' open',markup,'The list starts collapsed')
+            self.assertNotIn('$',markup)
+            self.assertEqual(chapter.math,[])
+        self.assertEqual((record_count,proof_count),(95,68))
 
 if __name__=='__main__':unittest.main()

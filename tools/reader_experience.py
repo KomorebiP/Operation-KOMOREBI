@@ -64,16 +64,16 @@ def introduction(root, component, assessment, page):
 
 
 ROUTES = {
-    'NEW_READER': ('New to Komorebi', '''This route introduces the vocabulary through a small example. It assumes no familiarity with the project.
+    'NEW_READER': ('New to Komorebi', '''This route introduces the project through the Euler research example and its connections to the wider collection.
 
 1. Read the [project introduction](../START_HERE.md) and [authorship statement](../PROJECT_STATEMENT.md).
-2. Look up **realization**, **projector**, **packet** and **certificate** in the [glossary](../GLOSSARY.md).
-3. Follow the [operator reconstruction demonstration](../demonstrations/PACKETS.md) from hand calculation to source evidence. It links the underlying examples and a standalone Python program.
+2. Use the [glossary](../GLOSSARY.md) for the terms **packet**, **transfer**, **residual**, and **realization**.
+3. Follow [Euler numbers through packets, polynomials, and residuals](../demonstrations/EULER_PACKETS.md). Work through the reciprocal series, coordinate changes, and exact residual calculations, then use the standalone checker to reproduce the results.
 4. Use the [project map](../PROJECT_MAP.md) to choose another subject, or the [first software examples](../FIRST_RUN.md) to try a library.
 5. Read the [common computational language](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md).
 6. Choose one [work](../BROWSE.md). Read its introduction and recorded limits before following technical references.
 
-Start with vectors and matrices if linear algebra is unfamiliar. You can read the work introductions without installing software.
+Familiarity with power series and polynomial calculations will help with the Euler derivation. The [elementary demonstrations](../DEMONSTRATIONS.md) offer shorter introductions. You can read the calculations and work introductions without installing software.
 '''),
     'MATHEMATICS': ('Read the mathematics', '''This is a suggested sequence, not a prerequisite chain for every work.
 
@@ -120,7 +120,7 @@ def render_reader_pages(root, components, assessments):
     for key,(title,body) in ROUTES.items():
         out['docs/routes/'+key+'.md'] = '# '+title+'\n\n'+body+footer
     out['docs/READING_ROUTES.md'] = '# Choose a reading route\n\nStart with the task you want to complete. These routes are editorial suggestions and do not change the recorded status of any work.\n\n'+ '\n'.join('- ['+title+'](routes/'+key+'.md)' for key,(title,_) in ROUTES.items())+'\n\n[Hand-worked examples](HAND_WORKED_EXAMPLES.md) · [Searchable website]('+SITE+') · [Browse works](BROWSE.md) · [Glossary](GLOSSARY.md) · [First runs](FIRST_RUN.md)\n'
-    out['docs/READING_ROUTES.md']=out['docs/READING_ROUTES.md'].replace('\n- [New to Komorebi]', '\nFor the collection as a whole, read the [project overview](START_HERE.md) and [project map](PROJECT_MAP.md). For a concrete introduction, choose one of the [three complete demonstrations](DEMONSTRATIONS.md).\n\n- [New to Komorebi]',1)
+    out['docs/READING_ROUTES.md']=out['docs/READING_ROUTES.md'].replace('\n- [New to Komorebi]', '\nFor the collection as a whole, read the [project overview](START_HERE.md) and [project map](PROJECT_MAP.md). For the research preview, follow [Euler numbers through packets, polynomials, and residuals](demonstrations/EULER_PACKETS.md). The [elementary demonstrations](DEMONSTRATIONS.md) offer shorter introductions.\n\n- [New to Komorebi]',1)
     out['docs/GLOSSARY.md']=render_glossary(config)
     downloads='# Download one work\n\nThe [website downloads]('+SITE+'downloads.html) provide a separate reading ZIP for each work. Each contains its selected reading files, linked claim guides, available license notices, a source revision and SHA-256 checksums. The website lists file counts and sizes before download.\n\nThese are reading selections. TeX may depend on additional files, and the ZIP is not a complete Lean or software build. Use the source instructions below for a full component.\n\n'
     downloads=downloads.replace('These are reading selections.', 'Use [Build your own ZIP]('+SITE+'downloads.html#build-a-zip) to combine files from several works. Start with reading files or PDFs, then adjust individual manuscript sources, Lean files, code, guides and worked examples. The selector shows the file count and size, adds available license notices, and checks each file against its recorded SHA-256 checksum. Choose Prepare ZIP, then Save ZIP when it is ready. You can cancel preparation without losing your choices. Custom ZIPs support up to 200 MiB of source files and are prepared in your browser. The ready-made ZIPs also work without JavaScript.\n\nThese are reading selections.',1)

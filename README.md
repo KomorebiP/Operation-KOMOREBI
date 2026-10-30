@@ -52,15 +52,19 @@ The [public project and authorship statement](docs/PROJECT_STATEMENT.md) explain
 
 The [software guide](docs/LIBRARIES.md) links documentation and instructions for checking each package, including [Constructive Repair’s current Windows results and remaining release checks](docs/components/CONSTRUCTIVE_REPAIR.md). Each project in this collection has its own setup instructions and supported environment.
 
-## Run a small example
+<a id="run-a-small-example"></a>
 
-With Python 3.10 or later, run this command from the collection root:
+## Research preview: Euler numbers
+
+Read [Euler numbers through packets, polynomials, and residuals](https://komorebip.github.io/Operation-KOMOREBI/collection/demonstrations/EULER_PACKETS.html). The extended derivation follows Euler numbers through reciprocal series, polynomial coordinates, exact transfer matrices, and residual correction. It includes hand calculations, failure controls, source references, and downloadable results.
+
+From a collection checkout, run the exact checker with Python 3.10 or later:
 
 ```text
-python -B formal/research-preview-1/demo.py
+python -B examples/euler_packets.py
 ```
 
-The expected JSON reports `status: PASS` and `scalar_coefficient_comparisons: 96`: three polynomial-mask cases with 32 coefficients each. The example uses only the Python standard library. It compares two finite calculation routes. It does not run Lean or test the minimal-realization compiler. See [Research Preview 1](formal/research-preview-1/README.md) for its mathematical scope.
+The checker uses Python's standard library. A successful run ends with `PASS: Euler packets, polynomials and residuals`. The example records the tested ranges and provides a [standalone checker](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/euler_packets.py) and a [source and results bundle](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/source-and-checks.zip).
 
 The [verification guide](docs/VERIFICATION.md) explains how to obtain a Git checkout, run the collection checks, reproduce component results, and interpret failures. The [collection workflow](https://github.com/KomorebiP/Operation-KOMOREBI/actions/workflows/artifact-checks.yml) reports checks for individual commits.
 

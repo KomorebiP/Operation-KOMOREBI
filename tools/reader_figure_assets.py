@@ -50,7 +50,9 @@ def image(reader,config,spec,assets,name,page):
     target=reader.site.output/record['image']
     target.parent.mkdir(parents=True,exist_ok=True)
     target.write_bytes(raw)
-    reader.images[source]=dict(repository_path='website/'+record['image'],
+    from reader_documents import png_dimensions
+    width,height=png_dimensions(raw)
+    reader.images[source]=dict(width=width,height=height,repository_path='website/'+record['image'],
         file_url=record['image'],size=len(raw),sha256=digest(raw),
         git_blob_sha1=hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest(),
         source=source,source_sha256=record['source_sha256'])

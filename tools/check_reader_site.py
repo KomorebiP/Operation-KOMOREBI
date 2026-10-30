@@ -18,6 +18,7 @@ class Page(HTMLParser):
         self.ids=[];self.links=[];self.inputs=[];self.labels=set()
         self.h1=0;self.main=0;self.language=None;self.title=False;self.skip=False
         self.images_without_alt=0
+        self.images=[]
         self.iframes=[]
         self.navigation=0;self.menu_buttons=[];self.menu_panels=[]
         self.feed(text)
@@ -35,6 +36,7 @@ class Page(HTMLParser):
         if tag in {'input','select','textarea'} and a.get('type') not in {'submit','hidden'}:self.inputs.append(a)
         if tag=='label' and a.get('for'):self.labels.add(a['for'])
         if tag=='img' and 'alt' not in a:self.images_without_alt+=1
+        if tag=='img':self.images.append(a)
         if tag=='iframe':self.iframes.append(a)
         if tag=='nav' and a.get('aria-label')=='Main navigation':self.navigation+=1
         if a.get('id')=='site-menu-toggle':self.menu_buttons.append(a)
@@ -50,6 +52,14 @@ def check_search_targets(index, pages):
         assert path in pages,('Missing search page',item['url'])
         if target.fragment:
             assert unquote(target.fragment) in pages[path].ids,('Missing search fragment',item['url'])
+
+
+def check_png_image_sizes(root,page,images):
+    from reader_documents import png_dimensions
+    for image in images:
+        path=posixpath.normpath(posixpath.join(posixpath.dirname(page),unquote(urlsplit(image['src']).path)))
+        width,height=png_dimensions((root/path).read_bytes())
+        assert (image.get('width'),image.get('height'))==(str(width),str(height)), (page,'Image dimensions differ from PNG',path)
 
 
 def check_readable_chapter(root, documents, pages):
@@ -73,6 +83,7 @@ def check_readable_chapter(root, documents, pages):
     count=0
     for report,spec in zip(reports,CHAPTERS):
         source,page=spec['source'],spec['url']
+        check_png_image_sizes(root,page,pages[page].images)
         main_path=BOOKS[spec['work']]['main']
         main=(root/records[main_path]['file_url']).read_text(encoding='utf-8-sig')
         if BOOKS[spec['work']].get('monolithic'):
@@ -85,7 +96,7 @@ def check_readable_chapter(root, documents, pages):
         assert report['url']==page
         assert report['math_expressions']==len(expressions)
         assert report['math_sequence_sha256']==hashlib.sha256(json.dumps(expressions,ensure_ascii=False).encode()).hexdigest()
-        assert report['macros']==manuscript_macros(main,BOOKS[spec['work']].get('macro_contract'))
+        assert report['macros']==manuscript_macros(main,BOOKS[spec['work']].get('required_macros'))
         assert not report['new_proof_review'] and not report['new_lean_execution']
         for node in report['nodes']:
             assert node['id'] in pages[page].ids
