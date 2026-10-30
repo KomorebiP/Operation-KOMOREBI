@@ -70,7 +70,8 @@ def site_navigation(page):
                   ('Worked examples', 'collection/HAND_WORKED_EXAMPLES.html')]),
         ('Look up', [('Claims', 'claims.html'),
                      ('Notation', 'notation.html')]),
-        ('Use', [('Run Python', 'playground.html'), ('Software', 'software.html'),
+        ('Use', [('Interactive diagrams', 'interactive.html'),
+                 ('Run Python', 'playground.html'), ('Software', 'software.html'),
                  ('Downloads', 'downloads.html'),
                  ('Accessibility', 'collection/ACCESSIBILITY.html')]),
     ]
@@ -118,6 +119,10 @@ def home_page():
 </section>
 <section class="home-ways" aria-labelledby="home-ways-title"><h2 id="home-ways-title">Find your starting point.</h2><p>Four ways into the collection, each with context and a path to the sources.</p>
 <div class="home-route-grid">'''+cards+'''</div></section>
+<section class="home-interactive" aria-labelledby="home-interactive-title"><div>
+<h2 id="home-interactive-title">Change the inputs. Follow the result.</h2>
+<p>Rebuild a matrix operation, refine a signal, and explore what a summary loses.</p></div>
+<a href="interactive.html">Explore the interactive diagrams <span aria-hidden="true">→</span></a></section>
 <div class="home-notes"><details class="home-more"><summary>Explore the collections and how they connect</summary>
 <div class="home-collection-list"><h2>Three repositories, one place to begin</h2><dl>
 <dt><a href="collection/index.html">Operation KOMOREBI</a></dt><dd>Papers, books, research programs, formal sources and evidence.</dd>
@@ -319,7 +324,7 @@ class Site:
         return posixpath.relpath(target,posixpath.dirname(page) or '.')
     def page(self,path,title,body,source=None):
         esc=html.escape
-        if path not in {'side-by-side.html','index.html','404.html'}:
+        if path not in {'side-by-side.html','index.html','404.html','interactive.html'}:
             pair=self.rel('side-by-side.html',path)+'?left='+quote(path,safe='')
             launch='<p class="side-launch"><a data-side-reader-link href="'+esc(pair,quote=True)+'">Read side by side</a></p>'
             body=re.sub(r'(</h1>)',lambda match:match[1]+launch,body,count=1)
@@ -636,6 +641,8 @@ class Site:
         build_python(self,self.python_root)
         from notation_index import build as build_notation
         notation = build_notation(self)
+        from interactive_diagrams import build as build_interactive_diagrams
+        build_interactive_diagrams(self)
         self.indexes()
         from side_reader import build as build_side_reader
         side_reader = build_side_reader(self)

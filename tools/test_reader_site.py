@@ -639,8 +639,9 @@ class ReaderSiteTests(unittest.TestCase):
         self.assertEqual([a['href'] for a in links if a.get('aria-current')=='page'], ['GLOSSARY.html'])
         self.assertIn('../search.html', [a['href'] for a in links])
         self.assertIn('PHYSICS_COLLECTION.html', [a['href'] for a in links])
-        self.assertEqual(len(links),15)
-        self.assertEqual(len({a['href'] for a in links}),15)
+        self.assertIn('../interactive.html', [a['href'] for a in links])
+        self.assertEqual(len(links),16)
+        self.assertEqual(len({a['href'] for a in links}),16)
         physics=Links(site_navigation('collection/PHYSICS_COLLECTION.html')).links
         self.assertEqual([a['href'] for a in physics if a.get('aria-current')=='page'], ['PHYSICS_COLLECTION.html'])
         search=Links(site_navigation('search.html')).links

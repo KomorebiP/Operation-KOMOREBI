@@ -4,6 +4,9 @@
 
 [Run and edit this example in your browser](https://KomorebiP.github.io/Operation-KOMOREBI/playground.html#refinement)
 
+[Explore the interactive diagram](https://KomorebiP.github.io/Operation-KOMOREBI/interactive.html#refinement)
+to reshape the signal, refine its address packets, and inspect what is lost when a packet is discarded.
+
 **Question:** What changes when a signal is described by finer address classes?
 This example uses list indexing and integer arithmetic.
 
