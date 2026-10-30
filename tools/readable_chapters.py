@@ -105,6 +105,7 @@ BOOKS['paper-iv'] = dict(work='paper-iv', label='Paper IV', base=FOURTH_BASE, ma
                         chapters=FOURTH_CHAPTERS, main_chapters=17, monolithic=True,
                         diagram_guide='collection/PAPER_IV_DIAGRAMS.html',
                         figure_descriptions='website/paper-iv-figure-descriptions.json',
+                        statement_navigation=True,
                         table_reading_aids={'L2988': dict(caption='Formalization ledger for version 1.0.0',
                             headers=['Manuscript records','Compiled Paper IV scope'],row_header_column=0)},
                         atlas_index='read/paper-iv/atlas/index.html',
@@ -827,6 +828,26 @@ def reading_options(description=None):
             '<p><a href="#chapter-text">Skip contents and start reading</a></p>')
 
 
+def statement_navigation(chapter,rows):
+    """Index retained numbered records without adding math to the transcript."""
+    records=[node for node in chapter.nodes if node['kind'] in NUMBERED]
+    if not records: return ''
+    by_line={node['line']:node for node in chapter.nodes}
+    body='<details class="statement-navigation"><summary>Statements and proofs ('+str(len(records))+')</summary><ol>'
+    for node in records:
+        name=KIND_NAMES.get(node['kind'],node['kind'].capitalize())+' '+node['number']
+        title=typography(plain_math(node['title'].replace('$',''))[0])
+        label=name+(': '+title if title else '')
+        body+='<li><a href="#'+node['id']+'">'+html.escape(label)+'</a>'
+        row=rows.get(node['line'])
+        if row and row['proof_line']:
+            proof=by_line.get(row['proof_line'])
+            if not proof or proof['kind']!='proof': raise ValueError('Statement index has no recorded proof target: '+name)
+            body+=' <a class="statement-proof-link" href="#'+proof['id']+'" aria-label="Read proof of '+html.escape(name,quote=True)+'">Read proof</a>'
+        body+='</li>'
+    return body+'</ol></details>'
+
+
 def render_book(reader,book):
     from side_reader import pair_link
     site=reader.site
@@ -846,7 +867,9 @@ def render_book(reader,book):
         toc='<nav class="chapter-contents" aria-label="Chapter contents"><h2 id="contents">Contents</h2><ol>'
         toc+=''.join('<li'+(' class="subsection-entry"' if n['kind']!='section' else '')+'><a href="#'+n['id']+'">'+e((n['number']+' '+typography(n['title'])).strip())+'</a></li>' for n in headings)
         if not headings: toc+='<li><a href="#L'+str(chapter.nodes[0]['line'])+'">'+e(spec['title'])+'</a></li>'
-        toc+='</ol></nav>'
+        toc+='</ol>'
+        if config.get('statement_navigation'): toc+=statement_navigation(chapter,rows)
+        toc+='</nav>'
         body='<p class="eyebrow">Readable manuscript</p><h1>'+e(title)+'</h1>'
         body+='<p>The wording and mathematics follow the retained manuscript. This reading format does not add a proof review or extend Lean coverage.</p>'
         body+=reader.work_routes(work,page)+neighbour_links(spec)

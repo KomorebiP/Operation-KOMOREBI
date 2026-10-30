@@ -820,4 +820,47 @@ class ReaderSiteTests(unittest.TestCase):
         self.assertIn('&work=',result)
 
 
+    def test_statement_navigation_uses_recorded_proofs_without_repeating_math(self):
+        from readable_chapters import statement_navigation
+        chapter=Chapter('\\section{Model}\n\\begin{theorem}[Case $N=2$]Value $x$.\\end{theorem}\n'
+                        '\\begin{proof}Argument $y$.\\end{proof}\n\\begin{remark}Context.\\end{remark}',{})
+        theorem=next(n for n in chapter.nodes if n['kind']=='theorem')
+        proof=next(n for n in chapter.nodes if n['kind']=='proof')
+        chapter.math=['existing expression']
+        rows={theorem['line']:dict(proof_line=proof['line'])}
+        markup=statement_navigation(chapter,rows)
+        self.assertIn('<summary>Statements and proofs (2)</summary>',markup)
+        self.assertIn('Theorem 1.1: Case N=2</a>',markup)
+        self.assertIn('aria-label="Read proof of Theorem 1.1"',markup)
+        self.assertNotIn('$',markup)
+        self.assertEqual(chapter.math,['existing expression'])
+        self.assertNotIn('Read proof',statement_navigation(chapter,{}),'Adjacent proofs are not guessed')
+        self.assertEqual(statement_navigation(Chapter('Only prose.',{}),{}),'')
+        with self.assertRaisesRegex(ValueError,'no recorded proof target'):
+            statement_navigation(chapter,{theorem['line']:dict(proof_line=999)})
+
+    def test_paper_iv_statement_navigation_covers_all_records_and_recorded_proofs(self):
+        from readable_chapters import NUMBERED, statement_navigation
+        root=Path(__file__).resolve().parents[1]
+        source=(root/FOURTH_MAIN).read_text(encoding='utf-8-sig')
+        claims=json.loads((root/'manifests/claim-navigation.json').read_bytes())['records']
+        rows={r['statement_line']:r for r in claims if r['statement_path']==FOURTH_MAIN}
+        state={}; record_count=proof_count=0
+        for spec in FOURTH_CHAPTERS:
+            chapter=Chapter(chapter_text(source,spec),{},state=state,check_refs=False)
+            state={'section':chapter.section,'appendix':chapter.appendix,'part':chapter.part}
+            markup=statement_navigation(chapter,rows)
+            expected=[]
+            for node in chapter.nodes:
+                if node['kind'] not in NUMBERED: continue
+                expected.append('#'+node['id']); record_count+=1
+                row=rows.get(node['line'])
+                if row and row['proof_line']:
+                    expected.append('#L'+str(row['proof_line'])); proof_count+=1
+            self.assertEqual(Page(markup).links,expected)
+            self.assertNotIn(' open',markup,'The list starts collapsed')
+            self.assertNotIn('$',markup)
+            self.assertEqual(chapter.math,[])
+        self.assertEqual((record_count,proof_count),(95,68))
+
 if __name__=='__main__':unittest.main()

@@ -40,6 +40,11 @@ is remembered in this browser when local storage is available. **Read proof**,
 **Skip contents and start reading** moves directly to the chapter text. Without
 JavaScript, all passage links remain visible and usable.
 
+In Paper IV, open **Statements and proofs** within a chapter's contents to find
+its numbered definitions, results, remarks and examples. Each entry links to the
+record, with **Read proof** beside it when a proof is recorded. The list works
+with the keyboard and without JavaScript.
+
 Section controls are ordinary links within the chapter, so they do not add a
 repeated navigation landmark for every heading. Chapter contents, neighbouring
 chapters and work routes retain their named navigation regions.
