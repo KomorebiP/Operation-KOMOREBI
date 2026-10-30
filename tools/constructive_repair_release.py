@@ -478,7 +478,7 @@ def assemble(args):
         wheel = next((bundle / "dist").glob("*.whl"))
         wheel_data.append(wheel.read_bytes())
     require({(r["system"], r["python"]) for r in reports} ==
-            {("Linux", "3.13.5"), ("Windows", "3.12.14")}, "Wrong qualification matrix")
+            {("Linux", "3.13.5"), ("Windows", "3.13.5")}, "Wrong qualification matrix")
     require(wheel_data[0] == wheel_data[1], "Platforms qualified different wheel bytes")
     for key in ("source", "source_receipt_sha256", "qualifier_sha256", "build_tools", "wheel"):
         require(reports[0][key] == reports[1][key], "Platform binding differs: " + key)

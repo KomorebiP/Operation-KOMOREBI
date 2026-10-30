@@ -80,6 +80,38 @@ class ReaderSiteTests(unittest.TestCase):
         self.assertIsNone(table_reading_aid(config,'book/c.tex','L4')[1])
         fourth=BOOKS['paper-iv']
         self.assertIs(table_reading_aid(fourth,fourth['main'],'L2988')[1],fourth['table_reading_aids']['L2988'])
+        sixth=BOOKS['paper-vi']
+        self.assertIsNone(table_reading_aid(sixth,sixth['main'],'L1632')[1])
+        for work in ('paper-i','paper-ii','paper-iii'):
+            with self.assertRaisesRegex(ValueError,'Review the table reading aid'):
+                table_reading_aid(BOOKS[work],BOOKS[work]['main'],'L999999')
+
+    def test_book_rendering_allows_partial_aids_unless_full_coverage_is_requested(self):
+        from readable_chapters import BOOKS, render_book
+        from unittest.mock import patch
+        raw=(r'\section{Tables}'+'\n'+r'\begin{tabularx}{\textwidth}{ll}Name & Value\\First & $x$\\\end{tabularx}'+'\n'
+             +r'\begin{tabularx}{\textwidth}{ll}Other & Value\\Second & $y$\\\end{tabularx}').encode()
+        source='book/main.tex'; pages={}
+        spec=dict(source=source,url='read/test/tables.html',title='Tables',work='test')
+        config=dict(work='test',label='Test',base='book/',main=source,index='read/test/index.html',
+                    bib_page='read/test/references.html',title='Test tables',chapters=[spec],main_chapters=1,
+                    table_reading_aids={'L2':dict(caption='First table',headers=['Name','Value'],row_header_column=0)})
+        site=SimpleNamespace(root=Path('.'),search=[],rel=lambda target,page:target,
+                             page=lambda page,title,body:pages.update({page:body}))
+        reader=SimpleNamespace(site=site,claims_by_source={},work_routes=lambda work,page:'',
+                               resolve=lambda path,page,anchor=None:path+('#'+anchor if anchor else ''),
+                               records={source:dict(sha256=hashlib.sha256(raw).hexdigest(),work='test',format='tex',file_url=source)})
+        def book():
+            chapter=Chapter(raw.decode(),{}); chapter.url=spec['url']
+            return dict(config=config,chapters=[(spec,raw,chapter)],main=raw.decode(),macros={},references=[])
+        with patch.dict(BOOKS,{'test':config}):
+            reports=render_book(reader,book())
+            self.assertEqual(len(reports),1)
+            self.assertEqual(pages[spec['url']].count('<table>'),2)
+            self.assertEqual(pages[spec['url']].count('<caption>First table</caption>'),1)
+            config['require_table_reading_aids']=True
+            with self.assertRaisesRegex(ValueError,'main.tex#L3'):
+                render_book(reader,book())
 
     def test_row_header_aids_retain_authored_captions(self):
         aid=dict(headers=['Name','Value'],row_header_column=0)

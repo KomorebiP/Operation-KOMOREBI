@@ -100,6 +100,8 @@ BOOKS['paper-iii']['table_reading_aids']={
     ('chapters/02_connections_obstructions.tex','L923'): dict(caption='Formalization status and boundaries',
         headers=['Topic','Status','Declaration or roadmap target','Exact boundary'],row_header_column=0),
 }
+for work in ('paper-i','paper-ii','paper-iii'):
+    BOOKS[work]['require_table_reading_aids']=True
 FOURTH_BASE = 'papers/paper-iv/current/Paper_IV_Verification_Closeout_v1.1.0/publication_baseline/editable/traditional/'
 FOURTH_MAIN = FOURTH_BASE+'Paper_IV_Traditional_Final.tex'
 # Inclusive, contiguous source ranges. Boundaries are checked before conversion;
@@ -814,6 +816,8 @@ def table_reading_aid(config,source,identifier):
     aids=config.get('table_reading_aids',{})
     scoped=(source.removeprefix(config['base']),identifier)
     key=scoped if scoped in aids else identifier
+    if config.get('require_table_reading_aids') and key not in aids:
+        raise ValueError('Review the table reading aid for '+source+'#'+identifier)
     return key,aids.get(key)
 
 
@@ -1081,9 +1085,7 @@ def render_book(reader,book):
                 size=' width="'+str(dimensions['width'])+'" height="'+str(dimensions['height'])+'"'
                 body+='<figure id="'+node['id']+'" tabindex="-1"><img src="'+image+'"'+size+' alt="'+e(alt,quote=True)+'" loading="lazy"><figcaption>'+chapter.inline(caption)+'</figcaption>'+description_link+passage_links(links)+'</figure>'
             elif kind in {'table','longtable','tabularx','tabular'}:
-                aid_key,aid=table_reading_aid(config,source,node['id'])
-                if table_aids and not aid: raise ValueError('Review the table reading aid for '+source+'#'+node['id'])
-                if aid: aided_tables.add(aid_key)
+                aid_key,aid=table_reading_aid(config,source,node['id'])                if aid: aided_tables.add(aid_key)
                 body+='<section id="'+node['id']+'">'+render_table(node,chapter,aid)+passage_links(links)+'</section>'
             elif kind=='conceptchain':
                 body+='<section id="'+node['id']+'"><div class="table-scroll" tabindex="0" role="region" aria-label="Conceptual diagram. Scroll horizontally if needed.">'+chapter.paragraphs(node['body'])+'</div>'+passage_links(links)+'</section>'
