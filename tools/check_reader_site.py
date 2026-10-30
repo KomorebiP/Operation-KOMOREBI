@@ -58,6 +58,8 @@ def check_png_image_sizes(root,page,images):
     from reader_documents import png_dimensions
     for image in images:
         path=posixpath.normpath(posixpath.join(posixpath.dirname(page),unquote(urlsplit(image['src']).path)))
+        if PurePosixPath(path).suffix.lower()!='.png':
+            continue
         width,height=png_dimensions((root/path).read_bytes())
         assert (image.get('width'),image.get('height'))==(str(width),str(height)), (page,'Image dimensions differ from PNG',path)
 

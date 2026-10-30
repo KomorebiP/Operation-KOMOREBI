@@ -266,7 +266,9 @@ class ReaderSiteTests(unittest.TestCase):
         image=b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR'+(1200).to_bytes(4,'big')+(450).to_bytes(4,'big')+bytes(9)
         with tempfile.TemporaryDirectory() as folder:
             root=Path(folder); (root/'figure.png').write_bytes(image)
-            page=Page('<img src="../figure.png" width="1200" height="450" alt="A drawing" loading="lazy">')
+            (root/'brand.svg').write_text('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"></svg>')
+            page=Page('<img src="../brand.svg" width="32" height="32" alt="Brand">'
+                      '<img src="../figure.png" width="1200" height="450" alt="A drawing" loading="lazy">')
             check_png_image_sizes(root,'read/plate.html',page.images)
             for attrs in ({}, {'width':'1200','height':'451'}):
                 with self.assertRaisesRegex(AssertionError,'dimensions differ'):
