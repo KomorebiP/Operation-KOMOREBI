@@ -84,7 +84,7 @@ def site_navigation(page):
 def home_page():
     """The Open research introduction keeps each reading route a plain link."""
     routes = [
-        ('Understand the project', 'Begin with a small example and a guide to the vocabulary.', 'NEW_READER'),
+        ('Understand the project', 'Read the introduction and follow the Euler research example.', 'NEW_READER'),
         ('Read the mathematics', 'Explore the papers and books, with their assumptions in view.', 'MATHEMATICS'),
         ('Examine a proof', 'Follow statements, formal sources, and recorded evidence.', 'PROOF_REVIEW'),
         ('Try the software', 'Run a worked example and compare the expected output.', 'SOFTWARE'),
@@ -108,6 +108,7 @@ def home_page():
 <dt><a href="polyphase/index.html">Polyphase Float</a></dt><dd>A C library for arbitrary-precision binary floating-point arithmetic.</dd></dl>
 <h3>What connects the work?</h3><p>Describe an object in parts, transfer operations through those parts, and account for what a change of representation preserves or loses.</p>
 <ul><li><a href="collection/PROJECT_MAP.html">See the project map</a> — explore the twelve core papers, related books and documented connections.</li>
+<li><a href="collection/demonstrations/EULER_PACKETS.html">Research preview: Euler numbers</a> — follow an extended derivation through packets, coordinate changes and exact residual correction.</li>
 <li><a href="collection/DEMONSTRATIONS.html">Follow a complete demonstration</a> — work through a calculation, run its program and follow the source evidence.</li></ul></div></details>
 <details class="home-status"><summary>What does “work in progress” mean?</summary><p>The collection records completion, formal coverage, and confidence separately. A linked file does not mean every claim has been verified. Software is beta.</p><p><a href="collection/COMPLETION_STATUS.html">Read the guide to evidence and status</a></p></details>'''
 
