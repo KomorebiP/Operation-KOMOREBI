@@ -131,14 +131,24 @@ def pane(side):
 </section>'''
 
 
+def work_picker():
+    return '''<details class="side-work-picker" id="side-work-picker"><summary>Compare papers and monographs</summary>
+<p>Choose a work for each side. Each choice opens its reading edition, PDF or work overview.</p>
+<form id="side-works-form"><div class="side-work-grid"><div>
+<label for="side-left-work">Work on the left</label><select id="side-left-work" required></select></div><div>
+<label for="side-right-work">Work on the right</label><select id="side-right-work" required></select></div></div>
+<button type="submit">Open these works</button></form>
+<p>Use each pane's document picker to choose a chapter, proof, Lean source, program or example.</p></details>'''
+
+
 def build(site):
     data = catalogue(site)
     site.write('side-reader-index.json', json.dumps(data, ensure_ascii=False)+'\n')
     body = '''<div class="side-heading"><h1>Read side by side</h1>
-<p>Keep a paper open while you follow a claim, written proof, Lean source, program or worked example.</p></div>
+<p>Read different papers or monographs together, or keep a paper open while you follow a claim, proof, Lean source, program or example.</p></div>
 <noscript><p>This workspace needs JavaScript. You can still open <a href="documents.html">papers</a>,
 <a href="claims.html">claims</a> and <a href="collection/HAND_WORKED_EXAMPLES.html">worked examples</a> in separate tabs.</p></noscript>
-<div id="side-reader" data-index="side-reader-index.json?v='''+site.revision+'''" hidden>
+<div id="side-reader" data-index="side-reader-index.json?v='''+site.revision+'''" hidden>'''+work_picker()+'''
 <div class="side-toolbar"><div class="side-view" role="group" aria-label="Visible reading panes">
 <button type="button" data-side-view="both" aria-pressed="true">Both panes</button>
 <button type="button" data-side-view="left" aria-pressed="false">Left only</button>
@@ -182,6 +192,7 @@ def check(root, pages):
     assert {row['kind'] for row in data['entries']} >= {'Claims','Written proofs','Lean','Code','Examples'}
     page = pages['side-by-side.html']
     assert len(page.iframes) == 2
-    assert {'side-reader','side-swap','side-share','side-width','left-document','right-document'} <= set(page.ids)
+    assert {'side-reader','side-swap','side-share','side-width','left-document','right-document',
+            'side-works-form','side-left-work','side-right-work'} <= set(page.ids)
     return dict(pages=len(data['pages']), entries=len(data['entries']), works=len(data['works']),
                 related_routes=check_work_routes(data['works'], pages), paired_links=check_pair_links(pages))

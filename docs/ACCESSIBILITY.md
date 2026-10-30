@@ -62,6 +62,12 @@ anchor. Each pane has a document picker with work, type and text filters.
 Papers, claims, proof locations, Lean sources, code, notation and examples can
 be read together. Each document keeps its existing evidence and scope notes.
 
+**Compare papers and monographs** provides separate **Work on the left** and
+**Work on the right** choices. Choose any two works, then select **Open these
+works**. Each side opens its available reading edition, PDF or work overview.
+The works can be different. Their chapters, proof links and related material
+remain independent, and **Copy link to this pair** shares the chosen documents.
+
 Open **Related material** above either document to find that work's paper,
 claims, written proofs, Lean, code, notation, evidence and available examples.
 Choosing a link opens it in the other pane and keeps the current document in

@@ -108,6 +108,21 @@
     } catch { if (focus) frame.focus(); }
   }
   const focusPane = side => positionPane(side, true);
+  function openPair(pair, message) {
+    state.left = pair.left;
+    state.right = pair.right;
+    state.view = matchMedia("(max-width: 800px)").matches ? "left" : "both";
+    focusAfterLoad.left = true;
+    focusAfterLoad.right = false;
+    layout(); save(true);
+    for (const side of sides) {
+      $(side + "-work").value = workFor(state[side]);
+      $(side + "-query").value = "";
+      $(side + "-kind").value = "";
+      refresh(side); load(side);
+    }
+    status.textContent = message;
+  }
   function navigate(side, value, push = true, reveal = true) {
     const url = api.canonical(value, base, data.pages);
     if (!url) {
@@ -206,19 +221,7 @@
       if (pair) {
         event.preventDefault();
         event.stopPropagation();
-        state.left = pair.left;
-        state.right = pair.right;
-        state.view = matchMedia("(max-width: 800px)").matches ? "left" : "both";
-        focusAfterLoad.left = true;
-        focusAfterLoad.right = false;
-        layout(); save(true);
-        for (const pane of sides) {
-          $(pane + "-work").value = workFor(state[pane]);
-          $(pane + "-query").value = "";
-          $(pane + "-kind").value = "";
-          refresh(pane); load(pane);
-        }
-        status.textContent = "The statement and its recorded companion are open. Use either pane’s reading controls to continue.";
+        openPair(pair, "The statement and its recorded companion are open. Use either pane’s reading controls to continue.");
         return;
       }
       const target = api.canonical(link.href, base, data.pages);
@@ -274,6 +277,25 @@
     $(side + "-count").textContent = matches.length + " documents and passages" + (matches.length ? "." : ". Try fewer words or clear the filters.");
     $(side + "-form").querySelector("button[type=submit]").disabled = !matches.length;
   }
+  for (const work of data.works) {
+    $("side-left-work").add(new Option(work.title, work.id));
+    $("side-right-work").add(new Option(work.title, work.id));
+  }
+  $("side-left-work").value = workFor(state.left) || data.works[0].id;
+  const rightWork = workFor(state.right);
+  const nextWork = (data.works.findIndex(work => work.id === $("side-left-work").value) + 1) % data.works.length;
+  $("side-right-work").value = rightWork && rightWork !== $("side-left-work").value ? rightWork : data.works[nextWork].id;
+  $("side-work-picker").open = !new URL(location.href).searchParams.has("right");
+  $("side-works-form").addEventListener("submit", event => {
+    event.preventDefault();
+    const pair = api.workPair($("side-left-work").value, $("side-right-work").value, base, data);
+    if (!pair) {
+      status.textContent = "Choose two available works to read together.";
+      return;
+    }
+    $("side-work-picker").open = false;
+    openPair(pair, "Your chosen works are open. Each pane has its own chapters and related material.");
+  });
   for (const side of sides) {
     $(side + "-related-work").addEventListener("change", relatedMaterial);
     $(side + "-related-links").addEventListener("click", event => {
