@@ -151,6 +151,8 @@ BOOKS['paper-vii'] = SEVENTH_BOOK
 CHAPTERS += SEVENTH_CHAPTERS
 from paper_ix_reading import register as register_paper_ix
 register_paper_ix(BOOKS, CHAPTERS)
+from special_functions_reading import CONFIG as SPECIAL_FUNCTIONS_BOOK
+BOOKS[SPECIAL_FUNCTIONS_BOOK['work']] = SPECIAL_FUNCTIONS_BOOK
 BY_SOURCE = {c['source']:c for c in reversed(CHAPTERS)}
 NUMBERED = {'definition', 'theorem', 'proposition', 'lemma', 'corollary', 'remark', 'example', 'standardfact', 'certificate','boundary','roadmap','construction','classicalinput','classical','conjecture'}
 KIND_NAMES = {'classical':'Classical input','statement':'Supplementary statement','standardfact':'Standard fact','certificate':'Numerical certificate','text':'Passage','roadmap':'Formalization target','classicalinput':'Classical input'}
@@ -649,6 +651,8 @@ class Chapter:
 
 def readable_url(path, line=None):
     record = next((c for c in CHAPTERS if c['source']==path and (line is None or 'start_line' not in c or c['start_line']<=line<=c['end_line'])),None)
+    if record is None:
+        record = next((c for c in SPECIAL_FUNCTIONS_BOOK['chapters'] if c.get('source')==path and (line is None or 'start_line' not in c or c['start_line']<=line<=c['end_line'])),None)
     return record['url']+('#L'+str(line) if line else '') if record else None
 
 
@@ -716,6 +720,10 @@ def prepare(reader):
     reader.add(BIB,'Paper II historical bibliography output')
     reader.readable_books={}
     for work,config in BOOKS.items():
+        if config.get('custom_reader'):
+            from special_functions_reading import prepare_book
+            reader.readable_books[work] = prepare_book(reader, config)
+            continue
         reader.add(config['bib'],config['label']+' bibliography source')
         main=reader.site.read_source(reader.records[config['main']]).decode('utf-8-sig')
         if config.get('monolithic'): validate_monolithic(main,config)
@@ -900,7 +908,11 @@ def neighbour_links(spec):
 def render(reader):
     reports=[]
     for book in reader.readable_books.values():
-        reports.extend(render_book(reader,book))
+        if book['config'].get('custom_reader'):
+            from special_functions_reading import render_book as render_special_functions
+            render_special_functions(reader,book)
+        else:
+            reports.extend(render_book(reader,book))
     reader.site.write('documents/readable-chapters.json',json.dumps(reports,ensure_ascii=False,indent=2)+'\n')
     render_reading_index(reader)
 

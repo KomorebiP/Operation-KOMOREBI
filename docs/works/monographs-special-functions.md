@@ -34,6 +34,7 @@ Use the links below to read this work and its supporting files. Ctrl+click (Comm
 
 ## Read
 
+- [Read online: chapters, proof appendices, figures and glossary](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/index.html)
 - [Edition README](../../monographs/special-functions/README.md)
 - [Read PDF](../../monographs/special-functions/books/Special_Functions.pdf)
 - [Visual guide (PDF)](../../monographs/special-functions/research/visual_guide.pdf)
