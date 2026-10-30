@@ -2,7 +2,8 @@
 (() => {
   const form = document.querySelector("#catalog-filters");
   if (!form) return;
-  const pageSize = 8;
+  const sizeControl = document.querySelector("#catalog-size");
+  let pageSize = 8;
   const controls = {
     q: document.querySelector("#catalog-query"),
     discipline: document.querySelector("#catalog-discipline"),
@@ -30,6 +31,9 @@
     }
     const requested = Number(params.get("page"));
     page = Number.isSafeInteger(requested) && requested > 0 ? requested : 1;
+    const requestedSize = params.get("per_page") || "8";
+    sizeControl.value = Array.from(sizeControl.options).some(option => option.value === requestedSize) ? requestedSize : "8";
+    pageSize = Number(sizeControl.value);
   }
 
   function apply({ persist = true, push = false, revealAnchor = false } = {}) {
@@ -60,8 +64,18 @@
       " of " + matches.length + " works" : "0 matching works";
     empty.hidden = matches.length !== 0;
     for (const pager of pagers) {
-      pager.hidden = pages === 1;
-      pager.querySelector(".catalog-page-status").textContent = "Page " + page + " of " + pages;
+      pager.hidden = matches.length === 0;
+      pager.querySelector(".catalog-page-status").textContent = "of " + pages;
+      const picker = pager.querySelector(".catalog-page-select");
+      const options = Array.from({ length: pages }, (_, index) => {
+        const option = document.createElement("option");
+        option.value = String(index + 1);
+        option.textContent = String(index + 1);
+        return option;
+      });
+      picker.replaceChildren(...options);
+      picker.value = String(page);
+      picker.disabled = pages === 1;
       pager.querySelector('[data-catalog-page="previous"]').disabled = page === 1;
       pager.querySelector('[data-catalog-page="next"]').disabled = page === pages;
     }
@@ -77,12 +91,15 @@
       }
       if (page > 1) url.searchParams.set("page", page);
       else url.searchParams.delete("page");
+      if (pageSize !== 8) url.searchParams.set("per_page", pageSize);
+      else url.searchParams.delete("per_page");
       if (url.hash.startsWith("#work-")) url.hash = "";
       history[push ? "pushState" : "replaceState"](null, "", url);
     }
   }
 
-  function filter() { page = 1; apply(); }
+  function filter() { page = 1; pageSize = Number(sizeControl.value); apply(); }
+  sizeControl.addEventListener("change", filter);
   for (const control of Object.values(controls)) {
     control.addEventListener(control.tagName === "INPUT" ? "input" : "change", filter);
   }
@@ -97,6 +114,13 @@
   for (const button of document.querySelectorAll("[data-catalog-page]")) {
     button.addEventListener("click", () => {
       page += button.dataset.catalogPage === "next" ? 1 : -1;
+      apply({ push: true });
+      count.scrollIntoView({ block: "start", behavior: "auto" });
+    });
+  }
+  for (const picker of document.querySelectorAll(".catalog-page-select")) {
+    picker.addEventListener("change", () => {
+      page = Number(picker.value);
       apply({ push: true });
       count.scrollIntoView({ block: "start", behavior: "auto" });
     });

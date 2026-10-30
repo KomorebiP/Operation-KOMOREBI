@@ -18,6 +18,17 @@ GROUP_LABELS = {
 }
 
 
+def page_navigation(prefix, position):
+    """Give collection and full-text search the same accessible page picker."""
+    label = 'Collection' if prefix == 'catalog' else 'Search'
+    return ('<nav class="' + prefix + '-pagination" aria-label="' + label + ' pages (' + position + ')" hidden>'
+            '<button type="button" data-' + prefix + '-page="previous">Previous</button>'
+            '<label class="' + prefix + '-page-choice" for="' + prefix + '-page-' + position + '">Page '
+            '<select id="' + prefix + '-page-' + position + '" class="' + prefix + '-page-select"></select></label>'
+            '<span class="' + prefix + '-page-status"></span>'
+            '<button type="button" data-' + prefix + '-page="next">Next</button></nav>')
+
+
 def load_catalog(root, registry, assessments):
     """Require one explicit primary discipline for every indexed primary work."""
     data = json.loads((root / CATALOG_PATH).read_text(encoding='utf-8'))
@@ -75,10 +86,7 @@ def render_works_catalog(root, registry, components, assessments, status):
         return 'assets/' + name + '?v=' + version
 
     def pagination(position):
-        return ('<nav class="catalog-pagination" aria-label="Collection pages (' + position + ')" hidden>'
-                '<button type="button" data-catalog-page="previous">Previous</button>'
-                '<span class="catalog-page-status"></span>'
-                '<button type="button" data-catalog-page="next">Next</button></nav>')
+        return page_navigation('catalog', position)
 
     def choices(kind, prompt, values):
         return ('<option value="">' + e(prompt) + '</option>' +
@@ -95,7 +103,7 @@ def render_works_catalog(root, registry, components, assessments, status):
         '<h1>Explore the research collection</h1>',
         '<p><a href="search.html">Search documents, proof references, Lean and code</a> · '
         '<a href="claims.html">Find individual statements by paper and type</a></p>',
-        '<p class="catalog-intro">Browse eight works at a time, or narrow the whole collection by subject, completion and proof evidence.</p>',
+        '<p class="catalog-intro">Browse by subject, completion and proof evidence. Choose how many works to show per page.</p>',
         '<nav class="discipline-overview" aria-label="Choose a discipline">',
     ]
     for key, subject in data['disciplines'].items():
@@ -126,6 +134,10 @@ def render_works_catalog(root, registry, components, assessments, status):
         '<select id="catalog-group"><option value="">All publication types</option>' +
         ''.join('<option value="' + e(key) + '">' + e(label) + '</option>'
                 for key, label in GROUP_LABELS.items()) + '</select></div>',
+        '<div><label for="catalog-size">Works per page</label>'
+        '<select id="catalog-size" name="per_page"><option value="8">8</option>'
+        '<option value="12">12</option><option value="24">24</option>'
+        '<option value="48">48</option></select></div>',
         '<div class="catalog-reset"><button type="reset">Clear all filters</button></div>',
         '</form>',
         '<details class="catalog-notice"><summary>About completion and proof evidence</summary><p>'
