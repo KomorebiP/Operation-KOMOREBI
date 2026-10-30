@@ -15,6 +15,26 @@ from readable_chapters import Chapter, expand_math, plain_math, readable_url, or
 
 
 class ReaderSiteTests(unittest.TestCase):
+    def test_quantum_parts_keep_printed_numbers_and_unnumbered_supplements(self):
+        source=r'\section{Seeds}\begin{theorem}A.\end{theorem} Text.\setcounter{section}{14}\section{Conclusion}\begin{statement}B.\end{statement}'
+        chapter=Chapter(source,{},state={'part':1,'part_numbering':True})
+        self.assertEqual([n['number'] for n in chapter.nodes if n['kind']=='section'],['I.1','I.15'])
+        self.assertEqual(next(n for n in chapter.nodes if n['kind']=='theorem')['number'],'I.1.1')
+        self.assertEqual(next(n for n in chapter.nodes if n['kind']=='statement')['number'],'')
+
+    def test_quantum_inner_products_preserve_argument_order_and_ket_tokens(self):
+        macros={'ip':dict(arguments=2,body=r'\langle#1,#2\rangle'),
+                'ket':dict(arguments=1,body=r'|#1\rangle',token_arguments=True)}
+        self.assertEqual(expand_math(r'\ip{x}{y}',macros),r'{\langle x,y\rangle}')
+        self.assertEqual(expand_math(r'\ket\psi',macros),r'{|\psi\rangle}')
+        with self.assertRaises(ValueError):expand_math(r'\ip{x}',macros)
+
+    def test_quantum_paired_figures_keep_both_captions_and_reject_unknown_content(self):
+        from paper_vii_reading import figure_items
+        pair=(r'\centering\begin{minipage}[t]{0.48\textwidth}\includegraphics[width=\textwidth]{a.pdf}\captionof{figure}{First $x$.}\end{minipage}\hfill'
+              r'\begin{minipage}[t]{0.48\textwidth}\includegraphics[width=\textwidth]{b.pdf}\captionof{figure}{Second $y$.}\end{minipage}')
+        self.assertEqual(figure_items(pair),[('a.pdf','First $x$.'),('b.pdf','Second $y$.')])
+        with self.assertRaises(ValueError):figure_items(pair+'Unrecognized figure text')
     def test_paper_vi_preserves_ranges_records_and_printed_numbering(self):
         import re
         from paper_vi_reading import BOOK
