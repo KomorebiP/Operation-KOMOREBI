@@ -55,9 +55,11 @@ body.open-research {
 /* A typographic introduction and one concrete entry into the collection. */
 .home-page main { padding-top: 0; padding-bottom: 1.4rem; min-height: 0; }
 .home-hero {
+  position: relative; isolation: isolate;
   display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); align-items: center;
-  gap: clamp(2rem, 5vw, 4.5rem); padding: 3.6rem 0 3.4rem; border-bottom: 1px solid var(--line);
+  gap: clamp(2rem, 5vw, 4.5rem); padding: 3.6rem 0 3.4rem;
 }
+.home-hero::before { content: ''; position: absolute; inset: 1.4rem -1.2rem 1.2rem; z-index: -1; pointer-events: none; border: 1px solid #d5dfcc; border-radius: .4rem; background: linear-gradient(115deg, #edf2e5, #e3ecdb); }
 .home-copy { min-width: 0; }
 .home-kicker { display: flex; align-items: center; gap: .8rem; color: var(--muted); font-size: .69rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; margin: 0 0 1.65rem; }
 .home-kicker::before { content: ''; flex: 0 0 1.6rem; height: 1px; background: var(--green); }
@@ -134,6 +136,7 @@ body.open-research {
   .open-research .site-navigation-bar { justify-content: flex-start; gap: .2rem .65rem; }
   .open-research .site-navigation-bar > a { padding-inline: .25rem; }
   .home-hero { grid-template-columns: minmax(0, 1fr); gap: 2.2rem; padding: 2.8rem 0; }
+  .home-hero::before { inset: 1rem -.8rem .8rem; }
   .home-copy { max-width: 40rem; }
   .home-page .home-hero h1 { font-size: clamp(3rem, 7.7vw, 4.5rem); }
   .home-lede { max-width: 48ch; }
@@ -152,6 +155,7 @@ body.open-research {
   .footer-inner { align-items: flex-start; gap: .6rem; }
   .open-research .footer-links { flex-direction: column; gap: 0; }
   .home-hero { padding: 2.2rem 0 2rem; gap: 2rem; }
+  .home-hero::before { inset: .7rem -.8rem .6rem; }
   .home-kicker { font-size: .62rem; letter-spacing: .07em; margin-bottom: 1.4rem; gap: .6rem; }
   .home-kicker::before { flex-basis: 1.2rem; }
   .home-page .home-hero h1 { font-size: clamp(2.6rem, 9.4vw, 3.5rem); line-height: 1.04; }
@@ -177,6 +181,7 @@ body.open-research {
 }
 @media (forced-colors: active) {
   body.open-research { background: Canvas; border-top-color: CanvasText; }
+  .home-hero::before { background: Canvas; border-color: CanvasText; }
   .home-feature, .home-route, .home-actions .button { border-color: ButtonText; box-shadow: none; }
   .home-feature, .home-feature h2, .home-feature h2 em, .home-feature p, .home-feature span,
   .home-sequence dt, .home-sequence dd { background: Canvas; color: LinkText; }
@@ -191,6 +196,7 @@ body.open-research {
 @media print {
   body.open-research { border-top: 0; background: white; }
   .home-hero { display: block; padding: 0; border: 0; }
+  .home-hero::before { display: none; }
   .home-actions, .home-feature, .home-route-grid, .home-more > summary, .home-status > summary { display: none; }
   .home-more > .home-collection-list, .home-status > p { display: block; }
 }
