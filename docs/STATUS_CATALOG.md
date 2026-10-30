@@ -2,7 +2,7 @@
 
 [Browse the collection](BROWSE.md) · [Status guide](COMPLETION_STATUS.md) · [Finalization queue](FINALIZATION_QUEUE.md)
 
-Recorded 2026-10-27. Each entry summarizes existing evidence for a particular source edition. These entries do not report new proof reviews or compiler runs. The [status guide](COMPLETION_STATUS.md) defines the labels. Each primary entry links back to the work's paper, proofs, Lean, and code. Supporting collections link to their source files and import receipts. File hashes and the assessed Git revision are recorded in [project-status.json](../manifests/project-status.json).
+Base assessment recorded 2026-10-27. Each entry summarizes dated evidence for a particular source edition, with later companion checks linked separately. Rendering this catalogue does not run Lean or review proofs. The [status guide](COMPLETION_STATUS.md) defines the labels. Each primary entry links back to the work's paper, proofs, Lean, and code. Supporting collections link to their source files and import receipts. File hashes and the assessed Git revision are recorded in [project-status.json](../manifests/project-status.json).
 
 <a id="paper-i"></a>
 
@@ -1116,13 +1116,17 @@ Internally audited final manuscript with exact finite coherence calculations. Th
 
 ## Resolution Semantics
 
-**Active development** · Lean: **Source available, no current pass** · Confidence basis: **Written / finite evidence**
+**Active development** · Lean: **Selected results recorded** · Confidence basis: **Recorded formal evidence**
 
-Written structural proofs and finite tests. KRS_Core.lean is explicitly uncompiled and is only a limited two-valued scaffold.
+The separate Lean 4.24.0 companion compiles 15 unchanged scaffold statements and 19 two-world declarations, including both assertions of Theorem 7.3. Both obstruction theorems have empty axiom inventories. General Boolean-algebra-valued transport, graph and forcing results remain outside this formal scope.
 
-**Next step:** Pin a compiler and dependencies, compile the exact scaffold, and map its actual types to the written theorem inventory.
+**Next step:** Formalize a precise next contract for the Boolean-algebra-valued transport differential or finite graph integration. The original 0.1.0 source edition and its uncompiled label are preserved.
 
 [Return to this work: paper, proofs, Lean, and code](works/resolution-semantics.md)
+
+[Edition and reader guide](components/RESOLUTION_SEMANTICS_LEAN.md)
+
+[Separate Lean companion replay and exact scope](../verification/resolution-semantics/windows-2026-10-30-run5/receipt.json)
 
 [Source directory](../research/resolution-semantics) · [README.md](../research/resolution-semantics/README.md) · [THEOREM_INDEX.md](../research/resolution-semantics/THEOREM_INDEX.md) · [PROOF_BOUNDARY.md](../research/resolution-semantics/PROOF_BOUNDARY.md)
 
