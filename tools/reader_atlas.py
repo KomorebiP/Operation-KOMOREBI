@@ -19,11 +19,11 @@ RECEIPTS='assets/atlas/paper-iv/figures.json'
 REPORT='documents/paper-iv-atlas.json'
 REFERENCE_PATTERN=re.compile(r'(Section|Definition|Theorem|Proposition|Corollary|Example) (\d+(?:\.\d+)?) \(p\. (\d+)\)')
 TABLE_READING_AIDS={
-    (1,'L11'): dict(caption='Routes through the Paper IV visual atlas',
+    (1,'L11'): dict(caption='Atlas reading routes',
                    headers=['Route','Pages and question'],row_header_column=0),
-    (2,'L27'): dict(caption='Objects and normalizations in the Paper IV visual atlas',
+    (2,'L27'): dict(caption='Objects and normalizations',
                    headers=['Object','Definition and role'],row_header_column=0),
-    (26,'L474'): dict(caption='Evidence layers and their stated scope',
+    (26,'L474'): dict(caption='Evidence layers and scope',
                      headers=[r'\textbf{Evidence layer}',r'\textbf{What it supports}'],row_header_column=0),
 }
 
