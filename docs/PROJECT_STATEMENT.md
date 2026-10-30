@@ -1,6 +1,6 @@
 # Public project and authorship statement
 
-**Komorebi P. · First published 27 October 2026 · Revised 30 October 2026**
+**Komorebi P. · First published 27 October 2026**
 
 Komorebi is my independent mathematical research project, published under the name **Komorebi P.** It brings together manuscripts, formal developments, software, calculations, experiments, and guides for readers.
 
@@ -24,9 +24,7 @@ Review must be documented separately. Publication under my name does not imply t
 
 ## Current state and publication circumstances
 
-I first described the circumstances surrounding publication on 27 October 2026. I have since revised that account to reflect the broader industry context:
-
-> This work remains in progress and has, in many respects, been rushed because of circumstances shaped by the AI industry. I am continuing to correct, verify, and organize it.
+This work remains in progress and has, in many respects, been rushed because of circumstances shaped by the AI industry. I am continuing to correct, verify, and organize it.
 
 The works are at different stages of development and review. The [finalization queue](FINALIZATION_QUEUE.md) records remaining editorial work, source checks, proof replays, software tests, and reviews. Completion and confidence labels reflect the evidence recorded for each work. All executable software remains **beta and a work in progress**.
 
@@ -40,9 +38,9 @@ I have made the collection public so that others can inspect, question, reproduc
 
 ## Sources and editorial provenance
 
-This statement was first published on 27 October 2026 and revised on 28, 29, and 30 October. Its current wording draws on the project overview, the current essay, and the work-specific disclosures below.
+This statement draws on the project overview, the current essay, and the work-specific disclosures below.
 
-The publication note above revises the account first added on 27 October. The [current reading edition of *The Possibility for a Machine-Native Mathematics*](essays/MACHINE_NATIVE_MATHEMATICS.md) develops the broader conceptual account.
+The [current reading edition of *The Possibility for a Machine-Native Mathematics*](essays/MACHINE_NATIVE_MATHEMATICS.md) develops the broader conceptual account.
 
 - [Project overview](../README.md) and [reading guide](START_HERE.md).
 - [Machine-Native Mathematics: current author's note](essays/MACHINE_NATIVE_MATHEMATICS.md#authors-note).
