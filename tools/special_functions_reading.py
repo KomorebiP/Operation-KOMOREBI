@@ -241,13 +241,7 @@ def render_book(reader, book):
         headings = [n for n in chapter.nodes if n['kind'] in HEADINGS]
         body += '<nav class="chapter-contents" aria-label="On this page"><h2>On this page</h2><ol>'+''.join('<li><a href="#'+n['id']+'">'+html.escape(typography(n['title']))+'</a></li>' for n in headings)+'</ol></nav>'
         body += '<article id="chapter-text" class="readable-chapter">'
-        proof_targets = {}
-        statement = None
-        for n in headings:
-            if re.match(r'(?:Theorem|Lemma|Proposition|Corollary|Zero-radius theorem)\b',n['title']): statement = n
-            elif n['title']=='Proof.' and statement:
-                proof_targets[statement['id']] = n['id']
-                statement = None
+        proof_targets = proof_links(headings)
         for node in chapter.nodes:
             kind = node['kind']
             links = '<a href="#'+node['id']+'">Permalink</a> · <a href="'+reader.resolve(spec['source'],page,'L'+str(node['line']))+'">Source line '+str(node['line'])+'</a>'
@@ -305,6 +299,20 @@ def render_book(reader, book):
     site.page(INDEX,'Read Special Functions',body)
     site.search.append(dict(title='Special Functions / Chapter contents',group='Collection',kind='Papers and source',work_ids=[WORK],url=INDEX,text='Special Functions contracted feedback arithmetic complex depth prime sieves spectral zeta sequences coupled growth resolution proof appendices glossary'))
     return []
+
+
+def proof_links(headings):
+    """Link only an explicit proof before the next intervening heading."""
+    result, statement = {}, None
+    for node in headings:
+        if re.match(r'(?:Theorem|Lemma|Proposition|Corollary|Zero-radius theorem)\b',node['title']):
+            statement = node
+        elif node['title']=='Proof.' and statement:
+            result[statement['id']] = node['id']
+            statement = None
+        else:
+            statement = None
+    return result
 
 
 def verify(root, documents, pages):

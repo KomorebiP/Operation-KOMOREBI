@@ -8,7 +8,7 @@ import unittest
 
 from reader_documents import ReadingDocuments, source_lines
 from special_functions_reading import (BASE, MAIN, WORK, CONFIG, INDEX, REPORT,
-    SOURCE_TITLES, normalize, source_specs, prepare_book, render_book, verify, figure_path)
+    SOURCE_TITLES, normalize, source_specs, prepare_book, render_book, verify, figure_path, proof_links)
 from readable_chapters import Chapter, original_math
 from check_reader_site import Page
 
@@ -32,6 +32,11 @@ class SpecialFunctionsReadingTests(unittest.TestCase):
         self.assertEqual(original_math(converted),original_math(text))
         with self.assertRaisesRegex(ValueError,'Unsupported prose command'):
             Chapter('',{}).paragraphs(normalize(r'Kept. \unreviewed{must not disappear}'))
+
+    def test_proof_links_do_not_cross_another_heading(self):
+        headings=[dict(id='a',title='Theorem A.1.'),dict(id='b',title='A different argument'),dict(id='c',title='Proof.')]
+        self.assertEqual(proof_links(headings),{})
+        self.assertEqual(proof_links([headings[0],headings[2]]),{'a':'c'})
 
     def test_entire_render_and_independent_html_verification(self):
         with tempfile.TemporaryDirectory() as temporary:
