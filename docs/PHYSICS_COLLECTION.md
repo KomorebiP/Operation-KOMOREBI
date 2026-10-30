@@ -1,6 +1,6 @@
 # Physics collection
 
-**Komorebi P. · Work in progress**
+**Komorebi P.**
 
 How does a state exchange probability between its parts? What changes when we alter its phase, coordinates or spatial resolution? This collection follows those questions from small calculations to the free Dirac field, then into finite models of energy exchange and cosmological research.
 
