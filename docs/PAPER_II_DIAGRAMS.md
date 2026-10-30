@@ -53,14 +53,14 @@ Read each arrow from source to target. The table lists all six directed edges; e
 
 <table>
 <caption>Figure 4: Weighted transfer graph</caption>
-<thead><tr><th scope="col">Source</th><th scope="col">Target</th><th scope="col">Filtration weight</th></tr></thead>
+<thead><tr><th scope="col">Source and target</th><th scope="col">Filtration weight</th></tr></thead>
 <tbody>
-<tr><th scope="row">0</th><td>0</td><td>2</td></tr>
-<tr><th scope="row">0</th><td>1</td><td>1</td></tr>
-<tr><th scope="row">1</th><td>1</td><td>3</td></tr>
-<tr><th scope="row">1</th><td>2</td><td>2</td></tr>
-<tr><th scope="row">2</th><td>0</td><td>1</td></tr>
-<tr><th scope="row">2</th><td>2</td><td>4</td></tr>
+<tr><th scope="row">Source 0 to target 0</th><td>2</td></tr>
+<tr><th scope="row">Source 0 to target 1</th><td>1</td></tr>
+<tr><th scope="row">Source 1 to target 1</th><td>3</td></tr>
+<tr><th scope="row">Source 1 to target 2</th><td>2</td></tr>
+<tr><th scope="row">Source 2 to target 0</th><td>1</td></tr>
+<tr><th scope="row">Source 2 to target 2</th><td>4</td></tr>
 </tbody>
 </table>
 
@@ -131,12 +131,12 @@ For the integral involution A with rows (1,1) and (0,−1), the left matrix is E
 
 <table>
 <caption>Figure 7: Rational sign projectors</caption>
-<thead><tr><th scope="col">Projector</th><th scope="col">Row</th><th scope="col">Column 0</th><th scope="col">Column 1</th></tr></thead>
+<thead><tr><th scope="col">Projector and row</th><th scope="col">Column 0</th><th scope="col">Column 1</th></tr></thead>
 <tbody>
-<tr><th scope="row">E₊</th><td>0</td><td>1</td><td>1/2</td></tr>
-<tr><th scope="row">E₊</th><td>1</td><td>0</td><td>0</td></tr>
-<tr><th scope="row">E₋</th><td>0</td><td>0</td><td>-1/2</td></tr>
-<tr><th scope="row">E₋</th><td>1</td><td>0</td><td>1</td></tr>
+<tr><th scope="row">E₊, row 0</th><td>1</td><td>1/2</td></tr>
+<tr><th scope="row">E₊, row 1</th><td>0</td><td>0</td></tr>
+<tr><th scope="row">E₋, row 0</th><td>0</td><td>-1/2</td></tr>
+<tr><th scope="row">E₋, row 1</th><td>0</td><td>1</td></tr>
 </tbody>
 </table>
 

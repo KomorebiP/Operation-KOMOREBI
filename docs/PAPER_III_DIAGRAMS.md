@@ -32,12 +32,12 @@ The first derivative at the origin is identity. Each two-by-two grid lists order
 
 <table>
 <caption>Figure 4: Two exact packet Hessians</caption>
-<thead><tr><th scope="col">Output</th><th scope="col">First input slot</th><th scope="col">Second slot x</th><th scope="col">Second slot y</th></tr></thead>
+<thead><tr><th scope="col">Output and first input slot</th><th scope="col">Second slot x</th><th scope="col">Second slot y</th></tr></thead>
 <tbody>
-<tr><th scope="row">1</th><td>x</td><td>0</td><td>1</td></tr>
-<tr><th scope="row">1</th><td>y</td><td>1</td><td>0</td></tr>
-<tr><th scope="row">2</th><td>x</td><td>2</td><td>0</td></tr>
-<tr><th scope="row">2</th><td>y</td><td>0</td><td>0</td></tr>
+<tr><th scope="row">Output 1, first input x</th><td>0</td><td>1</td></tr>
+<tr><th scope="row">Output 1, first input y</th><td>1</td><td>0</td></tr>
+<tr><th scope="row">Output 2, first input x</th><td>2</td><td>0</td></tr>
+<tr><th scope="row">Output 2, first input y</th><td>0</td><td>0</td></tr>
 </tbody>
 </table>
 
