@@ -62,8 +62,25 @@ def check_png_image_sizes(root,page,images):
         assert (image.get('width'),image.get('height'))==(str(width),str(height)), (page,'Image dimensions differ from PNG',path)
 
 
+def check_table_reading_aids(markup,aids):
+    from readable_chapters import Chapter
+    for identifier,aid in aids.items():
+        section=re.search(r'<section id="'+re.escape(identifier)+r'">(.*?)</section>',markup,re.S)
+        assert section,('Missing table section',identifier)
+        table=re.search(r'<table>(.*?)</table>',section[1],re.S)
+        assert table,('Missing table',identifier)
+        caption=re.search(r'<caption>(.*?)</caption>',table[1],re.S)
+        assert caption and caption[1].strip(),('Missing table caption',identifier)
+        if 'caption' in aid:
+            assert caption[1]==Chapter('',{}).inline(aid['caption']),('Table caption differs',identifier)
+        assert table[1].count('scope="col"')==len(aid['headers']),('Missing column headers',identifier)
+        body=re.search(r'<tbody>(.*?)</tbody>',table[1],re.S)
+        assert body and body[1].count('<tr>')>0,('Missing table body',identifier)
+        assert body[1].count('scope="row"')==body[1].count('<tr>'),('Missing row headers',identifier)
+
+
 def check_readable_chapter(root, documents, pages):
-    from readable_chapters import BOOKS, CHAPTERS, original_math, expand_math, manuscript_macros, chapter_text, validate_monolithic
+    from readable_chapters import BOOKS, CHAPTERS, original_math, expand_math, manuscript_macros, chapter_text, validate_monolithic, table_reading_aid
     records = {r['repository_path']:r for r in documents['files']}
     reports = json.loads((root/'documents/readable-chapters.json').read_bytes())
     assert [r['source'] for r in reports] == [c['source'] for c in CHAPTERS]
@@ -101,8 +118,17 @@ def check_readable_chapter(root, documents, pages):
         for node in report['nodes']:
             assert node['id'] in pages[page].ids
             assert 'L'+str(node['line']) in pages[records[source]['url']].ids
+        markup=(root/page).read_text(encoding='utf-8')
+        aids={}
+        config=BOOKS[spec['work']]
+        for node in report['nodes']:
+            if node['kind'] in {'table','longtable','tabularx'}:
+                _,aid=table_reading_aid(config,source,node['id'])
+                assert not config.get('table_reading_aids') or aid,('Unreviewed chapter table',source,node['id'])
+                if aid:aids[node['id']]=aid
+        check_table_reading_aids(markup,aids)
         rendered=MathText()
-        rendered.feed((root/page).read_text(encoding='utf-8'))
+        rendered.feed(markup)
         assert [x[2:-2] for x in rendered.expressions]==[expand_math(x,report['macros']) for x in expressions], ('HTML mathematical sequence differs from source',source)
         count+=len(expressions)
     return count
