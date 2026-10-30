@@ -277,6 +277,17 @@ def check(math_root=None,git='git'):
     assert text.count(r'\(')==text.count(r'\)')
     assert 'A000364' in text and 'A211212' in text
 
+    tap_script=ROOT/'examples/euler_polyphase_taps.py'
+    tap_spec=importlib.util.spec_from_file_location('euler_tap_split',tap_script)
+    tap_module=importlib.util.module_from_spec(tap_spec)
+    tap_spec.loader.exec_module(tap_module)
+    tap_result=tap_module.compute()
+    assert tap_result==json.loads((ROOT/'verification/euler-packets/polyphase-taps-002/results.json').read_bytes())
+    tap_marker=re.search(r'<!-- euler-tap-expected-output -->\s*```text\n(.*?)```',text,re.S)
+    assert tap_marker
+    tap_cli=subprocess.run([sys.executable,'-B',str(tap_script)],check=True,capture_output=True,text=True,timeout=30)
+    assert tap_cli.stdout==tap_marker[1], 'Printed tap-split output differs from the worked page'
+
     # A nonzero infinite vector has zero sampled output although square leading
     # blocks have nonzero diagonal. Check complete finite rows, not square cuts.
     for order in range(12):
@@ -319,6 +330,9 @@ def check(math_root=None,git='git'):
                 sampling_infinite_kernel_rows=12,
                 euler_index_supercongruence_cases=index_cases,euler_zero_index_counterexample=True,
                 library_comparison=check_library(example,math_root,git,fresh) if math_root else None,
+                polyphase_taps=dict(signal_cases=tap_result['finite_checks']['signal_comparisons'],
+                                    impulse_cases=tap_result['finite_checks']['impulse_comparisons'],
+                                    displayed_cli_matches=True,missing_advance_control=tap_result['missing_advance']),
                 scope='Executed finite calculations, displayed-output correspondence and source identities. Written proof self-review is separate.')
     return result
 

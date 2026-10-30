@@ -1,8 +1,6 @@
 # Euler numbers through packets, polynomials, and residuals
 
-**An extended hand-worked Komorebi example · Komorebi P. · 29 October 2026**
-
-[Machine-native mathematics essay](../essays/MACHINE_NATIVE_MATHEMATICS.md) · [Sequence experiments](SEQUENCE_SHAPES.md) · [Coefficient matrices](#write-the-coefficient-transform-as-an-infinite-matrix) · [Supercongruences](#state-the-supercongruences-and-check-an-euler-index-shift) · [Fibonacci transfer](#change-euler-polynomials-to-fibonacci-coordinates) · [Quartic coordinates](#work-with-all-four-quartic-addresses) · [Logarithmic transform](#change-to-logarithmic-euler-coordinates-with-stirling-matrices) · [Run the exact checks](#run-the-exact-checks)
+**An extended hand-worked Komorebi example · Komorebi P. · 29 October 2026 · Navigation and FIR example updated 30 October 2026**
 
 We will reconstruct the Euler secant numbers through a different sequence, turn the calculation into polynomial identities, and then use the same Euler data in a refinement calculation. At each change of coordinates we will write the transfer explicitly. When a shortcut fails, we will calculate the residual that explains the failure.
 
@@ -2362,6 +2360,111 @@ It differs by a pure shift and has the same gain. The earlier one-sided Euler ca
 
 This frequency response belongs to the finite filter. We have not taken a convergent Fourier transform of the rapidly growing Euler sequence. The arithmetic reading of the polynomial measures divisibility of integer outputs. The signal reading evaluates it on exponential modes. The common shift polynomial connects the two calculations while preserving what each one means.
 
+## Split an FIR filter into polyphase taps
+
+The signal and the filter can both be split into phases. A **tap** is one coefficient of the finite filter. For \(L\geq1\) and \(n\geq0\), we keep the forward-shift convention already used above:
+
+\[
+y(n)=(H(S)a)(n)=\sum_{r=0}^{L-1}h_r a(n+r),
+\qquad H(z)=\sum_{r=0}^{L-1}h_rz^r.
+\]
+
+Take the four-tap filter
+
+\[
+(h_0,h_1,h_2,h_3)=(1,-2,3,1),
+\qquad H(S)=I-2S+3S^2+S^3.
+\]
+
+Its even and odd tap polynomials are
+
+\[
+H_0(z)=1+3z,\qquad H_1(z)=-2+z,
+\qquad H(z)=H_0(z^2)+zH_1(z^2).
+\]
+
+For a general finite tap list, the same split is
+\(H_0(z)=\sum_jh_{2j}z^j\) and
+\(H_1(z)=\sum_jh_{2j+1}z^j\), with only the available tap indices included.
+Split the input and output into
+
+\[
+a_0(q)=a(2q),\quad a_1(q)=a(2q+1),
+\qquad y_0(q)=y(2q),\quad y_1(q)=y(2q+1),
+\]
+
+and let \((S_qb)(q)=b(q+1)\) advance a phase sequence by one place, for \(q\geq0\). Separating the even and odd tap indices in the finite sum gives
+
+\[
+\begin{aligned}
+y_0(q)&=\sum_jh_{2j}a_0(q+j)+\sum_jh_{2j+1}a_1(q+j),\\
+y_1(q)&=\sum_jh_{2j}a_1(q+j)+\sum_jh_{2j+1}a_0(q+j+1).
+\end{aligned}
+\]
+
+Thus the complete polyphase transfer is
+
+\[
+\binom{y_0}{y_1}
+=\begin{pmatrix}
+H_0(S_q)&H_1(S_q)\\
+S_qH_1(S_q)&H_0(S_q)
+\end{pmatrix}\binom{a_0}{a_1}.
+\]
+
+The extra \(S_q\) in the lower-left entry is the lane-boundary carry: an odd output index plus an odd tap index lands in the **next** even input position. This location follows from the forward shift. The earlier formal-series multiplication matrix uses its own coefficient convention.
+
+Use the signed Euler sequence \(a(n)=E_{2n}\). Its two phases begin
+
+\[
+\begin{aligned}
+a_0&=(1,5,1385,2702765,\ldots),\\
+a_1&=(-1,-61,-50521,\ldots).
+\end{aligned}
+\]
+
+The first even and odd outputs are therefore
+
+\[
+\begin{aligned}
+y_0(0)&=(1+3\cdot5)+(-2(-1)-61)=16-59=-43,\\
+y_1(0)&=(-2\cdot5+1385)+(-1+3(-61))=1375-184=1191.
+\end{aligned}
+\]
+
+One more coarse index gives the following complete windows:
+
+| Output index \(n\) | Phase | Contribution from \(a_0\) | Contribution from \(a_1\) | Output \(y(n)\) |
+|---:|---|---:|---:|---:|
+| 0 | even, \(q=0\) | 16 | -59 | -43 |
+| 1 | odd, \(q=0\) | 1375 | -184 | 1191 |
+| 2 | even, \(q=1\) | 4160 | -50399 | -46239 |
+| 3 | odd, \(q=1\) | 2699995 | -151624 | 2548371 |
+
+Interleaving the two output phases recovers the direct four-tap output
+\((-43,1191,-46239,2548371,\ldots)\).
+For a failure control, omit the advance in the lower-left entry. The first odd output would then be
+\((-2\cdot1+5)+(-1+3(-61))=-181\), which disagrees with \(1191\).
+
+The [tap-split program](https://komorebip.github.io/Operation-KOMOREBI/read/euler-polyphase-taps.html) shows both implementations. Download the [standalone checker](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/euler_polyphase_taps.py), then run:
+
+```bash
+python -B euler_polyphase_taps.py
+```
+
+<!-- euler-tap-expected-output -->
+```text
+Even taps: 1, 3
+Odd taps: -2, 1
+Direct outputs: -43, 1191, -46239, 2548371
+Polyphase outputs: -43, 1191, -46239, 2548371
+Missing-advance control: -181 (correct: 1191)
+Finite comparisons: 600 signal cases and 468 impulse cases
+PASS: exact polyphase/tap split
+```
+
+The [exact result record](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/polyphase-taps.json) contains the phase contributions and finite test ranges. These are exact integer calculations with complete input windows; no zero padding, periodic extension, or Fourier transform of the Euler sequence is used. The finite comparisons support the implementation in their stated ranges. The general phase law follows from the finite-sum reindexing above.
+
 ## See what a single sampled lane forgets
 
 A small bounded signal makes the sampling issue visible without the growth of the Euler numbers. Compare
@@ -3631,6 +3734,9 @@ The role of Komorebi is visible in the intermediate objects. A packet that appea
 The method keeps the representation, operation, preserved data, and remaining defect together throughout the calculation. That is the concrete connection to [machine-native mathematics](../essays/MACHINE_NATIVE_MATHEMATICS.md). Establishing an advantage for an automated discovery system would additionally require a specified system and a controlled comparison.
 
 ## Sources and further reading
+
+- [Polyphase/tap example review and finite scope](../../verification/euler-packets/POLYPHASE_TAPS_REVIEW.md).
+- [Machine-native mathematics essay](../essays/MACHINE_NATIVE_MATHEMATICS.md) and [sequence experiments](SEQUENCE_SHAPES.md).
 
 - [Quartic and coefficient-atlas source check](../../verification/euler-packets/LITERATURE_ATLAS.md), for the exact four-address, isometry, Hurwitz-mode and formal-logarithmic source statements and their uses here.
 - [Paper IX: Euler Congruences](../works/paper-ix.md), for companion jumps, Fibonacci packets, and integral matrix precision amplification. Exact source identities and the distinction between source statements and new worked consequences appear in the [source check](../../verification/euler-packets/LITERATURE_FIBONACCI.md).
