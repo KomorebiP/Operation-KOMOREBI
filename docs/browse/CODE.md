@@ -233,6 +233,7 @@ Jump to a work:
 ### [Special Functions](../works/monographs-special-functions.md#code)
 
 - [Code / scripts: tools](../../monographs/special-functions/tools/)
+- [Exact coupled-function regression (Python)](../../monographs/special-functions/tools/check_coupled_exact.py)
 - [Return to this work’s code section](../works/monographs-special-functions.md#code)
 - [Work overview](../works/monographs-special-functions.md)
 - [Status and evidence](../STATUS_CATALOG.md#monographs-special-functions)

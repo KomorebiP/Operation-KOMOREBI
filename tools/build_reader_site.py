@@ -62,6 +62,7 @@ def site_navigation(page):
     groups = [
         ('Read', [('Reading routes', 'collection/READING_ROUTES.html'),
                   ('Physics collection', 'collection/PHYSICS_COLLECTION.html'),
+                  ('Special Functions', 'collection/SPECIAL_FUNCTIONS.html'),
                   ('Papers and PDFs', 'documents.html'),
                   ('Read side by side', 'side-by-side.html'),
                   ('Worked examples', 'collection/HAND_WORKED_EXAMPLES.html')]),
@@ -111,6 +112,7 @@ def home_page():
 <h3>What connects the work?</h3><p>Describe an object in parts, transfer operations through those parts, and account for what a change of representation preserves or loses.</p>
 <ul><li><a href="collection/PROJECT_MAP.html">See the project map</a> — explore the twelve core papers, related books and documented connections.</li>
 <li><a href="collection/demonstrations/EULER_PACKETS.html">Research preview: Euler numbers</a> — follow an extended derivation through packets, coordinate changes and exact residual correction.</li>
+<li><a href="collection/SPECIAL_FUNCTIONS.html">Explore Special Functions</a> — open the current volumes, compare five families, and run the coupled-function lab.</li>
 <li><a href="collection/DEMONSTRATIONS.html">Follow a complete demonstration</a> — work through a calculation, run its program and follow the source evidence.</li></ul></div></details>
 <details class="home-status"><summary>How to read completion and verification</summary><p>The collection records completion, formal coverage, and confidence separately. A linked file does not mean every claim has been verified. Software is beta.</p><p><a href="collection/COMPLETION_STATUS.html">Read the guide to evidence and status</a></p></details>'''
 
