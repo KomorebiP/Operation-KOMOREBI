@@ -20,10 +20,10 @@ class DisciplineCatalogTests(unittest.TestCase):
     def test_complete_disjoint_primary_disciplines(self):
         data, subjects = load_catalog(self.root, self.registry, self.assessments)
         self.assertEqual(len(subjects), len(self.registry['components']))
-        self.assertEqual(len(subjects), 91)
+        self.assertEqual(len(subjects), 90)
         counts = {key: sum(item['primary'] == key for item in subjects.values())
                   for key in data['disciplines']}
-        self.assertEqual(counts, {'math': 53, 'cs': 30, 'physics': 6, 'other': 2})
+        self.assertEqual(counts, {'math': 53, 'cs': 29, 'physics': 6, 'other': 2})
         self.assertEqual(subjects['paper-i']['primary'], 'math')
         self.assertEqual(subjects['monographs-large-signal-model']['primary'], 'cs')
         self.assertEqual(subjects['monographs-physics']['primary'], 'physics')
@@ -41,7 +41,7 @@ class DisciplineCatalogTests(unittest.TestCase):
     def test_html_links_both_work_and_status(self):
         page = render_works_catalog(self.root, self.registry, self.components,
                                     self.assessments, self.status)
-        self.assertEqual(page.count('class="catalog-item"'), 91)
+        self.assertEqual(page.count('class="catalog-item"'), 90)
         self.assertEqual(page.count('class="catalog-section"'), 4)
         self.assertIn('collection/works/paper-xi.html', page)
         self.assertIn('collection/STATUS_CATALOG.html#paper-xi', page)

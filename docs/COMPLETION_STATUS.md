@@ -6,7 +6,7 @@ Recorded 2026-10-27 · **Komorebi P.**
 
 **Completion, Lean coverage and confidence describe different things.** A finished book may contain open research. A checked Lean proof may belong to an unfinished project. Choose a completion stage below, open a work's evidence record, then follow its paper, proofs, Lean, and code link.
 
-This guide summarizes the existing release and status records at [source revision `080487d6401a`](https://github.com/KomorebiP/Operation-KOMOREBI/commit/080487d6401a7e9d90c415fd9ffbbf8d825e3842). It covers **91 primary components** and **75 supporting collections**. The labels report those records, rather than a new proof review or Lean run. Each recorded pass keeps its original date and scope.
+This guide summarizes the existing release and status records at [source revision `080487d6401a`](https://github.com/KomorebiP/Operation-KOMOREBI/commit/080487d6401a7e9d90c415fd9ffbbf8d825e3842). It covers **90 primary components** and **71 supporting collections**. The labels report those records, rather than a new proof review or Lean run. Each recorded pass keeps its original date and scope.
 
 [Finalization queue](FINALIZATION_QUEUE.md) · [Detailed evidence catalogue](STATUS_CATALOG.md) · [Component/file index](COMPONENT_INDEX.md) · [Machine-readable status](../manifests/project-status.json)
 
@@ -25,7 +25,7 @@ Entries deferred from the main reading lists remain in the [incubator](INCUBATOR
 | Active development | 19 | A candidate, working manuscript or bounded research milestone with identified unfinished work. |
 | Experiment / prototype | 12 | A research instrument, implementation or experiment whose tested scope does not establish a general scientific endpoint. |
 | Reader available, source qualification pending | 1 | The PDF edition and reading scope have been identified. Matching editable sources, full page review, and reproducible build qualification remain pending. |
-| Needs assessment | 7 | Available material lacks a sufficient assessed source/status record for a stronger label. |
+| Needs assessment | 6 | Available material lacks a sufficient assessed source/status record for a stronger label. |
 | Earlier checkpoint | 1 | An earlier edition kept with its own evidence. Later acceptance records do not change that evidence. |
 
 These categories describe the state of a work. They are not percentages or a ranking of mathematical importance. “Scoped release” means the stated release requirements are recorded as complete. Broader claims and implementations may remain unfinished. “Reading edition complete” means the stated manuscript or reader set has been released. It does not imply journal acceptance or a completed research program.
@@ -168,11 +168,10 @@ All executable software remains **beta / work in progress**, including implement
 |---|---|---|
 | [Gaussian Elimination: collected guide](STATUS_CATALOG.md#gaussian-elimination-guide) | Not assessed | Unassessed |
 
-## Needs assessment (7)
+## Needs assessment (6)
 
 | Project and exact scope | Lean | Confidence basis |
 |---|---|---|
-| [ARC-AGI-2 experiment](STATUS_CATALOG.md#arc-agi2) | Not assessed | Unassessed |
 | [Large Signal Model software](STATUS_CATALOG.md#large-signal-model) | Not assessed | Unassessed |
 | [Machine Theory Compendium](STATUS_CATALOG.md#machine-theory-compendium) | Not assessed | Unassessed |
 | [Physics: curvature states](STATUS_CATALOG.md#physics-curvature-states) | Not assessed | Unassessed |
@@ -188,7 +187,7 @@ All executable software remains **beta / work in progress**, including implement
 
 ## Supporting and earlier material
 
-The **75 supporting collections** are listed separately in the [evidence catalogue](STATUS_CATALOG.md#supporting-and-historical-collections). Their import receipts identify the available files. This guide does not reassess their mathematics or transfer a newer edition's coverage and completion label to them.
+The **71 supporting collections** are listed separately in the [evidence catalogue](STATUS_CATALOG.md#supporting-and-historical-collections). Their import receipts identify the available files. This guide does not reassess their mathematics or transfer a newer edition's coverage and completion label to them.
 
 | Additional material | Status in this assessment |
 |---|---|

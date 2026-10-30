@@ -1,8 +1,8 @@
 # Component index
 
-Recorded 2026-10-27.
+Recorded 2026-10-30.
 
-91 primary components and 75 supporting source collections are present with verified file receipts. The receipts cover **139,002 distinct source files**. Older source imports remain separately available.
+90 primary components and 71 supporting source collections are present with verified file receipts. The receipts cover **138,343 distinct source files**. Older source imports remain separately available.
 
 [Browse by completion stage, Lean coverage and confidence](COMPLETION_STATUS.md) · [Cleanup and finalization queue](FINALIZATION_QUEUE.md). Status labels describe the scope of each linked record. File counts do not measure proof or completion.
 
@@ -68,7 +68,6 @@ For direct PDFs, manuscript text, Lean, and code, use the [clickable browse hub]
 | [J-Space Causal Lab](works/experiments-jspace-causal-lab.md) | [Experiment / prototype](STATUS_CATALOG.md#experiments-jspace-causal-lab) | No Lean claim | Experimental evidence | 224 | [file record](../manifests/source-imports/experiments-jspace-causal-lab.json) |
 | [J-Space Collections](works/experiments-jspace-collections.md) | [Experiment / prototype](STATUS_CATALOG.md#experiments-jspace-collections) | No Lean claim | Experimental evidence | 53 | [file record](../manifests/source-imports/experiments-jspace-collections.json) |
 | [Workspace Incubator](works/experiments-workspace-incubator.md) | [Experiment / prototype](STATUS_CATALOG.md#experiments-workspace-incubator) | No Lean claim | Experimental evidence | 689 | [file record](../manifests/source-imports/experiments-workspace-incubator.json) |
-| [ARC-AGI-2 experiment](works/arc-agi2.md) | [Needs assessment](STATUS_CATALOG.md#arc-agi2) | Not assessed | Unassessed | 69 | [file record](../manifests/source-imports/arc-agi2.json) |
 
 ## Research programs
 
@@ -130,7 +129,6 @@ These directories retain distinct manuscripts, formal projects, tools, and exper
 
 | Collection | Source components | File records |
 |---|---|---|
-| [experiments/arc-agi2/supporting-sources](../experiments/arc-agi2/supporting-sources/) | 4 | 590 |
 | [experiments/jspace-collections/supporting-sources](../experiments/jspace-collections/supporting-sources/) | 2 | 135 |
 | [experiments/rrct-lineage/komorebi-nested-cognition-limited-test](../experiments/rrct-lineage/komorebi-nested-cognition-limited-test/) | 1 | 13 |
 | [experiments/rrct-lineage/rrct-v0-41-1-temporal-identity-frozen-exploratory-compact-1](../experiments/rrct-lineage/rrct-v0-41-1-temporal-identity-frozen-exploratory-compact-1/) | 1 | 397 |

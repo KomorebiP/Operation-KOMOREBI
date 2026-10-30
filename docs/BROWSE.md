@@ -25,7 +25,7 @@ These are editorial primary categories. The files remain in their original repos
 | Books and companion volumes | [19 works](browse/MONOGRAPHS.md) |
 | Research programs | [49 works](browse/RESEARCH.md) |
 | Software packages | [5 works](browse/PACKAGES.md) |
-| Experiments | [6 works](browse/EXPERIMENTS.md) |
+| Experiments | [5 works](browse/EXPERIMENTS.md) |
 
 ## Follow a claim
 
