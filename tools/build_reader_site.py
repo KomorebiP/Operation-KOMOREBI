@@ -535,11 +535,32 @@ class Site:
         from discipline_catalog import render_works_catalog, facet_records
         body = render_works_catalog(self.root, self.registry, self.components, self.assessments, self.status)
         self.page('works.html', 'Browse works', body)
-        self.write('work-facets.json', json.dumps(
-            facet_records(self.root, self.registry, self.assessments), ensure_ascii=False, sort_keys=True) + '\n')
+        work_facets = facet_records(self.root, self.registry, self.assessments)
+        self.write('work-facets.json', json.dumps(work_facets, ensure_ascii=False, sort_keys=True) + '\n')
         self.page('software.html','Software','<h1>Run a small calculation</h1><p><a class="button" href="playground.html#library">Try Komorebi Math in your browser</a></p><p>Start with the platform instructions and expected output. All software remains beta.</p><p><a class="button" href="collection/FIRST_RUN.html">First runs and expected output</a></p><div class="route-grid"><a class="route" href="math/index.html"><h2>Komorebi Math</h2><p>Python. Finite operators, coordinates, signals and arithmetic.</p></a><a class="route" href="polyphase/index.html"><h2>Polyphase Float</h2><p>C on the supported Linux baseline. Arbitrary-precision binary arithmetic.</p></a></div><p><a href="collection/LIBRARIES.html">Library checks and source revisions</a></p>')
         work_options=''.join('<option value="'+c['id']+'">'+e(self.components[c['id']]['title'])+'</option>' for c in self.registry['components'])
-        self.page('search.html','Search the collection','<h1>Search the collection</h1><p>Find a work, a claim, a written proof location, Lean guidance, code or a worked example. Choose one work to keep its related material together. Open a PDF and use its reader search to find words throughout that document.</p><form id="site-search" data-index="search-index.json?v='+e(self.revision)+'"><label for="search-query">Word, symbol name or question</label><input id="search-query" type="search" name="q" autocomplete="off"><label for="search-group">Repository</label><select id="search-group"><option value="">All repositories</option><option>Collection</option><option>Komorebi Math</option><option>Polyphase Float</option></select><label for="search-work">Work</label><select id="search-work"><option value="">All works</option>'+work_options+'</select><label for="search-kind">Result type</label><select id="search-kind"><option value="">All result types</option><option>Claims</option><option>Written proofs</option><option>Lean</option><option>Code</option><option>Glossary</option><option>Notation</option><option>Examples</option><option>Papers and source</option><option>Guides</option></select><button type="submit">Search</button><button type="reset">Clear search</button></form><p id="search-status" role="status" aria-live="polite">Enter a search term.</p><ol id="search-results"></ol><button id="search-more" type="button" hidden>Show more results</button><noscript><p>Search needs JavaScript. You can still <a href="works.html">browse all works</a> and use the <a href="collection/GLOSSARY.html">glossary</a>.</p></noscript>')
+
+        facet_values = list(work_facets['works'].values())
+        facet_dimensions = [
+            ('discipline', 'Discipline', 'All disciplines',
+             [(key, item['label']) for key, item in work_facets['disciplines'].items()]),
+            ('stage', 'Completion stage', 'Any completion stage',
+             [(key, item[0]) for key, item in self.status['labels']['stage'].items()
+              if any(work['stage'] == key for work in facet_values)]),
+            ('lean', 'Lean coverage', 'Any Lean coverage',
+             [(key, item[0]) for key, item in self.status['labels']['lean'].items()
+              if any(work['lean'] == key for work in facet_values)]),
+            ('evidence', 'Evidence basis', 'Any evidence basis',
+             [(key, item[0]) for key, item in self.status['labels']['confidence'].items()
+              if any(work['evidence'] == key for work in facet_values)]),
+        ]
+        search_facets = ''.join(
+            '<label for="search-'+key+'">'+e(title)+'</label><select id="search-'+key+'">'
+            '<option value="">'+e(default)+'</option>'+
+            ''.join('<option value="'+e(code)+'">'+e(label)+'</option>'
+                    for code,label in options)+'</select>'
+            for key,title,default,options in facet_dimensions)
+        self.page('search.html','Search the collection','<h1>Search the collection</h1><p>Find a work, a claim, a written proof location, Lean guidance, code or a worked example. Choose one work to keep its related material together. Open a PDF and use its reader search to find words throughout that document.</p><form id="site-search" data-facets="work-facets.json?v='+e(self.revision)+'" data-index="search-index.json?v='+e(self.revision)+'"><label for="search-query">Word, symbol name or question</label><input id="search-query" type="search" name="q" autocomplete="off"><label for="search-group">Repository</label><select id="search-group"><option value="">All repositories</option><option>Collection</option><option>Komorebi Math</option><option>Polyphase Float</option></select><label for="search-work">Work</label><select id="search-work"><option value="">All works</option>'+work_options+'</select>'+search_facets+'<label for="search-kind">Result type</label><select id="search-kind"><option value="">All result types</option><option>Claims</option><option>Written proofs</option><option>Lean</option><option>Code</option><option>Glossary</option><option>Notation</option><option>Examples</option><option>Papers and source</option><option>Guides</option></select><button type="submit">Search</button><button type="reset">Clear search</button></form><p id="search-status" role="status" aria-live="polite">Enter a search term.</p><ol id="search-results"></ol><button id="search-more" type="button" hidden>Show more results</button><noscript><p>Search needs JavaScript. You can still <a href="works.html">browse all works</a> and use the <a href="collection/GLOSSARY.html">glossary</a>.</p></noscript>')
         self.claim_index()
         self.reader.search_routes()
         learning=json.loads((self.root/'manifests/reader-experience.json').read_bytes())
