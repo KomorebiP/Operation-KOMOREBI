@@ -413,7 +413,11 @@ class Site:
                 content=glossary_return_links(content,glossary_config)
                 lookup=glossary_lookup(glossary_config)
                 content=re.sub(r'(</h1>)',lambda m:m[1]+lookup,content,count=1)
-            if repo=='collection' and path.startswith('docs/works/'):
+            is_euler = repo=='collection' and path=='docs/demonstrations/EULER_PACKETS.md'
+            if is_euler:
+                from euler_navigation import decorate
+                content=decorate(content)
+            elif repo=='collection' and path.startswith('docs/works/'):
                 identifier=PurePosixPath(path).stem
                 shortcut=self.reader.work_intro(identifier,page)
                 content=re.sub(r'(</h1>)',lambda m:m[1]+shortcut,content,count=1)
@@ -424,7 +428,8 @@ class Site:
             else:
                 contents=page_contents(content)
                 content=re.sub(r'(</h1>)',lambda m:m[1]+contents,content,count=1)
-            body='<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="'+self.rel('index.html',page)+'">Home</a> / <a href="'+self.rel(repo+'/index.html',page)+'">'+section+'</a></nav><article>'+content+'</article>'
+            article_class=' class="euler-example"' if is_euler else ''
+            body='<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="'+self.rel('index.html',page)+'">Home</a> / <a href="'+self.rel(repo+'/index.html',page)+'">'+section+'</a></nav><article'+article_class+'>'+content+'</article>'
             self.page(page,title,body,github(self.repos[repo],self.revisions[repo],path))
             plain=re.sub(r'<[^>]+>',' ',rendered)
             plain=html.unescape(re.sub(r'\s+',' ',plain))
