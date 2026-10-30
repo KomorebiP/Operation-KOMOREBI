@@ -235,7 +235,7 @@ Realization Calculus develops the mathematics of decomposition, transfer, refine
 | What would you like to do? | Begin here |
 |---|---|
 | Understand the ideas | [Read the introduction](docs/START_HERE.md), then explore the [complete demonstrations](docs/DEMONSTRATIONS.md). |
-| Read the mathematics | [Browse the works](docs/BROWSE.md), with links to papers, monographs, source files, and evidence. |
+| Browse by field or proof status | [Filter mathematics, computer science, physics and other works](https://KomorebiP.github.io/Operation-KOMOREBI/works.html) by completion, Lean coverage and evidence. The [repository reading index](docs/BROWSE.md) provides file links. |
 | Use the software | [Install a library and run a first example](docs/FIRST_RUN.md), or explore the [software guide](docs/LIBRARIES.md). |
 
 > **Author’s note:** This work remains in progress and has, in many respects, been rushed because of circumstances shaped by the AI industry. I am continuing to correct, verify, and organize it.
@@ -306,7 +306,7 @@ A finished reading edition can contain open conjectures. A passing collection ch
 
 ## Find a specific resource
 
-[Reading routes](docs/READING_ROUTES.md) · [Project map](docs/PROJECT_MAP.md) · [Glossary](docs/GLOSSARY.md) · [Completion and confidence](docs/COMPLETION_STATUS.md)
+[Discipline and evidence filters](https://KomorebiP.github.io/Operation-KOMOREBI/works.html) · [Reading routes](docs/READING_ROUTES.md) · [Project map](docs/PROJECT_MAP.md) · [Glossary](docs/GLOSSARY.md) · [Completion and confidence](docs/COMPLETION_STATUS.md)
 
 [Hand-worked examples](docs/HAND_WORKED_EXAMPLES.md) · [Papers](docs/browse/PAPERS.md) · [Written proofs](docs/browse/PROOFS.md) · [Lean sources](docs/browse/LEAN.md) · [Code](docs/browse/CODE.md) · [Downloads](docs/DOWNLOADS.md)
 
