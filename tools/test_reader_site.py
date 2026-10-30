@@ -100,7 +100,7 @@ class ReaderSiteTests(unittest.TestCase):
                     table_reading_aids={'L2':dict(caption='First table',headers=['Name','Value'],row_header_column=0)})
         site=SimpleNamespace(root=Path('.'),search=[],rel=lambda target,page:target,
                              page=lambda page,title,body:pages.update({page:body}))
-        reader=SimpleNamespace(site=site,claims_by_source={},work_routes=lambda work,page:'',
+        reader=SimpleNamespace(site=site,claims_by_source={},work_routes=lambda work,page:'',work_route_targets=lambda work:[],
                                resolve=lambda path,page,anchor=None:path+('#'+anchor if anchor else ''),
                                records={source:dict(sha256=hashlib.sha256(raw).hexdigest(),work='test',format='tex',file_url=source)})
         def book():

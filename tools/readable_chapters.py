@@ -893,16 +893,9 @@ def render_table(node,chapter,reading_aid=None):
     return body+('</tbody>' if len(rows)>1 else '')+'</table></div>'
 
 
-def neighbour_links(spec):
-    config=BOOKS[spec['work']]
-    chapters=config['chapters']
-    index=chapters.index(spec)
-    routes=[]
-    if index>0: routes.append(('Previous: '+chapters[index-1]['title'],chapters[index-1]['url']))
-    routes.append(('All '+config['label']+' chapters',config['index']))
-    if index+1<len(chapters): routes.append(('Next: '+chapters[index+1]['title'],chapters[index+1]['url']))
-    return '<nav class="chapter-neighbours" aria-label="Neighbouring reading chapters">'+''.join(
-        '<a href="'+posixpath.relpath(url,posixpath.dirname(spec['url']))+'">'+html.escape(title)+'</a>' for title,url in routes)+'</nav>'
+def neighbour_links(spec, placement='top'):
+    from reading_navigation import navigation
+    return navigation(BOOKS[spec['work']],spec['url'],placement)
 
 
 def render(reader):
@@ -915,6 +908,8 @@ def render(reader):
             reports.extend(render_book(reader,book))
     reader.site.write('documents/readable-chapters.json',json.dumps(reports,ensure_ascii=False,indent=2)+'\n')
     render_reading_index(reader)
+    from reading_navigation import publish_record
+    publish_record(reader.site,BOOKS)
 
 
 def render_reading_index(reader):
@@ -977,6 +972,7 @@ def statement_navigation(chapter,rows):
 
 def render_book(reader,book):
     from side_reader import pair_link
+    from reading_navigation import outline, resources, work_links
     site=reader.site
     config=book['config']
     work=config['work']
@@ -1000,9 +996,11 @@ def render_book(reader,book):
         if config.get('statement_navigation'): toc+=statement_navigation(chapter,rows)
         toc+='</nav>'
         body='<p class="eyebrow">Readable manuscript</p><h1>'+e(title)+'</h1>'
-        body+='<p>The wording and mathematics follow the retained manuscript. This reading format does not add a proof review or extend Lean coverage.</p>'
-        body+=reader.work_routes(work,page)+neighbour_links(spec)
-        body+='<p><a href="'+reader.resolve(source,page)+'">Original TeX with line links</a> · <a href="'+site.rel(reader.records[source]['file_url'],page)+'" download>Download TeX</a></p>'+reading_options()+toc
+        body+=neighbour_links(spec)+'<p class="reading-start"><a href="#chapter-text">Start reading</a></p>'+outline(toc)
+        tools=work_links(reader,work,page)
+        tools+='<p><a href="'+reader.resolve(source,page)+'">Original TeX with line links</a> · <a href="'+site.rel(reader.records[source]['file_url'],page)+'" download>Download TeX</a></p>'
+        tools+='<p>The wording and mathematics follow the retained manuscript. This reading format does not add a proof review or extend Lean coverage.</p>'+reading_options()
+        body+=resources(tools)
         body+='<article id="chapter-text" class="readable-chapter" aria-label="'+e(title,quote=True)+'">'
         level=2
         for node in chapter.nodes:
@@ -1014,10 +1012,7 @@ def render_book(reader,book):
             if kind in HEADINGS:
                 level=min(level+1,5) if kind=='paragraph' else HEADINGS[kind]
                 body+='<h'+str(level)+' id="'+node['id']+'">'+e(node['number'])+' '+chapter.inline(node['title'])+'</h'+str(level)+'>'
-                index=headings.index(node)
-                section_links='<a href="#contents">Contents</a>'
-                if index: section_links+=' · <a href="#'+headings[index-1]['id']+'">Previous section</a>'
-                if index+1<len(headings): section_links+=' · <a href="#'+headings[index+1]['id']+'">Next section</a>'
+                section_links='<a href="#contents">On this page</a>'
                 reading_links=' · '.join(filter(None,[section_links,reading_links]))
                 body+=passage_links(links,reading_links)
             elif kind=='figure' and config.get('figure_pdfs'):
@@ -1105,7 +1100,7 @@ def render_book(reader,book):
                 math_preview=re.search(r'\\\[(.*?)\\\]',node['body'],re.S)
                 if math_preview and len(math_preview[1])<650 and kind!='lstlisting': item['math_preview']=expand_math(math_preview[1],chapter.macros)
                 site.search.append(item)
-        body+='</article>'+neighbour_links(spec)+reader.work_routes(work,page)
+        body+='</article>'+neighbour_links(spec,'bottom')
         body+='<details class="document-provenance"><summary>Source and conversion record</summary><p>Source SHA-256: <code>'+reader.records[source]['sha256']+'</code></p><p>Unsupported prose commands stop the build. The mathematical expression sequence is checked against the source, with manuscript macros expanded for display.</p><p><a href="'+site.rel('documents/readable-chapters.json',page)+'">Conversion records</a></p></details>'
         site.page(page,title,body)
         expressions=original_math(chapter_text(raw.decode('utf-8-sig'),spec))
@@ -1135,7 +1130,7 @@ def render_book_index(reader,book,reports):
         body+='<li><a href="'+site.rel(spec['url'],page)+'">'+html.escape(spec['title'])+'</a></li>'
     body+='<li><a href="references.html">Bibliography</a></li></ol></nav>'
     if config.get('continuation_sources'):
-        body+='<h2>Continue in the manuscript sources</h2><p>These chapters are available as selectable TeX, with line links. The complete typeset edition is available below.</p><ul>'
+        body+='<h2 id="source-continuations">Continue in the manuscript sources</h2><p>These chapters are available as selectable TeX, with line links. The complete typeset edition is available below.</p><ul>'
         for path,title in config['continuation_sources']:
             body+='<li><a href="'+reader.resolve(path,page)+'">'+html.escape(title)+'</a></li>'
         body+='</ul>'
@@ -1159,12 +1154,15 @@ def render_book_index(reader,book,reports):
 
 
 def render_bibliography(reader,book):
+    from reading_navigation import navigation, resources, work_links
     site=reader.site
     config=book['config']
     page,work,label=config['bib_page'],config['work'],config['label']
-    body='<h1>'+label+' bibliography</h1>'+reader.work_routes(work,page)
+    body='<h1>'+label+' bibliography</h1>'+navigation(config,page)
+    body+=resources(work_links(reader,work,page))+'<article id="chapter-text">'
     if config.get('bibliography_source_only'):
         body+='<p>The complete bibliography, including the recovered historical references, remains in the original manuscript and its linked TeX sources.</p><p><a href="'+reader.resolve(config['bib'],page)+'">Read the bibliography in the manuscript source</a></p>'
+        body+='</article>'+navigation(config,page,'bottom')
         site.page(page,label+' bibliography',body)
         return
     body+='<p>Entries follow the retained bibliography source. Citation keys keep references stable without relying on older generated bibliography numbering. These links do not establish what a cited source proves.</p>'
@@ -1177,6 +1175,7 @@ def render_bibliography(reader,book):
                 body+='<dt>'+html.escape(field.capitalize())+'</dt><dd>'+html.escape(typography(value).replace('{','').replace('}',''))+'</dd>'
             body+='</dl>'
         body+='<p><a href="'+reader.resolve(config['bib'],page,'L'+str(entry['line']))+'">Original bibliography entry</a> · <a href="#ref-'+entry['key']+'">Permalink</a></p></section>'
+    body+='</article>'+navigation(config,page,'bottom')
     site.page(page,label+' bibliography',body)
     site.search.append(dict(title=label+' / Bibliography',group='Collection',kind='Papers and source',work_ids=[work],url=page,text=' '.join(e['key']+' '+(e['body'] if 'body' in e else ' '.join(e['fields'].values())) for e in book['references'])))
 

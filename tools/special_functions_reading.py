@@ -224,22 +224,18 @@ def prepare_book(reader, config):
 
 
 def render_book(reader, book):
+    from reading_navigation import navigation, outline, resources, work_links
     from readable_chapters import (HEADINGS, chapter_text, original_math, render_table,
                                    group, passage_links, reading_options, typography, plain_math)
     site, reports = reader.site, []
     chapters = book['chapters']
     for index, (spec, raw, chapter) in enumerate(chapters):
         page = spec['url']
-        def nav():
-            routes = [('Chapter contents', INDEX)]
-            if index: routes.insert(0, ('Previous: '+chapters[index-1][0]['title'], chapters[index-1][0]['url']))
-            if index+1<len(chapters): routes.append(('Next: '+chapters[index+1][0]['title'], chapters[index+1][0]['url']))
-            return '<nav class="document-routes" aria-label="Chapter navigation">'+''.join('<a href="'+site.rel(url,page)+'">'+html.escape(title)+'</a>' for title,url in routes)+'</nav>'
-        body = '<p class="eyebrow">Special Functions · Reading edition</p><h1>'+html.escape(spec['title'])+'</h1>'+nav()
-        body += reader.work_routes(WORK,page)
-        body += '<p><a href="'+reader.resolve(spec['source'],page)+'">Original TeX with line links</a></p>'+reading_options()
+        body = '<p class="eyebrow">Special Functions · Reading edition</p><h1>'+html.escape(spec['title'])+'</h1>'+navigation(book['config'],page)
+        body += '<p class="reading-start"><a href="#chapter-text">Start reading</a></p>'
         headings = [n for n in chapter.nodes if n['kind'] in HEADINGS]
-        body += '<nav class="chapter-contents" aria-label="On this page"><h2>On this page</h2><ol>'+''.join('<li><a href="#'+n['id']+'">'+html.escape(typography(n['title']))+'</a></li>' for n in headings)+'</ol></nav>'
+        body += outline('<nav class="chapter-contents" aria-label="On this page"><h2>On this page</h2><ol>'+''.join('<li><a href="#'+n['id']+'">'+html.escape(typography(n['title']))+'</a></li>' for n in headings)+'</ol></nav>')
+        body += resources(work_links(reader,WORK,page)+'<p><a href="'+reader.resolve(spec['source'],page)+'">Original TeX with line links</a></p>'+reading_options())
         body += '<article id="chapter-text" class="readable-chapter">'
         proof_targets = proof_links(headings)
         for node in chapter.nodes:
@@ -271,7 +267,7 @@ def render_book(reader, book):
             else: raise ValueError('Unsupported Special Functions block: '+kind)
             if kind not in {'figure','thebibliography','lstlisting'}:
                 site.search.append(dict(title='Special Functions / '+spec['title'],group='Collection',kind='Papers and source',work_ids=[WORK],url=page+'#'+node['id'],text=re.sub(r'\s+',' ',node['title']+' '+node['body'])))
-        body += '</article>'+nav()
+        body += '</article>'+navigation(book['config'],page,'bottom')
         body += '<details class="document-provenance"><summary>Source and conversion record</summary><p>This HTML edition follows the retained manuscript. It adds no proof review or Lean coverage.</p><p><a href="'+site.rel(REPORT,page)+'">Source identities and equation checks</a></p></details>'
         # Ignore code literals, exactly as the shared parser does for listings.
         selected = re.sub(r'\\begin\{verbatim\}.*?\\end\{verbatim\}', lambda m: mask(m[0]), chapter_text(raw,spec), flags=re.S)
