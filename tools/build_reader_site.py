@@ -78,14 +78,14 @@ def site_navigation(page):
         '<li>'+link(label, target)+'</li>' for label, target in links)+'</ul></div>'
         for title, links in groups)
     return ('<nav class="site-navigation" aria-label="Main navigation">'
-            '<div class="site-navigation-bar">'+link('Collection', 'works.html')+
-            link('About', 'collection/START_HERE.html')+link('Search', 'search.html')+
-            link('Glossary', 'collection/GLOSSARY.html')+
+            '<div class="site-navigation-bar"><div class="site-nav-links">'+link('Collection', 'works.html')+
+            link('Glossary', 'collection/GLOSSARY.html')+link('About', 'collection/START_HERE.html')+
+            '</div><div class="site-nav-tools">'+link('Search', 'search.html')+
             '<button id="site-menu-toggle" type="button" aria-expanded="true" '
             'aria-controls="site-menu-panel" hidden><svg class="site-browse-icon" viewBox="0 0 20 20" '
             'width="16" height="16" aria-hidden="true" focusable="false"><path '
             'd="M3 3h5v5H3zm9 0h5v5h-5zM3 12h5v5H3zm9 0h5v5h-5z"/></svg>'
-            'Browse <span aria-hidden="true">▾</span></button></div>'
+            'Browse <span aria-hidden="true">▾</span></button></div></div>'
             '<div id="site-menu-panel" class="site-menu-panel">'+panel+'</div></nav>')
 
 
