@@ -6,7 +6,7 @@ Recorded 2026-10-27 · **Komorebi P.**
 
 **Completion, Lean coverage and confidence describe different things.** A finished book may contain open research. A checked Lean proof may belong to an unfinished project. Choose a completion stage below, open a work's evidence record, then follow its paper, proofs, Lean, and code link.
 
-This guide summarizes the existing release and status records at [source revision `080487d6401a`](https://github.com/KomorebiP/Operation-KOMOREBI/commit/080487d6401a7e9d90c415fd9ffbbf8d825e3842). It covers **90 primary components** and **71 supporting collections**. The labels report those records, rather than a new proof review or Lean run. Each recorded pass keeps its original date and scope.
+This guide summarizes the existing release and status records at [source revision `4c09d41f2793`](https://github.com/KomorebiP/Operation-KOMOREBI/commit/4c09d41f2793cde15485eb52b789c081d1cfa27c). It covers **90 primary components** and **71 supporting collections**. The labels report those records, rather than a new proof review or Lean run. Each recorded pass keeps its original date and scope.
 
 [Finalization queue](FINALIZATION_QUEUE.md) · [Detailed evidence catalogue](STATUS_CATALOG.md) · [Component/file index](COMPONENT_INDEX.md) · [Machine-readable status](../manifests/project-status.json)
 
