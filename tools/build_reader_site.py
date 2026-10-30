@@ -86,20 +86,24 @@ def site_navigation(page):
 def home_page():
     """The Open research introduction keeps each reading route a plain link."""
     routes = [
-        ('Understand the project', 'Read the introduction and follow the Euler research example.', 'NEW_READER'),
-        ('Read the mathematics', 'Explore the papers and books, with their assumptions in view.', 'MATHEMATICS'),
-        ('Examine a proof', 'Follow statements, formal sources, and recorded evidence.', 'PROOF_REVIEW'),
-        ('Try the software', 'Run a worked example and compare the expected output.', 'SOFTWARE'),
+        ('Understand the project', 'Read the introduction and follow the Euler research example.', 'NEW_READER', 'Orientation'),
+        ('Read the mathematics', 'Explore the papers and books, with their assumptions in view.', 'MATHEMATICS', 'Papers &amp; books'),
+        ('Examine a proof', 'Follow statements, formal sources, and recorded evidence.', 'PROOF_REVIEW', 'Statements &amp; sources'),
+        ('Try the software', 'Run a worked example and compare the expected output.', 'SOFTWARE', 'Examples &amp; tools'),
     ]
     cards = ''.join(
-        '<a class="home-route" href="collection/routes/'+key+'.html"><div><h3>'+title+
-        '</h3><p>'+description+'</p></div><span aria-hidden="true">→</span></a>'
-        for title, description, key in routes)
+        '<a class="home-route" href="collection/routes/'+key+'.html"><div><p class="home-route-label"><span aria-hidden="true">'+str(index).zfill(2)+' / </span>'+label+'</p><h3>'+title+
+        '</h3><p>'+description+'</p></div><span class="home-route-arrow" aria-hidden="true">↗</span></a>'
+        for index, (title, description, key, label) in enumerate(routes, 1))
     return '''<section class="home-hero" aria-labelledby="home-title">
+<div class="home-copy">
 <p class="home-kicker">The Komorebi research collection</p>
-<h1 id="home-title">Explore the ideas.<br>Follow the evidence.</h1>
+<h1 id="home-title">Explore the ideas.<br><em>Follow the evidence.</em></h1>
 <p class="home-lede">A place to read mathematics, inspect the reasoning, and try the calculations for yourself.</p>
 <div class="home-actions"><a class="button" href="collection/START_HERE.html">Start with the introduction <span aria-hidden="true">→</span></a><a class="button button-secondary" href="works.html">Browse all works</a></div>
+<p class="home-example">Or follow a worked example: <a href="collection/demonstrations/EULER_PACKETS.html">Euler numbers <span aria-hidden="true">↗</span></a></p>
+</div>
+<div class="home-art" aria-hidden="true"><img src="assets/komorebi-structure.svg" alt="" width="440" height="440"><p>Mathematics <span>·</span> Proofs <span>·</span> Software</p></div>
 </section>
 <section class="home-ways" aria-labelledby="home-ways-title"><h2 id="home-ways-title">What would you like to explore?</h2><p>Choose a starting point. Each route includes context and links to the sources.</p>
 <div class="home-route-grid">'''+cards+'''</div></section>
@@ -315,12 +319,13 @@ class Site:
         doc='''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Read Komorebi papers, follow recorded proofs and run finite mathematical examples.">
+<meta name="theme-color" content="#20583c"><link rel="icon" type="image/svg+xml" href="'''+self.rel('assets/komorebi-mark.svg',path)+'''">
 <title>'''+esc(title)+''' · Komorebi</title><link rel="stylesheet" href="'''+self.rel('assets/reader.css',path)+'?v='+hashlib.sha256((self.root/'website/assets/reader.css').read_bytes()).hexdigest()[:12]+'''">
 <link rel="stylesheet" href="'''+self.rel('assets/open-research.css',path)+'?v='+hashlib.sha256((self.root/'website/assets/open-research.css').read_bytes()).hexdigest()[:12]+'''">
 <link rel="stylesheet" href="'''+self.rel('assets/side-reader.css',path)+'?v='+hashlib.sha256((self.root/'website/assets/side-reader.css').read_bytes()).hexdigest()[:12]+'''">
 <script defer src="'''+self.rel('assets/mathjax-config.js',path)+'''"></script><script defer src="'''+self.rel('assets/mathjax/tex-svg-full.js',path)+'''"></script>
 <script defer src="'''+self.rel('assets/reader.js',path)+'?v='+hashlib.sha256((self.root/'website/assets/reader.js').read_bytes()).hexdigest()[:12]+'''"></script>'''+glossary_script+'''</head><body class="open-research'''+(' home-page' if path == 'index.html' else '')+'''">
-<a class="skip-link" href="#main">Skip to main content</a><header class="site-header"><a class="brand" href="'''+root+'''">Komorebi<span>Mathematics · proofs · software</span></a>'''+nav_html+'''</header>
+<a class="skip-link" href="#main">Skip to main content</a><header class="site-header"><a class="brand" href="'''+root+'''"><img class="brand-mark" src="'''+self.rel('assets/komorebi-mark.svg',path)+'''" alt="" width="40" height="40">Komorebi<span>Mathematics · proofs · software</span></a>'''+nav_html+'''</header>
 <main id="main" tabindex="-1">'''+body+'''</main><footer><div class="footer-links">'''+source_html+'''<a href="'''+self.rel('collection/PROJECT_STATEMENT.html',path)+'''">Project and authorship statement</a> · <a href="'''+self.rel('collection/ACCESSIBILITY.html',path)+'''">Accessibility and reporting problems</a></div><p><a href="https://github.com/'''+REPOSITORY+'''">Return to GitHub</a></p></footer></body></html>'''
         self.write(path,doc)
     def collect_documents(self):
