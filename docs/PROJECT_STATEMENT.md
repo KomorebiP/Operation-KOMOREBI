@@ -16,11 +16,11 @@ For me, the pseudonym is a working arrangement rather than a commitment to perma
 
 ## Authorship and AI assistance
 
-This project has developed with substantial AI assistance, including mathematical formulation, exploration of possible proof approaches, drafting, programming, exact calculations, testing, and review. It has also included work on references, figures, and document production. Its extent and the review history vary across the collection and are described in the disclosures accompanying individual works.
+This project has developed with substantial AI assistance in mathematical formulation, exploration of possible proof approaches, drafting, programming, exact calculations, testing, review, references, figures, and document production. The extent of that assistance and the review history vary across the collection and are described in the disclosures accompanying individual works.
 
 I am the named author and take responsibility for what I publish and for correcting it. Crediting AI assistance is part of giving an accurate account of how the work was produced. That assistance does not, by itself, establish the correctness of a result.
 
-Review must be documented separately. Publication under my name does not imply that every proof has received my separate personal approval, independent human review, or external certification.
+Review must be documented separately. Publication under my name does not imply that every proof has received my personal approval, independent human review, or external certification.
 
 ## Current state and publication circumstances
 
