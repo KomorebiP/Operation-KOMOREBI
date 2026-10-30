@@ -209,7 +209,8 @@ also have HTML pages. They retain the source prose and equations, with 24
 drawings rendered from the unchanged TikZ files. Each drawing has a text
 description and a complete transcript of its labels. Matrix entries, coefficient
 values and root certificates use tables with row and column headers. Wide tables
-can be scrolled with the keyboard. Equations use the same MathJax reading controls
+can be scrolled with the keyboard. Each drawing table's scrolling region is named
+by its visible caption. Equations use the same MathJax reading controls
 as the manuscript. Each plate links to its manuscript statements and original
 PDF page, and to the previous and next plates.
 

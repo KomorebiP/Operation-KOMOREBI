@@ -185,11 +185,34 @@ class ReaderSiteTests(unittest.TestCase):
         rendered=render_drawing(drawing,chapter,reader)
         self.assertEqual(chapter.math,['x','y'])
         self.assertIn('width="1200" height="450"',rendered)
-        self.assertIn('<caption>Values</caption>',rendered)
+        self.assertIn('<caption id="drawing-table-caption-1">Values</caption>',rendered)
+        self.assertIn('role="region" aria-labelledby="drawing-table-caption-1"',rendered)
         self.assertEqual(rendered.count('scope="col"'),2)
         self.assertEqual(rendered.count('scope="row"'),2)
         self.assertIn('tabindex="0" role="region"',rendered)
         self.assertIn('id="drawing-label-1"',rendered)
+
+    def test_atlas_table_names_reference_distinct_captions_and_preserve_caption_math(self):
+        import re
+        from reader_atlas import render_drawing
+        from paper_iv_atlas_descriptions import figure,table
+        drawing=dict(description=figure('Two tables','Description',
+                         table(0,['Term','Value'],[['First',1]]),
+                         table(2,['Term','Value'],[['Second',3]])),
+                     receipt=dict(image='image.png',source='figure.tex'),
+                     nodes=[dict(text='First $a$'),dict(text='$x$'),
+                            dict(text='Second $b$'),dict(text='$y$')],width=1200,height=450)
+        reader=SimpleNamespace(site=SimpleNamespace(rel=lambda path,page:path),resolve=lambda path,page:'source.html')
+        chapter=Chapter('',{})
+        rendered=render_drawing(drawing,chapter,reader)
+        references=re.findall(r'role="region" aria-labelledby="([^"]+)"',rendered)
+        captions=re.findall(r'<caption id="([^"]+)"',rendered)
+        self.assertEqual(references,captions)
+        self.assertEqual(len(set(references)),2)
+        self.assertEqual(chapter.math,['a','x','b','y'])
+        self.assertEqual(rendered.count('id="drawing-label-'),4)
+        self.assertEqual(rendered.count('tabindex="0" role="region"'),2)
+        self.assertNotIn('aria-label="Drawing values',rendered)
 
     def test_atlas_return_links_follow_only_explicit_references_and_deduplicate(self):
         from reader_atlas import manuscript_backlinks

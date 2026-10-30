@@ -187,7 +187,7 @@ def render_drawing(figure, chapter, reader):
     size=' width="'+str(figure['width'])+'" height="'+str(figure['height'])+'"'
     body='<figure class="atlas-drawing"><img src="'+image+'"'+size+' alt="'+e(info['alt'],quote=True)+'" loading="lazy"><figcaption>Original drawing. A text description and its labels follow.</figcaption></figure>'
     body+='<section aria-labelledby="drawing-description"><h2 id="drawing-description">Reading the drawing</h2><p>'+e(info['description'])+'</p>'
-    for block in info['blocks']:
+    for block_number,block in enumerate(info['blocks'],1):
         if block['kind']=='text':
             if block.get('title'): body+='<h3>'+e(block['title'])+'</h3>'
             if (block.get('title') or '').endswith('ticks'):
@@ -197,7 +197,8 @@ def render_drawing(figure, chapter, reader):
             # A real caption and row/column headers preserve relationships at zoom
             # and in assistive reading, without using the image's coordinates.
             caption=cell(block['caption'])
-            body+='<div class="table-scroll" tabindex="0" role="region" aria-label="Drawing values. Scroll horizontally if needed."><table><caption>'+caption+'</caption><thead><tr>'
+            caption_id='drawing-table-caption-'+str(block_number)
+            body+='<div class="table-scroll" tabindex="0" role="region" aria-labelledby="'+caption_id+'"><table><caption id="'+caption_id+'">'+caption+'</caption><thead><tr>'
             body+=''.join('<th scope="col">'+cell(c)+'</th>' for c in block['headers'])+'</tr></thead><tbody>'
             for row in block['rows']:
                 body+='<tr>'+''.join(('<th scope="row">' if i==0 else '<td>')+cell(c)+('</th>' if i==0 else '</td>') for i,c in enumerate(row))+'</tr>'
