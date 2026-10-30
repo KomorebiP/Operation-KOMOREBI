@@ -13,7 +13,7 @@ screens. Wide tables and code blocks can be scrolled with the keyboard.
 In HTML guides, captioned tables use their visible captions as the names of
 their scrolling regions, so screen-reader region navigation identifies the table.
 
-The header keeps **Collection**, **About the project** and **Search** visible.
+The header keeps **Collection**, **About the project**, **Search** and **Glossary** visible.
 **Browse** opens links grouped
 under **Read**, **Look up** and **Use**. The current page is marked in its link.
 The expanded navigation stays above the content and does not cover it. Press
@@ -290,6 +290,15 @@ exploration. Open an expression's context menu for the available math options.
 Support varies with the browser and assistive technology.
 
 The [glossary](GLOSSARY.md) includes prose explanations of introductory symbols.
+Its website link is always visible in the main navigation. The glossary's quick
+lookup searches maintained terms, definitions and reading notes, with an optional
+subject filter. Exact term names appear first. Result counts are announced without
+moving focus while typing; submitting moves focus to the matching terms heading.
+Each result links to its complete entry, examples and related terms. Every entry
+has a **Back to glossary lookup** link that preserves the search. The lookup
+address can be shared, and the full reference, subject links and alphabetical
+index remain available without JavaScript. **Read side by side** can keep the
+glossary beside a manuscript.
 The original papers retain their own definitions. Text descriptions and source
 files are linked where available. This does not establish that every diagram
 or every mathematical expression in the collection has an adequate spoken

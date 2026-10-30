@@ -65,7 +65,7 @@ def site_navigation(page):
                   ('Papers and PDFs', 'documents.html'),
                   ('Read side by side', 'side-by-side.html'),
                   ('Worked examples', 'collection/HAND_WORKED_EXAMPLES.html')]),
-        ('Look up', [('Claims', 'claims.html'), ('Glossary', 'collection/GLOSSARY.html'),
+        ('Look up', [('Claims', 'claims.html'),
                      ('Notation', 'notation.html')]),
         ('Use', [('Run Python', 'playground.html'), ('Software', 'software.html'),
                  ('Downloads', 'downloads.html'),
@@ -77,6 +77,7 @@ def site_navigation(page):
     return ('<nav class="site-navigation" aria-label="Main navigation">'
             '<div class="site-navigation-bar">'+link('Collection', 'works.html')+
             link('About the project', 'collection/START_HERE.html')+link('Search', 'search.html')+
+            link('Glossary', 'collection/GLOSSARY.html')+
             '<button id="site-menu-toggle" type="button" aria-expanded="true" '
             'aria-controls="site-menu-panel" hidden>Browse <span aria-hidden="true">▾</span></button></div>'
             '<div id="site-menu-panel" class="site-menu-panel">'+panel+'</div></nav>')
@@ -310,6 +311,7 @@ class Site:
         root=self.rel('index.html',path)
         nav_html=site_navigation(path)
         source_html=('<a href="'+esc(source,quote=True)+'">Source on GitHub</a> · ') if source else ''
+        glossary_script=('<script defer src="'+self.rel('assets/glossary.js',path)+'?v='+hashlib.sha256((self.root/'website/assets/glossary.js').read_bytes()).hexdigest()[:12]+'"></script>') if path=='collection/GLOSSARY.html' else ''
         doc='''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Read Komorebi papers, follow recorded proofs and run finite mathematical examples.">
@@ -317,7 +319,7 @@ class Site:
 <link rel="stylesheet" href="'''+self.rel('assets/open-research.css',path)+'?v='+hashlib.sha256((self.root/'website/assets/open-research.css').read_bytes()).hexdigest()[:12]+'''">
 <link rel="stylesheet" href="'''+self.rel('assets/side-reader.css',path)+'?v='+hashlib.sha256((self.root/'website/assets/side-reader.css').read_bytes()).hexdigest()[:12]+'''">
 <script defer src="'''+self.rel('assets/mathjax-config.js',path)+'''"></script><script defer src="'''+self.rel('assets/mathjax/tex-svg-full.js',path)+'''"></script>
-<script defer src="'''+self.rel('assets/reader.js',path)+'?v='+hashlib.sha256((self.root/'website/assets/reader.js').read_bytes()).hexdigest()[:12]+'''"></script></head><body class="open-research'''+(' home-page' if path == 'index.html' else '')+'''">
+<script defer src="'''+self.rel('assets/reader.js',path)+'?v='+hashlib.sha256((self.root/'website/assets/reader.js').read_bytes()).hexdigest()[:12]+'''"></script>'''+glossary_script+'''</head><body class="open-research'''+(' home-page' if path == 'index.html' else '')+'''">
 <a class="skip-link" href="#main">Skip to main content</a><header class="site-header"><a class="brand" href="'''+root+'''">Komorebi<span>Mathematics · proofs · software</span></a>'''+nav_html+'''</header>
 <main id="main" tabindex="-1">'''+body+'''</main><footer><div class="footer-links">'''+source_html+'''<a href="'''+self.rel('collection/PROJECT_STATEMENT.html',path)+'''">Project and authorship statement</a> · <a href="'''+self.rel('collection/ACCESSIBILITY.html',path)+'''">Accessibility and reporting problems</a></div><p>Completion and verification details accompany each work.</p></footer></body></html>'''
         self.write(path,doc)
@@ -395,6 +397,12 @@ class Site:
             title=title_match[1] if title_match else Path(path).stem
             section={'collection':'Collection','math':'Komorebi Math','polyphase':'Polyphase Float'}[repo]
             content=''.join(rewrite.out)
+            if repo=='collection' and path=='docs/GLOSSARY.md':
+                from glossary_reader import glossary_lookup, glossary_return_links
+                glossary_config=json.loads((self.root/'manifests/reader-experience.json').read_bytes())
+                content=glossary_return_links(content,glossary_config)
+                lookup=glossary_lookup(glossary_config)
+                content=re.sub(r'(</h1>)',lambda m:m[1]+lookup,content,count=1)
             if repo=='collection' and path.startswith('docs/works/'):
                 identifier=PurePosixPath(path).stem
                 shortcut=self.reader.work_intro(identifier,page)

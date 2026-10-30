@@ -2,6 +2,8 @@
 
 This guide explains 183 terms used in the collection and its finite examples. Start with a subject below, use the [alphabetical index](#alphabetical-index), or look up [symbols](#symbols-in-the-introductory-example).
 
+[Find a glossary term on the reading website](https://KomorebiP.github.io/Operation-KOMOREBI/collection/GLOSSARY.html#glossary-lookup): search terms and definitions, or choose a subject. Open the glossary beside a paper with **Read side by side**.
+
 A word can have a more specific meaning in another paper. The paper’s definitions and hypotheses take precedence. Examples and source links provide context without changing any recorded evidence status.
 
 [Look up notation across the collection](NOTATION_INDEX.md) · [Work through the calculations by hand](HAND_WORKED_EXAMPLES.md) · [Papers, proofs, Lean and code by topic](LEARNING_MAP.md) · [First software runs](FIRST_RUN.md)
