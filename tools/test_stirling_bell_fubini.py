@@ -18,14 +18,15 @@ class PartitionTransformExactTests(unittest.TestCase):
     def test_all_exact_contracts(self):
         counts=M.test_cases()
         self.assertEqual(counts,{
-            "reference":17,
+            "reference":25,
             "partitions":45,
             "surjections":36,
             "triangular":165,
             "generating":110,
-            "packets":44
+            "packets":44,
+            "moments":212
         })
-        self.assertEqual(sum(counts.values()),417)
+        self.assertEqual(sum(counts.values()),637)
 
     def test_reference_row_and_signed_inverse(self):
         second=M.stirling_second(5)
@@ -36,6 +37,24 @@ class PartitionTransformExactTests(unittest.TestCase):
         self.assertEqual(first[5],(0,24,-50,35,-10,1))
         self.assertEqual(sum(first[5][j]*ordered[j] for j in range(6)),120)
         self.assertEqual(sum(first[5][j]*bell[j] for j in range(6)),1)
+
+    def test_touchard_gamma_moment_and_parameterized_reciprocal(self):
+        second=M.stirling_second(10)
+        row=second[5]
+        self.assertEqual(M.touchard_value(row,2),454)
+        self.assertEqual(M.exponential_moment_value(row,2),9002)
+        self.assertEqual(M.touchard_value(row,Fraction(1,2)),Fraction(257,32))
+        self.assertEqual(M.exponential_moment_value(row,Fraction(1,2)),Fraction(91,2))
+        for z in (Fraction(0),Fraction(1,2),Fraction(1),Fraction(2)):
+            touchard=[M.touchard_value(row,z) for row in second]
+            moment=[M.exponential_moment_value(row,z) for row in second]
+            for n in range(11):
+                self.assertEqual(
+                    M.exponential_series_of_expm1(10,z)[n],
+                    touchard[n]/M.factorial(n))
+                self.assertEqual(
+                    M.parameterized_reciprocal_series(10,z)[n],
+                    moment[n]/M.factorial(n))
 
     def test_two_summary_obstruction_uses_only_a_candidate_not_another_partition_row(self):
         original=M.stirling_second(4)[4]
@@ -73,13 +92,17 @@ class PartitionTransformExactTests(unittest.TestCase):
             counts=M.test_cases()
             M.save(a,counts)
             M.save(b,counts)
-            self.assertEqual(len(FILES),7)
+            self.assertEqual(len(FILES),8)
             for name in FILES:
                 with self.subTest(name=name):
                     self.assertEqual((a/name).read_bytes(),(b/name).read_bytes())
             summary=json.loads((a/"results.json").read_bytes())
-            self.assertEqual(summary["total_assertions"],417)
+            self.assertEqual(summary["total_assertions"],637)
             self.assertEqual(summary["bell5"],52)
+            self.assertEqual(summary["moment_bridge_n5"]["2"],
+                             {"touchard":"454","exponential_moment":"9002"})
+            self.assertIn("1/2,5,257/32,91/2",
+                          (a/"moment-bridge.csv").read_text())
             self.assertEqual(summary["fubini5"],541)
             self.assertEqual(summary["packet_split_n5"],{
                 "even_degree_tap_contribution":135,
@@ -106,8 +129,8 @@ class PartitionTransformWebsiteTests(unittest.TestCase):
                                  write=write,page=page,search=[])
             record=publish(site)
             self.assertEqual(len(site.search),1)
-            self.assertEqual(record["case_assertions"],417)
-            self.assertEqual(len(record["tables"]),7)
+            self.assertEqual(record["case_assertions"],637)
+            self.assertEqual(len(record["tables"]),8)
             pages[record["manuscript_url"]]="<h1>Stirling partitions</h1>"
             from check_reader_site import Page
             parsed={name:Page(content) for name,content in pages.items()}
