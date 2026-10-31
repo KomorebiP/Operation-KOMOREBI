@@ -439,6 +439,56 @@ def check():
             energy(fir(quarter)) == 8*energy(quarter),
             "reference", "both finite operator norm bounds are sharp")
 
+    # Full four-level operator transfer, not merely one Haar pair.
+    wx = wavelet_analysis(x)
+    wy = wavelet_analysis(case["filtered"])
+    matrix16 = full_wavelet_transfer(16)
+    project = coarsen_first_level
+    ph = project(case["filtered"])
+    hp = fir(project(x))
+    commutator = operation_commutator(x)
+    require(wx == exact((3,1,-2,-2,0,0,-4,0,0,0,0,0,0,8,0,0)),
+            "multiscale", "full input coefficient ordering")
+    require(wy == exact((6,2,-4,0,0,0,-12,-4,2,0,-4,0,10,-8,-16,0)),
+            "multiscale", "full filtered coefficient ordering")
+    require(wavelet_synthesis(wx) == x,
+            "multiscale", "wavelet analysis-synthesis inverse")
+    require(wavelet_synthesis(wy) == case["filtered"],
+            "multiscale", "filtered wavelet analysis-synthesis")
+    require(tuple(value for _,value,_ in wavelet_energy_levels(wx))
+            == exact((144,16,64,64,128)),
+            "multiscale", "five original weighted energy bands")
+    require(tuple(value for _,value,_ in wavelet_energy_levels(wy))
+            == exact((576,64,128,640,880)),
+            "multiscale", "five filtered weighted energy bands")
+    require(sum(int(t!=0) for t in wx) == 6,
+            "multiscale", "original wavelet support size")
+    require(sum(int(t!=0) for t in wy) == 10,
+            "multiscale", "filtered wavelet support size")
+    require(len(matrix16) == 16 and all(len(row)==16 for row in matrix16),
+            "multiscale", "full square transfer matrix shape")
+    require(sum(t!=0 for row in matrix16 for t in row) == 56,
+            "multiscale", "exact transfer matrix sparsity")
+    require(apply_matrix(matrix16, wx) == wy,
+            "multiscale", "full four-level operator transfer on the signal")
+    require(matrix16[0] == exact((2,)+(0,)*15),
+            "multiscale", "the global mean scales exactly by two")
+    require(project(x) == case["coarse"],
+            "multiscale", "coarsening equals dropping finest details")
+    require(project(project(x)) == project(x),
+            "multiscale", "coarsening is idempotent")
+    require(energy(commutator) == 624,
+            "multiscale", "noncommutation witness energy")
+    require(energy(tuple(case["filtered"][i]-hp[i] for i in range(16))) == 768
+            and energy(tuple(case["filtered"][i]-ph[i] for i in range(16))) == 880,
+            "multiscale", "distinct orders have distinct projection errors")
+    require(energy(commutator) == energy(case["filter_error"]),
+            "multiscale", "commutator norm equals omitted-transfer energy")
+    require(commutator == exact((-2,2,0,0,4,-4,0,0,-10,10,16,0,-8,-8,0,0)),
+            "multiscale", "exact commutator coordinate witness")
+    require(commutator != (F(0),)*16,
+            "multiscale", "filter and coarse projection do not commute")
+
     # Linearity plus equality on every coordinate basis vector gives an
     # exact 16-dimensional operator identity, not merely a sample agreement.
     for k in range(16):
@@ -464,8 +514,19 @@ def check():
         require(residue == (2*basis[-1]-basis[-2], -basis[-1])
                 + (F(0),)*(len(basis)-2),
                 "basis", "boundary correction basis "+str(k))
+        waves = wavelet_analysis(basis)
+        require(wavelet_synthesis(waves) == basis,
+                "multiscale", "four-level inverse on coordinate impulse")
+        require(apply_matrix(matrix16, waves) == wavelet_analysis(direct),
+                "multiscale", "whole wavelet matrix on coordinate impulse")
+        require(energy(operation_commutator(basis))
+                == energy(skew_shift(basis)),
+                "multiscale", "whole commutator on sample impulse")
+        require(energy(basis) == sum(v for _,v,_ in wavelet_energy_levels(waves)),
+                "multiscale", "wavelet energy on sample impulse")
 
     # Exhaustive small-integer 4-vectors and deterministic longer controls.
+    matrix4=full_wavelet_transfer(4)
     for numbers in product((-2, -1, 0, 1, 2), repeat=4):
         s = exact(numbers)
         m, stages = analyze(s)
@@ -490,7 +551,12 @@ def check():
         require(boundary_difference == (2*s[-1]-s[-2], -s[-1])
                 + (F(0),)*(len(s)-2),
                 "exhaustive", "four-sample edge correction")
+        require(apply_matrix(matrix4, wavelet_analysis(s)) == wavelet_analysis(direct),
+                "multiscale", "exhaustive 4-point whole wavelet transfer")
+        require(energy(operation_commutator(s)) == energy(skew_shift(s)),
+                "multiscale", "exhaustive 4-point noncommutation certificate")
     rng = Random(20261030)
+    wavelet_matrices = {8:full_wavelet_transfer(8),16:matrix16,32:full_wavelet_transfer(32)}
     for length in (8, 16, 32):
         for _ in range(32):
             s = exact(rng.randrange(-12, 13) for _ in range(length))
@@ -520,6 +586,11 @@ def check():
             require(boundary_difference == (2*s[-1]-s[-2], -s[-1])
                     + (F(0),)*(len(s)-2),
                     "random", "cyclic versus zero edge packet")
+            require(apply_matrix(wavelet_matrices[length], wavelet_analysis(s))
+                    == wavelet_analysis(direct),
+                    "multiscale", "whole wavelet transfer for seeded signal")
+            require(energy(operation_commutator(s)) == energy(skew_shift(s)),
+                    "multiscale", "noncommutation for seeded signal")
     return counts
 
 
