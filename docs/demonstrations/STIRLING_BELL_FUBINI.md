@@ -282,6 +282,8 @@ Evaluating at \(z=1\) forgets the number of blocks but preserves the partition c
 \int_0^\infty e^{-u}u^k\,du=k!.
 \]
 
+Indeed, the integral is \(1\) for \(k=0\), and integration by parts gives \(I_k=kI_{k-1}\) for \(k\ge1\). This proves the factorial rule without numerical approximation.
+
 Because \(T_n\) is a finite polynomial, we may integrate term by term, without an interchange of infinite series:
 
 \[
@@ -359,7 +361,13 @@ The same reciprocal has a classical probabilistic realization. When \(\lambda>0\
 \left(\frac{\lambda}{1+\lambda}\right)^m,\qquad m\ge0.
 \]
 
-Its falling-factorial moments are \(\mathbb E[(M)_k]=k!\lambda^k\). Combine this with the basis identity from Section 3,
+Its falling-factorial moments are \(\mathbb E[(M)_k]=k!\lambda^k\). To see this directly, put \(q=\lambda/(1+\lambda)\). Differentiate the geometric series \(1/(1-q)=\sum_{m\ge0}q^m\) \(k\) times and multiply by \(q^k\):
+
+\[
+\sum_{m\ge0}(m)_kq^m=\frac{k!q^k}{(1-q)^{k+1}}.
+\]
+
+Dividing by \(1+\lambda\) gives \(k!\lambda^k\) exactly. Combine this with the basis identity from Section 3,
 \(m^n=\sum_k S(n,k)(m)_k\), to obtain
 
 \[
@@ -378,7 +386,7 @@ F_n=\sum_{m\ge0}\frac{m^n}{2^{m+1}}.
 
 This is an **independent interpretation**, not a claim that infinitely many terms are required to *compute* \(F_n\): the original finite Stirling row remains exact. The signed Stirling inverse still recovers the input moments \(k!\lambda^k\) from the complete prefix \((F_0(\lambda),\ldots,F_n(\lambda))\). A single output \(F_n(\lambda)\) does not recover its underlying row.
 
-The checker verifies the parameter values, polynomial recurrences, formal generating functions, reciprocal identities and signed inversions using integers and rational fractions. Download the [parameterized moment table](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/moment-bridge.csv) alongside the earlier tables.
+The checker verifies the parameter values, polynomial recurrences, geometric falling-factorial moments, formal generating functions, reciprocal identities and signed inversions using integers and rational fractions. Download the [parameterized moment table](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/moment-bridge.csv) alongside the earlier tables.
 
 ## 6. Split the reciprocal identity into even and odd packets
 
