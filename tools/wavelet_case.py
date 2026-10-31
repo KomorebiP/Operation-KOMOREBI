@@ -17,8 +17,8 @@ PREFIX = "downloads/wavelet-polyphase/"
 DOWNLOAD = PREFIX + "wavelet_polyphase.py"
 RECORD = PREFIX + "source-record.json"
 ARCHIVE = PREFIX + "source-and-results.zip"
-FILES = ("phase-transfer.csv", "haar-coefficients.csv", "results.json",
-         "signal-comparison.svg")
+FILES = ("phase-transfer.csv", "haar-coefficients.csv", "weighted-budget.csv",
+         "results.json", "signal-comparison.svg")
 
 
 def digest(raw):
@@ -66,9 +66,10 @@ def publish(site):
         "archive_sha256": digest(archive.read_bytes()),
         "archive_files": [{"source": key, "sha256": digest(raw)}
                           for key, raw in sources.items()],
-        "scope": ("Exact rational sixteen-sample wavelet/FIR worked example, "
-                  "finite operator proof and reproducible arithmetic tests. "
-                  "No infinite signal or formal Lean replay.")
+        "scope": ("Exact rational sixteen-sample Haar/FIR worked example with "
+                  "finite lifting, periodic filter stability, optimal fixed-basis "
+                  "selection, boundary repair and reproducible checks. "
+                  "No infinite-signal or formal Lean replay.")
     }
     site.write(RECORD, json.dumps(record, ensure_ascii=False, indent=2)+"\n")
 
@@ -76,8 +77,9 @@ def publish(site):
     body = (
         '<h1>Wavelets and polyphase transfer / exact Python program</h1>'
         '<p>Four Haar levels, circular three-tap FIR filtering, exact '
-        'polyphase and Haar operator transfers, missing-detail repair, '
-        'and counterexamples. Python 3.10 or later, standard library only.</p>'
+        'polyphase and Haar operator transfers, exact lifting, weighted '
+        'coefficient budgets, finite filter stability, boundary repair and '
+        'counterexamples. Python 3.10 or later, standard library only.</p>'
         '<p><a class="button" href="../collection/demonstrations/WAVELET_POLYPHASE.html">'
         'Read the complete worked example</a> '
         '<a download href="../'+DOWNLOAD+'">Download Python</a> · '
@@ -87,7 +89,7 @@ def publish(site):
         ' · '.join('<a href="../'+item["url"]+'">'+item["url"].split("/")[-1]+'</a>'
                    for item in exports) + '</p>'
         '<p>Run <code>python -B wavelet_polyphase.py</code>. '
-        'Add <code>--output wavelet-results</code> to generate the exact '
+        'Add <code>--output wavelet-results</code> to generate all exact '
         'CSV, SVG, and JSON records.</p>'
     )
     site.page(READER, "Wavelets and polyphase transfer / exact Python program",
@@ -99,9 +101,10 @@ def publish(site):
         group="Collection", kind="Code",
         work_ids=["paper-ii", "paper-v", "information-realization", "streaming-skat"],
         url=READER,
-        text=("Haar multiresolution wavelet pairs energy coefficient "
-              "residual repair circular FIR three tap periodic polyphase "
-              "operator conjugacy direct transfer missing cross blocks "
+        text=("Haar multiresolution lifting predict update weighted optimal "
+              "coefficient selection filter stability cyclic convolution "
+              "polyphase energy defect residual repair circular FIR three tap "
+              "operator conjugacy direct transfer boundary correction "
               "Python exact fractions independently checked")))
     return record
 

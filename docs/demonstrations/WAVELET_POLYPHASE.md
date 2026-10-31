@@ -2,7 +2,7 @@
 
 **An extended hand-worked example · Komorebi P.**
 
-Begin with sixteen actual sample values. Separate their even and odd addresses, analyze them through four Haar levels, remove a detail packet, reconstruct the resulting signal, and calculate the missing residual exactly. Then apply a three-tap FIR filter and transport the **operation itself** through the polyphase and Haar coordinates.
+Begin with sixteen specified sample values. Separate their even and odd addresses, analyze them through four Haar levels, remove a detail packet, reconstruct the resulting signal, and calculate the missing residual exactly. Then apply a three-tap FIR filter and transport the **operation itself** through the polyphase and Haar coordinates.
 
 Nothing in the calculation requires interpolation or a continuous input. The filters and wavelets act on a finite vector, while the same linear-algebraic operations explain why the coordinate transfers work.
 
@@ -121,6 +121,35 @@ Indeed \(B^{-1}B=I\). This local inverse holds for every rational pair, not only
 
 The only nonzero finest-level detail is \(d_{1,5}=8\). Its pair is recovered by \(4+8=12\) and \(4-8=-4\). Keeping the average alone gives \((4,4)\) and loses the spike.
 
+### Predict–update lifting: the same pair in another factorization
+
+Paper V also records an exact *lifting* construction. First predict the odd coordinate from the even coordinate, then update the even coordinate using the residual:
+
+\[
+\ell=O-E,\qquad s=E+\tfrac12\ell.
+\]
+
+The inverse is \(E=s-\ell/2\), followed by \(O=E+\ell\). In matrix form,
+
+\[
+\begin{aligned}
+\underbrace{\frac12\begin{pmatrix}1&1\\1&-1\end{pmatrix}}_{B}
+&=
+\underbrace{\begin{pmatrix}1&0\\0&-1/2\end{pmatrix}}_{\text{scale}}
+\underbrace{\begin{pmatrix}1&1/2\\0&1\end{pmatrix}}_{\text{update}}
+\underbrace{\begin{pmatrix}1&0\\-1&1\end{pmatrix}}_{\text{predict}}.
+\end{aligned}
+\]
+
+The two triangular matrices have determinant one. The final diagonal factor converts the lifting difference into our Haar detail \(d=-\ell/2\), so \(s=a\). At the nontrivial pair \((12,-4)\),
+
+\[
+\ell=-4-12=-16,\qquad
+s=12-8=4,\qquad d=8.
+\]
+
+Reversing the update and prediction returns \((12,-4)\) exactly. This is an alternative **factorization of the same perfect-reconstruction transform**, not an additional approximation. It is the finite rational specialization of Paper V's predict–update lifting result.
+
 ## 3. Continue through all four wavelet levels
 
 Repeat the same averaging and differencing rule on the averages of the preceding level. The complete calculation is:
@@ -132,7 +161,7 @@ Repeat the same averaging and differencing rule on the averages of the preceding
 | 3 | \((4,2)\) | \((-2,-2)\) |
 | 4 | \((3)\) | \((1)\) |
 
-The final mean is \(m=3\). The stored description consists of that one mean and \(8+4+2+1=15\) detail coefficients. There are sixteen coordinates in total.
+The final mean is \(m=3\). The stored description consists of that one mean and \(8+4+2+1=15\) detail coefficients. There are sixteen coordinates in total. This is the usual **lowpass-branch Haar decomposition**. A full wavelet-packet tree, as studied separately in Paper V, also splits detail branches; we do not perform that further refinement here.
 
 Synthesis begins at the mean. For each level, restore the children using \((u,v)=(a+d,a-d)\) until all sixteen samples are recovered. The exact inverse is simply the composition of these pair inverses in reverse level order.
 
@@ -211,7 +240,37 @@ Thus \(A\) loses eight independent directions. Two distinct signals can have ide
 
 There are only six nonzero Haar coefficients for this particular signal: the mean and five details. That fact is an exact sparsity property of **this input**, not a claim about universal compression rates or arbitrary signals.
 
-## 5. Apply a real discrete filter, not merely an address rearrangement
+### Choosing an optimal finite detail budget
+
+Suppose the mean is always retained and exactly \(k\) nonzero detail coefficients may also be kept. Because the Haar synthesis vectors are orthogonal, the exact squared error after selecting a detail set \(K\) is
+
+\[
+\boxed{\|x-\widehat x_K\|_2^2
+ =\sum_{(j,r)\notin K}2^j d_{j,r}^2.}
+\]
+
+Therefore, for this **fixed** Haar basis and uniform cost per retained detail, the optimal choice is to keep the \(k\) largest **weighted energies** \(2^j d_{j,r}^2\). Their positive values here are \(128,64,32,32,16\). The two 32-energy details may be selected in either order.
+
+| Retained nonzero details \(k\) | Retained detail energy | Minimum squared error |
+|---:|---:|---:|
+| 0 | 0 | 272 |
+| 1 | 128 | 144 |
+| 2 | 192 | 80 |
+| 3 | 224 | 48 |
+| 4 | 256 | 16 |
+| 5 | 272 | 0 |
+
+One should not substitute raw coefficient magnitude for weighted energy in this normalization. Consider the separate signal
+
+\[
+z=(2,2,2,2,2,2,2,2,-2,-2,1,-5,-2,-2,-2,-2).
+\]
+
+It has zero mean and only two nonzero details: \(d_{4,0}=2\) with energy \(16(2^2)=64\), and \(d_{1,5}=3\) with energy \(2(3^2)=18\). Its total energy is \(82\). With room for one detail, selecting the largest *magnitude* (3) leaves error \(64\), while selecting the largest *weighted energy* (the smaller amplitude 2) leaves error \(18\).
+
+This finite fixed-basis minimization illustrates the cost accounting behind Paper V's adaptive-selector discussion. It is **not** a proof of the book's more general best-packet-tree dynamic-programming theorem, whose admissible prunings and cost hypotheses differ.
+
+## 5. Apply a discrete filter, not merely an address rearrangement
 
 Now define a circular shift on the same sixteen samples:
 
@@ -353,6 +412,69 @@ Synthesis then gives \(E'_5=a'_5+d'_5=8\) and \(O'_5=a'_5-d'_5=24\), matching th
 
 In the accompanying code, the direct filter, polyphase transfer, and Haar-conjugated transfer are checked independently for all sixteen standard basis vectors of \(\mathbb Q^{16}\). Since these maps are linear, agreement on that basis certifies the **finite-dimensional operator identity**.
 
+### A sharp finite filter-stability certificate
+
+Paper V discusses stability alongside exact reconstruction. For the particular three-tap operator here, we can calculate the precise norm range with no numerical eigensolver.
+
+The cyclic shift is orthogonal: \(T^*=T^{-1}\). Define \(A=T^{-1}-T\), so \(A^*=-A\). Since
+
+\[
+H=I+2T-T^2=T(2I+A),
+\]
+
+orthogonality and cancellation of the cross term give, for every \(v\in\mathbb R^{16}\),
+
+\[
+\begin{aligned}
+\|Hv\|_2^2
+&=\|(2I+A)v\|_2^2\\
+&=4\|v\|_2^2+\|Av\|_2^2.
+\end{aligned}
+\]
+
+Also \(\|Av\|_2\leq\|T^{-1}v\|_2+\|Tv\|_2=2\|v\|_2\). Hence
+
+\[
+\boxed{
+4\|v\|_2^2\ \leq\ \|Hv\|_2^2\ \leq\ 8\|v\|_2^2.
+}
+\]
+
+Both constants are sharp on the sixteen-cycle. A constant vector attains the lower bound; the repeated four-period vector \((1,0,-1,0,\ldots)\) attains the upper bound. In particular, \(H\) is invertible in this finite-dimensional circular setting and \(\|H^{-1}\|_{2\to2}\leq1/2\).
+
+For our fixed signal,
+
+\[
+\underbrace{\|Hx\|_2^2}_{2288}
+=4\underbrace{\|x\|_2^2}_{416}
++\underbrace{\|(T^{-1}-T)x\|_2^2}_{624}
+=1664+624.
+\]
+
+This is a stability statement for the *declared periodic filter*, not a universal stability bound for an arbitrary FIR filter or nonperiodic extension.
+
+### Why the missing-transfer error is exactly the energy surplus
+
+There is a second identity behind the number \(624\). If the off-diagonal Haar transfer blocks are deleted, then the omitted coefficient contributions are
+
+\[
+\delta a=(I-Z)d,\qquad \delta d=(Z-I)a.
+\]
+
+Under the averaging normalization, synthesis of the pair \((\delta a,\delta d)\) has squared norm \(2(\|\delta a\|_2^2+\|\delta d\|_2^2)\). Rewriting in the original even and odd phases shows
+
+\[
+\begin{aligned}
+\|Hv-y_{\mathrm{wrong}}(v)\|_2^2
+&=2\|(I-Z)d\|_2^2+2\|(I-Z)a\|_2^2\\
+&=\|(I-Z)E\|_2^2+\|(I-Z)O\|_2^2\\
+&=\|(I-T^2)v\|_2^2\\
+&=\|(T^{-1}-T)v\|_2^2.
+\end{aligned}
+\]
+
+The last equality uses the norm-preserving cyclic shift \(T^{-1}\). Therefore, **for every input in this finite model**, the missing-transfer error equals the FIR's energy surplus over \(4\|v\|_2^2\). Both happen to equal \(624\) for our chosen input because they arise from the *same* operator expression.
+
 ## 8. Three controls that expose the limits
 
 **Delete a detail coefficient.** Keeping only lowpass coordinates does not identify the original signal. The displayed \(x\) and \(\widehat x\) have the same first-level averages but differ by the nonzero residual \(8(e_{10}-e_{11})\). Recovery succeeds only when that missing detail is supplied.
@@ -377,13 +499,30 @@ This is not a small rounding effect. It is the algebraic cost of deleting genuin
 (Hx)_0=x_0+2x_{15}-x_{14}=2+8-4=6.
 \]
 
-A zero-extended, causal convolution would instead give \(2\) at address zero. Both are legitimate boundary conventions, but their operators and polyphase transfers differ. Applying the cyclic transfer matrix to a zero-padded filter is not valid without a boundary correction.
+A zero-extended, causal convolution would instead give \(2\) at address zero. At address one, it would give \(x_1+2x_0=6\) rather than the circular value \(2\). All other addresses agree for this three-tap filter. Thus the difference is the explicit two-address boundary packet
+
+\[
+\boxed{
+H_{\mathrm{circ}}x-H_{\mathrm{zero}}x
+=(4,-4,0,\ldots,0),\qquad
+\|H_{\mathrm{circ}}x-H_{\mathrm{zero}}x\|_2^2=32.
+}
+\]
+
+More generally, for a window of length \(n\geq2\) with the same taps,
+
+\[
+H_{\mathrm{circ}}v-H_{\mathrm{zero}}v
+=(2v_{n-1}-v_{n-2})e_0-v_{n-1}e_1.
+\]
+
+The residual is supported on the first two output addresses. Once the last two input samples and the boundary convention are specified, this finite correction can be added or removed exactly. Both boundary conventions are legitimate, but their operators and polyphase matrices differ. The **circular** transfer matrix cannot be applied to the zero-extended filter without that correction. This finite boundary calculation does not resolve Paper V's broader singular-edge recovery questions.
 
 ## 9. What is proved and what is checked
 
-The Haar pair inverse, weighted energy identity, projector refinement and finite circular FIR transfer are exact algebraic statements. The multilevel inverse and energy formula follow inductively from the pair identities. The block transfer and Haar-conjugated matrix follow by symbolic multiplication of the declared linear operators.
+The Haar pair inverse, predict–update lifting, weighted energy identity, projector refinement, and finite circular FIR transfer are exact algebraic statements. The multilevel inverse and energy formula follow inductively from the pair identities. The block transfer and Haar-conjugated matrix follow by symbolic multiplication. The stability identity follows from the skew-adjoint shift difference, while the optimal fixed-basis selector follows from orthogonality and exact energy accounting.
 
-The independent Python checker uses fractions and integer arithmetic. It verifies the complete hand calculation, the sixteen basis-vector transfers, every four-sample integer signal with entries in \(\{-2,-1,0,1,2\}\), and seeded inputs of lengths \(8,16,32\). These finite regressions test the implementation in addition to the arguments on this page.
+The independent Python checker uses exact rational and integer arithmetic. It verifies the complete hand calculation, the sixteen basis-vector transfers, all \(5^4=625\) four-sample signals with entries in \(\{-2,-1,0,1,2\}\), and fixed-seed inputs of lengths \(8,16,32\). It also checks the lifting inverse, the sharp filter identity, the omitted-block energy identity, and the finite boundary correction. The program now records **5,384 exact assertions**. These finite regressions test the implementation in addition to the proofs on this page.
 
 The demonstration does **not** prove stability for an arbitrary infinite filter bank, unrestricted singular-edge recovery, universal compression, or empirical benefits for genetic association tests. Paper V treats broader wavelet and polyphase results with specific hypotheses; its inherited formal evidence is separate from this example. No fresh Lean theorem correspondence is asserted here.
 
@@ -396,15 +535,15 @@ python -B examples/wavelet_polyphase.py
 python -B examples/wavelet_polyphase.py --output wavelet-results
 ~~~
 
-The first command runs exact assertions. The second also generates four reproducible files: a sample-by-sample transfer table, a weighted Haar coefficient ledger, an accessible SVG plot, and the finite-check JSON record. The website publishes committed output snapshots, then verifies their hashes and reproduces their exact bytes in its build workflow.
+The first command runs exact assertions. The second generates five reproducible files: a sample-by-sample transfer and boundary table, the Haar coefficient energy ledger, an optimal retained-detail budget table, an accessible SVG plot, and the finite-check JSON record. The website publishes committed output snapshots, checks their identities, and reproduces their exact bytes in its build workflow.
 
 [Read the complete Python program on this site](https://KomorebiP.github.io/Operation-KOMOREBI/read/wavelet-polyphase.html) · [Download the standalone program](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/wavelet-polyphase/wavelet_polyphase.py)
 
-[Transfer table (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/wavelet-polyphase/phase-transfer.csv) · [Haar coefficients (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/wavelet-polyphase/haar-coefficients.csv) · [Exact certificate (JSON)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/wavelet-polyphase/results.json) · [Figure (SVG)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/wavelet-polyphase/signal-comparison.svg) · [Complete source-and-results archive (ZIP)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/wavelet-polyphase/source-and-results.zip)
+[Transfer and boundary table (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/wavelet-polyphase/phase-transfer.csv) · [Haar coefficients (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/wavelet-polyphase/haar-coefficients.csv) · [Optimal detail budgets (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/wavelet-polyphase/weighted-budget.csv) · [Exact certificate (JSON)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/wavelet-polyphase/results.json) · [Figure (SVG)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/wavelet-polyphase/signal-comparison.svg) · [Complete source-and-results archive (ZIP)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/wavelet-polyphase/source-and-results.zip)
 
 ### Follow the original literature
 
-This reader example is built from the established [four-level Haar laboratory](HAAR_LAB.md), the [Haar pair hand calculation](../examples/14_HAAR_PAIRS.md), and the [finite residue refinement example](REFINEMENT.md). The FIR transfer specializes the operator and polyphase machinery in [Paper V: Multiresolution Signal Calculus](../works/paper-v.md), with its separate [traditional manuscript](../../papers/paper-v/current/editable/traditional/Paper_V_Traditional_Final.tex), [proof guide](../../papers/paper-v/current/README.md), and [Information Realization](../works/information-realization.md).
+This reader example is built from the established [four-level Haar laboratory](HAAR_LAB.md), the [Haar pair hand calculation](../examples/14_HAAR_PAIRS.md), and the [finite residue refinement example](REFINEMENT.md). The FIR transfer, lifting construction and finite selector discussion specialize the operator, filter-bank and adaptive-tree machinery in [Paper V: Multiresolution Signal Calculus](../works/paper-v.md), especially its **Exact FIR polyphase transfer law**, **Exact lifting reconstruction** and **Finite globally optimal stable selector**. Consult the [traditional manuscript](../../papers/paper-v/current/editable/traditional/Paper_V_Traditional_Final.tex), [recorded verification scope](../../papers/paper-v/current/README.md), and [Information Realization](../works/information-realization.md). The additional FIR stability and cross-transfer identities above are derived directly for this specific finite operator; their statements do not inherit the wider hypotheses or formal verification status of Paper V.
 
 For a different application, see [Streaming Polyphase Factor Decomposition / SKAT](../works/streaming-skat.md). This example demonstrates legitimate signal-processing operations on finite discrete data; it does not assert improved SKAT power or runtime.
 

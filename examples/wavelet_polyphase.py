@@ -44,6 +44,30 @@ def shift(values):
     return values[-1:] + values[:-1]
 
 
+def backward_shift(values):
+    """The inverse cyclic shift (T^-1 x)[i] = x[(i+1) mod len(x)]."""
+    values = exact(values)
+    if not values:
+        raise ValueError("Signal must be nonempty")
+    return values[1:] + values[:1]
+
+
+def skew_shift(values):
+    """(T^-1 - T)x, the finite energy certificate for the FIR."""
+    return tuple(left - right for left, right
+                 in zip(backward_shift(values), shift(values)))
+
+
+def zero_extended_fir(values, taps=TAPS):
+    """Finite causal convolution with values outside the window set to zero."""
+    values = exact(values)
+    if not values:
+        raise ValueError("Signal must be nonempty")
+    return tuple(sum((F(tap) * values[i-j]
+                      for j, tap in enumerate(taps) if 0 <= i-j < len(values)),
+                     F(0)) for i in range(len(values)))
+
+
 def fir(values, taps=TAPS):
     """Circular FIR: H = sum_j taps[j] T^j."""
     values = exact(values)
@@ -63,6 +87,28 @@ def haar_pair(even, odd):
         raise ValueError("Haar phases need equal length")
     return (tuple((u + v) / 2 for u, v in zip(even, odd)),
             tuple((u - v) / 2 for u, v in zip(even, odd)))
+
+
+def lifting_decompose(even, odd):
+    """Paper V predict/update: difference=odd-even, average=even+difference/2."""
+    even, odd = exact(even), exact(odd)
+    if len(even) != len(odd):
+        raise ValueError("Lifting phases need equal length")
+    differences = tuple(o-e for e, o in zip(even, odd))
+    averages = tuple(e + difference/2
+                     for e, difference in zip(even, differences))
+    return averages, differences
+
+
+def lifting_synthesize(averages, differences):
+    """Invert the predict/update map using exactly the stored side channel."""
+    averages, differences = exact(averages), exact(differences)
+    if len(averages) != len(differences):
+        raise ValueError("Lifting phases need equal length")
+    even = tuple(a - difference/2
+                 for a, difference in zip(averages, differences))
+    odd = tuple(e + difference for e, difference in zip(even, differences))
+    return join_phases((even, odd))
 
 
 def inverse_haar_pair(averages, details):
@@ -108,6 +154,29 @@ def coefficient_energy(mean, levels):
         (2 ** j * energy(pair[1]) for j, pair in enumerate(levels, 1)), F(0))
 
 
+def best_detail_budget(levels):
+    """Optimal fixed Haar-coordinate budget with the mean always retained.
+
+    The detail synthesis vectors are orthogonal with squared norm 2**level.
+    Sort exact weighted energies; ties use (level,index) to be deterministic.
+    Returns (retained_count, retained_energy, residual_energy) for each budget.
+    This is not an adaptive best-packet-tree algorithm.
+    """
+    entries = sorted(
+        ((2**j * F(d)**2, j, k)
+         for j, (_, details) in enumerate(levels, 1)
+         for k, d in enumerate(details) if d != 0),
+        key=lambda item: (-item[0], item[1], item[2]))
+    residual = sum((item[0] for item in entries), F(0))
+    records = [(0, F(0), residual)]
+    retained = F(0)
+    for budget, (contribution, _, _) in enumerate(entries, 1):
+        retained += contribution
+        residual -= contribution
+        records.append((budget, retained, residual))
+    return tuple(records)
+
+
 def transfer_polyphase(even, odd):
     """(E',O') = ((I-Z)E+2ZO, 2E+(I-Z)O), Z a circular half-rate shift."""
     even, odd = exact(even), exact(odd)
@@ -144,8 +213,10 @@ def default_case():
     even, odd = split_phases(x)
     a, d = haar_pair(even, odd)
     wrong = diagonal_only(a, d)
+    boundary = zero_extended_fir(x)
     return dict(x=x, mean=mean, levels=levels, coarse=coarse, residual=residual,
-                filtered=filtered, wrong=wrong,
+                filtered=filtered, wrong=wrong, boundary=boundary,
+                boundary_residual=tuple(u - v for u, v in zip(filtered, boundary)),
                 filter_error=tuple(u - v for u, v in zip(filtered, wrong)))
 
 
@@ -206,6 +277,37 @@ def check():
             case["filtered"][10] == 8 and case["filtered"][11] == 24,
             "reference", "local boundary-crossing calculation")
 
+    # The independent Paper V lifting factorization uses d_L = odd-even.
+    a, d = haar_pair(*split_phases(x))
+    lifted_a, lifted_difference = lifting_decompose(*split_phases(x))
+    require(lifted_a == a and lifted_difference == tuple(-2*v for v in d),
+            "reference", "lifting equals Haar after declared rescaling")
+    require(lifting_synthesize(lifted_a, lifted_difference) == x,
+            "reference", "exact predict/update synthesis")
+    skew = skew_shift(x)
+    require(energy(skew) == 624 and
+            energy(case["filtered"]) == 4*energy(x) + energy(skew),
+            "reference", "sharp FIR energy identity")
+    require(4*energy(x) <= energy(case["filtered"]) <= 8*energy(x),
+            "reference", "finite stability interval")
+    require(energy(case["filter_error"]) == energy(skew),
+            "reference", "off-diagonal error equals FIR energy surplus")
+    require(case["boundary_residual"] == exact((4,-4)+(0,)*14)
+            and energy(case["boundary_residual"]) == 32,
+            "reference", "two-site boundary correction")
+    require(tuple(record[2] for record in best_detail_budget(levels))
+            == tuple(map(F, (272,144,80,48,16,0))),
+            "reference", "optimal fixed-basis detail budget")
+    contrast = exact((2,)*8 + (-2,-2,1,-5,-2,-2,-2,-2))
+    contrast_mean, contrast_levels = analyze(contrast)
+    require(contrast_mean == 0 and energy(contrast) == 82
+            and best_detail_budget(contrast_levels)[1] == (1,F(64),F(18)),
+            "reference", "weighted selection beats largest raw magnitude")
+    flat, quarter = exact((1,)*16), exact((1,0,-1,0)*4)
+    require(energy(fir(flat)) == 4*energy(flat) and
+            energy(fir(quarter)) == 8*energy(quarter),
+            "reference", "both finite operator norm bounds are sharp")
+
     # Linearity plus equality on every coordinate basis vector gives an
     # exact 16-dimensional operator identity, not merely a sample agreement.
     for k in range(16):
@@ -218,6 +320,19 @@ def check():
         require(haar_pair(*split_phases(direct)) == transfer_haar(a, d),
                 "basis", "Haar conjugacy basis "+str(k))
         require(synthesize(*analyze(basis)) == basis, "basis", "wavelet basis "+str(k))
+        lifted_a, lifted_d = lifting_decompose(e, o)
+        require(lifted_a == a and lifted_d == tuple(-2*v for v in d)
+                and lifting_synthesize(lifted_a, lifted_d) == basis,
+                "basis", "lifting operator basis "+str(k))
+        require(energy(direct) == 4*energy(basis)+energy(skew_shift(basis)),
+                "basis", "FIR adjoint energy basis "+str(k))
+        require(energy(tuple(u-v for u,v in zip(direct, diagonal_only(a,d))))
+                == energy(skew_shift(basis)),
+                "basis", "omitted cross phase error basis "+str(k))
+        residue = tuple(u-v for u,v in zip(direct, zero_extended_fir(basis)))
+        require(residue == (2*basis[-1]-basis[-2], -basis[-1])
+                + (F(0),)*(len(basis)-2),
+                "basis", "boundary correction basis "+str(k))
 
     # Exhaustive small-integer 4-vectors and deterministic longer controls.
     for numbers in product((-2, -1, 0, 1, 2), repeat=4):
@@ -228,6 +343,22 @@ def check():
                 "exhaustive", "four-sample energy")
         require(join_phases(transfer_polyphase(*split_phases(s))) == fir(s),
                 "exhaustive", "four-sample polyphase FIR")
+        even, odd = split_phases(s)
+        a, d = haar_pair(even, odd)
+        lifted_a, lifted_d = lifting_decompose(even, odd)
+        require(lifted_a == a and lifted_d == tuple(-2*v for v in d)
+                and lifting_synthesize(lifted_a, lifted_d) == s,
+                "exhaustive", "four-sample lifting inverse")
+        direct = fir(s)
+        require(energy(direct) == 4*energy(s) + energy(skew_shift(s)),
+                "exhaustive", "four-sample FIR energy")
+        require(energy(tuple(u-v for u,v in zip(direct, diagonal_only(a,d))))
+                == energy(skew_shift(s)),
+                "exhaustive", "four-sample omitted cross blocks")
+        boundary_difference = tuple(u-v for u,v in zip(direct, zero_extended_fir(s)))
+        require(boundary_difference == (2*s[-1]-s[-2], -s[-1])
+                + (F(0),)*(len(s)-2),
+                "exhaustive", "four-sample edge correction")
     rng = Random(20261030)
     for length in (8, 16, 32):
         for _ in range(32):
@@ -242,6 +373,22 @@ def check():
             require(haar_pair(*split_phases(fir(s))) ==
                     transfer_haar(*haar_pair(*split_phases(s))),
                     "random", "Haar coordinate transfer")
+            even, odd = split_phases(s)
+            a, d = haar_pair(even, odd)
+            lifted_a, lifted_d = lifting_decompose(even, odd)
+            require(lifted_a == a and lifted_d == tuple(-2*v for v in d)
+                    and lifting_synthesize(lifted_a, lifted_d) == s,
+                    "random", "predict update lifting")
+            direct = fir(s)
+            require(energy(direct) == 4*energy(s) + energy(skew_shift(s)),
+                    "random", "sharp finite filter energy")
+            require(energy(tuple(u-v for u,v in zip(direct, diagonal_only(a,d))))
+                    == energy(skew_shift(s)),
+                    "random", "cross channel energy identity")
+            boundary_difference = tuple(u-v for u,v in zip(direct, zero_extended_fir(s)))
+            require(boundary_difference == (2*s[-1]-s[-2], -s[-1])
+                    + (F(0),)*(len(s)-2),
+                    "random", "cyclic versus zero edge packet")
     return counts
 
 
@@ -256,7 +403,7 @@ def figure_svg(case):
         '<svg xmlns="http://www.w3.org/2000/svg" width="1020" height="520" viewBox="0 0 1020 520" role="img" aria-labelledby="title description">',
         '<title id="title">Haar reconstruction and exact residual</title>',
         '<desc id="description">Three aligned sixteen-sample stem plots: the input signal, its lowpass reconstruction, and the missing finest detail. The residual has values eight and negative eight only at positions ten and eleven.</desc>',
-        '<rect width="1020" height="490" fill="#ffffff"/>',
+        '<rect width="1020" height="520" fill="#ffffff"/>',
         '<text x="35" y="30" font-family="sans-serif" font-size="20" font-weight="600" fill="#193b36">One signal · full, coarse and residual coordinates</text>',
     ]
     def fmt(v):
@@ -289,11 +436,13 @@ def save(folder, counts):
     with (folder/"phase-transfer.csv").open("w", encoding="utf-8", newline="") as stream:
         w = csv.writer(stream, lineterminator="\n")
         w.writerow(("index", "original", "coarse", "residual", "circular_fir",
-                    "incorrect_diagonal_only", "transfer_error"))
+                    "incorrect_diagonal_only", "transfer_error",
+                    "zero_extended_fir", "cyclic_minus_zero_boundary"))
         for i in range(len(x)):
             w.writerow((i, *(str(v[i]) for v in (
                 x, case["coarse"], case["residual"], case["filtered"],
-                case["wrong"], case["filter_error"]))))
+                case["wrong"], case["filter_error"], case["boundary"],
+                case["boundary_residual"]))))
     with (folder/"haar-coefficients.csv").open("w", encoding="utf-8", newline="") as stream:
         w = csv.writer(stream, lineterminator="\n")
         w.writerow(("kind", "level", "index", "value", "energy_weight", "weighted_energy"))
@@ -301,6 +450,11 @@ def save(folder, counts):
         for j in range(len(levels), 0, -1):
             for k, d in enumerate(levels[j-1][1]):
                 w.writerow(("detail", j, k, str(d), 2**j, str(2**j*d*d)))
+    with (folder/"weighted-budget.csv").open("w", encoding="utf-8", newline="") as stream:
+        w = csv.writer(stream, lineterminator="\n")
+        w.writerow(("retained_details", "retained_detail_energy", "squared_residual_error"))
+        for budget, retained, residual in best_detail_budget(levels):
+            w.writerow((budget, str(retained), str(residual)))
     (folder/"signal-comparison.svg").write_text(figure_svg(case), encoding="utf-8", newline="\n")
     record = {
         "case": "Haar averaging / cyclic FIR (1, 2, -1)",
@@ -309,6 +463,23 @@ def save(folder, counts):
         "coarse": [int(v) for v in case["coarse"]],
         "energies": {"original": 416, "coarse": 288, "residual": 128,
                      "filtered": 2288, "missing_transfer_blocks": 624},
+        "stability": {
+            "fourfold_input": 1664,
+            "skew_shift_energy": int(energy(skew_shift(x))),
+            "filtered": int(energy(case["filtered"])),
+            "eightfold_input": 3328,
+            "omitted_transfer_error": int(energy(case["filter_error"])),
+            "boundary_correction_energy": int(energy(case["boundary_residual"]))
+        },
+        "weighted_selection_control": {
+            "coarse_detail_amplitude": 2,
+            "fine_detail_amplitude": 3,
+            "coarse_weighted_energy": 64,
+            "fine_weighted_energy": 18,
+            "raw_magnitude_selection_error": 64,
+            "weighted_selection_error": 18
+        },
+        "budget_residual_energies": [int(row[2]) for row in best_detail_budget(levels)],
         "assertions_by_group": counts,
         "total_assertions": sum(counts.values()),
         "scope": "Exact finite models; no infinite-domain or cross-boundary filter claim."
@@ -326,7 +497,9 @@ def main():
     print("WAVELET POLYPHASE | 16 samples | circular FIR (1,2,-1)")
     print("Original energy 416 = coarse 288 + residual 128")
     print("Direct FIR equals both transported polyphase and Haar operators")
-    print("Omitting two transfer blocks gives squared error 624")
+    print("FIR energy 2288 = 4 * 416 + 624; two omitted transfers also cost 624")
+    print("Zero-extension boundary correction: (4,-4), squared energy 32")
+    print("Best-detail budget errors: 272, 144, 80, 48, 16, 0")
     print("PASS: " + str(sum(counts.values())) + " exact assertions")
     if args.output:
         save(args.output, counts)
