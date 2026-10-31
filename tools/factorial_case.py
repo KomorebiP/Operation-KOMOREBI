@@ -107,7 +107,8 @@ def verify_site(root: Path, pages: dict) -> int:
         for item in record['archive_files']:
             assert sha(bundle.read(item['source'])) == item['sha256']
     from reader_documents import source_lines
-    assert source_lines(raw.decode('utf-8')) in pages[record['reader_url']]
-    assert 'FACTORIAL_LANES.html' in pages[record['reader_url']]
+    reader_html = (root/record['reader_url']).read_text(encoding='utf-8')
+    assert source_lines(raw.decode('utf-8')) in reader_html
+    assert 'FACTORIAL_LANES.html' in reader_html
     assert record['scope'].startswith('Exact formal identities')
     return 1
