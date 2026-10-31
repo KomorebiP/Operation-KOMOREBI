@@ -13,6 +13,7 @@ GUIDED_DEMONSTRATIONS = {
     'docs/demonstrations/SEQUENCE_SHAPES.md': ('Komorebi sequence shapes', ['paper-iv','monographs-special-functions']),
     'docs/demonstrations/EULER_PACKETS.md': ('Euler packets, polynomials and residuals', ['paper-iii','paper-iv','paper-ix','euler-signal-bridge','machine-native-mathematics-essay']),
     'docs/demonstrations/WAVELET_POLYPHASE.md': ('Wavelets and polyphase transfer', ['paper-v','information-realization']),
+    'docs/demonstrations/STIRLING_BELL_FUBINI.md': ('Stirling, Bell and Fubini', ['monographs-special-functions']),
 }
 
 
