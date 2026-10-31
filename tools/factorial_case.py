@@ -4,12 +4,16 @@ from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
+import zipfile
 
 PROGRAM = 'examples/factorial_lanes.py'
 MANUSCRIPT = 'docs/demonstrations/FACTORIAL_LANES.md'
 READER = 'read/factorial-lanes.html'
-DOWNLOAD = 'downloads/factorial-lanes/factorial_lanes.py'
-RECORD = 'downloads/factorial-lanes/source-record.json'
+PREFIX = 'downloads/factorial-lanes/'
+DOWNLOAD = PREFIX+'factorial_lanes.py'
+RECORD = PREFIX+'source-record.json'
+ARCHIVE = PREFIX+'source-and-results.zip'
+TABLES = ('lane-products.csv', 'coefficients.csv', 'results.json')
 
 
 def sha(raw: bytes) -> str:
@@ -19,9 +23,22 @@ def sha(raw: bytes) -> str:
 def publish(site) -> dict:
     program = (site.root/PROGRAM).read_bytes()
     manuscript = (site.root/MANUSCRIPT).read_bytes()
-    # Both inputs are site-owned and published at the same immutable revision.
+    contents = {PROGRAM: program, MANUSCRIPT: manuscript}
     (site.output/DOWNLOAD).parent.mkdir(parents=True, exist_ok=True)
     (site.output/DOWNLOAD).write_bytes(program)
+    exports = []
+    for name in TABLES:
+        source = 'verification/factorial-lanes/'+name
+        raw = (site.root/source).read_bytes()
+        contents[source] = raw
+        url = PREFIX+name
+        (site.output/url).write_bytes(raw)
+        exports.append(dict(source=source, url=url, sha256=sha(raw), size=len(raw)))
+    contents['LICENSE.md'] = (site.root/'LICENSE.md').read_bytes()
+    with zipfile.ZipFile(site.output/ARCHIVE, 'w', zipfile.ZIP_DEFLATED) as bundle:
+        for path, raw in contents.items():
+            bundle.writestr(path, raw)
+
     record = dict(
         title='Factorial lanes: exact worked derivation',
         collection_revision=site.revision,
@@ -33,10 +50,15 @@ def publish(site) -> dict:
         reader_url=READER,
         manuscript_url='collection/demonstrations/FACTORIAL_LANES.html',
         download_url=DOWNLOAD,
+        tables=exports,
+        archive_url=ARCHIVE,
+        archive_sha256=sha((site.output/ARCHIVE).read_bytes()),
+        archive_files=[dict(source=source, sha256=sha(raw)) for source,raw in contents.items()],
         scope='Exact formal identities and 225 finite arithmetic checks; '
               'not a Lean replay or a general conjecture certificate.'
     )
     site.write(RECORD, json.dumps(record, indent=2)+'\n')
+
     from reader_documents import source_lines
     body = (
         '<h1>Factorial lanes / exact Python program</h1>'
@@ -46,7 +68,11 @@ def publish(site) -> dict:
         '<p><a class="button" href="../collection/demonstrations/FACTORIAL_LANES.html">'
         'Read the complete hand derivation</a> '
         '<a download href="../'+DOWNLOAD+'">Download Python</a> · '
+        '<a href="../'+ARCHIVE+'">Source and exact results ZIP</a> · '
         '<a href="../'+RECORD+'">Source identities</a></p>'
+        '<p>Checked data: '
+        + ' · '.join('<a href="../'+item['url']+'">'+item['url'].split('/')[-1]+'</a>'
+                   for item in exports) + '</p>'
         '<p>Run <code>python -B factorial_lanes.py</code>. '
         'Add <code>--output factorial-results</code> to write exact CSV and JSON tables.</p>'
     )
@@ -71,6 +97,15 @@ def verify_site(root: Path, pages: dict) -> int:
     raw = (root/record['download_url']).read_bytes()
     assert len(raw) == record['program_size']
     assert sha(raw) == record['program_sha256']
+    for item in record['tables']:
+        exported = (root/item['url']).read_bytes()
+        assert len(exported) == item['size'] and sha(exported) == item['sha256']
+    archive = root/record['archive_url']
+    assert sha(archive.read_bytes()) == record['archive_sha256']
+    with zipfile.ZipFile(archive) as bundle:
+        assert set(bundle.namelist()) == {item['source'] for item in record['archive_files']}
+        for item in record['archive_files']:
+            assert sha(bundle.read(item['source'])) == item['sha256']
     from reader_documents import source_lines
     assert source_lines(raw.decode('utf-8')) in pages[record['reader_url']]
     assert 'FACTORIAL_LANES.html' in pages[record['reader_url']]
