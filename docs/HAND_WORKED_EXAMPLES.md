@@ -56,7 +56,8 @@ The [Euler-number derivation](demonstrations/EULER_PACKETS.md),
 longer chains of exact representations, transfer laws, and explicit failure
 witnesses. The wavelet case includes a three-tap discrete filter, four levels of
 Haar coefficients, exact predict–update lifting, a weighted best-detail
-selection, sharp finite stability, boundary repair, and downloadable
+selection, sharp finite stability, a full wavelet transfer matrix, a
+filtering-versus-coarsening counterexample, boundary repair and downloadable
 results. Each extended example retains its own finite evidence scope.
 
 ## Conventions and scope
