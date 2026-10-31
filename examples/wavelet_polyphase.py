@@ -436,11 +436,13 @@ def save(folder, counts):
     with (folder/"phase-transfer.csv").open("w", encoding="utf-8", newline="") as stream:
         w = csv.writer(stream, lineterminator="\n")
         w.writerow(("index", "original", "coarse", "residual", "circular_fir",
-                    "incorrect_diagonal_only", "transfer_error"))
+                    "incorrect_diagonal_only", "transfer_error",
+                    "zero_extended_fir", "cyclic_minus_zero_boundary"))
         for i in range(len(x)):
             w.writerow((i, *(str(v[i]) for v in (
                 x, case["coarse"], case["residual"], case["filtered"],
-                case["wrong"], case["filter_error"]))))
+                case["wrong"], case["filter_error"], case["boundary"],
+                case["boundary_residual"]))))
     with (folder/"haar-coefficients.csv").open("w", encoding="utf-8", newline="") as stream:
         w = csv.writer(stream, lineterminator="\n")
         w.writerow(("kind", "level", "index", "value", "energy_weight", "weighted_energy"))
@@ -448,6 +450,11 @@ def save(folder, counts):
         for j in range(len(levels), 0, -1):
             for k, d in enumerate(levels[j-1][1]):
                 w.writerow(("detail", j, k, str(d), 2**j, str(2**j*d*d)))
+    with (folder/"weighted-budget.csv").open("w", encoding="utf-8", newline="") as stream:
+        w = csv.writer(stream, lineterminator="\n")
+        w.writerow(("retained_details", "retained_detail_energy", "squared_residual_error"))
+        for budget, retained, residual in best_detail_budget(levels):
+            w.writerow((budget, str(retained), str(residual)))
     (folder/"signal-comparison.svg").write_text(figure_svg(case), encoding="utf-8", newline="\n")
     record = {
         "case": "Haar averaging / cyclic FIR (1, 2, -1)",
@@ -456,6 +463,23 @@ def save(folder, counts):
         "coarse": [int(v) for v in case["coarse"]],
         "energies": {"original": 416, "coarse": 288, "residual": 128,
                      "filtered": 2288, "missing_transfer_blocks": 624},
+        "stability": {
+            "fourfold_input": 1664,
+            "skew_shift_energy": int(energy(skew_shift(x))),
+            "filtered": int(energy(case["filtered"])),
+            "eightfold_input": 3328,
+            "omitted_transfer_error": int(energy(case["filter_error"])),
+            "boundary_correction_energy": int(energy(case["boundary_residual"]))
+        },
+        "weighted_selection_control": {
+            "coarse_detail_amplitude": 2,
+            "fine_detail_amplitude": 3,
+            "coarse_weighted_energy": 64,
+            "fine_weighted_energy": 18,
+            "raw_magnitude_selection_error": 64,
+            "weighted_selection_error": 18
+        },
+        "budget_residual_energies": [int(row[2]) for row in best_detail_budget(levels)],
         "assertions_by_group": counts,
         "total_assertions": sum(counts.values()),
         "scope": "Exact finite models; no infinite-domain or cross-boundary filter claim."
@@ -473,7 +497,9 @@ def main():
     print("WAVELET POLYPHASE | 16 samples | circular FIR (1,2,-1)")
     print("Original energy 416 = coarse 288 + residual 128")
     print("Direct FIR equals both transported polyphase and Haar operators")
-    print("Omitting two transfer blocks gives squared error 624")
+    print("FIR energy 2288 = 4 * 416 + 624; two omitted transfers also cost 624")
+    print("Zero-extension boundary correction: (4,-4), squared energy 32")
+    print("Best-detail budget errors: 272, 144, 80, 48, 16, 0")
     print("PASS: " + str(sum(counts.values())) + " exact assertions")
     if args.output:
         save(args.output, counts)
