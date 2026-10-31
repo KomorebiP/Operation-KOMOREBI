@@ -55,7 +55,8 @@ witnesses. Reproducible tables and Python-generated figures complete the example
 [From set partitions to exact transfer](demonstrations/STIRLING_BELL_FUBINI.md)
 starts with one Stirling-number row, constructs Bell and ordered Bell numbers,
 and then exposes the inverse triangular kernel. It independently derives the
-exponential generating functions, transfers the Fubini reciprocal across even
+exponential generating functions, interprets Bell as a Touchard evaluation
+and Fubini as a gamma or geometric moment, then transfers the reciprocal across even
 and odd coefficient packets, and proves why two scalar row summaries do not
 identify an arbitrary coordinate profile. Every example has exact Python
 checks, source-bound tables and a Python-generated diagram.
