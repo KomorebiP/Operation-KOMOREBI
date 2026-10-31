@@ -632,6 +632,21 @@ Neither order recovers \(Hx\) when the discarded coefficients interact with \(H\
 | Filter, then coarsen: \(\|Hx-PHx\|_2^2\) | 880 |
 | Compare the two outputs: \(\|PHx-HPx\|_2^2\) | 624 |
 
+Both approximation errors can also be checked without constructing any large matrix. The first difference is
+
+\[
+Hx-HPx=H(x-Px)=H\bigl(8(e_{10}-e_{11})\bigr)
+=8e_{10}+8e_{11}-24e_{12}+8e_{13}.
+\]
+
+Its squared norm is \(64+64+576+64=768\). For the other order, the omitted finest details of the *filtered* signal are \((2,0,-4,0,10,-8,-16,0)\). The averaging normalization therefore gives
+
+\[
+\|Hx-PHx\|_2^2
+=2(2^2+(-4)^2+10^2+(-8)^2+(-16)^2)
+=\boxed{880}.
+\]
+
 The three values are distinct questions. In particular, the commutator energy **cannot** be obtained by simply subtracting the two approximation errors.
 
 The [operation-order ledger (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/wavelet-polyphase/operation-order.csv) records the complete sixteen-component vectors and both residuals. The [scale-energy ledger (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/wavelet-polyphase/multiscale-energy.csv) records each original and filtered Haar band.
