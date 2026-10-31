@@ -156,8 +156,7 @@ def normalize(source):
     # Introductory print columns become ordinary sequential reading paragraphs.
     text = re.sub(
         r"\\begin\{minipage\}\[t\]\{0\.47\\linewidth\}(.*?)\\end\{minipage\}",
-        lambda m: m[1] + _mask(m[0])[-(m[0].count("\n") - m[1].count("\n")):]
-        if m[0].count("\n") > m[1].count("\n") else m[1],
+        lambda m: m[1] + "\n" * (m[0].count("\n") - m[1].count("\n")),
         text, flags=re.S
     )
     # Figure locations, paper headers and small-type styles do not change the text.
@@ -208,7 +207,7 @@ def prepare_book(reader, config):
                  for key in ("section", "appendix", "part", "subsection",
                              "subsubsection", "counter", "section_prefix",
                              "figure", "table", "number_floats")}
-        chapters.append((spec, main.encode("utf-8"), chapter))
+        chapters.append((spec, reader.site.read_source(reader.records[MAIN]), chapter))
     for _, _, chapter in chapters:
         chapter.labels = labels
         chapter.validate_references()
