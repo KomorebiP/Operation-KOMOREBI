@@ -290,7 +290,7 @@ def multiscale_transfer_svg(matrix):
         parts.append(f'<text x="{left-10}" y="{y+22}" text-anchor="end" font-family="monospace" font-size="11" fill="#334e49">{labels[i]}</text>')
         for j, value in enumerate(row):
             x = left+j*cell
-            fill="#edf1f0" if value==0 else ("#28786d" if value>0 else "#b57442")
+            fill="#edf1f0" if value==0 else ("#28786d" if value>0 else "#965023")
             parts.append(f'<rect x="{x}" y="{y}" width="{cell-1}" height="{cell-1}" rx="2" fill="{fill}"/>')
             if value:
                 foreground="#ffffff"
@@ -298,7 +298,7 @@ def multiscale_transfer_svg(matrix):
     parts.extend((
         '<rect x="140" y="686" width="16" height="16" fill="#28786d"/>',
         '<text x="165" y="699" font-family="sans-serif" font-size="13" fill="#334e49">positive</text>',
-        '<rect x="258" y="686" width="16" height="16" fill="#b57442"/>',
+        '<rect x="258" y="686" width="16" height="16" fill="#965023"/>',
         '<text x="283" y="699" font-family="sans-serif" font-size="13" fill="#334e49">negative</text>',
         '<rect x="382" y="686" width="16" height="16" fill="#edf1f0"/>',
         '<text x="407" y="699" font-family="sans-serif" font-size="13" fill="#334e49">zero</text>',
