@@ -467,6 +467,8 @@ The first command reports `PASS: 225 exact finite assertions`, including the dis
 
 [Read the complete Python source on the website](https://KomorebiP.github.io/Operation-KOMOREBI/read/factorial-lanes.html) · [Download the standalone checker](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/factorial-lanes/factorial_lanes.py)
 
+[Download lane products (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/factorial-lanes/lane-products.csv) · [Download exact coefficients (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/factorial-lanes/coefficients.csv) · [Finite-check results (JSON)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/factorial-lanes/results.json) · [Complete source and results (ZIP)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/factorial-lanes/source-and-results.zip)
+
 ### Interpretation and next reading
 
 The derivation is exact for all indices where the identities are stated. The program checks bounded ranges, not an infinite theorem. The general lane split is proved by unique factor addresses; the reciprocal and valuation statements are proved by formal multiplication and elementary divisibility.
