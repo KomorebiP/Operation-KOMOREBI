@@ -97,7 +97,9 @@ def check() -> dict[str, int]:
     for n, coefficient in enumerate(coeffs):
         total = sum((comb(N*n, N*k)*unit_tail(k)*coeffs[n-k]
                      for k in range(n+1)), Fraction(0))
-        assert total == (1 if n == 0 else 0)
+        original = sum((comb(N*n+J, N*q)*coeffs[q]
+                        for q in range(n+1)), Fraction(0))
+        assert total == original == (1 if n == 0 else 0)
         assert valuation(coefficient) is None or valuation(coefficient) >= 0
         totals['reciprocal'] += 2
     assert coeffs[1] == -Fraction(1, 1001)
@@ -110,7 +112,8 @@ def check() -> dict[str, int]:
         totals['prime_unit_and_displacement'] += 2
     for q in (1, 2, 5, 10):
         for n in range(6):
-            assert valuation(unit_tail(n+q)-unit_tail(n)) >= 1 + valuation(q)
+            # Special four-factor cancellation supplies two extra powers of 5.
+            assert valuation(unit_tail(n+q)-unit_tail(n)) >= 3 + valuation(q)
             totals['prime_unit_and_displacement'] += 1
     for steps in ((2,), (2,2), (2,2,2), (2,2,2,2), (2,10), (5,10)):
         for n in range(5):
@@ -118,11 +121,12 @@ def check() -> dict[str, int]:
             lower = len(steps) + sum(valuation(q) for q in steps)
             assert valuation(value) is None or valuation(value) >= lower
             totals['prime_unit_and_displacement'] += 1
-    # The finer 20-address packets partition the 10-address packet.
+    # Both the two-child and the literature's five-child refinements are exact.
     for degree in range(100):
         parent = int(degree % 10 == 4)
-        children = int(degree % 20 == 4) + int(degree % 20 == 14)
-        assert parent == children
+        children_20 = int(degree % 20 == 4) + int(degree % 20 == 14)
+        children_50 = sum(int(degree % 50 == r) for r in (4, 14, 24, 34, 44))
+        assert parent == children_20 == children_50
         totals['refinement'] += 1
     # Outside 0 <= j < 5 the uniform unit conclusion can fail.
     assert valuation(Fraction(1, comb(25, 5))) == -1

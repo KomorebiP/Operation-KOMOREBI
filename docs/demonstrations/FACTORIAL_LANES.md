@@ -2,7 +2,7 @@
 
 **An extended hand-worked example · Komorebi P.**
 
-This example follows one object through residue projection, ten multiplicative factorial lanes, hypergeometric coordinates, normalization, reciprocal inversion, prime-adic valuations and refinement. Every displayed value is rational or integral. No floating-point approximation is needed.
+This example follows one object through residue projection, ten multiplicative factorial lanes, hypergeometric coordinates, normalization, reciprocal inversion, prime-adic valuations and refinement. The numerical tables and certificates use exact integers and rational numbers. Roots of unity appear symbolically in the projector; no floating-point approximation is needed.
 
 Our fixed data are
 
@@ -88,7 +88,7 @@ This is a coefficientwise identity over the cyclotomic field, so no analytic con
 
 ## 2. Disassemble a factorial into ten lanes
 
-For a positive step $N$ define
+For a positive step $N$, define
 
 \[
 (a)_{n;N}=\prod_{k=0}^{n-1}(a+Nk),\qquad (a)_{0;N}=1.
@@ -106,7 +106,7 @@ For our residue class,
 
 **Why this is exact:** every integer between $5$ and $10n+4$ has a unique representation $r+10k$ with $5\leq r\leq14$ and $0\leq k<n$. The ten lanes are disjoint and exhaust the interval.
 
-Take $n=3$. The ten columns of the disassembly are:
+Take $n=3$. The ten lanes in the disassembly are:
 
 | Lane $r$ | Three factors $r,r+10,r+20$ | Lane product |
 |---:|---|---:|
@@ -277,7 +277,41 @@ For $n=3$ the same recurrence gives
 C_3=-\frac{163326976357}{29541512}.
 \]
 
-A finite row check is especially useful here: multiplying the computed coefficients back into $G$ must give $1$ and zero in every positive block degree through the chosen truncation.
+### The same reciprocal recurrence before normalization
+
+The longer factorial-lane manuscript also writes the inverse directly against the original residue section. Because
+
+\[
+S_{10,4}(t)\,C(t)=\frac{t^4}{4!},
+\]
+
+comparison at degree $10n+4$ gives another exact triangular system:
+
+\[
+\sum_{q=0}^n\binom{10n+4}{10q}C_q
+=\begin{cases}1,&n=0,\\0,&n>0.\end{cases}
+\]
+
+The diagonal coefficient is $d_n=\binom{10n+4}{4}$. The bridge to the normalized recurrence is the **termwise identity**
+
+\[
+\boxed{
+\frac{\binom{10n+4}{10q}}{d_n}
+=\binom{10n}{10q}
+  \frac{1}{\binom{10(n-q)+4}{4}}
+=\binom{10n}{10q}g_{n-q}
+}\qquad(0\leq q\leq n).
+\]
+
+For example, the original row at $n=2$ is
+
+\[
+1+1961256\,C_1+10626\,C_2=0.
+\]
+
+Substitution of the fractions above gives zero exactly. The two recurrences therefore compute the same rational coefficients, rather than merely congruent values. Section 6 shows why dividing by $d_n$ loses no $5$-adic precision: $d_n$ is a $5$-adic unit.
+
+A finite row check is useful here: multiplying the computed coefficients back into $G$ must give $1$ and zero in every positive block degree through the chosen truncation.
 
 ## 6. See what the prime 5 detects
 
@@ -360,7 +394,29 @@ v_5\bigl(\Delta_{q_1}\cdots\Delta_{q_s}g(n)\bigr)
 }
 \]
 
-for positive integer steps. At each application, a factor $10q_\nu$ appears, and all shifted denominators remain units. This is a statement **about this rational function $g$**. Extending analogous bounds to other reciprocal families requires their own hypotheses.
+for positive integer steps. Repeated use of the product rule supplies a factor $10q_\nu$ at each difference, and all shifted denominators remain $5$-adic units.
+
+**The single-step bound is stronger in this particular case.** Put
+
+\[
+d(n)=\binom{10n+4}{4}
+=1+\frac{125}{6}Q(n),
+\quad
+Q(n)=n(1+7n+20n^2+20n^3)\in\mathbb Z[n].
+\]
+
+Every integer polynomial satisfies $q\mid Q(n+q)-Q(n)$. Since $d(n)$ and $d(n+q)$ are $5$-adic units, $g_n=1/d(n)$ gives
+
+\[
+\begin{aligned}
+v_5(g_{n+q}-g_n)
+&=v_5\bigl(d(n+q)-d(n)\bigr)\\
+&\geq\boxed{3+v_5(q)}
+\qquad(q\geq1).
+\end{aligned}
+\]
+
+The sharper first-order estimate uses the explicit four-factor cancellation. It is not asserted for arbitrary normalized residue sections. The earlier mixed-difference bound remains valid for repeated steps.
 
 Three checks make the estimates concrete:
 
@@ -376,7 +432,28 @@ Three checks make the estimates concrete:
 \end{aligned}
 \]
 
-The universal lower bounds are respectively $1$, $2$ and $2$. Their measured valuations are at least as large; this example displays additional cancellation rather than assuming it.
+The general factorwise bounds are $1$, $2$ and $2$, respectively. The sharper single-step bound gives $3$ and $4$ for the first two calculations, and both are attained. The repeated second difference has valuation $3$, exceeding its general bound of $2$.
+
+### The distinct coefficient row in the wider transfer argument
+
+The factorial-lane study continues with the congruential row
+
+\[
+R_n=4!C_n=24C_n.
+\]
+
+Some of its older tables call this row $E_n$. **It is not the classical Euler-number sequence** used in the companion demonstration. For $p=5$ and $m=2$, the index step used there is $h=(p-1)/m=2$. One exact calculation is
+
+\[
+\begin{aligned}
+(\Delta_2R)(1)
+&=R_3-R_1=24(C_3-C_1)\\
+&=-\frac{489980840535}{3692689},
+\qquad v_5\bigl((\Delta_2R)(1)\bigr)=1.
+\end{aligned}
+\]
+
+This is a finite check of one displacement. A uniform mixed Kummer bound for $R_n$ requires the additional weighted Amice–Mahler transfer hypotheses developed in that study; it does not follow from $v_5(C_n)\geq0$ alone. The general mixed-difference estimate **proved on this page** concerns $g_n$.
 
 ## 8. Refine the additive packet without altering it
 
@@ -387,6 +464,23 @@ A degree congruent to $4$ modulo $10$ is congruent to either $4$ or $14$ modulo 
 \]
 
 The first child contains degrees $4,24,44,\ldots$. The second contains $14,34,54,\ldots$. There is no overlap, and neither child alone reconstructs the parent.
+
+### The five-child prime refinement from the source study
+
+The extended factorial-lane calculation also refines the same parent packet from modulus $10$ to modulus $50$:
+
+\[
+\boxed{
+\mathcal B_{10,4}
+=\mathcal B_{50,4}+\mathcal B_{50,14}
++\mathcal B_{50,24}+\mathcal B_{50,34}
++\mathcal B_{50,44}.
+}
+\]
+
+Applied to $e^t$, the five children sort the surviving degrees into $4,14,24,34,44$ modulo $50$. Their supports are disjoint, and their sum is exactly $S_{10,4}(t)$. This is a **polyphase refinement**, not an approximation.
+
+The parent coefficient $g_n$ is a $5$-adic unit by the standard-window argument. That proof does **not** automatically pass to each modulus-$50$ child in the same form, because several child residue labels lie outside $0\leq j<5$. Refinement preserves the parent series, while prime-adic unit estimates must be checked in the chosen coordinates.
 
 The ten projected exponential sections also form a closed derivative-transfer system. Set
 
@@ -472,5 +566,7 @@ The first command reports `PASS: 225 exact finite assertions`, including the dis
 ### Interpretation and next reading
 
 The derivation is exact for all indices where the identities are stated. The program checks bounded ranges, not an infinite theorem. The general lane split is proved by unique factor addresses; the reciprocal and valuation statements are proved by formal multiplication and elementary divisibility.
+
+The exact triangular-kernel bridge, five-child modulus-$50$ split and weighted-transfer direction follow the longer study *From Factorial Lanes to $p$-Adic Transfer* (Komorebi P.). This page proves the algebraic identities and the stated $g_n$ valuation bounds. It does not substitute its finite examples for the extra hypotheses of the weighted continuation.
 
 Continue with the [Euler extended example](EULER_PACKETS.md), [cyclic reciprocal coefficients](../examples/16_CYCLIC_RECIPROCALS.md), [Paper IV](../works/paper-iv.md), [Special Functions](../works/monographs-special-functions.md) and the [project's evidence guide](../RECORDS.md). These links identify related mechanisms, not automatic transfer of their proof status.
