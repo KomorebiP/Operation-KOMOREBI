@@ -247,13 +247,13 @@ def check():
 
 def figure_svg(case):
     """A small, accessible SVG generated from exact sample data."""
-    width, height = 1020, 490
+    width, height = 1020, 520
     colors = ("#205e54", "#287d89", "#b96b35")
     panels = ((case["x"], "Original x", colors[0]),
               (case["coarse"], "Coarse reconstruction (finest details removed)", colors[1]),
               (case["residual"], "Residual x - reconstruction", colors[2]))
     pieces = [
-        '<svg xmlns="http://www.w3.org/2000/svg" width="1020" height="490" viewBox="0 0 1020 490" role="img" aria-labelledby="title description">',
+        '<svg xmlns="http://www.w3.org/2000/svg" width="1020" height="520" viewBox="0 0 1020 520" role="img" aria-labelledby="title description">',
         '<title id="title">Haar reconstruction and exact residual</title>',
         '<desc id="description">Three aligned sixteen-sample stem plots: the input signal, its lowpass reconstruction, and the missing finest detail. The residual has values eight and negative eight only at positions ten and eleven.</desc>',
         '<rect width="1020" height="490" fill="#ffffff"/>',
@@ -277,7 +277,7 @@ def figure_svg(case):
             if k in (0, 4, 8, 12, 15):
                 pieces.append(f'<text x="{px}" y="{top+130}" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#526966">{k}</text>')
     pieces.extend((
-        '<text x="977" y="473" text-anchor="end" font-family="sans-serif" font-size="11" fill="#526966">Sample addresses 0–15 · linear amplitude scale in every panel</text>',
+        '<text x="977" y="504" text-anchor="end" font-family="sans-serif" font-size="11" fill="#526966">Sample addresses 0–15 · linear amplitude scale in every panel</text>',
         '</svg>'))
     return "\n".join(pieces) + "\n"
 
