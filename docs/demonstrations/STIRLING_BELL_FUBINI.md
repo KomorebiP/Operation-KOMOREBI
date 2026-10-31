@@ -2,7 +2,7 @@
 
 **An extended hand-worked example · Komorebi P.**
 
-One triangular table counts partitions of labelled objects into nonempty blocks. Two different input weightings of that same table generate the Bell numbers and the ordered Bell (Fubini) numbers. We will keep every coefficient visible, invert the triangular transformation, derive the generating functions, split a reciprocal identity into residue packets, and exhibit a genuine obstruction to recovering an entire row from summary values.
+One triangular table counts partitions of labelled objects into nonempty blocks. Constant and factorial weights on that same table generate Bell and ordered Bell (Fubini) numbers. We compute both from an explicit row, prove the general generating-function substitution and its inverse, trace polynomial and moment realizations, and identify the boundary between reversible data and lossy summaries.
 
 No new mathematical result is claimed. The counting identities are classical. The purpose is to follow one explicit object through the coordinate, transfer, reconstruction and obstruction language used throughout the collection.
 
@@ -234,6 +234,39 @@ These are exact identities of **formal power series** over \(\mathbb Q\). The su
 
 This makes the connection to the Euler and factorial-lane demonstrations precise: the Fubini generating function is another **reciprocal series**, but its denominator and indexing are different. The resulting coefficient family is not the Euler sequence.
 
+### The general input rule and its formal inverse
+
+The two generating functions above are instances of a single, exact operation. For an arbitrary weight sequence \(a_0,a_1,\ldots\) over \(\mathbb Q\), write
+
+\[
+c_n=\sum_{k=0}^n S(n,k)a_k,\qquad
+A(u)=\sum_{k\ge0}a_k\frac{u^k}{k!},\qquad
+C(t)=\sum_{n\ge0}c_n\frac{t^n}{n!}.
+\]
+
+Substitute the fixed-\(k\) identity from the start of this section, rearranging only coefficientwise finite sums:
+
+\[
+\boxed{C(t)=A(e^t-1).}
+\]
+
+The inverse substitution exists because \(e^t-1\) has zero constant term and linear coefficient one. Its compositional inverse is \(\log(1+u)\). Therefore
+
+\[
+\boxed{A(u)=C(\log(1+u)).}
+\]
+
+This is the **formal-series counterpart** of the signed-Stirling matrix inversion in Section 3. The two inversion methods act in different coordinate descriptions but recover the same input sequence. Here are four specializations of the one rule:
+
+| Input weight \(a_k\) | Input EGF \(A(u)\) | Output EGF \(C(t)\) |
+|---|---|---|
+| \(1\) | \(e^u\) | \(\exp(e^t-1)\), Bell |
+| \(k!\) | \((1-u)^{-1}\) | \((2-e^t)^{-1}\), Fubini |
+| \(z^k\) | \(e^{zu}\) | \(\exp(z(e^t-1))\), Touchard |
+| \(k!\lambda^k\) | \((1-\lambda u)^{-1}\) | \((1-\lambda(e^t-1))^{-1}\), scaled Fubini |
+
+All four are classical substitutions. The point of the operator presentation is that changing the input weights does **not** require inventing a new triangular kernel, and the full output sequence retains its inverse. The checker also exercises this substitution on rational and alternating weight families beyond these four examples.
+
 ### Two independent recurrence checks
 
 Differentiate the Bell generating function:
@@ -351,6 +384,37 @@ These are formal identities over \(\mathbb Q[z][[t]]\) and \(\mathbb Q[\lambda][
 F_n(\lambda)=\lambda\sum_{j=1}^n\binom nj F_{n-j}(\lambda),
 \qquad F_0(\lambda)=1.
 \]
+
+### Two further operations on the Touchard family
+
+The Stirling recurrence yields an exact polynomial differential rule:
+
+\[
+\boxed{T_{n+1}(z)=z\bigl(T_n(z)+T_n'(z)\bigr),\qquad T_0(z)=1.}
+\]
+
+The term \(S(n,k-1)\) contributes \(zT_n(z)\), and the term \(kS(n,k)\) contributes \(zT_n'(z)\). For example,
+
+\[
+T_4(z)=z+7z^2+6z^3+z^4
+\quad\Longrightarrow\quad
+z(T_4+T_4')=z+15z^2+25z^3+10z^4+z^5=T_5(z).
+\]
+
+There is also a **binomial addition law**, obtained by multiplying the two Touchard EGFs from the preceding section:
+
+\[
+\boxed{T_n(x+y)=\sum_{j=0}^n\binom nj T_j(x)T_{n-j}(y).}
+\]
+
+At \(x=y=1\), it gives a second finite route to a parameter value:
+
+\[
+T_5(2)=\sum_{j=0}^5\binom5j B_jB_{5-j}
+=52+75+100+100+75+52=\boxed{454}.
+\]
+
+The polynomial recurrence and addition identity connect the same counting coordinates to differentiation and binomial convolution. Neither requires interpreting the Stirling transform itself as a fixed-length FIR filter.
 
 ### A second interpretation: geometric moments
 
@@ -484,6 +548,48 @@ For \(m=3\), the three packets begin as follows:
 | 1 | \(t+75t^4/4!+47293t^7/7!+\cdots\) |
 | 2 | \(3t^2/2!+541t^5/5!+\cdots\) |
 
+### From residue filtering to a coupled transfer
+
+A coefficient filter alone tells us which addresses belong to each packet. The full reciprocal equation gives more: an **exact transfer law between packets**. Put
+
+\[
+u(t)=e^t-1,\qquad
+u^{(m)}_a(t)=\sum_{\substack{j\ge1\\j\equiv a\pmod m}}\frac{t^j}{j!}.
+\]
+
+Taking residue \(r\) of the identity \(F=1+uF\) gives, for every integer \(m\ge2\),
+
+\[
+\boxed{
+F_r^{(m)}=\delta_{r0}
++\sum_{a=0}^{m-1}u_a^{(m)}F_{(r-a)\bmod m}^{(m)}.
+}
+\]
+
+For \(m=3\), suppress the superscript and write the complete circulant system:
+
+\[
+\begin{pmatrix}
+1-u_0&-u_2&-u_1\\
+-u_1&1-u_0&-u_2\\
+-u_2&-u_1&1-u_0
+\end{pmatrix}
+\begin{pmatrix}F_0\\F_1\\F_2\end{pmatrix}
+=\begin{pmatrix}1\\0\\0\end{pmatrix}.
+\]
+
+Because every \(u_a\) has zero constant coefficient, this matrix has identity constant term and is invertible as a formal power-series matrix. The three-packet equation is **equivalent** to the original reciprocal, not an approximation or a different sequence.
+
+At degree five the output belongs to residue \(2\bmod3\). Splitting the original binomial recurrence by the *tap degree* \(j\bmod3\) gives
+
+| Tap degree residue | \(j\) values | Exact contribution |
+|---:|---|---:|
+| \(0\) | \(3\) | \(\binom53F_2=30\) |
+| \(1\) | \(1,4\) | \(\binom51F_4+\binom54F_1=380\) |
+| \(2\) | \(2,5\) | \(\binom52F_3+\binom55F_0=131\) |
+
+Thus \(30+380+131=\boxed{541}\). The checker tests the entire coupled identity coefficient by coefficient for moduli \(2,3,4,5\), rather than checking packet reconstruction alone. These are finite algebraic transfers of the already established formal reciprocal.
+
 The coefficient checker uses integer residue indexing and exact rational series. It does not approximate complex roots numerically. The three-packet decomposition is a **refinement of coefficient addresses**, not a new formula for \(F_n\) or an assertion about new transcendental values.
 
 [Download all reciprocal packet coefficients](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/reciprocal-packets.csv).
@@ -536,6 +642,45 @@ The profile \(w\) is **not** claimed to be another valid Stirling row. Its purpo
 
 This is the same distinction as our operator and wavelet demonstrations: an invertible representation can be followed by a lossy measurement. A failure of the latter does not invalidate the former.
 
+### The sharp recovery distinction
+
+The failure above concerns **two scalar summaries**, not a failure of all finite representations. Retain instead the entire parameterized polynomial for an arbitrary coordinate profile \(x=(x_0,\ldots,x_n)\):
+
+\[
+P_x(\lambda)=\sum_{k=0}^n k!x_k\lambda^k.
+\]
+
+Its coefficients reconstruct every coordinate:
+
+\[
+\boxed{x_k=\frac{[\lambda^k]P_x(\lambda)}{k!}
+=\frac{P_x^{(k)}(0)}{(k!)^2}.}
+\]
+
+Over \(\mathbb Q\), values at \(n+1\) distinct parameter points also recover this degree-at-most-\(n\) polynomial by interpolation. For consecutive samples \(0,1,\ldots,n\), one exact construction is
+
+\[
+\boxed{P_x(\lambda)=
+\sum_{j=0}^n\Delta^jP_x(0)\binom{\lambda}{j}},
+\qquad \Delta P_x(j)=P_x(j+1)-P_x(j).
+\]
+
+Here is the same \(n=4\) obstruction, now evaluated at additional parameter addresses:
+
+| \(\lambda\) | Genuine \(P_v(\lambda)\) | Candidate \(P_w(\lambda)\) |
+|---:|---:|---:|
+| 0 | 0 | 0 |
+| 1 | 75 | 75 |
+| 2 | 730 | 746 |
+| 3 | 3045 | 3129 |
+| 4 | 8676 | 8916 |
+
+Indeed, \(P_v(\lambda)=\lambda+14\lambda^2+36\lambda^3+24\lambda^4\), while \(P_w(\lambda)=5\lambda+4\lambda^2+42\lambda^3+24\lambda^4\). One extra sample at \(2\) distinguishes **these particular profiles**, but does not generally identify an arbitrary five-coordinate profile. The complete five-sample table does: exact interpolation recovers \(v=(0,1,7,6,1)\) and, separately, \(w=(0,5,2,7,1)\).
+
+We have therefore exhibited both sides of a precise boundary: complete triangular outputs are invertible across indices, complete parameter polynomials are recoverable within a fixed row, and the two fixed summaries \(B_n,F_n\) are insufficient for unrestricted coordinate recovery. The candidate \(w\) remains a non-Stirling profile.
+
+[Download the exact interpolation and candidate comparison](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/reconstruction.csv).
+
 [Inspect the obstruction witness, coordinate by coordinate](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/obstruction.csv).
 
 ## 8. What the checks prove, and what they do not
@@ -549,8 +694,11 @@ The standalone checker uses only standard-library exact integers and fractions. 
 - Both orders of multiplication of the truncated Stirling and signed-Stirling matrices.
 - Inversion of the Bell and Fubini sequence prefixes to their distinct input weights.
 - The Bell exponential series, Fubini reciprocal series, and separate binomial recurrences.
+- The general Stirling-series substitution and its formal logarithmic inverse for additional rational input families.
+- The Touchard differential recurrence and binomial addition law.
+- Exact polynomial interpolation that recovers complete row coordinates, contrasted with two-scalar noninjectivity.
 - The Touchard polynomial bridge, scaled gamma moments, signed inverse, and parameterized reciprocal recurrences.
-- Even/odd reciprocal packet transfer and the three-residue reconstruction.
+- Coupled reciprocal packet transfers for moduli two through five, including the three-residue coefficient-five paths.
 - The explicit \(n=4\) aggregation obstruction.
 
 Finite computation is a regression check, not a substitute for the displayed general proofs. All sequences and identities here are classical. The broader analytic and formalized Special Functions volume has its own claim map and scope. Nothing on this page asserts new Lean compilation, universal recovery from finite summaries, or new results on unrelated conjectures.
@@ -568,7 +716,7 @@ The second command regenerates the exact integer CSVs, rational packet table, SV
 
 [Read the full Python source](https://KomorebiP.github.io/Operation-KOMOREBI/read/stirling-bell-fubini.html) · [Download the Python checker](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/stirling_bell_fubini.py) · [Download the source-and-results ZIP](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/source-and-results.zip)
 
-[Parameterized moment bridge (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/moment-bridge.csv) · [Stirling rows (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/stirling-rows.csv) · [Sequence and inverse checks (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/sequence-checks.csv) · [Signed inverse matrix (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/signed-transfer.csv) · [Reciprocal packets (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/reciprocal-packets.csv) · [Obstruction witness (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/obstruction.csv) · [Exact SVG diagram](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/stirling-transform.svg) · [Verification record (JSON)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/results.json)
+[Parameterized moment bridge (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/moment-bridge.csv) · [Exact row reconstruction (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/reconstruction.csv) · [Stirling rows (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/stirling-rows.csv) · [Sequence and inverse checks (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/sequence-checks.csv) · [Signed inverse matrix (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/signed-transfer.csv) · [Reciprocal packets (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/reciprocal-packets.csv) · [Obstruction witness (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/obstruction.csv) · [Exact SVG diagram](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/stirling-transform.svg) · [Verification record (JSON)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/results.json)
 
 ### Original literature and related worked examples
 

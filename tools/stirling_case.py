@@ -18,7 +18,7 @@ READER="read/stirling-bell-fubini.html"
 PREFIX="downloads/stirling-bell-fubini/"
 RECORD=PREFIX+"source-record.json"
 ARCHIVE=PREFIX+"source-and-results.zip"
-FILES=("stirling-rows.csv","sequence-checks.csv","moment-bridge.csv","signed-transfer.csv",
+FILES=("stirling-rows.csv","sequence-checks.csv","moment-bridge.csv","reconstruction.csv","signed-transfer.csv",
        "obstruction.csv","reciprocal-packets.csv","stirling-transform.svg",
        "results.json")
 
@@ -81,8 +81,8 @@ def publish(site):
         "archive_files":[dict(path=path,sha256=sha256(raw)) for path,raw in sorted(sources.items())],
         "case_assertions":result["total_assertions"],
         "case_groups":result["checks_by_group"],
-        "scope":("Classical finite combinatorics, exact triangular matrices, formal "
-                 "reciprocal series and two/three residue packets. The site's "
+        "scope":("Classical finite combinatorics, formal Stirling substitution, "
+                 "polynomial reconstruction and general residue packet transfer. The site's "
                  "bounded tests do not constitute a new Lean or novelty claim.")
     }
     site.write(RECORD,json.dumps(record,ensure_ascii=False,indent=2)+"\n")
@@ -92,7 +92,7 @@ def publish(site):
         '<h1>Stirling, Bell and Fubini / complete exact Python source</h1>'
         '<p>Triangular matrices, signed inverse, Bell and ordered Bell numbers, '
         'Touchard and exponential-moment families, formal generating functions, a parity transfer system, '
-        'three residue packets and an explicit information-loss witness. '
+        'coupled residue transfers and an exact recoverability boundary. '
         'Python 3.10 or later, standard library only.</p>'
         '<p><a class="button" href="../collection/demonstrations/STIRLING_BELL_FUBINI.html">'
         'Read the complete hand derivation</a> '
@@ -119,6 +119,8 @@ def publish(site):
               "signed Stirling first kind inverse Bell EGF reciprocal "
               "root of unity filters even odd polyphase residues "
               "Touchard polynomials gamma moments geometric distribution "
+              "formal logarithm substitution interpolation reconstruction "
+              "three packet coupled transfer finite differences "
               "obstruction finite matrices exact rational Python")))
     return record
 
@@ -139,6 +141,9 @@ def verify_site(root:Path,pages:dict)->int:
     assert results["packet_split_n5"]=={
         "even_degree_tap_contribution":135,"odd_degree_tap_contribution":406}
     assert results["witness_n4"]["alternative_row"]==[0,5,2,7,1]
+    assert results["packet_split_n5_mod3"]=={"residue_0":30,"residue_1":380,"residue_2":131}
+    assert results["reconstruction_n4"]["true_ordered_samples"]==[
+        "0","75","730","3045","8676"]
     for item in record["tables"]:
         data=(root/item["url"]).read_bytes()
         assert len(data)==item["size"] and sha256(data)==item["sha256"]
