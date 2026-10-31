@@ -38,6 +38,16 @@ congruential transfer row from the classical Euler numbers. A standalone
 checker supplies exact rational results, downloadable code and two explicit
 failure witnesses.
 
+## An extended derivation with wavelets and polyphase transfer
+
+[Wavelets and polyphase transfer: one signal through the whole calculus](demonstrations/WAVELET_POLYPHASE.md)
+follows a sixteen-sample signal through even/odd phases, four Haar levels,
+weighted energy, exact residual repair, and a genuine three-tap FIR filter.
+It transports the filter into polyphase and Haar coordinates, checks the
+same operator on the full coordinate basis, and exposes failed transfer
+shortcuts and boundary mismatches. A standalone exact Python program
+produces downloadable data and a readable diagram.
+
 ## Run in your browser
 
 [Explore the interactive diagrams](https://KomorebiP.github.io/Operation-KOMOREBI/interactive.html).
