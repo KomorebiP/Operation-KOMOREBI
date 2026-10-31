@@ -43,11 +43,12 @@ failure witnesses.
 [Wavelets and polyphase transfer: one signal through the whole calculus](demonstrations/WAVELET_POLYPHASE.md)
 follows a sixteen-sample signal through even/odd phases, four Haar levels,
 predict–update lifting, weighted coefficient selection, and exact residual
-repair. It transports a three-tap FIR filter into polyphase and Haar
-coordinates, derives a sharp finite stability certificate, and shows why
-omitted cross-channel transfers produce an exact energy defect. Explicit
-boundary repairs, reproducible tables and a Python-generated diagram
-complete the example.
+repair. It transports a three-tap FIR filter through polyphase
+coordinates and all four Haar levels, derives a sharp finite stability
+certificate, and proves the exact error from omitted cross-channel transfers.
+The full 16×16 matrix displays inter-scale coupling, while two noncommuting
+operation orders and explicit boundary repairs provide independent failure
+witnesses. Reproducible tables and Python-generated figures complete the example.
 
 ## Run in your browser
 
