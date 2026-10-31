@@ -26,6 +26,15 @@ quartic sequence reconstruction, parameter polynomials, exact residual repair,
 and finite-difference refinement. It includes the full hand calculations, failure
 witnesses, and a standalone exact Python checker with downloadable tables.
 
+## An extended derivation with factorial lanes
+
+[Factorial lanes: one residue section through exact transfer](demonstrations/FACTORIAL_LANES.md)
+starts with the degree-4 packet of the exponential. It reconstructs 34! from
+ten step-factorial lanes, converts those lanes to a hypergeometric series,
+normalizes the denominator, inverts the packet, and checks the 5-adic
+valuation and finite-difference bounds. A standalone checker supplies exact
+rational results, downloadable code and two explicit failure witnesses.
+
 ## Run in your browser
 
 [Explore the interactive diagrams](https://KomorebiP.github.io/Operation-KOMOREBI/interactive.html).
