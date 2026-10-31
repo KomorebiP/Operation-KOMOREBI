@@ -129,6 +129,11 @@ def home_page():
 <h2 id="home-wavelet-title">One signal. Exact multiresolution.</h2>
 <p>Follow four Haar levels, a circular three-tap FIR filter, exact operator transfers, and a checked residual repair. The complete Python calculation and diagram are available.</p></div>
 <a href="collection/demonstrations/WAVELET_POLYPHASE.html">Read the wavelet and polyphase derivation <span aria-hidden="true">→</span></a></section>
+<section class="home-interactive" aria-labelledby="home-stirling-title"><div>
+<p class="home-kicker">Research preview / Combinatorial sequences</p>
+<h2 id="home-stirling-title">One partition triangle. Two families.</h2>
+<p>Start with set partitions, obtain Bell and ordered Bell numbers, invert the Stirling transfer, and split the Fubini reciprocal into exact residue packets.</p></div>
+<a href="collection/demonstrations/STIRLING_BELL_FUBINI.html">Read the Stirling, Bell and Fubini derivation <span aria-hidden="true">→</span></a></section>
 <section class="home-interactive" aria-labelledby="home-interactive-title"><div>
 <h2 id="home-interactive-title">Change the inputs. Follow the result.</h2>
 <p>Rebuild matrices, explore information loss, and decompose a signal through four Haar levels.</p></div>
@@ -143,6 +148,7 @@ def home_page():
 <li><a href="collection/demonstrations/EULER_PACKETS.html">Research preview: Euler numbers</a> — follow an extended derivation through packets, coordinate changes and exact residual correction.</li>
 <li><a href="collection/demonstrations/FACTORIAL_LANES.html">Research preview: Factorial lanes</a> — reconstruct factorials from ten step lanes, then follow exact hypergeometric and 5-adic transfers.</li>
 <li><a href="collection/demonstrations/WAVELET_POLYPHASE.html">Research preview: Wavelets and polyphase</a> — one signal through Haar decomposition, finite FIR transfer, residual repair and exact coordinates.</li>
+<li><a href="collection/demonstrations/STIRLING_BELL_FUBINI.html">Research preview: Stirling, Bell and Fubini</a> — one triangular partition kernel, two counting families, a signed inverse and reciprocal residue packets.</li>
 <li><a href="collection/DEMONSTRATIONS.html">Follow a complete demonstration</a> — work through a calculation, run its program and follow the source evidence.</li></ul></div></details>
 <details class="home-status"><summary>How to read completion and verification</summary><p>The collection records completion, formal coverage, and confidence separately. A linked file does not mean every claim has been verified. Software is beta.</p><p><a href="collection/COMPLETION_STATUS.html">Read the guide to evidence and status</a></p></details></div>'''
 
@@ -405,6 +411,8 @@ class Site:
             return self.rel('read/factorial-lanes.html',page)+('#'+parts.fragment if parts.fragment else '')
         if repo=='collection' and resolved=='examples/wavelet_polyphase.py':
             return self.rel('read/wavelet-polyphase.html',page)+('#'+parts.fragment if parts.fragment else '')
+        if repo=='collection' and resolved=='examples/stirling_bell_fubini.py':
+            return self.rel('read/stirling-bell-fubini.html',page)+('#'+parts.fragment if parts.fragment else '')
         if repo=='collection' and resolved=='examples/euler_packets.py':
             return self.rel('read/euler-packets.html',page)+('#'+parts.fragment if parts.fragment else '')
         if repo=='collection' and not is_image:
@@ -652,6 +660,8 @@ class Site:
         publish_factorial_case(self)
         from wavelet_case import publish as publish_wavelet_case
         publish_wavelet_case(self)
+        from stirling_case import publish as publish_stirling_case
+        publish_stirling_case(self)
         self.markdown_pages()
         self.reader.render()
         self.bundles()

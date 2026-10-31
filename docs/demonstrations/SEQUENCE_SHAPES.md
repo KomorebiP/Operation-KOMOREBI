@@ -7,10 +7,17 @@ weights in the Special Functions sequence atlas. The code runs the published
 Komorebi Math package. Each plot has an exact CSV export, editable parameters,
 and routes back to its mathematical sources.
 
-For a complete hand derivation, read [Euler numbers through packets, polynomials,
-and residuals](EULER_PACKETS.md). It reconstructs secant numbers through the
-quartic family, explains a failed coarsening and its exact repair, and carries
-the signed Euler data into polyphase difference coordinates.
+For a complete combinatorial hand derivation, follow
+[Stirling, Bell and Fubini numbers through exact transfer](STIRLING_BELL_FUBINI.md).
+It connects the factorial-weighted Stirling charts below to an invertible
+triangular transformation, a reciprocal generating function, residue-packet
+identities, and an explicit information-loss witness.
+
+For the corresponding reciprocal-family approach to Euler numbers, read
+[Euler numbers through packets, polynomials, and residuals](EULER_PACKETS.md).
+That derivation reconstructs secant numbers through the quartic family,
+explains failed coarsening and exact repair, and carries the signed Euler
+data into polyphase difference coordinates.
 
 ## Reciprocal growth
 
