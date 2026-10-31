@@ -170,6 +170,16 @@ def normalize(source):
                   lambda m: _mask(m[0]), text)
     text = re.sub(r"\\(?:smallskip|bigskip|medskip|FloatBarrier|protect)\b",
                   lambda m: _mask(m[0]), text)
+    # The retained tabular ledger uses print-only font and ink directives.
+    # Remove them only inside tables, leaving mathematical expressions intact.
+    def plain_table(match):
+        table = match[0]
+        table = re.sub(r"\\\\color\\{Komorebi[A-Za-z]+\\}", "", table)
+        table = re.sub(r"\\\\(?:sffamily|bfseries|footnotesize|small)\\b", "", table)
+        table = table.replace(r"\\newline", "  ")
+        return table
+    text = re.sub(r"\\\\begin\\{(?:longtable|table)\\}.*?\\\\end\\{(?:longtable|table)\\}",
+                  plain_table, text, flags=re.S)
     text = _style_groups(text)
     if text.count("\n") != count:
         raise ValueError("Proof Path Theory HTML conversion changed source line count")
