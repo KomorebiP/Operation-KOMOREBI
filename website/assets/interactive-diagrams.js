@@ -1,4 +1,4 @@
-import {reconstruct, refine, recover} from './interactive-diagrams-core.mjs';
+import {reconstruct, refine, recover, haarAnalyze, haar} from './interactive-diagrams-core.mjs';
 
 const byId = id => document.getElementById(id);
 const text = (id, value) => { byId(id).textContent = value; };
@@ -198,6 +198,132 @@ function updateRecovery() {
   drawRecovery(summary, result);
 }
 
+const haarShapes = {
+  step: [2,2,2,2,6,6,6,6,-4,-4,12,-4,4,4,4,4],
+  ramp: Array.from({length:16}, (_, i) => i-8),
+  alternating: Array.from({length:16}, (_, i) => i % 2 ? -8 : 8),
+  pulse: Array.from({length:16}, (_, i) => i === 10 ? 16 : 0),
+  triangle: [-8,-6,-4,-2,0,2,4,6,8,6,4,2,0,-2,-4,-6],
+};
+const haarState = {keep: Array(16).fill(true), mode: 'all'};
+function readHaarSignal() {
+  const inputs = Array.from({length:16}, (_, i) => byId('haar-sample-' + i));
+  const invalid = inputs.filter(input => input.value.trim() === '' || !input.checkValidity() || !Number.isInteger(Number(input.value)));
+  for (const input of inputs) {
+    input.setAttribute('aria-invalid', String(invalid.includes(input)));
+    input.setAttribute('aria-describedby', 'haar-error');
+  }
+  byId('haar-error').hidden = invalid.length === 0;
+  if (invalid.length) {
+    text('haar-error', 'Use whole numbers from −16 to 16. The graphs keep the last valid calculation until all samples are valid.');
+    return null;
+  }
+  return inputs.map(input => Number(input.value));
+}
+function haarSelection(mode, coefficients) {
+  return coefficients.map((coefficient, index) => index === 0 || mode === 'all' ||
+    (mode === 'coarse' && coefficient.level >= 3) ||
+    (mode === 'no-fine' && coefficient.level >= 2) ||
+    (mode === 'threshold' && Math.abs(coefficient.value) >= number('haar-cutoff')));
+}
+function makeHaarControls(coefficients) {
+  if (byId('haar-levels').children.length) return;
+  for (let level = 4; level >= 1; level--) {
+    const row = document.createElement('div'); row.className = 'haar-level-row';
+    const title = document.createElement('p'); title.id = 'haar-level-title-' + level;
+    title.textContent = `Level ${level} · ${2**level}-sample blocks`;
+    const grid = document.createElement('div'); grid.className = 'haar-coefficient-grid';
+    grid.dataset.count = String(16 / 2**level);
+    grid.setAttribute('role', 'group'); grid.setAttribute('aria-labelledby', title.id);
+    coefficients.forEach((coefficient, index) => {
+      if (coefficient.kind !== 'detail' || coefficient.level !== level) return;
+      const label = document.createElement('label'); label.htmlFor = 'haar-keep-' + index;
+      const input = document.createElement('input'); input.type = 'checkbox';
+      input.id = 'haar-keep-' + index; input.dataset.index = index;
+      input.setAttribute('aria-label', `Keep level ${level} detail ${coefficient.index}, addresses ${coefficient.start} to ${coefficient.end}`);
+      const name = document.createElement('span'); name.className = 'haar-coefficient-name';
+      name.textContent = `d${level},${coefficient.index}`;
+      const value = document.createElement('output'); value.id = 'haar-coefficient-' + index;
+      value.setAttribute('aria-live', 'off');
+      const support = document.createElement('span'); support.className = 'haar-support';
+      support.textContent = `${coefficient.start}–${coefficient.end}`;
+      label.append(input, name, value, support); grid.append(label);
+    });
+    row.append(title, grid); byId('haar-levels').append(row);
+  }
+}
+function drawHaar(signal, result) {
+  const svg = picture('haar-diagram', 720, 370,
+    `16-sample Haar reconstruction using ${result.retained} coefficients. Squared error ${result.residualEnergy}. Exact sample values and intermediate levels are in the table below.`);
+  const x = i => 58 + i * 42;
+  function plot(values, top, bottom, limit, className) {
+    const y = value => (top+bottom)/2 - value*(bottom-top)/(2*limit);
+    svg.append(svgNode('polyline', {points: values.map((v,i) => `${x(i)},${y(v)}`).join(' '), class: 'haar-trace ' + className}));
+    values.forEach((value, i) => svg.append(svgNode('circle', {cx:x(i), cy:y(value), r:className === 'haar-rebuilt-trace' ? 4.5 : 2.6,
+      class:'haar-dot ' + className})));
+  }
+  function axes(top, bottom, limit, title) {
+    label(svg, 58, top-12, title, 'haar-chart-title', 'start');
+    for (const [value, y] of [[limit,top],[0,(top+bottom)/2],[-limit,bottom]]) {
+      svg.append(svgNode('line', {x1:58,x2:x(15),y1:y,y2:y,class:value === 0 ? 'signal-baseline' : 'haar-chart-grid'}));
+      label(svg, 45, y+4, value, 'haar-axis-label', 'end');
+    }
+  }
+  const topLimit = Math.max(4, Math.ceil(Math.max(...signal.map(Math.abs), ...result.rebuilt.map(Math.abs))/4)*4);
+  const residualLimit = Math.max(4, Math.ceil(Math.max(...result.residual.map(Math.abs))/4)*4);
+  axes(35, 190, topLimit, 'Original and reconstruction');
+  plot(result.rebuilt, 35, 190, topLimit, 'haar-rebuilt-trace');
+  plot(signal, 35, 190, topLimit, 'haar-original-trace');
+  axes(245, 332, residualLimit, 'Residual · original − reconstruction');
+  plot(result.residual, 245, 332, residualLimit, 'haar-residual-trace');
+  for (const i of [0,4,8,12,15]) label(svg,x(i),355,i,'haar-axis-label');
+  label(svg, 8, 355, 'Address', 'haar-axis-label', 'start');
+}
+function dataRow(values, rowHeading = true) {
+  const row = document.createElement('tr');
+  values.forEach((value, index) => {
+    const cell = document.createElement(index === 0 && rowHeading ? 'th' : 'td');
+    if (index === 0 && rowHeading) cell.scope = 'row';
+    cell.textContent = value; row.append(cell);
+  });
+  return row;
+}
+function updateHaar() {
+  const signal = readHaarSignal();
+  if (!signal) return;
+  const analysis = haarAnalyze(signal);
+  if (haarState.mode !== 'custom') haarState.keep = haarSelection(haarState.mode, analysis.coefficients);
+  const result = haar(signal, haarState.keep);
+  makeHaarControls(result.coefficients);
+  text('haar-mean', result.coefficients[0].value);
+  result.coefficients.forEach((coefficient, index) => {
+    if (index === 0) return;
+    const input = byId('haar-keep-' + index);
+    input.checked = haarState.keep[index];
+    input.parentElement.dataset.omitted = String(!haarState.keep[index]);
+    text('haar-coefficient-' + index, coefficient.value);
+  });
+  text('haar-retained', `${result.retained} / 16`);
+  text('haar-error-energy', result.residualEnergy);
+  text('haar-original-energy', result.energy);
+  text('haar-rebuilt-energy', result.rebuiltEnergy);
+  text('haar-residual-energy', result.residualEnergy);
+  const modes = {all:'all coefficients',coarse:'mean and the two coarsest detail levels',
+    'no-fine':'all but the finest detail level',mean:'global mean only',
+    threshold:`details with magnitude at least ${number('haar-cutoff')}`,custom:'manually chosen details'};
+  text('haar-selection-note', 'Selection: ' + modes[haarState.mode] + '.');
+  document.querySelectorAll('[data-haar-selection]').forEach(button =>
+    button.setAttribute('aria-pressed', String(button.dataset.haarSelection === haarState.mode)));
+  verdict('haar-status', result.residualEnergy === 0 ?
+    `${result.retained} of 16 coefficients retained. Every sample is recovered exactly.` :
+    `${result.retained} of 16 coefficients retained. Omitted details contribute exactly ${result.residualEnergy} units of squared reconstruction error.`, result.residualEnergy !== 0);
+  byId('haar-analysis-table').replaceChildren(...result.levels.map(level =>
+    dataRow([level.level, level.averages.join(', '), level.details.join(', ')])));
+  byId('haar-sample-table').replaceChildren(...signal.map((value, index) =>
+    dataRow([index,value,result.rebuilt[index],result.residual[index]])));
+  drawHaar(signal, result);
+}
+
 function reset(name) {
   if (name === 'packets') {
     [1, 2, 3, 4].forEach((v, i) => { byId('matrix-' + i).value = v; byId('block-' + i).checked = true; });
@@ -207,17 +333,21 @@ function reset(name) {
     byId('signal-preset').value = 'ramp'; byId('signal-count').value = '4';
     Array.from({length: 8}, (_, i) => { byId('sample-' + i).value = i+1; });
     makePacketControls(4); updateSignal();
-  } else {
+  } else if (name === 'recovery') {
     byId('recovery-question').value = 'first';
     byId('summary').value = 1; byId('position').value = 1;
     byId('coefficient-a').value = 1; byId('coefficient-b').value = 0;
     updateRecovery();
+  } else if (name === 'haar') {
+    byId('haar-preset').value = 'step'; byId('haar-cutoff').value = 0;
+    haarShapes.step.forEach((value, i) => { byId('haar-sample-' + i).value = value; });
+    haarState.mode = 'all'; updateHaar();
   }
   sliderValues();
 }
 
 const tabs = [...document.querySelectorAll('.lab-tabs a')];
-const names = ['packets', 'refinement', 'recovery'];
+const names = ['packets', 'refinement', 'recovery', 'haar'];
 function selectTab(name, updateUrl = false) {
   if (!names.includes(name)) name = 'packets';
   tabs.forEach(tab => {
@@ -279,6 +409,27 @@ byId('recovery-controls').addEventListener('input', event => {
   if (event.target.type !== 'range') return;
   if (event.target.id.startsWith('coefficient-')) byId('recovery-question').value = 'custom';
   sliderValues(); updateRecovery();
+});
+byId('haar-controls').addEventListener('input', event => {
+  if (event.target.id.startsWith('haar-sample-')) byId('haar-preset').value = 'custom';
+  else if (event.target.id === 'haar-cutoff') haarState.mode = 'threshold';
+  else return;
+  sliderValues(); updateHaar();
+});
+byId('haar-cutoff').setAttribute('aria-describedby', 'haar-cutoff-help');
+byId('haar-preset').addEventListener('change', () => {
+  const shape = haarShapes[byId('haar-preset').value];
+  if (!shape) return;
+  shape.forEach((value, i) => { byId('haar-sample-' + i).value = value; });
+  updateHaar();
+});
+document.querySelectorAll('[data-haar-selection]').forEach(button => {
+  button.addEventListener('click', () => { haarState.mode = button.dataset.haarSelection; updateHaar(); });
+});
+byId('haar-coefficients').addEventListener('change', event => {
+  const index = Number(event.target.dataset.index);
+  if (!Number.isInteger(index) || index < 1 || index > 15) return;
+  haarState.keep[index] = event.target.checked; haarState.mode = 'custom'; updateHaar();
 });
 document.querySelectorAll('[data-reset]').forEach(button => {
   button.addEventListener('click', () => reset(button.dataset.reset));

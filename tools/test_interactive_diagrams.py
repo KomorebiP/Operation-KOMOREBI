@@ -1,5 +1,6 @@
 """Exercise the new page through the shared renderer and access/link checker."""
 from pathlib import Path
+import hashlib
 import tempfile
 import unittest
 from urllib.parse import urlsplit
@@ -29,7 +30,13 @@ class InteractivePageTests(unittest.TestCase):
                 if path.startswith('assets/interactive-'):
                     self.assertTrue((site.root/'website'/path).is_file(), target)
             self.assertEqual({entry['url'] for entry in site.search},
-                             {'interactive.html#packets','interactive.html#refinement','interactive.html#recovery'})
+                             {'interactive.html#packets','interactive.html#refinement','interactive.html#recovery','interactive.html#haar'})
+            core = site.root/'website/assets/interactive-diagrams-core.mjs'
+            version = hashlib.sha256(core.read_bytes()).hexdigest()[:12]
+            script = (site.output/'assets/interactive-diagrams.js').read_text(encoding='utf-8')
+            self.assertIn("'./interactive-diagrams-core.mjs?v="+version+"'", script)
+            expected = hashlib.sha256(script.encode('utf-8')).hexdigest()[:12]
+            self.assertIn('assets/interactive-diagrams.js?v='+expected, page.links)
 
 
 if __name__ == '__main__':

@@ -121,7 +121,7 @@ def home_page():
 <div class="home-route-grid">'''+cards+'''</div></section>
 <section class="home-interactive" aria-labelledby="home-interactive-title"><div>
 <h2 id="home-interactive-title">Change the inputs. Follow the result.</h2>
-<p>Rebuild a matrix operation, refine a signal, and explore what a summary loses.</p></div>
+<p>Rebuild matrices, explore information loss, and decompose a signal through four Haar levels.</p></div>
 <a href="interactive.html">Explore the interactive diagrams <span aria-hidden="true">→</span></a></section>
 <div class="home-notes"><details class="home-more"><summary>Explore the collections and how they connect</summary>
 <div class="home-collection-list"><h2>Three repositories, one place to begin</h2><dl>

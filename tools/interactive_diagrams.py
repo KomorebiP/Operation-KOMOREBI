@@ -1,12 +1,12 @@
-"""Publish control-driven versions of the three finite teaching demonstrations."""
+"""Publish control-driven finite teaching demonstrations and a multilevel lab."""
 import hashlib
 
 
-def slider(identifier, label, value, low, high):
+def slider(identifier, label, value, low, high, step=1):
     return (f'<div class="lab-slider"><label for="{identifier}">{label}'
             f'<output for="{identifier}" id="{identifier}-value">{value}</output></label>'
             f'<input type="range" id="{identifier}" min="{low}" max="{high}" '
-            f'step="1" value="{value}"></div>')
+            f'step="{step}" value="{value}"></div>')
 
 
 def diagram(identifier, label):
@@ -22,6 +22,7 @@ def sources(name, page, description):
 
 
 def build(site):
+    from haar_diagram import panel as haar_panel
     matrix = ''.join(f'<input type="number" id="matrix-{i}" aria-label="Matrix row {i//2+1}, column {i%2+1}" '
                      f'min="-9" max="9" step="1" value="{i+1}" required>' for i in range(4))
     blocks = ''.join(f'<label for="block-{i}"><input type="checkbox" id="block-{i}" checked>'
@@ -30,12 +31,13 @@ def build(site):
     body = '''<div class="math-lab" id="math-lab">
 <header class="lab-intro"><p class="lab-kicker">Interactive mathematics</p>
 <h1>Change the parts.<br><em>See what survives.</em></h1>
-<p>Rebuild an operation. Refine a signal. Find what a summary loses.<br class="lab-wide-break"> Three small experiments, with the calculation always in view.</p>
-<span class="lab-local">Whole-number inputs · Instant results · No installation</span></header>
+<p>Rebuild an operation. Refine a signal. Find what a summary loses.<br class="lab-wide-break"> Go deeper with a four-level Haar signal experiment.</p>
+<span class="lab-local">Exact calculations · Instant results · No installation</span></header>
 <nav class="lab-tabs" aria-label="Choose an experiment">
 <a id="tab-packets" href="#packets"><span>01</span> Reconstruct</a>
 <a id="tab-refinement" href="#refinement"><span>02</span> Refine</a>
-<a id="tab-recovery" href="#recovery"><span>03</span> Recover</a></nav>
+<a id="tab-recovery" href="#recovery"><span>03</span> Recover</a>
+<a id="tab-haar" href="#haar"><span>04</span> Haar lab</a></nav>
 <noscript><p class="notice">Enable JavaScript for the controls and diagrams, or follow the worked explanations below.</p></noscript>
 <section class="lab-panel" id="packets" aria-labelledby="packets-title">
 <div class="lab-panel-heading"><div><p class="lab-kicker">01 / Operator packets</p>
@@ -106,10 +108,12 @@ RECOVERY_SLIDERS
 <details class="lab-reason"><summary>When is recovery possible?</summary>
 <p>For R(x) = x₁ + x₂ and F(x) = ax₁ + bx₂ on the real plane, exact recovery from R for every input is possible exactly when a = b. Then F(x) = aR(x) and the recovery rule is G(s) = as. Otherwise, u and v above have equal sums but answers differing by a − b. No function of the sum alone can give both answers, even if that function is nonlinear.</p></details>
 RECOVERY_SOURCES</section>
-<p class="lab-footnote">These bounded integer experiments illustrate finite constructions over the real numbers. The linked explanations give the arguments, sources, and recorded proof coverage.</p>
+HAAR_PANEL
+<p class="lab-footnote">These experiments use bounded integer inputs, with exact power-of-two fractions in the Haar lab. The linked explanations give the arguments, sources, and recorded proof coverage.</p>
 </div>'''
     replacements = {
         'MATRIX': matrix, 'BLOCKS': blocks,
+        'HAAR_PANEL': haar_panel(slider, diagram),
         'VECTOR_SLIDERS': slider('vector-0', 'Input coordinate x₁', 2, -5, 5) + slider('vector-1', 'Input coordinate x₂', 3, -5, 5),
         'SIGNAL_SLIDERS': ''.join(slider(f'sample-{i}', f'Sample {i}', i+1, -8, 8) for i in range(8)),
         'RECOVERY_SLIDERS': (slider('summary', 'Summary s = x₁ + x₂', 1, -4, 4)
@@ -125,8 +129,13 @@ RECOVERY_SOURCES</section>
     }
     for key, value in replacements.items():
         body = body.replace(key, value)
+    core_version = hashlib.sha256((site.root/'website/assets/interactive-diagrams-core.mjs').read_bytes()).hexdigest()[:12]
+    script = (site.root/'website/assets/interactive-diagrams.js').read_text(encoding='utf-8')
+    script = script.replace("'./interactive-diagrams-core.mjs'", "'./interactive-diagrams-core.mjs?v="+core_version+"'")
+    site.write('assets/interactive-diagrams.js', script)
     def asset(name):
-        version = hashlib.sha256((site.root/'website/assets'/name).read_bytes()).hexdigest()[:12]
+        raw = script.encode('utf-8') if name == 'interactive-diagrams.js' else (site.root/'website/assets'/name).read_bytes()
+        version = hashlib.sha256(raw).hexdigest()[:12]
         return 'assets/'+name+'?v='+version
     body = '<link rel="stylesheet" href="'+asset('interactive-diagrams.css')+'">'+body
     body += '<script type="module" src="'+asset('interactive-diagrams.js')+'"></script>'
@@ -135,7 +144,9 @@ RECOVERY_SOURCES</section>
         ('packets', 'Reconstruct an operator', ['paper-i']),
         ('refinement', 'Refine a signal', ['paper-ii', 'paper-v']),
         ('recovery', 'Recover information from a summary', ['paper-iii', 'realization-boundaries']),
+        ('haar', 'Multilevel Haar decomposition and signal reconstruction', ['paper-v', 'information-realization']),
     ]:
         site.search.append(dict(title='Interactive diagram: '+title, group='Collection', kind='Examples',
                                 work_ids=works, url='interactive.html#'+name,
-                                text='Interactive mathematics diagrams sliders matrix blocks packets reconstruction signal refinement residual information loss summary recovery '+title))
+                                text='Interactive mathematics diagrams sliders matrix blocks packets reconstruction signal refinement residual information loss summary recovery '
+                                     + ('Haar wavelet averages details multilevel energy cutoff ' if name == 'haar' else '') + title))

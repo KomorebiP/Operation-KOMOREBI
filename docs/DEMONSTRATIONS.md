@@ -34,6 +34,13 @@ signal, and move inputs along a shared-summary line. The controls update the
 diagrams and exact whole-number results immediately, without writing code.
 Each experiment links back to its hand calculation and sources.
 
+For a deeper experiment, open the
+[16-sample Haar lab](https://KomorebiP.github.io/Operation-KOMOREBI/interactive.html#haar).
+Decompose a signal through four levels, choose individual coefficients or a
+magnitude cutoff, and inspect the exact reconstruction error and weighted
+energy balance. The [multilevel calculation](demonstrations/HAAR_LAB.md)
+records the default example and its expected results.
+
 [Open the Python playground](https://KomorebiP.github.io/Operation-KOMOREBI/playground.html).
 Choose a demonstration, press Run and compare its output with the hand calculation.
 You can edit the code, stop a calculation and reset the original example.
