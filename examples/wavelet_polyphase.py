@@ -177,6 +177,137 @@ def best_detail_budget(levels):
     return tuple(records)
 
 
+def wavelet_analysis(values):
+    """All lowpass-branch Haar coordinates: mean, then coarse-to-fine details."""
+    mean, levels = analyze(values)
+    return (mean,) + tuple(d for _, details in reversed(levels) for d in details)
+
+
+def wavelet_synthesis(coordinates):
+    """Inverse transform using only the declared coarse-to-fine coordinates."""
+    coordinates = exact(coordinates)
+    n = len(coordinates)
+    if n < 2 or n & (n-1):
+        raise ValueError("Wavelet coordinates need a power-of-two length >= 2")
+    current = (coordinates[0],)
+    offset = 1
+    while len(current) < n:
+        count = len(current)
+        current = inverse_haar_pair(current, coordinates[offset:offset+count])
+        offset += count
+    if offset != n:
+        raise AssertionError("Wavelet coordinate partition did not close")
+    return current
+
+
+def wavelet_labels(length):
+    if length < 2 or length & (length - 1):
+        raise ValueError("Wavelet coordinate labels require a dyadic length")
+    depth = length.bit_length()-1
+    return ("m",) + tuple(f"L{j}.{k}" for j in range(depth,0,-1)
+                           for k in range(length//(2**j)))
+
+
+def wavelet_energy_levels(coordinates):
+    """Five weighted bands for length 16; generalized to any dyadic length."""
+    coordinates = exact(coordinates)
+    labels = wavelet_labels(len(coordinates))
+    depth = len(coordinates).bit_length()-1
+    result = [("mean", len(coordinates)*coordinates[0]**2,
+               int(coordinates[0] != 0))]
+    offset = 1
+    for j in range(depth,0,-1):
+        width = len(coordinates)//(2**j)
+        values = coordinates[offset:offset+width]
+        result.append((f"level_{j}", (2**j)*energy(values),
+                       sum(int(value != 0) for value in values)))
+        offset += width
+    if len(labels) != offset:
+        raise AssertionError("The scale labels do not match the input")
+    return tuple(result)
+
+
+def full_wavelet_transfer(length=16):
+    """Exact W H W^-1 matrix, columns obtained from wavelet coordinate impulses."""
+    wavelet_labels(length)
+    columns = []
+    for j in range(length):
+        e = tuple(F(k == j) for k in range(length))
+        columns.append(wavelet_analysis(fir(wavelet_synthesis(e))))
+    return tuple(tuple(columns[j][i] for j in range(length))
+                 for i in range(length))
+
+
+def apply_matrix(matrix, values):
+    values = exact(values)
+    if len(matrix) != len(values) or any(len(row) != len(values) for row in matrix):
+        raise ValueError("Transfer matrix and coordinate length differ")
+    return tuple(sum((F(a)*b for a,b in zip(row,values)),F(0)) for row in matrix)
+
+
+def coarsen_first_level(values):
+    """Project onto first-level Haar averages, duplicating every pair mean."""
+    values = exact(values)
+    if len(values)<2 or len(values)%2:
+        raise ValueError("First-level coarsening needs a positive even length")
+    return inverse_haar_pair(haar_pair(*split_phases(values))[0],
+                             (F(0),)*(len(values)//2))
+
+
+def operation_commutator(values):
+    """(P H - H P)x, where P is the averaging projection."""
+    values = exact(values)
+    ph = coarsen_first_level(fir(values))
+    hp = fir(coarsen_first_level(values))
+    return tuple(a-b for a,b in zip(ph,hp))
+
+
+def multiscale_transfer_svg(matrix):
+    """Python-generated signed rational heatmap with matching coordinate labels."""
+    n = len(matrix)
+    labels = wavelet_labels(n)
+    if len(matrix)!=n or any(len(row)!=n for row in matrix):
+        raise ValueError("Heatmap requires a square wavelet matrix")
+    cell = 34
+    left, top = 138, 112
+    width, height = 822, 774
+    nnz=sum(int(coefficient != 0) for row in matrix for coefficient in row)
+    parts = [
+        '<svg xmlns="http://www.w3.org/2000/svg" width="822" height="774" viewBox="0 0 822 774" role="img" aria-labelledby="title description">',
+        '<title id="title">Exact four-level Haar transfer matrix</title>',
+        '<desc id="description">A 16 by 16 matrix for W H W inverse. Rows are output wavelet coordinates, columns are input wavelet coordinates, ordered global mean then levels four through one. Teal is positive, ochre negative, grey zero. Each nonzero cell is labeled with its exact rational value.</desc>',
+        '<rect width="822" height="774" fill="#fff"/>',
+        '<text x="36" y="34" font-family="sans-serif" font-size="21" font-weight="600" fill="#173f3a">FIR transfer in four-level Haar coordinates</text>',
+        f'<text x="36" y="60" font-family="sans-serif" font-size="14" fill="#425852">{n} × {n} exact coefficients · {nnz} nonzero · W H W⁻¹</text>',
+        '<text x="140" y="85" font-family="sans-serif" font-size="12" fill="#536b66">Input wavelet coordinates (columns)</text>',
+        '<text x="12" y="107" font-family="sans-serif" font-size="12" fill="#536b66">Output rows</text>'
+    ]
+    for j, label in enumerate(labels):
+        cx = left + j*cell + cell//2
+        parts.append(f'<text x="{cx}" y="104" text-anchor="middle" font-family="monospace" font-size="10" fill="#445f59">{label}</text>')
+    for i, row in enumerate(matrix):
+        y = top+i*cell
+        parts.append(f'<text x="{left-10}" y="{y+22}" text-anchor="end" font-family="monospace" font-size="11" fill="#334e49">{labels[i]}</text>')
+        for j, value in enumerate(row):
+            x = left+j*cell
+            fill="#edf1f0" if value==0 else ("#28786d" if value>0 else "#965023")
+            parts.append(f'<rect x="{x}" y="{y}" width="{cell-1}" height="{cell-1}" rx="2" fill="{fill}"/>')
+            if value:
+                foreground="#ffffff"
+                parts.append(f'<text x="{x+cell//2}" y="{y+21}" text-anchor="middle" font-family="monospace" font-size="10" font-weight="600" fill="{foreground}">{value}</text>')
+    parts.extend((
+        '<rect x="140" y="686" width="16" height="16" fill="#28786d"/>',
+        '<text x="165" y="699" font-family="sans-serif" font-size="13" fill="#334e49">positive</text>',
+        '<rect x="258" y="686" width="16" height="16" fill="#965023"/>',
+        '<text x="283" y="699" font-family="sans-serif" font-size="13" fill="#334e49">negative</text>',
+        '<rect x="382" y="686" width="16" height="16" fill="#edf1f0"/>',
+        '<text x="407" y="699" font-family="sans-serif" font-size="13" fill="#334e49">zero</text>',
+        '<text x="140" y="740" font-family="sans-serif" font-size="13" fill="#536b66">Averaging-normalized Haar basis · no approximation · finite circular boundary</text>',
+        '</svg>'
+    ))
+    return "\n".join(parts) + "\n"
+
+
 def transfer_polyphase(even, odd):
     """(E',O') = ((I-Z)E+2ZO, 2E+(I-Z)O), Z a circular half-rate shift."""
     even, odd = exact(even), exact(odd)
@@ -308,6 +439,56 @@ def check():
             energy(fir(quarter)) == 8*energy(quarter),
             "reference", "both finite operator norm bounds are sharp")
 
+    # Full four-level operator transfer, not merely one Haar pair.
+    wx = wavelet_analysis(x)
+    wy = wavelet_analysis(case["filtered"])
+    matrix16 = full_wavelet_transfer(16)
+    project = coarsen_first_level
+    ph = project(case["filtered"])
+    hp = fir(project(x))
+    commutator = operation_commutator(x)
+    require(wx == exact((3,1,-2,-2,0,0,-4,0,0,0,0,0,0,8,0,0)),
+            "multiscale", "full input coefficient ordering")
+    require(wy == exact((6,2,-4,0,0,0,-12,-4,2,0,-4,0,10,-8,-16,0)),
+            "multiscale", "full filtered coefficient ordering")
+    require(wavelet_synthesis(wx) == x,
+            "multiscale", "wavelet analysis-synthesis inverse")
+    require(wavelet_synthesis(wy) == case["filtered"],
+            "multiscale", "filtered wavelet analysis-synthesis")
+    require(tuple(value for _,value,_ in wavelet_energy_levels(wx))
+            == exact((144,16,64,64,128)),
+            "multiscale", "five original weighted energy bands")
+    require(tuple(value for _,value,_ in wavelet_energy_levels(wy))
+            == exact((576,64,128,640,880)),
+            "multiscale", "five filtered weighted energy bands")
+    require(sum(int(t!=0) for t in wx) == 6,
+            "multiscale", "original wavelet support size")
+    require(sum(int(t!=0) for t in wy) == 10,
+            "multiscale", "filtered wavelet support size")
+    require(len(matrix16) == 16 and all(len(row)==16 for row in matrix16),
+            "multiscale", "full square transfer matrix shape")
+    require(sum(t!=0 for row in matrix16 for t in row) == 56,
+            "multiscale", "exact transfer matrix sparsity")
+    require(apply_matrix(matrix16, wx) == wy,
+            "multiscale", "full four-level operator transfer on the signal")
+    require(matrix16[0] == exact((2,)+(0,)*15),
+            "multiscale", "the global mean scales exactly by two")
+    require(project(x) == case["coarse"],
+            "multiscale", "coarsening equals dropping finest details")
+    require(project(project(x)) == project(x),
+            "multiscale", "coarsening is idempotent")
+    require(energy(commutator) == 624,
+            "multiscale", "noncommutation witness energy")
+    require(energy(tuple(case["filtered"][i]-hp[i] for i in range(16))) == 768
+            and energy(tuple(case["filtered"][i]-ph[i] for i in range(16))) == 880,
+            "multiscale", "distinct orders have distinct projection errors")
+    require(energy(commutator) == energy(case["filter_error"]),
+            "multiscale", "commutator norm equals omitted-transfer energy")
+    require(commutator == exact((-2,2,0,0,4,-4,0,0,-10,10,16,0,-8,-8,0,0)),
+            "multiscale", "exact commutator coordinate witness")
+    require(commutator != (F(0),)*16,
+            "multiscale", "filter and coarse projection do not commute")
+
     # Linearity plus equality on every coordinate basis vector gives an
     # exact 16-dimensional operator identity, not merely a sample agreement.
     for k in range(16):
@@ -333,8 +514,19 @@ def check():
         require(residue == (2*basis[-1]-basis[-2], -basis[-1])
                 + (F(0),)*(len(basis)-2),
                 "basis", "boundary correction basis "+str(k))
+        waves = wavelet_analysis(basis)
+        require(wavelet_synthesis(waves) == basis,
+                "multiscale", "four-level inverse on coordinate impulse")
+        require(apply_matrix(matrix16, waves) == wavelet_analysis(direct),
+                "multiscale", "whole wavelet matrix on coordinate impulse")
+        require(energy(operation_commutator(basis))
+                == energy(skew_shift(basis)),
+                "multiscale", "whole commutator on sample impulse")
+        require(energy(basis) == sum(v for _,v,_ in wavelet_energy_levels(waves)),
+                "multiscale", "wavelet energy on sample impulse")
 
     # Exhaustive small-integer 4-vectors and deterministic longer controls.
+    matrix4=full_wavelet_transfer(4)
     for numbers in product((-2, -1, 0, 1, 2), repeat=4):
         s = exact(numbers)
         m, stages = analyze(s)
@@ -359,7 +551,12 @@ def check():
         require(boundary_difference == (2*s[-1]-s[-2], -s[-1])
                 + (F(0),)*(len(s)-2),
                 "exhaustive", "four-sample edge correction")
+        require(apply_matrix(matrix4, wavelet_analysis(s)) == wavelet_analysis(direct),
+                "multiscale", "exhaustive 4-point whole wavelet transfer")
+        require(energy(operation_commutator(s)) == energy(skew_shift(s)),
+                "multiscale", "exhaustive 4-point noncommutation certificate")
     rng = Random(20261030)
+    wavelet_matrices = {8:full_wavelet_transfer(8),16:matrix16,32:full_wavelet_transfer(32)}
     for length in (8, 16, 32):
         for _ in range(32):
             s = exact(rng.randrange(-12, 13) for _ in range(length))
@@ -389,6 +586,11 @@ def check():
             require(boundary_difference == (2*s[-1]-s[-2], -s[-1])
                     + (F(0),)*(len(s)-2),
                     "random", "cyclic versus zero edge packet")
+            require(apply_matrix(wavelet_matrices[length], wavelet_analysis(s))
+                    == wavelet_analysis(direct),
+                    "multiscale", "whole wavelet transfer for seeded signal")
+            require(energy(operation_commutator(s)) == energy(skew_shift(s)),
+                    "multiscale", "noncommutation for seeded signal")
     return counts
 
 
@@ -455,6 +657,38 @@ def save(folder, counts):
         w.writerow(("retained_details", "retained_detail_energy", "squared_residual_error"))
         for budget, retained, residual in best_detail_budget(levels):
             w.writerow((budget, str(retained), str(residual)))
+    input_waves = wavelet_analysis(x)
+    output_waves = wavelet_analysis(case["filtered"])
+    matrix = full_wavelet_transfer(len(x))
+    labels = wavelet_labels(len(x))
+    with (folder/"full-wavelet-transfer.csv").open("w", encoding="utf-8", newline="") as stream:
+        w = csv.writer(stream, lineterminator="\n")
+        w.writerow(("output_index","output_coordinate","input_index","input_coordinate","coefficient"))
+        for i, row in enumerate(matrix):
+            for j, coefficient in enumerate(row):
+                if coefficient:
+                    w.writerow((i, labels[i], j, labels[j], str(coefficient)))
+    input_bands = wavelet_energy_levels(input_waves)
+    output_bands = wavelet_energy_levels(output_waves)
+    with (folder/"multiscale-energy.csv").open("w", encoding="utf-8", newline="") as stream:
+        w = csv.writer(stream, lineterminator="\n")
+        w.writerow(("band","original_energy","filtered_energy","original_nonzero","filtered_nonzero"))
+        for (name, en0, count0), (_, en1, count1) in zip(input_bands,output_bands):
+            w.writerow((name, str(en0), str(en1), count0, count1))
+    ph=coarsen_first_level(case["filtered"])
+    hp=fir(coarsen_first_level(x))
+    with (folder/"operation-order.csv").open("w", encoding="utf-8", newline="") as stream:
+        w=csv.writer(stream, lineterminator="\n")
+        w.writerow(("index","original","filtered","coarse_original","filter_coarse",
+                    "coarse_filtered","commutator","filtered_minus_filter_coarse",
+                    "filtered_minus_coarse_filtered"))
+        for k in range(len(x)):
+            w.writerow((k,str(x[k]),str(case["filtered"][k]),str(case["coarse"][k]),
+                        str(hp[k]),str(ph[k]),str(ph[k]-hp[k]),
+                        str(case["filtered"][k]-hp[k]),
+                        str(case["filtered"][k]-ph[k])))
+    (folder/"full-wavelet-transfer.svg").write_text(
+        multiscale_transfer_svg(matrix), encoding="utf-8", newline="\n")
     (folder/"signal-comparison.svg").write_text(figure_svg(case), encoding="utf-8", newline="\n")
     record = {
         "case": "Haar averaging / cyclic FIR (1, 2, -1)",
@@ -480,6 +714,17 @@ def save(folder, counts):
             "weighted_selection_error": 18
         },
         "budget_residual_energies": [int(row[2]) for row in best_detail_budget(levels)],
+        "multiscale": {
+            "matrix_order": len(matrix),
+            "matrix_nonzero": sum(int(value != 0) for row in matrix for value in row),
+            "input_wavelet_nonzero": sum(int(value != 0) for value in input_waves),
+            "filtered_wavelet_nonzero": sum(int(value != 0) for value in output_waves),
+            "input_band_energies": [int(v) for _, v, _ in input_bands],
+            "filtered_band_energies": [int(v) for _, v, _ in output_bands],
+            "commutator_energy": int(energy(operation_commutator(x))),
+            "error_filter_coarse": int(energy(tuple(y-v for y,v in zip(case["filtered"],hp)))),
+            "error_coarse_filtered": int(energy(tuple(y-v for y,v in zip(case["filtered"],ph)))),
+        },
         "assertions_by_group": counts,
         "total_assertions": sum(counts.values()),
         "scope": "Exact finite models; no infinite-domain or cross-boundary filter claim."
@@ -500,6 +745,8 @@ def main():
     print("FIR energy 2288 = 4 * 416 + 624; two omitted transfers also cost 624")
     print("Zero-extension boundary correction: (4,-4), squared energy 32")
     print("Best-detail budget errors: 272, 144, 80, 48, 16, 0")
+    print("Full Haar transfer: 16 x 16 rational matrix, 56 nonzero entries")
+    print("Commutator energy 624; H(Px) error 768; P(Hx) error 880")
     print("PASS: " + str(sum(counts.values())) + " exact assertions")
     if args.output:
         save(args.output, counts)

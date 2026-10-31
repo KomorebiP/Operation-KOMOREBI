@@ -43,10 +43,11 @@ arithmetic and compares freshly emitted tables against the committed copies.
 
 The [wavelet-polyphase walkthrough](demonstrations/WAVELET_POLYPHASE.md) extends
 the existing four-level Haar lab with exact lifting, weighted detail selection,
-a circular FIR filter, operator conjugacy, sharp finite stability and a
-boundary correction. The [exact program](../examples/wavelet_polyphase.py)
-uses only rational arithmetic. Its three CSV tables, JSON certificate and
-Python-generated SVG are stored under
+a circular FIR filter, a complete four-level operator conjugacy, sharp finite
+stability, operation-order counterexample and boundary correction. The
+[exact program](../examples/wavelet_polyphase.py) uses rational arithmetic
+for its mathematical checks. Six CSV tables, a JSON certificate, and two
+Python-generated SVG figures are stored under
 [verification/wavelet-polyphase/](../verification/wavelet-polyphase/).
 The [publication bridge](../tools/wavelet_case.py) verifies source-bound
 downloads and archives without running the program at build time. GitHub
