@@ -50,6 +50,16 @@ The full 16×16 matrix displays inter-scale coupling, while two noncommuting
 operation orders and explicit boundary repairs provide independent failure
 witnesses. Reproducible tables and Python-generated figures complete the example.
 
+## An extended derivation with Stirling, Bell and Fubini numbers
+
+[From set partitions to exact transfer](demonstrations/STIRLING_BELL_FUBINI.md)
+starts with one Stirling-number row, constructs Bell and ordered Bell numbers,
+and then exposes the inverse triangular kernel. It independently derives the
+exponential generating functions, transfers the Fubini reciprocal across even
+and odd coefficient packets, and proves why two scalar row summaries do not
+identify an arbitrary coordinate profile. Every example has exact Python
+checks, source-bound tables and a Python-generated diagram.
+
 ## Run in your browser
 
 [Explore the interactive diagrams](https://KomorebiP.github.io/Operation-KOMOREBI/interactive.html).
