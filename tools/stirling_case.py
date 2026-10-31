@@ -18,7 +18,7 @@ READER="read/stirling-bell-fubini.html"
 PREFIX="downloads/stirling-bell-fubini/"
 RECORD=PREFIX+"source-record.json"
 ARCHIVE=PREFIX+"source-and-results.zip"
-FILES=("stirling-rows.csv","sequence-checks.csv","signed-transfer.csv",
+FILES=("stirling-rows.csv","sequence-checks.csv","moment-bridge.csv","signed-transfer.csv",
        "obstruction.csv","reciprocal-packets.csv","stirling-transform.svg",
        "results.json")
 
@@ -91,7 +91,7 @@ def publish(site):
     body=(
         '<h1>Stirling, Bell and Fubini / complete exact Python source</h1>'
         '<p>Triangular matrices, signed inverse, Bell and ordered Bell numbers, '
-        'two formal generating functions, a parity transfer system, '
+        'Touchard and exponential-moment families, formal generating functions, a parity transfer system, '
         'three residue packets and an explicit information-loss witness. '
         'Python 3.10 or later, standard library only.</p>'
         '<p><a class="button" href="../collection/demonstrations/STIRLING_BELL_FUBINI.html">'
@@ -118,6 +118,7 @@ def publish(site):
               "Bell numbers ordered Bell Fubini factorial Stirling transform "
               "signed Stirling first kind inverse Bell EGF reciprocal "
               "root of unity filters even odd polyphase residues "
+              "Touchard polynomials gamma moments geometric distribution "
               "obstruction finite matrices exact rational Python")))
     return record
 
@@ -133,6 +134,8 @@ def verify_site(root:Path,pages:dict)->int:
     results=json.loads((root/PREFIX/"results.json").read_bytes())
     assert results["bell5"]==52 and results["fubini5"]==541
     assert results["row5"]==[0,1,15,25,10,1]
+    assert results["moment_bridge_n5"]["2"] == {"touchard":"454","exponential_moment":"9002"}
+    assert results["moment_bridge_n5"]["1/2"] == {"touchard":"257/32","exponential_moment":"91/2"}
     assert results["packet_split_n5"]=={
         "even_degree_tap_contribution":135,"odd_degree_tap_contribution":406}
     assert results["witness_n4"]["alternative_row"]==[0,5,2,7,1]
