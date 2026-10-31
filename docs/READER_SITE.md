@@ -172,6 +172,14 @@ guide links to the existing 26 HTML plates and their complete label transcripts.
 
 The [Proof Path Theory HTML edition](https://KomorebiP.github.io/Operation-KOMOREBI/read/proof-path-theory/index.html) follows the retained manuscript from the preface through five parts, its theorem ledger, source-bound tables, and the final reproducible example. Chapter navigation, original TeX line links, selectable mathematics, original figures, PDF and visual sampler links, and routes to Lean, code and evidence are retained. Source expressions are checked against the unchanged TeX. The reading presentation adds no proof or formal verification assessments.
 
+The converter also reads the five part-opening figures and four explanatory
+paragraphs from the manuscript's preamble macro. All 25 figure numbers follow
+the printed sequence. Captions, including their nine mathematical expressions,
+are included in the source and HTML checks. Plain references retain their
+authored numbers, the tagged condition links as `(SC)`, and the nine bibliography
+entries retain their numeric citation order. The complete HTML edition contains
+1,051 mathematical expressions and 51 proof environments.
+
 Run `python -B -m unittest discover -s tools -p 'test_proof_path_reading.py' -v` to check manuscript boundaries, formula preservation, readable syntax and source illustrations. The normal website checker verifies published equations, chapter links and all reading ZIPs.
 
 ## Publication
