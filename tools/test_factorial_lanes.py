@@ -58,6 +58,9 @@ class FactorialLaneArithmeticTests(unittest.TestCase):
             self.assertEqual(record['total'],225)
             self.assertIn('3,34,1/46376', (folder/'coefficients.csv').read_text())
             self.assertIn('10,10 * 20 * 30,6000', (folder/'lane-products.csv').read_text())
+            for name in ('coefficients.csv', 'lane-products.csv', 'results.json'):
+                self.assertEqual((folder/name).read_bytes(),
+                                 (ROOT/'verification/factorial-lanes'/name).read_bytes())
 
 
 class FactorialLanePublicationTests(unittest.TestCase):
