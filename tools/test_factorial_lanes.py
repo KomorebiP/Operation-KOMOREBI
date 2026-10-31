@@ -79,11 +79,14 @@ class FactorialLanePublicationTests(unittest.TestCase):
                                  write=write,page=page,search=[])
             record=publish(site)
             pages[record['manuscript_url']]='<h1>Factorial lanes</h1>'
-            self.assertEqual(verify_site(output,pages),1)
+            # The production site checker supplies parsed Page objects, not strings.
+            from check_reader_site import Page
+            parsed={name:Page((output/name).read_text(encoding='utf-8')) for name in pages}
+            self.assertEqual(verify_site(output,parsed),1)
             self.assertEqual(len(site.search),1)
             (output/record['download_url']).write_bytes(b'mutated program')
             with self.assertRaises(AssertionError):
-                verify_site(output,pages)
+                verify_site(output,parsed)
 
 
 if __name__ == '__main__':
