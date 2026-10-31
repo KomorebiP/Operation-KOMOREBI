@@ -48,6 +48,14 @@ The [coverage list](EXAMPLE_COVERAGE.md) shows which works still need an introdu
 | 25. [Choose repair directions](examples/25_REPAIR_MENUS.md) | Constructive Repair: free repair, weighted menus and an obstruction witness | Linear equations and span |
 | 26. [Update a Gaussian model](examples/26_GAUSSIAN_UPDATE.md) | Certified Inference: one observation, posterior covariance and a candidate gain | Small matrices and Gaussian densities |
 
+## Extended research examples
+
+The [Euler-number derivation](demonstrations/EULER_PACKETS.md) and the
+[factorial-lanes derivation](demonstrations/FACTORIAL_LANES.md) follow longer
+chains of exact representations, carry calculations and failure witnesses.
+The factorial example includes an independent Python program and downloadable
+rational tables.
+
 ## Conventions and scope
 
 Vectors are columns unless a displayed signal is explicitly a list. Matrix
