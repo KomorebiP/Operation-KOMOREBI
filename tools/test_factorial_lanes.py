@@ -81,7 +81,7 @@ class FactorialLanePublicationTests(unittest.TestCase):
             pages[record['manuscript_url']]='<h1>Factorial lanes</h1>'
             # The production site checker supplies parsed Page objects, not strings.
             from check_reader_site import Page
-            parsed={name:Page((output/name).read_text(encoding='utf-8')) for name in pages}
+            parsed={name:Page(body) for name,body in pages.items()}
             self.assertEqual(verify_site(output,parsed),1)
             self.assertEqual(len(site.search),1)
             (output/record['download_url']).write_bytes(b'mutated program')
