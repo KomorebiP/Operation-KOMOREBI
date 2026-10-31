@@ -31,9 +31,12 @@ witnesses, and a standalone exact Python checker with downloadable tables.
 [Factorial lanes: one residue section through exact transfer](demonstrations/FACTORIAL_LANES.md)
 starts with the degree-4 packet of the exponential. It reconstructs 34! from
 ten step-factorial lanes, converts those lanes to a hypergeometric series,
-normalizes the denominator, inverts the packet, and checks the 5-adic
-valuation and finite-difference bounds. A standalone checker supplies exact
-rational results, downloadable code and two explicit failure witnesses.
+normalizes the denominator, and inverts the packet in two equivalent
+coordinate systems. It also proves a sharpened 5-adic displacement bound,
+refines the residue packet into two and five children, and distinguishes the
+congruential transfer row from the classical Euler numbers. A standalone
+checker supplies exact rational results, downloadable code and two explicit
+failure witnesses.
 
 ## Run in your browser
 
