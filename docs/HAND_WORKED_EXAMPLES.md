@@ -62,7 +62,7 @@ results. Each extended example retains its own finite evidence scope.
 
 The [Stirling, Bell and Fubini example](demonstrations/STIRLING_BELL_FUBINI.md)
 adds a combinatorial flagship: one triangular counting kernel with two
-distinct input weightings, a signed inverse, reciprocal coefficient packets,
+distinct input weightings, a signed inverse, Touchard polynomial and gamma-moment bridges, reciprocal coefficient packets,
 and a noninjective aggregation witness. It includes a standalone exact
 Python checker and downloadable source-bound records.
 
