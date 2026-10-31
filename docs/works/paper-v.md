@@ -29,7 +29,10 @@ These introductory calculations lead into this work’s subject. The source and 
 - [5. Refine a signal](../examples/05_REFINEMENT.md) · [Terms and source routes](../LEARNING_MAP.md#refinement)
 - [14. Separate averages and details](../examples/14_HAAR_PAIRS.md) · [Terms and source routes](../LEARNING_MAP.md#haar)
 
-**Complete demonstration with runnable code:** [Refine a signal](../demonstrations/REFINEMENT.md).
+**Complete demonstrations with runnable code:** [Refine a signal](../demonstrations/REFINEMENT.md)
+and [Wavelets and polyphase transfer](../demonstrations/WAVELET_POLYPHASE.md),
+including a sixteen-sample FIR operator, exact Haar reconstruction, and
+explicit residual and boundary controls.
 
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 

@@ -2,6 +2,12 @@
 
 [Open the interactive Haar lab](https://KomorebiP.github.io/Operation-KOMOREBI/interactive.html#haar) · [Four-sample introduction](../examples/14_HAAR_PAIRS.md) · [All demonstrations](../DEMONSTRATIONS.md)
 
+For the complete operator calculation, see
+[Wavelets and polyphase transfer: one signal through the whole calculus](WAVELET_POLYPHASE.md).
+It starts with the same signal, then transports a genuine FIR filter through
+the polyphase and Haar representations, with an independently checked
+finite-dimensional operator identity.
+
 The lab extends the neighboring-pair calculation to sixteen real samples.
 It uses the **averaging normalization** throughout. Start with a shape, edit its
 samples, then choose which details to retain. The diagrams show the original
