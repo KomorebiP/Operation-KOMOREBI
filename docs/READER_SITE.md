@@ -29,6 +29,16 @@ and return links on the related work pages. Edit tutorial explanations above
 the `learning-navigation` marker. The status command replaces the section
 below that marker. A subject route does not establish a theorem correspondence.
 
+## Extended factorial-lanes example
+
+The [factorial-lanes derivation](demonstrations/FACTORIAL_LANES.md) has an
+independent exact program in [examples/factorial_lanes.py](../examples/factorial_lanes.py).
+The [factorial publisher](../tools/factorial_case.py) provides a checked on-site
+source reader and source-bound downloads. Its finite output snapshots live in
+[verification/factorial-lanes/](../verification/factorial-lanes/). The site
+checker validates their byte identities, while the workflow re-runs the
+arithmetic and compares freshly emitted tables against the committed copies.
+
 ## Build locally
 
 Use a complete collection checkout and separate checkouts of the two libraries
