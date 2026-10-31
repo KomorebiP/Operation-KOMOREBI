@@ -10,7 +10,6 @@ import argparse
 import csv
 import json
 from fractions import Fraction
-from itertools import product
 from math import comb, factorial
 from pathlib import Path
 
@@ -59,6 +58,36 @@ def series_product(a, b):
         raise ValueError("Truncated series require equal declared degree")
     return tuple(sum((a[j]*b[n-j] for j in range(n+1)), Q(0))
                  for n in range(len(a)))
+
+
+
+def series_compose(outer, inner):
+    """Exact truncated formal composition; inner must vanish at zero."""
+    if len(outer)!=len(inner) or not inner or inner[0]!=0:
+        raise ValueError("Formal composition requires equal degree and zero inner constant")
+    degree=len(outer)-1
+    result=[Q(0)]*(degree+1)
+    power=(Q(1),)+(Q(0),)*degree
+    for k,coefficient in enumerate(outer):
+        for n in range(degree+1):
+            result[n]+=Q(coefficient)*power[n]
+        power=series_product(power,inner)
+    return tuple(result)
+
+
+def formal_log_one_plus(degree):
+    """Coefficients of log(1+t), exactly to the requested degree."""
+    return (Q(0),)+tuple(Q((-1)**(j+1),j) for j in range(1,degree+1))
+
+
+def stirling_transform_egf(degree, weights):
+    """EGF of S*weights = A(exp(t)-1), A(u)=sum weights[k]u**k/k!."""
+    weights=tuple(weights)
+    if len(weights)<degree+1:
+        raise ValueError("Need every input coordinate through declared degree")
+    input_egf=tuple(Q(weights[k],factorial(k)) for k in range(degree+1))
+    expm1=(Q(0),)+tuple(Q(1,factorial(k)) for k in range(1,degree+1))
+    return series_compose(input_egf,expm1)
 
 
 def series_reciprocal(a):
@@ -123,6 +152,29 @@ def geometric_moment_value(row, mean):
     """Compute the polynomial's geometric raw moment in the falling basis."""
     return sum((value*geometric_falling_moment(k,mean)
                 for k,value in enumerate(row)),Q(0))
+
+
+
+def interpolate_integer_samples(samples):
+    """Recover monomial coefficients from P(0),...,P(n) by Newton differences."""
+    if not samples:
+        raise ValueError("At least one polynomial sample is required")
+    degree=len(samples)-1
+    differences=[Q(v) for v in samples]
+    result=[Q(0)]*(degree+1)
+    falling=[Q(1)]
+    for j in range(degree+1):
+        scale=differences[0]/factorial(j)
+        for k,value in enumerate(falling):
+            result[k]+=scale*value
+        differences=[differences[i+1]-differences[i]
+                     for i in range(len(differences)-1)]
+        next_falling=[Q(0)]*(len(falling)+1)
+        for k,value in enumerate(falling):
+            next_falling[k]-=j*value
+            next_falling[k+1]+=value
+        falling=next_falling
+    return tuple(result)
 
 
 def parameterized_reciprocal_series(degree, scale):
@@ -299,6 +351,83 @@ def test_cases():
     verify(touchard_value(S[0],0)==exponential_moment_value(S[0],0)==1,
            "reference","Empty-set boundary for zero parameter")
 
+    # General coefficient grammar: composition and its formal logarithmic inverse.
+    weight_families=(
+        (1,)*(DEGREE+1),
+        tuple(factorial(k) for k in range(DEGREE+1)),
+        tuple(Q((-1)**k*(k+1),3) for k in range(DEGREE+1)),
+        tuple(Q(k*k+1,k+1) for k in range(DEGREE+1)),
+    )
+    log= formal_log_one_plus(DEGREE)
+    for weights in weight_families:
+        outputs=lower_apply(S,weights)
+        generated=stirling_transform_egf(DEGREE,weights)
+        recovered=series_compose(generated,log)
+        for n in range(DEGREE+1):
+            verify(generated[n]==Q(outputs[n],factorial(n)),
+                   "composition","General Stirling formal substitution")
+            verify(recovered[n]==Q(weights[n],factorial(n)),
+                   "composition","Formal logarithm recovers original weight")
+
+    # Touchard polynomial calculus and the exact binomial-type addition law.
+    for z in (Q(0),Q(1,2),Q(1),Q(2),Q(-1)):
+        for n in range(DEGREE):
+            derivative=sum(k*S[n][k]*z**(k-1) for k in range(1,n+1))
+            verify(touchard_value(S[n+1],z)
+                   ==z*(touchard_value(S[n],z)+derivative),
+                   "touchard","Touchard differential recurrence")
+    for x,y in ((Q(0),Q(1)),(Q(1),Q(1)),(Q(1,2),Q(2)),(Q(-1),Q(2))):
+        for n in range(DEGREE+1):
+            verify(touchard_value(S[n],x+y)==sum(
+                comb(n,j)*touchard_value(S[j],x)
+                *touchard_value(S[n-j],y) for j in range(n+1)),
+                "touchard","Touchard binomial addition law")
+
+    # Full parameter polynomial is reversible; one or two scalar summaries are not.
+    for n,row in enumerate(S):
+        touchard_samples=tuple(touchard_value(row,j) for j in range(n+1))
+        ordered_samples=tuple(exponential_moment_value(row,j) for j in range(n+1))
+        verify(interpolate_integer_samples(touchard_samples)==tuple(row),
+               "reconstruction","Touchard interpolation recovers the row")
+        ordered_coefficients=interpolate_integer_samples(ordered_samples)
+        verify(tuple(ordered_coefficients[k]/factorial(k)
+                     for k in range(n+1))==tuple(row),
+               "reconstruction","Ordered polynomial recovers factorial-scaled row")
+    original,candidate=S[4],ALTERNATIVE_ROW_4
+    verify(touchard_value(original,2)==94
+           and touchard_value(candidate,2)==90,
+           "reconstruction","Another evaluation separates the two profiles")
+    verify(exponential_moment_value(original,2)==730
+           and exponential_moment_value(candidate,2)==746,
+           "reconstruction","Another moment separates the two profiles")
+    verify(interpolate_integer_samples(tuple(
+        touchard_value(candidate,j) for j in range(5)))==candidate,
+        "reconstruction","Interpolate the alternative candidate itself")
+    verify(interpolate_integer_samples(tuple(
+        exponential_moment_value(candidate,j) for j in range(5)))
+        ==tuple(candidate[k]*factorial(k) for k in range(5)),
+        "reconstruction","Recover candidate factorial-weighted coefficients")
+
+    # The mod-m filters satisfy an entire coupled transfer, not just reconstruction.
+    for modulus in range(2,6):
+        for residue in range(modulus):
+            expected=packet(fe,modulus,residue)
+            generated=[Q(int(residue==0))]+[Q(0)]*DEGREE
+            for tap in range(modulus):
+                contribution=series_product(packet(u,modulus,tap),
+                    packet(fe,modulus,(residue-tap)%modulus))
+                generated=[generated[n]+contribution[n]
+                           for n in range(DEGREE+1)]
+            for n in range(DEGREE+1):
+                verify(expected[n]==generated[n],"packet_transfer",
+                       "Coupled residue transfer at modulus "+str(modulus))
+    for residue,expected in enumerate((30,380,131)):
+        verify(sum(comb(5,j)*ordered[5-j] for j in range(1,6)
+                   if j%3==residue)==expected,
+               "packet_transfer","Three-residue tap contributions at n=5")
+    verify(30+380+131==ordered[5],"packet_transfer",
+           "All three taps reconstruct Fubini n=5")
+
     # Even/odd packets of F and U obey an exact 2x2 convolutional transfer.
     ue,uo=packet(u,2,0),packet(u,2,1)
     even,odd=packet(fe,2,0),packet(fe,2,1)
@@ -413,6 +542,16 @@ def save(folder, checks):
         for k in range(5):
             delta=ALTERNATIVE_ROW_4[k]-witness[k]
             writer.writerow((k,witness[k],ALTERNATIVE_ROW_4[k],delta,factorial(k),factorial(k)*delta))
+    original=S[4]
+    with (folder/"reconstruction.csv").open("w",encoding="utf-8",newline="") as stream:
+        writer=csv.writer(stream,lineterminator="\n")
+        writer.writerow(("parameter","true_touchard","candidate_touchard",
+                         "true_ordered_polynomial","candidate_ordered_polynomial"))
+        for z in range(5):
+            writer.writerow((z,touchard_value(original,z),
+                             touchard_value(ALTERNATIVE_ROW_4,z),
+                             exponential_moment_value(original,z),
+                             exponential_moment_value(ALTERNATIVE_ROW_4,z)))
     with (folder/"reciprocal-packets.csv").open("w",encoding="utf-8",newline="") as stream:
         writer=csv.writer(stream,lineterminator="\n")
         writer.writerow(("n","bell","fubini","egf_bell","egf_fubini","even_packet","odd_packet","mod3_residue","mod3_packet"))
@@ -440,6 +579,15 @@ def save(folder, checks):
                         difference=[ALTERNATIVE_ROW_4[k]-S[4][k] for k in range(5)]),
         packet_split_n5=dict(even_degree_tap_contribution=135,
                              odd_degree_tap_contribution=406),
+        packet_split_n5_mod3=dict(residue_0=30,residue_1=380,residue_2=131),
+        reconstruction_n4=dict(
+            true_ordered_samples=[str(exponential_moment_value(S[4],z))
+                                  for z in range(5)],
+            candidate_ordered_samples=[str(exponential_moment_value(
+                ALTERNATIVE_ROW_4,z)) for z in range(5)],
+            true_touchard_at_2=94,candidate_touchard_at_2=90,
+            recovered_stirling_row=list(interpolate_integer_samples(tuple(
+                touchard_value(S[4],z) for z in range(5))))),
         checks_by_group=checks,
         total_assertions=sum(checks.values()),
         scope="Exact classical finite combinatorics and formal-series identities; no new Lean replay or universal recovery theorem."
@@ -456,6 +604,8 @@ def main():
     print("STIRLING / BELL / FUBINI | exact integer and rational arithmetic")
     print("n=5: S=(0,1,15,25,10,1); Bell=52; Fubini=541")
     print("Inverse Stirling transform recovers 1 and k! input families")
+    print("General EGF substitution and exact polynomial interpolation checked")
+    print("Three residue tap paths at n=5: 30 + 380 + 131 = 541")
     print("Touchard T5(2)=454; gamma moment F5(2)=9002")
     print("Reciprocal parity packets at degree five: 135 + 406 = 541")
     print("n=4: distinct nonnegative rows can share Bell=15 and Fubini=75")

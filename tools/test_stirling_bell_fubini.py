@@ -24,9 +24,13 @@ class PartitionTransformExactTests(unittest.TestCase):
             "triangular":165,
             "generating":110,
             "packets":44,
-            "moments":300
+            "moments":300,
+            "composition":88,
+            "touchard":94,
+            "reconstruction":26,
+            "packet_transfer":158
         })
-        self.assertEqual(sum(counts.values()),725)
+        self.assertEqual(sum(counts.values()),1091)
 
     def test_reference_row_and_signed_inverse(self):
         second=M.stirling_second(5)
@@ -59,6 +63,45 @@ class PartitionTransformExactTests(unittest.TestCase):
                 self.assertEqual(
                     M.parameterized_reciprocal_series(10,z)[n],
                     moment[n]/M.factorial(n))
+
+    def test_general_composition_and_exact_polynomial_reconstruction(self):
+        rows=M.stirling_second(10)
+        weights=tuple(Fraction((-1)**k*(k+1),3) for k in range(11))
+        generated=M.stirling_transform_egf(10,weights)
+        outputs=M.lower_apply(rows,weights)
+        self.assertEqual(generated,tuple(
+            outputs[n]/M.factorial(n) for n in range(11)))
+        self.assertEqual(
+            M.series_compose(generated,M.formal_log_one_plus(10)),
+            tuple(weights[n]/M.factorial(n) for n in range(11)))
+        for n,row in enumerate(rows):
+            samples=[M.touchard_value(row,k) for k in range(n+1)]
+            self.assertEqual(M.interpolate_integer_samples(samples),row)
+        original,candidate=rows[4],M.ALTERNATIVE_ROW_4
+        self.assertEqual(M.exponential_moment_value(original,1),75)
+        self.assertEqual(M.exponential_moment_value(candidate,1),75)
+        self.assertEqual(M.exponential_moment_value(original,2),730)
+        self.assertEqual(M.exponential_moment_value(candidate,2),746)
+        with self.assertRaises(ValueError):
+            M.interpolate_integer_samples([])
+        with self.assertRaises(ValueError):
+            M.series_compose((Fraction(1),Fraction(0)),(Fraction(1),Fraction(0)))
+
+    def test_three_packet_coupled_transfer(self):
+        degree=10
+        rows=M.stirling_second(degree)
+        _,ordered=M.bell_fubini(rows)
+        values=M.egf_coefficients(ordered)
+        u=(Fraction(0),)+tuple(
+            Fraction(1,M.factorial(j)) for j in range(1,degree+1))
+        for residue in range(3):
+            lhs=M.packet(values,3,residue)
+            rhs=[Fraction(int(residue==0))]+[Fraction(0)]*degree
+            for tap in range(3):
+                part=M.series_product(M.packet(u,3,tap),
+                    M.packet(values,3,(residue-tap)%3))
+                rhs=[rhs[n]+part[n] for n in range(degree+1)]
+            self.assertEqual(lhs,tuple(rhs))
 
     def test_two_summary_obstruction_uses_only_a_candidate_not_another_partition_row(self):
         original=M.stirling_second(4)[4]
@@ -96,18 +139,26 @@ class PartitionTransformExactTests(unittest.TestCase):
             counts=M.test_cases()
             M.save(a,counts)
             M.save(b,counts)
-            self.assertEqual(len(FILES),8)
+            self.assertEqual(len(FILES),9)
             for name in FILES:
                 with self.subTest(name=name):
                     self.assertEqual((a/name).read_bytes(),(b/name).read_bytes())
             summary=json.loads((a/"results.json").read_bytes())
-            self.assertEqual(summary["total_assertions"],725)
+            self.assertEqual(summary["total_assertions"],1091)
             self.assertEqual(summary["bell5"],52)
             self.assertEqual(summary["moment_bridge_n5"]["2"],
                              {"touchard":"454","exponential_moment":"9002"})
             self.assertIn("1/2,5,257/32,91/2",
                           (a/"moment-bridge.csv").read_text())
             self.assertEqual(summary["fubini5"],541)
+            self.assertEqual(summary["packet_split_n5_mod3"],
+                             {"residue_0":30,"residue_1":380,"residue_2":131})
+            self.assertEqual(summary["reconstruction_n4"]["true_ordered_samples"],
+                             ["0","75","730","3045","8676"])
+            self.assertEqual(summary["reconstruction_n4"]["candidate_ordered_samples"],
+                             ["0","75","746","3129","8916"])
+            self.assertIn("2,94,90,730,746",
+                          (a/"reconstruction.csv").read_text())
             self.assertEqual(summary["packet_split_n5"],{
                 "even_degree_tap_contribution":135,
                 "odd_degree_tap_contribution":406
@@ -133,8 +184,8 @@ class PartitionTransformWebsiteTests(unittest.TestCase):
                                  write=write,page=page,search=[])
             record=publish(site)
             self.assertEqual(len(site.search),1)
-            self.assertEqual(record["case_assertions"],725)
-            self.assertEqual(len(record["tables"]),8)
+            self.assertEqual(record["case_assertions"],1091)
+            self.assertEqual(len(record["tables"]),9)
             pages[record["manuscript_url"]]="<h1>Stirling partitions</h1>"
             from check_reader_site import Page
             parsed={name:Page(content) for name,content in pages.items()}
