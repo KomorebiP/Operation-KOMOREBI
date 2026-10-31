@@ -262,7 +262,133 @@ F_5=5F_4+10F_3+10F_2+5F_1+F_0
 
 The standalone checker computes both families by Stirling rows and these independent recurrences. It also expands \(\exp(e^t-1)\) and the reciprocal \(1/(2-e^t)\) using exact rational series arithmetic, rather than floating-point evaluations at small \(t\).
 
-## 5. Split the reciprocal identity into even and odd packets
+## 5. A polynomial bridge: evaluation versus exponential moments
+
+The preceding triangular formulas reveal a more general construction. **Keep the row as a polynomial before applying any summary.** Define the Touchard polynomial
+
+\[
+\boxed{T_n(z)=\sum_{k=0}^n S(n,k)z^k.}
+\]
+
+For our central row,
+
+\[
+T_5(z)=z+15z^2+25z^3+10z^4+z^5.
+\]
+
+Evaluating at \(z=1\) forgets the number of blocks but preserves the partition count: \(T_n(1)=B_n\). A *different* linear functional on the same polynomial produces the ordered Bell numbers. The gamma integral for an integer \(k\ge0\) is
+
+\[
+\int_0^\infty e^{-u}u^k\,du=k!.
+\]
+
+Indeed, the integral is \(1\) for \(k=0\), and integration by parts gives \(I_k=kI_{k-1}\) for \(k\ge1\). This proves the factorial rule without numerical approximation.
+
+Because \(T_n\) is a finite polynomial, we may integrate term by term, without an interchange of infinite series:
+
+\[
+\boxed{
+F_n=\int_0^\infty e^{-u}T_n(u)\,du
+=\sum_{k=0}^n k!S(n,k).
+}
+\]
+
+The entire computation at \(n=5\) is visible:
+
+\[
+\begin{aligned}
+T_5(1)&=1+15+25+10+1=\boxed{52},\\
+\int_0^\infty e^{-u}T_5(u)\,du
+&=1(1!)+15(2!)+25(3!)+10(4!)+1(5!)
+=\boxed{541}.
+\end{aligned}
+\]
+
+This distinguishes the operations precisely: **Bell is polynomial evaluation; Fubini is an exponential moment of that polynomial.** Neither operation requires an unrelated counting kernel.
+
+### A one-parameter family of exact transfers
+
+For a nonnegative real parameter \(\lambda\), rescale the polynomial argument before taking the moment:
+
+\[
+\boxed{
+F_n(\lambda)=\int_0^\infty e^{-u}T_n(\lambda u)\,du
+=\sum_{k=0}^n k!S(n,k)\lambda^k,\qquad F_n(1)=F_n.
+}
+\]
+
+In particular,
+
+\[
+F_5(\lambda)=\lambda+30\lambda^2+150\lambda^3
++240\lambda^4+120\lambda^5.
+\]
+
+| Parameter | \(T_5(\lambda)\) | \(F_5(\lambda)\) |
+|---:|---:|---:|
+| \(0\) | \(0\) | \(0\) |
+| \(1/2\) | \(257/32\) | \(91/2\) |
+| \(1\) | \(52\) | \(541\) |
+| \(2\) | \(454\) | \(9002\) |
+
+The first column changes the **evaluation point** of \(T_5\). The second changes the **scale before its exponential moment**. These are distinct operations even when they use the same parameter. At \(n=0\), both polynomials give \(1\) for every parameter, consistent with \(S(0,0)=1\).
+
+To derive the complete families, first preserve the formal coefficient variable \(z\):
+
+\[
+\begin{aligned}
+\sum_{n\ge0}T_n(z)\frac{t^n}{n!}
+&=\boxed{\exp\!\bigl(z(e^t-1)\bigr)},\\
+\sum_{n\ge0}F_n(\lambda)\frac{t^n}{n!}
+&=\sum_{k\ge0}\bigl(\lambda(e^t-1)\bigr)^k
+=\boxed{\frac{1}{1-\lambda(e^t-1)}}.
+\end{aligned}
+\]
+
+These are formal identities over \(\mathbb Q[z][[t]]\) and \(\mathbb Q[\lambda][[t]]\), respectively. Each fixed coefficient of \(t^n\) involves only \(k\le n\). In particular, the reciprocal specialization \(\lambda=1\) gives exactly \(1/(2-e^t)\). For \(n\ge1\), its parameterized coefficients also satisfy
+
+\[
+F_n(\lambda)=\lambda\sum_{j=1}^n\binom nj F_{n-j}(\lambda),
+\qquad F_0(\lambda)=1.
+\]
+
+### A second interpretation: geometric moments
+
+The same reciprocal has a classical probabilistic realization. When \(\lambda>0\), let \(M\) be a nonnegative integer with
+
+\[
+\Pr(M=m)=\frac{1}{1+\lambda}
+\left(\frac{\lambda}{1+\lambda}\right)^m,\qquad m\ge0.
+\]
+
+Its falling-factorial moments are \(\mathbb E[(M)_k]=k!\lambda^k\). To see this directly, put \(q=\lambda/(1+\lambda)\). Differentiate the geometric series \(1/(1-q)=\sum_{m\ge0}q^m\) \(k\) times and multiply by \(q^k\):
+
+\[
+\sum_{m\ge0}(m)_kq^m=\frac{k!q^k}{(1-q)^{k+1}}.
+\]
+
+Dividing by \(1+\lambda\) gives \(k!\lambda^k\) exactly. Combine this with the basis identity from Section 3,
+\(m^n=\sum_k S(n,k)(m)_k\), to obtain
+
+\[
+\boxed{
+\mathbb E[M^n]=F_n(\lambda)
+=\frac{1}{1+\lambda}\sum_{m\ge0}
+m^n\left(\frac{\lambda}{1+\lambda}\right)^m.
+}
+\]
+
+Here \((M)_k=M(M-1)\cdots(M-k+1)\) and the \(n=0\) convention is \(m^0=1\), including \(m=0\). The sum converges for \(\lambda>0\). At \(\lambda=1\) this becomes the classical ordered-Bell formula
+
+\[
+F_n=\sum_{m\ge0}\frac{m^n}{2^{m+1}}.
+\]
+
+This is an **independent interpretation**, not a claim that infinitely many terms are required to *compute* \(F_n\): the original finite Stirling row remains exact. The signed Stirling inverse still recovers the input moments \(k!\lambda^k\) from the complete prefix \((F_0(\lambda),\ldots,F_n(\lambda))\). A single output \(F_n(\lambda)\) does not recover its underlying row.
+
+The checker verifies the parameter values, polynomial recurrences, geometric falling-factorial moments, formal generating functions, reciprocal identities and signed inversions using integers and rational fractions. Download the [parameterized moment table](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/moment-bridge.csv) alongside the earlier tables.
+
+## 6. Split the reciprocal identity into even and odd packets
 
 The reciprocal \(F(t)=1/(2-e^t)\) offers a useful direct bridge to Komorebi’s residue coordinates. Define
 
@@ -362,7 +488,7 @@ The coefficient checker uses integer residue indexing and exact rational series.
 
 [Download all reciprocal packet coefficients](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/reciprocal-packets.csv).
 
-## 6. A real obstruction: two summaries do not determine the whole row
+## 7. A real obstruction: two summaries do not determine the whole row
 
 We have distinguished two reversible maps:
 
@@ -412,7 +538,7 @@ This is the same distinction as our operator and wavelet demonstrations: an inve
 
 [Inspect the obstruction witness, coordinate by coordinate](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/obstruction.csv).
 
-## 7. What the checks prove, and what they do not
+## 8. What the checks prove, and what they do not
 
 The mathematical identities above are derived from partition counting, lower-triangular inversion, formal exponential series, and the orthogonality of roots of unity. The program independently checks their finite consequences.
 
@@ -423,12 +549,13 @@ The standalone checker uses only standard-library exact integers and fractions. 
 - Both orders of multiplication of the truncated Stirling and signed-Stirling matrices.
 - Inversion of the Bell and Fubini sequence prefixes to their distinct input weights.
 - The Bell exponential series, Fubini reciprocal series, and separate binomial recurrences.
+- The Touchard polynomial bridge, scaled gamma moments, signed inverse, and parameterized reciprocal recurrences.
 - Even/odd reciprocal packet transfer and the three-residue reconstruction.
 - The explicit \(n=4\) aggregation obstruction.
 
 Finite computation is a regression check, not a substitute for the displayed general proofs. All sequences and identities here are classical. The broader analytic and formalized Special Functions volume has its own claim map and scope. Nothing on this page asserts new Lean compilation, universal recovery from finite summaries, or new results on unrelated conjectures.
 
-## 8. Reproduce the exact records
+## 9. Reproduce the exact records
 
 Python 3.10 or later is sufficient; NumPy, plotting packages and external services are unnecessary. From the collection checkout run:
 
@@ -441,7 +568,7 @@ The second command regenerates the exact integer CSVs, rational packet table, SV
 
 [Read the full Python source](https://KomorebiP.github.io/Operation-KOMOREBI/read/stirling-bell-fubini.html) · [Download the Python checker](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/stirling_bell_fubini.py) · [Download the source-and-results ZIP](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/source-and-results.zip)
 
-[Stirling rows (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/stirling-rows.csv) · [Sequence and inverse checks (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/sequence-checks.csv) · [Signed inverse matrix (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/signed-transfer.csv) · [Reciprocal packets (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/reciprocal-packets.csv) · [Obstruction witness (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/obstruction.csv) · [Exact SVG diagram](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/stirling-transform.svg) · [Verification record (JSON)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/results.json)
+[Parameterized moment bridge (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/moment-bridge.csv) · [Stirling rows (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/stirling-rows.csv) · [Sequence and inverse checks (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/sequence-checks.csv) · [Signed inverse matrix (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/signed-transfer.csv) · [Reciprocal packets (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/reciprocal-packets.csv) · [Obstruction witness (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/obstruction.csv) · [Exact SVG diagram](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/stirling-transform.svg) · [Verification record (JSON)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/results.json)
 
 ### Original literature and related worked examples
 

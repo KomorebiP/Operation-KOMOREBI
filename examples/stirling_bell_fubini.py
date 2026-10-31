@@ -74,15 +74,16 @@ def egf_coefficients(values):
     return tuple(Q(v, factorial(n)) for n, v in enumerate(values))
 
 
-def exponential_series_of_expm1(degree):
-    """Formal exp(exp(t)-1) as sum_{k=0}^N (exp(t)-1)^k/k!."""
+def exponential_series_of_expm1(degree, z=1):
+    """Formal exp(z*(exp(t)-1)) in exact rational arithmetic."""
+    z=Q(z)
     unit = (Q(1),) + (Q(0),)*degree
     u = (Q(0),) + tuple(Q(1, factorial(j)) for j in range(1, degree+1))
     result = [Q(0)] * (degree+1)
     power = unit
     for k in range(degree+1):
         for n in range(degree+1):
-            result[n] += power[n]/factorial(k)
+            result[n] += power[n]*z**k/factorial(k)
         power = series_product(power, u)
     return tuple(result)
 
@@ -91,6 +92,44 @@ def ordered_reciprocal_series(degree):
     """1 / (2-exp(t)) as a formal power series about t=0."""
     denominator = (Q(1),) + tuple(-Q(1,factorial(n))
                                   for n in range(1,degree+1))
+    return series_reciprocal(denominator)
+
+
+
+def touchard_value(row, z):
+    """Evaluate the exact row polynomial sum S(n,k)*z**k."""
+    z=Q(z)
+    return sum((value*z**k for k,value in enumerate(row)),Q(0))
+
+
+def exponential_moment_value(row, scale):
+    """Gamma moment of T_n(scale*u); E[u**k]=k!, u~Exp(1)."""
+    scale=Q(scale)
+    return sum((value*factorial(k)*scale**k for k,value in enumerate(row)),Q(0))
+
+
+def geometric_falling_moment(order, mean):
+    """Exact falling-factorial moment of a geometric variable with given mean."""
+    if order<0:
+        raise ValueError("Moment order must be nonnegative")
+    mean=Q(mean)
+    if mean<0:
+        raise ValueError("Geometric mean must be nonnegative")
+    q=mean/(1+mean)
+    return Q(factorial(order))*q**order/((1+mean)*(1-q)**(order+1))
+
+
+def geometric_moment_value(row, mean):
+    """Compute the polynomial's geometric raw moment in the falling basis."""
+    return sum((value*geometric_falling_moment(k,mean)
+                for k,value in enumerate(row)),Q(0))
+
+
+def parameterized_reciprocal_series(degree, scale):
+    """Formal 1/(1-scale*(exp(t)-1)); no floating-point operations."""
+    scale=Q(scale)
+    denominator=(Q(1),)+tuple(-scale*Q(1,factorial(n))
+                               for n in range(1,degree+1))
     return series_reciprocal(denominator)
 
 
@@ -218,6 +257,48 @@ def test_cases():
             verify(power[n]/factorial(k)==Q(S[n][k],factorial(n)),
                    "generating","Fixed k partition EGF")
 
+    # Same Stirling row, two different functionals: evaluation and gamma moment.
+    # Check each parameter through a second formal generating-function route.
+    for z in (Q(0),Q(1,2),Q(1),Q(2)):
+        ts=tuple(touchard_value(row,z) for row in S)
+        fs=tuple(exponential_moment_value(row,z) for row in S)
+        t_egf=exponential_series_of_expm1(DEGREE,z)
+        f_egf=parameterized_reciprocal_series(DEGREE,z)
+        for n in range(DEGREE+1):
+            verify(t_egf[n]==Q(ts[n],factorial(n)),
+                   "moments","Touchard EGF at parameter "+str(z))
+            verify(f_egf[n]==Q(fs[n],factorial(n)),
+                   "moments","Parameterized Fubini EGF at "+str(z))
+            verify(sum(s[n][j]*fs[j] for j in range(n+1))
+                   == factorial(n)*z**n,
+                   "moments","Signed inverse recovers scaled gamma moments")
+            verify(geometric_moment_value(S[n],z)==fs[n],
+                   "moments","Independent geometric moment of Touchard polynomial")
+            verify(geometric_falling_moment(n,z)==factorial(n)*z**n,
+                   "moments","Geometric falling factorial identity")
+        for n in range(DEGREE):
+            verify(ts[n+1] == z*sum(comb(n,j)*ts[j] for j in range(n+1)),
+                   "moments","Touchard binomial recurrence")
+        for n in range(1,DEGREE+1):
+            verify(fs[n] == z*sum(comb(n,j)*fs[n-j] for j in range(1,n+1)),
+                   "moments","Parameterized reciprocal recurrence")
+    verify(touchard_value(S[5],Q(1,2))==Q(257,32),
+           "reference","Touchard half evaluation")
+    verify(exponential_moment_value(S[5],Q(1,2))==Q(91,2),
+           "reference","Half-scaled gamma moment")
+    verify(touchard_value(S[5],Q(2))==454,
+           "reference","Touchard evaluation at two")
+    verify(exponential_moment_value(S[5],Q(2))==9002,
+           "reference","Double-scaled gamma moment")
+    verify(touchard_value(S[5],1)==bell[5],
+           "reference","Touchard evaluation recovers Bell")
+    verify(exponential_moment_value(S[5],1)==ordered[5],
+           "reference","Gamma moment recovers Fubini")
+    verify(parameterized_reciprocal_series(DEGREE,1)==rf,
+           "reference","Parameter one recovers original reciprocal")
+    verify(touchard_value(S[0],0)==exponential_moment_value(S[0],0)==1,
+           "reference","Empty-set boundary for zero parameter")
+
     # Even/odd packets of F and U obey an exact 2x2 convolutional transfer.
     ue,uo=packet(u,2,0),packet(u,2,1)
     even,odd=packet(fe,2,0),packet(fe,2,1)
@@ -304,6 +385,20 @@ def save(folder, checks):
                              sum(first[n][j]*bell[j] for j in range(n+1)),
                              sum(first[n][j]*ordered[j] for j in range(n+1)),
                              n%2,n%3))
+    with (folder/"moment-bridge.csv").open("w",encoding="utf-8",newline="") as stream:
+        writer=csv.writer(stream,lineterminator="\n")
+        writer.writerow(("parameter","n","touchard_evaluation","exponential_moment",
+                         "geometric_moment","touchard_egf_coefficient","moment_egf_coefficient",
+                         "signed_inverse_recovered_weight"))
+        for scale in (Q(0),Q(1,2),Q(1),Q(2)):
+            values=tuple(exponential_moment_value(row,scale) for row in S)
+            for n,row in enumerate(S):
+                writer.writerow((str(scale),n,str(touchard_value(row,scale)),
+                                 str(values[n]),str(geometric_moment_value(row,scale)),
+                                 str(touchard_value(row,scale)/factorial(n)),
+                                 str(values[n]/factorial(n)),
+                                 str(sum(first[n][j]*values[j]
+                                         for j in range(n+1)))))
     with (folder/"signed-transfer.csv").open("w",encoding="utf-8",newline="") as stream:
         writer=csv.writer(stream,lineterminator="\n")
         writer.writerow(("n","k","stirling_second","signed_stirling_first","inverse_product"))
@@ -335,6 +430,11 @@ def save(folder, checks):
         fubini5=ordered[5],
         row5=list(S[5]),
         weighted_row5=[factorial(k)*S[5][k] for k in range(6)],
+        moment_bridge_n5={
+            str(scale):dict(touchard=str(touchard_value(S[5],scale)),
+                            exponential_moment=str(exponential_moment_value(S[5],scale)))
+            for scale in (Q(0),Q(1,2),Q(1),Q(2))
+        },
         witness_n4=dict(true_row=list(S[4]),alternative_row=list(ALTERNATIVE_ROW_4),
                         bell=bell[4],fubini=ordered[4],
                         difference=[ALTERNATIVE_ROW_4[k]-S[4][k] for k in range(5)]),
@@ -356,6 +456,7 @@ def main():
     print("STIRLING / BELL / FUBINI | exact integer and rational arithmetic")
     print("n=5: S=(0,1,15,25,10,1); Bell=52; Fubini=541")
     print("Inverse Stirling transform recovers 1 and k! input families")
+    print("Touchard T5(2)=454; gamma moment F5(2)=9002")
     print("Reciprocal parity packets at degree five: 135 + 406 = 541")
     print("n=4: distinct nonnegative rows can share Bell=15 and Fubini=75")
     print(f"PASS: {sum(checks.values())} exact assertions")

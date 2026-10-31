@@ -58,13 +58,14 @@ Actions separately checks the program, exact output identity and site links.
 The [partition-transform derivation](demonstrations/STIRLING_BELL_FUBINI.md)
 starts with exact Stirling numbers of the second kind, gives Bell and
 factorial-weighted Fubini numbers and reverses the triangular transform
-using signed Stirling numbers of the first kind. It also constructs the
+using signed Stirling numbers of the first kind. It then derives Touchard
+polynomial evaluation, scaled exponential moments and the
 Fubini reciprocal EGF and explicit two- and three-residue coefficient packets,
 with a precise noninjective row-summary witness.
 The [standard-library checker](../examples/stirling_bell_fubini.py)
 independently enumerates small partitions, verifies surjection counts,
 triangular inverse matrices and formal series coefficients, and generates
-five CSV tables, a Python SVG figure and JSON checks.
+six CSV tables, a Python SVG figure and JSON checks.
 The [publication bridge](../tools/stirling_case.py) rebuilds every record
 from the retained program, binds the source identities and checksums,
 and publishes a reproducible reader and download archive.
