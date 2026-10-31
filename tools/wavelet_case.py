@@ -18,7 +18,9 @@ DOWNLOAD = PREFIX + "wavelet_polyphase.py"
 RECORD = PREFIX + "source-record.json"
 ARCHIVE = PREFIX + "source-and-results.zip"
 FILES = ("phase-transfer.csv", "haar-coefficients.csv", "weighted-budget.csv",
-         "results.json", "signal-comparison.svg")
+         "full-wavelet-transfer.csv", "multiscale-energy.csv",
+         "operation-order.csv", "results.json", "signal-comparison.svg",
+         "full-wavelet-transfer.svg")
 
 
 def digest(raw):
@@ -67,9 +69,9 @@ def publish(site):
         "archive_files": [{"source": key, "sha256": digest(raw)}
                           for key, raw in sources.items()],
         "scope": ("Exact rational sixteen-sample Haar/FIR worked example with "
-                  "finite lifting, periodic filter stability, optimal fixed-basis "
-                  "selection, boundary repair and reproducible checks. "
-                  "No infinite-signal or formal Lean replay.")
+                  "four-level operator conjugacy, 16x16 sparse transfer, "
+                  "finite noncommuting-filter certificate, lifting, stability "
+                  "and reproducible checks. No infinite-signal or Lean replay.")
     }
     site.write(RECORD, json.dumps(record, ensure_ascii=False, indent=2)+"\n")
 
@@ -77,9 +79,10 @@ def publish(site):
     body = (
         '<h1>Wavelets and polyphase transfer / exact Python program</h1>'
         '<p>Four Haar levels, circular three-tap FIR filtering, exact '
-        'polyphase and Haar operator transfers, exact lifting, weighted '
-        'coefficient budgets, finite filter stability, boundary repair and '
-        'counterexamples. Python 3.10 or later, standard library only.</p>'
+        'polyphase and all-four-level Haar operator transfers, exact lifting, '
+        'weighted coefficient budgets, finite filter stability, order-of-'
+        'operations comparison, boundary repair and counterexamples. '
+        'Python 3.10 or later, standard library only.</p>'
         '<p><a class="button" href="../collection/demonstrations/WAVELET_POLYPHASE.html">'
         'Read the complete worked example</a> '
         '<a download href="../'+DOWNLOAD+'">Download Python</a> · '
@@ -101,11 +104,12 @@ def publish(site):
         group="Collection", kind="Code",
         work_ids=["paper-ii", "paper-v", "information-realization", "streaming-skat"],
         url=READER,
-        text=("Haar multiresolution lifting predict update weighted optimal "
-              "coefficient selection filter stability cyclic convolution "
-              "polyphase energy defect residual repair circular FIR three tap "
-              "operator conjugacy direct transfer boundary correction "
-              "Python exact fractions independently checked")))
+        text=("Haar multiresolution full four-level conjugacy 16 by 16 transfer "
+              "matrix heatmap noncommuting projection filtering before "
+              "coarsening order commutator energy scale migration lifting "
+              "predict update weighted optimal coefficient selection filter "
+              "stability cyclic convolution polyphase residual repair "
+              "circular FIR three tap Python exact fractions")))
     return record
 
 
