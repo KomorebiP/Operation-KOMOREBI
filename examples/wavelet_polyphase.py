@@ -177,6 +177,137 @@ def best_detail_budget(levels):
     return tuple(records)
 
 
+def wavelet_analysis(values):
+    """All lowpass-branch Haar coordinates: mean, then coarse-to-fine details."""
+    mean, levels = analyze(values)
+    return (mean,) + tuple(d for _, details in reversed(levels) for d in details)
+
+
+def wavelet_synthesis(coordinates):
+    """Inverse transform using only the declared coarse-to-fine coordinates."""
+    coordinates = exact(coordinates)
+    n = len(coordinates)
+    if n < 2 or n & (n-1):
+        raise ValueError("Wavelet coordinates need a power-of-two length >= 2")
+    current = (coordinates[0],)
+    offset = 1
+    while len(current) < n:
+        count = len(current)
+        current = inverse_haar_pair(current, coordinates[offset:offset+count])
+        offset += count
+    if offset != n:
+        raise AssertionError("Wavelet coordinate partition did not close")
+    return current
+
+
+def wavelet_labels(length):
+    if length < 2 or length & (length - 1):
+        raise ValueError("Wavelet coordinate labels require a dyadic length")
+    depth = length.bit_length()-1
+    return ("m",) + tuple(f"L{j}.{k}" for j in range(depth,0,-1)
+                           for k in range(length//(2**j)))
+
+
+def wavelet_energy_levels(coordinates):
+    """Five weighted bands for length 16; generalized to any dyadic length."""
+    coordinates = exact(coordinates)
+    labels = wavelet_labels(len(coordinates))
+    depth = len(coordinates).bit_length()-1
+    result = [("mean", len(coordinates)*coordinates[0]**2,
+               int(coordinates[0] != 0))]
+    offset = 1
+    for j in range(depth,0,-1):
+        width = len(coordinates)//(2**j)
+        values = coordinates[offset:offset+width]
+        result.append((f"level_{j}", (2**j)*energy(values),
+                       sum(int(value != 0) for value in values)))
+        offset += width
+    if len(labels) != offset:
+        raise AssertionError("The scale labels do not match the input")
+    return tuple(result)
+
+
+def full_wavelet_transfer(length=16):
+    """Exact W H W^-1 matrix, columns obtained from wavelet coordinate impulses."""
+    wavelet_labels(length)
+    columns = []
+    for j in range(length):
+        e = tuple(F(k == j) for k in range(length))
+        columns.append(wavelet_analysis(fir(wavelet_synthesis(e))))
+    return tuple(tuple(columns[j][i] for j in range(length))
+                 for i in range(length))
+
+
+def apply_matrix(matrix, values):
+    values = exact(values)
+    if len(matrix) != len(values) or any(len(row) != len(values) for row in matrix):
+        raise ValueError("Transfer matrix and coordinate length differ")
+    return tuple(sum((F(a)*b for a,b in zip(row,values)),F(0)) for row in matrix)
+
+
+def coarsen_first_level(values):
+    """Project onto first-level Haar averages, duplicating every pair mean."""
+    values = exact(values)
+    if len(values)<2 or len(values)%2:
+        raise ValueError("First-level coarsening needs a positive even length")
+    return inverse_haar_pair(haar_pair(*split_phases(values))[0],
+                             (F(0),)*(len(values)//2))
+
+
+def operation_commutator(values):
+    """(P H - H P)x, where P is the averaging projection."""
+    values = exact(values)
+    ph = coarsen_first_level(fir(values))
+    hp = fir(coarsen_first_level(values))
+    return tuple(a-b for a,b in zip(ph,hp))
+
+
+def multiscale_transfer_svg(matrix):
+    """Python-generated signed rational heatmap with matching coordinate labels."""
+    n = len(matrix)
+    labels = wavelet_labels(n)
+    if len(matrix)!=n or any(len(row)!=n for row in matrix):
+        raise ValueError("Heatmap requires a square wavelet matrix")
+    cell = 34
+    left, top = 138, 112
+    width, height = 822, 774
+    nnz=sum(int(coefficient != 0) for row in matrix for coefficient in row)
+    parts = [
+        '<svg xmlns="http://www.w3.org/2000/svg" width="822" height="774" viewBox="0 0 822 774" role="img" aria-labelledby="title description">',
+        '<title id="title">Exact four-level Haar transfer matrix</title>',
+        '<desc id="description">A 16 by 16 matrix for W H W inverse. Rows are output wavelet coordinates, columns are input wavelet coordinates, ordered global mean then levels four through one. Teal is positive, ochre negative, grey zero. Each nonzero cell is labeled with its exact rational value.</desc>',
+        '<rect width="822" height="774" fill="#fff"/>',
+        '<text x="36" y="34" font-family="sans-serif" font-size="21" font-weight="600" fill="#173f3a">FIR transfer in four-level Haar coordinates</text>',
+        f'<text x="36" y="60" font-family="sans-serif" font-size="14" fill="#425852">{n} × {n} exact coefficients · {nnz} nonzero · W H W⁻¹</text>',
+        '<text x="140" y="85" font-family="sans-serif" font-size="12" fill="#536b66">Input wavelet coordinates →</text>',
+        '<text x="12" y="107" font-family="sans-serif" font-size="12" fill="#536b66">Output ↓</text>'
+    ]
+    for j, label in enumerate(labels):
+        cx = left + j*cell + cell//2
+        parts.append(f'<text x="{cx}" y="104" text-anchor="middle" font-family="monospace" font-size="10" fill="#445f59">{label}</text>')
+    for i, row in enumerate(matrix):
+        y = top+i*cell
+        parts.append(f'<text x="{left-10}" y="{y+22}" text-anchor="end" font-family="monospace" font-size="11" fill="#334e49">{labels[i]}</text>')
+        for j, value in enumerate(row):
+            x = left+j*cell
+            fill="#edf1f0" if value==0 else ("#28786d" if value>0 else "#b57442")
+            parts.append(f'<rect x="{x}" y="{y}" width="{cell-1}" height="{cell-1}" rx="2" fill="{fill}"/>')
+            if value:
+                foreground="#ffffff"
+                parts.append(f'<text x="{x+cell//2}" y="{y+21}" text-anchor="middle" font-family="monospace" font-size="10" font-weight="600" fill="{foreground}">{value}</text>')
+    parts.extend((
+        '<rect x="140" y="686" width="16" height="16" fill="#28786d"/>',
+        '<text x="165" y="699" font-family="sans-serif" font-size="13" fill="#334e49">positive</text>',
+        '<rect x="258" y="686" width="16" height="16" fill="#b57442"/>',
+        '<text x="283" y="699" font-family="sans-serif" font-size="13" fill="#334e49">negative</text>',
+        '<rect x="382" y="686" width="16" height="16" fill="#edf1f0"/>',
+        '<text x="407" y="699" font-family="sans-serif" font-size="13" fill="#334e49">zero</text>',
+        '<text x="140" y="740" font-family="sans-serif" font-size="13" fill="#536b66">Averaging-normalized Haar basis · no approximation · finite circular boundary</text>',
+        '</svg>'
+    ))
+    return "\n".join(parts) + "\n"
+
+
 def transfer_polyphase(even, odd):
     """(E',O') = ((I-Z)E+2ZO, 2E+(I-Z)O), Z a circular half-rate shift."""
     even, odd = exact(even), exact(odd)
