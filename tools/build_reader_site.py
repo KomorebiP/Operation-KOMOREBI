@@ -131,6 +131,7 @@ def home_page():
 <h3>What connects the work?</h3><p>Describe an object in parts, transfer operations through those parts, and account for what a change of representation preserves or loses.</p>
 <ul><li><a href="collection/PROJECT_MAP.html">See the project map</a> — explore the twelve core papers, related books and documented connections.</li>
 <li><a href="collection/demonstrations/EULER_PACKETS.html">Research preview: Euler numbers</a> — follow an extended derivation through packets, coordinate changes and exact residual correction.</li>
+<li><a href="collection/demonstrations/FACTORIAL_LANES.html">Research preview: Factorial lanes</a> — reconstruct factorials from ten step lanes, then follow exact hypergeometric and 5-adic transfers.</li>
 <li><a href="collection/DEMONSTRATIONS.html">Follow a complete demonstration</a> — work through a calculation, run its program and follow the source evidence.</li></ul></div></details>
 <details class="home-status"><summary>How to read completion and verification</summary><p>The collection records completion, formal coverage, and confidence separately. A linked file does not mean every claim has been verified. Software is beta.</p><p><a href="collection/COMPLETION_STATUS.html">Read the guide to evidence and status</a></p></details></div>'''
 
@@ -389,6 +390,8 @@ class Site:
                     return self.rel(edition['file_url'], page)+('#'+parts.fragment if parts.fragment else '')
         if repo=='collection' and resolved=='examples/komorebi_demonstrations.py':
             return self.rel('read/demonstrations.html',page)+('#'+parts.fragment if parts.fragment else '')
+        if repo=='collection' and resolved=='examples/factorial_lanes.py':
+            return self.rel('read/factorial-lanes.html',page)+('#'+parts.fragment if parts.fragment else '')
         if repo=='collection' and resolved=='examples/euler_packets.py':
             return self.rel('read/euler-packets.html',page)+('#'+parts.fragment if parts.fragment else '')
         if repo=='collection' and not is_image:
@@ -632,6 +635,8 @@ class Site:
         self.publish_editorial_editions()
         from euler_case import publish as publish_euler_case
         publish_euler_case(self)
+        from factorial_case import publish as publish_factorial_case
+        publish_factorial_case(self)
         self.markdown_pages()
         self.reader.render()
         self.bundles()
