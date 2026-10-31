@@ -119,6 +119,11 @@ def home_page():
 </section>
 <section class="home-ways" aria-labelledby="home-ways-title"><h2 id="home-ways-title">Find your starting point.</h2><p>Four ways into the collection, each with context and a path to the sources.</p>
 <div class="home-route-grid">'''+cards+'''</div></section>
+<section class="home-interactive" aria-labelledby="home-factorial-title"><div>
+<p class="home-kicker">Research preview / Factorial lanes</p>
+<h2 id="home-factorial-title">One factorial. Ten exact lanes.</h2>
+<p>Reconstruct 34!, translate to hypergeometric coordinates, and follow an exact five-adic reciprocal calculation. Includes runnable arithmetic checks.</p></div>
+<a href="collection/demonstrations/FACTORIAL_LANES.html">Read the factorial-lane derivation <span aria-hidden="true">→</span></a></section>
 <section class="home-interactive" aria-labelledby="home-interactive-title"><div>
 <h2 id="home-interactive-title">Change the inputs. Follow the result.</h2>
 <p>Rebuild matrices, explore information loss, and decompose a signal through four Haar levels.</p></div>
