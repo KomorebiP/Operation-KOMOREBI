@@ -277,6 +277,37 @@ def check():
             case["filtered"][10] == 8 and case["filtered"][11] == 24,
             "reference", "local boundary-crossing calculation")
 
+    # The independent Paper V lifting factorization uses d_L = odd-even.
+    a, d = haar_pair(*split_phases(x))
+    lifted_a, lifted_difference = lifting_decompose(*split_phases(x))
+    require(lifted_a == a and lifted_difference == tuple(-2*v for v in d),
+            "reference", "lifting equals Haar after declared rescaling")
+    require(lifting_synthesize(lifted_a, lifted_difference) == x,
+            "reference", "exact predict/update synthesis")
+    skew = skew_shift(x)
+    require(energy(skew) == 624 and
+            energy(case["filtered"]) == 4*energy(x) + energy(skew),
+            "reference", "sharp FIR energy identity")
+    require(4*energy(x) <= energy(case["filtered"]) <= 8*energy(x),
+            "reference", "finite stability interval")
+    require(energy(case["filter_error"]) == energy(skew),
+            "reference", "off-diagonal error equals FIR energy surplus")
+    require(case["boundary_residual"] == exact((4,-4)+(0,)*14)
+            and energy(case["boundary_residual"]) == 32,
+            "reference", "two-site boundary correction")
+    require(tuple(record[2] for record in best_detail_budget(levels))
+            == tuple(map(F, (272,144,80,48,16,0))),
+            "reference", "optimal fixed-basis detail budget")
+    contrast = exact((2,)*8 + (-2,-2,1,-5,-2,-2,-2,-2))
+    contrast_mean, contrast_levels = analyze(contrast)
+    require(contrast_mean == 0 and energy(contrast) == 82
+            and best_detail_budget(contrast_levels)[1] == (1,F(64),F(18)),
+            "reference", "weighted selection beats largest raw magnitude")
+    flat, quarter = exact((1,)*16), exact((1,0,-1,0)*4)
+    require(energy(fir(flat)) == 4*energy(flat) and
+            energy(fir(quarter)) == 8*energy(quarter),
+            "reference", "both finite operator norm bounds are sharp")
+
     # Linearity plus equality on every coordinate basis vector gives an
     # exact 16-dimensional operator identity, not merely a sample agreement.
     for k in range(16):
@@ -289,6 +320,19 @@ def check():
         require(haar_pair(*split_phases(direct)) == transfer_haar(a, d),
                 "basis", "Haar conjugacy basis "+str(k))
         require(synthesize(*analyze(basis)) == basis, "basis", "wavelet basis "+str(k))
+        lifted_a, lifted_d = lifting_decompose(e, o)
+        require(lifted_a == a and lifted_d == tuple(-2*v for v in d)
+                and lifting_synthesize(lifted_a, lifted_d) == basis,
+                "basis", "lifting operator basis "+str(k))
+        require(energy(direct) == 4*energy(basis)+energy(skew_shift(basis)),
+                "basis", "FIR adjoint energy basis "+str(k))
+        require(energy(tuple(u-v for u,v in zip(direct, diagonal_only(a,d))))
+                == energy(skew_shift(basis)),
+                "basis", "omitted cross phase error basis "+str(k))
+        residue = tuple(u-v for u,v in zip(direct, zero_extended_fir(basis)))
+        require(residue == (2*basis[-1]-basis[-2], -basis[-1])
+                + (F(0),)*(len(basis)-2),
+                "basis", "boundary correction basis "+str(k))
 
     # Exhaustive small-integer 4-vectors and deterministic longer controls.
     for numbers in product((-2, -1, 0, 1, 2), repeat=4):
@@ -299,6 +343,22 @@ def check():
                 "exhaustive", "four-sample energy")
         require(join_phases(transfer_polyphase(*split_phases(s))) == fir(s),
                 "exhaustive", "four-sample polyphase FIR")
+        even, odd = split_phases(s)
+        a, d = haar_pair(even, odd)
+        lifted_a, lifted_d = lifting_decompose(even, odd)
+        require(lifted_a == a and lifted_d == tuple(-2*v for v in d)
+                and lifting_synthesize(lifted_a, lifted_d) == s,
+                "exhaustive", "four-sample lifting inverse")
+        direct = fir(s)
+        require(energy(direct) == 4*energy(s) + energy(skew_shift(s)),
+                "exhaustive", "four-sample FIR energy")
+        require(energy(tuple(u-v for u,v in zip(direct, diagonal_only(a,d))))
+                == energy(skew_shift(s)),
+                "exhaustive", "four-sample omitted cross blocks")
+        boundary_difference = tuple(u-v for u,v in zip(direct, zero_extended_fir(s)))
+        require(boundary_difference == (2*s[-1]-s[-2], -s[-1])
+                + (F(0),)*(len(s)-2),
+                "exhaustive", "four-sample edge correction")
     rng = Random(20261030)
     for length in (8, 16, 32):
         for _ in range(32):
@@ -313,6 +373,22 @@ def check():
             require(haar_pair(*split_phases(fir(s))) ==
                     transfer_haar(*haar_pair(*split_phases(s))),
                     "random", "Haar coordinate transfer")
+            even, odd = split_phases(s)
+            a, d = haar_pair(even, odd)
+            lifted_a, lifted_d = lifting_decompose(even, odd)
+            require(lifted_a == a and lifted_d == tuple(-2*v for v in d)
+                    and lifting_synthesize(lifted_a, lifted_d) == s,
+                    "random", "predict update lifting")
+            direct = fir(s)
+            require(energy(direct) == 4*energy(s) + energy(skew_shift(s)),
+                    "random", "sharp finite filter energy")
+            require(energy(tuple(u-v for u,v in zip(direct, diagonal_only(a,d))))
+                    == energy(skew_shift(s)),
+                    "random", "cross channel energy identity")
+            boundary_difference = tuple(u-v for u,v in zip(direct, zero_extended_fir(s)))
+            require(boundary_difference == (2*s[-1]-s[-2], -s[-1])
+                    + (F(0),)*(len(s)-2),
+                    "random", "cyclic versus zero edge packet")
     return counts
 
 
