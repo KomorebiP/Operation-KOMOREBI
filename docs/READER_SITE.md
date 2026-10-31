@@ -71,6 +71,20 @@ The [publication bridge](../tools/stirling_case.py) rebuilds every record
 from the retained program, binds the source identities and checksums,
 and publishes a reproducible reader and download archive.
 
+## Extended roots-of-unity and falling-factorial example
+
+The [roots-of-unity / Newton walkthrough](demonstrations/ROOTS_UNITY_FALLING_FACTORIAL.md)
+takes the ordinary power x^5 through a primitive-cubic-residue projector,
+the Stirling/Newton coordinate isomorphism, finite-difference transfer,
+refinement and an induced multiplication law. It distinguishes transported
+projectors from raw ordinary-degree filters using a concrete failed control.
+The [standalone exact checker](../examples/roots_unity_falling_factorial.py)
+uses standard-library rational arithmetic, an exact cyclic permutation trace
+for root-of-unity orthogonality, and independent matrix coefficients.
+The [publication bridge](../tools/roots_newton_case.py) regenerates five CSV
+tables, an accessible SVG, JSON checks, and a deterministic source-and-results
+archive. Tests include reproducible bytes and deliberately corrupted downloads.
+
 ## Build locally
 
 Use a complete collection checkout and separate checkouts of the two libraries
