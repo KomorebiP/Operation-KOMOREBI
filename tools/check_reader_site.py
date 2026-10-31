@@ -299,6 +299,8 @@ def inspect_site(root):
     factorial_cases=verify_factorial_case(root,pages)
     from wavelet_case import verify_site as verify_wavelet_case
     wavelet_cases=verify_wavelet_case(root,pages)
+    from stirling_case import verify_site as verify_stirling_case
+    stirling_cases=verify_stirling_case(root,pages)
     from download_selector import verify as verify_selector
     download_selection=verify_selector(root,pages)
     from side_reader import check as check_side_reader
@@ -307,7 +309,7 @@ def inspect_site(root):
     special_functions=verify_special_functions(root,documents,pages)
     from reading_navigation import verify as verify_reading_navigation
     reading_navigation=verify_reading_navigation(root,pages,documents)
-    return dict(status='PASS',html_pages=len(pages),local_links=links,fragments=fragments,euler_worked_examples=euler_cases,factorial_worked_examples=factorial_cases,wavelet_worked_examples=wavelet_cases,
+    return dict(status='PASS',html_pages=len(pages),local_links=links,fragments=fragments,euler_worked_examples=euler_cases,factorial_worked_examples=factorial_cases,wavelet_worked_examples=wavelet_cases,stirling_worked_examples=stirling_cases,
                 search_pages=len(index),reading_bundles=len(bundles),checked_bundle_files=zipped_files,download_selection=download_selection,side_reader=side_reader,
                 reading_documents=len(documents['files']),pdfs=pdf_count,editorial_editions=len(editions),readable_math_expressions=readable_math,atlas=atlas,paper_vi_atlas=paper_vi_atlas,notation=notation,special_functions=special_functions,reading_navigation=reading_navigation,
                 scope='Static navigation, HTML structure and ZIP source identities. Not WCAG certification or mathematical review.')

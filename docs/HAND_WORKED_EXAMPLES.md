@@ -60,6 +60,12 @@ selection, sharp finite stability, a full wavelet transfer matrix, a
 filtering-versus-coarsening counterexample, boundary repair and downloadable
 results. Each extended example retains its own finite evidence scope.
 
+The [Stirling, Bell and Fubini example](demonstrations/STIRLING_BELL_FUBINI.md)
+adds a combinatorial flagship: one triangular counting kernel with two
+distinct input weightings, a signed inverse, reciprocal coefficient packets,
+and a noninjective aggregation witness. It includes a standalone exact
+Python checker and downloadable source-bound records.
+
 ## Conventions and scope
 
 Vectors are columns unless a displayed signal is explicitly a list. Matrix
