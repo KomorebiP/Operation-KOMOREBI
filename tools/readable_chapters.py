@@ -153,8 +153,11 @@ from paper_ix_reading import register as register_paper_ix
 register_paper_ix(BOOKS, CHAPTERS)
 from special_functions_reading import CONFIG as SPECIAL_FUNCTIONS_BOOK
 BOOKS[SPECIAL_FUNCTIONS_BOOK['work']] = SPECIAL_FUNCTIONS_BOOK
+from proof_path_reading import BOOK as PROOF_PATH_BOOK, CHAPTERS as PROOF_PATH_CHAPTERS
+BOOKS[PROOF_PATH_BOOK['work']] = PROOF_PATH_BOOK
+CHAPTERS += PROOF_PATH_CHAPTERS
 BY_SOURCE = {c['source']:c for c in reversed(CHAPTERS)}
-NUMBERED = {'definition', 'theorem', 'proposition', 'lemma', 'corollary', 'remark', 'example', 'standardfact', 'certificate','boundary','roadmap','construction','classicalinput','classical','conjecture'}
+NUMBERED = {'definition', 'theorem', 'proposition', 'lemma', 'corollary', 'remark', 'example', 'standardfact', 'certificate','boundary','roadmap','construction','classicalinput','classical','conjecture','problem','warning'}
 KIND_NAMES = {'classical':'Classical input','statement':'Supplementary statement','standardfact':'Standard fact','certificate':'Numerical certificate','text':'Passage','roadmap':'Formalization target','classicalinput':'Classical input'}
 HEADINGS = {'part':2,'section':2,'subsection':3,'subsubsection':4,'paragraph':5}
 MATH_PATTERN = re.compile(r'(?<!\\)\$(.*?)(?<!\\)\$|\\\[(.*?)\\\]|(\\begin\{align\*\}.*?\\end\{align\*\})|\\\((.*?)\\\)',re.S)
@@ -175,7 +178,7 @@ SYMBOLS = {'alpha': 'α', 'beta': 'β', 'gamma': 'γ', 'rho': 'ρ', 'omega': 'ω
 
 def clean_tex(text):
     # Retain newlines for exact links to the unchanged source file.
-    parts = re.split(r'(\\begin\{lstlisting\}.*?\\end\{lstlisting\})',text,flags=re.S)
+    parts = re.split(r'(\\begin\{lstlisting\}(?:\[[^\]\n]*\])?.*?\\end\{lstlisting\})',text,flags=re.S)
     for i in range(0,len(parts),2):
         parts[i] = re.sub(r'(?<!\\)%[^\n]*', '', parts[i])
         parts[i] = re.sub(r'\\(?:Needspace|enlargethispage)\{[^{}]*\}',lambda m:' '*len(m[0]),parts[i])
@@ -208,7 +211,13 @@ def presentation_tex(text):
     while (match := re.search(r'\\KomorebiOpeningNote\{', text)):
         value,end = group(text, match.end()-1)
         text = text[:match.start()] + r'\begin{readerroadmap}[title={Reading orientation}]' + value + r'\end{readerroadmap}' + text[end:]
-    text = text.replace(r'\fbox{\begin{minipage}{0.93\textwidth}', r'\begin{readerroadmap}').replace(r'\end{minipage}}', r'\end{readerroadmap}')
+    # Only turn the *paired print box* into a reader panel. A separate source
+    # uses a minipage inside an actual displayed mathematical expression.
+    text = re.sub(
+        r'\\fbox\{\\begin\{minipage\}\{0\.93\\textwidth\}(.*?)\\end\{minipage\}\}',
+        lambda m: r'\begin{readerroadmap}' + m[1] + r'\end{readerroadmap}',
+        text, flags=re.S
+    )
     while (match := re.search(r'\\modelfigure\{', text)):
         path,end = group(text, match.end()-1)
         caption,end = group(text, end)
@@ -227,7 +236,7 @@ def presentation_tex(text):
 
 
 def original_math(text):
-    text = re.sub(r'\\begin\{lstlisting\}.*?\\end\{lstlisting\}', '', clean_tex(text),flags=re.S)
+    text = re.sub(r'\\begin\{lstlisting\}(?:\[[^\]\n]*\])?.*?\\end\{lstlisting\}', '', clean_tex(text),flags=re.S)
     return [next(x for x in m.groups() if x is not None) for m in MATH_PATTERN.finditer(text)]
 
 
@@ -295,6 +304,18 @@ def formal_note_labels(main):
 
 def expand_math(tex, macros):
     tex = re.sub(r'\\label\{[^{}]+\}', '',tex)
+    # The monograph uses one print-only minipage *inside* a boxed statement.
+    # Preserve the recorded source math, but use MathJax-readable text rows.
+    boxed = re.fullmatch(
+        r'\s*\\boxed\{\\begin\{minipage\}\{0\.88\\linewidth\}\s*(.*?)\s*\\end\{minipage\}\}\s*',
+        tex, re.S)
+    if boxed:
+        import textwrap
+        text = ' '.join(boxed[1].split())
+        lines = textwrap.wrap(text, width=70)
+        return r'\boxed{\begin{gathered}' + r'\\'.join(
+            r'\text{' + line + '}' for line in lines
+        ) + r'\end{gathered}}'
     tex = tex_accents(tex)
     if tex.startswith(r'\begin{align*}'):
         tex = tex.replace(r'\begin{align*}',r'\begin{aligned}',1).removesuffix(r'\end{align*}')+r'\end{aligned}'
@@ -721,7 +742,10 @@ def prepare(reader):
     reader.readable_books={}
     for work,config in BOOKS.items():
         if config.get('custom_reader'):
-            from special_functions_reading import prepare_book
+            if config['custom_reader'] == 'proof_path':
+                from proof_path_reading import prepare_book
+            else:
+                from special_functions_reading import prepare_book
             reader.readable_books[work] = prepare_book(reader, config)
             continue
         reader.add(config['bib'],config['label']+' bibliography source')
@@ -901,7 +925,7 @@ def neighbour_links(spec, placement='top'):
 def render(reader):
     reports=[]
     for book in reader.readable_books.values():
-        if book['config'].get('custom_reader'):
+        if book['config'].get('custom_reader') is True:
             from special_functions_reading import render_book as render_special_functions
             render_special_functions(reader,book)
         else:
@@ -1012,6 +1036,17 @@ def render_book(reader,book):
             if kind in HEADINGS:
                 level=min(level+1,5) if kind=='paragraph' else HEADINGS[kind]
                 body+='<h'+str(level)+' id="'+node['id']+'">'+e(node['number'])+' '+chapter.inline(node['title'])+'</h'+str(level)+'>'
+                if kind=='part' and config.get('part_figures'):
+                    part_number=sum(c.get('kind')=='part' and c['start_line']<=spec['start_line']
+                                    for c in config['chapters'])
+                    figure_name=config['part_figures'].get(part_number)
+                    if figure_name:
+                        figure_path=config['base']+'figures/'+figure_name
+                        figure_url=reader.image_url(figure_path,page)
+                        if not figure_url: raise ValueError('Missing part illustration '+figure_path)
+                        dimensions=reader.images[figure_path]
+                        alt='Original diagram introducing '+spec['title']
+                        body+='<figure class="part-reading-figure"><img src="'+figure_url+'" width="'+str(dimensions['width'])+'" height="'+str(dimensions['height'])+'" alt="'+e(alt,quote=True)+'" loading="lazy"><figcaption>Original monograph illustration. The PDF retains the complete printed caption.</figcaption></figure>'
                 section_links='<a href="#contents">On this page</a>'
                 reading_links=' · '.join(filter(None,[section_links,reading_links]))
                 body+=passage_links(links,reading_links)

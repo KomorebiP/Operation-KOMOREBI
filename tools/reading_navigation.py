@@ -107,7 +107,11 @@ def verify(root, pages, documents):
     count=0
     for work,original in BOOKS.items():
         config=dict(original)
-        if config.get('custom_reader'):config['chapters']=source_specs(load)
+        if config.get('custom_reader') == 'proof_path':
+            from proof_path_reading import source_specs as proof_path_specs
+            config['chapters']=proof_path_specs(load)
+        elif config.get('custom_reader'):
+            config['chapters']=source_specs(load)
         sequence=entries(config)
         assert records[work]==dict(index=config['index'],label=config['label'],partial=bool(config.get('partial')),entries=sequence)
         for entry in sequence:
