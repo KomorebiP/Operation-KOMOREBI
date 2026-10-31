@@ -108,6 +108,23 @@ def exponential_moment_value(row, scale):
     return sum((value*factorial(k)*scale**k for k,value in enumerate(row)),Q(0))
 
 
+def geometric_falling_moment(order, mean):
+    """Exact falling-factorial moment of a geometric variable with given mean."""
+    if order<0:
+        raise ValueError("Moment order must be nonnegative")
+    mean=Q(mean)
+    if mean<0:
+        raise ValueError("Geometric mean must be nonnegative")
+    q=mean/(1+mean)
+    return Q(factorial(order))*q**order/((1+mean)*(1-q)**(order+1))
+
+
+def geometric_moment_value(row, mean):
+    """Compute the polynomial's geometric raw moment in the falling basis."""
+    return sum((value*geometric_falling_moment(k,mean)
+                for k,value in enumerate(row)),Q(0))
+
+
 def parameterized_reciprocal_series(degree, scale):
     """Formal 1/(1-scale*(exp(t)-1)); no floating-point operations."""
     scale=Q(scale)
@@ -255,6 +272,10 @@ def test_cases():
             verify(sum(s[n][j]*fs[j] for j in range(n+1))
                    == factorial(n)*z**n,
                    "moments","Signed inverse recovers scaled gamma moments")
+            verify(geometric_moment_value(S[n],z)==fs[n],
+                   "moments","Independent geometric moment of Touchard polynomial")
+            verify(geometric_falling_moment(n,z)==factorial(n)*z**n,
+                   "moments","Geometric falling factorial identity")
         for n in range(DEGREE):
             verify(ts[n+1] == z*sum(comb(n,j)*ts[j] for j in range(n+1)),
                    "moments","Touchard binomial recurrence")
@@ -367,13 +388,13 @@ def save(folder, checks):
     with (folder/"moment-bridge.csv").open("w",encoding="utf-8",newline="") as stream:
         writer=csv.writer(stream,lineterminator="\n")
         writer.writerow(("parameter","n","touchard_evaluation","exponential_moment",
-                         "touchard_egf_coefficient","moment_egf_coefficient",
+                         "geometric_moment","touchard_egf_coefficient","moment_egf_coefficient",
                          "signed_inverse_recovered_weight"))
         for scale in (Q(0),Q(1,2),Q(1),Q(2)):
             values=tuple(exponential_moment_value(row,scale) for row in S)
             for n,row in enumerate(S):
                 writer.writerow((str(scale),n,str(touchard_value(row,scale)),
-                                 str(values[n]),
+                                 str(values[n]),str(geometric_moment_value(row,scale)),
                                  str(touchard_value(row,scale)/factorial(n)),
                                  str(values[n]/factorial(n)),
                                  str(sum(first[n][j]*values[j]
