@@ -263,7 +263,7 @@ def figure_svg(case):
         return format(float(v), ".2f")
     for index, (data, name, color) in enumerate(panels):
         top = 48 + index * 146
-        baseline = top + 76
+        baseline = top + 88
         pieces.extend((
             f'<text x="36" y="{top+15}" font-family="sans-serif" font-size="15" font-weight="600" fill="#203c39">{name}</text>',
             f'<line x1="41" y1="{baseline}" x2="972" y2="{baseline}" stroke="#9eb3af" stroke-width="1.2"/>',
@@ -291,9 +291,9 @@ def save(folder, counts):
         w.writerow(("index", "original", "coarse", "residual", "circular_fir",
                     "incorrect_diagonal_only", "transfer_error"))
         for i in range(len(x)):
-            w.writerow(tuple(str(v[i]) if j else i for j, v in enumerate((
-                (), x, case["coarse"], case["residual"], case["filtered"],
-                case["wrong"], case["filter_error"])) if j))
+            w.writerow((i, *(str(v[i]) for v in (
+                x, case["coarse"], case["residual"], case["filtered"],
+                case["wrong"], case["filter_error"]))))
     with (folder/"haar-coefficients.csv").open("w", encoding="utf-8", newline="") as stream:
         w = csv.writer(stream, lineterminator="\n")
         w.writerow(("kind", "level", "index", "value", "energy_weight", "weighted_energy"))
