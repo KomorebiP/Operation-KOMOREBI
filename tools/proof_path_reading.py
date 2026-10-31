@@ -177,6 +177,9 @@ def normalize(source):
         table = re.sub(r"\\color\{Komorebi[A-Za-z]+\}", "", table)
         table = re.sub(r"\\(?:sffamily|bfseries|footnotesize|small)\b", "", table)
         table = table.replace(r"\newline", " ")
+        table = re.sub(r"\{\s*(\\path\{[^{}]*\})\}", r"\1", table)
+        table = re.sub(r"\{\s*(Written|Lean|Mixed|ID|EVIDENCE|RESULT AND IMPLEMENTATION SUPPORT)\s*\}", r"\1", table)
+        table = re.sub(r"\{\s*\\footnotesize([^{}]*)\}", r"\1", table)
         return table
     text = re.sub(r"\\begin\{(?:longtable|table)\}.*?\\end\{(?:longtable|table)\}",
                   plain_table, text, flags=re.S)
