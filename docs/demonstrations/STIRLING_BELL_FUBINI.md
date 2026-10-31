@@ -53,6 +53,10 @@ The image is produced by the standalone Python program. Every cell is an exact i
 
 ## 1. Construct the triangular coordinates
 
+For example, a three-element set has exactly three partitions into two
+nonempty blocks: \(\{1\}\mid\{2,3\}\), \(\{2\}\mid\{1,3\}\), and
+\(\{3\}\mid\{1,2\}\). Hence \(S(3,2)=3\).
+
 To make a partition of \(\{1,\ldots,n\}\) into \(k\) blocks, inspect the last element \(n\).
 
 It either forms a singleton block, leaving a partition of \(n-1\) objects into \(k-1\) blocks, or joins one of \(k\) blocks of a partition of \(n-1\) objects into \(k\) blocks. Therefore
@@ -134,6 +138,24 @@ They satisfy \(s(0,0)=1\) and
 \[
 s(n,k)=s(n-1,k-1)-(n-1)s(n-1,k).
 \]
+
+**Why this is the inverse:** for a positive integer \(x\), count all
+functions from an \(n\)-element set into an \(x\)-element set. Every
+function determines a partition into its \(k\) nonempty inverse-image
+blocks. After choosing that partition, there are
+\(x(x-1)\cdots(x-k+1)\) ways to assign distinct target labels to its
+blocks. Thus
+
+\[
+x^n=\sum_{k=0}^n S(n,k)\,x(x-1)\cdots(x-k+1).
+\]
+
+The identity holds as a polynomial because it holds for every
+positive integer \(x\). Substitute the signed first-kind polynomial
+expansion and compare powers of \(x\). This gives
+\(\mathcal S\,s=I\). Both matrices are lower triangular with diagonal
+one, so the reverse product is also \(s\,\mathcal S=I\)
+in every finite truncation.
 
 The two triangular matrices are inverses:
 
