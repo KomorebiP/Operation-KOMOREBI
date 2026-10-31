@@ -211,7 +211,13 @@ def presentation_tex(text):
     while (match := re.search(r'\\KomorebiOpeningNote\{', text)):
         value,end = group(text, match.end()-1)
         text = text[:match.start()] + r'\begin{readerroadmap}[title={Reading orientation}]' + value + r'\end{readerroadmap}' + text[end:]
-    text = text.replace(r'\fbox{\begin{minipage}{0.93\textwidth}', r'\begin{readerroadmap}').replace(r'\end{minipage}}', r'\end{readerroadmap}')
+    # Only turn the *paired print box* into a reader panel. A separate source
+    # uses a minipage inside an actual displayed mathematical expression.
+    text = re.sub(
+        r'\\fbox\{\\begin\{minipage\}\{0\.93\\textwidth\}(.*?)\\end\{minipage\}\}',
+        lambda m: r'\begin{readerroadmap}' + m[1] + r'\end{readerroadmap}',
+        text, flags=re.S
+    )
     while (match := re.search(r'\\modelfigure\{', text)):
         path,end = group(text, match.end()-1)
         caption,end = group(text, end)
