@@ -54,8 +54,9 @@ The [Euler-number derivation](demonstrations/EULER_PACKETS.md),
 [factorial-lanes derivation](demonstrations/FACTORIAL_LANES.md), and
 [wavelet and polyphase transfer](demonstrations/WAVELET_POLYPHASE.md) follow
 longer chains of exact representations, transfer laws, and explicit failure
-witnesses. The wavelet case includes a real three-tap discrete filter, four
-levels of Haar coefficients, exact residual correction and downloadable
+witnesses. The wavelet case includes a three-tap discrete filter, four levels of
+Haar coefficients, exact predict–update lifting, a weighted best-detail
+selection, sharp finite stability, boundary repair, and downloadable
 results. Each extended example retains its own finite evidence scope.
 
 ## Conventions and scope
