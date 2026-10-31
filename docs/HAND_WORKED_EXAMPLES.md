@@ -67,6 +67,13 @@ substitution, Touchard polynomial and moment operations, complete residue
 packet transfers, and an exact interpolation-versus-aggregation boundary. It includes a standalone exact
 Python checker and downloadable source-bound records.
 
+The [roots-of-unity and falling-factorial example](demonstrations/ROOTS_UNITY_FALLING_FACTORIAL.md)
+connects the earlier arithmetic, Euler and Stirling examples. It carries
+a character projector through a Stirling/Newton change of basis and
+independently checks the resulting operation against finite differences,
+cyclic packet multiplication and a wrong-basis counterexample. Exact
+tables and a generated diagram are published with the Python source.
+
 ## Conventions and scope
 
 Vectors are columns unless a displayed signal is explicitly a list. Matrix

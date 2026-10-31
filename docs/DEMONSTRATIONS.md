@@ -62,6 +62,19 @@ parameterized polynomial, while two scalar summaries do not determine an
 arbitrary coordinate profile. Every example has exact Python
 checks, source-bound tables and a Python-generated diagram.
 
+## An extended derivation with roots of unity and falling factorials
+
+[Roots of unity, projectors, and falling-factorial coordinates](demonstrations/ROOTS_UNITY_FALLING_FACTORIAL.md)
+starts with the Stirling expansion of a fifth power, constructs exact
+roots-of-unity residue filters, and transports the projectors through a
+Newton/falling-factorial change of basis. The three packets yield
+600+244+180=1024. The same page proves finite-difference and multiplication
+transfer rules, tests six-way refinement, and shows why filtering ordinary
+monomial degrees is the wrong operation after a coordinate change.
+A standalone rational-arithmetic program and source-bound CSV/SVG records
+support the hand derivation. These are classical identities presented as
+one continuous realization argument, not a new theorem claim.
+
 ## Run in your browser
 
 [Explore the interactive diagrams](https://KomorebiP.github.io/Operation-KOMOREBI/interactive.html).
