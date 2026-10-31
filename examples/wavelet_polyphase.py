@@ -279,8 +279,8 @@ def multiscale_transfer_svg(matrix):
         '<rect width="822" height="774" fill="#fff"/>',
         '<text x="36" y="34" font-family="sans-serif" font-size="21" font-weight="600" fill="#173f3a">FIR transfer in four-level Haar coordinates</text>',
         f'<text x="36" y="60" font-family="sans-serif" font-size="14" fill="#425852">{n} × {n} exact coefficients · {nnz} nonzero · W H W⁻¹</text>',
-        '<text x="140" y="85" font-family="sans-serif" font-size="12" fill="#536b66">Input wavelet coordinates →</text>',
-        '<text x="12" y="107" font-family="sans-serif" font-size="12" fill="#536b66">Output ↓</text>'
+        '<text x="140" y="85" font-family="sans-serif" font-size="12" fill="#536b66">Input wavelet coordinates (columns)</text>',
+        '<text x="12" y="107" font-family="sans-serif" font-size="12" fill="#536b66">Output rows</text>'
     ]
     for j, label in enumerate(labels):
         cx = left + j*cell + cell//2
