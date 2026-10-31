@@ -50,11 +50,13 @@ The [coverage list](EXAMPLE_COVERAGE.md) shows which works still need an introdu
 
 ## Extended research examples
 
-The [Euler-number derivation](demonstrations/EULER_PACKETS.md) and the
-[factorial-lanes derivation](demonstrations/FACTORIAL_LANES.md) follow longer
-chains of exact representations, carry calculations and failure witnesses.
-The factorial example includes an independent Python program and downloadable
-rational tables.
+The [Euler-number derivation](demonstrations/EULER_PACKETS.md),
+[factorial-lanes derivation](demonstrations/FACTORIAL_LANES.md), and
+[wavelet and polyphase transfer](demonstrations/WAVELET_POLYPHASE.md) follow
+longer chains of exact representations, transfer laws, and explicit failure
+witnesses. The wavelet case includes a real three-tap discrete filter, four
+levels of Haar coefficients, exact residual correction and downloadable
+results. Each extended example retains its own finite evidence scope.
 
 ## Conventions and scope
 
