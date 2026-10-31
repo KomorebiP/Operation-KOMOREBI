@@ -40,18 +40,73 @@ BOOK = dict(
                      "Cost", "Loss", "Debt", "argmin", "argmax"},
     reading_introduction=(
         "Read the full manuscript online, from its preface and five parts to "
-        "the formal ledger and reproducing examples. This presentation preserves "
+        "the theorem ledger and reproducible examples. This presentation preserves "
         "source lines and the original mathematical expressions. The full PDF "
         "and visual sampler remain available alongside it."
     ),
-    part_figures={
-        1: "fig_14_ambient_field.png",
-        2: "fig_17_binary_cube.png",
-        3: "fig_20_compression_collision.png",
-        4: "fig_21_review_error_floor.png",
-        5: "fig_13_repository_workflow.png",
-    },
+    show_figure_numbers=True,
+    numbered_bibliography=True,
+    reading_note=(
+        "All 25 numbered figures and six visual studies appear in the HTML "
+        "chapters. The complete typeset edition and visual sampler remain "
+        "available above. The chapters preserve the source wording, mathematical "
+        "statements and recorded limits. They do not add a proof assessment."
+    ),
 )
+
+
+def part_openings(main):
+    """Read the five printed openings from the retained preamble, without TeX.
+
+    The part macro contains authored captions and prose, not just typography.
+    Keep that content in the reading edition and count its numbered figures.
+    Accept only the reviewed macro structure so changed branches need review.
+    """
+    from readable_chapters import group
+    marker = r"\newcommand{\monographpart}[3]"
+    start = main.index(marker) + len(marker)
+    body, _ = group(main, start)
+    branches = body.split(r"\ifcase\value{part}\relax", 1)[1]
+    branches, tail = branches.split(r"\fi", 1)
+    cases = branches.split(r"\or")
+    if cases[0].strip() or len(cases) != 6 or tail.strip() != r"\clearpage":
+        raise ValueError("Review Proof Path Theory part-opening branches")
+    titles = [title for _, title, kind, _ in MARKERS if kind == "part"]
+    result = {}
+    for title, case in zip(titles, cases[1:]):
+        match = re.match(r"\s*\\openingfigure", case)
+        if not match:
+            raise ValueError("Missing Proof Path Theory part illustration")
+        end, args = match.end(), []
+        for _ in range(3):
+            arg, end = group(case, end)
+            args.append(arg)
+        image, caption, label = args
+        if not re.fullmatch(r"fig_\d\d_[a-z_]+\.pdf", image):
+            raise ValueError("Review Proof Path Theory part image")
+        prose = case[end:].strip()
+        if prose:
+            heading = re.match(
+                r"\\vspace\{[34]pt\}\{\\sffamily\\bfseries\\color\{KomorebiTeal\}"
+                r"The governing distinction\}\\par\s*", prose)
+            if not heading:
+                raise ValueError("Review Proof Path Theory part-opening prose")
+            prose = r"\paragraph*{The governing distinction} " + prose[heading.end():]
+        text = (r"\begin{figure}\centering\includegraphics[width=.96\linewidth]{"
+                + image + r"}\caption{" + caption + r"}\label{" + label
+                + r"}\end{figure} " + prose)
+        result[title] = dict(source=case, text=re.sub(r"\s+", " ", text),
+                             image=image, caption=caption, label=label)
+    return result
+
+
+def source_math(main, spec):
+    """Include math printed by the part macro as well as the selected body."""
+    from readable_chapters import chapter_text, original_math
+    expressions = original_math(chapter_text(main, spec))
+    if spec.get("kind") == "part":
+        expressions += original_math(part_openings(main)[spec["title"]]["source"])
+    return expressions
 
 
 def source_specs(load):
@@ -135,7 +190,7 @@ def _style_groups(text):
     return text
 
 
-def normalize(source):
+def normalize(source, openings=None):
     """Translate only print-oriented wrappers, preserving math and line counts."""
     from readable_chapters import clean_tex
     text = clean_tex(source)
@@ -143,6 +198,7 @@ def normalize(source):
     text = _rewrite(
         text, "monographpart", 3,
         lambda name, short, subtitle: r"\part{" + name + "} " + subtitle
+        + (" " + openings[name]["text"] if openings is not None else "")
     )
     text = _rewrite(
         text, "studyhead", 2,
@@ -202,12 +258,13 @@ def prepare_book(reader, config):
     source_specs(load)
     macros = manuscript_macros(main, config["required_macros"])
     references = manuscript_bibliography(main)
+    openings = part_openings(main)
     state = {"number_floats": True}
     labels, chapters = {}, []
     for spec in CHAPTERS:
         source = chapter_text(main, spec)
-        formatted = normalize(source)
-        if original_math(source) != original_math(formatted):
+        formatted = normalize(source, openings)
+        if source_math(main, spec) != original_math(formatted):
             raise ValueError("Proof Path Theory math was changed by layout translation")
         chapter = Chapter(formatted, macros, state=state, check_refs=False)
         chapter.url, chapter.base = spec["url"], BASE
@@ -216,7 +273,17 @@ def prepare_book(reader, config):
             if key in labels:
                 raise ValueError("Repeated Proof Path Theory label: " + key)
             node["url"] = chapter.url
-            labels[key] = node
+            # This manuscript writes "Theorem~\ref{...}" and "Section~\ref{...}".
+            # Its plain \ref supplies the number; adding the kind repeats it.
+            reference = dict(node, reference_label=node["number"] or node["title"])
+            if key.startswith("eq:"):
+                tag = re.search(r"\\tag\{([^{}]+)\}\\label\{" + re.escape(key) + r"\}", node["body"])
+                if not tag:
+                    raise ValueError("Review Proof Path Theory equation reference: " + key)
+                reference["reference_label"] = "(" + tag[1] + ")"
+            if not reference["reference_label"]:
+                raise ValueError("Missing Proof Path Theory reference number: " + key)
+            labels[key] = reference
         state = {key: getattr(chapter, key)
                  for key in ("section", "appendix", "part", "subsection",
                              "subsubsection", "counter", "section_prefix",
@@ -226,8 +293,8 @@ def prepare_book(reader, config):
         chapter.labels = labels
         chapter.validate_references()
         chapter.citations = {
-            ref["key"]: (ref["key"], chapter.relative(BIB_PAGE) + "#ref-" + ref["key"])
-            for ref in references
+            ref["key"]: (i, chapter.relative(BIB_PAGE) + "#ref-" + ref["key"])
+            for i, ref in enumerate(references, 1)
         }
     return dict(config=config, chapters=chapters, references=references,
                 macros=macros, main=main)

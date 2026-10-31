@@ -111,6 +111,9 @@ def check_readable_chapter(root, documents, pages):
         assert report['macro_source']==main_path
         raw=(root/records[source]['file_url']).read_bytes()
         expressions=original_math(chapter_text(raw.decode('utf-8-sig'),spec))
+        if BOOKS[spec['work']].get('custom_reader')=='proof_path':
+            from proof_path_reading import source_math
+            expressions=source_math(main,spec)
         assert report['source_sha256']==hashlib.sha256(raw).hexdigest()
         assert report['url']==page
         assert report['math_expressions']==len(expressions)

@@ -1089,7 +1089,8 @@ def render_book(reader,book):
                     width,height=png_dimensions(preview_raw)
                     dimensions=dict(width=width,height=height)
                 size=' width="'+str(dimensions['width'])+'" height="'+str(dimensions['height'])+'"'
-                body+='<figure id="'+node['id']+'" tabindex="-1"><img src="'+image+'"'+size+' alt="'+e(alt,quote=True)+'" loading="lazy"><figcaption>'+chapter.inline(caption)+'</figcaption>'+description_link+passage_links(links)+'</figure>'
+                figure_number=('Figure '+node['number']+'. ') if config.get('show_figure_numbers') else ''
+                body+='<figure id="'+node['id']+'" tabindex="-1"><img src="'+image+'"'+size+' alt="'+e(alt,quote=True)+'" loading="lazy"><figcaption>'+figure_number+chapter.inline(caption)+'</figcaption>'+description_link+passage_links(links)+'</figure>'
             elif kind in {'table','longtable','tabularx'}:
                 aid_key,aid=table_reading_aid(config,source,node['id'])
                 if aid: aided_tables.add(aid_key)
@@ -1098,8 +1099,9 @@ def render_book(reader,book):
                 body+='<section id="'+node['id']+'"><div class="table-scroll" tabindex="0" role="region" aria-label="Conceptual diagram. Scroll horizontally if needed.">'+chapter.paragraphs(node['body'])+'</div>'+passage_links(links)+'</section>'
             elif kind=='thebibliography':
                 body+='<section id="'+node['id']+'"><h2>References</h2>'
-                for entry in book['references']:
-                    body+='<section id="ref-'+entry['key']+'"><h3>'+e(entry['key'])+'</h3>'+chapter.paragraphs(presentation_tex(entry['body']))+'</section>'
+                for i,entry in enumerate(book['references'],1):
+                    reference_number=('['+str(i)+'] ') if config.get('numbered_bibliography') else ''
+                    body+='<section id="ref-'+entry['key']+'"><h3>'+reference_number+e(entry['key'])+'</h3>'+chapter.paragraphs(presentation_tex(entry['body']))+'</section>'
                 body+=passage_links(links)+'</section>'
             elif kind=='lstlisting':
                 body+='<section id="'+node['id']+'"><pre tabindex="0" aria-label="Original algorithm listing"><code>'+e(node['body'].strip('\n'))+'</code></pre>'+passage_links(links)+'</section>'
@@ -1139,6 +1141,9 @@ def render_book(reader,book):
         body+='<details class="document-provenance"><summary>Source and conversion record</summary><p>Source SHA-256: <code>'+reader.records[source]['sha256']+'</code></p><p>Unsupported prose commands stop the build. The mathematical expression sequence is checked against the source, with manuscript macros expanded for display.</p><p><a href="'+site.rel('documents/readable-chapters.json',page)+'">Conversion records</a></p></details>'
         site.page(page,title,body)
         expressions=original_math(chapter_text(raw.decode('utf-8-sig'),spec))
+        if config.get('custom_reader')=='proof_path':
+            from proof_path_reading import source_math
+            expressions=source_math(book['main'],spec)
         if chapter.math!=expressions:
             difference=next((i for i,(a,b) in enumerate(zip(chapter.math,expressions)) if a!=b),min(len(chapter.math),len(expressions)))
             raise ValueError('Reading math differs at '+source+' expression '+str(difference)+' rendered '+str(chapter.math[difference:difference+1])+' original '+str(expressions[difference:difference+1]))
@@ -1183,7 +1188,7 @@ def render_book_index(reader,book,reports):
     body+='</ul>'
     if config.get('atlas_index'):
         body+='<p><a href="'+site.rel(config['atlas_index'],page)+'">'+html.escape(config.get('atlas_link_text','Explore all 26 atlas plates in HTML'))+'</a> '+html.escape(config.get('atlas_note','With drawings, text descriptions, equations and tables.'))+'</p>'
-    body+='<p>The original visual atlas remains available in the PDF and visual guide. The HTML chapters preserve the source wording, mathematical statements and recorded limits. They do not add a proof assessment.</p>'
+    body+='<p>'+html.escape(config.get('reading_note','The original visual atlas remains available in the PDF and visual guide. The HTML chapters preserve the source wording, mathematical statements and recorded limits. They do not add a proof assessment.'))+'</p>'
     site.page(page,'Read '+label,body)
     site.search.append(dict(title=label+' / Read all chapters',group='Collection',kind='Papers and source',work_ids=[work],url=page,text=config['title']+' readable chapters '+ ' '.join(c['title'] for c in config['chapters'])))
 
@@ -1200,9 +1205,13 @@ def render_bibliography(reader,book):
         body+='</article>'+navigation(config,page,'bottom')
         site.page(page,label+' bibliography',body)
         return
-    body+='<p>Entries follow the retained bibliography source. Citation keys keep references stable without relying on older generated bibliography numbering. These links do not establish what a cited source proves.</p>'
-    for entry in book['references']:
-        body+='<section id="ref-'+entry['key']+'"><h2>'+html.escape(entry['key'])+'</h2><dl>'
+    if config.get('numbered_bibliography'):
+        body+='<p>Entries and citation numbers follow the retained manuscript. Citation keys keep links stable. These links do not establish what a cited source proves.</p>'
+    else:
+        body+='<p>Entries follow the retained bibliography source. Citation keys keep references stable without relying on older generated bibliography numbering. These links do not establish what a cited source proves.</p>'
+    for i,entry in enumerate(book['references'],1):
+        reference_number=('['+str(i)+'] ') if config.get('numbered_bibliography') else ''
+        body+='<section id="ref-'+entry['key']+'"><h2>'+reference_number+html.escape(entry['key'])+'</h2><dl>'
         if 'body' in entry:
             body+='</dl>'+Chapter('',book['macros']).paragraphs(presentation_tex(entry['body']))
         else:
