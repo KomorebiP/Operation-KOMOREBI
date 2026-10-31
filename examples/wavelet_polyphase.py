@@ -657,6 +657,38 @@ def save(folder, counts):
         w.writerow(("retained_details", "retained_detail_energy", "squared_residual_error"))
         for budget, retained, residual in best_detail_budget(levels):
             w.writerow((budget, str(retained), str(residual)))
+    input_waves = wavelet_analysis(x)
+    output_waves = wavelet_analysis(case["filtered"])
+    matrix = full_wavelet_transfer(len(x))
+    labels = wavelet_labels(len(x))
+    with (folder/"full-wavelet-transfer.csv").open("w", encoding="utf-8", newline="") as stream:
+        w = csv.writer(stream, lineterminator="\n")
+        w.writerow(("output_index","output_coordinate","input_index","input_coordinate","coefficient"))
+        for i, row in enumerate(matrix):
+            for j, coefficient in enumerate(row):
+                if coefficient:
+                    w.writerow((i, labels[i], j, labels[j], str(coefficient)))
+    input_bands = wavelet_energy_levels(input_waves)
+    output_bands = wavelet_energy_levels(output_waves)
+    with (folder/"multiscale-energy.csv").open("w", encoding="utf-8", newline="") as stream:
+        w = csv.writer(stream, lineterminator="\n")
+        w.writerow(("band","original_energy","filtered_energy","original_nonzero","filtered_nonzero"))
+        for (name, en0, count0), (_, en1, count1) in zip(input_bands,output_bands):
+            w.writerow((name, str(en0), str(en1), count0, count1))
+    ph=coarsen_first_level(case["filtered"])
+    hp=fir(coarsen_first_level(x))
+    with (folder/"operation-order.csv").open("w", encoding="utf-8", newline="") as stream:
+        w=csv.writer(stream, lineterminator="\n")
+        w.writerow(("index","original","filtered","coarse_original","filter_coarse",
+                    "coarse_filtered","commutator","filtered_minus_filter_coarse",
+                    "filtered_minus_coarse_filtered"))
+        for k in range(len(x)):
+            w.writerow((k,str(x[k]),str(case["filtered"][k]),str(case["coarse"][k]),
+                        str(hp[k]),str(ph[k]),str(ph[k]-hp[k]),
+                        str(case["filtered"][k]-hp[k]),
+                        str(case["filtered"][k]-ph[k])))
+    (folder/"full-wavelet-transfer.svg").write_text(
+        multiscale_transfer_svg(matrix), encoding="utf-8", newline="\n")
     (folder/"signal-comparison.svg").write_text(figure_svg(case), encoding="utf-8", newline="\n")
     record = {
         "case": "Haar averaging / cyclic FIR (1, 2, -1)",
@@ -682,6 +714,17 @@ def save(folder, counts):
             "weighted_selection_error": 18
         },
         "budget_residual_energies": [int(row[2]) for row in best_detail_budget(levels)],
+        "multiscale": {
+            "matrix_order": len(matrix),
+            "matrix_nonzero": sum(int(value != 0) for row in matrix for value in row),
+            "input_wavelet_nonzero": sum(int(value != 0) for value in input_waves),
+            "filtered_wavelet_nonzero": sum(int(value != 0) for value in output_waves),
+            "input_band_energies": [int(v) for _, v, _ in input_bands],
+            "filtered_band_energies": [int(v) for _, v, _ in output_bands],
+            "commutator_energy": int(energy(operation_commutator(x))),
+            "error_filter_coarse": int(energy(tuple(y-v for y,v in zip(case["filtered"],hp)))),
+            "error_coarse_filtered": int(energy(tuple(y-v for y,v in zip(case["filtered"],ph)))),
+        },
         "assertions_by_group": counts,
         "total_assertions": sum(counts.values()),
         "scope": "Exact finite models; no infinite-domain or cross-boundary filter claim."
@@ -702,6 +745,8 @@ def main():
     print("FIR energy 2288 = 4 * 416 + 624; two omitted transfers also cost 624")
     print("Zero-extension boundary correction: (4,-4), squared energy 32")
     print("Best-detail budget errors: 272, 144, 80, 48, 16, 0")
+    print("Full Haar transfer: 16 x 16 rational matrix, 56 nonzero entries")
+    print("Commutator energy 624; H(Px) error 768; P(Hx) error 880")
     print("PASS: " + str(sum(counts.values())) + " exact assertions")
     if args.output:
         save(args.output, counts)
