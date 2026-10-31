@@ -41,13 +41,36 @@ class FactorialLaneArithmeticTests(unittest.TestCase):
             self.assertEqual(sum(comb(10*n,10*k)*EXAMPLE.unit_tail(k)*c[n-k]
                                  for k in range(n+1)),int(n==0))
 
+    def test_original_diagonal_bridge_and_five_child_refinement(self):
+        c = EXAMPLE.reciprocal_coefficients(7)
+        for n in range(8):
+            original = sum(comb(10*n+4, 10*q)*c[q] for q in range(n+1))
+            self.assertEqual(original, int(n == 0))
+            diagonal = comb(10*n+4, 4)
+            for q in range(n+1):
+                left = Fraction(comb(10*n+4, 10*q), diagonal)
+                right = comb(10*n, 10*q) * EXAMPLE.unit_tail(n-q)
+                self.assertEqual(left, right)
+        for degree in range(200):
+            parent = int(degree % 10 == 4)
+            two_children = sum(int(degree % 20 == r) for r in (4, 14))
+            five_children = sum(int(degree % 50 == r)
+                                for r in (4, 14, 24, 34, 44))
+            self.assertEqual(parent, two_children)
+            self.assertEqual(parent, five_children)
+        # The congruential row is not the classical secant Euler sequence.
+        congruential_difference = 24*(c[3]-c[1])
+        self.assertEqual(congruential_difference,
+                         -Fraction(489980840535, 3692689))
+        self.assertEqual(EXAMPLE.valuation(congruential_difference), 1)
+
     def test_prime_adic_bounds_and_sharp_boundary(self):
         for n in range(30):
             self.assertEqual(EXAMPLE.valuation(EXAMPLE.unit_tail(n)),0)
         for n in range(6):
             for q in (1,2,5,10):
                 self.assertGreaterEqual(EXAMPLE.valuation(
-                    EXAMPLE.unit_tail(n+q)-EXAMPLE.unit_tail(n)),1+EXAMPLE.valuation(q))
+                    EXAMPLE.unit_tail(n+q)-EXAMPLE.unit_tail(n)),3+EXAMPLE.valuation(q))
         self.assertEqual(EXAMPLE.valuation(Fraction(1,comb(25,5))),-1)
 
     def test_exports_are_exact(self):
