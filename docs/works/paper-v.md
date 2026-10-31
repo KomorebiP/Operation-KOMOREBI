@@ -31,8 +31,10 @@ These introductory calculations lead into this work’s subject. The source and 
 
 **Complete demonstrations with runnable code:** [Refine a signal](../demonstrations/REFINEMENT.md)
 and [Wavelets and polyphase transfer](../demonstrations/WAVELET_POLYPHASE.md),
-including a sixteen-sample FIR operator, exact Haar reconstruction, and
-explicit residual and boundary controls.
+including a sixteen-sample FIR operator, Haar reconstruction and lifting,
+weighted best-detail selection, a sharp periodic filter bound, and
+explicit residual and boundary controls. It is a finite teaching
+example, not an expanded Lean correspondence.
 
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
