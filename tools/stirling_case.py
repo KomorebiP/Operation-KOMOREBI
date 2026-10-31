@@ -82,7 +82,7 @@ def publish(site):
         "case_assertions":result["total_assertions"],
         "case_groups":result["checks_by_group"],
         "scope":("Classical finite combinatorics, formal Stirling substitution, "
-                 "polynomial reconstruction and general residue packet transfer. The site's 
+                 "polynomial reconstruction and general residue packet transfer. The site's "
                  "bounded tests do not constitute a new Lean or novelty claim.")
     }
     site.write(RECORD,json.dumps(record,ensure_ascii=False,indent=2)+"\n")
