@@ -168,6 +168,12 @@ remain unchanged, and description links stay visible in the quieter reading view
 The first three guides also describe their 22, 24 and 24 atlas pages. Paper IV's
 guide links to the existing 26 HTML plates and their complete label transcripts.
 
+## Proof Path Theory reading edition
+
+The [Proof Path Theory HTML edition](https://KomorebiP.github.io/Operation-KOMOREBI/read/proof-path-theory/index.html) follows the retained manuscript from the preface through five parts, its theorem ledger, source-bound tables, and the final reproducible example. Chapter navigation, original TeX line links, selectable mathematics, original figures, PDF and visual sampler links, and routes to Lean, code and evidence are retained. Source expressions are checked against the unchanged TeX. The reading presentation adds no proof or formal verification assessments.
+
+Run `python -B -m unittest discover -s tools -p 'test_proof_path_reading.py' -v` to check manuscript boundaries, formula preservation, readable syntax and source illustrations. The normal website checker verifies published equations, chapter links and all reading ZIPs.
+
 ## Publication
 
 The [reader website workflow](../.github/workflows/reader-site.yml) builds and
