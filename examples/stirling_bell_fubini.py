@@ -586,8 +586,8 @@ def save(folder, checks):
             candidate_ordered_samples=[str(exponential_moment_value(
                 ALTERNATIVE_ROW_4,z)) for z in range(5)],
             true_touchard_at_2=94,candidate_touchard_at_2=90,
-            recovered_stirling_row=list(interpolate_integer_samples(tuple(
-                touchard_value(S[4],z) for z in range(5))))),
+            recovered_stirling_row=[int(v) for v in interpolate_integer_samples(tuple(
+                touchard_value(S[4],z) for z in range(5)))]),
         checks_by_group=checks,
         total_assertions=sum(checks.values()),
         scope="Exact classical finite combinatorics and formal-series identities; no new Lean replay or universal recovery theorem."
