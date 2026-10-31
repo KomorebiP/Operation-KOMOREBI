@@ -2,7 +2,7 @@
 
 **An extended hand-worked example · Komorebi P.**
 
-Begin with sixteen actual sample values. Separate their even and odd addresses, analyze them through four Haar levels, remove a detail packet, reconstruct the resulting signal, and calculate the missing residual exactly. Then apply a three-tap FIR filter and transport the **operation itself** through the polyphase and Haar coordinates.
+Begin with sixteen specified sample values. Separate their even and odd addresses, analyze them through four Haar levels, remove a detail packet, reconstruct the resulting signal, and calculate the missing residual exactly. Then apply a three-tap FIR filter and transport the **operation itself** through the polyphase and Haar coordinates.
 
 Nothing in the calculation requires interpolation or a continuous input. The filters and wavelets act on a finite vector, while the same linear-algebraic operations explain why the coordinate transfers work.
 
@@ -121,6 +121,35 @@ Indeed \(B^{-1}B=I\). This local inverse holds for every rational pair, not only
 
 The only nonzero finest-level detail is \(d_{1,5}=8\). Its pair is recovered by \(4+8=12\) and \(4-8=-4\). Keeping the average alone gives \((4,4)\) and loses the spike.
 
+### Predict–update lifting: the same pair in another factorization
+
+Paper V also records an exact *lifting* construction. First predict the odd coordinate from the even coordinate, then update the even coordinate using the residual:
+
+\[
+\ell=O-E,\qquad s=E+\tfrac12\ell.
+\]
+
+The inverse is \(E=s-\ell/2\), followed by \(O=E+\ell\). In matrix form,
+
+\[
+\begin{aligned}
+\underbrace{\frac12\begin{pmatrix}1&1\\1&-1\end{pmatrix}}_{B}
+&=
+\underbrace{\begin{pmatrix}1&0\\0&-1/2\end{pmatrix}}_{\text{scale}}
+\underbrace{\begin{pmatrix}1&1/2\\0&1\end{pmatrix}}_{\text{update}}
+\underbrace{\begin{pmatrix}1&0\\-1&1\end{pmatrix}}_{\text{predict}}.
+\end{aligned}
+\]
+
+The two triangular matrices have determinant one. The final diagonal factor converts the lifting difference into our Haar detail \(d=-\ell/2\), so \(s=a\). At the nontrivial pair \((12,-4)\),
+
+\[
+\ell=-4-12=-16,\qquad
+s=12-8=4,\qquad d=8.
+\]
+
+Reversing the update and prediction returns \((12,-4)\) exactly. This is an alternative **factorization of the same perfect-reconstruction transform**, not an additional approximation. It is the finite rational specialization of Paper V's predict–update lifting result.
+
 ## 3. Continue through all four wavelet levels
 
 Repeat the same averaging and differencing rule on the averages of the preceding level. The complete calculation is:
@@ -132,7 +161,7 @@ Repeat the same averaging and differencing rule on the averages of the preceding
 | 3 | \((4,2)\) | \((-2,-2)\) |
 | 4 | \((3)\) | \((1)\) |
 
-The final mean is \(m=3\). The stored description consists of that one mean and \(8+4+2+1=15\) detail coefficients. There are sixteen coordinates in total.
+The final mean is \(m=3\). The stored description consists of that one mean and \(8+4+2+1=15\) detail coefficients. There are sixteen coordinates in total. This is the usual **lowpass-branch Haar decomposition**. A full wavelet-packet tree, as studied separately in Paper V, also splits detail branches; we do not perform that further refinement here.
 
 Synthesis begins at the mean. For each level, restore the children using \((u,v)=(a+d,a-d)\) until all sixteen samples are recovered. The exact inverse is simply the composition of these pair inverses in reverse level order.
 
@@ -211,7 +240,37 @@ Thus \(A\) loses eight independent directions. Two distinct signals can have ide
 
 There are only six nonzero Haar coefficients for this particular signal: the mean and five details. That fact is an exact sparsity property of **this input**, not a claim about universal compression rates or arbitrary signals.
 
-## 5. Apply a real discrete filter, not merely an address rearrangement
+### Choosing an optimal finite detail budget
+
+Suppose the mean is always retained and exactly \(k\) nonzero detail coefficients may also be kept. Because the Haar synthesis vectors are orthogonal, the exact squared error after selecting a detail set \(K\) is
+
+\[
+\boxed{\|x-\widehat x_K\|_2^2
+ =\sum_{(j,r)\notin K}2^j d_{j,r}^2.}
+\]
+
+Therefore, for this **fixed** Haar basis and uniform cost per retained detail, the optimal choice is to keep the \(k\) largest **weighted energies** \(2^j d_{j,r}^2\). Their positive values here are \(128,64,32,32,16\). The two 32-energy details may be selected in either order.
+
+| Retained nonzero details \(k\) | Retained detail energy | Minimum squared error |
+|---:|---:|---:|
+| 0 | 0 | 272 |
+| 1 | 128 | 144 |
+| 2 | 192 | 80 |
+| 3 | 224 | 48 |
+| 4 | 256 | 16 |
+| 5 | 272 | 0 |
+
+One should not substitute raw coefficient magnitude for weighted energy in this normalization. Consider the separate signal
+
+\[
+z=(2,2,2,2,2,2,2,2,-2,-2,1,-5,-2,-2,-2,-2).
+\]
+
+It has zero mean and only two nonzero details: \(d_{4,0}=2\) with energy \(16(2^2)=64\), and \(d_{1,5}=3\) with energy \(2(3^2)=18\). Its total energy is \(82\). With room for one detail, selecting the largest *magnitude* (3) leaves error \(64\), while selecting the largest *weighted energy* (the smaller amplitude 2) leaves error \(18\).
+
+This finite fixed-basis minimization illustrates the cost accounting behind Paper V's adaptive-selector discussion. It is **not** a proof of the book's more general best-packet-tree dynamic-programming theorem, whose admissible prunings and cost hypotheses differ.
+
+## 5. Apply a discrete filter, not merely an address rearrangement
 
 Now define a circular shift on the same sixteen samples:
 
