@@ -44,6 +44,30 @@ def shift(values):
     return values[-1:] + values[:-1]
 
 
+def backward_shift(values):
+    """The inverse cyclic shift (T^-1 x)[i] = x[(i+1) mod len(x)]."""
+    values = exact(values)
+    if not values:
+        raise ValueError("Signal must be nonempty")
+    return values[1:] + values[:1]
+
+
+def skew_shift(values):
+    """(T^-1 - T)x, the finite energy certificate for the FIR."""
+    return tuple(left - right for left, right
+                 in zip(backward_shift(values), shift(values)))
+
+
+def zero_extended_fir(values, taps=TAPS):
+    """Finite causal convolution with values outside the window set to zero."""
+    values = exact(values)
+    if not values:
+        raise ValueError("Signal must be nonempty")
+    return tuple(sum((F(tap) * values[i-j]
+                      for j, tap in enumerate(taps) if 0 <= i-j < len(values)),
+                     F(0)) for i in range(len(values)))
+
+
 def fir(values, taps=TAPS):
     """Circular FIR: H = sum_j taps[j] T^j."""
     values = exact(values)
@@ -63,6 +87,28 @@ def haar_pair(even, odd):
         raise ValueError("Haar phases need equal length")
     return (tuple((u + v) / 2 for u, v in zip(even, odd)),
             tuple((u - v) / 2 for u, v in zip(even, odd)))
+
+
+def lifting_decompose(even, odd):
+    """Paper V predict/update: difference=odd-even, average=even+difference/2."""
+    even, odd = exact(even), exact(odd)
+    if len(even) != len(odd):
+        raise ValueError("Lifting phases need equal length")
+    differences = tuple(o-e for e, o in zip(even, odd))
+    averages = tuple(e + difference/2
+                     for e, difference in zip(even, differences))
+    return averages, differences
+
+
+def lifting_synthesize(averages, differences):
+    """Invert the predict/update map using exactly the stored side channel."""
+    averages, differences = exact(averages), exact(differences)
+    if len(averages) != len(differences):
+        raise ValueError("Lifting phases need equal length")
+    even = tuple(a - difference/2
+                 for a, difference in zip(averages, differences))
+    odd = tuple(e + difference for e, difference in zip(even, differences))
+    return join_phases((even, odd))
 
 
 def inverse_haar_pair(averages, details):
@@ -108,6 +154,29 @@ def coefficient_energy(mean, levels):
         (2 ** j * energy(pair[1]) for j, pair in enumerate(levels, 1)), F(0))
 
 
+def best_detail_budget(levels):
+    """Optimal fixed Haar-coordinate budget with the mean always retained.
+
+    The detail synthesis vectors are orthogonal with squared norm 2**level.
+    Sort exact weighted energies; ties use (level,index) to be deterministic.
+    Returns (retained_count, retained_energy, residual_energy) for each budget.
+    This is not an adaptive best-packet-tree algorithm.
+    """
+    entries = sorted(
+        ((2**j * F(d)**2, j, k)
+         for j, (_, details) in enumerate(levels, 1)
+         for k, d in enumerate(details) if d != 0),
+        key=lambda item: (-item[0], item[1], item[2]))
+    residual = sum((item[0] for item in entries), F(0))
+    records = [(0, F(0), residual)]
+    retained = F(0)
+    for budget, (contribution, _, _) in enumerate(entries, 1):
+        retained += contribution
+        residual -= contribution
+        records.append((budget, retained, residual))
+    return tuple(records)
+
+
 def transfer_polyphase(even, odd):
     """(E',O') = ((I-Z)E+2ZO, 2E+(I-Z)O), Z a circular half-rate shift."""
     even, odd = exact(even), exact(odd)
@@ -144,8 +213,10 @@ def default_case():
     even, odd = split_phases(x)
     a, d = haar_pair(even, odd)
     wrong = diagonal_only(a, d)
+    boundary = zero_extended_fir(x)
     return dict(x=x, mean=mean, levels=levels, coarse=coarse, residual=residual,
-                filtered=filtered, wrong=wrong,
+                filtered=filtered, wrong=wrong, boundary=boundary,
+                boundary_residual=tuple(u - v for u, v in zip(filtered, boundary)),
                 filter_error=tuple(u - v for u, v in zip(filtered, wrong)))
 
 
@@ -256,7 +327,7 @@ def figure_svg(case):
         '<svg xmlns="http://www.w3.org/2000/svg" width="1020" height="520" viewBox="0 0 1020 520" role="img" aria-labelledby="title description">',
         '<title id="title">Haar reconstruction and exact residual</title>',
         '<desc id="description">Three aligned sixteen-sample stem plots: the input signal, its lowpass reconstruction, and the missing finest detail. The residual has values eight and negative eight only at positions ten and eleven.</desc>',
-        '<rect width="1020" height="490" fill="#ffffff"/>',
+        '<rect width="1020" height="520" fill="#ffffff"/>',
         '<text x="35" y="30" font-family="sans-serif" font-size="20" font-weight="600" fill="#193b36">One signal · full, coarse and residual coordinates</text>',
     ]
     def fmt(v):
