@@ -717,6 +717,14 @@ Both adjacent interpretations already explain the intended meaning. The record
 binds four source files and reports the syntax checks. The retained text and
 mathematics are unchanged; the same review exclusions apply.
 
+The [Paper VII proofreading record](../manifests/reader-proofreading-paper-vii-2026-11-01.json)
+covers its 25 main reading sections, front matter, notation, cross-references,
+figure captions, preamble and bibliography syntax. The finite core,
+strengthened development, six supplements and three retained alternative
+derivations were reviewed. No objective routine correction was identified in
+that scope. The record binds twelve source files and reports the syntax checks.
+The retained text and mathematics are unchanged; the same review exclusions apply.
+
 ## Signal Laboratory
 
 `signal-lab.html` is a larger known-reference signal experiment with 16–256
