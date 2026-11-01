@@ -33,11 +33,12 @@ compiled input hash.
 
 ## Exact formal scope
 
-The manuscript is a finite **simple undirected graph** with binary vertex
-labels. `SimpleGraph` records a symmetric, irreflexive adjacency relation.
+The manuscript considers a finite **simple undirected graph** with binary
+vertex labels. `SimpleGraph` records a symmetric, irreflexive adjacency relation.
 The residual field is a function on ordered vertex pairs, constrained to be
-symmetric on edges; its values on nonedges are ignored. Its derivative is XOR
-of the two endpoint labels. A simple cycle is a closed walk of length at least
+symmetric on edges; its values on nonedges are ignored. The derivative of a
+vertex labeling is the XOR of its two endpoint labels on each edge.
+A simple cycle is a closed walk of length at least
 three whose vertex list, with its final repeated endpoint removed, has no
 duplicates. The formal argument proves that this simple-cycle condition also
 annihilates every closed walk.
