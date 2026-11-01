@@ -38,8 +38,8 @@ def enhance(body, page):
                      '<p>Saved in this browser for all core-paper chapters. Browser zoom also works.</p>'
                      '<button type="button" class="reading-display-reset">Reset text settings</button></div></details>')
     controls += '</div>'
-    navigation = Navigation(body).controls
-    if navigation and 'class="chapter-sidebar' in body:
+    parsed = Navigation(body);navigation = parsed.controls
+    if navigation and 'class="chapter-sidebar' in body and not parsed.returns:
         links = navigation[0]['links']
         previous = next(link for link in links if 'reading-previous' in link.get('class', '').split())
         following = next(link for link in links if 'reading-next' in link.get('class', '').split())

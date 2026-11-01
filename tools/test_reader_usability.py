@@ -44,6 +44,8 @@ class ReaderUsabilityTests(unittest.TestCase):
             self.assertTrue(enabled)
             self.assertEqual(enhanced.count(article),1)
             self.assertEqual(enhanced.count('aria-label="Keep reading"'),1)
+            self.assertEqual(enhanced.count('class="reading-return"'),1)
+            self.assertNotIn('class="reading-shortcuts"',enhanced)
             self.assertEqual(enhanced.count('aria-current="location"'),1)
             self.assertIn('class="reading-display" hidden',enhanced)
             parsed = Page(enhanced)
