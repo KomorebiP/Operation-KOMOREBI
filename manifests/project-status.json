@@ -2426,8 +2426,8 @@
       "stage": "development",
       "lean": "partial",
       "confidence": "formal",
-      "scope": "The separate Lean 4.24.0 companion checks 119 declarations. It retains the two-world obstruction and graph reconstruction contracts, and proves exactly 2^c distinct reconstructions for integrable binary fields, with c the actual connected-component count. Component and solution lists are complete and duplicate-free. Standard choice and quotient dependencies are recorded; both obstruction theorems remain axiom-free. Rank formulas and wider transport/forcing results remain outside this formal scope.",
-      "next_step": "Formalize the rank formulas n-c and m-n+c and replace exhaustive search with a verified spanning-forest solver. Counts under partial pinning remain a separate contract. Preserve the original source and earlier companions.",
+      "scope": "The separate Lean 4.24.0 companion checks 157 declarations. It retains binary graph reconstruction and the exact 2^c unpinned count, and proves exact counts under arbitrary vertex pins: 2^u when edge equations and pins are jointly consistent, zero otherwise. Here u counts actual components containing no pinned vertex. Component and solution lists are complete and duplicate-free. Standard classical dependencies are recorded; both two-world obstruction theorems remain axiom-free. Rank formulas and wider transport/forcing results remain outside this formal scope.",
+      "next_step": "Formalize the rank formulas n-c and m-n+c and replace exhaustive search with a verified spanning-forest solver. Preserve the original source and earlier companions.",
       "evidence": [
         {
           "path": "research/resolution-semantics/README.md",
@@ -2448,12 +2448,12 @@
           "kind": "release/status record"
         }
       ],
-      "reader_summary": "Active development with checked binary graph reconstruction and the exact 2^c reconstruction count, alongside the inherited two-world obstruction. Rank formulas and wider transport and forcing claims remain open.",
+      "reader_summary": "Active development with checked binary graph reconstruction and exact counts with arbitrary vertex pins, alongside the inherited two-world obstruction. Rank formulas and wider transport and forcing claims remain open.",
       "reader_guide": "docs/components/RESOLUTION_SEMANTICS_LEAN.md",
       "formal_verification": {
-        "path": "verification/resolution-semantics/counting-windows-2026-11-01-run1/receipt.json",
-        "sha256": "414d49d96b31e4cd9de91649ce15fe6adc1826e561a88c1e1bf3628305a17582",
-        "source_root": "formal/resolution-semantics-v0.4.0",
+        "path": "verification/resolution-semantics/pins-windows-2026-11-01-run1/receipt.json",
+        "sha256": "1215804561bcd49b66d5f5e986925883f3d042dd3ab41df31b96e9f302b53e7e",
+        "source_root": "formal/resolution-semantics-v0.5.0",
         "main_theorems": [
           "KRS.TwoWorld.no_swap_equivariant_additive_retraction",
           "KRS.TwoWorld.no_swap_equivariant_boolean_retraction"
@@ -2551,6 +2551,111 @@
             "propext",
             "Classical.choice",
             "Quot.sound"
+          ],
+          "KRS.Graph.mem_map_extend": [
+            "propext",
+            "Quot.sound"
+          ],
+          "KRS.Graph.mask_match_succ": [
+            "propext"
+          ],
+          "KRS.Graph.free_assignments_complete": [
+            "propext",
+            "Quot.sound"
+          ],
+          "KRS.Graph.free_assignments_nodup": [
+            "propext",
+            "Quot.sound"
+          ],
+          "KRS.Graph.free_assignments_length": [
+            "propext"
+          ],
+          "KRS.Graph.free_count_eq_filter_get": [
+            "propext"
+          ],
+          "KRS.Graph.pinned_mask_true_iff": [
+            "propext",
+            "Quot.sound"
+          ],
+          "KRS.Graph.shift_by_injective": [
+            "propext",
+            "Quot.sound"
+          ],
+          "KRS.Graph.shift_by_integrates": [],
+          "KRS.Graph.integrating_difference_constant": [
+            "propext"
+          ],
+          "KRS.Graph.shift_by_surjective": [
+            "propext",
+            "Quot.sound"
+          ],
+          "KRS.Graph.pins_match_iff_pointwise": [
+            "propext",
+            "Quot.sound"
+          ],
+          "KRS.Graph.shift_by_pins_iff": [
+            "propext",
+            "Quot.sound"
+          ],
+          "KRS.Graph.pinned_solutions_complete": [
+            "propext",
+            "Quot.sound"
+          ],
+          "KRS.Graph.pinned_solutions_nodup": [
+            "propext",
+            "Quot.sound"
+          ],
+          "KRS.Graph.pinned_solutions_empty_iff": [
+            "propext",
+            "Quot.sound"
+          ],
+          "KRS.Graph.pinned_solutions_count": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "KRS.Graph.component_position_injective": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "KRS.Graph.canonical_pinned_mask_true_iff": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "KRS.Graph.unpinned_components_complete": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "KRS.Graph.unpinned_components_nodup": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "KRS.Graph.unpinned_component_count_eq_free_count": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "KRS.Graph.pinned_solutions_count_by_components": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "KRS.Graph.pinned_solutions_count_total": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "KRS.Graph.pinned_solutions_no_pins": [
+            "propext"
+          ],
+          "KRS.Graph.unpinned_component_count_no_pins": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
           ]
         },
         "required_controls": [
@@ -2561,11 +2666,15 @@
           "reject-dropped-root-coverage",
           "reject-dropped-integrability",
           "reject-omitted-isolated-component",
-          "reject-empty-graph-zero-count"
+          "reject-empty-graph-zero-count",
+          "reject-count-pins-instead-of-components",
+          "reject-ignore-conflicting-pins",
+          "reject-unpinned-isolated-component"
         ],
         "required_positive_steps": [
           "run-graph-examples",
-          "run-count-examples"
+          "run-count-examples",
+          "run-pin-examples"
         ]
       }
     },
@@ -4409,7 +4518,7 @@
       ],
       "reason": "Source text or static inventories are not compiler acceptance.",
       "done_when": "Compile the exact intended source with pinned dependencies, record diagnostics and axioms, and map accepted statements to the manuscript. Retain missing mathematical inputs.",
-      "progress": "Resolution Semantics has a separate 0.4.0 companion with 119 accepted declarations. It retains graph reconstruction and the two-world obstruction and proves the exact 2^c count using complete duplicate-free component and solution lists. A canonical component index exists for every finite graph. Seven graph cases, six count cases and eight rejection controls pass in the bound Windows replay. Standard axiom dependencies are recorded; both obstruction theorems remain axiom-free. The original and earlier companions are preserved. Rank formulas, the wider paper, Hodge and Stratified Universality obligations remain open."
+      "progress": "Resolution Semantics has a separate 0.5.0 companion with 157 accepted declarations. It retains graph reconstruction, the two-world obstruction and the exact 2^c unpinned count, and proves 2^u reconstructions under arbitrary jointly consistent vertex pins, zero otherwise. The free component classes and solution lists are complete and duplicate-free. Seven graph cases, six unpinned count cases, fourteen partial-pin cases and eleven rejection controls pass in the clean source-bound Windows replay. Standard axiom dependencies are recorded; both obstruction theorems remain axiom-free. The original and earlier companions are preserved. Rank formulas, an efficient solver, the wider paper, Hodge and Stratified Universality obligations remain open."
     },
     {
       "id": "F07",
@@ -4702,6 +4811,7 @@
     "verification/constructive-repair/qualified-2026-10-30/qualification-windows-py3135.json",
     "verification/resolution-semantics/graphs-windows-2026-11-01-run1/receipt.json",
     "verification/resolution-semantics/counting-windows-2026-11-01-run1/receipt.json",
+    "verification/resolution-semantics/pins-windows-2026-11-01-run1/receipt.json",
     "manifests/reader-proofreading-2026-11-01.json"
   ],
   "new_python_execution": true,
