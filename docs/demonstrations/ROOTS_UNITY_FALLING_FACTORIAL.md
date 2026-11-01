@@ -2,7 +2,7 @@
 
 **An extended hand-worked example · Komorebi P.**
 
-One polynomial will pass through a Fourier-style residue projector, a Newton/falling-factorial coordinate change, a finite-difference operation, and an exact refinement. We will keep the objects and operations separate. In particular, we will see why projecting *after* a change of coordinates requires transporting the projector, not reusing its old formula.
+One polynomial will pass through a Fourier-style residue projector, a Newton/falling-factorial coordinate change, finite differences, exact shift-transfer blocks, and residue refinement. We will keep the objects and operations separate. In particular, we will see why projecting *after* a change of coordinates requires transporting the projector, not reusing its old formula.
 
 The mathematical identities are classical: the roots-of-unity filter, Stirling inversion, Newton interpolation, umbral polynomial coordinates, and the forward difference. The purpose of this example is to exhibit their precise composition and recovery conditions in the realization-and-transfer language of the collection. No new theorem, Lean compilation, general analytic continuation, or novelty claim is made here.
 
@@ -202,7 +202,7 @@ Thus
 \boxed{\Phi(z^2)\ne\Phi(z)^2.}
 \]
 
-We cannot transport multiplication through \(\Phi\) while pretending the product in the target is unchanged. We will construct the correct transported product in Section 8.
+We cannot transport multiplication through \(\Phi\) while pretending the product in the target is unchanged. We will construct the correct transported product in Section 9.
 
 ## 4. Transport the projector into falling-factorial coordinates
 
@@ -544,7 +544,159 @@ because on each basis vector \(x^{\underline k}\), the forward difference lowers
 
 [Download the rational spectral/projector comparison](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/roots-unity-falling-factorial/spectral-projectors.csv).
 
-## 7. Refine the same packets without changing their sum
+## 7. Translate the input and follow every cross-packet term
+
+The earlier differentiation rule describes how a packet's degree decreases. We can now transport the **whole shift**, including its diagonal part and the terms crossing between residue classes.
+
+Write
+
+\[
+(T_hf)(x)=f(x+h),\qquad h\in\mathbb Q.
+\]
+
+Falling factorials satisfy a binomial-type addition formula:
+
+\[
+\boxed{
+(x+h)^{\underline k}=
+\sum_{j=0}^k\binom kj
+x^{\underline j}h^{\underline{k-j}}.
+}
+\]
+
+**Proof.** Expand the formal identity
+
+\[
+(1+u)^{x+h}=(1+u)^x(1+u)^h
+\]
+
+using \((1+u)^x=\sum_{k\ge0}x^{\underline k}u^k/k!\) in \(\mathbb Q[x][[u]]\), and compare the coefficient of \(u^k/k!\). No convergence or evaluation at a complex argument is involved.
+
+If \(f=\sum_k a_kx^{\underline k}\), this supplies every cross-packet transfer block:
+
+\[
+\boxed{
+Q_r^{(m)}T_hQ_s^{(m)}f=
+\sum_{\substack{k\equiv s\ (m)}}a_k
+\sum_{\substack{0\le j\le k\\j\equiv r\ (m)}}
+\binom kj h^{\underline{k-j}}x^{\underline j}.
+}
+\]
+
+This expression works for rational \(h\), including negative and fractional steps. The corresponding source-to-target block matrix is not assumed to be diagonal.
+
+### An especially simple two-tap shift
+
+At \(h=1\), the only nonzero falling factorials \(1^{\underline\ell}\) occur at \(\ell=0,1\). Hence
+
+\[
+T_1=I+\Delta
+\]
+
+and
+
+\[
+\boxed{
+Q_r^{(m)}T_1Q_s^{(m)}
+=\delta_{rs}Q_s^{(m)}
++\delta_{r,s-1\ (\mathrm{mod}\ m)}\Delta Q_s^{(m)}.
+}
+\]
+
+For our three residue packets:
+
+\[
+\boxed{
+\begin{pmatrix}
+Q_0T_1f\\Q_1T_1f\\Q_2T_1f
+\end{pmatrix}
+=
+\begin{pmatrix}
+I&\Delta&0\\
+0&I&\Delta\\
+\Delta&0&I
+\end{pmatrix}
+\begin{pmatrix}Q_0f\\Q_1f\\Q_2f\end{pmatrix}.
+}
+\]
+
+The off-diagonal difference operators are genuine transfers from one falling-degree residue into another.
+
+At \(x=4\), compute each output packet independently:
+
+| Target residue | Original \(Q_rf(4)\) | Carry from next residue | \(Q_r(T_1f)(4)\) | \((T_1Q_rf)(4)\) |
+|---:|---:|---:|---:|---:|
+| 0 | 600 | \(\Delta Q_1f(4)=961\) | **1561** | 1500 |
+| 1 | 244 | \(\Delta Q_2f(4)=240\) | **484** | 1205 |
+| 2 | 180 | \(\Delta Q_0f(4)=900\) | **1080** | 420 |
+| Total | 1024 | 2101 | **3125** | 3125 |
+
+Both right-hand columns reconstruct \(5^5=3125\), but they label the components differently:
+
+\[
+(Q_0T_1f,Q_1T_1f,Q_2T_1f)(4)
+=(1561,484,1080),
+\]
+
+whereas
+
+\[
+(T_1Q_0f,T_1Q_1f,T_1Q_2f)(4)
+=(1500,1205,420).
+\]
+
+![Python-generated exact transfer diagram displaying the original packet values, the incoming difference carries, and the shifted output values.](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/roots-unity-falling-factorial/translation-carry.svg)
+
+The discrepancy is a **noncommutation witness**, not numerical error. In fact,
+
+\[
+\boxed{
+[Q_r^{(m)},T_1]f
+=\Delta Q_{r+1}^{(m)}f-\Delta Q_r^{(m)}f
+}
+\]
+
+and for the three packets its evaluation at four is
+
+\[
+\boxed{(61,-721,660),\qquad61-721+660=0.}
+\]
+
+The sum of the commutator packets vanishes because \(\sum_rQ_r=I\), even though individual commutators need not vanish.
+
+### Arbitrary integer steps and finite transfer bandwidth
+
+When \(h\) is a nonnegative integer, \(h^{\underline\ell}=0\) for \(\ell>h\). Thus an input falling degree \(k\) can reach only degrees \(k,k-1,\ldots,k-h\). The \(m\times m\) residue transfer therefore has at most \(h+1\) allowed cyclic diagonals, possibly fewer when residues coincide. For instance, \(h=2\) requires three possible shifts rather than two.
+
+Fractional or negative \(h\) need not have this fixed finite bandwidth: the connection formula is still a finite sum on each polynomial of fixed degree, but its number of potentially nonzero terms can grow with the degree.
+
+The checker computes \(Q_rT_hQ_s\) from the falling-factorial binomial identity and, independently, by ordinary-power translation followed by the projector. It compares both through multiple moduli, polynomial degrees and rational shifts. A complete source-to-target table for \(h=0,1,2\) is downloadable.
+
+[Download the exact translation block matrix entries](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/roots-unity-falling-factorial/translation-blocks.csv) · [Download the two different shifted packet ledgers](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/roots-unity-falling-factorial/shifted-packet-ledger.csv).
+
+### The corresponding carry in the all-degree generating functions
+
+The filtered generating functions from Section 5 satisfy a compatible identity. The formal binomial recurrence
+
+\[
+\binom{x+1}{k}=\binom{x}{k}+\binom{x}{k-1}
+\]
+
+implies, with \(u=e^t-1\),
+
+\[
+\boxed{
+G_r^{(m)}(t,x+1)
+=G_r^{(m)}(t,x)
++(e^t-1)G_{r-1}^{(m)}(t,x).
+}
+\]
+
+This concerns **evaluation of the original \(r\)-packet at the shifted argument**. It corresponds to \(T_1Q_rf\), not to \(Q_rT_1f\). Those two operations must not be silently identified. For \(m=3,x=4,n=5\), its coefficient changes are \(900,961,240\), precisely the differences in the last numerical column above.
+
+The checker verifies this formal-series carry equation coefficientwise for several integer and rational \(x\), not solely at \(x=4\).
+
+## 8. Refine the same packets without changing their sum
 
 The same congruence class modulo three splits into two disjoint classes modulo six:
 
@@ -576,7 +728,7 @@ This is exact address refinement, not an error-producing truncation. Discarding 
 
 [Download the refinement table](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/roots-unity-falling-factorial/refinement.csv).
 
-## 8. Multiplication must also be transported
+## 9. Multiplication must also be transported
 
 The linear change \(\Phi\) does not preserve ordinary polynomial multiplication. If we want multiplication in the Newton coordinate algebra to survive, define a *transported* product on \(\mathbb Q[x]\):
 
@@ -632,21 +784,61 @@ The naive differential Leibniz rule fails even for \(f=g=x\):
 
 This is a useful boundary example. We can transport an operation exactly, but the transported operation need not be identical to the familiar operation on the target coordinates.
 
-## 9. General scope and conditions
+## 10. General scope and conditions
+
+### A sharp characteristic-three obstruction
+
+The distinction between coordinate transport and a particular spectral formula is even clearer over a finite field.
+
+The linear transformation \(\Phi(z^k)=x^{\underline k}\) is unitriangular with **integer** Stirling coefficients and inverse. It remains an invertible change of polynomial basis over **any commutative coefficient ring**, including \(\mathbb F_3\). What fails in characteristic three is the *difference quotient* \(a_k=(\Delta^kf)(0)/k!\) for \(k\ge3\), not the existence of the falling-factorial basis itself.
+
+Likewise, our rational Lagrange formula for spectral projectors divides by \(k-j\). In characteristic three, the operator \(\mathcal N=x\nabla\) has colliding eigenvalues:
+
+\[
+\begin{aligned}
+v_0&=x^{\underline0}=1,&\quad\mathcal Nv_0&=0,\\
+v_3&=x^{\underline3}=x^3-x\ne0,&\quad\mathcal Nv_3&=3v_3=0
+\quad\text{in }\mathbb F_3[x].
+\end{aligned}
+\]
+
+The *coefficient projector* by parity is still perfectly well defined: the order \(m=2\) is invertible modulo three and the root \(-1\) exists in \(\mathbb F_3\). Its action is
+
+\[
+\boxed{
+Q_0^{(2)}v_0=v_0,\qquad Q_0^{(2)}v_3=0.
+}
+\]
+
+Suppose, contrary to fact, that one polynomial \(H(\mathcal N)\) represented \(Q_0^{(2)}\) on all polynomials of degree at most three. Both \(v_0\) and \(v_3\) are nonzero eigenvectors with the same eigenvalue zero, so \(H(\mathcal N)\) acts on each as multiplication by \(H(0)\). The first required value forces \(H(0)=1\), while the second forces \(H(0)=0\). Contradiction.
+
+Thus **the projector survives, but its proposed realization as a polynomial in this single degree operator fails** in that coefficient field. On degrees strictly below the characteristic, the distinct eigenvalues permit the usual Lagrange construction; the collision becomes unavoidable at degree three for this example.
+
+There is a parallel finite-difference obstruction: over \(\mathbb F_3[x]\),
+
+\[
+\boxed{\Delta^3=(T_1-I)^3=T_3-I=0.}
+\]
+
+The equality uses characteristic three and \(T_3f(x)=f(x+3)=f(x)\). Consequently, high-order differences cannot recover all falling-factorial coefficients by division. The integral Stirling matrix inverse still does.
+
+This is a deliberate negative control against extending a rational spectral argument across a characteristic boundary without checking its denominators and eigenvalue separation.
+
+[Download the exact characteristic-three obstruction](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/roots-unity-falling-factorial/finite-characteristic-obstruction.csv).
 
 All statements above are exact for polynomials over \(\mathbb Q\), with integer modulus \(m\ge2\). The function-counting interpretation additionally requires nonnegative integer domain and codomain sizes, whereas the packet EGF and spectral projector identities are rational-polynomial statements.
 
 - The roots-of-unity formula uses a field containing \(m\)-th roots of unity and an invertible \(m\), but its output on \(\mathbb Q[z]\) is rational.
-- The Newton inverse divides by \(k!\). It therefore cannot be transplanted unchanged to an arbitrary ring in which factorials fail to be units. In characteristic \(p\), the unrestricted polynomial isomorphism and ordinary Newton coefficient division require particular care.
+- The Newton difference-quotient formula divides by \(k!\). It does not transfer unchanged when that factorial is not invertible. The **integral, unitriangular Stirling basis isomorphism remains valid** over arbitrary commutative rings; the characteristic-three counterexample explains why these facts must be distinguished.
 - For functions on the nonnegative integers, Newton's formula recovers each fixed value through a finite sum up to that index. The polynomial isomorphism statement does **not** imply arbitrary analytic, \(p\)-adic, or infinite-series convergence.
 - The forward difference is the transported derivative. Ordinary differentiation \(d/dx\) is a different operation. The *backward* difference, multiplied by \(x\), realizes the transported degree operator. Its finite Lagrange projector formula depends on the degree bound.
 - The transported product \(\star\) is not ordinary multiplication. Claims about multiplicative transport must name the product they use.
 
-The program tests the general finite identities, not merely the displayed numerical example. It checks independent Stirling/finite-difference coefficient routes, inverse triangular matrices, idempotence and orthogonality, exact cyclic traces for moduli two through six, operator conjugation in ordinary-power matrices, finite-difference transport, refinements, transported multiplication, the rational spectral formula, exhaustive function enumeration, filtered formal EGFs, and deliberately incorrect shortcuts.
+The program tests the general finite identities, not merely the displayed numerical example. It checks independent Stirling/finite-difference coefficient routes, inverse triangular matrices, idempotence and orthogonality, exact cyclic traces for moduli two through six, operator conjugation in ordinary-power matrices, finite-difference and general translation transfers, refinements, transported multiplication, the rational spectral formula, exhaustive function enumeration, filtered formal EGFs, characteristic-three coefficient obstructions, and deliberately incorrect shortcuts.
 
 No assertion about an unrelated arithmetic conjecture follows from these finite polynomial identities.
 
-## 10. Run, inspect, and reproduce
+## 11. Run, inspect, and reproduce
 
 The complete Python program needs only Python 3.10 or later and its standard library. No network, symbolic algebra dependency, complex floating arithmetic, or random inputs are required.
 
@@ -657,7 +849,7 @@ python -B examples/roots_unity_falling_factorial.py
 python -B examples/roots_unity_falling_factorial.py --output roots-results
 ```
 
-The first command performs the exact checks and prints the three-packet reconstruction. The second also writes eight exact CSV tables, two accessible Python-generated SVG diagrams, and a JSON summary. Existing output files are not overwritten. The publisher recreates the same files on the website and binds their hashes to the committed program and manuscript.
+The first command performs the exact checks and prints the three-packet reconstruction and shift-transfer comparison. The second also writes eleven exact CSV tables, three accessible Python-generated SVG diagrams, and a JSON summary. Existing output files are not overwritten. The publisher recreates the same files on the website and binds their hashes to the committed program and manuscript.
 
 [Source-and-results ZIP](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/roots-unity-falling-factorial/source-and-results.zip) · [Python source](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/roots-unity-falling-factorial/roots_unity_falling_factorial.py) · [Source identity record](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/roots-unity-falling-factorial/source-record.json) · [Exact results (JSON)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/roots-unity-falling-factorial/results.json)
 

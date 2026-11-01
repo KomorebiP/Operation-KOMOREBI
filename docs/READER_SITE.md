@@ -82,9 +82,12 @@ The [standalone exact checker](../examples/roots_unity_falling_factorial.py)
 uses standard-library rational arithmetic, an exact cyclic permutation trace
 for root-of-unity orthogonality, direct enumeration of function images,
 rational spectral polynomials in the backward-difference number operator,
-filtered formal generating functions, and independent matrix coefficients.
-The [publication bridge](../tools/roots_newton_case.py) regenerates eight
-CSV tables, two accessible Python SVGs, JSON checks, and a deterministic
+filtered formal generating functions, general cross-packet translation
+blocks, and independent matrix coefficients. The degree-operator spectral
+formula's characteristic-three failure is an explicit control rather than
+a theorem inferred beyond its rational coefficient scope.
+The [publication bridge](../tools/roots_newton_case.py) regenerates eleven
+CSV tables, three accessible Python SVGs, JSON checks, and a deterministic
 source-and-results archive. Tests include reproducible bytes and
 deliberately corrupted downloads.
 

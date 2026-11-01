@@ -74,10 +74,12 @@ monomial degrees is the wrong operation after a coordinate change.
 The independently enumerated functions from five inputs to four labels
 explain exactly what those residue packets count. A rational spectral formula
 for the projectors and an all-degree generating-function bridge add two
-more exact routes to the same identities. The standalone checker and
-source-bound CSV/SVG records support the hand derivation. These are
-classical identities presented as one continuous realization argument,
-not a new theorem claim.
+more exact routes to the same identities. Translation by one is then carried
+through a complete cyclic transfer matrix, with a concrete noncommutation
+witness and an integral characteristic-three spectral obstruction. The
+standalone checker and source-bound CSV/SVG records support the hand
+derivation. These are classical identities presented as one continuous
+realization argument, not a new theorem claim.
 
 ## Run in your browser
 

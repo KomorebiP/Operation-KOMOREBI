@@ -23,12 +23,16 @@ FILES = (
     "image-histograms.csv",
     "packet-egfs.csv",
     "spectral-projectors.csv",
+    "translation-blocks.csv",
+    "shifted-packet-ledger.csv",
+    "finite-characteristic-obstruction.csv",
     "packet-contributions.csv",
     "difference-transfer.csv",
     "refinement.csv",
     "projector-matrix.csv",
     "projection-diagram.svg",
     "function-image-histogram.svg",
+    "translation-carry.svg",
     "results.json",
 )
 
@@ -198,6 +202,63 @@ def translate(a, offset):
         for j in range(k + 1):
             out[j] += Q(coefficient) * comb(k, j) * Q(offset)**(k-j)
     return trim(out)
+
+
+
+def translate_via_newton(poly, offset):
+    """Independent translation from the falling-factorial binomial identity.
+
+    (x+h)_(k) = sum_{j<=k} choose(k,j)*(h)_(k-j)*(x)_(j).
+    Valid for any rational shift h; not based on power-basis substitution.
+    """
+    h = Q(offset)
+    coefficients = to_newton(poly)
+    out = [Q(0)] * len(coefficients)
+    for k, value in enumerate(coefficients):
+        for j in range(k+1):
+            out[j] += value * comb(k,j) * evaluate(falling(k-j),h)
+    return from_newton(out)
+
+
+def translate_packet_block(poly, modulus, source, target, offset):
+    """Q_target T_h Q_source in falling-factorial coordinates.
+
+    Constructed from the explicit binomial-type connection coefficients,
+    independently of translate() and project_newton().
+    """
+    if type(modulus) is not int or modulus < 2:
+        raise ValueError("Require integer modulus >= 2")
+    if type(source) is not int or not 0 <= source < modulus:
+        raise ValueError("Invalid source residue")
+    if type(target) is not int or not 0 <= target < modulus:
+        raise ValueError("Invalid target residue")
+    h = Q(offset)
+    coefficients = to_newton(poly)
+    out = [Q(0)] * len(coefficients)
+    for k,value in enumerate(coefficients):
+        if k % modulus != source:
+            continue
+        for j in range(k+1):
+            if j % modulus == target:
+                out[j] += value * comb(k,j) * evaluate(falling(k-j),h)
+    return from_newton(out)
+
+
+def mod_polynomial(poly, modulus):
+    """Integer-coefficient polynomial reduced modulo an integer >= 2.
+
+    This is deliberately a bounded exact finite-characteristic witness, not
+    an implementation of general division or spectral functional calculus.
+    """
+    if type(modulus) is not int or modulus < 2:
+        raise ValueError("Require integer modulus >= 2")
+    entries = tuple(Q(v) for v in poly)
+    if any(v.denominator != 1 for v in entries):
+        raise ValueError("Require integral polynomial coefficients")
+    values = [v.numerator % modulus for v in entries]
+    while len(values)>1 and values[-1]==0:
+        values.pop()
+    return tuple(values) if values else (0,)
 
 
 def backward_difference(a):
@@ -429,6 +490,110 @@ def check():
                  for r in range(3))==(600,244,180),
            "packet_egf","fifth EGF coefficient matches image partition")
 
+    # Translation, filtered packets and all cross-channel carry blocks.
+    source_packets=tuple(project_newton(p,3,r) for r in range(3))
+    shifted_target=tuple(project_newton(translate(p,1),3,r) for r in range(3))
+    verify(tuple(evaluate(q,4) for q in shifted_target)==(1561,484,1080),
+           "translation_anchor","shifted output packet values")
+    verify(tuple(evaluate(translate(q,1),4) for q in source_packets)
+           ==(1500,1205,420),"translation_anchor",
+           "individually shifted source packets")
+    verify(tuple(evaluate(delta(q),4) for q in source_packets)==(900,961,240),
+           "translation_anchor","individual carry terms")
+    for r in range(3):
+        verify(shifted_target[r] ==
+               add(source_packets[r],delta(source_packets[(r+1)%3])),
+               "translation_anchor","Q_r T_1 = Q_r + Delta Q_(r+1)")
+    verify(sum(evaluate(q,4) for q in shifted_target)==3125,
+           "translation_anchor","shifted packets recover fifth power")
+    verify(shifted_target!=tuple(translate(q,1) for q in source_packets),
+           "translation_anchor","translation does not preserve original packet labels")
+
+    for poly in sample_polys:
+        for h in (Q(-1),Q(0),Q(1),Q(2),Q(3),Q(1,2)):
+            shifted=translate(poly,h)
+            verify(shifted==translate_via_newton(poly,h),"translation",
+                   "Newton binomial translation equals independent power translation")
+            for modulus in range(2,7):
+                source_parts=[project_newton(poly,modulus,r)
+                              for r in range(modulus)]
+                target_parts=[project_newton(shifted,modulus,r)
+                              for r in range(modulus)]
+                for r in range(modulus):
+                    aggregate=(Q(0),)
+                    for source in range(modulus):
+                        block=translate_packet_block(poly,modulus,source,r,h)
+                        verify(block == project_newton(
+                            translate(source_parts[source],h),modulus,r),
+                            "translation_blocks","independent cross-packet transfer")
+                        aggregate=add(aggregate,block)
+                        if h.denominator == 1 and h.numerator>=0:
+                            lag=(source-r)%modulus
+                            # For nonnegative integer shift h, the falling
+                            # binomial identity has no terms of lag > h.
+                            if all((k-j)>h for k in range(len(poly))
+                                   for j in range(k+1)
+                                   if k%modulus==source and j%modulus==r):
+                                verify(block==(Q(0),),"translation_blocks",
+                                       "zero outside integer-shift bandwidth")
+                    verify(target_parts[r]==aggregate,"translation",
+                           "all packet blocks reconstruct target packet")
+                if h==1:
+                    for source in range(modulus):
+                        for r in range(modulus):
+                            block=translate_packet_block(poly,modulus,source,r,h)
+                            rhs=(Q(0),)
+                            if r==source:
+                                rhs=add(rhs,source_parts[source])
+                            if r==(source-1)%modulus:
+                                rhs=add(rhs,delta(source_parts[source]))
+                            verify(block==rhs,"translation_blocks",
+                                   "one-step transfer is cyclic two-tap")
+                if h==0:
+                    for source in range(modulus):
+                        for r in range(modulus):
+                            verify(translate_packet_block(
+                                poly,modulus,source,r,h)==
+                                (source_parts[source] if r==source else (Q(0),)),
+                                "translation_blocks","zero shift gives diagonal transfer")
+
+    # The same carry in the function-image generating functions.  This checks
+    # the binomial coefficient identity in an independent formal-series route.
+    u=(Q(0),)+tuple(Q(1,factorial(j)) for j in range(1,MAX_DEGREE+1))
+    for x in (Q(0),Q(1),Q(4),Q(1,2),Q(-3,2)):
+        for modulus in (2,3,4):
+            for residue in range(modulus):
+                before=packet_egf_coefficients(x,modulus,residue,MAX_DEGREE)
+                after=packet_egf_coefficients(x+1,modulus,residue,MAX_DEGREE)
+                prior=packet_egf_coefficients(x,modulus,(residue-1)%modulus,
+                                             MAX_DEGREE)
+                carry=series_product_truncated(u,prior,MAX_DEGREE)
+                for n in range(MAX_DEGREE+1):
+                    verify(after[n]==before[n]+carry[n],"egf_carry",
+                           "G_r(t,x+1)=G_r(t,x)+(exp(t)-1)G_(r-1)(t,x)")
+
+    # Characteristic-three obstruction to an unjustified spectral lift:
+    # falling factorials remain an integral unitriangular basis; however
+    # number-operator eigenvalues 0 and 3 collide mod 3.
+    one=falling(0)
+    triple=falling(3)
+    verify(mod_polynomial(triple,3)==(0,2,0,1),"characteristic",
+           "falling degree three is a nonzero polynomial in F3[x]")
+    verify(mod_polynomial(newton_degree_operator(one),3)==(0,),
+           "characteristic","eigenvalue zero on the constant polynomial")
+    verify(mod_polynomial(newton_degree_operator(triple),3)==(0,),
+           "characteristic","eigenvalue three collapses to zero in F3")
+    verify(mod_polynomial(project_newton(one,2,0),3)==(1,),
+           "characteristic","even character projector keeps degree zero")
+    verify(mod_polynomial(project_newton(triple,2,0),3)==(0,),
+           "characteristic","even character projector removes degree three")
+    verify(mod_polynomial(project_newton(triple,2,1),3)==(0,2,0,1),
+           "characteristic","odd character projector keeps degree three")
+    verify(mod_polynomial(falling(3),3)!=mod_polynomial(falling(0),3),
+           "characteristic","eigenvectors remain distinct")
+    verify(mod_polynomial(translate(triple,3),3)==mod_polynomial(triple,3),
+           "characteristic","shift by characteristic is identity on F3[x]")
+
     # All entries of Q in the ordinary-power basis, computed independently
     # from signed Stirling and the second-kind triangle.
     for degree in range(0,7):
@@ -560,6 +725,48 @@ def svg_image_histogram():
     return "\n".join(result)+"\n"
 
 
+
+def svg_translation_carry():
+    """Vector diagram of the cyclic two-tap transfer; values are recomputed."""
+    _, poly, source = example_row()
+    originals=[int(evaluate(q,4)) for q in source]
+    carries=[int(evaluate(delta(source[(r+1)%3]),4)) for r in range(3)]
+    targets=[int(evaluate(project_newton(translate(poly,1),3,r),4))
+             for r in range(3)]
+    naive=[int(evaluate(translate(q,1),4)) for q in source]
+    assert originals==[600,244,180] and carries==[961,240,900]
+    assert targets==[1561,484,1080] and naive==[1500,1205,420]
+    palette=("#16775f","#3c659d","#aa7021")
+    out=[
+        '<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="600" viewBox="0 0 1080 600" role="img" aria-labelledby="title desc">',
+        '<title id="title">Cross-packet carry when translating the fifth power</title>',
+        '<desc id="desc">For three falling-factorial residue packets at x equals four, old values 600,244,180 carry forward difference contributions 961,240,900 from the next residue. The projected shifted polynomial has packet values 1561,484,1080; direct shifts of the old packets instead give 1500,1205,420. Both totals are 3125, but their packet assignments are different.</desc>',
+        '<rect width="1080" height="600" fill="#fff"/>',
+        '<text x="42" y="51" font-family="sans-serif" font-size="27" font-weight="700" fill="#153e33">Translating a polynomial moves information between packets</text>',
+        '<text x="42" y="82" font-family="sans-serif" font-size="17" fill="#4c665c">Q_r T_1 f = Q_r f + Delta Q_(r+1) f   (residues mod 3)</text>',
+        '<rect x="40" y="107" width="1000" height="66" rx="10" fill="#edf5f2"/>',
+        '<text x="59" y="136" font-family="sans-serif" font-size="17" fill="#244d3e">Input: f(x) = x^5, evaluated at x = 4. Output: Q_r(f(x+1)) at x = 4.</text>',
+        '<text x="59" y="159" font-family="sans-serif" font-size="16" fill="#44665b">Only the next input residue contributes to each output carry.</text>',
+    ]
+    for r in range(3):
+        xx=40+340*r
+        out.extend([
+            f'<rect x="{xx}" y="197" width="320" height="253" rx="14" fill="#fafcfc" stroke="{palette[r]}" stroke-width="1.5"/>',
+            f'<text x="{xx+17}" y="234" font-family="sans-serif" font-size="19" font-weight="700" fill="{palette[r]}">Target residue {r}</text>',
+            f'<text x="{xx+17}" y="273" font-family="sans-serif" font-size="17" fill="#344e45">Original packet: {originals[r]}</text>',
+            f'<text x="{xx+17}" y="308" font-family="sans-serif" font-size="17" fill="#344e45">Carry from {(r+1)%3}: +{carries[r]}</text>',
+            f'<text x="{xx+17}" y="374" font-family="sans-serif" font-size="44" font-weight="700" fill="{palette[r]}">{targets[r]}</text>',
+            f'<text x="{xx+17}" y="412" font-family="sans-serif" font-size="15" fill="#52685e">Shift old packet: {naive[r]}</text>'
+        ])
+    out.extend([
+        '<rect x="40" y="473" width="1000" height="88" rx="12" fill="#143d32"/>',
+        '<text x="62" y="506" font-family="sans-serif" font-size="18" fill="#e6f5ee">Transferred destination packets</text>',
+        '<text x="62" y="544" font-family="sans-serif" font-size="30" font-weight="700" fill="#fff">1561 + 484 + 1080 = 3125 = 5^5</text>',
+        '</svg>'
+    ])
+    return "\n".join(out)+"\n"
+
+
 def save(directory: Path, counts):
     directory.mkdir(parents=True,exist_ok=True)
     for name in FILES:
@@ -603,6 +810,40 @@ def save(directory: Path, counts):
                 w.writerow((n,3,r,";".join(map(str,spectral)),
                             ";".join(map(str,conjugated))))
     row,p,packets=example_row()
+    with (directory/"translation-blocks.csv").open("w",newline="",encoding="utf-8") as f:
+        w=csv.writer(f,lineterminator="\n")
+        w.writerow(("shift","source_residue","target_residue",
+                    "block_polynomial_power_coefficients","block_value_at_4"))
+        for h in (Q(0),Q(1),Q(2)):
+            for source in range(3):
+                for target in range(3):
+                    block=translate_packet_block(p,3,source,target,h)
+                    w.writerow((str(h),source,target,
+                                ";".join(map(str,block)),
+                                str(evaluate(block,4))))
+    with (directory/"shifted-packet-ledger.csv").open("w",newline="",encoding="utf-8") as f:
+        w=csv.writer(f,lineterminator="\n")
+        w.writerow(("residue","Qr_f_at_4","T1_Qr_f_at_4",
+                    "Delta_Qr_f_at_4","Delta_Q_next_f_at_4",
+                    "Qr_T1_f_at_4"))
+        for r in range(3):
+            original=evaluate(packets[r],4)
+            individual=evaluate(translate(packets[r],1),4)
+            carry=evaluate(delta(packets[(r+1)%3]),4)
+            projected=evaluate(project_newton(translate(p,1),3,r),4)
+            self_difference=evaluate(delta(packets[r]),4)
+            w.writerow((r,str(original),str(individual),str(self_difference),
+                        str(carry),str(projected)))
+    with (directory/"finite-characteristic-obstruction.csv").open("w",newline="",encoding="utf-8") as f:
+        w=csv.writer(f,lineterminator="\n")
+        w.writerow(("base_field","falling_degree","N_eigenvalue_mod_3",
+                    "polynomial_mod_3","even_projector_mod_3",
+                    "odd_projector_mod_3"))
+        for k in (0,3):
+            fpoly=falling(k)
+            w.writerow(("F3",k,k%3,";".join(map(str,mod_polynomial(fpoly,3))),
+                        ";".join(map(str,mod_polynomial(project_newton(fpoly,2,0),3))),
+                        ";".join(map(str,mod_polynomial(project_newton(fpoly,2,1),3)))))
     with (directory/"packet-contributions.csv").open("w",newline="",encoding="utf-8") as f:
         w=csv.writer(f,lineterminator="\n")
         w.writerow(("residue","k","stirling_count","falling_4_k","contribution","character_trace"))
@@ -641,6 +882,7 @@ def save(directory: Path, counts):
                         proj[row_number] if row_number<len(proj) else Q(0))))
     (directory/"projection-diagram.svg").write_text(svg_diagram(),encoding="utf-8")
     (directory/"function-image-histogram.svg").write_text(svg_image_histogram(),encoding="utf-8")
+    (directory/"translation-carry.svg").write_text(svg_translation_carry(),encoding="utf-8")
     summary={
         "arithmetic":"exact integer and Fraction",
         "scope":"Polynomials over Q; finite degree and m>=2; no analytic or p-adic convergence",
@@ -650,6 +892,19 @@ def save(directory: Path, counts):
         "packet_values_at_x4":[str(evaluate(v,4)) for v in packets],
         "image_count_histogram_n5_x4":list(image_count_histogram(5,4)),
         "number_operator_on_x_squared":list(map(str,newton_degree_operator(power(2)))),
+        "shift_one_project_after_translate_at_4":[str(evaluate(
+            project_newton(translate(p,1),3,r),4)) for r in range(3)],
+        "shift_one_translate_existing_packet_at_4":[str(evaluate(
+            translate(packets[r],1),4)) for r in range(3)],
+        "shift_one_cross_packet_carries_at_4":[str(evaluate(
+            delta(packets[(r+1)%3]),4)) for r in range(3)],
+        "finite_characteristic_obstruction":{
+            "field":"F3","character_modulus":2,
+            "colliding_degree_eigenvalues_mod_3":[0,0],
+            "falling_degree_3_mod_3":list(mod_polynomial(falling(3),3)),
+            "even_projector_on_falling_0_mod_3":[1],
+            "even_projector_on_falling_3_mod_3":[0],
+        },
         "packet_egf_n5_x4":[str(packet_egf_coefficients(4,3,r,5)[5]*120)
                             for r in range(3)],
         "difference_values_at_x4":[str(evaluate(delta(v),4)) for v in packets],
@@ -672,6 +927,9 @@ def main():
     print("Root-of-unity packets at x=4: 600 + 244 + 180 = 1024")
     print("Finite-difference packets at x=4: 900 + 961 + 240 = 2101")
     print("Independent function-image counts: 0, 4, 180, 600, 240, 0")
+    print("After shift, projected packets at x=4: 1561 + 484 + 1080 = 3125")
+    print("Shifted old packets at x=4: 1500 + 1205 + 420 = 3125")
+    print("F3 obstruction: N has a shared eigenvalue on degrees 0 and 3, but Q0 mod 2 separates them")
     print("Spectral number operator: N=x*(I-backshift), N(x^2)=2x^2-x")
     print("Transferred projector != raw power-degree filter (180 != 1024)")
     print("PASS:",sum(counts.values()),"exact assertions")
