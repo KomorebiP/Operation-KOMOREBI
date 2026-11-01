@@ -600,5 +600,6 @@ group the reading sequence by its four parts and references. The current part
 opens in the chapter menu. Contents groups, plate pickers and resource menus use
 native disclosures, so they remain usable without JavaScript. Both complete
 visual atlases use the chapter sidebar for their on-page contents and keep PDF
-and source options in a separate disclosure.
+and source options in a separate disclosure. Paper IV's visual atlas uses the
+same controls and sidebar.
 
