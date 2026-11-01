@@ -24,6 +24,14 @@ Reading routes, glossary, download guides and work introductions are generated
 with the collection's normal status command. Edit their source records or
 templates. Keep each claim's exact recorded scope when changing navigation.
 
+The homepage keeps its five research previews in one manually selected panel,
+with named topic tabs, previous/next buttons, touch swipes, and standard tab-list
+keyboard controls (Left/Right, Home/End). It never advances automatically. All
+five sections and their reading links remain visible without JavaScript. The
+four reading routes and a short tools row stay outside the slides. Homepage
+content lives in `tools/home_page.py`; its styles and behavior load only on the
+homepage from `website/assets/home.css` and `home-slides.js`.
+
 The collection keeps title search and discipline selection visible. Completion,
 Lean coverage, evidence, publication type and page size live under **Advanced
 filters**. Shared filter URLs reopen that panel when an advanced selection is
