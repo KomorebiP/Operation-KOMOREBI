@@ -55,6 +55,18 @@ class ReaderGuidanceTests(unittest.TestCase):
         next(r for r in reader.site.claims['records'] if r['id']=='PSC-I-T-SINGLE-OPERATOR')['work_id']='paper-ii'
         with self.assertRaisesRegex(ValueError,'statement and proof'):load_introductions(reader)
 
+    def test_partial_book_build_only_loads_selected_paper_introductions(self):
+        reader=self.reader()
+        reader.site.registry={'components':[{'id':'proof-path-theory'}]}
+        reader.site.claims={'records':[]}
+        self.assertEqual(load_introductions(reader),{})
+        self.assertEqual(reader.records,{})
+        reader=self.reader()
+        reader.site.registry={'components':[{'id':'paper-i'}]}
+        reader.site.claims['records']=[row for row in reader.site.claims['records'] if row['work_id']=='paper-i']
+        self.assertEqual(set(load_introductions(reader)),{'paper-i'})
+        self.assertEqual(len(reader.records),1)
+
     def test_moved_setup_requires_review_and_introduction_text_is_inert(self):
         reader=self.reader();reader.paper_introductions=load_introductions(reader)
         reader.paper_introductions['paper-i']['setup']['expected']='A changed definition'

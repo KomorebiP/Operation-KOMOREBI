@@ -10,9 +10,12 @@ def load_introductions(reader):
     data=json.loads((reader.site.root/INTRODUCTIONS).read_bytes())
     if data.get('schema')!=1 or set(data.get('papers',{}))!=set(PAPERS):
         raise ValueError('Paper introductions must cover the twelve core papers exactly')
+    registry=getattr(reader.site,'registry',None)
+    selected={row['id'] for row in registry['components']} if registry is not None else set(PAPERS)
+    guides={work:guide for work,guide in data['papers'].items() if work in selected}
     claims={row['id']:row for row in reader.site.claims['records']}
     topics={row['id']:row for row in reader.learning['learning_topics']}
-    for work,guide in data['papers'].items():
+    for work,guide in guides.items():
         for field in ('question','contribution','limits'):
             if not isinstance(guide.get(field),str) or not guide[field].strip():
                 raise ValueError('Missing paper introduction '+field+': '+work)
@@ -26,7 +29,7 @@ def load_introductions(reader):
             raise ValueError('Invalid setup source for '+work)
         if setup.get('kind') not in {'setup','definition'}:raise ValueError('Unknown setup kind for '+work)
         reader.add(setup['path'])
-    return data['papers']
+    return guides
 
 
 def prepare_introductions(reader):
