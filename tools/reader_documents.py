@@ -151,6 +151,8 @@ class ReadingDocuments:
         prepare_atlas(self)
         from paper_vi_atlas import prepare as prepare_paper_vi_atlas
         prepare_paper_vi_atlas(self)
+        from paper_vii_atlas import prepare as prepare_paper_vii_atlas
+        prepare_paper_vii_atlas(self)
 
     def primary_pdf(self, work):
         candidates = [r for r in self.records.values() if r['work'] == work and r['format'] == 'pdf']
@@ -398,6 +400,8 @@ class ReadingDocuments:
         render_atlas(self)
         from paper_vi_atlas import render as render_paper_vi_atlas
         render_paper_vi_atlas(self)
+        from paper_vii_atlas import render as render_paper_vii_atlas
+        render_paper_vii_atlas(self)
         records = sorted(self.records.values(), key=lambda r: (r['work'], r['url']))
         self.site.write('documents/index.json', json.dumps(dict(source_revision=self.site.revision, files=records, images=list(self.images.values())), ensure_ascii=False, indent=2)+'\n')
 

@@ -58,9 +58,10 @@ BOOK = dict(work='paper-vii', label='Paper VII', base=BASE, main=MAIN, bib=BASE+
             part_numbering=True, figure_pdfs=True,
             collected_parts=[dict(url=FULL_CORE,title='Read all of Part I on one page')],
             reading_introduction='Read Part I in short topic chapters, then continue through effective dynamics and the supplementary developments.',
-            reading_note='All 38 manuscript figures appear inline with text descriptions and links to the original PDFs. The worked visual atlas remains in the PDF and visual guide. The HTML preserves the source wording, mathematics, and recorded limits; it adds no proof assessment.',
+            atlas_index='read/paper-vii/atlas/index.html',atlas_link_text='Explore all 40 worked atlas plates in HTML',
+            reading_note='All 38 manuscript figures appear inline. The 40 worked atlas plates also have HTML pages with original drawings, selectable labels, and manuscript links. The HTML preserves the source wording, mathematics, and recorded limits; it adds no proof assessment.',
             main_inputs=['monograph_examples.tex']+['parts/'+p[0] for p in PARTS]+['monograph_atlas.tex'],
-            pdf_inputs={'monograph_atlas.tex':'Read the worked visual atlas in the original PDF'})
+            html_inputs={'monograph_atlas.tex':dict(url='read/paper-vii/atlas/index.html',title='Read the 40 worked atlas plates in HTML',note='')})
 
 
 def figure_items(body):

@@ -224,8 +224,18 @@ The complete Part I page retains its earlier URL and passage anchors.
 All 38 original manuscript figures appear as inline PNGs with source captions,
 reviewed text descriptions, full-size links and the original PDFs. The asset
 record binds every PNG to its retained PDF with SHA-256 hashes and intrinsic
-dimensions. The worked visual atlas remains in the original monograph and
-visual guide. This presentation adds no proof assessment or Lean execution.
+dimensions. All 40 worked visual-atlas plates also have HTML pages, with 38
+original drawings, 547 selectable drawing labels, and 945 source expressions.
+Each plate links to the manuscript passages it illustrates; those passages
+link back to the plates. The atlas retains its wording and evidence limits.
+This presentation adds no proof assessment or Lean execution.
+
+The [atlas renderer](../tools/paper_vii_atlas.py) checks the prose and drawing
+math sequences, finite label loops, source hashes, image sizes, and both
+directions of the manuscript links. `documents/paper-vii-atlas.json` records
+the conversion. Drawings are reviewed crops of the frozen monograph PDF;
+rebuild them with `python tools/render_paper_vii_atlas.py --pdftoppm PATH`.
+The web build verifies the checked-in assets and requires no TeX compiler.
 
 [The chapter renderer](../tools/readable_chapters.py) publishes the main chapters
 of Papers I, II, III, IV and VII as readable HTML alongside their original source pages.

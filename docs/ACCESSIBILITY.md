@@ -412,7 +412,15 @@ alternative text and an expandable **Text description**. Open the image for
 its full size, or use **Open original figure (PDF)** for the retained vector
 figure. The images include intrinsic dimensions and adapt to the reading
 column. Text descriptions retain the distinction between finite models and
-open physical targets. The worked visual atlas remains available in the PDF.
+open physical targets.
+
+[The 40 worked atlas plates](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vii/atlas/index.html)
+also have HTML pages, with their original prose and 38 drawings. All 547
+drawing labels are selectable. Matrix entries have row and column headers,
+and the 945 expressions use the shared math reader. Each plate links to its
+manuscript passages and original monograph PDF page. Manuscript passages
+link back to the plates. Original evidence notes and stated limits remain
+alongside the examples.
 
 ## Paper VIII: manuscript and appendices
 

@@ -582,6 +582,13 @@ the collection's Lean evidence.
 [Bell-state circuit and packet paths](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vii/circuits-and-bell-states.html#L329) ·
 [All Paper VII chapters](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vii/index.html)
 
+For the retained worked drawings, continue with
+[measurement and coherence, V16](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vii/atlas/v16.html),
+[amplitude damping, V17](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vii/atlas/v17.html),
+or [syndrome recovery, V19](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vii/atlas/v19.html).
+The [complete 40-plate atlas](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vii/atlas/index.html)
+includes source equations, drawing-label transcripts, and manuscript links.
+
 The starting state is the one in [hand-worked example 17](../examples/17_QUANTUM_MEASUREMENT.md).
 [Paper VII's measurement and channel section](../../papers/paper-vii/current/editable/traditional/parts/01_finite_core.tex#L670)
 states the block-diagonal measurement-invariance result and defines Kraus
