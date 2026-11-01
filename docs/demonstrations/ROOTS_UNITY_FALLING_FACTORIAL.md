@@ -118,7 +118,7 @@ z^k,&k\equiv r\pmod m,\\
 \end{cases}
 \]
 
-The inner sum is either \(m\), or the geometric series with nonunit ratio and total zero. Consequently, on rational polynomials the result has rational coefficients, despite the cyclotomic expression:
+The inner sum is either \(m\), or a geometric series whose ratio differs from one and whose sum is zero. Consequently, on rational polynomials the result has rational coefficients, despite the cyclotomic expression:
 
 \[
 P_r^{(m)}g(z)=
@@ -329,14 +329,14 @@ Write the forward difference as
 (\Delta f)(x)=f(x+1)-f(x).
 \]
 
-The falling-factorial basis satisfies
+For \(k\ge1\), the falling-factorial basis satisfies
 
 \[
 \boxed{\Delta x^{\underline{k}}
 =kx^{\underline{k-1}}.}
 \]
 
-Iterating, evaluating at zero, and using \(0^{\underline{k}}=0\) for \(k>0\) gives the exact Newton coefficient formula:
+For \(k=0\), \(\Delta1=0\). Iterating, evaluating at zero, and using \(0^{\underline{k}}=0\) for \(k>0\) gives the exact Newton coefficient formula:
 
 \[
 \boxed{
@@ -444,7 +444,7 @@ The exact program checks this formal-series identity coefficientwise through deg
 
 ## 6. Transport differentiation: a cyclic finite-difference law
 
-Let \(D_z=d/dz\). Since both operators lower their respective basis degrees in the same way,
+Let \(D_z=d/dz\). For \(k\ge1\), both operators lower their respective basis degrees in the same way:
 
 \[
 \Delta\Phi(z^k)
@@ -452,7 +452,7 @@ Let \(D_z=d/dz\). Since both operators lower their respective basis degrees in t
 =\Phi D_z(z^k).
 \]
 
-By linearity,
+Both sides also vanish on the constant basis vector, since \(\Delta1=D_z1=0\). By linearity,
 
 \[
 \boxed{\Delta=\Phi D_z\Phi^{-1}.}
@@ -810,7 +810,7 @@ v_3&=x^{\underline3}=x^3-x\ne0,&\quad\mathcal Nv_3&=3v_3=0
 \end{aligned}
 \]
 
-The polynomial \(x^3-x\) is nonzero in \(\mathbb F_3[x]\), even though it evaluates to zero at every point of \(\mathbb F_3\). This is an argument in the **polynomial ring**, not in the three-element space of polynomial functions.
+The polynomial \(x^3-x\) is nonzero in \(\mathbb F_3[x]\), even though it evaluates to zero at every point of \(\mathbb F_3\). This is an argument in the **polynomial ring**, not in the space of polynomial functions on \(\mathbb F_3\).
 
 The *coefficient projector* by parity is still perfectly well defined: the order \(m=2\) is invertible modulo three and the root \(-1\) exists in \(\mathbb F_3\). This does not assert that the cyclotomic averaging formula works when the projector modulus is divisible by the characteristic. The parity projector acts as follows:
 

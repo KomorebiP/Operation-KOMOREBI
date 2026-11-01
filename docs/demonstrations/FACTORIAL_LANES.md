@@ -200,9 +200,9 @@ The nine parameters supply nine of the factors. $10(n+1)=10n+10$ supplies the om
 
 **Cancellation checkpoint:** the rational parameters introduce no arithmetic loss. The common power $10^{10n}$ restores the original ten integer progressions.
 
-## 4. Remove the forced first packet
+## 4. Factor out the leading monomial
 
-The leading term of $S_{10,4}$ is $t^4/4!$. Remove it and define
+The leading term of $S_{10,4}$ is $t^4/4!$. Factor out this monomial and its coefficient to obtain a series with constant term one:
 
 \[
 G(t)=\frac{4!}{t^4}S_{10,4}(t)
@@ -506,7 +506,7 @@ This derivative transfer acts on additive series packets. It must not be confuse
 (10)_{3;10}=10\cdot20\cdot30=6000.
 \]
 
-The reconstructed value is $34!/6000$, not $34!$. In hypergeometric coordinates this is exactly the omitted $(1)_n=n!$ factor. Omitting it without retaining the definition's $n!$ changes the series.
+The reconstructed value is $34!/6000$, not $34!$. In hypergeometric coordinates, the omitted lane is $(10)_{n;10}=10^n(1)_n=10^n n!$. Its Pochhammer factor $(1)_n=n!$ is supplied by the $n!$ in the definition of the hypergeometric series.
 
 **Move the residue across the prime boundary.** The uniform $5$-adic-unit argument above assumed $0\leq j<5$. Take $N=10$ and $j=5$ instead. The analogous normalized coefficient at $n=2$ is
 
