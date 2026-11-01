@@ -103,6 +103,12 @@ signal, and move inputs along a shared-summary line. The controls update the
 diagrams and exact whole-number results immediately, without writing code.
 Each experiment links back to its hand calculation and sources.
 
+Use **Copy experiment link** to save or share the selected experiment's exact
+inputs and packet or coefficient choices. A Haar link also restores the
+coefficient and sample address being inspected. Open the link to return to
+those settings. If clipboard access is unavailable, select and copy the link
+shown below the button.
+
 For a deeper experiment, open the
 [16-sample Haar lab](https://KomorebiP.github.io/Operation-KOMOREBI/interactive.html#haar).
 Decompose a signal through four levels, choose individual coefficients or a

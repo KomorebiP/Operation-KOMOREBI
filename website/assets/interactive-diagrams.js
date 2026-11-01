@@ -1,4 +1,5 @@
 import {reconstruct, refine, recover, haarAnalyze, haar} from './interactive-diagrams-core.mjs';
+import {encodeExperiment, decodeExperiment} from './interactive-diagrams-state.mjs';
 
 const byId = id => document.getElementById(id);
 const text = (id, value) => { byId(id).textContent = value; };
@@ -255,6 +256,8 @@ const haarShapes = {
   pulse: Array.from({length:16}, (_, i) => i === 10 ? 16 : 0),
   triangle: [-8,-6,-4,-2,0,2,4,6,8,6,4,2,0,-2,-4,-6],
 };
+const signalShapes = {ramp:[1,2,3,4,5,6,7,8], alternating:[6,-6,6,-6,6,-6,6,-6], pulse:[0,0,0,8,0,0,0,0]};
+const recoveryChoices = {first:[1,0], sum:[2,2], difference:[1,-1]};
 const haarState = {keep: Array(16).fill(true), mode: 'all'};
 let haarView = null;
 function readHaarSignal() {
@@ -542,8 +545,7 @@ byId('signal-controls').addEventListener('input', event => {
   if (event.target.id.startsWith('sample-')) { byId('signal-preset').value = 'custom'; sliderValues(); updateSignal(); }
 });
 byId('signal-preset').addEventListener('change', () => {
-  const shapes = {ramp: [1,2,3,4,5,6,7,8], alternating: [6,-6,6,-6,6,-6,6,-6], pulse: [0,0,0,8,0,0,0,0]};
-  const shape = shapes[byId('signal-preset').value];
+  const shape = signalShapes[byId('signal-preset').value];
   if (!shape) return;
   shape.forEach((value, i) => { byId('sample-' + i).value = value; });
   sliderValues(); updateSignal();
@@ -554,8 +556,7 @@ byId('signal-drop').addEventListener('click', () => {
   byId('signal-keep-' + Math.min(2, number('signal-count')-1)).checked = false; updateSignal();
 });
 byId('recovery-question').addEventListener('change', () => {
-  const choices = {first: [1,0], sum: [2,2], difference: [1,-1]};
-  const choice = choices[byId('recovery-question').value];
+  const choice = recoveryChoices[byId('recovery-question').value];
   if (!choice) return;
   byId('coefficient-a').value = choice[0]; byId('coefficient-b').value = choice[1];
   sliderValues(); updateRecovery();
@@ -593,9 +594,94 @@ byId('haar-coefficients').addEventListener('change', event => {
 document.querySelectorAll('[data-reset]').forEach(button => {
   button.addEventListener('click', () => reset(button.dataset.reset));
 });
+function shareNumber(id) {
+  const input = byId(id);
+  if (input.value.trim() === '' || !input.checkValidity()) throw new RangeError('Invalid input');
+  return Number(input.value);
+}
+function captureExperiment(name) {
+  const state = {v:1,name};
+  const values = (prefix,count) => Array.from({length:count},(_,i) => shareNumber(prefix+i));
+  const keep = (prefix,count) => Array.from({length:count},(_,i) => byId(prefix+i).checked);
+  if (name === 'packets') return {...state,matrix:values('matrix-',4),vector:values('vector-',2),keep:keep('block-',4)};
+  if (name === 'refinement') {
+    const count = shareNumber('signal-count');
+    return {...state,signal:values('sample-',8),count,keep:keep('signal-keep-',count)};
+  }
+  if (name === 'recovery') return {...state,summary:shareNumber('summary'),position:shareNumber('position'),
+    coefficients:[shareNumber('coefficient-a'),shareNumber('coefficient-b')]};
+  const stateHaar = {...state,signal:values('haar-sample-',16),mode:haarState.mode,cutoff:shareNumber('haar-cutoff'),
+    coefficient:byId('haar-inspect').value === 'none' ? null : number('haar-inspect'),address:shareNumber('haar-address')};
+  if (haarState.mode === 'custom') stateHaar.keep = haarState.keep.slice();
+  return stateHaar;
+}
+function restoreExperiment(state) {
+  const values = (prefix,entries) => entries.forEach((value,i) => { byId(prefix+i).value = value; });
+  const flags = (prefix,entries) => entries.forEach((value,i) => { byId(prefix+i).checked = value; });
+  const preset = (shapes,entries) => Object.keys(shapes).find(key => shapes[key].every((value,i) => value === entries[i])) || 'custom';
+  if (state.name === 'packets') {
+    values('matrix-',state.matrix); values('vector-',state.vector); flags('block-',state.keep); updatePackets();
+  } else if (state.name === 'refinement') {
+    values('sample-',state.signal); byId('signal-count').value = state.count;
+    byId('signal-preset').value = preset(signalShapes,state.signal);
+    makePacketControls(state.count); flags('signal-keep-',state.keep); updateSignal();
+  } else if (state.name === 'recovery') {
+    byId('summary').value = state.summary; byId('position').value = state.position;
+    byId('coefficient-a').value = state.coefficients[0]; byId('coefficient-b').value = state.coefficients[1];
+    byId('recovery-question').value = preset(recoveryChoices,state.coefficients); updateRecovery();
+  } else {
+    values('haar-sample-',state.signal); byId('haar-preset').value = preset(haarShapes,state.signal);
+    haarState.mode = state.mode;
+    if (state.mode === 'custom') haarState.keep = state.keep.slice();
+    byId('haar-cutoff').value = state.cutoff; byId('haar-address').value = state.address;
+    byId('haar-inspect').value = state.coefficient === null ? 'none' : state.coefficient;
+    updateHaar();
+  }
+  sliderValues();
+}
+function shareStatus(message,error = false) {
+  text('lab-share-status',message); byId('lab-share-status').dataset.error = String(error);
+}
+byId('lab-share').addEventListener('click',async () => {
+  byId('lab-share-fallback').hidden = true;
+  let url;
+  try {
+    const name = names.find(name => !byId(name).hidden);
+    url = new URL(location.href);
+    url.searchParams.set('experiment',encodeExperiment(captureExperiment(name)));
+    url.hash = name;
+  } catch {
+    shareStatus('Fix the marked inputs before copying an experiment link.',true);
+    return;
+  }
+  byId('lab-share').disabled = true;
+  try {
+    await navigator.clipboard.writeText(url.href);
+    shareStatus('Experiment link copied. It restores these settings when opened.');
+  } catch {
+    byId('lab-share-link').value = url.href;
+    byId('lab-share-fallback').hidden = false;
+    byId('lab-share-link').focus(); byId('lab-share-link').select();
+    shareStatus('Select and copy the experiment link below.');
+  } finally {
+    byId('lab-share').disabled = false;
+  }
+});
 names.forEach(reset);
+let restoredName;
+const sharedExperiment = new URL(location.href).searchParams.get('experiment');
+if (sharedExperiment !== null) {
+  try {
+    const state = decodeExperiment(sharedExperiment);
+    restoreExperiment(state); restoredName = state.name;
+    shareStatus('Experiment settings restored from the link.');
+  } catch {
+    shareStatus('This experiment link could not be restored. Default settings are shown.',true);
+  }
+}
 document.querySelectorAll('.math-lab fieldset, .math-lab [data-reset]').forEach(node => { node.disabled = false; });
-selectTab(location.hash.slice(1));
+byId('lab-share').disabled = false;
+selectTab(names.includes(location.hash.slice(1)) ? location.hash.slice(1) : restoredName);
 let resizeFrame;
 const diagramWidths = new WeakMap();
 const diagramObserver = new ResizeObserver(entries => {
