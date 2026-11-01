@@ -100,10 +100,8 @@ def render_works_catalog(root, registry, components, assessments, status):
 
     out = [
         '<link rel="stylesheet" href="' + asset('discipline-catalog.css') + '">',
-        '<h1>Explore the research collection</h1>',
-        '<p><a href="search.html">Search documents, proof references, Lean and code</a> · '
-        '<a href="claims.html">Find individual statements by paper and type</a></p>',
-        '<p class="catalog-intro">Browse by subject, completion and proof evidence. Choose how many works to show per page.</p>',
+        '<header class="catalog-heading"><h1>Explore the research collection</h1>',
+        '<p class="catalog-intro">Find a work by title or subject, then follow its mathematics and evidence.</p></header>',
         '<nav class="discipline-overview" aria-label="Choose a discipline">',
     ]
     for key, subject in data['disciplines'].items():
@@ -117,13 +115,17 @@ def render_works_catalog(root, registry, components, assessments, status):
     out.append('</nav>')
     out += [
         '<form id="catalog-filters" class="catalog-filters" role="search">',
+        '<div class="catalog-primary">',
         '<div><label for="catalog-query">Search titles and subjects</label>'
         '<input type="search" id="catalog-query" name="q" autocomplete="off" '
-        'placeholder="e.g. Hilbert 12, SKAT, packet, quantum"></div>',
+        'placeholder="e.g. packets, quantum, Hilbert 12"></div>',
         '<div><label for="catalog-discipline">Discipline</label>'
         '<select id="catalog-discipline"><option value="">All disciplines</option>' +
         ''.join('<option value="' + e(key) + '">' + e(x['label']) + '</option>'
                 for key, x in data['disciplines'].items()) + '</select></div>',
+        '<div class="catalog-reset"><button type="reset">Clear filters</button></div></div>',
+        '<details id="catalog-advanced" class="catalog-advanced"><summary>Advanced filters'
+        '<span id="catalog-active-filters"></span></summary><div class="catalog-advanced-grid">',
         '<div><label for="catalog-stage">Completion stage</label><select id="catalog-stage">' +
         choices('stage', 'Any stage', stages) + '</select></div>',
         '<div><label for="catalog-lean">Lean coverage</label><select id="catalog-lean">' +
@@ -138,9 +140,8 @@ def render_works_catalog(root, registry, components, assessments, status):
         '<select id="catalog-size" name="per_page"><option value="8">8</option>'
         '<option value="12">12</option><option value="24">24</option>'
         '<option value="48">48</option></select></div>',
-        '<div class="catalog-reset"><button type="reset">Clear all filters</button></div>',
-        '</form>',
-        '<details class="catalog-notice"><summary>About completion and proof evidence</summary><p>'
+        '</div></details></form>',
+        '<div class="catalog-support"><details class="catalog-notice"><summary>About completion and proof evidence</summary><p>'
         'Completion and proof evidence are separate: a completed reading edition need not prove an open conjecture. '
         'Subject assignments are editorial finding aids, '
         'not evaluations. The completion and evidence labels reproduce the existing '
@@ -148,6 +149,8 @@ def render_works_catalog(root, registry, components, assessments, status):
         'Read the <a href="collection/COMPLETION_STATUS.html">status guide</a> before '
         'interpreting them. Cross-disciplinary subjects have one primary home and '
         'may list related fields.</p></details>',
+        '<p class="catalog-other-search"><a href="search.html">Search full text, Lean and code</a> · '
+        '<a href="claims.html">Find individual statements</a></p></div>',
         '<div id="catalog-results">',
         '<div class="catalog-results-toolbar">',
         '<p id="catalog-count" role="status" aria-live="polite">' +

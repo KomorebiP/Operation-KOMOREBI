@@ -23,6 +23,19 @@ Reading routes, glossary, download guides and work introductions are generated
 with the collection's normal status command. Edit their source records or
 templates. Keep each claim's exact recorded scope when changing navigation.
 
+The collection keeps title search and discipline selection visible. Completion,
+Lean coverage, evidence, publication type and page size live under **Advanced
+filters**. Shared filter URLs reopen that panel when an advanced selection is
+active. Work overviews use one reading toolbar, with specialist links under
+**More resources**; existing section and return anchors remain available.
+
+HTML chapters use compact previous/next controls and a section contents panel.
+On wide screens the panel stays beside the text and marks the current section.
+In narrow windows, including comparison panes, it becomes a sticky **Contents**
+disclosure that closes after a section is selected. Contents and resource links
+remain native disclosures without JavaScript. These controls rearrange the
+reading interface without changing the manuscript article or its passage IDs.
+
 The `learning_topics` records in the reader experience manifest generate the
 [topic map](LEARNING_MAP.md), the source routes at the end of each tutorial,
 and return links on the related work pages. Edit tutorial explanations above

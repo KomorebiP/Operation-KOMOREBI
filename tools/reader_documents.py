@@ -193,22 +193,40 @@ class ReadingDocuments:
                 '&v='+RUNTIME_ID+
                 ('#'+fragment if fragment else ''))
 
-    def work_intro(self, work, page):
-        edition = getattr(self.site,'assessments',{}).get(work,{}).get('editorial_edition')
-        if edition:
-            manuscript = 'collection/'+edition['manuscript'].removeprefix('docs/').removesuffix('.md')+'.html'
-            shortcut = ('<aside class="document-shortcut"><a class="button" href="'+self.site.rel(manuscript,page)+'">Read the revised edition</a> '
-                        '<a href="'+self.site.rel('read/'+work+'/revised-reading-edition.html',page)+'">Open monograph PDF</a></aside>')
-            return shortcut+self.work_routes(work,page)
-        pdf = self.primary_pdf(work)
-        from readable_chapters import BOOKS
-        if work in BOOKS:
-            shortcut='<aside class="document-shortcut"><a class="button" href="'+self.site.rel(BOOKS[work]['index'],page)+'">Read online</a>'
-            if pdf: shortcut+=' <a href="'+self.site.rel(pdf['url'],page)+'">Read PDF</a>'
-            shortcut+=' <a href="'+self.site.rel('read/index.html',page)+'">All HTML reading editions</a></aside>'
-        else:
-            shortcut = ('<aside class="document-shortcut"><a class="button" href="'+self.site.rel(pdf['url'], page)+'">Read the paper here</a> <a href="'+self.site.rel('documents.html', page)+'">Browse papers and PDFs</a></aside>') if pdf else ''
-        return shortcut+self.work_routes(work, page)
+    def work_intro(self, work, page, collection_links=''):
+        """One work toolbar; keep specialist destinations in a native disclosure."""
+        targets = self.work_route_targets(work)
+        primary = next((label for label in ('Revised edition', 'Read chapters', 'Read PDF')
+                        if any(name == label for name, _ in targets)), None)
+        prominent = {primary, 'Read PDF', 'Written proofs', 'Worked examples'}
+        hub = 'collection/works/'+work+'.html'
+        def link(label, url, main=False):
+            target = '#'+url.split('#',1)[1] if url.startswith(hub+'#') else self.site.rel(url,page)
+            title = {'Read chapters':'Read online', 'Revised edition':'Read revised edition'}.get(label,label)
+            return '<a'+(' class="button"' if main else '')+' href="'+html.escape(target,quote=True)+'">'+html.escape(title)+'</a>'
+        ordered = sorted(((label,url) for label,url in targets if label in prominent), key=lambda row: row[0] != primary)
+        body = '<nav id="work-navigation" class="work-overview-nav" aria-label="Reading routes for this work">'
+        body += ''.join(link(label,url,label==primary) for label,url in ordered)
+        body += '<details class="work-more"><summary>More resources</summary><div class="work-more-links">'
+        body += ''.join(link(label,url) for label,url in targets if label not in prominent and label!='Paper overview')
+        body += link('All HTML reading editions','read/index.html')
+        pair = self.site.rel('side-by-side.html',page)+'?left='+quote(page,safe='')
+        body += '<a data-side-reader-link href="'+html.escape(pair,quote=True)+'">Read side by side</a>'
+        body += collection_links+'</div></details></nav>'
+        return body
+
+    def work_overview(self, work, page, content):
+        """Adapt repository Markdown navigation to the shared website toolbar."""
+        context = re.search(r'<p>(<a href="[^"]+">Browse hub</a>.*?)</p>',content,re.S)
+        collection_links = ''.join(re.findall(r'<a\b[^>]*>.*?</a>',context[1],re.S)) if context else ''
+        if context: content=content[:context.start()]+content[context.end():]
+        # Preserve the fragment on the replacement toolbar for existing return links.
+        content=re.sub(r'<p><a id="work-navigation"></a></p>\s*<p>.*?</p>','',content,count=1,flags=re.S)
+        content=re.sub(r'<p>Use the links below to read this work and its supporting files\..*?</p>','',content,count=1,flags=re.S)
+        content=re.sub(r'(<p><strong>Completion:</strong>.*?</p>)\s*(<p>.*?</p>)',
+                       lambda m:m[2].replace('<p>','<p class="work-summary">',1)+
+                       m[1].replace('<p>','<p class="work-status">',1),content,count=1,flags=re.S)
+        return re.sub(r'(</h1>)',lambda m:m[1]+self.work_intro(work,page,collection_links),content,count=1)
 
     def work_route_targets(self, work):
         hub = 'collection/works/'+work+'.html'

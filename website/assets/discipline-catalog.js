@@ -3,6 +3,9 @@
   const form = document.querySelector("#catalog-filters");
   if (!form) return;
   const sizeControl = document.querySelector("#catalog-size");
+  const advanced = document.querySelector("#catalog-advanced");
+  const activeFilters = document.querySelector("#catalog-active-filters");
+  const advancedKeys = ["stage", "lean", "evidence", "collection"];
   let pageSize = 8;
   const controls = {
     q: document.querySelector("#catalog-query"),
@@ -34,9 +37,12 @@
     const requestedSize = params.get("per_page") || "8";
     sizeControl.value = Array.from(sizeControl.options).some(option => option.value === requestedSize) ? requestedSize : "8";
     pageSize = Number(sizeControl.value);
+    if (advanced && (advancedKeys.some(key => controls[key].value) || pageSize !== 8)) advanced.open = true;
   }
 
   function apply({ persist = true, push = false, revealAnchor = false } = {}) {
+    const active = advancedKeys.filter(key => controls[key].value).length + Number(pageSize !== 8);
+    if (activeFilters) activeFilters.textContent = active ? " · " + active + " active" : "";
     const words = normalize(controls.q.value).trim().split(/\s+/).filter(Boolean);
     const matches = items.filter(item => words.every(word => text.get(item).includes(word)) &&
       (!controls.discipline.value || controls.discipline.value === item.dataset.discipline) &&
