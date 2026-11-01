@@ -291,27 +291,35 @@ s(k,i)S(j,k).
 
 The source-bound [matrix CSV](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/roots-unity-falling-factorial/projector-matrix.csv) gives all three \(6\times6\) rational matrices for degrees zero through five. The checker also verifies these entries directly against independently computed finite differences.
 
-### A wrong projector, with an exact witness
+### A valid projector that is wrong for this transfer
 
-If we mistakenly apply the original degree-filter rule directly to \(x^5\) in the *ordinary-power basis*, we obtain
+There is a typing distinction. The original \(P_r^{(m)}\) acts on polynomials in \(z\), while the transported \(Q_r^{(m)}\) acts on polynomials in \(x\). To compare operators on the **same space**, define the separate ordinary-power projector
 
 \[
-P_0^{(3)}x^5=0,\qquad
-P_1^{(3)}x^5=0,\qquad
-P_2^{(3)}x^5=x^5.
+\widetilde P_r^{(m)}
+\left(\sum_k c_k x^k\right)
+=\sum_{k\equiv r\ (m)}c_kx^k.
 \]
 
-At \(x=4\), that allocates the entire value \(1024\) to residue two.
+This is a valid family of complete, orthogonal projectors on \(\mathbb Q[x]\), but it is **not** the projector obtained by transporting \(P_r\) through \(\Phi\).
 
-But the **correct transported packets** give \((600,244,180)\). In particular,
+If we incorrectly substitute \(\widetilde P_r\) for \(Q_r\) in the falling-factorial calculation, we obtain
 
 \[
-\boxed{(P_2x^5)(4)=1024
+\widetilde P_0^{(3)}x^5=0,\qquad
+\widetilde P_1^{(3)}x^5=0,\qquad
+\widetilde P_2^{(3)}x^5=x^5.
+\]
+
+At \(x=4\), this assigns all \(1024\) to residue two, whereas the **correct transported packets** give \((600,244,180)\). In particular,
+
+\[
+\boxed{(\widetilde P_2^{(3)}x^5)(4)=1024
 \quad\ne\quad
-(Q_2x^5)(4)=180.}
+(Q_2^{(3)}x^5)(4)=180.}
 \]
 
-Both projector systems are mathematically legitimate. They project different coordinate labels. The failure comes from changing the representation without changing the operation.
+Both projector systems are mathematically legitimate, and both act on \(\mathbb Q[x]\). They project **different coordinate labels**. The error is not the power-degree projector itself, but substituting it for the transported falling-factorial projector.
 
 ## 5. Newton differences give a second, independently computable inverse
 
@@ -430,7 +438,7 @@ Extract the coefficient of \(t^5/5!\) and we recover, independently,
 }
 \]
 
-The exact program checks this formal-series identity coefficientwise through degree eight for integer **and rational** parameters \(x\) and moduli two, three, and four. The integer values count functions. Noninteger values remain valid polynomial identities, but are not assigned a literal finite-set counting interpretation.
+The exact program checks this formal-series identity coefficientwise through degree eight for integer **and rational** parameters \(x\) and moduli two, three, and four. Nonnegative integer values of \(x\) count functions. Other rational values remain valid polynomial identities, but are not assigned a literal finite-set counting interpretation.
 
 [Download the exact filtered EGF coefficients](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/roots-unity-falling-factorial/packet-egfs.csv).
 
@@ -802,7 +810,9 @@ v_3&=x^{\underline3}=x^3-x\ne0,&\quad\mathcal Nv_3&=3v_3=0
 \end{aligned}
 \]
 
-The *coefficient projector* by parity is still perfectly well defined: the order \(m=2\) is invertible modulo three and the root \(-1\) exists in \(\mathbb F_3\). Its action is
+The polynomial \(x^3-x\) is nonzero in \(\mathbb F_3[x]\), even though it evaluates to zero at every point of \(\mathbb F_3\). This is an argument in the **polynomial ring**, not in the three-element space of polynomial functions.
+
+The *coefficient projector* by parity is still perfectly well defined: the order \(m=2\) is invertible modulo three and the root \(-1\) exists in \(\mathbb F_3\). This does not assert that the cyclotomic averaging formula works when the projector modulus is divisible by the characteristic. The parity projector acts as follows:
 
 \[
 \boxed{
@@ -826,15 +836,15 @@ This is a deliberate negative control against extending a rational spectral argu
 
 [Download the exact characteristic-three obstruction](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/roots-unity-falling-factorial/finite-characteristic-obstruction.csv).
 
-All statements above are exact for polynomials over \(\mathbb Q\), with integer modulus \(m\ge2\). The function-counting interpretation additionally requires nonnegative integer domain and codomain sizes, whereas the packet EGF and spectral projector identities are rational-polynomial statements.
+Except for the explicitly identified characteristic-three example, the constructions above are exact for polynomials over \(\mathbb Q\), with projector modulus \(m\ge2\). The function-counting interpretation additionally requires nonnegative integer domain and codomain sizes, whereas the packet EGF and rational spectral projector identities do not.
 
 - The roots-of-unity formula uses a field containing \(m\)-th roots of unity and an invertible \(m\), but its output on \(\mathbb Q[z]\) is rational.
-- The Newton difference-quotient formula divides by \(k!\). It does not transfer unchanged when that factorial is not invertible. The **integral, unitriangular Stirling basis isomorphism remains valid** over arbitrary commutative rings; the characteristic-three counterexample explains why these facts must be distinguished.
+- The Newton difference-quotient formula divides by \(k!\) and does not transfer unchanged when that factorial is not invertible. The **integral, unitriangular Stirling basis isomorphism remains valid** over any commutative coefficient ring. By contrast, the finite-degree Lagrange spectral formula requires the eigenvalue differences used in its denominators to be units. The characteristic-three example distinguishes these facts.
 - For functions on the nonnegative integers, Newton's formula recovers each fixed value through a finite sum up to that index. The polynomial isomorphism statement does **not** imply arbitrary analytic, \(p\)-adic, or infinite-series convergence.
 - The forward difference is the transported derivative. Ordinary differentiation \(d/dx\) is a different operation. The *backward* difference, multiplied by \(x\), realizes the transported degree operator. Its finite Lagrange projector formula depends on the degree bound.
 - The transported product \(\star\) is not ordinary multiplication. Claims about multiplicative transport must name the product they use.
 
-The program tests the general finite identities, not merely the displayed numerical example. It checks independent Stirling/finite-difference coefficient routes, inverse triangular matrices, idempotence and orthogonality, exact cyclic traces for moduli two through six, operator conjugation in ordinary-power matrices, finite-difference and general translation transfers, refinements, transported multiplication, the rational spectral formula, exhaustive function enumeration, filtered formal EGFs, characteristic-three coefficient obstructions, and deliberately incorrect shortcuts.
+The program tests the general finite identities, not merely the displayed numerical example. It checks independent Stirling/finite-difference coefficient routes, inverse triangular matrices, idempotence and orthogonality, exact cyclic traces for moduli two through six, operator conjugation in ordinary-power matrices, finite-difference and general translation transfers, refinements, transported multiplication, the rational spectral formula, exhaustive function enumeration, filtered formal EGFs, explicit modular basis-inversion and characteristic-three difference controls, and deliberately invalid operator substitutions.
 
 No assertion about an unrelated arithmetic conjecture follows from these finite polynomial identities.
 
