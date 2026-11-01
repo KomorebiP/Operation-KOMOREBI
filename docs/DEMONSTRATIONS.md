@@ -111,6 +111,12 @@ undo/redo. Save up to 12 runs in the browser notebook, restore or rename them,
 and overlay reconstructions from identical reference and observed data. Notebook
 JSON preserves the collection; a results CSV exports its comparison table.
 
+Four starter experiments open paired runs for sharp edges, a cosine-like tone,
+detail in noise, and Haar ranking rules. Saved-run comparisons offer
+reconstruction, signed-error, and B-minus-A views, with a linked sample
+inspector and a jump to the largest absolute difference. Download comparison
+CSV for both reconstructions and their signed errors at every address.
+
 The reference signal is known in these experiments. The displayed reference
 minimum uses that knowledge; it does not estimate the clean signal behind an
 unknown real-world recording. Cosine calculations are numerical approximations.

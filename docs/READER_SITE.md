@@ -705,6 +705,17 @@ the notebook. Its JSON and results CSV are separate from the active experiment's
 exports and share link. `node --test tools/test_signal_lab_workspace.cjs` checks
 stroke/history behavior, import boundaries and comparison eligibility.
 
+The four starter experiments append two compatible runs and open their
+comparison. They preserve existing notebook entries and require two free slots.
+The comparison inspector switches among reconstructions, signed errors
+(reconstruction minus reference), and differences (B minus A). Its pointer and
+keyboard sample selection is independent of the active experiment's inspector.
+The largest-difference action chooses the first address attaining the maximum
+absolute separation. A numeric comparison CSV and sample table retain both
+reconstructions and all signed values. Mismatched data disables these views and
+exports. The workspace tests cover starters and an exact zero-versus-full
+sample-coordinate fixture for the comparison values and CSV signs.
+
 The lab compares averaging-normalized Haar wavelets with their support
 weights, an orthonormal DCT-II, and sample coordinates. Seeded bounded integer
 noise, equal coefficient budgets, three selection policies, full budget/error

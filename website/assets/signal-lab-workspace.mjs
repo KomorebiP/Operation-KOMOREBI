@@ -57,6 +57,31 @@ export function appendRuns(entries,additional) {
   return readNotebook(writeNotebook([...entries,...additional]));
 }
 export function sameObservation(a,b) {return equal(a.reference,b.reference)&&equal(a.observed,b.observed);}
+export function starterRuns(id) {
+  const base={...defaults(),noise:0,budget:8};let entries;
+  if(id==='edges')entries=[{label:'Edges · Haar',settings:{...base,basis:'haar'}},{label:'Edges · cosine',settings:{...base,basis:'cosine'}}];
+  if(id==='tone')entries=[{label:'Tone · Haar',settings:{...base,shape:'wave',cycles:5,budget:1,basis:'haar'}},{label:'Tone · cosine',settings:{...base,shape:'wave',cycles:5,budget:1,basis:'cosine'}}];
+  if(id==='noise')entries=[{label:'Noisy steps · 6 kept',settings:{...base,noise:8,budget:6}},{label:'Noisy steps · 32 kept',settings:{...base,noise:8,budget:32}}];
+  if(id==='ranking') {
+    const benchmark={...base,n:16,shape:'custom',custom:[2,2,2,2,6,6,6,6,-4,-4,12,-4,4,4,4,4],budget:1,address:8};
+    entries=[{label:'Haar · weighted energy',settings:{...benchmark,policy:'energy'}},{label:'Haar · raw magnitude',settings:{...benchmark,policy:'magnitude'}}];
+  }
+  if(!entries)throw new RangeError('Choose a known starter experiment.');
+  return readNotebook(writeNotebook(entries));
+}
+export function compareRuns(a,b) {
+  if(!sameObservation(a,b))throw new RangeError('Comparison data requires identical reference and observed samples.');
+  const aa=a.analyses[a.config.basis].reconstruction,bb=b.analyses[b.config.basis].reconstruction;
+  const rows=a.reference.map((reference,address)=>({address,reference,observed:a.observed[address],a:aa[address],b:bb[address],
+    errorA:aa[address]-reference,errorB:bb[address]-reference,difference:bb[address]-aa[address]}));
+  const maximum=Math.max(...rows.map(row=>Math.abs(row.difference)));
+  return {rows,maximum,maximumAddress:rows.findIndex(row=>Math.abs(row.difference)===maximum)};
+}
+export function comparisonCsv(a,b) {
+  const {rows}=compareRuns(a,b);
+  return 'address,reference,observed,a_reconstruction,b_reconstruction,a_error_to_reference,b_error_to_reference,b_minus_a\n'+
+    rows.map(row=>[row.address,row.reference,row.observed,row.a,row.b,row.errorA,row.errorB,row.difference].join(',')).join('\n')+'\n';
+}
 export function notebookCsv(entries,results) {
   if(entries.length!==results.length)throw new RangeError('Recompute every run before exporting.');
   const quote=label=>'"'+(/^[=+@-]/.test(label)?"'":'')+label.replace(/"/g,'""')+'"';
