@@ -119,11 +119,22 @@ def check_readable_chapter(root, documents, pages):
         elif BOOKS[spec['work']].get('custom_reader')=='paper_ix':
             from paper_ix_reading import source_math
             expressions=source_math(raw.decode('utf-8-sig'),spec)
+        elif BOOKS[spec['work']].get('custom_reader')=='paper_x':
+            from paper_x_reading import source_math
+            expressions=source_math(raw.decode('utf-8-sig'),spec)
+        elif BOOKS[spec['work']].get('custom_reader')=='paper_xi':
+            from paper_xi_reading import source_math
+            expressions=source_math(raw.decode('utf-8-sig'),spec)
         assert report['source_sha256']==hashlib.sha256(raw).hexdigest()
         assert report['url']==page
         assert report['math_expressions']==len(expressions)
         assert report['math_sequence_sha256']==hashlib.sha256(json.dumps(expressions,ensure_ascii=False).encode()).hexdigest()
-        assert report['macros']==manuscript_macros(main,BOOKS[spec['work']].get('required_macros'))
+        if BOOKS[spec['work']].get('custom_reader')=='paper_x':
+            from paper_x_reading import source_macros,CONTINUATION
+            continuation=(root/records[CONTINUATION]['file_url']).read_text(encoding='utf-8-sig')
+            expected_macros=source_macros(main,continuation)
+        else:expected_macros=manuscript_macros(main,BOOKS[spec['work']].get('required_macros'))
+        assert report['macros']==expected_macros
         assert not report['new_proof_review'] and not report['new_lean_execution']
         for node in report['nodes']+report.get('nested_tables',[]):
             assert node['id'] in pages[page].ids
@@ -289,6 +300,10 @@ def inspect_site(root):
     readable_math = check_readable_chapter(root,documents,pages)
     from paper_ix_reading import verify_bibliography as verify_paper_ix_bibliography
     verify_paper_ix_bibliography(root,documents,pages)
+    from paper_x_reading import verify_bibliography as verify_paper_x_bibliography
+    verify_paper_x_bibliography(root,documents,pages)
+    from paper_xi_reading import verify_bibliography as verify_paper_xi_bibliography
+    verify_paper_xi_bibliography(root,documents,pages)
     from paper_vii_reading import verify_site as verify_paper_vii
     paper_vii=verify_paper_vii(root,pages,documents)
     from reader_atlas import verify as verify_atlas

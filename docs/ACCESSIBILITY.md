@@ -219,6 +219,26 @@ historical theorem headings and checkpoint qualifications remain explicit.
 The worked visual atlas remains available in the PDF. This reading conversion
 adds no proof review or Lean execution.
 
+The [Paper X reading edition](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-x/index.html)
+includes all 15 main sections, the algorithms and reproducibility appendices,
+the historical checkpoint discussion, the residue-counting continuation and
+the final conditional completion. Its 30 reading pages retain 1,080 mathematical
+expressions, 16 proof bodies, 16 original figures and three semantic tables.
+All 23 bibliography entries are included. Paragraph headings inside proofs
+remain inside their proof blocks. Historical ledger totals and the final
+contract's separate outputs keep their original qualifications. The thirty-page
+visual atlas remains in the PDF. No proof review or Lean execution is added.
+
+The [Paper XI reading edition](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-xi/index.html)
+includes all 19 main sections and fifteen construction appendices in 38 reading
+pages. It retains 1,030 typeset mathematical expressions, 275 literal derivations,
+68 proof environments, 16 original figures, five semantic tables and all 29
+bibliography entries. Literal derivations remain selectable, including those
+inside lists. Conjecture 66 keeps its published number and open status.
+Companion links resolve to the delivered PDF pages using the retained reading
+concordance. Visual, Lean and research companions remain in PDF. This reading
+conversion adds no proof review or Lean execution.
+
 Paper I includes its orientation, foundations, packet and graph results,
 transport, worked models, notation ledger, statement concordance and bibliography.
 Its ten manuscript figures retain their captions and have short text alternatives
@@ -348,7 +368,7 @@ Document pages link back to the work, written proofs, Lean coverage, code and
 available worked examples. Edition READMEs are rendered as HTML. Linked
 manuscript and program sources have selectable text and line links. TeX source
 is shown as source, with links to included manuscript sections where available.
-Papers I–IX also have formatted HTML chapters. Paper IV's visual atlas
+Papers I–XI also have formatted HTML chapters. Paper IV's visual atlas
 has HTML plates; all original visual atlases remain available through the on-site PDF reader. Use the PDF for
 typeset manuscript sections that have not yet been converted to HTML.
 
@@ -395,12 +415,15 @@ a bibliography in HTML. Its ordinary, E and R section numbering follows the
 retained edition. Statements link to their recorded proofs and source lines.
 The manuscript dictionaries and numerical tables have row headers. The
 formalization ledger has a caption and row headers for its 33 scoped results. Figures keep the original captions; 15 PDF-only figures have
-source-bound web previews. The worked visual atlas has an index of all 42
-plates. V1–V6 now have HTML
-reading pages with original drawings, selectable equations, text descriptions
-and complete drawing-label transcripts. Matrices and bar values use tables
-with row and column headers. V7–V42 open at their exact PDF pages. These
-reading changes do not add a proof audit or a fresh Lean replay.
+source-bound web previews. All [42 worked atlas plates](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vi/atlas/index.html)
+have HTML reading pages with 40 original drawings, 931 selectable expressions,
+text descriptions and all 588 drawing labels. Matrix and table transcripts
+use row and column headers. Drawings can be opened at full size, and every
+plate retains its exact PDF-page link. The 40 mathematical plates have 76
+links to their manuscript passages, which link back to the plates. The two
+evidence guides retain their source edition's scope. The earlier index
+anchors and six HTML URLs remain available. These reading changes do not
+add a proof audit or a fresh Lean replay.
 
 ## Paper VII: topic chapters and figures
 

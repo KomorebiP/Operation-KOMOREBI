@@ -61,18 +61,38 @@
       const labels={'notation-table':'Notation table','definition-passage':'Definition passage','introduction-passage':'Introduction passage','use':'In context'};
       for (const group of groups) {
         const entry=group.entries[0],context=group.context;
-        const row=node('li'),heading=node('h3',context.table?.label || labels[entry.kind]);
+        const definitionTitle=!context.table && group.score>=6 ? context.title : null;
+        const row=node('li'),heading=node('h3',context.table?.label || definitionTitle || labels[entry.kind]);
         row.append(heading);
-        const symbols=node('p',undefined,'chapter-notation-symbols');
-        const display=context.table?.display || (!context.table ? entry.display : null);
-        if (display) formula(symbols,display);
-        else symbols.append(node('code',context.table?.tex || entry.tex));
-        row.append(symbols,node('p',context.table?.meaning || context.excerpt));
+        if (definitionTitle) row.append(node('p','Definition passage','notation-result-meta'));
+        if (!definitionTitle) {
+          const symbols=node('p',undefined,'chapter-notation-symbols');
+          const display=context.table?.display || (!context.table ? entry.display : null);
+          if (display) formula(symbols,display);
+          else symbols.append(node('code',context.table?.tex || entry.tex));
+          row.append(symbols);
+        }
+        if (context.title && !definitionTitle) row.append(node('p','From the definition “'+context.title+'”.'));
+        row.append(node('p',context.table?.meaning || context.excerpt));
         const links=node('p',undefined,'chapter-notation-links');
         const passage=node('a','Read passage');passage.href=targetURL(context.reading_url || context.source_url);
         passage.title=context.source_label;
-        const full=node('a','Full notation entry');full.href=targetURL(entry.url);
-        links.append(passage,node('span',' · '),full);row.append(links);results.append(row);
+        links.append(passage);
+        if (!definitionTitle || group.entries.length===1) {
+          const full=node('a','Full notation entry');full.href=targetURL(entry.url);
+          links.append(node('span',' · '),full);
+        }
+        row.append(links);
+        if (definitionTitle && group.entries.length>1) {
+          const spellings=node('details'),list=node('ul');
+          spellings.append(node('summary',group.entries.length+' matching symbol spellings'));
+          for (const match of group.entries) {
+            const item=node('li'),link=node('a');link.href=targetURL(match.url);
+            link.append(node('code',match.tex));item.append(link);list.append(item);
+          }
+          spellings.append(list);row.append(spellings);
+        }
+        results.append(row);
       }
       status.textContent=groups.length ? (query ? 'Showing '+groups.length+' of '+found.groups.length+' matching passages.' : 'Browse this work’s notation, or search above.') : 'No matching passages. Try a symbol name or open the full notation index below.';
     } catch (error) {

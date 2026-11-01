@@ -269,13 +269,41 @@ def context_text(raw,macros=None):
     return plain(raw).strip()
 
 
+def definition_contexts(text, suffix):
+    """Track explicit definition scopes, excluding comments and code examples."""
+    clean=masked_source(text,suffix)
+    positions=[];states=[];stack=[]
+    for match in re.finditer(r'\\(begin|end)\{(definition\*?)\}',clean):
+        if match[1]=='begin':
+            position=match.end()
+            while position<len(clean) and clean[position].isspace():position+=1
+            name=group(clean,position,'[',']')
+            stack.append((match[2],name[0][1:-1].strip() if name else None))
+        elif stack and stack[-1][0]==match[2]:stack.pop()
+        else:stack=[]
+        positions.append(match.end());states.append((bool(stack),stack[-1][1] if stack else None))
+    return positions,states
+
+
+def definition_at(contexts, position):
+    positions,states=contexts
+    index=bisect.bisect_right(positions,position)-1
+    return states[index] if index>=0 else (False,None)
+
+
 def index_document(text, suffix):
     offsets=[-1]+[m.start() for m in re.finditer('\n',text)]
+    definitions=definition_contexts(text,suffix)
     result=[]
     for start,end,expression in passages(text,suffix):
         raw,kind=context_for(text,start,end)
-        result.append(dict(line=bisect.bisect_left(offsets,start),start=start,end=end,expression=text[start:end],
-                           context=raw,kind=kind,symbols=symbol_tokens(expression)))
+        active,title=definition_at(definitions,start)
+        if active and kind!='notation-table':kind='definition-passage'
+        elif not active and kind=='definition-passage':kind='use'
+        item=dict(line=bisect.bisect_left(offsets,start),start=start,end=end,expression=text[start:end],
+                  context=raw,kind=kind,symbols=symbol_tokens(expression))
+        if title:item['definition_title']=title
+        result.append(item)
     return result
 
 
@@ -459,11 +487,14 @@ def build(site):
                       kind=entry['kind'],excerpt=excerpts[0][:350],count=len(entry['occurrences']))
             all_entries.append(item)
             primary=data['passages'][sample[0]];source=data['sources'][primary['source']]
-            key=(work,source['repository_path'],primary['context'])
+            title=context_text(primary.get('definition_title',''),source['macros'])
+            title=title if title and len(title)<=160 else None
+            search+=' '+(title or '')
+            key=(work,source['repository_path'],primary['context'],title)
             if key not in context_ids:
                 from reader_guidance import reading_passage_url
                 context_ids[key]=len(contexts)
-                contexts.append(dict(work=work,excerpt=excerpts[0][:450],source_url=source_url(source,primary['line']),
+                contexts.append(dict(work=work,title=title,excerpt=excerpts[0][:450],source_url=source_url(source,primary['line']),
                     reading_url=reading_passage_url(site.reader,source['repository_path'],primary['line']) or source_url(source,primary['line']),
                     source_label=PurePosixPath(source['repository_path']).name+', line '+str(primary['line']),
                     table=table_preview(primary['context'],source['macros']) if primary['kind']=='notation-table' else None))
@@ -477,7 +508,9 @@ def build(site):
             for number in sample:
                 p=data['passages'][number];source=data['sources'][p['source']]
                 excerpt=context_text(p['context'],source['macros'])
-                body+='<li><p><strong>'+KINDS[p['kind']]+'</strong> · <a href="'+site.rel(source_url(source,p['line']),page)+'">'+e(PurePosixPath(source['repository_path']).name)+', line '+str(p['line'])+'</a></p><p class="notation-excerpt">'+e(excerpt[:500]+('…' if len(excerpt)>500 else ''))+'</p><details><summary>Exact mathematical passage</summary><pre><code>'+e(p['expression'])+'</code></pre></details></li>'
+                name=context_text(p.get('definition_title',''),source['macros'])
+                name=': '+name if name and len(name)<=160 else ''
+                body+='<li><p><strong>'+KINDS[p['kind']]+e(name)+'</strong> · <a href="'+site.rel(source_url(source,p['line']),page)+'">'+e(PurePosixPath(source['repository_path']).name)+', line '+str(p['line'])+'</a></p><p class="notation-excerpt">'+e(excerpt[:500]+('…' if len(excerpt)>500 else ''))+'</p><details><summary>Exact mathematical passage</summary><pre><code>'+e(p['expression'])+'</code></pre></details></li>'
             body+='</ul><button type="button" class="notation-occurrences" data-symbol="'+entry['id']+'" hidden>List all '+str(len(entry['occurrences']))+' source passages</button><div class="notation-all"></div></details>'
             entry_blocks.append(body)
         body=introduction+''.join(entry_blocks)
@@ -529,16 +562,18 @@ def verify(root,documents,pages):
         assert data['work']==work['id']
         expected_sources={p for p,r in records.items() if r['work']==work['id'] and PurePosixPath(p).suffix.lower() in TEXT_SUFFIXES}
         assert {s['repository_path'] for s in data['sources']}==expected_sources
-        source_text=[]
+        source_text=[];source_definitions=[]
         for source in data['sources']:
             record=records[source['repository_path']]
             assert source['sha256']==record['sha256'] and source['git_blob_sha1']==record['git_blob_sha1']
             source_text.append((root/source['file_url']).read_bytes().decode('utf-8-sig'))
+            source_definitions.append(definition_contexts(source_text[-1],PurePosixPath(source['repository_path']).suffix.lower()))
         bysource=collections.Counter()
         for p in data['passages']:
             text=source_text[p['source']]
             assert text[p['start']:p['end']]==p['expression']
             assert text.count('\n',0,p['start'])+1==p['line']
+            assert p.get('definition_title')==(definition_at(source_definitions[p['source']],p['start'])[1] or None)
             source=data['sources'][p['source']]
             assert 'L'+str(p['line']) in pages[source.get('source_url',source['url'])].ids
             bysource[p['source']]+=1

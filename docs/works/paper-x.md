@@ -32,6 +32,7 @@ Use the links below to read this work and its supporting files. Ctrl+click (Comm
 
 ## Read
 
+- [Read online: manuscript, historical continuations and final conditional completion](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-x/index.html)
 - [Edition README](../../papers/paper-x/current/README.md)
 - [Read PDF](../../papers/paper-x/current/publication/pdfs/Paper_X_Traditional_Final.pdf)
 - [Visual guide (PDF)](../../papers/paper-x/current/publication/pdfs/Paper_X_Visual_Guide_Final.pdf)

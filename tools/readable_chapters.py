@@ -157,6 +157,12 @@ BOOKS['paper-viii'] = EIGHTH_BOOK
 CHAPTERS += EIGHTH_CHAPTERS
 from paper_ix_reading import register as register_paper_ix
 register_paper_ix(BOOKS, CHAPTERS)
+from paper_x_reading import BOOK as TENTH_BOOK, CHAPTERS as TENTH_CHAPTERS
+BOOKS['paper-x'] = TENTH_BOOK
+CHAPTERS += TENTH_CHAPTERS
+from paper_xi_reading import BOOK as ELEVENTH_BOOK, CHAPTERS as ELEVENTH_CHAPTERS
+BOOKS['paper-xi'] = ELEVENTH_BOOK
+CHAPTERS += ELEVENTH_CHAPTERS
 from special_functions_reading import CONFIG as SPECIAL_FUNCTIONS_BOOK
 BOOKS[SPECIAL_FUNCTIONS_BOOK['work']] = SPECIAL_FUNCTIONS_BOOK
 from proof_path_reading import BOOK as PROOF_PATH_BOOK, CHAPTERS as PROOF_PATH_CHAPTERS
@@ -165,9 +171,11 @@ CHAPTERS += PROOF_PATH_CHAPTERS
 BY_SOURCE = {c['source']:c for c in reversed(CHAPTERS)}
 NUMBERED = {'definition', 'theorem', 'proposition', 'lemma', 'corollary', 'remark', 'example', 'standardfact', 'certificate','boundary','roadmap','construction','classicalinput','classical','conjecture','problem','warning'}
 NUMBERED.update('hist'+kind for kind in ('theorem','proposition','lemma','corollary','definition','example','remark','standardfact'))
+NUMBERED.add('numericalcertificate')
 KIND_NAMES = {'classical':'Classical input','statement':'Supplementary statement','standardfact':'Standard fact','certificate':'Numerical certificate','text':'Passage','roadmap':'Formalization target','classicalinput':'Classical input'}
 KIND_NAMES.update({'hist'+kind:'Historical '+('standard fact' if kind=='standardfact' else kind)
                   for kind in ('theorem','proposition','lemma','corollary','definition','example','remark','standardfact')})
+KIND_NAMES['numericalcertificate']='Numerical certificate'
 HEADINGS = {'part':2,'section':2,'subsection':3,'subsubsection':4,'paragraph':5}
 MATH_PATTERN = re.compile(r'(?<!\\)\$(.*?)(?<!\\)\$|\\\[(.*?)\\\]|(\\begin\{align\*\}.*?\\end\{align\*\})|\\\((.*?)\\\)',re.S)
 PANELS = {'keyidea': 'The central idea', 'interpretation': 'How to read the result',
@@ -175,6 +183,7 @@ PANELS = {'keyidea': 'The central idea', 'interpretation': 'How to read the resu
           'hypothesisguide': 'Why the hypotheses matter', 'sectionrecap': 'Section recap',
           'warningbox': 'Do not conflate'}
 BLOCKS = NUMBERED | set(PANELS) | {'proof','figure','table','longtable','tabularx','tabular','lstlisting','verbatim','thebibliography','conceptchain','statement'}
+BLOCKS.update({'enumerate','itemize','description'})
 MACROS = {'Pcal', 'Qcal', 'Rcal', 'Acal', 'Scal', 'cA', 'cS', 'End', 'id', 'bbk'}
 # Search aliases describe notation, not new equivalences between mathematical claims.
 SYMBOLS = {'alpha': 'α', 'beta': 'β', 'gamma': 'γ', 'rho': 'ρ', 'omega': 'ω',
@@ -294,8 +303,8 @@ def manuscript_macros(main, required=None):
     if not set(required) <= set(result):
         raise ValueError('Missing manuscript macro definitions')
     # Only the literal, one-argument math wrappers used by the reading editions.
-    for name in ('cl', 'closure', 'norm', 'mat', 'abs', 'jump', 'ket', 'bra', 'ip', 'comm', 'code', 'coef', 'fall'):
-        match = re.search(r'\\newcommand\{\\'+name+r'\}\[([12])\]', main)
+    for name in ('cl', 'closure', 'norm', 'mat', 'abs', 'jump', 'ket', 'bra', 'ip', 'comm', 'code', 'coef', 'fall', 'absn'):
+        match = re.search(r'\\(?:newcommand|providecommand)\{\\'+name+r'\}\[([12])\]', main)
         if match:
             value, _ = group(main, match.end())
             arguments=int(match[1])
@@ -551,7 +560,7 @@ class Chapter:
                 value,pos=group(text,pos)
                 out.append(self.inline(value))
             elif text[pos] == '\\':
-                if text[pos:pos+2] in {r'\_',r'\&',r'\%',r'\#',r'\$'}:
+                if text[pos:pos+2] in {r'\_',r'\&',r'\%',r'\#',r'\$',r'\{',r'\}'}:
                     out.append(html.escape(text[pos+1]));pos+=2;continue
                 if text[pos:pos+2] in {r'\ ',r'\,',r'\;',r'\:',r'\!'}:
                     out.append('' if text[pos+1]=='!' else ' ');pos+=2;continue
@@ -562,8 +571,8 @@ class Chapter:
                 if not m: raise ValueError('Unsupported prose escape at '+text[pos:pos+40])
                 name = m[1]
                 pos += m.end()
-                if name in {'S','textquotesingle','o'}:
-                    out.append({'S':'§','textquotesingle':'’','o':'ø'}[name])
+                if name in {'S','textquotesingle','o','ldots','textbackslash'}:
+                    out.append({'S':'§','textquotesingle':'’','o':'ø','ldots':'…','textbackslash':'\\'}[name])
                     if text[pos:pos+1]==' ': pos+=1
                     continue
                 if name in {'quad','qquad','hfill'}:
@@ -621,8 +630,9 @@ class Chapter:
                     out.append('<a class="included-reading" href="'+self.relative(target['url'])+'">Read '+html.escape(target['title'].lower())+'</a>')
                 elif name=='href':
                     label,pos=group(text,pos)
-                    if not value.startswith(('https://','http://')): raise ValueError('Unsupported bibliography URL')
-                    out.append('<a href="'+html.escape(value,quote=True)+'">'+self.inline(label)+'</a>')
+                    targets=getattr(self,'href_targets',{})
+                    if value not in targets and not value.startswith(('https://','http://')): raise ValueError('Unsupported bibliography URL')
+                    out.append('<a href="'+html.escape(targets.get(value,value),quote=True)+'">'+self.inline(label)+'</a>')
                 elif name=='url':
                     if not value.startswith(('https://','http://')):raise ValueError('Unsupported bibliography URL')
                     out.append('<a href="'+html.escape(value,quote=True)+'">'+html.escape(value)+'</a>')
@@ -644,6 +654,11 @@ class Chapter:
         # Separate paragraphs outside math. A display splits paragraph elements,
         # but its exact mathematical source is passed unchanged to inline().
         # Lists can occur inside statements. Keep them semantic and preserve order.
+        heading=re.search(r'\\paragraph\*?\{',text)
+        if heading:
+            title,end=group(text,heading.end()-1)
+            return (self.paragraphs(text[:heading.start()])+'<h5>'+self.inline(title)+'</h5>'
+                +self.paragraphs(text[end:]))
         nested=re.search(r'\\begin\{(tabularx|tabular|longtable)\}(?:\[[^\]]*\])?(.*?)\\end\{\1\}',text,re.S)
         if nested and hasattr(self,'table_config'):
             start=self.text.find(nested[0])
@@ -677,6 +692,11 @@ class Chapter:
             before=self.paragraphs(text[:listing.start()])
             content=''.join('<li>'+('<span class="conclusion-label">I.'+str(i)+'. </span>' if options[option]=='I' else '')+self.paragraphs(item.strip())+'</li>' for i,item in enumerate(items[1:],1))
             return before+'<'+tag+attrs+'>'+content+'</'+tag+'>'+self.paragraphs(text[listing.end():])
+        literal=re.search(r'\\begin\{verbatim\}(.*?)\\end\{verbatim\}',text,re.S)
+        if literal:
+            label=getattr(self,'literal_listing_label','Original algorithm listing')
+            return (self.paragraphs(text[:literal.start()])+'<pre tabindex="0" aria-label="'+label+'"><code>'
+                +html.escape(literal[1].strip('\n'))+'</code></pre>'+self.paragraphs(text[literal.end():]))
         chunks=[]
         pos=0
         for m in MATH_PATTERN.finditer(text):
@@ -800,6 +820,10 @@ def prepare(reader):
                 from proof_path_reading import prepare_book
             elif config['custom_reader'] == 'paper_ix':
                 from paper_ix_reading import prepare_book
+            elif config['custom_reader'] == 'paper_x':
+                from paper_x_reading import prepare_book
+            elif config['custom_reader'] == 'paper_xi':
+                from paper_xi_reading import prepare_book
             else:
                 from special_functions_reading import prepare_book
             reader.readable_books[work] = prepare_book(reader, config)
@@ -1027,7 +1051,7 @@ def render_reading_index(reader):
         pdf=reader.primary_pdf(work)
         if pdf: body+='<a href="'+site.rel(pdf['url'],page)+'">Read PDF</a>'
         body+='</nav></section>'
-    body+='</div><h2>Reading options</h2><p>Use browser zoom to enlarge text. Wide equations and tables have separate areas that can be scrolled with the keyboard. MathJax provides equation exploration and assistive reading options through its context menu.</p><p>The HTML editions follow the retained manuscripts. <a href="'+site.rel('read/paper-iv/atlas/index.html',page)+'">Paper IV’s 26 atlas plates</a> also have HTML pages with drawings, descriptions and tables. Paper VI’s first six atlas plates also have HTML pages. Paper VII’s complete 40-plate atlas has HTML drawings, descriptions and selectable labels. The original visual atlases remain in the PDFs. Not every paper has an HTML edition yet. See <a href="'+site.rel('collection/ACCESSIBILITY.html',page)+'">accessibility and reading options</a> for current coverage and limitations.</p><p><a href="'+site.rel('documents.html',page)+'">Browse all papers and PDFs</a> · <a href="'+site.rel('collection/READING_ROUTES.html',page)+'">Choose a reading route</a></p>'
+    body+='</div><h2>Reading options</h2><p>Use browser zoom to enlarge text. Wide equations and tables have separate areas that can be scrolled with the keyboard. MathJax provides equation exploration and assistive reading options through its context menu.</p><p>The HTML editions follow the retained manuscripts. <a href="'+site.rel('read/paper-iv/atlas/index.html',page)+'">Paper IV’s 26 atlas plates</a> also have HTML pages with drawings, descriptions and tables. Paper VI’s complete 42-plate atlas has HTML drawings, descriptions and selectable labels. Paper VII’s complete 40-plate atlas has HTML drawings, descriptions and selectable labels. The original visual atlases remain in the PDFs. Not every paper has an HTML edition yet. See <a href="'+site.rel('collection/ACCESSIBILITY.html',page)+'">accessibility and reading options</a> for current coverage and limitations.</p><p><a href="'+site.rel('documents.html',page)+'">Browse all papers and PDFs</a> · <a href="'+site.rel('collection/READING_ROUTES.html',page)+'">Choose a reading route</a></p>'
     site.page(page,'Read the papers online',body)
     site.search.append(dict(title='Read the papers online',group='Collection',kind='Guides',url=page,text='HTML reading editions '+' '.join(c['label'] for c in BOOKS.values())+' chapters equations proofs',work_ids=list(BOOKS)))
 
@@ -1190,7 +1214,8 @@ def render_book(reader,book):
                     body+='<section id="ref-'+entry['key']+'"><h3>'+reference_number+e(entry['key'])+'</h3>'+chapter.paragraphs(presentation_tex(entry['body']))+'</section>'
                 body+=passage_links(links)+'</section>'
             elif kind in {'lstlisting','verbatim'}:
-                body+='<section id="'+node['id']+'"><pre tabindex="0" aria-label="Original algorithm listing"><code>'+e(node['body'].strip('\n'))+'</code></pre>'+passage_links(links)+'</section>'
+                listing_label='Original literal derivation' if config.get('literal_derivations') and kind=='verbatim' else 'Original algorithm listing'
+                body+='<section id="'+node['id']+'"><pre tabindex="0" aria-label="'+listing_label+'"><code>'+e(node['body'].strip('\n'))+'</code></pre>'+passage_links(links)+'</section>'
             else:
                 row=rows.get(node['line']) or proof_rows.get(node['line'])
                 if row:
@@ -1213,8 +1238,9 @@ def render_book(reader,book):
             if kind not in {'figure','thebibliography'}:
                 plain,aliases=plain_math(re.sub(r'\\label\{[^}]+\}','',node['body']).replace('$',''))
                 parent=next((n['title'] for n in reversed(headings) if n['line']<=node['line']),spec['title'])
-                search_title=(parent+' / '+('Algorithm' if kind=='lstlisting' else 'Commands' if kind=='verbatim' else 'Passage at line '+str(node['line']))) if kind in {'text','lstlisting','verbatim'} else label
-                item=dict(title=config['label']+' / '+typography(search_title),group='Collection',kind='Code' if kind in {'lstlisting','verbatim'} else ('Written proofs' if kind=='proof' else 'Papers and source'),work_ids=[work],url=page+'#'+node['id'],text=parent+' '+plain+' '+aliases,preview=plain[:240] or label)
+                literal_derivation=kind=='verbatim' and config.get('literal_derivations')
+                search_title=(parent+' / '+('Algorithm' if kind=='lstlisting' else 'Literal derivation' if literal_derivation else 'Commands' if kind=='verbatim' else 'Passage at line '+str(node['line']))) if kind in {'text','lstlisting','verbatim'} else label
+                item=dict(title=config['label']+' / '+typography(search_title),group='Collection',kind='Code' if kind in {'lstlisting','verbatim'} and not literal_derivation else ('Written proofs' if kind=='proof' else 'Papers and source'),work_ids=[work],url=page+'#'+node['id'],text=parent+' '+plain+' '+aliases,preview=plain[:240] or label)
                 # Preview prose only when it has no list/table/input syntax.
                 snippet=re.split(r'\\\[|\\begin',node['body'],maxsplit=1)[0]
                 snippet=re.sub(r'\\label\{[^}]+\}','',snippet).strip()
@@ -1232,6 +1258,12 @@ def render_book(reader,book):
             expressions=source_math(book['main'],spec)
         elif config.get('custom_reader')=='paper_ix':
             from paper_ix_reading import source_math
+            expressions=source_math(raw.decode('utf-8-sig'),spec)
+        elif config.get('custom_reader')=='paper_x':
+            from paper_x_reading import source_math
+            expressions=source_math(raw.decode('utf-8-sig'),spec)
+        elif config.get('custom_reader')=='paper_xi':
+            from paper_xi_reading import source_math
             expressions=source_math(raw.decode('utf-8-sig'),spec)
         if chapter.math!=expressions:
             difference=next((i for i,(a,b) in enumerate(zip(chapter.math,expressions)) if a!=b),min(len(chapter.math),len(expressions)))
@@ -1290,6 +1322,12 @@ def render_book_index(reader,book,reports):
 
 
 def render_bibliography(reader,book):
+    if book['config'].get('custom_reader')=='paper_xi':
+        from paper_xi_reading import render_bibliography as render_paper_xi_bibliography
+        return render_paper_xi_bibliography(reader,book)
+    if book['config'].get('custom_reader')=='paper_x':
+        from paper_x_reading import render_bibliography as render_paper_x_bibliography
+        return render_paper_x_bibliography(reader,book)
     if book['config'].get('custom_reader')=='paper_ix':
         from paper_ix_reading import render_bibliography as render_paper_ix_bibliography
         return render_paper_ix_bibliography(reader,book)

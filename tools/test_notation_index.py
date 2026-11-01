@@ -5,6 +5,30 @@ from notation_index import (passages, symbol_tokens, index_document, macro_defin
 
 
 class NotationTests(unittest.TestCase):
+    def test_definition_titles_follow_the_explicit_source_scope(self):
+        text='$a$\n\\begin{definition}[Generator number]\n$x$\n'+('Long explanatory text. '*250)+'\n$y$\n\\end{definition}\n$z$'
+        records=index_document(text,'.tex')
+        self.assertEqual([row.get('definition_title') for row in records],[None,'Generator number','Generator number',None])
+        self.assertEqual(records[2]['kind'],'definition-passage','A long definition retains its source scope')
+        for row in records:self.assertEqual(text[row['start']:row['end']],row['expression'])
+
+    def test_nested_and_unnamed_definitions_do_not_borrow_a_title(self):
+        text=r'\begin{definition}[Outer]$a$\begin{definition*}$b$\end{definition*}$c$\end{definition}$d$'
+        records=index_document(text,'.tex')
+        self.assertEqual([row.get('definition_title') for row in records],['Outer',None,'Outer',None])
+
+    def test_commented_or_example_definitions_do_not_name_an_ordinary_use(self):
+        text='% \\begin{definition}[Comment]\n$x$\n\\begin{lstlisting}\n\\begin{definition}[Example]\n\\end{lstlisting}\n$y$'
+        records=index_document(text,'.tex')
+        self.assertEqual(len(records),2)
+        self.assertTrue(all(row.get('definition_title') is None and row['kind']=='use' for row in records))
+
+    def test_balanced_definition_titles_retain_their_original_spelling(self):
+        title=r'\emph{A [closed] family} over $\mathbb{R}$'
+        records=index_document(r'\begin{definition}['+title+r'] $V$.\end{definition}', '.tex')
+        self.assertEqual(records[-1]['definition_title'],title)
+        self.assertEqual(context_text(title),'A [closed] family over ℝ')
+
     def test_excerpts_hide_layout_and_nested_bookkeeping_arguments(self):
         source=r'\Needspace{15\baselineskip}\noindent A \textbf{finite} module $M$. \RecordID{PSC-{nested}-ID}\label{a{b}}\index{module!finite}'
         self.assertEqual(context_text(source),'A finite module M.')

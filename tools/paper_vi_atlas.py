@@ -1,26 +1,28 @@
-"""Opening HTML plates of Paper VI's retained 42-plate visual atlas."""
+"""Source-bound HTML edition of Paper VI's complete 42-plate visual atlas."""
 import html
 import json
+import posixpath
 import re
 from html.parser import HTMLParser
 
 from paper_vi_reading import BOOK
 from paper_vi_atlas_descriptions import FIGURES
-from reader_atlas import (atlas_tex, digest, drawing_nodes, expected_math,
-                          render_drawing, transcript_order)
+from reader_atlas import (atlas_tex as original_atlas_tex, digest, expected_math,
+                          render_drawing as original_render_drawing, transcript_order)
+from reader_drawing_transcripts import drawing_nodes,matrix_label_blocks
 from readable_chapters import (Chapter, HEADINGS, MATH_PATTERN, PANELS, clean_tex,
                                group, manuscript_macros, original_math,
                                passage_links, plain_math, presentation_tex,
                                reading_options, render_table)
 from reader_documents import png_dimensions
-from render_paper_vi_atlas import PDF, PDF_SHA256
+from render_paper_vi_atlas import CROPS, PDF, PDF_SHA256
 
 SOURCE = BOOK['base']+'atlas-pages.tex'
 DEFINITIONS = BOOK['base']+'atlas-definitions.tex'
 INDEX = 'read/paper-vi/atlas/index.html'
 REPORT = 'documents/paper-vi-atlas.json'
 RECEIPTS = 'assets/atlas/paper-vi/figures.json'
-HTML_COUNT = 6
+HTML_COUNT = 42
 REFERENCES = {
     1: [('Section',str(n)) for n in (1,2,3,8,13)],
     2: [('Section',str(n)) for n in (2,4,6,7,12)],
@@ -28,13 +30,77 @@ REFERENCES = {
     4: [('Theorem','2.1'),('Corollary','2.2')],
     5: [('Theorem','5.1')],
     6: [('Theorem','3.1'),('Theorem','3.3'),('Theorem','5.2')],
+    7: [('Theorem','6.1')],
+    8: [('Theorem','6.2')],
+    9: [('Theorem','7.1'),('Theorem','7.2'),('Theorem','7.3')],
+    10: [('Theorem','8.2')],
+    11: [('Theorem','8.1'),('Theorem','8.4'),('Corollary','8.6')],
+    12: [('Theorem','7.1'),('Theorem','9.1')],
+    13: [('Proposition','9.3')],
+    14: [('Example','9.2')],
+    15: [('Theorem','10.1')],
+    16: [('Theorem','10.3'),('Corollary','10.4')],
+    17: [('Theorem','10.2')],
+    18: [('Theorem','11.1')],
+    19: [('Theorem','11.1'),('Theorem','11.2')],
+    20: [('Theorem','12.1')],
+    21: [('Theorem','13.1')],
+    22: [('Theorem','13.2')],
+    23: [('Theorem','13.2'),('Section','15')],
+    24: [('Theorem','14.1')],
+    25: [('Theorem','15.1')],
+    26: [('Proposition','9.3'),('Theorem','5.1'),('Theorem','8.2')],
+    27: [('Corollary','10.5'),('Section','17')],
+    28: [],
+    29: [('Theorem','E2.8'),('Corollary','E2.9')],
+    30: [('Theorem','E4.8'),('Example','E4.10')],
+    31: [('Theorem','E4.5'),('Corollary','E4.7')],
+    32: [('Theorem','E5.3'),('Corollary','E5.4')],
+    33: [('Theorem','E7.1'),('Corollary','E7.2'),('Corollary','E7.4'),('Corollary','E7.5')],
+    34: [('Theorem','E9.3')],
+    35: [('Theorem','E9.8'),('Corollary','E9.9')],
+    36: [('Theorem','E10.1'),('Theorem','E10.2')],
+    37: [('Theorem','E15.1'),('Corollary','E15.2')],
+    38: [('Theorem','E15.6')],
+    39: [('Corollary','E15.4'),('Corollary','E15.5')],
+    40: [('Proposition','E16.4'),('Theorem','E16.5')],
+    41: [('Theorem','E3.4'),('Theorem','15.1')],
+    42: [],
 }
 TABLE_AIDS = {
     (1,'L14'): dict(caption='Questions and worked routes through the atlas',
                    headers=['Question','Worked route','Pages'],row_header_column=0),
     (2,'L26'): dict(caption='Conventions for transfer operators',
                    headers=['Object','Exact meaning','What to check'],row_header_column=0),
+    (28,'L648'): dict(caption='Evidence layers and their stated limits',
+                     headers=['Evidence','What is checked here','What it does not establish'],row_header_column=0),
 }
+
+
+def reading_aids(name,nodes,source):
+    info=FIGURES[name]
+    return info if info['blocks'] else dict(**{k:v for k,v in info.items() if k!='blocks'},
+                                           blocks=matrix_label_blocks(nodes,source))
+
+
+def atlas_tex(text):
+    text=re.sub(r'\\endgroup\b|\\vspace\{[\d.]+pt\}',lambda m:' '*len(m[0]),text)
+    return original_atlas_tex(text)
+
+
+def atlas_macros(main,definitions):
+    macros=manuscript_macros(main+'\n'+definitions,BOOK['required_macros'])
+    for match in re.finditer(r'\\providecommand\{\\(mat|diagmat)\}\[1\]\{',definitions):
+        if match[1] not in macros:
+            macros[match[1]]=dict(arguments=1,body=group(definitions,match.end()-1)[0])
+    return macros
+
+
+def render_drawing(figure,chapter,reader):
+    body=original_render_drawing(figure,chapter,reader)
+    image=html.escape(reader.site.rel(figure['receipt']['image'],chapter.url),quote=True)
+    label=html.escape('Open full-size drawing: '+figure['description']['alt'],quote=True)
+    return re.sub(r'<img\b[^>]*>',lambda m:'<a href="'+image+'" aria-label="'+label+'">'+m[0]+'</a>',body,count=1)
 
 
 def plate_url(number):
@@ -87,16 +153,23 @@ def prepare(reader):
     if digest(reader.site.read_source(reader.records[PDF])) != PDF_SHA256:
         raise ValueError('Paper VI atlas PDF differs from the frozen guide')
     main = reader.readable_books['paper-vi']['main']
-    macros = manuscript_macros(main+'\n'+definitions.decode('utf-8-sig'),BOOK['required_macros'])
+    macros = atlas_macros(main,definitions.decode('utf-8-sig'))
     selected = plates(raw.decode('utf-8-sig'))
     receipts = json.loads((reader.site.root/'website'/RECEIPTS).read_bytes())
     if receipts['source_pdf'] != PDF or receipts['source_pdf_sha256'] != PDF_SHA256:
         raise ValueError('Unexpected Paper VI drawing PDF binding')
     figures = {}
+    if len(receipts['figures'])!=40:
+        raise ValueError('Paper VI needs all 40 atlas drawings')
+    crops={name:(number,bounds) for name,number,bounds in CROPS}
     for record in receipts['figures']:
         name = record['name']
         if name not in FIGURES or record['source'] != BOOK['base']+'visual_graphics/'+name+'.tex':
             raise ValueError('Unexpected Paper VI drawing source')
+        number,bounds=crops[name]
+        if (record['image']!='assets/atlas/paper-vi/'+name+'.png' or record['plate']!=number
+                or record['pdf_page']!=number+2 or record['crop_pdf_points']!=bounds):
+            raise ValueError('Paper VI drawing crop or image path changed')
         reader.add(record['source'])
         source = reader.site.read_source(reader.records[record['source']])
         image = (reader.site.root/'website'/record['image']).read_bytes()
@@ -104,11 +177,12 @@ def prepare(reader):
             raise ValueError('Review changed Paper VI drawing '+name)
         nodes = drawing_nodes(source.decode('utf-8-sig'))
         width,height = png_dimensions(image)
-        figures[name] = dict(receipt=record,nodes=nodes,description=FIGURES[name],
-                             order=transcript_order(FIGURES[name],nodes),width=width,height=height)
+        info=reading_aids(name,nodes,source.decode('utf-8-sig'))
+        figures[name] = dict(receipt=record,nodes=nodes,description=info,
+                             order=transcript_order(info,nodes),width=width,height=height)
     used = [name for p in selected[:HTML_COUNT] for name in re.findall(r'\\vfig\{([^{}]+)\}',p['body'])]
     if sorted(used) != sorted(FIGURES) or set(figures) != set(FIGURES):
-        raise ValueError('Paper VI opening-plate drawing coverage changed')
+        raise ValueError('Paper VI atlas drawing coverage changed')
     references = {}
     for _,_,chapter in reader.readable_books['paper-vi']['chapters']:
         for node in chapter.nodes:
@@ -162,9 +236,11 @@ def render(reader):
         body = '<p class="eyebrow">Paper VI visual atlas · V'+str(number)+' · '+e(plate['category'])+'</p><h1>'+e(plate['title'])+'</h1>'
         body += '<p>'+e(plate['locator'])+'</p>'+reader.work_routes('paper-vi',page)+neighbours(reader,plate)
         body += '<p><a href="'+reader.viewer_url(pdf,page,'page='+str(number+2))+'">Original plate in the visual guide PDF</a> · <a href="'+reader.resolve(SOURCE,page,'L'+str(plate['line']))+'">Original atlas source</a></p>'
-        body += '<p>V1–V6 are available in HTML. The complete 42-plate atlas remains in the PDF. Evidence notes retain the source edition’s scope.</p>'
+        body += '<p>All 42 plates are available in HTML. Evidence notes retain the source edition’s scope.</p>'
         body += '<nav class="document-routes" aria-label="Manuscript passages illustrated on this plate">'+''.join(
             '<a href="'+site.rel(target,page)+'">'+e(label)+'</a>' for label,target in atlas['references'][number])+'</nav>'
+        if number in (28,42):
+            body += '<p><a href="'+site.rel('collection/works/paper-vi.html#evidence',page)+'">Recorded evidence for Paper VI</a></p>'
         body += reading_options('Show each passage’s permalink and source line. Manuscript links and plate navigation remain visible.')
         body += '<nav class="chapter-contents" aria-label="Plate contents"><h2 id="contents">On this plate</h2><ul>'
         for node in chapter.nodes:
@@ -204,15 +280,15 @@ def render(reader):
                             nodes=[{k:n[k] for k in ('kind','id','line','end_line')} for n in chapter.nodes]))
     if aided != set(TABLE_AIDS):
         raise ValueError('Paper VI atlas table coverage differs')
-    report = dict(source=SOURCE,source_sha256=atlas['source_sha256'],definitions=DEFINITIONS,
+    report = dict(collection_revision=site.revision,source=SOURCE,source_sha256=atlas['source_sha256'],definitions=DEFINITIONS,
                   definitions_sha256=atlas['definitions_sha256'],macro_source=BOOK['main'],macros=atlas['macros'],
                   source_pdf=PDF,source_pdf_sha256=PDF_SHA256,index=INDEX,total_plates=42,html_plates=reports,
-                  figures={name:dict(**f['receipt'],nodes=f['nodes'],node_order=f['order']) for name,f in atlas['figures'].items()},
+                  figures={name:dict(**f['receipt'],nodes=f['nodes'],node_order=f['order'],reading_aid=f['description']) for name,f in atlas['figures'].items()},
                   manuscript_references=atlas['references'],new_proof_review=False,new_lean_execution=False,
                   new_mathematical_example_execution=False,new_tex_build=False)
     site.write(REPORT,json.dumps(report,ensure_ascii=False,indent=2)+'\n')
     body = '<p class="eyebrow">Paper VI · Visual atlas</p><h1>Explore the 42 atlas plates</h1>'
-    body += '<p>The first six plates have HTML reading pages with drawings, selectable equations, descriptions and tables. All 42 plates can be opened at their exact pages in the complete visual guide.</p>'+reader.work_routes('paper-vi',INDEX)
+    body += '<p>Read all 42 worked plates with their original drawings, selectable equations, descriptions, and label transcripts. Each mathematical plate links to the manuscript passages it illustrates; the two evidence guides retain their source edition’s scope.</p>'+reader.work_routes('paper-vi',INDEX)
     body += '<nav class="chapter-contents" aria-label="Atlas plates"><h2>Choose a plate</h2><ol>'
     for plate in atlas['plates']:
         number = plate['number']
@@ -234,8 +310,9 @@ def verify(root, documents, pages):
     source,definitions = read(SOURCE),read(DEFINITIONS)
     assert digest(source)==report['source_sha256'] and digest(definitions)==report['definitions_sha256']
     assert report['source_pdf']==PDF and digest(read(PDF))==report['source_pdf_sha256']==PDF_SHA256
-    macros = manuscript_macros(read(BOOK['main']).decode('utf-8-sig')+'\n'+definitions.decode('utf-8-sig'),BOOK['required_macros'])
+    macros = atlas_macros(read(BOOK['main']).decode('utf-8-sig'),definitions.decode('utf-8-sig'))
     assert report['macros']==macros
+    assert report['collection_revision']==documents['source_revision']
     assert not any(report[k] for k in ('new_proof_review','new_lean_execution','new_mathematical_example_execution','new_tex_build'))
     selected = plates(source.decode('utf-8-sig'))
     assert report['total_plates']==len(selected)==42 and len(report['html_plates'])==HTML_COUNT
@@ -244,7 +321,9 @@ def verify(root, documents, pages):
         nodes = drawing_nodes(read(record['source']).decode('utf-8-sig'))
         assert digest(read(record['source']))==record['source_sha256']
         assert digest((root/record['image']).read_bytes())==record['image_sha256']
-        assert record['nodes']==nodes and record['node_order']==transcript_order(FIGURES[name],nodes)
+        info=reading_aids(name,nodes,read(record['source']).decode('utf-8-sig'))
+        assert record['reading_aid']==info
+        assert record['nodes']==nodes and record['node_order']==transcript_order(info,nodes)
         figures[name]=dict(nodes=nodes,order=record['node_order'])
     assert set(figures)==set(FIGURES)
     class MathText(HTMLParser):
@@ -273,5 +352,15 @@ def verify(root, documents, pages):
             assert 'L'+str(node['line']) in pages[records[SOURCE]['url']].ids
         count+=len(expected)
     assert all('v'+str(n).zfill(2) in pages[INDEX].ids for n in range(1,43))
+    returns=0
+    for plate in selected:
+        targets=report['manuscript_references'][str(plate['number'])]
+        assert len(targets)==len(REFERENCES[plate['number']])
+        for label,target in targets:
+            chapter,anchor=target.split('#')
+            assert anchor in pages[chapter].ids
+            assert posixpath.relpath(target,posixpath.dirname(plate['url'])) in pages[plate['url']].links
+            assert posixpath.relpath(plate['url'],posixpath.dirname(chapter)) in pages[chapter].links
+            returns+=1
     return dict(total_plates=42,html_plates=HTML_COUNT,drawings=len(figures),
-                transcribed_labels=sum(len(f['nodes']) for f in figures.values()),math_expressions=count)
+                transcribed_labels=sum(len(f['nodes']) for f in figures.values()),math_expressions=count,return_links=returns)

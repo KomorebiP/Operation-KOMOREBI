@@ -86,6 +86,24 @@ tables and figure identities. The wavelet walkthrough and Haar lab link directly
 to the related HTML chapters. Historical formal and experimental scope remains
 attached to the edition; this conversion adds no proof review or Lean replay.
 
+## Paper VI worked visual atlas
+
+[All 42 Paper VI atlas plates](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vi/atlas/index.html)
+have HTML pages. The conversion retains 40 original drawings, 588 selectable
+drawing labels and 931 expressions, with 76 manuscript passage links and
+return links. The two evidence-guide plates retain their original wording
+and link to the work's evidence record. Existing plate URLs and index anchors
+remain available; the five previously published drawing images are unchanged.
+
+The [atlas renderer](../tools/paper_vi_atlas.py) verifies source correspondence,
+figure identities, table cells and both directions of the manuscript links.
+The [shared transcript parser](../tools/reader_drawing_transcripts.py) also
+serves Paper VII without changing its retained mathematics. Conversion records
+are published in `documents/paper-vi-atlas.json`. To regenerate only the
+frozen-PDF crops, run `python tools/render_paper_vi_atlas.py --pdftoppm PATH`.
+The website build checks the assets and requires no TeX compiler. This
+conversion adds no mathematical example execution, proof audit or Lean replay.
+
 ## Paper VIII HTML reading edition
 
 [Paper VIII](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-viii/index.html)
@@ -127,6 +145,54 @@ The bibliography has a separate source-bound mathematical conversion record.
 Run `python -B -m unittest discover -s tools -p 'test_paper_ix_reading.py'`
 to check input coverage, printed numbering, equation order, tables, figures,
 bibliography and reading links. No proof assessment or Lean replay is added.
+
+## Paper X HTML reading edition
+
+[Paper X](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-x/index.html)
+has 30 reading pages and a bibliography. It covers all 15 main sections,
+the algorithms and reproducibility appendices, the dated Block 27 discussion,
+the residue-counting continuation and the final conditional completion.
+The conversion retains 1,080 mathematical expressions, all 16 main proof
+bodies, 16 original figures, three tables and all 23 bibliography entries.
+The thirty-page visual atlas remains in the PDF.
+
+The [chapter map](../tools/paper_x_sections.json) fixes contiguous source
+ranges. The [conversion module](../tools/paper_x_reading.py) checks every
+authored input, preserves source-line anchors and expands the continuation's
+literal notation macros. Headings within proofs remain inside their proof
+blocks. Equation references retain the published numbering. The bibliography
+has its own source-bound equation and reference record.
+
+Run `python -B -m unittest discover -s tools -p 'test_paper_x_reading.py'`
+to check coverage, numbering, statement/proof routes, figures, tables,
+bibliography and mathematical order. Historical totals and the independent
+outputs of the conditional endpoint retain their source qualifications.
+This conversion adds no proof assessment or Lean execution.
+
+## Paper XI HTML reading edition
+
+[Paper XI](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-xi/index.html)
+has 38 reading pages and a bibliography. All 19 main sections, 68 main proof
+environments and fifteen construction appendices are retained. The conversion
+preserves 1,030 typeset mathematical expressions, 275 literal derivation blocks,
+16 original figures, five semantic tables and all 29 bibliography entries.
+The visual, Lean and research companions remain available as PDFs.
+
+The [chapter map](../tools/paper_xi_sections.json) fixes contiguous ranges and
+authored input order. The [converter](../tools/paper_xi_reading.py) preserves
+literal derivations, source-line anchors, published numbering and Conjecture 66's
+open status. Internal companion route keys resolve through the retained reading
+concordance to actual PDF pages. The bibliography follows the published order
+and citation numbers, checked against the compiled labels.
+
+The [figure renderer](../tools/build_paper_xi_figures.py) produces browser PNGs
+from receipt-bound single-page PDFs. The shared publisher verifies the original
+PDF and rendered PNG hashes; normal builds need no PDF renderer.
+
+Run `python -B -m unittest discover -s tools -p 'test_paper_xi_reading.py'`
+to check input coverage, numbering, literal and mathematical order, figures,
+tables, companion routes and bibliography. The HTML conversion adds no proof
+assessment, arithmetic realization result or Lean execution.
 
 ## Special Functions hub and coupled-function lab
 
@@ -537,6 +603,14 @@ Search excerpts omit recognized layout commands and source bookkeeping such as
 preview while preserving section titles, literal set braces and escaped text
 characters. These previews remain reading aids: the downloadable occurrence
 records and linked source passages retain the exact original text and positions.
+
+Word searches can use the source's explicit definition title as the result
+heading, with a direct link to its reading passage. Names follow the enclosing
+definition scope, including long definitions; unnamed definitions keep a generic
+label. Symbol searches keep the matched symbol visible and identify its source
+definition separately. Matching symbol spellings remain available in a disclosure.
+The build checks title metadata against the source; comments and code examples
+cannot supply a definition name.
 
 ## Signal Laboratory
 

@@ -32,6 +32,7 @@ Use the links below to read this work and its supporting files. Ctrl+click (Comm
 
 ## Read
 
+- [Read online: complete monograph and fifteen construction appendices](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-xi/index.html)
 - [Edition README](../../papers/paper-xi/current/README.md)
 - [Read PDF](../../papers/paper-xi/current/publication/pdfs/Paper_XI_Traditional_v1.1.0.pdf)
 - [Visual guide (PDF)](../../papers/paper-xi/current/publication/pdfs/Paper_XI_Visual_Guide_v1.1.0.pdf)

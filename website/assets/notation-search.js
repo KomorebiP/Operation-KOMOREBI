@@ -21,7 +21,7 @@
     const symbolText=normalize(entry.tex+' '+entry.aliases);
     const words=lower.split(/\s+/).filter(Boolean);
     if (words.every(word=>symbolText.includes(word))) return 4;
-    const excerpt=normalize(context.excerpt+' '+(context.table?.label || '')+' '+(context.table?.meaning || ''));
+    const excerpt=normalize(context.excerpt+' '+(context.title || '')+' '+(context.table?.label || '')+' '+(context.table?.meaning || ''));
     return words.every(word=>(symbolText+' '+excerpt).includes(word)) ? 6 : -1;
   }
   function search(data, options) {

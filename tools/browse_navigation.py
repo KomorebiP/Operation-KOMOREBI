@@ -189,14 +189,20 @@ class Browser:
             links = self.resources(c,kinds,page)
             if title=='Read' and c['id']=='monographs-special-functions':
                 links.insert(0,'[Read online: chapters, proof appendices, figures and glossary](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/index.html)')
-            if title=='Read' and c['id'] in {'paper-v','paper-vii'}:
+            if title=='Read' and c['id'] in {'paper-v','paper-vi','paper-vii'}:
                 links.insert(0,'[Read online: chapters, figures and proof links](https://KomorebiP.github.io/Operation-KOMOREBI/read/'+c['id']+'/index.html)')
+            if title=='Read' and c['id']=='paper-vi':
+                links.insert(1,'[Worked visual atlas: all 42 HTML plates](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vi/atlas/index.html)')
             if title=='Read' and c['id']=='paper-vii':
                 links.insert(1,'[Worked visual atlas: all 40 HTML plates](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vii/atlas/index.html)')
             if title=='Read' and c['id']=='paper-viii':
                 links.insert(0,'[Read online: manuscript, six appendices and figures](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-viii/index.html)')
             if title=='Read' and c['id']=='paper-ix':
                 links.insert(0,'[Read online: complete manuscript, strengthening and historical appendices](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-ix/index.html)')
+            if title=='Read' and c['id']=='paper-x':
+                links.insert(0,'[Read online: manuscript, historical continuations and final conditional completion](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-x/index.html)')
+            if title=='Read' and c['id']=='paper-xi':
+                links.insert(0,'[Read online: complete monograph and fifteen construction appendices](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-xi/index.html)')
             if title=='Written proofs' and edition:
                 links.insert(0,link('Mathematical discussion in the revised essay',edition['manuscript'],page))
             has_lean = any(a['kind']=='lean' for a in self.rows[c['id']]['resources'])

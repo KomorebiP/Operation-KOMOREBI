@@ -2426,8 +2426,8 @@
       "stage": "development",
       "lean": "partial",
       "confidence": "formal",
-      "scope": "The separate Lean 4.24.0 companion compiles 15 unchanged scaffold statements and 19 two-world declarations, including both assertions of Theorem 7.3. Both obstruction theorems have empty axiom inventories. General Boolean-algebra-valued transport, graph and forcing results remain outside this formal scope.",
-      "next_step": "Formalize a precise next contract for the Boolean-algebra-valued transport differential or finite graph integration. The original 0.1.0 source edition and its uncompiled label are preserved.",
+      "scope": "The separate Lean 4.24.0 companion checks 83 declarations, including the inherited scaffold and two-world obstruction, simple-cycle graph integrability, componentwise ambiguity and root-fixed uniqueness. The finite reference solver has universal soundness/completeness proofs. Graph existence uses recorded standard choice and quotient axioms; both obstruction theorems remain axiom-free. Numerical cardinality/rank formulas and wider transport/forcing results remain outside this formal scope.",
+      "next_step": "Formalize the finite cardinality and rank formulas and replace exhaustive search with a spanning-forest solver under the same specification. Preserve the original 0.1.0 edition and the 0.2.0 companion.",
       "evidence": [
         {
           "path": "research/resolution-semantics/README.md",
@@ -2448,15 +2448,62 @@
           "kind": "release/status record"
         }
       ],
-      "reader_summary": "Active development with a separately compiled Lean subset: the two-valued scaffold and the two-world additive/Boolean symmetry obstruction. The wider structural and forcing claims need their own formalization.",
+      "reader_summary": "Active development with a compiled Lean subset covering the two-world obstruction and binary graph reconstruction, including a verified finite reference solver. Numerical rank formulas and wider transport and forcing claims remain open.",
       "reader_guide": "docs/components/RESOLUTION_SEMANTICS_LEAN.md",
       "formal_verification": {
-        "path": "verification/resolution-semantics/windows-2026-10-30-run5/receipt.json",
-        "sha256": "5f19b3da94fd2b987bc362780b0931fd8d2ac4741eeaed4b2aa0eafc96a69a0a",
-        "source_root": "formal/resolution-semantics-v0.2.0",
+        "path": "verification/resolution-semantics/graphs-windows-2026-11-01-run1/receipt.json",
+        "sha256": "505c717967e7d81a9104a451b880282bdd1f5d13e0d3379033479d80cfc81ba3",
+        "source_root": "formal/resolution-semantics-v0.3.0",
         "main_theorems": [
           "KRS.TwoWorld.no_swap_equivariant_additive_retraction",
           "KRS.TwoWorld.no_swap_equivariant_boolean_retraction"
+        ],
+        "checked_theorems": {
+          "KRS.Graph.integrable_iff_cycle_zero": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "KRS.Graph.kernel_iff_componentwise_constant": [
+            "propext"
+          ],
+          "KRS.Graph.root_fixed_unique": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "KRS.Graph.reconstruction_classification": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "KRS.Graph.solve_sound": [
+            "propext",
+            "Quot.sound"
+          ],
+          "KRS.Graph.solve_complete": [
+            "propext",
+            "Quot.sound"
+          ],
+          "KRS.Graph.solve_exists_iff_cycle_zero": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "KRS.Graph.pins_cover_unique": [
+            "propext",
+            "Quot.sound"
+          ]
+        },
+        "required_controls": [
+          "reject-false-symmetry",
+          "reject-false-additivity",
+          "reject-sorry",
+          "reject-dropped-cycle-condition",
+          "reject-dropped-root-coverage"
+        ],
+        "required_positive_steps": [
+          "run-graph-examples"
         ]
       }
     },
@@ -4300,7 +4347,7 @@
       ],
       "reason": "Source text or static inventories are not compiler acceptance.",
       "done_when": "Compile the exact intended source with pinned dependencies, record diagnostics and axioms, and map accepted statements to the manuscript. Retain missing mathematical inputs.",
-      "progress": "Resolution Semantics now has a separate Lean 4.24.0 companion: 15 unchanged scaffold statements and 19 two-world declarations compile, both obstruction theorems are axiom-free, and three rejection controls pass. The original source remains preserved. The wider paper, Hodge and Stratified Universality obligations remain open."
+      "progress": "Resolution Semantics has a separate 0.3.0 companion with 83 accepted declarations: the inherited two-world results plus graph cycle integrability, componentwise ambiguity, root-fixed uniqueness and a verified finite reference solver. Seven executable cases and five rejection controls pass in the bound Windows replay. Both obstruction theorems remain axiom-free; graph existence records standard choice and quotient axioms. The original and 0.2.0 sources are preserved. Numerical rank formulas, the wider paper, Hodge and Stratified Universality obligations remain open."
     },
     {
       "id": "F07",
@@ -4590,7 +4637,8 @@
     "verification/constructive-repair/qualified-2026-10-30/summary.json",
     "verification/constructive-repair/qualified-2026-10-30/release-record.json",
     "verification/constructive-repair/qualified-2026-10-30/qualification-linux-py3135.json",
-    "verification/constructive-repair/qualified-2026-10-30/qualification-windows-py3135.json"
+    "verification/constructive-repair/qualified-2026-10-30/qualification-windows-py3135.json",
+    "verification/resolution-semantics/graphs-windows-2026-11-01-run1/receipt.json"
   ],
   "new_python_execution": true,
   "reader_curation_reviews": [
