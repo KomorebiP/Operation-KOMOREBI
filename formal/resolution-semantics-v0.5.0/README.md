@@ -30,6 +30,11 @@ and requires mathematical diagnostics from each rejection control. It covers
 supporting, counting and example declarations. This is not a count of manuscript
 theorems. There are 27 executable cases and 11 rejection controls.
 
+The [source-bound Windows replay](../../verification/resolution-semantics/pins-windows-2026-11-01-run1/receipt.json)
+records clean source commit `6ead663936401aa9ebf1cd26ff604af1d0ee8975` and every
+compiled input hash. The receipt retains the exact output and required
+diagnostic for every positive step and rejection control.
+
 ## Exact contracts
 
 | Claim | Formal result |
