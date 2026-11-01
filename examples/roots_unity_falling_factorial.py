@@ -11,6 +11,7 @@ import argparse
 import csv
 import json
 from fractions import Fraction
+from itertools import product
 from math import comb, factorial
 from pathlib import Path
 
@@ -19,11 +20,15 @@ MAX_DEGREE = 8
 ROW_FIVE = (0, 1, 15, 25, 10, 1)
 FILES = (
     "newton-stirling.csv",
+    "image-histograms.csv",
+    "packet-egfs.csv",
+    "spectral-projectors.csv",
     "packet-contributions.csv",
     "difference-transfer.csv",
     "refinement.csv",
     "projector-matrix.csv",
     "projection-diagram.svg",
+    "function-image-histogram.svg",
     "results.json",
 )
 
@@ -185,6 +190,95 @@ def shift_newton_derivative(coordinates):
                  for k in range(len(coordinates)-1)) or (Q(0),)
 
 
+
+def translate(a, offset):
+    """f(x+offset), computed independently by binomial expansion."""
+    out = [Q(0)] * len(a)
+    for k, coefficient in enumerate(a):
+        for j in range(k + 1):
+            out[j] += Q(coefficient) * comb(k, j) * Q(offset)**(k-j)
+    return trim(out)
+
+
+def backward_difference(a):
+    """Nabla f(x) = f(x) - f(x-1)."""
+    return add(a, scale(translate(a, -1), -1))
+
+
+def newton_degree_operator(poly):
+    """Number operator N = x*Nabla: N(x_(k))=k*x_(k)."""
+    return multiply(power(1), backward_difference(poly))
+
+
+def spectral_project_newton(poly, modulus, residue):
+    """Exact projector as rational Lagrange polynomial in N on Q[x]_{<=d}."""
+    if not isinstance(modulus, int) or modulus < 2:
+        raise ValueError("Require integer modulus at least two")
+    if not isinstance(residue, int) or not 0 <= residue < modulus:
+        raise ValueError("Residue must be in 0,...,modulus-1")
+    poly = trim(poly)
+    degree = len(poly) - 1
+    result = (Q(0),)
+    for k in range(degree + 1):
+        if k % modulus != residue:
+            continue
+        candidate = poly
+        for j in range(degree + 1):
+            if j != k:
+                candidate = scale(
+                    add(newton_degree_operator(candidate),scale(candidate, -j)),
+                    Q(1, k-j))
+        result = add(result, candidate)
+    return result
+
+
+def image_count_histogram(n, codomain):
+    """Independent exhaustive enumeration of functions [n] -> [codomain].
+
+    For n=0, the empty function is counted once, even for empty codomain.
+    No Stirling recurrence, Newton transform or roots of unity is consulted.
+    """
+    if type(n) is not int or type(codomain) is not int or n < 0 or codomain < 0:
+        raise ValueError("n and codomain must be nonnegative integers")
+    counts = [0] * (n+1)
+    for image in product(range(codomain), repeat=n):
+        counts[len(set(image))] += 1
+    return tuple(counts)
+
+
+def series_product_truncated(a, b, degree):
+    out = [Q(0)] * (degree + 1)
+    for i, value in enumerate(a):
+        for j, other in enumerate(b):
+            if i + j <= degree:
+                out[i+j] += value * other
+    return tuple(out)
+
+
+def packet_egf_coefficients(x, modulus, residue, degree):
+    """[t^n] of sum_{k congruent residue} binom(x,k)*(exp(t)-1)^k.
+
+    Formal power series, with rational x; no evaluation at complex roots.
+    """
+    if not isinstance(modulus, int) or modulus < 2:
+        raise ValueError("Require integer modulus at least two")
+    if not isinstance(residue, int) or not 0 <= residue < modulus:
+        raise ValueError("Residue must be in 0,...,modulus-1")
+    if type(degree) is not int or degree < 0:
+        raise ValueError("Degree must be a nonnegative integer")
+    x = Q(x)
+    u = (Q(0),) + tuple(Q(1, factorial(k)) for k in range(1, degree+1))
+    power_u = (Q(1),) + (Q(0),)*degree
+    result = [Q(0)]*(degree+1)
+    for k in range(degree+1):
+        if k % modulus == residue:
+            weight = evaluate(falling(k), x) / factorial(k)
+            for n in range(degree+1):
+                result[n] += weight*power_u[n]
+        power_u = series_product_truncated(power_u,u,degree)
+    return tuple(result)
+
+
 def example_row():
     row = stirling_second(5)[5]
     polynomial = power(5)
@@ -282,6 +376,59 @@ def check():
                         children=add(children,project_newton(poly,refined,r+modulus*q))
                     verify(children==pieces[r],"refinement",
                            "parent equals disjoint residue children")
+    # A second, *independent* interpretation: count actual functions by
+    # the number of different labels in their image, without using S(n,k).
+    verify(image_count_histogram(5,4)==(0,4,180,600,240,0),
+           "enumeration","all 1,024 functions [5] -> [4] by image size")
+    for codomain in range(5):
+        for n in range(7):
+            observed=image_count_histogram(n,codomain)
+            verify(sum(observed)==codomain**n,"enumeration",
+                   "all functions counted, including the empty function")
+            for k in range(n+1):
+                expected=second[n][k]*evaluate(falling(k),codomain)
+                verify(observed[k]==expected,"enumeration",
+                       "independent image enumeration vs falling Stirling count")
+
+    # The finite-difference number operator N=x*(I-E^{-1}) has eigenvectors
+    # (x)_(k) with eigenvalues k. A finite degree cutoff makes its spectral
+    # projectors rational Lagrange polynomials in N, no roots needed.
+    for k in range(MAX_DEGREE+1):
+        verify(newton_degree_operator(falling(k))==scale(falling(k),k),
+               "spectral","falling factorial eigenvalue")
+    verify(newton_degree_operator(power(2))==(Q(0),Q(-1),Q(2)),
+           "spectral","N x^2=2x^2-x, not ordinary Euler derivative")
+    for polynomial in sample_polys:
+        verify(add(newton_degree_operator(delta(polynomial)),
+                   scale(delta(newton_degree_operator(polynomial)),-1))
+                   ==scale(delta(polynomial),-1),"spectral",
+               "[N,Delta] = -Delta")
+    for n in range(7):
+        for modulus in (2,3,4,5):
+            for r in range(modulus):
+                verify(spectral_project_newton(power(n),modulus,r)
+                       ==project_newton(power(n),modulus,r),
+                       "spectral","spectral Lagrange projector equals conjugation")
+
+    # A third independent route via the EGF of functions with image size
+    # in a specified residue class. Compare all formal t coefficients.
+    for x in (Q(0),Q(1),Q(4),Q(1,2),Q(-3,2)):
+        for modulus in (2,3,4):
+            egfs=[packet_egf_coefficients(x,modulus,r,MAX_DEGREE)
+                  for r in range(modulus)]
+            for n in range(MAX_DEGREE+1):
+                verify(sum(egfs[r][n] for r in range(modulus)) ==
+                       Q(x**n,factorial(n)),"packet_egf",
+                       "sum of filtered EGFs is exp(x*t)")
+                for r in range(modulus):
+                    verify(egfs[r][n] ==
+                           Q(evaluate(project_newton(power(n),modulus,r),x),
+                             factorial(n)),"packet_egf",
+                           "EGF coefficients reproduce transported projection")
+    verify(tuple(packet_egf_coefficients(4,3,r,5)[5]*factorial(5)
+                 for r in range(3))==(600,244,180),
+           "packet_egf","fifth EGF coefficient matches image partition")
+
     # All entries of Q in the ordinary-power basis, computed independently
     # from signed Stirling and the second-kind triangle.
     for degree in range(0,7):
@@ -378,6 +525,41 @@ def svg_diagram():
     return "\n".join(out)+"\n"
 
 
+
+def svg_image_histogram():
+    """Standalone accessible SVG using independently enumerated exact counts."""
+    hist = image_count_histogram(5,4)
+    fills = ("#1d6855","#3b68a2","#b87321")
+    result = [
+        '<svg xmlns="http://www.w3.org/2000/svg" width="1020" height="550" viewBox="0 0 1020 550" role="img" aria-labelledby="title desc">',
+        '<title id="title">Exact image-size histogram for functions from five inputs to four labels</title>',
+        '<desc id="desc">Enumerating all 1024 functions from a five-element set to a four-element set gives 0, 4, 180, 600, 240 and 0 functions using k=0 through k=5 different labels. Grouping k modulo three gives 600, 244 and 180.</desc>',
+        '<rect width="1020" height="550" fill="#fff"/>',
+        '<text x="42" y="49" font-family="sans-serif" font-size="26" font-weight="700" fill="#173e32">Count actual functions by their image size</text>',
+        '<text x="42" y="82" font-family="sans-serif" font-size="16" fill="#48645d">Every map from 5 inputs to 4 labels, grouped by how many distinct labels occur</text>',
+        '<line x1="74" y1="421" x2="949" y2="421" stroke="#637870" stroke-width="2"/>',
+    ]
+    for k,value in enumerate(hist):
+        x=91+k*145
+        height=round(value*274/600)
+        display_height=max(3,height) if value else 0
+        y=421-display_height
+        result.append(
+            f'<rect x="{x}" y="{y}" width="84" height="{display_height}" rx="4" fill="{fills[k%3]}"/>')
+        result.append(
+            f'<text x="{x+42}" y="{max(115,y-12)}" text-anchor="middle" font-family="sans-serif" font-size="21" font-weight="700" fill="#203e34">{value}</text>')
+        result.append(
+            f'<text x="{x+42}" y="452" text-anchor="middle" font-family="sans-serif" font-size="16" fill="#48645d">k = {k}</text>')
+    result.extend([
+        '<text x="43" y="493" font-family="sans-serif" font-size="16" fill="#42675a">Residue 0: 600</text>',
+        '<text x="375" y="493" font-family="sans-serif" font-size="16" fill="#365d91">Residue 1: 244</text>',
+        '<text x="708" y="493" font-family="sans-serif" font-size="16" fill="#955c20">Residue 2: 180</text>',
+        '<text x="43" y="527" font-family="sans-serif" font-size="17" font-weight="700" fill="#173e32">600 + 244 + 180 = 1024 functions</text>',
+        '</svg>'
+    ])
+    return "\n".join(result)+"\n"
+
+
 def save(directory: Path, counts):
     directory.mkdir(parents=True,exist_ok=True)
     for name in FILES:
@@ -391,6 +573,35 @@ def save(directory: Path, counts):
             c=to_newton(power(n))
             for k in range(n+1):
                 w.writerow((n,k,second[n][k],str(c[k])))
+    with (directory/"image-histograms.csv").open("w",newline="",encoding="utf-8") as f:
+        w=csv.writer(f,lineterminator="\n")
+        w.writerow(("domain_size","codomain_size","distinct_image_size",
+                    "enumerated_functions","stirling_falling_formula"))
+        for codomain in range(5):
+            for n in range(7):
+                hist=image_count_histogram(n,codomain)
+                for k in range(n+1):
+                    w.writerow((n,codomain,k,hist[k],
+                                str(second[n][k]*evaluate(falling(k),codomain))))
+    with (directory/"packet-egfs.csv").open("w",newline="",encoding="utf-8") as f:
+        w=csv.writer(f,lineterminator="\n")
+        w.writerow(("codomain_parameter","modulus","residue","degree",
+                    "ordinary_egf_coefficient","weighted_exact_count"))
+        for r in range(3):
+            series=packet_egf_coefficients(4,3,r,MAX_DEGREE)
+            for n in range(MAX_DEGREE+1):
+                w.writerow((4,3,r,n,str(series[n]),
+                            str(series[n]*factorial(n))))
+    with (directory/"spectral-projectors.csv").open("w",newline="",encoding="utf-8") as f:
+        w=csv.writer(f,lineterminator="\n")
+        w.writerow(("power_degree","modulus","residue",
+                    "spectral_power_coefficients","conjugated_power_coefficients"))
+        for n in range(7):
+            for r in range(3):
+                spectral=spectral_project_newton(power(n),3,r)
+                conjugated=project_newton(power(n),3,r)
+                w.writerow((n,3,r,";".join(map(str,spectral)),
+                            ";".join(map(str,conjugated))))
     row,p,packets=example_row()
     with (directory/"packet-contributions.csv").open("w",newline="",encoding="utf-8") as f:
         w=csv.writer(f,lineterminator="\n")
@@ -429,6 +640,7 @@ def save(directory: Path, counts):
                     w.writerow((r,row_number,col,str(
                         proj[row_number] if row_number<len(proj) else Q(0))))
     (directory/"projection-diagram.svg").write_text(svg_diagram(),encoding="utf-8")
+    (directory/"function-image-histogram.svg").write_text(svg_image_histogram(),encoding="utf-8")
     summary={
         "arithmetic":"exact integer and Fraction",
         "scope":"Polynomials over Q; finite degree and m>=2; no analytic or p-adic convergence",
@@ -436,6 +648,10 @@ def save(directory: Path, counts):
         "newton_polynomial":"z + 15z^2 + 25z^3 + 10z^4 + z^5",
         "packet_polynomials_power_basis":[list(map(str,part)) for part in packets],
         "packet_values_at_x4":[str(evaluate(v,4)) for v in packets],
+        "image_count_histogram_n5_x4":list(image_count_histogram(5,4)),
+        "number_operator_on_x_squared":list(map(str,newton_degree_operator(power(2)))),
+        "packet_egf_n5_x4":[str(packet_egf_coefficients(4,3,r,5)[5]*120)
+                            for r in range(3)],
         "difference_values_at_x4":[str(evaluate(delta(v),4)) for v in packets],
         "reconstructed_value_at_x4":str(evaluate(p,4)),
         "naive_residue2_at_x4":str(evaluate(naive_power_project(p,3,2),4)),
@@ -455,6 +671,8 @@ def main():
     print("Stirling row five:",ROW_FIVE)
     print("Root-of-unity packets at x=4: 600 + 244 + 180 = 1024")
     print("Finite-difference packets at x=4: 900 + 961 + 240 = 2101")
+    print("Independent function-image counts: 0, 4, 180, 600, 240, 0")
+    print("Spectral number operator: N=x*(I-backshift), N(x^2)=2x^2-x")
     print("Transferred projector != raw power-degree filter (180 != 1024)")
     print("PASS:",sum(counts.values()),"exact assertions")
     if args.output:
