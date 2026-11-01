@@ -1,6 +1,8 @@
 """Small physics illustrations; formal and experimental scope stays in the sources."""
+from quantum_presets import QUANTUM_PRESETS
 
 PHYSICS_PRESETS = {
+    **QUANTUM_PRESETS,
     'physics-current': dict(
         title='Watch probability move between packets', group='Physics', packages=[],
         works=['monographs-physics'], collection_guide='packet-current',

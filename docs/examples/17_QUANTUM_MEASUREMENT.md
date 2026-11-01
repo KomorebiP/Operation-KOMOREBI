@@ -66,6 +66,10 @@ measurement probabilities agree.
 
 ## Try it
 
+Continue with [Quantum phase, measurement, and information loss](../demonstrations/QUANTUM_PHASE_MEASUREMENT.md)
+for three-setting tomography, partial dephasing, coherent records, packet
+refinement, and a standalone exact Python program.
+
 Repeat the probability and dephasing-purity calculations for
 $\chi=(4/5,3/5)^{\mathsf T}$.
 
