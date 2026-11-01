@@ -189,9 +189,28 @@ function updateSignal() {
 function drawRecovery(summary, result) {
   const width = diagramWidth('recovery-diagram');
   const size = Math.min(320, width-68), leftEdge = (width-size)/2;
-  const svg = picture('recovery-diagram', width, size+80,
-    `Line x one plus x two equals ${summary}. Input u ${vectorText(result.u)} and input v ${vectorText(result.v)} have answers ${result.answers.join(' and ')}.`);
   const px = x => width/2 + x * size/20, py = y => 32 + size/2 - y * size/20;
+  const description = `Line x one plus x two equals ${summary}. Input u ${vectorText(result.u)} and input v ${vectorText(result.v)} have answers ${result.answers.join(' and ')}.`;
+  const previous = byId('recovery-diagram').querySelector('svg');
+  // Move only the points while dragging so the pointer target stays connected.
+  if (recoveryPointer !== null && previous && previous.viewBox.baseVal.width === width && previous.dataset.summary === String(summary)) {
+    byId('recovery-diagram').setAttribute('aria-label',description);
+    const points = previous.querySelectorAll('.recovery-point');
+    const labels = previous.querySelectorAll('.point-label');
+    const backgrounds = previous.querySelectorAll('.point-label-bg');
+    [result.u,result.v].forEach((point,i) => {
+      const x = px(point[0]), y = py(point[1]);
+      const lx = x+(i ? -25 : 25), ly = y+(i ? -21 : 29);
+      points[i].setAttribute('cx',x); points[i].setAttribute('cy',y);
+      labels[i].setAttribute('x',lx); labels[i].setAttribute('y',ly);
+      backgrounds[i].setAttribute('x',lx-14); backgrounds[i].setAttribute('y',ly-17);
+    });
+    const handle = previous.querySelector('[data-recovery-drag]');
+    handle.setAttribute('cx',px(result.u[0])); handle.setAttribute('cy',py(result.u[1]));
+    return;
+  }
+  const svg = picture('recovery-diagram', width, size+80, description);
+  svg.dataset.summary = summary;
   for (let i = -10; i <= 10; i += 2) {
     svg.append(svgNode('line', {x1: px(i), x2: px(i), y1: py(10), y2: py(-10), class: 'recovery-grid'}));
     svg.append(svgNode('line', {x1: px(-10), x2: px(10), y1: py(i), y2: py(i), class: 'recovery-grid'}));
@@ -350,13 +369,13 @@ function drawHaar(signal, result) {
 }
 function inspectHaar() {
   if (!haarView) return;
-  const {signal, result} = haarView;
+  const {signal, result, keep} = haarView;
   const selected = byId('haar-inspect').value;
   byId('haar-inspect-detail').hidden = selected === 'none';
   byId('haar-component-legend').hidden = selected === 'none';
   if (selected !== 'none') {
     const index = Number(selected), c = result.coefficients[index];
-    const kept = haarState.keep[index];
+    const kept = keep[index];
     text('haar-component-legend', (c.kind === 'average' ? 'Global mean' : `d${c.level},${c.index}`) + ' contribution (if kept)');
     text('haar-inspect-help', c.kind === 'average' ? 'The global mean contributes the same value at every address.' :
       'The dotted trace shows this coefficient alone, if kept. Shading marks its support; the two halves have opposite signs.');
@@ -412,7 +431,7 @@ function updateHaar() {
     dataRow([level.level, level.averages.join(', '), level.details.join(', ')])));
   byId('haar-sample-table').replaceChildren(...signal.map((value, index) =>
     dataRow([index,value,result.rebuilt[index],result.residual[index]])));
-  haarView = {signal, result};
+  haarView = {signal, result, keep:haarState.keep.slice()};
   inspectHaar();
 }
 
@@ -504,9 +523,8 @@ function moveRecoveryPoint(event) {
 recoveryHost.addEventListener('pointerdown', event => {
   if (event.button !== 0 || recoveryPointer !== null || !event.target.closest('[data-recovery-drag]')) return;
   recoveryPointer = event.pointerId;
-  recoveryHost.setPointerCapture(event.pointerId);
+  if (event.pointerType === 'mouse') event.target.closest('[data-recovery-drag]').setPointerCapture(event.pointerId);
   recoveryHost.dataset.dragging = 'true';
-  event.preventDefault();
 });
 recoveryHost.addEventListener('pointermove', event => {
   if (recoveryPointer === event.pointerId) moveRecoveryPoint(event);
@@ -517,7 +535,6 @@ for (const name of ['pointerup','pointercancel','lostpointercapture']) {
     if (name === 'pointerup') moveRecoveryPoint(event);
     recoveryPointer = null;
     delete recoveryHost.dataset.dragging;
-    if (recoveryHost.hasPointerCapture(event.pointerId)) recoveryHost.releasePointerCapture(event.pointerId);
   });
 }
 byId('packet-remove').addEventListener('click', () => { byId('block-3').checked = false; updatePackets(); });
