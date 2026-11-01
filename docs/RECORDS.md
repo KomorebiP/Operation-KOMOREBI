@@ -67,6 +67,7 @@ These files include test contracts, source records, run outputs, publication rec
 - [verification/constructive-repair/qualified-2026-10-30/qualification-linux-py3135.json](../verification/constructive-repair/qualified-2026-10-30/qualification-linux-py3135.json)
 - [verification/constructive-repair/qualified-2026-10-30/qualification-windows-py3135.json](../verification/constructive-repair/qualified-2026-10-30/qualification-windows-py3135.json)
 - [verification/resolution-semantics/graphs-windows-2026-11-01-run1/receipt.json](../verification/resolution-semantics/graphs-windows-2026-11-01-run1/receipt.json)
+- [verification/resolution-semantics/counting-windows-2026-11-01-run1/receipt.json](../verification/resolution-semantics/counting-windows-2026-11-01-run1/receipt.json)
 
 ## Reading and updating a record
 

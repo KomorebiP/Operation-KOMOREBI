@@ -545,7 +545,7 @@ Jump to a work:
 
 ### [Resolution Semantics](../works/resolution-semantics.md#lean)
 
-- [Checked formal companion: source and reproduction](../../formal/resolution-semantics-v0.3.0/README.md)
+- [Checked formal companion: source and reproduction](../../formal/resolution-semantics-v0.4.0/README.md)
 - [Preserved original edition: Lean sources (directory)](../../research/resolution-semantics/formal/)
 - Coverage: Selected results recorded
 - [Return to this work’s Lean section](../works/resolution-semantics.md#lean)
