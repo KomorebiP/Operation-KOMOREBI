@@ -143,7 +143,10 @@ def publish(site):
               "Stirling Newton coefficients falling factorial polynomial "
               "transported operator finite difference derivative composition "
               "conjugation six lane residue refinement umbral star product "
-              "character Fourier roots of unity Python exact rational certificate"),
+              "character Fourier roots of unity Python exact rational certificate "
+              "functions image sizes independent enumeration combinatorial "
+              "backward difference number operator rational spectral projectors "
+              "formal filtered exponential generating functions"),
     ))
     return record
 
