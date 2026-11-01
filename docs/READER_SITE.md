@@ -638,3 +638,19 @@ specified configurations and 54,108 budget cases using NumPy FFT/IFFT and
 explicit Haar support vectors. Its report records the tested range and
 numerical errors; it does not change manuscript or proof status.
 
+## Paper navigation
+
+Paper, source and PDF pages keep the overview, chapter contents, visual atlas
+and main reading format together. Supporting destinations are grouped under
+More resources. Overview pages also expose the visual atlas directly when a
+work has one. Existing URLs and source passage anchors are retained.
+
+Chapter and atlas reading bars share previous/next controls, position markers,
+an overview link and a complete jump menu. Paper VI's contents and chapter menu
+group the reading sequence by its four parts and references. The current part
+opens in the chapter menu. Contents groups, plate pickers and resource menus use
+native disclosures, so they remain usable without JavaScript. Both complete
+visual atlases use the chapter sidebar for their on-page contents and keep PDF
+and source options in a separate disclosure. Paper IV's visual atlas uses the
+same controls and sidebar.
+

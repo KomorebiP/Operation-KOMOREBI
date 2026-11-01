@@ -162,17 +162,9 @@ def source_references(locator, references, relative):
     return ''.join(out)+html.escape(locator[pos:])
 
 
-def neighbours(reader, plate):
-    number=plate['number']; page=plate['url']
-    routes=[]
-    def neighbour(index, direction):
-        adjacent=reader.atlas['plates'][index]
-        return (direction+': V'+str(adjacent['number'])+' · '+adjacent['title'],adjacent['url'])
-    if number>1: routes.append(neighbour(number-2,'Previous'))
-    routes.append(('All 26 atlas plates',INDEX))
-    if number<26: routes.append(neighbour(number,'Next'))
-    return '<nav class="chapter-neighbours" aria-label="Neighbouring atlas plates">'+''.join(
-        '<a href="'+reader.site.rel(url,page)+'">'+html.escape(title)+'</a>' for title,url in routes)+'</nav>'
+def neighbours(reader, plate, placement='top'):
+    from reading_navigation import atlas_config, navigation
+    return navigation(atlas_config('paper-iv','Paper IV',INDEX,reader.atlas['plates']),plate['url'],placement)
 
 
 def render_drawing(figure, chapter, reader):
@@ -227,6 +219,7 @@ def expected_math(plate, figures):
 
 
 def render(reader):
+    from reading_navigation import outline, resources
     atlas=reader.atlas; site=reader.site; e=html.escape; reports=[]
     aided_tables=set()
     pdf=next(r for r in reader.records.values() if r['work']=='paper-iv' and r.get('title')=='Visual guide (PDF)')
@@ -237,14 +230,15 @@ def render(reader):
         chapter.command_links={'pagerefV':{str(p['number']):(p['url'],'V'+str(p['number'])) for p in atlas['plates']}}
         body='<p class="eyebrow">Paper IV visual atlas · V'+str(plate['number'])+' · '+e(plate['category'])+'</p><h1>'+e(plate['title'])+'</h1>'
         body+='<p>'+source_references(plate['locator'],atlas['references'],chapter.relative)+'</p>'
-        body+=neighbours(reader,plate)
-        body+='<p><a href="'+site.rel('read/paper-iv/index.html',page)+'">Paper IV chapters</a> · <a href="'+reader.viewer_url(pdf,page,'page='+str(plate['number']+2))+'">Original plate in the PDF</a></p>'
-        body+='<p>Evidence notes retain the source edition’s scope. <a href="v26.html">Read the evidence guide (V26).</a></p>'+reading_options('Show each passage’s permalink and original source. Manuscript links and plate navigation are always available.')
-        body+='<nav class="chapter-contents" aria-label="Plate contents"><h2 id="contents">On this plate</h2><ul>'
+        body+=reader.work_routes('paper-iv',page)+neighbours(reader,plate)
+        tools='<p><a href="'+reader.viewer_url(pdf,page,'page='+str(plate['number']+2))+'">Original plate in the PDF</a></p>'
+        tools+='<p>Evidence notes retain the source edition’s scope. <a href="v26.html">Read the evidence guide (V26).</a></p>'+reading_options('Show each passage’s permalink and original source. Manuscript links and plate navigation are always available.')
+        body+=resources(tools)+'<p class="reading-start"><a href="#chapter-text">Start reading</a></p>'
+        toc='<nav class="chapter-contents" aria-label="Plate contents"><h2 id="contents">On this plate</h2><ul>'
         for node in chapter.nodes:
             if node['kind'] in HEADINGS or node['kind']=='figure':
-                body+='<li><a href="#'+node['id']+'">'+e(node['title'] if node['kind'] in HEADINGS else 'Drawing and text description')+'</a></li>'
-        body+='</ul></nav><article id="chapter-text" class="readable-chapter atlas-plate" aria-label="'+e(title,quote=True)+'">'
+                toc+='<li><a href="#'+node['id']+'">'+e(node['title'] if node['kind'] in HEADINGS else 'Drawing and text description')+'</a></li>'
+        body+=outline(toc+'</ul></nav>')+'<article id="chapter-text" class="readable-chapter atlas-plate" aria-label="'+e(title,quote=True)+'">'
         for node in chapter.nodes:
             kind=node['kind']; label=node['title']; identifier=node['id']
             links='<a href="#'+identifier+'">Permalink</a> · <a href="'+reader.resolve(SOURCE,page,'L'+str(node['line']))+'">Source line '+str(node['line'])+'</a>'
@@ -262,7 +256,7 @@ def render(reader):
                 if kind in PANELS: body+='<h3>'+chapter.inline(label or PANELS[kind])+'</h3>'
                 body+=chapter.paragraphs(node['body'])+passage_links(links)+'</section>'
             else: raise ValueError('Unsupported atlas node '+kind)
-        body+='</article>'+neighbours(reader,plate)
+        body+='</article>'+neighbours(reader,plate,'bottom')
         body+='<details class="document-provenance"><summary>Source and conversion record</summary><p>The retained atlas prose and all drawing labels are preserved. Text descriptions and table headings are added reading aids. Drawing labels are read directly from the original TikZ source. This conversion does not rerun the mathematical examples or Lean.</p><p><a href="'+reader.resolve(SOURCE,page,'L'+str(plate['line']))+'">Original atlas source</a> · <a href="'+site.rel(REPORT,page)+'">Conversion checks</a></p></details>'
         expected=expected_math(plate,atlas['figures'])
         if chapter.math!=expected: raise ValueError('Atlas mathematical sequence differs on V'+str(plate['number']))
@@ -281,7 +275,7 @@ def render(reader):
                 new_proof_review=False,new_lean_execution=False,new_mathematical_example_execution=False)
     site.write(REPORT,json.dumps(report,ensure_ascii=False,indent=2)+'\n')
     body='<p class="eyebrow">Paper IV · Visual atlas</p><h1>Explore the 26 atlas plates</h1><p>Read the worked models with their original drawings, selectable equations, text descriptions and tables. Each plate links to the manuscript statements it illustrates.</p>'
-    body+='<p><a href="'+site.rel('read/paper-iv/index.html',INDEX)+'">Paper IV chapters</a> · <a href="'+site.rel(pdf['url'],INDEX)+'">Visual guide PDF</a></p>'
+    body+=reader.work_routes('paper-iv',INDEX)+'<p><a href="'+site.rel(pdf['url'],INDEX)+'">Visual guide PDF</a></p>'
     body+='<p>For algebra, follow V3–V16. For zero geometry, follow V17–V24. V25 follows one coefficient through the whole calculation, and V26 explains the evidence.</p><nav class="chapter-contents" aria-label="Atlas plates"><h2>Choose a plate</h2><ol>'
     body+=''.join('<li><a href="'+site.rel(p['url'],INDEX)+'">V'+str(p['number'])+' · '+e(p['title'])+'</a></li>' for p in atlas['plates'])
     body+='</ol></nav><p>The source’s test and release statements describe the retained atlas edition. This HTML conversion adds reading aids and does not establish new mathematical or formal verification.</p>'

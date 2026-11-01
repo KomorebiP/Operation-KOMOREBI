@@ -2426,8 +2426,8 @@
       "stage": "development",
       "lean": "partial",
       "confidence": "formal",
-      "scope": "The separate Lean 4.24.0 companion checks 83 declarations, including the inherited scaffold and two-world obstruction, simple-cycle graph integrability, componentwise ambiguity and root-fixed uniqueness. The finite reference solver has universal soundness/completeness proofs. Graph existence uses recorded standard choice and quotient axioms; both obstruction theorems remain axiom-free. Numerical cardinality/rank formulas and wider transport/forcing results remain outside this formal scope.",
-      "next_step": "Formalize the finite cardinality and rank formulas and replace exhaustive search with a spanning-forest solver under the same specification. Preserve the original 0.1.0 edition and the 0.2.0 companion.",
+      "scope": "The separate Lean 4.24.0 companion checks 119 declarations. It retains the two-world obstruction and graph reconstruction contracts, and proves exactly 2^c distinct reconstructions for integrable binary fields, with c the actual connected-component count. Component and solution lists are complete and duplicate-free. Standard choice and quotient dependencies are recorded; both obstruction theorems remain axiom-free. Rank formulas and wider transport/forcing results remain outside this formal scope.",
+      "next_step": "Formalize the rank formulas n-c and m-n+c and replace exhaustive search with a verified spanning-forest solver. Counts under partial pinning remain a separate contract. Preserve the original source and earlier companions.",
       "evidence": [
         {
           "path": "research/resolution-semantics/README.md",
@@ -2448,12 +2448,12 @@
           "kind": "release/status record"
         }
       ],
-      "reader_summary": "Active development with a compiled Lean subset covering the two-world obstruction and binary graph reconstruction, including a verified finite reference solver. Numerical rank formulas and wider transport and forcing claims remain open.",
+      "reader_summary": "Active development with checked binary graph reconstruction and the exact 2^c reconstruction count, alongside the inherited two-world obstruction. Rank formulas and wider transport and forcing claims remain open.",
       "reader_guide": "docs/components/RESOLUTION_SEMANTICS_LEAN.md",
       "formal_verification": {
-        "path": "verification/resolution-semantics/graphs-windows-2026-11-01-run1/receipt.json",
-        "sha256": "505c717967e7d81a9104a451b880282bdd1f5d13e0d3379033479d80cfc81ba3",
-        "source_root": "formal/resolution-semantics-v0.3.0",
+        "path": "verification/resolution-semantics/counting-windows-2026-11-01-run1/receipt.json",
+        "sha256": "414d49d96b31e4cd9de91649ce15fe6adc1826e561a88c1e1bf3628305a17582",
+        "source_root": "formal/resolution-semantics-v0.4.0",
         "main_theorems": [
           "KRS.TwoWorld.no_swap_equivariant_additive_retraction",
           "KRS.TwoWorld.no_swap_equivariant_boolean_retraction"
@@ -2493,6 +2493,64 @@
           "KRS.Graph.pins_cover_unique": [
             "propext",
             "Quot.sound"
+          ],
+          "KRS.Graph.assignments_nodup": [
+            "propext",
+            "Quot.sound"
+          ],
+          "KRS.Graph.assignments_length": [
+            "propext"
+          ],
+          "KRS.Graph.ComponentIndex.component_label_vertex": [],
+          "KRS.Graph.ComponentIndex.component_vertex_label": [
+            "Quot.sound"
+          ],
+          "KRS.Graph.all_solutions_complete": [
+            "propext",
+            "Quot.sound"
+          ],
+          "KRS.Graph.all_solutions_nodup": [
+            "propext",
+            "Quot.sound"
+          ],
+          "KRS.Graph.all_solutions_empty_iff": [
+            "propext",
+            "Quot.sound"
+          ],
+          "KRS.Graph.component_list_complete": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "KRS.Graph.component_list_nodup": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "KRS.Graph.component_get_position": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "KRS.Graph.component_position_get": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "KRS.Graph.all_solutions_count": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "KRS.Graph.all_solutions_count_of_cycle_zero": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "KRS.Graph.all_solutions_count_by_components": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
           ]
         },
         "required_controls": [
@@ -2500,10 +2558,14 @@
           "reject-false-additivity",
           "reject-sorry",
           "reject-dropped-cycle-condition",
-          "reject-dropped-root-coverage"
+          "reject-dropped-root-coverage",
+          "reject-dropped-integrability",
+          "reject-omitted-isolated-component",
+          "reject-empty-graph-zero-count"
         ],
         "required_positive_steps": [
-          "run-graph-examples"
+          "run-graph-examples",
+          "run-count-examples"
         ]
       }
     },
@@ -4347,7 +4409,7 @@
       ],
       "reason": "Source text or static inventories are not compiler acceptance.",
       "done_when": "Compile the exact intended source with pinned dependencies, record diagnostics and axioms, and map accepted statements to the manuscript. Retain missing mathematical inputs.",
-      "progress": "Resolution Semantics has a separate 0.3.0 companion with 83 accepted declarations: the inherited two-world results plus graph cycle integrability, componentwise ambiguity, root-fixed uniqueness and a verified finite reference solver. Seven executable cases and five rejection controls pass in the bound Windows replay. Both obstruction theorems remain axiom-free; graph existence records standard choice and quotient axioms. The original and 0.2.0 sources are preserved. Numerical rank formulas, the wider paper, Hodge and Stratified Universality obligations remain open."
+      "progress": "Resolution Semantics has a separate 0.4.0 companion with 119 accepted declarations. It retains graph reconstruction and the two-world obstruction and proves the exact 2^c count using complete duplicate-free component and solution lists. A canonical component index exists for every finite graph. Seven graph cases, six count cases and eight rejection controls pass in the bound Windows replay. Standard axiom dependencies are recorded; both obstruction theorems remain axiom-free. The original and earlier companions are preserved. Rank formulas, the wider paper, Hodge and Stratified Universality obligations remain open."
     },
     {
       "id": "F07",
@@ -4638,7 +4700,8 @@
     "verification/constructive-repair/qualified-2026-10-30/release-record.json",
     "verification/constructive-repair/qualified-2026-10-30/qualification-linux-py3135.json",
     "verification/constructive-repair/qualified-2026-10-30/qualification-windows-py3135.json",
-    "verification/resolution-semantics/graphs-windows-2026-11-01-run1/receipt.json"
+    "verification/resolution-semantics/graphs-windows-2026-11-01-run1/receipt.json",
+    "verification/resolution-semantics/counting-windows-2026-11-01-run1/receipt.json"
   ],
   "new_python_execution": true,
   "reader_curation_reviews": [

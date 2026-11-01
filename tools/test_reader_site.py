@@ -850,6 +850,27 @@ class ReaderSiteTests(unittest.TestCase):
         self.assertIn('Original scope and limits.',result)
         self.assertLess(result.index('Original summary.'),result.index('Scoped release'))
 
+    def test_paper_routes_keep_primary_choices_and_disclose_all_supporting_routes(self):
+        reader=ReadingDocuments.__new__(ReadingDocuments)
+        reader.site=SimpleNamespace(rel=lambda target,page:target)
+        reader.records={'paper.pdf':dict(work='paper-vi',format='pdf',title='Read PDF',url='read/paper-vi/pdf.html')}
+        reader.manuscript_roots={'paper-vi':'main.tex'}
+        reader.learning={'learning_topics':[{'works':['paper-vi']}]}
+        markup=reader.work_routes('paper-vi','read/paper-vi/atlas/index.html')
+        primary=markup.split('<details class="work-more">')[0]
+        self.assertEqual(Page(primary).links,['collection/works/paper-vi.html','read/paper-vi/index.html',
+                                             'read/paper-vi/atlas/index.html','read/paper-vi/pdf.html'])
+        self.assertEqual(primary.count('aria-current="page"'),1)
+        links=Page(markup).links
+        for label,target in reader.work_route_targets('paper-vi'):
+            self.assertEqual(links.count(target),1,label)
+        self.assertIn('Proofs and implementation',markup)
+        self.assertIn('<summary>More resources</summary>',markup)
+        plate=reader.work_routes('paper-vi','read/paper-vi/atlas/v29.html')
+        self.assertIn('href="read/paper-vi/atlas/index.html" aria-current="location"',plate)
+        overview=reader.work_intro('paper-vi','collection/works/paper-vi.html')
+        self.assertIn('Visual atlas',overview.split('<details class="work-more">')[0])
+
     def test_example_search_membership_follows_recorded_learning_routes(self):
         reader = ReadingDocuments.__new__(ReadingDocuments)
         reader.site = SimpleNamespace(components={'paper-i':{},'paper-ii':{}})

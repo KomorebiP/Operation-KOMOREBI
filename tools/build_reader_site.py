@@ -296,7 +296,7 @@ class Site:
                 chapter_help_script=''.join('<script defer src="'+self.rel('assets/'+name,path)+'?v='+hashlib.sha256((self.root/'website/assets'/name).read_bytes()).hexdigest()[:12]+'"></script>' for name in ('notation-search.js','chapter-notation.js'))
             else:body=chapter_layout(body)
         work_page = path.startswith('collection/works/')
-        if not work_page and path not in {'side-by-side.html','index.html','404.html','interactive.html','signal-lab.html','works.html'}:
+        if not work_page and 'data-side-reader-link' not in body and path not in {'side-by-side.html','index.html','404.html','interactive.html','signal-lab.html','works.html'}:
             pair=self.rel('side-by-side.html',path)+'?left='+quote(path,safe='')
             launch='<p class="side-launch"><a data-side-reader-link href="'+esc(pair,quote=True)+'">Read side by side</a></p>'
             body=re.sub(r'(</h1>)',lambda match:match[1]+launch,body,count=1)
