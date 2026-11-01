@@ -34,6 +34,9 @@ class SignalLaboratoryTests(unittest.TestCase):
             model = site.root/'website/assets/signal-lab-core.mjs'
             version = hashlib.sha256(model.read_bytes()).hexdigest()[:12]
             self.assertIn("'./signal-lab-core.mjs?v="+version+"'", script)
+            workspace = (site.output/'assets/signal-lab-workspace.mjs').read_text(encoding='utf-8')
+            self.assertIn("'./signal-lab-core.mjs?v="+version+"'", workspace)
+            self.assertIn("'./signal-lab-workspace.mjs?v="+hashlib.sha256(workspace.encode()).hexdigest()[:12]+"'", script)
             version = hashlib.sha256(script.encode()).hexdigest()[:12]
             self.assertIn('assets/signal-lab.js?v='+version, page.links)
 
