@@ -219,6 +219,16 @@ historical theorem headings and checkpoint qualifications remain explicit.
 The worked visual atlas remains available in the PDF. This reading conversion
 adds no proof review or Lean execution.
 
+The [Paper X reading edition](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-x/index.html)
+includes all 15 main sections, the algorithms and reproducibility appendices,
+the historical checkpoint discussion, the residue-counting continuation and
+the final conditional completion. Its 30 reading pages retain 1,080 mathematical
+expressions, 16 proof bodies, 16 original figures and three semantic tables.
+All 23 bibliography entries are included. Paragraph headings inside proofs
+remain inside their proof blocks. Historical ledger totals and the final
+contract's separate outputs keep their original qualifications. The thirty-page
+visual atlas remains in the PDF. No proof review or Lean execution is added.
+
 Paper I includes its orientation, foundations, packet and graph results,
 transport, worked models, notation ledger, statement concordance and bibliography.
 Its ten manuscript figures retain their captions and have short text alternatives
@@ -348,7 +358,7 @@ Document pages link back to the work, written proofs, Lean coverage, code and
 available worked examples. Edition READMEs are rendered as HTML. Linked
 manuscript and program sources have selectable text and line links. TeX source
 is shown as source, with links to included manuscript sections where available.
-Papers I–IX also have formatted HTML chapters. Paper IV's visual atlas
+Papers I–X also have formatted HTML chapters. Paper IV's visual atlas
 has HTML plates; all original visual atlases remain available through the on-site PDF reader. Use the PDF for
 typeset manuscript sections that have not yet been converted to HTML.
 

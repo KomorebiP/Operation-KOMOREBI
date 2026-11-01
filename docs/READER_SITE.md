@@ -120,6 +120,29 @@ Run `python -B -m unittest discover -s tools -p 'test_paper_ix_reading.py'`
 to check input coverage, printed numbering, equation order, tables, figures,
 bibliography and reading links. No proof assessment or Lean replay is added.
 
+## Paper X HTML reading edition
+
+[Paper X](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-x/index.html)
+has 30 reading pages and a bibliography. It covers all 15 main sections,
+the algorithms and reproducibility appendices, the dated Block 27 discussion,
+the residue-counting continuation and the final conditional completion.
+The conversion retains 1,080 mathematical expressions, all 16 main proof
+bodies, 16 original figures, three tables and all 23 bibliography entries.
+The thirty-page visual atlas remains in the PDF.
+
+The [chapter map](../tools/paper_x_sections.json) fixes contiguous source
+ranges. The [conversion module](../tools/paper_x_reading.py) checks every
+authored input, preserves source-line anchors and expands the continuation's
+literal notation macros. Headings within proofs remain inside their proof
+blocks. Equation references retain the published numbering. The bibliography
+has its own source-bound equation and reference record.
+
+Run `python -B -m unittest discover -s tools -p 'test_paper_x_reading.py'`
+to check coverage, numbering, statement/proof routes, figures, tables,
+bibliography and mathematical order. Historical totals and the independent
+outputs of the conditional endpoint retain their source qualifications.
+This conversion adds no proof assessment or Lean execution.
+
 ## Special Functions hub and coupled-function lab
 
 The [Special Functions hub](SPECIAL_FUNCTIONS.md) connects the current HTML
