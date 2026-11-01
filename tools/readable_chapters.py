@@ -152,6 +152,9 @@ CHAPTERS += SIXTH_BOOK['chapters']
 from paper_vii_reading import BOOK as SEVENTH_BOOK, CHAPTERS as SEVENTH_CHAPTERS
 BOOKS['paper-vii'] = SEVENTH_BOOK
 CHAPTERS += SEVENTH_CHAPTERS
+from paper_viii_reading import BOOK as EIGHTH_BOOK, CHAPTERS as EIGHTH_CHAPTERS
+BOOKS['paper-viii'] = EIGHTH_BOOK
+CHAPTERS += EIGHTH_CHAPTERS
 from paper_ix_reading import register as register_paper_ix
 register_paper_ix(BOOKS, CHAPTERS)
 from special_functions_reading import CONFIG as SPECIAL_FUNCTIONS_BOOK
@@ -168,7 +171,7 @@ PANELS = {'keyidea': 'The central idea', 'interpretation': 'How to read the resu
           'readerroadmap': 'Reader roadmap', 'microexample': 'Running example',
           'hypothesisguide': 'Why the hypotheses matter', 'sectionrecap': 'Section recap',
           'warningbox': 'Do not conflate'}
-BLOCKS = NUMBERED | set(PANELS) | {'proof','figure','table','longtable','tabularx','tabular','lstlisting','thebibliography','conceptchain','statement'}
+BLOCKS = NUMBERED | set(PANELS) | {'proof','figure','table','longtable','tabularx','tabular','lstlisting','verbatim','thebibliography','conceptchain','statement'}
 MACROS = {'Pcal', 'Qcal', 'Rcal', 'Acal', 'Scal', 'cA', 'cS', 'End', 'id', 'bbk'}
 # Search aliases describe notation, not new equivalences between mathematical claims.
 SYMBOLS = {'alpha': 'α', 'beta': 'β', 'gamma': 'γ', 'rho': 'ρ', 'omega': 'ω',
@@ -181,7 +184,7 @@ SYMBOLS = {'alpha': 'α', 'beta': 'β', 'gamma': 'γ', 'rho': 'ρ', 'omega': 'ω
 
 def clean_tex(text):
     # Retain newlines for exact links to the unchanged source file.
-    parts = re.split(r'(\\begin\{lstlisting\}(?:\[[^\]\n]*\])?.*?\\end\{lstlisting\})',text,flags=re.S)
+    parts = re.split(r'(\\begin\{lstlisting\}(?:\[[^\]\n]*\])?.*?\\end\{lstlisting\}|\\begin\{verbatim\}.*?\\end\{verbatim\})',text,flags=re.S)
     for i in range(0,len(parts),2):
         parts[i] = re.sub(r'(?<!\\)%[^\n]*', '', parts[i])
         parts[i] = re.sub(r'\\(?:Needspace|enlargethispage)\{[^{}]*\}',lambda m:' '*len(m[0]),parts[i])
@@ -197,6 +200,7 @@ def presentation_tex(text):
     text = re.sub(r'\\(?:FloatBarrier|hfill)\b', mask, text)
     text = re.sub(r'\\graphicspath\{\{[^{}]+\}\}', mask, text)
     text = re.sub(r'\\renewcommand\{\\refname\}\{\}', mask, text)
+    text = re.sub(r'\\renewcommand\{\\arraystretch\}\{[0-9.]+\}', mask, text)
     text = re.sub(r'\\startreadingpart\{([^{}]+)\}', r'\\part{\1}', text)
     text = re.sub(r'\\(?:begin|end)\{center\}|\\begin\{multicols\}\{2\}|\\end\{multicols\}', mask, text)
     text = re.sub(r'\\addcontentsline\{toc\}\{(?:section|part)\}\{[^{}]*\}', mask, text)
@@ -245,6 +249,7 @@ def presentation_tex(text):
 
 def original_math(text):
     text = re.sub(r'\\begin\{lstlisting\}(?:\[[^\]\n]*\])?.*?\\end\{lstlisting\}', '', clean_tex(text),flags=re.S)
+    text = re.sub(r'\\begin\{verbatim\}.*?\\end\{verbatim\}', '', text,flags=re.S)
     return [next(x for x in m.groups() if x is not None) for m in MATH_PATTERN.finditer(text)]
 
 
@@ -286,7 +291,7 @@ def manuscript_macros(main, required=None):
     if not set(required) <= set(result):
         raise ValueError('Missing manuscript macro definitions')
     # Only the literal, one-argument math wrappers used by the reading editions.
-    for name in ('cl', 'closure', 'norm', 'mat', 'abs', 'jump', 'ket', 'bra', 'ip', 'comm'):
+    for name in ('cl', 'closure', 'norm', 'mat', 'abs', 'jump', 'ket', 'bra', 'ip', 'comm', 'code'):
         match = re.search(r'\\newcommand\{\\'+name+r'\}\[([12])\]', main)
         if match:
             value, _ = group(main, match.end())
@@ -789,6 +794,7 @@ def prepare(reader):
             if config.get('part_numbering'):
                 if spec.get('reset_part'): state={}
                 state.update(part=spec.get('part',0),part_numbering=True)
+            state.update(spec.get('numbering_state',{}))
             chapter=Chapter(chapter_text(raw.decode('utf-8-sig'),spec),macros,state=state,check_refs=False)
             if config.get('figure_pdfs'):
                 from paper_vii_reading import prepare_figures
@@ -913,7 +919,8 @@ def render_table(node,chapter,reading_aid=None):
     width=sum(span for span,_ in parsed[0]) if parsed else 0
     if not width or any(sum(span for span,_ in row)!=width for row in parsed):
         raise ValueError('Unexpected table column structure')
-    row_header=None
+    row_headers=[]
+    header_rows=1
     if reading_aid:
         if [' '.join(cell.split()) for cell in rows[0]]!=reading_aid['headers']:
             raise ValueError('Review the table reading aid: column headers changed')
@@ -921,30 +928,34 @@ def render_table(node,chapter,reading_aid=None):
             if caption: raise ValueError('A table reading aid must not replace an authored caption')
             caption=reading_aid['caption']
         if not caption: raise ValueError('A table reading aid must provide or retain a caption')
-        row_header=reading_aid['row_header_column']
-        if type(row_header) is not int or not 0<=row_header<len(rows[0]):
+        if 'subheaders' in reading_aid:
+            if len(rows)<3 or [' '.join(cell.split()) for cell in rows[1]]!=reading_aid['subheaders']:
+                raise ValueError('Review the table reading aid: subordinate headers changed')
+            header_rows=2
+        row_headers=reading_aid.get('row_header_columns',[reading_aid['row_header_column']])
+        if not row_headers or len(set(row_headers))!=len(row_headers) or any(type(column) is not int or not 0<=column<width for column in row_headers):
             raise ValueError('Invalid table row-header column')
-        if any(not row[row_header].strip() for row in rows[1:]):
+        if any(not row[column].strip() for row in rows[header_rows:] for column in row_headers):
             raise ValueError('A table row header is empty')
     body='<div class="table-scroll" tabindex="0" role="region" aria-label="'+html.escape(caption or 'Notation table',quote=True)+'"><table>'
     if caption: body+='<caption>'+chapter.inline(caption)+'</caption>'
     for index,row in enumerate(rows):
         if index==0: body+='<thead>'
-        if index==1: body+='<tbody>'
+        if index==header_rows: body+='<tbody>'
         body+='<tr>'
         column=0
         for span,value in parsed[index]:
-            if row_header is not None and span>1:
+            if row_headers and span>1 and not (index==0 and header_rows==2):
                 raise ValueError('Review spanning cells with table reading aids')
-            header=index==0 or column==row_header
+            header=(index<header_rows or column in row_headers) and not (header_rows==2 and index==0 and not value.strip())
             tag='th' if header else 'td'
-            attrs=(' scope="'+('col' if index==0 else 'row')+'"') if header else ''
+            attrs=(' scope="'+('colgroup' if span>1 else 'col' if index<header_rows else 'row')+'"') if header else ''
             if span>1: attrs+=' colspan="'+str(span)+'"'
             body+='<'+tag+attrs+'>'+chapter.inline(value)+'</'+tag+'>'
             column+=span
         body+='</tr>'
-        if index==0: body+='</thead>'
-    return body+('</tbody>' if len(rows)>1 else '')+'</table></div>'
+        if index==header_rows-1: body+='</thead>'
+    return body+('</tbody>' if len(rows)>header_rows else '')+'</table></div>'
 
 
 def neighbour_links(spec, placement='top'):
@@ -1084,7 +1095,7 @@ def render_book(reader,book):
                 from paper_vii_reading import render_figure
                 body+=render_figure(reader,spec,chapter,node,links)
             elif kind=='figure':
-                match=re.match(r'\s*\\centering\s*\\includegraphics\[width=(?:0?\.\d+|1(?:\.0+)?)\\(?:textwidth|linewidth)\]\{([^}]+)\}\s*\\caption',node['body'])
+                match=re.match(r'\s*\\centering\s*\\includegraphics\[width=(?:0?\.\d+|1(?:\.0+)?)?\\(?:textwidth|linewidth)\]\{([^}]+)\}\s*\\caption',node['body'])
                 if not match: raise ValueError('Unsupported figure')
                 caption,end=group(node['body'],match.end())
                 if re.sub(r'\\label\{[^}]+\}','',node['body'][end:]).strip(): raise ValueError('Unhandled figure content')
@@ -1139,7 +1150,7 @@ def render_book(reader,book):
                     reference_number=('['+str(i)+'] ') if config.get('numbered_bibliography') else ''
                     body+='<section id="ref-'+entry['key']+'"><h3>'+reference_number+e(entry['key'])+'</h3>'+chapter.paragraphs(presentation_tex(entry['body']))+'</section>'
                 body+=passage_links(links)+'</section>'
-            elif kind=='lstlisting':
+            elif kind in {'lstlisting','verbatim'}:
                 body+='<section id="'+node['id']+'"><pre tabindex="0" aria-label="Original algorithm listing"><code>'+e(node['body'].strip('\n'))+'</code></pre>'+passage_links(links)+'</section>'
             else:
                 row=rows.get(node['line']) or proof_rows.get(node['line'])
@@ -1163,15 +1174,15 @@ def render_book(reader,book):
             if kind not in {'figure','thebibliography'}:
                 plain,aliases=plain_math(re.sub(r'\\label\{[^}]+\}','',node['body']).replace('$',''))
                 parent=next((n['title'] for n in reversed(headings) if n['line']<=node['line']),spec['title'])
-                search_title=(parent+' / '+('Algorithm' if kind=='lstlisting' else 'Passage at line '+str(node['line']))) if kind in {'text','lstlisting'} else label
-                item=dict(title=config['label']+' / '+typography(search_title),group='Collection',kind='Code' if kind=='lstlisting' else ('Written proofs' if kind=='proof' else 'Papers and source'),work_ids=[work],url=page+'#'+node['id'],text=parent+' '+plain+' '+aliases,preview=plain[:240] or label)
+                search_title=(parent+' / '+('Algorithm' if kind=='lstlisting' else 'Commands' if kind=='verbatim' else 'Passage at line '+str(node['line']))) if kind in {'text','lstlisting','verbatim'} else label
+                item=dict(title=config['label']+' / '+typography(search_title),group='Collection',kind='Code' if kind in {'lstlisting','verbatim'} else ('Written proofs' if kind=='proof' else 'Papers and source'),work_ids=[work],url=page+'#'+node['id'],text=parent+' '+plain+' '+aliases,preview=plain[:240] or label)
                 # Preview prose only when it has no list/table/input syntax.
                 snippet=re.split(r'\\\[|\\begin',node['body'],maxsplit=1)[0]
                 snippet=re.sub(r'\\label\{[^}]+\}','',snippet).strip()
-                if snippet and kind not in {'table','longtable','tabularx','tabular','lstlisting'} and r'\input' not in snippet:
+                if snippet and kind not in {'table','longtable','tabularx','tabular','lstlisting','verbatim'} and r'\input' not in snippet:
                     item['preview_parts']=chapter.preview(snippet)
                 math_preview=re.search(r'\\\[(.*?)\\\]',node['body'],re.S)
-                if math_preview and len(math_preview[1])<650 and kind!='lstlisting': item['math_preview']=expand_math(math_preview[1],chapter.macros)
+                if math_preview and len(math_preview[1])<650 and kind not in {'lstlisting','verbatim'}: item['math_preview']=expand_math(math_preview[1],chapter.macros)
                 site.search.append(item)
         body+='</article>'+neighbour_links(spec,'bottom')
         body+='<details class="document-provenance"><summary>Source and conversion record</summary><p>Source SHA-256: <code>'+reader.records[source]['sha256']+'</code></p><p>Unsupported prose commands stop the build. The mathematical expression sequence is checked against the source, with manuscript macros expanded for display.</p><p><a href="'+site.rel('documents/readable-chapters.json',page)+'">Conversion records</a></p></details>'
@@ -1240,7 +1251,7 @@ def render_bibliography(reader,book):
     config=book['config']
     page,work,label=config['bib_page'],config['work'],config['label']
     body='<h1>'+label+' bibliography</h1>'+navigation(config,page)
-    body+=resources(work_links(reader,work,page))+'<article id="chapter-text">'
+    body+=resources(work_links(reader,work,page))+'<article id="chapter-text" class="reading-bibliography">'
     if config.get('bibliography_source_only'):
         body+='<p>The complete bibliography, including the recovered historical references, remains in the original manuscript and its linked TeX sources.</p><p><a href="'+reader.resolve(config['bib'],page)+'">Read the bibliography in the manuscript source</a></p>'
         body+='</article>'+navigation(config,page,'bottom')

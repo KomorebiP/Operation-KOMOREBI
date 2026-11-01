@@ -48,6 +48,28 @@ tables and figure identities. The wavelet walkthrough and Haar lab link directly
 to the related HTML chapters. Historical formal and experimental scope remains
 attached to the edition; this conversion adds no proof review or Lean replay.
 
+## Paper VIII HTML reading edition
+
+[Paper VIII](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-viii/index.html)
+has 23 reading pages, contents and a bibliography: the opening orientation,
+three exact models, 15 manuscript sections and Appendices A–F. The conversion
+retains 1,192 mathematical expressions, 56 proof bodies, 25 figures and 12
+tables. Numbering is checked against the retained compiled labels. The worked
+visual atlas remains in the original PDF.
+
+The [chapter configuration](../tools/paper_viii_reading.py) fixes source ranges,
+appendix transitions and table reading aids. Tables with grouped columns retain
+their column groups; tables printed in parallel retain both row-header columns.
+The shared figure publisher checks the original PDF and rendered PNG digests.
+Use [the figure renderer](../tools/build_paper_viii_figures.py) with `--pdftoppm`
+only when regenerating those assets. Normal builds need no PDF renderer.
+
+Run `python -B -m unittest discover -s tools -p 'test_paper_viii_reading.py'`
+to check complete source coverage, equation order, printed numbering,
+statement/proof routes, figure identity, tables and internal links. The website
+workflow runs these checks before publication. This reading conversion adds no
+proof assessment, Lean replay or new hardware measurement.
+
 ## Special Functions hub and coupled-function lab
 
 The [Special Functions hub](SPECIAL_FUNCTIONS.md) connects the current HTML

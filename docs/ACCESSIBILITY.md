@@ -197,9 +197,12 @@ jump links remain readable. The browser’s Find command is also available.
 The [HTML reading catalogue](https://KomorebiP.github.io/Operation-KOMOREBI/read/index.html)
 brings together the main chapters of [Paper I](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-i/index.html),
 [Paper II](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-ii/index.html),
-[Paper III](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-iii/index.html)
+[Paper III](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-iii/index.html),
 [Paper IV](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-iv/index.html),
-and [Paper V](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-v/index.html).
+[Paper V](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-v/index.html),
+[Paper VI](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vi/index.html),
+[Paper VII](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vii/index.html),
+and [Paper VIII](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-viii/index.html).
 These editions retain the original prose, equations,
 figures, tables and code examples. Each paper has chapter contents, previous
 and next links, cross references and a bibliography. Paper II also includes its
@@ -343,7 +346,7 @@ Document pages link back to the work, written proofs, Lean coverage, code and
 available worked examples. Edition READMEs are rendered as HTML. Linked
 manuscript and program sources have selectable text and line links. TeX source
 is shown as source, with links to included manuscript sections where available.
-Papers I–VII also have formatted HTML chapters. Paper IV's visual atlas
+Papers I–VIII also have formatted HTML chapters. Paper IV's visual atlas
 has HTML plates; all original visual atlases remain available through the on-site PDF reader. Use the PDF for
 typeset manuscript sections that have not yet been converted to HTML.
 
@@ -410,3 +413,14 @@ its full size, or use **Open original figure (PDF)** for the retained vector
 figure. The images include intrinsic dimensions and adapt to the reading
 column. Text descriptions retain the distinction between finite models and
 open physical targets. The worked visual atlas remains available in the PDF.
+
+## Paper VIII: manuscript and appendices
+
+Paper VIII includes its orientation, three exact models, all 15 manuscript
+sections and all six mathematical appendices. Its 23 reading pages retain
+1,192 mathematical expressions, 56 proof bodies, 25 figures and 12 tables.
+Tables have captions, row and column headers, and grouped precision-option
+headers where the source groups columns. Commands remain selectable code.
+Statement and proof links retain their original source-line destinations;
+section and appendix numbering matches the printed edition. The worked
+visual atlas remains in the original PDF.
