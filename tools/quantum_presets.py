@@ -1,6 +1,57 @@
 """Exact partial-dephasing experiment accompanying the extended derivation."""
 
 QUANTUM_PRESETS = {
+    'physics-arithmetic-phase': dict(
+        title='Separate equal histograms with an arithmetic projector', group='Physics', packages=[],
+        works=['monographs-quantum-and-circuits'], collection_guide='quantum-phase',
+        run_label='arithmetic phase comparison',
+        description='Use the book’s modulus-12 Ramanujan projector to distinguish signed, unsigned, and dephased states. Edit a rational unit phase; download exact probabilities.',
+        expected='Common coordinate probabilities sum: 1\nSelected probability, edited phase: 1/5\nUnsigned coherent: 0\nSigned coherent: 1\nComplete coordinate dephasing: 1/3\nExported 5 exact phase comparisons.\n',
+        code='''from fractions import Fraction as Q
+import csv
+import io
+from komorebi_browser import show_plot, export_file
+
+# Quantum and Circuits, quantum arithmetic QA13-QA14 and QA19-QA20.
+c = (4, 0, 2, 0, -2, 0, -4, 0, -2, 0, 2, 0)
+phase_real, phase_imag = Q(3, 5), Q(4, 5)
+if phase_real**2 + phase_imag**2 != 1:
+    raise ValueError("Choose a unit phase: real squared + imaginary squared = 1.")
+projector = [[Q(c[(n-m) % 12], 12) for m in range(12)] for n in range(12)]
+histogram = [Q(x*x, 48) for x in c]
+
+def selected(real, imag):
+    # Unnormalized v_+ + z v_-; divide squared norms by 48.
+    vr = [Q(abs(x)) if x >= 0 else abs(x)*real for x in c]
+    vi = [Q(0) if x >= 0 else abs(x)*imag for x in c]
+    pr = [sum(row[m]*vr[m] for m in range(12)) for row in projector]
+    pi = [sum(row[m]*vi[m] for m in range(12)) for row in projector]
+    probability = sum(a*a+b*b for a, b in zip(pr, pi))/48
+    assert probability == (1-real)/2
+    return probability
+
+dephased = sum(projector[n][n]*histogram[n] for n in range(12))
+print("Common coordinate probabilities sum:", sum(histogram))
+print("Selected probability, edited phase:", selected(phase_real, phase_imag))
+print("Unsigned coherent:", selected(Q(1), Q(0)))
+print("Signed coherent:", selected(Q(-1), Q(0)))
+print("Complete coordinate dephasing:", dephased)
+phases = [("1", Q(1), Q(0)), ("i", Q(0), Q(1)), ("-1", Q(-1), Q(0)),
+          ("-i", Q(0), Q(-1)), ("edited phase", phase_real, phase_imag)]
+rows = [(label, re, im, selected(re, im), dephased) for label, re, im in phases]
+show_plot([
+    {"type": "bar", "x": [r[0] for r in rows], "y": [float(r[3]) for r in rows], "name": "Coherent state"},
+    {"type": "bar", "x": [r[0] for r in rows], "y": [float(r[4]) for r in rows], "name": "After coordinate dephasing"},
+], {"title": {"text": "Same coordinate histogram, different arithmetic interference"},
+    "barmode": "group", "yaxis": {"title": {"text": "Selected probability"}, "range": [0, 1]}},
+    description="The modulus-12 projector selects four coprime Fourier labels. The unsigned coherent state has probability zero, the signed state one, and all fully coordinate-dephased states one third. Other phases interpolate without changing the original coordinate histogram. CSV fractions are exact; bar heights use floating-point conversion.")
+stream = io.StringIO(newline="")
+writer = csv.writer(stream, lineterminator="\\n")
+writer.writerow(["phase", "phase_real", "phase_imag", "coherent_selected_probability", "dephased_selected_probability"])
+writer.writerows(rows)
+export_file("arithmetic-phase.csv", stream.getvalue())
+print("Exported 5 exact phase comparisons.")
+'''),
     'physics-dephasing': dict(
         title='Recover a state after partial dephasing', group='Physics', packages=[],
         works=['paper-vii'], collection_guide='quantum-phase',

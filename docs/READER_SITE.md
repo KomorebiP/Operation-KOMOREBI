@@ -136,6 +136,11 @@ and records to their SHA-256 identities in a deterministic ZIP. Pages CI
 checks the arithmetic, expected output, reproducible bytes, and corruption
 detection. The `physics-dephasing` playground preset exports editable exact
 data. These finite teaching checks do not replay Lean.
+The collection extension adds amplitude damping, a rational modulus-12
+Ramanujan projector and phase family, and three-qubit bit-flip recovery.
+Three additional CSVs and the `physics-arithmetic-phase` preset expose
+the exact data. The expanded program checks 1,917 finite cases, including
+the difference between syndrome measurement and full address measurement.
 
 ## Build locally
 
