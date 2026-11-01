@@ -168,6 +168,9 @@ def verify(root, pages, documents):
         elif config.get('custom_reader') == 'paper_x':
             from paper_x_reading import source_specs as paper_x_specs
             config['chapters']=paper_x_specs(load)
+        elif config.get('custom_reader') == 'paper_xi':
+            from paper_xi_reading import source_specs as paper_xi_specs
+            config['chapters']=paper_xi_specs(load)
         elif config.get('custom_reader'):
             config['chapters']=source_specs(load)
         sequence=entries(config)

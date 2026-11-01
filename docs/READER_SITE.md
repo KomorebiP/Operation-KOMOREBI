@@ -169,6 +169,31 @@ bibliography and mathematical order. Historical totals and the independent
 outputs of the conditional endpoint retain their source qualifications.
 This conversion adds no proof assessment or Lean execution.
 
+## Paper XI HTML reading edition
+
+[Paper XI](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-xi/index.html)
+has 38 reading pages and a bibliography. All 19 main sections, 68 main proof
+environments and fifteen construction appendices are retained. The conversion
+preserves 1,030 typeset mathematical expressions, 275 literal derivation blocks,
+16 original figures, five semantic tables and all 29 bibliography entries.
+The visual, Lean and research companions remain available as PDFs.
+
+The [chapter map](../tools/paper_xi_sections.json) fixes contiguous ranges and
+authored input order. The [converter](../tools/paper_xi_reading.py) preserves
+literal derivations, source-line anchors, published numbering and Conjecture 66's
+open status. Internal companion route keys resolve through the retained reading
+concordance to actual PDF pages. The bibliography follows the published order
+and citation numbers, checked against the compiled labels.
+
+The [figure renderer](../tools/build_paper_xi_figures.py) produces browser PNGs
+from receipt-bound single-page PDFs. The shared publisher verifies the original
+PDF and rendered PNG hashes; normal builds need no PDF renderer.
+
+Run `python -B -m unittest discover -s tools -p 'test_paper_xi_reading.py'`
+to check input coverage, numbering, literal and mathematical order, figures,
+tables, companion routes and bibliography. The HTML conversion adds no proof
+assessment, arithmetic realization result or Lean execution.
+
 ## Special Functions hub and coupled-function lab
 
 The [Special Functions hub](SPECIAL_FUNCTIONS.md) connects the current HTML

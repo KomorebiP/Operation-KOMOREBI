@@ -229,6 +229,16 @@ remain inside their proof blocks. Historical ledger totals and the final
 contract's separate outputs keep their original qualifications. The thirty-page
 visual atlas remains in the PDF. No proof review or Lean execution is added.
 
+The [Paper XI reading edition](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-xi/index.html)
+includes all 19 main sections and fifteen construction appendices in 38 reading
+pages. It retains 1,030 typeset mathematical expressions, 275 literal derivations,
+68 proof environments, 16 original figures, five semantic tables and all 29
+bibliography entries. Literal derivations remain selectable, including those
+inside lists. Conjecture 66 keeps its published number and open status.
+Companion links resolve to the delivered PDF pages using the retained reading
+concordance. Visual, Lean and research companions remain in PDF. This reading
+conversion adds no proof review or Lean execution.
+
 Paper I includes its orientation, foundations, packet and graph results,
 transport, worked models, notation ledger, statement concordance and bibliography.
 Its ten manuscript figures retain their captions and have short text alternatives
@@ -358,7 +368,7 @@ Document pages link back to the work, written proofs, Lean coverage, code and
 available worked examples. Edition READMEs are rendered as HTML. Linked
 manuscript and program sources have selectable text and line links. TeX source
 is shown as source, with links to included manuscript sections where available.
-Papers I–X also have formatted HTML chapters. Paper IV's visual atlas
+Papers I–XI also have formatted HTML chapters. Paper IV's visual atlas
 has HTML plates; all original visual atlases remain available through the on-site PDF reader. Use the PDF for
 typeset manuscript sections that have not yet been converted to HTML.
 

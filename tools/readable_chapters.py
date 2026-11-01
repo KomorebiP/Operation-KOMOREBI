@@ -160,6 +160,9 @@ register_paper_ix(BOOKS, CHAPTERS)
 from paper_x_reading import BOOK as TENTH_BOOK, CHAPTERS as TENTH_CHAPTERS
 BOOKS['paper-x'] = TENTH_BOOK
 CHAPTERS += TENTH_CHAPTERS
+from paper_xi_reading import BOOK as ELEVENTH_BOOK, CHAPTERS as ELEVENTH_CHAPTERS
+BOOKS['paper-xi'] = ELEVENTH_BOOK
+CHAPTERS += ELEVENTH_CHAPTERS
 from special_functions_reading import CONFIG as SPECIAL_FUNCTIONS_BOOK
 BOOKS[SPECIAL_FUNCTIONS_BOOK['work']] = SPECIAL_FUNCTIONS_BOOK
 from proof_path_reading import BOOK as PROOF_PATH_BOOK, CHAPTERS as PROOF_PATH_CHAPTERS
@@ -180,6 +183,7 @@ PANELS = {'keyidea': 'The central idea', 'interpretation': 'How to read the resu
           'hypothesisguide': 'Why the hypotheses matter', 'sectionrecap': 'Section recap',
           'warningbox': 'Do not conflate'}
 BLOCKS = NUMBERED | set(PANELS) | {'proof','figure','table','longtable','tabularx','tabular','lstlisting','verbatim','thebibliography','conceptchain','statement'}
+BLOCKS.update({'enumerate','itemize','description'})
 MACROS = {'Pcal', 'Qcal', 'Rcal', 'Acal', 'Scal', 'cA', 'cS', 'End', 'id', 'bbk'}
 # Search aliases describe notation, not new equivalences between mathematical claims.
 SYMBOLS = {'alpha': 'α', 'beta': 'β', 'gamma': 'γ', 'rho': 'ρ', 'omega': 'ω',
@@ -556,7 +560,7 @@ class Chapter:
                 value,pos=group(text,pos)
                 out.append(self.inline(value))
             elif text[pos] == '\\':
-                if text[pos:pos+2] in {r'\_',r'\&',r'\%',r'\#',r'\$'}:
+                if text[pos:pos+2] in {r'\_',r'\&',r'\%',r'\#',r'\$',r'\{',r'\}'}:
                     out.append(html.escape(text[pos+1]));pos+=2;continue
                 if text[pos:pos+2] in {r'\ ',r'\,',r'\;',r'\:',r'\!'}:
                     out.append('' if text[pos+1]=='!' else ' ');pos+=2;continue
@@ -567,8 +571,8 @@ class Chapter:
                 if not m: raise ValueError('Unsupported prose escape at '+text[pos:pos+40])
                 name = m[1]
                 pos += m.end()
-                if name in {'S','textquotesingle','o'}:
-                    out.append({'S':'§','textquotesingle':'’','o':'ø'}[name])
+                if name in {'S','textquotesingle','o','ldots','textbackslash'}:
+                    out.append({'S':'§','textquotesingle':'’','o':'ø','ldots':'…','textbackslash':'\\'}[name])
                     if text[pos:pos+1]==' ': pos+=1
                     continue
                 if name in {'quad','qquad','hfill'}:
@@ -626,8 +630,9 @@ class Chapter:
                     out.append('<a class="included-reading" href="'+self.relative(target['url'])+'">Read '+html.escape(target['title'].lower())+'</a>')
                 elif name=='href':
                     label,pos=group(text,pos)
-                    if not value.startswith(('https://','http://')): raise ValueError('Unsupported bibliography URL')
-                    out.append('<a href="'+html.escape(value,quote=True)+'">'+self.inline(label)+'</a>')
+                    targets=getattr(self,'href_targets',{})
+                    if value not in targets and not value.startswith(('https://','http://')): raise ValueError('Unsupported bibliography URL')
+                    out.append('<a href="'+html.escape(targets.get(value,value),quote=True)+'">'+self.inline(label)+'</a>')
                 elif name=='url':
                     if not value.startswith(('https://','http://')):raise ValueError('Unsupported bibliography URL')
                     out.append('<a href="'+html.escape(value,quote=True)+'">'+html.escape(value)+'</a>')
@@ -687,6 +692,11 @@ class Chapter:
             before=self.paragraphs(text[:listing.start()])
             content=''.join('<li>'+('<span class="conclusion-label">I.'+str(i)+'. </span>' if options[option]=='I' else '')+self.paragraphs(item.strip())+'</li>' for i,item in enumerate(items[1:],1))
             return before+'<'+tag+attrs+'>'+content+'</'+tag+'>'+self.paragraphs(text[listing.end():])
+        literal=re.search(r'\\begin\{verbatim\}(.*?)\\end\{verbatim\}',text,re.S)
+        if literal:
+            label=getattr(self,'literal_listing_label','Original algorithm listing')
+            return (self.paragraphs(text[:literal.start()])+'<pre tabindex="0" aria-label="'+label+'"><code>'
+                +html.escape(literal[1].strip('\n'))+'</code></pre>'+self.paragraphs(text[literal.end():]))
         chunks=[]
         pos=0
         for m in MATH_PATTERN.finditer(text):
@@ -812,6 +822,8 @@ def prepare(reader):
                 from paper_ix_reading import prepare_book
             elif config['custom_reader'] == 'paper_x':
                 from paper_x_reading import prepare_book
+            elif config['custom_reader'] == 'paper_xi':
+                from paper_xi_reading import prepare_book
             else:
                 from special_functions_reading import prepare_book
             reader.readable_books[work] = prepare_book(reader, config)
@@ -1202,7 +1214,8 @@ def render_book(reader,book):
                     body+='<section id="ref-'+entry['key']+'"><h3>'+reference_number+e(entry['key'])+'</h3>'+chapter.paragraphs(presentation_tex(entry['body']))+'</section>'
                 body+=passage_links(links)+'</section>'
             elif kind in {'lstlisting','verbatim'}:
-                body+='<section id="'+node['id']+'"><pre tabindex="0" aria-label="Original algorithm listing"><code>'+e(node['body'].strip('\n'))+'</code></pre>'+passage_links(links)+'</section>'
+                listing_label='Original literal derivation' if config.get('literal_derivations') and kind=='verbatim' else 'Original algorithm listing'
+                body+='<section id="'+node['id']+'"><pre tabindex="0" aria-label="'+listing_label+'"><code>'+e(node['body'].strip('\n'))+'</code></pre>'+passage_links(links)+'</section>'
             else:
                 row=rows.get(node['line']) or proof_rows.get(node['line'])
                 if row:
@@ -1225,8 +1238,9 @@ def render_book(reader,book):
             if kind not in {'figure','thebibliography'}:
                 plain,aliases=plain_math(re.sub(r'\\label\{[^}]+\}','',node['body']).replace('$',''))
                 parent=next((n['title'] for n in reversed(headings) if n['line']<=node['line']),spec['title'])
-                search_title=(parent+' / '+('Algorithm' if kind=='lstlisting' else 'Commands' if kind=='verbatim' else 'Passage at line '+str(node['line']))) if kind in {'text','lstlisting','verbatim'} else label
-                item=dict(title=config['label']+' / '+typography(search_title),group='Collection',kind='Code' if kind in {'lstlisting','verbatim'} else ('Written proofs' if kind=='proof' else 'Papers and source'),work_ids=[work],url=page+'#'+node['id'],text=parent+' '+plain+' '+aliases,preview=plain[:240] or label)
+                literal_derivation=kind=='verbatim' and config.get('literal_derivations')
+                search_title=(parent+' / '+('Algorithm' if kind=='lstlisting' else 'Literal derivation' if literal_derivation else 'Commands' if kind=='verbatim' else 'Passage at line '+str(node['line']))) if kind in {'text','lstlisting','verbatim'} else label
+                item=dict(title=config['label']+' / '+typography(search_title),group='Collection',kind='Code' if kind in {'lstlisting','verbatim'} and not literal_derivation else ('Written proofs' if kind=='proof' else 'Papers and source'),work_ids=[work],url=page+'#'+node['id'],text=parent+' '+plain+' '+aliases,preview=plain[:240] or label)
                 # Preview prose only when it has no list/table/input syntax.
                 snippet=re.split(r'\\\[|\\begin',node['body'],maxsplit=1)[0]
                 snippet=re.sub(r'\\label\{[^}]+\}','',snippet).strip()
@@ -1247,6 +1261,9 @@ def render_book(reader,book):
             expressions=source_math(raw.decode('utf-8-sig'),spec)
         elif config.get('custom_reader')=='paper_x':
             from paper_x_reading import source_math
+            expressions=source_math(raw.decode('utf-8-sig'),spec)
+        elif config.get('custom_reader')=='paper_xi':
+            from paper_xi_reading import source_math
             expressions=source_math(raw.decode('utf-8-sig'),spec)
         if chapter.math!=expressions:
             difference=next((i for i,(a,b) in enumerate(zip(chapter.math,expressions)) if a!=b),min(len(chapter.math),len(expressions)))
@@ -1305,6 +1322,9 @@ def render_book_index(reader,book,reports):
 
 
 def render_bibliography(reader,book):
+    if book['config'].get('custom_reader')=='paper_xi':
+        from paper_xi_reading import render_bibliography as render_paper_xi_bibliography
+        return render_paper_xi_bibliography(reader,book)
     if book['config'].get('custom_reader')=='paper_x':
         from paper_x_reading import render_bibliography as render_paper_x_bibliography
         return render_paper_x_bibliography(reader,book)

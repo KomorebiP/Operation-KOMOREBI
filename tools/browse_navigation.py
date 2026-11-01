@@ -201,6 +201,8 @@ class Browser:
                 links.insert(0,'[Read online: complete manuscript, strengthening and historical appendices](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-ix/index.html)')
             if title=='Read' and c['id']=='paper-x':
                 links.insert(0,'[Read online: manuscript, historical continuations and final conditional completion](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-x/index.html)')
+            if title=='Read' and c['id']=='paper-xi':
+                links.insert(0,'[Read online: complete monograph and fifteen construction appendices](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-xi/index.html)')
             if title=='Written proofs' and edition:
                 links.insert(0,link('Mathematical discussion in the revised essay',edition['manuscript'],page))
             has_lean = any(a['kind']=='lean' for a in self.rows[c['id']]['resources'])
