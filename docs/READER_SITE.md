@@ -71,6 +71,21 @@ and return links on the related work pages. Edit tutorial explanations above
 the `learning-navigation` marker. The status command replaces the section
 below that marker. A subject route does not establish a theorem correspondence.
 
+## Saved reading
+
+**Browse → Saved reading** opens a personal list of pages and passages stored in
+this browser. Reading pages offer **Save page**, and section headings have a
+bookmark control that retains the exact fragment. The list supports title,
+paper and section search, individual removal, and updates across open tabs.
+It records explicit saves only. Storage failures leave save controls unchanged
+and explain how to use browser bookmarks instead. Without JavaScript, the
+ordinary reading links and browser bookmarks remain available.
+
+The page and controls are built by `tools/reading_list.py`; browser behavior and
+styles live in `website/assets/reading-list.js` and `reading-list.css`. URL and
+storage guards keep saved links inside this site's reading pages. The site
+workflow runs the rendering and browser-state regressions alongside reader tests.
+
 ## Paper V HTML reading edition
 
 [Paper V](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-v/index.html)
@@ -641,6 +656,21 @@ definition separately. Matching symbol spellings remain available in a disclosur
 The build checks title metadata against the source; comments and code examples
 cannot supply a definition name.
 
+## Source-bound proofreading notes
+
+The [1 November 2026 proofreading record](../manifests/reader-proofreading-2026-11-01.json)
+covers the main online chapter text of Papers I and II. Two labelled editorial
+reading notes clarify Paper II's abbreviated Fourier hypotheses and the two
+uses of `t` in its walk-series subsection. The retained manuscripts, mathematical
+expressions, statement numbering and proof bodies are unchanged.
+
+`tools/reader_proofreading.py` binds the review to 17 source-file hashes and
+exact source passages. Notes link to the existing HTML definitions and publish
+their record at `documents/reader-proofreading.json`. The build rejects stale
+source bindings, moved reference targets, missing notes and duplicate placements.
+This is a proofreading record, with no new proof audit, Lean replay or external
+citation verification. Visual atlases and PDF layout are outside its coverage.
+
 ## Signal Laboratory
 
 `signal-lab.html` is a larger known-reference signal experiment with 16–256
@@ -648,6 +678,21 @@ samples. Its maintained interface is in `tools/signal_lab.py`; the model and
 browser controller are `website/assets/signal-lab-core.mjs` and
 `website/assets/signal-lab.js`. The shared site builder publishes it and adds
 its search entry. Both the page script and model import use content versions.
+
+`signal-lab-workspace.mjs` supplies bounded sample strokes, a 32-edit history,
+and validated notebook serialization. Its import and the model import both use
+content versions, including nested module references. Drawing fills crossed
+sample addresses and commits a stroke on release; cancellation restores the
+previous reference. The precise sample editor provides keyboard access.
+
+The notebook keeps at most 12 labeled settings records in local browser storage
+and falls back to the current tab if storage is unavailable. JSON imports append
+atomically within that limit. All metrics are recomputed from settings; stored
+result fields are ignored. Saved reconstructions are overlaid only when both
+reference and observed arrays match exactly. Resetting the active lab retains
+the notebook. Its JSON and results CSV are separate from the active experiment's
+exports and share link. `node --test tools/test_signal_lab_workspace.cjs` checks
+stroke/history behavior, import boundaries and comparison eligibility.
 
 The lab compares averaging-normalized Haar wavelets with their support
 weights, an orthonormal DCT-II, and sample coordinates. Seeded bounded integer

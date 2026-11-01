@@ -29,17 +29,41 @@ def build(site):
 <p class="lab-control-note" id="sl-shape-note">Preset samples are rounded to whole numbers. Imported data supplies its own sample count.</p></details>
 </fieldset></details>
 <section class="sl-main-plot" aria-labelledby="sl-reconstruction-title">
-<h2 id="sl-reconstruction-title">Signal reconstruction <span id="sl-active-name">· Haar wavelets</span></h2>
-<div class="sl-legend"><span class="sl-reference">Clean reference</span><span class="sl-observed">Observed with noise</span><span class="sl-reconstruction">Selected reconstruction</span></div>
+<h2 id="sl-reconstruction-title"><span id="sl-main-title">Signal reconstruction</span> <span id="sl-active-name">· Haar wavelets</span></h2>
+<div class="sl-legend sl-signal-legend"><span class="sl-reference">Clean reference</span><span class="sl-observed">Observed with noise</span><span class="sl-reconstruction">Selected reconstruction</span></div>
+<div class="sl-edit-toolbar"><button type="button" id="sl-draw" data-sl-action aria-pressed="false" disabled>Draw reference</button>
+<button type="button" id="sl-undo" disabled>Undo edit</button><button type="button" id="sl-redo" disabled>Redo edit</button></div>
+<p class="lab-caption" id="sl-draw-help" hidden>Drag across the plot to draw whole-number reference samples from −64 to 64. Crossed addresses are filled between pointer positions. Finish drawing to see the noisy reconstruction. Escape cancels a stroke and leaves drawing mode.</p>
 SIGNAL_PLOT
 <fieldset class="sl-inspector" id="sl-sample-inspector" disabled><legend class="sr-only">Inspect a sample</legend>ADDRESS
 <p class="sl-readout" id="sl-sample-status" role="status"></p></fieldset>
+<details class="sl-exact-edit"><summary>Edit the selected sample precisely</summary><fieldset id="sl-edit-controls" disabled><legend class="sr-only">Set a reference sample</legend>
+<label class="lab-label" for="sl-edit-value">Reference value · whole number from −64 to 64<input type="number" id="sl-edit-value" min="-64" max="64" step="1" value="0" required></label>
+<button type="button" id="sl-set-sample">Set selected sample</button></fieldset></details>
+<p class="sl-readout" id="sl-edit-status" role="status"></p>
 </section></div>
 <div class="sl-actions"><button type="button" id="sl-copy" data-sl-action disabled>Copy experiment link</button>
+<button type="button" id="sl-save-run" data-sl-action disabled>Save run to notebook</button>
 <label class="lab-label" for="sl-export-kind">Export
 <select id="sl-export-kind" disabled><option value="signal">Signal CSV</option><option value="curves">Error curves CSV</option><option value="experiment">Experiment JSON</option></select></label>
 <button type="button" id="sl-export" data-sl-action disabled>Download</button>
 <button type="button" id="sl-reset" data-sl-action disabled>Reset lab</button></div>
+<details class="sl-data sl-notebook" id="sl-notebook"><summary>Experiment notebook <span id="sl-notebook-count">0 / 12 saved runs</span></summary>
+<p class="lab-caption">Save competing setups, rename their rows, and restore them later. Runs are saved in this browser. Download notebook JSON to keep or exchange the collection; importing appends runs and recomputes their results. Reset lab keeps the notebook.</p>
+<p class="lab-caption" id="sl-notebook-status" role="status"></p>
+<div class="sl-notebook-actions"><button type="button" id="sl-notebook-export" disabled>Download notebook JSON</button>
+<button type="button" id="sl-notebook-csv" disabled>Download results CSV</button>
+<label class="lab-label" for="sl-notebook-file">Import notebook JSON · up to 64 KiB<input type="file" id="sl-notebook-file" accept=".json,application/json" disabled></label></div>
+<p id="sl-notebook-empty" class="lab-caption">Save the current run, change its budget or representation, then save another run to compare.</p>
+<div class="table-scroll" id="sl-notebook-table-wrap" hidden><table class="sl-notebook-table"><caption>Saved runs · squared errors recomputed from their settings</caption>
+<thead><tr><th scope="col">Run name</th><th scope="col">Setup</th><th scope="col">Retained</th><th scope="col">Error to reference · Σ(x̂ − x)²</th><th scope="col">Discarded energy · Σ(y − x̂)²</th><th scope="col">Actions</th></tr></thead>
+<tbody id="sl-notebook-rows"></tbody></table></div>
+<div id="sl-notebook-comparison" hidden><h2>Compare saved reconstructions</h2>
+<div class="sl-pair-controls"><label class="lab-label" for="sl-compare-a">Run A<select id="sl-compare-a"></select></label>
+<label class="lab-label" for="sl-compare-b">Run B<select id="sl-compare-b"></select></label></div>
+<p class="sl-readout" id="sl-pair-summary" role="status"></p>
+<div id="sl-pair-plot" hidden><div class="sl-legend"><span class="sl-reference">Clean reference</span><span class="sl-cosine" id="sl-pair-a-label">Run A</span><span class="sl-samples" id="sl-pair-b-label">Run B</span></div>PAIR_PLOT</div></div>
+</details>
 <section aria-labelledby="sl-comparison-title"><h2 id="sl-comparison-title">Same budget. Three representations.</h2>
 <p class="lab-caption" id="sl-policy-note"></p>
 <div class="table-scroll"><table class="sl-comparison"><caption id="sl-budget-summary">12 of 64 coefficients retained in each representation</caption>
@@ -59,7 +83,7 @@ COEFFICIENT_PLOT
 <p class="sl-readout" id="sl-coefficient-status" role="status"></p></fieldset>
 <h3>Selected contribution, if retained</h3>BASIS_PLOT
 </section></div>
-<details class="sl-data"><summary>Import your own signal</summary>
+<details class="sl-data" id="sl-import"><summary>Import your own signal</summary>
 <p id="sl-import-help">Use 16, 32, 64, 128, or 256 whole-number reference samples from −64 to 64. Paste values, or import a numeric CSV with a reference, value, or sample column. A saved experiment JSON restores the complete setup.</p>
 <p class="lab-caption">Imported samples become the known reference. The noise control adds simulated noise afterward; this experiment does not estimate an unknown real-world clean signal.</p>
 <fieldset class="sl-import-controls" id="sl-import-controls" disabled>
@@ -91,6 +115,7 @@ COEFFICIENT_PLOT
         'FRONTIER_PLOT': diagram('sl-frontier-chart', 'Reference reconstruction errors for all coefficient budgets and all three representations'),
         'COEFFICIENT_PLOT': diagram('sl-coefficient-chart', 'Weighted coefficient energy and retained selection'),
         'BASIS_PLOT': diagram('sl-basis-chart', 'Selected coefficient contribution at every sample address'),
+        'PAIR_PLOT': diagram('sl-pair-chart', 'Two saved reconstructions of the same observed signal'),
         'COMPARISON_ROWS': rows,
     }
     # Replace longer placeholders before their shorter prefixes.
@@ -98,12 +123,16 @@ COEFFICIENT_PLOT
         body = body.replace(key, replacements[key])
     def asset(name):
         return 'assets/'+name+'?v='+hashlib.sha256((site.root/'website/assets'/name).read_bytes()).hexdigest()[:12]
-    script = (site.root/'website/assets/signal-lab.js').read_text(encoding='utf-8')
-    script = script.replace("'./signal-lab-core.mjs'", "'./signal-lab-core.mjs?v="+hashlib.sha256((site.root/'website/assets/signal-lab-core.mjs').read_bytes()).hexdigest()[:12]+"'")
+    def version_model(script):
+        return script.replace("'./signal-lab-core.mjs'", "'./signal-lab-core.mjs?v="+hashlib.sha256((site.root/'website/assets/signal-lab-core.mjs').read_bytes()).hexdigest()[:12]+"'")
+    workspace = version_model((site.root/'website/assets/signal-lab-workspace.mjs').read_text(encoding='utf-8'))
+    site.write('assets/signal-lab-workspace.mjs', workspace)
+    script = version_model((site.root/'website/assets/signal-lab.js').read_text(encoding='utf-8'))
+    script = script.replace("'./signal-lab-workspace.mjs'", "'./signal-lab-workspace.mjs?v="+hashlib.sha256(workspace.encode()).hexdigest()[:12]+"'")
     site.write('assets/signal-lab.js', script)
     body = '<link rel="stylesheet" href="'+asset('interactive-diagrams.css')+'"><link rel="stylesheet" href="'+asset('signal-lab.css')+'">'+body
     body += '<script type="module" src="assets/signal-lab.js?v='+hashlib.sha256(script.encode()).hexdigest()[:12]+'"></script>'
     site.page('signal-lab.html', 'Signal laboratory', body)
     site.search.append(dict(title='Signal laboratory: compare Haar, cosine and sample representations',group='Collection',kind='Examples',
                             work_ids=['paper-ii','paper-v','information-realization'],url='signal-lab.html',
-                            text='Interactive signal laboratory wavelets DCT cosine compression denoising coefficient budget weighted energy error curves seeded noise CSV JSON import export'))
+                            text='Interactive signal laboratory draw edit undo reference notebook compare saved runs wavelets DCT cosine compression denoising coefficient budget weighted energy error curves seeded noise CSV JSON import export'))
