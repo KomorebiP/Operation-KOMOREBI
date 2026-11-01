@@ -15,8 +15,9 @@ the exact file hashes bound by this companion's replay receipt.
 For every `n`, every simple undirected graph on `Fin n` with decidable
 adjacency, and every integrable binary edge field, the list of all integrating
 vertex labelings has length `2 ^ componentCount G`. The list is complete and
-duplicate-free. `componentCount G` enumerates the actual component quotient
-exactly once. A canonical component index is constructed within the proof for
+duplicate-free. `componentCount G` is the length of a complete, duplicate-free
+enumeration of the actual component quotient. A canonical component index is
+constructed within the proof for
 every finite graph; no supplied partition or numerical component count is
 assumed by the final theorem.
 

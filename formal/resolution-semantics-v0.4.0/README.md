@@ -28,6 +28,11 @@ Use a fresh output directory for every replay. The runner compiles fresh proof
 objects, checks every theorem's axiom inventory, verifies seven inherited graph
 examples and six count examples, and checks eight expected rejections.
 
+The [source-bound Windows replay](../../verification/resolution-semantics/counting-windows-2026-11-01-run1/receipt.json)
+passed all 119 declarations, thirteen executable cases and eight rejection
+controls. It records clean source commit
+`99b8fca55b0fc216e7f09d30102f25b5a0f61944` and every compiled input hash.
+
 ## What the count means
 
 `allSolutions G r` is an executable list that checks every binary vertex
@@ -97,7 +102,7 @@ two-world obstruction theorems remain axiom-free. No accepted theorem may
 depend on `sorryAx` or a custom axiom.
 
 The rank formulas `n-c` and `m-n+c`, numerical counts under partial pinning,
-general Boolean-algebra-valued transport, weighted multiresolution and forcing
-applications remain outside this increment. The paper remains active
+general Boolean-algebra-valued transport, selector/envelope results, weighted
+multiresolution and forcing applications remain outside this increment. The paper remains active
 development. Abstract graph labelings are not asserted to be realized by
 models of ZFC or forcing diagrams.
