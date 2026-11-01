@@ -12,6 +12,14 @@ def build(site):
 <p class="lab-caption" id="sl-status" role="status"></p>
 <label class="lab-share-fallback" id="sl-link-fallback" for="sl-link" hidden>Experiment link<input type="url" id="sl-link" readonly></label>
 <p class="lab-error" id="sl-error" role="status" hidden></p>
+<details class="sl-data sl-starters" id="sl-starters"><summary>Start with a comparison experiment</summary>
+<p class="lab-caption" id="sl-starter-note">Each starter opens a reference experiment and adds two named runs to your notebook. Existing saved runs are kept.</p>
+<div class="sl-starter-grid">
+<article><h2>Sharp edges</h2><p>Compare Haar and cosine reconstructions of steps and a spike, keeping eight coefficients in each.</p><button type="button" data-sl-starter="edges" disabled>Compare sharp edges</button></article>
+<article><h2>A cosine-like tone</h2><p>Keep one component in each representation. The generated reference is rounded to whole numbers.</p><button type="button" data-sl-starter="tone" disabled>Compare a tone</button></article>
+<article><h2>Does more detail help?</h2><p>Compare six and 32 Haar coefficients from the same noisy observations. Inspect their errors against the known reference.</p><button type="button" data-sl-starter="noise" disabled>Compare detail in noise</button></article>
+<article><h2>Magnitude or energy?</h2><p>Compare two Haar ranking rules on a 16-sample benchmark, retaining one coefficient under each rule.</p><button type="button" data-sl-starter="ranking" disabled>Compare ranking rules</button></article>
+</div></details>
 <div class="sl-primary-grid"><details class="sl-setup" id="sl-setup" open><summary>Experiment controls<span id="sl-controls-summary">64 samples · 12 kept · noise ±4</span></summary>
 <fieldset class="sl-controls" id="sl-controls" disabled><legend>Build the experiment</legend>
 <div class="sl-form-grid"><label class="lab-label" for="sl-shape">Reference signal
@@ -62,7 +70,23 @@ SIGNAL_PLOT
 <div class="sl-pair-controls"><label class="lab-label" for="sl-compare-a">Run A<select id="sl-compare-a"></select></label>
 <label class="lab-label" for="sl-compare-b">Run B<select id="sl-compare-b"></select></label></div>
 <p class="sl-readout" id="sl-pair-summary" role="status"></p>
-<div id="sl-pair-plot" hidden><div class="sl-legend"><span class="sl-reference">Clean reference</span><span class="sl-cosine" id="sl-pair-a-label">Run A</span><span class="sl-samples" id="sl-pair-b-label">Run B</span></div>PAIR_PLOT</div></div>
+<div id="sl-pair-plot" hidden>
+<fieldset class="sl-pair-inspector" id="sl-pair-inspector" disabled><legend class="sr-only">Inspect the saved comparison</legend>
+<label class="lab-label" for="sl-pair-view">Plot view<select id="sl-pair-view"><option value="overlay">Reconstructions</option><option value="error">Signed error to reference</option><option value="difference">Difference · B − A</option></select></label>
+<p class="lab-caption" id="sl-pair-view-note">Click the plot or use the sample slider to inspect both runs.</p>
+<div class="sl-legend"><span class="sl-reference" id="sl-pair-reference-label">Clean reference</span><span class="sl-cosine" id="sl-pair-a-label">Run A</span><span class="sl-samples" id="sl-pair-b-label">Run B</span><span class="sl-difference" id="sl-pair-difference-label" hidden>Difference · B − A</span></div>
+PAIR_PLOT PAIR_ADDRESS
+<p class="sl-readout" id="sl-pair-gap" role="status"></p>
+<div class="sl-pair-actions"><button type="button" id="sl-pair-largest">Inspect largest difference</button><button type="button" id="sl-pair-csv">Download comparison CSV</button></div>
+</fieldset>
+<dl class="sl-pair-readouts" aria-label="Selected sample values"><div><dt>Sample address</dt><dd><output id="sl-pair-sample">—</output></dd></div>
+<div><dt>Reference</dt><dd><output id="sl-pair-reference">—</output></dd></div><div><dt>Observed</dt><dd><output id="sl-pair-observed">—</output></dd></div>
+<div><dt>Reconstruction A</dt><dd><output id="sl-pair-a">—</output></dd></div><div><dt>Reconstruction B</dt><dd><output id="sl-pair-b">—</output></dd></div>
+<div><dt>A − reference</dt><dd><output id="sl-pair-error-a">—</output></dd></div><div><dt>B − reference</dt><dd><output id="sl-pair-error-b">—</output></dd></div>
+<div><dt>Difference · B − A</dt><dd><output id="sl-pair-difference">—</output></dd></div></dl>
+<details id="sl-pair-table-details" class="sl-pair-table"><summary>Inspect every comparison sample</summary><div class="table-scroll"><table><caption>Signed errors use reconstruction minus reference; differences use B minus A.</caption>
+<thead><tr><th scope="col">Address</th><th scope="col">Reference</th><th scope="col">Observed</th><th scope="col">Run A</th><th scope="col">Run B</th><th scope="col">A − reference</th><th scope="col">B − reference</th><th scope="col">B − A</th></tr></thead><tbody id="sl-pair-table"></tbody></table></div></details>
+</div></div>
 </details>
 <section aria-labelledby="sl-comparison-title"><h2 id="sl-comparison-title">Same budget. Three representations.</h2>
 <p class="lab-caption" id="sl-policy-note"></p>
@@ -116,6 +140,7 @@ COEFFICIENT_PLOT
         'COEFFICIENT_PLOT': diagram('sl-coefficient-chart', 'Weighted coefficient energy and retained selection'),
         'BASIS_PLOT': diagram('sl-basis-chart', 'Selected coefficient contribution at every sample address'),
         'PAIR_PLOT': diagram('sl-pair-chart', 'Two saved reconstructions of the same observed signal'),
+        'PAIR_ADDRESS': slider('sl-pair-address', 'Inspect comparison sample', 32, 0, 63),
         'COMPARISON_ROWS': rows,
     }
     # Replace longer placeholders before their shorter prefixes.
@@ -135,4 +160,4 @@ COEFFICIENT_PLOT
     site.page('signal-lab.html', 'Signal laboratory', body)
     site.search.append(dict(title='Signal laboratory: compare Haar, cosine and sample representations',group='Collection',kind='Examples',
                             work_ids=['paper-ii','paper-v','information-realization'],url='signal-lab.html',
-                            text='Interactive signal laboratory draw edit undo reference notebook compare saved runs wavelets DCT cosine compression denoising coefficient budget weighted energy error curves seeded noise CSV JSON import export'))
+                            text='Interactive signal laboratory starter experiments draw edit undo reference notebook compare saved runs signed residual errors differences inspection wavelets DCT cosine compression denoising coefficient budget weighted energy error curves seeded noise CSV JSON import export'))

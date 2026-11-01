@@ -61,3 +61,35 @@ test('comparisons require identical data and CSV metrics come from recomputed ex
   assert.equal(csv.trim().split('\n').length,3);assert.ok(csv.includes('"\'=formula"'));assert.ok(csv.includes('"A ""quoted"" name"'));
   assert.equal(Number(csv.trim().split('\n')[1].split(',').at(-2)),a.analyses.haar.referenceError);
 });
+
+test('every starter produces two independent valid settings for identical observations',async()=>{
+  const w=await workspace,m=await core;
+  for(const id of ['edges','tone','noise','ranking']) {
+    const entries=w.starterRuns(id);assert.equal(entries.length,2);
+    entries.forEach(entry=>assert.deepEqual(m.settings(entry.settings),entry.settings));
+    assert.equal(w.sameObservation(...entries.map(entry=>m.experiment(entry.settings))),true);
+    entries[0].settings.seed=999;assert.equal(w.starterRuns(id)[0].settings.seed,17);
+  }
+  const ranked=w.starterRuns('ranking').map(entry=>m.experiment(entry.settings));
+  assert.equal(ranked[0].analyses.haar.referenceError,272);assert.equal(ranked[1].analyses.haar.referenceError,288);
+  assert.throws(()=>w.starterRuns('unknown'),RangeError);
+});
+
+test('signed comparison data and CSV agree with an exact zero-versus-full sample reconstruction',async()=>{
+  const w=await workspace,m=await core,reference=Array.from({length:16},(_,i)=>i+1);
+  const config={...m.defaults(),n:16,shape:'custom',custom:reference,basis:'samples',noise:0,budget:0,address:0};
+  const a=m.experiment(config),b=m.experiment({...config,budget:16}),data=w.compareRuns(a,b);
+  assert.equal(data.maximum,16);assert.equal(data.maximumAddress,15);
+  for(let i=0;i<16;i++)assert.deepEqual(data.rows[i],{address:i,reference:i+1,observed:i+1,a:0,b:i+1,errorA:-(i+1),errorB:0,difference:i+1});
+  const lines=w.comparisonCsv(a,b).trim().split('\n');assert.equal(lines.length,17);
+  assert.equal(lines[1],'0,1,1,0,1,-1,0,1');assert.equal(lines.at(-1),'15,16,16,0,16,-16,0,16');
+  assert.equal(a.analyses.samples.referenceError,1496);assert.equal(b.analyses.samples.referenceError,0);
+  const same=w.compareRuns(a,a);assert.equal(same.maximum,0);assert.equal(same.maximumAddress,0);
+});
+
+test('comparison exports reject different data and cover the largest supported sample count',async()=>{
+  const w=await workspace,m=await core,a=m.experiment(m.defaults()),b=m.experiment({...m.defaults(),seed:18});
+  assert.throws(()=>w.compareRuns(a,b),RangeError);assert.throws(()=>w.comparisonCsv(a,b),RangeError);
+  const large=m.experiment({...m.defaults(),n:256});assert.equal(w.compareRuns(large,large).rows.length,256);
+  assert.equal(w.comparisonCsv(large,large).trim().split('\n').length,257);
+});
