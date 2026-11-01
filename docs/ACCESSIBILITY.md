@@ -395,12 +395,15 @@ a bibliography in HTML. Its ordinary, E and R section numbering follows the
 retained edition. Statements link to their recorded proofs and source lines.
 The manuscript dictionaries and numerical tables have row headers. The
 formalization ledger has a caption and row headers for its 33 scoped results. Figures keep the original captions; 15 PDF-only figures have
-source-bound web previews. The worked visual atlas has an index of all 42
-plates. V1–V6 now have HTML
-reading pages with original drawings, selectable equations, text descriptions
-and complete drawing-label transcripts. Matrices and bar values use tables
-with row and column headers. V7–V42 open at their exact PDF pages. These
-reading changes do not add a proof audit or a fresh Lean replay.
+source-bound web previews. All [42 worked atlas plates](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vi/atlas/index.html)
+have HTML reading pages with 40 original drawings, 931 selectable expressions,
+text descriptions and all 588 drawing labels. Matrix and table transcripts
+use row and column headers. Drawings can be opened at full size, and every
+plate retains its exact PDF-page link. The 40 mathematical plates have 76
+links to their manuscript passages, which link back to the plates. The two
+evidence guides retain their source edition's scope. The earlier index
+anchors and six HTML URLs remain available. These reading changes do not
+add a proof audit or a fresh Lean replay.
 
 ## Paper VII: topic chapters and figures
 
