@@ -75,10 +75,12 @@ def check_table_reading_aids(markup,aids):
         assert caption and caption[1].strip(),('Missing table caption',identifier)
         if 'caption' in aid:
             assert caption[1]==Chapter('',{}).inline(aid['caption']),('Table caption differs',identifier)
-        assert table[1].count('scope="col"')==len(aid['headers']),('Missing column headers',identifier)
+        assert table[1].count('scope="col"')==len(aid.get('subheaders',aid['headers'])),('Missing column headers',identifier)
+        if 'subheaders' in aid:
+            assert table[1].count('scope="colgroup"')==sum(r'\multicolumn' in cell for cell in aid['headers']),('Missing column groups',identifier)
         body=re.search(r'<tbody>(.*?)</tbody>',table[1],re.S)
         assert body and body[1].count('<tr>')>0,('Missing table body',identifier)
-        assert body[1].count('scope="row"')==body[1].count('<tr>'),('Missing row headers',identifier)
+        assert body[1].count('scope="row"')==body[1].count('<tr>')*len(aid.get('row_header_columns',[aid['row_header_column']])),('Missing row headers',identifier)
 
 
 def check_readable_chapter(root, documents, pages):
