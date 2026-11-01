@@ -70,9 +70,11 @@ Python checker and downloadable source-bound records.
 The [roots-of-unity and falling-factorial example](demonstrations/ROOTS_UNITY_FALLING_FACTORIAL.md)
 connects the earlier arithmetic, Euler and Stirling examples. It carries
 a character projector through a Stirling/Newton change of basis and
-independently checks the resulting operation against finite differences,
-cyclic packet multiplication and a wrong-basis counterexample. Exact
-tables and a generated diagram are published with the Python source.
+independently checks the resulting operation against actual function-image
+enumeration, rational spectral projectors, filtered generating functions,
+finite differences, cyclic packet multiplication and a wrong-basis
+counterexample. Eight exact CSV tables and two generated SVG diagrams
+are published with the Python source.
 
 ## Conventions and scope
 
