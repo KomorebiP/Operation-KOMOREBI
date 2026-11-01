@@ -25,4 +25,8 @@ assert.equal(search(data,{query:'packet',kind:'use'}).count,0);
 assert.equal(search(data,{query:'unfindable'}).count,0);
 assert.equal(search(data,{query:'alpha'}).groups[0].entries[0].tex,'\\alpha');
 assert.equal(search(data,{query:'\\alpha',exact:true}).count,1);
+const titled={...context,title:'Generator number',excerpt:'A generating family.'};
+assert.equal(rank(alpha,titled,'generator number',false),6,'Explicit passage names can be searched even outside the excerpt');
+assert.equal(rank(alpha,titled,'G',false),-1,'A short symbol query does not match an incidental initial in a passage name');
+assert.equal(rank(alpha,titled,'\\alpha',true),0,'Exact symbol queries retain priority over passage names');
 console.log('PASS: symbol ranking, case, short queries, grouping, filters and retained entries');

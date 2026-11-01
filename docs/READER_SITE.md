@@ -561,3 +561,11 @@ preview while preserving section titles, literal set braces and escaped text
 characters. These previews remain reading aids: the downloadable occurrence
 records and linked source passages retain the exact original text and positions.
 
+Word searches can use the source's explicit definition title as the result
+heading, with a direct link to its reading passage. Names follow the enclosing
+definition scope, including long definitions; unnamed definitions keep a generic
+label. Symbol searches keep the matched symbol visible and identify its source
+definition separately. Matching symbol spellings remain available in a disclosure.
+The build checks title metadata against the source; comments and code examples
+cannot supply a definition name.
+
