@@ -85,6 +85,30 @@ class FormalCompanionTests(unittest.TestCase):
                 with self.assertRaises(AssertionError):
                     validate_formal_companions(root, data, tracked)
 
+    def test_required_theorems_keep_their_exact_standard_axioms(self):
+        for variant in ('missing', 'changed-axioms'):
+            with self.subTest(variant=variant), tempfile.TemporaryDirectory() as folder:
+                root = Path(folder)
+                data, tracked, _, _, _ = self.fixture(root)
+                binding = data['components'][0]['formal_verification']
+                binding['checked_theorems'] = {'checked': []}
+                validate_formal_companions(root, data, tracked)
+                binding['checked_theorems'] = ({'missing': []} if variant == 'missing'
+                                               else {'checked': ['Classical.choice']})
+                with self.assertRaises(AssertionError):
+                    validate_formal_companions(root, data, tracked)
+
+    def test_required_graph_execution_and_controls_cannot_disappear(self):
+        for field, step in (('required_positive_steps', 'run-graph-examples'),
+                            ('required_positive_steps', 'reject-sorry'),
+                            ('required_controls', 'reject-dropped-cycle-condition')):
+            with self.subTest(field=field), tempfile.TemporaryDirectory() as folder:
+                root = Path(folder)
+                data, tracked, _, _, _ = self.fixture(root)
+                data['components'][0]['formal_verification'][field] = [step]
+                with self.assertRaises(AssertionError):
+                    validate_formal_companions(root, data, tracked)
+
     def test_rejects_uncommitted_or_escaping_source(self):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)
