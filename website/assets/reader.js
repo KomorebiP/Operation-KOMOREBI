@@ -110,6 +110,7 @@ if (chapterSidebar) {
   const summary = contents.querySelector("summary");
   const currentSection = contents.querySelector(".reading-current-section");
   const article = document.querySelector("#chapter-text");
+  const returnLinks = chapterSidebar.querySelector(".reading-return");
   const wide = window.matchMedia("(min-width: 64rem)");
   const sections = Array.from(contents.querySelectorAll('.chapter-contents a[href^="#"]')).flatMap(link => {
     let target;
@@ -117,12 +118,19 @@ if (chapterSidebar) {
     return target && article.contains(target) && target.matches("h2,h3,h4,h5,h6") ? [{link, target}] : [];
   });
   let scheduled = false;
+  function readingClearance() {
+    if (!returnLinks || wide.matches) { article.style.removeProperty("--reading-clearance"); return 110; }
+    const clearance = Math.ceil(summary.getBoundingClientRect().height + returnLinks.getBoundingClientRect().height + 12);
+    article.style.setProperty("--reading-clearance", clearance + "px");
+    return clearance + 8;
+  }
   function updateCurrentSection() {
     scheduled = false;
+    const clearance = readingClearance();
     if (!sections.length) return;
     let current = sections[0];
     for (const section of sections) {
-      if (section.target.getBoundingClientRect().top > 110) break;
+      if (section.target.getBoundingClientRect().top > clearance) break;
       current = section;
     }
     for (const section of sections) {
@@ -134,12 +142,16 @@ if (chapterSidebar) {
   function scheduleSectionUpdate() {
     if (!scheduled) { scheduled = true; requestAnimationFrame(updateCurrentSection); }
   }
-  function setContentsLayout() { contents.open = wide.matches; scheduleSectionUpdate(); }
+  function setContentsLayout() { contents.open = wide.matches; readingClearance(); scheduleSectionUpdate(); }
   setContentsLayout();
   wide.addEventListener("change", setContentsLayout);
   window.addEventListener("scroll", scheduleSectionUpdate, {passive: true});
   window.addEventListener("resize", scheduleSectionUpdate);
   window.addEventListener("load", scheduleSectionUpdate, {once: true});
+  if (returnLinks && typeof ResizeObserver !== "undefined") {
+    const observer = new ResizeObserver(scheduleSectionUpdate);
+    observer.observe(summary);observer.observe(returnLinks);
+  }
   contents.addEventListener("click", event => {
     const link = event.target.closest('a[href^="#"]');
     if (link && !wide.matches && !event.button && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey) contents.open = false;

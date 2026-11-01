@@ -123,6 +123,32 @@ class ReadingNavigationTests(unittest.TestCase):
                        outline('<nav>Contents</nav>')+'<article>Other page</article>'):
             self.assertEqual(chapter_layout(source),source)
 
+    def test_sidebar_return_links_keep_the_work_and_contents_with_exact_article(self):
+        config=self.config();config['label']='Paper <test> & reader'
+        article='<article id="chapter-text"><h2 id="L4">Kept</h2><p>\\(x+y\\)</p></article>'
+        body=navigation(config,'read/test/two.html')+outline('<nav class="chapter-contents"><a href="#L4">Kept</a></nav>')+article+navigation(config,'read/test/two.html','bottom')
+        result=chapter_layout(body)
+        parsed=Navigation(result)
+        self.assertEqual(result.count(article),1)
+        self.assertEqual(len(parsed.controls),2)
+        self.assertEqual([a['href'] for a in parsed.returns[0]['links']],['one.html','../../collection/works/test.html','index.html','references.html'])
+        self.assertIn('aria-label="Paper &lt;test&gt; &amp; reader overview"',result)
+        self.assertLess(result.index('class="reading-return"'),result.index('</aside>'))
+        self.assertNotIn(' hidden',result)
+
+    def test_nested_atlas_return_links_keep_their_own_index(self):
+        config=atlas_config('test','Paper test','read/test/atlas/index.html',[dict(number=1,url='read/test/atlas/v1.html',title='A plate')])
+        body=navigation(config,'read/test/atlas/v1.html')+outline('<nav>Sections</nav>')+'<article id="chapter-text">A plate</article>'
+        links=Navigation(chapter_layout(body)).returns[0]['links']
+        self.assertEqual([a['href'] for a in links],['index.html','../../../collection/works/test.html','index.html','index.html'])
+
+    def test_partial_reader_return_row_keeps_the_source_continuation(self):
+        config=self.config(True);page=config['bib_page']
+        body=navigation(config,page)+outline('<nav>Sections</nav>')+'<article id="chapter-text">Text</article>'
+        result=chapter_layout(body)
+        self.assertEqual(Navigation(result).returns[0]['links'][-1]['href'],'index.html#source-continuations')
+        self.assertIn('>Continue →</a>',result)
+
     def test_verifier_rejects_wrong_next_menu_and_missing_footer(self):
         import readable_chapters
         config=self.config()
@@ -133,12 +159,17 @@ class ReadingNavigationTests(unittest.TestCase):
             publish_record(SimpleNamespace(write=write),{'test':config})
             for entry in entries(config):
                 write(entry['url'],navigation(config,entry['url'])+'<article>Text</article>'+navigation(config,entry['url'],'bottom'))
+            first='read/test/one.html'
+            write(first,chapter_layout(navigation(config,first)+outline('<nav>Sections</nav>')+'<article id="chapter-text">Text</article>'+navigation(config,first,'bottom')))
             pages={entry['url']:None for entry in entries(config)}
             with patch.dict(readable_chapters.BOOKS,{'test':config},clear=True):
                 self.assertEqual(verify(root,pages,dict(files=[])),dict(editions=1,reading_pages=3,navigation_controls=6))
                 page=root/'read/test/one.html';original=page.read_text(encoding='utf-8')
                 for bad in [original.replace('rel="next" href="two.html"','rel="next" href="references.html"',1),
                             original.replace('data-reading-entry="2" href="two.html"','data-reading-entry="2" href="one.html"',1),
+                            original.replace('class="reading-work-overview" href="../../collection/works/test.html"','class="reading-work-overview" href="../../collection/works/other.html"'),
+                            original.replace('class="reading-full-contents" href="index.html"','class="reading-full-contents" href="two.html"'),
+                            original.replace('class="reading-return"','class="other-return"'),
                             navigation(config,'read/test/one.html')]:
                     page.write_text(bad,encoding='utf-8')
                     with self.assertRaises(AssertionError):verify(root,pages,dict(files=[]))

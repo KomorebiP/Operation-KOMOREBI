@@ -60,6 +60,13 @@ disclosure that closes after a section is selected. Contents and resource links
 remain native disclosures without JavaScript. These controls rearrange the
 reading interface without changing the manuscript article or its passage IDs.
 
+The section panel keeps **Work overview** and **Full contents** links available
+while reading a chapter, so a link into a definition still has a visible route
+back to the introduction. They share one compact row with Previous and Next;
+the core-paper enhancements reuse this row. On narrow screens, anchor spacing follows the actual
+height of these controls, including wrapped text. The links work without scripting;
+the site checker verifies that they return to the matching work and reading index.
+
 The twelve core-paper overviews introduce the central question, contribution,
 assumptions and limits, followed by an example → setup/definition → result →
 proof route. Edit the paper-introduction manifest for that editorial copy.
