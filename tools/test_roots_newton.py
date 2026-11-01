@@ -54,6 +54,12 @@ class RootsUnityExactTests(unittest.TestCase):
                 self.assertEqual(
                     M.naive_power_project(ordinary[r],3,target),
                     ordinary[r] if target==r else (Fraction(0),))
+        with self.assertRaises(ValueError):
+            M.naive_power_project(f,0,0)
+        with self.assertRaises(ValueError):
+            M.naive_power_project(f,3,3)
+        with self.assertRaises(ValueError):
+            M.naive_power_project(f,True,0)
 
     def test_integral_stirling_inverse_and_mod_three_polynomial_scope(self):
         first=M.signed_stirling_first(8)
