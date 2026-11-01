@@ -653,9 +653,10 @@ class ReaderSiteTests(unittest.TestCase):
         self.assertIn('PHYSICS_COLLECTION.html', [a['href'] for a in links])
         self.assertIn('../interactive.html', [a['href'] for a in links])
         self.assertIn('../signal-lab.html', [a['href'] for a in links])
-        self.assertEqual(len(links),19)
-        self.assertEqual(len({a['href'] for a in links}),19)
         self.assertIn('../reading-list.html', [a['href'] for a in links])
+        self.assertIn('../read/index.html', [a['href'] for a in links])
+        self.assertEqual(len(links),20)
+        self.assertEqual(len({a['href'] for a in links}),20)
         self.assertIn('SPECIAL_FUNCTIONS.html', [a['href'] for a in links])
         special=Links(site_navigation('collection/SPECIAL_FUNCTIONS.html')).links
         self.assertEqual([a['href'] for a in special if a.get('aria-current')=='page'], ['SPECIAL_FUNCTIONS.html'])

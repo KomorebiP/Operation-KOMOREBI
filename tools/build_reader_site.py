@@ -82,7 +82,7 @@ def site_navigation(page):
         '<li>'+link(label, target)+'</li>' for label, target in links)+'</ul></div>'
         for title, links in groups)
     return ('<nav class="site-navigation" aria-label="Main navigation">'
-            '<div class="site-navigation-bar"><div class="site-nav-links">'+link('Collection', 'works.html')+
+            '<div class="site-navigation-bar"><div class="site-nav-links">'+link('Read', 'read/index.html')+link('Collection', 'works.html')+
             link('Glossary', 'collection/GLOSSARY.html')+link('About', 'collection/START_HERE.html')+
             '</div><div class="site-nav-tools">'+link('Search', 'search.html')+
             '<button id="site-menu-toggle" type="button" aria-expanded="true" '
@@ -303,6 +303,12 @@ class Site:
                 body=chapter_layout(body,controls)+dialog
                 chapter_help_script=''.join('<script defer src="'+self.rel('assets/'+name,path)+'?v='+hashlib.sha256((self.root/'website/assets'/name).read_bytes()).hexdigest()[:12]+'"></script>' for name in ('notation-search.js','chapter-notation.js'))
             else:body=chapter_layout(body)
+        from reader_usability import enhance
+        body,reading_tools = enhance(body,path)
+        if reading_tools:
+            for name in ('reading-tools.css','reading-tools.js'):
+                url=self.rel('assets/'+name,path)+'?v='+hashlib.sha256((self.root/'website/assets'/name).read_bytes()).hexdigest()[:12]
+                chapter_help_script+=('<link rel="stylesheet" href="'+url+'">') if name.endswith('.css') else ('<script defer src="'+url+'"></script>')
         work_page = path.startswith('collection/works/')
         if not work_page and 'data-side-reader-link' not in body and path not in {'side-by-side.html','index.html','404.html','interactive.html','signal-lab.html','works.html','reading-list.html'}:
             pair=self.rel('side-by-side.html',path)+'?left='+quote(path,safe='')
