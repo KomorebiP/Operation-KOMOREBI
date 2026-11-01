@@ -22,6 +22,10 @@ function picture(id, width, height, description) {
   container.replaceChildren(svg);
   return svg;
 }
+// Match drawing units to CSS pixels, including when a hidden tab becomes visible.
+function diagramWidth(id) {
+  return Math.max(220, Math.floor(byId(id).getBoundingClientRect().width));
+}
 function label(svg, x, y, value, className = '', anchor = 'middle') {
   svg.append(svgNode('text', {x, y, class: className, 'text-anchor': anchor}, value));
 }
@@ -32,36 +36,52 @@ function verdict(id, message, loss) {
 }
 
 function drawPackets(matrix, vector, keep, result) {
-  const svg = picture('packet-diagram', 620, 310,
+  const width = diagramWidth('packet-diagram');
+  const compact = width < 440;
+  const svg = picture('packet-diagram', width, compact ? 330 : 310,
     `Input ${vectorText(vector)}. Direct output ${vectorText(result.direct)}. Output from kept blocks ${vectorText(result.rebuilt)}. Residual ${vectorText(result.residual)}.`);
-  label(svg, 75, 28, 'INPUT', 'diagram-heading');
-  label(svg, 535, 28, 'KEPT OUTPUT', 'diagram-heading');
-  label(svg, 305, 28, 'FOUR TRANSFER BLOCKS', 'diagram-heading');
+  if (compact) {
+    label(svg, 8, 22, 'INPUT → TRANSFER → CONTRIBUTION', 'diagram-heading', 'start');
+    result.contributions.forEach((value, i) => {
+      const y = 65 + i * 66;
+      const row = Math.floor(i / 2), column = i % 2;
+      const group = svgNode('g', {class: keep[i] ? 'packet-contribution' : 'packet-contribution omitted'});
+      group.append(svgNode('rect', {x: 1, y: y-25, width: width-2, height: 54, rx: 5}));
+      group.append(svgNode('text', {x: 12, y: y-3}, `T${row+1}${column+1} · x${column+1} → y${row+1}`));
+      group.append(svgNode('text', {x: 12, y: y+17, class: 'compact-block-state'}, keep[i] ? 'Kept' : 'Omitted'));
+      group.append(svgNode('text', {x: width-12, y: y+17, 'text-anchor': 'end'}, `${matrix[i]} × (${vector[column]}) = ${value}`));
+      svg.append(group);
+    });
+    return;
+  }
+  const left = 48, right = width-48, middle = width/2;
+  label(svg, left, 28, 'INPUT', 'diagram-heading');
+  label(svg, right, 28, 'KEPT OUTPUT', 'diagram-heading');
+  label(svg, middle, 28, 'TRANSFER BLOCKS', 'diagram-heading');
   const ys = [100, 242];
   keep.forEach((kept, i) => {
     const row = Math.floor(i / 2), column = i % 2;
     const start = ys[column], end = ys[row];
-    const path = svgNode('path', {d: `M 122 ${start} C 245 ${start}, 365 ${end}, 488 ${end}`,
+    const path = svgNode('path', {d: `M ${left+34} ${start} C ${middle-50} ${start}, ${middle+50} ${end}, ${right-34} ${end}`,
       class: kept ? 'packet-wire' : 'packet-wire omitted'});
     svg.append(path);
   });
   // Offset the crossing labels so both contributions remain readable.
-  const positions = [[305, 94], [380, 143], [230, 205], [305, 236]];
+  const positions = [[middle, 94], [middle+45, 143], [middle-45, 205], [middle, 236]];
   result.contributions.forEach((value, i) => {
     const [x, y] = positions[i];
     const group = svgNode('g', {class: keep[i] ? 'packet-contribution' : 'packet-contribution omitted'});
     group.append(svgNode('rect', {x: x-54, y: y-20, width: 108, height: 32, rx: 5}));
     group.append(svgNode('text', {x, y, 'text-anchor': 'middle', class: 'contribution-full'}, `${matrix[i]} × ${vector[i % 2]} = ${value}`));
-    group.append(svgNode('text', {x, y, 'text-anchor': 'middle', class: 'contribution-short'}, value));
     svg.append(group);
   });
   for (let i = 0; i < 2; i++) {
-    svg.append(svgNode('circle', {cx: 75, cy: ys[i], r: 40, class: 'packet-node'}));
-    svg.append(svgNode('circle', {cx: 535, cy: ys[i], r: 40, class: 'packet-node output-node'}));
-    label(svg, 75, ys[i]+8, vector[i], 'diagram-number');
-    label(svg, 535, ys[i]+8, result.rebuilt[i], 'diagram-number');
-    label(svg, 75, ys[i]+57, `x${i === 0 ? '₁' : '₂'}`, 'diagram-coordinate');
-    label(svg, 535, ys[i]+57, `y${i === 0 ? '₁' : '₂'}`, 'diagram-coordinate');
+    svg.append(svgNode('circle', {cx: left, cy: ys[i], r: 32, class: 'packet-node'}));
+    svg.append(svgNode('circle', {cx: right, cy: ys[i], r: 32, class: 'packet-node output-node'}));
+    label(svg, left, ys[i]+8, vector[i], 'diagram-number');
+    label(svg, right, ys[i]+8, result.rebuilt[i], 'diagram-number');
+    label(svg, left, ys[i]+54, `x${i === 0 ? '₁' : '₂'}`, 'diagram-coordinate');
+    label(svg, right, ys[i]+54, `y${i === 0 ? '₁' : '₂'}`, 'diagram-coordinate');
   }
 }
 
@@ -94,24 +114,26 @@ function updatePackets() {
 }
 
 function drawSignal(signal, result) {
-  const svg = picture('signal-diagram', 640, 330,
+  const width = diagramWidth('signal-diagram');
+  const svg = picture('signal-diagram', width, 370,
     `Original ${vectorText(signal)}. Rebuilt ${vectorText(result.rebuilt)}. Residual ${vectorText(result.residual)}. Squared residual norm ${result.energy}.`);
   const series = [signal, result.rebuilt, result.residual];
   const names = ['Original', 'Rebuilt', 'Residual'];
   series.forEach((values, row) => {
-    const baseline = 64 + row * 105;
-    label(svg, 8, baseline-38, names[row], 'signal-row-label', 'start');
-    svg.append(svgNode('line', {x1: 95, x2: 628, y1: baseline, y2: baseline, class: 'signal-baseline'}));
+    const baseline = 76 + row * 114;
+    label(svg, 8, baseline-56, names[row], 'signal-row-label', 'start');
+    svg.append(svgNode('line', {x1: 8, x2: width-8, y1: baseline, y2: baseline, class: 'signal-baseline'}));
     values.forEach((value, index) => {
-      const x = 118 + index * 68;
+      const x = 22 + index * (width-44)/7;
       const length = Math.abs(value) * 4;
-      svg.append(svgNode('rect', {x: x-16, y: value > 0 ? baseline-length : baseline,
-        width: 32, height: Math.max(length, 1), rx: 2, class: `signal-bar series-${row}`}));
+      const barWidth = Math.min(32, (width-44)/7 * .65);
+      svg.append(svgNode('rect', {x: x-barWidth/2, y: value > 0 ? baseline-length : baseline,
+        width: barWidth, height: Math.max(length, 1), rx: 2, class: `signal-bar series-${row}`}));
       label(svg, x, value >= 0 ? baseline-length-7 : baseline+length+14, value, 'signal-value');
-      if (row === 2) label(svg, x, 322, index, 'signal-address');
+      if (row === 2) label(svg, x, 352, index, 'signal-address');
     });
   });
-  label(svg, 8, 322, 'Address', 'signal-address', 'start');
+  label(svg, width/2, 368, 'Original address', 'signal-address');
 }
 
 function makePacketControls(count) {
@@ -160,13 +182,15 @@ function updateSignal() {
 }
 
 function drawRecovery(summary, result) {
-  const svg = picture('recovery-diagram', 420, 352,
+  const width = diagramWidth('recovery-diagram');
+  const size = Math.min(320, width-68), leftEdge = (width-size)/2;
+  const svg = picture('recovery-diagram', width, size+80,
     `Line x one plus x two equals ${summary}. Input u ${vectorText(result.u)} and input v ${vectorText(result.v)} have answers ${result.answers.join(' and ')}.`);
-  const px = x => 210 + x * 14, py = y => 170 - y * 14;
+  const px = x => width/2 + x * size/20, py = y => 32 + size/2 - y * size/20;
   for (let i = -10; i <= 10; i += 2) {
     svg.append(svgNode('line', {x1: px(i), x2: px(i), y1: py(10), y2: py(-10), class: 'recovery-grid'}));
     svg.append(svgNode('line', {x1: px(-10), x2: px(10), y1: py(i), y2: py(i), class: 'recovery-grid'}));
-    if (i !== 0) label(svg, px(i), py(0)+17, i, 'axis-tick');
+    if (i !== 0 && (width >= 360 || i % 4 === 0)) label(svg, px(i), py(0)+17, i, 'axis-tick');
   }
   svg.append(svgNode('line', {x1: px(-10), x2: px(10), y1: py(0), y2: py(0), class: 'recovery-axis'}));
   svg.append(svgNode('line', {x1: px(0), x2: px(0), y1: py(10), y2: py(-10), class: 'recovery-axis'}));
@@ -181,7 +205,7 @@ function drawRecovery(summary, result) {
     svg.append(svgNode('rect', {x: lx-14, y: ly-17, width: 28, height: 24, rx: 4, class: 'point-label-bg'}));
     label(svg, lx, ly, i ? 'v' : 'u', 'point-label');
   });
-  label(svg, 210, 340, `Same summary everywhere on the line: s = ${summary}`, 'diagram-heading');
+  label(svg, leftEdge+size/2, size+67, `Same summary on the line: s = ${summary}`, 'diagram-heading');
 }
 function updateRecovery() {
   const summary = number('summary');
@@ -206,6 +230,7 @@ const haarShapes = {
   triangle: [-8,-6,-4,-2,0,2,4,6,8,6,4,2,0,-2,-4,-6],
 };
 const haarState = {keep: Array(16).fill(true), mode: 'all'};
+let haarView = null;
 function readHaarSignal() {
   const inputs = Array.from({length:16}, (_, i) => byId('haar-sample-' + i));
   const invalid = inputs.filter(input => input.value.trim() === '' || !input.checkValidity() || !Number.isInteger(Number(input.value)));
@@ -228,6 +253,11 @@ function haarSelection(mode, coefficients) {
 }
 function makeHaarControls(coefficients) {
   if (byId('haar-levels').children.length) return;
+  coefficients.forEach((coefficient, index) => {
+    const option = document.createElement('option'); option.value = index;
+    option.textContent = coefficient.kind === 'average' ? 'Global mean' : `d${coefficient.level},${coefficient.index} · addresses ${coefficient.start}–${coefficient.end}`;
+    byId('haar-inspect').append(option);
+  });
   for (let level = 4; level >= 1; level--) {
     const row = document.createElement('div'); row.className = 'haar-level-row';
     const title = document.createElement('p'); title.id = 'haar-level-title-' + level;
@@ -253,20 +283,34 @@ function makeHaarControls(coefficients) {
   }
 }
 function drawHaar(signal, result) {
-  const svg = picture('haar-diagram', 720, 370,
+  const width = diagramWidth('haar-diagram');
+  const svg = picture('haar-diagram', width, 388,
     `16-sample Haar reconstruction using ${result.retained} coefficients. Squared error ${result.residualEnergy}. Exact sample values and intermediate levels are in the table below.`);
-  const x = i => 58 + i * 42;
+  const x = i => 40 + i * (width-54)/15;
+  const address = number('haar-address');
+  const selected = byId('haar-inspect').value;
+  const coefficient = selected === 'none' ? null : result.coefficients[Number(selected)];
+  if (coefficient) {
+    const step = (width-54)/15;
+    const start = Math.max(34, x(coefficient.start)-step/2);
+    const end = Math.min(width-8, x(coefficient.end)+step/2);
+    const middle = x((coefficient.start+coefficient.end)/2);
+    for (const [top, bottom] of [[35,190],[245,332]]) {
+      svg.append(svgNode('rect', {x:start,y:top,width:end-start,height:bottom-top,class:'haar-support-band'}));
+      if (coefficient.kind === 'detail') svg.append(svgNode('rect', {x:middle,y:top,width:end-middle,height:bottom-top,class:'haar-support-half'}));
+    }
+  }
   function plot(values, top, bottom, limit, className) {
     const y = value => (top+bottom)/2 - value*(bottom-top)/(2*limit);
     svg.append(svgNode('polyline', {points: values.map((v,i) => `${x(i)},${y(v)}`).join(' '), class: 'haar-trace ' + className}));
-    values.forEach((value, i) => svg.append(svgNode('circle', {cx:x(i), cy:y(value), r:className === 'haar-rebuilt-trace' ? 4.5 : 2.6,
+    values.forEach((value, i) => svg.append(svgNode('circle', {cx:x(i), cy:y(value), r:i === address ? 5 : className === 'haar-rebuilt-trace' ? 4 : 2,
       class:'haar-dot ' + className})));
   }
   function axes(top, bottom, limit, title) {
-    label(svg, 58, top-12, title, 'haar-chart-title', 'start');
+    label(svg, 40, top-12, title, 'haar-chart-title', 'start');
     for (const [value, y] of [[limit,top],[0,(top+bottom)/2],[-limit,bottom]]) {
-      svg.append(svgNode('line', {x1:58,x2:x(15),y1:y,y2:y,class:value === 0 ? 'signal-baseline' : 'haar-chart-grid'}));
-      label(svg, 45, y+4, value, 'haar-axis-label', 'end');
+      svg.append(svgNode('line', {x1:40,x2:x(15),y1:y,y2:y,class:value === 0 ? 'signal-baseline' : 'haar-chart-grid'}));
+      label(svg, 30, y+4, value, 'haar-axis-label', 'end');
     }
   }
   const topLimit = Math.max(4, Math.ceil(Math.max(...signal.map(Math.abs), ...result.rebuilt.map(Math.abs))/4)*4);
@@ -276,8 +320,33 @@ function drawHaar(signal, result) {
   plot(signal, 35, 190, topLimit, 'haar-original-trace');
   axes(245, 332, residualLimit, 'Residual · original − reconstruction');
   plot(result.residual, 245, 332, residualLimit, 'haar-residual-trace');
+  svg.append(svgNode('line', {x1:x(address),x2:x(address),y1:35,y2:332,class:'haar-address-guide'}));
   for (const i of [0,4,8,12,15]) label(svg,x(i),355,i,'haar-axis-label');
-  label(svg, 8, 355, 'Address', 'haar-axis-label', 'start');
+  label(svg, (x(0)+x(15))/2, 379, 'Original address', 'haar-axis-label');
+  // A range control provides the same inspection to keyboard and touch users.
+  svg.addEventListener('pointerdown', event => {
+    const bounds = svg.getBoundingClientRect();
+    const pointerX = (event.clientX-bounds.left) * width/bounds.width;
+    byId('haar-address').value = Math.max(0, Math.min(15, Math.round((pointerX-40) * 15/(width-54))));
+    inspectHaar();
+  });
+}
+function inspectHaar() {
+  if (!haarView) return;
+  const {signal, result} = haarView;
+  const selected = byId('haar-inspect').value;
+  byId('haar-inspect-detail').hidden = selected === 'none';
+  if (selected !== 'none') {
+    const index = Number(selected), c = result.coefficients[index];
+    const kept = haarState.keep[index];
+    const contribution = c.kind === 'average' ? `Adds ${c.value} at every address.` :
+      `If kept, adds ${c.value} at addresses ${c.start}–${(c.start+c.end-1)/2} and ${-c.value || 0} at ${(c.start+c.end+1)/2}–${c.end}.`;
+    text('haar-inspect-detail', `${kept ? 'Kept' : 'Omitted'} · coefficient ${c.value}. ${contribution} ${kept ? 'Retained' : 'Discarded'} energy: ${c.weight} × (${c.value})² = ${c.weight*c.value**2}.`);
+  }
+  const address = number('haar-address');
+  text('haar-address-value', address);
+  text('haar-sample-detail', `Address ${address} · original ${signal[address]} · reconstructed ${result.rebuilt[address]} · residual ${result.residual[address]}`);
+  drawHaar(signal, result);
 }
 function dataRow(values, rowHeading = true) {
   const row = document.createElement('tr');
@@ -321,7 +390,8 @@ function updateHaar() {
     dataRow([level.level, level.averages.join(', '), level.details.join(', ')])));
   byId('haar-sample-table').replaceChildren(...signal.map((value, index) =>
     dataRow([index,value,result.rebuilt[index],result.residual[index]])));
-  drawHaar(signal, result);
+  haarView = {signal, result};
+  inspectHaar();
 }
 
 function reset(name) {
@@ -340,6 +410,7 @@ function reset(name) {
     updateRecovery();
   } else if (name === 'haar') {
     byId('haar-preset').value = 'step'; byId('haar-cutoff').value = 0;
+    byId('haar-inspect').value = 'none'; byId('haar-address').value = 10;
     haarShapes.step.forEach((value, i) => { byId('haar-sample-' + i).value = value; });
     haarState.mode = 'all'; updateHaar();
   }
@@ -357,6 +428,11 @@ function selectTab(name, updateUrl = false) {
     byId(tab.hash.slice(1)).hidden = !selected;
   });
   if (updateUrl && location.hash !== '#' + name) history.pushState(null, '', '#' + name);
+  // Hidden diagrams have no measurable width until their tab is selected.
+  redrawDiagram(name);
+}
+function redrawDiagram(name) {
+  ({packets: updatePackets, refinement: updateSignal, recovery: updateRecovery, haar: updateHaar})[name]();
 }
 document.querySelector('.lab-tabs').setAttribute('role', 'tablist');
 tabs.forEach((tab, i) => {
@@ -417,6 +493,8 @@ byId('haar-controls').addEventListener('input', event => {
   sliderValues(); updateHaar();
 });
 byId('haar-cutoff').setAttribute('aria-describedby', 'haar-cutoff-help');
+byId('haar-inspect').addEventListener('change', inspectHaar);
+byId('haar-address').addEventListener('input', inspectHaar);
 byId('haar-preset').addEventListener('change', () => {
   const shape = haarShapes[byId('haar-preset').value];
   if (!shape) return;
@@ -437,4 +515,21 @@ document.querySelectorAll('[data-reset]').forEach(button => {
 names.forEach(reset);
 document.querySelectorAll('.math-lab fieldset, .math-lab [data-reset]').forEach(node => { node.disabled = false; });
 selectTab(location.hash.slice(1));
+let resizeFrame;
+const diagramWidths = new WeakMap();
+const diagramObserver = new ResizeObserver(entries => {
+  let changed = false;
+  for (const entry of entries) {
+    const width = Math.floor(entry.contentRect.width);
+    if (width > 0 && diagramWidths.get(entry.target) !== width) changed = true;
+    diagramWidths.set(entry.target, width);
+  }
+  if (!changed) return;
+  cancelAnimationFrame(resizeFrame);
+  resizeFrame = requestAnimationFrame(() => {
+    const active = names.find(name => !byId(name).hidden);
+    if (active) redrawDiagram(active);
+  });
+});
+document.querySelectorAll('.lab-diagram').forEach(node => diagramObserver.observe(node));
 byId('math-lab').dataset.ready = 'true';

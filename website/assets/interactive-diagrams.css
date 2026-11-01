@@ -57,7 +57,7 @@
 .packet-wire.omitted { stroke: var(--lab-amber); stroke-dasharray: 6 6; stroke-width: 1.5; }
 .packet-contribution rect { fill: var(--surface); stroke: var(--line); }
 .packet-contribution text { font-size: 14px; }
-.packet-contribution .contribution-short { display: none; }
+.packet-contribution .compact-block-state { font-size: 12px; fill: var(--muted); }
 .packet-contribution.omitted rect { fill: var(--lab-amber-bg); stroke: var(--lab-amber); stroke-dasharray: 3 3; }
 .packet-node { fill: #f0f3e9; stroke: var(--green); stroke-width: 1.5; }
 .output-node { fill: var(--sage-surface); }
@@ -111,8 +111,7 @@
 .point-v { fill: var(--lab-amber); }
 .point-label-bg { fill: var(--surface); stroke: var(--line); }
 .lab-diagram .point-label { font: italic 19px var(--display); }
-.lab-diagram .axis-tick { font-size: 10px; fill: var(--muted); }
-#recovery-diagram svg { max-height: 360px; }
+.lab-diagram .axis-tick { font-size: 11px; fill: var(--muted); }
 .haar-samples { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: .4rem; margin: .8rem 0 1.2rem; }
 .haar-samples label { min-width: 0; margin: 0; }
 .haar-samples label > span { display: block; text-align: center; font-size: .65rem; color: var(--muted); }
@@ -136,7 +135,7 @@
 .haar-dot.haar-rebuilt-trace { fill: var(--surface); stroke-dasharray: none; stroke-width: 1.5; }
 .haar-dot.haar-residual-trace { fill: var(--lab-amber); stroke-width: 1; }
 .haar-chart-grid { stroke: var(--line); stroke-dasharray: 3 5; }
-.lab-diagram .haar-chart-title { font-size: 13px; font-weight: 600; }
+.lab-diagram .haar-chart-title { font-size: 12px; font-weight: 600; }
 .lab-diagram .haar-axis-label { font-size: 12px; fill: var(--muted); }
 .haar-coefficients { padding: 0; margin: 1.3rem 0 .5rem; border: 0; }
 .haar-coefficients > legend { font-size: .9rem; font-weight: 650; margin-bottom: .4rem; }
@@ -153,6 +152,14 @@
 .haar-coefficient-grid output { grid-column: 1 / -1; font: 500 1.35rem/1.3 var(--display); font-variant-numeric: lining-nums tabular-nums; }
 .haar-support { grid-column: 1 / -1; font-size: .6rem; color: var(--muted); }
 .haar-coefficient-grid label[data-omitted=true] { border-style: dashed; border-color: var(--lab-amber); background: var(--lab-amber-bg); }
+.haar-inspector { border: 0; padding: .5rem 0; margin: 0 0 .7rem; }
+.haar-inspector legend { font-size: .85rem; font-weight: 650; }
+.haar-inspect-detail, .haar-sample-detail { margin: .5rem 0; font-size: .8rem; line-height: 1.7; font-variant-numeric: tabular-nums; }
+.haar-inspect-detail[hidden] { display: none; }
+.haar-support-band { fill: var(--green); opacity: .09; }
+.haar-support-half { fill: var(--lab-teal); opacity: .12; }
+.haar-address-guide { stroke: var(--ink); stroke-width: 1; stroke-dasharray: 3 4; pointer-events: none; }
+#haar-diagram svg { cursor: crosshair; }
 .haar-energy-caption { font-size: .75rem; line-height: 1.8; }
 .haar-energy-equation { font: 400 1.8rem/1.4 var(--display); font-variant-numeric: lining-nums tabular-nums; margin: .4rem 0; }
 .haar-visual .lab-data th, .haar-visual .lab-data td { white-space: normal; overflow-wrap: anywhere; }
@@ -195,17 +202,13 @@
   .lab-samples { gap: 0 1.5rem; }
   .lab-collision output { font-size: 1.3rem; }
   .lab-collision span { font-size: .65rem; }
-  .lab-diagram .packet-contribution .contribution-full { display: none; }
-  .lab-diagram .packet-contribution .contribution-short { display: block; font-size: 24px; }
-  .lab-diagram .diagram-number { font-size: 36px; }
-  .lab-diagram .diagram-coordinate { font-size: 26px; }
-  .lab-diagram .diagram-heading { font-size: 16px; letter-spacing: 0; }
-  .lab-diagram .signal-value, .lab-diagram .signal-row-label { font-size: 21px; }
-  .lab-diagram .signal-address { font-size: 19px; }
-  .lab-diagram .axis-tick { display: none; }
-  .lab-diagram .haar-chart-title { font-size: 21px; }
-  .lab-diagram .haar-axis-label { font-size: 20px; }
   .haar-coefficient-grid output { font-size: 1.1rem; }
+}
+@media (max-width: 380px) {
+  .haar-coefficient-grid[data-count="4"], .haar-coefficient-grid[data-count="8"] { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .lab-matrix-row { flex-wrap: wrap; }
+  .lab-metrics { grid-template-columns: 1fr; }
+  .lab-metrics-two { grid-template-columns: 1fr 1fr; }
 }
 @media print {
   .lab-panel[hidden] { display: block; }
@@ -217,5 +220,7 @@
   .packet-node, .packet-contribution rect, .point-label-bg { fill: Canvas; stroke: CanvasText; }
   .signal-bar, .recovery-point { fill: CanvasText; stroke: CanvasText; }
   .haar-trace, .haar-dot { stroke: CanvasText; }
+  .haar-address-guide { stroke: CanvasText; }
+  .haar-support-band, .haar-support-half { fill: Highlight; }
   .lab-diagram svg text { fill: CanvasText; }
 }
