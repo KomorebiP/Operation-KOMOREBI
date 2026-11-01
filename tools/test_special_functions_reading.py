@@ -16,6 +16,26 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class SpecialFunctionsReadingTests(unittest.TestCase):
+    def test_subject_hub_links_follow_the_current_reading_edition(self):
+        from urllib.parse import urlsplit
+        from navigation_links import inline_targets
+        specs=source_specs(lambda p:(ROOT/p).read_text(encoding='utf-8-sig'))
+        sections={spec['url'] for spec in specs}
+        sections.add(INDEX)
+        hub=(ROOT/'docs/SPECIAL_FUNCTIONS.md').read_text(encoding='utf-8')
+        links=[urlsplit(target) for target in inline_targets(hub)]
+        reading_links={link.path.removeprefix('/Operation-KOMOREBI/') for link in links
+                       if '/read/'+WORK+'/' in link.path}
+        self.assertTrue(reading_links)
+        self.assertLessEqual(reading_links,sections)
+        registry=json.loads((ROOT/'manifests/browse-resources.json').read_bytes())
+        resources=next(c['resources'] for c in registry['components'] if c['id']==WORK)
+        selected={resource['path'] for resource in resources}
+        selected.update(spec['source'].removeprefix('monographs/special-functions/') for spec in specs)
+        for link in links:
+            if link.path.startswith('../monographs/special-functions/'):
+                self.assertIn(link.path.removeprefix('../monographs/special-functions/'),selected)
+
     def test_all_body_inputs_and_ten_appendices_are_selected(self):
         load=lambda path:(ROOT/path).read_text(encoding='utf-8-sig')
         specs=source_specs(load)

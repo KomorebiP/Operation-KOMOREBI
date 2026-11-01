@@ -92,7 +92,7 @@ The fixed Fourier-space result leaves finite sampled-grid comparison, the abstra
 
 ## Special functions connect coefficients and recovery
 
-The [Special Functions collection](works/monographs-special-functions.md) brings together a monograph, worked visual lessons, a coupled-function atlas and the original series. Use its [reading map and reproduction guide](../monographs/special-functions/README.md) to choose between the books, recurrence laboratories and exact computations. Read the original series together with its consolidated correction register.
+The [Special Functions collection](SPECIAL_FUNCTIONS.md) brings together a monograph, worked visual lessons, a coupled-function atlas and the original series. Use its [reading map and reproduction guide](../monographs/special-functions/README.md) to choose between the books, recurrence laboratories and exact computations. Read the original series together with its consolidated correction register.
 
 The [current formal status](../monographs/special-functions/LEAN_STATUS.md) records selected results on the coupled recurrence, coefficient positivity, local convergence, tail bounds and generic recovery. The remaining analytic and global continuation obligations are listed there. The [sequence plotting guide](demonstrations/SEQUENCE_SHAPES.md) supplies a related computational entry point; a shared coefficient vocabulary alone does not establish a physical model.
 

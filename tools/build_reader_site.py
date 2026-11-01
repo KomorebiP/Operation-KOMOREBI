@@ -65,6 +65,7 @@ def site_navigation(page):
     groups = [
         ('Read', [('Reading routes', 'collection/READING_ROUTES.html'),
                   ('Physics collection', 'collection/PHYSICS_COLLECTION.html'),
+                  ('Special Functions', 'collection/SPECIAL_FUNCTIONS.html'),
                   ('Papers and PDFs', 'documents.html'),
                   ('Read side by side', 'side-by-side.html'),
                   ('Worked examples', 'collection/HAND_WORKED_EXAMPLES.html')]),
@@ -155,6 +156,7 @@ def home_page():
 <li><a href="collection/demonstrations/WAVELET_POLYPHASE.html">Research preview: Wavelets and polyphase</a> — one signal through Haar decomposition, finite FIR transfer, residual repair and exact coordinates.</li>
 <li><a href="collection/demonstrations/STIRLING_BELL_FUBINI.html">Research preview: Stirling, Bell and Fubini</a> — one triangular partition kernel, two counting families, a signed inverse and reciprocal residue packets.</li>
 <li><a href="collection/demonstrations/ROOTS_UNITY_FALLING_FACTORIAL.html">Research preview: Roots of unity and Newton coordinates</a> — character projectors, Stirling inversion, falling-factorial transport and finite differences.</li>
+<li><a href="collection/SPECIAL_FUNCTIONS.html">Explore Special Functions</a> — read the current volumes, compare five families, and run the coupled-function lab.</li>
 <li><a href="collection/DEMONSTRATIONS.html">Follow a complete demonstration</a> — work through a calculation, run its program and follow the source evidence.</li></ul></div></details>
 <details class="home-status"><summary>How to read completion and verification</summary><p>The collection records completion, formal coverage, and confidence separately. A linked file does not mean every claim has been verified. Software is beta.</p><p><a href="collection/COMPLETION_STATUS.html">Read the guide to evidence and status</a></p></details></div>'''
 
@@ -228,9 +230,9 @@ from claim_navigation import validate_claims, render_claim_index
 
 class Rewriter(HTMLParser):
     """Rewrite Markdown links and discard active content in source documents."""
-    allowed=set('a p div span h1 h2 h3 h4 h5 h6 ul ol li dl dt dd pre code blockquote strong em b i s del table caption thead tbody tr th td br hr img sup sub details summary kbd abbr'.split())
+    allowed=set('a p div span h1 h2 h3 h4 h5 h6 ul ol li dl dt dd pre code blockquote strong em b i s del table caption thead tbody tr th td br hr img figure figcaption sup sub details summary kbd abbr'.split())
     void={'br','hr','img'}
-    attrs={'id','class','title','href','src','alt','colspan','rowspan','scope','start','open','aria-label','role','tabindex'}
+    attrs={'id','class','title','href','src','alt','colspan','rowspan','scope','start','open','aria-label','role','tabindex','width','height','loading'}
     def __init__(self, resolve):
         super().__init__(convert_charrefs=False)
         self.resolve=resolve

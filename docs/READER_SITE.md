@@ -29,6 +29,22 @@ and return links on the related work pages. Edit tutorial explanations above
 the `learning-navigation` marker. The status command replaces the section
 below that marker. A subject route does not establish a theorem correspondence.
 
+## Special Functions hub and coupled-function lab
+
+The [Special Functions hub](SPECIAL_FUNCTIONS.md) connects the current HTML
+monograph, its five subject families, the five selected reading PDFs, and the
+coupled recurrence's formal report and claim map. Its chapter links follow the
+source-bound HTML edition. The preserved scientific figure retains its caption,
+alternative text and intrinsic dimensions in the shared Markdown renderer.
+
+The `special-functions-coupled` playground preset uses exact rational
+coefficients, exports both coefficient lists as CSV, and distinguishes its local
+series-tail envelope from floating-point plot evaluation. Run
+`python -B -m unittest discover -s tools -p 'test_special_function_python.py'`
+for its independent polynomial, closed-form, export and input controls. The
+reader tests also check the hub's chapter and selected-source links. This
+integration adds no formal replay or mathematical completion claim.
+
 ## Extended factorial-lanes example
 
 The [factorial-lanes derivation](demonstrations/FACTORIAL_LANES.md) has an
