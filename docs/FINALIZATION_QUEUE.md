@@ -161,6 +161,8 @@ Source text or static inventories are not compiler acceptance.
 
 **Done when:** Compile the exact intended source with pinned dependencies, record diagnostics and axioms, and map accepted statements to the manuscript. Retain missing mathematical inputs.
 
+**Progress:** Resolution Semantics now has a separate Lean 4.24.0 companion: 15 unchanged scaffold statements and 19 two-world declarations compile, both obstruction theorems are axiom-free, and three rejection controls pass. The original source remains preserved. The wider paper, Hodge and Stratified Universality obligations remain open.
+
 Related works and source records: [Resolution Semantics](works/resolution-semantics.md) · [Hodge: source and evidence](works/hodge-reader.md) · [Stratified Universality](works/stratified-universality.md).
 
 <a id="f07"></a>

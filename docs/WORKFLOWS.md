@@ -7,6 +7,7 @@ The collection's workflows have different triggers and scopes: a successful coll
 | Workflow | Trigger | What it checks |
 |---|---|---|
 | [Collection and formal artifact checks](../.github/workflows/artifact-checks.yml) | Push, pull request, or manual dispatch | Collection entry points, preserved preview identity, all source receipts, maintained navigation/status pages, tooling regressions, bounded SRIC fixtures, and preview guard/classifier tests. It does not invoke Lean. |
+| [Resolution Semantics Lean companion](../.github/workflows/resolution-semantics-lean.yml) | Relevant formal companion/source changes on main pushes or pull requests, or manual dispatch | Pinned Lean 4.24.0 build, fresh theorem/axiom inventories and three rejection controls on Ubuntu and Windows. Limited to the separate 0.2.0 companion and Theorem 7.3; no whole-paper verification. |
 | [AM-SPD CI](../.github/workflows/am-spd-ci.yml) | Relevant package/workflow changes on main pushes or pull requests, or manual dispatch | AM-SPD compilation, lint, tests, package verification, and a synthetic-geometry replay on the configured Python 3.13 jobs. The matrix covers Ubuntu and Windows. It does not qualify unrelated packages. |
 
 A documentation-only push normally runs the collection checks without triggering the path-filtered AM-SPD CI. The [verification guide](VERIFICATION.md) gives the local collection commands and explains what they establish.

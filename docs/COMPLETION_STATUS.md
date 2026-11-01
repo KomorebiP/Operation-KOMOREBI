@@ -141,7 +141,7 @@ All executable software remains **beta / work in progress**, including implement
 | [Hilbert 12: contracting ambient torsion](STATUS_CATALOG.md#hilbert12-contracting-ambient-torsion) | No Lean claim | Written / finite evidence |
 | [IUT Valuation Hulls](STATUS_CATALOG.md#iut-valuation-hulls) | Selected results recorded | Recorded formal evidence |
 | [Model-Theory Normalization](STATUS_CATALOG.md#model-theory-normalization) | Selected results recorded | Recorded formal evidence |
-| [Resolution Semantics](STATUS_CATALOG.md#resolution-semantics) | Source available, no current pass | Written / finite evidence |
+| [Resolution Semantics](STATUS_CATALOG.md#resolution-semantics) | Selected results recorded | Recorded formal evidence |
 | [Seeded Two-Axis Calculus](STATUS_CATALOG.md#seeded-two-axis) | No Lean claim | Written / finite evidence |
 | [Streaming Polyphase Factor Decomposition / SKAT](STATUS_CATALOG.md#streaming-skat) | No Lean claim | Written / finite evidence |
 
