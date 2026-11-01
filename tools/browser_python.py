@@ -144,6 +144,7 @@ RESEARCH_OPTIONS<optgroup label="Worked examples"><option value="packets">Recons
             if work == 'paper-iv': label = 'Paper IV'
             if work == 'monographs-special-functions': label = 'Special Functions'
             if work == 'monographs-physics': label = 'Physics'
+            if work == 'monographs-quantum-and-circuits': label = 'Quantum and Circuits'
             if work == 'paper-vii': label = 'Paper VII'
             base = 'collection/works/'+work+'.html'
             body += '<a href="'+base+'">'+label+'</a><a href="'+base+'#written-proofs">'+label+' proofs</a><a href="'+base+'#lean">'+label+' Lean coverage</a><a href="'+base+'#code">'+label+' code</a>'

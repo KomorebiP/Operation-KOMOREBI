@@ -420,7 +420,7 @@ P=FDF^*,\qquad P_{nm}=\frac{c((n-m)\bmod12)}{12}.
 \]
 
 Direct multiplication gives \(P^2=P=P^*\), \(Pc=c\), and \(Pa=0\).
-Thus a measurement of \(\{P,I-P\}\), equivalently a Fourier transform
+Thus a measurement of \(\{P,I-P\}\), equivalently applying \(F^*\)
 followed by selection of \(U_{12}\), accepts \(\psi\) with probability
 one and \(\chi\) with probability zero. Identical initial histograms
 can conceal perfectly distinguishable states. These are the book's
@@ -481,6 +481,8 @@ encodes the same logical state as
 \[
 |\psi_L\rangle=\frac35|000\rangle+\frac45z|111\rangle.
 \]
+
+Write \(\rho_L=|\psi_L\rangle\langle\psi_L|\) for its density matrix.
 
 Consider the error family \(E_0=I\), \(E_1=X\otimes I\otimes I\),
 \(E_2=I\otimes X\otimes I\), and \(E_3=I\otimes I\otimes X\).
@@ -550,7 +552,7 @@ Syndrome recovery: four single-error branches preserve the logical state
 PASS: 1917 exact cases
 ```
 
-The suite covers 182 pure states formed from rational circle parameters,
+The suite covers 182 pure-state cases using rational circle parameters,
 910 partial-channel cases, 182 coherent/classical record comparisons, and
 10 fixed controls. The collection extensions add 546 damping cases, 15
 arithmetic-projector cases, and 72 syndrome/recovery cases. The suite uses
