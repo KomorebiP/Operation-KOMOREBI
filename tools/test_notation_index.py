@@ -1,10 +1,34 @@
 """Regression cases for notation extraction and source fidelity."""
 import unittest
 from notation_index import (passages, symbol_tokens, index_document, macro_definitions,
-                            aliases, display_math, symbol_id, context_for,table_preview,reader_index)
+                            aliases, display_math, symbol_id, context_for,table_preview,reader_index,context_text)
 
 
 class NotationTests(unittest.TestCase):
+    def test_excerpts_hide_layout_and_nested_bookkeeping_arguments(self):
+        source=r'\Needspace{15\baselineskip}\noindent A \textbf{finite} module $M$. \RecordID{PSC-{nested}-ID}\label{a{b}}\index{module!finite}'
+        self.assertEqual(context_text(source),'A finite module M.')
+        self.assertEqual(context_text(r'\vspace*{2pt}\hspace{1em}Kept.\pagebreak[4] Next.'),'Kept. Next.')
+
+    def test_excerpts_keep_section_names_and_definition_titles(self):
+        source=r'\subsection[Short]{Quotient \emph{witnesses}}\begin{definition}[Witness for seed rank] A map $\Phi:M\twoheadrightarrow N$.\end{definition}'
+        self.assertEqual(context_text(source),'Quotient witnesses. [Witness for seed rank] A map Φ:M↠ N.')
+
+    def test_excerpt_math_keeps_literal_braces_and_escaped_text_characters(self):
+        source=r'Let $S=\{x,y\}$, $U\hookrightarrow V$ and $A\setminus B$. Research \& examples cost \$5 at 50\%. $x$ & Meaning.'
+        self.assertEqual(context_text(source),'Let S={x,y}, U↪ V and A∖ B. Research & examples cost $5 at 50%. x · Meaning.')
+
+    def test_unknown_commands_and_mathematical_content_are_retained(self):
+        self.assertEqual(context_text(r'A \localmeaning{essential} object $x_{i}$, with \ref{result}.'),
+                         'A localmeaningessential object x_i, with [source reference].')
+        self.assertEqual(context_text(r'$\rank(M)\le r$',{'rank':r'\operatorname{rank}'}),'rank(M)≤ r')
+        self.assertEqual(context_text(r'Uses the bound. \Depends{PSC-I-D-SEED-RANK}'),'Uses the bound. [source reference]')
+
+    def test_a_display_box_is_not_indexed_as_a_mathematical_symbol(self):
+        tokens=symbol_tokens(r'\boxed{x_i=y}')
+        self.assertNotIn(r'\boxed',tokens)
+        self.assertTrue({'x','x_i','i','y','='}<=set(tokens))
+
     def test_reader_index_remaps_contexts_without_crossing_work_boundaries(self):
         search=dict(source_revision='revision',works=[dict(id='a'),dict(id='b')],
                     contexts=[dict(work='b',excerpt='Other'),dict(work='a',excerpt='First'),dict(work='a',excerpt='Second')],

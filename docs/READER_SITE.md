@@ -524,3 +524,9 @@ The [notation index](NOTATION_INDEX.md) provides symbol search and a source inve
 
 `tools/notation_index.py` builds the reference. `manifests/notation-sources.json` declares additional manuscript entrypoints. The reader follows their literal includes and checks source receipts before indexing. Parser regression tests and the site checker validate extraction, source positions, counts and links.
 
+Search excerpts omit recognized layout commands and source bookkeeping such as
+`Needspace` and `RecordID`. Balanced arguments keep nested metadata out of the
+preview while preserving section titles, literal set braces and escaped text
+characters. These previews remain reading aids: the downloadable occurrence
+records and linked source passages retain the exact original text and positions.
+
