@@ -160,6 +160,10 @@ def project_newton(poly, modulus, residue):
 
 def naive_power_project(poly, modulus, residue):
     """Valid ordinary-power projector; not the transported Newton projector."""
+    if type(modulus) is not int or modulus < 2:
+        raise ValueError("Require integer modulus at least two")
+    if type(residue) is not int or not 0 <= residue < modulus:
+        raise ValueError("Residue must be in 0,...,modulus-1")
     return trim(v if k % modulus == residue else Q(0)
                 for k, v in enumerate(poly))
 
