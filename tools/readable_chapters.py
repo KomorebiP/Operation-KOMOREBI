@@ -1286,15 +1286,15 @@ def render_book(reader,book):
 
 
 def render_book_index(reader,book,reports):
+    from reading_navigation import contents_list
     site=reader.site
     config=book['config']
     page,work,label=config['index'],config['work'],config['label']
     introduction=(config.get('reading_introduction') or 'Read the '+str(config['main_chapters'])+' main manuscript chapters in order, or choose a topic below.')
     body='<p class="eyebrow">Read '+label+'</p><h1>'+html.escape(config['title'])+'</h1><p>'+html.escape(introduction)+'</p>'+reader.work_routes(work,page)
-    body+='<nav class="chapter-contents" aria-label="'+label+' chapters"><h2>Contents</h2><ol>'
-    for spec,report in zip(config['chapters'],reports):
-        body+='<li><a href="'+site.rel(spec['url'],page)+'">'+html.escape(spec['title'])+'</a></li>'
-    body+='<li><a href="references.html">Bibliography</a></li></ol></nav>'
+    body+='<p class="reading-start"><a class="button" href="'+site.rel(config['chapters'][0]['url'],page)+'">Start reading</a></p>'
+    body+='<nav class="chapter-contents reading-contents-index" aria-label="'+label+' chapters"><h2>Contents</h2>'
+    body+=contents_list(config,page)+'</nav>'
     for collected in config.get('collected_parts',[]):
         body+='<p><a href="'+site.rel(collected['url'],page)+'">'+html.escape(collected['title'])+'</a></p>'
     if config.get('continuation_sources'):

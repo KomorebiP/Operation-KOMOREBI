@@ -204,7 +204,7 @@ class ReadingDocuments:
         targets = self.work_route_targets(work)
         primary = next((label for label in ('Revised edition', 'Read chapters', 'Read PDF')
                         if any(name == label for name, _ in targets)), None)
-        prominent = {primary, 'Read PDF', 'Written proofs', 'Worked examples'}
+        prominent = {primary, 'Read PDF', 'Visual atlas'}
         hub = 'collection/works/'+work+'.html'
         def link(label, url, main=False):
             target = '#'+url.split('#',1)[1] if url.startswith(hub+'#') else self.site.rel(url,page)
@@ -262,8 +262,20 @@ class ReadingDocuments:
         return routes
 
     def work_routes(self, work, page):
-        return '<nav class="document-routes" aria-label="Reading routes for this work">'+''.join(
-            '<a href="'+self.site.rel(url, page)+'">'+label+'</a>' for label, url in self.work_route_targets(work))+'</nav>'
+        from reading_navigation import work_links
+        primary = {'Paper overview', 'Read chapters', 'Visual atlas', 'Read PDF', 'Revised edition'}
+        body = '<nav class="work-overview-nav paper-routes" aria-label="Reading routes for this work">'
+        for label, url in self.work_route_targets(work):
+            if label not in primary: continue
+            current = (' aria-current="page"' if url == page else
+                       ' aria-current="location"' if label == 'Visual atlas' and page.startswith(url.removesuffix('index.html')) else '')
+            body += '<a href="'+html.escape(self.site.rel(url,page),quote=True)+'"'+current+'>'+html.escape(label)+'</a>'
+        body += '<details class="work-more"><summary>More resources</summary><div class="work-more-links reading-resource-menu">'
+        body += work_links(self,work,page,exclude=primary)
+        body += '<a href="'+html.escape(self.site.rel('read/index.html',page),quote=True)+'">All HTML reading editions</a>'
+        pair = self.site.rel('side-by-side.html',page)+'?left='+quote(page,safe='')
+        body += '<a data-side-reader-link href="'+html.escape(pair,quote=True)+'">Read side by side</a>'
+        return body+'</div></details></nav>'
 
     def source_annotations(self, path, page):
         from side_reader import pair_link
