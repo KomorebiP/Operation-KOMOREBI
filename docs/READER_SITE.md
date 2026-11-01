@@ -682,6 +682,13 @@ source bindings, moved reference targets, missing notes and duplicate placements
 This is a proofreading record, with no new proof audit, Lean replay or external
 citation verification. Visual atlases and PDF layout are outside its coverage.
 
+The [Papers III and IV proofreading record](../manifests/reader-proofreading-papers-iii-iv-2026-11-01.json)
+covers Paper III's four main chapters and Paper IV's eighteen non-atlas reading
+sections, plus their abstracts, notation, preambles and bibliography syntax.
+No objective routine correction was identified in that scope. The record binds
+eight retained source files and reports the scoped syntax checks. The same
+exclusions apply; the manuscripts and mathematical statements are unchanged.
+
 ## Signal Laboratory
 
 `signal-lab.html` is a larger known-reference signal experiment with 16–256
