@@ -3,6 +3,72 @@ const assert = require('node:assert/strict');
 const path = require('node:path');
 const {pathToFileURL} = require('node:url');
 const core = import(pathToFileURL(path.join(__dirname, '../website/assets/interactive-diagrams-core.mjs')));
+const links = import(pathToFileURL(path.join(__dirname, '../website/assets/interactive-diagrams-state.mjs')));
+
+test('experiment links round-trip bounded settings without changing their calculations', async () => {
+  const {encodeExperiment,decodeExperiment} = await links;
+  const {reconstruct,refine,recover,haar} = await core;
+  const examples = [
+    [{v:1,name:'packets',matrix:[-9,0,7,9],vector:[-5,5],keep:[false,true,true,false]},
+      s=>reconstruct(s.matrix,s.vector,s.keep)],
+    [{v:1,name:'refinement',signal:[-8,8,0,1,-1,3,6,-7],count:8,keep:[true,false,false,true,true,false,true,false]},
+      s=>refine(s.signal,s.count,s.keep)],
+    [{v:1,name:'recovery',summary:-4,position:4,coefficients:[-3,3]},
+      s=>recover(s.summary,s.position,s.coefficients)],
+    [{v:1,name:'haar',signal:Array.from({length:16},(_,i)=>i===10 ? 16 : -16),mode:'custom',cutoff:3.25,
+      keep:Array.from({length:16},(_,i)=>i===0 || i%3===0),coefficient:13,address:15},
+      s=>haar(s.signal,s.keep)],
+  ];
+  for (const [state,calculate] of examples) {
+    const encoded = encodeExperiment(state);
+    assert.match(encoded,/^[A-Za-z0-9_-]+$/);
+    assert.ok(encoded.length < 2048);
+    const restored = decodeExperiment(encoded);
+    assert.deepEqual(restored,state);
+    assert.deepEqual(calculate(restored),calculate(state));
+  }
+  for (const mode of ['all','coarse','no-fine','mean','threshold']) {
+    const state = {v:1,name:'haar',signal:Array(16).fill(0),mode,cutoff:.25,coefficient:null,address:0};
+    assert.deepEqual(decodeExperiment(encodeExperiment(state)),state);
+  }
+});
+
+test('malformed, incompatible and out-of-range experiment links are rejected', async () => {
+  const {encodeExperiment,decodeExperiment} = await links;
+  const signal = {v:1,name:'refinement',signal:Array(8).fill(1),count:4,keep:Array(4).fill(true)};
+  const wavelet = {v:1,name:'haar',signal:Array(16).fill(0),mode:'custom',cutoff:0,keep:Array(16).fill(true),coefficient:0,address:15};
+  const invalid = [
+    null,[],{}, {...signal,v:2}, {...signal,name:'unknown'},
+    {...signal,count:3}, {...signal,signal:[.5,...Array(7).fill(0)]},
+    {...signal,keep:[true,true,true]}, {...signal,keep:[true,true,true,1]},
+    {...signal,signal:Array(8)}, {...signal,signal:Array(8).fill(9)},
+    {...wavelet,signal:Array(16).fill(17)}, {...wavelet,cutoff:.1}, {...wavelet,cutoff:17},
+    {...wavelet,coefficient:-1}, {...wavelet,coefficient:16}, {...wavelet,address:-1},
+    {...wavelet,address:16}, {...wavelet,mode:'unknown'}, {...wavelet,keep:Array(16).fill(false)},
+    {...wavelet,mode:'all'},
+    {v:1,name:'packets',matrix:[1,2,3,10],vector:[0,0],keep:Array(4).fill(true)},
+    {v:1,name:'recovery',summary:0,position:0,coefficients:[0,4]},
+  ];
+  for (const state of invalid) {
+    assert.throws(()=>encodeExperiment(state),RangeError);
+    assert.throws(()=>decodeExperiment(btoa(JSON.stringify(state)).replace(/=+$/,'')),RangeError);
+  }
+  for (const value of ['',null,'A','not!base64','x'.repeat(2049),btoa('not JSON')]) {
+    assert.throws(()=>decodeExperiment(value),RangeError);
+  }
+});
+
+test('decoded links copy known fields into fresh settings objects', async () => {
+  const {encodeExperiment,decodeExperiment} = await links;
+  const source = {v:1,name:'packets',matrix:[1,2,3,4],vector:[0,0],keep:Array(4).fill(true),unused:'discard me'};
+  const restored = decodeExperiment(encodeExperiment(source));
+  assert.equal(Object.hasOwn(restored,'unused'),false);
+  restored.matrix[0] = 9;
+  assert.equal(source.matrix[0],1);
+  const incoming = btoa('{"v":1,"name":"recovery","summary":0,"position":0,"coefficients":[1,1],"__proto__":{"polluted":true}}').replace(/=+$/,'');
+  assert.equal(Object.hasOwn(decodeExperiment(incoming),'__proto__'),false);
+  assert.equal({}.polluted,undefined);
+});
 
 test('published examples agree with the standalone exact teaching program', async () => {
   const {reconstruct, refine, recover} = await core;

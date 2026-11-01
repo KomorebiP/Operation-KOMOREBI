@@ -38,6 +38,12 @@ def build(site):
 <a id="tab-refinement" href="#refinement"><span>02</span> Refine</a>
 <a id="tab-recovery" href="#recovery"><span>03</span> Recover</a>
 <a id="tab-haar" href="#haar"><span>04</span> Haar lab</a></nav>
+<div class="lab-session"><div class="lab-session-actions">
+<button type="button" id="lab-share" disabled>Copy experiment link</button>
+<span class="lab-control-note">Save or share these settings.</span></div>
+<p class="lab-caption" id="lab-share-status" role="status"></p>
+<label class="lab-share-fallback" id="lab-share-fallback" for="lab-share-link" hidden>Experiment link
+<input type="url" id="lab-share-link" readonly></label></div>
 <noscript><p class="notice">Enable JavaScript for the controls and diagrams, or follow the worked explanations below.</p></noscript>
 <section class="lab-panel" id="packets" aria-labelledby="packets-title">
 <div class="lab-panel-heading"><div><p class="lab-kicker">01 / Operator packets</p>
@@ -131,9 +137,11 @@ HAAR_PANEL
     }
     for key, value in replacements.items():
         body = body.replace(key, value)
-    core_version = hashlib.sha256((site.root/'website/assets/interactive-diagrams-core.mjs').read_bytes()).hexdigest()[:12]
     script = (site.root/'website/assets/interactive-diagrams.js').read_text(encoding='utf-8')
-    script = script.replace("'./interactive-diagrams-core.mjs'", "'./interactive-diagrams-core.mjs?v="+core_version+"'")
+    for module in ('core', 'state'):
+        filename = 'interactive-diagrams-'+module+'.mjs'
+        version = hashlib.sha256((site.root/'website/assets'/filename).read_bytes()).hexdigest()[:12]
+        script = script.replace("'./"+filename+"'", "'./"+filename+"?v="+version+"'")
     site.write('assets/interactive-diagrams.js', script)
     def asset(name):
         raw = script.encode('utf-8') if name == 'interactive-diagrams.js' else (site.root/'website/assets'/name).read_bytes()
