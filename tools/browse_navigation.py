@@ -195,6 +195,8 @@ class Browser:
                 links.insert(1,'[Worked visual atlas: all 40 HTML plates](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vii/atlas/index.html)')
             if title=='Read' and c['id']=='paper-viii':
                 links.insert(0,'[Read online: manuscript, six appendices and figures](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-viii/index.html)')
+            if title=='Read' and c['id']=='paper-ix':
+                links.insert(0,'[Read online: complete manuscript, strengthening and historical appendices](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-ix/index.html)')
             if title=='Written proofs' and edition:
                 links.insert(0,link('Mathematical discussion in the revised essay',edition['manuscript'],page))
             has_lean = any(a['kind']=='lean' for a in self.rows[c['id']]['resources'])

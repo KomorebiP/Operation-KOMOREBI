@@ -208,14 +208,16 @@ figures, tables and code examples. Each paper has chapter contents, previous
 and next links, cross references and a bibliography. Paper II also includes its
 separate current verification snapshot.
 
-The [Paper IX opening chapters](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-ix/index.html)
-provide **Scope and conventions** and **Arithmetic packets and coefficient
-transport** in HTML. Their original equations, statements, proofs and Lean
-declaration notes are retained. Forward references to later material link to
-the exact headings in the selectable manuscript sources. The contents page
-links to the complete PDF and source continuations; the rest of Paper IX
-has not yet been converted to formatted HTML. This adds no proof review or
-Lean execution.
+The [complete Paper IX reading edition](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-ix/index.html)
+includes the arithmetic and factorial strengthening, lifting and analytic
+regularity, and all five mathematical appendices. Its 56 reading pages retain
+5,252 mathematical expressions, 153 proof environments, 14 manuscript figures
+and 33 tables. Nested proof tables keep their source values and semantic
+headers. The bibliography includes all five current and 22 recovered historical
+entries. Equation and statement references retain the printed numbering;
+historical theorem headings and checkpoint qualifications remain explicit.
+The worked visual atlas remains available in the PDF. This reading conversion
+adds no proof review or Lean execution.
 
 Paper I includes its orientation, foundations, packet and graph results,
 transport, worked models, notation ledger, statement concordance and bibliography.
@@ -346,7 +348,7 @@ Document pages link back to the work, written proofs, Lean coverage, code and
 available worked examples. Edition READMEs are rendered as HTML. Linked
 manuscript and program sources have selectable text and line links. TeX source
 is shown as source, with links to included manuscript sections where available.
-Papers I–VIII also have formatted HTML chapters. Paper IV's visual atlas
+Papers I–IX also have formatted HTML chapters. Paper IV's visual atlas
 has HTML plates; all original visual atlases remain available through the on-site PDF reader. Use the PDF for
 typeset manuscript sections that have not yet been converted to HTML.
 

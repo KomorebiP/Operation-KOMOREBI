@@ -162,6 +162,9 @@ def verify(root, pages, documents):
         if config.get('custom_reader') == 'proof_path':
             from proof_path_reading import source_specs as proof_path_specs
             config['chapters']=proof_path_specs(load)
+        elif config.get('custom_reader') == 'paper_ix':
+            from paper_ix_reading import source_specs as paper_ix_specs
+            config['chapters']=paper_ix_specs(load)
         elif config.get('custom_reader'):
             config['chapters']=source_specs(load)
         sequence=entries(config)

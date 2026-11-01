@@ -164,7 +164,10 @@ BOOKS[PROOF_PATH_BOOK['work']] = PROOF_PATH_BOOK
 CHAPTERS += PROOF_PATH_CHAPTERS
 BY_SOURCE = {c['source']:c for c in reversed(CHAPTERS)}
 NUMBERED = {'definition', 'theorem', 'proposition', 'lemma', 'corollary', 'remark', 'example', 'standardfact', 'certificate','boundary','roadmap','construction','classicalinput','classical','conjecture','problem','warning'}
+NUMBERED.update('hist'+kind for kind in ('theorem','proposition','lemma','corollary','definition','example','remark','standardfact'))
 KIND_NAMES = {'classical':'Classical input','statement':'Supplementary statement','standardfact':'Standard fact','certificate':'Numerical certificate','text':'Passage','roadmap':'Formalization target','classicalinput':'Classical input'}
+KIND_NAMES.update({'hist'+kind:'Historical '+('standard fact' if kind=='standardfact' else kind)
+                  for kind in ('theorem','proposition','lemma','corollary','definition','example','remark','standardfact')})
 HEADINGS = {'part':2,'section':2,'subsection':3,'subsubsection':4,'paragraph':5}
 MATH_PATTERN = re.compile(r'(?<!\\)\$(.*?)(?<!\\)\$|\\\[(.*?)\\\]|(\\begin\{align\*\}.*?\\end\{align\*\})|\\\((.*?)\\\)',re.S)
 PANELS = {'keyidea': 'The central idea', 'interpretation': 'How to read the result',
@@ -254,8 +257,8 @@ def original_math(text):
 
 
 def tex_accents(text):
-    accents={"'":'\u0301','`':'\u0300','"':'\u0308'}
-    return re.sub(r'''\\(['`"])(?:\{([A-Za-z])\}|([A-Za-z]))''',lambda m:unicodedata.normalize('NFC',(m[2] or m[3])+accents[m[1]]),text)
+    accents={"'":'\u0301','`':'\u0300','"':'\u0308','^':'\u0302'}
+    return re.sub(r'''\\(['`"^])(?:\{([A-Za-z])\}|([A-Za-z]))''',lambda m:unicodedata.normalize('NFC',(m[2] or m[3])+accents[m[1]]),text)
 
 
 def typography(text):
@@ -291,7 +294,7 @@ def manuscript_macros(main, required=None):
     if not set(required) <= set(result):
         raise ValueError('Missing manuscript macro definitions')
     # Only the literal, one-argument math wrappers used by the reading editions.
-    for name in ('cl', 'closure', 'norm', 'mat', 'abs', 'jump', 'ket', 'bra', 'ip', 'comm', 'code'):
+    for name in ('cl', 'closure', 'norm', 'mat', 'abs', 'jump', 'ket', 'bra', 'ip', 'comm', 'code', 'coef', 'fall'):
         match = re.search(r'\\newcommand\{\\'+name+r'\}\[([12])\]', main)
         if match:
             value, _ = group(main, match.end())
@@ -299,6 +302,12 @@ def manuscript_macros(main, required=None):
             if re.search(r'#(?![1-'+str(arguments)+'])',value): raise ValueError('Unsupported math macro argument')
             result[name] = dict(arguments=arguments, body=value)
             if r'\newcommand{\ket}' in main: result[name]['token_arguments']=True
+    for match in re.finditer(r'\\DeclareMathOperator\{\\([A-Za-z]+)\}\{([^{}]+)\}',main):
+        result[match[1]]=r'\operatorname{'+match[2]+'}'
+    # Paper IX uses these typewriter wrappers for literal declaration names.
+    for name in ('code','mcode','target'):
+        if re.search(r'\\newcommand\{\\'+name+r'\}\[1\]',main) and r'\nolinkurl{#1}' in main:
+            result[name]=dict(arguments=1,body=r'\texttt{#1}')
     if r'\providecommand{\bm}[1]{\symbfit{#1}}' in main:
         # Both commands present a bold italic mathematical symbol.
         result['bm'] = dict(arguments=1, body=r'\boldsymbol{#1}', unbraced=True)
@@ -478,7 +487,7 @@ class Chapter:
                 if kind in NUMBERED:
                     self.counter += 1
                     number = self.section_number()+'.'+str(self.counter)
-                if self.number_floats and (kind=='figure' or kind in {'table','longtable'} and r'\caption' in body):
+                if self.number_floats and (kind in {'figure','longtable'} or kind=='table' and r'\caption' in body):
                     counter='figure' if kind=='figure' else 'table'
                     setattr(self,counter,getattr(self,counter)+1)
                     number=self.section_prefix+str(getattr(self,counter))
@@ -529,13 +538,24 @@ class Chapter:
                 extra = ' tabindex="0" role="group" aria-label="Displayed equation. Scroll horizontally if needed."' if display else ''
                 out.append('<'+tag+' class="arithmatex"'+extra+'>'+html.escape(
                     ('\\[' if display else '\\(')+expand_math(tex,self.macros)+('\\]' if display else '\\)'))+'</'+tag+'>')
+                if display and r'\tag' not in tex:
+                    numbers=list(dict.fromkeys(getattr(self,'equation_numbers',{}).get(key)
+                        for key in re.findall(r'\\label\{([^{}]+)\}',tex)))
+                    numbers=[n for n in numbers if n]
+                    if numbers:out.append('<span class="equation-number">'+html.escape(', '.join('('+n+')' for n in numbers))+'</span>')
                 pos = math.end()
             elif text[pos]=='$':
                 raise ValueError('Unclosed inline mathematics')
+            elif text[pos]=='{':
+                if not getattr(self,'allow_prose_groups',False):raise ValueError('Unparsed prose grouping')
+                value,pos=group(text,pos)
+                out.append(self.inline(value))
             elif text[pos] == '\\':
                 if text[pos:pos+2] in {r'\_',r'\&',r'\%',r'\#',r'\$'}:
                     out.append(html.escape(text[pos+1]));pos+=2;continue
-                accent = re.match(r'''\\['`"](?:\{[A-Za-z]\}|[A-Za-z])''',text[pos:])
+                if text[pos:pos+2] in {r'\ ',r'\,',r'\;',r'\:',r'\!'}:
+                    out.append('' if text[pos+1]=='!' else ' ');pos+=2;continue
+                accent = re.match(r'''\\['`"^](?:\{[A-Za-z]\}|[A-Za-z])''',text[pos:])
                 if accent:
                     out.append(html.escape(typography(accent[0]))); pos += accent.end(); continue
                 m = re.match(r'\\([A-Za-z]+)', text[pos:])
@@ -560,8 +580,8 @@ class Chapter:
                     if value not in self.command_links[name]: raise ValueError('Unresolved reading link: '+name+' '+value)
                     target,label=self.command_links[name][value]
                     out.append('<a href="'+html.escape(self.relative(target),quote=True)+'">'+html.escape(label)+'</a>')
-                elif name in {'textbf','emph','textit','texttt','leanname','path','nolinkurl','code','lean','text'}:
-                    tag = {'textbf':'strong','texttt':'code','leanname':'code','path':'code','nolinkurl':'code','code':'code','lean':'code','text':'span'}.get(name,'em')
+                elif name in {'textbf','emph','textit','texttt','leanname','path','nolinkurl','code','mcode','target','lean','text'}:
+                    tag = {'textbf':'strong','texttt':'code','leanname':'code','path':'code','nolinkurl':'code','code':'code','mcode':'code','target':'code','lean':'code','text':'span'}.get(name,'em')
                     content=html.escape(value.replace(r'\_','_')) if tag=='code' else self.inline(value)
                     out.append('<'+tag+'>'+content+'</'+tag+'>')
                 elif name in {'statusleanthree','statusleanprior','statusroadmap'}:
@@ -574,6 +594,8 @@ class Chapter:
                     for key in value.split(','):
                         node = self.labels[key]
                         label = node.get('reference_label') or KIND_NAMES.get(node['kind'],node['kind'].capitalize())+' '+node['number']
+                        if name in {'ref','eqref'} and node.get('plain_reference_label'):
+                            label=node['plain_reference_label']
                         url = self.relative(node.get('url',''))+'#'+node['id']
                         links.append('<a href="'+url+'" title="'+html.escape(typography(node['title']),quote=True)+'">'+label+'</a>')
                     out.append(', '.join(links))
@@ -601,9 +623,13 @@ class Chapter:
                     label,pos=group(text,pos)
                     if not value.startswith(('https://','http://')): raise ValueError('Unsupported bibliography URL')
                     out.append('<a href="'+html.escape(value,quote=True)+'">'+self.inline(label)+'</a>')
+                elif name=='url':
+                    if not value.startswith(('https://','http://')):raise ValueError('Unsupported bibliography URL')
+                    out.append('<a href="'+html.escape(value,quote=True)+'">'+html.escape(value)+'</a>')
                 else: raise ValueError('Unsupported prose command: '+name)
             else:
-                m = re.match(r'[^$\\]+', text[pos:])
+                m = re.match(r'[^$\\{}]+', text[pos:])
+                if not m:raise ValueError('Unparsed prose grouping')
                 literal = m[0]
                 if '$' in literal or '{' in literal or '}' in literal: raise ValueError('Unparsed prose or math grouping')
                 out.append(html.escape(typography(re.sub(r'\s+', ' ', literal))))
@@ -618,6 +644,17 @@ class Chapter:
         # Separate paragraphs outside math. A display splits paragraph elements,
         # but its exact mathematical source is passed unchanged to inline().
         # Lists can occur inside statements. Keep them semantic and preserve order.
+        nested=re.search(r'\\begin\{(tabularx|tabular|longtable)\}(?:\[[^\]]*\])?(.*?)\\end\{\1\}',text,re.S)
+        if nested and hasattr(self,'table_config'):
+            start=self.text.find(nested[0])
+            if start<0 or self.text.count(nested[0])!=1:raise ValueError('Ambiguous nested table source')
+            identifier='L'+str(self.line(start))
+            key,aid=table_reading_aid(self.table_config,self.source,identifier)
+            self.table_aids_used.add(key)
+            self.nested_tables.append(dict(kind=nested[1],id=identifier,line=self.line(start)))
+            return (self.paragraphs(text[:nested.start()])+'<section id="'+identifier+'">'
+                +render_table(dict(kind=nested[1],body=nested[2]),self,aid)+'</section>'
+                +self.paragraphs(text[nested.end():]))
         description=re.search(r'\\begin\{description\}(?:\[([^\]]*)\])?(.*?)\\end\{description\}',text,re.S)
         if description:
             if description[1] not in (None, r'style=nextline,font=\normalfont\bfseries'):
@@ -761,6 +798,8 @@ def prepare(reader):
         if config.get('custom_reader'):
             if config['custom_reader'] == 'proof_path':
                 from proof_path_reading import prepare_book
+            elif config['custom_reader'] == 'paper_ix':
+                from paper_ix_reading import prepare_book
             else:
                 from special_functions_reading import prepare_book
             reader.readable_books[work] = prepare_book(reader, config)
@@ -814,11 +853,6 @@ def prepare(reader):
             chapters.append((spec,raw,chapter))
         bib_text=reader.site.read_source(reader.records[config['bib']]).decode('utf-8-sig')
         references=[] if config.get('bibliography_source_only') else (manuscript_bibliography if config.get('inline_bibliography') else bibliography)(bib_text)
-        if config.get('source_references'):
-            from paper_ix_reading import source_references
-            for key,node in source_references(reader,config).items():
-                if key in labels: raise ValueError('Duplicate source reference '+key)
-                labels[key]=node
         for spec,raw,chapter in chapters:
             chapter.labels=labels
             chapter.validate_references()
@@ -906,8 +940,13 @@ def render_table(node,chapter,reading_aid=None):
         if normalize(first_header)!=normalize(repeated) or original_math(repeated):
             raise ValueError('Unsupported repeated table header')
         content=first+tail
-    content=re.sub(r'\\(?:toprule|midrule|bottomrule|endfirsthead|endhead|endfoot|addlinespace)\b','',content)
+    content=re.sub(r'\\(?:toprule|midrule|bottomrule|hline|endfirsthead|endhead|endfoot|endlastfoot|addlinespace)\b','',content)
     rows=[split_cells(row,'&') for row in split_cells(content,r'\\') if row.strip()]
+    if reading_aid and 'source_first_row' in reading_aid:
+        if [' '.join(cell.split()) for cell in rows[0]]!=reading_aid['source_first_row']:
+            raise ValueError('Review the unheaded source table')
+        if original_math(' '.join(reading_aid['headers'])):raise ValueError('Added table headers must be plain text')
+        rows.insert(0,reading_aid['headers'])
     def cell(value):
         value=value.strip()
         match=re.match(r'\\multicolumn\{([1-9][0-9]*)\}\{[lcr]\}',value)
@@ -1104,7 +1143,7 @@ def render_book(reader,book):
                     path,image,figure_source_sha256=figure_image(reader,config,spec,book['figure_assets'],match[1],page)
                 else:
                     image_name=match[1].removesuffix('.pdf')+'.png'
-                    path=config['base']+(image_name if '/' in image_name else spec.get('figure_directory',config.get('figure_directory','figures'))+'/'+image_name)
+                    path=posixpath.normpath(config['base']+(image_name if '/' in image_name else spec.get('figure_directory',config.get('figure_directory','figures'))+'/'+image_name))
                     image=reader.image_url(path,page)
                     if not image:
                         pdf_path=path.removesuffix('.png')+'.pdf'
@@ -1191,10 +1230,15 @@ def render_book(reader,book):
         if config.get('custom_reader')=='proof_path':
             from proof_path_reading import source_math
             expressions=source_math(book['main'],spec)
+        elif config.get('custom_reader')=='paper_ix':
+            from paper_ix_reading import source_math
+            expressions=source_math(raw.decode('utf-8-sig'),spec)
         if chapter.math!=expressions:
             difference=next((i for i,(a,b) in enumerate(zip(chapter.math,expressions)) if a!=b),min(len(chapter.math),len(expressions)))
             raise ValueError('Reading math differs at '+source+' expression '+str(difference)+' rendered '+str(chapter.math[difference:difference+1])+' original '+str(expressions[difference:difference+1]))
         report=dict(source=source,source_sha256=hashlib.sha256(raw).hexdigest(),url=page,math_expressions=len(expressions),math_sequence_sha256=hashlib.sha256(json.dumps(expressions,ensure_ascii=False).encode()).hexdigest(),references=len(chapter.references),labels=sum(len(n['labels']) for n in chapter.nodes),nodes=[{k:n[k] for k in ('kind','id','line','end_line','labels')} for n in chapter.nodes],macro_source=config['main'],macros=chapter.macros,new_proof_review=False,new_lean_execution=False)
+        if getattr(chapter,'nested_tables',None):report['nested_tables']=chapter.nested_tables
+        aided_tables.update(getattr(chapter,'table_aids_used',set()))
         reports.append(report)
         if 'start_line' in spec: report.update(start_line=spec['start_line'],end_line=spec['end_line'])
         if source==SOURCE: site.write('documents/readable-paper-ii.json',json.dumps(report,ensure_ascii=False,indent=2)+'\n')
@@ -1246,6 +1290,9 @@ def render_book_index(reader,book,reports):
 
 
 def render_bibliography(reader,book):
+    if book['config'].get('custom_reader')=='paper_ix':
+        from paper_ix_reading import render_bibliography as render_paper_ix_bibliography
+        return render_paper_ix_bibliography(reader,book)
     from reading_navigation import navigation, resources, work_links
     site=reader.site
     config=book['config']
