@@ -102,6 +102,57 @@ if (readingOptions && showPassageTools) {
   readingOptions.hidden = false;
 }
 
+// A single native contents disclosure becomes a desktop sidebar or a compact
+// sticky control in narrow readers, including the side-by-side panes.
+const chapterSidebar = document.querySelector(".chapter-sidebar");
+if (chapterSidebar) {
+  const contents = chapterSidebar.querySelector(".reading-outline");
+  const summary = contents.querySelector("summary");
+  const currentSection = contents.querySelector(".reading-current-section");
+  const article = document.querySelector("#chapter-text");
+  const wide = window.matchMedia("(min-width: 64rem)");
+  const sections = Array.from(contents.querySelectorAll('.chapter-contents a[href^="#"]')).flatMap(link => {
+    let target;
+    try { target = document.getElementById(decodeURIComponent(link.hash.slice(1))); } catch { return []; }
+    return target && article.contains(target) && target.matches("h2,h3,h4,h5,h6") ? [{link, target}] : [];
+  });
+  let scheduled = false;
+  function updateCurrentSection() {
+    scheduled = false;
+    if (!sections.length) return;
+    let current = sections[0];
+    for (const section of sections) {
+      if (section.target.getBoundingClientRect().top > 110) break;
+      current = section;
+    }
+    for (const section of sections) {
+      if (section === current) section.link.setAttribute("aria-current", "location");
+      else section.link.removeAttribute("aria-current");
+    }
+    currentSection.textContent = current.link.textContent.trim();
+  }
+  function scheduleSectionUpdate() {
+    if (!scheduled) { scheduled = true; requestAnimationFrame(updateCurrentSection); }
+  }
+  function setContentsLayout() { contents.open = wide.matches; scheduleSectionUpdate(); }
+  setContentsLayout();
+  wide.addEventListener("change", setContentsLayout);
+  window.addEventListener("scroll", scheduleSectionUpdate, {passive: true});
+  window.addEventListener("resize", scheduleSectionUpdate);
+  window.addEventListener("load", scheduleSectionUpdate, {once: true});
+  contents.addEventListener("click", event => {
+    const link = event.target.closest('a[href^="#"]');
+    if (link && !wide.matches && !event.button && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey) contents.open = false;
+  });
+  contents.addEventListener("keydown", event => {
+    if (event.key === "Escape" && !wide.matches && contents.open) {
+      contents.open = false;
+      summary.focus();
+      event.preventDefault();
+    }
+  });
+}
+
 const sourceLineForm = document.querySelector("#source-line-form");
 if (sourceLineForm) {
   const lineInput = document.querySelector("#source-line-number");

@@ -1,5 +1,6 @@
 /* Four editorial research sections. Labels are textual rather than colored status badges. */
-.catalog-intro { max-width: 67rem; font-size: 1.07rem; line-height: 1.65; }
+.catalog-heading h1 { margin: 0 0 .55rem; }
+.catalog-intro { max-width: 67rem; font-size: 1.07rem; line-height: 1.65; margin: 0 0 1rem; }
 .discipline-overview {
   display: flex; flex-wrap: wrap; gap: .55rem; margin: 1rem 0;
 }
@@ -14,19 +15,27 @@
 .discipline-count { font-size: .82rem; color: var(--green); font-weight: 650; }
 .discipline-detail { font-size: .84rem; line-height: 1.5; color: var(--muted); }
 .catalog-filters {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
-  gap: .9rem 1.1rem; padding: 1.2rem; border: 1px solid var(--line);
+  display: block; padding: .8rem 1rem .25rem; border: 1px solid var(--line);
   border-radius: .25rem; background: var(--surface);
 }
-.catalog-filters > div { display: flex; flex-direction: column; gap: .3rem; min-width: 0; }
-.catalog-filters label { font-size: .84rem; font-weight: 650; }
+.catalog-primary { display: grid; grid-template-columns: minmax(0, 2fr) minmax(12rem, 1fr) auto; gap: .9rem 1.1rem; }
+.catalog-primary > div, .catalog-advanced-grid > div { display: flex; flex-direction: column; gap: .3rem; min-width: 0; }
+.catalog-filters label { margin: 0; font-size: .84rem; font-weight: 650; }
 .catalog-filters input, .catalog-filters select {
   width: 100%; min-width: 0; min-height: 2.8rem; padding: .5rem;
   border: 1px solid var(--control-edge); background: var(--surface); color: var(--ink);
   border-radius: .2rem; font: inherit;
 }
 .catalog-filters .catalog-reset { justify-content: end; }
-.catalog-filters button { min-height: 2.8rem; }
+.catalog-filters button { min-height: 2.8rem; margin: 0; background: var(--surface); color: var(--green); border-color: var(--control-edge); }
+.catalog-advanced { margin-top: .5rem; }
+.catalog-advanced > summary { cursor: pointer; min-height: 44px; padding: .5rem 0; font-size: .9rem; font-weight: 600; color: var(--green); }
+.catalog-advanced-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); gap: .9rem 1.1rem; padding: .5rem 0 .85rem; border-top: 1px solid var(--line); }
+#catalog-active-filters { font-weight: 400; }
+.catalog-other-search { font-size: .87rem; margin: .4rem 0; }
+.catalog-support { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0 1.5rem; }
+.catalog-support .catalog-notice { margin: .35rem 0; }
+.catalog-support .catalog-notice[open] { flex-basis: 100%; }
 .catalog-notice { max-width: 70rem; margin: .6rem 0; font-size: .87rem; color: var(--muted); line-height: 1.55; }
 .catalog-notice summary, .catalog-proof summary { cursor: pointer; padding: .4rem 0; }
 .catalog-results-toolbar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .5rem 1rem; margin-top: 1rem; }
@@ -38,7 +47,7 @@
 .catalog-pagination .catalog-page-choice { display: flex; align-items: center; gap: .4rem; margin: 0; font-size: .85rem; }
 .catalog-pagination select { width: auto; min-width: 4.3rem; min-height: 2.75rem; padding: .4rem; }
 .catalog-section { margin-block: 1rem 1.5rem; }
-.catalog-section h2 { border-bottom: 1px solid var(--line); padding-bottom: .55rem; }
+.catalog-section h2 { border-bottom: 1px solid var(--line); padding-bottom: .55rem; margin: .6rem 0 .7rem; }
 .catalog-section h2 small { font: 400 .75rem system-ui, sans-serif; color: var(--muted); margin-left: .6rem; }
 .catalog-items { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: .85rem; }
 .catalog-item {
@@ -60,6 +69,9 @@
 .catalog-item-links { font-size: .83rem; }
 .catalog-section[hidden], .catalog-item[hidden], #catalog-empty[hidden], .catalog-pagination[hidden] { display: none !important; }
 @media (max-width: 40rem) {
-  .catalog-filters { grid-template-columns: 1fr; }
+  .catalog-primary { grid-template-columns: minmax(0, 1fr) auto; gap: .65rem; }
+  .catalog-primary > div:first-child { grid-column: 1 / -1; }
+  .catalog-primary > div:nth-child(2) { min-width: 0; }
+  .catalog-advanced-grid { grid-template-columns: minmax(0, 1fr); }
   .catalog-assessment > div { grid-template-columns: 6rem minmax(0, 1fr); }
 }
