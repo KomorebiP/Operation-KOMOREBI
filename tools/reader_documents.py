@@ -332,7 +332,7 @@ class ReadingDocuments:
             body += '<header class="document-heading"><p class="eyebrow">'+e(record['title'])+'</p><h1>'+e(title)+'</h1><p class="document-filename">'+e(PurePosixPath(path).name)+'</p></header>'
             body += self.work_routes(work, page)
             body += self.source_claims(path, page)
-            siblings = [r for r in self.records.values() if r['work'] == work and r['format'] == 'pdf' and r != record]
+            siblings = [r for r in self.records.values() if r['work'] == work and r['format'] == 'pdf' and r != record and not r.get('figure_source')]
             if record['format'] == 'pdf':
                 if not raw.startswith(b'%PDF-'):
                     raise ValueError('Invalid PDF signature: '+path)
@@ -385,7 +385,7 @@ class ReadingDocuments:
 
     def catalog(self):
         e = html.escape
-        pdfs = [r for r in self.records.values() if r['format'] == 'pdf']
+        pdfs = [r for r in self.records.values() if r['format'] == 'pdf' and not r.get('figure_source')]
         editions=list(getattr(self.site,'editorial_editions',{}).values())
         body = '<h1>Papers and PDFs</h1><p><a class="button" href="read/index.html">Read the HTML editions</a></p><p>HTML editions provide chapter navigation, selectable equations and links between statements and proofs. Other papers, visual guides and formal companions are available below as PDFs with search, page controls, zoom, printing and a direct download.</p><p><a href="works.html">Browse all works and their evidence</a> · <a href="collection/HAND_WORKED_EXAMPLES.html">Worked examples</a></p><label for="work-query">Find a work or document</label><input id="work-query" type="search" data-result-label="PDFs"><p id="work-count" role="status" aria-live="polite">'+str(len(pdfs)+len(editions))+' PDFs</p><div class="work-list">'
         for edition in editions:

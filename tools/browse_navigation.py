@@ -189,6 +189,8 @@ class Browser:
             links = self.resources(c,kinds,page)
             if title=='Read' and c['id']=='monographs-special-functions':
                 links.insert(0,'[Read online: chapters, proof appendices, figures and glossary](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/index.html)')
+            if title=='Read' and c['id']=='paper-v':
+                links.insert(0,'[Read online: chapters, figures and proof links](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-v/index.html)')
             if title=='Written proofs' and edition:
                 links.insert(0,link('Mathematical discussion in the revised essay',edition['manuscript'],page))
             has_lean = any(a['kind']=='lean' for a in self.rows[c['id']]['resources'])

@@ -29,6 +29,25 @@ and return links on the related work pages. Edit tutorial explanations above
 the `learning-navigation` marker. The status command replaces the section
 below that marker. A subject route does not establish a theorem correspondence.
 
+## Paper V HTML reading edition
+
+[Paper V](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-v/index.html)
+has 40 reading pages plus contents and bibliography. Its contiguous source ranges
+retain both manuscript branches, four appendices, 1,219 mathematical expressions,
+83 proof bodies, 35 manuscript figures and ten tables. Chapter navigation uses
+the shared reading controls. The forty-plate visual atlas stays in the PDF.
+
+The [chapter configuration](../tools/paper_v_chapters.py) records the original
+line ranges and E-prefixed numbering. The [figure publisher](../tools/reader_figure_assets.py)
+checks the retained PDF sources and their rendered PNG hashes. Normal builds
+verify those images; the [figure renderer](../tools/build_paper_v_figures.py)
+is needed only to regenerate them. Run
+`python -B -m unittest discover -s tools -p 'test_paper_v_reading.py'`
+to check the complete equation sequence, statement/proof routes, numbering,
+tables and figure identities. The wavelet walkthrough and Haar lab link directly
+to the related HTML chapters. Historical formal and experimental scope remains
+attached to the edition; this conversion adds no proof review or Lean replay.
+
 ## Special Functions hub and coupled-function lab
 
 The [Special Functions hub](SPECIAL_FUNCTIONS.md) connects the current HTML

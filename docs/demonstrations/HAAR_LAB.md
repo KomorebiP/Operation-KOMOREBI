@@ -122,4 +122,6 @@ its inverse, and the normalization identity. Follow its links to
 for the broader setting and recorded evidence. This teaching extension adds no
 new formal verification or production software qualification.
 
+[Read Paper V's wavelet-packet chapter](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-v/wavelet-packets.html) or follow the [extended wavelet and polyphase calculation](WAVELET_POLYPHASE.md).
+
 [Return to the lab](https://KomorebiP.github.io/Operation-KOMOREBI/interactive.html#haar)

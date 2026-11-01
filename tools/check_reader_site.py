@@ -278,6 +278,9 @@ def inspect_site(root):
         raw=(root/record['file_url']).read_bytes()
         assert len(raw)==record['size'] and hashlib.sha256(raw).hexdigest()==record['sha256'],record['repository_path']
         assert hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest()==record['git_blob_sha1']
+        if record.get('source'):
+            sources={r['repository_path']:r for r in documents['files']}
+            assert sources[record['source']]['sha256']==record['source_sha256']
     readable_math = check_readable_chapter(root,documents,pages)
     from reader_atlas import verify as verify_atlas
     atlas = verify_atlas(root,documents,pages)
