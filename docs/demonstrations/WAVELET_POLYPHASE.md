@@ -620,7 +620,7 @@ Consequently, for **every input in the declared even-length circular model**,
 }
 \]
 
-The three quantities have equal squared norms for algebraic reasons. The commutator residual and the omitted-transfer residual need not be the same vector: their first-level detail contributions have different signs. This distinction matters when reconstructing the actual missing signal rather than just measuring its energy.
+The three squared norms agree for algebraic reasons. The commutator residual and the omitted-transfer residual need not be the same vector: their first-level detail contributions have different signs. This distinction matters when reconstructing the actual missing signal rather than just measuring its energy.
 
 ### Compare both approximations with the complete filtered signal
 

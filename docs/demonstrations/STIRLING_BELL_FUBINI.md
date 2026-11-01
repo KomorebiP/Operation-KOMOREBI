@@ -364,7 +364,7 @@ F_5(\lambda)=\lambda+30\lambda^2+150\lambda^3
 | \(1\) | \(52\) | \(541\) |
 | \(2\) | \(454\) | \(9002\) |
 
-The first column changes the **evaluation point** of \(T_5\). The second changes the **scale before its exponential moment**. These are distinct operations even when they use the same parameter. At \(n=0\), both polynomials give \(1\) for every parameter, consistent with \(S(0,0)=1\).
+The \(T_5(\lambda)\) column records polynomial evaluations. The \(F_5(\lambda)\) column records exponential moments after scaling the polynomial argument. These are distinct operations even when they use the same parameter. At \(n=0\), both polynomials give \(1\) for every parameter, consistent with \(S(0,0)=1\).
 
 To derive the complete families, first preserve the formal coefficient variable \(z\):
 
@@ -520,7 +520,7 @@ The two packet contributions reconstruct the original recurrence:
 
 No coefficient was inferred by interpolation. We partitioned a finite sum according to its residue and retained both children.
 
-### Extend to a three-packet refinement
+### Extend to a three-packet decomposition
 
 For any integer \(m\ge2\), define
 

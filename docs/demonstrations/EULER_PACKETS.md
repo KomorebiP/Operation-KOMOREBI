@@ -2545,7 +2545,7 @@ Write the classical Euler polynomials in this basis as
 \mathcal E_n(x)=\sum_{k=0}^n C_{k,n}B_k(x).
 \]
 
-Combining the monomial formula with the earlier expansion
+Combining the monomial formula with the Appell expansion obtained from the defining generating function
 \(\mathcal E_n(x)=\sum_{j=0}^n\binom nj\mathcal E_{n-j}(0)x^j\) gives
 
 \[
@@ -3438,13 +3438,13 @@ U_2(21)\equiv418=2+32(13)\pmod{2048}.
 
 Dividing the last difference by 32 gives \(\Phi_2(21)\equiv13\pmod{64}\), exactly as the lifting table predicts.
 
-For a full 2-adic target, repeat the lift indefinitely. The compatible input residues define one element of \(\mathbb Z_2\), and the isometry passes to the limit. This proves the continuous extension is a bijective isometry. Consequently the image of the original packet is exactly
+For a full 2-adic target, repeat the lift indefinitely. The compatible input residues define one element of \(\mathbb Z_2\), and the isometry passes to the limit. This proves the continuous extension is a bijective isometry. Consequently, the image of the continuous extension \(U_j:\mathbb Z_2\to\mathbb Z_2\) is exactly
 
 \[
 \boxed{j!+2^{d_j}\mathbb Z_2,}
 \]
 
-with one preimage for each point of that image. The statement concerns 2-adic coordinates; no complex-analytic continuation is being inferred.
+with one preimage in \(\mathbb Z_2\) for each point of that image. The statement concerns 2-adic coordinates; no complex-analytic continuation is being inferred.
 
 ## Invert the Euler source in a finite Hurwitz mode algebra
 

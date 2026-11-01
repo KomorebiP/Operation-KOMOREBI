@@ -81,8 +81,8 @@ PASS: refinement
 ```
 
 The checks compare fine children with both coarse packets, reconstruct the
-list and test the discarded-packet residual. There is no convolution, padding,
-boundary extension or approximation in this run.
+list and test the discarded-packet residual. All displayed values and residuals
+use exact integer arithmetic, including the reconstruction after a packet is discarded.
 
 ## 5. Follow the result and its evidence
 
