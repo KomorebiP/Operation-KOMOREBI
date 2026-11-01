@@ -32,6 +32,7 @@ Use the links below to read this work and its supporting files. Ctrl+click (Comm
 
 ## Read
 
+- [Read online: chapters, figures and proof links](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vii/index.html)
 - [Edition README](../../papers/paper-vii/current/README.md)
 - [Read PDF](../../papers/paper-vii/current/papers/Paper_VII_Traditional_Final.pdf)
 - [Visual guide (PDF)](../../papers/paper-vii/current/papers/Paper_VII_Visual_Guide_Final.pdf)

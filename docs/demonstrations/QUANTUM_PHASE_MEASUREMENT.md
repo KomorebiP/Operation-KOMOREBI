@@ -571,6 +571,17 @@ the collection's Lean evidence.
 
 ## Papers, written proofs, and scope
 
+### Read the matching Paper VII chapters
+
+| Topic | Illustrated chapter | Statement and proof |
+|---|---|---|
+| Which measurements detect coherence? | [Measurements](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vii/measurements.html) | [Measurement invariance](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vii/measurements.html#L685) · [Proof](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vii/measurements.html#L705) |
+| What does a channel transfer? | [Kraus channels and amplitude damping](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vii/quantum-channels.html) | [Finite Kraus channel](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vii/quantum-channels.html#L722) · [Proof](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vii/quantum-channels.html#L736) |
+| When can an error be corrected? | [Error correction and syndrome packets](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vii/error-correction.html) | [Finite correction criterion](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vii/error-correction.html#L809) · [Proof](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vii/error-correction.html#L822) |
+
+[Bell-state circuit and packet paths](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vii/circuits-and-bell-states.html#L329) ·
+[All Paper VII chapters](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vii/index.html)
+
 The starting state is the one in [hand-worked example 17](../examples/17_QUANTUM_MEASUREMENT.md).
 [Paper VII's measurement and channel section](../../papers/paper-vii/current/editable/traditional/parts/01_finite_core.tex#L670)
 states the block-diagonal measurement-invariance result and defines Kraus

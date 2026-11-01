@@ -180,13 +180,17 @@ linked images and runtime integrity, in addition to HTML links and reading ZIPs.
 
 ## Readable chapters
 
-Paper VII now has eleven reading pages: the opening orientation, three exact
-finite models, and all nine mathematical source parts. The pages retain the
-I, II and III numbering, the supplementary statements, 107 proof environments
-and 1,820 mathematical expressions. The 38 original figure PDFs can be opened
-inside the chapters or in the PDF reader. The worked visual atlas remains in
-the original monograph and visual guide. This presentation adds no proof
-assessment or Lean execution.
+Paper VII has 25 reading pages: the opening orientation, three exact finite
+models, fifteen focused Part I topics, and all eight later source parts.
+Measurements, Kraus channels and error correction have separate reading pages.
+The chapters preserve the I, II and III numbering, original counter resets,
+107 proof environments, and the same 1,820 mathematical expressions in order.
+The complete Part I page retains its earlier URL and passage anchors.
+All 38 original manuscript figures appear as inline PNGs with source captions,
+reviewed text descriptions, full-size links and the original PDFs. The asset
+record binds every PNG to its retained PDF with SHA-256 hashes and intrinsic
+dimensions. The worked visual atlas remains in the original monograph and
+visual guide. This presentation adds no proof assessment or Lean execution.
 
 [The chapter renderer](../tools/readable_chapters.py) publishes the main chapters
 of Papers I, II, III, IV and VII as readable HTML alongside their original source pages.
