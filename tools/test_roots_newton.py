@@ -135,14 +135,109 @@ class RootsUnityExactTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             M.packet_egf_coefficients(4,3,2,-1)
 
+    def test_translation_carry_noncommutation_exact_row(self):
+        f=M.power(5)
+        source=[M.project_newton(f,3,r) for r in range(3)]
+        target=[M.project_newton(M.translate(f,1),3,r) for r in range(3)]
+        self.assertEqual([M.evaluate(q,4) for q in source],[600,244,180])
+        self.assertEqual([M.evaluate(M.delta(q),4) for q in source],
+                         [900,961,240])
+        self.assertEqual([M.evaluate(q,4) for q in target],[1561,484,1080])
+        self.assertEqual([M.evaluate(M.translate(q,1),4) for q in source],
+                         [1500,1205,420])
+        self.assertEqual([M.evaluate(q,4)-M.evaluate(M.translate(source[r],1),4)
+                          for r,q in enumerate(target)],[61,-721,660])
+        self.assertEqual(sum(M.evaluate(q,4) for q in target),5**5)
+        for r in range(3):
+            self.assertEqual(target[r],
+                M.add(source[r],M.delta(source[(r+1)%3])))
+            self.assertNotEqual(target[r],M.translate(source[r],1))
+        self.assertIn("1561 + 484 + 1080 = 3125",
+                      M.svg_translation_carry())
+
+    def test_general_translation_and_cyclic_transfer_blocks(self):
+        examples=[M.power(k) for k in range(7)]
+        examples.extend([(Fraction(2,3),Fraction(-1),Fraction(0),Fraction(5)),
+                         (Fraction(0),Fraction(1,2),Fraction(0),Fraction(-2))])
+        for poly in examples:
+            for h in (Fraction(-1),Fraction(0),Fraction(1),
+                      Fraction(2),Fraction(3),Fraction(1,2)):
+                self.assertEqual(M.translate(poly,h),
+                                 M.translate_via_newton(poly,h))
+                for m in (2,3,4,5):
+                    destinations=[M.project_newton(M.translate(poly,h),m,r)
+                                  for r in range(m)]
+                    for r in range(m):
+                        total=(Fraction(0),)
+                        for source in range(m):
+                            result=M.translate_packet_block(poly,m,source,r,h)
+                            self.assertEqual(result,
+                                M.project_newton(
+                                    M.translate(M.project_newton(poly,m,source),h),
+                                    m,r))
+                            total=M.add(total,result)
+                            if h==1:
+                                original=M.project_newton(poly,m,source)
+                                expected=(Fraction(0),)
+                                if r==source:
+                                    expected=M.add(expected,original)
+                                if r==(source-1)%m:
+                                    expected=M.add(expected,M.delta(original))
+                                self.assertEqual(result,expected)
+                        self.assertEqual(total,destinations[r])
+        with self.assertRaises(ValueError):
+            M.translate_packet_block(M.power(2),1,0,0,1)
+        with self.assertRaises(ValueError):
+            M.translate_packet_block(M.power(2),3,3,0,1)
+        with self.assertRaises(ValueError):
+            M.translate_packet_block(M.power(2),3,0,-1,1)
+
+    def test_filtered_egf_carry_under_one_extra_label(self):
+        degree=8
+        u=(Fraction(0),)+tuple(
+            Fraction(1,M.factorial(j)) for j in range(1,degree+1))
+        for x in (Fraction(0),Fraction(1),Fraction(4),
+                  Fraction(1,2),Fraction(-3,2)):
+            for m in (2,3,4):
+                for r in range(m):
+                    current=M.packet_egf_coefficients(x,m,r,degree)
+                    next_row=M.packet_egf_coefficients(x+1,m,r,degree)
+                    prior=M.packet_egf_coefficients(x,m,(r-1)%m,degree)
+                    carry=M.series_product_truncated(u,prior,degree)
+                    self.assertEqual(next_row,tuple(
+                        current[n]+carry[n] for n in range(degree+1)))
+        self.assertEqual([M.packet_egf_coefficients(5,3,r,5)[5]*120
+                          for r in range(3)],[1500,1205,420])
+
+    def test_integral_basis_but_colliding_spectral_eigenvalues_in_f3(self):
+        one=M.falling(0)
+        triple=M.falling(3)
+        self.assertEqual(M.mod_polynomial(triple,3),(0,2,0,1))
+        self.assertEqual(M.mod_polynomial(M.newton_degree_operator(one),3),(0,))
+        self.assertEqual(M.mod_polynomial(M.newton_degree_operator(triple),3),(0,))
+        self.assertEqual(M.mod_polynomial(M.project_newton(one,2,0),3),(1,))
+        self.assertEqual(M.mod_polynomial(M.project_newton(triple,2,0),3),(0,))
+        self.assertEqual(M.mod_polynomial(M.project_newton(triple,2,1),3),
+                         (0,2,0,1))
+        self.assertNotEqual(M.mod_polynomial(one,3),
+                            M.mod_polynomial(triple,3))
+        self.assertEqual(M.mod_polynomial(M.translate(triple,3),3),
+                         M.mod_polynomial(triple,3))
+        with self.assertRaises(ValueError):
+            M.mod_polynomial((Fraction(1,2),),3)
+        with self.assertRaises(ValueError):
+            M.mod_polynomial(M.falling(3),1)
+
     def test_exact_suite_and_invalid_controls(self):
         checks = M.check()
         self.assertEqual(checks["anchor"],12)
-        self.assertGreater(sum(checks.values()),6300)
+        self.assertGreater(sum(checks.values()),6800)
         self.assertEqual(set(checks),{
             "anchor","stirling","roundtrip","projection","difference",
             "fourier","refinement","matrix","star","boundaries",
             "enumeration","spectral","packet_egf",
+            "translation_anchor","translation","translation_blocks",
+            "egf_carry","characteristic",
         })
         with self.assertRaises(ValueError):
             M.project_newton(M.power(2),0,0)
@@ -157,7 +252,7 @@ class RootsUnityExactTests(unittest.TestCase):
             c=M.check()
             M.save(a,c)
             M.save(b,c)
-            self.assertEqual(len(FILES),11)
+            self.assertEqual(len(FILES),15)
             for file in FILES:
                 with self.subTest(file=file):
                     self.assertEqual((a/file).read_bytes(),(b/file).read_bytes())
@@ -167,6 +262,20 @@ class RootsUnityExactTests(unittest.TestCase):
             self.assertEqual(result["image_count_histogram_n5_x4"],[0,4,180,600,240,0])
             self.assertEqual(result["number_operator_on_x_squared"],["0","-1","2"])
             self.assertEqual(result["packet_egf_n5_x4"],["600","244","180"])
+            self.assertEqual(result["shift_one_project_after_translate_at_4"],
+                             ["1561","484","1080"])
+            self.assertEqual(result["shift_one_translate_existing_packet_at_4"],
+                             ["1500","1205","420"])
+            self.assertEqual(result["shift_one_cross_packet_carries_at_4"],
+                             ["961","240","900"])
+            self.assertEqual(result["finite_characteristic_obstruction"]["falling_degree_3_mod_3"],
+                             [0,2,0,1])
+            self.assertIn("0,600,1500,900,961,1561",
+                          (a/"shifted-packet-ledger.csv").read_text())
+            self.assertIn("F3,0,0,1,1,0",
+                          (a/"finite-characteristic-obstruction.csv").read_text())
+            self.assertIn("1561 + 484 + 1080 = 3125",
+                          (a/"translation-carry.svg").read_text())
             self.assertIn("5,4,3,600,600",(a/"image-histograms.csv").read_text())
             self.assertIn("600 + 244 + 180 = 1024 functions",
                           (a/"function-image-histogram.svg").read_text())
@@ -200,7 +309,7 @@ class RootsUnityReaderTests(unittest.TestCase):
             pages[record["manuscript_url"]]="<h1>Roots of unity</h1>"
             self.assertEqual(record["reader_url"],READER)
             self.assertEqual(len(record["tables"]),len(FILES))
-            self.assertGreaterEqual(record["case_assertions"],6300)
+            self.assertGreaterEqual(record["case_assertions"],6800)
             self.assertEqual(len(site.search),1)
             from check_reader_site import Page
             parsed={path:Page(body) for path,body in pages.items()}
