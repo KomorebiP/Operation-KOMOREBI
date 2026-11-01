@@ -71,6 +71,21 @@ and return links on the related work pages. Edit tutorial explanations above
 the `learning-navigation` marker. The status command replaces the section
 below that marker. A subject route does not establish a theorem correspondence.
 
+## Saved reading
+
+**Browse → Saved reading** opens a personal list of pages and passages stored in
+this browser. Reading pages offer **Save page**, and section headings have a
+bookmark control that retains the exact fragment. The list supports title,
+paper and section search, individual removal, and updates across open tabs.
+It records explicit saves only. Storage failures leave save controls unchanged
+and explain how to use browser bookmarks instead. Without JavaScript, the
+ordinary reading links and browser bookmarks remain available.
+
+The page and controls are built by `tools/reading_list.py`; browser behavior and
+styles live in `website/assets/reading-list.js` and `reading-list.css`. URL and
+storage guards keep saved links inside this site's reading pages. The site
+workflow runs the rendering and browser-state regressions alongside reader tests.
+
 ## Paper V HTML reading edition
 
 [Paper V](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-v/index.html)
