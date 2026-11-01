@@ -664,6 +664,21 @@ browser controller are `website/assets/signal-lab-core.mjs` and
 `website/assets/signal-lab.js`. The shared site builder publishes it and adds
 its search entry. Both the page script and model import use content versions.
 
+`signal-lab-workspace.mjs` supplies bounded sample strokes, a 32-edit history,
+and validated notebook serialization. Its import and the model import both use
+content versions, including nested module references. Drawing fills crossed
+sample addresses and commits a stroke on release; cancellation restores the
+previous reference. The precise sample editor provides keyboard access.
+
+The notebook keeps at most 12 labeled settings records in local browser storage
+and falls back to the current tab if storage is unavailable. JSON imports append
+atomically within that limit. All metrics are recomputed from settings; stored
+result fields are ignored. Saved reconstructions are overlaid only when both
+reference and observed arrays match exactly. Resetting the active lab retains
+the notebook. Its JSON and results CSV are separate from the active experiment's
+exports and share link. `node --test tools/test_signal_lab_workspace.cjs` checks
+stroke/history behavior, import boundaries and comparison eligibility.
+
 The lab compares averaging-normalized Haar wavelets with their support
 weights, an orthonormal DCT-II, and sample coordinates. Seeded bounded integer
 noise, equal coefficient budgets, three selection policies, full budget/error

@@ -105,6 +105,12 @@ raw-magnitude, and prefix selections; inspect individual components; and
 explore reconstruction error over every budget. Export signals or error curves
 as CSV, save the experiment as JSON, or copy a link to the complete setup.
 
+Draw your own reference directly on the signal plot, or set a selected sample
+precisely with the keyboard. Edits use whole numbers from −64 to 64 and support
+undo/redo. Save up to 12 runs in the browser notebook, restore or rename them,
+and overlay reconstructions from identical reference and observed data. Notebook
+JSON preserves the collection; a results CSV exports its comparison table.
+
 The reference signal is known in these experiments. The displayed reference
 minimum uses that knowledge; it does not estimate the clean signal behind an
 unknown real-world recording. Cosine calculations are numerical approximations.
