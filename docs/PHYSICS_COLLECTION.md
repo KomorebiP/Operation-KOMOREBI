@@ -66,6 +66,13 @@ recovery, and the Quantum and Circuits book's modulus-12 arithmetic phase
 example. [Run the arithmetic comparison](https://KomorebiP.github.io/Operation-KOMOREBI/playground.html#physics-arithmetic-phase)
 to distinguish coherent sign replacement from complete coordinate dephasing.
 
+Continue in Paper VII's illustrated chapters on
+[measurements](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vii/measurements.html),
+[Kraus channels](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vii/quantum-channels.html), and
+[error correction](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vii/error-correction.html).
+Their statement/proof links lead into the retained manuscript, with figures
+displayed inline and text descriptions available alongside them.
+
 <a id="continuum-limit"></a>
 
 ## Centered approximation reaches the free continuum field

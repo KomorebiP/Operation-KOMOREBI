@@ -66,6 +66,9 @@ measurement probabilities agree.
 
 ## Try it
 
+[Read the illustrated measurement chapter](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vii/measurements.html) ·
+[Read the Kraus-channel chapter and damping figure](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vii/quantum-channels.html)
+
 Continue with [Quantum phase, measurement, and information loss](../demonstrations/QUANTUM_PHASE_MEASUREMENT.md)
 for three-setting tomography, partial dephasing, coherent records, packet
 refinement, and a standalone exact Python program.

@@ -1192,6 +1192,9 @@ def render_book(reader,book):
     if aided_tables!=set(table_aids): raise ValueError('Review unused table reading aids for '+work)
     render_book_index(reader,book,reports)
     render_bibliography(reader,book)
+    if work=='paper-vii':
+        from paper_vii_reading import render_collected_core
+        render_collected_core(reader,book)
     return reports
 
 
@@ -1205,6 +1208,8 @@ def render_book_index(reader,book,reports):
     for spec,report in zip(config['chapters'],reports):
         body+='<li><a href="'+site.rel(spec['url'],page)+'">'+html.escape(spec['title'])+'</a></li>'
     body+='<li><a href="references.html">Bibliography</a></li></ol></nav>'
+    for collected in config.get('collected_parts',[]):
+        body+='<p><a href="'+site.rel(collected['url'],page)+'">'+html.escape(collected['title'])+'</a></p>'
     if config.get('continuation_sources'):
         body+='<h2 id="source-continuations">Continue in the manuscript sources</h2><p>These chapters are available as selectable TeX, with line links. The complete typeset edition is available below.</p><ul>'
         for path,title in config['continuation_sources']:

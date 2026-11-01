@@ -396,3 +396,17 @@ reading pages with original drawings, selectable equations, text descriptions
 and complete drawing-label transcripts. Matrices and bar values use tables
 with row and column headers. V7–V42 open at their exact PDF pages. These
 reading changes do not add a proof audit or a fresh Lean replay.
+
+## Paper VII: topic chapters and figures
+
+[Paper VII's HTML edition](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vii/index.html)
+offers short Part I chapters, including measurements, Kraus channels and error
+correction. Statement and proof links retain the original source-line anchors.
+The earlier complete Part I reading page remains available.
+
+All 38 manuscript figures appear inline with their original captions, short
+alternative text and an expandable **Text description**. Open the image for
+its full size, or use **Open original figure (PDF)** for the retained vector
+figure. The images include intrinsic dimensions and adapt to the reading
+column. Text descriptions retain the distinction between finite models and
+open physical targets. The worked visual atlas remains available in the PDF.
