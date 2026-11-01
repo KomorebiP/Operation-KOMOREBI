@@ -706,6 +706,17 @@ No objective routine correction was identified in that scope. The record binds
 eight retained source files and reports the scoped syntax checks. The same
 exclusions apply; the manuscripts and mathematical statements are unchanged.
 
+The [Papers V and VI proofreading record](../manifests/reader-proofreading-papers-v-vi-2026-11-01.json)
+covers 88 non-atlas reading sections, their abstracts, notation, preambles and
+bibliography syntax. It recommends two wording corrections for a later edition:
+“minimum cost among all admissible prunings” in
+[Paper V's best-basis theorem](https://komorebip.github.io/Operation-KOMOREBI/read/paper-v/admissible-packet-trees.html#L2436),
+and “potential weight” in
+[Paper VI's alternating-product theorem](https://komorebip.github.io/Operation-KOMOREBI/read/paper-vi/extended-finite-state-feynman-kac-transfer.html#L4417).
+Both adjacent interpretations already explain the intended meaning. The record
+binds four source files and reports the syntax checks. The retained text and
+mathematics are unchanged; the same review exclusions apply.
+
 ## Signal Laboratory
 
 `signal-lab.html` is a larger known-reference signal experiment with 16–256
