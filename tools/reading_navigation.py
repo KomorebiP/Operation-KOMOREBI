@@ -57,7 +57,7 @@ def outline(contents):
     return '<details class="reading-outline"><summary>On this page</summary>'+contents+'</details>'
 
 
-def chapter_layout(body):
+def chapter_layout(body,extra_tools=''):
     """Move complete section navigation beside the unmodified chapter article.
 
     Track nested tags so a statement-index disclosure cannot truncate the outline.
@@ -103,7 +103,8 @@ def chapter_layout(body):
     contents=text('outline').replace('<summary>On this page</summary>',
         '<summary>Contents<span class="reading-current-section" aria-hidden="true"></span></summary>',1)
     toolbar='<div class="chapter-toolbar">'+''.join(text(name) for name in ('start','resources') if name in parts)+'</div>'
-    layout=('<div class="chapter-layout"><aside class="chapter-sidebar" aria-label="Section navigation">'+contents+
+    tools='<div class="chapter-sidebar-tools">'+extra_tools+'</div>' if extra_tools else ''
+    layout=('<div class="chapter-layout"><aside class="chapter-sidebar'+(' has-reading-tools' if tools else '')+'" aria-label="Section navigation">'+tools+contents+
             '</aside><div class="chapter-reading">'+text('article')+'</div></div>')
     return prefix+toolbar+layout+body[article_end:]
 

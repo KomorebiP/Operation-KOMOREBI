@@ -12,6 +12,7 @@ pages with documentation from two explicitly pinned library revisions.
 | Completion, Lean coverage, confidence and limits | [Project status](../manifests/project-status.json) |
 | Selected reading, proof, Lean and code files | [Browse resources](../manifests/browse-resources.json) |
 | Introductory terminology and background advice | [Reader experience](../manifests/reader-experience.json) |
+| Core-paper questions, scope and first reading paths | [Paper introductions](../manifests/paper-introductions.json) and [guidance renderer](../tools/reader_guidance.py) |
 | Hand-worked calculations and exercises | [Example index](HAND_WORKED_EXAMPLES.md), [tutorial pages](examples/) and [exact arithmetic checker](../tools/check_hand_examples.py) |
 | Statement locations for all 12 core papers and retained Paper I declaration mappings | [Claim navigation](../manifests/claim-navigation.json), bound to the retained source records |
 | Library source revisions | [Website library revisions](../manifests/reader-site-libraries.json) |
@@ -35,6 +36,22 @@ In narrow windows, including comparison panes, it becomes a sticky **Contents**
 disclosure that closes after a section is selected. Contents and resource links
 remain native disclosures without JavaScript. These controls rearrange the
 reading interface without changing the manuscript article or its passage IDs.
+
+The twelve core-paper overviews introduce the central question, contribution,
+assumptions and limits, followed by an example → setup/definition → result →
+proof route. Edit the paper-introduction manifest for that editorial copy.
+Each example must already belong to the paper's learning topics. Setup lines
+are checked against receipt-bound source text; result and proof links use the
+existing claim index. Where an HTML chapter is available the links open that
+passage, otherwise they use the on-site source reader.
+
+**Notation help** opens a chapter-local search dialog and downloads only the
+current work's compact index when opened. It reuses the notation search's
+case-sensitive symbol ranking and source contexts. A notation-table result
+keeps the whole row's subject and meaning together; an occurrence inside a
+definition is shown as a passage, rather than treated as a definition of every
+symbol it contains. Closing the dialog returns keyboard focus to its control.
+Without scripting or dialog support, the ordinary notation-index link remains.
 
 The `learning_topics` records in the reader experience manifest generate the
 [topic map](LEARNING_MAP.md), the source routes at the end of each tutorial,
