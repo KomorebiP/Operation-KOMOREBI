@@ -275,7 +275,7 @@ def tex_accents(text):
 
 def typography(text):
     text = tex_accents(text)
-    return text.replace('``','“').replace("''",'”').replace('~','\u00a0')
+    return text.replace('``','“').replace("''",'”').replace('---','—').replace('--','–').replace('~','\u00a0')
 
 
 def group(text, start, opening='{', closing='}'):
@@ -413,9 +413,12 @@ def navigation_title(text):
         value=re.sub(r'\\([A-Za-z]+)',
                      lambda command:SYMBOLS.get(command[1],{'cong':'≅'}.get(command[1],command[1])),value)
         return re.sub(r'[{}]', '', value)
-    text=re.sub(r'\$([^$]+)\$|\\\((.*?)\\\)',
-                math_label,text)
-    return re.sub(r'\s+', ' ',typography(text)).strip()
+    parts=[];position=0
+    for match in re.finditer(r'\$([^$]+)\$|\\\((.*?)\\\)',text):
+        parts.extend((typography(text[position:match.start()]),math_label(match)))
+        position=match.end()
+    parts.append(typography(text[position:]))
+    return re.sub(r'\s+', ' ',''.join(parts)).strip()
 
 
 class Chapter:
@@ -1313,6 +1316,8 @@ def render_book(reader,book):
     if aided_tables!=set(table_aids): raise ValueError('Review unused table reading aids for '+work)
     render_book_index(reader,book,reports)
     render_bibliography(reader,book)
+    from reading_links import add_reference_routes
+    add_reference_routes(reader,book)
     if work=='paper-vii':
         from paper_vii_reading import render_collected_core
         render_collected_core(reader,book)

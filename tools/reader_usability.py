@@ -1,4 +1,4 @@
-"""Shared reading controls; manuscript article bytes are left intact."""
+"""Shared reading controls that retain manuscript text and mathematics."""
 import html
 import posixpath
 import re
@@ -15,6 +15,8 @@ def enhance(body, page):
     is_index = page == config['index']
     if not is_index and 'id="chapter-text"' not in body:
         return body, False
+    from reading_links import figure_controls
+    body=figure_controls(body)
     e = html.escape
     def relative(target):
         return e(posixpath.relpath(target, posixpath.dirname(page)), quote=True)
