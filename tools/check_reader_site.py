@@ -125,6 +125,9 @@ def check_readable_chapter(root, documents, pages):
         elif BOOKS[spec['work']].get('custom_reader')=='paper_xi':
             from paper_xi_reading import source_math
             expressions=source_math(raw.decode('utf-8-sig'),spec)
+        elif BOOKS[spec['work']].get('custom_reader')=='paper_xii':
+            from paper_xii_reading import source_math
+            expressions=source_math(raw.decode('utf-8-sig'),spec)
         assert report['source_sha256']==hashlib.sha256(raw).hexdigest()
         assert report['url']==page
         assert report['math_expressions']==len(expressions)
@@ -304,6 +307,8 @@ def inspect_site(root):
     verify_paper_x_bibliography(root,documents,pages)
     from paper_xi_reading import verify_bibliography as verify_paper_xi_bibliography
     verify_paper_xi_bibliography(root,documents,pages)
+    from paper_xii_reading import verify_bibliography as verify_paper_xii_bibliography
+    verify_paper_xii_bibliography(root,documents,pages)
     from paper_vii_reading import verify_site as verify_paper_vii
     paper_vii=verify_paper_vii(root,pages,documents)
     from reader_atlas import verify as verify_atlas

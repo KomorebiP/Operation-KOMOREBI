@@ -32,6 +32,7 @@ Use the links below to read this work and its supporting files. Ctrl+click (Comm
 
 ## Read
 
+- [Read online: complete monograph, reading map and revision scope](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-xii/index.html)
 - [Edition README](../../papers/paper-xii/current/README.md)
 - [Read PDF](../../papers/paper-xii/current/core/publication/pdfs/Paper_XII_Traditional_v1.0.0.pdf)
 - [Visual guide (PDF)](../../papers/paper-xii/current/core/publication/pdfs/Paper_XII_Visual_Guide_v1.0.0.pdf)
