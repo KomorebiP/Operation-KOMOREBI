@@ -83,9 +83,10 @@ def navigation(config, page, placement='top'):
         relation = ('prev' if direction=='previous' else 'next') if target in sequence else 'contents'
         return ('<a class="reading-step reading-'+direction+'" rel="'+relation+'" href="'+relative(target['url'])+'" aria-label="'+e(label+' '+target['title'],quote=True)+'">'
                 '<span class="reading-step-label">'+label+'</span><span class="reading-step-title">'+e(target['title'])+'</span></a>')
-    body = '<nav class="reading-navigation" aria-label="Chapter and part navigation ('+placement+')" data-reading-work="'+e(config['work'],quote=True)+'" data-reading-position="'+str(position+1)+'" data-reading-total="'+str(len(sequence))+'" data-reading-placement="'+placement+'">'
     overview = relative('collection/works/'+config['work']+'.html')
     overview_label = config.get('overview_label', config['label'])
+    context=(' data-reading-overview="'+overview+'" data-reading-index="'+relative(config['index'])+'" data-reading-label="'+e(overview_label,quote=True)+'"') if placement=='top' else ''
+    body = '<nav class="reading-navigation" aria-label="Chapter and part navigation ('+placement+')" data-reading-work="'+e(config['work'],quote=True)+'" data-reading-position="'+str(position+1)+'" data-reading-total="'+str(len(sequence))+'" data-reading-placement="'+placement+'"'+context+'>'
     body += '<div class="reading-position"><span><a href="'+overview+'" aria-label="'+e(overview_label+' overview',quote=True)+'">'+e(overview_label)+'</a></span><span>'+str(position+1)+' of '+str(len(sequence))+'</span></div>'
     body += '<div class="reading-steps">'+step(previous,'previous','← Previous' if position else '← Contents')
     body += step(following,'next','Next →' if position+1<len(sequence) else ('Continue reading →' if config.get('partial') else 'Contents →'))+'</div>'
@@ -114,7 +115,7 @@ def chapter_layout(body,extra_tools=''):
         def __init__(self):
             super().__init__(convert_charrefs=False)
             self.lines=[0]+[i+1 for i,c in enumerate(body) if c=='\n']
-            self.active=[];self.parts={}
+            self.active=[];self.parts={};self.reading=None;self.reading_depth=0;self.steps={}
         def source_position(self):
             line,column=self.getpos()
             return self.lines[line-1]+column
@@ -122,12 +123,19 @@ def chapter_layout(body,extra_tools=''):
             for part in self.active:
                 if part['tag']==tag:part['depth']+=1
             attrs=dict(attrs);classes=attrs.get('class','').split()
+            if tag=='nav' and self.reading_depth:self.reading_depth+=1
+            if tag=='nav' and attrs.get('data-reading-placement')=='top':
+                self.reading=attrs;self.reading_depth=1;self.steps={}
+            if tag=='a' and self.reading_depth:
+                for direction in ('previous','next'):
+                    if 'reading-'+direction in classes:self.steps[direction]=attrs
             name = ('outline' if tag=='details' and 'reading-outline' in classes else
                     'resources' if tag=='details' and 'reading-resources' in classes else
                     'start' if tag=='p' and 'reading-start' in classes else
                     'article' if tag=='article' and attrs.get('id')=='chapter-text' else None)
             if name:self.active.append(dict(name=name,tag=tag,start=self.source_position(),depth=1))
         def handle_endtag(self,tag):
+            if tag=='nav' and self.reading_depth:self.reading_depth-=1
             for part in self.active[:]:
                 if part['tag']!=tag:continue
                 part['depth']-=1
@@ -151,8 +159,18 @@ def chapter_layout(body,extra_tools=''):
         '<summary>Contents<span class="reading-current-section" aria-hidden="true"></span></summary>',1)
     toolbar='<div class="chapter-toolbar">'+''.join(text(name) for name in ('start','resources') if name in parts)+'</div>'
     tools='<div class="chapter-sidebar-tools">'+extra_tools+'</div>' if extra_tools else ''
+    reading=parser.reading;returns=''
+    if reading and set(parser.steps)=={'previous','next'} and all(reading.get(key) for key in ('data-reading-overview','data-reading-index','data-reading-label')):
+        e=html.escape
+        def neighbour(direction):
+            link=parser.steps[direction]
+            label=('← Contents' if link.get('rel')=='contents' else '← Previous') if direction=='previous' else ('Continue →' if link['aria-label'].startswith('Continue reading') else 'Contents →' if link.get('rel')=='contents' else 'Next →')
+            return '<a class="reading-return-'+direction+'" href="'+e(link['href'],quote=True)+'" aria-label="'+e(link['aria-label'],quote=True)+'">'+label+'</a>'
+        returns=('<nav class="reading-return" aria-label="Keep reading">'+neighbour('previous')+
+                 '<a class="reading-work-overview" href="'+e(reading['data-reading-overview'],quote=True)+'" aria-label="'+e(reading['data-reading-label']+' overview',quote=True)+'">Work overview</a>'
+                 '<a class="reading-full-contents" href="'+e(reading['data-reading-index'],quote=True)+'">Full contents</a>'+neighbour('next')+'</nav>')
     layout=('<div class="chapter-layout"><aside class="chapter-sidebar'+(' has-reading-tools' if tools else '')+'" aria-label="Section navigation">'+tools+contents+
-            '</aside><div class="chapter-reading">'+text('article')+'</div></div>')
+            returns+'</aside><div class="chapter-reading">'+text('article')+'</div></div>')
     return prefix+toolbar+layout+body[article_end:]
 
 
@@ -185,11 +203,14 @@ def publish_record(site, books):
 
 class Navigation(HTMLParser):
     def __init__(self,text):
-        super().__init__();self.controls=[];self.current=None;self.feed(text)
+        super().__init__();self.controls=[];self.returns=[];self.has_sidebar=False;self.current=None;self.feed(text)
     def handle_starttag(self,tag,attrs):
         attrs=dict(attrs)
+        if tag=='aside' and 'chapter-sidebar' in attrs.get('class','').split():self.has_sidebar=True
         if tag=='nav' and 'data-reading-work' in attrs:
             self.current=dict(attrs=attrs,links=[]);self.controls.append(self.current)
+        elif tag=='nav' and 'reading-return' in attrs.get('class','').split():
+            self.current=dict(attrs=attrs,links=[]);self.returns.append(self.current)
         elif tag=='a' and self.current is not None:self.current['links'].append(attrs)
     def handle_endtag(self,tag):
         if tag=='nav':self.current=None
@@ -228,7 +249,7 @@ def verify(root, pages, documents):
         for entry in sequence:
             page=entry['url'];_,position,previous,following=neighbours(config,page)
             assert page in pages, ('Missing reading page',page)
-            controls=Navigation((root/page).read_text(encoding='utf-8')).controls
+            parsed=Navigation((root/page).read_text(encoding='utf-8'));controls=parsed.controls
             assert len(controls)==2, ('Reading page needs top and bottom controls',page)
             assert [c['attrs']['data-reading-placement'] for c in controls]==['top','bottom']
             def target(link):
@@ -245,5 +266,8 @@ def verify(root, pages, documents):
                 menu=[a for a in control['links'] if 'data-reading-entry' in a]
                 assert [target(a) for a in menu]==[e['url'] for e in sequence], ('Incomplete reading menu',page)
                 assert [i for i,a in enumerate(menu) if a.get('aria-current')=='page']==[position], ('Wrong current chapter',page)
+            assert len(parsed.returns)==int(parsed.has_sidebar),('Missing or duplicate reading return links',page)
+            if parsed.returns:
+                assert [target(a) for a in parsed.returns[0]['links']]==[previous['url'],'collection/works/'+work+'.html',config['index'],following['url']],('Wrong reading return destination',page)
             count+=1
     return dict(editions=len(records),reading_pages=count,navigation_controls=2*count)

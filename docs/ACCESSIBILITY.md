@@ -53,6 +53,17 @@ Browser zoom remains available. The section sidebar also keeps **Previous**,
 control stays above the text. Floating reading menus close with Escape or a
 click outside them, and Escape returns focus to the menu's summary.
 
+Bibliographies offer **Find a reference** for entry text, including authors,
+titles, years and citation keys. Clearing the search restores every entry.
+Repeated-author em dashes also match the preceding author list in searches.
+Following a reference's direct link or returning with browser Back reveals that
+entry even when a search had hidden it. **Cited in this paper** lists the HTML
+chapter passages that cite an entry, with direct return links that also work
+without JavaScript. The bibliography order and original citation numbers stay
+the same. Figures in the core chapters offer **View full-size figure (new tab)**
+so you can inspect the image while keeping your reading place. Captions and text
+descriptions remain beside the original figure.
+
 **On this page** expands the current chapter's section list. **PDF, source &
 reading options** groups the secondary links by purpose. **Start reading** jumps
 past these controls to the text. All of these links and disclosures work with

@@ -4,13 +4,14 @@ const path = require('node:path');
 const vm = require('node:vm');
 const source = fs.readFileSync(path.join(__dirname, '../website/assets/reader.js'), 'utf8');
 
-function page(hash = '#L50') {
+function page(hash = '#L50', withSidebar = false) {
   const events = {};
   const tasks = [];
   const body = {};
+  const elements = {};
   const document = {
     body, documentElement: {}, activeElement: body,
-    querySelector() { return null; }, querySelectorAll() { return []; },
+    querySelector(selector) { return elements[selector] || null; }, querySelectorAll() { return []; },
     getElementById(id) { return targets[id] || null; },
     addEventListener() {}
   };
@@ -28,9 +29,33 @@ function page(hash = '#L50') {
   let pushes = 0;
   const history = {pushState(a, b, value) { pushes++; location.hash = value; }};
   const window = {addEventListener(name, callback) { events[name] = callback; }};
-  vm.runInNewContext(source, {document, location, history, window, setTimeout: callback => tasks.push(callback)});
+  let sidebar, resizeCallback;
+  if (withSidebar) {
+    const heights = {summary:44, returns:44}, styles = {}, links = [];
+    const summary = {getBoundingClientRect:()=>({height:heights.summary})};
+    const returns = {getBoundingClientRect:()=>({height:heights.returns})};
+    const current = {textContent:''};
+    const article = {contains:target=>Object.values(targets).includes(target),style:{
+      setProperty:(key,value)=>{styles[key]=value;},removeProperty:key=>{delete styles[key];}}};
+    for (const [id,top] of [['L50',-10],['L51',170]]) {
+      const attrs = {};
+      links.push({hash:'#'+id,textContent:id,attrs,setAttribute:(key,value)=>{attrs[key]=value;},removeAttribute:key=>{delete attrs[key];}});
+      targets[id].matches = selector=>selector==='h2,h3,h4,h5,h6';
+      targets[id].getBoundingClientRect=()=>({top});
+    }
+    const contents = {open:false,querySelector:selector=>selector==='summary'?summary:current,
+      querySelectorAll:()=>links,addEventListener(){}};
+    const wide = {matches:false,addEventListener(name,callback){sidebar.change=callback;}};
+    window.matchMedia=()=>wide;
+    elements['#chapter-text']=article;
+    elements['.chapter-sidebar']={querySelector:selector=>selector==='.reading-outline'?contents:returns};
+    sidebar={styles,links,contents,wide,
+      resize(summaryHeight,returnHeight){heights.summary=summaryHeight;heights.returns=returnHeight;resizeCallback();}};
+  }
+  vm.runInNewContext(source, {document, location, history, window, setTimeout: callback => tasks.push(callback),
+    requestAnimationFrame:callback=>tasks.push(callback),ResizeObserver:class {constructor(callback){resizeCallback=callback;}observe(){}}});
   return {document, targets, disclosure, location, events, pushes: () => pushes,
-    flush() { while (tasks.length) tasks.shift()(); }};
+    sidebar,flush() { while (tasks.length) tasks.shift()(); }};
 }
 
 let p = page();
@@ -89,4 +114,14 @@ p.targets.alias = {textContent: '', parentElement: null, nextElementSibling: hea
 heading.matches = selector => selector === 'h1,h2,h3,h4,h5,h6';
 p.events.load();
 assert.equal(p.document.activeElement, heading, 'An empty legacy anchor focuses its following heading');
+
+p=page('',true);p.flush();
+assert.equal(p.sidebar.styles['--reading-clearance'],'100px','Mobile passage spacing clears both sticky control rows');
+assert.equal(p.sidebar.links[0].attrs['aria-current'],'location');
+p.sidebar.resize(72,88);p.flush();
+assert.equal(p.sidebar.styles['--reading-clearance'],'172px','Wrapped or resized controls update passage spacing');
+assert.equal(p.sidebar.links[1].attrs['aria-current'],'location','The current section follows the same visible boundary');
+p.sidebar.wide.matches=true;p.sidebar.change();p.flush();
+assert.equal(p.sidebar.styles['--reading-clearance'],undefined,'Desktop reading does not reserve a mobile control offset');
+assert.equal(p.sidebar.contents.open,true);
 console.log('PASS: direct passage focus, Back/Forward, disclosures, existing focus, safe hashes and legacy anchors');

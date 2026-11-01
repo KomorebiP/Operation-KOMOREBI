@@ -53,6 +53,74 @@
     container.prepend(form);apply();
   }
 
+  const bibliography = document.querySelector('.reading-bibliography');
+  const references = bibliography ? Array.from(bibliography.querySelectorAll('section[id^="ref-"]')) : [];
+  if (references.length) {
+    const texts = new Map();
+    let previousAuthors = '';
+    for (const reference of references) {
+      let text = Array.from(reference.children).filter(child => !child.matches('.reference-uses'))
+        .map(child => child.textContent).join(' ');
+      // An em dash repeats the preceding author list in the retained BBL.
+      // Include that explicit convention in search without changing the entry.
+      const paragraph = reference.querySelector('p');
+      const title = paragraph?.querySelector('em');
+      if (title?.parentElement === paragraph) {
+        let prefix = '';
+        for (const node of paragraph.childNodes) {if (node === title) break;prefix += node.textContent;}
+        if (/^\s*[—–]\s*,/.test(prefix)) text = previousAuthors+' '+text;
+        else previousAuthors = prefix.trim();
+      } else previousAuthors = '';
+      texts.set(reference, normalize(text));
+    }
+    const form = element('form', undefined, 'reading-chapter-filter reading-reference-filter');
+    form.setAttribute('role', 'search');form.setAttribute('aria-label', 'Bibliography');
+    const label = element('label', 'Find a reference');label.htmlFor = 'reading-reference-query';
+    const input = element('input');input.id = 'reading-reference-query';input.type = 'search';
+    input.placeholder = 'Author, title, year or citation key';input.autocomplete = 'off';
+    input.setAttribute('aria-describedby', 'reading-reference-count');
+    const clear = element('button', 'Clear reference search');clear.type = 'reset';clear.hidden = true;
+    const status = element('p', undefined, 'reading-chapter-count');status.id = 'reading-reference-count';
+    status.setAttribute('role', 'status');
+    form.append(label, input, clear, status);
+    function apply() {
+      const words = normalize(input.value).split(/\s+/).filter(Boolean);
+      let shown = 0;
+      for (const reference of references) {
+        const match = words.every(word => texts.get(reference).includes(word));
+        reference.hidden = !match;shown += Number(match);
+      }
+      clear.hidden = !input.value;
+      status.textContent = words.length ? (shown ? shown+' of '+references.length+' references' : 'No matching references. Try fewer words or clear the search.') : references.length+' references';
+    }
+    function reset(focus = false) {input.value = '';apply();if (focus) input.focus();}
+    function revealLinkedReference() {
+      let id;
+      try {id = decodeURIComponent(location.hash.slice(1));} catch {return;}
+      const target = references.find(reference => reference.id === id);
+      if (target?.hidden) reset();
+    }
+    form.addEventListener('submit', event => {event.preventDefault();apply();});
+    form.addEventListener('reset', event => {event.preventDefault();reset(true);});
+    input.addEventListener('input', apply);
+    input.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && input.value) {event.preventDefault();event.stopPropagation();reset();}
+    });
+    window.addEventListener('hashchange', revealLinkedReference);
+    // A local permalink uses pushState in reader.js, so reveal its target before
+    // the delegated focus handler runs as well as on Back/Forward navigation.
+    document.addEventListener('click', event => {
+      const link = event.target.closest('a[href]');
+      if (!link || event.defaultPrevented || event.button || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+      const url = new URL(link.href, location.href);
+      if (url.origin !== location.origin || url.pathname !== location.pathname || url.search !== location.search) return;
+      let id;
+      try {id = decodeURIComponent(url.hash.slice(1));} catch {return;}
+      if (references.some(reference => reference.id === id && reference.hidden)) reset();
+    }, true);
+    bibliography.prepend(form);apply();
+  }
+
   // Every disclosure retains its native, script-free operation. Escape and an
   // outside click dismiss the floating panels without losing keyboard focus.
   const menus = Array.from(document.querySelectorAll('.reading-menu, .reading-paper-menu, .reading-display, .chapter-toolbar .reading-resources'));

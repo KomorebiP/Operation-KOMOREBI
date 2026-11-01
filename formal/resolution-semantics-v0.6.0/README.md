@@ -48,6 +48,11 @@ controls. The declarations comprise 157 inherited declarations and 25 new
 supporting, solver and example declarations, rather than 182 manuscript
 theorems.
 
+The [source-bound Windows replay](../../verification/resolution-semantics/traversal-windows-2026-11-01-run1/receipt.json)
+passed at source commit `5786646c1a889becc1c3f03b5af6eb8c8b1e2828` with no local
+companion changes. It records every compiled input hash and retains all raw
+output and rejection diagnostics.
+
 ## Claim map
 
 | Contract | Lean declaration |
@@ -86,8 +91,7 @@ edge cases and limits. [PROVENANCE.json](PROVENANCE.json) binds the original
 manuscript and inherited sources. This is self-review and Lean kernel
 checking, not independent scientific review.
 
-Standard classical dependencies of the inherited graph/counting results are
-recorded explicitly. Both inherited two-world obstruction theorems remain
+Standard classical dependencies are recorded explicitly wherever used. Both inherited two-world obstruction theorems remain
 axiom-free. No accepted theorem may depend on `sorryAx` or a custom axiom.
 
 Rank formulas, automatic traversal/forest construction, general Boolean-valued

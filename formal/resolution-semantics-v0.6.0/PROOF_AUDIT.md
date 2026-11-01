@@ -63,7 +63,7 @@ universal claim.
 | Changed path and root choices | Passed: executable diamond certificates use another path and another root; the general proof is quantified over every supplied checked traversal. |
 | Empty and isolated cases | Passed: no vertex access is needed on `Fin 0`; an isolated pin fixes its singleton component. |
 | Enumeration and runtime claims | Passed within scope: `traversalSolve` constructs one candidate and calls `checkSolution`, without calling the assignment enumerator. It may recompute path integrals; no runtime bound is claimed. |
-| Rejection controls | Required by replay: reject omitted non-tree edges, ignored non-root pins, contradictory pins and unconditional exact reference equality. |
+| Rejection controls | Passed by source-bound fresh replay: reject omitted non-tree edges, ignored non-root pins, contradictory pins and unconditional exact reference equality. |
 | Automatic forest/traversal construction and rank formulas | Out of scope. |
 | General Boolean algebras, ZFC models and forcing realizations | Out of scope. |
 
