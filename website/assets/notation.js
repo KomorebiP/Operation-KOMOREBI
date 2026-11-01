@@ -58,10 +58,11 @@
       for (const group of slice) {
         const entry=group.entries[0], context=group.context;
         const table=group.score>=6 ? context.table : null;
-        const title=table?.label;
+        const definitionTitle=group.score>=6 ? context.title : null;
+        const title=table?.label || definitionTitle;
         const symbol=table?.display || (!table ? entry.display : null);
         const li=node('li'), heading=node('h2'), link=node('a');
-        link.href=table ? context.source_url : entry.url;
+        link.href=table ? context.source_url : definitionTitle ? (context.reading_url || context.source_url) : entry.url;
         if(title)link.textContent=title;
         else if(symbol)formula(link,symbol);
         else link.append(node('code',table?.tex || entry.tex));
@@ -70,8 +71,8 @@
         const meta=node('p',undefined,'notation-result-meta');
         const workLink=node('a',workRecord?.short_title || entry.work);
         workLink.href='collection/works/'+entry.work+'.html';workLink.title=workRecord?.title || entry.work;
-        meta.append(workLink,node('span',' · '+labels[entry.kind]));li.append(meta);
-        if(title) {
+        meta.append(workLink,node('span',' · '+labels[entry.kind]+(!definitionTitle && context.title ? ' · From “'+context.title+'”' : '')));li.append(meta);
+        if(title && table) {
           const math=node('p',undefined,'notation-result-math');
           if(symbol)formula(math,symbol);else math.append(node('code',table.tex));
           li.append(math);
