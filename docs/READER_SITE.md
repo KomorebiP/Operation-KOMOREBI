@@ -587,3 +587,18 @@ definition separately. Matching symbol spellings remain available in a disclosur
 The build checks title metadata against the source; comments and code examples
 cannot supply a definition name.
 
+## Paper navigation
+
+Paper, source and PDF pages keep the overview, chapter contents, visual atlas
+and main reading format together. Supporting destinations are grouped under
+More resources. Overview pages also expose the visual atlas directly when a
+work has one. Existing URLs and source passage anchors are retained.
+
+Chapter and atlas reading bars share previous/next controls, position markers,
+an overview link and a complete jump menu. Paper VI's contents and chapter menu
+group the reading sequence by its four parts and references. The current part
+opens in the chapter menu. Contents groups, plate pickers and resource menus use
+native disclosures, so they remain usable without JavaScript. Both complete
+visual atlases use the chapter sidebar for their on-page contents and keep PDF
+and source options in a separate disclosure.
+

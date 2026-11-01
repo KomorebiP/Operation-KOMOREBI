@@ -14,6 +14,7 @@ from readable_chapters import (Chapter, HEADINGS, MATH_PATTERN, PANELS, clean_te
                                group, manuscript_macros, original_math,
                                passage_links, plain_math, presentation_tex,
                                reading_options, render_table)
+from reading_navigation import atlas_config, navigation, outline, resources
 from reader_documents import png_dimensions
 from render_paper_vi_atlas import CROPS, PDF, PDF_SHA256
 
@@ -204,21 +205,9 @@ def prepare(reader):
                                  definitions_sha256=digest(definitions))
 
 
-def neighbours(reader, plate):
-    number,page = plate['number'],plate['url']
-    selected = reader.paper_vi_atlas['plates']
-    routes = []
-    if number>1:
-        previous = selected[number-2]
-        routes.append(('Previous: V'+str(number-1)+' · '+previous['title'],previous['url']))
-    routes.append(('All 42 atlas plates',INDEX))
-    if number<42:
-        following = selected[number]
-        label = ('Next: ' if number<HTML_COUNT else 'Continue in the PDF: ')+'V'+str(number+1)+' · '+following['title']
-        routes.append((label,following['url']))
-    return '<nav class="chapter-neighbours" aria-label="Neighbouring atlas plates">'+''.join(
-        '<a href="'+reader.site.rel(target,page)+'">'+html.escape(label)+'</a>'
-        for label,target in routes)+'</nav>'
+def neighbours(reader, plate, placement='top'):
+    config = atlas_config('paper-vi', 'Paper VI', INDEX, reader.paper_vi_atlas['plates'])
+    return navigation(config, plate['url'], placement)
 
 
 def render(reader):
@@ -235,18 +224,18 @@ def render(reader):
         chapter.command_links = {'pagerefV':{str(p['number']):(p['url'],'V'+str(p['number'])) for p in atlas['plates']}}
         body = '<p class="eyebrow">Paper VI visual atlas · V'+str(number)+' · '+e(plate['category'])+'</p><h1>'+e(plate['title'])+'</h1>'
         body += '<p>'+e(plate['locator'])+'</p>'+reader.work_routes('paper-vi',page)+neighbours(reader,plate)
-        body += '<p><a href="'+reader.viewer_url(pdf,page,'page='+str(number+2))+'">Original plate in the visual guide PDF</a> · <a href="'+reader.resolve(SOURCE,page,'L'+str(plate['line']))+'">Original atlas source</a></p>'
-        body += '<p>All 42 plates are available in HTML. Evidence notes retain the source edition’s scope.</p>'
         body += '<nav class="document-routes" aria-label="Manuscript passages illustrated on this plate">'+''.join(
             '<a href="'+site.rel(target,page)+'">'+e(label)+'</a>' for label,target in atlas['references'][number])+'</nav>'
         if number in (28,42):
             body += '<p><a href="'+site.rel('collection/works/paper-vi.html#evidence',page)+'">Recorded evidence for Paper VI</a></p>'
-        body += reading_options('Show each passage’s permalink and source line. Manuscript links and plate navigation remain visible.')
-        body += '<nav class="chapter-contents" aria-label="Plate contents"><h2 id="contents">On this plate</h2><ul>'
+        tools = '<p><a href="'+reader.viewer_url(pdf,page,'page='+str(number+2))+'">Original plate in the visual guide PDF</a> · <a href="'+reader.resolve(SOURCE,page,'L'+str(plate['line']))+'">Original atlas source</a></p>'
+        tools += reading_options('Show each passage’s permalink and source line. Manuscript links and plate navigation remain visible.')
+        body += resources(tools)+'<p class="reading-start"><a href="#chapter-text">Start reading</a></p>'
+        toc = '<nav class="chapter-contents" aria-label="Plate contents"><h2 id="contents">On this plate</h2><ul>'
         for node in chapter.nodes:
             if node['kind'] in HEADINGS or node['kind']=='figure':
-                body += '<li><a href="#'+node['id']+'">'+e(node['title'] if node['kind'] in HEADINGS else 'Drawing and text description')+'</a></li>'
-        body += '</ul></nav><article id="chapter-text" class="readable-chapter atlas-plate" aria-label="'+e(title,quote=True)+'">'
+                toc += '<li><a href="#'+node['id']+'">'+e(node['title'] if node['kind'] in HEADINGS else 'Drawing and text description')+'</a></li>'
+        body += outline(toc+'</ul></nav>')+'<article id="chapter-text" class="readable-chapter atlas-plate" aria-label="'+e(title,quote=True)+'">'
         for node in chapter.nodes:
             kind,identifier = node['kind'],node['id']
             links = '<a href="#'+identifier+'">Permalink</a> · <a href="'+reader.resolve(SOURCE,page,'L'+str(node['line']))+'">Source line '+str(node['line'])+'</a>'
@@ -267,7 +256,7 @@ def render(reader):
                 body += chapter.paragraphs(node['body'])+passage_links(links)+'</section>'
             else:
                 raise ValueError('Unsupported Paper VI atlas block: '+kind)
-        body += '</article>'+neighbours(reader,plate)
+        body += '</article>'+neighbours(reader,plate,'bottom')
         body += '<details class="document-provenance"><summary>Source and conversion record</summary><p>The original atlas wording, equations and drawing labels are retained. Drawings are views of the frozen visual-guide PDF. Text descriptions and table headings are added reading aids. This conversion does not rebuild TeX, rerun the examples, audit proofs or compile Lean.</p><p><a href="'+site.rel(REPORT,page)+'">Conversion checks and source hashes</a></p></details>'
         expected = expected_math(plate,atlas['figures'])
         if chapter.math != expected:

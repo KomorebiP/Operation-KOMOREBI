@@ -30,6 +30,48 @@ def neighbours(config, page):
     return sequence, position, previous, following
 
 
+def sequence_groups(config):
+    """Keep editorial part boundaries in contents and chapter jump menus."""
+    sequence = entries(config)
+    starts = config.get('contents_groups', [])
+    if not starts:
+        starts = [dict(start=c['url'], title=c['title']) for c in config['chapters'] if c.get('kind') == 'part']
+        if starts and starts[0]['start'] != sequence[0]['url']:
+            starts.insert(0, dict(start=sequence[0]['url'], title='Introduction'))
+    if not starts:
+        return [(None, sequence)]
+    positions = {entry['url']: i for i, entry in enumerate(sequence)}
+    offsets = [positions[group['start']] for group in starts]
+    if offsets[0] != 0 or offsets != sorted(set(offsets)):
+        raise ValueError('Contents groups must cover the reading sequence in order')
+    if sequence[-1]['url'] == config.get('bib_page') and offsets[-1] != len(sequence)-1:
+        starts = [*starts, dict(start=sequence[-1]['url'], title='References')]
+        offsets.append(len(sequence)-1)
+    return [(group['title'], sequence[start:end]) for group, start, end in
+            zip(starts, offsets, [*offsets[1:], len(sequence)])]
+
+
+def contents_list(config, page, position=None):
+    sequence = entries(config)
+    positions = {entry['url']: i for i, entry in enumerate(sequence)}
+    def listing(group):
+        body = '<ol>'
+        for entry in group:
+            i = positions[entry['url']]
+            current = ' aria-current="page"' if i == position else ''
+            target = posixpath.relpath(entry['url'], posixpath.dirname(page))
+            body += '<li><a data-reading-entry="'+str(i+1)+'" href="'+html.escape(target,quote=True)+'"'+current+'><span class="reading-entry-number" aria-hidden="true">'+str(i+1)+'</span><span>'+html.escape(entry['title'])+'</span></a></li>'
+        return body+'</ol>'
+    groups = sequence_groups(config)
+    if groups[0][0] is None:
+        return listing(sequence)
+    body = '<div class="reading-contents-groups">'
+    for title, group in groups:
+        active = any(positions[entry['url']] == position for entry in group)
+        body += '<details class="reading-contents-group"'+(' open' if active else '')+'><summary>'+html.escape(title)+' <span>('+str(len(group))+')</span></summary>'+listing(group)+'</details>'
+    return body+'</div>'
+
+
 def navigation(config, page, placement='top'):
     if placement not in {'top','bottom'}: raise ValueError('Unknown reading-navigation placement')
     sequence, position, previous, following = neighbours(config,page)
@@ -42,15 +84,19 @@ def navigation(config, page, placement='top'):
         return ('<a class="reading-step reading-'+direction+'" rel="'+relation+'" href="'+relative(target['url'])+'" aria-label="'+e(label+' '+target['title'],quote=True)+'">'
                 '<span class="reading-step-label">'+label+'</span><span class="reading-step-title">'+e(target['title'])+'</span></a>')
     body = '<nav class="reading-navigation" aria-label="Chapter and part navigation ('+placement+')" data-reading-work="'+e(config['work'],quote=True)+'" data-reading-position="'+str(position+1)+'" data-reading-total="'+str(len(sequence))+'" data-reading-placement="'+placement+'">'
-    body += '<div class="reading-position"><span>'+e(config['label'])+'</span><span>'+str(position+1)+' of '+str(len(sequence))+'</span></div>'
+    overview = relative('collection/works/'+config['work']+'.html')
+    body += '<div class="reading-position"><span><a href="'+overview+'" aria-label="'+e(config['label']+' overview',quote=True)+'">'+e(config['label'])+'</a></span><span>'+str(position+1)+' of '+str(len(sequence))+'</span></div>'
     body += '<div class="reading-steps">'+step(previous,'previous','← Previous' if position else '← Contents')
     body += step(following,'next','Next →' if position+1<len(sequence) else ('Continue reading →' if config.get('partial') else 'Contents →'))+'</div>'
-    body += '<details class="reading-menu"><summary>Chapters &amp; parts</summary><div class="reading-menu-panel"><p><a rel="contents" href="'+relative(config['index'])+'">Full contents</a></p><ol>'
-    for i,entry in enumerate(sequence):
-        current = ' aria-current="page"' if i==position else ''
-        body += '<li><a data-reading-entry="'+str(i+1)+'" href="'+relative(entry['url'])+'"'+current+'><span class="reading-entry-number" aria-hidden="true">'+str(i+1)+'</span><span>'+e(entry['title'])+'</span></a></li>'
-    body += '</ol></div></details></nav>'
+    body += '<details class="reading-menu"><summary>'+e(config.get('menu_title','Chapters & parts'))+'</summary><div class="reading-menu-panel"><p><a rel="contents" href="'+relative(config['index'])+'">'+e(config.get('index_title','Full contents'))+'</a></p>'
+    body += contents_list(config,page,position)+'</div></details></nav>'
     return body
+
+
+def atlas_config(work, label, index, plates):
+    return dict(work=work,label=label+' atlas',index=index,
+                chapters=[dict(url=p['url'],title='V'+str(p['number'])+' · '+p['title']) for p in plates],
+                menu_title='Atlas plates',index_title='All '+str(len(plates))+' atlas plates')
 
 
 def outline(contents):
@@ -113,10 +159,10 @@ def resources(contents):
     return '<details class="reading-resources"><summary>PDF, source &amp; reading options</summary><div>'+contents+'</div></details>'
 
 
-def work_links(reader, work, page):
+def work_links(reader, work, page, exclude=('Read chapters',)):
     """Group secondary routes and omit the chapter link already in the reading bar."""
-    targets=[(label,url) for label,url in reader.work_route_targets(work) if label!='Read chapters']
-    groups=[('Read and explore',{'Read PDF','Original PDF','Revised edition','Monograph PDF','Visual atlas','Diagram descriptions','Worked examples','Notation'}),
+    targets=[(label,url) for label,url in reader.work_route_targets(work) if label not in exclude]
+    groups=[('Read and explore',{'Read chapters','Read PDF','Original PDF','Revised edition','Monograph PDF','Visual atlas','Diagram descriptions','Worked examples','Notation'}),
             ('Proofs and implementation',{'Claims','Written proofs','Lean','Code'}),
             ('About this work',{'Paper overview','Evidence','Search this work'})]
     used=set();body='<div class="reading-resource-groups">'

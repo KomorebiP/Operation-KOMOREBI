@@ -5,7 +5,7 @@ from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
-from reading_navigation import entries, neighbours, navigation, outline, resources, work_links, Navigation, publish_record, verify, chapter_layout
+from reading_navigation import entries, neighbours, navigation, outline, resources, work_links, Navigation, publish_record, verify, chapter_layout, sequence_groups, contents_list, atlas_config
 
 
 class ReadingNavigationTests(unittest.TestCase):
@@ -66,6 +66,41 @@ class ReadingNavigationTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'outside'):navigation(config,'read/other/one.html')
         config['chapters'].append(config['chapters'][0])
         with self.assertRaisesRegex(ValueError,'unique'):entries(config)
+
+    def test_grouped_contents_preserve_order_and_open_only_the_current_part(self):
+        config=self.config()
+        config['contents_groups']=[dict(start='read/test/one.html',title='Part I'),
+                                   dict(start='read/test/two.html',title='Part II')]
+        groups=sequence_groups(config)
+        self.assertEqual([title for title,_ in groups],['Part I','Part II','References'])
+        self.assertEqual([entry for _,group in groups for entry in group],entries(config))
+        markup=contents_list(config,'read/test/two.html',1)
+        self.assertEqual(markup.count(' open'),1)
+        self.assertIn('<details class="reading-contents-group" open><summary>Part II',markup)
+        self.assertEqual(markup.count('aria-current="page"'),1)
+        self.assertNotIn(' open',contents_list(config,config['index']))
+        config['contents_groups'].reverse()
+        with self.assertRaisesRegex(ValueError,'in order'):sequence_groups(config)
+
+    def test_atlas_controls_use_the_full_sequence_and_preserve_boundaries(self):
+        plates=[dict(number=i,url='read/test/atlas/v'+str(i)+'.html',title='Plate '+str(i)) for i in range(1,4)]
+        config=atlas_config('test','Paper test','read/test/atlas/index.html',plates)
+        self.assertIn('<summary>Atlas plates</summary>',navigation(config,plates[1]['url']))
+        self.assertIn('All 3 atlas plates',navigation(config,plates[1]['url']))
+        for plate in plates:
+            for placement in ('top','bottom'):
+                control=Navigation(navigation(config,plate['url'],placement)).controls[0]
+                self.assertEqual(len([a for a in control['links'] if 'data-reading-entry' in a]),3)
+                self.assertEqual(control['attrs']['data-reading-placement'],placement)
+                self.assertIn('../../../collection/works/test.html',[a['href'] for a in control['links']])
+        self.assertEqual(neighbours(config,plates[0]['url'])[2]['url'],config['index'])
+        self.assertEqual(neighbours(config,plates[-1]['url'])[3]['url'],config['index'])
+
+    def test_paper_vi_groups_cover_every_page_once(self):
+        from paper_vi_reading import BOOK
+        groups=sequence_groups(BOOK)
+        self.assertEqual([len(group) for _,group in groups],[21,20,8,1,1])
+        self.assertEqual([entry for _,group in groups for entry in group],entries(BOOK))
 
     def test_sidebar_preserves_nested_contents_and_exact_article_bytes(self):
         contents=outline('<nav class="chapter-contents"><h2 id="contents">Contents</h2>'
