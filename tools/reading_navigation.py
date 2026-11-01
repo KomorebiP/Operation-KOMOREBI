@@ -85,7 +85,8 @@ def navigation(config, page, placement='top'):
                 '<span class="reading-step-label">'+label+'</span><span class="reading-step-title">'+e(target['title'])+'</span></a>')
     body = '<nav class="reading-navigation" aria-label="Chapter and part navigation ('+placement+')" data-reading-work="'+e(config['work'],quote=True)+'" data-reading-position="'+str(position+1)+'" data-reading-total="'+str(len(sequence))+'" data-reading-placement="'+placement+'">'
     overview = relative('collection/works/'+config['work']+'.html')
-    body += '<div class="reading-position"><span><a href="'+overview+'" aria-label="'+e(config['label']+' overview',quote=True)+'">'+e(config['label'])+'</a></span><span>'+str(position+1)+' of '+str(len(sequence))+'</span></div>'
+    overview_label = config.get('overview_label', config['label'])
+    body += '<div class="reading-position"><span><a href="'+overview+'" aria-label="'+e(overview_label+' overview',quote=True)+'">'+e(overview_label)+'</a></span><span>'+str(position+1)+' of '+str(len(sequence))+'</span></div>'
     body += '<div class="reading-steps">'+step(previous,'previous','← Previous' if position else '← Contents')
     body += step(following,'next','Next →' if position+1<len(sequence) else ('Continue reading →' if config.get('partial') else 'Contents →'))+'</div>'
     body += '<details class="reading-menu"><summary>'+e(config.get('menu_title','Chapters & parts'))+'</summary><div class="reading-menu-panel"><p><a rel="contents" href="'+relative(config['index'])+'">'+e(config.get('index_title','Full contents'))+'</a></p>'
@@ -94,7 +95,7 @@ def navigation(config, page, placement='top'):
 
 
 def atlas_config(work, label, index, plates):
-    return dict(work=work,label=label+' atlas',index=index,
+    return dict(work=work,label=label+' atlas',overview_label=label,index=index,
                 chapters=[dict(url=p['url'],title='V'+str(p['number'])+' · '+p['title']) for p in plates],
                 menu_title='Atlas plates',index_title='All '+str(len(plates))+' atlas plates')
 
