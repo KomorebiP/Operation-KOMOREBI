@@ -15,7 +15,8 @@ READER = 'read/quantum-phase-measurement.html'
 PREFIX = 'downloads/quantum-phase-measurement/'
 RECORD = PREFIX+'source-record.json'
 FILES = ('measurement-settings.csv', 'partial-dephasing.csv', 'results.json',
-         'measurement-comparison.svg')
+         'measurement-comparison.svg', 'amplitude-damping.csv',
+         'arithmetic-phase.csv', 'syndrome-recovery.csv')
 
 
 def digest(raw):
@@ -67,7 +68,8 @@ def publish(site):
     body = ('<h1>Quantum phase, measurement, and information loss / exact Python</h1>'
             '<p>Gaussian rational matrix arithmetic, three-setting tomography, '
             'partial dephasing, operation order, coherent records, and packet '
-            'refinement. Python 3.10 or later; standard library only.</p>'
+            'refinement, amplitude damping, modulus-12 arithmetic interference, '
+            'and three-qubit syndrome recovery. Python 3.10 or later; standard library only.</p>'
             '<p><a class="button" href="../'+MANUSCRIPT_URL+'">Read the worked derivation</a> · '
             '<a download href="../'+download+'">Download Python</a> · '
             '<a href="../'+archive+'">Source and results ZIP</a> · '
@@ -81,9 +83,10 @@ def publish(site):
               body+source_lines(sources[PROGRAM].decode('utf-8')),
               'https://github.com/KomorebiP/Operation-KOMOREBI/blob/'+site.revision+'/'+PROGRAM)
     site.search.append(dict(title='Quantum phase and measurement / exact Python',
-                            group='Collection', kind='Code', work_ids=['paper-vii'],
+                            group='Collection', kind='Code', work_ids=['paper-vii', 'monographs-quantum-and-circuits'],
                             url=READER, text='quantum phase dephasing coherence density matrix '
-                            'tomography Born Kraus purity record CNOT parity packet recovery'))
+                            'tomography Born Kraus purity record CNOT parity packet recovery '
+                            'Ramanujan Fourier modulus twelve amplitude damping syndrome bit flip'))
     return record
 
 

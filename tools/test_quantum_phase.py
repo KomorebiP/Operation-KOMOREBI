@@ -21,7 +21,8 @@ M = load_program(ROOT)
 
 class QuantumArithmeticTests(unittest.TestCase):
     def test_full_exact_suite_and_documented_stdout(self):
-        self.assertEqual(M.check(), dict(states=182, partial_channels=910, records=182, controls=10))
+        self.assertEqual(M.check(), dict(states=182, partial_channels=910, records=182, controls=10,
+                                        damping=546, arithmetic=15, syndrome=72))
         output = subprocess.check_output([sys.executable, '-B', str(ROOT/PROGRAM)], text=True)
         document = (ROOT/MANUSCRIPT).read_text(encoding='utf-8')
         expected = re.search(r'<!-- expected-output -->\s*```text\n(.*?)\n```', document, re.S)[1]+'\n'
@@ -79,6 +80,44 @@ class QuantumArithmeticTests(unittest.TestCase):
                 self.assertEqual((Path(temp)/name).read_bytes(),
                                  (ROOT/'verification/quantum-phase-measurement'/name).read_bytes())
 
+    def test_damping_populations_coherence_and_purity_increase_control(self):
+        rho = M.amplitude_damp(M.state())
+        self.assertEqual(rho, M.matrix(((Q(369, 625), Q(48, 125)),
+                                       (Q(48, 125), Q(256, 625)))))
+        self.assertEqual(M.purity(rho), Q(316897, 390625))
+        mixed = M.scale(Q(1, 2), M.matrix(((1, 0), (0, 1))))
+        self.assertEqual(M.amplitude_damp(mixed), M.matrix(((Q(17, 25), 0), (0, Q(8, 25)))))
+        self.assertEqual(M.purity(M.amplitude_damp(mixed)), Q(353, 625))
+        for survival, jump in ((Q(-4, 5), Q(3, 5)), (Q(1), Q(1))):
+            with self.assertRaises(ValueError):
+                M.amplitude_damp(mixed, survival, jump)
+
+    def test_arithmetic_selector_has_the_declared_integer_images(self):
+        c = tuple((M.C(x),) for x in M.ARITHMETIC_C)
+        a = tuple((M.C(abs(x)),) for x in M.ARITHMETIC_C)
+        self.assertEqual(M.multiply(M.ARITHMETIC_P, c), c)
+        self.assertEqual(M.multiply(M.ARITHMETIC_P, a), ((M.C(),),)*12)
+        self.assertEqual(M.arithmetic_probability(M.C(1)), 0)
+        self.assertEqual(M.arithmetic_probability(M.C(-1)), 1)
+        self.assertEqual(M.arithmetic_probability(M.C(Q(3, 5), Q(4, 5))), Q(1, 5))
+
+    def test_syndrome_decoder_agrees_with_full_eight_dimensional_kraus_map(self):
+        logical = M.state(Q(4, 5), Q(3, 5), M.C(0, 1))
+        encoded = M.encode(logical)
+        noisy = M.scale(0, encoded)
+        for mask, weight in zip(M.SYNDROME_MASKS, (Q(1, 2), Q(1, 4), Q(1, 8), Q(1, 8))):
+            noisy = M.add(noisy, M.scale(weight, M.bit_flip(encoded, mask)))
+        recovered = M.scale(0, encoded)
+        complete = M.scale(0, encoded)
+        for mask, group in zip(M.SYNDROME_MASKS, M.SYNDROME_GROUPS):
+            branch = M.matrix(tuple(tuple(int(j in group and i == (j ^ mask))
+                                         for j in range(8)) for i in range(8)))
+            complete = M.add(complete, M.multiply(M.adjoint(branch), branch))
+            recovered = M.add(recovered, M.multiply(M.multiply(branch, noisy), M.adjoint(branch)))
+        self.assertEqual(complete, M.matrix(tuple(tuple(int(i == j) for j in range(8)) for i in range(8))))
+        self.assertEqual(recovered, encoded)
+        self.assertEqual(M.recover_logical(noisy), logical)
+
 
 class QuantumPublicationTests(unittest.TestCase):
     def test_published_program_records_and_bundle_detect_corruption(self):
@@ -131,6 +170,18 @@ class QuantumPublicationTests(unittest.TestCase):
                             ('Q(3, 5), Q(4, 5)', 'Q(1), Q(1)')):
             with self.assertRaises(ValueError):
                 run_preset('physics-dephasing', replacement)
+
+    def test_arithmetic_browser_export_agrees_with_gaussian_rational_projector(self):
+        _, messages, _ = run_preset('physics-arithmetic-phase')
+        exported = next(m for m in messages if m['kind'] == 'file')
+        rows = list(csv.DictReader(io.StringIO(exported['content'])))
+        self.assertEqual(len(rows), 5)
+        for row in rows:
+            phase = M.C(Q(row['phase_real']), Q(row['phase_imag']))
+            self.assertEqual(Q(row['coherent_selected_probability']), M.arithmetic_probability(phase))
+            self.assertEqual(Q(row['dephased_selected_probability']), Q(1, 3))
+        with self.assertRaises(ValueError):
+            run_preset('physics-arithmetic-phase', ('Q(3, 5), Q(4, 5)', 'Q(1), Q(1)'))
 
 
 if __name__ == '__main__':

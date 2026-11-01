@@ -88,8 +88,12 @@ follows one qubit through three measurement settings, exact tomography,
 partial dephasing, and a concrete recovery obstruction. A coherent two-qubit
 record can be uncomputed, while a classical record loses the relative phase.
 Parity packets and their singleton refinement show which coherence a
-measurement removes. The page includes two browser experiments, exact
+measurement removes. The page includes three browser experiments, exact
 Python matrix calculations, downloadable tables, and a generated figure.
+Three further collection examples develop amplitude damping, the Quantum
+and Circuits book's modulus-12 Fourier phase separation, and three-qubit
+syndrome recovery. The arithmetic browser experiment contrasts signed, unsigned,
+and fully dephased arithmetic states.
 
 ## Run in your browser
 

@@ -61,6 +61,10 @@ The extended [phase, measurement, and information-loss derivation](demonstration
 continues through exact tomography, partial dephasing, coherent versus classical
 records, and parity-packet refinement. [Run its editable coherence experiment](https://KomorebiP.github.io/Operation-KOMOREBI/playground.html#physics-dephasing)
 and export the exact measurement probabilities and purity.
+The same walkthrough includes amplitude damping, three-qubit syndrome
+recovery, and the Quantum and Circuits book's modulus-12 arithmetic phase
+example. [Run the arithmetic comparison](https://KomorebiP.github.io/Operation-KOMOREBI/playground.html#physics-arithmetic-phase)
+to distinguish coherent sign replacement from complete coordinate dephasing.
 
 <a id="continuum-limit"></a>
 

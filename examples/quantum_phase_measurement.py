@@ -176,8 +176,59 @@ def circle(u):
     return C((1-u*u)/(1+u*u), 2*u/(1+u*u))
 
 
+def amplitude_damp(rho, survival=Q(4, 5), jump=Q(3, 5)):
+    """Kraus channel with gamma=jump**2 and sqrt(1-gamma)=survival."""
+    survival, jump = Q(survival), Q(jump)
+    if min(survival, jump) < 0 or survival**2+jump**2 != 1:
+        raise ValueError('Use nonnegative survival/jump amplitudes of squared norm one')
+    k0 = matrix(((1, 0), (0, survival)))
+    k1 = matrix(((0, jump), (0, 0)))
+    return add(multiply(multiply(k0, rho), adjoint(k0)),
+               multiply(multiply(k1, rho), adjoint(k1)))
+
+
+ARITHMETIC_C = (4, 0, 2, 0, -2, 0, -4, 0, -2, 0, 2, 0)
+ARITHMETIC_P = matrix(tuple(tuple(Q(ARITHMETIC_C[(n-m) % 12], 12)
+                                     for m in range(12)) for n in range(12)))
+
+
+def arithmetic_state(phase=C(1)):
+    """Unnormalized v_+ + phase*v_-; its squared norm is 48."""
+    if phase.abs2() != 1:
+        raise ValueError('Use a unit relative phase')
+    return tuple(C(abs(x)) if x >= 0 else abs(x)*phase for x in ARITHMETIC_C)
+
+
+def arithmetic_probability(phase):
+    v = arithmetic_state(phase)
+    projected = multiply(ARITHMETIC_P, tuple((x,) for x in v))
+    return sum(row[0].abs2() for row in projected)/48
+
+
+SYNDROME_MASKS = (0, 4, 2, 1)
+SYNDROME_GROUPS = tuple((mask, 7 ^ mask) for mask in SYNDROME_MASKS)
+
+
+def encode(rho):
+    return tuple(tuple(rho[i//7][j//7] if i in (0, 7) and j in (0, 7)
+                       else C() for j in range(8)) for i in range(8))
+
+
+def bit_flip(rho, mask):
+    if mask not in range(8):
+        raise ValueError('Use a three-bit error mask')
+    return tuple(tuple(rho[i ^ mask][j ^ mask] for j in range(8)) for i in range(8))
+
+
+def recover_logical(rho):
+    """Syndrome measurement, matching bit flip, then logical decoding."""
+    return tuple(tuple(sum((rho[group[i]][group[j]] for group in SYNDROME_GROUPS), C())
+                       for j in range(2)) for i in range(2))
+
+
 def check():
-    counts = dict(states=0, partial_channels=0, records=0, controls=0)
+    counts = dict(states=0, partial_channels=0, records=0, controls=0,
+                  damping=0, arithmetic=0, syndrome=0)
     phases = [circle(Q(k, 4)) for k in range(-6, 7)] + [C(-1)]
     for k in range(-6, 7):
         amplitudes = circle(Q(k, 4))
@@ -209,6 +260,42 @@ def check():
             require(forget_record(uncompute_record(dephase(joint))) == dephase(rho),
                     "Classical record does not restore phase")
             counts['records'] += 1
+            for survival, jump in ((Q(1), Q(0)), (Q(4, 5), Q(3, 5)), (Q(0), Q(1))):
+                damped = amplitude_damp(rho, survival, jump)
+                closed = matrix(((a*a+jump*jump*b*b, survival*rho[0][1]),
+                                 (survival*rho[1][0], survival*survival*b*b)))
+                require(damped == closed and trace(damped) == C(1), 'Damping transfer')
+                require(purity(damped) == 1-2*jump**2*survival**2*b**4, 'Damping purity')
+                counts['damping'] += 1
+
+    require(multiply(ARITHMETIC_P, ARITHMETIC_P) == ARITHMETIC_P,
+            'Arithmetic selector is a projector')
+    require(adjoint(ARITHMETIC_P) == ARITHMETIC_P and trace(ARITHMETIC_P) == C(4),
+            'Arithmetic orthogonal projector rank')
+    require(sum(x*abs(x) for x in ARITHMETIC_C) == 0, 'Signed/unsigned orthogonality')
+    counts['arithmetic'] += 1
+    for phase in phases:
+        require(arithmetic_probability(phase) == (1-phase.re)/2, 'Arithmetic phase response')
+        rho12 = scale(Q(1, 48), outer(arithmetic_state(phase)))
+        require(trace(multiply(ARITHMETIC_P, dephase(rho12))) == C(Q(1, 3)),
+                'Arithmetic complete dephasing')
+        counts['arithmetic'] += 1
+        logical = state(phase=phase)
+        encoded = encode(logical)
+        noisy = scale(0, encoded)
+        for mask, weight in zip(SYNDROME_MASKS, (Q(1, 2), Q(1, 4), Q(1, 8), Q(1, 8))):
+            error = bit_flip(encoded, mask)
+            require(recover_logical(error) == logical, 'Single-error recovery')
+            require(dephase(error, SYNDROME_GROUPS) == error, 'Syndrome preserves logical coherence')
+            noisy = add(noisy, scale(weight, error))
+            counts['syndrome'] += 1
+        require(recover_logical(noisy) == logical, 'Mixed-error recovery')
+        require(recover_logical(dephase(noisy)) == dephase(logical), 'Fine measurement loses logical phase')
+        counts['syndrome'] += 1
+    require(recover_logical(bit_flip(encode(state()), 6)) != state(), 'Two-flip failure')
+    phase_error = state(phase=C(-1))
+    require(recover_logical(encode(phase_error)) == phase_error != state(), 'Logical phase-error failure')
+    counts['syndrome'] += 2
 
     real, imaginary = state(), state(phase=C(0, 1))
     require(dephase(real) == dephase(imaginary), "Equal summaries")
@@ -244,7 +331,8 @@ def phase_rows():
 
 
 FILES = ('measurement-settings.csv', 'partial-dephasing.csv', 'results.json',
-         'measurement-comparison.svg')
+         'measurement-comparison.svg', 'amplitude-damping.csv',
+         'arithmetic-phase.csv', 'syndrome-recovery.csv')
 
 
 def save(folder, counts):
@@ -264,12 +352,29 @@ def save(folder, counts):
         rows.append((t, *probabilities(rho), purity(rho), Q(288, 625)*(1-t)**2))
     csv_file(FILES[1], ('retained_coherence', 'p_X_plus', 'p_Y_plus',
                         'p_Z_plus', 'purity', 'squared_HS_error'), rows)
+    phases = (('1', C(1)), ('i', C(0, 1)), ('-1', C(-1)),
+              ('-i', C(0, -1)), ('(3+4i)/5', C(Q(3, 5), Q(4, 5))))
+    csv_file('amplitude-damping.csv', ('phase', 'p_X_plus', 'p_Y_plus', 'p_Z_plus', 'purity'),
+             [(label, *probabilities(amplitude_damp(state(phase=z))),
+               purity(amplitude_damp(state(phase=z)))) for label, z in phases])
+    csv_file('arithmetic-phase.csv', ('phase', 'coherent_selected_probability', 'dephased_selected_probability'),
+             [(label, arithmetic_probability(z), Q(1, 3)) for label, z in phases])
+    csv_file('syndrome-recovery.csv', ('bit_flip_mask', 'first_address', 'second_address',
+                                      'noise_probability', 'recovered_p0', 'recovered_upper_right'),
+             [(mask, f'{group[0]:03b}', f'{group[1]:03b}', weight,
+               recover_logical(bit_flip(encode(state()), mask))[0][0],
+               recover_logical(bit_flip(encode(state()), mask))[0][1])
+              for mask, group, weight in zip(SYNDROME_MASKS, SYNDROME_GROUPS,
+                                            (Q(1, 2), Q(1, 4), Q(1, 8), Q(1, 8)))])
     result = dict(scope='Exact finite teaching example; no sampling or Lean replay.',
                   checks_by_group=counts, total_cases=sum(counts.values()),
                   phase_rows=[[str(x) for x in row] for row in phase_rows()],
                   order_p0=['49/50', '1/2'],
                   tomography_oblique=['197/250', '221/250', '9/25'],
-                  coarse_bell_purity='1', fine_bell_purity='1/2')
+                  coarse_bell_purity='1', fine_bell_purity='1/2',
+                  damping_purity=str(purity(amplitude_damp(state()))),
+                  arithmetic_selected=['0', '1', '1/3'],
+                  syndrome_groups=SYNDROME_GROUPS)
     (folder/FILES[2]).write_text(json.dumps(result, indent=2)+'\n', encoding='utf-8', newline='\n')
     # Static scientific chart; exact labels carry the data, geometry is rounded.
     svg = ['<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 510" role="img" aria-labelledby="title desc">',
@@ -302,6 +407,9 @@ def main():
     print('Order witness, outcome 0: 49/50 versus 1/2')
     print('Coherent record: reversible; classical record: phase lost')
     print('Bell purity: parity packets 1; individual addresses 1/2')
+    print('Damping: ground population 369/625; purity 316897/390625')
+    print('Arithmetic selector: unsigned 0; signed 1; dephased 1/3')
+    print('Syndrome recovery: four single-error branches preserve the logical state')
     print(f'PASS: {sum(counts.values())} exact cases')
     if args.output:
         save(args.output, counts)
