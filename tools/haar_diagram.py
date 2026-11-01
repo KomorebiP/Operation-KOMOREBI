@@ -29,12 +29,12 @@ def panel(slider, diagram):
 <p class="lab-control-note" id="haar-cutoff-help">Moving the cutoff selects details with |coefficient| ≥ cutoff. You can then override that selection using the coefficient checkboxes. The global mean is always kept.</p>
 <p class="haar-selection-note" id="haar-selection-note">Selection: all coefficients.</p>
 </fieldset><div class="lab-visual haar-visual">
-<div class="haar-legend"><span class="haar-original">Original</span><span class="haar-rebuilt">Reconstructed</span><span class="haar-residual">Residual</span></div>
+<div class="haar-legend"><span class="haar-original">Original</span><span class="haar-rebuilt">Reconstructed</span><span class="haar-residual">Residual</span><span class="haar-component" id="haar-component-legend" hidden>Selected coefficient contribution (if kept)</span></div>
 ''' + diagram('haar-diagram', 'Original and reconstructed 16-sample signal, with residual below') + '''
 <fieldset class="haar-inspector" id="haar-inspector" disabled><legend>Inspect the signal</legend>
 <label class="lab-label" for="haar-inspect">Coefficient support and contribution</label>
 <select id="haar-inspect" aria-describedby="haar-inspect-help"><option value="none">Whole signal</option></select>
-<p class="lab-control-note" id="haar-inspect-help">Choose a coefficient to highlight its support. Its contribution is added on the first half and subtracted on the second.</p>
+<p class="lab-control-note" id="haar-inspect-help">Choose a coefficient to highlight its support and plot its contribution if kept.</p>
 <p class="haar-inspect-detail" id="haar-inspect-detail" role="status"></p>
 ''' + slider('haar-address', 'Inspect address', 10, 0, 15) + '''
 <p class="haar-sample-detail" id="haar-sample-detail" role="status"></p></fieldset>

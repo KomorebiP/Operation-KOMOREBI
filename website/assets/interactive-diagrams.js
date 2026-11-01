@@ -45,7 +45,7 @@ function drawPackets(matrix, vector, keep, result) {
     result.contributions.forEach((value, i) => {
       const y = 65 + i * 66;
       const row = Math.floor(i / 2), column = i % 2;
-      const group = svgNode('g', {class: keep[i] ? 'packet-contribution' : 'packet-contribution omitted'});
+      const group = svgNode('g', {'data-block':i, class: keep[i] ? 'packet-contribution' : 'packet-contribution omitted'});
       group.append(svgNode('rect', {x: 1, y: y-25, width: width-2, height: 54, rx: 5}));
       group.append(svgNode('text', {x: 12, y: y-3}, `T${row+1}${column+1} · x${column+1} → y${row+1}`));
       group.append(svgNode('text', {x: 12, y: y+17, class: 'compact-block-state'}, keep[i] ? 'Kept' : 'Omitted'));
@@ -65,12 +65,13 @@ function drawPackets(matrix, vector, keep, result) {
     const path = svgNode('path', {d: `M ${left+34} ${start} C ${middle-50} ${start}, ${middle+50} ${end}, ${right-34} ${end}`,
       class: kept ? 'packet-wire' : 'packet-wire omitted'});
     svg.append(path);
+    svg.append(svgNode('path', {d:path.getAttribute('d'), class:'packet-hit', 'data-block':i}));
   });
   // Offset the crossing labels so both contributions remain readable.
   const positions = [[middle, 94], [middle+45, 143], [middle-45, 205], [middle, 236]];
   result.contributions.forEach((value, i) => {
     const [x, y] = positions[i];
-    const group = svgNode('g', {class: keep[i] ? 'packet-contribution' : 'packet-contribution omitted'});
+    const group = svgNode('g', {'data-block':i, class: keep[i] ? 'packet-contribution' : 'packet-contribution omitted'});
     group.append(svgNode('rect', {x: x-54, y: y-20, width: 108, height: 32, rx: 5}));
     group.append(svgNode('text', {x, y, 'text-anchor': 'middle', class: 'contribution-full'}, `${matrix[i]} × ${vector[i % 2]} = ${value}`));
     svg.append(group);
@@ -131,6 +132,10 @@ function drawSignal(signal, result) {
         width: barWidth, height: Math.max(length, 1), rx: 2, class: `signal-bar series-${row}`}));
       label(svg, x, value >= 0 ? baseline-length-7 : baseline+length+14, value, 'signal-value');
       if (row === 2) label(svg, x, 352, index, 'signal-address');
+      const spacing = (width-44)/7;
+      svg.append(svgNode('rect', {x:Math.max(0,x-spacing/2),y:baseline-44,
+        width:Math.min(spacing,width-Math.max(0,x-spacing/2)),height:90,
+        class:'signal-hit','data-signal-packet':index%result.packets.length}));
     });
   });
   label(svg, width/2, 368, 'Original address', 'signal-address');
@@ -205,6 +210,8 @@ function drawRecovery(summary, result) {
     svg.append(svgNode('rect', {x: lx-14, y: ly-17, width: 28, height: 24, rx: 4, class: 'point-label-bg'}));
     label(svg, lx, ly, i ? 'v' : 'u', 'point-label');
   });
+  svg.append(svgNode('circle', {cx:px(result.u[0]),cy:py(result.u[1]),r:20,
+    class:'recovery-drag-handle','data-recovery-drag':'true'}));
   label(svg, leftEdge+size/2, size+67, `Same summary on the line: s = ${summary}`, 'diagram-heading');
 }
 function updateRecovery() {
@@ -282,6 +289,11 @@ function makeHaarControls(coefficients) {
     row.append(title, grid); byId('haar-levels').append(row);
   }
 }
+function coefficientSignal(coefficient) {
+  return Array.from({length:16}, (_, i) => coefficient.kind === 'average' ? coefficient.value :
+    i < coefficient.start || i > coefficient.end ? 0 :
+      i < (coefficient.start+coefficient.end+1)/2 ? coefficient.value : -coefficient.value || 0);
+}
 function drawHaar(signal, result) {
   const width = diagramWidth('haar-diagram');
   const svg = picture('haar-diagram', width, 388,
@@ -318,6 +330,11 @@ function drawHaar(signal, result) {
   axes(35, 190, topLimit, 'Original and reconstruction');
   plot(result.rebuilt, 35, 190, topLimit, 'haar-rebuilt-trace');
   plot(signal, 35, 190, topLimit, 'haar-original-trace');
+  if (coefficient) {
+    const values = coefficientSignal(coefficient);
+    svg.append(svgNode('polyline', {points:values.map((v,i) => `${x(i)},${112.5-v*155/(2*topLimit)}`).join(' '),
+      class:'haar-trace haar-component-trace','data-coefficient':selected}));
+  }
   axes(245, 332, residualLimit, 'Residual · original − reconstruction');
   plot(result.residual, 245, 332, residualLimit, 'haar-residual-trace');
   svg.append(svgNode('line', {x1:x(address),x2:x(address),y1:35,y2:332,class:'haar-address-guide'}));
@@ -336,13 +353,18 @@ function inspectHaar() {
   const {signal, result} = haarView;
   const selected = byId('haar-inspect').value;
   byId('haar-inspect-detail').hidden = selected === 'none';
+  byId('haar-component-legend').hidden = selected === 'none';
   if (selected !== 'none') {
     const index = Number(selected), c = result.coefficients[index];
     const kept = haarState.keep[index];
+    text('haar-component-legend', (c.kind === 'average' ? 'Global mean' : `d${c.level},${c.index}`) + ' contribution (if kept)');
+    text('haar-inspect-help', c.kind === 'average' ? 'The global mean contributes the same value at every address.' :
+      'The dotted trace shows this coefficient alone, if kept. Shading marks its support; the two halves have opposite signs.');
+    const support = (start, end) => start === end ? `address ${start}` : `addresses ${start}–${end}`;
     const contribution = c.kind === 'average' ? `Adds ${c.value} at every address.` :
-      `If kept, adds ${c.value} at addresses ${c.start}–${(c.start+c.end-1)/2} and ${-c.value || 0} at ${(c.start+c.end+1)/2}–${c.end}.`;
+      `If kept, adds ${c.value} at ${support(c.start,(c.start+c.end-1)/2)} and ${-c.value || 0} at ${support((c.start+c.end+1)/2,c.end)}.`;
     text('haar-inspect-detail', `${kept ? 'Kept' : 'Omitted'} · coefficient ${c.value}. ${contribution} ${kept ? 'Retained' : 'Discarded'} energy: ${c.weight} × (${c.value})² = ${c.weight*c.value**2}.`);
-  }
+  } else text('haar-inspect-help', 'Choose a coefficient to highlight its support and plot its contribution if kept.');
   const address = number('haar-address');
   text('haar-address-value', address);
   text('haar-sample-detail', `Address ${address} · original ${signal[address]} · reconstructed ${result.rebuilt[address]} · residual ${result.residual[address]}`);
@@ -458,6 +480,46 @@ function restoreTab() {
 window.addEventListener('popstate', restoreTab);
 window.addEventListener('hashchange', restoreTab);
 byId('packet-controls').addEventListener('input', () => { sliderValues(); updatePackets(); });
+byId('packet-diagram').addEventListener('click', event => {
+  const block = event.target.closest('[data-block]');
+  if (block) byId('block-' + block.dataset.block).click();
+});
+byId('signal-diagram').addEventListener('click', event => {
+  const packet = event.target.closest('[data-signal-packet]');
+  if (packet) byId('signal-keep-' + packet.dataset.signalPacket).click();
+});
+const recoveryHost = byId('recovery-diagram');
+let recoveryPointer = null;
+function moveRecoveryPoint(event) {
+  const svg = recoveryHost.querySelector('svg'), bounds = svg.getBoundingClientRect();
+  const width = svg.viewBox.baseVal.width, size = Math.min(320,width-68);
+  const x = ((event.clientX-bounds.left)*width/bounds.width-width/2)*20/size;
+  const y = 10-((event.clientY-bounds.top)*svg.viewBox.baseVal.height/bounds.height-32)*20/size;
+  const position = Math.max(-4,Math.min(4,Math.round((x+number('summary')-y)/2)));
+  if (position === number('position')) return;
+  byId('position').value = position;
+  text('position-value',position);
+  updateRecovery();
+}
+recoveryHost.addEventListener('pointerdown', event => {
+  if (event.button !== 0 || recoveryPointer !== null || !event.target.closest('[data-recovery-drag]')) return;
+  recoveryPointer = event.pointerId;
+  recoveryHost.setPointerCapture(event.pointerId);
+  recoveryHost.dataset.dragging = 'true';
+  event.preventDefault();
+});
+recoveryHost.addEventListener('pointermove', event => {
+  if (recoveryPointer === event.pointerId) moveRecoveryPoint(event);
+});
+for (const name of ['pointerup','pointercancel','lostpointercapture']) {
+  recoveryHost.addEventListener(name, event => {
+    if (recoveryPointer !== event.pointerId) return;
+    if (name === 'pointerup') moveRecoveryPoint(event);
+    recoveryPointer = null;
+    delete recoveryHost.dataset.dragging;
+    if (recoveryHost.hasPointerCapture(event.pointerId)) recoveryHost.releasePointerCapture(event.pointerId);
+  });
+}
 byId('packet-remove').addEventListener('click', () => { byId('block-3').checked = false; updatePackets(); });
 byId('signal-controls').addEventListener('input', event => {
   if (event.target.id.startsWith('sample-')) { byId('signal-preset').value = 'custom'; sliderValues(); updateSignal(); }
@@ -507,7 +569,9 @@ document.querySelectorAll('[data-haar-selection]').forEach(button => {
 byId('haar-coefficients').addEventListener('change', event => {
   const index = Number(event.target.dataset.index);
   if (!Number.isInteger(index) || index < 1 || index > 15) return;
-  haarState.keep[index] = event.target.checked; haarState.mode = 'custom'; updateHaar();
+  haarState.keep[index] = event.target.checked; haarState.mode = 'custom';
+  byId('haar-inspect').value = index;
+  updateHaar();
 });
 document.querySelectorAll('[data-reset]').forEach(button => {
   button.addEventListener('click', () => reset(button.dataset.reset));
