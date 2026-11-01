@@ -7,7 +7,7 @@ import posixpath
 import re
 from urllib.parse import quote, unquote, urlsplit
 
-TEXT_SUFFIXES = {'.md', '.tex', '.txt', '.json', '.lean', '.py', '.bib', '.bbl', '.c', '.h'}
+TEXT_SUFFIXES = {'.md', '.tex', '.txt', '.json', '.lean', '.py', '.bib', '.bbl', '.aux', '.c', '.h'}
 
 
 def png_dimensions(raw):

@@ -100,6 +100,26 @@ statement/proof routes, figure identity, tables and internal links. The website
 workflow runs these checks before publication. This reading conversion adds no
 proof assessment, Lean replay or new hardware measurement.
 
+## Paper IX HTML reading edition
+
+[Paper IX](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-ix/index.html)
+has 56 reading pages and a bibliography. The route covers all 13 main sections,
+the edition summary and all five mathematical appendices. It retains 5,252
+mathematical expressions, 153 proof environments, 14 manuscript figures,
+33 tables and all 27 bibliography entries. The worked visual atlas remains
+in the PDF. Historical headings and checkpoint notices keep their source scope.
+
+The [chapter map](../tools/paper_ix_sections.json) fixes the reading ranges;
+the [conversion module](../tools/paper_ix_reading.py) checks the complete input
+graph and preserves original line anchors through Pandoc and print wrappers.
+The [table aids](../tools/paper_ix_tables.json) bind reviewed headers and captions
+to the retained source. Tables inside proofs remain inside their proof blocks.
+The bibliography has a separate source-bound mathematical conversion record.
+
+Run `python -B -m unittest discover -s tools -p 'test_paper_ix_reading.py'`
+to check input coverage, printed numbering, equation order, tables, figures,
+bibliography and reading links. No proof assessment or Lean replay is added.
+
 ## Special Functions hub and coupled-function lab
 
 The [Special Functions hub](SPECIAL_FUNCTIONS.md) connects the current HTML
