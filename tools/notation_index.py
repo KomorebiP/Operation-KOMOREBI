@@ -27,14 +27,16 @@ GLYPHS = {**GREEK, 'in':'∈', 'notin':'∉', 'subset':'⊂', 'subseteq':'⊆', 
     'oplus':'⊕', 'bigoplus':'⊕', 'otimes':'⊗', 'bigotimes':'⊗', 'cup':'∪', 'cap':'∩',
     'bigcup':'⋃', 'bigcap':'⋂', 'emptyset':'∅', 'varnothing':'∅', 'forall':'∀', 'exists':'∃',
     'circ':'∘', 'times':'×', 'cdot':'·', 'pm':'±', 'mp':'∓', 'perp':'⊥', 'ell':'ℓ',
-    'hbar':'ℏ', 'dagger':'†', 'star':'⋆', 'ast':'∗', 'langle':'⟨', 'rangle':'⟩', 'Bbbk':'𝕜'}
+    'hbar':'ℏ', 'dagger':'†', 'star':'⋆', 'ast':'∗', 'langle':'⟨', 'rangle':'⟩', 'Bbbk':'𝕜',
+    'twoheadrightarrow':'↠', 'hookrightarrow':'↪', 'setminus':'∖', 'smallsetminus':'∖',
+    'ldots':'…', 'cdots':'⋯', 'dots':'…'}
 FORMATS = {'mathbb', 'mathcal', 'mathfrak', 'mathbf', 'mathrm', 'mathsf', 'mathtt', 'boldsymbol', 'bm', 'operatorname'}
 ACCENTS = {'hat', 'widehat', 'tilde', 'widetilde', 'bar', 'overline', 'underline', 'vec', 'dot', 'ddot'}
 STRUCTURAL = {'frac', 'dfrac', 'tfrac', 'sqrt', 'binom', 'dbinom', 'tbinom', 'left', 'right',
     'big', 'Big', 'bigg', 'Bigg', 'bigl', 'bigr', 'Bigl', 'Bigr', 'biggl', 'biggr',
     'begin', 'end', 'label', 'tag', 'nonumber', 'notag', 'limits', 'nolimits', 'displaystyle',
     'textstyle', 'scriptstyle', 'scriptscriptstyle', 'quad', 'qquad', 'hspace', 'vspace',
-    'phantom', 'vphantom', 'hphantom', 'overbrace', 'underbrace', 'substack', 'color', 'textcolor'}
+    'phantom', 'vphantom', 'hphantom', 'overbrace', 'underbrace', 'substack', 'color', 'textcolor', 'boxed'}
 TEXT_COMMANDS = {'text', 'textrm', 'textsf', 'texttt', 'textnormal', 'textbf', 'emph', 'mbox', 'ref', 'eqref', 'cite', 'url', 'href'}
 MATH = re.compile(
     r'\$\$(?P<dollars>.*?)\$\$|'
@@ -198,8 +200,42 @@ def plain(tex):
     tex = re.sub(r'\\mathbb\s*\{([RNCQZFH])\}',lambda m:dict(R='ℝ',N='ℕ',C='ℂ',Q='ℚ',Z='ℤ',F='𝔽',H='ℍ')[m[1]],tex)
     tex = re.sub(r'\\(?:quad|qquad)\b',' ',tex)
     tex = re.sub(r'\\(?:left|right|big|Big|bigg|Bigg|bigl|bigr|Bigl|Bigr|biggl|biggr|boxed)\b','',tex)
-    tex = re.sub(r'\\([A-Za-z]+)', lambda m: GLYPHS.get(m[1], '' if m[1] in FORMATS | TEXT_COMMANDS else m[1]), tex)
-    return re.sub(r'\s+', ' ', tex.replace('{','').replace('}','').replace('\\,',' ').replace('\\;',' ')).strip()
+    pieces=re.split(r'(\\(?:[A-Za-z]+|[\s\S]))',tex)
+    for number,piece in enumerate(pieces):
+        if number%2:
+            command=piece[1:]
+            pieces[number]=(GLYPHS.get(command, '' if command in FORMATS | TEXT_COMMANDS else command)
+                            if command.isalpha() else command if command in '{}%&#_$' else ' ')
+        else:pieces[number]=piece.replace('{','').replace('}','')
+    return re.sub(r'\s+', ' ', ''.join(pieces)).strip()
+
+
+def preview_commands(text):
+    """Remove known layout/metadata arguments, retaining named section content."""
+    omitted={'Needspace','needspace','RecordID','label','index','vspace','hspace','addvspace'}
+    headings={'part','chapter','section','subsection','subsubsection','paragraph','subparagraph'}
+    spacing={'protect','phantomsection','noindent','smallskip','medskip','bigskip','clearpage','newpage','par','newline','pagebreak','nopagebreak'}
+    chunks=[];position=0
+    for match in re.finditer(r'\\([A-Za-z]+)\*?\s*',text):
+        command=match[1]
+        if match.start()<position or command not in omitted|headings|spacing:continue
+        end=match.end()
+        if command in headings|{'pagebreak','nopagebreak'}:
+            option=group(text,end,'[',']')
+            if option:
+                end=option[1]
+                while end<len(text) and text[end].isspace():end+=1
+        replacement=' '
+        if command not in spacing:
+            body=group(text,end)
+            if not body:continue
+            end=body[1]
+            if command in headings:
+                title=preview_commands(body[0][1:-1]).strip()
+                replacement=title+(' ' if title.endswith(('.',':','!','?')) else '. ')
+        chunks.extend((text[position:match.start()],replacement));position=end
+    chunks.append(text[position:])
+    return ''.join(chunks)
 
 
 def context_for(text, start, end):
@@ -223,13 +259,14 @@ def context_for(text, start, end):
 
 
 def context_text(raw,macros=None):
-    raw = re.sub(r'\\label\{[^{}]*\}', '', raw)
-    raw = re.sub(r'\\(?:ref|eqref|cref|Cref|autoref|cite|citep|citet)\*?(?:\[[^\]]*\])?\{[^{}]*\}', '[source reference]', raw)
+    raw = preview_commands(raw)
+    raw = re.sub(r'\\(?:ref|eqref|cref|Cref|autoref|cite|citep|citet|Depends)\*?(?:\[[^\]]*\])?\{[^{}]*\}', '[source reference]', raw)
     if macros:raw=expand(raw,macros)
     raw = re.sub(r'\\(?:toprule|midrule|bottomrule|endhead|endfirsthead|hline)\b', '', raw)
     raw = re.sub(r'\\(?:begin|end)\{[^{}]*\}', '', raw)
-    raw = raw.replace(r'\(', '').replace(r'\)', '').replace(r'\[','').replace(r'\]','').replace('$','')
-    return plain(raw).replace('&',' · ').strip()
+    # Consume escaped pairs together so literal dollars/ampersands survive.
+    raw = re.sub(r'\\.|[$&]',lambda m:'' if m[0] in {'$',r'\(',r'\)',r'\[',r'\]'} else ' · ' if m[0]=='&' else m[0],raw)
+    return plain(raw).strip()
 
 
 def index_document(text, suffix):
