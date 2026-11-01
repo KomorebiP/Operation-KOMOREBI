@@ -4,6 +4,10 @@ The public site is at <https://KomorebiP.github.io/Operation-KOMOREBI/>.
 Its source is in this repository. The site combines maintained collection
 pages with documentation from two explicitly pinned library revisions.
 
+All twelve core papers have formatted HTML reading editions. Each retains its
+recorded mathematical scope; companion guides and atlas coverage are described
+on the individual reading pages.
+
 ## Sources
 
 | Content | Source |
@@ -193,6 +197,31 @@ Run `python -B -m unittest discover -s tools -p 'test_paper_xi_reading.py'`
 to check input coverage, numbering, literal and mathematical order, figures,
 tables, companion routes and bibliography. The HTML conversion adds no proof
 assessment, arithmetic realization result or Lean execution.
+
+## Paper XII HTML reading edition
+
+[Paper XII](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-xii/index.html)
+has 16 reading pages and a bibliography, covering all 13 main sections, the
+reading map and the full verification/revision record. The conversion retains
+873 mathematical expressions, 52 proof bodies, all 82 statement environments,
+18 original figures, two semantic tables and all 27 bibliography entries.
+The visual and Lean/evidence companions remain available as PDFs.
+
+The [chapter map](../tools/paper_xii_sections.json) fixes contiguous source
+ranges. The [converter](../tools/paper_xii_reading.py) checks authored inputs,
+equation order and source anchors. Companion route keys resolve through the
+retained reading concordance to actual PDF pages. The ring-isomorphism heading
+keeps its mathematics in the text and uses its plain PDF label in navigation.
+
+The [figure renderer](../tools/build_paper_xii_figures.py) produces browser PNGs
+from receipt-bound single-page PDFs. Normal builds verify the original PDF and
+PNG hashes without requiring a renderer.
+
+Run `python -B -m unittest discover -s tools -p 'test_paper_xii_reading.py'`
+to check source coverage, numbering, mathematical order, proof links, figures,
+tables, companion routes and bibliography. The conditional arithmetic inputs
+and separate original/revised claim records retain their source scope.
+This conversion adds no proof assessment or Lean execution.
 
 ## Special Functions hub and coupled-function lab
 

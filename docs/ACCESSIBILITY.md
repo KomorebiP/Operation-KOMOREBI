@@ -239,6 +239,16 @@ Companion links resolve to the delivered PDF pages using the retained reading
 concordance. Visual, Lean and research companions remain in PDF. This reading
 conversion adds no proof review or Lean execution.
 
+The [Paper XII reading edition](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-xii/index.html)
+includes all 13 main sections, the reading map and the complete verification
+and revision record in 16 reading pages. It retains 873 mathematical expressions,
+52 proof bodies, all 82 statement environments, 18 original figures, two semantic
+tables and all 27 bibliography entries. Companion routes open the delivered PDF
+pages from the retained concordance. The algebraic results, conditional
+arithmetic hypotheses and original/revised claim records retain their stated
+scope. The visual and Lean guides remain in PDF. No proof review or Lean
+execution is added.
+
 Paper I includes its orientation, foundations, packet and graph results,
 transport, worked models, notation ledger, statement concordance and bibliography.
 Its ten manuscript figures retain their captions and have short text alternatives
@@ -368,7 +378,7 @@ Document pages link back to the work, written proofs, Lean coverage, code and
 available worked examples. Edition READMEs are rendered as HTML. Linked
 manuscript and program sources have selectable text and line links. TeX source
 is shown as source, with links to included manuscript sections where available.
-Papers I–XI also have formatted HTML chapters. Paper IV's visual atlas
+All twelve core papers (I–XII) have formatted HTML chapters. Paper IV's visual atlas
 has HTML plates; all original visual atlases remain available through the on-site PDF reader. Use the PDF for
 typeset manuscript sections that have not yet been converted to HTML.
 

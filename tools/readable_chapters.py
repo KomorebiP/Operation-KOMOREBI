@@ -163,6 +163,9 @@ CHAPTERS += TENTH_CHAPTERS
 from paper_xi_reading import BOOK as ELEVENTH_BOOK, CHAPTERS as ELEVENTH_CHAPTERS
 BOOKS['paper-xi'] = ELEVENTH_BOOK
 CHAPTERS += ELEVENTH_CHAPTERS
+from paper_xii_reading import BOOK as TWELFTH_BOOK, CHAPTERS as TWELFTH_CHAPTERS
+BOOKS['paper-xii'] = TWELFTH_BOOK
+CHAPTERS += TWELFTH_CHAPTERS
 from special_functions_reading import CONFIG as SPECIAL_FUNCTIONS_BOOK
 BOOKS[SPECIAL_FUNCTIONS_BOOK['work']] = SPECIAL_FUNCTIONS_BOOK
 from proof_path_reading import BOOK as PROOF_PATH_BOOK, CHAPTERS as PROOF_PATH_CHAPTERS
@@ -824,6 +827,8 @@ def prepare(reader):
                 from paper_x_reading import prepare_book
             elif config['custom_reader'] == 'paper_xi':
                 from paper_xi_reading import prepare_book
+            elif config['custom_reader'] == 'paper_xii':
+                from paper_xii_reading import prepare_book
             else:
                 from special_functions_reading import prepare_book
             reader.readable_books[work] = prepare_book(reader, config)
@@ -1118,7 +1123,7 @@ def render_book(reader,book):
         proof_rows={r['proof_line']:r for r in rows.values() if r['proof_line']}
         headings=[n for n in chapter.nodes if n['kind'] in HEADINGS]
         toc='<nav class="chapter-contents" aria-label="Chapter contents"><h2 id="contents">Contents</h2><ol>'
-        toc+=''.join('<li'+(' class="subsection-entry"' if n['kind']!='section' else '')+'><a href="#'+n['id']+'">'+e((n['number']+' '+typography(n['title'])).strip())+'</a></li>' for n in headings)
+        toc+=''.join('<li'+(' class="subsection-entry"' if n['kind']!='section' else '')+'><a href="#'+n['id']+'">'+e((n['number']+' '+typography(n.get('toc_title',n['title']))).strip())+'</a></li>' for n in headings)
         if not headings: toc+='<li><a href="#L'+str(chapter.nodes[0]['line'])+'">'+e(spec['title'])+'</a></li>'
         toc+='</ol>'
         if config.get('statement_navigation'): toc+=statement_navigation(chapter,rows)
@@ -1265,6 +1270,9 @@ def render_book(reader,book):
         elif config.get('custom_reader')=='paper_xi':
             from paper_xi_reading import source_math
             expressions=source_math(raw.decode('utf-8-sig'),spec)
+        elif config.get('custom_reader')=='paper_xii':
+            from paper_xii_reading import source_math
+            expressions=source_math(raw.decode('utf-8-sig'),spec)
         if chapter.math!=expressions:
             difference=next((i for i,(a,b) in enumerate(zip(chapter.math,expressions)) if a!=b),min(len(chapter.math),len(expressions)))
             raise ValueError('Reading math differs at '+source+' expression '+str(difference)+' rendered '+str(chapter.math[difference:difference+1])+' original '+str(expressions[difference:difference+1]))
@@ -1322,6 +1330,9 @@ def render_book_index(reader,book,reports):
 
 
 def render_bibliography(reader,book):
+    if book['config'].get('custom_reader')=='paper_xii':
+        from paper_xii_reading import render_bibliography as render_paper_xii_bibliography
+        return render_paper_xii_bibliography(reader,book)
     if book['config'].get('custom_reader')=='paper_xi':
         from paper_xi_reading import render_bibliography as render_paper_xi_bibliography
         return render_paper_xi_bibliography(reader,book)
