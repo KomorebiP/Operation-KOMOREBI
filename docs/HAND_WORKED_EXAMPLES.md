@@ -72,9 +72,10 @@ connects the earlier arithmetic, Euler and Stirling examples. It carries
 a character projector through a Stirling/Newton change of basis and
 independently checks the resulting operation against actual function-image
 enumeration, rational spectral projectors, filtered generating functions,
-finite differences, cyclic packet multiplication and a wrong-basis
-counterexample. Eight exact CSV tables and two generated SVG diagrams
-are published with the Python source.
+finite differences, general translation and cyclic carry blocks, and
+transported multiplication. Wrong-basis and characteristic-three spectral
+counterexamples keep the assumptions explicit. Eleven exact CSV tables
+and three Python-generated SVG diagrams accompany the source.
 
 ## Conventions and scope
 
