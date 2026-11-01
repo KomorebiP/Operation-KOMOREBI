@@ -33,6 +33,7 @@ def build(site):
 <h1>Change the parts.<br><em>See what survives.</em></h1>
 <p>Rebuild an operation. Refine a signal. Find what a summary loses.<br class="lab-wide-break"> Go deeper with a four-level Haar signal experiment.</p>
 <span class="lab-local">Exact calculations · Instant results · No installation</span></header>
+<p class="lab-upgrade"><a href="signal-lab.html">Open Signal Laboratory <span aria-hidden="true">→</span></a> · Compare 16–256 samples, three representations, noise, and coefficient budgets.</p>
 <nav class="lab-tabs" aria-label="Choose an experiment">
 <a id="tab-packets" href="#packets"><span>01</span> Reconstruct</a>
 <a id="tab-refinement" href="#refinement"><span>02</span> Refine</a>
