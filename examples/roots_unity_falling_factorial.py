@@ -32,6 +32,7 @@ FILES = (
     "projector-matrix.csv",
     "projection-diagram.svg",
     "function-image-histogram.svg",
+    "translation-carry.svg",
     "results.json",
 )
 
@@ -724,6 +725,48 @@ def svg_image_histogram():
     return "\n".join(result)+"\n"
 
 
+
+def svg_translation_carry():
+    """Vector diagram of the cyclic two-tap transfer; values are recomputed."""
+    _, poly, source = example_row()
+    originals=[int(evaluate(q,4)) for q in source]
+    carries=[int(evaluate(delta(source[(r+1)%3]),4)) for r in range(3)]
+    targets=[int(evaluate(project_newton(translate(poly,1),3,r),4))
+             for r in range(3)]
+    naive=[int(evaluate(translate(q,1),4)) for q in source]
+    assert originals==[600,244,180] and carries==[961,240,900]
+    assert targets==[1561,484,1080] and naive==[1500,1205,420]
+    palette=("#16775f","#3c659d","#aa7021")
+    out=[
+        '<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="600" viewBox="0 0 1080 600" role="img" aria-labelledby="title desc">',
+        '<title id="title">Cross-packet carry when translating the fifth power</title>',
+        '<desc id="desc">For three falling-factorial residue packets at x equals four, old values 600,244,180 carry forward difference contributions 961,240,900 from the next residue. The projected shifted polynomial has packet values 1561,484,1080; direct shifts of the old packets instead give 1500,1205,420. Both totals are 3125, but their packet assignments are different.</desc>',
+        '<rect width="1080" height="600" fill="#fff"/>',
+        '<text x="42" y="51" font-family="sans-serif" font-size="27" font-weight="700" fill="#153e33">Translating a polynomial moves information between packets</text>',
+        '<text x="42" y="82" font-family="sans-serif" font-size="17" fill="#4c665c">Q_r T_1 f = Q_r f + Delta Q_(r+1) f   (residues mod 3)</text>',
+        '<rect x="40" y="107" width="1000" height="66" rx="10" fill="#edf5f2"/>',
+        '<text x="59" y="136" font-family="sans-serif" font-size="17" fill="#244d3e">Input: f(x) = x^5, evaluated at x = 4. Output: Q_r(f(x+1)) at x = 4.</text>',
+        '<text x="59" y="159" font-family="sans-serif" font-size="16" fill="#44665b">Only the next input residue contributes to each output carry.</text>',
+    ]
+    for r in range(3):
+        xx=40+340*r
+        out.extend([
+            f'<rect x="{xx}" y="197" width="320" height="253" rx="14" fill="#fafcfc" stroke="{palette[r]}" stroke-width="1.5"/>',
+            f'<text x="{xx+17}" y="234" font-family="sans-serif" font-size="19" font-weight="700" fill="{palette[r]}">Target residue {r}</text>',
+            f'<text x="{xx+17}" y="273" font-family="sans-serif" font-size="17" fill="#344e45">Original packet: {originals[r]}</text>',
+            f'<text x="{xx+17}" y="308" font-family="sans-serif" font-size="17" fill="#344e45">Carry from {(r+1)%3}: +{carries[r]}</text>',
+            f'<text x="{xx+17}" y="374" font-family="sans-serif" font-size="44" font-weight="700" fill="{palette[r]}">{targets[r]}</text>',
+            f'<text x="{xx+17}" y="412" font-family="sans-serif" font-size="15" fill="#52685e">Shift old packet: {naive[r]}</text>'
+        ])
+    out.extend([
+        '<rect x="40" y="473" width="1000" height="88" rx="12" fill="#143d32"/>',
+        '<text x="62" y="506" font-family="sans-serif" font-size="18" fill="#e6f5ee">Transferred destination packets</text>',
+        '<text x="62" y="544" font-family="sans-serif" font-size="30" font-weight="700" fill="#fff">1561 + 484 + 1080 = 3125 = 5^5</text>',
+        '</svg>'
+    ])
+    return "\n".join(out)+"\n"
+
+
 def save(directory: Path, counts):
     directory.mkdir(parents=True,exist_ok=True)
     for name in FILES:
@@ -780,16 +823,17 @@ def save(directory: Path, counts):
                                 str(evaluate(block,4))))
     with (directory/"shifted-packet-ledger.csv").open("w",newline="",encoding="utf-8") as f:
         w=csv.writer(f,lineterminator="\n")
-        w.writerow(("residue","original_Qr_f_at_4","original_packet_shifted_to_5",
-                    "difference_carry_from_next_packet_at_4",
-                    "projector_after_shift_at_4","untransported_packet_value_at_5"))
+        w.writerow(("residue","Qr_f_at_4","T1_Qr_f_at_4",
+                    "Delta_Qr_f_at_4","Delta_Q_next_f_at_4",
+                    "Qr_T1_f_at_4"))
         for r in range(3):
             original=evaluate(packets[r],4)
             individual=evaluate(translate(packets[r],1),4)
             carry=evaluate(delta(packets[(r+1)%3]),4)
             projected=evaluate(project_newton(translate(p,1),3,r),4)
-            w.writerow((r,str(original),str(individual),str(carry),
-                        str(projected),str(individual)))
+            self_difference=evaluate(delta(packets[r]),4)
+            w.writerow((r,str(original),str(individual),str(self_difference),
+                        str(carry),str(projected)))
     with (directory/"finite-characteristic-obstruction.csv").open("w",newline="",encoding="utf-8") as f:
         w=csv.writer(f,lineterminator="\n")
         w.writerow(("base_field","falling_degree","N_eigenvalue_mod_3",
@@ -838,6 +882,7 @@ def save(directory: Path, counts):
                         proj[row_number] if row_number<len(proj) else Q(0))))
     (directory/"projection-diagram.svg").write_text(svg_diagram(),encoding="utf-8")
     (directory/"function-image-histogram.svg").write_text(svg_image_histogram(),encoding="utf-8")
+    (directory/"translation-carry.svg").write_text(svg_translation_carry(),encoding="utf-8")
     summary={
         "arithmetic":"exact integer and Fraction",
         "scope":"Polynomials over Q; finite degree and m>=2; no analytic or p-adic convergence",
