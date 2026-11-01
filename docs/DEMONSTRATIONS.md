@@ -81,6 +81,16 @@ standalone checker and source-bound CSV/SVG records support the hand
 derivation. These are classical identities presented as one continuous
 realization argument, not a new theorem claim.
 
+## An extended derivation with quantum phase and measurement
+
+[Quantum phase, measurement, and information loss](demonstrations/QUANTUM_PHASE_MEASUREMENT.md)
+follows one qubit through three measurement settings, exact tomography,
+partial dephasing, and a concrete recovery obstruction. A coherent two-qubit
+record can be uncomputed, while a classical record loses the relative phase.
+Parity packets and their singleton refinement show which coherence a
+measurement removes. The page includes two browser experiments, exact
+Python matrix calculations, downloadable tables, and a generated figure.
+
 ## Run in your browser
 
 [Explore the interactive diagrams](https://KomorebiP.github.io/Operation-KOMOREBI/interactive.html).

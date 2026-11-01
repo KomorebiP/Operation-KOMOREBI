@@ -57,6 +57,11 @@ Equal probabilities in one basis therefore leave information about relative phas
 
 [Run the comparison](https://KomorebiP.github.io/Operation-KOMOREBI/playground.html#physics-phase), then follow the [complete hand calculation](examples/17_QUANTUM_MEASUREMENT.md) into [Paper VII](works/paper-vii.md). The [Quantum and Circuits book](works/monographs-quantum-and-circuits.md) extends the reading route into arithmetic, symmetry, finite gate costs and projected quantum trajectories. Its [edition guide](../monographs/quantum-and-circuits/README.md) separates the written results, finite computations and selected formal developments.
 
+The extended [phase, measurement, and information-loss derivation](demonstrations/QUANTUM_PHASE_MEASUREMENT.md)
+continues through exact tomography, partial dephasing, coherent versus classical
+records, and parity-packet refinement. [Run its editable coherence experiment](https://KomorebiP.github.io/Operation-KOMOREBI/playground.html#physics-dephasing)
+and export the exact measurement probabilities and purity.
+
 <a id="continuum-limit"></a>
 
 ## Centered approximation reaches the free continuum field

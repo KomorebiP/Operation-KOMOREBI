@@ -419,6 +419,8 @@ class Site:
             return self.rel('read/factorial-lanes.html',page)+('#'+parts.fragment if parts.fragment else '')
         if repo=='collection' and resolved=='examples/wavelet_polyphase.py':
             return self.rel('read/wavelet-polyphase.html',page)+('#'+parts.fragment if parts.fragment else '')
+        if repo=='collection' and resolved=='examples/quantum_phase_measurement.py':
+            return self.rel('read/quantum-phase-measurement.html',page)+('#'+parts.fragment if parts.fragment else '')
         if repo=='collection' and resolved=='examples/stirling_bell_fubini.py':
             return self.rel('read/stirling-bell-fubini.html',page)+('#'+parts.fragment if parts.fragment else '')
         if repo=='collection' and resolved=='examples/roots_unity_falling_factorial.py':
@@ -670,6 +672,8 @@ class Site:
         publish_factorial_case(self)
         from wavelet_case import publish as publish_wavelet_case
         publish_wavelet_case(self)
+        from quantum_case import publish as publish_quantum_case
+        publish_quantum_case(self)
         from stirling_case import publish as publish_stirling_case
         publish_stirling_case(self)
         from roots_newton_case import publish as publish_roots_newton_case

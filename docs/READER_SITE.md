@@ -126,6 +126,17 @@ CSV tables, three accessible Python SVGs, JSON checks, and a deterministic
 source-and-results archive. Tests include reproducible bytes and
 deliberately corrupted downloads.
 
+The [quantum phase and measurement derivation](demonstrations/QUANTUM_PHASE_MEASUREMENT.md)
+adds exact Gaussian-rational matrix calculations, three-setting tomography,
+partial dephasing, coherent records, and packet refinement. Its
+[standalone program](../examples/quantum_phase_measurement.py) generates two
+CSV tables, a labelled SVG, and a JSON case summary. The
+[publication bridge](../tools/quantum_case.py) binds the source, walkthrough,
+and records to their SHA-256 identities in a deterministic ZIP. Pages CI
+checks the arithmetic, expected output, reproducible bytes, and corruption
+detection. The `physics-dephasing` playground preset exports editable exact
+data. These finite teaching checks do not replay Lean.
+
 ## Build locally
 
 Use a complete collection checkout and separate checkouts of the two libraries
