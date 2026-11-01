@@ -58,7 +58,7 @@ VECTOR_SLIDERS
 <div><span>From kept blocks</span><output id="packet-rebuilt">(8, 18)</output></div>
 <div class="lab-residual"><span>Residual · direct − rebuilt</span><output id="packet-residual">(0, 0)</output></div></div>
 <p class="lab-verdict" id="packet-status" role="status">All four blocks retained. The operation is reconstructed.</p>
-<p class="lab-caption">Read each connection as T[row, column] × x[column]. Dashed connections mark omitted blocks.</p>
+<p class="lab-caption">Tap a connection or transfer row to keep or omit its block, or use the checkboxes. Each contribution is T[row, column] × x[column]. Dashed marks indicate omitted blocks.</p>
 </div></div>
 <details class="lab-reason"><summary>Why does reconstruction work?</summary>
 <p>The coordinate projectors P₁ and P₂ add to the identity. Consequently, the sum of all four blocks PⱼTPᵢ is (P₁ + P₂)T(P₁ + P₂) = T for every vector. Omitting a block changes the retained operator whenever that block is nonzero; a particular input may still give the same output.</p></details>
@@ -77,6 +77,7 @@ PACKET_SOURCES</section>
 <p class="lab-control-note" id="signal-level-help">Changing resolution restores all packets.</p>
 <button class="lab-secondary" type="button" id="signal-drop">Discard packet 2</button>
 </fieldset><div class="lab-visual">SIGNAL_DIAGRAM
+<p class="lab-caption">Tap a sample in any row to keep or discard its entire address packet, or use the checkboxes below.</p>
 <fieldset class="lab-packets" id="signal-packets" disabled><legend>Keep these address packets</legend></fieldset>
 <div class="lab-metrics lab-metrics-two"><div><span>Retained samples</span><output id="signal-retained">8 / 8</output></div>
 <div class="lab-residual"><span>Squared residual norm · Σrᵢ²</span><output id="signal-energy">0</output></div></div>
@@ -99,6 +100,7 @@ SIGNAL_SOURCES</section>
 <p class="lab-control-note">For a custom question F(x) = ax₁ + bx₂, change a and b below.</p>
 RECOVERY_SLIDERS
 </fieldset><div class="lab-visual">RECOVERY_DIAGRAM
+<p class="lab-caption">Drag u along the line, or use the position slider. Coordinates snap to whole numbers from −4 to 4 for x₁; the sum stays fixed.</p>
 <div class="lab-collision"><div><span>Input u</span><output id="recovery-u">(1, 0)</output><span id="recovery-u-answer">F(u) = 1</span></div>
 <div class="lab-shared"><span>Same summary</span><output id="recovery-summary">1</output><span>x₁ + x₂</span></div>
 <div><span>Input v</span><output id="recovery-v">(0, 1)</output><span id="recovery-v-answer">F(v) = 0</span></div></div>
