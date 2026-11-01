@@ -823,6 +823,32 @@ class ReaderSiteTests(unittest.TestCase):
         self.assertIn('read/paper-iv/atlas/index.html',Page(reader.work_routes('paper-iv','index.html')).links)
         self.assertNotIn('read/paper-iv/atlas/index.html',routes)
 
+    def test_work_overview_keeps_resource_routes_and_legacy_return_anchor(self):
+        import posixpath
+        reader=ReadingDocuments.__new__(ReadingDocuments)
+        reader.site=SimpleNamespace(rel=lambda target,page:posixpath.relpath(target,posixpath.dirname(page)))
+        reader.records={'paper.pdf':dict(work='paper-i',format='pdf',title='Read PDF',url='read/paper-i/pdf.html')}
+        reader.manuscript_roots={'paper-i':'main.tex'}
+        reader.learning={'learning_topics':[{'works':['paper-i']}]}
+        source=('<h1>Paper I</h1><p><a href="../BROWSE.html">Browse hub</a> / <a href="../browse/PAPERS.html">Core papers</a></p>'
+                '<p><a id="work-navigation"></a></p><p><a href="#read">Read</a> · <a href="#lean">Lean</a></p>'
+                '<p><strong>Completion:</strong> Scoped release</p><p>Original summary.</p>'
+                '<h2 id="before-you-start">Before you start</h2><p>Original scope and limits.</p>'
+                '<p>Use the links below to read this work and its supporting files. Ctrl+click opens a tab.</p>'
+                '<h2 id="read">Read</h2><h2 id="lean">Lean</h2><a href="#work-navigation">Back to work navigation</a>')
+        result=reader.work_overview('paper-i','collection/works/paper-i.html',source)
+        parsed=Page(result)
+        self.assertEqual(result.count('id="work-navigation"'),1)
+        self.assertEqual(result.count('aria-label="Reading routes for this work"'),1)
+        self.assertEqual(result.count('href="#lean"'),1)
+        self.assertIn('../../read/paper-i/index.html',parsed.links)
+        self.assertIn('../../read/paper-i/pdf.html',parsed.links)
+        self.assertIn('../BROWSE.html',parsed.links)
+        self.assertIn('../browse/PAPERS.html',parsed.links)
+        self.assertIn('#work-navigation',parsed.links)
+        self.assertIn('Original scope and limits.',result)
+        self.assertLess(result.index('Original summary.'),result.index('Scoped release'))
+
     def test_example_search_membership_follows_recorded_learning_routes(self):
         reader = ReadingDocuments.__new__(ReadingDocuments)
         reader.site = SimpleNamespace(components={'paper-i':{},'paper-ii':{}})

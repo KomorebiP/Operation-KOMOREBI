@@ -39,7 +39,7 @@ def navigation(config, page, placement='top'):
         return e(posixpath.relpath(path,posixpath.dirname(page))+ (sep+fragment if sep else ''),quote=True)
     def step(target, direction, label):
         relation = ('prev' if direction=='previous' else 'next') if target in sequence else 'contents'
-        return ('<a class="reading-step reading-'+direction+'" rel="'+relation+'" href="'+relative(target['url'])+'">'
+        return ('<a class="reading-step reading-'+direction+'" rel="'+relation+'" href="'+relative(target['url'])+'" aria-label="'+e(label+' '+target['title'],quote=True)+'">'
                 '<span class="reading-step-label">'+label+'</span><span class="reading-step-title">'+e(target['title'])+'</span></a>')
     body = '<nav class="reading-navigation" aria-label="Chapter and part navigation ('+placement+')" data-reading-work="'+e(config['work'],quote=True)+'" data-reading-position="'+str(position+1)+'" data-reading-total="'+str(len(sequence))+'" data-reading-placement="'+placement+'">'
     body += '<div class="reading-position"><span>'+e(config['label'])+'</span><span>'+str(position+1)+' of '+str(len(sequence))+'</span></div>'
@@ -55,6 +55,57 @@ def navigation(config, page, placement='top'):
 
 def outline(contents):
     return '<details class="reading-outline"><summary>On this page</summary>'+contents+'</details>'
+
+
+def chapter_layout(body):
+    """Move complete section navigation beside the unmodified chapter article.
+
+    Track nested tags so a statement-index disclosure cannot truncate the outline.
+    Pages without an outline retain their existing structure.
+    """
+    class Parts(HTMLParser):
+        def __init__(self):
+            super().__init__(convert_charrefs=False)
+            self.lines=[0]+[i+1 for i,c in enumerate(body) if c=='\n']
+            self.active=[];self.parts={}
+        def source_position(self):
+            line,column=self.getpos()
+            return self.lines[line-1]+column
+        def handle_starttag(self,tag,attrs):
+            for part in self.active:
+                if part['tag']==tag:part['depth']+=1
+            attrs=dict(attrs);classes=attrs.get('class','').split()
+            name = ('outline' if tag=='details' and 'reading-outline' in classes else
+                    'resources' if tag=='details' and 'reading-resources' in classes else
+                    'start' if tag=='p' and 'reading-start' in classes else
+                    'article' if tag=='article' and attrs.get('id')=='chapter-text' else None)
+            if name:self.active.append(dict(name=name,tag=tag,start=self.source_position(),depth=1))
+        def handle_endtag(self,tag):
+            for part in self.active[:]:
+                if part['tag']!=tag:continue
+                part['depth']-=1
+                if not part['depth']:
+                    self.parts[part['name']]=(part['start'],body.index('>',self.source_position())+1)
+                    self.active.remove(part)
+    parser=Parts();parser.feed(body)
+    parts=parser.parts
+    if not {'outline','article'}<=parts.keys():return body
+    def text(name):
+        start,end=parts[name]
+        return body[start:end]
+    article_start,article_end=parts['article']
+    # Only rearrange controls that precede this article.
+    controls=[name for name in ('outline','resources','start') if name in parts]
+    if any(parts[name][1]>article_start for name in controls):return body
+    prefix=body[:article_start]
+    for name in sorted(controls,key=lambda n:parts[n][0],reverse=True):
+        start,end=parts[name];prefix=prefix[:start]+prefix[end:]
+    contents=text('outline').replace('<summary>On this page</summary>',
+        '<summary>Contents<span class="reading-current-section" aria-hidden="true"></span></summary>',1)
+    toolbar='<div class="chapter-toolbar">'+''.join(text(name) for name in ('start','resources') if name in parts)+'</div>'
+    layout=('<div class="chapter-layout"><aside class="chapter-sidebar" aria-label="Section navigation">'+contents+
+            '</aside><div class="chapter-reading">'+text('article')+'</div></div>')
+    return prefix+toolbar+layout+body[article_end:]
 
 
 def resources(contents):

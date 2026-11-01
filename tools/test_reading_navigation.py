@@ -5,7 +5,7 @@ from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
-from reading_navigation import entries, neighbours, navigation, outline, resources, work_links, Navigation, publish_record, verify
+from reading_navigation import entries, neighbours, navigation, outline, resources, work_links, Navigation, publish_record, verify, chapter_layout
 
 
 class ReadingNavigationTests(unittest.TestCase):
@@ -66,6 +66,27 @@ class ReadingNavigationTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'outside'):navigation(config,'read/other/one.html')
         config['chapters'].append(config['chapters'][0])
         with self.assertRaisesRegex(ValueError,'unique'):entries(config)
+
+    def test_sidebar_preserves_nested_contents_and_exact_article_bytes(self):
+        contents=outline('<nav class="chapter-contents"><h2 id="contents">Contents</h2>'
+                         '<a href="#L4">Section</a><details><summary>Statements</summary>'
+                         '<a href="#L5">Theorem</a></details></nav>')
+        article='<article id="chapter-text"><h2 id="L4">A &amp; B</h2><section id="L5">\\(x&lt;y\\)</section></article>'
+        source='<h1>Title</h1>'+contents+resources('<details><summary>Sources</summary>TeX</details>')+article+'<nav>Next chapter</nav>'
+        result=chapter_layout(source)
+        self.assertEqual(result.count(article),1)
+        self.assertEqual(result.count('href="#L5"'),1)
+        self.assertIn('<details><summary>Statements</summary><a href="#L5">Theorem</a></details>',result)
+        self.assertIn('<details><summary>Sources</summary>TeX</details>',result)
+        self.assertIn('id="contents"',result)
+        self.assertTrue(result.endswith('<nav>Next chapter</nav>'))
+        self.assertLess(result.index('class="chapter-toolbar"'),result.index('class="chapter-layout"'))
+        self.assertNotIn(' open',result)
+
+    def test_pages_without_a_chapter_outline_keep_their_structure(self):
+        for source in ('<h1>Guide</h1>', '<article id="chapter-text">References</article>',
+                       outline('<nav>Contents</nav>')+'<article>Other page</article>'):
+            self.assertEqual(chapter_layout(source),source)
 
     def test_verifier_rejects_wrong_next_menu_and_missing_footer(self):
         import readable_chapters
