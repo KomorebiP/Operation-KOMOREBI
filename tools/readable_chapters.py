@@ -157,6 +157,9 @@ BOOKS['paper-viii'] = EIGHTH_BOOK
 CHAPTERS += EIGHTH_CHAPTERS
 from paper_ix_reading import register as register_paper_ix
 register_paper_ix(BOOKS, CHAPTERS)
+from paper_x_reading import BOOK as TENTH_BOOK, CHAPTERS as TENTH_CHAPTERS
+BOOKS['paper-x'] = TENTH_BOOK
+CHAPTERS += TENTH_CHAPTERS
 from special_functions_reading import CONFIG as SPECIAL_FUNCTIONS_BOOK
 BOOKS[SPECIAL_FUNCTIONS_BOOK['work']] = SPECIAL_FUNCTIONS_BOOK
 from proof_path_reading import BOOK as PROOF_PATH_BOOK, CHAPTERS as PROOF_PATH_CHAPTERS
@@ -165,9 +168,11 @@ CHAPTERS += PROOF_PATH_CHAPTERS
 BY_SOURCE = {c['source']:c for c in reversed(CHAPTERS)}
 NUMBERED = {'definition', 'theorem', 'proposition', 'lemma', 'corollary', 'remark', 'example', 'standardfact', 'certificate','boundary','roadmap','construction','classicalinput','classical','conjecture','problem','warning'}
 NUMBERED.update('hist'+kind for kind in ('theorem','proposition','lemma','corollary','definition','example','remark','standardfact'))
+NUMBERED.add('numericalcertificate')
 KIND_NAMES = {'classical':'Classical input','statement':'Supplementary statement','standardfact':'Standard fact','certificate':'Numerical certificate','text':'Passage','roadmap':'Formalization target','classicalinput':'Classical input'}
 KIND_NAMES.update({'hist'+kind:'Historical '+('standard fact' if kind=='standardfact' else kind)
                   for kind in ('theorem','proposition','lemma','corollary','definition','example','remark','standardfact')})
+KIND_NAMES['numericalcertificate']='Numerical certificate'
 HEADINGS = {'part':2,'section':2,'subsection':3,'subsubsection':4,'paragraph':5}
 MATH_PATTERN = re.compile(r'(?<!\\)\$(.*?)(?<!\\)\$|\\\[(.*?)\\\]|(\\begin\{align\*\}.*?\\end\{align\*\})|\\\((.*?)\\\)',re.S)
 PANELS = {'keyidea': 'The central idea', 'interpretation': 'How to read the result',
@@ -294,8 +299,8 @@ def manuscript_macros(main, required=None):
     if not set(required) <= set(result):
         raise ValueError('Missing manuscript macro definitions')
     # Only the literal, one-argument math wrappers used by the reading editions.
-    for name in ('cl', 'closure', 'norm', 'mat', 'abs', 'jump', 'ket', 'bra', 'ip', 'comm', 'code', 'coef', 'fall'):
-        match = re.search(r'\\newcommand\{\\'+name+r'\}\[([12])\]', main)
+    for name in ('cl', 'closure', 'norm', 'mat', 'abs', 'jump', 'ket', 'bra', 'ip', 'comm', 'code', 'coef', 'fall', 'absn'):
+        match = re.search(r'\\(?:newcommand|providecommand)\{\\'+name+r'\}\[([12])\]', main)
         if match:
             value, _ = group(main, match.end())
             arguments=int(match[1])
@@ -644,6 +649,11 @@ class Chapter:
         # Separate paragraphs outside math. A display splits paragraph elements,
         # but its exact mathematical source is passed unchanged to inline().
         # Lists can occur inside statements. Keep them semantic and preserve order.
+        heading=re.search(r'\\paragraph\*?\{',text)
+        if heading:
+            title,end=group(text,heading.end()-1)
+            return (self.paragraphs(text[:heading.start()])+'<h5>'+self.inline(title)+'</h5>'
+                +self.paragraphs(text[end:]))
         nested=re.search(r'\\begin\{(tabularx|tabular|longtable)\}(?:\[[^\]]*\])?(.*?)\\end\{\1\}',text,re.S)
         if nested and hasattr(self,'table_config'):
             start=self.text.find(nested[0])
@@ -800,6 +810,8 @@ def prepare(reader):
                 from proof_path_reading import prepare_book
             elif config['custom_reader'] == 'paper_ix':
                 from paper_ix_reading import prepare_book
+            elif config['custom_reader'] == 'paper_x':
+                from paper_x_reading import prepare_book
             else:
                 from special_functions_reading import prepare_book
             reader.readable_books[work] = prepare_book(reader, config)
@@ -1233,6 +1245,9 @@ def render_book(reader,book):
         elif config.get('custom_reader')=='paper_ix':
             from paper_ix_reading import source_math
             expressions=source_math(raw.decode('utf-8-sig'),spec)
+        elif config.get('custom_reader')=='paper_x':
+            from paper_x_reading import source_math
+            expressions=source_math(raw.decode('utf-8-sig'),spec)
         if chapter.math!=expressions:
             difference=next((i for i,(a,b) in enumerate(zip(chapter.math,expressions)) if a!=b),min(len(chapter.math),len(expressions)))
             raise ValueError('Reading math differs at '+source+' expression '+str(difference)+' rendered '+str(chapter.math[difference:difference+1])+' original '+str(expressions[difference:difference+1]))
@@ -1290,6 +1305,9 @@ def render_book_index(reader,book,reports):
 
 
 def render_bibliography(reader,book):
+    if book['config'].get('custom_reader')=='paper_x':
+        from paper_x_reading import render_bibliography as render_paper_x_bibliography
+        return render_paper_x_bibliography(reader,book)
     if book['config'].get('custom_reader')=='paper_ix':
         from paper_ix_reading import render_bibliography as render_paper_ix_bibliography
         return render_paper_ix_bibliography(reader,book)
