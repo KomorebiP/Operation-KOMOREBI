@@ -1,34 +1,52 @@
 # Resolution Semantics: checked Lean subset
 
-A separate **0.2.0 formal companion** now provides a pinned Lean 4.24.0 build
-for the original two-valued scaffold and Theorem 7.3, the two-world symmetry
-obstruction. The paper remains an active development.
+The **0.3.0 formal companion** checks binary graph reconstruction as well as
+the inherited two-world symmetry obstruction. The package uses Lean 4.24.0
+and its bundled `Std`, with no external library dependency. The paper remains
+active development.
 
-The [source and reproduction guide](../../formal/resolution-semantics-v0.2.0/README.md)
-contains the exact claim map and self-review. The
-[two-world proof](../../formal/resolution-semantics-v0.2.0/TwoWorld.lean)
-quantifies over arbitrary candidate retractions. It proves that no additive
-retraction onto the diagonal of the two-world Boolean ring can commute with
-coordinate swap. The Boolean retraction obstruction follows immediately.
+The [source and reproduction guide](../../formal/resolution-semantics-v0.3.0/README.md)
+maps each checked claim to the manuscript. The
+[graph proofs](../../formal/resolution-semantics-v0.3.0/GraphReconstruction.lean)
+establish that an undirected binary edge field is induced by vertex labels
+exactly when every simple cycle has zero XOR sum. The kernel consists of labels
+constant on connected components. Reconstructions are parameterized by one
+Boolean value per component; fixing one vertex value per component makes the
+reconstruction unique.
 
-The [fresh Windows replay receipt](../../verification/resolution-semantics/windows-2026-10-30-run5/receipt.json)
-records 34 accepted theorem declarations: 15 inherited scaffold statements
-and 19 new declarations, including the two main assertions and supporting
-lemmas and controls. Both main assertions have empty axiom inventories.
-One inherited helper uses `propext`; none uses `sorryAx` or custom axioms.
-Three rejection controls passed for the intended reasons.
+The [finite reference solver](../../formal/resolution-semantics-v0.3.0/GraphSolver.lean)
+enumerates all binary labelings. Lean proves its soundness and completeness for
+every graph on `Fin n` and every supplied list of vertex pins. It checks pin
+consistency, including contradictory pins on one vertex. Uniqueness requires
+pins to cover every component. This implementation is intended for small
+examples; a faster spanning-forest implementation remains future work.
+
+[Executable cases](../../formal/resolution-semantics-v0.3.0/GraphExamples.lean)
+include the two diamond reconstructions, an inconsistent triangle, disconnected
+components with an isolated vertex, an empty graph and conflicting pins. The
+[source-bound Windows replay](../../verification/resolution-semantics/graphs-windows-2026-11-01-run1/receipt.json)
+checks **83 theorem declarations**, seven executable cases and five rejection
+controls. The declaration count includes supporting lemmas and examples; it is
+not a count of manuscript theorems.
+
+The graph existence proof records standard classical choice and quotient
+dependencies. Both inherited two-world obstruction theorems remain axiom-free.
+No accepted theorem depends on `sorryAx` or custom axioms. The
+[self-review](../../formal/resolution-semantics-v0.3.0/PROOF_AUDIT.md) describes the
+definitions, cycle-to-walk argument, root hypotheses and exact limitations.
+This is author-side review and kernel checking, not independent review.
 
 The [original scaffold](../../research/resolution-semantics/formal/KRS_Core.lean)
-is preserved with its original uncompiled label. The companion moves its
-import before module documentation and fixes three pointwise rewrite proofs,
-without changing those theorem statements. Its
-[provenance record](../../formal/resolution-semantics-v0.2.0/PROVENANCE.json)
-identifies the original source, manuscript and compiler.
+retains its original uncompiled label. The
+[0.2.0 companion](../../formal/resolution-semantics-v0.2.0/README.md) and its
+[dated replay](../../verification/resolution-semantics/windows-2026-10-30-run5/receipt.json)
+are preserved. [Provenance](../../formal/resolution-semantics-v0.3.0/PROVENANCE.json)
+binds the new companion to the manuscript and unchanged inherited sources.
 
-The general Boolean-algebra, graph, selector, multiresolution and forcing
-theorems still need their own formal contracts. This subset does not verify
-the whole paper or construct a model of ZFC. Correspondence review here was
-self-review, alongside actual Lean compilation.
+Numerical cardinality and rank formulas, general Boolean-algebra-valued
+transport, selector and envelope results, weighted multiresolution and forcing
+applications remain outside this increment. Abstract graph labelings are not
+claimed to be realized by models of ZFC or forcing diagrams.
 
 [Work overview](../works/resolution-semantics.md) ·
 [Original source edition](../../research/resolution-semantics/README.md)

@@ -36,11 +36,18 @@ def validate_formal_companions(root, data, current):
         assert binding['main_theorems'], path
         for name in binding['main_theorems']:
             assert name in axioms and not axioms[name], 'Main formal theorem is missing or has axioms: '+name
+        for name, expected in binding.get('checked_theorems', {}).items():
+            assert isinstance(expected, list) and len(expected) == len(set(expected)), name
+            assert name in axioms, 'Required formal theorem is missing: '+name
+            assert set(axioms[name]) == set(expected), 'Formal theorem axioms differ: '+name
         controls = set()
         step_names = [s['name'] for s in receipt['steps']]
         assert len(step_names) == len(set(step_names)), path
         compilations = {'compile-'+name[:-5] for name in receipt['inputs'] if name.endswith('.lean')}
         assert compilations | {'version', 'compiler-prefix'} <= set(step_names), 'Incomplete formal build: '+path
+        positive = set(binding.get('required_positive_steps', []))
+        assert positive <= set(step_names), 'Missing formal execution: '+path
+        assert all(s['expected_zero'] for s in receipt['steps'] if s['name'] in positive), 'Required formal execution is negative: '+path
         for step in receipt['steps']:
             assert step['accepted'] and ((step['exit_code'] == 0) == step['expected_zero']), path
             parent = path.rsplit('/', 1)[0]
@@ -53,4 +60,5 @@ def validate_formal_companions(root, data, current):
                 assert step['required_diagnostic'] and step['required_diagnostic'] in ''.join(logs), path
                 controls.add(step['name'])
         required = {'reject-false-symmetry', 'reject-false-additivity', 'reject-sorry'}
+        required.update(binding.get('required_controls', []))
         assert required <= controls and receipt['negative_controls'] == len(controls), path

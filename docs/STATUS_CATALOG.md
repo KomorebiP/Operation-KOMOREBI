@@ -1118,15 +1118,15 @@ Internally audited final manuscript with exact finite coherence calculations. Th
 
 **Active development** · Lean: **Selected results recorded** · Confidence basis: **Recorded formal evidence**
 
-The separate Lean 4.24.0 companion compiles 15 unchanged scaffold statements and 19 two-world declarations, including both assertions of Theorem 7.3. Both obstruction theorems have empty axiom inventories. General Boolean-algebra-valued transport, graph and forcing results remain outside this formal scope.
+The separate Lean 4.24.0 companion checks 83 declarations, including the inherited scaffold and two-world obstruction, simple-cycle graph integrability, componentwise ambiguity and root-fixed uniqueness. The finite reference solver has universal soundness/completeness proofs. Graph existence uses recorded standard choice and quotient axioms; both obstruction theorems remain axiom-free. Numerical cardinality/rank formulas and wider transport/forcing results remain outside this formal scope.
 
-**Next step:** Formalize a precise next contract for the Boolean-algebra-valued transport differential or finite graph integration. The original 0.1.0 source edition and its uncompiled label are preserved.
+**Next step:** Formalize the finite cardinality and rank formulas and replace exhaustive search with a spanning-forest solver under the same specification. Preserve the original 0.1.0 edition and the 0.2.0 companion.
 
 [Return to this work: paper, proofs, Lean, and code](works/resolution-semantics.md)
 
 [Edition and reader guide](components/RESOLUTION_SEMANTICS_LEAN.md)
 
-[Separate Lean companion replay and exact scope](../verification/resolution-semantics/windows-2026-10-30-run5/receipt.json)
+[Separate Lean companion replay and exact scope](../verification/resolution-semantics/graphs-windows-2026-11-01-run1/receipt.json)
 
 [Source directory](../research/resolution-semantics) · [README.md](../research/resolution-semantics/README.md) · [THEOREM_INDEX.md](../research/resolution-semantics/THEOREM_INDEX.md) · [PROOF_BOUNDARY.md](../research/resolution-semantics/PROOF_BOUNDARY.md)
 

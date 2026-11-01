@@ -26,6 +26,11 @@ objects, treats warnings as errors, checks every declared theorem's axiom
 inventory, runs seven graph examples and checks five expected rejections.
 Setup, parser and import errors cannot satisfy the rejection controls.
 
+The [source-bound Windows replay](../../verification/resolution-semantics/graphs-windows-2026-11-01-run1/receipt.json)
+passed all 83 declarations, seven executable cases and five rejection controls.
+It records source commit `941e5e1ed8e55aaf33275e241ed81dd438563019` and every
+compiled input hash.
+
 ## Exact formal scope
 
 The manuscript is a finite **simple undirected graph** with binary vertex

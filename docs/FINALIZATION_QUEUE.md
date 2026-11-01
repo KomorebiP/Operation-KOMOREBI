@@ -161,7 +161,7 @@ Source text or static inventories are not compiler acceptance.
 
 **Done when:** Compile the exact intended source with pinned dependencies, record diagnostics and axioms, and map accepted statements to the manuscript. Retain missing mathematical inputs.
 
-**Progress:** Resolution Semantics now has a separate Lean 4.24.0 companion: 15 unchanged scaffold statements and 19 two-world declarations compile, both obstruction theorems are axiom-free, and three rejection controls pass. The original source remains preserved. The wider paper, Hodge and Stratified Universality obligations remain open.
+**Progress:** Resolution Semantics has a separate 0.3.0 companion with 83 accepted declarations: the inherited two-world results plus graph cycle integrability, componentwise ambiguity, root-fixed uniqueness and a verified finite reference solver. Seven executable cases and five rejection controls pass in the bound Windows replay. Both obstruction theorems remain axiom-free; graph existence records standard choice and quotient axioms. The original and 0.2.0 sources are preserved. Numerical rank formulas, the wider paper, Hodge and Stratified Universality obligations remain open.
 
 Related works and source records: [Resolution Semantics](works/resolution-semantics.md) · [Hodge: source and evidence](works/hodge-reader.md) · [Stratified Universality](works/stratified-universality.md).
 
