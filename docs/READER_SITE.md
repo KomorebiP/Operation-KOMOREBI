@@ -86,6 +86,24 @@ tables and figure identities. The wavelet walkthrough and Haar lab link directly
 to the related HTML chapters. Historical formal and experimental scope remains
 attached to the edition; this conversion adds no proof review or Lean replay.
 
+## Paper VI worked visual atlas
+
+[All 42 Paper VI atlas plates](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vi/atlas/index.html)
+have HTML pages. The conversion retains 40 original drawings, 588 selectable
+drawing labels and 931 expressions, with 76 manuscript passage links and
+return links. The two evidence-guide plates retain their original wording
+and link to the work's evidence record. Existing plate URLs and index anchors
+remain available; the five previously published drawing images are unchanged.
+
+The [atlas renderer](../tools/paper_vi_atlas.py) verifies source correspondence,
+figure identities, table cells and both directions of the manuscript links.
+The [shared transcript parser](../tools/reader_drawing_transcripts.py) also
+serves Paper VII without changing its retained mathematics. Conversion records
+are published in `documents/paper-vi-atlas.json`. To regenerate only the
+frozen-PDF crops, run `python tools/render_paper_vi_atlas.py --pdftoppm PATH`.
+The website build checks the assets and requires no TeX compiler. This
+conversion adds no mathematical example execution, proof audit or Lean replay.
+
 ## Paper VIII HTML reading edition
 
 [Paper VIII](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-viii/index.html)

@@ -1,15 +1,18 @@
-"""Source correspondence and accessible-table checks for the opening atlas."""
+"""Source correspondence and accessible-table checks for all 42 atlas plates."""
 import copy
 import hashlib
 import json
+import posixpath
 from html.parser import HTMLParser
 from pathlib import Path
 from types import SimpleNamespace
 import unittest
 
 from paper_vi_atlas import (AtlasChapter, BOOK, DEFINITIONS, FIGURES, HTML_COUNT,
-                            PDF, PDF_SHA256, RECEIPTS, SOURCE, TABLE_AIDS, plates)
-from reader_atlas import atlas_tex, drawing_nodes, expected_math, render_drawing, transcript_order
+                            PDF, PDF_SHA256, RECEIPTS, SOURCE, TABLE_AIDS, plates,
+                            atlas_macros,reading_aids,render_drawing,atlas_tex)
+from reader_atlas import expected_math, transcript_order
+from reader_drawing_transcripts import drawing_nodes
 from readable_chapters import Chapter, chapter_text, manuscript_macros, original_math, render_table
 from reader_documents import png_dimensions
 
@@ -39,19 +42,55 @@ class PaperVIAtlasTests(unittest.TestCase):
     def setUpClass(cls):
         cls.source = (ROOT/SOURCE).read_text(encoding='utf-8-sig')
         cls.selected = plates(cls.source)
-        cls.macros = manuscript_macros((ROOT/BOOK['main']).read_text(encoding='utf-8-sig')+'\n'+
-                                       (ROOT/DEFINITIONS).read_text(encoding='utf-8-sig'),
-                                       BOOK['required_macros'])
+        cls.macros = atlas_macros((ROOT/BOOK['main']).read_text(encoding='utf-8-sig'),
+                                 (ROOT/DEFINITIONS).read_text(encoding='utf-8-sig'))
         cls.receipts = json.loads((ROOT/'website'/RECEIPTS).read_bytes())
         cls.nodes = {name:drawing_nodes((ROOT/BOOK['base']/'visual_graphics'/(name+'.tex')).read_text(encoding='utf-8-sig'))
                      for name in FIGURES}
+        main=(ROOT/BOOK['main']).read_text(encoding='utf-8-sig')
+        state={'number_floats':True};chapters=[]
+        for spec in BOOK['chapters']:
+            if 'section_prefix' in spec:
+                state.update(section=0,appendix=False,figure=0,table=0,section_prefix=spec['section_prefix'])
+            chapter=Chapter(chapter_text(main,spec),cls.macros,state=state,check_refs=False)
+            chapter.url=spec['url'];chapters.append((spec,main.encode(),chapter))
+            state={key:getattr(chapter,key) for key in ('section','appendix','part','subsection','subsubsection','counter','section_prefix','figure','table','number_floats')}
+        cls.pages={};cls.writes={};records={}
+        def add(path):
+            records.setdefault(path,dict(repository_path=path,sha256=hashlib.sha256((ROOT/path).read_bytes()).hexdigest()))
+            return records[path]
+        site=SimpleNamespace(root=ROOT,revision='test-revision',search=[],
+            read_source=lambda record:(ROOT/record['repository_path']).read_bytes(),
+            rel=lambda target,page:posixpath.relpath(target,posixpath.dirname(page)),
+            page=lambda path,title,body:cls.pages.__setitem__(path,body),
+            write=lambda path,body:cls.writes.__setitem__(path,body))
+        cls.reader=SimpleNamespace(site=site,records=records,add=add,
+            readable_books={'paper-vi':dict(main=main,chapters=chapters)},
+            resolve=lambda path,page,anchor='':'source.html'+('#'+anchor if anchor else ''),
+            work_routes=lambda work,page:'',viewer_url=lambda record,page,anchor='':'original.pdf#'+anchor)
+        from paper_vi_atlas import prepare,render
+        prepare(cls.reader);render(cls.reader)
+        cls.report=json.loads(cls.writes['documents/paper-vi-atlas.json'])
 
-    def test_inventory_distinguishes_html_plates_from_pdf_continuations(self):
+    def test_all_42_production_pages_keep_source_math_and_routes(self):
+        self.assertEqual(len(self.pages),43)
+        self.assertEqual(len(self.report['html_plates']),42)
+        self.assertEqual(len(self.report['figures']),40)
+        self.assertEqual(sum(p['math_expressions'] for p in self.report['html_plates']),931)
+        self.assertEqual(sum(len(r) for r in self.report['manuscript_references'].values()),76)
+        for plate in self.selected:
+            body=self.pages[plate['url']]
+            self.assertIn(plate['title'],body)
+            self.assertIn('page='+str(plate['number']+2),body)
+            self.assertNotIn('<iframe',body)
+            self.assertEqual(bool(self.report['manuscript_references'][str(plate['number'])]),plate['number'] not in (28,42))
+        self.assertIn('href="v42.html"',self.pages['read/paper-vi/atlas/index.html'])
+
+    def test_inventory_includes_all_42_html_plates(self):
         self.assertEqual(len(self.selected),42)
         self.assertEqual([p['number'] for p in self.selected],list(range(1,43)))
-        self.assertEqual(HTML_COUNT,6)
-        self.assertTrue(all(p['url'].endswith('.html') for p in self.selected[:6]))
-        self.assertTrue(all('/index.html#v' in p['url'] for p in self.selected[6:]))
+        self.assertEqual(HTML_COUNT,42)
+        self.assertTrue(all(p['url'].endswith('.html') for p in self.selected))
         self.assertEqual(self.selected[1]['title'],'A dictionary with orientations')
         with self.assertRaisesRegex(ValueError,'numbering'):
             plates(self.source.replace(r'\vpage{3}',r'\vpage{30}',1))
@@ -59,17 +98,19 @@ class PaperVIAtlasTests(unittest.TestCase):
             plates('Unreviewed prose.\n'+self.source)
 
     def test_all_drawing_labels_are_read_once_and_keep_their_math(self):
-        self.assertEqual(sum(map(len,self.nodes.values())),138)
+        self.assertEqual(sum(map(len,self.nodes.values())),588)
         reader = SimpleNamespace(site=SimpleNamespace(rel=lambda path,page:path),
                                  resolve=lambda path,page:'source.html')
         figures = {}
         for record in self.receipts['figures']:
             name = record['name']
             nodes = self.nodes[name]
-            order = transcript_order(FIGURES[name],nodes)
+            source=(ROOT/record['source']).read_text(encoding='utf-8-sig')
+            info=reading_aids(name,nodes,source)
+            order = transcript_order(info,nodes)
             self.assertEqual(sorted(order),list(range(len(nodes))))
             width,height = png_dimensions((ROOT/'website'/record['image']).read_bytes())
-            figure = dict(receipt=record,nodes=nodes,description=FIGURES[name],order=order,
+            figure = dict(receipt=record,nodes=nodes,description=info,order=order,
                           width=width,height=height)
             figures[name] = figure
             chapter = AtlasChapter('',self.macros)
@@ -77,7 +118,7 @@ class PaperVIAtlasTests(unittest.TestCase):
             markup = render_drawing(figure,chapter,reader)
             self.assertEqual(chapter.math,[m for index in order for m in original_math(nodes[index]['text'])],name)
             self.assertEqual(markup.count('id="drawing-label-'),len(nodes),name)
-            if name!='defect_budget':
+            if name in {'three_views','clock','generator_modes','lumpability'}:
                 self.assertIn('scope="col"',markup)
             self.assertNotIn('Drawing label 0',markup)
         for plate in self.selected[:HTML_COUNT]:
@@ -113,7 +154,7 @@ class PaperVIAtlasTests(unittest.TestCase):
                 after = render_table(node,aided,TABLE_AIDS[key])
                 self.assertEqual(Cells(before).cells,Cells(after).cells)
                 self.assertEqual(original.math,aided.math)
-                self.assertEqual(after.count('scope="row"'),4 if plate['number']==1 else 11)
+                self.assertEqual(after.count('scope="row"'),{1:4,2:11,28:5}[plate['number']])
                 self.assertIn('<caption>'+TABLE_AIDS[key]['caption']+'</caption>',after)
         self.assertEqual(found,set(TABLE_AIDS))
 
