@@ -151,6 +151,8 @@ class ReadingDocuments:
                 done.add(path)
         from readable_chapters import prepare
         prepare(self)
+        from reader_proofreading import prepare as prepare_proofreading
+        prepare_proofreading(self)
         from reader_atlas import prepare as prepare_atlas
         prepare_atlas(self)
         from paper_vi_atlas import prepare as prepare_paper_vi_atlas
@@ -422,6 +424,8 @@ class ReadingDocuments:
         render_paper_vi_atlas(self)
         from paper_vii_atlas import render as render_paper_vii_atlas
         render_paper_vii_atlas(self)
+        from reader_proofreading import publish as publish_proofreading
+        publish_proofreading(self)
         records = sorted(self.records.values(), key=lambda r: (r['work'], r['url']))
         self.site.write('documents/index.json', json.dumps(dict(source_revision=self.site.revision, files=records, images=list(self.images.values())), ensure_ascii=False, indent=2)+'\n')
 

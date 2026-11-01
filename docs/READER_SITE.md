@@ -641,6 +641,21 @@ definition separately. Matching symbol spellings remain available in a disclosur
 The build checks title metadata against the source; comments and code examples
 cannot supply a definition name.
 
+## Source-bound proofreading notes
+
+The [1 November 2026 proofreading record](../manifests/reader-proofreading-2026-11-01.json)
+covers the main online chapter text of Papers I and II. Two labelled editorial
+reading notes clarify Paper II's abbreviated Fourier hypotheses and the two
+uses of `t` in its walk-series subsection. The retained manuscripts, mathematical
+expressions, statement numbering and proof bodies are unchanged.
+
+`tools/reader_proofreading.py` binds the review to 17 source-file hashes and
+exact source passages. Notes link to the existing HTML definitions and publish
+their record at `documents/reader-proofreading.json`. The build rejects stale
+source bindings, moved reference targets, missing notes and duplicate placements.
+This is a proofreading record, with no new proof audit, Lean replay or external
+citation verification. Visual atlases and PDF layout are outside its coverage.
+
 ## Signal Laboratory
 
 `signal-lab.html` is a larger known-reference signal experiment with 16–256
