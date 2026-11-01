@@ -27,7 +27,7 @@ GLYPHS = {**GREEK, 'in':'∈', 'notin':'∉', 'subset':'⊂', 'subseteq':'⊆', 
     'oplus':'⊕', 'bigoplus':'⊕', 'otimes':'⊗', 'bigotimes':'⊗', 'cup':'∪', 'cap':'∩',
     'bigcup':'⋃', 'bigcap':'⋂', 'emptyset':'∅', 'varnothing':'∅', 'forall':'∀', 'exists':'∃',
     'circ':'∘', 'times':'×', 'cdot':'·', 'pm':'±', 'mp':'∓', 'perp':'⊥', 'ell':'ℓ',
-    'hbar':'ℏ', 'dagger':'†', 'star':'⋆', 'ast':'∗', 'langle':'⟨', 'rangle':'⟩'}
+    'hbar':'ℏ', 'dagger':'†', 'star':'⋆', 'ast':'∗', 'langle':'⟨', 'rangle':'⟩', 'Bbbk':'𝕜'}
 FORMATS = {'mathbb', 'mathcal', 'mathfrak', 'mathbf', 'mathrm', 'mathsf', 'mathtt', 'boldsymbol', 'bm', 'operatorname'}
 ACCENTS = {'hat', 'widehat', 'tilde', 'widetilde', 'bar', 'overline', 'underline', 'vec', 'dot', 'ddot'}
 STRUCTURAL = {'frac', 'dfrac', 'tfrac', 'sqrt', 'binom', 'dbinom', 'tbinom', 'left', 'right',
@@ -372,6 +372,17 @@ def symbol_names(tex,display):
                               re.sub(r'\\(?=[A-Za-z])','',tex)) if s})
 
 
+def reader_index(search,work):
+    """A compact, work-local slice of the existing context-aware search index."""
+    entries=[entry for entry in search['entries'] if entry['work']==work]
+    identifiers=sorted({entry['context'] for entry in entries})
+    positions={identifier:number for number,identifier in enumerate(identifiers)}
+    return dict(version=2,source_revision=search['source_revision'],
+                works=[row for row in search['works'] if row['id']==work],
+                contexts=[search['contexts'][identifier] for identifier in identifiers],
+                entries=[{**entry,'context':positions[entry['context']]} for entry in entries])
+
+
 def build(site):
     e=html.escape
     config=json.loads((site.root/'manifests/notation-sources.json').read_bytes())
@@ -413,8 +424,10 @@ def build(site):
             primary=data['passages'][sample[0]];source=data['sources'][primary['source']]
             key=(work,source['repository_path'],primary['context'])
             if key not in context_ids:
+                from reader_guidance import reading_passage_url
                 context_ids[key]=len(contexts)
                 contexts.append(dict(work=work,excerpt=excerpts[0][:450],source_url=source_url(source,primary['line']),
+                    reading_url=reading_passage_url(site.reader,source['repository_path'],primary['line']) or source_url(source,primary['line']),
                     source_label=PurePosixPath(source['repository_path']).name+', line '+str(primary['line']),
                     table=table_preview(primary['context'],source['macros']) if primary['kind']=='notation-table' else None))
             search_entries.append({k:v for k,v in item.items() if k!='excerpt'} |
@@ -445,8 +458,10 @@ def build(site):
                                 work_ids=[work],text='Symbols definitions notation TeX '+data['title']+' '+' '.join(x['tex']+' '+x['aliases'] for x in data['entries'])))
     manifest=dict(version=VERSION,source_revision=site.revision,scope=config['scope'],totals=dict(totals),works=works,entries=all_entries)
     site.write('notation/index.json',json.dumps(manifest,ensure_ascii=False,separators=(',',':'))+'\n')
-    site.write('notation/search.json',json.dumps(dict(version=2,source_revision=site.revision,works=works,
-               contexts=contexts,entries=search_entries),ensure_ascii=False,separators=(',',':'))+'\n')
+    search=dict(version=2,source_revision=site.revision,works=works,contexts=contexts,entries=search_entries)
+    site.write('notation/search.json',json.dumps(search,ensure_ascii=False,separators=(',',':'))+'\n')
+    for work in works:
+        site.write('notation/reader/'+work['id']+'.json',json.dumps(reader_index(search,work['id']),ensure_ascii=False,separators=(',',':'))+'\n')
     body='<div class="notation-heading"><p class="eyebrow">Across the collection</p><h1>Notation index</h1><p>Find a symbol and read it in context.</p><p class="notation-links"><a href="collection/GLOSSARY.html">Glossary</a> · <a href="#works">Browse by work</a> · <a href="#coverage">Coverage</a></p></div>'
     options='<option value="">All works</option>'
     for label,core in [('Core papers',True),('Books and other works',False)]:
@@ -515,4 +530,9 @@ def verify(root,documents,pages):
     for context in search['contexts']:
         path,fragment=context['source_url'].split('#',1)
         assert path in pages and fragment in pages[path].ids
+        path,fragment=context['reading_url'].split('#',1)
+        assert path in pages and fragment in pages[path].ids
+    for work in search['works']:
+        compact=json.loads((root/('notation/reader/'+work['id']+'.json')).read_bytes())
+        assert compact==reader_index(search,work['id']),('Reader notation index differs',work['id'])
     return dict(works=len(manifest['works']),**dict(totals))

@@ -1,10 +1,21 @@
 """Regression cases for notation extraction and source fidelity."""
 import unittest
 from notation_index import (passages, symbol_tokens, index_document, macro_definitions,
-                            aliases, display_math, symbol_id, context_for,table_preview)
+                            aliases, display_math, symbol_id, context_for,table_preview,reader_index)
 
 
 class NotationTests(unittest.TestCase):
+    def test_reader_index_remaps_contexts_without_crossing_work_boundaries(self):
+        search=dict(source_revision='revision',works=[dict(id='a'),dict(id='b')],
+                    contexts=[dict(work='b',excerpt='Other'),dict(work='a',excerpt='First'),dict(work='a',excerpt='Second')],
+                    entries=[dict(work='a',tex='x',context=2),dict(work='b',tex='x',context=0),dict(work='a',tex='y',context=1)])
+        compact=reader_index(search,'a')
+        self.assertEqual(compact['works'],[dict(id='a')])
+        self.assertEqual(compact['source_revision'],'revision')
+        self.assertEqual([e['context'] for e in compact['entries']],[1,0])
+        self.assertEqual([c['excerpt'] for c in compact['contexts']],['First','Second'])
+        self.assertEqual(search['entries'][0]['context'],2)
+
     def test_tex_masks_comments_preamble_and_programs(self):
         text=r'''\newcommand{\fake}{$WRONG$}
 \begin{document}

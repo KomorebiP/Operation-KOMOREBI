@@ -93,6 +93,8 @@ class ReadingDocuments:
                     mapped = self.claims_by_module.setdefault(declaration['path'], [])
                     if row not in mapped:
                         mapped.append(row)
+        from reader_guidance import INTRODUCTIONS, load_introductions
+        self.paper_introductions=load_introductions(self) if (site.root/INTRODUCTIONS).is_file() else {}
 
     def add(self, path, label=None):
         if path in self.records:
@@ -117,6 +119,8 @@ class ReadingDocuments:
         # Include manuscript sections and explicit source passages linked from maintained guides.
         from notation_index import prepare_sources
         prepare_sources(self)
+        from reader_guidance import prepare_introductions
+        prepare_introductions(self)
         from navigation_links import inline_targets
         for (repo, path), text in self.site.documents.items():
             if repo != 'collection':
@@ -228,6 +232,10 @@ class ReadingDocuments:
         content=re.sub(r'(<p><strong>Completion:</strong>.*?</p>)\s*(<p>.*?</p>)',
                        lambda m:m[2].replace('<p>','<p class="work-summary">',1)+
                        m[1].replace('<p>','<p class="work-status">',1),content,count=1,flags=re.S)
+        from reader_guidance import paper_introduction
+        introduction=paper_introduction(self,work,page)
+        if introduction:
+            content=re.sub(r'<p class="work-summary">.*?</p>',lambda m:introduction,content,count=1,flags=re.S)
         return re.sub(r'(</h1>)',lambda m:m[1]+self.work_intro(work,page,collection_links),content,count=1)
 
     def work_route_targets(self, work):
