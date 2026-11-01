@@ -81,7 +81,9 @@ class ReaderSiteTests(unittest.TestCase):
         fourth=BOOKS['paper-iv']
         self.assertIs(table_reading_aid(fourth,fourth['main'],'L2988')[1],fourth['table_reading_aids']['L2988'])
         sixth=BOOKS['paper-vi']
-        self.assertIsNone(table_reading_aid(sixth,sixth['main'],'L1632')[1])
+        self.assertEqual(table_reading_aid(sixth,sixth['main'],'L1632')[1]['headers'],
+                         ['Realization','Seed','Transfer','Packet/reconstruction law'])
+        self.assertIsNone(table_reading_aid(sixth,sixth['main'],'L99999')[1])
         for work in ('paper-i','paper-ii','paper-iii'):
             with self.assertRaisesRegex(ValueError,'Review the table reading aid'):
                 table_reading_aid(BOOKS[work],BOOKS[work]['main'],'L999999')
@@ -98,7 +100,7 @@ class ReaderSiteTests(unittest.TestCase):
                     table_reading_aids={'L2':dict(caption='First table',headers=['Name','Value'],row_header_column=0)})
         site=SimpleNamespace(root=Path('.'),search=[],rel=lambda target,page:target,
                              page=lambda page,title,body:pages.update({page:body}))
-        reader=SimpleNamespace(site=site,claims_by_source={},work_routes=lambda work,page:'',
+        reader=SimpleNamespace(site=site,claims_by_source={},work_routes=lambda work,page:'',work_route_targets=lambda work:[],
                                resolve=lambda path,page,anchor=None:path+('#'+anchor if anchor else ''),
                                records={source:dict(sha256=hashlib.sha256(raw).hexdigest(),work='test',format='tex',file_url=source)})
         def book():
@@ -264,7 +266,9 @@ class ReaderSiteTests(unittest.TestCase):
         image=b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR'+(1200).to_bytes(4,'big')+(450).to_bytes(4,'big')+bytes(9)
         with tempfile.TemporaryDirectory() as folder:
             root=Path(folder); (root/'figure.png').write_bytes(image)
-            page=Page('<img src="../figure.png" width="1200" height="450" alt="A drawing" loading="lazy">')
+            (root/'brand.svg').write_text('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"></svg>')
+            page=Page('<img src="../brand.svg" width="32" height="32" alt="Brand">'
+                      '<img src="../figure.png" width="1200" height="450" alt="A drawing" loading="lazy">')
             check_png_image_sizes(root,'read/plate.html',page.images)
             for attrs in ({}, {'width':'1200','height':'451'}):
                 with self.assertRaisesRegex(AssertionError,'dimensions differ'):
@@ -622,6 +626,18 @@ class ReaderSiteTests(unittest.TestCase):
         self.assertIn('Skowroński.',rendered)
         self.assertIn('<a href="https://doi.org/example">Original DOI</a>',rendered)
 
+    def test_authored_figures_retain_captions_and_intrinsic_dimensions(self):
+        rewrite=Rewriter(lambda value,image:value)
+        rewrite.feed('<figure><img src="plot.png" width="1820" height="884" '
+                     'loading="lazy" alt="Two coupled functions" onerror="bad()">'
+                     '<figcaption>Original scientific plate.</figcaption></figure>')
+        rendered=''.join(rewrite.out)
+        self.assertIn('<figure>',rendered)
+        self.assertIn('<figcaption>Original scientific plate.</figcaption></figure>',rendered)
+        self.assertIn('width="1820" height="884"',rendered)
+        self.assertIn('loading="lazy"',rendered)
+        self.assertNotIn('onerror',rendered)
+
     def test_navigation_has_nested_relative_links_and_current_page(self):
         from html.parser import HTMLParser
         class Links(HTMLParser):
@@ -635,8 +651,12 @@ class ReaderSiteTests(unittest.TestCase):
         self.assertEqual([a['href'] for a in links if a.get('aria-current')=='page'], ['GLOSSARY.html'])
         self.assertIn('../search.html', [a['href'] for a in links])
         self.assertIn('PHYSICS_COLLECTION.html', [a['href'] for a in links])
-        self.assertEqual(len(links),15)
-        self.assertEqual(len({a['href'] for a in links}),15)
+        self.assertIn('../interactive.html', [a['href'] for a in links])
+        self.assertEqual(len(links),17)
+        self.assertEqual(len({a['href'] for a in links}),17)
+        self.assertIn('SPECIAL_FUNCTIONS.html', [a['href'] for a in links])
+        special=Links(site_navigation('collection/SPECIAL_FUNCTIONS.html')).links
+        self.assertEqual([a['href'] for a in special if a.get('aria-current')=='page'], ['SPECIAL_FUNCTIONS.html'])
         physics=Links(site_navigation('collection/PHYSICS_COLLECTION.html')).links
         self.assertEqual([a['href'] for a in physics if a.get('aria-current')=='page'], ['PHYSICS_COLLECTION.html'])
         search=Links(site_navigation('search.html')).links

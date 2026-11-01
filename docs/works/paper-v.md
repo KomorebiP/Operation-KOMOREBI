@@ -29,12 +29,13 @@ These introductory calculations lead into this work’s subject. The source and 
 - [5. Refine a signal](../examples/05_REFINEMENT.md) · [Terms and source routes](../LEARNING_MAP.md#refinement)
 - [14. Separate averages and details](../examples/14_HAAR_PAIRS.md) · [Terms and source routes](../LEARNING_MAP.md#haar)
 
-**Complete demonstration with runnable code:** [Refine a signal](../demonstrations/REFINEMENT.md).
+**Complete demonstration with runnable code:** [Refine a signal](../demonstrations/REFINEMENT.md) · [Wavelets and polyphase transfer](../demonstrations/WAVELET_POLYPHASE.md).
 
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read
 
+- [Read online: chapters, figures and proof links](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-v/index.html)
 - [Edition README](../../papers/paper-v/current/README.md)
 - [Read PDF](../../papers/paper-v/current/papers/Paper_V_Traditional_Final.pdf)
 - [Visual guide (PDF)](../../papers/paper-v/current/papers/Paper_V_Visual_Guide_Final.pdf)

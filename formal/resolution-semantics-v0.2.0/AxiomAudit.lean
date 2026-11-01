@@ -1,0 +1,36 @@
+import ResolutionSemantics
+
+#print axioms KRS.defect_self
+#print axioms KRS.defect_comm
+#print axioms KRS.defect_zero
+#print axioms KRS.defect_eq_false_iff
+#print axioms KRS.defect_composition
+#print axioms KRS.defect_reconstruction
+#print axioms KRS.defect_additive
+#print axioms KRS.defect_twisted_product
+#print axioms KRS.defect_complement
+#print axioms KRS.triangle_telescope
+#print axioms KRS.invariant_constant
+#print axioms KRS.invariant_complement
+#print axioms KRS.invariant_xor
+#print axioms KRS.invariant_and
+#print axioms KRS.invariant_of_more_edges
+#print axioms KRS.TwoWorld.xor_self
+#print axioms KRS.TwoWorld.swap_eq_self_of_diagonal
+#print axioms KRS.TwoWorld.no_swap_equivariant_additive_retraction
+#print axioms KRS.TwoWorld.BooleanRetraction.map_complement
+#print axioms KRS.TwoWorld.no_swap_equivariant_boolean_retraction
+#print axioms KRS.TwoWorld.leftProjection_not_equivariant
+#print axioms KRS.TwoWorld.rightProjection_not_equivariant
+#print axioms KRS.TwoWorld.lowerSummary_diagonal
+#print axioms KRS.TwoWorld.lowerSummary_fixes_diagonal
+#print axioms KRS.TwoWorld.lowerSummary_equivariant
+#print axioms KRS.TwoWorld.lowerSummary_not_additive
+#print axioms KRS.TwoWorld.identity_additive
+#print axioms KRS.TwoWorld.identity_fixes_diagonal
+#print axioms KRS.TwoWorld.identity_equivariant
+#print axioms KRS.TwoWorld.identity_not_diagonal
+#print axioms KRS.TwoWorld.zeroSummary_diagonal
+#print axioms KRS.TwoWorld.zeroSummary_additive
+#print axioms KRS.TwoWorld.zeroSummary_equivariant
+#print axioms KRS.TwoWorld.zeroSummary_not_retraction

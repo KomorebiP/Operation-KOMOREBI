@@ -87,7 +87,7 @@ def build(site, runtime_root):
                   library_files=files, runtime_version=runtime['version'], packages=runtime['packages'],
                   plotly_js=runtime['plotly_js'], helper_url='downloads/komorebi_browser.py',
                   helper_sha256=sha(helper), examples={})
-    body = '''<h1>Python playground</h1><p class="lede">Explore Komorebi's sequences, factorial normalizations and worked calculations. Change the inputs, inspect the graphs and follow the links to the written mathematics.</p>
+    body = '''<h1>Python playground</h1><p class="lede">Explore Komorebi's special functions, physics examples, sequences and worked calculations. Change the inputs, inspect the graphs and follow the links to the written mathematics.</p>
 <p>Python starts when you press Run. The first run downloads about 13 MB of runtime files. The library example also loads NumPy and Komorebi Math. Calculations run in your browser. Use Save draft to keep edited code in this browser, or download it as a Python file. Unsaved code and selected data may be lost when you leave or reload the page.</p>
 <div id="python-picker" class="python-picker" hidden><label for="python-preset">Preload an example</label><select id="python-preset" aria-describedby="python-preset-help">
 RESEARCH_OPTIONS<optgroup label="Worked examples"><option value="packets">Reconstruct an operator</option><option value="refinement">Refine a signal</option><option value="recovery">Test recovery from a summary</option></optgroup>
@@ -124,6 +124,11 @@ RESEARCH_OPTIONS<optgroup label="Worked examples"><option value="packets">Recons
             body += '<p><a href="collection/demonstrations/'+doc+'.html">Hand calculation, expected output and source connections</a></p>'
         elif name in PRESETS:
             body += '<p>'+html.escape(PRESETS[name]['description'])+'</p>'
+            if PRESETS[name].get('guide_page'):
+                guide = 'collection/'+html.escape(PRESETS[name]['guide_page'], quote=True)+'.html'
+                if PRESETS[name].get('guide_anchor'):
+                    guide += '#'+html.escape(PRESETS[name]['guide_anchor'], quote=True)
+                body += '<p><a href="'+guide+'">Function definitions, reading volumes and proof sources</a></p>'
             if PRESETS[name].get('collection_guide'):
                 body += '<p><a href="collection/PHYSICS_COLLECTION.html#'+html.escape(PRESETS[name]['collection_guide'], quote=True)+'">Physics collection, hand calculations and proof sources</a></p>'
             if PRESETS[name].get('guide'):

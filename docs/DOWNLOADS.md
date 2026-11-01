@@ -512,12 +512,6 @@ These are reading selections. TeX may depend on additional files, and the ZIP is
 
 [Reading ZIP and contents](https://KomorebiP.github.io/Operation-KOMOREBI/downloads.html#universal-generative-deformation) · [Work and evidence](works/universal-generative-deformation.md)
 
-<a id="arc-agi2"></a>
-
-## ARC-AGI-2 experiment
-
-[Reading ZIP and contents](https://KomorebiP.github.io/Operation-KOMOREBI/downloads.html#arc-agi2) · [Work and evidence](works/arc-agi2.md)
-
 <a id="large-signal-model"></a>
 
 ## Large Signal Model software

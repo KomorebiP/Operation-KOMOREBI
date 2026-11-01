@@ -28,15 +28,25 @@ These introductory calculations lead into this work’s subject. The source and 
 
 - [24. Calculate coefficients of contracted feedback](../examples/24_CONTRACTED_FEEDBACK.md) · [Terms and source routes](../LEARNING_MAP.md#contracted-feedback)
 
-**Complete demonstration with runnable code:** [Komorebi sequence shapes](../demonstrations/SEQUENCE_SHAPES.md).
+**Complete demonstration with runnable code:** [Komorebi sequence shapes](../demonstrations/SEQUENCE_SHAPES.md) · [Stirling, Bell and Fubini](../demonstrations/STIRLING_BELL_FUBINI.md).
+
+### Explore Special Functions
+
+[Books, five families and the coupled-function lab](../SPECIAL_FUNCTIONS.md)
 
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read
 
+- [Read online: chapters, proof appendices, figures and glossary](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/index.html)
 - [Edition README](../../monographs/special-functions/README.md)
 - [Read PDF](../../monographs/special-functions/books/Special_Functions.pdf)
-- [Visual guide (PDF)](../../monographs/special-functions/research/visual_guide.pdf)
+- [Expanded Visual Guide (current PDF)](../../monographs/special-functions/books/Expanded_Visual_Guide.pdf)
+- [Resolution and Coupled Atlas (current PDF)](../../monographs/special-functions/books/Resolution_and_Coupled_Atlas.pdf)
+- [Packet Realization Core and correction register (PDF)](../../monographs/special-functions/series/Komorebi_Special_Functions_Consolidated_Manuscript_v0.1.pdf)
+- [Original Series Collected Reader (PDF)](../../monographs/special-functions/series/Komorebi_Special_Functions_Complete_Reader_v0.1.pdf)
+- [Earlier visual guide (historical PDF)](../../monographs/special-functions/research/visual_guide.pdf)
+- [Rights and reuse](../../monographs/special-functions/RIGHTS_AND_REUSE.md)
 
 [Back to work navigation](#work-navigation) · [Worked examples](#worked-examples-for-this-work)
 
@@ -45,6 +55,8 @@ Use the links below to read this work and its supporting files. Ctrl+click (Comm
 Find the statement number or section in the [reading files](#read), then read its assumptions and argument. A claim map may cover only part of the written result.
 
 - [Manuscript text (TeX)](../../monographs/special-functions/monograph/main.tex)
+- [Proof map and appendices (TeX)](../../monographs/special-functions/monograph/sections/proof_map.tex)
+- [Coupled formal claim map](../../monographs/special-functions/formalization/Block01/CLAIM_MAP.json)
 
 [Find this work among other written proofs](../browse/PROOFS.md#monographs-special-functions)
 
@@ -54,7 +66,11 @@ Find the statement number or section in the [reading files](#read), then read it
 
 Start with the [edition guide](../../monographs/special-functions/README.md) and the build instructions below. Check the correspondence records to see which written claims the Lean declarations cover. Source links lead to `.lean` files. PDF guides explain the formalization.
 
-- [Lean sources (directory)](../../monographs/special-functions/lean/)
+- [Current formal coverage and replay instructions](../../monographs/special-functions/LEAN_STATUS.md)
+- [Coupled recurrence formal companion and limitations](../../monographs/special-functions/formalization/Block01/REPORT.md)
+- [Finite core and coupled Lean sources (directory)](../../monographs/special-functions/lean/)
+- [Coupled recurrence, local convergence and recovery (Lean)](../../monographs/special-functions/lean/CoupledFormal.lean)
+- [Coupled formal claim map](../../monographs/special-functions/formalization/Block01/CLAIM_MAP.json)
 
 [Find this work among other Lean projects](../browse/LEAN.md#monographs-special-functions)
 
@@ -65,6 +81,7 @@ Start with the [edition guide](../../monographs/special-functions/README.md) and
 These links include code, examples, checks, or build tools. Read the [edition guide](../../monographs/special-functions/README.md) for setup instructions and what each command does. All software is beta and work in progress.
 
 - [Code / scripts: tools](../../monographs/special-functions/tools/)
+- [Exact coupled-function regression (Python)](../../monographs/special-functions/tools/check_coupled_exact.py)
 
 [Find this work among other code projects](../browse/CODE.md#monographs-special-functions)
 

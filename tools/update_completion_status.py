@@ -51,7 +51,7 @@ def render(data):
 
 Recorded {data['as_of']} · **Komorebi P.**
 
-[Browse the collection](BROWSE.md) · [Start here](START_HERE.md) · [Repository home](../README.md)
+[Filter by discipline, completion and proof evidence](https://KomorebiP.github.io/Operation-KOMOREBI/works.html) · [Browse the collection](BROWSE.md) · [Start here](START_HERE.md) · [Repository home](../README.md)
 
 **Completion, Lean coverage and confidence describe different things.** A finished book may contain open research. A checked Lean proof may belong to an unfinished project. Choose a completion stage below, open a work's evidence record, then follow its paper, proofs, Lean, and code link.
 
@@ -120,7 +120,7 @@ To strengthen a formal status, supply the exact claim map, pinned source and env
 
 [Browse the collection](BROWSE.md) · [Status guide](COMPLETION_STATUS.md) · [Finalization queue](FINALIZATION_QUEUE.md)
 
-Recorded {data['as_of']}. Each entry summarizes existing evidence for a particular source edition. These entries do not report new proof reviews or compiler runs. The [status guide](COMPLETION_STATUS.md) defines the labels. Each primary entry links back to the work's paper, proofs, Lean, and code. Supporting collections link to their source files and import receipts. File hashes and the assessed Git revision are recorded in [project-status.json](../manifests/project-status.json).
+Base assessment recorded {data['as_of']}. Each entry summarizes dated evidence for a particular source edition, with later companion checks linked separately. Rendering this catalogue does not run Lean or review proofs. The [status guide](COMPLETION_STATUS.md) defines the labels. Each primary entry links back to the work's paper, proofs, Lean, and code. Supporting collections link to their source files and import receipts. File hashes and the assessed Git revision are recorded in [project-status.json](../manifests/project-status.json).
 
 '''
     for row in primary:
@@ -151,6 +151,8 @@ Recorded {data['as_of']}. Each entry summarizes existing evidence for a particul
             catalogue += link('Latest written review and its scope', row['review_report'], page) + '\n\n'
         if 'software_verification' in row:
             catalogue += link('Software check and tested scope', row['software_verification']['path'], page) + ' (separate from Lean evidence)\n\n'
+        if 'formal_verification' in row:
+            catalogue += link('Separate Lean companion replay and exact scope', row['formal_verification']['path'], page) + '\n\n'
         evidence = ' · '.join(link(e['path'][len(row['destination'])+1:] if e['path'].startswith(row['destination']+'/') else 'import receipt (availability only)', e['path'], page) for e in row['evidence'])
         catalogue += link('Source directory', row['destination']+'/', page) + ' · ' + evidence + '\n\n'
     catalogue += '''## Supporting and historical collections
@@ -371,6 +373,8 @@ def validate(root, data, git):
     pinned = git_tree(root, git, data['source_revision'])
     current = git_tree(root, git, 'HEAD')
     validate_editorial_editions(root, data, current)
+    from formal_companions import validate_formal_companions
+    validate_formal_companions(root, data, current)
     validate_reader_reviews(root, data, available, current, git)
     from proof_review_coverage import validate_coverage
     for binding in data.get('proof_review_coverage', []):

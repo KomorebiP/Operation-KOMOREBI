@@ -678,14 +678,6 @@ A detailed statement index has not yet been transcribed for this work. Follow it
 
 [Written proofs](works/universal-generative-deformation.md#written-proofs) · [Lean](works/universal-generative-deformation.md#lean) · [Code](works/universal-generative-deformation.md#code) · [Evidence](works/universal-generative-deformation.md#evidence)
 
-<a id="arc-agi2"></a>
-
-## ARC-AGI-2 experiment
-
-A detailed statement index has not yet been transcribed for this work. Follow its written proofs and any linked correspondence map. This does not imply that a map or proof is absent from the source edition.
-
-[Written proofs](works/arc-agi2.md#written-proofs) · [Lean](works/arc-agi2.md#lean) · [Code](works/arc-agi2.md#code) · [Evidence](works/arc-agi2.md#evidence)
-
 <a id="large-signal-model"></a>
 
 ## Large Signal Model software

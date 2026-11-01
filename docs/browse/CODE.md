@@ -233,6 +233,7 @@ Jump to a work:
 ### [Special Functions](../works/monographs-special-functions.md#code)
 
 - [Code / scripts: tools](../../monographs/special-functions/tools/)
+- [Exact coupled-function regression (Python)](../../monographs/special-functions/tools/check_coupled_exact.py)
 - [Return to this work’s code section](../works/monographs-special-functions.md#code)
 - [Work overview](../works/monographs-special-functions.md)
 - [Status and evidence](../STATUS_CATALOG.md#monographs-special-functions)
@@ -943,7 +944,6 @@ Jump to a work:
 - [J-Space Causal Lab](#experiments-jspace-causal-lab)
 - [J-Space Collections](#experiments-jspace-collections)
 - [Workspace Incubator](#experiments-workspace-incubator)
-- [ARC-AGI-2 experiment](#arc-agi2)
 
 <a id="experiments-agent-dynamics"></a>
 
@@ -998,17 +998,6 @@ Jump to a work:
 - [Return to this work’s code section](../works/experiments-workspace-incubator.md#code)
 - [Work overview](../works/experiments-workspace-incubator.md)
 - [Status and evidence](../STATUS_CATALOG.md#experiments-workspace-incubator)
-
-[Back to collection menu](#collections)
-
-<a id="arc-agi2"></a>
-
-### [ARC-AGI-2 experiment](../works/arc-agi2.md#code)
-
-- [Script: prepare_limitfix.py](../../experiments/arc-agi2/prepare_limitfix.py)
-- [Return to this work’s code section](../works/arc-agi2.md#code)
-- [Work overview](../works/arc-agi2.md)
-- [Status and evidence](../STATUS_CATALOG.md#arc-agi2)
 
 [Back to collection menu](#collections)
 

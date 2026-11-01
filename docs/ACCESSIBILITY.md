@@ -30,13 +30,24 @@ Long HTML guides have a collapsed **On this page** list of section headings.
 Open it and choose a section to jump there. Keyboard focus follows the jump,
 so the next Tab continues from that section. These section links also work
 without JavaScript. Work pages keep their existing paper, proof, Lean, code
-and example routes. Readable chapters keep their chapter contents.
+and example routes.
 
-The HTML chapters of Papers I–VII open with repeated source and reference links
-hidden from the reading flow. **Show source and reference links** reveals each
+Online reading editions have the same chapter and part controls at the top and
+bottom of each reading page. **Previous** and **Next** show the destination title.
+The position indicator and **Chapters & parts** menu show the reading sequence,
+with the current page marked. Bibliographies are included in that sequence;
+partial editions link onward to their full manuscript sources.
+
+**On this page** expands the current chapter's section list. **PDF, source &
+reading options** groups the secondary links by purpose. **Start reading** jumps
+past these controls to the text. All of these links and disclosures work with
+the keyboard and without JavaScript.
+
+The HTML chapters open with repeated passage links hidden from the reading flow.
+Inside **PDF, source & reading options**, **Show source and reference links** reveals each
 passage’s permalink, source line, claim record and related resources. The choice
 is remembered in this browser when local storage is available. **Read proof**,
-**Back to statement**, contents and section links remain visible in either view.
+**Back to statement**, and **On this page** links remain visible in either view.
 **Skip contents and start reading** moves directly to the chapter text. Without
 JavaScript, all passage links remain visible and usable.
 
@@ -46,8 +57,8 @@ record, with **Read proof** beside it when a proof is recorded. The list works
 with the keyboard and without JavaScript.
 
 Section controls are ordinary links within the chapter, so they do not add a
-repeated navigation landmark for every heading. Chapter contents, neighbouring
-chapters and work routes retain their named navigation regions.
+repeated navigation landmark for every heading. Chapter contents, chapter and
+part controls, and work routes retain their named navigation regions.
 
 In-page links to chapters, statements, proofs and source lines also move keyboard
 focus to the destination. Any enclosing contents disclosure opens when needed.
@@ -377,7 +388,11 @@ published document against its source identity. PDF scripting is disabled.
 Paper VI has 46 manuscript sections across Parts I–III, orientation pages and
 a bibliography in HTML. Its ordinary, E and R section numbering follows the
 retained edition. Statements link to their recorded proofs and source lines.
-The formalization ledger has a caption and row headers for its 33 scoped
-results. Figures keep the original captions; 15 PDF-only figures have
-source-bound web previews. The worked visual atlas remains in the PDF. These
+The manuscript dictionaries and numerical tables have row headers. The
+formalization ledger has a caption and row headers for its 33 scoped results. Figures keep the original captions; 15 PDF-only figures have
+source-bound web previews. The worked visual atlas has an index of all 42
+plates. V1–V6 now have HTML
+reading pages with original drawings, selectable equations, text descriptions
+and complete drawing-label transcripts. Matrices and bar values use tables
+with row and column headers. V7–V42 open at their exact PDF pages. These
 reading changes do not add a proof audit or a fresh Lean replay.

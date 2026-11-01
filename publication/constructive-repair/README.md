@@ -70,7 +70,7 @@ python -m pip install setuptools==84.1.0 wheel==0.48.0
 python -B tools/constructive_repair_release.py qualify --root . --output ../fresh-repair-qualification
 ```
 
-Use the interpreter/platform being evaluated and a new output directory. The qualification runner makes no network requests. The original installed-wheel acceptance runner creates its own environment and installs with `--no-index --no-deps`. A machine that cannot create the symlink fixtures reports failure; the controls are not converted into passing skips.
+Use the interpreter/platform being evaluated and a new output directory. The runner supplies a canonical temporary directory so Windows path checks do not compare long names with short-name aliases. The qualification runner makes no network requests. The original installed-wheel acceptance runner creates its own environment and installs with `--no-index --no-deps`. A machine that cannot create the symlink fixtures reports failure; the controls are not converted into passing skips.
 
 For a source checkout, use the same command from the collection root with `--revision` set to its exact Git commit. `--build-only` prepares and checks a wheel without reporting acceptance or producing qualified release assets.
 

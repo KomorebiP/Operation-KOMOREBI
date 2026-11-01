@@ -1,6 +1,6 @@
 # Introductory example coverage by work
 
-23 of 91 work pages have introductory example routes in this guide. 68 do not yet have a tutorial linked here. Their source editions may contain their own examples.
+23 of 90 work pages have introductory example routes in this guide. 67 do not yet have a tutorial linked here. Their source editions may contain their own examples.
 
 This is a reading aid. An example route does not measure proof completion, Lean coverage or confidence. Those records remain on each work page.
 
@@ -112,6 +112,5 @@ This is a reading aid. An example route does not measure proof completion, Lean 
 - [J-Space Causal Lab](works/experiments-jspace-causal-lab.md#read): No introductory tutorial linked in this guide yet.
 - [J-Space Collections](works/experiments-jspace-collections.md#read): No introductory tutorial linked in this guide yet.
 - [Workspace Incubator](works/experiments-workspace-incubator.md#read): No introductory tutorial linked in this guide yet.
-- [ARC-AGI-2 experiment](works/arc-agi2.md#read): No introductory tutorial linked in this guide yet.
 
 [Back to the topic map](LEARNING_MAP.md) · [All examples](HAND_WORKED_EXAMPLES.md)

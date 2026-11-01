@@ -17,7 +17,7 @@ Recorded 2026-10-27. This queue tracks documentation, research, formalization an
 | [F05](#f05) | open | Replay editions that currently rely on inherited formal evidence |
 | [F06](#f06) | open | Resolve uncompiled or unverified Lean source |
 | [F07](#f07) | open | Assess the two reader-only entries |
-| [F08](#f08) | open | Close the Constructive Repair release-candidate checklist |
+| [F08](#f08) | done | Close the Constructive Repair release-candidate checklist |
 | [F09](#f09) | done | Consolidate Streaming SKAT version navigation |
 | [F10](#f10) | open | Complete bounded proof and submission reviews |
 | [F11](#f11) | open | Extend selected formal cores only against explicit claim maps |
@@ -56,6 +56,22 @@ All primary components receive distinct stage, Lean, confidence, scope, evidence
 **Done when:** Every selected component is represented once. Supporting sources remain separately classified.
 
 Coverage: all primary entries in the [status guide](COMPLETION_STATUS.md).
+
+<a id="f08"></a>
+
+<a id="f08--close-the-constructive-repair-release-candidate-checklist"></a>
+
+### F08: Close the Constructive Repair release-candidate checklist
+
+**Status: done**
+
+The mathematical contract and kernel/Python distinction must survive package finalization.
+
+**Done when:** Repeat the documented package checks on supported platforms, publish an exact source-to-wheel mapping, and reference the current collection license.
+
+**Progress:** 30 October 2026: published the [qualified beta](https://github.com/KomorebiP/Operation-KOMOREBI/releases/tag/constructive-repair-1.0.0rc3-qualified-e58a66e5e5fc). Linux / CPython 3.13.5 passed all 100 release tests; Windows Server 2025 / CPython 3.13.5 passed 97 with the three named POSIX-only skips. Both platforms passed the two symlink controls, 134 engine tests, and 72 installed cases with 369 probe checks. The final gate verified both source archives and byte-identical wheels bound to the seven original runtime files. Current license/README metadata is recorded in a separate build overlay. All seven public assets were downloaded and hash-checked, and both extracted archives passed their verifier. Original source and earlier failure records are preserved. No fresh Lean replay is claimed.
+
+Related works and source records: [Constructive Repair](works/constructive-repair.md).
 
 <a id="f09"></a>
 
@@ -145,6 +161,8 @@ Source text or static inventories are not compiler acceptance.
 
 **Done when:** Compile the exact intended source with pinned dependencies, record diagnostics and axioms, and map accepted statements to the manuscript. Retain missing mathematical inputs.
 
+**Progress:** Resolution Semantics now has a separate Lean 4.24.0 companion: 15 unchanged scaffold statements and 19 two-world declarations compile, both obstruction theorems are axiom-free, and three rejection controls pass. The original source remains preserved. The wider paper, Hodge and Stratified Universality obligations remain open.
+
 Related works and source records: [Resolution Semantics](works/resolution-semantics.md) · [Hodge: source and evidence](works/hodge-reader.md) · [Stratified Universality](works/stratified-universality.md).
 
 <a id="f07"></a>
@@ -162,22 +180,6 @@ Availability alone does not establish an editorial or mathematical completion le
 **Progress:** The machine-native mathematics essay has a separately identified 25-page reading edition with editable sources, inspected typesetting, local mathematical clarifications, and source-reconciled accounts of the current papers and selected companion studies. Its scientific confidence remains unassessed. The original editable source, the Gaussian Elimination entry, and independent scientific review requirements remain open.
 
 Related works and source records: [Gaussian Elimination: collected guide](works/gaussian-elimination-guide.md) · [The Possibility for a Machine Native Mathematics](works/machine-native-mathematics-essay.md).
-
-<a id="f08"></a>
-
-<a id="f08--close-the-constructive-repair-release-candidate-checklist"></a>
-
-### F08: Close the Constructive Repair release-candidate checklist
-
-**Status: open**
-
-The mathematical contract and kernel/Python distinction must survive package finalization.
-
-**Done when:** Repeat the documented package checks on supported platforms, publish an exact source-to-wheel mapping, and reference the current collection license.
-
-**Progress:** All 2,254 selected source files were SHA-256 checked. A rebuilt wheel maps exactly to seven committed runtime files. Windows 11 / CPython 3.12.14 passed 134 engine tests and 72 installed cases. The 100-test release suite had 95 passes, 3 POSIX/Linux-only skips and 2 symlink-fixture setup errors, so full qualification remains open. The package guide links the current collection license and preserves the original records.
-
-Related works and source records: [Constructive Repair](works/constructive-repair.md).
 
 ## Proof and submission review
 
@@ -227,7 +229,7 @@ Thirteen additional collections were imported before the availability and assess
 
 **Progress:** All 166 component receipts now reconcile with the committed paths, blob identities, modes, and aggregate record digests. The 13 new records remain scientifically unassessed.
 
-Related works and source records: [ARC-AGI-2 experiment](works/arc-agi2.md) · [Offline handoff](STATUS_CATALOG.md#arc-agi2-offline-handoff) · [Original solver](STATUS_CATALOG.md#arc-agi2-original-solver) · [Public evaluation](STATUS_CATALOG.md#arc-agi2-public-evaluation) · [Training evidence](STATUS_CATALOG.md#arc-agi2-training-evidence) · [Recovery v14](STATUS_CATALOG.md#certified-inference-recovery-v14-supporting-sources) · [Large Signal Model software](works/large-signal-model.md) · [Supporting sources](STATUS_CATALOG.md#large-signal-model-ancestry-supporting-sources) · [Machine Theory Compendium](works/machine-theory-compendium.md) · [Physics: curvature states](works/physics-curvature-states.md) · [Physics: energy and backreaction](works/physics-energy-backreaction.md) · [Physics: origin locking](works/physics-origin-locking.md) · [Realization Calculus: twin edition](works/realization-calculus-twin-edition.md).
+Related works and source records: [Recovery v14](STATUS_CATALOG.md#certified-inference-recovery-v14-supporting-sources) · [Large Signal Model software](works/large-signal-model.md) · [Supporting sources](STATUS_CATALOG.md#large-signal-model-ancestry-supporting-sources) · [Machine Theory Compendium](works/machine-theory-compendium.md) · [Physics: curvature states](works/physics-curvature-states.md) · [Physics: energy and backreaction](works/physics-energy-backreaction.md) · [Physics: origin locking](works/physics-origin-locking.md) · [Realization Calculus: twin edition](works/realization-calculus-twin-edition.md).
 
 ## Formal, mathematical and empirical development
 

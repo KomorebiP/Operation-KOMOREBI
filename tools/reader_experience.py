@@ -12,6 +12,8 @@ GUIDED_DEMONSTRATIONS = {
     'docs/demonstrations/RECOVERY.md': ('Test recovery from a summary', ['paper-iii','realization-boundaries']),
     'docs/demonstrations/SEQUENCE_SHAPES.md': ('Komorebi sequence shapes', ['paper-iv','monographs-special-functions']),
     'docs/demonstrations/EULER_PACKETS.md': ('Euler packets, polynomials and residuals', ['paper-iii','paper-iv','paper-ix','euler-signal-bridge','machine-native-mathematics-essay']),
+    'docs/demonstrations/WAVELET_POLYPHASE.md': ('Wavelets and polyphase transfer', ['paper-v','information-realization']),
+    'docs/demonstrations/STIRLING_BELL_FUBINI.md': ('Stirling, Bell and Fubini', ['monographs-special-functions']),
 }
 
 
@@ -60,6 +62,8 @@ def introduction(root, component, assessment, page):
         demonstrations=[link(title,path,page) for path,(title,works) in GUIDED_DEMONSTRATIONS.items() if component['id'] in works]
         if demonstrations:
             text+='**Complete demonstration with runnable code:** '+' · '.join(demonstrations)+'.\n\n'
+    if component['id']=='monographs-special-functions':
+        text+='### Explore Special Functions\n\n'+link('Books, five families and the coupled-function lab','docs/SPECIAL_FUNCTIONS.md',page)+'\n\n'
     return text
 
 
@@ -123,6 +127,7 @@ def render_reader_pages(root, components, assessments):
     out['docs/READING_ROUTES.md']=out['docs/READING_ROUTES.md'].replace('\n- [New to Komorebi]', '\nFor the collection as a whole, read the [project overview](START_HERE.md) and [project map](PROJECT_MAP.md). For the research preview, follow [Euler numbers through packets, polynomials, and residuals](demonstrations/EULER_PACKETS.md). The [elementary demonstrations](DEMONSTRATIONS.md) offer shorter introductions.\n\n- [New to Komorebi]',1)
     out['docs/GLOSSARY.md']=render_glossary(config)
     out['docs/READING_ROUTES.md']+='\n[Explore the physics collection](PHYSICS_COLLECTION.md): packet currents, quantum phase, continuum approximation, special functions and research studies.\n'
+    out['docs/READING_ROUTES.md']+='\n[Explore Special Functions](SPECIAL_FUNCTIONS.md): current reading volumes, five families, an exact coupled-function lab and formal evidence.\n'
     downloads='# Download one work\n\nThe [website downloads]('+SITE+'downloads.html) provide a separate reading ZIP for each work. Each contains its selected reading files, linked claim guides, available license notices, a source revision and SHA-256 checksums. The website lists file counts and sizes before download.\n\nThese are reading selections. TeX may depend on additional files, and the ZIP is not a complete Lean or software build. Use the source instructions below for a full component.\n\n'
     downloads=downloads.replace('These are reading selections.', 'Use [Build your own ZIP]('+SITE+'downloads.html#build-a-zip) to combine files from several works. Start with reading files or PDFs, then adjust individual manuscript sources, Lean files, code, guides and worked examples. The selector shows the file count and size, adds available license notices, and checks each file against its recorded SHA-256 checksum. Choose Prepare ZIP, then Save ZIP when it is ready. You can cancel preparation without losing your choices. Custom ZIPs support up to 200 MiB of source files and are prepared in your browser. The ready-made ZIPs also work without JavaScript.\n\nThese are reading selections.',1)
     claim_data=json.loads((root/'manifests/claim-navigation.json').read_bytes())

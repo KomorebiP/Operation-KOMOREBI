@@ -1,8 +1,8 @@
 # Component index
 
-Recorded 2026-10-27.
+Recorded 2026-10-30.
 
-91 primary components and 75 supporting source collections are present with verified file receipts. The receipts cover **139,002 distinct source files**. Older source imports remain separately available.
+90 primary components and 71 supporting source collections are present with verified file receipts. The receipts cover **138,326 distinct source files**. Older source imports remain separately available.
 
 [Browse by completion stage, Lean coverage and confidence](COMPLETION_STATUS.md) · [Cleanup and finalization queue](FINALIZATION_QUEUE.md). Status labels describe the scope of each linked record. File counts do not measure proof or completion.
 
@@ -13,17 +13,17 @@ For direct PDFs, manuscript text, Lean, and code, use the [clickable browse hub]
 | Component | Completion | Lean | Confidence basis | Source files | Receipt |
 |---|---|---|---|---|---|
 | [Paper I: Typed Operator Systems, Seed Rank, and Exact Packet Coordinates](works/paper-i.md) | [Scoped release](STATUS_CATALOG.md#paper-i) | Declared contract recorded | Recorded formal evidence | 2,085 | [file record](../manifests/source-imports/paper-i.json) |
-| [Paper II: Refinement Towers, Weighted Transfer, and Integral Separation of Operator Packets](works/paper-ii.md) | [Scoped release](STATUS_CATALOG.md#paper-ii) | Declared contract recorded | Recorded formal evidence | 3,335 | [file record](../manifests/source-imports/paper-ii.json) |
-| [Paper III: Typed Transfer, Nonlinear Packets, and Obstruction Theory](works/paper-iii.md) | [Reading edition complete](STATUS_CATALOG.md#paper-iii) | Selected results recorded | Recorded formal evidence | 2,174 | [file record](../manifests/source-imports/paper-iii.json) |
-| [Paper IV: Cyclic Analytic Functions, Reciprocal Families, and Spectral Zero Data](works/paper-iv.md) | [Reading edition complete](STATUS_CATALOG.md#paper-iv) | Selected results recorded | Recorded formal evidence | 1,243 | [file record](../manifests/source-imports/paper-iv.json) |
-| [Paper V: Polyphase Signal Calculus](works/paper-v.md) | [Reading edition complete](STATUS_CATALOG.md#paper-v) | Inherited / related evidence | Historical formal evidence | 1,524 | [file record](../manifests/source-imports/paper-v.json) |
-| [Paper VI: Transfer Semigroups: Stochastic, Bayesian, Fractional, and PDE Realizations](works/paper-vi.md) | [Reading edition complete](STATUS_CATALOG.md#paper-vi) | Inherited / related evidence | Historical formal evidence | 2,148 | [file record](../manifests/source-imports/paper-vi.json) |
-| [Paper VII: Quantum Seed Calculus](works/paper-vii.md) | [Reading edition complete](STATUS_CATALOG.md#paper-vii) | Inherited / related evidence | Historical formal evidence | 3,300 | [file record](../manifests/source-imports/paper-vii.json) |
-| [Paper VIII: Packet Operator Algorithms, Exact Compilation, and GPU Realization](works/paper-viii.md) | [Reading edition complete](STATUS_CATALOG.md#paper-viii) | Inherited / related evidence | Historical formal evidence | 2,737 | [file record](../manifests/source-imports/paper-viii.json) |
+| [Paper II: Refinement Towers, Weighted Transfer, and Integral Separation of Operator Packets](works/paper-ii.md) | [Scoped release](STATUS_CATALOG.md#paper-ii) | Declared contract recorded | Recorded formal evidence | 3,334 | [file record](../manifests/source-imports/paper-ii.json) |
+| [Paper III: Typed Transfer, Nonlinear Packets, and Obstruction Theory](works/paper-iii.md) | [Reading edition complete](STATUS_CATALOG.md#paper-iii) | Selected results recorded | Recorded formal evidence | 2,172 | [file record](../manifests/source-imports/paper-iii.json) |
+| [Paper IV: Cyclic Analytic Functions, Reciprocal Families, and Spectral Zero Data](works/paper-iv.md) | [Reading edition complete](STATUS_CATALOG.md#paper-iv) | Selected results recorded | Recorded formal evidence | 1,242 | [file record](../manifests/source-imports/paper-iv.json) |
+| [Paper V: Polyphase Signal Calculus](works/paper-v.md) | [Reading edition complete](STATUS_CATALOG.md#paper-v) | Inherited / related evidence | Historical formal evidence | 1,523 | [file record](../manifests/source-imports/paper-v.json) |
+| [Paper VI: Transfer Semigroups: Stochastic, Bayesian, Fractional, and PDE Realizations](works/paper-vi.md) | [Reading edition complete](STATUS_CATALOG.md#paper-vi) | Inherited / related evidence | Historical formal evidence | 2,146 | [file record](../manifests/source-imports/paper-vi.json) |
+| [Paper VII: Quantum Seed Calculus](works/paper-vii.md) | [Reading edition complete](STATUS_CATALOG.md#paper-vii) | Inherited / related evidence | Historical formal evidence | 3,299 | [file record](../manifests/source-imports/paper-vii.json) |
+| [Paper VIII: Packet Operator Algorithms, Exact Compilation, and GPU Realization](works/paper-viii.md) | [Reading edition complete](STATUS_CATALOG.md#paper-viii) | Inherited / related evidence | Historical formal evidence | 2,735 | [file record](../manifests/source-imports/paper-viii.json) |
 | [Paper IX: Arithmetic Packets, Dyadic Towers, and Local Polynomial Deformation](works/paper-ix.md) | [Reading edition complete](STATUS_CATALOG.md#paper-ix) | Selected results recorded | Recorded formal evidence | 3,613 | [file record](../manifests/source-imports/paper-ix.json) |
-| [Paper X: Universal Residual Seeds and Conditional Occupied-System Completion](works/paper-x.md) | [Scoped release](STATUS_CATALOG.md#paper-x) | Declared contract recorded | Recorded formal evidence | 4,179 | [file record](../manifests/source-imports/paper-x.json) |
+| [Paper X: Universal Residual Seeds and Conditional Occupied-System Completion](works/paper-x.md) | [Scoped release](STATUS_CATALOG.md#paper-x) | Declared contract recorded | Recorded formal evidence | 4,178 | [file record](../manifests/source-imports/paper-x.json) |
 | [Paper XI: Packets, Arithmetic Realization, and Conditional Comparison](works/paper-xi.md) | [Reading edition complete](STATUS_CATALOG.md#paper-xi) | Selected results recorded | Recorded formal evidence | 2,524 | [file record](../manifests/source-imports/paper-xi.json) |
-| [Paper XII: Patching Support, Hecke Packets, and Conditional Automorphic Completion](works/paper-xii.md) | [Reading edition complete](STATUS_CATALOG.md#paper-xii) | Inherited / related evidence | Historical formal evidence | 3,618 | [file record](../manifests/source-imports/paper-xii.json) |
+| [Paper XII: Patching Support, Hecke Packets, and Conditional Automorphic Completion](works/paper-xii.md) | [Reading edition complete](STATUS_CATALOG.md#paper-xii) | Inherited / related evidence | Historical formal evidence | 3,614 | [file record](../manifests/source-imports/paper-xii.json) |
 
 ## Monographs and companion volumes
 
@@ -54,7 +54,7 @@ For direct PDFs, manuscript text, Lean, and code, use the [clickable browse hub]
 | Component | Completion | Lean | Confidence basis | Source files | Receipt |
 |---|---|---|---|---|---|
 | [Certified Inference](works/certified-inference.md) | [Scoped release](STATUS_CATALOG.md#certified-inference) | Declared contract recorded | Recorded formal evidence | 939 | [file record](../manifests/source-imports/certified-inference.json) |
-| [Constructive Repair](works/constructive-repair.md) | [Active development](STATUS_CATALOG.md#constructive-repair) | Selected results recorded | Recorded formal evidence | 2,254 | [file record](../manifests/source-imports/constructive-repair.json) |
+| [Constructive Repair](works/constructive-repair.md) | [Scoped release](STATUS_CATALOG.md#constructive-repair) | Selected results recorded | Recorded formal evidence | 2,254 | [file record](../manifests/source-imports/constructive-repair.json) |
 | [RRCT](works/packages-rrct.md) | [Experiment / prototype](STATUS_CATALOG.md#packages-rrct) | No Lean claim | Experimental evidence | 185 | [file record](../manifests/source-imports/packages-rrct.json) |
 | [Universal Generative Deformation Calculus](works/universal-generative-deformation.md) | [Experiment / prototype](STATUS_CATALOG.md#universal-generative-deformation) | No Lean claim | Experimental evidence | 144 | [file record](../manifests/source-imports/universal-generative-deformation.json) |
 | [Large Signal Model software](works/large-signal-model.md) | [Needs assessment](STATUS_CATALOG.md#large-signal-model) | Not assessed | Unassessed | 443 | [file record](../manifests/source-imports/large-signal-model.json) |
@@ -68,7 +68,6 @@ For direct PDFs, manuscript text, Lean, and code, use the [clickable browse hub]
 | [J-Space Causal Lab](works/experiments-jspace-causal-lab.md) | [Experiment / prototype](STATUS_CATALOG.md#experiments-jspace-causal-lab) | No Lean claim | Experimental evidence | 224 | [file record](../manifests/source-imports/experiments-jspace-causal-lab.json) |
 | [J-Space Collections](works/experiments-jspace-collections.md) | [Experiment / prototype](STATUS_CATALOG.md#experiments-jspace-collections) | No Lean claim | Experimental evidence | 53 | [file record](../manifests/source-imports/experiments-jspace-collections.json) |
 | [Workspace Incubator](works/experiments-workspace-incubator.md) | [Experiment / prototype](STATUS_CATALOG.md#experiments-workspace-incubator) | No Lean claim | Experimental evidence | 689 | [file record](../manifests/source-imports/experiments-workspace-incubator.json) |
-| [ARC-AGI-2 experiment](works/arc-agi2.md) | [Needs assessment](STATUS_CATALOG.md#arc-agi2) | Not assessed | Unassessed | 69 | [file record](../manifests/source-imports/arc-agi2.json) |
 
 ## Research programs
 
@@ -114,7 +113,7 @@ For direct PDFs, manuscript text, Lean, and code, use the [clickable browse hub]
 | [The Possibility for a Machine Native Mathematics](works/machine-native-mathematics-essay.md) | [Reading edition complete](STATUS_CATALOG.md#machine-native-mathematics-essay) | No Lean claim | Unassessed | 1 | [file record](../manifests/source-imports/machine-native-mathematics-essay.json) |
 | [Model-Theory Normalization](works/model-theory-normalization.md) | [Active development](STATUS_CATALOG.md#model-theory-normalization) | Selected results recorded | Recorded formal evidence | 285 | [file record](../manifests/source-imports/model-theory-normalization.json) |
 | [Prime-Contact Coherence Calculus](works/prime-contact-coherence.md) | [Reading edition complete](STATUS_CATALOG.md#prime-contact-coherence) | No Lean claim | Recorded written review | 51 | [file record](../manifests/source-imports/prime-contact-coherence.json) |
-| [Resolution Semantics](works/resolution-semantics.md) | [Active development](STATUS_CATALOG.md#resolution-semantics) | Source available, no current pass | Written / finite evidence | 14 | [file record](../manifests/source-imports/resolution-semantics.json) |
+| [Resolution Semantics](works/resolution-semantics.md) | [Active development](STATUS_CATALOG.md#resolution-semantics) | Selected results recorded | Recorded formal evidence | 14 | [file record](../manifests/source-imports/resolution-semantics.json) |
 | [Seeded Two-Axis Calculus](works/seeded-two-axis.md) | [Active development](STATUS_CATALOG.md#seeded-two-axis) | No Lean claim | Written / finite evidence | 62 | [file record](../manifests/source-imports/seeded-two-axis.json) |
 | [Signal Reconstruction](works/signal-reconstruction.md) | [Reading edition complete](STATUS_CATALOG.md#signal-reconstruction) | Inherited / related evidence | Historical formal evidence | 1,155 | [file record](../manifests/source-imports/signal-reconstruction.json) |
 | [Stratified Universality](works/stratified-universality.md) | [Reading edition complete](STATUS_CATALOG.md#stratified-universality) | Source available, no current pass | Recorded written review | 476 | [file record](../manifests/source-imports/stratified-universality.json) |
@@ -130,7 +129,6 @@ These directories retain distinct manuscripts, formal projects, tools, and exper
 
 | Collection | Source components | File records |
 |---|---|---|
-| [experiments/arc-agi2/supporting-sources](../experiments/arc-agi2/supporting-sources/) | 4 | 590 |
 | [experiments/jspace-collections/supporting-sources](../experiments/jspace-collections/supporting-sources/) | 2 | 135 |
 | [experiments/rrct-lineage/komorebi-nested-cognition-limited-test](../experiments/rrct-lineage/komorebi-nested-cognition-limited-test/) | 1 | 13 |
 | [experiments/rrct-lineage/rrct-v0-41-1-temporal-identity-frozen-exploratory-compact-1](../experiments/rrct-lineage/rrct-v0-41-1-temporal-identity-frozen-exploratory-compact-1/) | 1 | 397 |
@@ -156,7 +154,7 @@ These directories retain distinct manuscripts, formal projects, tools, and exper
 | [packages/large-signal-model/supporting-sources](../packages/large-signal-model/supporting-sources/) | 1 | 119 |
 | [papers/paper-i/current/supporting-sources](../papers/paper-i/current/supporting-sources/) | 1 | 966 |
 | [papers/paper-iv/current/supporting-sources](../papers/paper-iv/current/supporting-sources/) | 1 | 3 |
-| [papers/paper-ix/current/supporting-sources](../papers/paper-ix/current/supporting-sources/) | 1 | 3,274 |
+| [papers/paper-ix/current/supporting-sources](../papers/paper-ix/current/supporting-sources/) | 1 | 3,273 |
 | [papers/paper-v/current/supporting-sources](../papers/paper-v/current/supporting-sources/) | 1 | 3 |
 | [papers/paper-x/current/supporting-sources](../papers/paper-x/current/supporting-sources/) | 1 | 102 |
 | [papers/paper-xi/current/supporting-sources](../papers/paper-xi/current/supporting-sources/) | 1 | 680 |
@@ -174,7 +172,7 @@ These directories retain distinct manuscripts, formal projects, tools, and exper
 | [research/representation-calculus/supporting-sources](../research/representation-calculus/supporting-sources/) | 1 | 315 |
 | [research/seeded-two-axis/supporting-sources](../research/seeded-two-axis/supporting-sources/) | 1 | 121 |
 | [research/stratified-universality/supporting-sources](../research/stratified-universality/supporting-sources/) | 1 | 5 |
-| [research/strong-artin-reader/supporting-sources](../research/strong-artin-reader/supporting-sources/) | 1 | 626 |
+| [research/strong-artin-reader/supporting-sources](../research/strong-artin-reader/supporting-sources/) | 1 | 625 |
 
 The [machine-readable component index](../manifests/source-components.json) records every selected component and its actual availability. All software is beta and work in progress. File counts describe publication units and do not count theorems or completed research goals.
 
