@@ -48,6 +48,13 @@ jobs:
           leanchecker: 'false'
           nanoda: 'false'
           axiom-audit: 'false'
+      - name: Expose Elan shims to Windows run steps
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          # lean-action adds an MSYS path; PowerShell needs the native path.
+          $elanBin = Join-Path $env:USERPROFILE '.elan\bin'
+          Add-Content -LiteralPath $env:GITHUB_PATH -Value $elanBin -Encoding utf8
       - name: Build the pinned companion
         run: lake build
       - name: Fresh proof objects, axiom inventories and rejection controls
