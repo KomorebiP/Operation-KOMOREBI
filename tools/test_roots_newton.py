@@ -40,6 +40,45 @@ class RootsUnityExactTests(unittest.TestCase):
                          (Fraction(0),Fraction(9),Fraction(-35),Fraction(35),
                           Fraction(-10),Fraction(1)))
 
+    def test_both_projectors_are_valid_but_not_identical(self):
+        f=M.power(5)
+        ordinary=[M.naive_power_project(f,3,r) for r in range(3)]
+        transported=[M.project_newton(f,3,r) for r in range(3)]
+        self.assertEqual(ordinary,[(Fraction(0),),(Fraction(0),),f])
+        self.assertEqual([M.evaluate(p,4) for p in ordinary],[0,0,1024])
+        self.assertEqual([M.evaluate(p,4) for p in transported],[600,244,180])
+        self.assertEqual(
+            M.add(ordinary[0],M.add(ordinary[1],ordinary[2])),f)
+        for r in range(3):
+            for target in range(3):
+                self.assertEqual(
+                    M.naive_power_project(ordinary[r],3,target),
+                    ordinary[r] if target==r else (Fraction(0),))
+
+    def test_integral_stirling_inverse_and_mod_three_polynomial_scope(self):
+        first=M.signed_stirling_first(8)
+        second=M.stirling_second(8)
+        for p in (2,3,5):
+            for n in range(9):
+                for k in range(n+1):
+                    self.assertEqual(
+                        sum(first[n][j]*second[j][k]
+                            for j in range(k,n+1)) % p, int(n==k))
+                    self.assertEqual(
+                        sum(second[n][j]*first[j][k]
+                            for j in range(k,n+1)) % p, int(n==k))
+        for degree in range(9):
+            f=M.power(degree)
+            self.assertEqual(
+                M.mod_polynomial(M.delta(M.delta(M.delta(f))),3),(0,))
+            self.assertEqual(
+                M.mod_polynomial(M.translate(f,3),3),
+                M.mod_polynomial(f,3))
+        v=M.falling(3)
+        self.assertNotEqual(M.mod_polynomial(v,3),(0,))
+        self.assertTrue(all(M.evaluate(v,a).numerator%3==0
+                            for a in range(3)))
+
     def test_exact_fourier_trace_and_general_polynomial_projections(self):
         for modulus in range(2,8):
             for k in range(11):
@@ -237,7 +276,7 @@ class RootsUnityExactTests(unittest.TestCase):
             "fourier","refinement","matrix","star","boundaries",
             "enumeration","spectral","packet_egf",
             "translation_anchor","translation","translation_blocks",
-            "egf_carry","characteristic",
+            "egf_carry","characteristic","power_projector","modular_basis",
         })
         with self.assertRaises(ValueError):
             M.project_newton(M.power(2),0,0)
