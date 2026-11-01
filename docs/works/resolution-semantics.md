@@ -8,15 +8,15 @@
 
 **Completion:** Active development · **Lean:** Selected results recorded · **Confidence:** Recorded formal evidence
 
-Active development with checked binary graph reconstruction and exact counts with arbitrary vertex pins, alongside the inherited two-world obstruction. Rank formulas and wider transport and forcing claims remain open.
+Active development with checked binary reconstruction, exact counts with arbitrary vertex pins, and a sound and complete solver for supplied checked rooted traversals. Automatic traversal construction, rank formulas and wider transport and forcing claims remain open.
 
 ## Before you start
 
 **Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
 
-**Recorded results and limits:** The separate Lean 4.24.0 companion checks 157 declarations. It retains binary graph reconstruction and the exact 2^c unpinned count, and proves exact counts under arbitrary vertex pins: 2^u when edge equations and pins are jointly consistent, zero otherwise. Here u counts actual components containing no pinned vertex. Component and solution lists are complete and duplicate-free. Standard classical dependencies are recorded; both two-world obstruction theorems remain axiom-free. Rank formulas and wider transport/forcing results remain outside this formal scope.
+**Recorded results and limits:** The separate Lean 4.24.0 companion checks 182 declarations. It retains binary graph reconstruction and exact unpinned and partial-pin counts, and adds a solver that reconstructs from supplied checked component-root walks without enumerating vertex assignments. Soundness, completeness and agreement with the reference on existence are proved; equal outputs require component-covering pins. Twelve inherited sources are unchanged, and both two-world obstruction theorems remain axiom-free. Automatic traversal/forest construction, rank formulas and wider transport/forcing results remain outside this formal scope.
 
-**Remaining work:** Formalize the rank formulas n-c and m-n+c and replace exhaustive search with a verified spanning-forest solver. Preserve the original source and earlier companions.
+**Remaining work:** Construct and verify component-root traversals or a spanning forest automatically from a finite input graph, and formalize the rank formulas n-c and m-n+c. Preserve the reference solver, original source and earlier companions.
 
 The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
 
@@ -46,7 +46,7 @@ Find the statement number or section in the [reading files](#read), then read it
 
 Start with the [maintained edition guide](../components/RESOLUTION_SEMANTICS_LEAN.md) and the build instructions below. Check the correspondence records to see which written claims the Lean declarations cover. Source links lead to `.lean` files. PDF guides explain the formalization.
 
-- [Checked formal companion: source and reproduction](../../formal/resolution-semantics-v0.5.0/README.md)
+- [Checked formal companion: source and reproduction](../../formal/resolution-semantics-v0.6.0/README.md)
 - [Preserved original edition: Lean sources (directory)](../../research/resolution-semantics/formal/)
 
 [Find this work among other Lean projects](../browse/LEAN.md#resolution-semantics)
@@ -66,7 +66,7 @@ These links include code, examples, checks, or build tools. Read the [maintained
 ## Evidence
 
 - [Completion, Lean coverage, confidence, and cited evidence](../STATUS_CATALOG.md#resolution-semantics)
-- [Separate Lean companion replay and scope](../../verification/resolution-semantics/pins-windows-2026-11-01-run1/receipt.json)
+- [Separate Lean companion replay and scope](../../verification/resolution-semantics/traversal-windows-2026-11-01-run1/receipt.json)
 - [Source-file receipt (identity and availability)](../../manifests/source-imports/resolution-semantics.json)
 - [All files in this source edition](../../research/resolution-semantics/)
 
