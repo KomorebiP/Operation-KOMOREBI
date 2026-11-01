@@ -13,7 +13,7 @@ screens. Wide tables and code blocks can be scrolled with the keyboard.
 In HTML guides, captioned tables use their visible captions as the names of
 their scrolling regions, so screen-reader region navigation identifies the table.
 
-The header keeps **Collection**, **About the project**, **Search** and **Glossary** visible.
+The header keeps **Read**, **Collection**, **About**, **Search** and **Glossary** visible.
 **Browse** opens links grouped
 under **Read**, **Look up** and **Use**. The current page is marked in its link.
 The expanded navigation stays above the content and does not cover it. Press
@@ -37,6 +37,21 @@ bottom of each reading page. **Previous** and **Next** show the destination titl
 The position indicator and **Chapters & parts** menu show the reading sequence,
 with the current page marked. Bibliographies are included in that sequence;
 partial editions link onward to their full manuscript sources.
+
+All twelve core-paper contents pages and chapters offer **Switch paper** and a
+direct link to **All reading editions**. With JavaScript, **Find a chapter**
+filters the chapter menu or full contents by title or reading-page number.
+Searching opens matching part groups; clearing the search restores the groups
+you had open. The complete chapter lists remain available without JavaScript.
+Press Escape to clear a chapter search, then Escape again to close its menu.
+
+**Text settings** offers standard, large and extra-large text, with sans serif
+or serif prose. Choices apply across the core papers and are saved locally when
+browser storage is available. **Reset text settings** restores the defaults.
+Browser zoom remains available. The section sidebar also keeps **Previous**,
+**Chapters** and **Next** within reach while reading; on phones this compact
+control stays above the text. Floating reading menus close with Escape or a
+click outside them, and Escape returns focus to the menu's summary.
 
 **On this page** expands the current chapter's section list. **PDF, source &
 reading options** groups the secondary links by purpose. **Start reading** jumps

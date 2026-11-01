@@ -404,6 +404,20 @@ def plain_math(tex):
     return re.sub(r'\s+', ' ', re.sub(r'[{}_^\\]', ' ', text)).strip(), ' '.join(names)
 
 
+def navigation_title(text):
+    """Plain labels for navigation, without adding duplicate rendered math."""
+    text=re.sub(r'\\(?:qquad|quad)\b', ' · ', text)
+    def math_label(match):
+        value=match[1] if match[1] is not None else match[2]
+        value=re.sub(r'\\(?:mathrm|mathbb|mathcal|operatorname|text)\b', '', value)
+        value=re.sub(r'\\([A-Za-z]+)',
+                     lambda command:SYMBOLS.get(command[1],{'cong':'≅'}.get(command[1],command[1])),value)
+        return re.sub(r'[{}]', '', value)
+    text=re.sub(r'\$([^$]+)\$|\\\((.*?)\\\)',
+                math_label,text)
+    return re.sub(r'\s+', ' ',typography(text)).strip()
+
+
 class Chapter:
     def __init__(self, text, macros, section_offset=0, state=None, check_refs=True):
         self.text = presentation_tex(clean_tex(text))
@@ -1056,7 +1070,17 @@ def render_reading_index(reader):
         pdf=reader.primary_pdf(work)
         if pdf: body+='<a href="'+site.rel(pdf['url'],page)+'">Read PDF</a>'
         body+='</nav></section>'
-    body+='</div><h2>Reading options</h2><p>Use browser zoom to enlarge text. Wide equations and tables have separate areas that can be scrolled with the keyboard. MathJax provides equation exploration and assistive reading options through its context menu.</p><p>The HTML editions follow the retained manuscripts. <a href="'+site.rel('read/paper-iv/atlas/index.html',page)+'">Paper IV’s 26 atlas plates</a> also have HTML pages with drawings, descriptions and tables. Paper VI’s complete 42-plate atlas has HTML drawings, descriptions and selectable labels. Paper VII’s complete 40-plate atlas has HTML drawings, descriptions and selectable labels. The original visual atlases remain in the PDFs. Not every paper has an HTML edition yet. See <a href="'+site.rel('collection/ACCESSIBILITY.html',page)+'">accessibility and reading options</a> for current coverage and limitations.</p><p><a href="'+site.rel('documents.html',page)+'">Browse all papers and PDFs</a> · <a href="'+site.rel('collection/READING_ROUTES.html',page)+'">Choose a reading route</a></p>'
+    body+=('</div><h2>Reading options</h2><p>Use Text settings in any core-paper chapter to choose a text size and font, or use browser zoom. '
+           'Find a chapter filters the contents by title or reading-page number. Wide equations and tables have separate areas that can be scrolled with the keyboard. '
+           'MathJax provides equation exploration and assistive reading options through its context menu.</p>'
+           '<p>All twelve core papers have HTML reading editions that follow the retained manuscripts. '
+           '<a href="'+site.rel('read/paper-iv/atlas/index.html',page)+'">Paper IV’s 26 atlas plates</a> also have HTML pages with drawings, descriptions and tables. '
+           'Paper VI’s complete 42-plate atlas has HTML drawings, descriptions and selectable labels. '
+           'Paper VII’s complete 40-plate atlas has HTML drawings, descriptions and selectable labels. '
+           'Companion and atlas coverage varies by work; original visual atlases remain available in the PDFs. '
+           'See <a href="'+site.rel('collection/ACCESSIBILITY.html',page)+'">accessibility and reading options</a> for current coverage and limitations.</p>'
+           '<p><a href="'+site.rel('documents.html',page)+'">Browse all papers and PDFs</a> · '
+           '<a href="'+site.rel('collection/READING_ROUTES.html',page)+'">Choose a reading route</a></p>')
     site.page(page,'Read the papers online',body)
     site.search.append(dict(title='Read the papers online',group='Collection',kind='Guides',url=page,text='HTML reading editions '+' '.join(c['label'] for c in BOOKS.values())+' chapters equations proofs',work_ids=list(BOOKS)))
 
@@ -1124,7 +1148,7 @@ def render_book(reader,book):
         proof_rows={r['proof_line']:r for r in rows.values() if r['proof_line']}
         headings=[n for n in chapter.nodes if n['kind'] in HEADINGS]
         toc='<nav class="chapter-contents" aria-label="Chapter contents"><h2 id="contents">Contents</h2><ol>'
-        toc+=''.join('<li'+(' class="subsection-entry"' if n['kind']!='section' else '')+'><a href="#'+n['id']+'">'+e((n['number']+' '+typography(n.get('toc_title',n['title']))).strip())+'</a></li>' for n in headings)
+        toc+=''.join('<li'+(' class="subsection-entry"' if n['kind']!='section' else '')+'><a href="#'+n['id']+'">'+e((n['number']+' '+navigation_title(n.get('toc_title',n['title']))).strip())+'</a></li>' for n in headings)
         if not headings: toc+='<li><a href="#L'+str(chapter.nodes[0]['line'])+'">'+e(spec['title'])+'</a></li>'
         toc+='</ol>'
         if config.get('statement_navigation'): toc+=statement_navigation(chapter,rows)

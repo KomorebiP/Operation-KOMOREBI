@@ -8,6 +8,17 @@ All twelve core papers have formatted HTML reading editions. Each retains its
 recorded mathematical scope; companion guides and atlas coverage are described
 on the individual reading pages.
 
+The twelve core editions share collection switching, chapter filtering,
+persistent text size and font choices, and sidebar chapter shortcuts. The
+[control renderer](../tools/reader_usability.py) runs after chapter layout and
+preserves the article bytes. [Reading tools](../website/assets/reading-tools.js)
+enhance native links and disclosures; full chapter lists and paper switching
+remain usable without JavaScript. Text preferences tolerate unavailable or
+invalid browser storage. Keep these controls in the shared renderer rather than
+adding separate versions to individual papers. Run
+`python -B -m unittest discover -s tools -p 'test_reader_usability.py' -v` along
+with the reading-navigation and source-preservation checks when changing them.
+
 ## Sources
 
 | Content | Source |
