@@ -8,62 +8,58 @@ python -B examples/euler_packets.py
 python -B examples/euler_packets.py --output a-new-results-directory
 ```
 
-Python 3.10+ and its standard library are sufficient. No files are written by
-the first command. The second creates JSON and exact CSV tables and refuses to
-replace existing result files.
+Python 3.10 or later and its standard library are sufficient. The first command
+prints the expected report without creating result files. The second creates
+JSON and exact CSV tables and refuses to replace existing result files.
 
-`run-003/manifest.json` is the accepted v2 bounded execution record. It identifies
-the actual source revision and dirty state at execution, observed source hashes
-before/after, Python version, elapsed time, limits and output hashes. These
-hashes bind the new source independently of its pre-commit dirty state. The
-contract specifies every tested range and what a pass does not establish.
+The accepted final records are [run-007](run-007/manifest.json) and
+[cross-check-007](cross-check-007/manifest.json), for **EULER-CASE-007**.
+The [final contract](contract-007.json) declares every tested range and its
+non-claims. These records cover the full example, including the quartic atlas,
+logarithmic coordinates and exact dyadic-tail continuation. Stages 001–006 are
+historical editions; they do not bind the current expanded program.
 
-`cross-check-003/manifest.json` binds a separate check of the accepted results,
-the page's printed CLI output, Schur reconstruction, and exact agreement with
-the pinned mathematical-library source, including 605 reciprocal coefficients
-and 1,012 local-chart values, truncations and row weights. The additional
-`local-reconstruction.csv` gives every displayed E_8 term, partial sum and error.
-`coefficient-matrices.csv` supplies the finite local and Pascal blocks, the
-sampling block and the two displayed chart changes. `congruence-ladders.csv`
-records the guaranteed moduli, residues and exact errors. The supplementary
-checker also verifies complete rows of the infinite sampling-kernel witness
-and the stated finite Euler-index supercongruence examples.
-To repeat that additional comparison,
-use a checkout whose tracked `src/` matches the pin in
-`manifests/reader-site-libraries.json`:
+The [completion check of 30 October 2026](COMPLETION_CHECK_2026-10-30.md)
+reproduces the final finite output and manuscript report, repeats all 7,442
+pinned-library comparisons, checks all six publication safeguards and verifies
+the live IO downloads. Its fresh bounded execution record is supplementary;
+the original accepted stage 007 evidence remains intact.
+
+To repeat the supplementary comparison, use a checkout whose tracked `src/`
+matches the math revision in `manifests/reader-site-libraries.json`:
 
 ```text
+python -B tools/check_euler_case.py
 python -B tools/check_euler_case.py --math-root PATH_TO_PINNED_KOMOREBI_MATH
+python -B -m unittest discover -s tools -p test_euler_publication.py -v
 ```
 
-That optional command also needs the library's declared dependencies. Its source
-comparison rejects imported untracked project files and records the actual
-imported source hashes before/after. It does not rebuild external dependencies.
+The first command needs only the standard library. The optional library command
+also needs that library's declared dependencies and Git on PATH; `--git` accepts
+an explicit Git executable. It rejects mismatched tracked source and imported
+untracked project files and records imported source hashes before and after.
+It does not rebuild external dependencies.
 
-The runner used a 60-second wall timeout and a 1 MiB combined-log cap. No hard
-POSIX memory, CPU or affinity limit is claimed on Windows. The recorded thread
-setting is a conventional environment preference, not a universal enforcement
-mechanism. Neither run is a hardware performance benchmark.
+The accepted runs and fresh bounded completion run use a 60-second wall timeout
+and a 1 MiB combined-log cap. No hard POSIX memory, CPU or affinity limit is
+claimed on Windows. Recorded thread settings are conventional preferences,
+not universal enforcement. These are not hardware performance benchmarks.
 
-The first-edition self-review is in `PROOF_REVIEW.md`, and the added claims and
-full-page proofreading are in `PROOF_REVIEW_EXPANSION.md`. The
-matrix, base-change and additional congruence arguments are reviewed in
-`PROOF_REVIEW_MATRICES.md`. The authenticated
-references are in `SOURCES.md`, with the precise new denominator-theorem
-application in `LITERATURE_EXTENSION.md`. The target and route checkpoint is
-in `TARGET_AND_ROUTES.md`. Written proofs and finite
-execution are separate evidence. The local reconstruction and precision
-theorems have written proofs. No broader Euler-branch conjecture is certified
-by the finite checks, and no Lean run, novelty, exclusive method or speedup is
-asserted.
+The written proofs and their self-reviews remain separate from finite execution:
+[initial](PROOF_REVIEW.md), [expansion](PROOF_REVIEW_EXPANSION.md),
+[matrices](PROOF_REVIEW_MATRICES.md), [Fibonacci](PROOF_REVIEW_FIBONACCI.md),
+[packet/calculus](PROOF_REVIEW_LITERATURE.md), [atlas](PROOF_REVIEW_ATLAS.md)
+and [dyadic tails](PROOF_REVIEW_EDGE.md). Exact source identities and translations
+are retained in the corresponding literature records and [source notes](SOURCES.md).
+The universal root-simplicity problem remains open. No independent proof review,
+new Lean execution, global novelty, exclusive method or speedup is asserted.
 
-The preceding `run-001`, `cross-check-001`, `run-002`, `cross-check-002` and their contracts are preserved
-as historical execution records. Their input hashes describe their respective editions,
-not the revised program or page. They are not accepted evidence for the
-expanded source. The publication record accepts only the fresh 003 runs.
+All preceding run and cross-check directories are preserved. The failed
+`cross-check-004` is distinguished from its accepted replacement
+`cross-check-004b`; neither is substituted for the final 007 evidence.
 
 The publication manifest in `manifests/euler-packets-worked-example-2026-10-29.json`
-binds the final manuscript, code, review and execution records. Captured runner
-files have newline conversion disabled in `.gitattributes`, preserving their
-exact bytes across Windows and Linux checkouts. Original-project terms are in
-the repository's `LICENSE.md`; third-party references retain their own terms.
+binds the manuscript, program, reviews, run evidence and this completion report.
+Captured runner files have newline conversion disabled in `.gitattributes`,
+preserving their exact bytes across Windows and Linux checkouts. Original-project
+terms are in `LICENSE.md`; third-party references retain their own terms.

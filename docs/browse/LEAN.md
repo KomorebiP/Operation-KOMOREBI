@@ -230,7 +230,11 @@ Jump to a work:
 
 ### [Special Functions](../works/monographs-special-functions.md#lean)
 
-- [Lean sources (directory)](../../monographs/special-functions/lean/)
+- [Current formal coverage and replay instructions](../../monographs/special-functions/LEAN_STATUS.md)
+- [Coupled recurrence formal companion and limitations](../../monographs/special-functions/formalization/Block01/REPORT.md)
+- [Finite core and coupled Lean sources (directory)](../../monographs/special-functions/lean/)
+- [Coupled recurrence, local convergence and recovery (Lean)](../../monographs/special-functions/lean/CoupledFormal.lean)
+- [Coupled formal claim map](../../monographs/special-functions/formalization/Block01/CLAIM_MAP.json)
 - Coverage: Selected results recorded
 - [Return to this work’s Lean section](../works/monographs-special-functions.md#lean)
 - [Work overview](../works/monographs-special-functions.md)

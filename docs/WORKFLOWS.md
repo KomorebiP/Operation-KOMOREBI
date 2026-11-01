@@ -1,6 +1,6 @@
 # GitHub workflow guide
 
-The collection has ten workflows. Their triggers and scopes differ: a successful collection check does not mean a manual Lean replay, an AM-SPD package run, or a release operation has also succeeded. Inspect the workflow file and the run's exact commit before interpreting its result.
+The collection's workflows have different triggers and scopes: a successful collection check does not mean a manual Lean replay, an AM-SPD package run, or a release operation has also succeeded. Inspect the workflow file and the run's exact commit before interpreting its result.
 
 ## Routine checks
 
@@ -27,6 +27,7 @@ These workflows need their own successful run and evidence. The collection's sta
 
 | Workflow | Trigger | Repository effect |
 |---|---|---|
+| [Constructive Repair qualified beta](../.github/workflows/constructive-repair-release.yml) | Relevant package, release-tool, license, or workflow changes on main pushes; pull requests and manual runs qualify without publication | Runs the existing release, engine, and isolated installed-wheel acceptance suites on Linux and Windows with CPython 3.13.5. Verifies both source archives, current metadata and byte-identical accepted wheels, then publishes a new qualified beta prerelease after all gates pass. |
 | [Reader website](../.github/workflows/reader-site.yml) | Push, pull request, or manual dispatch | Builds the HTML guides, reading ZIPs and source-bound claim links, checks navigation and introductory examples, and deploys successful main builds to GitHub Pages. Pull requests build without deployment. It does not run Lean or review proofs. |
 | [Import source collection](../.github/workflows/import-source-collection.yml) | Manual dispatch on main with a committed batch name and exact `expected_base` SHA | Imports and verifies the selected declared source batch, then publishes its changes. Its main-commit check prevents silently importing on an unexpected base. This is a source publication operation. |
 | [AM-SPD stable release](../.github/workflows/am-spd-stable-release.yml) | Successful main-branch AM-SPD CI completion, or manual dispatch | Requires successful CI for the exact current main commit, builds and qualifies release assets, and can create the `am-spd-v1.0.0` release/tag. It preserves existing tag/release identities and refuses a conflicting revision. This is a publication operation, not a general test command. |

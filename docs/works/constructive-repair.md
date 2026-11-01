@@ -6,7 +6,7 @@
 
 [Read](#read) · [Written proofs](#written-proofs) · [Lean](#lean) · [Code](#code) · [Evidence](#evidence) · [Worked examples](#worked-examples-for-this-work)
 
-**Completion:** Active development · **Lean:** Selected results recorded · **Confidence:** Recorded formal evidence
+**Completion:** Scoped release · **Lean:** Selected results recorded · **Confidence:** Recorded formal evidence
 
 Constructive repairs, examples, and the accompanying reference implementation.
 
@@ -14,9 +14,9 @@ Constructive repairs, examples, and the accompanying reference implementation.
 
 **Suggested background:** Basic command-line use and the package's programming language. Check its platform requirements before installation.
 
-**Recorded results and limits:** Standalone release candidate with exact rational repair certificates and scoped historical Lean evidence. Fresh Windows 11 / CPython 3.12.14 checks passed 134 engine tests and 72 installed cases. The release suite retains two symlink-fixture setup errors and three POSIX/Linux-only skips. Python certificate validity remains separate from kernel acceptance.
+**Recorded results and limits:** Qualified beta distribution of the 1.0.0rc3 Python runtime. Linux x86_64 and Windows Server 2025 x86_64, both with CPython 3.13.5, passed 134 engine tests and 72 installed cases. Linux passed all 100 release tests; Windows passed 97 with the three named POSIX-only skips. Both symlink rejection controls passed on both platforms. The identical wheel's seven runtime files match the 2,254-file imported source. Historical Lean evidence retains its own scope; this qualification performs no new kernel replay.
 
-**Remaining work:** Resolve the two symlink-fixture prerequisites and complete a distribution gate for the intended rebuilt wheel and current metadata. Preserve the new exact source-to-wheel map and separate any future Lean replay from Python acceptance (F08).
+**Remaining work:** Use the qualified beta and its exact source/wheel/receipt record. Rerun the qualification workflow for future candidates. Other interpreters, operating systems, architectures, integration adapters, and fresh Lean execution require their own evidence.
 
 The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
 
@@ -72,7 +72,7 @@ These links include code, examples, checks, or build tools. Read the [maintained
 ## Evidence
 
 - [Completion, Lean coverage, confidence, and cited evidence](../STATUS_CATALOG.md#constructive-repair)
-- [Recorded software checks](../../verification/constructive-repair/windows-2026-10-27/summary.json)
+- [Recorded software checks](../../verification/constructive-repair/qualified-2026-10-30/summary.json)
 - [Source-file receipt (identity and availability)](../../manifests/source-imports/constructive-repair.json)
 - [All files in this source edition](../../packages/constructive-repair/)
 

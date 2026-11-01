@@ -51,7 +51,7 @@ def render(data):
 
 Recorded {data['as_of']} · **Komorebi P.**
 
-[Browse the collection](BROWSE.md) · [Start here](START_HERE.md) · [Repository home](../README.md)
+[Filter by discipline, completion and proof evidence](https://KomorebiP.github.io/Operation-KOMOREBI/works.html) · [Browse the collection](BROWSE.md) · [Start here](START_HERE.md) · [Repository home](../README.md)
 
 **Completion, Lean coverage and confidence describe different things.** A finished book may contain open research. A checked Lean proof may belong to an unfinished project. Choose a completion stage below, open a work's evidence record, then follow its paper, proofs, Lean, and code link.
 

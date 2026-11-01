@@ -55,13 +55,24 @@ jobs:
           python -B -m unittest discover -s tools -p 'test_*python.py' -v
       - name: Test reader rendering safeguards
         run: |
+          python -B -m unittest discover -s tools -p 'test_proof_path_reading.py' -v
           python -B -m unittest discover -s tools -p 'test_reader_site.py' -v
+          python -B -m unittest discover -s tools -p 'test_discipline_catalog.py' -v
+          python -B -m unittest discover -s tools -p 'test_paper_vi_atlas.py' -v
+          python -B -m unittest discover -s tools -p 'test_paper_ix_reading.py' -v
+          python -B -m unittest discover -s tools -p 'test_special_functions_reading.py' -v
+          python -B -m unittest discover -s tools -p 'test_reading_navigation.py' -v
           python -B -m unittest discover -s tools -p 'test_notation_index.py' -v
           node tools/test_notation_search.cjs
           node tools/test_download_selector.cjs
           node tools/test_reading_options.cjs
           node tools/test_reader_navigation.cjs
+          node --test tools/test_interactive_diagrams.cjs
+          python -B -m unittest discover -s tools -p 'test_interactive_diagrams.py' -v
+          python -B -m unittest discover -s tools -p 'test_glossary_reader.py' -v
+          node tools/test_glossary_lookup.cjs
           node tools/test_side_reader.cjs
+          node tools/test_side_sessions.cjs
           python -B -m unittest discover -s tools -p 'test_side_reader.py' -v
       - name: Verify the manuscript claim index
         run: python -B tools/claim_navigation.py --check
@@ -73,6 +84,22 @@ jobs:
         run: |
           python -B -m unittest discover -s tools -p 'test_euler_publication.py' -v
           python -B tools/check_euler_case.py --math-root .reader-libraries/math
+      - name: Check factorial-lane arithmetic and website publication
+        run: |
+          python -B examples/factorial_lanes.py
+          python -B -m unittest discover -s tools -p 'test_factorial_lanes.py' -v
+      - name: Check extended wavelet/polyphase operator and exact records
+        run: |
+          python -B examples/wavelet_polyphase.py
+          python -B -m unittest discover -s tools -p 'test_wavelet_polyphase.py' -v
+      - name: Check Stirling, Bell and Fubini exact research example
+        run: |
+          python -B examples/stirling_bell_fubini.py
+          python -B -m unittest discover -s tools -p 'test_stirling_bell_fubini.py' -v
+      - name: Check roots-of-unity and falling-factorial operator transport
+        run: |
+          python -B examples/roots_unity_falling_factorial.py
+          python -B -m unittest discover -s tools -p 'test_roots_newton.py' -v
       - name: Check the introductory Python output
         run: |
           python - <<'PY'

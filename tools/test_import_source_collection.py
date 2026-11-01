@@ -13,6 +13,21 @@ import import_source_collection as imp
 
 
 class SourceImportTests(unittest.TestCase):
+    def test_reading_import_omits_standalone_disclosures_and_keeps_ai_acknowledgments(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            archive = Path(temporary) / 'source.zip'
+            with zipfile.ZipFile(archive, 'w') as handle:
+                handle.writestr('source/article.tex', 'Manuscript with AI acknowledgment.')
+                handle.writestr('source/AI_CONTRIBUTION_DISCLOSURE.md', 'Separate contribution disclosure.')
+                handle.writestr('source/history/AI_CONTRIBUTION_DISCLOSURE.md', 'Earlier contribution disclosure.')
+                handle.writestr('source/docs/AI_ASSISTANCE_DISCLOSURE.md', 'Broader AI-use disclosure.')
+            selected, omissions = imp.select_zip(archive, 'source')
+            self.assertEqual({row['path'] for row in selected},
+                             {'article.tex', 'docs/AI_ASSISTANCE_DISCLOSURE.md'})
+            self.assertEqual({row['path'] for row in omissions},
+                             {'AI_CONTRIBUTION_DISCLOSURE.md', 'history/AI_CONTRIBUTION_DISCLOSURE.md'})
+            self.assertTrue(all(row['reason'] == 'redundant-standalone-ai-disclosure' for row in omissions))
+
     def test_digest_has_declared_sorted_utf8_format(self):
         rows = [{"path": "z.txt", "sha256": "b" * 64}, {"path": "a.txt", "sha256": "a" * 64}]
         expected = hashlib.sha256(("a" * 64 + "  a.txt\n" + "b" * 64 + "  z.txt\n").encode()).hexdigest()

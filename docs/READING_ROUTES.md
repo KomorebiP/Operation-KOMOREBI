@@ -10,3 +10,7 @@ For the collection as a whole, read the [project overview](START_HERE.md) and [p
 - [Run the software](routes/SOFTWARE.md)
 
 [Hand-worked examples](HAND_WORKED_EXAMPLES.md) · [Searchable website](https://KomorebiP.github.io/Operation-KOMOREBI/) · [Browse works](BROWSE.md) · [Glossary](GLOSSARY.md) · [First runs](FIRST_RUN.md)
+
+[Explore the physics collection](PHYSICS_COLLECTION.md): packet currents, quantum phase, continuum approximation, special functions and research studies.
+
+[Explore Special Functions](SPECIAL_FUNCTIONS.md): current reading volumes, five families, an exact coupled-function lab and formal evidence.

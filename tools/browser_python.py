@@ -87,16 +87,17 @@ def build(site, runtime_root):
                   library_files=files, runtime_version=runtime['version'], packages=runtime['packages'],
                   plotly_js=runtime['plotly_js'], helper_url='downloads/komorebi_browser.py',
                   helper_sha256=sha(helper), examples={})
-    body = '''<h1>Python playground</h1><p class="lede">Explore Komorebi's sequences, factorial normalizations and worked calculations. Change the inputs, inspect the graphs and follow the links to the written mathematics.</p>
+    body = '''<h1>Python playground</h1><p class="lede">Explore Komorebi's special functions, physics examples, sequences and worked calculations. Change the inputs, inspect the graphs and follow the links to the written mathematics.</p>
 <p>Python starts when you press Run. The first run downloads about 13 MB of runtime files. The library example also loads NumPy and Komorebi Math. Calculations run in your browser. Use Save draft to keep edited code in this browser, or download it as a Python file. Unsaved code and selected data may be lost when you leave or reload the page.</p>
 <div id="python-picker" class="python-picker" hidden><label for="python-preset">Preload an example</label><select id="python-preset" aria-describedby="python-preset-help">
 RESEARCH_OPTIONS<optgroup label="Worked examples"><option value="packets">Reconstruct an operator</option><option value="refinement">Refine a signal</option><option value="recovery">Test recovery from a summary</option></optgroup>
 <optgroup label="Library preset"><option value="library">Komorebi Math with NumPy</option></optgroup>EXTRA_OPTIONS</select><p id="python-preset-help">Choose a preset to load its code, source links and expected output. Switching presets keeps your edits on this page. Python and any required libraries load when you press Run.</p></div>
 <nav id="python-example-links" class="document-routes" aria-label="Choose a Python example">'''
-    groups = dict.fromkeys(spec['group'] for spec in PRESETS.values())
-    options = ''.join('<optgroup label="'+group+'">'+''.join('<option value="'+name+'">'+html.escape(spec['title'])+'</option>' for name, spec in PRESETS.items() if spec['group']==group)+'</optgroup>' for group in groups)
-    research = '<optgroup label="Komorebi sequence research">'+''.join('<option value="'+name+'">'+html.escape(spec['title'])+'</option>' for name, spec in PRESETS.items() if spec.get('works'))+'</optgroup>'
-    body = body.replace('RESEARCH_OPTIONS', research).replace('EXTRA_OPTIONS', options.replace(research, ''))
+    def options(research):
+        selected = {name: spec for name, spec in PRESETS.items() if bool(spec.get('works')) == research}
+        groups = dict.fromkeys(spec['group'] for spec in selected.values())
+        return ''.join('<optgroup label="'+html.escape(group, quote=True)+'">'+''.join('<option value="'+name+'">'+html.escape(spec['title'])+'</option>' for name, spec in selected.items() if spec['group']==group)+'</optgroup>' for group in groups)
+    body = body.replace('RESEARCH_OPTIONS', options(True)).replace('EXTRA_OPTIONS', options(False))
     body += ''.join('<a href="#'+key+'">'+html.escape(value[0])+'</a>' for key, value in EXAMPLES.items())+'</nav>'
     body += '''<noscript><p>Enable JavaScript to run Python here. The explanations, source and downloads below remain available.</p></noscript>
 <p id="python-help">The editor is a plain text field. Tab moves to the next control. Run uses a fresh Python namespace. Stop ends the runtime. Reset restores the selected preset. Fixed expected values may need updating when you change an input.</p>
@@ -123,6 +124,13 @@ RESEARCH_OPTIONS<optgroup label="Worked examples"><option value="packets">Recons
             body += '<p><a href="collection/demonstrations/'+doc+'.html">Hand calculation, expected output and source connections</a></p>'
         elif name in PRESETS:
             body += '<p>'+html.escape(PRESETS[name]['description'])+'</p>'
+            if PRESETS[name].get('guide_page'):
+                guide = 'collection/'+html.escape(PRESETS[name]['guide_page'], quote=True)+'.html'
+                if PRESETS[name].get('guide_anchor'):
+                    guide += '#'+html.escape(PRESETS[name]['guide_anchor'], quote=True)
+                body += '<p><a href="'+guide+'">Function definitions, reading volumes and proof sources</a></p>'
+            if PRESETS[name].get('collection_guide'):
+                body += '<p><a href="collection/PHYSICS_COLLECTION.html#'+html.escape(PRESETS[name]['collection_guide'], quote=True)+'">Physics collection, hand calculations and proof sources</a></p>'
             if PRESETS[name].get('guide'):
                 body += '<p><a href="collection/demonstrations/SEQUENCE_SHAPES.html#'+PRESETS[name]['guide']+'">Definitions, exact values and how to read this plot</a> · <a href="math/sequences_oeis.html">Komorebi Math sequence API</a></p>'
             body += '<p><a href="#python-features-help">Plotting, data and saving guide</a></p>'
@@ -135,6 +143,8 @@ RESEARCH_OPTIONS<optgroup label="Worked examples"><option value="packets">Recons
             if work == 'paper-v': label = 'Paper V'
             if work == 'paper-iv': label = 'Paper IV'
             if work == 'monographs-special-functions': label = 'Special Functions'
+            if work == 'monographs-physics': label = 'Physics'
+            if work == 'paper-vii': label = 'Paper VII'
             base = 'collection/works/'+work+'.html'
             body += '<a href="'+base+'">'+label+'</a><a href="'+base+'#written-proofs">'+label+' proofs</a><a href="'+base+'#lean">'+label+' Lean coverage</a><a href="'+base+'#code">'+label+' code</a>'
             if work.startswith('paper-'): body += '<a href="claims.html#'+work+'">'+label+' claims</a>'
@@ -160,3 +170,4 @@ RESEARCH_OPTIONS<optgroup label="Worked examples"><option value="packets">Recons
     body = body.replace('data-worker="assets/python-worker.js"', 'data-worker="assets/python-worker.js?v='+sha((site.root/'website/assets/python-worker.js').read_bytes())[:12]+'"')
     site.write('downloads/python-playground.json', json.dumps(record, indent=2)+'\n')
     site.page('playground.html', 'Python playground', body)
+

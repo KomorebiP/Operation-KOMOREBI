@@ -29,6 +29,8 @@ These introductory calculations lead into this work’s subject. The source and 
 - [10. Find a kernel and its fibers](../examples/10_KERNELS.md) · [Terms and source routes](../LEARNING_MAP.md#kernels)
 - [14. Separate averages and details](../examples/14_HAAR_PAIRS.md) · [Terms and source routes](../LEARNING_MAP.md#haar)
 
+**Complete demonstration with runnable code:** [Wavelets and polyphase transfer](../demonstrations/WAVELET_POLYPHASE.md).
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

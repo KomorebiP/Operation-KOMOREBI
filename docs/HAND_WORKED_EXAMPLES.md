@@ -48,6 +48,35 @@ The [coverage list](EXAMPLE_COVERAGE.md) shows which works still need an introdu
 | 25. [Choose repair directions](examples/25_REPAIR_MENUS.md) | Constructive Repair: free repair, weighted menus and an obstruction witness | Linear equations and span |
 | 26. [Update a Gaussian model](examples/26_GAUSSIAN_UPDATE.md) | Certified Inference: one observation, posterior covariance and a candidate gain | Small matrices and Gaussian densities |
 
+## Extended research examples
+
+The [Euler-number derivation](demonstrations/EULER_PACKETS.md),
+[factorial-lanes derivation](demonstrations/FACTORIAL_LANES.md), and
+[wavelet and polyphase transfer](demonstrations/WAVELET_POLYPHASE.md) follow
+longer chains of exact representations, transfer laws, and explicit failure
+witnesses. The wavelet case includes a three-tap discrete filter, four levels of
+Haar coefficients, exact predict–update lifting, a weighted best-detail
+selection, sharp finite stability, a full wavelet transfer matrix, a
+filtering-versus-coarsening counterexample, boundary repair and downloadable
+results. Each extended example retains its own finite evidence scope.
+
+The [Stirling, Bell and Fubini example](demonstrations/STIRLING_BELL_FUBINI.md)
+adds a combinatorial flagship: one triangular counting kernel with two
+distinct input weightings, a signed inverse, a general formal-series
+substitution, Touchard polynomial and moment operations, complete residue
+packet transfers, and an exact interpolation-versus-aggregation boundary. It includes a standalone exact
+Python checker and downloadable source-bound records.
+
+The [roots-of-unity and falling-factorial example](demonstrations/ROOTS_UNITY_FALLING_FACTORIAL.md)
+connects the earlier arithmetic, Euler and Stirling examples. It carries
+a character projector through a Stirling/Newton change of basis and
+independently checks the resulting operation against actual function-image
+enumeration, rational spectral projectors, filtered generating functions,
+finite differences, general translation and cyclic carry blocks, and
+transported multiplication. Wrong-basis and characteristic-three spectral
+counterexamples keep the assumptions explicit. Eleven exact CSV tables
+and three Python-generated SVG diagrams accompany the source.
+
 ## Conventions and scope
 
 Vectors are columns unless a displayed signal is explicitly a list. Matrix

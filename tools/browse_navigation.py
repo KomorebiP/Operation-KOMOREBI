@@ -187,6 +187,8 @@ class Browser:
             if title=='Read' and edition:
                 text+=link('Revised reading edition',edition['manuscript'],page)+' · '+link('Monograph PDF',edition['pdf'],page)+'\n\n'
             links = self.resources(c,kinds,page)
+            if title=='Read' and c['id']=='monographs-special-functions':
+                links.insert(0,'[Read online: chapters, proof appendices, figures and glossary](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/index.html)')
             if title=='Written proofs' and edition:
                 links.insert(0,link('Mathematical discussion in the revised essay',edition['manuscript'],page))
             has_lean = any(a['kind']=='lean' for a in self.rows[c['id']]['resources'])
@@ -240,11 +242,22 @@ class Browser:
 
 [Searchable website](https://KomorebiP.github.io/Operation-KOMOREBI/) · [Reading routes](READING_ROUTES.md) · [Hand-worked examples](HAND_WORKED_EXAMPLES.md) · [Glossary](GLOSSARY.md) · [Reading downloads](DOWNLOADS.md)
 
-Choose a subject below, or go straight to [written statements and proofs](browse/PROOFS.md), [Lean sources](browse/LEAN.md), or [code and scripts](browse/CODE.md).
+Browse by [mathematics, computer science, physics or other](https://KomorebiP.github.io/Operation-KOMOREBI/works.html) and combine those filters with **completion stage**, **Lean coverage**, **evidence basis**, publication type and a text query. The [full-text search](https://KomorebiP.github.io/Operation-KOMOREBI/search.html) applies the same work-level classifications to indexed reading pages, claims, code and guides. Or go directly to [written statements and proofs](browse/PROOFS.md), [Lean sources](browse/LEAN.md), or [code and scripts](browse/CODE.md).
 
 Each work has its own page with **Read**, **Written proofs**, **Lean**, **Code**, and **Evidence** sections. **PDF** opens a reading file. **Text** opens editable TeX or other source text. **Lean guide** opens explanatory reading. **Lean sources** leads to `.lean` files. Code links can include research utilities and build scripts. Read the edition's README before running them.
 
-## Choose a collection
+## Browse by discipline and verification
+
+| Primary field | Filtered catalogue |
+|---|---|
+| Mathematics | [Mathematics works](https://KomorebiP.github.io/Operation-KOMOREBI/works.html?discipline=math#catalog-results) |
+| Computer Science | [Computer Science works](https://KomorebiP.github.io/Operation-KOMOREBI/works.html?discipline=cs#catalog-results) |
+| Physics | [Physics works](https://KomorebiP.github.io/Operation-KOMOREBI/works.html?discipline=physics#catalog-results) |
+| Other | [Methodology and cross-disciplinary works](https://KomorebiP.github.io/Operation-KOMOREBI/works.html?discipline=other#catalog-results) |
+
+These are editorial primary categories. The files remain in their original repository paths so source links and formal evidence references are preserved. A finished reading edition is not necessarily a fully proved research endpoint. **Completion**, **Lean coverage** and **evidence basis** are independent, with details in the [completion guide](COMPLETION_STATUS.md) and [status catalogue](STATUS_CATALOG.md). Filter values come from the maintained [project status manifest](../manifests/project-status.json), not inferred from a file name or its presence in a folder.
+
+## Choose a publication type
 
 '''
         text += table(['Collection','Open'],[(title,link(str(sum(c['group']==g for c in self.components))+' works',page_for(g),page)) for g,title in GROUPS.items()])

@@ -29,6 +29,84 @@ and return links on the related work pages. Edit tutorial explanations above
 the `learning-navigation` marker. The status command replaces the section
 below that marker. A subject route does not establish a theorem correspondence.
 
+## Special Functions hub and coupled-function lab
+
+The [Special Functions hub](SPECIAL_FUNCTIONS.md) connects the current HTML
+monograph, its five subject families, the five selected reading PDFs, and the
+coupled recurrence's formal report and claim map. Its chapter links follow the
+source-bound HTML edition. The preserved scientific figure retains its caption,
+alternative text and intrinsic dimensions in the shared Markdown renderer.
+
+The `special-functions-coupled` playground preset uses exact rational
+coefficients, exports both coefficient lists as CSV, and distinguishes its local
+series-tail envelope from floating-point plot evaluation. Run
+`python -B -m unittest discover -s tools -p 'test_special_function_python.py'`
+for its independent polynomial, closed-form, export and input controls. The
+reader tests also check the hub's chapter and selected-source links. This
+integration adds no formal replay or mathematical completion claim.
+
+## Extended factorial-lanes example
+
+The [factorial-lanes derivation](demonstrations/FACTORIAL_LANES.md) has an
+independent exact program in [examples/factorial_lanes.py](../examples/factorial_lanes.py).
+The [factorial publisher](../tools/factorial_case.py) provides a checked on-site
+source reader and source-bound downloads. Its finite output snapshots live in
+[verification/factorial-lanes/](../verification/factorial-lanes/). The site
+checker validates their byte identities, while the workflow re-runs the
+arithmetic and compares freshly emitted tables against the committed copies.
+
+## Extended wavelet and polyphase transfer example
+
+The [wavelet-polyphase walkthrough](demonstrations/WAVELET_POLYPHASE.md) extends
+the existing four-level Haar lab with exact lifting, weighted detail selection,
+a circular FIR filter, a complete four-level operator conjugacy, sharp finite
+stability, operation-order counterexample and boundary correction. The
+[exact program](../examples/wavelet_polyphase.py) uses rational arithmetic
+for its mathematical checks. Six CSV tables, a JSON certificate, and two
+Python-generated SVG figures are stored under
+[verification/wavelet-polyphase/](../verification/wavelet-polyphase/).
+The [publication bridge](../tools/wavelet_case.py) verifies source-bound
+downloads and archives without running the program at build time. GitHub
+Actions separately checks the program, exact output identity and site links.
+
+## Extended Stirling, Bell and Fubini example
+
+The [partition-transform derivation](demonstrations/STIRLING_BELL_FUBINI.md)
+starts with exact Stirling numbers of the second kind, gives Bell and
+factorial-weighted Fubini numbers and reverses the triangular transform
+using signed Stirling numbers of the first kind. It then derives Touchard
+polynomial evaluation, scaled exponential moments and the
+Fubini reciprocal EGF, a general reversible Stirling substitution,
+coupled residue transfers and a precise boundary between recoverable
+polynomial data and noninjective row summaries.
+The [standard-library checker](../examples/stirling_bell_fubini.py)
+independently enumerates small partitions, verifies surjection counts,
+triangular inverse matrices and formal series coefficients, and generates
+seven CSV tables, a Python SVG figure and JSON checks.
+The [publication bridge](../tools/stirling_case.py) rebuilds every record
+from the retained program, binds the source identities and checksums,
+and publishes a reproducible reader and download archive.
+
+## Extended roots-of-unity and falling-factorial example
+
+The [roots-of-unity / Newton walkthrough](demonstrations/ROOTS_UNITY_FALLING_FACTORIAL.md)
+takes the ordinary power x^5 through a primitive-cubic-residue projector,
+the Stirling/Newton coordinate isomorphism, finite-difference transfer,
+refinement and an induced multiplication law. It distinguishes transported
+projectors from raw ordinary-degree filters using a concrete failed control.
+The [standalone exact checker](../examples/roots_unity_falling_factorial.py)
+uses standard-library rational arithmetic, an exact cyclic permutation trace
+for root-of-unity orthogonality, direct enumeration of function images,
+rational spectral polynomials in the backward-difference number operator,
+filtered formal generating functions, general cross-packet translation
+blocks, and independent matrix coefficients. The degree-operator spectral
+formula's characteristic-three failure is an explicit control rather than
+a theorem inferred beyond its rational coefficient scope.
+The [publication bridge](../tools/roots_newton_case.py) regenerates eleven
+CSV tables, three accessible Python SVGs, JSON checks, and a deterministic
+source-and-results archive. Tests include reproducible bytes and
+deliberately corrupted downloads.
+
 ## Build locally
 
 Use a complete collection checkout and separate checkouts of the two libraries
@@ -67,8 +145,16 @@ linked images and runtime integrity, in addition to HTML links and reading ZIPs.
 
 ## Readable chapters
 
+Paper VII now has eleven reading pages: the opening orientation, three exact
+finite models, and all nine mathematical source parts. The pages retain the
+I, II and III numbering, the supplementary statements, 107 proof environments
+and 1,820 mathematical expressions. The 38 original figure PDFs can be opened
+inside the chapters or in the PDF reader. The worked visual atlas remains in
+the original monograph and visual guide. This presentation adds no proof
+assessment or Lean execution.
+
 [The chapter renderer](../tools/readable_chapters.py) publishes the main chapters
-of Papers I, II, III and IV as readable HTML alongside their original source pages.
+of Papers I, II, III, IV and VII as readable HTML alongside their original source pages.
 Paper II's current verification snapshot has its own reading page. Each paper
 has a chapter index and bibliography, with links between chapters and recorded
 claim locations. Paper IV's atlas also has HTML plates; the original visual
@@ -136,6 +222,20 @@ changed, missing or unused figures stop the build for review. Original captions
 remain unchanged, and description links stay visible in the quieter reading view.
 The first three guides also describe their 22, 24 and 24 atlas pages. Paper IV's
 guide links to the existing 26 HTML plates and their complete label transcripts.
+
+## Proof Path Theory reading edition
+
+The [Proof Path Theory HTML edition](https://KomorebiP.github.io/Operation-KOMOREBI/read/proof-path-theory/index.html) follows the retained manuscript from the preface through five parts, its theorem ledger, source-bound tables, and the final reproducible example. Chapter navigation, original TeX line links, selectable mathematics, original figures, PDF and visual sampler links, and routes to Lean, code and evidence are retained. Source expressions are checked against the unchanged TeX. The reading presentation adds no proof or formal verification assessments.
+
+The converter also reads the five part-opening figures and four explanatory
+paragraphs from the manuscript's preamble macro. All 25 figure numbers follow
+the printed sequence. Captions, including their nine mathematical expressions,
+are included in the source and HTML checks. Plain references retain their
+authored numbers, the tagged condition links as `(SC)`, and the nine bibliography
+entries retain their numeric citation order. The complete HTML edition contains
+1,051 mathematical expressions and 51 proof environments.
+
+Run `python -B -m unittest discover -s tools -p 'test_proof_path_reading.py' -v` to check manuscript boundaries, formula preservation, readable syntax and source illustrations. The normal website checker verifies published equations, chapter links and all reading ZIPs.
 
 ## Publication
 
@@ -302,3 +402,4 @@ records and proof assessments retain their previous scope.
 The [notation index](NOTATION_INDEX.md) provides symbol search and a source inventory for every work. Entries link to exact source lines and retain the paper’s own context. Its JSON downloads record every detected occurrence in the selected TeX, Markdown and text sources. PDF and image notation remain explicit coverage limits.
 
 `tools/notation_index.py` builds the reference. `manifests/notation-sources.json` declares additional manuscript entrypoints. The reader follows their literal includes and checks source receipts before indexing. Parser regression tests and the site checker validate extraction, source positions, counts and links.
+

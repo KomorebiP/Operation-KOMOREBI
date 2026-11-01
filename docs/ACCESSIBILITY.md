@@ -13,7 +13,7 @@ screens. Wide tables and code blocks can be scrolled with the keyboard.
 In HTML guides, captioned tables use their visible captions as the names of
 their scrolling regions, so screen-reader region navigation identifies the table.
 
-The header keeps **Collection**, **About the project** and **Search** visible.
+The header keeps **Collection**, **About the project**, **Search** and **Glossary** visible.
 **Browse** opens links grouped
 under **Read**, **Look up** and **Use**. The current page is marked in its link.
 The expanded navigation stays above the content and does not cover it. Press
@@ -30,19 +30,35 @@ Long HTML guides have a collapsed **On this page** list of section headings.
 Open it and choose a section to jump there. Keyboard focus follows the jump,
 so the next Tab continues from that section. These section links also work
 without JavaScript. Work pages keep their existing paper, proof, Lean, code
-and example routes. Readable chapters keep their chapter contents.
+and example routes.
 
-The HTML chapters of Papers I–IV open with repeated source and reference links
-hidden from the reading flow. **Show source and reference links** reveals each
+Online reading editions have the same chapter and part controls at the top and
+bottom of each reading page. **Previous** and **Next** show the destination title.
+The position indicator and **Chapters & parts** menu show the reading sequence,
+with the current page marked. Bibliographies are included in that sequence;
+partial editions link onward to their full manuscript sources.
+
+**On this page** expands the current chapter's section list. **PDF, source &
+reading options** groups the secondary links by purpose. **Start reading** jumps
+past these controls to the text. All of these links and disclosures work with
+the keyboard and without JavaScript.
+
+The HTML chapters open with repeated passage links hidden from the reading flow.
+Inside **PDF, source & reading options**, **Show source and reference links** reveals each
 passage’s permalink, source line, claim record and related resources. The choice
 is remembered in this browser when local storage is available. **Read proof**,
-**Back to statement**, contents and section links remain visible in either view.
+**Back to statement**, and **On this page** links remain visible in either view.
 **Skip contents and start reading** moves directly to the chapter text. Without
 JavaScript, all passage links remain visible and usable.
 
+In Paper IV, open **Statements and proofs** within a chapter's contents to find
+its numbered definitions, results, remarks and examples. Each entry links to the
+record, with **Read proof** beside it when a proof is recorded. The list works
+with the keyboard and without JavaScript.
+
 Section controls are ordinary links within the chapter, so they do not add a
-repeated navigation landmark for every heading. Chapter contents, neighbouring
-chapters and work routes retain their named navigation regions.
+repeated navigation landmark for every heading. Chapter contents, chapter and
+part controls, and work routes retain their named navigation regions.
 
 In-page links to chapters, statements, proofs and source lines also move keyboard
 focus to the destination. Any enclosing contents disclosure opens when needed.
@@ -69,6 +85,35 @@ be read together. Each document keeps its existing evidence and scope notes.
 works**. Each side opens its available reading edition, PDF or work overview.
 The works can be different. Their chapters, proof links and related material
 remain independent, and **Copy link to this pair** shares the chosen documents.
+
+### Save and resume a reading session
+
+**Save and resume reading** keeps sessions in this browser and on this device.
+With **Remember my last reading session** enabled, a plain visit to the reader
+resumes the last pair, reading positions, pane layout and focus view. Shared
+links open their requested documents. **Resume last reading session** lets you
+return to the pair from before you opened that link.
+Refreshing the same pair also restores its saved positions.
+
+Enter a **Session name** and select **Save session** to keep a named bookmark.
+Choose it under **Saved sessions**, then select **Open saved session**. Reusing
+a name updates that bookmark. Up to 50 named sessions can be kept. **Delete
+saved session** removes the selected bookmark. An unavailable edition stays
+listed so you can identify and delete its old bookmark.
+
+HTML sessions remember a nearby passage and the position within it. After a
+window-size change, the reader uses that passage to approximate the same place.
+PDF sessions keep the viewer's page, zoom, position and rotation once it is
+loaded. Each pane restores when it becomes visible.
+
+Turning off automatic remembering clears the automatic session and keeps named
+bookmarks. Clearing browser site data removes all sessions. If storage is
+blocked or full, the reader explains that saving failed. Ordinary reading and
+**Copy link to this pair** remain available. Shared links keep document addresses
+and HTML anchors. PDF toolbar settings and saved scroll positions remain in the
+browser's sessions rather than in shared links.
+
+### Follow references and adjust the view
 
 Open **Related material** above either document to find that work's paper,
 claims, written proofs, Lean, code, notation, evidence and available examples.
@@ -159,6 +204,15 @@ figures, tables and code examples. Each paper has chapter contents, previous
 and next links, cross references and a bibliography. Paper II also includes its
 separate current verification snapshot.
 
+The [Paper IX opening chapters](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-ix/index.html)
+provide **Scope and conventions** and **Arithmetic packets and coefficient
+transport** in HTML. Their original equations, statements, proofs and Lean
+declaration notes are retained. Forward references to later material link to
+the exact headings in the selectable manuscript sources. The contents page
+links to the complete PDF and source continuations; the rest of Paper IX
+has not yet been converted to formatted HTML. This adds no proof review or
+Lean execution.
+
 Paper I includes its orientation, foundations, packet and graph results,
 transport, worked models, notation ledger, statement concordance and bibliography.
 Its ten manuscript figures retain their captions and have short text alternatives
@@ -209,9 +263,12 @@ also have HTML pages. They retain the source prose and equations, with 24
 drawings rendered from the unchanged TikZ files. Each drawing has a text
 description and a complete transcript of its labels. Matrix entries, coefficient
 values and root certificates use tables with row and column headers. Wide tables
-can be scrolled with the keyboard. Equations use the same MathJax reading controls
-as the manuscript. Each plate links to its manuscript statements and original
-PDF page, and to the previous and next plates.
+can be scrolled with the keyboard. Each drawing table's scrolling region is named
+by its visible caption. Equations use the same MathJax reading controls
+as the manuscript. The route guide (V1), object reference (V2) and evidence
+summary (V26) also have descriptive table captions and row headers. Their
+original cells, formulas and links are retained. Each plate links to its
+manuscript statements and original PDF page, and to the previous and next plates.
 
 Paper IV's reading menu includes **Visual atlas**. Referenced manuscript
 sections and statements link back to the relevant plates, using each plate's
@@ -230,6 +287,9 @@ source lines. Reading pages connect to the paper's recorded Lean coverage, code
 and worked examples. Paper III retains the manuscript's distinctions between
 its finite formal contract, inherited results and formalization targets.
 These reading editions add no mathematical review or Lean verification.
+The manuscript tables in Papers I–III have descriptive captions and row headers
+for notation, comparisons, recorded checks and reference entries. Their original
+captions, cells, mathematical notation and links are preserved.
 
 Search includes passages from these chapters, equation previews and highlighted
 matching words. Common Greek symbols can be searched by name or character,
@@ -244,6 +304,15 @@ exploration. Open an expression's context menu for the available math options.
 Support varies with the browser and assistive technology.
 
 The [glossary](GLOSSARY.md) includes prose explanations of introductory symbols.
+Its website link is always visible in the main navigation. The glossary's quick
+lookup searches maintained terms, definitions and reading notes, with an optional
+subject filter. Exact term names appear first. Result counts are announced without
+moving focus while typing; submitting moves focus to the matching terms heading.
+Each result links to its complete entry, examples and related terms. Every entry
+has a **Back to glossary lookup** link that preserves the search. The lookup
+address can be shared, and the full reference, subject links and alphabetical
+index remain available without JavaScript. **Read side by side** can keep the
+glossary beside a manuscript.
 The original papers retain their own definitions. Text descriptions and source
 files are linked where available. This does not establish that every diagram
 or every mathematical expression in the collection has an adequate spoken
@@ -302,3 +371,15 @@ retained Apache 2.0 license. The build verifies the pinned viewer and each
 published document against its source identity. PDF scripting is disabled.
 
 [Reading routes](READING_ROUTES.md) · [Glossary](GLOSSARY.md) · [Project statement](PROJECT_STATEMENT.md)
+
+Paper VI has 46 manuscript sections across Parts I–III, orientation pages and
+a bibliography in HTML. Its ordinary, E and R section numbering follows the
+retained edition. Statements link to their recorded proofs and source lines.
+The manuscript dictionaries and numerical tables have row headers. The
+formalization ledger has a caption and row headers for its 33 scoped results. Figures keep the original captions; 15 PDF-only figures have
+source-bound web previews. The worked visual atlas has an index of all 42
+plates. V1–V6 now have HTML
+reading pages with original drawings, selectable equations, text descriptions
+and complete drawing-label transcripts. Matrices and bar values use tables
+with row and column headers. V7–V42 open at their exact PDF pages. These
+reading changes do not add a proof audit or a fresh Lean replay.

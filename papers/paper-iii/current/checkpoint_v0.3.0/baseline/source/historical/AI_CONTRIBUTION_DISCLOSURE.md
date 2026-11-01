@@ -1,3 +1,0 @@
-# AI Contribution Disclosure
-
-The author used an OpenAI language model to help reorganize and draft parts of this article. The model suggested formulations and proof approaches for the polynomial tree theorem in Section 5, the cokernel, relative obstruction, and mapping cone results in Section 8, the Lyapunov Schmidt and filtered lifting arguments in Sections 9 and 10, the holonomy intertwining theorem in Section 13, and the direct packet rotation theorem in Section 14. The author checked the statements, proofs, and citations and accepts full responsibility for them. The model is not an author.

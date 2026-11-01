@@ -12,6 +12,8 @@ GUIDED_DEMONSTRATIONS = {
     'docs/demonstrations/RECOVERY.md': ('Test recovery from a summary', ['paper-iii','realization-boundaries']),
     'docs/demonstrations/SEQUENCE_SHAPES.md': ('Komorebi sequence shapes', ['paper-iv','monographs-special-functions']),
     'docs/demonstrations/EULER_PACKETS.md': ('Euler packets, polynomials and residuals', ['paper-iii','paper-iv','paper-ix','euler-signal-bridge','machine-native-mathematics-essay']),
+    'docs/demonstrations/WAVELET_POLYPHASE.md': ('Wavelets and polyphase transfer', ['paper-v','information-realization']),
+    'docs/demonstrations/STIRLING_BELL_FUBINI.md': ('Stirling, Bell and Fubini', ['monographs-special-functions']),
 }
 
 
@@ -60,6 +62,8 @@ def introduction(root, component, assessment, page):
         demonstrations=[link(title,path,page) for path,(title,works) in GUIDED_DEMONSTRATIONS.items() if component['id'] in works]
         if demonstrations:
             text+='**Complete demonstration with runnable code:** '+' · '.join(demonstrations)+'.\n\n'
+    if component['id']=='monographs-special-functions':
+        text+='### Explore Special Functions\n\n'+link('Books, five families and the coupled-function lab','docs/SPECIAL_FUNCTIONS.md',page)+'\n\n'
     return text
 
 
@@ -122,6 +126,8 @@ def render_reader_pages(root, components, assessments):
     out['docs/READING_ROUTES.md'] = '# Choose a reading route\n\nStart with the task you want to complete. These routes are editorial suggestions and do not change the recorded status of any work.\n\n'+ '\n'.join('- ['+title+'](routes/'+key+'.md)' for key,(title,_) in ROUTES.items())+'\n\n[Hand-worked examples](HAND_WORKED_EXAMPLES.md) · [Searchable website]('+SITE+') · [Browse works](BROWSE.md) · [Glossary](GLOSSARY.md) · [First runs](FIRST_RUN.md)\n'
     out['docs/READING_ROUTES.md']=out['docs/READING_ROUTES.md'].replace('\n- [New to Komorebi]', '\nFor the collection as a whole, read the [project overview](START_HERE.md) and [project map](PROJECT_MAP.md). For the research preview, follow [Euler numbers through packets, polynomials, and residuals](demonstrations/EULER_PACKETS.md). The [elementary demonstrations](DEMONSTRATIONS.md) offer shorter introductions.\n\n- [New to Komorebi]',1)
     out['docs/GLOSSARY.md']=render_glossary(config)
+    out['docs/READING_ROUTES.md']+='\n[Explore the physics collection](PHYSICS_COLLECTION.md): packet currents, quantum phase, continuum approximation, special functions and research studies.\n'
+    out['docs/READING_ROUTES.md']+='\n[Explore Special Functions](SPECIAL_FUNCTIONS.md): current reading volumes, five families, an exact coupled-function lab and formal evidence.\n'
     downloads='# Download one work\n\nThe [website downloads]('+SITE+'downloads.html) provide a separate reading ZIP for each work. Each contains its selected reading files, linked claim guides, available license notices, a source revision and SHA-256 checksums. The website lists file counts and sizes before download.\n\nThese are reading selections. TeX may depend on additional files, and the ZIP is not a complete Lean or software build. Use the source instructions below for a full component.\n\n'
     downloads=downloads.replace('These are reading selections.', 'Use [Build your own ZIP]('+SITE+'downloads.html#build-a-zip) to combine files from several works. Start with reading files or PDFs, then adjust individual manuscript sources, Lean files, code, guides and worked examples. The selector shows the file count and size, adds available license notices, and checks each file against its recorded SHA-256 checksum. Choose Prepare ZIP, then Save ZIP when it is ready. You can cancel preparation without losing your choices. Custom ZIPs support up to 200 MiB of source files and are prepared in your browser. The ready-made ZIPs also work without JavaScript.\n\nThese are reading selections.',1)
     claim_data=json.loads((root/'manifests/claim-navigation.json').read_bytes())
@@ -150,6 +156,7 @@ def render_glossary(config):
     text='# Glossary and notation\n\n'
     text+='This guide explains '+str(len(terms))+' terms used in the collection and its finite examples. '
     text+='Start with a subject below, use the [alphabetical index](#alphabetical-index), or look up [symbols](#symbols-in-the-introductory-example).\n\n'
+    text+='[Find a glossary term on the reading website]('+SITE+'collection/GLOSSARY.html#glossary-lookup): search terms and definitions, or choose a subject. Open the glossary beside a paper with **Read side by side**.\n\n'
     text+='A word can have a more specific meaning in another paper. The paper’s definitions and hypotheses take precedence. Examples and source links provide context without changing any recorded evidence status.\n\n'
     text+='[Look up notation across the collection](NOTATION_INDEX.md) · [Work through the calculations by hand](HAND_WORKED_EXAMPLES.md) · [Papers, proofs, Lean and code by topic](LEARNING_MAP.md) · [First software runs](FIRST_RUN.md)\n\n'
     for section in config['glossary_sections']:
@@ -289,3 +296,4 @@ def render_learning_pages(root, config, components):
         coverage+='\n'
     out[coverage_page]=coverage+'[Back to the topic map](LEARNING_MAP.md) · [All examples](HAND_WORKED_EXAMPLES.md)\n'
     return out
+

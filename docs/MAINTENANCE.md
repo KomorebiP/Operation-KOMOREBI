@@ -4,7 +4,7 @@ Current priority: navigation, record consistency, reproducibility instructions, 
 
 ## Choose the right tool
 
-Run commands from the collection root. The [verification guide](VERIFICATION.md) gives the routine check sequence and checkout requirements. These collection tools use Python's standard library and, where they inspect source history, Git. Individual software packages have separate dependencies.
+Run commands from the collection root. The [verification guide](VERIFICATION.md) gives the routine check sequence and checkout requirements. Navigation and record tools use Python's standard library and Git where they inspect source history. Package build and qualification tools document their additional requirements.
 
 | Tool | Purpose | File or publication effects |
 |---|---|---|
@@ -13,6 +13,7 @@ Run commands from the collection root. The [verification guide](VERIFICATION.md)
 | [update_completion_status.py](../tools/update_completion_status.py) | Validate evidence bindings and regenerate all maintained navigation/status pages. | Writes generated Markdown by default. `--check` validates without rewriting those pages. Both modes read Git history. |
 | [update_source_navigation.py](../tools/update_source_navigation.py) | Reconcile source availability after an import, using declared receipts and local source bytes. | Writes a navigation/manifest overlay to the required `--output-root`. Includes availability and contribution records. No commit or push. |
 | [update_publication_metadata.py](../tools/update_publication_metadata.py) | Prepare publication metadata from an already validated source index and explicit source commit. | Writes current and historical publication records to the required `--output-root`. Checks metadata consistency. Does not independently verify source bytes or query current library releases. |
+| [constructive_repair_release.py](../tools/constructive_repair_release.py) | Build and qualify Constructive Repair, verify a prepared archive, or assemble the two accepted platform distributions. Qualification uses pinned setuptools 84.1.0 and wheel 0.48.0. | Writes a new output directory and qualified artifacts. `verify` reads a distribution. The named release workflow performs publication after the two-platform gate passes. |
 | [import_source_collection.py](../tools/import_source_collection.py) | Prepare or import a declared source component or batch. | May download archives and extract files. `--prepare-component` writes to `--output`. Batch preparation without `--publish` uses temporary files. `--publish` installs sources and receipts, commits, and pushes the configured batch. |
 
 For routine wording or navigation changes, edit the relevant template or maintained document, then use `update_completion_status.py`. The source-navigation and publication-metadata scripts reconcile source and publication records. Review their dated inputs before reuse. Use a separate output directory to inspect their overlays before applying them.

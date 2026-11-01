@@ -1,7 +1,11 @@
 """Komorebi research presets followed by general plotting tutorials."""
 from sequence_presets import SEQUENCE_PRESETS
+from physics_presets import PHYSICS_PRESETS
+from special_function_presets import SPECIAL_FUNCTION_PRESETS
 
 PRESETS = {
+    **PHYSICS_PRESETS,
+    **SPECIAL_FUNCTION_PRESETS,
     **SEQUENCE_PRESETS,
     'plot-2d': dict(title='Plot a signal in 2D', group='Graphs', packages=['numpy'],
         description='Two sine waves and their sum. Zoom or inspect individual samples. This is a plotting tutorial, not a claim about a paper.',
@@ -124,3 +128,4 @@ export_file("processed-data.json", json.dumps([{"x": a, "y": b} for a,b in zip(x
 print(f"Plotted {len(rows)} rows.")
 '''),
 }
+

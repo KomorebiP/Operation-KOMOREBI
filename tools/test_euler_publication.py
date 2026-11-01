@@ -8,6 +8,7 @@ import unittest
 
 from euler_case import RECORD, PREFIX, READER, checked_path, publish, verify_site
 from build_reader_site import Site
+from euler_navigation import PARTS, TAP_SECTION, decorate, headings
 
 
 class EulerPublicationTests(unittest.TestCase):
@@ -95,6 +96,63 @@ class EulerPublicationTests(unittest.TestCase):
             'collection/demonstrations/EULER_PACKETS.html',
             'https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/results.json?v=1#data'),
             '../../downloads/euler-packets/results.json?v=1#data')
+
+    def test_optional_tap_program_and_results_are_bound_and_published(self):
+        with tempfile.TemporaryDirectory() as folder:
+            site,pages=self.fixture(folder)
+            record=json.loads((site.root/RECORD).read_bytes())
+            program='examples/euler_polyphase_taps.py'
+            result='verification/euler-packets/polyphase-taps-001/results.json'
+            for path,raw in ((program,b"print('tap split')\n"),(result,b'{"status":"PASS"}\n')):
+                target=site.root/path;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(raw)
+                record['files'].append(dict(path=path,sha256=hashlib.sha256(raw).hexdigest()))
+            record['tap_example']=dict(program=program,results=result)
+            (site.root/RECORD).write_text(json.dumps(record))
+            site.assessments['euler-signal-bridge']['worked_example']['sha256']=hashlib.sha256((site.root/RECORD).read_bytes()).hexdigest()
+            publish(site)
+            self.assertEqual(verify_site(site.output,pages),1)
+            self.assertIn('read/euler-polyphase-taps.html',pages)
+            self.assertIn('#split-an-fir-filter-into-polyphase-taps',pages['read/euler-polyphase-taps.html'])
+            self.assertEqual((site.output/(PREFIX+'euler_polyphase_taps.py')).read_bytes(),b"print('tap split')\n")
+            (site.output/(PREFIX+'polyphase-taps.json')).write_bytes(b'changed')
+            with self.assertRaises(AssertionError):verify_site(site.output,pages)
+
+
+class EulerNavigationTests(unittest.TestCase):
+    def manuscript(self):
+        sections=''.join('<h2 id="'+start+'">'+title+'</h2><p>Original text.</p>' for title,start in PARTS)
+        return '<h1>Euler</h1><p><strong>Date</strong></p>'+sections.replace(
+            '<h2 id="'+PARTS[4][1]+'">','<h2 id="'+TAP_SECTION+'">Tap split</h2><p>\\[x+y\\]</p><h2 id="'+PARTS[4][1]+'">')
+
+    def test_guide_is_complete_closed_and_preserves_all_section_anchors(self):
+        source=self.manuscript();result=decorate(source)
+        self.assertEqual(headings(result),headings(source))
+        self.assertEqual(result.count('Original text.'),len(PARTS))
+        self.assertEqual(result.count('\\[x+y\\]'),1)
+        self.assertEqual(result.count('class="euler-part-menu"'),7)
+        self.assertEqual(result.count('class="euler-part-navigation"'),7)
+        self.assertNotIn(' open',result)
+        self.assertNotIn('<script',result)
+        self.assertLess(result.index('<strong>Date</strong>'),result.index('id="euler-reading-guide"'))
+        self.assertLess(result.index('id="euler-reading-guide"'),result.index('id="'+PARTS[0][1]+'"'))
+
+    def test_missing_duplicate_and_reordered_section_anchors_fail_closed(self):
+        source=self.manuscript()
+        cases=(source.replace(PARTS[0][1],'missing'),source.replace(TAP_SECTION,'missing'),
+               source+'<h2 id="'+PARTS[0][1]+'">Duplicate</h2>',
+               source.replace(PARTS[0][1],'TEMP').replace(PARTS[1][1],PARTS[0][1]).replace('TEMP',PARTS[1][1]))
+        for case in cases:
+            with self.subTest(case=case[:80]),self.assertRaises(ValueError):decorate(case)
+
+    def test_guide_links_have_real_destinations_and_titles_are_escaped(self):
+        from check_reader_site import Page
+        source=self.manuscript().replace('Original text.','Retained &amp; safe.')
+        source=source.replace('Tap split</h2>','Tap &amp; split &lt;check&gt;</h2>')
+        result=decorate(source);page=Page(result)
+        self.assertIn('Tap &amp; split &lt;check&gt;',result)
+        for link in page.links:
+            self.assertTrue(link.startswith('#'))
+            self.assertIn(link[1:],page.ids)
 
 
 if __name__=='__main__':unittest.main()

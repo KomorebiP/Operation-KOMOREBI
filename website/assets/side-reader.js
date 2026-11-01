@@ -25,6 +25,7 @@
   const timers = {};
   const focusAfterLoad = {};
   const positions = {};
+  let sessions;
   const workFor = url => api.workIds(url, data)[0] || "";
   const titleFor = url => data.entries.find(row => row.url === url)?.title || data.pages[url.split(/[?#]/u)[0]] || "Document";
 
@@ -65,8 +66,10 @@
     if (location.href !== url) history[push ? "pushState" : "replaceState"](null, "", url);
     $("side-share-fallback").hidden = true;
     relatedMaterial();
+    sessions?.changed();
   }
   function layout() {
+    sessions?.captureVisible();
     root.dataset.view = state.view;
     root.style.setProperty("--left-width", state.width + "%");
     $("side-width").value = state.width;
@@ -86,6 +89,7 @@
         const position = positions[side];
         if (position?.url === state[side]) frame.contentWindow.scrollTo(position.x, position.y);
         else positionPane(side);
+        sessions?.restore(side);
       });
     }
   }
@@ -108,6 +112,26 @@
     } catch { if (focus) frame.focus(); }
   }
   const focusPane = side => positionPane(side, true);
+  function readingPreferences(value) {
+    document.body.classList.toggle("side-reading-focus", value.focus);
+    $("side-focus").setAttribute("aria-pressed", String(value.focus));
+    $("side-focus").textContent = value.focus ? "Show site navigation" : "Focus on reading";
+    for (const side of sides) $(side + "-send").checked = value.send[side];
+  }
+  function restoreSession(value) {
+    state = {left:value.left, right:value.right, view:value.view, width:value.width, invalid:false};
+    readingPreferences(value);
+    $("side-work-picker").open = false;
+    for (const side of sides) focusAfterLoad[side] = state.view === side || state.view === "both" && side === "left";
+    layout(); save(true);
+    for (const side of sides) {
+      $(side + "-work").value = workFor(state[side]);
+      $(side + "-query").value = "";
+      $(side + "-kind").value = "";
+      refresh(side); load(side);
+    }
+    status.textContent = "Restoring your saved reading session.";
+  }
   function openPair(pair, message) {
     state.left = pair.left;
     state.right = pair.right;
@@ -146,6 +170,7 @@
     if (!pending[side] && loaded[side] === value) {
       if (focusAfterLoad[side]) focusPane(side);
       focusAfterLoad[side] = false;
+      sessions?.restore(side);
       return;
     }
     if (!pending[side] && loaded[side] && loaded[side].split("#")[0] === value.split("#")[0]) {
@@ -153,6 +178,7 @@
       frame.contentWindow.history.replaceState(null, "", new URL(value, base).href);
       positionPane(side, Boolean(focusAfterLoad[side]));
       focusAfterLoad[side] = false;
+      sessions?.restore(side);
       return;
     }
     $(side + "-read").disabled = true;
@@ -186,7 +212,7 @@
     $(side + "-status").textContent = "Document ready.";
     doc.documentElement.classList.add("in-side-reader");
     const main = doc.querySelector("#main");
-    if (!main || main.dataset.sidePrepared) return;
+    if (!main || main.dataset.sidePrepared) {sessions?.watch(side); return;}
     main.dataset.sidePrepared = "true";
     for (const position of ["prepend", "append"]) {
       const button = doc.createElement("button");
@@ -258,6 +284,7 @@
       focusAfterLoad[side] = false;
       focusPane(side);
     } else positionPane(side);
+    sessions?.watch(side);
   }
   function refresh(side) {
     const matches = api.filter(data.entries, $(side + "-query").value, $(side + "-work").value, $(side + "-kind").value);
@@ -325,7 +352,8 @@
       $(side + "-picker").querySelector("summary").focus();
     });
     $(side + "-frame").addEventListener("load", () => decorate(side));
-    $(side + "-read").addEventListener("click", () => focusPane(side));
+    $(side + "-read").addEventListener("click", () => {if (!sessions?.focusCurrent(side)) focusPane(side);});
+    $(side + "-send").addEventListener("change", () => sessions?.changed());
     refresh(side);
     $(side + "-picker").open = false;
   }
@@ -339,6 +367,7 @@
     $("side-focus").setAttribute("aria-pressed", String(focused));
     $("side-focus").textContent = focused ? "Show site navigation" : "Focus on reading";
     $("side-focus").focus();
+    sessions?.changed();
   });
   $("side-swap").addEventListener("click", () => {
     [state.left, state.right] = [state.right, state.left];
@@ -364,9 +393,21 @@
     relatedMaterial();
     for (const side of sides) load(side);
   });
+  sessions = globalThis.KomorebiReaderSessions.create({base, data, titleFor,
+    getFrame:side => $(side + "-frame"), isCurrent:side => !pending[side] && loaded[side] === state[side],
+    getState:() => ({...state, focus:document.body.classList.contains("side-reading-focus"),
+      send:{left:$("left-send").checked, right:$("right-send").checked}}), restoreSession});
+  const resumed = sessions.initial();
+  if (resumed) {
+    state = {left:resumed.left, right:resumed.right, view:resumed.view, width:resumed.width, invalid:false};
+    readingPreferences(resumed);
+    $("side-work-picker").open = false;
+    for (const side of sides) {$(side + "-work").value = workFor(state[side]); refresh(side);}
+  }
   root.hidden = false;
   document.body.classList.add("side-reader-page");
   layout(); save();
   for (const side of sides) load(side);
-  status.textContent = initialInvalid ? "An unavailable address was replaced with a reading starting point. Choose a document to continue." : "Choose a document in either pane, or follow its reading links.";
+  status.textContent = resumed ? "Resumed your last reading session. Your saved positions will appear as the documents load." :
+    initialInvalid ? "An unavailable address was replaced with a reading starting point. Choose a document to continue." : "Choose a document in either pane, or follow its reading links.";
 })();

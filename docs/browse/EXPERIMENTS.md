@@ -13,7 +13,6 @@ PDF, manuscript text, Lean sources, code, and existing evidence are linked separ
 - [J-Space Causal Lab](../works/experiments-jspace-causal-lab.md)
 - [J-Space Collections](../works/experiments-jspace-collections.md)
 - [Workspace Incubator](../works/experiments-workspace-incubator.md)
-- [ARC-AGI-2 experiment](../works/arc-agi2.md)
 
 <a id="experiments-agent-dynamics"></a>
 
@@ -62,15 +61,5 @@ PDF, manuscript text, Lean sources, code, and existing evidence are linked separ
 [Open work page: Workspace Incubator](../works/experiments-workspace-incubator.md)
 
 [Code](../../experiments/workspace-incubator/src/) · [Work page](../works/experiments-workspace-incubator.md)
-
-[Back to contents](#contents) · [Browse all collections](../BROWSE.md)
-
-<a id="arc-agi2"></a>
-
-## ARC-AGI-2 experiment
-
-[Open work page: ARC-AGI-2 experiment](../works/arc-agi2.md)
-
-[Code](../../experiments/arc-agi2/prepare_limitfix.py) · [Work page](../works/arc-agi2.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)

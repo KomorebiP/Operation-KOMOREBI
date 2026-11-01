@@ -62,6 +62,10 @@ These files include test contracts, source records, run outputs, publication rec
 - [manifests/machine-native-reading-edition-2026-10-29.json](../manifests/machine-native-reading-edition-2026-10-29.json)
 - [manifests/euler-packets-worked-example-2026-10-29.json](../manifests/euler-packets-worked-example-2026-10-29.json)
 - [verification/resolution-semantics/windows-2026-10-30-run5/receipt.json](../verification/resolution-semantics/windows-2026-10-30-run5/receipt.json)
+- [verification/constructive-repair/qualified-2026-10-30/summary.json](../verification/constructive-repair/qualified-2026-10-30/summary.json)
+- [verification/constructive-repair/qualified-2026-10-30/release-record.json](../verification/constructive-repair/qualified-2026-10-30/release-record.json)
+- [verification/constructive-repair/qualified-2026-10-30/qualification-linux-py3135.json](../verification/constructive-repair/qualified-2026-10-30/qualification-linux-py3135.json)
+- [verification/constructive-repair/qualified-2026-10-30/qualification-windows-py3135.json](../verification/constructive-repair/qualified-2026-10-30/qualification-windows-py3135.json)
 
 ## Reading and updating a record
 
