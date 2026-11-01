@@ -1104,6 +1104,7 @@ def statement_navigation(chapter,rows):
 
 
 def render_book(reader,book):
+    from reader_proofreading import render as proofreading_notes
     from side_reader import pair_link
     from reading_navigation import outline, resources, work_links
     site=reader.site
@@ -1145,6 +1146,7 @@ def render_book(reader,book):
             if kind in HEADINGS:
                 level=min(level+1,5) if kind=='paragraph' else HEADINGS[kind]
                 body+='<h'+str(level)+' id="'+node['id']+'">'+e(node['number'])+' '+chapter.inline(node['title'])+'</h'+str(level)+'>'
+                body+=proofreading_notes(reader,page,node['id'])
                 if kind=='part' and config.get('part_figures'):
                     part_number=sum(c.get('kind')=='part' and c['start_line']<=spec['start_line']
                                     for c in config['chapters'])
@@ -1312,11 +1314,12 @@ def render_book_index(reader,book,reports):
         body+='</ul>'
     abstract=re.search(r'\\begin\{abstract\}(.*?)\\end\{abstract\}',book['main'],re.S)
     if abstract:
+        from reader_proofreading import render as proofreading_notes
         parser=Chapter('',book['macros'])
         parser.url=page
         parser.labels=book['chapters'][0][2].labels
         parser.citations={r['key']:(r['key'],parser.relative(config['bib_page'])+'#ref-'+r['key']) for r in book['references']}
-        body+='<section><h2>Abstract</h2>'+parser.paragraphs(abstract[1])+'</section>'
+        body+='<section><h2>Abstract</h2>'+proofreading_notes(reader,page,'abstract')+parser.paragraphs(abstract[1])+'</section>'
     body+='<h2>PDF and companion guides</h2><ul>'
     for record in reader.records.values():
         if record['work']==work and record['format']=='pdf' and not record.get('figure') and not record.get('figure_source'):
