@@ -72,13 +72,77 @@ class RootsUnityExactTests(unittest.TestCase):
                          M.add(M.multiply(M.delta(f),g),
                                M.multiply(M.shift(f),M.delta(g))))
 
+    def test_independent_function_image_histograms(self):
+        self.assertEqual(M.image_count_histogram(5,4),(0,4,180,600,240,0))
+        self.assertEqual(sum(M.image_count_histogram(5,4)),4**5)
+        self.assertEqual(M.image_count_histogram(0,0),(1,))
+        self.assertEqual(M.image_count_histogram(3,0),(0,0,0,0))
+        for codomain in range(5):
+            for n in range(7):
+                counts=M.image_count_histogram(n,codomain)
+                expected=M.stirling_second(n)[n]
+                self.assertEqual(
+                    counts,tuple(expected[k]*M.evaluate(M.falling(k),codomain)
+                                 for k in range(n+1)))
+                self.assertEqual(sum(counts),codomain**n)
+        for bad in ((-1,2),(1,-1),(2.2,3)):
+            with self.assertRaises(ValueError):
+                M.image_count_histogram(*bad)
+
+    def test_number_operator_and_rational_spectral_projectors(self):
+        for k in range(10):
+            self.assertEqual(M.newton_degree_operator(M.falling(k)),
+                             M.scale(M.falling(k),k))
+        self.assertEqual(M.newton_degree_operator(M.power(2)),
+                         (Fraction(0),Fraction(-1),Fraction(2)))
+        self.assertNotEqual(M.newton_degree_operator(M.power(2)),
+                            (Fraction(0),Fraction(0),Fraction(2)))
+        for degree in range(7):
+            f=M.power(degree)
+            self.assertEqual(
+                M.add(M.newton_degree_operator(M.delta(f)),
+                      M.scale(M.delta(M.newton_degree_operator(f)),-1)),
+                M.scale(M.delta(f),-1))
+            for modulus in (2,3,4,5):
+                for r in range(modulus):
+                    self.assertEqual(M.spectral_project_newton(f,modulus,r),
+                                     M.project_newton(f,modulus,r))
+
+    def test_formal_image_packet_egfs(self):
+        degree=8
+        for x in (Fraction(0),Fraction(1),Fraction(4),
+                  Fraction(1,2),Fraction(-3,2)):
+            for modulus in (2,3,4):
+                packets=[
+                    M.packet_egf_coefficients(x,modulus,r,degree)
+                    for r in range(modulus)]
+                for n in range(degree+1):
+                    self.assertEqual(sum(packet[n] for packet in packets),
+                                     x**n/M.factorial(n))
+                    for r in range(modulus):
+                        self.assertEqual(
+                            packets[r][n],
+                            M.evaluate(
+                                M.project_newton(M.power(n),modulus,r),x
+                            ) / M.factorial(n))
+        self.assertEqual(tuple(
+            M.packet_egf_coefficients(4,3,r,5)[5]*M.factorial(5)
+            for r in range(3)),(600,244,180))
+        with self.assertRaises(ValueError):
+            M.packet_egf_coefficients(4,1,0,5)
+        with self.assertRaises(ValueError):
+            M.packet_egf_coefficients(4,3,3,5)
+        with self.assertRaises(ValueError):
+            M.packet_egf_coefficients(4,3,2,-1)
+
     def test_exact_suite_and_invalid_controls(self):
         checks = M.check()
         self.assertEqual(checks["anchor"],12)
-        self.assertGreater(sum(checks.values()),400)
+        self.assertGreater(sum(checks.values()),6300)
         self.assertEqual(set(checks),{
             "anchor","stirling","roundtrip","projection","difference",
             "fourier","refinement","matrix","star","boundaries",
+            "enumeration","spectral","packet_egf",
         })
         with self.assertRaises(ValueError):
             M.project_newton(M.power(2),0,0)
@@ -93,13 +157,19 @@ class RootsUnityExactTests(unittest.TestCase):
             c=M.check()
             M.save(a,c)
             M.save(b,c)
-            self.assertEqual(len(FILES),7)
+            self.assertEqual(len(FILES),11)
             for file in FILES:
                 with self.subTest(file=file):
                     self.assertEqual((a/file).read_bytes(),(b/file).read_bytes())
             result=json.loads((a/"results.json").read_bytes())
             self.assertEqual(result["total_assertions"],sum(c.values()))
             self.assertEqual(result["packet_values_at_x4"],["600","244","180"])
+            self.assertEqual(result["image_count_histogram_n5_x4"],[0,4,180,600,240,0])
+            self.assertEqual(result["number_operator_on_x_squared"],["0","-1","2"])
+            self.assertEqual(result["packet_egf_n5_x4"],["600","244","180"])
+            self.assertIn("5,4,3,600,600",(a/"image-histograms.csv").read_text())
+            self.assertIn("600 + 244 + 180 = 1024 functions",
+                          (a/"function-image-histogram.svg").read_text())
             self.assertIn("2,2,15,12,180,1",
                           (a/"packet-contributions.csv").read_text())
             self.assertIn("600 + 244 + 180 = 1024",
@@ -130,6 +200,7 @@ class RootsUnityReaderTests(unittest.TestCase):
             pages[record["manuscript_url"]]="<h1>Roots of unity</h1>"
             self.assertEqual(record["reader_url"],READER)
             self.assertEqual(len(record["tables"]),len(FILES))
+            self.assertGreaterEqual(record["case_assertions"],6300)
             self.assertEqual(len(site.search),1)
             from check_reader_site import Page
             parsed={path:Page(body) for path,body in pages.items()}

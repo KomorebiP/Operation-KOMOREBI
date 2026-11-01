@@ -71,9 +71,13 @@ Newton/falling-factorial change of basis. The three packets yield
 600+244+180=1024. The same page proves finite-difference and multiplication
 transfer rules, tests six-way refinement, and shows why filtering ordinary
 monomial degrees is the wrong operation after a coordinate change.
-A standalone rational-arithmetic program and source-bound CSV/SVG records
-support the hand derivation. These are classical identities presented as
-one continuous realization argument, not a new theorem claim.
+The independently enumerated functions from five inputs to four labels
+explain exactly what those residue packets count. A rational spectral formula
+for the projectors and an all-degree generating-function bridge add two
+more exact routes to the same identities. The standalone checker and
+source-bound CSV/SVG records support the hand derivation. These are
+classical identities presented as one continuous realization argument,
+not a new theorem claim.
 
 ## Run in your browser
 

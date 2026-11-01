@@ -20,11 +20,15 @@ RECORD = PREFIX + "source-record.json"
 ARCHIVE = PREFIX + "source-and-results.zip"
 FILES = (
     "newton-stirling.csv",
+    "image-histograms.csv",
+    "packet-egfs.csv",
+    "spectral-projectors.csv",
     "packet-contributions.csv",
     "difference-transfer.csv",
     "refinement.csv",
     "projector-matrix.csv",
     "projection-diagram.svg",
+    "function-image-histogram.svg",
     "results.json",
 )
 
@@ -98,7 +102,8 @@ def publish(site):
         case_groups=result["checks_by_group"],
         scope=("Exact classical rational-polynomial theory; roots-of-unity degree "
                "filters, conjugated projectors, Newton inversion, cyclic difference "
-               "transfer, star multiplication and explicit failed controls. "
+               "transfer, exact function enumeration, spectral projectors, "
+               "formal packet EGFs, star multiplication and explicit failed controls. "
                "No new Lean or novelty claim."),
     )
     site.write(RECORD, json.dumps(record, ensure_ascii=False, indent=2) + "\n")
@@ -108,7 +113,8 @@ def publish(site):
         '<h1>Roots of unity, projectors, and falling factorials / exact Python</h1>'
         '<p>Reconstruct x^5 from three transported character packets. '
         'Includes exact Newton/Stirling inverses, difference-transfer identities, '
-        'a six-packet refinement, an induced star product, and counterexamples. '
+        'a six-packet refinement, an induced star product, direct function enumeration, '
+        'the spectral number operator, filtered EGFs, and counterexamples. '
         'No complex floating-point arithmetic or third-party package is required.</p>'
         '<p><a class="button" href="../' + record["manuscript_url"] + '">'
         'Read the complete mathematical derivation</a> · '
@@ -137,7 +143,10 @@ def publish(site):
               "Stirling Newton coefficients falling factorial polynomial "
               "transported operator finite difference derivative composition "
               "conjugation six lane residue refinement umbral star product "
-              "character Fourier roots of unity Python exact rational certificate"),
+              "character Fourier roots of unity Python exact rational certificate "
+              "functions image sizes independent enumeration combinatorial "
+              "backward difference number operator rational spectral projectors "
+              "formal filtered exponential generating functions"),
     ))
     return record
 
@@ -152,10 +161,13 @@ def verify_site(root: Path, pages: dict) -> int:
     assert len(record["tables"]) == len(FILES)
     assert {x["name"] for x in record["tables"]} == set(FILES)
     assert record["case_assertions"] == sum(record["case_groups"].values())
-    assert record["case_assertions"] >= 400
+    assert record["case_assertions"] >= 6300
 
     results = json.loads((root / PREFIX / "results.json").read_bytes())
     assert results["row5"] == [0,1,15,25,10,1]
+    assert results["image_count_histogram_n5_x4"] == [0,4,180,600,240,0]
+    assert results["number_operator_on_x_squared"] == ["0","-1","2"]
+    assert results["packet_egf_n5_x4"] == ["600","244","180"]
     assert results["packet_values_at_x4"] == ["600","244","180"]
     assert results["difference_values_at_x4"] == ["900","961","240"]
     assert results["reconstructed_value_at_x4"] == "1024"
@@ -170,6 +182,11 @@ def verify_site(root: Path, pages: dict) -> int:
         root / PREFIX / "packet-contributions.csv").read_text(encoding="utf-8")
     assert "0,600,900,900" in (
         root / PREFIX / "difference-transfer.csv").read_text(encoding="utf-8")
+    assert "5,4,3,600,600" in (root / PREFIX / "image-histograms.csv").read_text(encoding="utf-8")
+    assert "4,3,0,5,5,600" in (root / PREFIX / "packet-egfs.csv").read_text(encoding="utf-8")
+    histogram_svg = (root / PREFIX / "function-image-histogram.svg").read_text(encoding="utf-8")
+    assert 'role="img"' in histogram_svg
+    assert "600 + 244 + 180 = 1024 functions" in histogram_svg
     svg = (root / PREFIX / "projection-diagram.svg").read_text(encoding="utf-8")
     assert 'role="img"' in svg
     assert "600 + 244 + 180 = 1024" in svg
