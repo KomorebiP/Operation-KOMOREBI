@@ -159,7 +159,7 @@ def project_newton(poly, modulus, residue):
 
 
 def naive_power_project(poly, modulus, residue):
-    """INCORRECT replacement for transported projector on power coordinates."""
+    """Valid ordinary-power projector; not the transported Newton projector."""
     return trim(v if k % modulus == residue else Q(0)
                 for k, v in enumerate(poly))
 
@@ -437,6 +437,25 @@ def check():
                         children=add(children,project_newton(poly,refined,r+modulus*q))
                     verify(children==pieces[r],"refinement",
                            "parent equals disjoint residue children")
+    # Independent power-basis projectors are legitimate, but are not the
+    # Newton-transferred projectors unless the chosen coordinate change
+    # preserves those specific degree labels.
+    for poly in sample_polys:
+        for modulus in range(2,7):
+            power_parts=[naive_power_project(poly,modulus,r)
+                         for r in range(modulus)]
+            reconstructed=(Q(0),)
+            for part in power_parts:
+                reconstructed=add(reconstructed,part)
+            verify(reconstructed==trim(poly),"power_projector",
+                   "ordinary power-degree filters reconstruct the polynomial")
+            for r in range(modulus):
+                for target in range(modulus):
+                    verify(naive_power_project(power_parts[r],modulus,target)
+                           ==(power_parts[r] if r==target else (Q(0),)),
+                           "power_projector",
+                           "ordinary power-degree filters are orthogonal projectors")
+
     # A second, *independent* interpretation: count actual functions by
     # the number of different labels in their image, without using S(n,k).
     verify(image_count_histogram(5,4)==(0,4,180,600,240,0),
@@ -556,6 +575,36 @@ def check():
                                 poly,modulus,source,r,h)==
                                 (source_parts[source] if r==source else (Q(0),)),
                                 "translation_blocks","zero shift gives diagonal transfer")
+
+    # The signed first/second Stirling matrices are integral and mutually
+    # inverse. Unlike Newton's divided-difference formula, the change of
+    # basis remains invertible after reduction modulo any prime.
+    for prime in (2,3,5):
+        for n in range(MAX_DEGREE+1):
+            for k in range(n+1):
+                row_first_second=sum(first[n][j]*second[j][k]
+                                     for j in range(k,n+1))
+                row_second_first=sum(second[n][j]*first[j][k]
+                                     for j in range(k,n+1))
+                verify(row_first_second%prime == int(n==k),
+                       "modular_basis","signed-first times second inverse mod p")
+                verify(row_second_first%prime == int(n==k),
+                       "modular_basis","second times signed-first inverse mod p")
+
+    # Over F3 the cubic forward difference vanishes on every polynomial;
+    # x^3-x is nevertheless a nonzero polynomial despite being zero as
+    # a function on the three-point field.
+    for n in range(MAX_DEGREE+1):
+        poly=power(n)
+        cubed=delta(delta(delta(poly)))
+        verify(mod_polynomial(cubed,3)==(0,),
+               "modular_basis","third forward difference vanishes modulo 3")
+        verify(mod_polynomial(translate(poly,3),3)==mod_polynomial(poly,3),
+               "modular_basis","shift by characteristic is polynomial identity")
+    verify(mod_polynomial(falling(3),3)!=(0,),"modular_basis",
+           "x^3-x is nonzero as a polynomial over F3")
+    verify(all(evaluate(falling(3),a).numerator%3==0 for a in range(3)),
+           "modular_basis","same polynomial is zero as a function on F3")
 
     # The same carry in the function-image generating functions.  This checks
     # the binomial coefficient identity in an independent formal-series route.
