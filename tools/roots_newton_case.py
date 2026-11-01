@@ -23,12 +23,16 @@ FILES = (
     "image-histograms.csv",
     "packet-egfs.csv",
     "spectral-projectors.csv",
+    "translation-blocks.csv",
+    "shifted-packet-ledger.csv",
+    "finite-characteristic-obstruction.csv",
     "packet-contributions.csv",
     "difference-transfer.csv",
     "refinement.csv",
     "projector-matrix.csv",
     "projection-diagram.svg",
     "function-image-histogram.svg",
+    "translation-carry.svg",
     "results.json",
 )
 
@@ -103,7 +107,9 @@ def publish(site):
         scope=("Exact classical rational-polynomial theory; roots-of-unity degree "
                "filters, conjugated projectors, Newton inversion, cyclic difference "
                "transfer, exact function enumeration, spectral projectors, "
-               "formal packet EGFs, star multiplication and explicit failed controls. "
+               "formal packet EGFs, general translation and cyclic carry, "
+               "finite-characteristic spectral obstructions, star multiplication "
+               "and explicit failed controls. "
                "No new Lean or novelty claim."),
     )
     site.write(RECORD, json.dumps(record, ensure_ascii=False, indent=2) + "\n")
@@ -114,7 +120,8 @@ def publish(site):
         '<p>Reconstruct x^5 from three transported character packets. '
         'Includes exact Newton/Stirling inverses, difference-transfer identities, '
         'a six-packet refinement, an induced star product, direct function enumeration, '
-        'the spectral number operator, filtered EGFs, and counterexamples. '
+        'the spectral number operator, filtered EGFs, translation carry blocks, '
+        'finite-characteristic obstructions, and counterexamples. '
         'No complex floating-point arithmetic or third-party package is required.</p>'
         '<p><a class="button" href="../' + record["manuscript_url"] + '">'
         'Read the complete mathematical derivation</a> · '
@@ -146,7 +153,9 @@ def publish(site):
               "character Fourier roots of unity Python exact rational certificate "
               "functions image sizes independent enumeration combinatorial "
               "backward difference number operator rational spectral projectors "
-              "formal filtered exponential generating functions"),
+              "formal filtered exponential generating functions "
+              "cyclic shift translation packet carry cross-channel matrix "
+              "characteristic three finite fields eigenvalue collision"),
     ))
     return record
 
@@ -161,12 +170,16 @@ def verify_site(root: Path, pages: dict) -> int:
     assert len(record["tables"]) == len(FILES)
     assert {x["name"] for x in record["tables"]} == set(FILES)
     assert record["case_assertions"] == sum(record["case_groups"].values())
-    assert record["case_assertions"] >= 6300
+    assert record["case_assertions"] >= 6800
 
     results = json.loads((root / PREFIX / "results.json").read_bytes())
     assert results["row5"] == [0,1,15,25,10,1]
     assert results["image_count_histogram_n5_x4"] == [0,4,180,600,240,0]
     assert results["number_operator_on_x_squared"] == ["0","-1","2"]
+    assert results["shift_one_project_after_translate_at_4"] == ["1561","484","1080"]
+    assert results["shift_one_translate_existing_packet_at_4"] == ["1500","1205","420"]
+    assert results["shift_one_cross_packet_carries_at_4"] == ["961","240","900"]
+    assert results["finite_characteristic_obstruction"]["falling_degree_3_mod_3"] == [0,2,0,1]
     assert results["packet_egf_n5_x4"] == ["600","244","180"]
     assert results["packet_values_at_x4"] == ["600","244","180"]
     assert results["difference_values_at_x4"] == ["900","961","240"]
@@ -183,10 +196,17 @@ def verify_site(root: Path, pages: dict) -> int:
     assert "0,600,900,900" in (
         root / PREFIX / "difference-transfer.csv").read_text(encoding="utf-8")
     assert "5,4,3,600,600" in (root / PREFIX / "image-histograms.csv").read_text(encoding="utf-8")
+    assert "0,600,1500,900,961,1561" in (
+        root / PREFIX / "shifted-packet-ledger.csv").read_text(encoding="utf-8")
+    assert "F3,0,0,1,1,0" in (
+        root / PREFIX / "finite-characteristic-obstruction.csv").read_text(encoding="utf-8")
     assert "4,3,0,5,5,600" in (root / PREFIX / "packet-egfs.csv").read_text(encoding="utf-8")
     histogram_svg = (root / PREFIX / "function-image-histogram.svg").read_text(encoding="utf-8")
     assert 'role="img"' in histogram_svg
     assert "600 + 244 + 180 = 1024 functions" in histogram_svg
+    translation_svg=(root / PREFIX / "translation-carry.svg").read_text(encoding="utf-8")
+    assert 'role="img"' in translation_svg
+    assert "1561 + 484 + 1080 = 3125" in translation_svg
     svg = (root / PREFIX / "projection-diagram.svg").read_text(encoding="utf-8")
     assert 'role="img"' in svg
     assert "600 + 244 + 180 = 1024" in svg
