@@ -11,13 +11,23 @@ on the individual reading pages.
 The twelve core editions share collection switching, chapter filtering,
 persistent text size and font choices, and sidebar chapter shortcuts. The
 [control renderer](../tools/reader_usability.py) runs after chapter layout and
-preserves the article bytes. [Reading tools](../website/assets/reading-tools.js)
+preserves manuscript text and mathematics. [Reading tools](../website/assets/reading-tools.js)
 enhance native links and disclosures; full chapter lists and paper switching
 remain usable without JavaScript. Text preferences tolerate unavailable or
 invalid browser storage. Keep these controls in the shared renderer rather than
 adding separate versions to individual papers. Run
 `python -B -m unittest discover -s tools -p 'test_reader_usability.py' -v` along
 with the reading-navigation and source-preservation checks when changing them.
+
+[Citation and figure navigation](../tools/reading_links.py) adds native links
+to the existing figure assets and return links from bibliography entries to
+their citing HTML passages. Return routes are derived from the rendered
+canonical chapters after each book is built. They retain the nearest source
+passage anchor and deduplicate repeated citations within one passage. The site
+verifier recomputes those routes and checks their placement and targets. Run
+`test_reading_links.py` when changing this code. Bibliography search enhances the
+original entries in the browser; direct links and Back/Forward reveal an entry
+that a search has hidden. Print styles restore the complete bibliography.
 
 ## Sources
 

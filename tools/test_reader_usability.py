@@ -3,12 +3,19 @@ import re
 import unittest
 
 from check_reader_site import Page
-from readable_chapters import BOOKS, navigation_title
+from readable_chapters import BOOKS, Chapter, navigation_title
 from reader_usability import enhance
 from reading_navigation import navigation, chapter_layout, outline
 
 
 class ReaderUsabilityTests(unittest.TestCase):
+    def test_tex_dashes_render_in_prose_while_math_and_code_remain_exact(self):
+        markup=Chapter('',{}).inline(r'Pages 10--12---a range. $1--2$ \texttt{--flag}')
+        self.assertIn('Pages 10–12—a range.',markup)
+        self.assertIn(r'\(1--2\)',markup)
+        self.assertIn('<code>--flag</code>',markup)
+        self.assertEqual(navigation_title(r'Pages 10--12 and $1--2$'),'Pages 10–12 and 1--2')
+
     def test_navigation_labels_remove_print_spacing_and_raw_math_delimiters(self):
         self.assertEqual(navigation_title(r'Part II\quad Extended mathematical development'),
                          'Part II · Extended mathematical development')
