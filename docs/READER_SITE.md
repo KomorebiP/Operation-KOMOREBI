@@ -80,10 +80,13 @@ refinement and an induced multiplication law. It distinguishes transported
 projectors from raw ordinary-degree filters using a concrete failed control.
 The [standalone exact checker](../examples/roots_unity_falling_factorial.py)
 uses standard-library rational arithmetic, an exact cyclic permutation trace
-for root-of-unity orthogonality, and independent matrix coefficients.
-The [publication bridge](../tools/roots_newton_case.py) regenerates five CSV
-tables, an accessible SVG, JSON checks, and a deterministic source-and-results
-archive. Tests include reproducible bytes and deliberately corrupted downloads.
+for root-of-unity orthogonality, direct enumeration of function images,
+rational spectral polynomials in the backward-difference number operator,
+filtered formal generating functions, and independent matrix coefficients.
+The [publication bridge](../tools/roots_newton_case.py) regenerates eight
+CSV tables, two accessible Python SVGs, JSON checks, and a deterministic
+source-and-results archive. Tests include reproducible bytes and
+deliberately corrupted downloads.
 
 ## Build locally
 
