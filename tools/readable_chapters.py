@@ -100,6 +100,8 @@ BOOKS['paper-iii']['table_reading_aids']={
     ('chapters/02_connections_obstructions.tex','L923'): dict(caption='Formalization status and boundaries',
         headers=['Topic','Status','Declaration or roadmap target','Exact boundary'],row_header_column=0),
 }
+for work in ('paper-i','paper-ii','paper-iii'):
+    BOOKS[work]['require_table_reading_aids']=True
 FOURTH_BASE = 'papers/paper-iv/current/Paper_IV_Verification_Closeout_v1.1.0/publication_baseline/editable/traditional/'
 FOURTH_MAIN = FOURTH_BASE+'Paper_IV_Traditional_Final.tex'
 # Inclusive, contiguous source ranges. Boundaries are checked before conversion;
@@ -149,8 +151,13 @@ BOOKS['paper-vii'] = SEVENTH_BOOK
 CHAPTERS += SEVENTH_CHAPTERS
 from paper_ix_reading import register as register_paper_ix
 register_paper_ix(BOOKS, CHAPTERS)
+from special_functions_reading import CONFIG as SPECIAL_FUNCTIONS_BOOK
+BOOKS[SPECIAL_FUNCTIONS_BOOK['work']] = SPECIAL_FUNCTIONS_BOOK
+from proof_path_reading import BOOK as PROOF_PATH_BOOK, CHAPTERS as PROOF_PATH_CHAPTERS
+BOOKS[PROOF_PATH_BOOK['work']] = PROOF_PATH_BOOK
+CHAPTERS += PROOF_PATH_CHAPTERS
 BY_SOURCE = {c['source']:c for c in reversed(CHAPTERS)}
-NUMBERED = {'definition', 'theorem', 'proposition', 'lemma', 'corollary', 'remark', 'example', 'standardfact', 'certificate','boundary','roadmap','construction','classicalinput','classical','conjecture'}
+NUMBERED = {'definition', 'theorem', 'proposition', 'lemma', 'corollary', 'remark', 'example', 'standardfact', 'certificate','boundary','roadmap','construction','classicalinput','classical','conjecture','problem','warning'}
 KIND_NAMES = {'classical':'Classical input','statement':'Supplementary statement','standardfact':'Standard fact','certificate':'Numerical certificate','text':'Passage','roadmap':'Formalization target','classicalinput':'Classical input'}
 HEADINGS = {'part':2,'section':2,'subsection':3,'subsubsection':4,'paragraph':5}
 MATH_PATTERN = re.compile(r'(?<!\\)\$(.*?)(?<!\\)\$|\\\[(.*?)\\\]|(\\begin\{align\*\}.*?\\end\{align\*\})|\\\((.*?)\\\)',re.S)
@@ -171,7 +178,7 @@ SYMBOLS = {'alpha': 'α', 'beta': 'β', 'gamma': 'γ', 'rho': 'ρ', 'omega': 'ω
 
 def clean_tex(text):
     # Retain newlines for exact links to the unchanged source file.
-    parts = re.split(r'(\\begin\{lstlisting\}.*?\\end\{lstlisting\})',text,flags=re.S)
+    parts = re.split(r'(\\begin\{lstlisting\}(?:\[[^\]\n]*\])?.*?\\end\{lstlisting\})',text,flags=re.S)
     for i in range(0,len(parts),2):
         parts[i] = re.sub(r'(?<!\\)%[^\n]*', '', parts[i])
         parts[i] = re.sub(r'\\(?:Needspace|enlargethispage)\{[^{}]*\}',lambda m:' '*len(m[0]),parts[i])
@@ -204,7 +211,13 @@ def presentation_tex(text):
     while (match := re.search(r'\\KomorebiOpeningNote\{', text)):
         value,end = group(text, match.end()-1)
         text = text[:match.start()] + r'\begin{readerroadmap}[title={Reading orientation}]' + value + r'\end{readerroadmap}' + text[end:]
-    text = text.replace(r'\fbox{\begin{minipage}{0.93\textwidth}', r'\begin{readerroadmap}').replace(r'\end{minipage}}', r'\end{readerroadmap}')
+    # Only turn the *paired print box* into a reader panel. A separate source
+    # uses a minipage inside an actual displayed mathematical expression.
+    text = re.sub(
+        r'\\fbox\{\\begin\{minipage\}\{0\.93\\textwidth\}(.*?)\\end\{minipage\}\}',
+        lambda m: r'\begin{readerroadmap}' + m[1] + r'\end{readerroadmap}',
+        text, flags=re.S
+    )
     while (match := re.search(r'\\modelfigure\{', text)):
         path,end = group(text, match.end()-1)
         caption,end = group(text, end)
@@ -223,7 +236,7 @@ def presentation_tex(text):
 
 
 def original_math(text):
-    text = re.sub(r'\\begin\{lstlisting\}.*?\\end\{lstlisting\}', '', clean_tex(text),flags=re.S)
+    text = re.sub(r'\\begin\{lstlisting\}(?:\[[^\]\n]*\])?.*?\\end\{lstlisting\}', '', clean_tex(text),flags=re.S)
     return [next(x for x in m.groups() if x is not None) for m in MATH_PATTERN.finditer(text)]
 
 
@@ -291,6 +304,18 @@ def formal_note_labels(main):
 
 def expand_math(tex, macros):
     tex = re.sub(r'\\label\{[^{}]+\}', '',tex)
+    # The monograph uses one print-only minipage *inside* a boxed statement.
+    # Preserve the recorded source math, but use MathJax-readable text rows.
+    boxed = re.fullmatch(
+        r'\s*\\boxed\{\\begin\{minipage\}\{0\.88\\linewidth\}\s*(.*?)\s*\\end\{minipage\}\}\s*',
+        tex, re.S)
+    if boxed:
+        import textwrap
+        text = ' '.join(boxed[1].split())
+        lines = textwrap.wrap(text, width=70)
+        return r'\boxed{\begin{gathered}' + r'\\'.join(
+            r'\text{' + line + '}' for line in lines
+        ) + r'\end{gathered}}'
     tex = tex_accents(tex)
     if tex.startswith(r'\begin{align*}'):
         tex = tex.replace(r'\begin{align*}',r'\begin{aligned}',1).removesuffix(r'\end{align*}')+r'\end{aligned}'
@@ -647,6 +672,8 @@ class Chapter:
 
 def readable_url(path, line=None):
     record = next((c for c in CHAPTERS if c['source']==path and (line is None or 'start_line' not in c or c['start_line']<=line<=c['end_line'])),None)
+    if record is None:
+        record = next((c for c in SPECIAL_FUNCTIONS_BOOK['chapters'] if c.get('source')==path and (line is None or 'start_line' not in c or c['start_line']<=line<=c['end_line'])),None)
     return record['url']+('#L'+str(line) if line else '') if record else None
 
 
@@ -714,6 +741,13 @@ def prepare(reader):
     reader.add(BIB,'Paper II historical bibliography output')
     reader.readable_books={}
     for work,config in BOOKS.items():
+        if config.get('custom_reader'):
+            if config['custom_reader'] == 'proof_path':
+                from proof_path_reading import prepare_book
+            else:
+                from special_functions_reading import prepare_book
+            reader.readable_books[work] = prepare_book(reader, config)
+            continue
         reader.add(config['bib'],config['label']+' bibliography source')
         main=reader.site.read_source(reader.records[config['main']]).decode('utf-8-sig')
         if config.get('monolithic'): validate_monolithic(main,config)
@@ -800,6 +834,8 @@ def table_reading_aid(config,source,identifier):
     aids=config.get('table_reading_aids',{})
     scoped=(source.removeprefix(config['base']),identifier)
     key=scoped if scoped in aids else identifier
+    if config.get('require_table_reading_aids') and key not in aids:
+        raise ValueError('Review the table reading aid for '+source+'#'+identifier)
     return key,aids.get(key)
 
 
@@ -881,24 +917,23 @@ def render_table(node,chapter,reading_aid=None):
     return body+('</tbody>' if len(rows)>1 else '')+'</table></div>'
 
 
-def neighbour_links(spec):
-    config=BOOKS[spec['work']]
-    chapters=config['chapters']
-    index=chapters.index(spec)
-    routes=[]
-    if index>0: routes.append(('Previous: '+chapters[index-1]['title'],chapters[index-1]['url']))
-    routes.append(('All '+config['label']+' chapters',config['index']))
-    if index+1<len(chapters): routes.append(('Next: '+chapters[index+1]['title'],chapters[index+1]['url']))
-    return '<nav class="chapter-neighbours" aria-label="Neighbouring reading chapters">'+''.join(
-        '<a href="'+posixpath.relpath(url,posixpath.dirname(spec['url']))+'">'+html.escape(title)+'</a>' for title,url in routes)+'</nav>'
+def neighbour_links(spec, placement='top'):
+    from reading_navigation import navigation
+    return navigation(BOOKS[spec['work']],spec['url'],placement)
 
 
 def render(reader):
     reports=[]
     for book in reader.readable_books.values():
-        reports.extend(render_book(reader,book))
+        if book['config'].get('custom_reader') is True:
+            from special_functions_reading import render_book as render_special_functions
+            render_special_functions(reader,book)
+        else:
+            reports.extend(render_book(reader,book))
     reader.site.write('documents/readable-chapters.json',json.dumps(reports,ensure_ascii=False,indent=2)+'\n')
     render_reading_index(reader)
+    from reading_navigation import publish_record
+    publish_record(reader.site,BOOKS)
 
 
 def render_reading_index(reader):
@@ -912,7 +947,7 @@ def render_reading_index(reader):
         pdf=reader.primary_pdf(work)
         if pdf: body+='<a href="'+site.rel(pdf['url'],page)+'">Read PDF</a>'
         body+='</nav></section>'
-    body+='</div><h2>Reading options</h2><p>Use browser zoom to enlarge text. Wide equations and tables have separate areas that can be scrolled with the keyboard. MathJax provides equation exploration and assistive reading options through its context menu.</p><p>The HTML editions follow the retained manuscripts. <a href="'+site.rel('read/paper-iv/atlas/index.html',page)+'">Paper IV’s 26 atlas plates</a> also have HTML pages with drawings, descriptions and tables. Other visual atlases remain in the PDFs, and not every paper has an HTML edition yet. See <a href="'+site.rel('collection/ACCESSIBILITY.html',page)+'">accessibility and reading options</a> for current coverage and limitations.</p><p><a href="'+site.rel('documents.html',page)+'">Browse all papers and PDFs</a> · <a href="'+site.rel('collection/READING_ROUTES.html',page)+'">Choose a reading route</a></p>'
+    body+='</div><h2>Reading options</h2><p>Use browser zoom to enlarge text. Wide equations and tables have separate areas that can be scrolled with the keyboard. MathJax provides equation exploration and assistive reading options through its context menu.</p><p>The HTML editions follow the retained manuscripts. <a href="'+site.rel('read/paper-iv/atlas/index.html',page)+'">Paper IV’s 26 atlas plates</a> also have HTML pages with drawings, descriptions and tables. Paper VI’s first six atlas plates also have HTML pages; its complete atlas and other visual atlases remain in the PDFs. Not every paper has an HTML edition yet. See <a href="'+site.rel('collection/ACCESSIBILITY.html',page)+'">accessibility and reading options</a> for current coverage and limitations.</p><p><a href="'+site.rel('documents.html',page)+'">Browse all papers and PDFs</a> · <a href="'+site.rel('collection/READING_ROUTES.html',page)+'">Choose a reading route</a></p>'
     site.page(page,'Read the papers online',body)
     site.search.append(dict(title='Read the papers online',group='Collection',kind='Guides',url=page,text='HTML reading editions '+' '.join(c['label'] for c in BOOKS.values())+' chapters equations proofs',work_ids=list(BOOKS)))
 
@@ -961,6 +996,7 @@ def statement_navigation(chapter,rows):
 
 def render_book(reader,book):
     from side_reader import pair_link
+    from reading_navigation import outline, resources, work_links
     site=reader.site
     config=book['config']
     work=config['work']
@@ -984,9 +1020,11 @@ def render_book(reader,book):
         if config.get('statement_navigation'): toc+=statement_navigation(chapter,rows)
         toc+='</nav>'
         body='<p class="eyebrow">Readable manuscript</p><h1>'+e(title)+'</h1>'
-        body+='<p>The wording and mathematics follow the retained manuscript. This reading format does not add a proof review or extend Lean coverage.</p>'
-        body+=reader.work_routes(work,page)+neighbour_links(spec)
-        body+='<p><a href="'+reader.resolve(source,page)+'">Original TeX with line links</a> · <a href="'+site.rel(reader.records[source]['file_url'],page)+'" download>Download TeX</a></p>'+reading_options()+toc
+        body+=neighbour_links(spec)+'<p class="reading-start"><a href="#chapter-text">Start reading</a></p>'+outline(toc)
+        tools=work_links(reader,work,page)
+        tools+='<p><a href="'+reader.resolve(source,page)+'">Original TeX with line links</a> · <a href="'+site.rel(reader.records[source]['file_url'],page)+'" download>Download TeX</a></p>'
+        tools+='<p>The wording and mathematics follow the retained manuscript. This reading format does not add a proof review or extend Lean coverage.</p>'+reading_options()
+        body+=resources(tools)
         body+='<article id="chapter-text" class="readable-chapter" aria-label="'+e(title,quote=True)+'">'
         level=2
         for node in chapter.nodes:
@@ -998,10 +1036,18 @@ def render_book(reader,book):
             if kind in HEADINGS:
                 level=min(level+1,5) if kind=='paragraph' else HEADINGS[kind]
                 body+='<h'+str(level)+' id="'+node['id']+'">'+e(node['number'])+' '+chapter.inline(node['title'])+'</h'+str(level)+'>'
-                index=headings.index(node)
-                section_links='<a href="#contents">Contents</a>'
-                if index: section_links+=' · <a href="#'+headings[index-1]['id']+'">Previous section</a>'
-                if index+1<len(headings): section_links+=' · <a href="#'+headings[index+1]['id']+'">Next section</a>'
+                if kind=='part' and config.get('part_figures'):
+                    part_number=sum(c.get('kind')=='part' and c['start_line']<=spec['start_line']
+                                    for c in config['chapters'])
+                    figure_name=config['part_figures'].get(part_number)
+                    if figure_name:
+                        figure_path=config['base']+'figures/'+figure_name
+                        figure_url=reader.image_url(figure_path,page)
+                        if not figure_url: raise ValueError('Missing part illustration '+figure_path)
+                        dimensions=reader.images[figure_path]
+                        alt='Original diagram introducing '+spec['title']
+                        body+='<figure class="part-reading-figure"><img src="'+figure_url+'" width="'+str(dimensions['width'])+'" height="'+str(dimensions['height'])+'" alt="'+e(alt,quote=True)+'" loading="lazy"><figcaption>Original monograph illustration. The PDF retains the complete printed caption.</figcaption></figure>'
+                section_links='<a href="#contents">On this page</a>'
                 reading_links=' · '.join(filter(None,[section_links,reading_links]))
                 body+=passage_links(links,reading_links)
             elif kind=='figure' and config.get('figure_pdfs'):
@@ -1043,18 +1089,19 @@ def render_book(reader,book):
                     width,height=png_dimensions(preview_raw)
                     dimensions=dict(width=width,height=height)
                 size=' width="'+str(dimensions['width'])+'" height="'+str(dimensions['height'])+'"'
-                body+='<figure id="'+node['id']+'" tabindex="-1"><img src="'+image+'"'+size+' alt="'+e(alt,quote=True)+'" loading="lazy"><figcaption>'+chapter.inline(caption)+'</figcaption>'+description_link+passage_links(links)+'</figure>'
+                figure_number=('Figure '+node['number']+'. ') if config.get('show_figure_numbers') else ''
+                body+='<figure id="'+node['id']+'" tabindex="-1"><img src="'+image+'"'+size+' alt="'+e(alt,quote=True)+'" loading="lazy"><figcaption>'+figure_number+chapter.inline(caption)+'</figcaption>'+description_link+passage_links(links)+'</figure>'
             elif kind in {'table','longtable','tabularx'}:
                 aid_key,aid=table_reading_aid(config,source,node['id'])
-                if table_aids and not aid: raise ValueError('Review the table reading aid for '+source+'#'+node['id'])
                 if aid: aided_tables.add(aid_key)
                 body+='<section id="'+node['id']+'">'+render_table(node,chapter,aid)+passage_links(links)+'</section>'
             elif kind=='conceptchain':
                 body+='<section id="'+node['id']+'"><div class="table-scroll" tabindex="0" role="region" aria-label="Conceptual diagram. Scroll horizontally if needed.">'+chapter.paragraphs(node['body'])+'</div>'+passage_links(links)+'</section>'
             elif kind=='thebibliography':
                 body+='<section id="'+node['id']+'"><h2>References</h2>'
-                for entry in book['references']:
-                    body+='<section id="ref-'+entry['key']+'"><h3>'+e(entry['key'])+'</h3>'+chapter.paragraphs(presentation_tex(entry['body']))+'</section>'
+                for i,entry in enumerate(book['references'],1):
+                    reference_number=('['+str(i)+'] ') if config.get('numbered_bibliography') else ''
+                    body+='<section id="ref-'+entry['key']+'"><h3>'+reference_number+e(entry['key'])+'</h3>'+chapter.paragraphs(presentation_tex(entry['body']))+'</section>'
                 body+=passage_links(links)+'</section>'
             elif kind=='lstlisting':
                 body+='<section id="'+node['id']+'"><pre tabindex="0" aria-label="Original algorithm listing"><code>'+e(node['body'].strip('\n'))+'</code></pre>'+passage_links(links)+'</section>'
@@ -1090,10 +1137,13 @@ def render_book(reader,book):
                 math_preview=re.search(r'\\\[(.*?)\\\]',node['body'],re.S)
                 if math_preview and len(math_preview[1])<650 and kind!='lstlisting': item['math_preview']=expand_math(math_preview[1],chapter.macros)
                 site.search.append(item)
-        body+='</article>'+neighbour_links(spec)+reader.work_routes(work,page)
+        body+='</article>'+neighbour_links(spec,'bottom')
         body+='<details class="document-provenance"><summary>Source and conversion record</summary><p>Source SHA-256: <code>'+reader.records[source]['sha256']+'</code></p><p>Unsupported prose commands stop the build. The mathematical expression sequence is checked against the source, with manuscript macros expanded for display.</p><p><a href="'+site.rel('documents/readable-chapters.json',page)+'">Conversion records</a></p></details>'
         site.page(page,title,body)
         expressions=original_math(chapter_text(raw.decode('utf-8-sig'),spec))
+        if config.get('custom_reader')=='proof_path':
+            from proof_path_reading import source_math
+            expressions=source_math(book['main'],spec)
         if chapter.math!=expressions:
             difference=next((i for i,(a,b) in enumerate(zip(chapter.math,expressions)) if a!=b),min(len(chapter.math),len(expressions)))
             raise ValueError('Reading math differs at '+source+' expression '+str(difference)+' rendered '+str(chapter.math[difference:difference+1])+' original '+str(expressions[difference:difference+1]))
@@ -1120,7 +1170,7 @@ def render_book_index(reader,book,reports):
         body+='<li><a href="'+site.rel(spec['url'],page)+'">'+html.escape(spec['title'])+'</a></li>'
     body+='<li><a href="references.html">Bibliography</a></li></ol></nav>'
     if config.get('continuation_sources'):
-        body+='<h2>Continue in the manuscript sources</h2><p>These chapters are available as selectable TeX, with line links. The complete typeset edition is available below.</p><ul>'
+        body+='<h2 id="source-continuations">Continue in the manuscript sources</h2><p>These chapters are available as selectable TeX, with line links. The complete typeset edition is available below.</p><ul>'
         for path,title in config['continuation_sources']:
             body+='<li><a href="'+reader.resolve(path,page)+'">'+html.escape(title)+'</a></li>'
         body+='</ul>'
@@ -1136,25 +1186,32 @@ def render_book_index(reader,book,reports):
         if record['work']==work and record['format']=='pdf' and not record.get('figure'):
             body+='<li><a href="'+site.rel(record['url'],page)+'">'+html.escape(record['title'])+'</a></li>'
     body+='</ul>'
-    if config.get('html_inputs'):
-        body+='<p><a href="'+site.rel(config['html_inputs']['atlas-pages']['url'],page)+'">Explore all 26 atlas plates in HTML</a>, with drawings, text descriptions, equations and tables.</p>'
-    body+='<p>The original visual atlas remains available in the PDF and visual guide. The HTML chapters preserve the source wording, mathematical statements and recorded limits. They do not add a proof assessment.</p>'
+    if config.get('atlas_index'):
+        body+='<p><a href="'+site.rel(config['atlas_index'],page)+'">'+html.escape(config.get('atlas_link_text','Explore all 26 atlas plates in HTML'))+'</a> '+html.escape(config.get('atlas_note','With drawings, text descriptions, equations and tables.'))+'</p>'
+    body+='<p>'+html.escape(config.get('reading_note','The original visual atlas remains available in the PDF and visual guide. The HTML chapters preserve the source wording, mathematical statements and recorded limits. They do not add a proof assessment.'))+'</p>'
     site.page(page,'Read '+label,body)
     site.search.append(dict(title=label+' / Read all chapters',group='Collection',kind='Papers and source',work_ids=[work],url=page,text=config['title']+' readable chapters '+ ' '.join(c['title'] for c in config['chapters'])))
 
 
 def render_bibliography(reader,book):
+    from reading_navigation import navigation, resources, work_links
     site=reader.site
     config=book['config']
     page,work,label=config['bib_page'],config['work'],config['label']
-    body='<h1>'+label+' bibliography</h1>'+reader.work_routes(work,page)
+    body='<h1>'+label+' bibliography</h1>'+navigation(config,page)
+    body+=resources(work_links(reader,work,page))+'<article id="chapter-text">'
     if config.get('bibliography_source_only'):
         body+='<p>The complete bibliography, including the recovered historical references, remains in the original manuscript and its linked TeX sources.</p><p><a href="'+reader.resolve(config['bib'],page)+'">Read the bibliography in the manuscript source</a></p>'
+        body+='</article>'+navigation(config,page,'bottom')
         site.page(page,label+' bibliography',body)
         return
-    body+='<p>Entries follow the retained bibliography source. Citation keys keep references stable without relying on older generated bibliography numbering. These links do not establish what a cited source proves.</p>'
-    for entry in book['references']:
-        body+='<section id="ref-'+entry['key']+'"><h2>'+html.escape(entry['key'])+'</h2><dl>'
+    if config.get('numbered_bibliography'):
+        body+='<p>Entries and citation numbers follow the retained manuscript. Citation keys keep links stable. These links do not establish what a cited source proves.</p>'
+    else:
+        body+='<p>Entries follow the retained bibliography source. Citation keys keep references stable without relying on older generated bibliography numbering. These links do not establish what a cited source proves.</p>'
+    for i,entry in enumerate(book['references'],1):
+        reference_number=('['+str(i)+'] ') if config.get('numbered_bibliography') else ''
+        body+='<section id="ref-'+entry['key']+'"><h2>'+reference_number+html.escape(entry['key'])+'</h2><dl>'
         if 'body' in entry:
             body+='</dl>'+Chapter('',book['macros']).paragraphs(presentation_tex(entry['body']))
         else:
@@ -1162,6 +1219,7 @@ def render_bibliography(reader,book):
                 body+='<dt>'+html.escape(field.capitalize())+'</dt><dd>'+html.escape(typography(value).replace('{','').replace('}',''))+'</dd>'
             body+='</dl>'
         body+='<p><a href="'+reader.resolve(config['bib'],page,'L'+str(entry['line']))+'">Original bibliography entry</a> · <a href="#ref-'+entry['key']+'">Permalink</a></p></section>'
+    body+='</article>'+navigation(config,page,'bottom')
     site.page(page,label+' bibliography',body)
     site.search.append(dict(title=label+' / Bibliography',group='Collection',kind='Papers and source',work_ids=[work],url=page,text=' '.join(e['key']+' '+(e['body'] if 'body' in e else ' '.join(e['fields'].values())) for e in book['references'])))
 

@@ -58,7 +58,10 @@ def site_navigation(page):
     def link(title, target):
         current = ' aria-current="page"' if target == page else ''
         url = posixpath.relpath(target, posixpath.dirname(page) or '.')
-        return '<a href="'+html.escape(url, quote=True)+'"'+current+'>'+html.escape(title)+'</a>'
+        icon = ('<svg class="site-search-icon" viewBox="0 0 20 20" width="17" height="17" '
+                'aria-hidden="true" focusable="false"><circle cx="8.5" cy="8.5" r="5.5"/>'
+                '<path d="m12.5 12.5 4 4"/></svg>') if target == 'search.html' else ''
+        return '<a href="'+html.escape(url, quote=True)+'"'+current+'>'+icon+html.escape(title)+'</a>'
     groups = [
         ('Read', [('Reading routes', 'collection/READING_ROUTES.html'),
                   ('Physics collection', 'collection/PHYSICS_COLLECTION.html'),
@@ -68,7 +71,8 @@ def site_navigation(page):
                   ('Worked examples', 'collection/HAND_WORKED_EXAMPLES.html')]),
         ('Look up', [('Claims', 'claims.html'),
                      ('Notation', 'notation.html')]),
-        ('Use', [('Run Python', 'playground.html'), ('Software', 'software.html'),
+        ('Use', [('Interactive diagrams', 'interactive.html'),
+                 ('Run Python', 'playground.html'), ('Software', 'software.html'),
                  ('Downloads', 'downloads.html'),
                  ('Accessibility', 'collection/ACCESSIBILITY.html')]),
     ]
@@ -76,35 +80,71 @@ def site_navigation(page):
         '<li>'+link(label, target)+'</li>' for label, target in links)+'</ul></div>'
         for title, links in groups)
     return ('<nav class="site-navigation" aria-label="Main navigation">'
-            '<div class="site-navigation-bar">'+link('Collection', 'works.html')+
-            link('About the project', 'collection/START_HERE.html')+link('Search', 'search.html')+
-            link('Glossary', 'collection/GLOSSARY.html')+
+            '<div class="site-navigation-bar"><div class="site-nav-links">'+link('Collection', 'works.html')+
+            link('Glossary', 'collection/GLOSSARY.html')+link('About', 'collection/START_HERE.html')+
+            '</div><div class="site-nav-tools">'+link('Search', 'search.html')+
             '<button id="site-menu-toggle" type="button" aria-expanded="true" '
-            'aria-controls="site-menu-panel" hidden>Browse <span aria-hidden="true">▾</span></button></div>'
+            'aria-controls="site-menu-panel" hidden><svg class="site-browse-icon" viewBox="0 0 20 20" '
+            'width="16" height="16" aria-hidden="true" focusable="false"><path '
+            'd="M3 3h5v5H3zm9 0h5v5h-5zM3 12h5v5H3zm9 0h5v5h-5z"/></svg>'
+            'Browse <span aria-hidden="true">▾</span></button></div></div>'
             '<div id="site-menu-panel" class="site-menu-panel">'+panel+'</div></nav>')
 
 
 def home_page():
     """The Open research introduction keeps each reading route a plain link."""
     routes = [
-        ('Understand the project', 'Read the introduction and follow the Euler research example.', 'NEW_READER'),
-        ('Read the mathematics', 'Explore the papers and books, with their assumptions in view.', 'MATHEMATICS'),
-        ('Examine a proof', 'Follow statements, formal sources, and recorded evidence.', 'PROOF_REVIEW'),
-        ('Try the software', 'Run a worked example and compare the expected output.', 'SOFTWARE'),
+        ('Understand the project', 'Read the introduction and follow the Euler research example.', 'NEW_READER', 'Orientation'),
+        ('Read the mathematics', 'Explore the papers and books, with their assumptions in view.', 'MATHEMATICS', 'Papers &amp; books'),
+        ('Examine a proof', 'Follow statements, formal sources, and recorded evidence.', 'PROOF_REVIEW', 'Statements &amp; sources'),
+        ('Try the software', 'Run a worked example and compare the expected output.', 'SOFTWARE', 'Examples &amp; tools'),
     ]
     cards = ''.join(
-        '<a class="home-route" href="collection/routes/'+key+'.html"><div><h3>'+title+
-        '</h3><p>'+description+'</p></div><span aria-hidden="true">→</span></a>'
-        for title, description, key in routes)
+        '<a class="home-route" href="collection/routes/'+key+'.html"><span class="home-route-number" aria-hidden="true">'+str(index).zfill(2)+'</span><div class="home-route-content"><p class="home-route-label">'+label+'</p><h3>'+title+
+        '</h3><p>'+description+'</p></div><span class="home-route-arrow" aria-hidden="true">↗</span></a>'
+        for index, (title, description, key, label) in enumerate(routes, 1))
     return '''<section class="home-hero" aria-labelledby="home-title">
+<div class="home-copy">
 <p class="home-kicker">The Komorebi research collection</p>
-<h1 id="home-title">Explore the ideas.<br>Follow the evidence.</h1>
+<h1 id="home-title">Explore the ideas.<br><em>Follow the evidence.</em></h1>
 <p class="home-lede">A place to read mathematics, inspect the reasoning, and try the calculations for yourself.</p>
 <div class="home-actions"><a class="button" href="collection/START_HERE.html">Start with the introduction <span aria-hidden="true">→</span></a><a class="button button-secondary" href="works.html">Browse all works</a></div>
+</div>
+<a class="home-feature" href="collection/demonstrations/EULER_PACKETS.html">
+<p class="home-feature-kicker">Research preview <span aria-hidden="true">/</span> Euler numbers</p>
+<h2>One sequence.<br><em>Several perspectives.</em></h2>
+<p class="home-feature-description">Follow packets, polynomial coordinates, and exact residual correction through one extended derivation.</p>
+<dl class="home-sequence" aria-label="Signed even Euler numbers"><div><dt>E<sub>0</sub></dt><dd>1</dd></div><div><dt>E<sub>2</sub></dt><dd>−1</dd></div><div><dt>E<sub>4</sub></dt><dd>5</dd></div><div><dt>E<sub>6</sub></dt><dd>−61</dd></div><div><dt>E<sub>8</sub></dt><dd>1385</dd></div></dl>
+<span class="home-feature-link">Read the Euler derivation <span aria-hidden="true">↗</span></span>
+</a>
 </section>
-<section class="home-ways" aria-labelledby="home-ways-title"><h2 id="home-ways-title">What would you like to explore?</h2><p>Choose a starting point. Each route includes context and links to the sources.</p>
+<section class="home-ways" aria-labelledby="home-ways-title"><h2 id="home-ways-title">Find your starting point.</h2><p>Four ways into the collection, each with context and a path to the sources.</p>
 <div class="home-route-grid">'''+cards+'''</div></section>
-<details class="home-more"><summary>Explore the collections and how they connect</summary>
+<section class="home-interactive" aria-labelledby="home-factorial-title"><div>
+<p class="home-kicker">Research preview / Factorial lanes</p>
+<h2 id="home-factorial-title">One factorial. Ten exact lanes.</h2>
+<p>Reconstruct 34!, translate to hypergeometric coordinates, and follow an exact five-adic reciprocal calculation. Includes runnable arithmetic checks.</p></div>
+<a href="collection/demonstrations/FACTORIAL_LANES.html">Read the factorial-lane derivation <span aria-hidden="true">→</span></a></section>
+<section class="home-interactive" aria-labelledby="home-wavelet-title"><div>
+<p class="home-kicker">Research preview / Wavelets and polyphase</p>
+<h2 id="home-wavelet-title">One signal. Exact multiresolution.</h2>
+<p>Follow four Haar levels, a circular three-tap FIR filter, exact operator transfers, and a checked residual repair. The complete Python calculation and diagram are available.</p></div>
+<a href="collection/demonstrations/WAVELET_POLYPHASE.html">Read the wavelet and polyphase derivation <span aria-hidden="true">→</span></a></section>
+<section class="home-interactive" aria-labelledby="home-stirling-title"><div>
+<p class="home-kicker">Research preview / Combinatorial sequences</p>
+<h2 id="home-stirling-title">One partition triangle. Two families.</h2>
+<p>Start with set partitions, obtain Bell and ordered Bell numbers, invert the Stirling transfer, and split the Fubini reciprocal into exact residue packets.</p></div>
+<a href="collection/demonstrations/STIRLING_BELL_FUBINI.html">Read the Stirling, Bell and Fubini derivation <span aria-hidden="true">→</span></a></section>
+<section class="home-interactive" aria-labelledby="home-roots-title"><div>
+<p class="home-kicker">Research preview / Exact operator transport</p>
+<h2 id="home-roots-title">One polynomial. Three character packets.</h2>
+<p>Project degrees with roots of unity, carry the projectors into falling-factorial coordinates, and reconstruct 4^5 from three exact values.</p></div>
+<a href="collection/demonstrations/ROOTS_UNITY_FALLING_FACTORIAL.html">Read the roots-of-unity and Newton derivation <span aria-hidden="true">→</span></a></section>
+<section class="home-interactive" aria-labelledby="home-interactive-title"><div>
+<h2 id="home-interactive-title">Change the inputs. Follow the result.</h2>
+<p>Rebuild matrices, explore information loss, and decompose a signal through four Haar levels.</p></div>
+<a href="interactive.html">Explore the interactive diagrams <span aria-hidden="true">→</span></a></section>
+<div class="home-notes"><details class="home-more"><summary>Explore the collections and how they connect</summary>
 <div class="home-collection-list"><h2>Three repositories, one place to begin</h2><dl>
 <dt><a href="collection/index.html">Operation KOMOREBI</a></dt><dd>Papers, books, research programs, formal sources and evidence.</dd>
 <dt><a href="math/index.html">Komorebi Math</a></dt><dd>A Python library for finite mathematical constructions and inspectable certificates.</dd>
@@ -112,9 +152,13 @@ def home_page():
 <h3>What connects the work?</h3><p>Describe an object in parts, transfer operations through those parts, and account for what a change of representation preserves or loses.</p>
 <ul><li><a href="collection/PROJECT_MAP.html">See the project map</a> — explore the twelve core papers, related books and documented connections.</li>
 <li><a href="collection/demonstrations/EULER_PACKETS.html">Research preview: Euler numbers</a> — follow an extended derivation through packets, coordinate changes and exact residual correction.</li>
-<li><a href="collection/SPECIAL_FUNCTIONS.html">Explore Special Functions</a> — open the current volumes, compare five families, and run the coupled-function lab.</li>
+<li><a href="collection/demonstrations/FACTORIAL_LANES.html">Research preview: Factorial lanes</a> — reconstruct factorials from ten step lanes, then follow exact hypergeometric and 5-adic transfers.</li>
+<li><a href="collection/demonstrations/WAVELET_POLYPHASE.html">Research preview: Wavelets and polyphase</a> — one signal through Haar decomposition, finite FIR transfer, residual repair and exact coordinates.</li>
+<li><a href="collection/demonstrations/STIRLING_BELL_FUBINI.html">Research preview: Stirling, Bell and Fubini</a> — one triangular partition kernel, two counting families, a signed inverse and reciprocal residue packets.</li>
+<li><a href="collection/demonstrations/ROOTS_UNITY_FALLING_FACTORIAL.html">Research preview: Roots of unity and Newton coordinates</a> — character projectors, Stirling inversion, falling-factorial transport and finite differences.</li>
+<li><a href="collection/SPECIAL_FUNCTIONS.html">Explore Special Functions</a> — read the current volumes, compare five families, and run the coupled-function lab.</li>
 <li><a href="collection/DEMONSTRATIONS.html">Follow a complete demonstration</a> — work through a calculation, run its program and follow the source evidence.</li></ul></div></details>
-<details class="home-status"><summary>How to read completion and verification</summary><p>The collection records completion, formal coverage, and confidence separately. A linked file does not mean every claim has been verified. Software is beta.</p><p><a href="collection/COMPLETION_STATUS.html">Read the guide to evidence and status</a></p></details>'''
+<details class="home-status"><summary>How to read completion and verification</summary><p>The collection records completion, formal coverage, and confidence separately. A linked file does not mean every claim has been verified. Software is beta.</p><p><a href="collection/COMPLETION_STATUS.html">Read the guide to evidence and status</a></p></details></div>'''
 
 
 def page_contents(content):
@@ -306,24 +350,25 @@ class Site:
         return posixpath.relpath(target,posixpath.dirname(page) or '.')
     def page(self,path,title,body,source=None):
         esc=html.escape
-        if path not in {'side-by-side.html','index.html','404.html'}:
+        if path not in {'side-by-side.html','index.html','404.html','interactive.html'}:
             pair=self.rel('side-by-side.html',path)+'?left='+quote(path,safe='')
             launch='<p class="side-launch"><a data-side-reader-link href="'+esc(pair,quote=True)+'">Read side by side</a></p>'
             body=re.sub(r'(</h1>)',lambda match:match[1]+launch,body,count=1)
         root=self.rel('index.html',path)
         nav_html=site_navigation(path)
-        source_html=('<a href="'+esc(source,quote=True)+'">Source on GitHub</a> · ') if source else ''
+        source_html=('<a href="'+esc(source,quote=True)+'">Source on GitHub</a>') if source else ''
         glossary_script=('<script defer src="'+self.rel('assets/glossary.js',path)+'?v='+hashlib.sha256((self.root/'website/assets/glossary.js').read_bytes()).hexdigest()[:12]+'"></script>') if path=='collection/GLOSSARY.html' else ''
         doc='''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Read Komorebi papers, follow recorded proofs and run finite mathematical examples.">
+<meta name="theme-color" content="#20583c">
 <title>'''+esc(title)+''' · Komorebi</title><link rel="stylesheet" href="'''+self.rel('assets/reader.css',path)+'?v='+hashlib.sha256((self.root/'website/assets/reader.css').read_bytes()).hexdigest()[:12]+'''">
 <link rel="stylesheet" href="'''+self.rel('assets/open-research.css',path)+'?v='+hashlib.sha256((self.root/'website/assets/open-research.css').read_bytes()).hexdigest()[:12]+'''">
 <link rel="stylesheet" href="'''+self.rel('assets/side-reader.css',path)+'?v='+hashlib.sha256((self.root/'website/assets/side-reader.css').read_bytes()).hexdigest()[:12]+'''">
 <script defer src="'''+self.rel('assets/mathjax-config.js',path)+'''"></script><script defer src="'''+self.rel('assets/mathjax/tex-svg-full.js',path)+'''"></script>
 <script defer src="'''+self.rel('assets/reader.js',path)+'?v='+hashlib.sha256((self.root/'website/assets/reader.js').read_bytes()).hexdigest()[:12]+'''"></script>'''+glossary_script+'''</head><body class="open-research'''+(' home-page' if path == 'index.html' else '')+'''">
-<a class="skip-link" href="#main">Skip to main content</a><header class="site-header"><a class="brand" href="'''+root+'''">Komorebi<span>Mathematics · proofs · software</span></a>'''+nav_html+'''</header>
-<main id="main" tabindex="-1">'''+body+'''</main><footer><div class="footer-links">'''+source_html+'''<a href="'''+self.rel('collection/PROJECT_STATEMENT.html',path)+'''">Project and authorship statement</a> · <a href="'''+self.rel('collection/ACCESSIBILITY.html',path)+'''">Accessibility and reporting problems</a></div><p><a href="https://github.com/'''+REPOSITORY+'''">Return to GitHub</a></p></footer></body></html>'''
+<a class="skip-link" href="#main">Skip to main content</a><header class="site-header"><a class="brand" href="'''+root+'''"><span class="brand-wordmark">Komorebi<small>Mathematics · proofs · software</small></span></a>'''+nav_html+'''</header>
+<main id="main" tabindex="-1">'''+body+'''</main><footer><div class="footer-inner"><nav class="footer-links" aria-label="Project information">'''+source_html+'''<a href="'''+self.rel('collection/PROJECT_STATEMENT.html',path)+'''">Project and authorship statement</a><a href="'''+self.rel('collection/ACCESSIBILITY.html',path)+'''">Accessibility and reporting problems</a></nav><a class="footer-github" href="https://github.com/'''+REPOSITORY+'''">Return to GitHub <span aria-hidden="true">↗</span></a></div></footer></body></html>'''
         self.write(path,doc)
     def collect_documents(self):
         maintained=set(self.status['maintained_documents'])
@@ -370,6 +415,14 @@ class Site:
                     return self.rel(edition['file_url'], page)+('#'+parts.fragment if parts.fragment else '')
         if repo=='collection' and resolved=='examples/komorebi_demonstrations.py':
             return self.rel('read/demonstrations.html',page)+('#'+parts.fragment if parts.fragment else '')
+        if repo=='collection' and resolved=='examples/factorial_lanes.py':
+            return self.rel('read/factorial-lanes.html',page)+('#'+parts.fragment if parts.fragment else '')
+        if repo=='collection' and resolved=='examples/wavelet_polyphase.py':
+            return self.rel('read/wavelet-polyphase.html',page)+('#'+parts.fragment if parts.fragment else '')
+        if repo=='collection' and resolved=='examples/stirling_bell_fubini.py':
+            return self.rel('read/stirling-bell-fubini.html',page)+('#'+parts.fragment if parts.fragment else '')
+        if repo=='collection' and resolved=='examples/roots_unity_falling_factorial.py':
+            return self.rel('read/roots-unity-falling-factorial.html',page)+('#'+parts.fragment if parts.fragment else '')
         if repo=='collection' and resolved=='examples/euler_packets.py':
             return self.rel('read/euler-packets.html',page)+('#'+parts.fragment if parts.fragment else '')
         if repo=='collection' and not is_image:
@@ -405,7 +458,11 @@ class Site:
                 content=glossary_return_links(content,glossary_config)
                 lookup=glossary_lookup(glossary_config)
                 content=re.sub(r'(</h1>)',lambda m:m[1]+lookup,content,count=1)
-            if repo=='collection' and path.startswith('docs/works/'):
+            is_euler = repo=='collection' and path=='docs/demonstrations/EULER_PACKETS.md'
+            if is_euler:
+                from euler_navigation import decorate
+                content=decorate(content)
+            elif repo=='collection' and path.startswith('docs/works/'):
                 identifier=PurePosixPath(path).stem
                 shortcut=self.reader.work_intro(identifier,page)
                 content=re.sub(r'(</h1>)',lambda m:m[1]+shortcut,content,count=1)
@@ -416,7 +473,8 @@ class Site:
             else:
                 contents=page_contents(content)
                 content=re.sub(r'(</h1>)',lambda m:m[1]+contents,content,count=1)
-            body='<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="'+self.rel('index.html',page)+'">Home</a> / <a href="'+self.rel(repo+'/index.html',page)+'">'+section+'</a></nav><article>'+content+'</article>'
+            article_class=' class="euler-example"' if is_euler else ''
+            body='<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="'+self.rel('index.html',page)+'">Home</a> / <a href="'+self.rel(repo+'/index.html',page)+'">'+section+'</a></nav><article'+article_class+'>'+content+'</article>'
             self.page(page,title,body,github(self.repos[repo],self.revisions[repo],path))
             plain=re.sub(r'<[^>]+>',' ',rendered)
             plain=html.unescape(re.sub(r'\s+',' ',plain))
@@ -524,17 +582,35 @@ class Site:
     def indexes(self):
         e=html.escape
         self.page('index.html','Explore the ideas. Follow the evidence.',home_page())
-        body='<h1>Browse the works</h1><p>Each page brings together reading files, written proofs, Lean, code and the recorded limits. Incubator entries remain visible and labeled.</p><form class="filters" data-work-filter><label for="work-query">Find a title or subject</label><input id="work-query" name="q" type="search"><label for="work-group">Collection</label><select id="work-group"><option value="">All collections</option>'+''.join('<option value="'+g+'">'+t+'</option>' for g,t in [('papers','Core papers'),('monographs','Books and companion volumes'),('research','Research programs'),('packages','Software packages'),('experiments','Experiments')])+'</select><button type="reset">Clear filters</button></form><p id="work-count" role="status" aria-live="polite">'+str(len(self.registry['components']))+' works</p><div class="work-list">'
-        for row in self.registry['components']:
-            c=self.components[row['id']];s=self.assessments[row['id']]
-            labels=self.status['labels']
-            status=' · '.join(t+': '+labels[k][s[k]][0] for t,k in [('Completion','stage'),('Lean','lean'),('Confidence','confidence')])
-            held=s.get('reader_listing',{}).get('placement')=='incubator'
-            body+='<article class="work" data-group="'+c['group']+'" data-search="'+e((c['title']+' '+s.get('reader_summary',c['summary'])).lower(),quote=True)+'"><p class="eyebrow">'+e(c['group'])+(' · Incubator' if held else '')+'</p><h2><a href="collection/works/'+c['id']+'.html">'+e(c['title'])+'</a></h2><p>'+e(s.get('reader_summary',c['summary']))+'</p><p class="status">'+e(status)+'</p></article>'
-        self.page('works.html','Browse works',body+'</div><noscript><p>All works are shown. Use your browser’s Find command to locate a title.</p></noscript>')
+        from discipline_catalog import render_works_catalog, facet_records, page_navigation
+        body = render_works_catalog(self.root, self.registry, self.components, self.assessments, self.status)
+        self.page('works.html', 'Browse works', body)
+        work_facets = facet_records(self.root, self.registry, self.assessments)
+        self.write('work-facets.json', json.dumps(work_facets, ensure_ascii=False, sort_keys=True) + '\n')
         self.page('software.html','Software','<h1>Run a small calculation</h1><p><a class="button" href="playground.html#library">Try Komorebi Math in your browser</a></p><p>Start with the platform instructions and expected output. All software remains beta.</p><p><a class="button" href="collection/FIRST_RUN.html">First runs and expected output</a></p><div class="route-grid"><a class="route" href="math/index.html"><h2>Komorebi Math</h2><p>Python. Finite operators, coordinates, signals and arithmetic.</p></a><a class="route" href="polyphase/index.html"><h2>Polyphase Float</h2><p>C on the supported Linux baseline. Arbitrary-precision binary arithmetic.</p></a></div><p><a href="collection/LIBRARIES.html">Library checks and source revisions</a></p>')
         work_options=''.join('<option value="'+c['id']+'">'+e(self.components[c['id']]['title'])+'</option>' for c in self.registry['components'])
-        self.page('search.html','Search the collection','<h1>Search the collection</h1><p>Find a work, a claim, a written proof location, Lean guidance, code or a worked example. Choose one work to keep its related material together. Open a PDF and use its reader search to find words throughout that document.</p><form id="site-search" data-index="search-index.json?v='+e(self.revision)+'"><label for="search-query">Word, symbol name or question</label><input id="search-query" type="search" name="q" autocomplete="off"><label for="search-group">Repository</label><select id="search-group"><option value="">All repositories</option><option>Collection</option><option>Komorebi Math</option><option>Polyphase Float</option></select><label for="search-work">Work</label><select id="search-work"><option value="">All works</option>'+work_options+'</select><label for="search-kind">Result type</label><select id="search-kind"><option value="">All result types</option><option>Claims</option><option>Written proofs</option><option>Lean</option><option>Code</option><option>Glossary</option><option>Notation</option><option>Examples</option><option>Papers and source</option><option>Guides</option></select><button type="submit">Search</button><button type="reset">Clear search</button></form><p id="search-status" role="status" aria-live="polite">Enter a search term.</p><ol id="search-results"></ol><button id="search-more" type="button" hidden>Show more results</button><noscript><p>Search needs JavaScript. You can still <a href="works.html">browse all works</a> and use the <a href="collection/GLOSSARY.html">glossary</a>.</p></noscript>')
+
+        facet_values = list(work_facets['works'].values())
+        facet_dimensions = [
+            ('discipline', 'Discipline', 'All disciplines',
+             [(key, item['label']) for key, item in work_facets['disciplines'].items()]),
+            ('stage', 'Completion stage', 'Any completion stage',
+             [(key, item[0]) for key, item in self.status['labels']['stage'].items()
+              if any(work['stage'] == key for work in facet_values)]),
+            ('lean', 'Lean coverage', 'Any Lean coverage',
+             [(key, item[0]) for key, item in self.status['labels']['lean'].items()
+              if any(work['lean'] == key for work in facet_values)]),
+            ('evidence', 'Evidence basis', 'Any evidence basis',
+             [(key, item[0]) for key, item in self.status['labels']['confidence'].items()
+              if any(work['evidence'] == key for work in facet_values)]),
+        ]
+        search_facets = ''.join(
+            '<label for="search-'+key+'">'+e(title)+'</label><select id="search-'+key+'">'
+            '<option value="">'+e(default)+'</option>'+
+            ''.join('<option value="'+e(code)+'">'+e(label)+'</option>'
+                    for code,label in options)+'</select>'
+            for key,title,default,options in facet_dimensions)
+        self.page('search.html','Search the collection','<h1>Search the collection</h1><p>Find a work, a claim, a written proof location, Lean guidance, code or a worked example. Choose one work to keep its related material together. Open a PDF and use its reader search to find words throughout that document. Discipline and evidence filters refer to associated works, not the proof status of each search hit. Unassociated pages are excluded when these filters are active.</p><form id="site-search" data-facets="work-facets.json?v='+e(self.revision)+'" data-index="search-index.json?v='+e(self.revision)+'"><label for="search-query">Word, symbol name or question</label><input id="search-query" type="search" name="q" autocomplete="off"><label for="search-group">Repository</label><select id="search-group"><option value="">All repositories</option><option>Collection</option><option>Komorebi Math</option><option>Polyphase Float</option></select><label for="search-work">Work</label><select id="search-work"><option value="">All works</option>'+work_options+'</select>'+search_facets+'<label for="search-kind">Result type</label><select id="search-kind"><option value="">All result types</option><option>Claims</option><option>Written proofs</option><option>Lean</option><option>Code</option><option>Glossary</option><option>Notation</option><option>Examples</option><option>Papers and source</option><option>Guides</option></select><label for="search-size">Results per page</label><select id="search-size" name="per_page"><option value="10">10</option><option value="20">20</option><option value="40" selected>40</option><option value="80">80</option></select><button type="submit">Search</button><button type="reset">Clear search</button></form><p id="search-status" role="status" aria-live="polite">Enter a search term.</p>'+page_navigation('search','top')+'<ol id="search-results"></ol>'+page_navigation('search','bottom')+'<noscript><p>Search needs JavaScript. You can still <a href="works.html">browse all works</a> and use the <a href="collection/GLOSSARY.html">glossary</a>.</p></noscript>')
         self.claim_index()
         self.reader.search_routes()
         learning=json.loads((self.root/'manifests/reader-experience.json').read_bytes())
@@ -590,6 +666,14 @@ class Site:
         self.publish_editorial_editions()
         from euler_case import publish as publish_euler_case
         publish_euler_case(self)
+        from factorial_case import publish as publish_factorial_case
+        publish_factorial_case(self)
+        from wavelet_case import publish as publish_wavelet_case
+        publish_wavelet_case(self)
+        from stirling_case import publish as publish_stirling_case
+        publish_stirling_case(self)
+        from roots_newton_case import publish as publish_roots_newton_case
+        publish_roots_newton_case(self)
         self.markdown_pages()
         self.reader.render()
         self.bundles()
@@ -599,6 +683,8 @@ class Site:
         build_python(self,self.python_root)
         from notation_index import build as build_notation
         notation = build_notation(self)
+        from interactive_diagrams import build as build_interactive_diagrams
+        build_interactive_diagrams(self)
         self.indexes()
         from side_reader import build as build_side_reader
         side_reader = build_side_reader(self)

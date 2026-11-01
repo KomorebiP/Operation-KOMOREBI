@@ -67,6 +67,5 @@ The evidence records describe the reviews and runs completed for this edition.
 ## Continue browsing
 
 - [Previous: J-Space Collections](experiments-jspace-collections.md)
-- [Next: ARC-AGI-2 experiment](arc-agi2.md)
 - [Back to Experiments](../browse/EXPERIMENTS.md#contents)
 - [All collections](../BROWSE.md)

@@ -321,12 +321,15 @@ def qualify(args):
               "started_utc": datetime.now(timezone.utc).isoformat(),
               "system": platform.system(), "python": platform.python_version(),
               "platform": platform.platform(), "machine": platform.machine(),
-              "new_lean_execution": False, "commands": []}
+              "new_lean_execution": False, "commands": [],
+              "temporary_directory": "<QUALIFICATION_ROOT>/test-temp"}
+    test_temp = out / "test-temp"
     def save():
         dump(out / "qualification.json", report)
     def run(label, argv, cwd, timeout=600):
         env = os.environ.copy()
-        env.update(PYTHONDONTWRITEBYTECODE="1", PYTHONUTF8="1")
+        env.update(PYTHONDONTWRITEBYTECODE="1", PYTHONUTF8="1",
+                   TMP=str(test_temp), TEMP=str(test_temp), TMPDIR=str(test_temp))
         started = time.monotonic()
         p = subprocess.run([str(x) for x in argv], cwd=cwd, env=env,
                            capture_output=True, text=True, encoding="utf-8",
@@ -338,6 +341,7 @@ def qualify(args):
         save()
         require(p.returncode == 0, label + " failed; see " + label + ".log")
     try:
+        test_temp.mkdir()
         bundled = (root / "SOURCE_IMPORT.json").is_file()
         source = root / ("source" if bundled else "packages/constructive-repair")
         receipt_path = root / ("SOURCE_IMPORT.json" if bundled else

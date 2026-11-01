@@ -4,7 +4,7 @@
 
 Explore five families built from contraction, arithmetic, prime-sieve measures and rotation orbits. Start with a worked calculation, open the current books in the site reader, or follow a result into its written proof and formal companion.
 
-[Run the coupled-function lab](https://KomorebiP.github.io/Operation-KOMOREBI/playground.html#special-functions-coupled) · [Work and evidence](works/monographs-special-functions.md) · [Read by topic](#five-families) · [Choose a book](#reading-volumes)
+[Read the monograph online](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/index.html) · [Run the coupled-function lab](https://KomorebiP.github.io/Operation-KOMOREBI/playground.html#special-functions-coupled) · [Work and evidence](works/monographs-special-functions.md) · [Read by topic](#five-families) · [Choose a book](#reading-volumes)
 
 ## A pair of functions with a shared beginning
 
@@ -47,7 +47,7 @@ For a shorter first calculation, work through [the scalar contracted-feedback re
 
 | Volume | What it offers | Read here |
 |---|---|---|
-| Special Functions | The current 134-page monograph: five families, seven chapters and ten proof appendices | [Open monograph](../monographs/special-functions/books/Special_Functions.pdf) |
+| Special Functions | The current 134-page monograph: five families, seven chapters and ten proof appendices | [Read online](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/index.html) · [Open PDF](../monographs/special-functions/books/Special_Functions.pdf) |
 | Expanded Visual Guide | The current 180-page visual volume, with 171 worked lessons and associated plates across the eight-paper series | [Open visual guide](../monographs/special-functions/books/Expanded_Visual_Guide.pdf) |
 | Resolution and Coupled Atlas | Nineteen pages and fourteen computed plates on coupled functions, growth, recovery and finite resolution | [Open coupled atlas](../monographs/special-functions/books/Resolution_and_Coupled_Atlas.pdf) |
 | Packet Realization Core | The preserved 38-page consolidated core and correction register for the original series | [Open core and corrections](../monographs/special-functions/series/Komorebi_Special_Functions_Consolidated_Manuscript_v0.1.pdf) |
@@ -61,11 +61,11 @@ The last two entries are reference editions. The collected reader already includ
 
 | Family | Central question | Begin with |
 |---|---|---|
-| Contracted nonlinear feedback | How do two contracted arguments determine coefficients and entire growth? | [Defining equation and recurrence](examples/24_CONTRACTED_FEEDBACK.md), then monograph Chapter 1 |
-| Arithmetic at complex depth | How do arithmetic weights produce an entire depth parameter, shift formulas and positive kernels? | Monograph Chapter 2, [arithmetic and spectral source](../monographs/special-functions/monograph/main.tex) |
-| Prime sieves and signed measures | When do arithmetic moments give positive orthogonal-polynomial systems, and when does positivity fail at finer resolution? | Monograph Chapter 3, with its positivity and transport arguments |
-| Spectral functions of zero orbits | How does a rotation-invariant zero address lead to spectral zeta values and exact coefficients? | Monograph Chapters 4–5 and the [sequence plotting guide](demonstrations/SEQUENCE_SHAPES.md) |
-| Coupled contraction functions | What do interacting scales preserve about growth, local series and recovery of parameters? | [Coupled atlas](../monographs/special-functions/books/Resolution_and_Coupled_Atlas.pdf), then the [browser lab](#coupled-lab) |
+| Contracted nonlinear feedback | How do two contracted arguments determine coefficients and entire growth? | [Defining equation and recurrence](examples/24_CONTRACTED_FEEDBACK.md), then [Chapter 1](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/contracted-feedback.html) |
+| Arithmetic at complex depth | How do arithmetic weights produce an entire depth parameter, shift formulas and positive kernels? | [Chapter 2](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/arithmetic-depth.html), with its arithmetic and spectral constructions |
+| Prime sieves and signed measures | When do arithmetic moments give positive orthogonal-polynomial systems, and when does positivity fail at finer resolution? | [Chapter 3](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/prime-sieves.html), with its positivity and transport arguments |
+| Spectral functions of zero orbits | How does a rotation-invariant zero address lead to spectral zeta values and exact coefficients? | [Chapter 4](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/orbit-spectra.html), [Chapter 5](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/sequences-and-polyphase.html), and the [sequence plotting guide](demonstrations/SEQUENCE_SHAPES.md) |
+| Coupled contraction functions | What do interacting scales preserve about growth, local series and recovery of parameters? | [Chapter 6](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/coupled-contractions.html), the [coupled atlas](../monographs/special-functions/books/Resolution_and_Coupled_Atlas.pdf), and the [browser lab](#coupled-lab) |
 
 The related [reciprocal sequence plots](https://KomorebiP.github.io/Operation-KOMOREBI/playground.html#sequence-growth) compare exact coefficients with factorial normalization. Their guide explains the relation to Paper IV and the sequence chapter; they are distinct from the coupled-function experiment.
 

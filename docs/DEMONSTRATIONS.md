@@ -26,7 +26,75 @@ quartic sequence reconstruction, parameter polynomials, exact residual repair,
 and finite-difference refinement. It includes the full hand calculations, failure
 witnesses, and a standalone exact Python checker with downloadable tables.
 
+## An extended derivation with factorial lanes
+
+[Factorial lanes: one residue section through exact transfer](demonstrations/FACTORIAL_LANES.md)
+starts with the degree-4 packet of the exponential. It reconstructs 34! from
+ten step-factorial lanes, converts those lanes to a hypergeometric series,
+normalizes the denominator, and inverts the packet in two equivalent
+coordinate systems. It also proves a sharpened 5-adic displacement bound,
+refines the residue packet into two and five children, and distinguishes the
+congruential transfer row from the classical Euler numbers. A standalone
+checker supplies exact rational results, downloadable code and two explicit
+failure witnesses.
+
+## An extended derivation with wavelets and polyphase transfer
+
+[Wavelets and polyphase transfer: one signal through the whole calculus](demonstrations/WAVELET_POLYPHASE.md)
+follows a sixteen-sample signal through even/odd phases, four Haar levels,
+predict–update lifting, weighted coefficient selection, and exact residual
+repair. It transports a three-tap FIR filter through polyphase
+coordinates and all four Haar levels, derives a sharp finite stability
+certificate, and proves the exact error from omitted cross-channel transfers.
+The full 16×16 matrix displays inter-scale coupling, while two noncommuting
+operation orders and explicit boundary repairs provide independent failure
+witnesses. Reproducible tables and Python-generated figures complete the example.
+
+## An extended derivation with Stirling, Bell and Fubini numbers
+
+[From set partitions to exact transfer](demonstrations/STIRLING_BELL_FUBINI.md)
+starts with one Stirling-number row, constructs Bell and ordered Bell numbers,
+and then exposes the inverse triangular kernel. It independently derives the
+exponential generating functions and their formal inverse, interprets Bell as
+a Touchard evaluation and Fubini as a gamma or geometric moment, then builds
+full residue transfer systems. Exact interpolation recovers a complete
+parameterized polynomial, while two scalar summaries do not determine an
+arbitrary coordinate profile. Every example has exact Python
+checks, source-bound tables and a Python-generated diagram.
+
+## An extended derivation with roots of unity and falling factorials
+
+[Roots of unity, projectors, and falling-factorial coordinates](demonstrations/ROOTS_UNITY_FALLING_FACTORIAL.md)
+starts with the Stirling expansion of a fifth power, constructs exact
+roots-of-unity residue filters, and transports the projectors through a
+Newton/falling-factorial change of basis. The three packets yield
+600+244+180=1024. The same page proves finite-difference and multiplication
+transfer rules, tests six-way refinement, and shows why filtering ordinary
+monomial degrees is the wrong operation after a coordinate change.
+The independently enumerated functions from five inputs to four labels
+explain exactly what those residue packets count. A rational spectral formula
+for the projectors and an all-degree generating-function bridge add two
+more exact routes to the same identities. Translation by one is then carried
+through a complete cyclic transfer matrix, with a concrete noncommutation
+witness and an integral characteristic-three spectral obstruction. The
+standalone checker and source-bound CSV/SVG records support the hand
+derivation. These are classical identities presented as one continuous
+realization argument, not a new theorem claim.
+
 ## Run in your browser
+
+[Explore the interactive diagrams](https://KomorebiP.github.io/Operation-KOMOREBI/interactive.html).
+Change matrix entries, keep or omit transfer blocks, refine an eight-sample
+signal, and move inputs along a shared-summary line. The controls update the
+diagrams and exact whole-number results immediately, without writing code.
+Each experiment links back to its hand calculation and sources.
+
+For a deeper experiment, open the
+[16-sample Haar lab](https://KomorebiP.github.io/Operation-KOMOREBI/interactive.html#haar).
+Decompose a signal through four levels, choose individual coefficients or a
+magnitude cutoff, and inspect the exact reconstruction error and weighted
+energy balance. The [multilevel calculation](demonstrations/HAAR_LAB.md)
+records the default example and its expected results.
 
 [Open the Python playground](https://KomorebiP.github.io/Operation-KOMOREBI/playground.html).
 Choose a demonstration, press Run and compare its output with the hand calculation.

@@ -1,6 +1,6 @@
 # Source coverage
 
-**Inventory:** 25 October 2026. **Reconciled:** 27 October 2026. **Author:** Komorebi P.
+**Inventory:** 25 October 2026. **Reconciled:** 30 October 2026. **Author:** Komorebi P.
 
 This page maps all **74 named entries** in the release inventory to their canonical source components or existing repositories. It records where the work can be inspected. Several entries share a combined edition, so the row count is not a count of independent discoveries.
 
@@ -14,12 +14,13 @@ The [publication verification record](../verification/source-publication-2026-10
 
 | Source disposition | Inventory entries | Meaning |
 |---|---:|---|
-| Source package | 64 | A canonical source package is mapped to its component. |
+| Source package | 63 | A canonical source package is mapped to its component. |
 | Newer canonical source | 3 | A later edition supersedes the version named in the inventory. |
 | Included in a combined source | 2 | The original branch is retained inside a combined collection. |
 | Existing repository or component | 3 | The separately maintained repository or existing component remains canonical. |
 | Collection repository | 1 | The collection hub itself is an inventory entry. |
 | Available records, source unrecovered | 1 | Written and verification records are available, with the source limit stated below. |
+| Removed from collection | 1 | Removed from the published source collection at the author's request. |
 
 ## Known source-availability limits
 
@@ -89,7 +90,7 @@ No other named entry in this 74-entry inventory remains unaccounted for. This is
 | 32 | Circuit Obstructions publication set | Included in a combined source | [monographs/quantum-and-circuits](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/monographs/quantum-and-circuits) |
 | 33 | Realization Calculus: Quantum and Circuits collected volume | Newer canonical source | [monographs/quantum-and-circuits](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/monographs/quantum-and-circuits) |
 | 34 | Machine-Theory compendium and older integrated collection | Source package | [monographs/machine-theory-compendium](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/monographs/machine-theory-compendium) |
-| 35 | ARC-AGI2 Block17 solver and evaluation research | Source package | [experiments/arc-agi2](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/experiments/arc-agi2) · [supporting: original-solver](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/experiments/arc-agi2/supporting-sources/original-solver) · [supporting: public-evaluation](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/experiments/arc-agi2/supporting-sources/public-evaluation) · [supporting: training-evidence](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/experiments/arc-agi2/supporting-sources/training-evidence) · [supporting: offline-handoff](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/experiments/arc-agi2/supporting-sources/offline-handoff) |
+| 35 | ARC-AGI2 Block17 solver and evaluation research | Removed from collection | Removed on 30 October 2026. |
 
 ### Software and release infrastructure
 
@@ -159,6 +160,6 @@ No other named entry in this 74-entry inventory remains unaccounted for. This is
 
 Original archive hashes identify preserved source containers. The published tree exposes ordinary source files and scoped evidence. Repeated archive containers and dependency caches are not additional mathematical results. Unique historical sources remain in supporting-source directories with their own provenance. Inventory archive filenames and the actual canonical archive identities are recorded separately when a later version supersedes the original inventory reference.
 
-PR-LASM includes a documented, authorized MIT publication-metadata update while retaining the original metadata and unchanged scientific files. ARC evaluation includes lossless storage for its large census: [`census.json.gz`](../experiments/arc-agi2/supporting-sources/public-evaluation/arc-evidence/fullbank-public-evaluation/census.json.gz), an [exact restored-byte identity](../experiments/arc-agi2/supporting-sources/public-evaluation/COMPRESSED_DATA.json), and a [restore helper](../experiments/arc-agi2/supporting-sources/public-evaluation/restore_large_evidence.py). Third-party task-data and source licenses retain their own terms.
+PR-LASM includes a documented, authorized MIT publication-metadata update while retaining the original metadata and unchanged scientific files. Third-party task-data and source licenses retain their own terms.
 
 The paired Realization Calculus edition retains its Space 1.15 and Boundaries 1.0 editorial scope. Current Space 1.16 is linked separately. Its current reader README points to the collection license and canonical sources, with its original README preserved in provenance. The current Machine-Native Reasoning source supersedes the older Core25 inventory entry. Hilbert 12 continuations remain research branches with the arithmetic equality explicitly open.

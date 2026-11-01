@@ -276,17 +276,17 @@ Finished one-observation, finite-dimensional Gaussian inference contract with ex
 
 ## Constructive Repair
 
-**Active development** · Lean: **Selected results recorded** · Confidence basis: **Recorded formal evidence**
+**Scoped release** · Lean: **Selected results recorded** · Confidence basis: **Recorded formal evidence**
 
-Standalone release candidate with exact rational repair certificates and scoped historical Lean evidence. Fresh Windows 11 / CPython 3.12.14 checks passed 134 engine tests and 72 installed cases. The release suite retains two symlink-fixture setup errors and three POSIX/Linux-only skips. Python certificate validity remains separate from kernel acceptance.
+Qualified beta distribution of the 1.0.0rc3 Python runtime. Linux x86_64 and Windows Server 2025 x86_64, both with CPython 3.13.5, passed 134 engine tests and 72 installed cases. Linux passed all 100 release tests; Windows passed 97 with the three named POSIX-only skips. Both symlink rejection controls passed on both platforms. The identical wheel's seven runtime files match the 2,254-file imported source. Historical Lean evidence retains its own scope; this qualification performs no new kernel replay.
 
-**Next step:** Resolve the two symlink-fixture prerequisites and complete a distribution gate for the intended rebuilt wheel and current metadata. Preserve the new exact source-to-wheel map and separate any future Lean replay from Python acceptance (F08).
+**Next step:** Use the qualified beta and its exact source/wheel/receipt record. Rerun the qualification workflow for future candidates. Other interpreters, operating systems, architectures, integration adapters, and fresh Lean execution require their own evidence.
 
 [Return to this work: paper, proofs, Lean, and code](works/constructive-repair.md)
 
 [Edition and reader guide](components/CONSTRUCTIVE_REPAIR.md)
 
-[Software check and tested scope](../verification/constructive-repair/windows-2026-10-27/summary.json) (separate from Lean evidence)
+[Software check and tested scope](../verification/constructive-repair/qualified-2026-10-30/summary.json) (separate from Lean evidence)
 
 [Source directory](../packages/constructive-repair) · [README.md](../packages/constructive-repair/README.md) · [python_baseline/README.md](../packages/constructive-repair/python_baseline/README.md) · [docs/LICENSING_STATUS.md](../packages/constructive-repair/docs/LICENSING_STATUS.md)
 
@@ -1212,20 +1212,6 @@ Beta executable construction with 50 tests and 18 experiment checks. Closure is 
 
 [Source directory](../packages/universal-generative-deformation) · [README.md](../packages/universal-generative-deformation/README.md) · [CHANGELOG.md](../packages/universal-generative-deformation/CHANGELOG.md) · [RELEASE_AUDIT.md](../packages/universal-generative-deformation/RELEASE_AUDIT.md)
 
-<a id="arc-agi2"></a>
-
-## ARC-AGI-2 experiment
-
-**Needs assessment** · Lean: **Not assessed** · Confidence basis: **Unassessed**
-
-Source import identity and receipt verified. No new assessment of mathematical soundness, scientific completion, empirical validity, or Lean coverage.
-
-**Next step:** Identify the exact claims and edition, inspect the written support and any reproducibility records, and assign readiness only after a bounded review (F16).
-
-[Return to this work: paper, proofs, Lean, and code](works/arc-agi2.md)
-
-[Source directory](../experiments/arc-agi2) · [import receipt (availability only)](../manifests/source-imports/arc-agi2.json)
-
 <a id="large-signal-model"></a>
 
 ## Large Signal Model software
@@ -1385,10 +1371,6 @@ Every entry below is **Supporting / historical**, with **Lean: Not assessed** an
 | <a id="stratified-universality-supporting-sources"></a>[Supporting sources](../research/stratified-universality/supporting-sources) | [file receipt](../manifests/source-imports/stratified-universality-supporting-sources.json) |
 | <a id="strong-artin-reader-supporting-sources"></a>[Supporting sources](../research/strong-artin-reader/supporting-sources) | [file receipt](../manifests/source-imports/strong-artin-reader-supporting-sources.json) |
 | <a id="sufficient-resolution-supporting-sources"></a>[Supporting sources](../monographs/sufficient-resolution/supporting-sources) | [file receipt](../manifests/source-imports/sufficient-resolution-supporting-sources.json) |
-| <a id="arc-agi2-offline-handoff"></a>[Offline handoff](../experiments/arc-agi2/supporting-sources/offline-handoff) | [file receipt](../manifests/source-imports/arc-agi2-offline-handoff.json) |
-| <a id="arc-agi2-original-solver"></a>[Original solver](../experiments/arc-agi2/supporting-sources/original-solver) | [file receipt](../manifests/source-imports/arc-agi2-original-solver.json) |
-| <a id="arc-agi2-public-evaluation"></a>[Public evaluation](../experiments/arc-agi2/supporting-sources/public-evaluation) | [file receipt](../manifests/source-imports/arc-agi2-public-evaluation.json) |
-| <a id="arc-agi2-training-evidence"></a>[Training evidence](../experiments/arc-agi2/supporting-sources/training-evidence) | [file receipt](../manifests/source-imports/arc-agi2-training-evidence.json) |
 | <a id="certified-inference-recovery-v14-supporting-sources"></a>[Recovery v14](../packages/certified-inference/supporting-sources/recovery-v14) | [file receipt](../manifests/source-imports/certified-inference-recovery-v14-supporting-sources.json) |
 | <a id="large-signal-model-ancestry-supporting-sources"></a>[Supporting sources](../packages/large-signal-model/supporting-sources) | [file receipt](../manifests/source-imports/large-signal-model-ancestry-supporting-sources.json) |
 

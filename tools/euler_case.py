@@ -60,8 +60,12 @@ def publish(site):
         'dyadic-inverse.csv':'verification/euler-packets/run-007/dyadic-inverse.csv',
         'euler-coordinate-atlas.csv':'verification/euler-packets/run-007/euler-coordinate-atlas.csv',
         'dyadic-edge-tails.csv':'verification/euler-packets/run-007/dyadic-edge-tails.csv',
-        'library-comparison.json':'verification/euler-packets/cross-check-007/results.json',
+        'library-comparison.json':record.get('library_comparison_result','verification/euler-packets/cross-check-007/results.json'),
     }
+    tap_example=record.get('tap_example')
+    if tap_example:
+        downloads['euler_polyphase_taps.py']=checked_path(tap_example['program'])
+        downloads['polyphase-taps.json']=checked_path(tap_example['results'])
     output=site.output/PREFIX
     output.mkdir(parents=True,exist_ok=True)
     published=[]
@@ -93,6 +97,19 @@ def publish(site):
     body+=source_lines(contents['examples/euler_packets.py'].decode('utf-8'))
     site.page(READER,'Exact program for the Euler worked example',body,
               'https://github.com/KomorebiP/Operation-KOMOREBI/blob/'+site.revision+'/examples/euler_packets.py')
+    if tap_example:
+        tap_reader='read/euler-polyphase-taps.html'
+        tap_body=('<h1>Polyphase and FIR tap split / exact program</h1>'
+                  '<p>A forward-shift filter, exact signed Euler inputs, complete finite windows, and an explicit missing-advance control.</p>'
+                  '<p><a class="button" href="../collection/demonstrations/EULER_PACKETS.html#split-an-fir-filter-into-polyphase-taps">Read the worked tap split</a> '
+                  '<a download href="../'+PREFIX+'euler_polyphase_taps.py">Download Python</a> · '
+                  '<a href="../'+PREFIX+'polyphase-taps.json">Exact results and test ranges</a></p>'
+                  '<p>Run <code>python -B euler_polyphase_taps.py</code> with Python 3.10 or later. Only the standard library is needed.</p>')
+        tap_body+=source_lines(contents[tap_example['program']].decode('utf-8'))
+        site.page(tap_reader,'Polyphase and FIR tap split / exact program',tap_body,
+                  'https://github.com/KomorebiP/Operation-KOMOREBI/blob/'+site.revision+'/'+tap_example['program'])
+        site.search.append(dict(title='Euler example / polyphase and FIR tap split',group='Collection',kind='Code',
+            url=tap_reader,work_ids=record['work_ids'],text='Even odd filter taps signal phases forward shift lane advance exact Euler finite FIR standalone Python'))
     site.search.append(dict(title='Euler packets, polynomials and residuals / exact program',
         group='Collection',kind='Code',url=READER,work_ids=record['work_ids'],
         text='Euler secant A000364 A211212 quartic packets Schur complement reciprocal polynomials Fibonacci polynomial connection companion defect sequence transfer infinite coefficient matrices Pascal Toeplitz base changes supercongruences congruential addresses CRT odd-prime dyadic local coordinates Bernoulli sharp precision prime residual exact standalone Python'))

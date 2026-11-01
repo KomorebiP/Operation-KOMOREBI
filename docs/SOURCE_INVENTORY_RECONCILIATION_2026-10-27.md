@@ -10,11 +10,11 @@ The correction updates the availability index, contribution ledger, status catal
 
 | New component | Classification |
 |---|---|
-| [ARC-AGI-2 experiment](../experiments/arc-agi2/) | Primary, needs assessment |
-| [Offline handoff](../experiments/arc-agi2/supporting-sources/offline-handoff/) | Supporting, scientifically unassessed |
-| [Original solver](../experiments/arc-agi2/supporting-sources/original-solver/) | Supporting, scientifically unassessed |
-| [Public evaluation](../experiments/arc-agi2/supporting-sources/public-evaluation/) | Supporting, scientifically unassessed |
-| [Training evidence](../experiments/arc-agi2/supporting-sources/training-evidence/) | Supporting, scientifically unassessed |
+| [ARC-AGI-2 experiment](https://github.com/KomorebiP/Operation-KOMOREBI/tree/080487d6401a7e9d90c415fd9ffbbf8d825e3842/experiments/arc-agi2/) | Primary, needs assessment |
+| [Offline handoff](https://github.com/KomorebiP/Operation-KOMOREBI/tree/080487d6401a7e9d90c415fd9ffbbf8d825e3842/experiments/arc-agi2/supporting-sources/offline-handoff/) | Supporting, scientifically unassessed |
+| [Original solver](https://github.com/KomorebiP/Operation-KOMOREBI/tree/080487d6401a7e9d90c415fd9ffbbf8d825e3842/experiments/arc-agi2/supporting-sources/original-solver/) | Supporting, scientifically unassessed |
+| [Public evaluation](https://github.com/KomorebiP/Operation-KOMOREBI/tree/080487d6401a7e9d90c415fd9ffbbf8d825e3842/experiments/arc-agi2/supporting-sources/public-evaluation/) | Supporting, scientifically unassessed |
+| [Training evidence](https://github.com/KomorebiP/Operation-KOMOREBI/tree/080487d6401a7e9d90c415fd9ffbbf8d825e3842/experiments/arc-agi2/supporting-sources/training-evidence/) | Supporting, scientifically unassessed |
 | [Recovery v14](../packages/certified-inference/supporting-sources/recovery-v14/) | Supporting, scientifically unassessed |
 | [Large Signal Model software](../packages/large-signal-model/) | Primary, needs assessment |
 | [Supporting sources](../packages/large-signal-model/supporting-sources/) | Supporting, scientifically unassessed |

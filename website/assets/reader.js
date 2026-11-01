@@ -236,15 +236,27 @@ if (form) {
   const group = document.querySelector("#search-group");
   const kind = document.querySelector("#search-kind");
   const work = document.querySelector("#search-work");
+  const facets = {
+    discipline: document.querySelector("#search-discipline"),
+    stage: document.querySelector("#search-stage"),
+    lean: document.querySelector("#search-lean"),
+    evidence: document.querySelector("#search-evidence")
+  };
   const status = document.querySelector("#search-status");
   const results = document.querySelector("#search-results");
-  const more = document.querySelector("#search-more");
-  let indexPromise, found = [], displayed = 0, generation = 0, queryWords = [];
+  const sizeControl = document.querySelector("#search-size");
+  const pagers = Array.from(document.querySelectorAll(".search-pagination"));
+  let indexPromise, facetPromise, found = [], page = 1, pageSize = 40, generation = 0, queryWords = [];
   let mathQueue = Promise.resolve();
-  function renderMore(focusNew = false) {
-    const previous = displayed;
+  function renderPage() {
+    if (window.MathJax && window.MathJax.typesetClear) window.MathJax.typesetClear([results]);
+    results.replaceChildren();
+    const pages = Math.max(1, Math.ceil(found.length / pageSize));
+    page = Math.max(1, Math.min(page, pages));
+    const startIndex = (page - 1) * pageSize;
+    results.start = startIndex + 1;
     const equations = [];
-    for (const item of found.slice(displayed, displayed + 40)) {
+    for (const item of found.slice(startIndex, startIndex + pageSize)) {
       const li = document.createElement("li");
       const heading = document.createElement("h2");
       const link = document.createElement("a");
@@ -281,12 +293,26 @@ if (form) {
         equations.push(equation);
       }
       results.append(li);
-      displayed++;
     }
-    status.textContent = found.length ? `${found.length} results. Showing ${displayed}.` :
+    status.textContent = found.length ? `${found.length} results. Showing ${startIndex + 1}–${Math.min(startIndex + pageSize, found.length)}.` :
       "No results. Try fewer words, clear the filters or browse the glossary.";
-    more.hidden = displayed >= found.length;
-    if (focusNew && results.children[previous]) results.children[previous].querySelector("a").focus();
+    for (const pager of pagers) {
+      pager.hidden = found.length === 0;
+      pager.querySelector(".search-page-status").textContent = "of " + pages;
+      const picker = pager.querySelector(".search-page-select");
+      const options = Array.from({ length: pages }, (_, index) => {
+        const option = document.createElement("option");
+        option.value = String(index + 1);
+        option.textContent = String(index + 1);
+        return option;
+      });
+      picker.replaceChildren(...options);
+      picker.value = String(page);
+      picker.disabled = pages === 1;
+      pager.querySelector('[data-search-page="previous"]').disabled = page === 1;
+      pager.querySelector('[data-search-page="next"]').disabled = page === pages;
+    }
+    saveParams({page: page > 1 ? String(page) : "", per_page: pageSize !== 40 ? String(pageSize) : ""});
     mathQueue = mathQueue.then(async () => {
       if (window.MathJax && window.MathJax.startup) {
         await window.MathJax.startup.promise;
@@ -295,20 +321,29 @@ if (form) {
       }
     }).catch(() => { /* The exact TeX excerpt remains readable if MathJax fails. */ });
   }
-  async function search(event) {
+  async function search(event, preservePage = false) {
     if (event) event.preventDefault();
+    if (!preservePage) page = 1;
+    pageSize = Number(sizeControl.value);
     const request = ++generation;
     const query = input.value;
     const repository = group.value;
     const type = kind.value;
     const workId = work.value;
+    const selectedFacets = Object.fromEntries(
+      Object.entries(facets).map(([name, control]) => [name, control.value]));
+    const hasWorkFacets = Object.values(selectedFacets).some(Boolean);
     const words = wordsFor(query);
-    saveParams({q: query, repository, type, work: workId});
+    saveParams({q: query, repository, type, work: workId, ...selectedFacets,
+      page: page > 1 ? String(page) : "", per_page: pageSize !== 40 ? String(pageSize) : ""});
     if (window.MathJax && window.MathJax.typesetClear) window.MathJax.typesetClear([results]);
     results.replaceChildren();
-    more.hidden = true;
+    for (const pager of pagers) pager.hidden = true;
+    found = [];
     results.removeAttribute("aria-busy");
-    if (!words.length && !type && !repository && !workId) { status.textContent = "Enter a term, choose a work or choose a result type."; return; }
+    if (!words.length && !type && !repository && !workId && !hasWorkFacets) {
+      status.textContent = "Enter a term or choose a filter."; return;
+    }
     status.textContent = "Searching…";
     results.setAttribute("aria-busy", "true");
     try {
@@ -317,17 +352,30 @@ if (form) {
         return response.json();
       }).then(rows => rows.map(item => ({...item, normalizedTitle: normalized(item.title),
         normalizedText: normalized(item.title + " " + item.text)}))).catch(error => { indexPromise = null; throw error; });
-      const index = await indexPromise;
+      if (hasWorkFacets && !facetPromise) {
+        facetPromise = fetch(form.dataset.facets).then(response => {
+          if (!response.ok) throw new Error("Work facets could not be loaded");
+          return response.json();
+        }).catch(error => { facetPromise = null; throw error; });
+      }
+      const [index, subjectIndex] = await Promise.all([
+        indexPromise, hasWorkFacets ? facetPromise : Promise.resolve(null)
+      ]);
       if (request !== generation) return;
+      const matchesWorkFacets = item => !hasWorkFacets || (item.work_ids || []).some(id => {
+        const record = subjectIndex.works[id];
+        return record && Object.entries(selectedFacets).every(([name, code]) =>
+          !code || record[name === "evidence" ? "evidence" : name] === code);
+      });
       found = index.filter(item => (!repository || item.group === repository) &&
-        (!type || item.kind === type) && (!workId || (item.work_ids || []).includes(workId)) && words.every(word => item.normalizedText.includes(word)));
+        (!type || item.kind === type) && (!workId || (item.work_ids || []).includes(workId)) &&
+        matchesWorkFacets(item) && words.every(word => item.normalizedText.includes(word)));
       const score = item => (normalized(query) === item.normalizedTitle ? 100 : 0) +
         words.filter(word => item.normalizedTitle.includes(word)).length * 10 +
         (item.kind === "Claims" || item.kind === "Glossary" ? 1 : 0);
       found.sort((a, b) => score(b) - score(a) || a.title.localeCompare(b.title));
-      displayed = 0;
       queryWords = words;
-      renderMore();
+      renderPage();
     } catch (error) {
       if (request === generation) status.textContent = "Search could not load. Use the work index or glossary, or try again.";
     } finally { if (request === generation) results.removeAttribute("aria-busy"); }
@@ -336,23 +384,55 @@ if (form) {
   group.addEventListener("change", search);
   kind.addEventListener("change", search);
   work.addEventListener("change", search);
-  more.addEventListener("click", () => renderMore(true));
+  for (const control of Object.values(facets)) control.addEventListener("change", search);
+  sizeControl.addEventListener("change", search);
+  function showPage(nextPage) {
+    page = nextPage;
+    const url = new URL(location.href);
+    if (page > 1) url.searchParams.set("page", page);
+    else url.searchParams.delete("page");
+    history.pushState(null, "", url);
+    renderPage();
+    status.scrollIntoView({ block: "start", behavior: "auto" });
+  }
+  for (const button of document.querySelectorAll("[data-search-page]")) {
+    button.addEventListener("click", () => showPage(page + (button.dataset.searchPage === "next" ? 1 : -1)));
+  }
+  for (const picker of document.querySelectorAll(".search-page-select")) {
+    picker.addEventListener("change", () => showPage(Number(picker.value)));
+  }
   form.addEventListener("reset", () => {
     ++generation;
     if (window.MathJax && window.MathJax.typesetClear) window.MathJax.typesetClear([results]);
     results.replaceChildren();
     results.removeAttribute("aria-busy");
-    more.hidden = true;
-    status.textContent = "Enter a term, choose a work or choose a result type.";
-    saveParams({q: "", repository: "", type: "", work: ""});
+    found = [];
+    page = 1;
+    pageSize = 40;
+    results.start = 1;
+    for (const pager of pagers) pager.hidden = true;
+    status.textContent = "Enter a term or choose a filter.";
+    saveParams({q: "", repository: "", type: "", work: "",
+      discipline: "", stage: "", lean: "", evidence: "", page: "", per_page: ""});
     setTimeout(() => input.focus(), 0);
   });
-  const params = new URLSearchParams(location.search);
-  input.value = params.get("q") || "";
-  group.value = params.get("repository") || "";
-  kind.value = params.get("type") || "";
-  work.value = params.get("work") || "";
-  if (input.value || group.value || kind.value || work.value) search();
+  function restoreSearch() {
+    const params = new URLSearchParams(location.search);
+    input.value = params.get("q") || "";
+    group.value = params.get("repository") || "";
+    kind.value = params.get("type") || "";
+    work.value = params.get("work") || "";
+    for (const [name, control] of Object.entries(facets)) control.value = params.get(name) || "";
+    const requested = Number(params.get("page"));
+    page = Number.isSafeInteger(requested) && requested > 0 ? requested : 1;
+    const requestedSize = params.get("per_page") || "40";
+    sizeControl.value = Array.from(sizeControl.options).some(option => option.value === requestedSize) ? requestedSize : "40";
+    pageSize = Number(sizeControl.value);
+  }
+  window.addEventListener("popstate", () => { restoreSearch(); search(null, true); });
+  restoreSearch();
+  if (input.value || group.value || kind.value || work.value ||
+      Object.values(facets).some(control => control.value)) search(null, true);
 }
 
 for (const pre of document.querySelectorAll("pre")) {

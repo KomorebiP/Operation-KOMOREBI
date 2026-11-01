@@ -80,6 +80,40 @@ class ReaderSiteTests(unittest.TestCase):
         self.assertIsNone(table_reading_aid(config,'book/c.tex','L4')[1])
         fourth=BOOKS['paper-iv']
         self.assertIs(table_reading_aid(fourth,fourth['main'],'L2988')[1],fourth['table_reading_aids']['L2988'])
+        sixth=BOOKS['paper-vi']
+        self.assertEqual(table_reading_aid(sixth,sixth['main'],'L1632')[1]['headers'],
+                         ['Realization','Seed','Transfer','Packet/reconstruction law'])
+        self.assertIsNone(table_reading_aid(sixth,sixth['main'],'L99999')[1])
+        for work in ('paper-i','paper-ii','paper-iii'):
+            with self.assertRaisesRegex(ValueError,'Review the table reading aid'):
+                table_reading_aid(BOOKS[work],BOOKS[work]['main'],'L999999')
+
+    def test_book_rendering_allows_partial_aids_unless_full_coverage_is_requested(self):
+        from readable_chapters import BOOKS, render_book
+        from unittest.mock import patch
+        raw=(r'\section{Tables}'+'\n'+r'\begin{tabularx}{\textwidth}{ll}Name & Value\\First & $x$\\\end{tabularx}'+'\n'
+             +r'\begin{tabularx}{\textwidth}{ll}Other & Value\\Second & $y$\\\end{tabularx}').encode()
+        source='book/main.tex'; pages={}
+        spec=dict(source=source,url='read/test/tables.html',title='Tables',work='test')
+        config=dict(work='test',label='Test',base='book/',main=source,index='read/test/index.html',
+                    bib_page='read/test/references.html',title='Test tables',chapters=[spec],main_chapters=1,
+                    table_reading_aids={'L2':dict(caption='First table',headers=['Name','Value'],row_header_column=0)})
+        site=SimpleNamespace(root=Path('.'),search=[],rel=lambda target,page:target,
+                             page=lambda page,title,body:pages.update({page:body}))
+        reader=SimpleNamespace(site=site,claims_by_source={},work_routes=lambda work,page:'',work_route_targets=lambda work:[],
+                               resolve=lambda path,page,anchor=None:path+('#'+anchor if anchor else ''),
+                               records={source:dict(sha256=hashlib.sha256(raw).hexdigest(),work='test',format='tex',file_url=source)})
+        def book():
+            chapter=Chapter(raw.decode(),{}); chapter.url=spec['url']
+            return dict(config=config,chapters=[(spec,raw,chapter)],main=raw.decode(),macros={},references=[])
+        with patch.dict(BOOKS,{'test':config}):
+            reports=render_book(reader,book())
+            self.assertEqual(len(reports),1)
+            self.assertEqual(pages[spec['url']].count('<table>'),2)
+            self.assertEqual(pages[spec['url']].count('<caption>First table</caption>'),1)
+            config['require_table_reading_aids']=True
+            with self.assertRaisesRegex(ValueError,'main.tex#L3'):
+                render_book(reader,book())
 
     def test_row_header_aids_retain_authored_captions(self):
         aid=dict(headers=['Name','Value'],row_header_column=0)
@@ -232,7 +266,9 @@ class ReaderSiteTests(unittest.TestCase):
         image=b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR'+(1200).to_bytes(4,'big')+(450).to_bytes(4,'big')+bytes(9)
         with tempfile.TemporaryDirectory() as folder:
             root=Path(folder); (root/'figure.png').write_bytes(image)
-            page=Page('<img src="../figure.png" width="1200" height="450" alt="A drawing" loading="lazy">')
+            (root/'brand.svg').write_text('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"></svg>')
+            page=Page('<img src="../brand.svg" width="32" height="32" alt="Brand">'
+                      '<img src="../figure.png" width="1200" height="450" alt="A drawing" loading="lazy">')
             check_png_image_sizes(root,'read/plate.html',page.images)
             for attrs in ({}, {'width':'1200','height':'451'}):
                 with self.assertRaisesRegex(AssertionError,'dimensions differ'):
@@ -602,22 +638,6 @@ class ReaderSiteTests(unittest.TestCase):
         self.assertIn('loading="lazy"',rendered)
         self.assertNotIn('onerror',rendered)
 
-    def test_paper_vi_table_reading_aids_cover_every_retained_table(self):
-        import re
-        from paper_vi_reading import BOOK
-        source=(Path(__file__).resolve().parents[1]/BOOK['main']).read_text(encoding='utf-8-sig')
-        tables=list(re.finditer(r'\\begin\{(?:table|longtable)\}',source))
-        aids=BOOK['table_reading_aids']
-        self.assertEqual(set(aids), {'L'+str(source.count('\n',0,m.start())+1) for m in tables})
-        for match in tables:
-            key='L'+str(source.count('\n',0,match.start())+1)
-            header=source[source.index(r'\toprule',match.end())+len(r'\toprule'):].lstrip().splitlines()[0]
-            cells=[cell.strip() for cell in header.removesuffix(r'\\').split('&')]
-            self.assertEqual(cells,aids[key]['headers'])
-            self.assertEqual(aids[key]['row_header_column'],0)
-            if match[0]==r'\begin{table}':
-                self.assertNotIn('caption',aids[key])
-
     def test_navigation_has_nested_relative_links_and_current_page(self):
         from html.parser import HTMLParser
         class Links(HTMLParser):
@@ -631,8 +651,9 @@ class ReaderSiteTests(unittest.TestCase):
         self.assertEqual([a['href'] for a in links if a.get('aria-current')=='page'], ['GLOSSARY.html'])
         self.assertIn('../search.html', [a['href'] for a in links])
         self.assertIn('PHYSICS_COLLECTION.html', [a['href'] for a in links])
-        self.assertEqual(len(links),16)
-        self.assertEqual(len({a['href'] for a in links}),16)
+        self.assertIn('../interactive.html', [a['href'] for a in links])
+        self.assertEqual(len(links),17)
+        self.assertEqual(len({a['href'] for a in links}),17)
         self.assertIn('SPECIAL_FUNCTIONS.html', [a['href'] for a in links])
         special=Links(site_navigation('collection/SPECIAL_FUNCTIONS.html')).links
         self.assertEqual([a['href'] for a in special if a.get('aria-current')=='page'], ['SPECIAL_FUNCTIONS.html'])

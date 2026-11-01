@@ -4,6 +4,9 @@
 
 [Run and edit this example in your browser](https://KomorebiP.github.io/Operation-KOMOREBI/playground.html#packets)
 
+[Explore the interactive diagram](https://KomorebiP.github.io/Operation-KOMOREBI/interactive.html#packets)
+to change the matrix and input coordinates, then switch individual blocks on and off.
+
 **Question:** Can we reproduce a matrix operation by calculating its action
 between smaller pieces? You need only multiplication of two by two matrices.
 
