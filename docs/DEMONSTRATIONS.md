@@ -97,6 +97,18 @@ and fully dephased arithmetic states.
 
 ## Run in your browser
 
+[Open the Signal Laboratory](https://KomorebiP.github.io/Operation-KOMOREBI/signal-lab.html)
+for a larger experiment. Generate or import 16–256 integer samples, add seeded
+noise, and compare Haar wavelets, orthonormal cosine modes, and sample
+coordinates at the same coefficient budget. Compare weighted-energy,
+raw-magnitude, and prefix selections; inspect individual components; and
+explore reconstruction error over every budget. Export signals or error curves
+as CSV, save the experiment as JSON, or copy a link to the complete setup.
+
+The reference signal is known in these experiments. The displayed reference
+minimum uses that knowledge; it does not estimate the clean signal behind an
+unknown real-world recording. Cosine calculations are numerical approximations.
+
 [Explore the interactive diagrams](https://KomorebiP.github.io/Operation-KOMOREBI/interactive.html).
 Change matrix entries, keep or omit transfer blocks, refine an eight-sample
 signal, and move inputs along a shared-summary line. The controls update the

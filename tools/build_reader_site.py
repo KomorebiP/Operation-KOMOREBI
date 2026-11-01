@@ -71,7 +71,8 @@ def site_navigation(page):
                   ('Worked examples', 'collection/HAND_WORKED_EXAMPLES.html')]),
         ('Look up', [('Claims', 'claims.html'),
                      ('Notation', 'notation.html')]),
-        ('Use', [('Interactive diagrams', 'interactive.html'),
+        ('Use', [('Signal laboratory', 'signal-lab.html'),
+                 ('Interactive diagrams', 'interactive.html'),
                  ('Run Python', 'playground.html'), ('Software', 'software.html'),
                  ('Downloads', 'downloads.html'),
                  ('Accessibility', 'collection/ACCESSIBILITY.html')]),
@@ -295,7 +296,7 @@ class Site:
                 chapter_help_script=''.join('<script defer src="'+self.rel('assets/'+name,path)+'?v='+hashlib.sha256((self.root/'website/assets'/name).read_bytes()).hexdigest()[:12]+'"></script>' for name in ('notation-search.js','chapter-notation.js'))
             else:body=chapter_layout(body)
         work_page = path.startswith('collection/works/')
-        if not work_page and 'data-side-reader-link' not in body and path not in {'side-by-side.html','index.html','404.html','interactive.html','works.html'}:
+        if not work_page and 'data-side-reader-link' not in body and path not in {'side-by-side.html','index.html','404.html','interactive.html','signal-lab.html','works.html'}:
             pair=self.rel('side-by-side.html',path)+'?left='+quote(path,safe='')
             launch='<p class="side-launch"><a data-side-reader-link href="'+esc(pair,quote=True)+'">Read side by side</a></p>'
             body=re.sub(r'(</h1>)',lambda match:match[1]+launch,body,count=1)
@@ -638,6 +639,8 @@ class Site:
         notation = build_notation(self)
         from interactive_diagrams import build as build_interactive_diagrams
         build_interactive_diagrams(self)
+        from signal_lab import build as build_signal_lab
+        build_signal_lab(self)
         self.indexes()
         from side_reader import build as build_side_reader
         side_reader = build_side_reader(self)

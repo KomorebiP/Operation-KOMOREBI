@@ -612,6 +612,32 @@ definition separately. Matching symbol spellings remain available in a disclosur
 The build checks title metadata against the source; comments and code examples
 cannot supply a definition name.
 
+## Signal Laboratory
+
+`signal-lab.html` is a larger known-reference signal experiment with 16–256
+samples. Its maintained interface is in `tools/signal_lab.py`; the model and
+browser controller are `website/assets/signal-lab-core.mjs` and
+`website/assets/signal-lab.js`. The shared site builder publishes it and adds
+its search entry. Both the page script and model import use content versions.
+
+The lab compares averaging-normalized Haar wavelets with their support
+weights, an orthonormal DCT-II, and sample coordinates. Seeded bounded integer
+noise, equal coefficient budgets, three selection policies, full budget/error
+curves, component inspection, CSV/JSON import/export, and shareable settings
+are supported. Imported samples become the known reference before simulated
+noise is added. The minimum-budget action uses this reference and a stated
+numerical tolerance. It is not an estimator for an unknown clean signal.
+
+The website workflow runs `node --test tools/test_signal_lab.cjs` and
+`python -B -m unittest discover -s tools -p 'test_signal_lab.py' -v`.
+The model tests include every mask of one 16-sample benchmark in each basis.
+For an independent bounded numerical check, run
+`python -B tools/audit_signal_lab.py --node node --output signal-lab-report.json`
+with NumPy installed and a fresh report filename. This checks 180 explicitly
+specified configurations and 54,108 budget cases using NumPy FFT/IFFT and
+explicit Haar support vectors. Its report records the tested range and
+numerical errors; it does not change manuscript or proof status.
+
 ## Paper navigation
 
 Paper, source and PDF pages keep the overview, chapter contents, visual atlas
