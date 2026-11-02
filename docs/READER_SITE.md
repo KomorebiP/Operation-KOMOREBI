@@ -114,6 +114,13 @@ controls, work overviews, claim routes and the Browse menu. File filtering
 matches paths and lexical declaration names; `q` in the address retains the
 filter. The complete native file list works without JavaScript.
 
+The inspector groups core papers and books separately. File lists show the
+filename and module folder, with their shared source root under **Source
+locations and editions**. Full retained paths remain searchable. Source pages
+use filename headings and a compact row of reading, download and comparison
+actions. Coverage labels stay visible; their descriptions and evidence routes
+use a native disclosure. The original source bytes and line anchors are retained.
+
 The inspector expands only receipt-owned `.lean` files within the existing
 Lean resource selections. It excludes package caches, build directories and
 `lakefile.lean`. Original source readers retain exact downloads, linked line

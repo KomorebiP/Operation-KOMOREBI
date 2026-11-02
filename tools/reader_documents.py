@@ -376,9 +376,14 @@ class ReadingDocuments:
             work_url = self.site.rel('collection/works/'+work+'.html', page)
             title = self.site.components[work]['title']
             file_url = quote(self.site.rel(record['file_url'], page), safe='/')
-            body = '<nav class="breadcrumbs" aria-label="Document navigation"><a href="'+work_url+'">'+e(title)+'</a> / <a href="'+self.site.rel('documents.html', page)+'">Papers and PDFs</a></nav>'
-            body += '<header class="document-heading"><p class="eyebrow">'+e(record['title'])+'</p><h1>'+e(title)+'</h1><p class="document-filename">'+e(PurePosixPath(path).name)+'</p></header>'
-            body += self.work_routes(work, page)
+            lean_source = path.endswith('.lean') and work in getattr(self,'lean_works',{})
+            if lean_source:
+                from lean_reader import source_heading
+                body = '<section class="lean-source-page">'+source_heading(self,record,page)
+            else:
+                body = '<nav class="breadcrumbs" aria-label="Document navigation"><a href="'+work_url+'">'+e(title)+'</a> / <a href="'+self.site.rel('documents.html', page)+'">Papers and PDFs</a></nav>'
+                body += '<header class="document-heading"><p class="eyebrow">'+e(record['title'])+'</p><h1>'+e(title)+'</h1><p class="document-filename">'+e(PurePosixPath(path).name)+'</p></header>'
+                body += self.work_routes(work, page)
             body += self.source_claims(path, page)
             siblings = [r for r in self.records.values() if r['work'] == work and r['format'] == 'pdf' and r != record and not r.get('figure_source')]
             if record['format'] == 'pdf':
@@ -391,7 +396,7 @@ class ReadingDocuments:
                                              text=title+' '+record['title']+' '+PurePosixPath(path).name))
             else:
                 text = raw.decode('utf-8-sig')
-                body += '<p><a href="'+file_url+'" download>Download original file</a></p>'
+                if not lean_source: body += '<p><a href="'+file_url+'" download>Download original file</a></p>'
                 if path.endswith('.lean'):
                     from lean_reader import source_controls
                     body += source_controls(self, record, text, page)
@@ -407,12 +412,13 @@ class ReadingDocuments:
                     rewrite.feed(math_fences(rendered))
                     body += '<article class="edition-text">'+''.join(rewrite.out)+'</article>'
                 else:
-                    body += '<p>This is the original '+('TeX manuscript source. Use the paper’s PDF for typeset equations.' if path.endswith('.tex') else 'source text. Reading it does not run or verify the program.')+'</p>'
+                    if not lean_source:
+                        body += '<p>This is the original '+('TeX manuscript source. Use the paper’s PDF for typeset equations.' if path.endswith('.tex') else 'source text. Reading it does not run or verify the program.')+'</p>'
                     included = self.inclusions.get(path, [])
                     if included:
                         body += '<h2>Included manuscript sections</h2><ul>'+''.join('<li><a href="'+self.resolve(p, page)+'">'+e(PurePosixPath(p).name)+'</a></li>' for p in included)+'</ul>'
                     pdf = self.primary_pdf(work)
-                    if pdf:
+                    if pdf and not lean_source:
                         body += '<p><a class="button" href="'+self.site.rel(pdf['url'], page)+'">Read the typeset paper</a></p>'
                     from readable_chapters import readable_url
                     readable = readable_url(path)
@@ -421,9 +427,10 @@ class ReadingDocuments:
                     body += source_lines(text, self.source_annotations(path, page))
                 limit = 15000 if record['format'] == 'markdown' else 4000
                 self.site.search.append(dict(title=title+' / '+record['title'], group='Collection', kind=self.search_kind(record), work_ids=[work], url=page, text=re.sub(r'\s+', ' ', text)[:limit]))
-            if siblings:
+            if siblings and not lean_source:
                 body += '<section><h2>Other PDFs for this work</h2><ul>'+''.join('<li><a href="'+self.site.rel(r['url'], page)+'">'+e(r['title'])+'</a></li>' for r in siblings)+'</ul></section>'
             body += '<details class="document-provenance"><summary>Original file and source record</summary><p>This copy matches the recorded source file. Its publication here does not change the work’s review status.</p><p>SHA-256: <code>'+record['sha256']+'</code></p><p><a href="'+github(self.site.repos['collection'], self.site.revision, path)+'">Original source on GitHub</a></p></details><p><a href="'+work_url+'">Back to '+e(title)+'</a></p>'
+            if lean_source: body += '</section>'
             self.site.page(page, title+' / '+record['title'], body, github(self.site.repos['collection'], self.site.revision, path))
         from readable_chapters import render
         render(self)
