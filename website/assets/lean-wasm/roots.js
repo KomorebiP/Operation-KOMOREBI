@@ -51,7 +51,7 @@ export function importedRoots(code) {
 	return roots;
 }
 
-/** The program's `import` lines, verbatim — the syntax probe shares the program's environment. */
+/** Imports for the separate syntax probe, retaining the program's imported notation. */
 export function importLines(code) {
 	return stripComments(code)
 		.split('\n')
