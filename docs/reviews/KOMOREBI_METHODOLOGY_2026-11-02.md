@@ -45,7 +45,9 @@ comparison links, search entries, and the work overview use the shared reader.
 `tools/methodology_sections.json` records exact source digests and contiguous
 ranges. Changed sources stop the build pending a reviewed selection. The source
 package's byte-preservation Git attribute prevents Windows newline conversion
-from invalidating its existing delivery manifest.
+from invalidating its existing delivery manifest. The rule lives in
+`monographs/.gitattributes`, preserving the root attributes file's identity in
+the frozen Euler example record.
 
 ## Validation
 
