@@ -102,7 +102,7 @@
           record.button.title = saved ? 'Remove saved passage' : 'Save this passage';
         } else record.button.querySelector('span').textContent = saved ? 'Saved' : entry.section ? 'Save passage' : 'Save page';
       }
-      const link = bar && bar.querySelector('[data-saved-reading-link]');
+      const link = (bar && bar.querySelector('[data-saved-reading-link]')) || document.querySelector('[data-saved-reading-link]');
       if (link) link.textContent = items.length ? 'Saved reading (' + items.length + ')' : 'Saved reading';
     }
     function renderList() {

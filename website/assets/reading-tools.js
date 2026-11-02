@@ -182,15 +182,17 @@
 
   // Every disclosure retains its native, script-free operation. Escape and an
   // outside click dismiss the floating panels without losing keyboard focus.
-  const menus = Array.from(document.querySelectorAll('.reading-menu, .reading-paper-menu, .reading-display, .chapter-toolbar .reading-resources'));
+  const menus = Array.from(document.querySelectorAll('.reading-menu, .reading-page-tools, .reading-paper-menu, .reading-display, .chapter-toolbar .reading-resources'));
   for (const menu of menus) {
     menu.addEventListener('keydown', event => {
-      if (event.key === 'Escape' && menu.open) {
+      if (event.key === 'Escape' && menu.open && !event.defaultPrevented) {
         event.preventDefault();menu.open = false;menu.querySelector('summary').focus();
       }
     });
     menu.addEventListener('toggle', () => {
-      if (menu.open) for (const other of menus) if (other !== menu) other.open = false;
+      if (menu.open) for (const other of menus) {
+        if (other !== menu && !other.contains(menu) && !menu.contains(other)) other.open = false;
+      }
     });
   }
   document.addEventListener('click', event => {

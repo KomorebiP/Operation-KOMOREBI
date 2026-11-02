@@ -1,7 +1,33 @@
 """Consistent reading chrome around unchanged manuscript articles."""
 import html
+from html.parser import HTMLParser
 import posixpath
 import re
+
+
+def take_block(source, tag, class_name):
+    """Extract one generated wrapper while preserving its nested markup exactly."""
+    class Block(HTMLParser):
+        def __init__(self):
+            super().__init__(convert_charrefs=False)
+            self.lines=[0]+[i+1 for i,c in enumerate(source) if c=='\n']
+            self.start=self.end=None
+            self.depth=0
+        def position(self):
+            line,column=self.getpos()
+            return self.lines[line-1]+column
+        def handle_starttag(self, name, attrs):
+            if name!=tag or self.end is not None:return
+            if self.depth:self.depth+=1
+            elif class_name in dict(attrs).get('class','').split():
+                self.start=self.position();self.depth=1
+        def handle_endtag(self, name):
+            if name!=tag or not self.depth:return
+            self.depth-=1
+            if not self.depth:self.end=source.index('>',self.position())+1
+    parser=Block();parser.feed(source)
+    if parser.end is None:return source,''
+    return source[:parser.start]+source[parser.end:],source[parser.start:parser.end]
 
 
 def has_statement_finder(config):
@@ -32,6 +58,7 @@ def standardize(body,path):
     before=body[:heading.start()];after=body[heading.end():]
     eyebrow=re.search(r'<p class="eyebrow">.*?</p>\s*$',before,re.S)
     if eyebrow:before=before[:eyebrow.start()]
+    before,reader_controls=take_block(before,'div','reading-collection-nav')
     title=heading[0]
     prefix=html.escape(config['label'])+': '
     title=re.sub(r'(<h1\b[^>]*>)'+re.escape(prefix),r'\1',title,count=1)
@@ -48,6 +75,19 @@ def standardize(body,path):
     for pattern in (r'<div class="reading-save"[^>]*>.*?</div>',r'<p class="side-launch">.*?</p>'):
         match=re.search(pattern,front,re.S)
         if match:actions.append(match[0]);front=front[:match.start()]+front[match.end():]
+    if reader_controls:
+        primary=[];tools=[reader_controls]
+        for action in actions:
+            if action.startswith('<p class="side-launch">'):
+                tools.append(action);continue
+            saved=re.search(r'<a\b[^>]*\bdata-saved-reading-link\b[^>]*>.*?</a>',action,re.S)
+            if saved:
+                tools.append('<p class="reading-tools-saved">'+saved[0]+'</p>')
+                action=action[:saved.start()]+action[saved.end():]
+            primary.append(action)
+        primary.append('<details class="reading-page-tools"><summary>Reading tools</summary>'
+                       '<div class="reading-page-tools-panel">'+''.join(tools)+'</div></details>')
+        actions=primary
     target=html.escape(posixpath.relpath(config['index'],posixpath.dirname(path)),quote=True)
     header=('<header class="reading-page-header"><p class="eyebrow"><a href="'+target+'">'+html.escape(config['label'])+
             '</a>'+('<span aria-hidden="true"> · </span><span>'+context+'</span>' if context else '')+'</p>'+title+
