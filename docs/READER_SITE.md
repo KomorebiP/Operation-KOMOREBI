@@ -743,6 +743,16 @@ routine correction was identified in that scope. The record binds ten source
 files and reports the syntax checks. The retained text and mathematics are
 unchanged; the same review exclusions apply.
 
+The [Paper IX proofreading record](../manifests/reader-proofreading-paper-ix-2026-11-01.json)
+covers its 56 main reading sections, front matter, notation, cross-references,
+captions, preamble and bibliography syntax. The five mathematical appendices,
+continuation notes, checkpoint supplements and recovered historical text were
+included. One grammar correction is recommended for a later edition: the
+singular subject in “The full exact classification … are” requires “is.”
+The record binds 39 source files and gives the exact source and reading passage.
+The retained text and mathematical tokens are unchanged; the same review
+exclusions apply.
+
 ## Signal Laboratory
 
 `signal-lab.html` is a larger known-reference signal experiment with 16–256
