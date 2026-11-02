@@ -36,7 +36,35 @@ export const UNAVAILABLE_LIBRARIES = {
 
 /** Strip comments so a commented-out import does not count as one. */
 export function stripComments(code) {
-	return code.replace(/\/-[\s\S]*?-\//g, '').replace(/--[^\n]*/g, '');
+	const out=code.split('');let depth=0,string=false;
+	for(let i=0;i<out.length;){
+		const pair=out.slice(i,i+2).join('');let width=1;
+		if(depth){if(pair==='/-'){depth++;width=2;}else if(pair==='-/'){depth--;width=2;}}
+		else if(string){if(out[i]==='\\')width=2;else if(out[i]==='"')string=false;}
+		else if(pair==='/-'){depth=1;width=2;}
+		else if(pair==='--'){const end=out.indexOf('\n',i);width=(end<0?out.length:end)-i;}
+		else if(out[i]==='"')string=true;
+		else{i++;continue;}
+		for(let j=i;j<Math.min(i+width,out.length);j++)if(out[j]!=='\n')out[j]=' ';
+		i+=width;
+	}
+	return out.join('');
+}
+
+/** The original header prefix, including modern module markers and comments. */
+export function sourceHeader(code) {
+	const masked=stripComments(code);let offset=0,end=0,moduleEnd=0;
+	for(const line of masked.split('\n')) {
+		const next=Math.min(masked.length,offset+line.length+1),trimmed=line.trim();
+		if(!trimmed){offset=next;continue;}
+		if(!end&&trimmed==='module'){end=next;moduleEnd=next;}
+		else if(trimmed==='prelude'){end=next;moduleEnd=next;}
+		else if(/^(?:(?:public|private|meta)\s+)*import\s+\S/.test(trimmed))end=next;
+		else break;
+		offset=next;
+	}
+	// Masking retains UTF-16 offsets, including astral characters in comments.
+	return {prefix:code.slice(0,end),body:code.slice(end),moduleEnd};
 }
 
 /** The distinct top-level roots a program imports, in order. */
@@ -123,16 +151,16 @@ export function unavailableImportNotes(code, notMirrored, assets, build = null) 
 
 /**
  * A Mathlib module outside the published closure fails by path rather than by prefix, because
- * "Mathlib" itself resolves. Worth explaining: the layer is a 4,303-module closure, not Mathlib.
+ * "Mathlib" itself resolves. Only the compiler-matched modules on the host are available.
  */
 export function outsideClosureNotes(problems) {
 	const notes = [];
 	for (const problem of problems) {
 		const match = /object file '[^']*' of module (\S+)/.exec(problem.text);
-		if (!match) continue;
+		if (!match || !match[1].startsWith('Mathlib.')) continue;
 		const note =
-			`${match[1]} is not in the published Mathlib closure. Upstream ships only the 4,303 modules ` +
-			'its Real Analysis course needs, so some of Mathlib is available here and some is not.';
+			`${match[1]} is outside the available compiler-matched libraries. ` +
+			'The browser has selected Mathlib modules; this import needs an additional matching artifact.';
 		if (!notes.includes(note)) notes.push(note);
 	}
 	return notes;

@@ -14,6 +14,20 @@ environment, not replays of every retained Lake environment or the collection's
 2,249 displayed files. Original source bytes, receipts and verification labels
 are unchanged. Unsupported imports fail.
 
+“Open another retained Lean file” browses the full reading collection, using the
+existing portable source bundle. Its import planner resolves local dependencies
+inside the same reading edition and orders them before the selected file. The
+available-import filter is a preflight result, not a proof verification. A source
+can still fail because of APIs, missing tactics, stack limits or other differences
+from its retained project. Known prepared examples remain the default choices.
+
+The bundle is downloaded only when another source is opened. The browser checks
+its size and SHA-256, reads its ZIP directory without filesystem extraction, and
+checks every requested source against the individual receipt-bound hash and size.
+Dependencies cannot cross reading-edition ownership. Original downloads use the
+exact extracted bytes, including any BOM or CRLF; only the editor normalizes text.
+`catalog.json` records each source route, input identity and compatibility source.
+
 ## Environment and static hosting
 
 The compiler is cauli's Lean fork at
@@ -37,7 +51,10 @@ packs, following imports in the exact Mathlib source revision. Std/Lean/Batterie
 artifacts are compared byte for byte with the per-file tree; matching packed
 entries are shared, with any remaining files supplied individually. Each
 workspace has its own Mathlib import closure, so a small workspace does not
-load modules needed only by another. The source archive is read in one sequential
+load modules needed only by another. An edited import can expand to the complete
+set of compiler-matched modules already present in the pinned upstream packs.
+Exploratory workspaces use that set directly; it remains a subset of Mathlib.
+The source archive is read in one sequential
 pass and its import parsing is shared across closures. The site stores about
 9 MB of metadata. Large binaries remain at immutable URLs in the
 pinned upstream public GitHub repository. No additional hosting account is used.
@@ -63,7 +80,9 @@ startup. The initial artifact requires substantial desktop memory and downloads;
 mobile support and Firefox/Safari compatibility are not established.
 The retained Special Functions `BrowserCoreLocal.lean` was also tried, but hit
 `Maximum call stack size exceeded` in this runtime. It is excluded from the
-prepared picker; its original source remains inspectable through the reader.
+prepared picker; it can be opened experimentally. Its library-only import check
+passes, while its declarations still fail. Changing interpreter preference,
+deferring compilation and lowering Lean's recursion option did not remove it.
 
 The fork loses some parser diagnostics. The page therefore always runs Lean's
 parser in a separate elaboration, against the same import environment. A
@@ -73,6 +92,9 @@ carried into this separate check as ordinary imports, preserving the imported
 notation without changing the retained proof. An absent marker or failed probe fails checking.
 This is also why the Lean library is needed even for a small Std proof.
 Source controls that the probe cannot preserve are rejected before compilation.
+Long guard inputs are assembled from bounded Unicode string chunks, with bounded
+join nesting, before parsing the complete source. Export wrappers also supply the
+original dependency to this syntax check rather than checking only the wrapper.
 
 Workspace dependencies are checked first. A generated wrapper imports Lean,
 names the module, opens a public section for exported-only WASM artifacts, and
@@ -80,10 +102,13 @@ writes its checked environment to the compiler's temporary `/lib/lean` tree.
 The public section is marked `@[expose]` to preserve transparent definition
 bodies for dependent proofs.
 The dependent source imports that actual module. The main file is checked with
-its retained proof text. Workspaces with local dependencies start a fresh worker
-for every run, reusing cached downloads. Rewriting modules in a reused imported
-environment caused a stall during the edit test. Single-file workspaces retain
-their warm compiler. Warnings remain visible;
+its retained proof text. When dependency source strings are exactly unchanged,
+the same worker reuses their checked modules and checks the edited final file.
+Any dependency edit starts a fresh worker, reusing cached downloads. Rewriting
+modules in a live imported environment caused a stall during the edit test.
+Cached dependency warnings remain warnings, and the result explicitly labels
+reused checks. Stop and runtime failures discard this cache. Single-file
+workspaces retain their warm compiler. Warnings remain visible;
 `sorry` is not a clean result. A clean check is not an axiom audit.
 
 Recovery also needs the newer name `dite_eq_left`, which this runtime lacks.
@@ -92,6 +117,14 @@ proved from Lean 4.33's `dif_pos`. The lemma is checked in the same run, is
 recorded separately from retained source, and introduces no assumption. The
 editor and original download keep the retained proof text. Diagnostics are
 mapped back to the original lines; wrapper errors are labelled as generated.
+
+Exploratory sources that use this newer name receive a separate generated
+`KomorebiBrowser.Compatibility` module with the same checked lemma. Generated
+imports make it available without changing the retained proof body. Sources
+importing `Mathlib.Tactic` receive another generated module containing only imports
+of the available tactic facade modules. It adds no declarations or assumptions,
+and is not the complete upstream umbrella. Both generated sources are visible
+in the file picker and downloadable. Missing tactics and other APIs still fail.
 
 Unit tests cover source identity, runtime tampering, pack roundtrips, source
 routing, module wrappers and result states. Browser validation must also check

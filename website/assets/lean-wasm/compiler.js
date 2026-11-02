@@ -225,7 +225,15 @@ export async function createCompiler(options = {}) {
 		let result = await runtime.compile(code);
 		for (let round = 0; round < MAX_LOAD_ROUNDS; round++) {
 			const { problems } = collect(result.stdout, result.stderr);
-			if (!(await ensureRoots(missingRoots(problems), state))) break;
+			let progress=await ensureRoots(missingRoots(problems), state);
+			if(!progress && options.mathlibManifest && !loadedLayers.has('Additional Mathlib') &&
+				problems.some(p=>/object file '[^']*' of module Mathlib\./.test(p.text))) {
+				options.onProgress?.('Loading more available Mathlib modules for this import…');
+				const extra=await runtime.loadLayer({...optionalLayers(assets)[0],label:'Additional Mathlib'});
+				if(!extra.ok)throw new Error(extra.error||'Additional Mathlib libraries could not load.');
+				loadedLayers.add('Additional Mathlib');state.loaded.push('Additional available Mathlib modules');progress=true;
+			}
+			if(!progress)break;
 			result = await runtime.compile(code);
 		}
 		return result;
@@ -233,6 +241,7 @@ export async function createCompiler(options = {}) {
 
 	/** Ask Lean's own parser about the source, for the parse errors the runtime drops. */
 	async function findSyntaxErrors(code, state) {
+		options.onProgress?.('Checking source syntax…');
 		const probe = await compileWithLibraries(syntaxProbeSource(code), state);
 		if (!probe.success) throw new Error(probe.error || 'The syntax-check runtime failed.');
 		const { problems, info } = collect(probe.stdout, probe.stderr);
@@ -282,6 +291,7 @@ export async function createCompiler(options = {}) {
 			const state = { attempted: new Set(), layers: new Set(), loaded: [], notMirrored: [] };
 			const started = performance.now();
 
+			options.onProgress?.('Checking proof declarations…');
 			const result = await compileWithLibraries(code, state);
 			if (!result.success) {
 				const diagnostics = problemsToLines(collect(result.stdout,result.stderr).problems);
@@ -294,7 +304,9 @@ export async function createCompiler(options = {}) {
 			if (mode !== 'off' && code.trim() !== '' && !problems.some((p) => p.severity === 'error')) {
 				const leanReady = loadedRoots.has('Lean') || loadedLayers.size > 0;
 				if (mode === 'full' || leanReady) {
-					problems.push(...(await findSyntaxErrors(code, state)));
+					// Export wrappers change module visibility. Parse the supplied
+					// original dependency too, rather than only the generated wrapper.
+					problems.push(...(await findSyntaxErrors(runOptions.syntaxSource??code, state)));
 				}
 			}
 
