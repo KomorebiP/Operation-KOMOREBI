@@ -234,6 +234,8 @@ def source_controls(reader, record, text, page):
     body += '<a href="'+quote(site.rel(record['file_url'],page),safe='/')+'" download>Download source</a>'+paired_route(site,page)+'</nav>'
     from browser_lean import action
     body += action(site,page,source=record['repository_path'])
+    from lean_execution import action as run_action
+    body += run_action(site,page,record['repository_path'])
     body += scope(reader, work, page)
     module = record['repository_path'].removeprefix(source_root(reader,work))
     body += '<p class="lean-current-path"><code>'+e(module)+'</code><span>'+quantity(len(text.splitlines()),'line')+'</span></p>'
@@ -291,6 +293,7 @@ def build(reader):
     body += '<nav class="lean-actions" aria-label="Lean library routes"><a href="'+site.rel('read/index.html','lean/index.html')+'">Reading library</a>'+paired_route(site,'lean/index.html')+'</nav>'
     body += '<p class="lean-library-note">Coverage labels describe the existing evidence. Browsing the source does not run Lean.</p>'
     body += '<p class="lean-playground-route"><a class="button" href="'+site.rel('lean/playground.html','lean/index.html')+'">Try a proof in Lean</a> <span>Interactive pilot · Paper XII</span></p>'
+    body += '<p class="lean-playground-route"><a class="button" href="'+site.rel('lean/run.html','lean/index.html')+'">Run with dependencies</a> <span>All displayed source files · native Lean</span></p>'
     for group,core in [('Core papers',True),('Books and monographs',False)]:
         selected = [item for item in catalog if bool(re.fullmatch(r'paper-[ivx]+',item['work'])) == core]
         if not selected: continue

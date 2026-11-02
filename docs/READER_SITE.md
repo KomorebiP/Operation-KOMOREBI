@@ -978,6 +978,12 @@ numerical errors; it does not change manuscript or proof status.
 
 ## Interactive Lean pilot
 
+The collection-wide native runner at `lean/run.html` extends execution beyond
+the single-file pilot. Every displayed Lean source links to its selected
+workspace and command. See [Running the retained Lean sources](LEAN_EXECUTION.md)
+for the source bundle, manual GitHub workflow, retained/reconstructed
+environments, compiler receipts and dedicated-server export path.
+
 `lean/playground.html` embeds the official `live.lean-lang.org` editor only
 after a visitor presses **Load Lean editor**. A normal external link works
 without site JavaScript and is also the fallback for blocked frames or failed

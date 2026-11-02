@@ -321,7 +321,7 @@ class Site:
         article_start=body.find('<article id="chapter-text"')
         side_context=body[:article_start] if edition(path) and article_start>=0 else body
         has_side_action=('class="side-launch"' in side_context) if edition(path) else ('data-side-reader-link' in side_context)
-        if not work_page and not has_side_action and path not in {'side-by-side.html','index.html','404.html','interactive.html','signal-lab.html','works.html','reading-list.html','lean/playground.html'}:
+        if not work_page and not has_side_action and path not in {'side-by-side.html','index.html','404.html','interactive.html','signal-lab.html','works.html','reading-list.html','lean/playground.html','lean/run.html'}:
             pair=self.rel('side-by-side.html',path)+'?left='+quote(path,safe='')
             launch='<p class="side-launch"><a data-side-reader-link href="'+esc(pair,quote=True)+'">Read side by side</a></p>'
             body=re.sub(r'(</h1>)',lambda match:match[1]+launch,body,count=1)
@@ -660,6 +660,8 @@ class Site:
         lean = build_lean(self.reader)
         from browser_lean import build as build_lean_playground
         lean_playground = build_lean_playground(self.reader)
+        from lean_execution import build as build_lean_execution
+        lean_execution = build_lean_execution(self.reader)
         self.bundles()
         self.reader.catalog()
         self.demonstration_program()
@@ -682,6 +684,7 @@ class Site:
         result['notation'] = notation
         result['lean_reader'] = lean
         result['lean_playground'] = lean_playground
+        result['lean_execution'] = lean_execution
         result['side_reader'] = side_reader
         self.write('build-info.json',json.dumps(result,indent=2)+'\n')
         print(json.dumps(result))
