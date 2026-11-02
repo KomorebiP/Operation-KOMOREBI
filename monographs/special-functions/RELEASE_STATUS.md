@@ -1,5 +1,13 @@
 # Technical publication package with checked coupled-functions block
 
+**2026-11-02 explicit upper growth companion:** SF-LEAN-B10 adds 34
+checked theorem declarations proving the explicit F.2 upper comparison for
+all R>=e, parameter-only seed constants and index existence, positive upper
+coefficients and two-sided growth-ratio bounds. The registered scope is 251
+names, with actual I/O hashed. Formal real type bounds, radial exponent limit
+and F.3 proportions remain open. See `formalization/Block10/REPORT.md`.
+Earlier notes retain their dated scopes.
+
 **2026-11-02 lower logarithmic growth companion:** SF-LEAN-B09 adds 16
 checked theorem declarations proving the explicit F.2 lower comparison for
 all R>=2, positive canonical coefficients and uniform growth-ratio lower
