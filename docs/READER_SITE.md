@@ -8,6 +8,28 @@ All twelve core papers have formatted HTML reading editions. Each retains its
 recorded mathematical scope; companion guides and atlas coverage are described
 on the individual reading pages.
 
+Komorebi Space and Realization Boundaries also have complete HTML editions at
+`read/komorebi-space/` and `read/realization-boundaries/`. Their 52 source sections
+retain 137 proof blocks, 46 original figures and 4,828 mathematical expressions.
+`tools/foundational_reading.py` translates declared print wrappers;
+`tools/foundational_sections.json` fixes the source ranges, input order, source
+identities and accessible table headers. A changed source requires a reviewed
+selection. Equation and theorem numbers follow each book's printed counters.
+The statement finder links adjacent written proofs without adding formal claims.
+
+Figure receipts in `website/assets/figures/komorebi-space/` and
+`website/assets/figures/realization-boundaries/` identify the retained source and
+browser image. Space's TikZ diagrams are rendered from the retained book PDF;
+the receipt records the PDF identity, page and crop. Standalone plots and
+Boundaries diagrams use their retained figure assets. Captions remain selectable
+HTML. This presentation adds no mathematical review or Lean execution.
+`tools/render_foundational_figures.py` reproduces the images from those receipts
+with pypdfium2; it is separate from the normal website build.
+
+Run `python -B -m unittest discover -s tools -p 'test_foundational_reading.py' -v`
+to check both complete editions, source changes, formula preservation and HTML
+structure. The normal site checker also checks their navigation and source links.
+
 The twelve core editions share collection switching, chapter filtering,
 persistent text size and font choices, and sidebar chapter shortcuts. The
 [control renderer](../tools/reader_usability.py) runs after chapter layout and

@@ -113,7 +113,10 @@ def check_readable_chapter(root, documents, pages):
         assert report['macro_source']==main_path
         raw=(root/records[source]['file_url']).read_bytes()
         expressions=original_math(chapter_text(raw.decode('utf-8-sig'),spec))
-        if BOOKS[spec['work']].get('custom_reader')=='proof_path':
+        if BOOKS[spec['work']].get('custom_reader')=='foundational':
+            from foundational_reading import source_math
+            expressions=source_math(raw.decode('utf-8-sig'),spec)
+        elif BOOKS[spec['work']].get('custom_reader')=='proof_path':
             from proof_path_reading import source_math
             expressions=source_math(main,spec)
         elif BOOKS[spec['work']].get('custom_reader')=='paper_ix':
@@ -132,7 +135,10 @@ def check_readable_chapter(root, documents, pages):
         assert report['url']==page
         assert report['math_expressions']==len(expressions)
         assert report['math_sequence_sha256']==hashlib.sha256(json.dumps(expressions,ensure_ascii=False).encode()).hexdigest()
-        if BOOKS[spec['work']].get('custom_reader')=='paper_x':
+        if BOOKS[spec['work']].get('custom_reader')=='foundational':
+            from foundational_reading import source_macros
+            expected_macros=source_macros(lambda path:(root/records[path]['file_url']).read_text(encoding='utf-8-sig'),BOOKS[spec['work']])
+        elif BOOKS[spec['work']].get('custom_reader')=='paper_x':
             from paper_x_reading import source_macros,CONTINUATION
             continuation=(root/records[CONTINUATION]['file_url']).read_text(encoding='utf-8-sig')
             expected_macros=source_macros(main,continuation)

@@ -7,11 +7,13 @@ import re
 def enhance(body, page):
     from readable_chapters import BOOKS,statement_directory_url
     from reading_navigation import Navigation
-    match = re.fullmatch(r'read/(paper-[ivx]+)/[^/]+\.html', page)
+    match = re.fullmatch(r'read/([a-z0-9-]+)/[^/]+\.html', page)
     if not match or match[1] not in BOOKS:
         return body, False
     work = match[1]
     config = BOOKS[work]
+    core=bool(re.fullmatch(r'paper-[ivx]+',work))
+    if not core and not config.get('reader_controls'):return body,False
     is_index = page == config['index']
     is_directory = page == statement_directory_url(config)
     if not is_index and not is_directory and 'id="chapter-text"' not in body:
@@ -23,10 +25,10 @@ def enhance(body, page):
         return e(posixpath.relpath(target, posixpath.dirname(page)), quote=True)
     controls = ('<div class="reading-collection-nav"><a href="'+relative('read/index.html')+'">All reading editions</a>'
                 '<a href="'+relative(config['index'] if is_directory else statement_directory_url(config))+'">'+('All chapters' if is_directory else 'Find statements')+'</a>'
-                '<details class="reading-paper-menu"><summary>Switch paper</summary>'
-                '<nav aria-label="Core papers"><ul>')
+                '<details class="reading-paper-menu"><summary>'+('Switch paper' if core else 'Switch book')+'</summary>'
+                '<nav aria-label="'+('Core papers' if core else 'Foundational books')+'"><ul>')
     for identifier, book in BOOKS.items():
-        if not re.fullmatch(r'paper-[ivx]+', identifier):
+        if not (bool(re.fullmatch(r'paper-[ivx]+',identifier)) if core else book.get('reader_controls')):
             continue
         current = ' aria-current="'+('page' if is_index or is_directory else 'location')+'"' if identifier == work else ''
         controls += ('<li><a href="'+relative(statement_directory_url(book) if is_directory else book['index'])+'"'+current+'><strong>'+e(book['label'])+
@@ -39,7 +41,7 @@ def enhance(body, page):
                      '<option value="large">Large</option><option value="larger">Extra large</option></select>'
                      '<label for="reading-text-font">Text font</label><select id="reading-text-font">'
                      '<option value="default">Sans serif</option><option value="serif">Serif</option></select>'
-                     '<p>Saved in this browser for all core-paper chapters. Browser zoom also works.</p>'
+                     '<p>Saved in this browser for reading chapters. Browser zoom also works.</p>'
                      '<button type="button" class="reading-display-reset">Reset text settings</button></div></details>')
     controls += '</div>'
     parsed = Navigation(body);navigation = parsed.controls

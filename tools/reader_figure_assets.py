@@ -8,7 +8,7 @@ import re
 def digest(raw): return hashlib.sha256(raw).hexdigest()
 
 def candidates(config,spec,name):
-    return [config['base']+folder+name for folder in spec.get('figure_roots',['figures/'])]
+    return [posixpath.normpath(config['base']+folder+name) for folder in spec.get('figure_roots',['figures/'])]
 
 def prepare(reader,config,chapters):
     from build_reader_site import safe_path
@@ -17,13 +17,22 @@ def prepare(reader,config,chapters):
     for record in report['figures']:
         source=record['source']
         expected=posixpath.dirname(config['figure_receipts'])+'/'+PurePosixPath(source).stem+'.png'
-        if not source.startswith(config['base']) or record['image']!=expected:
+        if not source.startswith(config.get('figure_source_root',config['base'])) or record['image']!=expected:
             raise ValueError('Unexpected rendered figure path')
         if source in assets: raise ValueError('Duplicate rendered figure source')
         source_record=reader.add(source)
         if not source_record or digest(reader.site.read_source(source_record))!=record['source_sha256']:
             raise ValueError('Rendered figure source differs: '+source)
         source_record['figure_source']=True
+        if record.get('render_source'):
+            rendered=reader.add(record['render_source'])
+            if not rendered or digest(reader.site.read_source(rendered))!=record['render_source_sha256']:
+                raise ValueError('Rendered figure parent differs: '+record['render_source'])
+            if '/figures/' in record['render_source']:rendered['figure_source']=True
+        if record.get('render_image'):
+            image_entry=reader.owned.get(record['render_image'])
+            if not image_entry or digest(reader.site.read_source(image_entry))!=record['render_image_sha256']:
+                raise ValueError('Retained figure image differs: '+record['render_image'])
         raw=(reader.site.root/'website'/safe_path(record['image'])).read_bytes()
         if digest(raw)!=record['image_sha256']:
             raise ValueError('Rendered figure image differs: '+source)
