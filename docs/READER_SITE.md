@@ -66,6 +66,20 @@ Finder filters use `q` and `proof=1` query parameters, updated with replaceState
 Page restoration and Back/Forward apply the URL filters after native form-state
 restoration. Preserve unrelated query parameters and anchors when updating them.
 
+[Reference previews](../tools/reference_previews.py) audit marked reference and
+citation links after the canonical chapters and bibliography are rendered.
+Each paper's lazy-loaded JSON contains inert text/element trees from those
+destinations. Equation labels are retained as metadata before their print-only
+TeX commands are removed, so formulas sharing a passage can be selected exactly.
+Excerpts end at whole blocks and formulas; section excerpts and omitted content
+are identified in the dialog. The site verifier regenerates every entry and
+checks it against the published JSON. Do not substitute generated summaries.
+The browser creates an allowlisted DOM, keeps original hyperlinks, respects
+text preferences, and guards against stale loads and wrong-paper data. Run
+`test_reference_previews.py` and `node tools/test_reference_previews.cjs` when
+changing this behavior, then check keyboard, phone, math and passage navigation
+in real rendered chapters.
+
 ## Sources
 
 | Content | Source |
