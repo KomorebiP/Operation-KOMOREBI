@@ -1,5 +1,6 @@
 import hashlib
 import json
+import os
 from pathlib import Path
 import tempfile
 import unittest
@@ -40,7 +41,8 @@ class LeanExecutionTests(unittest.TestCase):
             with self.assertRaises(ValueError):validate_workspace(output,record)
 
     def test_retained_project_configuration_is_not_reconstructed(self):
-        collection,source,raws=self.fixture(native=True)
+        collection,source,raws=self.fixture({'book/current/helper.sh':b'#!/bin/sh\nexit 0\n'},native=True)
+        collection.inputs['book/current/helper.sh']['mode']='100755'
         with tempfile.TemporaryDirectory() as temp:
             output=prepare(collection,source,Path(temp)/'run')
             record=json.loads((output/'RUN_INPUTS.json').read_bytes())
@@ -48,6 +50,7 @@ class LeanExecutionTests(unittest.TestCase):
             self.assertEqual(record['target'],'Selected.lean')
             self.assertFalse(any(entry['generated'] for entry in record['inputs'].values()))
             for path,raw in raws.items():self.assertEqual((output/'project'/path.removeprefix('book/current/')).read_bytes(),raw)
+            if os.name!='nt':self.assertEqual((output/'project/helper.sh').stat().st_mode&0o777,0o755)
             with self.assertRaises(FileExistsError):prepare(collection,source,output)
 
     def test_missing_and_ambiguous_imports_stop_preparation(self):

@@ -23,7 +23,7 @@
     }
     select.value = id;
     activeId = id;
-    field('work').textContent = source.work;
+    field('work').textContent = source.label || source.work;
     field('name').textContent = source.path.split('/').pop();
     field('path').textContent = source.path;
     field('mode').textContent = source.mode === 'retained-project'
@@ -46,18 +46,18 @@
   function filter() {
     const query = search.value.toLocaleLowerCase().trim();
     const selected = activeId;
-    const found = files.filter(s => (s.work + ' ' + s.path).toLocaleLowerCase().includes(query));
+    const found = files.filter(s => (s.work + ' ' + (s.label || '') + ' ' + s.path).toLocaleLowerCase().includes(query));
     const options = found.map(source => {
       const option = document.createElement('option');
       option.value = source.id;
-      option.textContent = source.work + ' · ' + source.path;
+      option.textContent = (source.label || source.work) + ' · ' + source.path;
       return option;
     });
     if (selected && !found.some(s => s.id === selected)) {
       const current = files.find(s => s.id === selected);
       const option = document.createElement('option');
       option.value = selected;
-      option.textContent = 'Current selection: ' + current.work + ' · ' + current.path;
+      option.textContent = 'Current selection: ' + (current.label || current.work) + ' · ' + current.path;
       options.unshift(option);
     } else if (!selected) {
       const option = document.createElement('option');

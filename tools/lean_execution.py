@@ -68,11 +68,11 @@ def collect(root,revision):
                 if project+'/'+name not in files:files.append(project+'/'+name)
             projects[project]=dict(files=sorted(files))
         entry=owned[path]
-        sources.append(dict(id=identity(path),path=path,work=entry['work'],sha256=entry['sha256'],
+        sources.append(dict(id=identity(path),path=path,work=entry['work'],label=BOOKS[entry['work']]['label'],sha256=entry['sha256'],
                             url=page_path(entry['work'],path),project=project))
     for name in ('lean-toolchain','lake-manifest.json'):add(FALLBACK_ROOT+'/'+name)
     return owned,dict(schema=1,source_revision=revision,sources=sources,inputs={
-        p:{k:e[k] for k in ('work','sha256','git_blob_sha1','size')} for p,e in sorted(inputs.items())},projects=projects)
+        p:{k:e[k] for k in ('work','sha256','git_blob_sha1','size','mode')} for p,e in sorted(inputs.items())},projects=projects)
 
 
 def read_inputs(root,catalog,revision):
@@ -175,7 +175,7 @@ def build(reader):
     site.write('lean/run.json',json.dumps(record,ensure_ascii=False,indent=2)+'\n')
     e=html.escape
     def asset(name):return site.rel('assets/'+name,PAGE)+'?v='+digest((site.root/'website/assets'/name).read_bytes())[:12]
-    options=''.join('<option value="'+e(s['id'])+'">'+e(s['work']+' · '+s['path'].split('/')[-1])+'</option>' for s in record['files'])
+    options=''.join('<option value="'+e(s['id'])+'">'+e(s['label']+' · '+s['path'].split('/')[-1])+'</option>' for s in record['files'])
     size=round(record['bundle_bytes']/1048576,1)
     body=f'''<link rel="stylesheet" href="{asset('lean-reader.css')}"><link rel="stylesheet" href="{asset('lean-execution.css')}">
 <section class="lean-execution" data-lean-execution data-catalog="run.json">
@@ -194,6 +194,7 @@ def build(reader):
 <section class="lean-run-explain"><h2>Two environments, stated explicitly</h2><p><strong>Retained project:</strong> use the original Lake configuration, Lean pin, lockfile, and local source modules.</p><p><strong>Reconstructed workspace:</strong> keep the source bytes unchanged, collect its local imports, and use a fixed Lean/Mathlib environment. This is a new experiment rather than a replay of an absent project configuration. Ambiguous or missing imports stop preparation.</p>
 <p><strong>GitHub runs:</strong> repository maintainers can use the manual <a href="https://github.com/KomorebiP/Operation-KOMOREBI/actions/workflows/lean-source-run.yml">Lean source runner workflow</a>. Paste the selected repository path into its <strong>source</strong> input. The job checks that file and saves its result and logs as an artifact.</p>
 <p>Compiler errors, warnings, missing imports, and timeouts remain visible. A clean compiler exit does not audit axioms or establish that the entire paper is formalized. Existing coverage labels stay attached to their recorded evidence.</p>
+<p>For interactive checking of custom modules inside this site, the runner can also export a project for a dedicated Lean web server. <a href="../collection/LEAN_EXECUTION.html#path-to-interactive-checking-inside-the-site">Backend setup and export instructions</a>.</p>
 <p><a href="run.json">Environment catalogue and bundle checksum</a> · <a href="../downloads/komorebi-lean-runner.zip" download>Complete runner bundle</a></p></section>
 <noscript><p>The bundle works without site JavaScript. Run <code>python run_lean.py --list</code> to list source paths, then follow its README. The source inspector and GitHub workflow links also work directly.</p></noscript></section><script defer src="{asset('lean-execution.js')}"></script>'''
     site.page(PAGE,'Run Lean with dependencies',body)

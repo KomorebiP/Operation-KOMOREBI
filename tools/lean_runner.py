@@ -171,7 +171,8 @@ def prepare(collection, source, output, leanweb_project=None):
     for relative,original in plan['files'].items():
         safe_path(relative);raw=collection.read(original)
         dest=project/relative;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(raw)
-        inputs[relative]=dict(original_path=original,sha256=digest(raw),generated=False)
+        mode=collection.inputs[original].get('mode','100644');dest.chmod(int(mode,8)&0o777)
+        inputs[relative]=dict(original_path=original,sha256=digest(raw),generated=False,mode=mode)
     for relative,text in plan['generated'].items():
         raw=text.encode('utf-8');(project/relative).write_bytes(raw)
         inputs[relative]=dict(sha256=digest(raw),generated=True)
@@ -201,6 +202,8 @@ def validate_workspace(output, record):
         target=(project/safe_path(path)).resolve()
         if not target.is_relative_to(project) or digest(target.read_bytes()) != entry['sha256']:
             raise ValueError('Workspace input changed: '+path)
+        if os.name!='nt' and 'mode' in entry and target.stat().st_mode&0o777 != int(entry['mode'],8)&0o777:
+            raise ValueError('Workspace input permissions changed: '+path)
     if (project/'lean-toolchain').read_text(encoding='utf-8').strip() != record['toolchain']:
         raise ValueError('Workspace toolchain changed')
 
