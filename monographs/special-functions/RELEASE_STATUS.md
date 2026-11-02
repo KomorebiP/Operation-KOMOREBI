@@ -1,5 +1,13 @@
 # Technical publication package with checked coupled-functions block
 
+**2026-11-02 characteristic-exponent companion:** SF-LEAN-B07 adds 23
+checked declarations proving the unique positive characteristic exponent,
+positive right and left vectors, a max-normalized right vector, exact complex
+spectrum and spectral-radius characterization. The registered scope is 179 names.
+Actual file I/O is hashed explicitly. F.2's analytic growth bounds, operator
+decoupling and wider coverage remain open. See `formalization/Block07/REPORT.md`.
+Earlier notes retain their dated scopes.
+
 **2026-11-02 component-rescaling companion:** SF-LEAN-B06 adds 19 checked
 declarations proving Theorem G.1's complex rescaling equivalence, explicit
 scalar representation and a full boundary entire-pair collision. The source

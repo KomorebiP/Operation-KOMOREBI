@@ -1,0 +1,25 @@
+import CoupledCharacteristic
+
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.characteristicBalance_zero
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.rpow_contraction_bounds
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.characteristicBalance_continuous
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.characteristicBalance_strictMono
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.characteristicBalance_tendsto
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.characteristic_exponent_exists_unique
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.characteristicExponent_spec
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.characteristicVector_positive
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.characteristicLeftVector_positive
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.characteristic_right_eigenvector
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.characteristic_left_eigenvector
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.characteristicNormalizer_positive
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.normalizedCharacteristicVector_positive
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.normalizedCharacteristicVector_max
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.normalized_characteristic_eigenvector
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.characteristic_second_eigenvalue_bound
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.characteristic_spectrum
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.characteristic_spectralRadius
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.characteristic_mem_spectrum_iff
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.characteristic_spectrum_real
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.characteristic_spectrum_norm_attained
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.characteristic_spectralRadius_iff
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.characteristic_spectral_exponent_exists_unique
