@@ -59,8 +59,11 @@ BOOK = dict(work='paper-viii', label='Paper VIII', base=BASE, main=MAIN,
     main_inputs=['monograph_examples.tex','parts/01_manuscript.tex']+
                 ['parts/02_supplement_0'+str(i)+'.tex' for i in range(1,7)]+['monograph_atlas.tex'],
     pdf_inputs={'monograph_atlas.tex':'Read the worked visual atlas in the original PDF'},
+    atlas_index='read/paper-viii/atlas/index.html',
+    atlas_link_text='Explore all 32 worked atlas plates in HTML',
+    html_inputs={'monograph_atlas.tex':dict(url='read/paper-viii/atlas/index.html',title='Explore all 32 worked atlas plates in HTML',note='')},
     reading_introduction='Read the opening orientation and three exact models, all 15 manuscript sections, '
-                         'and Appendices A–F. The worked visual atlas remains in the original PDF.')
+                         'and Appendices A–F. All 32 worked visual-guide plates also have HTML pages with original drawings, selectable equations and labels, and manuscript return links.')
 
 BOOK['table_reading_aids']={
     ('monograph_examples.tex','L49'): dict(caption='Candidate-tree node costs and errors',

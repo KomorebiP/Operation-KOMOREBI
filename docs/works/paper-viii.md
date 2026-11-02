@@ -33,6 +33,7 @@ Use the links below to read this work and its supporting files. Ctrl+click (Comm
 ## Read
 
 - [Read online: manuscript, six appendices and figures](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-viii/index.html)
+- [Worked visual atlas: all 32 HTML plates](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-viii/atlas/index.html)
 - [Edition README](../../papers/paper-viii/current/README.md)
 - [Read PDF](../../papers/paper-viii/current/papers/Paper_VIII_Traditional_Final.pdf)
 - [Visual guide (PDF)](../../papers/paper-viii/current/papers/Paper_VIII_Visual_Guide_Final.pdf)
