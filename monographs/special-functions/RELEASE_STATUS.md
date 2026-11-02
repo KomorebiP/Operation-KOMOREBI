@@ -1,5 +1,12 @@
 # Technical publication package with checked coupled-functions block
 
+**2026-11-02 component-rescaling companion:** SF-LEAN-B06 adds 19 checked
+declarations proving Theorem G.1's complex rescaling equivalence, explicit
+scalar representation and a full boundary entire-pair collision. The source
+scope is 156 names. Input/output hashes are recorded explicitly. Perron growth,
+operator decoupling and broader coverage remain open. See
+`formalization/Block06/REPORT.md`. Earlier notes retain their dated scopes.
+
 **2026-11-02 analytic-germ inverse companion:** SF-LEAN-B05 adds 13 checked
 declarations proving all-degree coefficient extraction and Theorem G.2's
 guarded labeled-parameter inverse. Supplied Taylor coefficient-object
