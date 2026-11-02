@@ -83,6 +83,7 @@ These files include test contracts, source records, run outputs, publication rec
 - [manifests/reader-proofreading-paper-xii-2026-11-01.json](../manifests/reader-proofreading-paper-xii-2026-11-01.json)
 - [verification/special-functions/block02/record.json](../verification/special-functions/block02/record.json)
 - [verification/special-functions/block03/record.json](../verification/special-functions/block03/record.json)
+- [verification/special-functions/block04/record.json](../verification/special-functions/block04/record.json)
 
 ## Reading and updating a record
 
