@@ -7,6 +7,7 @@ import hashlib
 import html
 import json
 from pathlib import PurePosixPath
+import posixpath
 import re
 
 
@@ -24,6 +25,31 @@ def directory(work):
 
 def quantity(count, label):
     return str(count)+' '+label+('' if count == 1 else 's')
+
+
+def short_title(title):
+    return re.sub(r'^Paper [IVX]+:\s*', '', title)
+
+
+def source_root(reader, work):
+    paths = [posixpath.dirname(r['repository_path']) for r in reader.lean_works[work]]
+    return posixpath.commonpath(paths)+'/'
+
+
+def paired_route(site, page):
+    from urllib.parse import quote
+    return '<a data-side-reader-link href="'+site.rel('side-by-side.html',page)+'?left='+quote(page,safe='')+'">Read side by side</a>'
+
+
+def source_heading(reader, record, page):
+    from readable_chapters import BOOKS
+    site, work, e = reader.site, record['work'], html.escape
+    book = BOOKS[work]
+    name = PurePosixPath(record['repository_path']).name
+    return ('<nav class="breadcrumbs" aria-label="Document navigation"><a href="'+site.rel('collection/works/'+work+'.html',page)+'">'+
+            e(book['label'])+'</a><span aria-hidden="true">/</span><a href="'+site.rel(directory(work),page)+'">Lean files</a></nav>'
+            '<header class="document-heading lean-source-heading"><p class="eyebrow">'+e(book['label'])+' · Lean source</p>'
+            '<h1>'+e(name)+'</h1></header>')
 
 
 def selected_paths(component, owned):
@@ -108,10 +134,11 @@ def scope(reader, work, page):
     e = html.escape
     coverage = reader.site.rel('collection/works/'+work+'.html', page)+'#lean'
     evidence = reader.site.rel('collection/works/'+work+'.html', page)+'#evidence'
-    return ('<aside class="lean-scope" aria-label="Recorded Lean coverage"><p><strong>'+e(label)+
-            '</strong> · '+e(description)+'</p><p>Browse the retained source. This viewer does not '
-            'compile Lean or establish a correspondence with every statement in the paper.</p>'
-            '<p><a href="'+coverage+'">Coverage and setup</a> · <a href="'+evidence+'">Recorded evidence</a></p></aside>')
+    return ('<details class="lean-scope"><summary><span class="lean-badge">'+e(label)+
+            '</span> <span class="lean-scope-label">Coverage and evidence</span></summary><div><p>'+e(description)+
+            '</p><p>This viewer reads the retained source; it does not run Lean or assign new claim mappings.</p>'
+            '<nav aria-label="Recorded Lean evidence"><a href="'+coverage+'">Coverage and setup</a>'
+            '<a href="'+evidence+'">Recorded evidence</a></nav></div></details>')
 
 
 def source_controls(reader, record, text, page):
@@ -119,14 +146,21 @@ def source_controls(reader, record, text, page):
     if work not in getattr(reader,'lean_works',{}):
         return ''
     e = html.escape
-    body = assets(reader.site, page)+scope(reader, work, page)
+    site = reader.site
+    body = assets(site, page)
     relative = record['repository_path'].removeprefix(reader.site.components[work]['destination']+'/')
-    body += '<p class="lean-current-path"><code>'+e(relative)+'</code></p>'
-    body += '<p><a class="button" href="'+reader.site.rel(directory(work), page)+'">Browse this work’s Lean files</a></p>'
+    from readable_chapters import BOOKS
+    from urllib.parse import quote
+    body += '<nav class="lean-actions" aria-label="Lean source actions"><a href="'+site.rel(BOOKS[work]['index'],page)+'">Read the paper</a>'
+    body += '<a href="'+quote(site.rel(record['file_url'],page),safe='/')+'" download>Download source</a>'+paired_route(site,page)+'</nav>'
+    body += scope(reader, work, page)
+    module = record['repository_path'].removeprefix(source_root(reader,work))
+    body += '<p class="lean-current-path"><code>'+e(module)+'</code><span>'+quantity(len(text.splitlines()),'line')+'</span></p>'
+    body += '<details class="lean-source-location"><summary>Original source path</summary><code>'+e(relative)+'</code></details>'
     entries = declarations(text)
     if entries:
-        body += ('<details class="lean-declarations"><summary>'+quantity(len(entries),'declaration location')+
-                 '</summary><p>Names found in the source text; this is not a compiler report. '
+        body += ('<details class="lean-declarations"><summary>Declarations in this file <span>'+str(len(entries))+
+                 '</span></summary><p>Names found in the source text; this is not a compiler report. '
                  'Anonymous and generated declarations may be omitted.</p><ul>')
         body += ''.join('<li><a href="#L'+str(d['line'])+'"><code>'+e(d['kind']+' '+d['name'])+
                         '</code></a><span>Line '+str(d['line'])+'</span></li>' for d in entries)
@@ -135,21 +169,26 @@ def source_controls(reader, record, text, page):
 
 
 def build(reader):
+    from readable_chapters import BOOKS
     site, e = reader.site, html.escape
     catalog, total = [], 0
     for work, records in reader.lean_works.items():
         page = directory(work)
         title = site.components[work]['title']
-        body = assets(site, page)+'<p class="eyebrow">Lean source inspector</p><h1>'+e(title)+'</h1>'
-        body += '<nav class="document-routes" aria-label="Lean reading routes"><a href="'+site.rel('lean/index.html',page)+'">All included works</a>'
-        body += '<a href="'+site.rel('collection/works/'+work+'.html',page)+'">Work overview</a>'
-        from readable_chapters import BOOKS
-        body += '<a href="'+site.rel(BOOKS[work]['index'],page)+'">Read the paper</a></nav>'+scope(reader,work,page)
-        body += ('<p>'+quantity(len(records),'file')+' from this work’s selected Lean source directories. '
-                 'Historical editions retain their original paths. Package caches and build files are omitted.</p>'
-                 '<form class="lean-filter" role="search" hidden><label for="lean-query">Find a file or declaration</label>'
+        book = BOOKS[work]
+        body = assets(site, page)+'<section class="lean-browser"><nav class="breadcrumbs" aria-label="Lean navigation"><a href="'+site.rel('lean/index.html',page)+'">All Lean sources</a></nav>'
+        body += '<header class="lean-heading"><p class="eyebrow">'+e(book['label'])+' · Lean sources</p><h1>'+e(short_title(title))+'</h1></header>'
+        body += '<nav class="lean-actions" aria-label="Lean reading routes"><a class="button" href="'+site.rel(book['index'],page)+'">Read the paper</a>'
+        body += '<a href="'+site.rel('collection/works/'+work+'.html',page)+'">Work overview</a>'+paired_route(site,page)+'</nav>'+scope(reader,work,page)
+        common = source_root(reader,work)
+        root_label = common.removeprefix(site.components[work]['destination']+'/') or './'
+        body += ('<div class="lean-directory-heading"><h2>Source files <span>'+str(len(records))+'</span></h2>'
+                 '<details class="lean-source-location"><summary>Source locations and editions</summary>'
+                 '<p>Files are shown relative to <code>'+e(root_label)+'</code>.</p>'
+                 '<p>Historical editions keep their original paths. Package caches and build files are omitted.</p></details></div>'
+                 '<form class="lean-filter" role="search" hidden><label for="lean-query">Find a file or declaration</label><div>'
                  '<input id="lean-query" name="q" type="search" autocomplete="off" placeholder="File path, theorem, definition…">'
-                 '<button type="reset">Clear</button></form><p class="lean-count" role="status" aria-live="polite">'+
+                 '<button type="reset">Clear</button></div></form><p class="lean-count" role="status" aria-live="polite">'+
                  quantity(len(records),'file')+'</p><ul class="lean-files">')
         file_entries = []
         prefix = site.components[work]['destination']+'/'
@@ -158,25 +197,37 @@ def build(reader):
             raw = site.read_source(record)
             entries = declarations(raw.decode('utf-8-sig'))
             relative = path.removeprefix(prefix)
+            module = path.removeprefix(common)
+            folder = posixpath.dirname(module)
             search = relative+' '+' '.join(d['kind']+' '+d['name'] for d in entries)
-            body += '<li data-lean-search="'+e(search,quote=True)+'"><a href="'+site.rel(record['url'],page)+'"><code>'+e(relative)+'</code></a>'
-            body += '<span>'+quantity(len(raw.splitlines()),'line')+' · '+quantity(len(entries),'declaration location')+'</span></li>'
+            body += '<li data-lean-search="'+e(search,quote=True)+'"><div class="lean-file-name"><a href="'+site.rel(record['url'],page)+'" aria-label="'+e(module,quote=True)+'"><code>'+e(PurePosixPath(path).name)+'</code></a>'
+            if folder: body += '<span class="lean-file-folder">'+e(folder)+'/</span>'
+            body += '</div><span class="lean-file-meta">'+quantity(len(raw.splitlines()),'line')+' · '+quantity(len(entries),'declaration location')+'</span></li>'
             file_entries.append(dict(path=path,url=record['url'],sha256=record['sha256'],declarations=entries))
-        body += '</ul><noscript><p>The complete file list works without JavaScript. Use your browser’s Find command to search file paths.</p></noscript>'
+        body += '</ul><noscript><p>The complete file list works without JavaScript. Use your browser’s Find command to search file paths.</p></noscript></section>'
         site.page(page,title+' / Inspect Lean',body)
         site.search.append(dict(title=title+' / Inspect Lean',group='Collection',kind='Lean',work_ids=[work],url=page,
                                 text='Lean source inspector files declarations theorem definition '+title))
         catalog.append(dict(work=work,url=page,files=file_entries))
         total += len(records)
-    body = assets(site,'lean/index.html')+'<p class="eyebrow">Read the formal source</p><h1>Inspect Lean</h1>'
-    body += ('<p>Explore the Lean sources accompanying the papers and books already available as HTML reading editions. '
-             'Open a work, find a file or declaration, and follow a line link into the original source.</p>'
-             '<p>Coverage labels come from the existing evidence records. Browsing does not run Lean or change a work’s verification status.</p><ul class="lean-works">')
-    for item in catalog:
-        work = item['work']
-        label = site.status['labels']['lean'][site.assessments[work]['lean']][0]
-        body += '<li><a href="'+site.rel(item['url'],'lean/index.html')+'">'+e(site.components[work]['title'])+'</a><span>'+quantity(len(item['files']),'file')+' · '+e(label)+'</span></li>'
-    body += '</ul>'
+    body = assets(site,'lean/index.html')+'<section class="lean-browser"><header class="lean-heading"><p class="eyebrow">The formal source</p><h1>Inspect Lean</h1>'
+    body += '<p class="lean-lede">Read the code behind the papers. Find a file, explore its declarations, and link directly to the source.</p>'
+    body += '<p class="lean-summary">'+quantity(len(catalog),'reading edition')+'<span aria-hidden="true"> · </span>'+quantity(total,'source file')+'</p></header>'
+    body += '<nav class="lean-actions" aria-label="Lean library routes"><a href="'+site.rel('read/index.html','lean/index.html')+'">Reading library</a>'+paired_route(site,'lean/index.html')+'</nav>'
+    body += '<p class="lean-library-note">Coverage labels describe the existing evidence. Browsing the source does not run Lean.</p>'
+    for group,core in [('Core papers',True),('Books and monographs',False)]:
+        selected = [item for item in catalog if bool(re.fullmatch(r'paper-[ivx]+',item['work'])) == core]
+        if not selected: continue
+        body += '<section class="lean-work-group"><h2>'+group+'</h2><ul class="lean-works">'
+        for item in selected:
+            work = item['work']
+            label = site.status['labels']['lean'][site.assessments[work]['lean']][0]
+            title = site.components[work]['title']
+            book_label = BOOKS[work]['label']
+            body += '<li><div><p class="lean-work-label">'+e(book_label)+'</p><a href="'+site.rel(item['url'],'lean/index.html')+'">'+e(short_title(title))+'</a><span class="lean-work-coverage">'+e(label)+'</span></div>'
+            body += '<span class="lean-work-count">'+quantity(len(item['files']),'file')+'</span></li>'
+        body += '</ul></section>'
+    body += '</section>'
     site.page('lean/index.html','Inspect Lean',body)
     site.write('lean/index.json',json.dumps(dict(source_revision=site.revision,works=catalog,new_lean_execution=False),ensure_ascii=False,indent=2)+'\n')
     return dict(works=len(catalog),files=total,new_lean_execution=False)
