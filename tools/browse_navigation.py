@@ -258,7 +258,7 @@ class Browser:
 
 [Searchable website](https://KomorebiP.github.io/Operation-KOMOREBI/) · [Reading routes](READING_ROUTES.md) · [Hand-worked examples](HAND_WORKED_EXAMPLES.md) · [Glossary](GLOSSARY.md) · [Reading downloads](DOWNLOADS.md)
 
-Browse by [mathematics, computer science, physics or other](https://KomorebiP.github.io/Operation-KOMOREBI/works.html) and combine those filters with **completion stage**, **Lean coverage**, **evidence basis**, publication type and a text query. The [full-text search](https://KomorebiP.github.io/Operation-KOMOREBI/search.html) applies the same work-level classifications to indexed reading pages, claims, code and guides. Or go directly to [written statements and proofs](browse/PROOFS.md), [Lean sources](browse/LEAN.md), or [code and scripts](browse/CODE.md).
+Browse by [mathematics, computer science, physics, or other](https://KomorebiP.github.io/Operation-KOMOREBI/works.html) and combine those filters with **completion stage**, **Lean coverage**, **evidence basis**, publication type, and a text query. The [full-text search](https://KomorebiP.github.io/Operation-KOMOREBI/search.html) applies the same work-level classifications to indexed reading pages, claims, code, and guides. Or go directly to [written statements and proofs](browse/PROOFS.md), [Lean sources](browse/LEAN.md), or [code and scripts](browse/CODE.md).
 
 Each work has its own page with **Read**, **Written proofs**, **Lean**, **Code**, and **Evidence** sections. **PDF** opens a reading file. **Text** opens editable TeX or other source text. **Lean guide** opens explanatory reading. **Lean sources** leads to `.lean` files. Code links can include research utilities and build scripts. Read the edition's README before running them.
 

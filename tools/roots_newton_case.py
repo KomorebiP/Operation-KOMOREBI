@@ -85,7 +85,7 @@ def publish(site):
 
     result = json.loads((target / "results.json").read_text(encoding="utf-8"))
     record = dict(
-        title="Roots of unity, projectors and falling-factorial coordinates",
+        title="Roots of unity, projectors, and falling-factorial coordinates",
         collection_revision=site.revision,
         program_source=PROGRAM,
         program_sha256=sha256(program),

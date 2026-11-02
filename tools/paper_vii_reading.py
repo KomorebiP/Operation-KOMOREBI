@@ -10,12 +10,12 @@ MAIN = BASE+'Paper_VII_Traditional_Final.tex'
 PARTS = [
     ('01_finite_core.tex', 'finite-quantum-seeds', 'I. Finite quantum seed calculus', 1),
     ('02_strengthened.tex', 'effective-dynamics-and-towers', 'II. Effective dynamics and refinement towers', 2),
-    ('03_supplement_01.tex', 'exact-packets-and-resolvents', 'III. Exact packets, symmetry and resolvents', 3),
-    ('03_supplement_02.tex', 'basis-refinement-and-connections', 'III. Bases, refinement, connections and channels', 3),
-    ('03_supplement_03.tex', 'orbits-and-character-projectors', 'III. Orbits, Schmidt rank and character projectors', 3),
-    ('03_supplement_04.tex', 'leakage-curvature-and-recovery', 'III. Leakage, curvature and syndrome recovery', 3),
+    ('03_supplement_01.tex', 'exact-packets-and-resolvents', 'III. Exact packets, symmetry, and resolvents', 3),
+    ('03_supplement_02.tex', 'basis-refinement-and-connections', 'III. Bases, refinement, connections, and channels', 3),
+    ('03_supplement_03.tex', 'orbits-and-character-projectors', 'III. Orbits, Schmidt rank, and character projectors', 3),
+    ('03_supplement_04.tex', 'leakage-curvature-and-recovery', 'III. Leakage, curvature, and syndrome recovery', 3),
     ('03_supplement_05.tex', 'finite-error-correction', 'III. Finite error correction and recovery', 3),
-    ('03_supplement_06.tex', 'range-bundles-and-curvature', 'III. Range bundles, connections and curvature', 3),
+    ('03_supplement_06.tex', 'range-bundles-and-curvature', 'III. Range bundles, connections, and curvature', 3),
     ('04_alternative_derivations.tex', 'alternative-derivations', 'III. Alternative derivations', 3),
 ]
 CHAPTERS = [dict(source=MAIN, url='read/paper-vii/orientation.html', title='Reading orientation',

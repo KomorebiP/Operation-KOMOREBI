@@ -1,6 +1,6 @@
 # 8. Average with unequal weights
 
-[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: conditional expectation](../GLOSSARY.md#conditional-expectation) · [Papers, proofs, Lean and code](#papers-proofs-lean-and-code)
+[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: conditional expectation](../GLOSSARY.md#conditional-expectation) · [Papers, proofs, Lean, and code](#papers-proofs-lean-and-code)
 
 Take three real values $x=(2,6,9)^{\mathsf T}$, with positive weights
 $w=(1,3,2)$. Group the first two positions together and leave the third alone.
@@ -85,7 +85,7 @@ It does not estimate either from data.
 
 <!-- learning-navigation -->
 
-## Papers, proofs, Lean and code
+## Papers, proofs, Lean, and code
 
 **Terms in this example:** [Finite conditional expectation](../GLOSSARY.md#conditional-expectation) · [Inner product](../GLOSSARY.md#inner-product) · [Orthogonal projector](../GLOSSARY.md#orthogonal-projector) · [Residual](../GLOSSARY.md#residual)
 

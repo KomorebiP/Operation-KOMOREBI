@@ -83,7 +83,7 @@ def interface(site):
     return '''<section class="zip-builder" id="build-a-zip" aria-labelledby="zip-heading">
 <h2 id="zip-heading">Build your own ZIP</h2>
 <p>Combine files from several works. Start with a reading selection or PDFs, then choose individual files.</p>
-<p class="status">Available reading files, manuscript sources, Lean files, code and worked examples. A selection may need other files to compile or run. <a href="collection/DOWNLOADS.html#obtain-a-full-component">Get complete sources</a>.</p>
+<p class="status">Available reading files, manuscript sources, Lean files, code, and worked examples. A selection may need other files to compile or run. <a href="collection/DOWNLOADS.html#obtain-a-full-component">Get complete sources</a>.</p>
 <p id="zip-load-status" role="status">Use the custom selector, or choose a ready-made ZIP below.</p>
 <form id="zip-form" hidden data-index="downloads/selection.json?v='''+site.revision+'''" data-worker="assets/download-worker.js?v='''+site.revision+'''" data-revision="'''+site.revision+'''">
 <fieldset id="zip-controls"><legend>Choose your files</legend>

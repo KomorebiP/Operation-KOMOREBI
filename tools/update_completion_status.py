@@ -47,13 +47,13 @@ def render(data):
     by_id = {r['id']: r for r in rows}
     counts = collections.Counter(r['stage'] for r in primary)
     page = 'docs/COMPLETION_STATUS.md'
-    text = f'''# Completion, Lean coverage and confidence
+    text = f'''# Completion, Lean coverage, and confidence
 
 Recorded {data['as_of']} · **Komorebi P.**
 
 [Filter by discipline, completion and proof evidence](https://KomorebiP.github.io/Operation-KOMOREBI/works.html) · [Browse the collection](BROWSE.md) · [Start here](START_HERE.md) · [Repository home](../README.md)
 
-**Completion, Lean coverage and confidence describe different things.** A finished book may contain open research. A checked Lean proof may belong to an unfinished project. Choose a completion stage below, open a work's evidence record, then follow its paper, proofs, Lean, and code link.
+**Completion, Lean coverage, and confidence describe different things.** A finished book may contain open research. A checked Lean proof may belong to an unfinished project. Choose a completion stage below, open a work's evidence record, then follow its paper, proofs, Lean, and code link.
 
 This guide summarizes the existing release and status records at [source revision `{data['source_revision'][:12]}`]({REPO_URL}/commit/{data['source_revision']}). It covers **{len(primary)} primary components** and **{len(supporting)} supporting collections**. The labels report those records, rather than a new proof review or Lean run. Each recorded pass keeps its original date and scope.
 
@@ -87,7 +87,7 @@ These categories describe the state of a work. They are not percentages or a ran
 '''
     text += table(['Label', 'What supports confidence'], labels['confidence'].values())
     text += '''
-Confidence labels identify the **strongest recorded evidence for the stated subset**. They do not assign a probability that the whole project is correct. A record can contain checked results alongside open or refuted claims. A written review covers only its stated scope and does not imply external peer review. Lean proofs still need correct hypotheses and a faithful match to the written statements. Experiments support claims about the populations, inputs and conditions actually tested.
+Confidence labels identify the **strongest recorded evidence for the stated subset**. They do not assign a probability that the whole project is correct. A record can contain checked results alongside open or refuted claims. A written review covers only its stated scope and does not imply external peer review. Lean proofs still need correct hypotheses and a faithful match to the written statements. Experiments support claims about the populations, inputs, and conditions actually tested.
 
 All executable software remains **beta / work in progress**, including implementations attached to completed mathematical releases. See [LICENSE.md](../LICENSE.md) for the current reuse terms. Older undecided notices remain part of the historical record.
 '''
@@ -108,7 +108,7 @@ The **{len(supporting)} supporting collections** are listed separately in the [e
     text += '''
 ## Maintaining the distinctions
 
-Maintainers can edit the assessments and cited evidence in `manifests/project-status.json`, then run `python tools/update_completion_status.py`. Use `--check` to validate IDs, evidence bindings and generated pages without writing them. The component index uses the same labels. A changed source, expanded statement or new accepted run requires a reviewed status update. Uploading files alone does not change their completion or confidence status.
+Maintainers can edit the assessments and cited evidence in `manifests/project-status.json`, then run `python tools/update_completion_status.py`. Use `--check` to validate IDs, evidence bindings, and generated pages without writing them. The component index uses the same labels. A changed source, expanded statement or new accepted run requires a reviewed status update. Uploading files alone does not change their completion or confidence status.
 
 To strengthen a formal status, supply the exact claim map, pinned source and environment, accepted compiler and axiom records, appropriate controls, and any required review of how the formal and written statements correspond. To finalize a reading edition, identify its editable source and matching PDF, complete the relevant build and page checks, and preserve its mathematical scope. Wider research and experimental goals remain separate queue items.
 
@@ -168,7 +168,7 @@ Every entry below is **Supporting / historical**, with **Lean: Not assessed** an
 
 [Browse the collection](BROWSE.md) · [Completion guide](COMPLETION_STATUS.md) · [Evidence catalogue](STATUS_CATALOG.md)
 
-Recorded {data['as_of']}. This queue tracks documentation, research, formalization and experimental work. An item marked done has met its stated completion requirements. Progress on an open item leaves its remaining requirements in place. Use the item links below to read those requirements, then follow the work links to its paper, proofs, Lean, and code.
+Recorded {data['as_of']}. This queue tracks documentation, research, formalization, and experimental work. An item marked done has met its stated completion requirements. Progress on an open item leaves its remaining requirements in place. Use the item links below to read those requirements, then follow the work links to its paper, proofs, Lean, and code.
 
 **Current maintenance focus:** {data.get('maintenance_focus', 'Follow each open gate below and retain the scope of its evidence.')} All software remains beta / work in progress.
 '''
@@ -176,7 +176,7 @@ Recorded {data['as_of']}. This queue tracks documentation, research, formalizati
     queue += table(['Item', 'Status', 'Work to complete'],
                    [(f"[{task['id']}](#{task['id'].lower()})", task['status'], task['title']) for task in data['finalization_queue']])
     lanes = [('now', 'Completed cleanup and bounded qualification'), ('next', 'Next finishing work'),
-             ('review', 'Proof and submission review'), ('research', 'Formal, mathematical and empirical development')]
+             ('review', 'Proof and submission review'), ('research', 'Formal, mathematical, and empirical development')]
     for lane, title in lanes:
         queue += '\n## ' + title + '\n'
         for task in data['finalization_queue']:

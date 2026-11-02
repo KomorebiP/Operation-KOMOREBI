@@ -1,6 +1,6 @@
 # 26. Update a Gaussian model from one observation
 
-[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: posterior](../GLOSSARY.md#posterior) · [Papers, proofs, Lean and code](#papers-proofs-lean-and-code)
+[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: posterior](../GLOSSARY.md#posterior) · [Papers, proofs, Lean, and code](#papers-proofs-lean-and-code)
 
 Certified Inference and its Bayesian research companion separate the exact
 posterior from an approximation built using a candidate gain. Here is a
@@ -103,7 +103,7 @@ checks. No new Lean instance or sampler is claimed here.
 
 <!-- learning-navigation -->
 
-## Papers, proofs, Lean and code
+## Papers, proofs, Lean, and code
 
 **Terms in this example:** [Finite-dimensional Gaussian model](../GLOSSARY.md#gaussian-model) · [Prior distribution](../GLOSSARY.md#prior) · [Likelihood](../GLOSSARY.md#likelihood) · [Posterior distribution](../GLOSSARY.md#posterior) · [Covariance matrix](../GLOSSARY.md#covariance) · [Precision matrix](../GLOSSARY.md#precision-matrix) · [Observation innovation](../GLOSSARY.md#innovation) · [Exact Gaussian gain](../GLOSSARY.md#gaussian-gain) · [Joseph covariance](../GLOSSARY.md#joseph-covariance)
 

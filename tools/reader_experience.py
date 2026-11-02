@@ -11,9 +11,9 @@ GUIDED_DEMONSTRATIONS = {
     'docs/demonstrations/REFINEMENT.md': ('Refine a signal', ['paper-ii','paper-v']),
     'docs/demonstrations/RECOVERY.md': ('Test recovery from a summary', ['paper-iii','realization-boundaries']),
     'docs/demonstrations/SEQUENCE_SHAPES.md': ('Komorebi sequence shapes', ['paper-iv','monographs-special-functions']),
-    'docs/demonstrations/EULER_PACKETS.md': ('Euler packets, polynomials and residuals', ['paper-iii','paper-iv','paper-ix','euler-signal-bridge','machine-native-mathematics-essay']),
+    'docs/demonstrations/EULER_PACKETS.md': ('Euler packets, polynomials, and residuals', ['paper-iii','paper-iv','paper-ix','euler-signal-bridge','machine-native-mathematics-essay']),
     'docs/demonstrations/WAVELET_POLYPHASE.md': ('Wavelets and polyphase transfer', ['paper-v','information-realization']),
-    'docs/demonstrations/STIRLING_BELL_FUBINI.md': ('Stirling, Bell and Fubini', ['monographs-special-functions']),
+    'docs/demonstrations/STIRLING_BELL_FUBINI.md': ('Stirling, Bell, and Fubini', ['monographs-special-functions']),
 }
 
 
@@ -63,7 +63,7 @@ def introduction(root, component, assessment, page):
         if demonstrations:
             text+='**Complete demonstration with runnable code:** '+' · '.join(demonstrations)+'.\n\n'
     if component['id']=='monographs-special-functions':
-        text+='### Explore Special Functions\n\n'+link('Books, five families and the coupled-function lab','docs/SPECIAL_FUNCTIONS.md',page)+'\n\n'
+        text+='### Explore Special Functions\n\n'+link('Books, five families, and the coupled-function lab','docs/SPECIAL_FUNCTIONS.md',page)+'\n\n'
     return text
 
 
@@ -81,26 +81,26 @@ Familiarity with power series and polynomial calculations will help with the Eul
 '''),
     'MATHEMATICS': ('Read the mathematics', '''This is a suggested sequence, not a prerequisite chain for every work.
 
-The [project map](../PROJECT_MAP.md) distinguishes suggested reading order from connections explicitly recorded in the source. The [demonstrations](../DEMONSTRATIONS.md) provide short routes through calculations, statements, proofs and code.
+The [project map](../PROJECT_MAP.md) distinguishes suggested reading order from connections explicitly recorded in the source. The [demonstrations](../DEMONSTRATIONS.md) provide short routes through calculations, statements, proofs, and code.
 
 1. Read [Start here](../START_HERE.md) for the common questions and a finite identity.
-2. Use the [hand-worked examples](../HAND_WORKED_EXAMPLES.md) for concrete calculations with packets, seeds, coordinates and obstructions.
+2. Use the [hand-worked examples](../HAND_WORKED_EXAMPLES.md) for concrete calculations with packets, seeds, coordinates, and obstructions.
 3. Open [Paper I](../works/paper-i.md) for typed systems and packet coordinates.
 4. Continue to [Paper II](../works/paper-ii.md) for refinement and transfer.
 5. Choose a [book or companion volume](../browse/MONOGRAPHS.md) that matches your subject.
 6. Use the work's **Written proofs** and **Evidence** sections for precise statements and recorded review scope.
 
-Keep the coefficient system, topology, finiteness conditions and application assumptions with each statement. A shared vocabulary does not make the hypotheses of different works interchangeable.
+Keep the coefficient system, topology, finiteness conditions, and application assumptions with each statement. A shared vocabulary does not make the hypotheses of different works interchangeable.
 '''),
     'PROOF_REVIEW': ('Inspect a proof', '''Written proofs can stand on their own. Lean coverage and software tests answer additional, separate questions.
 
 1. Select the exact edition from a [work page](../BROWSE.md).
-2. Read the written statement, hypotheses and proof. Use the [claim index](../CLAIM_LINKS.md) where a detailed map is available.
+2. Read the written statement, hypotheses, and proof. Use the [claim index](../CLAIM_LINKS.md) where a detailed map is available.
 3. Read the work's evidence record and any recorded restrictions.
 4. For a mapped Lean claim, compare the full formal type with the written statement. Follow its exact source and pinned reproduction instructions.
-5. For computation, identify the tested inputs, arithmetic, acceptance criteria and source revision.
+5. For computation, identify the tested inputs, arithmetic, acceptance criteria, and source revision.
 
-The [completion guide](../COMPLETION_STATUS.md#lean-coverage) explains the labels. The [verification guide](../VERIFICATION.md) separates source identity, compiler execution and mathematical review. This route does not perform a new proof audit.
+The [completion guide](../COMPLETION_STATUS.md#lean-coverage) explains the labels. The [verification guide](../VERIFICATION.md) separates source identity, compiler execution, and mathematical review. This route does not perform a new proof audit.
 '''),
     'SOFTWARE': ('Run the software', '''Choose the library and environment before installing dependencies. All software remains beta and work in progress.
 
@@ -126,13 +126,13 @@ def render_reader_pages(root, components, assessments):
     out['docs/READING_ROUTES.md'] = '# Choose a reading route\n\nStart with the task you want to complete. These routes are editorial suggestions and do not change the recorded status of any work.\n\n'+ '\n'.join('- ['+title+'](routes/'+key+'.md)' for key,(title,_) in ROUTES.items())+'\n\n[Hand-worked examples](HAND_WORKED_EXAMPLES.md) · [Searchable website]('+SITE+') · [Browse works](BROWSE.md) · [Glossary](GLOSSARY.md) · [First runs](FIRST_RUN.md)\n'
     out['docs/READING_ROUTES.md']=out['docs/READING_ROUTES.md'].replace('\n- [New to Komorebi]', '\nFor the collection as a whole, read the [project overview](START_HERE.md) and [project map](PROJECT_MAP.md). For the research preview, follow [Euler numbers through packets, polynomials, and residuals](demonstrations/EULER_PACKETS.md). The [elementary demonstrations](DEMONSTRATIONS.md) offer shorter introductions.\n\n- [New to Komorebi]',1)
     out['docs/GLOSSARY.md']=render_glossary(config)
-    out['docs/READING_ROUTES.md']+='\n[Explore the physics collection](PHYSICS_COLLECTION.md): packet currents, quantum phase, continuum approximation, special functions and research studies.\n'
-    out['docs/READING_ROUTES.md']+='\n[Explore Special Functions](SPECIAL_FUNCTIONS.md): current reading volumes, five families, an exact coupled-function lab and formal evidence.\n'
-    downloads='# Download one work\n\nThe [website downloads]('+SITE+'downloads.html) provide a separate reading ZIP for each work. Each contains its selected reading files, linked claim guides, available license notices, a source revision and SHA-256 checksums. The website lists file counts and sizes before download.\n\nThese are reading selections. TeX may depend on additional files, and the ZIP is not a complete Lean or software build. Use the source instructions below for a full component.\n\n'
-    downloads=downloads.replace('These are reading selections.', 'Use [Build your own ZIP]('+SITE+'downloads.html#build-a-zip) to combine files from several works. Start with reading files or PDFs, then adjust individual manuscript sources, Lean files, code, guides and worked examples. The selector shows the file count and size, adds available license notices, and checks each file against its recorded SHA-256 checksum. Choose Prepare ZIP, then Save ZIP when it is ready. You can cancel preparation without losing your choices. Custom ZIPs support up to 200 MiB of source files and are prepared in your browser. The ready-made ZIPs also work without JavaScript.\n\nThese are reading selections.',1)
+    out['docs/READING_ROUTES.md']+='\n[Explore the physics collection](PHYSICS_COLLECTION.md): packet currents, quantum phase, continuum approximation, special functions, and research studies.\n'
+    out['docs/READING_ROUTES.md']+='\n[Explore Special Functions](SPECIAL_FUNCTIONS.md): current reading volumes, five families, an exact coupled-function lab, and formal evidence.\n'
+    downloads='# Download one work\n\nThe [website downloads]('+SITE+'downloads.html) provide a separate reading ZIP for each work. Each contains its selected reading files, linked claim guides, available license notices, a source revision, and SHA-256 checksums. The website lists file counts and sizes before download.\n\nThese are reading selections. TeX may depend on additional files, and the ZIP is not a complete Lean or software build. Use the source instructions below for a full component.\n\n'
+    downloads=downloads.replace('These are reading selections.', 'Use [Build your own ZIP]('+SITE+'downloads.html#build-a-zip) to combine files from several works. Start with reading files or PDFs, then adjust individual manuscript sources, Lean files, code, guides, and worked examples. The selector shows the file count and size, adds available license notices, and checks each file against its recorded SHA-256 checksum. Choose Prepare ZIP, then Save ZIP when it is ready. You can cancel preparation without losing your choices. Custom ZIPs support up to 200 MiB of source files and are prepared in your browser. The ready-made ZIPs also work without JavaScript.\n\nThese are reading selections.',1)
     claim_data=json.loads((root/'manifests/claim-navigation.json').read_bytes())
     counts={w['id']:sum(r['work_id']==w['id'] for r in claim_data['records']) for w in claim_data['works']}
-    claims='# Follow a written claim\n\nThe [searchable claim index]('+SITE+'claims.html) covers all 12 core papers with '+str(len(claim_data['records']))+' reading records. Search by title, statement text, source label or recorded Lean name. Filter by paper and statement type, then share the page address or a record’s permanent link.\n\nPaper I retains its 108 correspondence records. The source labels 69 as covered. Papers II through XII index explicit statement blocks in their current TeX manuscripts and literal included sections. The index keeps definitions, conjectures, classical inputs and numerical certificates distinct from theorems. Historical environments and statements introduced only through macro expansion are outside this extraction. Counts describe reading entries, not the number of proved or formalized results.\n\nA proof link identifies the recorded passage or an immediately following proof block. It does not assess correctness. Paper I’s existing Lean mappings are retained. Lean correspondence for individual claims for Papers II through XII has not been transcribed into this index. Their formal guides, Lean coverage, code and evidence remain linked at paper level. This update performs no new proof review or Lean run.\n\n'
+    claims='# Follow a written claim\n\nThe [searchable claim index]('+SITE+'claims.html) covers all 12 core papers with '+str(len(claim_data['records']))+' reading records. Search by title, statement text, source label or recorded Lean name. Filter by paper and statement type, then share the page address or a record’s permanent link.\n\nPaper I retains its 108 correspondence records. The source labels 69 as covered. Papers II through XII index explicit statement blocks in their current TeX manuscripts and literal included sections. The index keeps definitions, conjectures, classical inputs, and numerical certificates distinct from theorems. Historical environments and statements introduced only through macro expansion are outside this extraction. Counts describe reading entries, not the number of proved or formalized results.\n\nA proof link identifies the recorded passage or an immediately following proof block. It does not assess correctness. Paper I’s existing Lean mappings are retained. Lean correspondence for individual claims for Papers II through XII has not been transcribed into this index. Their formal guides, Lean coverage, code and evidence remain linked at paper level. This update performs no new proof review or Lean run.\n\n'
     for c in components:
         identifier=c['id']
         downloads += '<a id="'+identifier+'"></a>\n\n## '+c['title']+'\n\n[Reading ZIP and contents]('+SITE+'downloads.html#'+identifier+') · '+link('Work and evidence','docs/works/'+identifier+'.md','docs/DOWNLOADS.md')+'\n\n'
@@ -158,7 +158,7 @@ def render_glossary(config):
     text+='Start with a subject below, use the [alphabetical index](#alphabetical-index), or look up [symbols](#symbols-in-the-introductory-example).\n\n'
     text+='[Find a glossary term on the reading website]('+SITE+'collection/GLOSSARY.html#glossary-lookup): search terms and definitions, or choose a subject. Open the glossary beside a paper with **Read side by side**.\n\n'
     text+='A word can have a more specific meaning in another paper. The paper’s definitions and hypotheses take precedence. Examples and source links provide context without changing any recorded evidence status.\n\n'
-    text+='[Look up notation across the collection](NOTATION_INDEX.md) · [Work through the calculations by hand](HAND_WORKED_EXAMPLES.md) · [Papers, proofs, Lean and code by topic](LEARNING_MAP.md) · [First software runs](FIRST_RUN.md)\n\n'
+    text+='[Look up notation across the collection](NOTATION_INDEX.md) · [Work through the calculations by hand](HAND_WORKED_EXAMPLES.md) · [Papers, proofs, Lean, and code by topic](LEARNING_MAP.md) · [First software runs](FIRST_RUN.md)\n\n'
     for section in config['glossary_sections']:
         text+='- ['+section['title']+'](#'+section['id']+')\n'
     text+='\n'
@@ -175,7 +175,7 @@ def render_glossary(config):
                 links.append('[Further reading]('+term['source']+')')
             topics=[t for t in config.get('learning_topics',[]) if term['id'] in t['terms'] or t['example']=='docs/'+term.get('example','')]
             if topics:
-                links.append('[Papers, proofs, Lean and code](LEARNING_MAP.md#'+topics[0]['id']+')')
+                links.append('[Papers, proofs, Lean, and code](LEARNING_MAP.md#'+topics[0]['id']+')')
             elif term['section']=='claims-and-evidence':
                 links.append('[How to inspect a proof](routes/PROOF_REVIEW.md)')
             links.extend('['+terms[key]['term']+'](#'+key+')' for key in term.get('related',[]))
@@ -226,7 +226,7 @@ def render_learning_pages(root, config, components):
     page='docs/LEARNING_MAP.md'
     core=[c for c in components if c['group']=='papers']
     related=[c for c in components if c['group']!='papers' and any(c['id'] in t['works'] for t in topics)]
-    text='# From examples to papers, proofs, Lean and code\n\n'
+    text='# From examples to papers, proofs, Lean, and code\n\n'
     text+='Choose a topic to move from a hand calculation to definitions and related source material. Each linked work has return links to these examples. These are subject routes, not new theorem-to-Lean correspondences.\n\n'
     text+='[All hand-worked examples](HAND_WORKED_EXAMPLES.md) · [Glossary](GLOSSARY.md) · [Browse works](BROWSE.md) · [Example coverage by work](EXAMPLE_COVERAGE.md)\n\n'
     jumps=[]
@@ -262,10 +262,11 @@ def render_learning_pages(root, config, components):
         example=topic['example']
         body=(root/example).read_text(encoding='utf-8').split(marker)[0].rstrip()
         body=re.sub(r'\n\[(?:Previous|Next):[^\n]+$', '', body).rstrip()
-        jump='[Papers, proofs, Lean and code](#papers-proofs-lean-and-code)'
+        jump='[Papers, proofs, Lean, and code](#papers-proofs-lean-and-code)'
+        body=body.replace('[Papers, proofs, Lean and code](#papers-proofs-lean-and-code)',jump)
         if jump not in body:
             body=re.sub(r'(^\[All examples\][^\n]*)',lambda m:m[1]+' · '+jump,body,count=1,flags=re.M)
-        body+='\n\n'+marker+'\n\n## Papers, proofs, Lean and code\n\n'
+        body+='\n\n'+marker+'\n\n## Papers, proofs, Lean, and code\n\n'
         body+='**Terms in this example:** '+' · '.join(link(terms[x],'docs/GLOSSARY.md#'+x,example) for x in topic['terms'])+'\n\n'
         body+=source_routes(topic,works,example)
         footer=[]

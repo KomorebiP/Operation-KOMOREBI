@@ -1,6 +1,6 @@
 # 22. Recover the memory hidden by a summary
 
-[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: memory kernel](../GLOSSARY.md#memory-kernel) · [Papers, proofs, Lean and code](#papers-proofs-lean-and-code)
+[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: memory kernel](../GLOSSARY.md#memory-kernel) · [Papers, proofs, Lean, and code](#papers-proofs-lean-and-code)
 
 Sufficient Resolution studies what happens when visible coordinates omit a
 hidden state. Machine Societies asks when a summary has its own transition
@@ -84,7 +84,7 @@ state their own hypotheses for controlled, stochastic and approximate models.
 
 <!-- learning-navigation -->
 
-## Papers, proofs, Lean and code
+## Papers, proofs, Lean, and code
 
 **Terms in this example:** [Visible state](../GLOSSARY.md#visible-state) · [Hidden state](../GLOSSARY.md#hidden-state) · [Prepared hidden initialization](../GLOSSARY.md#prepared-state) · [Discrete memory maps](../GLOSSARY.md#memory-kernel) · [Autonomous dynamics of a summary](../GLOSSARY.md#autonomous-dynamics) · [State augmentation](../GLOSSARY.md#state-augmentation) · [Semigroup law for evolution maps](../GLOSSARY.md#semigroup-law)
 

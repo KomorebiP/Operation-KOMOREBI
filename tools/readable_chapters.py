@@ -26,13 +26,13 @@ CHAPTERS = [
     ('chapters/03_weighted.tex','weighted-transfer','Weighted transfer'),
     ('chapters/04_arithmetic.tex','integral-separation','Integral separation and Smith congruences'),
     ('chapters/05_defects.tex','refinement-defects','Linear refinement defects'),
-    ('chapters/06_models.tex','models-and-algorithms','Worked models, tables and algorithms'),
+    ('chapters/06_models.tex','models-and-algorithms','Worked models, tables, and algorithms'),
     ('chapters/07_scope.tex','edition-and-proof-scope','Edition and proof scope'),
     ('generated/current_scope.tex','current-verification-scope','Current verification snapshot'),
 ]
 CHAPTERS = [dict(source=BASE+p,url='read/paper-ii/'+slug+'.html',title=title,work='paper-ii') for p,slug,title in CHAPTERS]
 BOOKS = {'paper-ii':dict(work='paper-ii',label='Paper II',base=BASE,main=MAIN,bib=BIB_SOURCE,index=INDEX,bib_page=BIB_PAGE,
-                       title='Refinement, weighted transfer and integral separation',chapters=CHAPTERS[:],main_chapters=7,
+                       title='Refinement, weighted transfer, and integral separation',chapters=CHAPTERS[:],main_chapters=7,
                        diagram_guide='collection/PAPER_II_DIAGRAMS.html',
                        figure_descriptions='website/paper-ii-figure-descriptions.json')}
 THIRD_BASE = 'papers/paper-iii/current/manuscript/'
@@ -40,12 +40,12 @@ THIRD_CHAPTERS = [
     ('01_finite_coordinates.tex','finite-coordinates','Finite coordinates and typed transfer'),
     ('02_connections_obstructions.tex','connections-and-obstructions','Connections and obstruction witnesses'),
     ('03_nonlinear_coordinates.tex','nonlinear-coordinates','Nonlinear packet coordinates'),
-    ('04_correction_transport.tex','correction-and-transport','Correction, lifting and smooth transport'),
+    ('04_correction_transport.tex','correction-and-transport','Correction, lifting, and smooth transport'),
 ]
 THIRD_CHAPTERS = [dict(source=THIRD_BASE+'chapters/'+p,url='read/paper-iii/'+slug+'.html',title=t,work='paper-iii') for p,slug,t in THIRD_CHAPTERS]
 BOOKS['paper-iii']=dict(work='paper-iii',label='Paper III',base=THIRD_BASE,main=THIRD_BASE+'Paper_III_Traditional_Final.tex',
                        bib=THIRD_BASE+'references.bib',index='read/paper-iii/index.html',bib_page='read/paper-iii/references.html',
-                       title='Typed transfer, nonlinear packets and obstruction theory',chapters=THIRD_CHAPTERS,main_chapters=4,
+                       title='Typed transfer, nonlinear packets, and obstruction theory',chapters=THIRD_CHAPTERS,main_chapters=4,
                        diagram_guide='collection/PAPER_III_DIAGRAMS.html',
                        figure_descriptions='website/paper-iii-figure-descriptions.json')
 CHAPTERS += THIRD_CHAPTERS
@@ -56,7 +56,7 @@ FIRST_CHAPTERS = [
     ('03_packets_and_graphs.tex', 'packets-and-transfer-graphs', 'Packets and transfer graphs'),
     ('04_transport.tex', 'transport-and-realization', 'Transport and realization'),
     ('05_worked_models.tex', 'worked-models', 'Worked models and calculations'),
-    ('06_reference.tex', 'reference-and-concordance', 'Notation, concordance and references'),
+    ('06_reference.tex', 'reference-and-concordance', 'Notation, concordance, and references'),
 ]
 FIRST_CHAPTERS = [dict(source=FIRST_BASE+p, url='read/paper-i/'+slug+'.html', title=t, work='paper-i')
                   for p, slug, t in FIRST_CHAPTERS]
@@ -64,7 +64,7 @@ BOOKS = {'paper-i': dict(work='paper-i', label='Paper I', base=FIRST_BASE,
                         main=FIRST_BASE+'Paper_I_Monograph.tex', bib=FIRST_BASE+'06_reference.tex',
                         inline_bibliography=True, index='read/paper-i/index.html',
                         bib_page='read/paper-i/references.html',
-                        title='Typed operator systems, seed rank and exact packet coordinates',
+                        title='Typed operator systems, seed rank, and exact packet coordinates',
                         chapters=FIRST_CHAPTERS, main_chapters=6, chapter_prefix='',
                         diagram_guide='collection/PAPER_I_DIAGRAMS.html',
                         figure_descriptions='website/paper-i-figure-descriptions.json',
@@ -634,7 +634,7 @@ class Chapter:
                             label='('+node['equation_number']+')'
                         url = self.relative(node.get('url',''))+'#'+node['id']
                         links.append('<a href="'+url+'" data-reference-preview="'+html.escape(key,quote=True)+'" title="'+html.escape(typography(node['title']),quote=True)+'">'+label+'</a>')
-                    out.append(', '.join(links))
+                    out.append(prose_list(links))
                     self.references.extend(value.split(','))
                 elif name == 'cite':
                     links = []
@@ -742,7 +742,7 @@ class Chapter:
         """Return inert text/math pieces, keeping formulas intact at the excerpt boundary."""
         text = re.sub(r'\\label\{[^}]+\}', '', text).strip()
         def reference(match):
-            return ', '.join(self.labels[key].get('reference_label') or self.labels[key]['kind']+' '+self.labels[key]['number'] for key in match[1].split(','))
+            return prose_list([self.labels[key].get('reference_label') or self.labels[key]['kind']+' '+self.labels[key]['number'] for key in match[1].split(',')])
         text = re.sub(r'\\(?:c|C|eq)?ref\{([^}]+)\}', reference, text)
         text = re.sub(r'\\cite(?:\[([^\]]*)\])?\{([^}]+)\}',lambda m:', '.join('['+str(self.citations[k][0])+']' for k in m[2].split(','))+(', '+m[1] if m[1] else ''),text)
         while (note:=re.search(r'\\(statusleanthree|statusleanprior|statusroadmap)\{',text)):
@@ -768,6 +768,13 @@ class Chapter:
             size += len(value)
             if size>=400 or value.endswith('…'): break
         return parts
+
+
+def prose_list(items):
+    """Join manuscript references as prose while retaining each original label."""
+    if len(items) < 2:return ''.join(items)
+    if len(items) == 2:return ' and '.join(items)
+    return ', '.join(items[:-1])+', and '+items[-1]
 
 
 def readable_url(path, line=None):
@@ -920,6 +927,8 @@ def prepare(reader):
         from reader_figure_assets import prepare as prepare_figures
         assets=prepare_figures(reader,config,chapters) if config.get('figure_receipts') else {}
         reader.readable_books[work]=dict(config=config,chapters=chapters,references=references,macros=macros,main=main,figure_assets=assets)
+    from reader_copyediting import prepare as prepare_copyediting
+    prepare_copyediting(reader)
 
 
 def split_cells(text, separator):
@@ -1069,6 +1078,8 @@ def render(reader):
     render_reading_index(reader)
     from reading_navigation import publish_record
     publish_record(reader.site,BOOKS)
+    from reader_copyediting import publish as publish_copyediting
+    publish_copyediting(reader)
 
 
 def render_reading_index(reader):
@@ -1091,9 +1102,9 @@ def render_reading_index(reader):
            'Find a chapter filters the contents by title or reading-page number. Wide equations and tables have separate areas that can be scrolled with the keyboard. '
            'MathJax provides equation exploration and assistive reading options through its context menu.</p>'
            '<p>All twelve core papers have HTML reading editions that follow the retained manuscripts. '
-           '<a href="'+site.rel('read/paper-iv/atlas/index.html',page)+'">Paper IV’s 26 atlas plates</a> also have HTML pages with drawings, descriptions and tables. '
-           'Paper VI’s complete 42-plate atlas has HTML drawings, descriptions and selectable labels. '
-           'Paper VII’s complete 40-plate atlas has HTML drawings, descriptions and selectable labels. '
+           '<a href="'+site.rel('read/paper-iv/atlas/index.html',page)+'">Paper IV’s 26 atlas plates</a> also have HTML pages with drawings, descriptions, and tables. '
+           'Paper VI’s complete 42-plate atlas has HTML drawings, descriptions, and selectable labels. '
+           'Paper VII’s complete 40-plate atlas has HTML drawings, descriptions, and selectable labels. '
            'Companion and atlas coverage varies by work; original visual atlases remain available in the PDFs. '
            'See <a href="'+site.rel('collection/ACCESSIBILITY.html',page)+'">accessibility and reading options</a> for current coverage and limitations.</p>'
            '<p><a href="'+site.rel('documents.html',page)+'">Browse all papers and PDFs</a> · '
@@ -1116,7 +1127,7 @@ def related_reading_links(chapter, identifier):
 
 def reading_options(description=None):
     description=description or ('Show each passage’s permalink, source line, claim record '
-                                'and related resources. Proof links, atlas links and chapter navigation are always available.')
+                                'and related resources. Proof links, atlas links, and chapter navigation are always available.')
     return ('<div class="reading-options" hidden><label for="show-passage-tools">'
             '<input id="show-passage-tools" type="checkbox" aria-controls="chapter-text" '
             'aria-describedby="reading-options-help">Show source and reference links</label>'
@@ -1340,6 +1351,8 @@ def render_book(reader,book):
                 site.search.append(item)
         body+='</article>'+neighbour_links(spec,'bottom')
         body+='<details class="document-provenance"><summary>Source and conversion record</summary><p>Source SHA-256: <code>'+reader.records[source]['sha256']+'</code></p><p>Unsupported prose commands stop the build. The mathematical expression sequence is checked against the source, with manuscript macros expanded for display.</p><p><a href="'+site.rel('documents/readable-chapters.json',page)+'">Conversion records</a></p></details>'
+        from reader_copyediting import apply as apply_copyediting
+        body=apply_copyediting(reader,page,body)
         site.page(page,title,body)
         expressions=original_math(chapter_text(raw.decode('utf-8-sig'),spec))
         if config.get('custom_reader')=='foundational':
@@ -1416,8 +1429,8 @@ def render_book_index(reader,book,reports):
             body+='<li><a href="'+site.rel(record['url'],page)+'">'+html.escape(record['title'])+'</a></li>'
     body+='</ul>'
     if config.get('atlas_index'):
-        body+='<p><a href="'+site.rel(config['atlas_index'],page)+'">'+html.escape(config.get('atlas_link_text','Explore all 26 atlas plates in HTML'))+'</a> '+html.escape(config.get('atlas_note','With drawings, text descriptions, equations and tables.'))+'</p>'
-    body+='<p>'+html.escape(config.get('reading_note','The original visual atlas remains available in the PDF and visual guide. The HTML chapters preserve the source wording, mathematical statements and recorded limits. They do not add a proof assessment.'))+'</p>'
+        body+='<p><a href="'+site.rel(config['atlas_index'],page)+'">'+html.escape(config.get('atlas_link_text','Explore all 26 atlas plates in HTML'))+'</a> '+html.escape(config.get('atlas_note','With drawings, text descriptions, equations, and tables.'))+'</p>'
+    body+='<p>'+html.escape(config.get('reading_note','The original visual atlas remains available in the PDF and visual guide. The HTML chapters preserve the source wording, mathematical statements, and recorded limits. They do not add a proof assessment.'))+'</p>'
     site.page(page,'Read '+label,body)
     site.search.append(dict(title=label+' / Read all chapters',group='Collection',kind='Papers and source',work_ids=[work],url=page,text=config['title']+' readable chapters '+ ' '.join(c['title'] for c in config['chapters'])))
 

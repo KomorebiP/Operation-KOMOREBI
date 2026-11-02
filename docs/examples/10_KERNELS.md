@@ -1,6 +1,6 @@
 # 10. Find a kernel and describe the lost information
 
-[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: kernel](../GLOSSARY.md#kernel) · [Papers, proofs, Lean and code](#papers-proofs-lean-and-code)
+[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: kernel](../GLOSSARY.md#kernel) · [Papers, proofs, Lean, and code](#papers-proofs-lean-and-code)
 
 Consider the real linear map from three coordinates to two given by
 
@@ -56,7 +56,7 @@ gives $(0,1,-2)^{\mathsf T}$, whose output is $(1,-1)^{\mathsf T}$.
 
 <!-- learning-navigation -->
 
-## Papers, proofs, Lean and code
+## Papers, proofs, Lean, and code
 
 **Terms in this example:** [Kernel](../GLOSSARY.md#kernel) · [Image](../GLOSSARY.md#image) · [Rank](../GLOSSARY.md#rank) · [Nullity](../GLOSSARY.md#nullity) · [Rank–nullity identity](../GLOSSARY.md#rank-nullity) · [Injective map](../GLOSSARY.md#injective) · [Surjective map](../GLOSSARY.md#surjective) · [Quotient space](../GLOSSARY.md#quotient-space) · [Subspace](../GLOSSARY.md#subspace)
 

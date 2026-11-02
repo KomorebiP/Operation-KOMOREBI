@@ -1,6 +1,6 @@
 # 19. Compute Frobenius in a quadratic finite field
 
-[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: finite-field Frobenius](../GLOSSARY.md#frobenius) · [Papers, proofs, Lean and code](#papers-proofs-lean-and-code)
+[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: finite-field Frobenius](../GLOSSARY.md#frobenius) · [Papers, proofs, Lean, and code](#papers-proofs-lean-and-code)
 
 The square residues modulo five are $0,1,4$. Since $3$ is absent,
 $t^2-3$ is irreducible over $\mathbb F_5$. We can form the field
@@ -79,7 +79,7 @@ $\gamma^{-1}=2-\alpha$. All scalars in this answer are read modulo five.
 
 <!-- learning-navigation -->
 
-## Papers, proofs, Lean and code
+## Papers, proofs, Lean, and code
 
 **Terms in this example:** [Prime field](../GLOSSARY.md#prime-field) · [Extension field](../GLOSSARY.md#extension-field) · [Finite-field Frobenius](../GLOSSARY.md#frobenius) · [Field trace](../GLOSSARY.md#field-trace) · [Field norm](../GLOSSARY.md#field-norm) · [Irreducible polynomial](../GLOSSARY.md#irreducible-polynomial)
 

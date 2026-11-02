@@ -236,7 +236,7 @@ def render(reader):
             else:
                 raise ValueError('Unsupported Paper VII atlas block: '+kind)
         body += '</article>'+neighbours(reader,plate,'bottom')
-        body += '<details class="document-provenance"><summary>Source and conversion record</summary><p>The original atlas wording, equations and drawing labels are retained. Drawings are views of the frozen monograph PDF. Text descriptions and table headings are added reading aids. This conversion does not rebuild TeX, rerun the examples, audit proofs or compile Lean.</p><p><a href="'+site.rel(REPORT,page)+'">Conversion checks and source hashes</a></p></details>'
+        body += '<details class="document-provenance"><summary>Source and conversion record</summary><p>The original atlas wording, equations, and drawing labels are retained. Drawings are views of the frozen monograph PDF. Text descriptions and table headings are added reading aids. This conversion does not rebuild TeX, rerun the examples, audit proofs or compile Lean.</p><p><a href="'+site.rel(REPORT,page)+'">Conversion checks and source hashes</a></p></details>'
         expected = expected_math(plate,atlas['figures'])
         if chapter.math != expected:
             raise ValueError('Paper VII atlas mathematics differ on V'+str(number))

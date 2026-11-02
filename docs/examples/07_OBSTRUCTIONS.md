@@ -1,6 +1,6 @@
 # 7. Find an obstruction to recovering information
 
-[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: obstruction](../GLOSSARY.md#obstruction) · [Papers, proofs, Lean and code](#papers-proofs-lean-and-code)
+[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: obstruction](../GLOSSARY.md#obstruction) · [Papers, proofs, Lean, and code](#papers-proofs-lean-and-code)
 
 The [complete recovery demonstration](../demonstrations/RECOVERY.md) connects
 this argument to an executable witness and further source material.
@@ -78,7 +78,7 @@ products are one and zero.
 
 <!-- learning-navigation -->
 
-## Papers, proofs, Lean and code
+## Papers, proofs, Lean, and code
 
 **Terms in this example:** [Obstruction](../GLOSSARY.md#obstruction) · [Fiber](../GLOSSARY.md#fiber) · [Factorization through a map](../GLOSSARY.md#factorization) · [Kernel](../GLOSSARY.md#kernel) · [Quotient space](../GLOSSARY.md#quotient-space)
 

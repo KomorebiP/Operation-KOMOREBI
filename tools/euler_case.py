@@ -110,7 +110,7 @@ def publish(site):
                   'https://github.com/KomorebiP/Operation-KOMOREBI/blob/'+site.revision+'/'+tap_example['program'])
         site.search.append(dict(title='Euler example / polyphase and FIR tap split',group='Collection',kind='Code',
             url=tap_reader,work_ids=record['work_ids'],text='Even odd filter taps signal phases forward shift lane advance exact Euler finite FIR standalone Python'))
-    site.search.append(dict(title='Euler packets, polynomials and residuals / exact program',
+    site.search.append(dict(title='Euler packets, polynomials, and residuals / exact program',
         group='Collection',kind='Code',url=READER,work_ids=record['work_ids'],
         text='Euler secant A000364 A211212 quartic packets Schur complement reciprocal polynomials Fibonacci polynomial connection companion defect sequence transfer infinite coefficient matrices Pascal Toeplitz base changes supercongruences congruential addresses CRT odd-prime dyadic local coordinates Bernoulli sharp precision prime residual exact standalone Python'))
     return source

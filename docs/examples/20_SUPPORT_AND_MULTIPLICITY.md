@@ -1,6 +1,6 @@
 # 20. Separate support from multiplicity
 
-[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: module support](../GLOSSARY.md#module-support) · [Papers, proofs, Lean and code](#papers-proofs-lean-and-code)
+[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: module support](../GLOSSARY.md#module-support) · [Papers, proofs, Lean, and code](#papers-proofs-lean-and-code)
 
 Let $R=\mathbb Q[t]$. Compare the modules $M_1=R/(t)$ and $M_2=R/(t^2)$.
 This is an elementary model for the support distinctions used in Paper XII.
@@ -80,7 +80,7 @@ automorphic conclusions also require its stated arithmetic inputs.
 
 <!-- learning-navigation -->
 
-## Papers, proofs, Lean and code
+## Papers, proofs, Lean, and code
 
 **Terms in this example:** [Commutative ring with identity](../GLOSSARY.md#ring) · [Module](../GLOSSARY.md#module) · [Module presentation](../GLOSSARY.md#module-presentation) · [Cokernel](../GLOSSARY.md#cokernel) · [Nilpotent operator](../GLOSSARY.md#nilpotent) · [Module annihilator](../GLOSSARY.md#annihilator) · [Module support](../GLOSSARY.md#module-support) · [Zeroth Fitting ideal](../GLOSSARY.md#fitting-ideal) · [Multiplicity in the module example](../GLOSSARY.md#multiplicity) · [Ideal](../GLOSSARY.md#ideal) · [Prime ideal](../GLOSSARY.md#prime-ideal) · [Localization at a prime](../GLOSSARY.md#localization)
 

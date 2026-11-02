@@ -130,7 +130,7 @@ HAAR_PANEL
                              + slider('coefficient-a', 'Coefficient a', 1, -3, 3)
                              + slider('coefficient-b', 'Coefficient b', 0, -3, 3)),
         'PACKET_DIAGRAM': diagram('packet-diagram', 'Four connections from input coordinates to output coordinates'),
-        'SIGNAL_DIAGRAM': diagram('signal-diagram', 'Original signal, reconstruction and residual, by address'),
+        'SIGNAL_DIAGRAM': diagram('signal-diagram', 'Original signal, reconstruction, and residual, by address'),
         'RECOVERY_DIAGRAM': diagram('recovery-diagram', 'Two inputs on the line x one plus x two equals the same summary'),
         'PACKET_SOURCES': sources('packets', 'PACKETS', 'Continue to the hand calculation, operator identity, and Paper I source links.'),
         'SIGNAL_SOURCES': sources('refinement', 'REFINEMENT', 'Continue to the address calculation and Paper II refinement sources.'),

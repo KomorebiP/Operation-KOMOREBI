@@ -20,7 +20,7 @@ MAIN_TITLES = [
     ('arithmetic-depth', 'Arithmetic at complex depth'),
     ('prime-sieves', 'Prime sieves and signed measures'),
     ('orbit-spectra', 'Spectral functions of zero orbits'),
-    ('sequences-and-polyphase', 'Sequences, trees and polyphase'),
+    ('sequences-and-polyphase', 'Sequences, trees, and polyphase'),
     ('coupled-contractions', 'Coupled contraction functions'),
     ('finite-observation', 'Limits of finite observation'),
     ('proofs', 'Proofs and mathematical evidence'),
@@ -32,7 +32,7 @@ SOURCE_TITLES = {
     'sections/arithmetic_inverse.tex': 'Arithmetic inverse and character resolution',
     'sections/multi_prime.tex': 'Multiple-prime geometry',
     'sections/spectral_continuation.tex': 'Spectral continuation and regularized products',
-    'sections/sequence_polyphase.tex': 'Exact sequences, trees and polyphase laws',
+    'sections/sequence_polyphase.tex': 'Exact sequences, trees, and polyphase laws',
     'sections_v11/extension_overview.tex': 'The coupled family and its scope',
     'sections_v11/coupled_visual.tex': 'Coupled growth and inverse geometry',
     'sections_v11/resolution_visual.tex': 'The resolution atlas',
@@ -279,10 +279,10 @@ def render_book(reader, book):
         site.page(page, 'Special Functions: '+spec['title'], body)
         reports.append(dict(**spec,source_sha256=hashlib.sha256(reader.site.read_source(reader.records[spec['source']])).hexdigest(),math_expressions=len(expressions),math_sequence_sha256=hashlib.sha256(json.dumps(expressions,ensure_ascii=False).encode()).hexdigest(),macros=book['macros'],nodes=[{k:n[k] for k in ('id','line','end_line','kind')} for n in chapter.nodes],new_proof_review=False,new_lean_execution=False))
     site.write(REPORT,json.dumps(reports,ensure_ascii=False,indent=2)+'\n')
-    body = '<p class="eyebrow">Read Special Functions</p><h1>Special Functions</h1><p class="lede">Function families and their structure</p><p>Read the seven main chapters, the ten proof appendices, and the notation, references and evidence notes. The HTML edition follows the retained monograph, with selectable equations, original figures, and links to the source of each passage.</p>'+reader.work_routes(WORK,INDEX)
+    body = '<p class="eyebrow">Read Special Functions</p><h1>Special Functions</h1><p class="lede">Function families and their structure</p><p>Read the seven main chapters, the ten proof appendices, and the notation, references, and evidence notes. The HTML edition follows the retained monograph, with selectable equations, original figures, and links to the source of each passage.</p>'+reader.work_routes(WORK,INDEX)
     body += '<p class="reading-start"><a class="button" href="'+site.rel(chapters[0][0]['url'],INDEX)+'">Start reading</a> <a href="'+site.rel(source_url('notation.tex'),INDEX)+'">Notation and glossary</a> · <a href="'+site.rel(source_url('references.tex'),INDEX)+'">References</a></p>'
     body += '<nav class="chapter-contents reading-contents-index" aria-label="Special Functions chapters"><h2>Contents</h2>'+contents_list(book['config'],INDEX)+'</nav>'
-    body += '<h2>Formal coverage and evidence</h2><p>The recorded formal companion covers 68 named declarations in a finite core and Block 1. The full analytic monograph is not formalized in Lean. The evidence notes distinguish analytic proofs, finite computations, classical inputs and open questions.</p><p><a href="'+site.rel('collection/works/'+WORK+'.html',INDEX)+'#lean">Lean sources and recorded scope</a> · <a href="'+site.rel(source_url('evidence_notes.tex'),INDEX)+'">Evidence notes and open questions</a></p>'
+    body += '<h2>Formal coverage and evidence</h2><p>The recorded formal companion covers 68 named declarations in a finite core and Block 1. The full analytic monograph is not formalized in Lean. The evidence notes distinguish analytic proofs, finite computations, classical inputs, and open questions.</p><p><a href="'+site.rel('collection/works/'+WORK+'.html',INDEX)+'#lean">Lean sources and recorded scope</a> · <a href="'+site.rel(source_url('evidence_notes.tex'),INDEX)+'">Evidence notes and open questions</a></p>'
     pdfs = [r for r in reader.records.values() if r['work']==WORK and r['format']=='pdf']
     body += '<h2>PDF and companion volumes</h2><ul>'+''.join('<li><a href="'+site.rel(r['url'],INDEX)+'">'+html.escape(r['title'])+'</a></li>' for r in pdfs)+'</ul>'
     site.page(INDEX,'Read Special Functions',body)

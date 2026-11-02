@@ -521,7 +521,7 @@ def build(site):
             body+='<li><a href="'+site.rel(source.get('source_url',source['url']),page)+'">'+e(source['repository_path'])+'</a> · '+str(source['passages'])+' mathematical passages</li>'
         body+='</ul>'
         if data['pdfs']:
-            body+='<details><summary>PDF reading editions ('+str(len(data['pdfs']))+')</summary><p>The text index does not extract PDF glyphs. Check the reading edition for notation in figures, tables and PDF-only material.</p><ul>'+''.join('<li><a href="'+site.rel(p['url'],page)+'">'+e(PurePosixPath(p['repository_path']).name)+'</a></li>' for p in data['pdfs'])+'</ul></details>'
+            body+='<details><summary>PDF reading editions ('+str(len(data['pdfs']))+')</summary><p>The text index does not extract PDF glyphs. Check the reading edition for notation in figures, tables, and PDF-only material.</p><ul>'+''.join('<li><a href="'+site.rel(p['url'],page)+'">'+e(PurePosixPath(p['repository_path']).name)+'</a></li>' for p in data['pdfs'])+'</ul></details>'
         body+='</section>'+script(page)
         site.page(page,'Notation: '+data['title'],body)
         site.search.append(dict(title='Notation: '+data['title'],group='Collection',kind='Notation',url=page,

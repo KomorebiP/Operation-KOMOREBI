@@ -65,7 +65,7 @@ def publish(site):
             bundle.writestr(info,raw)
     result=json.loads((target/"results.json").read_bytes())
     record={
-        "title":"Stirling, Bell and Fubini: exact triangular and reciprocal transfer",
+        "title":"Stirling, Bell, and Fubini: exact triangular and reciprocal transfer",
         "collection_revision":site.revision,
         "program_source":PROGRAM,
         "program_sha256":sha256(program),
@@ -89,7 +89,7 @@ def publish(site):
 
     from reader_documents import source_lines
     body=(
-        '<h1>Stirling, Bell and Fubini / complete exact Python source</h1>'
+        '<h1>Stirling, Bell, and Fubini / complete exact Python source</h1>'
         '<p>Triangular matrices, signed inverse, Bell and ordered Bell numbers, '
         'Touchard and exponential-moment families, formal generating functions, a parity transfer system, '
         'coupled residue transfers and an exact recoverability boundary. '
@@ -105,12 +105,12 @@ def publish(site):
         '<p>Run <code>python -B stirling_bell_fubini.py</code> for exact checks; '
         'add <code>--output stirling-results</code> for downloadable records.</p>'
     )
-    site.page(READER,"Stirling, Bell and Fubini / exact Python source",
+    site.page(READER,"Stirling, Bell, and Fubini / exact Python source",
               body+source_lines(program.decode("utf-8")),
               "https://github.com/KomorebiP/Operation-KOMOREBI/blob/"
               +site.revision+"/"+PROGRAM)
     site.search.append(dict(
-        title="Stirling, Bell and Fubini / exact Python checker",
+        title="Stirling, Bell, and Fubini / exact Python checker",
         group="Collection",kind="Code",
         work_ids=["monographs-special-functions","paper-iv"],
         url=READER,

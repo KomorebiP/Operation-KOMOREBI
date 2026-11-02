@@ -26,7 +26,7 @@ BOOK=dict(work=WORK,label='Paper XI',base=BASE,main=MAIN,bib=BIB,inline_bibliogr
     require_table_reading_aids=True,
     reading_introduction='Read all 19 main sections and all fifteen detailed construction appendices. '
         'The reader routes preserve the distinction between proved finite theory, restricted arithmetic '
-        'constructions and the open Conjecture 66. The visual, Lean and research companions remain in PDF.')
+        'constructions and the open Conjecture 66. The visual, Lean, and research companions remain in PDF.')
 BOOK['table_reading_aids']={
     ('reader_route.tex','L8'):dict(caption='Five readers with different jobs',headers=['Reader','Route and purpose'],row_header_column=0),
     ('reader_route.tex','L28'):dict(caption='Current scope and research routes',headers=['Question','Route beyond the core statement'],row_header_column=0),

@@ -25,7 +25,7 @@ def research_slides():
          '</svg></div>'),
         ('stirling', 'Counting families', 'One partition triangle.<br><em>Two families.</em>',
          'Start with set partitions, obtain Bell and ordered Bell numbers, and follow the signed inverse and reciprocal packets.',
-         'STIRLING_BELL_FUBINI', 'Read the Stirling, Bell and Fubini derivation',
+         'STIRLING_BELL_FUBINI', 'Read the Stirling, Bell, and Fubini derivation',
          '<div class="home-motif home-counting" aria-hidden="true"><span>Partitions</span>'
          '<span class="home-motif-arrow">→</span><div><span>Bell</span><span>Ordered Bell</span></div></div>'),
         ('roots', 'Polynomial packets', 'One polynomial.<br><em>Three character packets.</em>',
@@ -82,11 +82,11 @@ def home_page():
 <a href="notation.html"><span class="home-tool-icon" aria-hidden="true">α</span><span><strong>Look up notation</strong><small>Find symbols and their source context.</small></span><span aria-hidden="true">↗</span></a></div></section>
 <div class="home-notes"><details class="home-more"><summary>Explore the collections and how they connect</summary>
 <div class="home-collection-list"><h2>Three repositories, one place to begin</h2><dl>
-<dt><a href="collection/index.html">Operation KOMOREBI</a></dt><dd>Papers, books, research programs, formal sources and evidence.</dd>
+<dt><a href="collection/index.html">Operation KOMOREBI</a></dt><dd>Papers, books, research programs, formal sources, and evidence.</dd>
 <dt><a href="math/index.html">Komorebi Math</a></dt><dd>A Python library for finite mathematical constructions and inspectable certificates.</dd>
 <dt><a href="polyphase/index.html">Polyphase Float</a></dt><dd>A C library for arbitrary-precision binary floating-point arithmetic.</dd></dl>
 <h3>What connects the work?</h3><p>Describe an object in parts, transfer operations through those parts, and account for what a change of representation preserves or loses.</p>
-<ul><li><a href="collection/PROJECT_MAP.html">See the project map</a> — explore the twelve core papers, related books and documented connections.</li>
-<li><a href="collection/DEMONSTRATIONS.html">Follow a complete demonstration</a> — work through a calculation, run its program and follow the source evidence.</li>
+<ul><li><a href="collection/PROJECT_MAP.html">See the project map</a> — explore the twelve core papers, related books, and documented connections.</li>
+<li><a href="collection/DEMONSTRATIONS.html">Follow a complete demonstration</a> — work through a calculation, run its program, and follow the source evidence.</li>
 <li><a href="collection/SPECIAL_FUNCTIONS.html">Explore Special Functions</a> — read the current volumes, compare five families, and run the coupled-function lab.</li></ul></div></details>
 <details class="home-status"><summary>How to read completion and verification</summary><p>The collection records completion, formal coverage, and confidence separately. A linked file does not mean every claim has been verified. Software is beta.</p><p><a href="collection/COMPLETION_STATUS.html">Read the guide to evidence and status</a></p></details></div>'''

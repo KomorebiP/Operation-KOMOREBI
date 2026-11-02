@@ -1,7 +1,7 @@
 "use strict";
 
 // Only formulas that need horizontal scrolling gain an extra keyboard stop.
-// Recheck after typesetting, text settings, responsive layout and live results.
+// Recheck after typesetting, text settings, responsive layout, and live results.
 {
   const managed = new Map();
   let scheduled = false;

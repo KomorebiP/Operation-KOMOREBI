@@ -274,7 +274,7 @@ def render(reader):
                 macros=atlas['macros'],plates=reports,manuscript_backlinks=atlas['backlinks'],figures={name:dict(**f['receipt'],node_order=f['order'],nodes=f['nodes']) for name,f in atlas['figures'].items()},
                 new_proof_review=False,new_lean_execution=False,new_mathematical_example_execution=False)
     site.write(REPORT,json.dumps(report,ensure_ascii=False,indent=2)+'\n')
-    body='<p class="eyebrow">Paper IV · Visual atlas</p><h1>Explore the 26 atlas plates</h1><p>Read the worked models with their original drawings, selectable equations, text descriptions and tables. Each plate links to the manuscript statements it illustrates.</p>'
+    body='<p class="eyebrow">Paper IV · Visual atlas</p><h1>Explore the 26 atlas plates</h1><p>Read the worked models with their original drawings, selectable equations, text descriptions, and tables. Each plate links to the manuscript statements it illustrates.</p>'
     body+=reader.work_routes('paper-iv',INDEX)+'<p><a href="'+site.rel(pdf['url'],INDEX)+'">Visual guide PDF</a></p>'
     body+='<p>For algebra, follow V3–V16. For zero geometry, follow V17–V24. V25 follows one coefficient through the whole calculation, and V26 explains the evidence.</p><nav class="chapter-contents" aria-label="Atlas plates"><h2>Choose a plate</h2><ol>'
     body+=''.join('<li><a href="'+site.rel(p['url'],INDEX)+'">V'+str(p['number'])+' · '+e(p['title'])+'</a></li>' for p in atlas['plates'])

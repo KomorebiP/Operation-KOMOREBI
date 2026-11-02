@@ -1,6 +1,6 @@
 # 21. Choose a certificate with shared premises
 
-[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: minimum-cost certificate](../GLOSSARY.md#minimum-cost-certificate) · [Papers, proofs, Lean and code](#papers-proofs-lean-and-code)
+[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: minimum-cost certificate](../GLOSSARY.md#minimum-cost-certificate) · [Papers, proofs, Lean, and code](#papers-proofs-lean-and-code)
 
 Proof Path Theory distinguishes a valid certificate, an inclusion-minimal
 certificate and a cheapest certificate. This small recorded rule system shows
@@ -92,7 +92,7 @@ that a selected certificate is the shortest possible proof in every system.
 
 <!-- learning-navigation -->
 
-## Papers, proofs, Lean and code
+## Papers, proofs, Lean, and code
 
 **Terms in this example:** [Finite proof field](../GLOSSARY.md#proof-field) · [Admissible leaf](../GLOSSARY.md#admissible-leaf) · [Recorded inference rule](../GLOSSARY.md#inference-rule) · [Verification closure](../GLOSSARY.md#verification-closure) · [Inclusion-minimal certificate](../GLOSSARY.md#inclusion-minimal) · [Least certificate](../GLOSSARY.md#least-certificate) · [Minimum-cost certificate](../GLOSSARY.md#minimum-cost-certificate)
 

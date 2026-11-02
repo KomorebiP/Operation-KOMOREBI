@@ -1,6 +1,6 @@
 # 1. Split and reconstruct a vector
 
-[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: projector](../GLOSSARY.md#projector) · [Papers, proofs, Lean and code](#papers-proofs-lean-and-code)
+[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: projector](../GLOSSARY.md#projector) · [Papers, proofs, Lean, and code](#papers-proofs-lean-and-code)
 
 For a complete route through blocks, a runnable program and the recorded proof
 links, use [Reconstruct an operator](../demonstrations/PACKETS.md).
@@ -90,7 +90,7 @@ $(-1,-1)^{\mathsf T}$. Both pairs sum to $(4,-1)^{\mathsf T}$.
 
 <!-- learning-navigation -->
 
-## Papers, proofs, Lean and code
+## Papers, proofs, Lean, and code
 
 **Terms in this example:** [Projector](../GLOSSARY.md#projector) · [Packet](../GLOSSARY.md#packet) · [Complete packet family](../GLOSSARY.md#complete-packet-family) · [Orthogonal projector](../GLOSSARY.md#orthogonal-projector) · [Direct sum](../GLOSSARY.md#direct-sum)
 

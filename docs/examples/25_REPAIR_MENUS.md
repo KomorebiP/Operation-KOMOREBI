@@ -1,6 +1,6 @@
 # 25. Choose repair directions from a finite menu
 
-[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: repair menu](../GLOSSARY.md#repair-menu) · [Papers, proofs, Lean and code](#papers-proofs-lean-and-code)
+[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: repair menu](../GLOSSARY.md#repair-menu) · [Papers, proofs, Lean, and code](#papers-proofs-lean-and-code)
 
 Constructive Repair asks how to make a target reachable while keeping the
 original equations and admissible choices fixed. Work in $\mathbb Q^3$.
@@ -79,7 +79,7 @@ certificate validity from acceptance of an emitted Lean certificate.
 
 <!-- learning-navigation -->
 
-## Papers, proofs, Lean and code
+## Papers, proofs, Lean, and code
 
 **Terms in this example:** [Repair direction](../GLOSSARY.md#repair-direction) · [Free linear repair](../GLOSSARY.md#free-repair) · [Finite repair menu](../GLOSSARY.md#repair-menu) · [Repair selection cost](../GLOSSARY.md#repair-cost) · [Feasibility](../GLOSSARY.md#feasibility) · [Linear obstruction witness](../GLOSSARY.md#dual-witness)
 

@@ -10,7 +10,7 @@ Use these guides to find works, software, and project records. Each dated review
 | A complete path from calculation to code and evidence | [Three demonstrations](DEMONSTRATIONS.md) |
 | Introductory terminology and notation | [Glossary](GLOSSARY.md) |
 | Calculations with every step shown | [Hand-worked examples](HAND_WORKED_EXAMPLES.md) |
-| Examples connected to papers, proofs, Lean and code | [Topic map](LEARNING_MAP.md) |
+| Examples connected to papers, proofs, Lean, and code | [Topic map](LEARNING_MAP.md) |
 | A small program with expected output | [First runs](FIRST_RUN.md) |
 | Statement locations, formal modules and reading ZIPs | [Claim links](CLAIM_LINKS.md) and [downloads](DOWNLOADS.md) |
 | Accessible formats and known limits | [Accessibility](ACCESSIBILITY.md) |
