@@ -187,6 +187,9 @@ class QuantumReadingTests(unittest.TestCase):
                 statement_href=posixpath.relpath(statement_spec['url'],posixpath.dirname(proof_spec['url']))+'#'+statement['id']
                 self.assertIn('href="'+proof_href+'">Read proof</a>',(output/statement_spec['url']).read_text(encoding='utf-8'))
                 self.assertIn('href="'+statement_href+'">Back to statement</a>',(output/proof_spec['url']).read_text(encoding='utf-8'))
+                search=next(entry for entry in reader.site.search if entry['url']==proof_spec['url']+'#L'+str(line))
+                expected_title='Proof of '+reading.KIND_NAMES.get(statement['kind'],statement['kind'].capitalize())+' '+statement['number']
+                self.assertEqual(search['title'],BOOK['label']+' / '+expected_title)
             # Reconstruct every equation counter from original source order.
             number=7;counter=0;expected={}
             for match in re.finditer(r'\\chapter\{|\\begin\{(equation|align)\}(.*?)\\end\{\1\}',source,re.S):

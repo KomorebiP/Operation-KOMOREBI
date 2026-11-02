@@ -98,5 +98,6 @@ def bind_named_proofs(chapters,labels):
             if statement['id'] in owner.proof_routes:raise ValueError('Duplicate catalytic named proof')
             owner.proof_routes[statement['id']]=chapter.url+'#'+node['id']
             chapter.proof_returns[node['id']]=owner.url+'#'+statement['id']
-            node['display_title']=node['title'];count+=1
+            node['display_title']=node['title']
+            node['search_title']='Proof of '+statement['reference_label'];count+=1
     if count!=8:raise ValueError('Review catalytic named-proof inventory')
