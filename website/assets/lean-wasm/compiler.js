@@ -123,7 +123,7 @@ export async function createCompiler(options = {}) {
 		throw new Error(`syntaxCheck must be one of ${SYNTAX_MODES.join(', ')}, not ${syntaxCheck}`);
 	}
 
-	const layers = optionalLayers(assets);
+	const layers = optionalLayers(assets,options.mathlibManifest);
 
 	// What the artifact declares, read from the first ~64 KiB of it rather than the whole 96.17 MiB, so a
 	// document that cannot run the runtime finds that out before paying for the runtime (FINDINGS.md §2).

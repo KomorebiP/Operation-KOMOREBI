@@ -296,7 +296,8 @@ def build(reader):
     body += '<p class="lean-summary">'+quantity(len(catalog),'reading edition')+'<span aria-hidden="true"> · </span>'+quantity(total,'source file')+'</p></header>'
     body += '<nav class="lean-actions" aria-label="Lean library routes"><a href="'+site.rel('read/index.html','lean/index.html')+'">Reading library</a>'+paired_route(site,'lean/index.html')+'</nav>'
     body += '<p class="lean-library-note">Coverage labels describe the existing evidence. Browsing the source does not run Lean.</p>'
-    body += '<p class="lean-playground-route"><a class="button" href="'+site.rel('lean/browser/index.html','lean/index.html')+'">Edit and run in your browser</a> <span>Free local compiler · three prepared workspaces</span></p>'
+    from lean_workspaces import WORKSPACES
+    body += '<p class="lean-playground-route"><a class="button" href="'+site.rel('lean/browser/index.html','lean/index.html')+'">Edit and run in your browser</a> <span>Free local compiler · '+str(len(WORKSPACES))+' prepared workspaces</span></p>'
     body += '<p class="lean-playground-route"><a href="'+site.rel('lean/playground.html','lean/index.html')+'">Hosted Paper XII editor</a> <span>External Lean service</span></p>'
     body += '<p class="lean-playground-route"><a class="button" href="'+site.rel('lean/run.html','lean/index.html')+'">Run with dependencies</a> <span>All displayed source files · native Lean</span></p>'
     for group,core in [('Core papers',True),('Books and monographs',False)]:
