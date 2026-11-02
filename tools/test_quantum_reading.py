@@ -1,4 +1,4 @@
-"""Check the first twelve chapters against the retained manuscript."""
+"""Check the twenty-one main chapters against the retained manuscript."""
 import json
 from pathlib import Path
 import re
@@ -11,6 +11,7 @@ import readable_chapters as reading
 from quantum_reading import BOOK,CHAPTERS,DATA,WORK,normalize,source_specs,source_math
 from quantum_symmetry import SOURCE as SYMMETRY,MACROS,FIGURES,normalize as normalize_symmetry
 from quantum_catalytic import SOURCE as CATALYTIC,MACROS as CATALYTIC_MACROS,normalize as normalize_catalytic
+from quantum_circuits import SOURCE as CIRCUITS,VISUAL,MACROS as CIRCUIT_MACROS,normalize as normalize_circuits,normalize_visual,source_macros as circuit_macros
 from build_reader_site import Site
 from check_reader_site import Page,check_readable_chapter
 from reader_documents import ReadingDocuments,source_lines
@@ -43,19 +44,19 @@ def publish_fixture(output):
 
 
 class QuantumReadingTests(unittest.TestCase):
-    def test_selection_covers_chapters_one_through_twelve_and_fails_closed(self):
+    def test_selection_covers_chapters_one_through_twenty_one_and_fails_closed(self):
         load=lambda path:(ROOT/path).read_bytes().decode('utf-8-sig')
         self.assertEqual(source_specs(load),CHAPTERS)
-        self.assertEqual(len(CHAPTERS),100)
+        self.assertEqual(len(CHAPTERS),148)
         for source in DATA['selected_sources']:
             text=load(source)
-            translated={SYMMETRY:normalize_symmetry,CATALYTIC:normalize_catalytic}.get(source,normalize)(text)
+            translated={SYMMETRY:normalize_symmetry,CATALYTIC:normalize_catalytic,CIRCUITS:normalize_circuits,VISUAL:normalize_visual}.get(source,normalize)(text)
             self.assertEqual(text.count('\n'),translated.count('\n'))
-            if source not in {SYMMETRY,CATALYTIC}:self.assertEqual(reading.original_math(text),reading.original_math(translated))
+            if source in DATA['selected_sources'][:2]:self.assertEqual(reading.original_math(text),reading.original_math(translated))
         with self.assertRaisesRegex(ValueError,'Review changed Quantum source'):
             source_specs(lambda path:load(path)+'\nUnreviewed source change.')
         self.assertTrue(BOOK['partial'])
-        self.assertIn('remaining book',BOOK['reading_introduction'])
+        self.assertIn('appendices remain available',BOOK['reading_introduction'])
         with self.assertRaisesRegex(ValueError,'Unsupported'):
             reading.Chapter('',{}).inline(normalize(r'\unreviewedcommand{lost prose}'))
 
@@ -97,6 +98,20 @@ class QuantumReadingTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'gate alignment'):
             normalize_catalytic(raw.replace('g:gate:a6','g:gate:changed'))
 
+    def test_circuit_formula_sequence_and_local_field_conventions(self):
+        pattern=re.compile(reading.MATH_PATTERN.pattern+r'|\\begin\{equation\}(.*?)\\end\{equation\}',re.S)
+        for source,count in [(CIRCUITS,447),(VISUAL,328)]:
+            raw=(ROOT/source).read_bytes().decode('utf-8-sig')
+            expected=[next(v for v in m.groups() if v is not None) for m in pattern.finditer(reading.clean_tex(raw))]
+            actual=[v for spec in CHAPTERS if spec['source']==source for v in source_math(raw,spec)]
+            self.assertEqual(actual,expected);self.assertEqual(len(actual),count)
+        load=lambda path:(ROOT/path).read_bytes().decode('utf-8-sig')
+        self.assertEqual(circuit_macros(load)['F'],r'\mathbb F_2')
+        self.assertEqual(circuit_macros(load,visual=True)['F'],r'\mathbb F')
+        self.assertEqual(circuit_macros(load)['B'],r'\{0,1\}')
+        with self.assertRaisesRegex(ValueError,'field and Boolean conventions'):
+            circuit_macros(lambda path:load(path).replace(r'\mathbb F_2',r'\mathbb F_3'))
+
     def test_published_math_proofs_tables_figures_and_source_lines(self):
         with tempfile.TemporaryDirectory() as folder:
             output=Path(folder);reader=publish_fixture(output)
@@ -104,23 +119,23 @@ class QuantumReadingTests(unittest.TestCase):
             documents=dict(files=list(reader.records.values()))
             with patch.object(reading,'BOOKS',{WORK:BOOK}),patch.object(reading,'CHAPTERS',CHAPTERS):
                 total=check_readable_chapter(output,documents,pages)
-            self.assertEqual(total,3111)
+            self.assertEqual(total,3886)
             nodes=[n for _,_,chapter in reader.readable_books[WORK]['chapters'] for n in chapter.nodes]
-            arithmetic=[n for spec,_,chapter in reader.readable_books[WORK]['chapters'] if spec['source'] not in {SYMMETRY,CATALYTIC} for n in chapter.nodes]
+            arithmetic=[n for spec,_,chapter in reader.readable_books[WORK]['chapters'] if spec['source'] in DATA['selected_sources'][:2] for n in chapter.nodes]
             statements=[n for n in arithmetic if n['kind']=='theorem']
             proofs=[n for n in nodes if n['kind']=='proof']
             self.assertEqual([n['number'] for n in statements],['QA'+str(i).zfill(2) for i in range(1,21)])
-            self.assertEqual(len(proofs),90)
+            self.assertEqual(len(proofs),120)
             self.assertTrue(all(r'\(\square\)' in n['body'] for n in arithmetic if n['kind']=='proof'))
             raw=(ROOT/DATA['selected_sources'][0]).read_text(encoding='utf-8')
             expected=[raw.count('\n',0,m.start())+1 for m in re.finditer(r'\\subsection\*\{Theorem QA\d\d\. ',raw)]
             self.assertEqual([n['line'] for n in statements],expected)
-            self.assertEqual(sum(n['kind']=='figure' for n in nodes),73)
-            self.assertEqual(len(reader.images),70)
+            self.assertEqual(sum(n['kind']=='figure' for n in nodes),85)
+            self.assertEqual(len(reader.images),82)
             nested=[n for _,_,c in reader.readable_books[WORK]['chapters'] for n in c.nested_tables]
-            self.assertEqual(sum(n['kind'] in {'table','longtable','tabular'} for n in nodes)+len(nested),21)
+            self.assertEqual(sum(n['kind'] in {'table','longtable','tabular'} for n in nodes)+len(nested),31)
             self.assertEqual(sum(n['kind']=='question' for n in nodes),44)
-            self.assertEqual(sum(n['kind']=='interpretation' for n in nodes),49)
+            self.assertEqual(sum(n['kind']=='interpretation' for n in nodes),54)
             # Reconstruct the chapter-wide statement counters from raw source,
             # independently of the reader's section-based parser and renumbering.
             source=(ROOT/SYMMETRY).read_bytes().decode('utf-8-sig');chapter_number=2;counter=0;expected=[]
@@ -159,8 +174,8 @@ class QuantumReadingTests(unittest.TestCase):
             self.assertIn('in this HTML selection',(output/directory).read_text(encoding='utf-8'))
             chapters=[(s['url'],(output/s['url']).read_text(encoding='utf-8')) for s in CHAPTERS]
             result=check_directory((output/directory).read_text(encoding='utf-8'),chapters,directory)
-            self.assertEqual(result['proof_links'],90)
-            self.assertEqual(result['statements'],203)
+            self.assertEqual(result['proof_links'],120)
+            self.assertEqual(result['statements'],233)
             references=(output/BOOK['bib_page']).read_text(encoding='utf-8')
             self.assertIn('Życzkowski',references)
             self.assertIn('[17] s:TransferRecords',references)
@@ -220,6 +235,45 @@ class QuantumReadingTests(unittest.TestCase):
             self.assertEqual(listing.items,expected);self.assertEqual(len(expected),6)
             self.assertEqual(sum(n['kind']=='algorithm' for n in nodes),3)
             self.assertEqual(sum(n['kind']=='protocol' for n in nodes),2)
+            circuits=[c for c in reader.readable_books[WORK]['chapters'] if c[0]['source']==CIRCUITS]
+            visual=[c for c in reader.readable_books[WORK]['chapters'] if c[0]['source']==VISUAL]
+            self.assertEqual((len(circuits),len(visual)),(23,25))
+            self.assertTrue(all(c.macro_source==CIRCUIT_MACROS for _,_,c in circuits+visual))
+            self.assertTrue(all(c.macros['F']==r'\mathbb F_2' for _,_,c in circuits))
+            self.assertTrue(all(c.macros['F']==r'\mathbb F' for _,_,c in visual))
+            # Independently recover the printed chapter-shared statements and
+            # equation counters directly from the unmodified circuit source.
+            source=(ROOT/CIRCUITS).read_bytes().decode('utf-8-sig');number=12;counter=0;expected=[]
+            for match in re.finditer(r'\\chapter\{|\\begin\{('+ '|'.join(sorted(reading.NUMBERED))+r')\}',source):
+                if match[1] is None:number+=1;counter=0
+                else:
+                    counter+=1;expected.append((match[1],str(number)+'.'+str(counter),source.count('\n',0,match.start())+1))
+            actual=[(n['kind'],n['number'],n['line']) for _,_,c in circuits for n in c.nodes if n['kind'] in reading.NUMBERED]
+            self.assertEqual(actual,expected);self.assertEqual(len(actual),30)
+            self.assertEqual(sum(len(c.proof_pairs) for _,_,c in circuits),30)
+            number=12;counter=0;expected={}
+            for match in re.finditer(r'\\chapter\{|\\begin\{equation\}(.*?)\\end\{equation\}',source,re.S):
+                if match[1] is None:number+=1;counter=0
+                else:
+                    counter+=1
+                    for label in re.findall(r'\\label\{([^{}]+)\}',match[1]):expected[label]=str(number)+'.'+str(counter)
+            self.assertEqual({k:v for k,v in circuits[0][2].equation_numbers.items() if k.startswith('c:')},expected)
+            self.assertEqual(len(expected),6)
+            for title in re.findall(r'\\begin\{circuitscopebox\}\{([^{}]+)\}',source):
+                self.assertTrue(any(title in (output/s['url']).read_text(encoding='utf-8') for s,_,_ in circuits))
+            guide=(ROOT/VISUAL).read_bytes().decode('utf-8-sig')
+            figures=[n for _,_,c in visual for n in c.nodes if n['kind']=='figure']
+            self.assertEqual(len(figures),12);self.assertTrue(all(not n['number'] for n in figures))
+            guide_listing=Listings()
+            for spec,_,_ in visual:guide_listing.feed((output/spec['url']).read_text(encoding='utf-8'))
+            self.assertEqual(guide_listing.items,[m[1].strip('\n') for m in re.finditer(r'\\begin\{lstlisting\}(.*?)\\end\{lstlisting\}',guide,re.S)])
+            self.assertEqual(len(guide_listing.items),2)
+            appendix=next(r for r in reader.records.values() if r['repository_path'].endswith('c_supplement.tex'))
+            citation_page=next(s['url'] for s,_,_ in circuits if s['title']=='What the comparison does and does not require')
+            self.assertIn(appendix['url'].split('/')[-1]+'#L85',(output/citation_page).read_text(encoding='utf-8'))
+            self.assertIn('id="L85"',(output/appendix['url']).read_text(encoding='utf-8'))
+            self.assertIn('[54] c:beckli',references)
+            self.assertIn('<code>docs/FOUNDATIONS.md</code>',references)
             for spec in CHAPTERS:
                 markup=(output/spec['url']).read_text(encoding='utf-8')
                 self.assertIn('reading-text-size',markup)
