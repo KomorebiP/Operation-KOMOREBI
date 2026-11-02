@@ -852,6 +852,17 @@ Closing a preview restores notebook selection; ordinary experiment links omit
 the comparison fragment. Malformed comparison links preserve the current valid
 experiment and notebook. Clipboard failure exposes a selectable link field.
 
+The quality-target finder uses the active experiment's existing error curves.
+It scans every budget in order, including zero, for either observed-energy
+retention (0–100%) or reference RMS error (0–64). Reference error need not be
+monotone; no qualifying budget is reported when the entire curve misses the
+target. Threshold checks allow `1e-10 * max(1, relevant signal energy)` in
+squared-error units. Zero observed energy satisfies retention targets at zero
+budget. Applying a result changes the active basis and budget. Saving qualifying
+runs appends the reachable settings as one group within notebook capacity; it
+does not replace saved entries. The finder controls are an analysis aid; saved
+experiments and links retain the resulting applied basis and budget.
+
 The lab compares averaging-normalized Haar wavelets with their support
 weights, an orthonormal DCT-II, and sample coordinates. Seeded bounded integer
 noise, equal coefficient budgets, three selection policies, full budget/error

@@ -118,3 +118,35 @@ test('comparison links reject malformed or incompatible data without accepting s
   assert.equal(m.experiment(clean.entries[0].settings).analyses.haar.referenceError,272);
   assert.equal(m.experiment(clean.entries[1].settings).analyses.haar.referenceError,288);
 });
+
+test('quality targets find exact first budgets for a sample-coordinate benchmark',async()=>{
+  const w=await workspace,m=await core,config={...m.defaults(),n:16,shape:'custom',custom:Array.from({length:16},(_,i)=>i+1),basis:'samples',noise:0,address:0},r=m.experiment(config);
+  const energy=w.targetBudgets(r,'energy',50),sample=energy.rows.find(row=>row.basis==='samples');
+  assert.equal(energy.observedEnergy,1496);assert.equal(energy.threshold,748);assert.equal(sample.budget,4);
+  assert.equal(r.analyses.samples.curve[3].observedError,819);assert.equal(r.analyses.samples.curve[4].observedError,650);
+  assert.equal(w.targetBudgets(r,'reference',5).rows.find(row=>row.basis==='samples').budget,6);
+  assert.equal(w.targetBudgets(r,'energy',0).rows.find(row=>row.basis==='samples').budget,0);
+  assert.equal(w.targetBudgets(r,'energy',100).rows.find(row=>row.basis==='samples').budget,16);
+});
+
+test('reference targets handle an intermediate success, unreachable limits, and zero energy',async()=>{
+  const w=await workspace,m=await core,r=m.experiment(m.defaults()),outcome=w.targetBudgets(r,'reference',2),haar=outcome.rows.find(row=>row.basis==='haar');
+  assert.ok(haar.budget>0&&haar.budget<64);assert.ok(haar.referenceRms<=2);assert.ok(Math.sqrt(r.noiseEnergy/64)>2);
+  assert.equal(w.targetBudgets(r,'reference',0).rows.filter(row=>row.budget!==null).length,0);
+  const zero=m.experiment({...m.defaults(),shape:'custom',custom:Array(64).fill(0),noise:0});
+  for(const metric of ['energy','reference'])for(const value of [0,metric==='energy'?100:64]){
+    for(const row of w.targetBudgets(zero,metric,value).rows){assert.equal(row.budget,0);assert.equal(row.retainedPercent,100);assert.equal(row.referenceRms,0);}
+  }
+});
+
+test('target results are minimal across supported sizes and selection policies; saved choices are independent',async()=>{
+  const w=await workspace,m=await core;
+  for(const n of m.SIZES)for(const policy of m.POLICIES){const r=m.experiment({...m.defaults(),n,policy,address:0});for(const [metric,value]of [['energy',95],['reference',2]]){
+    const outcome=w.targetBudgets(r,metric,value),field=metric==='energy'?'observedError':'referenceError';
+    for(const row of outcome.rows){const curve=r.analyses[row.basis].curve;if(row.budget===null)assert.ok(curve.every(point=>point[field]>outcome.threshold+outcome.tolerance));else{assert.ok(curve[row.budget][field]<=outcome.threshold+outcome.tolerance);assert.ok(curve.slice(0,row.budget).every(point=>point[field]>outcome.threshold+outcome.tolerance));}}
+  }}
+  const r=m.experiment({...m.defaults(),shape:'custom',custom:Array(64).fill(4)}),entries=w.targetRuns(r,'energy',95);assert.equal(entries.length,3);assert.equal(new Set(entries.map(entry=>entry.settings.basis)).size,3);
+  assert.equal(w.sameObservation(...entries.slice(0,2).map(entry=>m.experiment(entry.settings))),true);entries[0].settings.custom[0]=9;assert.equal(entries[1].settings.custom[0],4);assert.equal(r.config.custom[0],4);
+  assert.deepEqual(w.targetRuns(m.experiment(m.defaults()),'reference',0),[]);
+  for(const [metric,value]of [['unknown',1],['energy',-1],['energy',100.1],['reference',64.1],['reference',NaN],['energy',Infinity]])assert.throws(()=>w.targetBudgets(r,metric,value),RangeError);
+});

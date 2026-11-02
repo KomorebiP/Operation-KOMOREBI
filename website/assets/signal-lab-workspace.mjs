@@ -1,4 +1,4 @@
-import {defaults,settings,experiment} from './signal-lab-core.mjs';
+import {BASES,defaults,settings,experiment} from './signal-lab-core.mjs';
 
 export const MAX_RUNS=12;
 export const NOTEBOOK_SCHEMA='komorebi-signal-notebook-v1';
@@ -57,6 +57,29 @@ export function appendRuns(entries,additional) {
   return readNotebook(writeNotebook([...entries,...additional]));
 }
 export function sameObservation(a,b) {return equal(a.reference,b.reference)&&equal(a.observed,b.observed);}
+export function targetBudgets(result,metric,value) {
+  const maximum=metric==='energy'?100:metric==='reference'?64:null;
+  if(maximum===null||!Number.isFinite(value)||value<0||value>maximum)throw new RangeError('Choose an energy target from 0 to 100%, or a reference RMS limit from 0 to 64.');
+  const observedEnergy=result.observed.reduce((sum,v)=>sum+v*v,0),referenceEnergy=result.reference.reduce((sum,v)=>sum+v*v,0),n=result.config.n;
+  const energy=metric==='energy'?observedEnergy:referenceEnergy;
+  const threshold=metric==='energy'?energy*(1-value/100):n*value*value,tolerance=1e-10*Math.max(1,energy);
+  const rows=BASES.map(basis=>{
+    const curve=result.analyses[basis].curve,field=metric==='energy'?'observedError':'referenceError';
+    // Reference error need not be monotone: inspect every budget in order.
+    const point=curve.find(row=>row[field]<=threshold+tolerance);
+    return {basis,budget:point?.budget??null,
+      referenceRms:point?Math.sqrt(point.referenceError/n):null,
+      retainedPercent:point?(observedEnergy===0?100:Math.max(0,Math.min(100,100*(1-point.observedError/observedEnergy)))):null,
+      bestReferenceRms:Math.sqrt(Math.min(...curve.map(row=>row.referenceError))/n)};
+  });
+  return {metric,value,threshold,tolerance,observedEnergy,referenceEnergy,rows};
+}
+export function targetRuns(result,metric,value) {
+  const labels={haar:'Haar',cosine:'Cosine',samples:'Samples'};
+  return targetBudgets(result,metric,value).rows.filter(row=>row.budget!==null).map(row=>({
+    label:labels[row.basis]+' · '+(metric==='energy'?value+'% energy':'RMS≤'+value),
+    settings:settings({...result.config,basis:row.basis,budget:row.budget})}));
+}
 export function comparisonState(raw) {
   if(!raw||typeof raw!=='object'||Array.isArray(raw)||raw.v!==1||!Array.isArray(raw.entries)||raw.entries.length!==2||!['overlay','error','difference'].includes(raw.view))
     throw new RangeError('Use a supported comparison with exactly two runs.');
