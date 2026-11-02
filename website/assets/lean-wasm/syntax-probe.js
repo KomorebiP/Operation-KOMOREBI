@@ -28,6 +28,18 @@ export function leanStringLiteral(source) {
 	return `"${escaped}"`;
 }
 
+// A single large Lean string literal can overflow the browser stack while the
+// guard itself is elaborated. Construct the identical input from small literals;
+// bounded groups also avoid one deeply nested list for very large files.
+export function leanSourceExpression(source) {
+	const chars=Array.from(source),parts=[];
+	for(let i=0;i<chars.length;i+=1024)parts.push(leanStringLiteral(chars.slice(i,i+1024).join('')));
+	if(!parts.length)return '""';
+	let level=parts;
+	while(level.length>1){const next=[];for(let i=0;i<level.length;i+=32)next.push('String.join ['+level.slice(i,i+32).join(', ')+']');level=next;}
+	return level[0];
+}
+
 /** The marker a probe uses to report a parse error, so a caller can tell its findings from noise. */
 export const SYNTAX_ERROR_MARKER = /syntax error at line \d+, column \d+/;
 
@@ -52,7 +64,7 @@ export function syntaxProbeSource(code) {
 open Lean
 
 run_cmd do
-  let src := ${leanStringLiteral(code)}
+  let src := ${leanSourceExpression(code)}
   let ictx := Parser.mkInputContext src "<your code>"
   let (_, ps, msgs) ← Parser.parseHeader ictx
   let pmctx : Parser.ParserModuleContext := { env := (← getEnv), options := (← getOptions) }

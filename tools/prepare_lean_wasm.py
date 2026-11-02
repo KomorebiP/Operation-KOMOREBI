@@ -128,6 +128,10 @@ def prepare(source, output, mathlib_archive):
     seeds=mathlib_seeds(collection);seed_groups=mathlib_seed_groups(collection)
     closures=mathlib_closures(mathlib_archive,{'all':seeds,**seed_groups})
     selected=closures['all']
+    # Exploratory sources and edited imports can use every compiler-matched
+    # module already published by upstream, while prepared workspaces stay small.
+    full_mathlib={p[:-6].replace('/','.') for p in upstream['files']
+                  if p.startswith('Mathlib/') and p.endswith('.olean')}
     layer=dict(leanCommit=LEAN,mathlibCommit=MATHLIB,version='komorebi-browser-pilot-2',files=[],packs=[])
     work_layers={key:dict(leanCommit=LEAN,mathlibCommit=MATHLIB,files=[],packs=[]) for key in seed_groups}
     covered=set()
@@ -141,7 +145,7 @@ def prepare(source, output, mathlib_archive):
                 groups[wanted['root']].append(entry);covered.add(path)
             name=path.removesuffix('.sig').removesuffix('.olean').removesuffix('.ir').replace('/','.')
             external=name.split('.')[0] not in {'Init','Lean','Std','Batteries','Mathlib'}
-            if external or name in selected and name.startswith('Mathlib.'):
+            if external or name in full_mathlib:
                 groups['Mathlib'].append(entry);layer['files'].append(path)
         if not any(groups.values()):continue
         receipt=remote_file('shared/'+item['file'],source_path,compressed)

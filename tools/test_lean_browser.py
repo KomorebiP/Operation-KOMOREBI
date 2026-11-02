@@ -5,6 +5,7 @@ import posixpath
 import tempfile
 from types import SimpleNamespace
 import unittest
+import zipfile
 
 from lean_browser import BASE, PAGE, WORKSPACES, build, verify, verify_runtime, action
 from prepare_lean_wasm import UPSTREAM, LEAN, MATHLIB, pack, mathlib_closure,mathlib_closures
@@ -39,6 +40,15 @@ class LeanBrowserTests(unittest.TestCase):
             name='lean-mathlib/workspaces/'+key+'.json';p=runtime/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(b'workspace fixture')
             files[name]=dict(size=p.stat().st_size,sha256=hashlib.sha256(p.read_bytes()).hexdigest())
         (runtime/'SOURCE.json').write_text(json.dumps(dict(upstream=UPSTREAM,lean=LEAN,mathlib=MATHLIB,files=files,bytes=sum(f['size'] for f in files.values()),mathlib_modules=mathlib_seeds(root),workspace_modules=groups)))
+        from lean_execution import identity
+        catalog=dict(sources=[dict(id=identity(p),path=p,work=r['work'],label=r['work'],url=r['url']) for p,r in records.items()],
+                     inputs={p:dict(sha256=r['sha256'],size=(root/p).stat().st_size,work=r['work']) for p,r in records.items()})
+        bundle=out/'downloads/komorebi-lean-runner.zip';bundle.parent.mkdir()
+        with zipfile.ZipFile(bundle,'w',compression=zipfile.ZIP_DEFLATED) as archive:
+            archive.writestr('CATALOG.json',json.dumps(catalog))
+            for p in records:archive.writestr('inputs/'+p,(root/p).read_bytes())
+        (out/'lean').mkdir(exist_ok=True)
+        (out/'lean/run.json').write_text(json.dumps(dict(bundle_sha256=hashlib.sha256(bundle.read_bytes()).hexdigest(),bundle_bytes=bundle.stat().st_size)))
         return SimpleNamespace(site=site,lean_works={k:list(v.values()) for k,v in works.items()}),list(records.values()),runtime
 
     def test_receipt_bound_sources_and_local_execution_record(self):
@@ -77,6 +87,7 @@ class LeanBrowserTests(unittest.TestCase):
         site=SimpleNamespace(rel=lambda target,page:target)
         self.assertIn('paper-x-residual',action(site,'index.html',source=WORKSPACES[0][3][0][1]))
         self.assertEqual(action(site,'index.html',source='unsupported.lean'),'')
+        self.assertIn('?file=',action(site,'index.html',source='retained.lean',retained=True))
 
     def test_remote_assets_must_use_the_pinned_public_source(self):
         with tempfile.TemporaryDirectory() as tmp:

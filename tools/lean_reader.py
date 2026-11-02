@@ -235,7 +235,7 @@ def source_controls(reader, record, text, page):
     from browser_lean import action
     body += action(site,page,source=record['repository_path'])
     from lean_browser import action as local_action
-    body += local_action(site,page,source=record['repository_path'])
+    body += local_action(site,page,source=record['repository_path'],retained=True)
     from lean_execution import action as run_action
     body += run_action(site,page,record['repository_path'])+'</nav>'
     body += scope(reader, work, page)
