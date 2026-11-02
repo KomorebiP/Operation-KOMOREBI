@@ -1,5 +1,12 @@
 # Technical publication package with checked coupled-functions block
 
+**2026-11-02 lower logarithmic growth companion:** SF-LEAN-B09 adds 16
+checked theorem declarations proving the explicit F.2 lower comparison for
+all R>=2, positive canonical coefficients and uniform growth-ratio lower
+bounds. The registered scope is 217 names, with actual I/O hashed. The upper
+comparison, formal liminf/limsup type bounds and asymptotic conclusions remain
+open. See `formalization/Block09/REPORT.md`. Earlier notes retain their scopes.
+
 **2026-11-02 positive-real comparison companion:** SF-LEAN-B08 adds 22
 checked declarations proving real-axis embeddings, positivity and linear
 lower bounds, real derivative equations, attained maximum-modulus identities,

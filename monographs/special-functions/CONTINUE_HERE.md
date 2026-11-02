@@ -1,56 +1,61 @@
 # Continue Special Functions formalization
 
-Current checkpoint: **SF-LEAN-B08**, based on repository commit
-`13e65505a1ce2de3ece418b22b93b38811573207`. Start with
-`formalization/Block08/REPORT.md`, its claim map, declaration map,
-self-review, I/O inventory and source-bound execution receipt.
+Current checkpoint: **SF-LEAN-B09**, based on repository commit
+`b672123ad852de103130420565a6c1e9645b63f5`. Start with
+`formalization/Block09/REPORT.md`, claim/declaration maps, self-review,
+I/O inventory and source-bound receipt.
 
-`lean/CoupledPositiveReal.lean` adds 22 declarations identifying the complex
-canonical functions with their convergent real series on the real axis.
-For R>=0, UReal(R),VReal(R)>=R; both are strictly increasing there. Their
-real derivative equations hold globally. The maximum complex norm on each
-nonnegative radius is attained at the corresponding real point and equals
-its real value. Both unit-shift product lower recurrences hold at R>=1,
-and their logarithmic forms at R>1. All child radii are >=2 at R>=B=1+2/m,
-where m=min(q,r,a,b)>0. These radius conditions are distinct.
+`lean/CoupledLowerGrowth.lean` adds 16 theorem declarations proving
+log(F_i(R)) >= c_minus*w_i*(R+C)^rho for every R>=2 and both actual canonical
+real functions. Here rho is the positive characteristic exponent, w its
+max-normalized positive right vector, Q=maxScale, m=minScale, B=1+2/m,
+C=Q/(1-Q), and c_minus=log(2)/(B+C)^rho. Each c_minus*w_i is strictly
+positive and uniformly bounds log(F_i(R))/R^rho below. The corresponding
+complex norm lower comparison is also proved. The closed-cap induction uses
+d=(1-Q)B+Q>0, includes endpoints, and works for every rho>0.
 
-The registered scope is 201 names, including supporting lemmas and the
-preceding 179 declarations. F.2's explicit lower and upper type bounds,
-radial exponent limit and type-vector proportions remain open.
+The registered scope is 217 names, including supporting lemmas and the
+preceding 201 names. The explicit lower comparison is complete. Formal
+liminf/limsup type bounds, the upper comparison, radial exponent limit and
+F.3 type-vector proportions remain open.
 
-Next executable target in `monograph/sections_v11/coupled_growth_full.tex`:
-prove log(F_i(R)) >= c_minus*w_i*(R+C)^rho for every R>=2, where
-Q=maxScale, C=Q/(1-Q), B=lowerThreshold,
-c_minus=log(2)/(B+C)^rho, rho is the positive characteristic exponent, and
-w is the max-normalized characteristic right vector from Block07.
-First prove the seed interval [2,B] using the linear lower bound and w_i<=1.
-Then prove p(R-1)+C>=p(R+C) for each scale p<=Q. Finally use
-d=(1-Q)*B+Q>0: for R>=B every child is >=2 and <=R-d. Simultaneous induction
-over closed intervals [2,B+n*d], with an Archimedean covering argument,
-should propagate both rows. Keep real powers, positivity and endpoints
-explicit. No explicit power/type comparison is yet formalized.
+Next executable target: `Explicit upper comparison` in
+`monograph/sections_v11/coupled_growth_full.tex`. First derive
+F_i(R)<=R*(1+UReal(pR)*VReal(p'R)) for R>=0 from the actual derivative
+equations and monotonicity (rows (q,r) and (a,b)). Establish F_i(1)<=2
+from the existing coefficient majorant. Then prove the simultaneous seed
+ladder R_k=Q^(-k), Z_0=2, Z_k=Q^(-k)*(1+Z_(k-1)^2), and its explicit
+logarithmic bound log(Z_N)<=W_N with
+W_N=(2^(N+1)-1)log(2)+(2^(N+1)-N-2)log(1/Q).
+Use `Convex.image_sub_le_mul_sub_of_deriv_le` on [0,R]; its pinned source
+is Mathlib/Analysis/Calculus/Deriv/MeanValue.lean:355. Block08 supplies the
+global real derivatives, origin values and monotone positive restrictions.
 
-Later establish upper type bounds, the radial exponent limit and type-vector
-proportions. Operator decoupling and broader coverage remain separate.
-Use the real-valued restrictions and the proved complex embeddings;
-do not introduce an ordered-field inequality on complex values.
+After that set Delta=log(1/m),
+D=max(log(1/(qr)),log(1/(ab)))+log(2), choose N with Q^(-N)>=3/m,
+and obtain the seed on t in [1,1+Delta]. Prove the delayed upper recurrence
+for G_i(t)=log(F_i(exp(t)))+t+D and propagate with positive delays in
+[log(1/Q),Delta]. Check all constants, logarithm domains and endpoints.
+Only then identify the real liminf/limsup types and prove the radial exponent
+limit. Operator decoupling and broader coverage are separate obligations.
 
-Replay with `tools/verify_coupled_positive_real.py`, Lean 4.34.0-rc2,
-Mathlib `aeb72f1e9981b6d35b426b16dca7759be3e7ba06`, and a fresh external
-directory. The pinned native Windows toolchain and imports are cached.
-The replay checks eight coupled modules and 39 steps, freshly axiom-auditing
-162 declarations and inheriting the finite core's 39-name evidence. Imported
-Mathlib is cached rather than freshly replayed; review is self-review.
+Replay `tools/verify_coupled_lower_growth.py` with Lean 4.34.0-rc2,
+Mathlib `aeb72f1e9981b6d35b426b16dca7759be3e7ba06`, and a new external
+directory. The native Windows toolchain and imports are cached. The replay
+has 42 steps over nine coupled modules, freshly axiom-auditing 178 declarations
+and inheriting the finite core's 39-name evidence. Imported Mathlib is not
+freshly rebuilt/replayed. Review is self-review.
 
-`formalization/Block08/IO_MANIFEST.json` inventories input/output hashes and
-unbundled generated object hashes. Source, audits, controls, verifier,
-correspondence maps, current status, catalogue and this continuation file
-are updated together. Immutable source manifests exclude live guidance.
+Block09/IO_MANIFEST.json inventories 35 inputs, 43 packaged outputs and nine
+unbundled generated objects with hashes. Source, audit, controls, verifier,
+correspondence, current status, catalogue and this file are updated together.
+Immutable source manifests exclude live guidance.
 
-The real-restriction/mean-value route succeeded. The FTC route is deferred
-for future integral estimates; the direct coefficient/binomial route is
-deferred for stronger unit-shift coefficient bounds. The Block07 report
-retains the characteristic result and older alternatives. No delegated or
-delayed runs remain. Preserve all eight blocks and dated guides, manuscript
-sources and reading PDFs. New proofs belong in a new block. The root package
-manifest remains an earlier release snapshot, not a current archive validation.
+The closed-cap route succeeded. First-failure/infimum proof is deferred for
+future continuity-based estimates; branching-tree proof is deferred for
+extensions needing explicit leaf weights. Their boundary/termination checks
+remain untried, not exhausted. Earlier block reports retain older alternatives.
+No delegated or delayed runs remain. Preserve all nine blocks and dated
+guides, manuscript sources and reading PDFs. New proofs belong in a new block.
+The root package manifest is an older release snapshot, not current archive
+validation.
