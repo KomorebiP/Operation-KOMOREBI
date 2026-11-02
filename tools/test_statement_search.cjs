@@ -1,6 +1,6 @@
 const assert = require('node:assert/strict');
 const {test} = require('node:test');
-const {search} = require('../website/assets/statement-search.js');
+const {search,readFilters,filterUrl} = require('../website/assets/statement-search.js');
 const entries = [
   {id:'a',kind:'theorem',name:'Theorem',number:'1.2',text:'Theorem 1.2: Finite support',labels:'thm:finite-support',hasProof:true},
   {id:'b',kind:'theorem',name:'Theorem',number:'1.20',text:'Theorem 1.20: Infinite support',labels:'thm:infinite',hasProof:true},
@@ -60,4 +60,22 @@ test('proof filter follows recorded links and preserves source order without mut
   assert.deepEqual(ids('66',true),[]);
   assert.deepEqual(ids('',false),['a','b','c','d','e','f']);
   assert.equal(JSON.stringify(entries),original);
+});
+
+test('paper finder URLs restore encoded queries and the explicit proof filter',()=>{
+  assert.deepEqual(readFilters('?q=Theorem+II.2.2&proof=1'),{query:'Theorem II.2.2',proofOnly:true});
+  assert.deepEqual(readFilters('?q=conj%3Aarithmetic_realization&proof=no'),{query:'conj:arithmetic_realization',proofOnly:false});
+  assert.deepEqual(readFilters(''),{query:'',proofOnly:false});
+});
+
+test('updating paper finder URLs preserves other parameters and anchors',()=>{
+  const href='https://example.test/read/paper-v/statements.html?lang=en&q=old&proof=1#main';
+  const updated=new URL(filterUrl(href,' Theorem E5.1 ',false));
+  assert.equal(updated.searchParams.get('q'),'Theorem E5.1');
+  assert.equal(updated.searchParams.has('proof'),false);
+  assert.equal(updated.searchParams.get('lang'),'en');
+  assert.equal(updated.hash,'#main');
+  const cleared=new URL(filterUrl(updated.href,' ',true));
+  assert.equal(cleared.searchParams.has('q'),false);
+  assert.equal(cleared.searchParams.get('proof'),'1');
 });

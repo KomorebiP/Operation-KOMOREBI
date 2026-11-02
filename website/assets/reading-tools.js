@@ -53,7 +53,7 @@
     container.prepend(form);apply();
   }
 
-  for (const [index, container] of Array.from(document.querySelectorAll('.statement-navigation')).entries()) {
+  for (const [index, container] of Array.from(document.querySelectorAll('.statement-navigation, .reading-statement-directory')).entries()) {
     const engine = window.KomorebiStatementSearch;
     if (!engine) continue;
     const entries = Array.from(container.querySelectorAll('[data-statement-entry]')).map(row => ({row,
@@ -61,10 +61,12 @@
       name:row.dataset.statementName,number:row.dataset.statementNumber,labels:row.dataset.statementLabels,
       hasProof:!!row.querySelector('.statement-proof-link')}));
     if (!entries.length) continue;
+    const directory = container.classList.contains('reading-statement-directory');
+    const groups = Array.from(container.querySelectorAll('.statement-chapter-group'));
     const form = element('form', undefined, 'reading-chapter-filter reading-statement-filter');
-    form.setAttribute('role','search');form.setAttribute('aria-label','Statements in this chapter');
+    form.setAttribute('role','search');form.setAttribute('aria-label',directory ? 'Statements in this paper' : 'Statements in this chapter');
     const id = 'reading-statement-query-'+index;
-    const label = element('label','Find a statement');label.htmlFor = id;
+    const label = element('label',directory ? 'Find a statement in this paper' : 'Find a statement');label.htmlFor = id;
     const input = element('input');input.id = id;input.type = 'search';input.autocomplete = 'off';
     input.placeholder = 'Title, number, type or source label';
     const clear = element('button','Clear');clear.type = 'reset';clear.hidden = true;
@@ -75,11 +77,22 @@
     const status = element('p',undefined,'reading-chapter-count');status.id = id+'-status';
     status.setAttribute('role','status');input.setAttribute('aria-describedby',status.id);
     form.append(label,input,clear,proofLabel,status);
-    function apply() {
+    function apply(updateUrl = true) {
       const found = new Set(engine.search(entries,input.value,proof.checked));
       for (const entry of entries) entry.row.hidden = !found.has(entry);
+      for (const group of groups) group.hidden = !Array.from(group.querySelectorAll('[data-statement-entry]')).some(row=>!row.hidden);
       clear.hidden = !input.value && !proof.checked;
       status.textContent = found.size ? found.size+' of '+entries.length+' statements' : 'No matching statements. Try fewer words or clear the filters.';
+      if (directory && updateUrl) {
+        try {
+          const url = engine.filterUrl(location.href,input.value,proof.checked);
+          if (url !== location.href) history.replaceState(history.state,'',url);
+        } catch {} // Searching still works when browser history is unavailable.
+      }
+    }
+    function restoreFilters() {
+      const filters = engine.readFilters(location.search);
+      input.value = filters.query;proof.checked = filters.proofOnly;apply(false);
     }
     function reset(focus = false) {input.value = '';proof.checked = false;apply();if (focus) input.focus();}
     form.addEventListener('submit',event=>{event.preventDefault();apply();});
@@ -88,11 +101,15 @@
     container.addEventListener('keydown',event=>{
       if (event.key === 'Escape' && (input.value || proof.checked)) {
         event.preventDefault();event.stopPropagation();reset();
-      } else if (event.key === 'Escape' && container.open) {
+      } else if (event.key === 'Escape' && !directory && container.open) {
         event.preventDefault();event.stopPropagation();container.open = false;container.querySelector('summary').focus();
       }
     });
-    container.querySelector('summary').after(form);apply();
+    container.querySelector(directory ? 'h2' : 'summary').after(form);
+    if (directory) {
+      window.addEventListener('pageshow',restoreFilters);window.addEventListener('popstate',restoreFilters);
+      restoreFilters();
+    } else apply();
   }
 
   const bibliography = document.querySelector('.reading-bibliography');

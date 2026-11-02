@@ -74,6 +74,17 @@ link. Choose the statement or its proof link to move keyboard focus to the
 passage. Escape clears the filters, then closes the statement list. The complete
 statement list and its links also work without JavaScript.
 
+Choose **Find statements** above a core paper's contents, chapter or bibliography
+to search across the whole paper. Results stay grouped under their chapter
+headings, including when several chapters use the same statement number.
+Choose a statement or **Read proof** to open that chapter at the passage.
+**Proof links only**, Clear and Escape work as in the chapter search. **All
+chapters** returns to the paper's full contents; **Switch paper** opens the
+other paper's statement finder. The full chapter groups and links remain
+available without JavaScript and when printing. Finder filters stay in the
+page address, so browser Back, refresh and sharing that address restore the
+same search. Changing the search does not add browser-history steps.
+
 **On this page** expands the current chapter's section list. **PDF, source &
 reading options** groups the secondary links by purpose. **Start reading** jumps
 past these controls to the text. All of these links and disclosures work with

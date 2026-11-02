@@ -69,6 +69,20 @@ class ReaderUsabilityTests(unittest.TestCase):
         self.assertIn('Text settings',result)
         self.assertNotIn('Keep reading',result)
 
+    def test_paper_finders_switch_between_finders_and_return_to_full_contents(self):
+        for work,config in BOOKS.items():
+            if not re.fullmatch(r'paper-[ivx]+',work):continue
+            body,enabled=enhance('<h1>Statements</h1>',f'read/{work}/statements.html')
+            self.assertTrue(enabled)
+            self.assertIn('<a href="index.html">All chapters</a>',body)
+            self.assertIn('aria-current="page"',body)
+            self.assertNotIn('Text settings',body)
+            for other in BOOKS:
+                if re.fullmatch(r'paper-[ivx]+',other):
+                    self.assertIn('statements.html' if other==work else f'../{other}/statements.html',Page(body).links)
+            chapter,_=enhance('<article id="chapter-text">Source article.</article>',config['chapters'][0]['url'])
+            self.assertIn('<a href="statements.html">Find statements</a>',chapter)
+
     def test_pdf_source_and_noncore_pages_are_unchanged(self):
         for page in ('read/paper-i/pdf.html','read/paper-i/source.html','read/index.html',
                      'collection/works/paper-i.html','read/monographs-special-functions/index.html'):
