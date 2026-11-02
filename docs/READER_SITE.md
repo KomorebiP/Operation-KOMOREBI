@@ -126,9 +126,9 @@ to check both complete editions, source changes, formula preservation and HTML
 structure. The normal site checker also checks their navigation and source links.
 
 Quantum and Circuits has an HTML selection at
-`read/monographs-quantum-and-circuits/`: all of chapters 1–7 in 72 topic pages,
-with 69 numbered statements, 39 written proofs, 38 original scientific figures
-in 39 manuscript appearances, six accessible tables, and 1,205 mathematical
+`read/monographs-quantum-and-circuits/`: all of chapters 1–12 in 100 topic pages,
+with 203 numbered statements, 90 written proofs, 70 original scientific figures
+in 73 manuscript appearances, 21 accessible tables, and 3,111 mathematical
 expressions. The contents page identifies the selection and links the rest of
 the volume and its sources. `tools/quantum_reading.py` translates the retained print wrappers;
 `tools/quantum_sections.json` binds complete source ranges, original identities,
@@ -137,16 +137,25 @@ intact. `tools/quantum_symmetry.py` retains the symmetry treatment's chapter-wid
 statement, equation and figure numbering, its scope panels, and all twelve open
 questions. The 21 numbered equations remain part of the complete mathematical
 sequence; identical longtable continuation headers appear once in HTML.
-The shared statement finder links written proofs without adding Lean
+`tools/quantum_catalytic.py` adds the complete catalytic treatment: 28 topic
+pages, 134 numbered statements, 51 proofs, 32 figures in 34 appearances,
+15 tables, six literal listings, and 1,906 mathematical expressions. The six
+numbered gates in the linear atom appear as separate displays, retaining their
+original equation numbers and source lines. The eight explicitly named proofs
+have links from their earlier statements and return links across chapter pages.
+The shared statement finder links all written proofs without adding Lean
 correspondences. This presentation adds no mathematical review or Lean replay.
 
 The arithmetic figure receipts and browser images are in
 `website/assets/figures/quantum-arithmetic/`; symmetry figures and receipts are in
-`website/assets/figures/quantum-symmetry/`. Reproduce them from the original
+`website/assets/figures/quantum-symmetry/`; catalytic figures are in
+`website/assets/figures/quantum-catalytic/`. Reproduce them from the original
 single-page PDFs with `python -B tools/render_quantum_figures.py` and
-`python -B tools/render_symmetry_figures.py`. Normal site builds check their
+`python -B tools/render_symmetry_figures.py`, plus
+`python -B tools/render_catalytic_figures.py`. Normal site builds check their
 source identities and publish the retained PNGs. Figure receipts default to one
-use; the symmetry compiler diagram explicitly records its two appearances. Run
+use; the symmetry compiler diagram and catalytic Pareto and packet diagrams
+explicitly record their two appearances. Run
 `python -B -m unittest discover -s tools -p 'test_quantum_reading.py' -v` for the
 complete selection, formula sequence, proof routes, tables and source anchors.
 

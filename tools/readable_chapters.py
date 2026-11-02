@@ -194,6 +194,7 @@ NUMBERED = {'definition', 'theorem', 'proposition', 'lemma', 'corollary', 'remar
 NUMBERED.update('hist'+kind for kind in ('theorem','proposition','lemma','corollary','definition','example','remark','standardfact'))
 NUMBERED.add('numericalcertificate')
 NUMBERED.update({'principle','question'})
+NUMBERED.update({'algorithm','protocol'})
 KIND_NAMES = {'classical':'Classical input','statement':'Supplementary statement','standardfact':'Standard fact','certificate':'Numerical certificate','text':'Passage','roadmap':'Formalization target','classicalinput':'Classical input'}
 KIND_NAMES.update({'hist'+kind:'Historical '+('standard fact' if kind=='standardfact' else kind)
                   for kind in ('theorem','proposition','lemma','corollary','definition','example','remark','standardfact')})
@@ -237,7 +238,7 @@ def presentation_tex(text):
     text = re.sub(r'\\renewcommand\{\\arraystretch\}\{[0-9.]+\}', mask, text)
     text = re.sub(r'\\startreadingpart\{([^{}]+)\}', r'\\part{\1}', text)
     text = re.sub(r'\\(?:begin|end)\{center\}|\\begin\{multicols\}\{2\}|\\end\{multicols\}', mask, text)
-    text = re.sub(r'\\addcontentsline\{toc\}\{(?:section|part)\}\{[^{}]*\}', mask, text)
+    text = re.sub(r'\\addcontentsline\{toc\}\{(?:section|part|chapter)\}\{[^{}]*\}', mask, text)
     text = re.sub(r'\\fontsize\{[\d.]+\}\{[\d.]+\}|\\setstretch\{[\d.]+\}|\\selectfont\b', mask, text)
     text = re.sub(r'\\setlength\{\\(?:parindent|parskip)\}\{[^{}]*\}', mask, text)
     text = re.sub(r'\\(?:begin|end)\{document\}|\\(?:KomorebiCover|tableofcontents|listoffigures|listoftables)\b|\\pagenumbering\{arabic\}', mask, text)
@@ -1159,6 +1160,14 @@ def reading_options(description=None):
             '<p><a href="#chapter-text">Skip contents and start reading</a></p>')
 
 
+def written_proof_href(chapter,identifier,prefix=''):
+    target=getattr(chapter,'proof_routes',{}).get(identifier)
+    if target:
+        return posixpath.normpath(posixpath.join(posixpath.dirname(prefix),chapter.relative(target)))
+    target=getattr(chapter,'proof_pairs',{}).get(identifier)
+    return prefix+'#'+target if target else None
+
+
 def statement_entries(chapter,rows,prefix=''):
     """Retain the same numbered records and proof routes in either index."""
     records=[node for node in chapter.nodes if node['kind'] in NUMBERED]
@@ -1177,8 +1186,8 @@ def statement_entries(chapter,rows,prefix=''):
             proof=by_line.get(row['proof_line'])
             if not proof or proof['kind']!='proof': raise ValueError('Statement index has no recorded proof target: '+name)
             body+=' <a class="statement-proof-link" href="'+html.escape(prefix,quote=True)+'#'+proof['id']+'" aria-label="Read proof of '+html.escape(name,quote=True)+'">Read proof</a>'
-        elif node['id'] in getattr(chapter,'proof_pairs',{}):
-            body+=' <a class="statement-proof-link" href="'+html.escape(prefix,quote=True)+'#'+chapter.proof_pairs[node['id']]+'" aria-label="Read proof of '+html.escape(name,quote=True)+'">Read proof</a>'
+        elif proof_href:=written_proof_href(chapter,node['id'],prefix):
+            body+=' <a class="statement-proof-link" href="'+html.escape(proof_href,quote=True)+'" aria-label="Read proof of '+html.escape(name,quote=True)+'">Read proof</a>'
         body+='</li>'
     return body
 
@@ -1251,7 +1260,7 @@ def render_book(reader,book):
         level=2
         for node in chapter.nodes:
             kind=node['kind']
-            label=(node['number']+' '+node['title']).strip() if kind in HEADINGS else (KIND_NAMES.get(kind,kind.capitalize())+' '+node['number']+(': '+node['title'] if node['title'] else '')).strip()
+            label=node.get('display_title') or ((node['number']+' '+node['title']).strip() if kind in HEADINGS else (KIND_NAMES.get(kind,kind.capitalize())+' '+node['number']+(': '+node['title'] if node['title'] else '')).strip())
             source_link=reader.resolve(source,page,'L'+str(node['line']))
             links='<a href="#'+node['id']+'">Permalink</a> · <a href="'+source_link+'">Source line '+str(node['line'])+'</a>'
             reading_links=related_reading_links(chapter,node['id'])
@@ -1338,11 +1347,13 @@ def render_book(reader,book):
             else:
                 row=rows.get(node['line']) or proof_rows.get(node['line'])
                 pairs=getattr(chapter,'proof_pairs',{})
-                if not row and node['id'] in pairs:
-                    reading_links=' · '.join(filter(None,['<a href="#'+pairs[node['id']]+'">Read proof</a>',reading_links]))
+                if not row and (proof_href:=written_proof_href(chapter,node['id'])):
+                    reading_links=' · '.join(filter(None,['<a href="'+e(proof_href,quote=True)+'">Read proof</a>',reading_links]))
                 if not row and kind=='proof':
                     parent=next((key for key,value in pairs.items() if value==node['id']),None)
-                    if parent:reading_links=' · '.join(filter(None,['<a href="#'+parent+'">Back to statement</a>',reading_links]))
+                    target=getattr(chapter,'proof_returns',{}).get(node['id'])
+                    back=chapter.relative(target) if target else '#'+parent if parent else None
+                    if back:reading_links=' · '.join(filter(None,['<a href="'+e(back,quote=True)+'">Back to statement</a>',reading_links]))
                 if row:
                     links+=' · <a href="'+site.rel('claims.html',page)+'#'+row['id'].lower()+'">Claim record</a>'
                     other=row['statement_line'] if kind=='proof' else row['proof_line']
@@ -1364,7 +1375,7 @@ def render_book(reader,book):
                 plain,aliases=plain_math(re.sub(r'\\label\{[^}]+\}','',node['body']).replace('$',''))
                 parent=next((n['title'] for n in reversed(headings) if n['line']<=node['line']),spec['title'])
                 literal_derivation=kind=='verbatim' and config.get('literal_derivations')
-                search_title=(parent+' / '+('Algorithm' if kind=='lstlisting' else 'Literal derivation' if literal_derivation else 'Commands' if kind=='verbatim' else 'Passage at line '+str(node['line']))) if kind in {'text','lstlisting','verbatim'} else label
+                search_title=node.get('search_title') or ((parent+' / '+('Algorithm' if kind=='lstlisting' else 'Literal derivation' if literal_derivation else 'Commands' if kind=='verbatim' else 'Passage at line '+str(node['line']))) if kind in {'text','lstlisting','verbatim'} else label)
                 item=dict(title=config['label']+' / '+typography(search_title),group='Collection',kind='Code' if kind in {'lstlisting','verbatim'} and not literal_derivation else ('Written proofs' if kind=='proof' else 'Papers and source'),work_ids=[work],url=page+'#'+node['id'],text=parent+' '+plain+' '+aliases,preview=plain[:240] or label)
                 # Preview prose only when it has no list/table/input syntax.
                 snippet=re.split(r'\\\[|\\begin',node['body'],maxsplit=1)[0]
