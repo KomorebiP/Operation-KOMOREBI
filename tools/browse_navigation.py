@@ -193,6 +193,8 @@ class Browser:
                 links.insert(0,'[Read online: chapters, figures and proof links](https://KomorebiP.github.io/Operation-KOMOREBI/read/'+c['id']+'/index.html)')
             if title=='Read' and c['id']=='paper-vi':
                 links.insert(1,'[Worked visual atlas: all 42 HTML plates](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vi/atlas/index.html)')
+            if title=='Read' and c['id']=='paper-v':
+                links.insert(1,'[Worked visual atlas: all 40 HTML plates](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-v/atlas/index.html)')
             if title=='Read' and c['id']=='paper-vii':
                 links.insert(1,'[Worked visual atlas: all 40 HTML plates](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vii/atlas/index.html)')
             if title=='Read' and c['id']=='paper-viii':

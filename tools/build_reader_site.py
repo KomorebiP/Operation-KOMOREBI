@@ -68,6 +68,7 @@ def site_navigation(page):
                   ('Physics collection', 'collection/PHYSICS_COLLECTION.html'),
                   ('Special Functions', 'collection/SPECIAL_FUNCTIONS.html'),
                   ('Papers and PDFs', 'documents.html'),
+                  ('Core visual guides', 'read/visual-guides.html'),
                   ('Read side by side', 'side-by-side.html'),
                   ('Worked examples', 'collection/HAND_WORKED_EXAMPLES.html')]),
         ('Look up', [('Claims', 'claims.html'),

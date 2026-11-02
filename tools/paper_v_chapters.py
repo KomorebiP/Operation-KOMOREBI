@@ -1,7 +1,7 @@
 """The retained Paper V monograph's contiguous reading ranges.
 
 The 33 main sections, four appendices and three orientation pages retain the
-original source lines. The forty-plate atlas remains linked in the original PDF.
+original source lines. The forty-plate atlas has a separate HTML reading route.
 """
 BASE = 'papers/paper-v/current/editable/traditional/'
 MAIN = BASE+'Paper_V_Traditional_Final.tex'
@@ -63,4 +63,8 @@ BOOK = dict(work='paper-v', label='Paper V', base=BASE, main=MAIN,
             required_macros=['Pcal','Qcal','Rcal','Scal','id','bbC','bbZ'],
             figure_descriptions='website/paper-v-figure-descriptions.json',
             figure_receipts='assets/figures/paper-v/figures.json',
-            pdf_inputs={'atlas-pages.tex':'Read the forty worked visual plates in the PDF'})
+            atlas_index='read/paper-v/atlas/index.html',
+            atlas_link_text='Explore all 40 worked atlas plates in HTML',
+            reading_note='The complete forty-plate atlas has original drawings, selectable equations and TikZ labels, and links to the manuscript passages it illustrates. The source wording, mathematics and recorded evidence limits are retained.',
+            html_inputs={'atlas-pages.tex':dict(url='read/paper-v/atlas/index.html',
+                title='Explore all 40 worked atlas plates in HTML',note='')})

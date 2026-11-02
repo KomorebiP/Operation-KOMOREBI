@@ -1103,10 +1103,12 @@ def render_reading_index(reader):
            'MathJax provides equation exploration and assistive reading options through its context menu.</p>'
            '<p>All twelve core papers have HTML reading editions that follow the retained manuscripts. '
            '<a href="'+site.rel('read/paper-iv/atlas/index.html',page)+'">Paper IV’s 26 atlas plates</a> also have HTML pages with drawings, descriptions, and tables. '
+           'Paper V’s complete 40-plate atlas has HTML drawings, descriptions, and selectable TikZ labels. '
            'Paper VI’s complete 42-plate atlas has HTML drawings, descriptions, and selectable labels. '
            'Paper VII’s complete 40-plate atlas has HTML drawings, descriptions, and selectable labels. '
            'Companion and atlas coverage varies by work; original visual atlases remain available in the PDFs. '
-           'See <a href="'+site.rel('collection/ACCESSIBILITY.html',page)+'">accessibility and reading options</a> for current coverage and limitations.</p>'
+           'See <a href="'+site.rel('read/visual-guides.html',page)+'">visual guides for all twelve core papers</a> or '
+           '<a href="'+site.rel('collection/ACCESSIBILITY.html',page)+'">accessibility and reading options</a> for current coverage and limitations.</p>'
            '<p><a href="'+site.rel('documents.html',page)+'">Browse all papers and PDFs</a> · '
            '<a href="'+site.rel('collection/READING_ROUTES.html',page)+'">Choose a reading route</a></p>')
     site.page(page,'Reading library',body)
