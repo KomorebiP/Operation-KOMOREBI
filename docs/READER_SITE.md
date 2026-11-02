@@ -976,6 +976,36 @@ specified configurations and 54,108 budget cases using NumPy FFT/IFFT and
 explicit Haar support vectors. Its report records the tested range and
 numerical errors; it does not change manuscript or proof status.
 
+## Interactive Lean pilot
+
+`lean/playground.html` embeds the official `live.lean-lang.org` editor only
+after a visitor presses **Load Lean editor**. A normal external link works
+without site JavaScript and is also the fallback for blocked frames or failed
+connections. The editor runs Lean on that external service; it is not a local
+WebAssembly compiler. Code entered in the editor is sent to that service.
+
+The single starting example is Paper XII's complete retained
+`PaperXII/LocalIdempotents.lean` (Proposition 3.4). `tools/browser_lean.py` takes
+its bytes through the reader's receipt checks and appends only a labelled
+`#check` command. `lean/playground.json` records the source identity, appended
+command, service and project. Downloads and scientific sources remain unchanged.
+Links appear in Inspect Lean, the Paper XII source directory and the selected
+file; other modules do not acquire an unsupported run button.
+
+The `MathlibDemo` service project tracks its own Lean/Mathlib environment.
+Its displayed version is authoritative for that session; the example is not
+a replay of the paper's lockfile or the entire project. The parent page never
+converts an iframe load into a proof-success indicator. Lean's own diagnostics,
+including unfinished-proof warnings, remain inside the editor. Restoring or
+closing the frame discards edits and releases the session. No new verification
+status is assigned by the site build. To change the pilot source, update its
+explicit selection and recheck both the valid proof and a deliberately broken
+proof against the live service in the embedded frame.
+
+CI runs `test_browser_lean.py` and `test_browser_lean.cjs`. The site verifier
+checks the exact source checksum, the complete encoded editor input and the
+absence of an automatically loaded external frame.
+
 ## Paper navigation
 
 Paper, source and PDF pages keep the overview, chapter contents, visual atlas
