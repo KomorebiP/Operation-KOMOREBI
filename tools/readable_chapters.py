@@ -171,6 +171,9 @@ BOOKS[SPECIAL_FUNCTIONS_BOOK['work']] = SPECIAL_FUNCTIONS_BOOK
 from proof_path_reading import BOOK as PROOF_PATH_BOOK, CHAPTERS as PROOF_PATH_CHAPTERS
 BOOKS[PROOF_PATH_BOOK['work']] = PROOF_PATH_BOOK
 CHAPTERS += PROOF_PATH_CHAPTERS
+from foundational_reading import BOOKS as FOUNDATIONAL_BOOKS, CHAPTERS as FOUNDATIONAL_CHAPTERS
+BOOKS.update(FOUNDATIONAL_BOOKS)
+CHAPTERS += FOUNDATIONAL_CHAPTERS
 BY_SOURCE = {c['source']:c for c in reversed(CHAPTERS)}
 NUMBERED = {'definition', 'theorem', 'proposition', 'lemma', 'corollary', 'remark', 'example', 'standardfact', 'certificate','boundary','roadmap','construction','classicalinput','classical','conjecture','problem','warning'}
 NUMBERED.update('hist'+kind for kind in ('theorem','proposition','lemma','corollary','definition','example','remark','standardfact'))
@@ -180,7 +183,7 @@ KIND_NAMES.update({'hist'+kind:'Historical '+('standard fact' if kind=='standard
                   for kind in ('theorem','proposition','lemma','corollary','definition','example','remark','standardfact')})
 KIND_NAMES['numericalcertificate']='Numerical certificate'
 HEADINGS = {'part':2,'section':2,'subsection':3,'subsubsection':4,'paragraph':5}
-MATH_PATTERN = re.compile(r'(?<!\\)\$(.*?)(?<!\\)\$|\\\[(.*?)\\\]|(\\begin\{align\*\}.*?\\end\{align\*\})|\\\((.*?)\\\)',re.S)
+MATH_PATTERN = re.compile(r'(?<!\\)\$(.*?)(?<!\\)\$|(?<!\\)\\\[(.*?)\\\]|(\\begin\{align\*\}.*?\\end\{align\*\})|(?<!\\)\\\((.*?)\\\)',re.S)
 PANELS = {'keyidea': 'The central idea', 'interpretation': 'How to read the result',
           'readerroadmap': 'Reader roadmap', 'microexample': 'Running example',
           'hypothesisguide': 'Why the hypotheses matter', 'sectionrecap': 'Section recap',
@@ -625,6 +628,8 @@ class Chapter:
                         label = node.get('reference_label') or KIND_NAMES.get(node['kind'],node['kind'].capitalize())+' '+node['number']
                         if name in {'ref','eqref'} and node.get('plain_reference_label'):
                             label=node['plain_reference_label']
+                        if name=='eqref' and node.get('equation_number'):
+                            label='('+node['equation_number']+')'
                         url = self.relative(node.get('url',''))+'#'+node['id']
                         links.append('<a href="'+url+'" title="'+html.escape(typography(node['title']),quote=True)+'">'+label+'</a>')
                     out.append(', '.join(links))
@@ -836,7 +841,9 @@ def prepare(reader):
     reader.readable_books={}
     for work,config in BOOKS.items():
         if config.get('custom_reader'):
-            if config['custom_reader'] == 'proof_path':
+            if config['custom_reader'] == 'foundational':
+                from foundational_reading import prepare_book
+            elif config['custom_reader'] == 'proof_path':
                 from proof_path_reading import prepare_book
             elif config['custom_reader'] == 'paper_ix':
                 from paper_ix_reading import prepare_book
@@ -1128,6 +1135,8 @@ def statement_entries(chapter,rows,prefix=''):
             proof=by_line.get(row['proof_line'])
             if not proof or proof['kind']!='proof': raise ValueError('Statement index has no recorded proof target: '+name)
             body+=' <a class="statement-proof-link" href="'+html.escape(prefix,quote=True)+'#'+proof['id']+'" aria-label="Read proof of '+html.escape(name,quote=True)+'">Read proof</a>'
+        elif node['id'] in getattr(chapter,'proof_pairs',{}):
+            body+=' <a class="statement-proof-link" href="'+html.escape(prefix,quote=True)+'#'+chapter.proof_pairs[node['id']]+'" aria-label="Read proof of '+html.escape(name,quote=True)+'">Read proof</a>'
         body+='</li>'
     return body
 
@@ -1284,6 +1293,12 @@ def render_book(reader,book):
                 body+='<section id="'+node['id']+'"><pre tabindex="0" aria-label="'+listing_label+'"><code>'+e(node['body'].strip('\n'))+'</code></pre>'+passage_links(links)+'</section>'
             else:
                 row=rows.get(node['line']) or proof_rows.get(node['line'])
+                pairs=getattr(chapter,'proof_pairs',{})
+                if not row and node['id'] in pairs:
+                    reading_links=' · '.join(filter(None,['<a href="#'+pairs[node['id']]+'">Read proof</a>',reading_links]))
+                if not row and kind=='proof':
+                    parent=next((key for key,value in pairs.items() if value==node['id']),None)
+                    if parent:reading_links=' · '.join(filter(None,['<a href="#'+parent+'">Back to statement</a>',reading_links]))
                 if row:
                     links+=' · <a href="'+site.rel('claims.html',page)+'#'+row['id'].lower()+'">Claim record</a>'
                     other=row['statement_line'] if kind=='proof' else row['proof_line']
@@ -1319,7 +1334,10 @@ def render_book(reader,book):
         body+='<details class="document-provenance"><summary>Source and conversion record</summary><p>Source SHA-256: <code>'+reader.records[source]['sha256']+'</code></p><p>Unsupported prose commands stop the build. The mathematical expression sequence is checked against the source, with manuscript macros expanded for display.</p><p><a href="'+site.rel('documents/readable-chapters.json',page)+'">Conversion records</a></p></details>'
         site.page(page,title,body)
         expressions=original_math(chapter_text(raw.decode('utf-8-sig'),spec))
-        if config.get('custom_reader')=='proof_path':
+        if config.get('custom_reader')=='foundational':
+            from foundational_reading import source_math
+            expressions=source_math(raw.decode('utf-8-sig'),spec)
+        elif config.get('custom_reader')=='proof_path':
             from proof_path_reading import source_math
             expressions=source_math(book['main'],spec)
         elif config.get('custom_reader')=='paper_ix':
