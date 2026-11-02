@@ -75,6 +75,7 @@ These files include test contracts, source records, run outputs, publication rec
 - [manifests/reader-proofreading-papers-v-vi-2026-11-01.json](../manifests/reader-proofreading-papers-v-vi-2026-11-01.json)
 - [manifests/reader-proofreading-paper-vii-2026-11-01.json](../manifests/reader-proofreading-paper-vii-2026-11-01.json)
 - [manifests/reader-proofreading-paper-viii-2026-11-01.json](../manifests/reader-proofreading-paper-viii-2026-11-01.json)
+- [manifests/reader-proofreading-paper-ix-2026-11-01.json](../manifests/reader-proofreading-paper-ix-2026-11-01.json)
 
 ## Reading and updating a record
 
