@@ -351,7 +351,8 @@ class QuantumReadingTests(unittest.TestCase):
                 self.assertIn(term,markup)
             self.assertNotIn('Source: preamble.tex',markup)
             self.assertIn('Appendix F.',(output/BOOK['index']).read_text(encoding='utf-8'))
-            self.assertNotIn('source-continuations',(output/BOOK['index']).read_text(encoding='utf-8'))
+            self.assertIn('id="source-continuations"',(output/BOOK['index']).read_text(encoding='utf-8'))
+            self.assertNotIn('Continue in the manuscript sources',(output/BOOK['index']).read_text(encoding='utf-8'))
             self.assertEqual(sum(e['title'].startswith(BOOK['label']+' / Formal type ') for e in reader.site.search),115)
             for spec in CHAPTERS:
                 markup=(output/spec['url']).read_text(encoding='utf-8')

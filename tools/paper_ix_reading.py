@@ -21,7 +21,11 @@ BOOK=dict(work=WORK,label='Paper IX',base=BASE,main=MAIN,bib=MAIN,inline_bibliog
     require_table_reading_aids=True,table_reading_aids={},
     reading_introduction='Read the complete arithmetic and strengthening chapters, the lifting and analytic '
         'development, and all five mathematical appendices. Historical checkpoints retain their dated scope. '
-        'The worked visual atlas remains in the complete PDF.')
+        'The complete visual guide and eight worked arithmetic and lifting examples also have HTML sections.',
+    atlas_index=PREFIX+'atlas/index.html',atlas_link_text='Explore all 23 visual sections in HTML',
+    atlas_note='With 20 original figures, descriptions, selectable labels and recorded data tables.',
+    reading_note='The complete visual guide includes 15 explanations and eight worked arithmetic and lifting examples in HTML.',
+    html_inputs={'../worked_atlas.tex':dict(url=PREFIX+'atlas/index.html#s16',title='Read the eight worked arithmetic and lifting examples',note='')})
 _table_path=Path(__file__).with_name('paper_ix_tables.json')
 if _table_path.is_file():
     BOOK['table_reading_aids']={(r['source'].removeprefix(BASE),r['id']):
@@ -73,7 +77,7 @@ def source_math(source,spec):
 
 
 def source_specs(load):
-    """Require the complete authored input graph, with only the atlas in PDF."""
+    """Require the complete manuscript graph; the shared atlas has its own HTML route."""
     from readable_chapters import clean_tex,chapter_text
     seen=[]
     def visit(path):

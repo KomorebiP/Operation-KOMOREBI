@@ -16,7 +16,7 @@ HTML status follows the maintained reading configuration; PDF destinations
 and hashes come from the existing source receipts. Paper I's visual atlas is
 inside its main monograph. The other eleven have separate visual-guide PDFs.
 
-The [current inventory](../verification/reader-visual-guides/2026-11-02-paper-viii.json)
+The [current inventory](../verification/reader-visual-guides/2026-11-02-paper-ix.json)
 checks the committed visual sources against their receipts and identifies the
 remaining ports. Counts below describe source units, which vary by guide;
 they are not counts of theorems or PDF pages. The
@@ -33,13 +33,13 @@ the earlier four-atlas snapshot.
 | VI | 42 plates | Complete |
 | VII | 40 plates | Complete |
 | VIII | 32 plates across two inputs | Complete |
-| IX | 15 sections | Pending |
+| IX | 23 sections across two inputs, plus a generated coefficient input | Complete |
 | X | 30 plates | Pending |
 | XI | 47 lessons | Pending |
 | XII | 27 plates | Pending |
 
-Papers I–VIII now have complete HTML visual atlases. The remaining ports are
-IX–XII. Papers IX and XI need their own section and lesson conversions. Papers X and XII need explicit handling of their
+Papers I–IX now have complete HTML visual guides. The remaining ports are
+X–XII. Paper XI needs its own lesson conversion. Papers X and XII need explicit handling of their
 conditional and evidence boundaries. Each port should preserve prose,
 equations, drawing labels and manuscript links before its status is promoted.
 
@@ -195,7 +195,8 @@ map are in `tools/quantum_sections.json`. Recheck the PDF map with `python -B to
 (using the same PDFium dependency as the figure helpers). The volume guide routes all 21
 chapters and six appendices to their first HTML topics. Literal code bodies
 are protected before any print-wrapper translation, and source lines remain
-unchanged. The complete sequence has 207 pages including references.
+unchanged. The complete sequence has 207 pages including references. The former
+`#source-continuations` bookmark remains an alias for the complete contents.
 The shared statement finder links all written proofs without adding Lean
 correspondences. This presentation adds no mathematical review or Lean replay.
 
@@ -490,8 +491,37 @@ proof assessment, Lean replay or new hardware measurement.
 has 56 reading pages and a bibliography. The route covers all 13 main sections,
 the edition summary and all five mathematical appendices. It retains 5,252
 mathematical expressions, 153 proof environments, 14 manuscript figures,
-33 tables and all 27 bibliography entries. The worked visual atlas remains
-in the PDF. Historical headings and checkpoint notices keep their source scope.
+33 tables and all 27 bibliography entries. Historical headings and checkpoint
+notices keep their source scope.
+
+The [complete visual guide](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-ix/atlas/index.html)
+has 23 HTML sections, 20 original figures, 278 mathematical expressions, six
+source tables and 35 manuscript routes with return links. The entrypoint
+`sources/visual.tex` includes both `visual_body.tex` and `worked_atlas.tex`;
+the latter includes the generated Newton coefficients. The older retained
+`visual_README.md` still describes 15 sections and 12 figures. The audit follows
+the actual input graph and checks the retained 25-page PDF instead of using that
+stale inventory. All imported source bytes remain unchanged.
+
+`tools/paper_ix_atlas.py` preserves source wording, captions, mathematical
+sequences and line anchors. Figure math labels are read from the retained
+generator's Python AST without executing it. Other native figure labels are
+selectable PDF text, with descriptions and semantic data tables for reading
+order. Tables project the retained exact records, including every residue in
+the four displayed periods. The 5,490 illustration assertions and 463 worked
+example checks are inherited records, not executions performed by this port.
+Manuscript targets are reconstructed using the manuscript reader's own
+normalization and printed-label map. `documents/paper-ix-atlas.json` records
+these bindings and the stale README count.
+
+Run `python -B tools/render_paper_ix_atlas.py` with pypdfium2 to check all 23
+PDF section titles and render the 20 retained vector figures. Normal builds
+use frozen images and extraction receipts without PDF or TeX dependencies.
+Run `python -B -m unittest discover -s tools -p 'test_paper_ix_atlas.py' -v`
+for source coverage, formula preservation, transcripts, data tables and
+two-way manuscript links. The mathematical proofreading self-review covers the
+presentation, captions and labels; this port adds no mathematical proof audit,
+new example execution or Lean replay.
 
 The [chapter map](../tools/paper_ix_sections.json) fixes the reading ranges;
 the [conversion module](../tools/paper_ix_reading.py) checks the complete input

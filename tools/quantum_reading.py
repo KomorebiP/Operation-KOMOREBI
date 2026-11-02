@@ -20,6 +20,7 @@ BOOK=dict(work=WORK,label='Quantum and Circuits',title='Quantum and Circuits: Ar
     index=PREFIX+'index.html',bib_page=PREFIX+'references.html',chapters=CHAPTERS,
     custom_reader='quantum',partial=False,main_chapters=21,required_macros=[],
     reader_controls=True,statement_navigation=True,numbered_bibliography=True,
+    contents_anchors=['source-continuations'],
     bibliography_introduction='These collected entries accompany all four mathematical treatments, in their original order and numbering.',
     figure_receipts='assets/figures/quantum-arithmetic/figures.json',
     table_reading_aids={(t['source'].removeprefix(BASE),t['id']):t['aid'] for t in DATA['tables']},

@@ -1095,7 +1095,7 @@ def render(reader):
             render_special_functions(reader,book)
         else:
             reports.extend(render_book(reader,book))
-    reader.site.write('documents/readable-chapters.json',json.dumps(reports,ensure_ascii=False,indent=2)+'\n')
+    reader.site.write('documents/readable-chapters.json',json.dumps(reports,ensure_ascii=False,separators=(',',':'))+'\n')
     render_reading_index(reader)
     from reading_navigation import publish_record
     publish_record(reader.site,BOOKS)
@@ -1130,6 +1130,7 @@ def render_reading_index(reader):
            'Paper VI’s complete 42-plate atlas has HTML drawings, descriptions, and selectable labels. '
            'Paper VII’s complete 40-plate atlas has HTML drawings, descriptions, and selectable labels. '
            'Paper VIII’s complete 32-plate atlas has HTML drawings, descriptions, and selectable labels. '
+           'Paper IX’s complete 23-section visual guide includes 20 original figures and eight worked examples. '
            'Companion and atlas coverage varies by work; original visual atlases remain available in the PDFs. '
            'See <a href="'+site.rel('read/visual-guides.html',page)+'">visual guides for all twelve core papers</a> or '
            '<a href="'+site.rel('collection/ACCESSIBILITY.html',page)+'">accessibility and reading options</a> for current coverage and limitations.</p>'
@@ -1450,6 +1451,7 @@ def render_book_index(reader,book,reports):
     introduction=(config.get('reading_introduction') or 'Read the '+str(config['main_chapters'])+' main manuscript chapters in order, or choose a topic below.')
     body='<p class="eyebrow">Read '+label+'</p><h1>'+html.escape(config['title'])+'</h1><p>'+html.escape(introduction)+'</p>'+reader.work_routes(work,page)
     body+='<p class="reading-start"><a class="button" href="'+site.rel(config['chapters'][0]['url'],page)+'">Start reading</a></p>'
+    for anchor in config.get('contents_anchors',[]):body+='<span id="'+html.escape(anchor,quote=True)+'"></span>'
     body+='<nav class="chapter-contents reading-contents-index" aria-label="'+label+' chapters"><h2>Contents</h2>'
     body+=contents_list(config,page)+'</nav>'
     for collected in config.get('collected_parts',[]):
