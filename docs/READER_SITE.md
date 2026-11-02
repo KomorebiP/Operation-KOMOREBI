@@ -777,6 +777,16 @@ reconstructions and all signed values. Mismatched data disables these views and
 exports. The workspace tests cover starters and an exact zero-versus-full
 sample-coordinate fixture for the comparison values and CSV signs.
 
+Comparison links use a bounded, versioned UTF-8 payload in the `#compare=`
+fragment. The payload contains exactly two validated named settings records,
+one of the three plot views, and an in-range comparison address. Results are
+recomputed and the data-compatibility guard is checked on restoration. The
+preview is separate from notebook storage and works even when the notebook is
+full. Saving both runs is an explicit append action and requires two free slots.
+Closing a preview restores notebook selection; ordinary experiment links omit
+the comparison fragment. Malformed comparison links preserve the current valid
+experiment and notebook. Clipboard failure exposes a selectable link field.
+
 The lab compares averaging-normalized Haar wavelets with their support
 weights, an orthonormal DCT-II, and sample coordinates. Seeded bounded integer
 noise, equal coefficient budgets, three selection policies, full budget/error

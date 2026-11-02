@@ -93,3 +93,28 @@ test('comparison exports reject different data and cover the largest supported s
   const large=m.experiment({...m.defaults(),n:256});assert.equal(w.compareRuns(large,large).rows.length,256);
   assert.equal(w.comparisonCsv(large,large).trim().split('\n').length,257);
 });
+
+test('comparison links round-trip both bounded runs, Unicode names, views and boundary addresses',async()=>{
+  const w=await workspace,m=await core;
+  for(const n of m.SIZES)for(const view of ['overlay','error','difference']) {
+    const base={...m.defaults(),n,shape:'custom',custom:Array.from({length:n},(_,i)=>i%2?-64:64),noise:16,seed:4294967295,budget:n,address:n-1,coefficient:n-1};
+    const raw={v:1,entries:[{label:'波形 A 🟢',settings:base},{label:'Cosinus é · B',settings:{...base,basis:'cosine',budget:0}}],view,address:n-1};
+    const encoded=w.encodeComparison(raw);assert.ok(encoded.length<=8192);assert.match(encoded,/^[A-Za-z0-9_-]+$/);
+    assert.deepEqual(w.decodeComparison(encoded),raw);
+    const copy=w.decodeComparison(encoded);copy.entries[0].settings.custom[0]=0;assert.equal(w.decodeComparison(encoded).entries[0].settings.custom[0],64);
+  }
+  const boundary={v:1,entries:w.starterRuns('edges'),view:'overlay',address:0};assert.deepEqual(w.decodeComparison(w.encodeComparison(boundary)),boundary);
+});
+
+test('comparison links reject malformed or incompatible data without accepting stored result claims',async()=>{
+  const w=await workspace,m=await core,base={v:1,entries:w.starterRuns('ranking'),view:'error',address:11};
+  for(const raw of [null,[],{...base,v:2},{...base,entries:base.entries.slice(0,1)},{...base,entries:[...base.entries,base.entries[0]]},
+    {...base,view:'unknown'},{...base,address:-1},{...base,address:16},{...base,address:.5},
+    {...base,entries:[base.entries[0],{...base.entries[1],settings:{...base.entries[1].settings,noise:1}}]}])assert.throws(()=>w.encodeComparison(raw),RangeError);
+  for(const value of ['', 'invalid!', 'a'.repeat(8193),btoa('not json'),btoa('\xff'),btoa(JSON.stringify({...base,v:2}))])assert.throws(()=>w.decodeComparison(value),RangeError);
+  const claimed={...base,results:{error:-999},entries:base.entries.map(entry=>({...entry,results:{referenceError:-999},settings:{...entry.settings,unknown:true}}))};
+  const clean=w.decodeComparison(w.encodeComparison(claimed));assert.deepEqual(Object.keys(clean),['v','entries','view','address']);
+  assert.deepEqual(Object.keys(clean.entries[0]),['label','settings']);assert.equal(clean.entries[0].settings.unknown,undefined);
+  assert.equal(m.experiment(clean.entries[0].settings).analyses.haar.referenceError,272);
+  assert.equal(m.experiment(clean.entries[1].settings).analyses.haar.referenceError,288);
+});

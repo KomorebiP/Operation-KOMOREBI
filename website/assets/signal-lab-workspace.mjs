@@ -1,4 +1,4 @@
-import {defaults,settings} from './signal-lab-core.mjs';
+import {defaults,settings,experiment} from './signal-lab-core.mjs';
 
 export const MAX_RUNS=12;
 export const NOTEBOOK_SCHEMA='komorebi-signal-notebook-v1';
@@ -57,6 +57,25 @@ export function appendRuns(entries,additional) {
   return readNotebook(writeNotebook([...entries,...additional]));
 }
 export function sameObservation(a,b) {return equal(a.reference,b.reference)&&equal(a.observed,b.observed);}
+export function comparisonState(raw) {
+  if(!raw||typeof raw!=='object'||Array.isArray(raw)||raw.v!==1||!Array.isArray(raw.entries)||raw.entries.length!==2||!['overlay','error','difference'].includes(raw.view))
+    throw new RangeError('Use a supported comparison with exactly two runs.');
+  const entries=readNotebook(writeNotebook(raw.entries)),results=entries.map(entry=>experiment(entry.settings));
+  if(!sameObservation(...results))throw new RangeError('Shared comparisons require identical reference and observed samples.');
+  if(!Number.isInteger(raw.address)||raw.address<0||raw.address>=entries[0].settings.n)throw new RangeError('The comparison sample address is outside the signal.');
+  return {v:1,entries,view:raw.view,address:raw.address};
+}
+export function encodeComparison(raw) {
+  const bytes=new TextEncoder().encode(JSON.stringify(comparisonState(raw)));
+  const encoded=btoa(String.fromCharCode(...bytes)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+  if(encoded.length>8192)throw new RangeError('This comparison is too large for a shared link.');
+  return encoded;
+}
+export function decodeComparison(encoded) {
+  if(typeof encoded!=='string'||encoded.length>8192||!/^[A-Za-z0-9_-]+$/.test(encoded))throw new RangeError('This comparison link is invalid or too large.');
+  try{const bytes=Uint8Array.from(atob(encoded.replace(/-/g,'+').replace(/_/g,'/')),character=>character.charCodeAt(0));return comparisonState(JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(bytes)));}
+  catch{throw new RangeError('This comparison link could not be restored.');}
+}
 export function starterRuns(id) {
   const base={...defaults(),noise:0,budget:8};let entries;
   if(id==='edges')entries=[{label:'Edges · Haar',settings:{...base,basis:'haar'}},{label:'Edges · cosine',settings:{...base,basis:'cosine'}}];
