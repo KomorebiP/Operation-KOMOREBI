@@ -189,6 +189,8 @@ class Browser:
             links = self.resources(c,kinds,page)
             if title=='Read' and c['id']=='monographs-special-functions':
                 links.insert(0,'[Read online: chapters, proof appendices, figures and glossary](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/index.html)')
+            if title=='Read' and c['id']=='monographs-quantum-and-circuits':
+                links.insert(0,'[Read online: opening arithmetic chapters, proofs and twenty figures](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-quantum-and-circuits/index.html)')
             if title=='Read' and c['id'] in {'paper-v','paper-vi','paper-vii'}:
                 links.insert(0,'[Read online: chapters, figures and proof links](https://KomorebiP.github.io/Operation-KOMOREBI/read/'+c['id']+'/index.html)')
             if title=='Read' and c['id']=='paper-vi':
