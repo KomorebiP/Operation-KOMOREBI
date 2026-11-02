@@ -771,6 +771,15 @@ sentence with a comma and should end with a period. The record binds six source
 files and gives the exact source and reading passage. The retained text and
 mathematical tokens are unchanged; the same review exclusions apply.
 
+The [Paper XI proofreading record](../manifests/reader-proofreading-paper-xi-2026-11-01.json)
+covers all 38 main reading sections, the fifteen construction appendices,
+literal derivation blocks, front matter, notation, references, captions, tables,
+preamble and both bibliography files. Two corrections are recommended for a
+later edition: clarify the tensor example's carrier-dimension wording and protect
+German title capitalization in the generated bibliography. The record binds
+19 source files and gives the exact source and reading passages. The retained
+text and mathematical tokens are unchanged; the same review exclusions apply.
+
 ## Signal Laboratory
 
 `signal-lab.html` is a larger known-reference signal experiment with 16–256
