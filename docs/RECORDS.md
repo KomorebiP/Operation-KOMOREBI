@@ -71,6 +71,7 @@ These files include test contracts, source records, run outputs, publication rec
 - [verification/resolution-semantics/pins-windows-2026-11-01-run1/receipt.json](../verification/resolution-semantics/pins-windows-2026-11-01-run1/receipt.json)
 - [verification/resolution-semantics/traversal-windows-2026-11-01-run1/receipt.json](../verification/resolution-semantics/traversal-windows-2026-11-01-run1/receipt.json)
 - [verification/resolution-semantics/automatic-windows-2026-11-01-run1/receipt.json](../verification/resolution-semantics/automatic-windows-2026-11-01-run1/receipt.json)
+- [verification/resolution-semantics/ranks-windows-2026-11-01-run2/receipt.json](../verification/resolution-semantics/ranks-windows-2026-11-01-run2/receipt.json)
 - [manifests/reader-proofreading-2026-11-01.json](../manifests/reader-proofreading-2026-11-01.json)
 - [manifests/reader-proofreading-papers-iii-iv-2026-11-01.json](../manifests/reader-proofreading-papers-iii-iv-2026-11-01.json)
 - [manifests/reader-proofreading-papers-v-vi-2026-11-01.json](../manifests/reader-proofreading-papers-v-vi-2026-11-01.json)
