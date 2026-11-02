@@ -761,6 +761,16 @@ The record binds 39 source files and gives the exact source and reading passage.
 The retained text and mathematical tokens are unchanged; the same review
 exclusions apply.
 
+The [Paper X proofreading record](../manifests/reader-proofreading-paper-x-2026-11-01.json)
+covers its 30 main reading sections, front matter, notation, cross-references,
+captions, preamble and bibliography syntax. The algorithms and reproducibility
+appendices, retained checkpoints, residue-counting continuation, final conditional
+completion and atlas introduction were included. One punctuation correction is
+recommended for a later edition: the smooth-chart digit-stream display ends its
+sentence with a comma and should end with a period. The record binds six source
+files and gives the exact source and reading passage. The retained text and
+mathematical tokens are unchanged; the same review exclusions apply.
+
 ## Signal Laboratory
 
 `signal-lab.html` is a larger known-reference signal experiment with 16–256
