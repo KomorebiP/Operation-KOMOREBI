@@ -1118,15 +1118,15 @@ Internally audited final manuscript with exact finite coherence calculations. Th
 
 **Active development** · Lean: **Selected results recorded** · Confidence basis: **Recorded formal evidence**
 
-The separate Lean 4.24.0 companion checks 182 declarations. It retains binary graph reconstruction and exact unpinned and partial-pin counts, and adds a solver that reconstructs from supplied checked component-root walks without enumerating vertex assignments. Soundness, completeness and agreement with the reference on existence are proved; equal outputs require component-covering pins. Twelve inherited sources are unchanged, and both two-world obstruction theorems remain axiom-free. Automatic traversal/forest construction, rank formulas and wider transport/forcing results remain outside this formal scope.
+The separate Lean 4.24.0 companion checks 216 theorem declarations. It retains binary graph reconstruction, exact unpinned/partial-pin counts and the supplied-traversal solver. A new automatic constructor computes actual component indices and root walks using a checked indexed path table; every reachable pair is covered after n rounds on Fin n. The automatic solver is sound and complete for arbitrary proposed binary edge fields and pins, without caller-supplied traversals or assignment enumeration. Fifteen inherited sources are unchanged, and both two-world obstruction theorems remain axiom-free. Rank formulas, sparse forest/complexity results and wider transport/forcing claims remain outside this formal scope.
 
-**Next step:** Construct and verify component-root traversals or a spanning forest automatically from a finite input graph, and formalize the rank formulas n-c and m-n+c. Preserve the reference solver, original source and earlier companions.
+**Next step:** Formalize the rank formulas n-c and m-n+c. Develop a verified sparse spanning-forest implementation and state any proved complexity bounds. Preserve the reference solver, original source and earlier companions.
 
 [Return to this work: paper, proofs, Lean, and code](works/resolution-semantics.md)
 
 [Edition and reader guide](components/RESOLUTION_SEMANTICS_LEAN.md)
 
-[Separate Lean companion replay and exact scope](../verification/resolution-semantics/traversal-windows-2026-11-01-run1/receipt.json)
+[Separate Lean companion replay and exact scope](../verification/resolution-semantics/automatic-windows-2026-11-01-run1/receipt.json)
 
 [Source directory](../research/resolution-semantics) · [README.md](../research/resolution-semantics/README.md) · [THEOREM_INDEX.md](../research/resolution-semantics/THEOREM_INDEX.md) · [PROOF_BOUNDARY.md](../research/resolution-semantics/PROOF_BOUNDARY.md)
 
