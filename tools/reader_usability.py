@@ -4,7 +4,7 @@ import posixpath
 import re
 
 
-def enhance(body, page):
+def enhance(body, page, lean_works=None):
     from readable_chapters import BOOKS,statement_directory_url
     from reading_navigation import Navigation
     from reader_display import edition,has_statement_finder
@@ -23,6 +23,9 @@ def enhance(body, page):
     controls = '<div class="reading-collection-nav"><a href="'+relative('read/index.html')+'">Reading library</a>'
     if is_directory:controls+='<a href="'+relative(config['index'])+'">Contents</a>'
     elif has_statement_finder(config):controls+='<a href="'+relative(statement_directory_url(config))+'">Find statements</a>'
+    from lean_reader import directory
+    if work in (BOOKS if lean_works is None else lean_works):
+        controls+='<a href="'+relative(directory(work))+'">Inspect Lean</a>'
     controls+='<details class="reading-paper-menu"><summary>Switch work</summary><nav aria-label="Reading editions">'
     for group,core in [('Core papers',True),('Books and monographs',False)]:
         controls+='<section><h2>'+group+'</h2><ul>'

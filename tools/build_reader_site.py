@@ -71,6 +71,7 @@ def site_navigation(page):
                   ('Read side by side', 'side-by-side.html'),
                   ('Worked examples', 'collection/HAND_WORKED_EXAMPLES.html')]),
         ('Look up', [('Claims', 'claims.html'),
+                     ('Inspect Lean', 'lean/index.html'),
                      ('Notation', 'notation.html')]),
         ('Use', [('Signal laboratory', 'signal-lab.html'),
                  ('Interactive diagrams', 'interactive.html'),
@@ -304,7 +305,7 @@ class Site:
                 chapter_help_script=''.join('<script defer src="'+self.rel('assets/'+name,path)+'?v='+hashlib.sha256((self.root/'website/assets'/name).read_bytes()).hexdigest()[:12]+'"></script>' for name in ('notation-search.js','chapter-notation.js'))
             else:body=chapter_layout(body)
         from reader_usability import enhance
-        body,reading_tools = enhance(body,path)
+        body,reading_tools = enhance(body,path,lean_works=getattr(getattr(self,'reader',None),'lean_works',{}))
         if reading_tools:
             for name in ('reading-tools.css','statement-search.js','reading-tools.js'):
                 url=self.rel('assets/'+name,path)+'?v='+hashlib.sha256((self.root/'website/assets'/name).read_bytes()).hexdigest()[:12]
@@ -655,6 +656,8 @@ class Site:
         publish_roots_newton_case(self)
         self.markdown_pages()
         self.reader.render()
+        from lean_reader import build as build_lean
+        lean = build_lean(self.reader)
         self.bundles()
         self.reader.catalog()
         self.demonstration_program()
@@ -675,6 +678,7 @@ class Site:
         result=dict(collection_revision=self.revision,library_revisions=self.revisions,html_guides=len(self.documents),works=len(self.registry['components']),claim_records=len(self.claims['records']),reading_bundles=len(self.bundle_records),bundle_bytes=sum(x['archive_bytes'] for x in self.bundle_records),new_proof_review=False,new_lean_execution=False)
         result.update(reading_documents=len(self.reader.records),pdfs=sum(r['format']=='pdf' for r in self.reader.records.values()))
         result['notation'] = notation
+        result['lean_reader'] = lean
         result['side_reader'] = side_reader
         self.write('build-info.json',json.dumps(result,indent=2)+'\n')
         print(json.dumps(result))

@@ -226,6 +226,7 @@ def render_claim_index(site):
                       for r in guide['resources'] if r['kind'] == 'formal_guide'), None)
         body += '<section class="claim-section" data-paper="'+wid+'" aria-labelledby="'+wid+'"><h2 id="'+wid+'" tabindex="-1">'+e(title)+'</h2><p>'+str(len(rows))+' '+('correspondence records' if work['mode']=='correspondence' else 'written statement records')+'.</p><nav class="document-routes" aria-label="Paper '+wid[6:].upper()+' reading routes">'
         routes = [('Read PDF',pdf['url']),('Paper overview',hub),('Lean guide',guide or hub+'#lean'),
+                  ('Inspect Lean', 'lean/'+wid+'/index.html'),
                   ('Lean coverage',hub+'#lean'),('Code',hub+'#code'),('Evidence',hub+'#evidence'),
                   ('Worked examples',hub+'#worked-examples-for-this-work')]
         if wid in BOOKS: routes.insert(0, ('Read chapters', BOOKS[wid]['index']))

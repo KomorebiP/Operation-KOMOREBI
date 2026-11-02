@@ -106,6 +106,28 @@ For same-document Back navigation, previews mark the restored control with
 handler consumes that marker once, preserving the explicit focus return while
 continuing to handle ordinary or unrelated fragment navigation.
 
+## Inspect Lean
+
+**Inspect Lean** opens a source directory for the works that already have HTML
+reading editions and selected Lean resources. It is linked from their reading
+controls, work overviews, claim routes and the Browse menu. File filtering
+matches paths and lexical declaration names; `q` in the address retains the
+filter. The complete native file list works without JavaScript.
+
+The inspector expands only receipt-owned `.lean` files within the existing
+Lean resource selections. It excludes package caches, build directories and
+`lakefile.lean`. Original source readers retain exact downloads, linked line
+numbers, existing claim correspondence and SHA-256 provenance. Declaration
+locations ignore nested comments and strings, and provide navigation only;
+anonymous, generated or unusually formatted declarations may be omitted.
+Coverage labels and evidence links retain the current recorded assessment.
+The viewer does not execute Lean or add claim mappings.
+
+Implementation lives in `tools/lean_reader.py` and `lean-reader.js`/`.css`.
+The website workflow runs `test_lean_reader.py` and `test_lean_reader.cjs`;
+the full site verifier checks published source identities and declaration
+locations against `lean/index.json`.
+
 ## Sources
 
 | Content | Source |
