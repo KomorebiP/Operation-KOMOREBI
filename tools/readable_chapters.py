@@ -68,7 +68,10 @@ BOOKS = {'paper-i': dict(work='paper-i', label='Paper I', base=FIRST_BASE,
                         chapters=FIRST_CHAPTERS, main_chapters=6, chapter_prefix='',
                         diagram_guide='collection/PAPER_I_DIAGRAMS.html',
                         figure_descriptions='website/paper-i-figure-descriptions.json',
-                        pdf_inputs={'visual_atlas.tex': 'Read the 22-plate visual atlas in the PDF'}), **BOOKS}
+                        atlas_index='read/paper-i/atlas/index.html',
+                        atlas_link_text='Explore all 22 worked atlas plates in HTML',
+                        reading_note='All 22 worked atlas plates have HTML pages with original drawings, selectable equations and labels, and links to the manuscript. The original monograph retains its complete visual appendix.',
+                        html_inputs={'visual_atlas.tex':dict(url='read/paper-i/atlas/index.html',title='Explore all 22 worked atlas plates in HTML',note='')}), **BOOKS}
 CHAPTERS = FIRST_CHAPTERS + CHAPTERS
 BOOKS['paper-i']['table_reading_aids']={
     ('01_orientation.tex','L4'): dict(caption='Statement status classes',
@@ -1107,6 +1110,7 @@ def render_reading_index(reader):
            'Find a chapter filters the contents by title or reading-page number. Wide equations and tables have separate areas that can be scrolled with the keyboard. '
            'MathJax provides equation exploration and assistive reading options through its context menu.</p>'
            '<p>All twelve core papers have HTML reading editions that follow the retained manuscripts. '
+           '<a href="'+site.rel('read/paper-i/atlas/index.html',page)+'">Paper I’s 22 atlas plates</a> have HTML drawings, descriptions, and selectable labels. '
            '<a href="'+site.rel('read/paper-iv/atlas/index.html',page)+'">Paper IV’s 26 atlas plates</a> also have HTML pages with drawings, descriptions, and tables. '
            'Paper V’s complete 40-plate atlas has HTML drawings, descriptions, and selectable TikZ labels. '
            'Paper VI’s complete 42-plate atlas has HTML drawings, descriptions, and selectable labels. '

@@ -63,7 +63,7 @@ def verify(root,documents,pages):
     repository=__import__('pathlib').Path(__file__).resolve().parents[1]
     rows=inventory(repository,documents['files'])
     assert record==dict(source_revision=documents['source_revision'],guides=rows)
-    assert {r['work'] for r in rows}<=pages[INDEX].ids
+    assert {r['work'] for r in rows}<=set(pages[INDEX].ids)
     import posixpath
     for row in rows:
         targets=[row['visual_pdf'],row['manuscript'],row['overview']]

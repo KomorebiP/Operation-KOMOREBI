@@ -160,6 +160,8 @@ class ReadingDocuments:
         prepare_proofreading(self)
         from reader_atlas import prepare as prepare_atlas
         prepare_atlas(self)
+        from paper_i_atlas import prepare as prepare_paper_i_atlas
+        prepare_paper_i_atlas(self)
         from paper_v_atlas import prepare as prepare_paper_v_atlas
         prepare_paper_v_atlas(self)
         from paper_vi_atlas import prepare as prepare_paper_vi_atlas
@@ -445,6 +447,8 @@ class ReadingDocuments:
         render(self)
         from reader_atlas import render as render_atlas
         render_atlas(self)
+        from paper_i_atlas import render as render_paper_i_atlas
+        render_paper_i_atlas(self)
         from paper_v_atlas import render as render_paper_v_atlas
         render_paper_v_atlas(self)
         from paper_vi_atlas import render as render_paper_vi_atlas

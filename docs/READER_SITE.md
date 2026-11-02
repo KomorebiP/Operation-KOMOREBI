@@ -16,18 +16,20 @@ HTML status follows the maintained reading configuration; PDF destinations
 and hashes come from the existing source receipts. Paper I's visual atlas is
 inside its main monograph. The other eleven have separate visual-guide PDFs.
 
-The [2026-11-02 inventory](../verification/reader-visual-guides/2026-11-02.json)
+The [current inventory](../verification/reader-visual-guides/2026-11-02-paper-i.json)
 checks the committed visual sources against their receipts and identifies the
 remaining ports. Counts below describe source units, which vary by guide;
-they are not counts of theorems or PDF pages.
+they are not counts of theorems or PDF pages. The
+[initial inventory](../verification/reader-visual-guides/2026-11-02.json) retains
+the earlier four-atlas snapshot.
 
 | Paper | Retained visual source | HTML visual coverage |
 |---|---|---|
-| I | 22 plates | Pending |
+| I | 22 plates | Complete |
 | II | 24 plates | Pending |
 | III | 24 plates | Pending |
 | IV | 26 plates | Complete |
-| V | 40 plates | Complete in this port |
+| V | 40 plates | Complete |
 | VI | 42 plates | Complete |
 | VII | 40 plates | Complete |
 | VIII | 32 plates across two inputs | Pending |
@@ -36,7 +38,7 @@ they are not counts of theorems or PDF pages.
 | XI | 47 lessons | Pending |
 | XII | 27 plates | Pending |
 
-Next ports: Papers I–III establish the foundational visual sequence; Paper VIII
+Next ports: Papers II–III continue the foundational visual sequence; Paper VIII
 can reuse the worked-atlas approach. Papers IX and XI need their own section
 and lesson conversions. Papers X and XII need explicit handling of their
 conditional and evidence boundaries. Each port should preserve prose,
@@ -46,6 +48,23 @@ Run `python -B tools/audit_core_visual_guides.py` to inspect the current coverag
 The report identifies the committed source revision and states that HTML
 configuration is read from the working tree. `test_core_visual_guides.py`
 checks the twelve destinations and distinct integrated/separate PDF routes.
+
+Paper I's complete atlas is at `read/paper-i/atlas/`. Its 22 plates preserve
+20 original monograph drawings, 435 selectable labels, and 699 mathematical
+expressions, including formulas in the plate headings. Native source theorem
+references resolve to manuscript passages with return links. The path, cycle,
+coordinate-ring and evidence plates also link their explicitly selected source
+sections. Three source tables and the matrix-label transcripts have semantic
+headers. The first source table has no printed headings; its reading-aid
+headings retain all three original data rows.
+
+`tools/paper_i_atlas.py` records the source, macro and figure identities in
+`documents/paper-i-atlas.json`. PDF routes keep the integrated monograph's
+physical pages 83–104. To regenerate only those original drawing views, use
+`python -B tools/render_paper_i_atlas.py` with pypdfium2 available. Normal
+builds need no PDF renderer or TeX engine. Run
+`python -B -m unittest discover -s tools -p 'test_paper_i_atlas.py' -v`.
+This conversion adds no proof audit, mathematical example run or Lean replay.
 
 The **Komorebi Methodology** also has a complete HTML edition at
 `read/komorebi-methodology/`: preface, nine essay chapters, closing reflection,
