@@ -92,6 +92,10 @@ if (siteMenuToggle && siteMenuPanel) {
 
 // In-page links move keyboard focus as well as the visual reading position.
 // Delegation also covers links added by search and the notation browser.
+let readingNavigation = 0, readingInteraction = 0;
+for (const event of ["wheel", "touchstart", "pointerdown", "keydown"]) {
+  window.addEventListener(event, () => { readingInteraction++; }, {capture: true, passive: true});
+}
 function focusReadingTarget(target, hash) {
   if (target.matches("a:not([href])") && !target.textContent.trim()) {
     const next = target.nextElementSibling || (target.parentElement.matches("p") ? target.parentElement.nextElementSibling : null);
@@ -104,6 +108,16 @@ function focusReadingTarget(target, hash) {
   if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
   target.focus({preventScroll: true});
   target.scrollIntoView();
+  const navigation = ++readingNavigation, interaction = readingInteraction;
+  // Math rendering, web fonts and native scroll restoration can move a passage
+  // after load. Correct the final layout once, unless the reader has moved on.
+  const layout = [window.MathJax?.startup?.promise, document.fonts?.ready].filter(Boolean);
+  Promise.allSettled(layout).then(() => requestAnimationFrame(() => {
+    if (navigation === readingNavigation && interaction === readingInteraction &&
+        location.hash === hash && document.activeElement === target && target.isConnected) {
+      target.scrollIntoView({block: "start", behavior: "auto"});
+    }
+  }));
 }
 function linkedReadingTarget() {
   try { return document.getElementById(decodeURIComponent(location.hash.slice(1))); }
@@ -115,7 +129,7 @@ function linkedReadingTarget() {
 // have revealed their target, and preserve focus if the reader has moved it.
 window.addEventListener("load", () => {
   const target = linkedReadingTarget();
-  if (target && (!document.activeElement || document.activeElement === document.body ||
+  if (target && !readingInteraction && (!document.activeElement || document.activeElement === document.body ||
       document.activeElement === document.documentElement)) focusReadingTarget(target, location.hash);
 }, {once: true});
 window.addEventListener("hashchange", () => {
