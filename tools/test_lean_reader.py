@@ -5,7 +5,7 @@ import tempfile
 from types import SimpleNamespace
 import unittest
 
-from lean_reader import build, declarations, prepare, selected_paths, source_controls, verify
+from lean_reader import build, code_view, declarations, highlight_lines, prepare, selected_paths, source_controls, verify
 from reader_documents import ReadingDocuments, source_lines
 
 
@@ -65,7 +65,7 @@ class LeanReaderTests(unittest.TestCase):
             report=build(reader)
             self.assertEqual(report,dict(works=1,files=1,new_lean_execution=False))
             page=output/record['url'];page.parent.mkdir(parents=True)
-            page.write_text(source_controls(reader,record,text,record['url'])+source_lines(text),encoding='utf-8')
+            page.write_text(source_controls(reader,record,text,record['url'])+code_view(text),encoding='utf-8')
             raw=output/record['file_url'];raw.parent.mkdir(parents=True);raw.write_bytes(text.encode())
             body=page.read_text(encoding='utf-8')
             self.assertIn('href="#L2"',body);self.assertIn('Selected results recorded',body)
@@ -73,8 +73,32 @@ class LeanReaderTests(unittest.TestCase):
             self.assertIn('Paper I &lt;test&gt;',directory)
             self.assertIn('data-lean-search="formal/Main.lean theorem result"',directory)
             self.assertEqual(verify(output,dict(files=[record]))['files'],1)
-            page.write_text(body.replace('  trivial','  sorry'),encoding='utf-8')
+            tampered=body.replace('>trivial</span>','>sorry</span>')
+            self.assertNotEqual(tampered,body)
+            page.write_text(tampered,encoding='utf-8')
             with self.assertRaises(AssertionError):verify(output,dict(files=[record]))
+
+    def test_highlighting_preserves_unicode_indentation_and_escapes_active_html(self):
+        from html.parser import HTMLParser
+        class Text(HTMLParser):
+            def __init__(self):super().__init__(convert_charrefs=True);self.parts=[]
+            def handle_data(self,data):self.parts.append(data)
+        text = ('/- outer <script>\n/- nested theorem -/ still comment -/\n'
+                'def message := "a\\\" -- text & <tag>"\n'
+                'def letter := \'"\'\n'
+                'lemma quoted\' : True := by\n  exact True.intro\n'
+                'def «a--b» := 12\n\n'
+                'theorem τεστ (n : ℕ) : n = n := by\n  rfl -- unchanged\n')
+        highlighted=highlight_lines(text)
+        self.assertEqual(len(highlighted),len(text.splitlines()))
+        for original,markup in zip(text.splitlines(),highlighted):
+            parser=Text();parser.feed(markup);self.assertEqual(''.join(parser.parts),original)
+        self.assertIn('lean-token-comment',highlighted[1])
+        self.assertIn('lean-token-string',highlighted[2]);self.assertIn('lean-token-string',highlighted[3])
+        self.assertIn('lean-token-keyword',highlighted[4]);self.assertIn('lean-token-tactic',highlighted[5])
+        self.assertNotIn('lean-token-comment',highlighted[6])
+        self.assertNotIn('<script>', ''.join(highlighted))
+        with self.assertRaises(ValueError):source_lines('one\ntwo',rendered_lines=['one'])
 
     def test_prepare_does_not_add_works_without_a_reading_edition(self):
         reader=SimpleNamespace(site=SimpleNamespace(registry=dict(components=[

@@ -48,9 +48,12 @@ def tex_includes(text, path, owned, main_path=None):
     return sorted(set(result))
 
 
-def source_lines(text, annotations=None):
+def source_lines(text, annotations=None, *, rendered_lines=None):
     annotations = annotations or {}
     lines = text.splitlines()
+    rendered_lines = [html.escape(line) for line in lines] if rendered_lines is None else rendered_lines
+    if len(rendered_lines) != len(lines):
+        raise ValueError('Rendered source lines must match the original line count')
     navigation = '<div id="source-navigation" class="source-navigation"><p><a href="#source-end">Skip source text</a></p>'
     if lines:
         navigation += ('<form id="source-line-form" class="source-jump" hidden>'
@@ -60,7 +63,7 @@ def source_lines(text, annotations=None):
                        '<p class="status">Jump directly to a line, then copy its address from your browser.</p></form>')
     navigation += '</div>'
     return navigation+'<pre class="source-lines" tabindex="0" aria-label="Source text with linked line numbers"><code>'+''.join(
-        '<span class="source-line" id="L'+str(n)+'">'+annotations.get(n, '')+'<a class="line-number" href="#L'+str(n)+'" aria-label="Line '+str(n)+'">'+str(n)+'</a> '+html.escape(line)+'\n</span>'
+        '<span class="source-line" id="L'+str(n)+'">'+annotations.get(n, '')+'<a class="line-number" href="#L'+str(n)+'" aria-label="Line '+str(n)+'">'+str(n)+'</a> '+rendered_lines[n-1]+'\n</span>'
         for n, line in enumerate(lines, 1))+'</code></pre><p id="source-end" tabindex="-1"><a href="#source-navigation">Back to source controls</a></p>'
 
 
@@ -424,7 +427,11 @@ class ReadingDocuments:
                     readable = readable_url(path)
                     if readable:
                         body += '<p><a class="button" href="'+self.site.rel(readable,page)+'">Read this chapter with formatted equations</a></p>'
-                    body += source_lines(text, self.source_annotations(path, page))
+                    if lean_source:
+                        from lean_reader import code_view
+                        body += code_view(text,self.source_annotations(path,page))
+                    else:
+                        body += source_lines(text, self.source_annotations(path, page))
                 limit = 15000 if record['format'] == 'markdown' else 4000
                 self.site.search.append(dict(title=title+' / '+record['title'], group='Collection', kind=self.search_kind(record), work_ids=[work], url=page, text=re.sub(r'\s+', ' ', text)[:limit]))
             if siblings and not lean_source:
