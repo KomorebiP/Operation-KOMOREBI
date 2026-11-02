@@ -234,13 +234,13 @@ Reviewed essay with written arguments and 40 finite exact-check groups. No new L
 
 **Reading edition complete** · Lean: **Selected results recorded** · Confidence basis: **Recorded formal evidence**
 
-Proofread reading volumes plus 137 named theorem declarations: 39 in the inherited finite core, 29 in Block01, 21 in Block02, 19 in Block03, 16 in Block04, and 13 in Block05. The principal ordinary-series Theorem F.1 contract, all-degree Taylor coefficient transport, and the guarded labeled analytic-germ inverse of Theorem G.2 are checked. Full component rescaling, Perron growth and full monograph coverage remain open.
+Proofread reading volumes plus 156 named theorem declarations: 39 in the inherited finite core and 29, 21, 19, 16, 13, 19 in Blocks01 through 06. The principal ordinary-series F.1 contract, Taylor coefficient transport, guarded G.2 germ inverse, and full G.1 component-rescaling equivalence with explicit scalar representation are checked. The boundary example now has equal full labeled entire pairs at distinct tuples. Perron growth, operator decoupling and full monograph coverage remain open.
 
-**Next step:** Formalize the full analytic component-rescaling equivalence of Appendix G.1, preserving both exceptional parameter surfaces and amplitude/argument normalization. Perron order/type growth remains a separate larger obligation.
+**Next step:** Prove the unique positive root of (1-q^rho)(1-b^rho)=(ar)^rho and its positive characteristic-matrix eigenvector, then establish the analytic order, lower-order and type bounds. Operator decoupling and broader coverage remain separate.
 
 [Return to this work: paper, proofs, Lean, and code](works/monographs-special-functions.md)
 
-[Latest written review and its scope](SPECIAL_FUNCTIONS_GERM_INVERSE_BLOCK05.md)
+[Latest written review and its scope](SPECIAL_FUNCTIONS_RESCALING_BLOCK06.md)
 
 [Source directory](../monographs/special-functions) · [LEAN_STATUS.md](../monographs/special-functions/LEAN_STATUS.md) · [README.md](../monographs/special-functions/README.md) · [lean/README.md](../monographs/special-functions/lean/README.md)
 
