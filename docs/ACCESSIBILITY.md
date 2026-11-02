@@ -64,6 +64,21 @@ the same. Figures in the core chapters offer **View full-size figure (new tab)**
 so you can inspect the image while keeping your reading place. Captions and text
 descriptions remain beside the original figure.
 
+Reference and citation links in the twelve core papers offer a separate
+**Preview** button. It opens the referenced passage in a named dialog while
+keeping your reading position. Formulas are selectable and use the same math
+reader; previews follow the chapter's text-size and font choices. Wide formulas
+retain that size and scroll horizontally. Section
+previews and shortened passages are marked as excerpts. **Open referenced
+passage** follows the original destination. Close or Escape returns keyboard
+focus to the Preview button. Tab and Shift+Tab cycle within the dialog.
+Browser Back restores the originating control after following a preview's link
+when focus has not already moved to another reading control. The page address
+is retained. Long previews and formulas can be scrolled.
+Original links also work directly, including when JavaScript or previews are
+unavailable. Preview controls are
+omitted from print output.
+
 Chapters in all twelve core papers offer **Statements and proofs** inside
 **Contents** when they contain statement records. **Find a statement** searches
 titles, printed numbers, statement types and source labels. Printed-number

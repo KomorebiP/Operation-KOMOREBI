@@ -310,6 +310,12 @@ class Site:
                 url=self.rel('assets/'+name,path)+'?v='+hashlib.sha256((self.root/'website/assets'/name).read_bytes()).hexdigest()[:12]
                 chapter_help_script+=('<link rel="stylesheet" href="'+url+'">') if name.endswith('.css') else ('<script defer src="'+url+'"></script>')
         work_page = path.startswith('collection/works/')
+        if re.fullmatch(r'read/paper-[ivx]+/[^/]+\.html',path) and 'data-reference-preview=' in body:
+            work=path.split('/')[1]
+            for name in ('reference-previews.css','reference-previews.js'):
+                url=self.rel('assets/'+name,path)+'?v='+hashlib.sha256((self.root/'website/assets'/name).read_bytes()).hexdigest()[:12]
+                if name.endswith('.css'):chapter_help_script+='<link rel="stylesheet" href="'+url+'">'
+                else:chapter_help_script+='<script defer src="'+url+'" data-reference-work="'+work+'" data-reference-source="'+self.rel('documents/reference-previews/'+work+'.json',path)+'?v='+self.revision+'"></script>'
         if not work_page and 'data-side-reader-link' not in body and path not in {'side-by-side.html','index.html','404.html','interactive.html','signal-lab.html','works.html','reading-list.html'}:
             pair=self.rel('side-by-side.html',path)+'?left='+quote(path,safe='')
             launch='<p class="side-launch"><a data-side-reader-link href="'+esc(pair,quote=True)+'">Read side by side</a></p>'

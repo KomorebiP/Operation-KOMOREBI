@@ -565,6 +565,8 @@ class Chapter:
                 self.math.append(tex)
                 tag = 'div' if display else 'span'
                 extra = ' tabindex="0" role="group" aria-label="Displayed equation. Scroll horizontally if needed."' if display else ''
+                equation_labels=re.findall(r'\\label\{([^{}]+)\}',tex)
+                if equation_labels:extra+=' data-equation-labels="'+html.escape(' '.join(equation_labels),quote=True)+'"'
                 out.append('<'+tag+' class="arithmatex"'+extra+'>'+html.escape(
                     ('\\[' if display else '\\(')+expand_math(tex,self.macros)+('\\]' if display else '\\)'))+'</'+tag+'>')
                 if display and r'\tag' not in tex:
@@ -626,14 +628,14 @@ class Chapter:
                         if name in {'ref','eqref'} and node.get('plain_reference_label'):
                             label=node['plain_reference_label']
                         url = self.relative(node.get('url',''))+'#'+node['id']
-                        links.append('<a href="'+url+'" title="'+html.escape(typography(node['title']),quote=True)+'">'+label+'</a>')
+                        links.append('<a href="'+url+'" data-reference-preview="'+html.escape(key,quote=True)+'" title="'+html.escape(typography(node['title']),quote=True)+'">'+label+'</a>')
                     out.append(', '.join(links))
                     self.references.extend(value.split(','))
                 elif name == 'cite':
                     links = []
                     for key in value.split(','):
                         number, url = self.citations[key]
-                        links.append('<a href="'+html.escape(url,quote=True)+'" aria-label="Reference '+str(number)+': '+html.escape(key,quote=True)+'">['+str(number)+']</a>')
+                        links.append('<a href="'+html.escape(url,quote=True)+'" data-reference-preview="'+html.escape(key,quote=True)+'" aria-label="Reference '+str(number)+': '+html.escape(key,quote=True)+'">['+str(number)+']</a>')
                     out.append(', '.join(links))
                     if option: out.append(', '+self.inline(option))
                 elif name == 'bibliography':
@@ -1354,6 +1356,8 @@ def render_book(reader,book):
     if work=='paper-vii':
         from paper_vii_reading import render_collected_core
         render_collected_core(reader,book)
+    from reference_previews import publish as publish_reference_previews
+    publish_reference_previews(reader,book)
     return reports
 
 
