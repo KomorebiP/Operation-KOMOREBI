@@ -5,9 +5,9 @@ WebAssembly in a persistent Web Worker. It needs no reader account or compiler
 service. The page fetches static compiler artifacts; proof edits are never sent
 to a remote proof checker.
 
-The picker offers 17 prepared workspaces across ten existing reading editions:
-Papers II, III, VII, IX, X, XI and XII, Proof Path Theory, Komorebi Space and
-Special Functions. The complete retained files are listed in
+The picker offers 16 prepared workspaces across nine existing reading editions:
+Papers II, III, VII, IX, X, XI and XII, Proof Path Theory and Komorebi Space.
+The complete retained files are listed in
 `tools/lean_workspaces.py`; the picker groups them by reading edition. Recovery
 also compiles its actual local `ProofPath.Compression` import. These are experiments in the browser
 environment, not replays of every retained Lake environment or the collection's
@@ -39,7 +39,7 @@ entries are shared, with any remaining files supplied individually. Each
 workspace has its own Mathlib import closure, so a small workspace does not
 load modules needed only by another. The source archive is read in one sequential
 pass and its import parsing is shared across closures. The site stores about
-10 MB of metadata. Large binaries remain at immutable URLs in the
+9 MB of metadata. Large binaries remain at immutable URLs in the
 pinned upstream public GitHub repository. No additional hosting account is used.
 SOURCE.json records every remote URL, size and SHA-256, plus local metadata and
 input identities. The final site checker verifies these records and enforces
@@ -61,6 +61,9 @@ An exit, abort, missing artifact, timeout, stopped worker or failed syntax probe
 cannot produce a successful result. The Stop control terminates checking and
 startup. The initial artifact requires substantial desktop memory and downloads;
 mobile support and Firefox/Safari compatibility are not established.
+The retained Special Functions `BrowserCoreLocal.lean` was also tried, but hit
+`Maximum call stack size exceeded` in this runtime. It is excluded from the
+prepared picker; its original source remains inspectable through the reader.
 
 The fork loses some parser diagnostics. The page therefore always runs Lean's
 parser in a separate elaboration, against the same import environment. A
