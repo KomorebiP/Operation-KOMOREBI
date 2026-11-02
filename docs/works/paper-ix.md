@@ -36,6 +36,7 @@ Use the links below to read this work and its supporting files. Ctrl+click (Comm
 ## Read
 
 - [Read online: complete manuscript, strengthening and historical appendices](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-ix/index.html)
+- [Visual guide: all 23 HTML sections and 20 figures](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-ix/atlas/index.html)
 - [Edition README](../../papers/paper-ix/current/README.md)
 - [Read PDF](../../papers/paper-ix/current/publication/pdfs/Paper_IX_Euler_Main_Final.pdf)
 - [Visual guide (PDF)](../../papers/paper-ix/current/output/pdf/Paper_IX_Euler_Visual_Guide_Final.pdf)

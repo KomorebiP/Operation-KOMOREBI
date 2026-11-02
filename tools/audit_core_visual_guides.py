@@ -19,7 +19,7 @@ SOURCES = {
     'paper-vi':'editable/traditional/atlas-pages.tex',
     'paper-vii':'editable/traditional/monograph_atlas.tex',
     'paper-viii':'editable/visual_guide/source/pages.tex',
-    'paper-ix':'sources/visual_body.tex',
+    'paper-ix':'sources/visual.tex',
     'paper-x':'visual_appendix/source/pages.tex',
     'paper-xi':'publication/source/visual_guide/Paper_XI_Visual_Guide_Final.tex',
     'paper-xii':'core/publication/source/visual_guide/source/pages.tex',
@@ -43,9 +43,10 @@ def audit(root,git='git'):
             raise ValueError('Visual source does not match its receipt: '+path)
         text=raw.decode('utf-8-sig')
         inputs=[]
-        if work=='paper-viii':
-            for name in ('extended_pages.tex',):
-                child='editable/visual_guide/source/'+name
+        children={'paper-viii':['editable/visual_guide/source/extended_pages.tex'],
+            'paper-ix':['sources/visual_body.tex','sources/worked_atlas.tex','sources/generated/worked_newton_values.tex']}.get(work,[])
+        if children:
+            for child in children:
                 child_path=component['destination']+'/'+child
                 child_raw=subprocess.check_output([git,'show',revision+':'+child_path],cwd=root)
                 digest=hashlib.sha256(child_raw).hexdigest()
@@ -58,6 +59,12 @@ def audit(root,git='git'):
             raise ValueError('Review visual source numbering: '+path)
         unit='numbered plates' if numbers else 'lessons' if work=='paper-xi' else 'sections'
         count=len(numbers) if numbers else len(re.findall(r'\\lesson\{',text)) if work=='paper-xi' else len(re.findall(r'\\section\{',text))
+        if work=='paper-ix':
+            # AtlasHead is a section in the standalone guide and a subsection
+            # only when the same input is included in the main manuscript.
+            body=subprocess.check_output([git,'show',revision+':'+component['destination']+'/sources/visual_body.tex'],cwd=root).decode('utf-8-sig')
+            worked=subprocess.check_output([git,'show',revision+':'+component['destination']+'/sources/worked_atlas.tex'],cwd=root).decode('utf-8-sig')
+            count=len(re.findall(r'\\section\{',body))+len(re.findall(r'\\AtlasHead\{',worked))
         resource=next((r for r in component['resources'] if r['kind']=='visual'),None)
         integrated=resource is None
         resource=resource or next(r for r in component['resources'] if r['kind']=='pdf')
@@ -66,8 +73,15 @@ def audit(root,git='git'):
             source_units=count,source_unit_kind=unit,
             visual_pdf=pdf_path,visual_pdf_sha256=retained[resource['path']]['sha256'],
             integrated_pdf=integrated,html_atlas=BOOKS[work].get('atlas_index'),
-            remaining='Complete HTML atlas available' if BOOKS[work].get('atlas_index') else
+            remaining='Complete HTML visual guide available' if BOOKS[work].get('atlas_index') else
                 'Port the visual companion, its figures, source text and manuscript links'))
+        if work=='paper-ix':
+            readme='sources/visual_README.md'
+            readme_raw=subprocess.check_output([git,'show',revision+':'+component['destination']+'/'+readme],cwd=root)
+            assert hashlib.sha256(readme_raw).hexdigest()==retained[readme]['sha256']
+            rows[-1]['inherited_readme_inventory']=dict(source=component['destination']+'/'+readme,
+                source_sha256=retained[readme]['sha256'],sections=15,figures=12,current=False,
+                handling='Preserved unchanged; actual entrypoint and retained 25-page PDF have 23 sections and 20 figures')
         if work=='paper-viii':
             crosswalk='editable/visual_guide/VISUAL_TO_TRADITIONAL_CROSSWALK.json'
             crosswalk_path=component['destination']+'/'+crosswalk
