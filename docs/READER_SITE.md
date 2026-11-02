@@ -8,6 +8,64 @@ All twelve core papers have formatted HTML reading editions. Each retains its
 recorded mathematical scope; companion guides and atlas coverage are described
 on the individual reading pages.
 
+## Core visual-guide coverage
+
+The **Browse → Core visual guides** directory at `read/visual-guides.html`
+links every core paper's visual material, manuscript and evidence overview.
+HTML status follows the maintained reading configuration; PDF destinations
+and hashes come from the existing source receipts. Paper I's visual atlas is
+inside its main monograph. The other eleven have separate visual-guide PDFs.
+
+The [current inventory](../verification/reader-visual-guides/2026-11-02-paper-i.json)
+checks the committed visual sources against their receipts and identifies the
+remaining ports. Counts below describe source units, which vary by guide;
+they are not counts of theorems or PDF pages. The
+[initial inventory](../verification/reader-visual-guides/2026-11-02.json) retains
+the earlier four-atlas snapshot.
+
+| Paper | Retained visual source | HTML visual coverage |
+|---|---|---|
+| I | 22 plates | Complete |
+| II | 24 plates | Pending |
+| III | 24 plates | Pending |
+| IV | 26 plates | Complete |
+| V | 40 plates | Complete |
+| VI | 42 plates | Complete |
+| VII | 40 plates | Complete |
+| VIII | 32 plates across two inputs | Pending |
+| IX | 15 sections | Pending |
+| X | 30 plates | Pending |
+| XI | 47 lessons | Pending |
+| XII | 27 plates | Pending |
+
+Next ports: Papers II–III continue the foundational visual sequence; Paper VIII
+can reuse the worked-atlas approach. Papers IX and XI need their own section
+and lesson conversions. Papers X and XII need explicit handling of their
+conditional and evidence boundaries. Each port should preserve prose,
+equations, drawing labels and manuscript links before its status is promoted.
+
+Run `python -B tools/audit_core_visual_guides.py` to inspect the current coverage.
+The report identifies the committed source revision and states that HTML
+configuration is read from the working tree. `test_core_visual_guides.py`
+checks the twelve destinations and distinct integrated/separate PDF routes.
+
+Paper I's complete atlas is at `read/paper-i/atlas/`. Its 22 plates preserve
+20 original monograph drawings, 435 selectable labels, and 699 mathematical
+expressions, including formulas in the plate headings. Native source theorem
+references resolve to manuscript passages with return links. The path, cycle,
+coordinate-ring and evidence plates also link their explicitly selected source
+sections. Three source tables and the matrix-label transcripts have semantic
+headers. The first source table has no printed headings; its reading-aid
+headings retain all three original data rows.
+
+`tools/paper_i_atlas.py` records the source, macro and figure identities in
+`documents/paper-i-atlas.json`. PDF routes keep the integrated monograph's
+physical pages 83–104. To regenerate only those original drawing views, use
+`python -B tools/render_paper_i_atlas.py` with pypdfium2 available. Normal
+builds need no PDF renderer or TeX engine. Run
+`python -B -m unittest discover -s tools -p 'test_paper_i_atlas.py' -v`.
+This conversion adds no proof audit, mathematical example run or Lean replay.
+
 The **Komorebi Methodology** also has a complete HTML edition at
 `read/komorebi-methodology/`: preface, nine essay chapters, closing reflection,
 verification notes, and references. Its 12 text pages preserve 164 mathematical
@@ -264,7 +322,20 @@ workflow runs the rendering and browser-state regressions alongside reader tests
 has 40 reading pages plus contents and bibliography. Its contiguous source ranges
 retain both manuscript branches, four appendices, 1,219 mathematical expressions,
 83 proof bodies, 35 manuscript figures and ten tables. Chapter navigation uses
-the shared reading controls. The forty-plate visual atlas stays in the PDF.
+the shared reading controls. All forty visual-atlas plates also have HTML pages
+at `read/paper-v/atlas/`, retaining 37 drawings, 550 selectable TikZ labels,
+962 mathematical expressions, six semantic tables, original source-line links
+and 73 manuscript links with return routes.
+The reused Gibbs plot has a separate text description; its labels remain in
+the original image and PDF. Historical computation totals retain their
+source-edition scope and do not describe a new execution during conversion.
+
+`tools/paper_v_atlas.py` checks plate numbering, source and image identities,
+the complete equation sequence and both directions of manuscript links.
+`documents/paper-v-atlas.json` records those checks. Regenerate the reviewed
+PDF crops with `python -B tools/render_paper_v_atlas.py` (pypdfium2 required).
+Normal builds verify committed images without a PDF renderer or TeX compiler.
+Run `python -B -m unittest discover -s tools -p 'test_paper_v_atlas.py' -v`.
 
 The [chapter configuration](../tools/paper_v_chapters.py) records the original
 line ranges and E-prefixed numbering. The [figure publisher](../tools/reader_figure_assets.py)
