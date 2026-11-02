@@ -199,6 +199,8 @@ class Browser:
                 links.insert(1,'[Worked visual atlas: all 40 HTML plates](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-v/atlas/index.html)')
             if title=='Read' and c['id']=='paper-i':
                 links.insert(0,'[Worked visual atlas: all 22 HTML plates](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-i/atlas/index.html)')
+            if title=='Read' and c['id'] in {'paper-ii','paper-iii'}:
+                links.insert(0,'[Worked visual atlas: all 24 HTML plates](https://KomorebiP.github.io/Operation-KOMOREBI/read/'+c['id']+'/atlas/index.html)')
             if title=='Read' and c['id']=='paper-vii':
                 links.insert(1,'[Worked visual atlas: all 40 HTML plates](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vii/atlas/index.html)')
             if title=='Read' and c['id']=='paper-viii':
