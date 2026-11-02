@@ -1155,10 +1155,10 @@ def statement_directory_url(config):
 
 def render_statement_directory(reader,book):
     config=book['config']
-    if not re.fullmatch(r'paper-[ivx]+',config['work']):return
+    if not re.fullmatch(r'paper-[ivx]+',config['work']) and not config.get('reader_controls'):return
     site=reader.site;page=statement_directory_url(config);e=html.escape
     body='<p class="eyebrow">Find in '+e(config['label'])+'</p><h1>'+e(config['label'])+': Statements and proofs</h1>'
-    body+='<p>Find a statement anywhere in this paper by title, printed number, type or source label. Entries follow the chapter order. Each proof link opens the recorded proof passage.</p>'
+    body+='<p>Find a statement anywhere in this work by title, printed number, type or source label. Entries follow the chapter order. Each proof link opens the written proof passage.</p>'
     body+='<div class="reading-statement-directory"><h2>Statements by chapter</h2>'
     for spec,_,chapter in book['chapters']:
         rows={r['statement_line']:r for r in chapter_claims(reader,spec)}

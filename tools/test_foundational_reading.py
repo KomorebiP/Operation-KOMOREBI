@@ -58,6 +58,7 @@ class FoundationalReadingTests(unittest.TestCase):
             output=Path(folder);reader=publish_fixture(output)
             pages={p.relative_to(output).as_posix():Page(p.read_text(encoding='utf-8')) for p in output.rglob('*.html')}
             docs=dict(files=list(reader.records.values()),images=list(reader.images.values()))
+            pdf_pages={r['url'] for r in reader.records.values() if r['format']=='pdf'}
             with patch.object(reading,'BOOKS',BOOKS),patch.object(reading,'CHAPTERS',CHAPTERS):
                 count=check_readable_chapter(output,docs,pages)
             self.assertGreater(count,1500)
@@ -72,12 +73,21 @@ class FoundationalReadingTests(unittest.TestCase):
                     parts=urlsplit(link)
                     if parts.scheme or parts.netloc:continue
                     target=posixpath.normpath(posixpath.join(posixpath.dirname(name),unquote(parts.path))) if parts.path else name
+                    if any(target.startswith('read/'+work+'/') for work in BOOKS):
+                        self.assertIn(target,set(pages)|pdf_pages,(name,link,'Missing book reading page'))
                     if target in pages and parts.fragment and not parts.query:
                         self.assertIn(unquote(parts.fragment),pages[target].ids,(name,link))
             nodes=[n for r in reports for n in r['nodes']]
             self.assertEqual(sum(n['kind']=='proof' for n in nodes),137)
             self.assertEqual(sum(n['kind']=='figure' for n in nodes),46)
             self.assertEqual(sum(len(c.proof_pairs) for b in reader.readable_books.values() for _,_,c in b['chapters']),137)
+            from statement_navigation import check_directory
+            for work,config in BOOKS.items():
+                directory=reading.statement_directory_url(config)
+                self.assertIn(directory,pages)
+                chapters=[(s['url'],(output/s['url']).read_text(encoding='utf-8')) for s in config['chapters']]
+                result=check_directory((output/directory).read_text(encoding='utf-8'),chapters,directory)
+                self.assertEqual(result['proof_links'],92 if work=='komorebi-space' else 45)
             space=reader.readable_books['komorebi-space']['chapters'][0][2]
             self.assertEqual(space.labels['KS01']['number'],'1.3')
             self.assertEqual(space.labels['WR10']['number'],'30.1')
