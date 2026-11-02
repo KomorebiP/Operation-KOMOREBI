@@ -9,10 +9,11 @@ BASE='monographs/quantum-and-circuits/volume/'
 OUTPUT='assets/figures/quantum-symmetry/'
 
 
-def render(manuscript,output,expected_unique,expected_uses,treatment):
+def render(manuscript,output,expected_unique,expected_uses,treatment,normalizer=None):
     import pypdfium2 as pdfium
     from readable_chapters import group
     text=(ROOT/manuscript).read_text(encoding='utf-8')
+    if normalizer:text=normalizer(text)
     records={}
     for figure in re.finditer(r'\\begin\{figure\}(?:\[[htbpH]+\])?(.*?)\\end\{figure\}',text,re.S):
         match=re.search(r'\\includegraphics\[[^\]]+\]\{([^{}]+)\}',figure[1])
