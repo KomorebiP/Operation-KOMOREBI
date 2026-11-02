@@ -1,5 +1,12 @@
 # Technical publication package with checked coupled-functions block
 
+**2026-11-02 entire-existence companion:** SF-LEAN-B03 adds 19 checked
+declarations proving absolute convergence, holomorphy and both coupled
+equations on the whole plane for strict positive contractions. The registered
+source scope is 108 names. Analytic uniqueness, the reverse Taylor coefficient
+bridge and Perron growth remain open. See `formalization/Block03/REPORT.md`.
+The notes below retain the preceding Block02 and Block01 checkpoints.
+
 **2026-11-02 formal companion:** SF-LEAN-B02 adds 21 checked local analytic
 declarations; see `formalization/Block02/REPORT.md`. The current source scope is
 89 named declarations including the preceding 68. Entire continuation remains
