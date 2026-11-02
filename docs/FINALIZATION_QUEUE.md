@@ -245,7 +245,7 @@ Publication completion and checked subresults leave wider formal or implementati
 
 **Done when:** Choose one precise next theorem/refinement contract, establish its dependencies, and admit it only with corresponding source and verification evidence.
 
-**Progress:** Special Functions SF-LEAN-B07 adds 23 declarations proving the unique positive characteristic exponent, positive right/left eigenvectors with max-normalized right vector, exact complex spectrum and spectral-radius equivalence. The source scope is 179 named declarations. Sources, I/O, catalogue and continuation records are updated. F.2 analytic growth estimates, operator decoupling and wider coverage remain open; earlier blocks are preserved.
+**Progress:** Special Functions SF-LEAN-B08 adds 22 declarations proving real-axis series/embeddings, positivity and linear lower bounds, real derivative equations, attained maximum-modulus identities, unit-shift/log lower recurrences and child-radius thresholds. The registered scope is 201 names. Source, I/O, catalogue and continuation records are updated. Explicit F.2 power/type and asymptotic bounds, operator decoupling and wider coverage remain open; earlier blocks are preserved.
 
 Related works and source records: [Paper III: Typed Transfer, Nonlinear Packets, and Obstruction Theory](works/paper-iii.md) · [Special Functions](works/monographs-special-functions.md) · [Quantum and Circuits](works/monographs-quantum-and-circuits.md) · [Signal Reconstruction](works/signal-reconstruction.md) · [COS Method: formal continuation](works/monographs-cos-method-formal-continuation.md) · [p-adic Canonical Realization](works/padic-canonical-realization.md) · [Model-Theory Normalization](works/model-theory-normalization.md).
 
