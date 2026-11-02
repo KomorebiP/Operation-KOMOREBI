@@ -255,7 +255,7 @@ class Rewriter(HTMLParser):
 
 
 class Site:
-    def __init__(self,root,math_root,poly_root,output,revision,source_cache=None,mathjax_root=None,pdfjs_root=None,python_root=None):
+    def __init__(self,root,math_root,poly_root,output,revision,source_cache=None,mathjax_root=None,pdfjs_root=None,python_root=None,lean_wasm_root=None):
         self.root=root
         self.roots={'collection':root,'math':math_root,'polyphase':poly_root}
         self.output=output
@@ -264,6 +264,7 @@ class Site:
         self.mathjax_root=mathjax_root
         self.pdfjs_root=pdfjs_root
         self.python_root=python_root
+        self.lean_wasm_root=lean_wasm_root
         self.registry=json.loads((root/'manifests/browse-resources.json').read_bytes())
         self.status=json.loads((root/'manifests/project-status.json').read_bytes())
         self.assessments={c['id']:c for c in self.status['components']}
@@ -663,6 +664,9 @@ class Site:
         lean_playground = build_lean_playground(self.reader)
         from lean_execution import build as build_lean_execution
         lean_execution = build_lean_execution(self.reader)
+        from lean_browser import build as build_lean_browser
+        if not self.lean_wasm_root:raise ValueError('The pinned browser Lean runtime is required')
+        lean_browser = build_lean_browser(self.reader,self.lean_wasm_root)
         self.bundles()
         self.reader.catalog()
         self.demonstration_program()
@@ -686,6 +690,7 @@ class Site:
         result['lean_reader'] = lean
         result['lean_playground'] = lean_playground
         result['lean_execution'] = lean_execution
+        result['lean_browser'] = lean_browser
         result['side_reader'] = side_reader
         self.write('build-info.json',json.dumps(result,indent=2)+'\n')
         print(json.dumps(result))
@@ -702,9 +707,10 @@ def main():
     p.add_argument('--mathjax-root',type=Path,required=True)
     p.add_argument('--pdfjs-root',type=Path,required=True)
     p.add_argument('--python-root',type=Path,required=True)
+    p.add_argument('--lean-wasm-root',type=Path,required=True)
     args=p.parse_args()
     if not re.fullmatch(r'[0-9a-f]{40}',args.revision):p.error('A full collection commit is required')
-    Site(args.root.resolve(),args.math_root.resolve(),args.polyphase_root.resolve(),args.output.resolve(),args.revision,args.source_cache,args.mathjax_root,args.pdfjs_root,args.python_root).build()
+    Site(args.root.resolve(),args.math_root.resolve(),args.polyphase_root.resolve(),args.output.resolve(),args.revision,args.source_cache,args.mathjax_root,args.pdfjs_root,args.python_root,args.lean_wasm_root).build()
 
 
 if __name__=='__main__':main()

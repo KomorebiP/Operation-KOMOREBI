@@ -588,7 +588,10 @@ python -B tools/update_completion_status.py --check
 python -B tools/fetch_reader_runtime.py --output ../reader-runtime
 python -B tools/fetch_pdf_runtime.py --output ../pdf-reader-runtime
 python -B tools/fetch_python_runtime.py --output ../python-reader-runtime
-python -B tools/build_reader_site.py --math-root ../komorebi-math --polyphase-root ../polyphase-float --mathjax-root ../reader-runtime --pdfjs-root ../pdf-reader-runtime --python-root ../python-reader-runtime --revision FULL_COLLECTION_COMMIT --output ../reader-site
+git clone https://github.com/live-codes/browser-lean.git ../browser-lean
+git -C ../browser-lean checkout a8aed095534e67061e2626b94e8e69193099091d
+python -B tools/prepare_lean_wasm.py --source ../browser-lean --output ../lean-browser-runtime
+python -B tools/build_reader_site.py --math-root ../komorebi-math --polyphase-root ../polyphase-float --mathjax-root ../reader-runtime --pdfjs-root ../pdf-reader-runtime --python-root ../python-reader-runtime --lean-wasm-root ../lean-browser-runtime --revision FULL_COLLECTION_COMMIT --output ../reader-site
 python -B tools/check_reader_site.py --site ../reader-site
 python -m http.server 8765 --directory ../reader-site
 ```
