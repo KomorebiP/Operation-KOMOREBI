@@ -217,7 +217,7 @@ class ReadingDocuments:
         body += ''.join(link(label,url,label==primary) for label,url in ordered)
         body += '<details class="work-more"><summary>More resources</summary><div class="work-more-links">'
         body += ''.join(link(label,url) for label,url in targets if label not in prominent and label!='Paper overview')
-        body += link('All HTML reading editions','read/index.html')
+        body += link('Reading library','read/index.html')
         pair = self.site.rel('side-by-side.html',page)+'?left='+quote(page,safe='')
         body += '<a data-side-reader-link href="'+html.escape(pair,quote=True)+'">Read side by side</a>'
         body += collection_links+'</div></details></nav>'
@@ -271,10 +271,11 @@ class ReadingDocuments:
             if label not in primary: continue
             current = (' aria-current="page"' if url == page else
                        ' aria-current="location"' if label == 'Visual atlas' and page.startswith(url.removesuffix('index.html')) else '')
-            body += '<a href="'+html.escape(self.site.rel(url,page),quote=True)+'"'+current+'>'+html.escape(label)+'</a>'
+            display={'Paper overview':'Work overview','Read chapters':'Contents'}.get(label,label)
+            body += '<a href="'+html.escape(self.site.rel(url,page),quote=True)+'"'+current+'>'+html.escape(display)+'</a>'
         body += '<details class="work-more"><summary>More resources</summary><div class="work-more-links reading-resource-menu">'
         body += work_links(self,work,page,exclude=primary)
-        body += '<a href="'+html.escape(self.site.rel('read/index.html',page),quote=True)+'">All HTML reading editions</a>'
+        body += '<a href="'+html.escape(self.site.rel('read/index.html',page),quote=True)+'">Reading library</a>'
         pair = self.site.rel('side-by-side.html',page)+'?left='+quote(page,safe='')
         body += '<a data-side-reader-link href="'+html.escape(pair,quote=True)+'">Read side by side</a>'
         return body+'</div></details></nav>'

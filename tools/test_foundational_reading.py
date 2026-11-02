@@ -95,6 +95,6 @@ class FoundationalReadingTests(unittest.TestCase):
             for spec in CHAPTERS:
                 markup=(output/spec['url']).read_text(encoding='utf-8')
                 self.assertIn('reading-text-size',markup)
-                self.assertIn('Switch book',markup)
+                self.assertIn('Switch work',markup)
 
 if __name__=='__main__':unittest.main()

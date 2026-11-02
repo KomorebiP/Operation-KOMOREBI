@@ -1074,15 +1074,20 @@ def render(reader):
 def render_reading_index(reader):
     site=reader.site
     page='read/index.html'
-    body='<p class="eyebrow">HTML reading editions</p><h1>Read the papers online</h1><p>Read at your own pace with chapter contents, selectable equations, and direct links between statements, proofs and their sources. Start with Paper I for the foundations, or choose the paper you need.</p><div class="work-list">'
-    for work,config in BOOKS.items():
-        body+='<section class="work"><p class="eyebrow">'+config['label']+'</p><h2>'+html.escape(config['title'])+'</h2><p>'+str(config['main_chapters'])+(' opening chapters' if config.get('partial') else ' main chapters')+'</p><nav aria-label="'+config['label']+' reading formats">'
-        if config.get('partial'): body+='<p>Opening chapters are available in HTML; continue in the PDF or linked sources.</p>'
-        body+='<a class="button" href="'+site.rel(config['chapters'][0]['url'],page)+'">Start '+config['label']+'</a><a href="'+site.rel(config['index'],page)+'">Chapter contents</a>'
-        pdf=reader.primary_pdf(work)
-        if pdf: body+='<a href="'+site.rel(pdf['url'],page)+'">Read PDF</a>'
-        body+='</nav></section>'
-    body+=('</div><h2>Reading options</h2><p>Use Text settings in any core-paper chapter to choose a text size and font, or use browser zoom. '
+    from reading_navigation import entries
+    body='<p class="eyebrow">HTML reading editions</p><h1>Reading library</h1><p>Read papers and books with chapter contents, selectable equations, and links to proofs and original sources. Begin with Paper I for the foundations, or choose a work below.</p><nav class="reading-library-groups" aria-label="Reading collections"><a href="#core-papers">Core papers</a><a href="#books">Books and monographs</a></nav>'
+    for group,identifier,core in [('Core papers','core-papers',True),('Books and monographs','books',False)]:
+        body+='<section id="'+identifier+'"><h2>'+group+'</h2><div class="work-list">'
+        for work,config in BOOKS.items():
+            if bool(re.fullmatch(r'paper-[ivx]+',work))!=core:continue
+            body+='<section class="work"><p class="eyebrow">'+config['label']+'</p><h3>'+html.escape(config['title'])+'</h3><p>'+str(len(entries(config)))+' reading pages'+(' · opening selection' if config.get('partial') else '')+'</p><nav aria-label="'+config['label']+' reading formats">'
+            if config.get('partial'):body+='<p>Opening chapters are available in HTML; continue in the PDF or linked sources.</p>'
+            body+='<a class="button" href="'+site.rel(config['chapters'][0]['url'],page)+'">Start reading</a><a href="'+site.rel(config['index'],page)+'">Contents</a>'
+            pdf=reader.primary_pdf(work)
+            if pdf:body+='<a href="'+site.rel(pdf['url'],page)+'">Read PDF</a>'
+            body+='</nav></section>'
+        body+='</div></section>'
+    body+=('<h2>Reading options</h2><p>Use Text settings in a chapter to choose a text size and font, or use browser zoom. '
            'Find a chapter filters the contents by title or reading-page number. Wide equations and tables have separate areas that can be scrolled with the keyboard. '
            'MathJax provides equation exploration and assistive reading options through its context menu.</p>'
            '<p>All twelve core papers have HTML reading editions that follow the retained manuscripts. '
@@ -1093,8 +1098,8 @@ def render_reading_index(reader):
            'See <a href="'+site.rel('collection/ACCESSIBILITY.html',page)+'">accessibility and reading options</a> for current coverage and limitations.</p>'
            '<p><a href="'+site.rel('documents.html',page)+'">Browse all papers and PDFs</a> · '
            '<a href="'+site.rel('collection/READING_ROUTES.html',page)+'">Choose a reading route</a></p>')
-    site.page(page,'Read the papers online',body)
-    site.search.append(dict(title='Read the papers online',group='Collection',kind='Guides',url=page,text='HTML reading editions '+' '.join(c['label'] for c in BOOKS.values())+' chapters equations proofs',work_ids=list(BOOKS)))
+    site.page(page,'Reading library',body)
+    site.search.append(dict(title='Reading library',group='Collection',kind='Guides',url=page,text='HTML reading editions '+' '.join(c['label'] for c in BOOKS.values())+' chapters equations proofs',work_ids=list(BOOKS)))
 
 
 def passage_links(source_links, reading_links=''):
@@ -1157,7 +1162,8 @@ def statement_directory_url(config):
 
 def render_statement_directory(reader,book):
     config=book['config']
-    if not re.fullmatch(r'paper-[ivx]+',config['work']) and not config.get('reader_controls'):return
+    from reader_display import has_statement_finder
+    if not has_statement_finder(config):return
     site=reader.site;page=statement_directory_url(config);e=html.escape
     body='<p class="eyebrow">Find in '+e(config['label'])+'</p><h1>'+e(config['label'])+': Statements and proofs</h1>'
     body+='<p>Find a statement anywhere in this work by title, printed number, type or source label. Entries follow the chapter order. Each proof link opens the written proof passage.</p>'

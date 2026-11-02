@@ -316,10 +316,15 @@ class Site:
                 url=self.rel('assets/'+name,path)+'?v='+hashlib.sha256((self.root/'website/assets'/name).read_bytes()).hexdigest()[:12]
                 if name.endswith('.css'):chapter_help_script+='<link rel="stylesheet" href="'+url+'">'
                 else:chapter_help_script+='<script defer src="'+url+'" data-reference-work="'+work+'" data-reference-source="'+self.rel('documents/reference-previews/'+work+'.json',path)+'?v='+self.revision+'"></script>'
-        if not work_page and 'data-side-reader-link' not in body and path not in {'side-by-side.html','index.html','404.html','interactive.html','signal-lab.html','works.html','reading-list.html'}:
+        from reader_display import edition,standardize
+        article_start=body.find('<article id="chapter-text"')
+        side_context=body[:article_start] if edition(path) and article_start>=0 else body
+        has_side_action=('class="side-launch"' in side_context) if edition(path) else ('data-side-reader-link' in side_context)
+        if not work_page and not has_side_action and path not in {'side-by-side.html','index.html','404.html','interactive.html','signal-lab.html','works.html','reading-list.html'}:
             pair=self.rel('side-by-side.html',path)+'?left='+quote(path,safe='')
             launch='<p class="side-launch"><a data-side-reader-link href="'+esc(pair,quote=True)+'">Read side by side</a></p>'
             body=re.sub(r'(</h1>)',lambda match:match[1]+launch,body,count=1)
+        body=standardize(body,path)
         root=self.rel('index.html',path)
         nav_html=site_navigation(path)
         source_html=('<a href="'+esc(source,quote=True)+'">Source on GitHub</a>') if source else ''

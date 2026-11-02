@@ -7,13 +7,10 @@ import re
 def enhance(body, page):
     from readable_chapters import BOOKS,statement_directory_url
     from reading_navigation import Navigation
-    match = re.fullmatch(r'read/([a-z0-9-]+)/[^/]+\.html', page)
-    if not match or match[1] not in BOOKS:
-        return body, False
-    work = match[1]
-    config = BOOKS[work]
-    core=bool(re.fullmatch(r'paper-[ivx]+',work))
-    if not core and not config.get('reader_controls'):return body,False
+    from reader_display import edition,has_statement_finder
+    config=edition(page)
+    if not config:return body,False
+    work=config['work']
     is_index = page == config['index']
     is_directory = page == statement_directory_url(config)
     if not is_index and not is_directory and 'id="chapter-text"' not in body:
@@ -23,17 +20,19 @@ def enhance(body, page):
     e = html.escape
     def relative(target):
         return e(posixpath.relpath(target, posixpath.dirname(page)), quote=True)
-    controls = ('<div class="reading-collection-nav"><a href="'+relative('read/index.html')+'">All reading editions</a>'
-                '<a href="'+relative(config['index'] if is_directory else statement_directory_url(config))+'">'+('All chapters' if is_directory else 'Find statements')+'</a>'
-                '<details class="reading-paper-menu"><summary>'+('Switch paper' if core else 'Switch book')+'</summary>'
-                '<nav aria-label="'+('Core papers' if core else 'Foundational books')+'"><ul>')
-    for identifier, book in BOOKS.items():
-        if not (bool(re.fullmatch(r'paper-[ivx]+',identifier)) if core else book.get('reader_controls')):
-            continue
-        current = ' aria-current="'+('page' if is_index or is_directory else 'location')+'"' if identifier == work else ''
-        controls += ('<li><a href="'+relative(statement_directory_url(book) if is_directory else book['index'])+'"'+current+'><strong>'+e(book['label'])+
-                     '</strong><span>'+e(book['title'])+'</span></a></li>')
-    controls += '</ul></nav></details>'
+    controls = '<div class="reading-collection-nav"><a href="'+relative('read/index.html')+'">Reading library</a>'
+    if is_directory:controls+='<a href="'+relative(config['index'])+'">Contents</a>'
+    elif has_statement_finder(config):controls+='<a href="'+relative(statement_directory_url(config))+'">Find statements</a>'
+    controls+='<details class="reading-paper-menu"><summary>Switch work</summary><nav aria-label="Reading editions">'
+    for group,core in [('Core papers',True),('Books and monographs',False)]:
+        controls+='<section><h2>'+group+'</h2><ul>'
+        for identifier,book in BOOKS.items():
+            if bool(re.fullmatch(r'paper-[ivx]+',identifier))!=core:continue
+            current = ' aria-current="'+('page' if is_index or is_directory else 'location')+'"' if identifier == work else ''
+            target=statement_directory_url(book) if is_directory and has_statement_finder(book) else book['index']
+            controls+='<li><a href="'+relative(target)+'"'+current+'><strong>'+e(book['label'])+'</strong><span>'+e(book['title'])+'</span></a></li>'
+        controls+='</ul></section>'
+    controls+='</nav></details>'
     if not is_index and not is_directory:
         controls += ('<details class="reading-display" hidden><summary>Text settings</summary>'
                      '<div><label for="reading-text-size">Text size</label>'

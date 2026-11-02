@@ -16,7 +16,7 @@
     const groups = Array.from(container.querySelectorAll('.reading-contents-group'));
     let savedGroups;
     const form = element('form', undefined, 'reading-chapter-filter');
-    form.setAttribute('role', 'search');form.setAttribute('aria-label', 'Chapters in this paper');
+    form.setAttribute('role', 'search');form.setAttribute('aria-label', 'Chapters in this work');
     const id = 'reading-chapter-query-'+index;
     const label = element('label', 'Find a chapter');label.htmlFor = id;
     const input = element('input');input.id = id;input.type = 'search';
@@ -64,9 +64,9 @@
     const directory = container.classList.contains('reading-statement-directory');
     const groups = Array.from(container.querySelectorAll('.statement-chapter-group'));
     const form = element('form', undefined, 'reading-chapter-filter reading-statement-filter');
-    form.setAttribute('role','search');form.setAttribute('aria-label',directory ? 'Statements in this paper' : 'Statements in this chapter');
+    form.setAttribute('role','search');form.setAttribute('aria-label',directory ? 'Statements in this work' : 'Statements in this chapter');
     const id = 'reading-statement-query-'+index;
-    const label = element('label',directory ? 'Find a statement in this paper' : 'Find a statement');label.htmlFor = id;
+    const label = element('label',directory ? 'Find a statement in this work' : 'Find a statement');label.htmlFor = id;
     const input = element('input');input.id = id;input.type = 'search';input.autocomplete = 'off';
     input.placeholder = 'Title, number, type or source label';
     const clear = element('button','Clear');clear.type = 'reset';clear.hidden = true;
@@ -133,7 +133,7 @@
       texts.set(reference, normalize(text));
     }
     const form = element('form', undefined, 'reading-chapter-filter reading-reference-filter');
-    form.setAttribute('role', 'search');form.setAttribute('aria-label', 'Bibliography');
+    form.setAttribute('role', 'search');form.setAttribute('aria-label', 'References');
     const label = element('label', 'Find a reference');label.htmlFor = 'reading-reference-query';
     const input = element('input');input.id = 'reading-reference-query';input.type = 'search';
     input.placeholder = 'Author, title, year or citation key';input.autocomplete = 'off';

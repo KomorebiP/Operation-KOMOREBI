@@ -26,16 +26,16 @@ class ReaderUsabilityTests(unittest.TestCase):
         self.assertEqual(navigation_title(r'Transport through \(R\cong T\)'),
                          'Transport through R≅ T')
 
-    def test_every_core_paper_has_all_twelve_destinations_and_one_current_work(self):
+    def test_every_edition_has_all_destinations_and_one_current_work(self):
         books = {work:config for work,config in BOOKS.items() if re.fullmatch(r'paper-[ivx]+',work)}
         self.assertEqual(len(books),12)
-        for work, config in books.items():
+        for work, config in BOOKS.items():
             body, enabled = enhance('<h1>Contents</h1>', config['index'])
             self.assertTrue(enabled)
             parsed = Page(body)
-            self.assertEqual(len(re.findall(r'<li><a ',body)),12)
+            self.assertEqual(len(re.findall(r'<li><a ',body)),len(BOOKS))
             self.assertEqual(body.count('aria-current="page"'),1)
-            for other in books.values():
+            for other in BOOKS.values():
                 target = '../'+other['work']+'/index.html' if other['work'] != work else 'index.html'
                 self.assertIn(target,parsed.links)
             self.assertNotIn('Text settings',body)
@@ -74,7 +74,7 @@ class ReaderUsabilityTests(unittest.TestCase):
             if not re.fullmatch(r'paper-[ivx]+',work):continue
             body,enabled=enhance('<h1>Statements</h1>',f'read/{work}/statements.html')
             self.assertTrue(enabled)
-            self.assertIn('<a href="index.html">All chapters</a>',body)
+            self.assertIn('<a href="index.html">Contents</a>',body)
             self.assertIn('aria-current="page"',body)
             self.assertNotIn('Text settings',body)
             for other in BOOKS:
@@ -85,7 +85,7 @@ class ReaderUsabilityTests(unittest.TestCase):
 
     def test_pdf_source_and_noncore_pages_are_unchanged(self):
         for page in ('read/paper-i/pdf.html','read/paper-i/source.html','read/index.html',
-                     'collection/works/paper-i.html','read/monographs-special-functions/index.html'):
+                     'collection/works/paper-i.html'):
             body = '<h1>Source</h1><p>Retained content.</p>'
             self.assertEqual(enhance(body,page),(body,False))
 

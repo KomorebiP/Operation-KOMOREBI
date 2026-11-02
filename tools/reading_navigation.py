@@ -12,7 +12,7 @@ def entries(config):
     result = [dict(url=c['url'], title=c['title']) for c in config['chapters']]
     bibliography = config.get('bib_page')
     if bibliography and bibliography not in {c['url'] for c in result}:
-        result.append(dict(url=bibliography, title='Bibliography'))
+        result.append(dict(url=bibliography, title='References'))
     if not result or len(result) != len({c['url'] for c in result}):
         raise ValueError('Reading sequence must contain unique pages')
     return result
@@ -90,7 +90,7 @@ def navigation(config, page, placement='top'):
     body += '<div class="reading-position"><span><a href="'+overview+'" aria-label="'+e(overview_label+' overview',quote=True)+'">'+e(overview_label)+'</a></span><span>'+str(position+1)+' of '+str(len(sequence))+'</span></div>'
     body += '<div class="reading-steps">'+step(previous,'previous','← Previous' if position else '← Contents')
     body += step(following,'next','Next →' if position+1<len(sequence) else ('Continue reading →' if config.get('partial') else 'Contents →'))+'</div>'
-    body += '<details class="reading-menu"><summary>'+e(config.get('menu_title','Chapters & parts'))+'</summary><div class="reading-menu-panel"><p><a rel="contents" href="'+relative(config['index'])+'">'+e(config.get('index_title','Full contents'))+'</a></p>'
+    body += '<details class="reading-menu"><summary>'+e(config.get('menu_title','Contents'))+'</summary><div class="reading-menu-panel"><p><a rel="contents" href="'+relative(config['index'])+'">'+e(config.get('index_title','Full contents'))+'</a></p>'
     body += contents_list(config,page,position)+'</div></details></nav>'
     return body
 
@@ -156,7 +156,7 @@ def chapter_layout(body,extra_tools=''):
     for name in sorted(controls,key=lambda n:parts[n][0],reverse=True):
         start,end=parts[name];prefix=prefix[:start]+prefix[end:]
     contents=text('outline').replace('<summary>On this page</summary>',
-        '<summary>Contents<span class="reading-current-section" aria-hidden="true"></span></summary>',1)
+        '<summary>On this page<span class="reading-current-section" aria-hidden="true"></span></summary>',1)
     toolbar='<div class="chapter-toolbar">'+''.join(text(name) for name in ('start','resources') if name in parts)+'</div>'
     tools='<div class="chapter-sidebar-tools">'+extra_tools+'</div>' if extra_tools else ''
     reading=parser.reading;returns=''
@@ -175,7 +175,7 @@ def chapter_layout(body,extra_tools=''):
 
 
 def resources(contents):
-    return '<details class="reading-resources"><summary>PDF, source &amp; reading options</summary><div>'+contents+'</div></details>'
+    return '<details class="reading-resources"><summary>Resources &amp; source</summary><div>'+contents+'</div></details>'
 
 
 def work_links(reader, work, page, exclude=('Read chapters',)):
@@ -189,7 +189,7 @@ def work_links(reader, work, page, exclude=('Read chapters',)):
         selected=[(label,url) for label,url in targets if label in labels]
         used.update(label for label,url in selected)
         if selected:
-            body+='<section><h3>'+title+'</h3><ul>'+''.join('<li><a href="'+html.escape(reader.site.rel(url,page),quote=True)+'">'+html.escape(label)+'</a></li>' for label,url in selected)+'</ul></section>'
+            body+='<section><h3>'+title+'</h3><ul>'+''.join('<li><a href="'+html.escape(reader.site.rel(url,page),quote=True)+'">'+html.escape({'Paper overview':'Work overview','Read chapters':'Contents'}.get(label,label))+'</a></li>' for label,url in selected)+'</ul></section>'
     remaining=[(label,url) for label,url in targets if label not in used]
     if remaining:
         body+='<section><h3>Other resources</h3><ul>'+''.join('<li><a href="'+html.escape(reader.site.rel(url,page),quote=True)+'">'+html.escape(label)+'</a></li>' for label,url in remaining)+'</ul></section>'
