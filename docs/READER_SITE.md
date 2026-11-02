@@ -101,6 +101,10 @@ text preferences, and guards against stale loads and wrong-paper data. Run
 `test_reference_previews.py` and `node tools/test_reference_previews.cjs` when
 changing this behavior, then check keyboard, phone, math and passage navigation
 in real rendered chapters.
+For same-document Back navigation, previews mark the restored control with
+`data-reading-history-focus` containing the current URL. The generic hash
+handler consumes that marker once, preserving the explicit focus return while
+continuing to handle ordinary or unrelated fragment navigation.
 
 ## Sources
 

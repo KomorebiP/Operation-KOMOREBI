@@ -70,6 +70,12 @@ const flush=()=>new Promise(resolve=>setImmediate(resolve));
   p.open();await flush();p.dialog.emit('click',{target:p.openLink,clientX:10,clientY:10});
   p.document.activeElement={id:'L2',tabIndex:-1};p.restoreReturn();
   assert.equal(p.document.activeElement,p.link.previewButton,'Same-page Back replaces focus on the old destination with the originating control');
+  const localKey='read/paper-i/a.html#L2|thm:finite';
+  const localIndex={...index,entries:{[localKey]:{...index.entries[key],url:'read/paper-i/a.html#L2'}}};
+  p=fixture(()=>response(localIndex));p.link.href='https://example.test/collection/read/paper-i/a.html#L2';p.open();await flush();
+  p.dialog.emit('click',{target:p.openLink,clientX:10,clientY:10});
+  p.document.activeElement={id:'L2',tabIndex:-1};p.restoreReturn();
+  assert.equal(p.link.previewButton.getAttribute('data-reading-history-focus'),'https://example.test/collection/read/paper-i/a.html','Same-document returns identify their restored focus to hash navigation');
 
   let finish;
   p=fixture(()=>new Promise(resolve=>{finish=resolve;}));p.open();p.close.emit('click');finish(response(index));await flush();

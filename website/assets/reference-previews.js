@@ -69,13 +69,18 @@
       const state={...history.state};delete state.referencePreviewReturn;history.replaceState(state,'',location.href);
       const link=links[marker.index],button=link?.nextElementSibling;
       if (!link || link.href!==marker.href || link.dataset.referencePreview!==marker.label || !button?.classList.contains('reference-preview-open')) return;
-      const destinationId=decodeURIComponent(new URL(marker.destination || location.href,location.href).hash.slice(1));
+      const destination=new URL(marker.destination || location.href,location.href);
+      const destinationId=decodeURIComponent(destination.hash.slice(1));
+      const sameDocument=destination.origin===location.origin && destination.pathname===location.pathname && destination.search===location.search;
       const currentId=decodeURIComponent(location.hash.slice(1));
       setTimeout(()=>{
         const active=document.activeElement;
         const automatic=active===document.body || active===document.documentElement || active?.id==='main' ||
           (active?.tabIndex===-1 && active.id && (active.id===destinationId || active.id===currentId));
-        if (button.isConnected && automatic) button.focus({preventScroll:true});
+        if (button.isConnected && automatic) {
+          if (sameDocument) button.setAttribute('data-reading-history-focus',location.href);
+          button.focus({preventScroll:true});
+        }
       },0);
     } catch {}
   }
