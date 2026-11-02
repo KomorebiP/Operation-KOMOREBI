@@ -21,8 +21,9 @@
       status.textContent = 'That source is not in this catalogue. Choose a file from the list.';
       return;
     }
-    select.value = id;
     activeId = id;
+    filter();
+    select.value = id;
     field('work').textContent = source.label || source.work;
     field('name').textContent = source.path.split('/').pop();
     field('path').textContent = source.path;
