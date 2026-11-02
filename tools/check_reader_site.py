@@ -110,9 +110,16 @@ def check_readable_chapter(root, documents, pages):
         if BOOKS[spec['work']].get('monolithic'):
             validate_monolithic(main,BOOKS[spec['work']])
             assert (report['start_line'],report['end_line'])==(spec['start_line'],spec['end_line'])
-        assert report['macro_source']==main_path
+        macro_source=main_path
+        if BOOKS[spec['work']].get('custom_reader')=='quantum':
+            from quantum_symmetry import SOURCE,MACROS
+            if source==SOURCE:macro_source=MACROS
+        assert report['macro_source']==macro_source
         raw=(root/records[source]['file_url']).read_bytes()
         expressions=original_math(chapter_text(raw.decode('utf-8-sig'),spec))
+        if BOOKS[spec['work']].get('custom_reader')=='quantum':
+            from quantum_reading import source_math
+            expressions=source_math(raw.decode('utf-8-sig'),spec)
         if BOOKS[spec['work']].get('custom_reader')=='methodology':
             from methodology_reading import source_math
             expressions=source_math(raw.decode('utf-8-sig'),spec)
@@ -145,6 +152,9 @@ def check_readable_chapter(root, documents, pages):
             from paper_x_reading import source_macros,CONTINUATION
             continuation=(root/records[CONTINUATION]['file_url']).read_text(encoding='utf-8-sig')
             expected_macros=source_macros(main,continuation)
+        elif BOOKS[spec['work']].get('custom_reader')=='quantum':
+            from quantum_reading import source_macros
+            expected_macros=source_macros(lambda path:(root/records[path]['file_url']).read_text(encoding='utf-8-sig'),spec)
         else:expected_macros=manuscript_macros(main,BOOKS[spec['work']].get('required_macros'))
         assert report['macros']==expected_macros
         assert not report['new_proof_review'] and not report['new_lean_execution']

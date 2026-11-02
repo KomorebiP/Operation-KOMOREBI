@@ -184,6 +184,7 @@ BY_SOURCE = {c['source']:c for c in reversed(CHAPTERS)}
 NUMBERED = {'definition', 'theorem', 'proposition', 'lemma', 'corollary', 'remark', 'example', 'standardfact', 'certificate','boundary','roadmap','construction','classicalinput','classical','conjecture','problem','warning'}
 NUMBERED.update('hist'+kind for kind in ('theorem','proposition','lemma','corollary','definition','example','remark','standardfact'))
 NUMBERED.add('numericalcertificate')
+NUMBERED.update({'principle','question'})
 KIND_NAMES = {'classical':'Classical input','statement':'Supplementary statement','standardfact':'Standard fact','certificate':'Numerical certificate','text':'Passage','roadmap':'Formalization target','classicalinput':'Classical input'}
 KIND_NAMES.update({'hist'+kind:'Historical '+('standard fact' if kind=='standardfact' else kind)
                   for kind in ('theorem','proposition','lemma','corollary','definition','example','remark','standardfact')})
@@ -278,8 +279,8 @@ def original_math(text):
 
 
 def tex_accents(text):
-    accents={"'":'\u0301','`':'\u0300','"':'\u0308','^':'\u0302'}
-    return re.sub(r'''\\(['`"^])(?:\{([A-Za-z])\}|([A-Za-z]))''',lambda m:unicodedata.normalize('NFC',(m[2] or m[3])+accents[m[1]]),text)
+    accents={"'":'\u0301','`':'\u0300','"':'\u0308','^':'\u0302','.':'\u0307'}
+    return re.sub(r'''\\(['`"^.])(?:\{([A-Za-z])\}|([A-Za-z]))''',lambda m:unicodedata.normalize('NFC',(m[2] or m[3])+accents[m[1]]),text)
 
 
 def typography(text):
@@ -595,7 +596,7 @@ class Chapter:
                     out.append(html.escape(text[pos+1]));pos+=2;continue
                 if text[pos:pos+2] in {r'\ ',r'\,',r'\;',r'\:',r'\!'}:
                     out.append('' if text[pos+1]=='!' else ' ');pos+=2;continue
-                accent = re.match(r'''\\['`"^](?:\{[A-Za-z]\}|[A-Za-z])''',text[pos:])
+                accent = re.match(r'''\\['`"^.](?:\{[A-Za-z]\}|[A-Za-z])''',text[pos:])
                 if accent:
                     out.append(html.escape(typography(accent[0]))); pos += accent.end(); continue
                 m = re.match(r'\\([A-Za-z]+)', text[pos:])
@@ -1304,7 +1305,7 @@ def render_book(reader,book):
                     width,height=png_dimensions(preview_raw)
                     dimensions=dict(width=width,height=height)
                 size=' width="'+str(dimensions['width'])+'" height="'+str(dimensions['height'])+'"'
-                figure_number=('Figure '+node['number']+'. ') if config.get('show_figure_numbers') else ''
+                figure_number=('Figure '+node['number']+'. ') if node['number'] and (config.get('show_figure_numbers') or getattr(chapter,'show_figure_numbers',False)) else ''
                 body+='<figure id="'+node['id']+'" tabindex="-1"><img src="'+image+'"'+size+' alt="'+e(alt,quote=True)+'" loading="lazy"><figcaption>'+figure_number+chapter.inline(caption)+'</figcaption>'+description_link+passage_links(links)+'</figure>'
             elif kind in {'table','longtable','tabularx','tabular'}:
                 aid_key,aid=table_reading_aid(config,source,node['id'])
@@ -1366,6 +1367,9 @@ def render_book(reader,book):
         body=apply_copyediting(reader,page,body)
         site.page(page,title,body)
         expressions=original_math(chapter_text(raw.decode('utf-8-sig'),spec))
+        if config.get('custom_reader')=='quantum':
+            from quantum_reading import source_math
+            expressions=source_math(raw.decode('utf-8-sig'),spec)
         if config.get('custom_reader')=='methodology':
             from methodology_reading import source_math
             expressions=source_math(raw.decode('utf-8-sig'),spec)
@@ -1390,7 +1394,7 @@ def render_book(reader,book):
         if chapter.math!=expressions:
             difference=next((i for i,(a,b) in enumerate(zip(chapter.math,expressions)) if a!=b),min(len(chapter.math),len(expressions)))
             raise ValueError('Reading math differs at '+source+' expression '+str(difference)+' rendered '+str(chapter.math[difference:difference+1])+' original '+str(expressions[difference:difference+1]))
-        report=dict(source=source,source_sha256=hashlib.sha256(raw).hexdigest(),url=page,math_expressions=len(expressions),math_sequence_sha256=hashlib.sha256(json.dumps(expressions,ensure_ascii=False).encode()).hexdigest(),references=len(chapter.references),labels=sum(len(n['labels']) for n in chapter.nodes),nodes=[{k:n[k] for k in ('kind','id','line','end_line','labels','number') if k in n} for n in chapter.nodes],macro_source=config['main'],macros=chapter.macros,new_proof_review=False,new_lean_execution=False)
+        report=dict(source=source,source_sha256=hashlib.sha256(raw).hexdigest(),url=page,math_expressions=len(expressions),math_sequence_sha256=hashlib.sha256(json.dumps(expressions,ensure_ascii=False).encode()).hexdigest(),references=len(chapter.references),labels=sum(len(n['labels']) for n in chapter.nodes),nodes=[{k:n[k] for k in ('kind','id','line','end_line','labels','number') if k in n} for n in chapter.nodes],macro_source=getattr(chapter,'macro_source',config['main']),macros=chapter.macros,new_proof_review=False,new_lean_execution=False)
         if getattr(chapter,'nested_tables',None):report['nested_tables']=chapter.nested_tables
         aided_tables.update(getattr(chapter,'table_aids_used',set()))
         reports.append(report)
