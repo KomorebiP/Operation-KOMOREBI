@@ -371,7 +371,9 @@ def inspect_site(root):
     lean_execution=verify_lean_execution(root,documents)
     from lean_browser import verify as verify_lean_browser
     verify_lean_browser(root,documents)
-    assert sum(p.stat().st_size for p in root.rglob('*') if p.is_file()) < 1024**3, 'Published reader site exceeds GitHub Pages size limit'
+    site_bytes=sum(p.stat().st_size for p in root.rglob('*') if p.is_file())
+    print('Published site bytes:',site_bytes,flush=True)
+    assert site_bytes < 1024**3, 'Published reader site exceeds GitHub Pages size limit: '+str(site_bytes)
     return dict(status='PASS',html_pages=len(pages),local_links=links,fragments=fragments,euler_worked_examples=euler_cases,factorial_worked_examples=factorial_cases,wavelet_worked_examples=wavelet_cases,stirling_worked_examples=stirling_cases,roots_newton_worked_examples=roots_newton_cases,
                 quantum_worked_examples=quantum_cases,search_pages=len(index),reading_bundles=len(bundles),checked_bundle_files=zipped_files,download_selection=download_selection,side_reader=side_reader,
                 reading_documents=len(documents['files']),pdfs=pdf_count,editorial_editions=len(editions),readable_math_expressions=readable_math,paper_vii=paper_vii,atlas=atlas,paper_vi_atlas=paper_vi_atlas,paper_vii_atlas=paper_vii_atlas,notation=notation,special_functions=special_functions,reading_navigation=reading_navigation,

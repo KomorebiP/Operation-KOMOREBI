@@ -30,16 +30,21 @@ Browsers without the required facilities get a failure message and no successful
 result. The page can be tested on an ordinary localhost HTTP server with no
 headers. A single-threaded binary could later remove this isolation step.
 
-`prepare_lean_wasm.py` repackages compiler-matched libraries into gzip packs with
-explicit offsets and SHA-256 checksums. It follows imports in the exact Mathlib
-source revision to retain the prepared examples' Mathlib closure and excludes
-duplicated core/Std/Lean/Batteries data. SOURCE.json records input and output
-identities. The workflow verifies and copies these assets into the published
-site; large binaries are not added to this repository's source tree. The final
-site checker enforces the 1 GiB Pages publication limit.
+`prepare_lean_wasm.py` prepares small manifests over compiler-matched public
+packs, following imports in the exact Mathlib source revision. Std/Lean/Batteries
+artifacts are compared byte for byte with the per-file tree; matching packed
+entries are shared, with any remaining files supplied individually. The site
+stores about 2.6 MB of metadata. Large binaries remain at immutable URLs in the
+pinned upstream public GitHub repository. No additional hosting account is used.
+SOURCE.json records every remote URL, size and SHA-256, plus local metadata and
+input identities. The final site checker verifies these records and enforces
+the 1 GiB Pages publication limit.
 
-The service worker caches verified compiler downloads under checksum-based
-keys. Quota failures allow checking to continue without persistent caching.
+The service worker serves the compiler's virtual same-origin asset paths by
+fetching the pinned public GitHub URLs with CORS and credentials omitted. It
+verifies bytes before returning or caching them under checksum-based keys.
+Shared packs are downloaded once across library layers. Quota failures allow
+checking to continue without persistent caching.
 Its cache contains compiler artifacts, not proof edits. Readers can clear it on
 the page. The worker is started only after pressing Run.
 
@@ -57,6 +62,7 @@ parser in a separate elaboration, against the same import environment. A
 completion marker is required; errors in this check are retained, including
 errors unrelated to the marker. An absent marker or failed probe fails checking.
 This is also why the Lean library is needed even for a small Std proof.
+Source controls that the probe cannot preserve are rejected before compilation.
 
 Workspace dependencies are checked first. A generated wrapper imports Lean,
 names the module, opens a public section for exported-only WASM artifacts, and

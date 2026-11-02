@@ -1,8 +1,9 @@
-"""Repack pinned browser Lean assets into static, checksum-bound library bundles.
+"""Prepare small manifests for pinned, checksum-bound public browser Lean assets.
 
 Inputs come from the reader workflow's pinned upstream checkout. Mathlib imports
 are followed in the exact source revision recorded by its artifact manifest.
-This packages existing artifacts; it does not compile or certify paper proofs.
+Large artifacts stay at their immutable public GitHub URLs. This prepares their
+import manifests; it does not compile or certify paper proofs.
 """
 import argparse
 import gzip
@@ -74,17 +75,26 @@ def prepare(source, output, mathlib_archive):
     core=json.loads((source/'lean-wasm/core-layer.json').read_bytes())
     if upstream['leanCommit']!=LEAN or core['leanCommit']!=LEAN or upstream['mathlibCommit']!=MATHLIB:
         raise ValueError('Browser compiler and library build identities disagree')
-    inventory={}
+    inventory={};remote={}
+    origin='https://raw.githubusercontent.com/live-codes/browser-lean/'+UPSTREAM+'/public/'
     def record(path):
         data=(source/path).read_bytes()
+        if path.endswith(('.js','.json','.txt')):data=data.replace(b'\r\n',b'\n')
         inventory[path]=dict(size=len(data),sha256=sha(data))
         return data
+    def remote_file(virtual,path,data=None):
+        data=record(path) if data is None else data
+        remote[virtual]=dict(size=len(data),sha256=sha(data),url=origin+path)
+        return remote[virtual]
     record('lean-mathlib/real-analysis-layer.json')
     for p in sorted((source/'lean-wasm').rglob('*')):
         if not p.is_file():continue
         rel=p.relative_to(source).as_posix()
-        target=output/rel;target.parent.mkdir(parents=True,exist_ok=True)
-        target.write_bytes(record(rel))
+        data=record(rel)
+        if p.name=='core-layer.json':
+            target=output/rel;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(data)
+        else:remote_file(rel,rel,data)
+    roots={};expected={}
     for root in ('Std','Lean','Batteries'):
         paths=sorted((source/'lean-lib'/root).rglob('*'))
         paths=[p for p in paths if p.is_file() and p.name.endswith('.gz')]
@@ -93,28 +103,41 @@ def prepare(source, output, mathlib_archive):
         for ext in ('.ir.gz','.ir.sig.gz'):
             p=source/'lean-lib'/(root+ext)
             if p.exists():paths.append(p)
-        def entries():
-            for p in sorted(set(paths)):
-                rel=p.relative_to(source).as_posix()
-                yield p.relative_to(source/'lean-lib').as_posix()[:-3], gzip.decompress(record(rel))
-        layer=pack(entries(),output/'lean-lib',root.lower(),dict(leanCommit=LEAN))
-        if not layer['files']:raise ValueError('Empty library: '+root)
-        write_json(output/'lean-lib'/(root+'-layer.json'),layer)
+        names=[]
+        for p in sorted(set(paths)):
+            path=p.relative_to(source/'lean-lib').as_posix()[:-3]
+            rel=p.relative_to(source).as_posix();compressed=record(rel);raw=gzip.decompress(compressed)
+            expected[path]=dict(root=root,source=rel,sha256=sha(raw),bytes=len(raw))
+            names.append(path)
+        roots[root]=dict(leanCommit=LEAN,files=names,packs=[],loose=[])
     selected=mathlib_closure(mathlib_archive)
-    def entries():
-        for item in upstream['packs']:
-            blob=gzip.decompress(record('lean-mathlib/'+item['file']))
-            if len(blob)!=item['bytes']:raise ValueError('Invalid upstream Mathlib pack')
-            for entry in item['entries']:
-                path=entry['path']
-                name=path.removesuffix('.sig').removesuffix('.olean').removesuffix('.ir').replace('/','.')
-                # The upstream Mathlib layer duplicates core, Lean, Std and Batteries.
-                # Supply those once through the ordinary library packs instead.
-                external=name.split('.')[0] not in {'Init','Lean','Std','Batteries','Mathlib'}
-                if external or name in selected and name.startswith('Mathlib.'):
-                    yield path,blob[entry['offset']:entry['offset']+entry['bytes']]
-    layer=pack(entries(),output/'lean-mathlib','paper-imports',
-               dict(leanCommit=LEAN,mathlibCommit=MATHLIB,version='komorebi-browser-pilot-1'))
+    layer=dict(leanCommit=LEAN,mathlibCommit=MATHLIB,version='komorebi-browser-pilot-2',files=[],packs=[])
+    covered=set()
+    for item in upstream['packs']:
+        source_path='lean-mathlib/'+item['file'];compressed=record(source_path);blob=gzip.decompress(compressed)
+        if len(blob)!=item['bytes']:raise ValueError('Invalid upstream Mathlib pack')
+        groups={root:[] for root in roots};groups['Mathlib']=[]
+        for entry in item['entries']:
+            path=entry['path'];wanted=expected.get(path)
+            if wanted and sha(blob[entry['offset']:entry['offset']+entry['bytes']])==wanted['sha256']:
+                groups[wanted['root']].append(entry);covered.add(path)
+            name=path.removesuffix('.sig').removesuffix('.olean').removesuffix('.ir').replace('/','.')
+            external=name.split('.')[0] not in {'Init','Lean','Std','Batteries','Mathlib'}
+            if external or name in selected and name.startswith('Mathlib.'):
+                groups['Mathlib'].append(entry);layer['files'].append(path)
+        if not any(groups.values()):continue
+        receipt=remote_file('shared/'+item['file'],source_path,compressed)
+        for root,entries in groups.items():
+            if entries:
+                target=layer if root=='Mathlib' else roots[root]
+                target['packs'].append(dict(file='../shared/'+item['file'],bytes=item['bytes'],
+                                            compressedBytes=len(compressed),sha256=receipt['sha256'],entries=entries))
+    for path,wanted in expected.items():
+        if path in covered:continue
+        virtual='loose/'+path+'.gz';receipt=remote_file(virtual,wanted['source'])
+        roots[wanted['root']]['loose'].append(dict(path=path,file='../'+virtual,
+                                                 sha256=receipt['sha256'],bytes=wanted['bytes']))
+    for root,manifest in roots.items():write_json(output/'lean-lib'/(root+'-layer.json'),manifest)
     available={p[:-6].replace('/','.') for p in layer['files'] if p.endswith('.olean')}
     missing={n for n in selected if n.startswith('Mathlib.')}-available
     if missing:raise ValueError('Mathlib artifacts not in upstream layer: '+', '.join(sorted(missing)))
@@ -125,7 +148,10 @@ def prepare(source, output, mathlib_archive):
     source_record=dict(schema=1,upstream=UPSTREAM,lean=LEAN,mathlib=MATHLIB,
                        mathlib_source_sha256=sha(mathlib_archive.read_bytes()),
                        mathlib_seeds=SEEDS,mathlib_modules=sorted(available),
-                       inputs=inventory,files=files,bytes=sum(p['size'] for p in files.values()))
+                       inputs=inventory,files=files,remote_files=remote,
+                       bytes=sum(p['size'] for p in files.values())+sum(p['size'] for p in remote.values()),
+                       local_bytes=sum(p['size'] for p in files.values()),
+                       loose_files=sum(len(m['loose']) for m in roots.values()))
     write_json(output/'SOURCE.json',source_record)
     return source_record
 

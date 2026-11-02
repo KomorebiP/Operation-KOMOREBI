@@ -73,5 +73,16 @@ class LeanBrowserTests(unittest.TestCase):
         self.assertIn('paper-x-residual',action(site,'index.html',source=WORKSPACES[0][3][0][1]))
         self.assertEqual(action(site,'index.html',source='unsupported.lean'),'')
 
+    def test_remote_assets_must_use_the_pinned_public_source(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            _,_,runtime=self.fixture(Path(tmp))
+            path=runtime/'SOURCE.json';data=json.loads(path.read_bytes())
+            record=data['files'].pop('lean-wasm/lean.js')
+            record['url']='https://raw.githubusercontent.com/live-codes/browser-lean/'+UPSTREAM+'/public/lean-wasm/lean.js'
+            data['remote_files']={'lean-wasm/lean.js':record};path.write_text(json.dumps(data))
+            verify_runtime(runtime)
+            record['url']='https://example.com/unpinned.js';path.write_text(json.dumps(data))
+            with self.assertRaisesRegex(ValueError,'Unpinned'):verify_runtime(runtime)
+
 
 if __name__=='__main__':unittest.main()

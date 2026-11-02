@@ -3,7 +3,7 @@
  * Installed only under lean/browser/. It never stores reader proof text.
  */
 'use strict';
-const CACHE = 'komorebi-lean-62b6a229-v1';
+const CACHE = 'komorebi-lean-62b6a229-v2';
 const PREFIX = 'komorebi-lean-';
 const engine = new URL('engine/', self.registration.scope);
 let manifest;
@@ -34,13 +34,14 @@ async function responseFor(request) {
     if (!r.ok) throw new Error('Compiler download record is unavailable.');
     return r.json();
   }).catch(e => { manifest = null; throw e; });
-  const record = (await manifest).files[relative];
+  const source=await manifest;
+  const record = source.files[relative] || source.remote_files?.[relative];
   if (!record) return isolated(await fetch(request));
   const cache = await caches.open(CACHE);
   const key = new Request(new URL(relative+'?sha256='+record.sha256,engine));
   const cached = await cache.match(key);
   if (cached) return isolated(cached);
-  const response = await fetch(request);
+  const response = record.url ? await fetch(record.url,{credentials:'omit',mode:'cors'}) : await fetch(request);
   if (!response.ok) return isolated(response);
   const bytes = await response.clone().arrayBuffer();
   const hash = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)), b => b.toString(16).padStart(2,'0')).join('');

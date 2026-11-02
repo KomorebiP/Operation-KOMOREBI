@@ -39,12 +39,19 @@ def verify_runtime(root):
     required={'lean-wasm/lean.js','lean-wasm/lean.wasm.gz','lean-wasm/core-layer.json',
               'lean-lib/Lean-layer.json','lean-lib/Std-layer.json','lean-lib/Batteries-layer.json',
               'lean-mathlib/real-analysis-layer.json'}
-    if not required <= data['files'].keys():raise ValueError('Incomplete browser compiler download')
+    remotes=data.get('remote_files',{})
+    if not required <= (data['files'].keys()|remotes.keys()):raise ValueError('Incomplete browser compiler download')
     for path,record in data['files'].items():
         from lean_runner import safe_path
         raw=(root/safe_path(path)).read_bytes()
         if len(raw)!=record['size'] or hashlib.sha256(raw).hexdigest()!=record['sha256']:
             raise ValueError('Browser compiler checksum mismatch: '+path)
+    prefix='https://raw.githubusercontent.com/live-codes/browser-lean/'+UPSTREAM+'/public/'
+    for path,record in remotes.items():
+        from lean_runner import safe_path
+        safe_path(path)
+        if (not record['url'].startswith(prefix) or len(record['sha256'])!=64 or record['size']<1):
+            raise ValueError('Unpinned remote compiler asset: '+path)
     return data
 
 
@@ -98,7 +105,7 @@ def build(reader,runtime):
 <p>This pilot uses Lean 4.33.0, compiler revision <code>{runtime_record['lean'][:12]}</code>, and selected Mathlib modules from <code>{runtime_record['mathlib'][:12]}</code>. The papers’ retained projects may use different versions. Results here are browser experiments and do not change the collection’s recorded verification.</p>
 <p>Choose from three prepared workspaces. You can edit any file in a workspace. Required project files are compiled first, then the dependent file. Imports outside the packaged libraries produce an error. Compiler crashes and interrupted checks produce no successful result.</p>
 <p>For local imports, a generated wrapper names and exports the module into the compiler’s temporary filesystem. Original downloads remain byte for byte identical to the retained sources. A clean result means Lean completed checking these files with no reported warnings; it is not an audit of axioms or an entire paper.</p>
-<p>Compiler download cache: about {runtime_record['bytes']/1048576:.0f} MiB across all available libraries. Proofs using only Std need less. Edits live in this tab; save a copy before leaving.</p>
+<p>Compiler download cache: about {runtime_record['bytes']/1048576:.0f} MiB across all available libraries. Proofs using only Std need less. Large files come from pinned public GitHub assets and are checked against the download record. Edits live in this tab; save a copy before leaving.</p>
 <p><a href="examples.json">Source checksums</a> · <a href="engine/SOURCE.json">Compiler download record</a> · <a href="{site.rel('assets/lean-wasm/NOTICE.txt',PAGE)}">Open source credits</a></p>
 <button type="button" data-local-clear>Clear downloaded compiler cache</button></details>
 <noscript><p>JavaScript is needed to run Lean. Original sources remain available through <a href="{site.rel('lean/index.html',PAGE)}">Inspect Lean</a>.</p></noscript>

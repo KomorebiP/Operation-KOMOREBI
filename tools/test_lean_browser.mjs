@@ -1,5 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import vm from 'node:vm';
+import {readFile} from 'node:fs/promises';
+import {webcrypto} from 'node:crypto';
 globalThis.document={querySelector:()=>null};
 const {moduleSource,outcome,withCompatibility,mapDiagnostic}=await import('../website/assets/lean-browser.js');
 const {createCompiler}=await import('../website/assets/lean-wasm/compiler.js');
@@ -62,4 +65,30 @@ test('runtime failures are not clean checks and warnings remain warnings',async(
   assert.equal(outcome(warning),'warning');
   const clean=await simulatedCompiler(completed);
   assert.equal(outcome(clean),'passed');
+});
+
+test('public asset proxy verifies bytes, omits credentials and reuses its checked cache',async()=>{
+  const script=await readFile(new URL('../website/assets/lean-browser-sw.js',import.meta.url),'utf8');
+  const bytes=new TextEncoder().encode('compiler bytes');
+  const digest=Buffer.from(await webcrypto.subtle.digest('SHA-256',bytes)).toString('hex');
+  const events={},stored=new Map();let downloads=0;
+  const source={files:{},remote_files:{
+    'shared/good.pack':{size:bytes.length,sha256:digest,url:'https://raw.githubusercontent.com/pinned/good'},
+    'shared/bad.pack':{size:bytes.length,sha256:digest,url:'https://raw.githubusercontent.com/pinned/bad'}
+  }};
+  vm.runInNewContext(script,{
+    self:{registration:{scope:'https://example.test/lean/browser/'},addEventListener:(name,handler)=>events[name]=handler},
+    URL,Request,Response,Headers,crypto:webcrypto,
+    caches:{open:async()=>({match:async key=>stored.get(key.url)?.clone(),put:async(key,value)=>stored.set(key.url,value.clone())})},
+    fetch:async(input,options)=>{
+      const url=String(input);
+      if(url.endsWith('SOURCE.json'))return Response.json(source);
+      assert.equal(options.credentials,'omit');assert.equal(options.mode,'cors');downloads++;
+      return new Response(url.endsWith('/bad')?'wrong bytes':bytes);
+    }
+  });
+  async function request(name){let answer;events.fetch({request:new Request('https://example.test/lean/browser/engine/shared/'+name+'.pack'),respondWith:p=>answer=p});return answer;}
+  let response=await request('good');assert.equal(response.status,200);assert.equal(await response.text(),'compiler bytes');
+  response=await request('good');assert.equal(response.headers.get('Cross-Origin-Embedder-Policy'),'require-corp');assert.equal(downloads,1);
+  response=await request('bad');assert.equal(response.status,503);assert.match(await response.text(),/checksum mismatch/);
 });

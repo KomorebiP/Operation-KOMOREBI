@@ -557,6 +557,24 @@ async function loadPackedLayer({ manifestUrl, packBase, label }) {
     post({ type: 'layer', stage: 'progress', label, pack: index + 1, packs: manifest.packs.length, files, bytes });
   }
 
+  const loose=manifest.loose || [];
+  let next=0,completed=0;
+  async function loadLoose() {
+    for(;;) {
+      const index=next++;
+      if(index>=loose.length)return;
+      const entry=loose[index],response=await fetch(`${packBase}/${entry.file}`);
+      if(!response.ok)throw new Error(`${entry.path}: HTTP ${response.status}`);
+      let raw=new Uint8Array(await response.arrayBuffer());
+      const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',raw)),b=>b.toString(16).padStart(2,'0')).join('');
+      if(hash!==entry.sha256)throw new Error(`${entry.path}: checksum mismatch`);
+      raw=await gunzip(raw);
+      if(raw.length!==entry.bytes)throw new Error(`${entry.path}: invalid length`);
+      writeLibEntry(Module.FS,entry.path,raw);files++;bytes+=raw.length;completed++;
+      if(completed%32===0||completed===loose.length)post({type:'modules',stage:'progress',root:label,files:completed,total:loose.length});
+    }
+  }
+  await Promise.all(Array.from({length:Math.min(16,loose.length)},loadLoose));
   loadedLayers.add(label);
   post({
     type: 'layer',
