@@ -14,9 +14,9 @@ Cyclic families, sequence constructions, reciprocal structure, and exact methods
 
 **Suggested background:** Begin with the introduction and glossary. Then use the volume's own definitions to identify the background needed for its subject.
 
-**Recorded results and limits:** Proofread reading volumes plus 89 named formal declarations: the inherited 39-declaration finite core, 29 declarations in Block01, and 21 in Block02. The new block proves local holomorphy, termwise differentiation and the normalized coupled differential equations on norm(z)^2<2. Entire continuation and the full analytic monograph remain open.
+**Recorded results and limits:** Proofread reading volumes plus 108 named formal declarations: 39 in the inherited finite core, 29 in Block01, 21 in Block02, and 19 in Block03. The constructed coupled sums are entire and satisfy both normalized differential equations for strict positive contractions. Analytic uniqueness, Perron growth and full monograph coverage remain open.
 
-**Remaining work:** Prove extension and agreement from radius R to R/Q for strict contractions, then glue the radius ladder. Analytic uniqueness, the reverse coefficient bridge, Perron growth and full rescaling equivalence remain separate obligations.
+**Remaining work:** Prove that arbitrary normalized analytic solutions have the established Taylor coefficient recurrence, then use recurrence uniqueness and analytic identity. Apply the reverse coefficient bridge to analytic-germ parameter recovery; retain Perron growth and full rescaling equivalence as later obligations.
 
 The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
 
@@ -90,7 +90,7 @@ These links include code, examples, checks, or build tools. Read the [edition gu
 ## Evidence
 
 - [Completion, Lean coverage, confidence, and cited evidence](../STATUS_CATALOG.md#monographs-special-functions)
-- [Latest recorded written review](../SPECIAL_FUNCTIONS_ANALYTIC_BLOCK02.md)
+- [Latest recorded written review](../SPECIAL_FUNCTIONS_ENTIRE_BLOCK03.md)
 - [Source-file receipt (identity and availability)](../../manifests/source-imports/monographs-special-functions.json)
 - [All files in this source edition](../../monographs/special-functions/)
 

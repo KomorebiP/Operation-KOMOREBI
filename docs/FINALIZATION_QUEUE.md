@@ -245,7 +245,7 @@ Publication completion and checked subresults leave wider formal or implementati
 
 **Done when:** Choose one precise next theorem/refinement contract, establish its dependencies, and admit it only with corresponding source and verification evidence.
 
-**Progress:** Special Functions SF-LEAN-B02 adds 21 source-bound local analytic declarations. The coupled sums satisfy the equations on norm(z)^2<2; the strict-contraction extension ladder and analytic uniqueness remain open.
+**Progress:** Special Functions SF-LEAN-B03 adds 19 source-bound declarations proving entire existence and both global equations under strict positive contraction. The source scope is 108 named declarations. Analytic uniqueness and the reverse coefficient bridge remain open; the earlier local and finite blocks are preserved.
 
 Related works and source records: [Paper III: Typed Transfer, Nonlinear Packets, and Obstruction Theory](works/paper-iii.md) · [Special Functions](works/monographs-special-functions.md) · [Quantum and Circuits](works/monographs-quantum-and-circuits.md) · [Signal Reconstruction](works/signal-reconstruction.md) · [COS Method: formal continuation](works/monographs-cos-method-formal-continuation.md) · [p-adic Canonical Realization](works/padic-canonical-realization.md) · [Model-Theory Normalization](works/model-theory-normalization.md).
 
