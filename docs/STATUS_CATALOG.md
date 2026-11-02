@@ -1118,15 +1118,15 @@ Internally audited final manuscript with exact finite coherence calculations. Th
 
 **Active development** · Lean: **Selected results recorded** · Confidence basis: **Recorded formal evidence**
 
-The separate Lean 4.24.0 companion checks 216 theorem declarations. It retains binary graph reconstruction, exact unpinned/partial-pin counts and the supplied-traversal solver. A new automatic constructor computes actual component indices and root walks using a checked indexed path table; every reachable pair is covered after n rounds on Fin n. The automatic solver is sound and complete for arbitrary proposed binary edge fields and pins, without caller-supplied traversals or assignment enumeration. Fifteen inherited sources are unchanged, and both two-world obstruction theorems remain axiom-free. Rank formulas, sparse forest/complexity results and wider transport/forcing claims remain outside this formal scope.
+The separate Lean 4.24.0 companion checks 266 theorem declarations. It retains graph reconstruction, exact unpinned/partial-pin counts, and automatic checked traversal. New finite edge indexing counts each undirected edge once. Complete duplicate-free image and actual additive quotient lists have exactly 2^(n-c) and 2^(m+c-n) elements; log2 gives their binary cardinality ranks. Equal derivative fibers and equal cosets are proved before power cancellation, with c<=n and n-c<=m. Nineteen inherited sources are unchanged, and both obstruction theorems remain axiom-free. No external module/basis interface, sparse forest/complexity theorem or wider transport/forcing claim is added.
 
-**Next step:** Formalize the rank formulas n-c and m-n+c. Develop a verified sparse spanning-forest implementation and state any proved complexity bounds. Preserve the reference solver, original source and earlier companions.
+**Next step:** Develop a verified sparse spanning-forest implementation and state any proved complexity bounds. If a module/basis interface is introduced, connect its dimension to the established exact cardinalities. Preserve the exhaustive rank and reconstruction references, original source and earlier companions.
 
 [Return to this work: paper, proofs, Lean, and code](works/resolution-semantics.md)
 
 [Edition and reader guide](components/RESOLUTION_SEMANTICS_LEAN.md)
 
-[Separate Lean companion replay and exact scope](../verification/resolution-semantics/automatic-windows-2026-11-01-run1/receipt.json)
+[Separate Lean companion replay and exact scope](../verification/resolution-semantics/ranks-windows-2026-11-01-run2/receipt.json)
 
 [Source directory](../research/resolution-semantics) · [README.md](../research/resolution-semantics/README.md) · [THEOREM_INDEX.md](../research/resolution-semantics/THEOREM_INDEX.md) · [PROOF_BOUNDARY.md](../research/resolution-semantics/PROOF_BOUNDARY.md)
 

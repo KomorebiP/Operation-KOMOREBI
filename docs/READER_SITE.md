@@ -29,6 +29,14 @@ removes the scrolling treatment. Run `node tools/test_math_overflow.cjs` for
 the adaptive keyboard behavior and check a real rendered chapter at narrow
 phone widths with extra-large text.
 
+Direct passage links and in-page navigation correct their scroll position once
+MathJax and web fonts have finished loading. This correction retains the target
+and existing browser history. Pointer, touch, wheel and keyboard input cancel
+the pending correction, as do a newer destination, changed focus or a removed
+passage. Readers who have already interacted before page load keep their place.
+Run `node tools/test_reader_navigation.cjs` for delayed layout, cancellation,
+safe hashes, disclosure opening and browser-history behavior.
+
 [Citation and figure navigation](../tools/reading_links.py) adds native links
 to the existing figure assets and return links from bibliography entries to
 their citing HTML passages. Return routes are derived from the rendered
@@ -790,6 +798,15 @@ later edition: clarify the tensor example's carrier-dimension wording and protec
 German title capitalization in the generated bibliography. The record binds
 19 source files and gives the exact source and reading passages. The retained
 text and mathematical tokens are unchanged; the same review exclusions apply.
+
+The [Paper XII proofreading record](../manifests/reader-proofreading-paper-xii-2026-11-01.json)
+covers all 16 main reading sections, including the reading map, abstract,
+publication scope, thirteen manuscript sections and complete verification/revision
+record, plus notation, references, captions, tables, preamble and both bibliography
+files. One bibliography typography correction is recommended for a later edition:
+use “pp.” before the Mazur entry's page range. The record binds four source files
+and gives the exact source and reading passage. The retained text and mathematical
+tokens are unchanged; the same review exclusions apply.
 
 ## Signal Laboratory
 
