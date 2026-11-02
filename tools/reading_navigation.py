@@ -90,7 +90,7 @@ def navigation(config, page, placement='top'):
     body += '<div class="reading-position"><span><a href="'+overview+'" aria-label="'+e(overview_label+' overview',quote=True)+'">'+e(overview_label)+'</a></span><span>'+str(position+1)+' of '+str(len(sequence))+'</span></div>'
     body += '<div class="reading-steps">'+step(previous,'previous','← Previous' if position else '← Contents')
     body += step(following,'next','Next →' if position+1<len(sequence) else ('Continue reading →' if config.get('partial') else 'Contents →'))+'</div>'
-    body += '<details class="reading-menu"><summary>'+e(config.get('menu_title','Contents'))+'</summary><div class="reading-menu-panel"><p><a rel="contents" href="'+relative(config['index'])+'">'+e(config.get('index_title','Full contents'))+'</a></p>'
+    body += '<details class="reading-menu"><summary>'+e(config.get('menu_title','Chapters'))+'</summary><div class="reading-menu-panel"><p><a rel="contents" href="'+relative(config['index'])+'">'+e(config.get('index_title','Full contents'))+'</a></p>'
     body += contents_list(config,page,position)+'</div></details></nav>'
     return body
 

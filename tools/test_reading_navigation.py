@@ -42,7 +42,7 @@ class ReadingNavigationTests(unittest.TestCase):
         parsed=Navigation(markup).controls[0]
         current=[a for a in parsed['links'] if a.get('aria-current')=='page']
         self.assertEqual(len(current),1);self.assertEqual(current[0]['href'],'two.html')
-        self.assertIn('<summary>Contents</summary>',markup)
+        self.assertIn('<summary>Chapters</summary>',markup)
         self.assertIn('II. Second part',markup)
         self.assertIn('rel="prev" href="one.html"',markup)
         self.assertIn('rel="next" href="references.html"',markup)
