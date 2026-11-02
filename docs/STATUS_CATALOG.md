@@ -234,11 +234,13 @@ Reviewed essay with written arguments and 40 finite exact-check groups. No new L
 
 **Reading edition complete** · Lean: **Selected results recorded** · Confidence basis: **Recorded formal evidence**
 
-Proofread reading volumes plus 68 named formal declarations in a finite core and Block 1. The full analytic monograph is not formalized.
+Proofread reading volumes plus 89 named formal declarations: the inherited 39-declaration finite core, 29 declarations in Block01, and 21 in Block02. The new block proves local holomorphy, termwise differentiation and the normalized coupled differential equations on norm(z)^2<2. Entire continuation and the full analytic monograph remain open.
 
-**Next step:** Select the next analytic theorem family and state its formal dependencies before extending the finite core.
+**Next step:** Prove extension and agreement from radius R to R/Q for strict contractions, then glue the radius ladder. Analytic uniqueness, the reverse coefficient bridge, Perron growth and full rescaling equivalence remain separate obligations.
 
 [Return to this work: paper, proofs, Lean, and code](works/monographs-special-functions.md)
+
+[Latest written review and its scope](SPECIAL_FUNCTIONS_ANALYTIC_BLOCK02.md)
 
 [Source directory](../monographs/special-functions) · [LEAN_STATUS.md](../monographs/special-functions/LEAN_STATUS.md) · [README.md](../monographs/special-functions/README.md) · [lean/README.md](../monographs/special-functions/lean/README.md)
 
