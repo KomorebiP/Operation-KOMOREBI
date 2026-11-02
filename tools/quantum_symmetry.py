@@ -64,12 +64,15 @@ def number_chapter(chapter,spec,counters,equations):
             counts['statement']+=1;node['number']=str(number)+'.'+str(counts['statement'])
             if i+1<len(chapter.nodes) and chapter.nodes[i+1]['kind']=='proof':
                 chapter.proof_pairs[node['id']]=chapter.nodes[i+1]['id']
-        if node['kind'] in {'figure','longtable'}:
+        if node['kind']=='figure' or node['kind'] in {'longtable','table'} and r'\caption' in node['body']:
             key='figure' if node['kind']=='figure' else 'table'
             counts[key]+=1;node['number']=str(number)+'.'+str(counts[key])
     # Equation wrappers were translated to display math for the shared reader.
     # Their labels still resolve to the original printed equation number.
-    for match in re.finditer(r'\\begin\{equation\}(.*?)\\end\{equation\}',chapter.original_text,re.S):
-        counts['equation']+=1
-        for label in re.findall(r'\\label\{([^{}]+)\}',match[1]):
-            equations[label]=str(number)+'.'+str(counts['equation'])
+    for match in re.finditer(r'\\begin\{(equation|align)\}(.*?)\\end\{\1\}',chapter.original_text,re.S):
+        from readable_chapters import split_cells
+        blocks=[match[2]] if match[1]=='equation' else [row for row in split_cells(match[2],r'\\') if row.strip()]
+        for body in blocks:
+            counts['equation']+=1
+            for label in re.findall(r'\\label\{([^{}]+)\}',body):
+                equations[label]=str(number)+'.'+str(counts['equation'])

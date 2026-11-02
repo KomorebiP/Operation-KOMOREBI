@@ -3,6 +3,7 @@ from html.parser import HTMLParser
 import json
 import posixpath
 import re
+from urllib.parse import urlsplit,urlunsplit
 
 VOID={'area','base','br','col','embed','hr','img','input','link','meta','param','source','track','wbr'}
 
@@ -66,11 +67,15 @@ def check_directory(markup,chapters,page):
     """Recompute the full directory from canonical chapter indexes."""
     expected=[]
     for url,chapter_markup in chapters:
-        prefix=posixpath.relpath(url,posixpath.dirname(page))
+        def relative_target(target):
+            parts=urlsplit(target)
+            assert not parts.scheme and not parts.netloc,('External statement route',target)
+            path=posixpath.normpath(posixpath.join(posixpath.dirname(url),parts.path)) if parts.path else url
+            return urlunsplit(('', '',posixpath.relpath(path,posixpath.dirname(page)),parts.query,parts.fragment))
         for entry in StatementIndex(chapter_markup).entries:
             expected.append(dict(entry,chapter=url,
-                                 targets=[prefix+target for target in entry['targets']],
-                                 proofs=[prefix+target for target in entry['proofs']]))
+                                 targets=[relative_target(target) for target in entry['targets']],
+                                 proofs=[relative_target(target) for target in entry['proofs']]))
     actual=StatementIndex(markup).entries
     assert actual==expected,('Paper statement finder differs from chapter indexes',page)
     return dict(statements=len(actual),proof_links=sum(len(entry['proofs']) for entry in actual))

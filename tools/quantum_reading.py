@@ -1,4 +1,4 @@
-"""Source-bound arithmetic and symmetry chapters of Quantum and Circuits.
+"""Source-bound arithmetic, symmetry and catalytic chapters of Quantum and Circuits.
 
 Print wrappers are translated explicitly. The retained source lines, QA labels,
 proof endings, mathematical expression order and original figures stay bound
@@ -15,21 +15,20 @@ MAIN=BASE+'volume.tex'
 PREFIX='read/'+WORK+'/'
 DATA=json.loads(Path(__file__).with_name('quantum_sections.json').read_text(encoding='utf-8'))
 CHAPTERS=DATA['chapters']
-BOOK=dict(work=WORK,label='Quantum and Circuits',title='Quantum and Circuits: Arithmetic and symmetry',
+BOOK=dict(work=WORK,label='Quantum and Circuits',title='Quantum and Circuits: Arithmetic, symmetry, and catalysis',
     base=BASE,main=MAIN,bib=BASE+'generated/references.tex',inline_bibliography=True,
     index=PREFIX+'index.html',bib_page=PREFIX+'references.html',chapters=CHAPTERS,
-    custom_reader='quantum',partial=True,main_chapters=7,required_macros=[],
+    custom_reader='quantum',partial=True,main_chapters=12,required_macros=[],
     reader_controls=True,statement_navigation=True,numbered_bibliography=True,
-    bibliography_introduction='These seventeen entries accompany the arithmetic and symmetry treatments, in their original collected order and numbering. The full volume retains the references for its other treatments.',
+    bibliography_introduction='These collected entries accompany the arithmetic, symmetry, and catalytic treatments, in their original order and numbering. The full volume retains the references for the circuit treatment.',
     figure_receipts='assets/figures/quantum-arithmetic/figures.json',
     table_reading_aids={(t['source'].removeprefix(BASE),t['id']):t['aid'] for t in DATA['tables']},
     require_table_reading_aids=True,contents_groups=DATA['groups'],
-    reading_introduction='Read chapters 1–7: the arithmetic bridge and its visual study, followed by five chapters on symmetry collapse, '
-        'packet simulation, measurements, and the complexity boundary. Written proofs, original figures, benchmark records, and open questions retain their stated scope. The remaining book and formal companions are available in the full PDF and linked sources.',
-    reading_note='This HTML selection covers the arithmetic and symmetry treatments of the 344-page volume. It preserves the authored wording, '
+    reading_introduction='Read chapters 1–12: the arithmetic bridge and visual study, symmetry collapse and packet simulation, '
+        'then catalytic gate-set distortion from the complete linear core to quantum and reversible gate families. Written proofs, original figures, exact census records, code listings, and open questions retain their stated scope. The remaining book and formal companions are available in the full PDF and linked sources.',
+    reading_note='This HTML selection covers the arithmetic, symmetry, and catalytic treatments of the 344-page volume. It preserves the authored wording, '
         'mathematics, captions, and recorded limits. The selection adds no proof review or Lean execution.',
     continuation_sources=[(BASE+'generated/'+name,title) for name,title in [
-        ('g_main.tex','Chapters 8–12: Catalytic gate set distortion'),
         ('c_main.tex','Chapters 13–20: Circuit obstructions'),
         ('c_visual.tex','Chapter 21: Circuit examples in view')]])
 
@@ -102,48 +101,55 @@ def source_specs(load):
 def source_math(raw,spec):
     from readable_chapters import original_math,chapter_text
     from quantum_symmetry import SOURCE,normalize as normalize_symmetry
-    return original_math(chapter_text(normalize_symmetry(raw) if spec['source']==SOURCE else raw,spec))
+    from quantum_catalytic import SOURCE as CATALYTIC,normalize as normalize_catalytic
+    normalizer={SOURCE:normalize_symmetry,CATALYTIC:normalize_catalytic}.get(spec['source'],lambda text:text)
+    return original_math(chapter_text(normalizer(raw),spec))
 
 
 def source_macros(load,spec):
     from readable_chapters import manuscript_macros
     from quantum_symmetry import SOURCE,source_macros as symmetry_macros
-    return symmetry_macros(load) if spec['source']==SOURCE else manuscript_macros(load(MAIN),[])
+    from quantum_catalytic import SOURCE as CATALYTIC,source_macros as catalytic_macros
+    if spec['source']==SOURCE:return symmetry_macros(load)
+    if spec['source']==CATALYTIC:return catalytic_macros(load)
+    return manuscript_macros(load(MAIN),[])
 
 
 def prepare_book(reader,config):
     import readable_chapters as reading
     from quantum_symmetry import SOURCE as SYMMETRY,MACROS as SYMMETRY_MACROS,FIGURES,normalize as normalize_symmetry,number_chapter
+    from quantum_catalytic import SOURCE as CATALYTIC,MACROS as CATALYTIC_MACROS,FIGURES as CATALYTIC_FIGURES,normalize as normalize_catalytic
+    treatments={SYMMETRY:(normalize_symmetry,SYMMETRY_MACROS,FIGURES),CATALYTIC:(normalize_catalytic,CATALYTIC_MACROS,CATALYTIC_FIGURES)}
     def load(path):
         record=reader.add(path)
         if not record:raise ValueError('Missing retained Quantum source: '+path)
         return reader.site.read_source(record).decode('utf-8-sig')
     source_specs(load);main=load(MAIN);macros=reading.manuscript_macros(main,[])
     collected=reading.manuscript_bibliography(load(config['bib']))
-    references=[r for r in collected if r['key'].startswith(('q:','s:'))]
+    references=[r for r in collected if r['key'].startswith(('q:','s:','g:'))]
     if [r['key'] for r in references]!=DATA['reference_keys']:raise ValueError('Review Quantum reference selection')
     if references!=collected[:len(references)]:raise ValueError('Review original Quantum citation numbering')
     for path,title in config['continuation_sources']:reader.add(path,title)
     chapters=[];labels={};state={};qa=[];current_source=None;printed_chapter=None;counters={};equations={}
     for spec in CHAPTERS:
-        symmetry=spec['source']==SYMMETRY
-        if symmetry and spec['printed_chapter']!=printed_chapter:
+        treatment=treatments.get(spec['source'])
+        if treatment and spec['printed_chapter']!=printed_chapter:
             printed_chapter=spec['printed_chapter'];state={'section_prefix':str(printed_chapter)+'.'}
-        elif not symmetry and spec['source']!=current_source:
+        elif not treatment and spec['source']!=current_source:
             current_source=spec['source']
             state={'section_prefix':str(DATA['selected_sources'].index(current_source)+1)+'.'}
         raw=reader.site.read_source(reader.add(spec['source']))
-        selected=reading.chapter_text((normalize_symmetry if symmetry else normalize)(raw.decode('utf-8-sig')),spec)
+        selected=reading.chapter_text((treatment[0] if treatment else normalize)(raw.decode('utf-8-sig')),spec)
         chapter=reading.Chapter(selected,source_macros(load,spec),state=state,check_refs=False)
         chapter.url=spec['url'];chapter.base=BASE;chapter.allow_prose_groups=True
         chapter.bibliography_url=config['bib_page'];chapter.table_config=config;chapter.source=spec['source']
         chapter.table_aids_used=set();chapter.nested_tables=[];chapter.proof_pairs={}
-        if symmetry:
+        if treatment:
             chapter.original_text=reading.chapter_text(raw.decode('utf-8-sig'),spec)
-            chapter.macro_source=SYMMETRY_MACROS
+            chapter.macro_source=treatment[1]
             number_chapter(chapter,spec,counters,equations)
         for i,node in enumerate(chapter.nodes):
-            if not symmetry and node['kind']=='theorem':
+            if not treatment and node['kind']=='theorem':
                 number='QA'+str(len(qa)+1).zfill(2);node['number']=number;qa.append(number)
                 proof=chapter.nodes[i+1] if i+1<len(chapter.nodes) else None
                 if not proof or proof['kind']!='proof':raise ValueError('Missing authored proof for '+number)
@@ -151,7 +157,7 @@ def prepare_book(reader,config):
         for key,node in chapter.labels.items():
             if key in labels:raise ValueError('Repeated Quantum label: '+key)
             reference=node['number'] or node['title']
-            if symmetry and node['number']:
+            if treatment and node['number']:
                 kind='Table' if node['kind'] in {'longtable','tabular','table'} else reading.KIND_NAMES.get(node['kind'],node['kind'].capitalize())
                 reference=kind+' '+node['number']
             node['url']=chapter.url
@@ -161,12 +167,15 @@ def prepare_book(reader,config):
     if qa!=['QA'+str(i).zfill(2) for i in range(1,21)]:raise ValueError('Review arithmetic statement inventory')
     for label,number in equations.items():
         labels[label].update(reference_label='Equation ('+number+')',plain_reference_label=number,equation_number=number)
+    from quantum_catalytic import bind_named_proofs
+    bind_named_proofs(chapters,labels)
     for spec,raw,chapter in chapters:
         chapter.labels=labels;chapter.validate_references()
         chapter.equation_numbers=equations
         chapter.citations={r['key']:(str(i),chapter.relative(config['bib_page'])+'#ref-'+r['key']) for i,r in enumerate(references,1)}
     from reader_figure_assets import prepare
-    figures=prepare(reader,config,[c for c in chapters if c[0]['source']!=SYMMETRY])
-    figures.update(prepare(reader,dict(config,figure_receipts=FIGURES),[c for c in chapters if c[0]['source']==SYMMETRY]))
+    figures=prepare(reader,config,[c for c in chapters if c[0]['source'] not in treatments])
+    for source,treatment in treatments.items():
+        figures.update(prepare(reader,dict(config,figure_receipts=treatment[2]),[c for c in chapters if c[0]['source']==source]))
     return dict(config=config,chapters=chapters,references=references,macros=macros,main=main,
         figure_assets=figures)

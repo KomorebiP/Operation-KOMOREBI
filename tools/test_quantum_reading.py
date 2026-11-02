@@ -1,4 +1,4 @@
-"""Check arithmetic and symmetry transcription against the retained manuscript."""
+"""Check the first twelve chapters against the retained manuscript."""
 import json
 from pathlib import Path
 import re
@@ -10,6 +10,7 @@ from unittest.mock import patch
 import readable_chapters as reading
 from quantum_reading import BOOK,CHAPTERS,DATA,WORK,normalize,source_specs,source_math
 from quantum_symmetry import SOURCE as SYMMETRY,MACROS,FIGURES,normalize as normalize_symmetry
+from quantum_catalytic import SOURCE as CATALYTIC,MACROS as CATALYTIC_MACROS,normalize as normalize_catalytic
 from build_reader_site import Site
 from check_reader_site import Page,check_readable_chapter
 from reader_documents import ReadingDocuments,source_lines
@@ -42,15 +43,15 @@ def publish_fixture(output):
 
 
 class QuantumReadingTests(unittest.TestCase):
-    def test_selection_covers_chapters_one_through_seven_and_fails_closed(self):
+    def test_selection_covers_chapters_one_through_twelve_and_fails_closed(self):
         load=lambda path:(ROOT/path).read_bytes().decode('utf-8-sig')
         self.assertEqual(source_specs(load),CHAPTERS)
-        self.assertEqual(len(CHAPTERS),72)
+        self.assertEqual(len(CHAPTERS),100)
         for source in DATA['selected_sources']:
             text=load(source)
-            translated=(normalize_symmetry if source==SYMMETRY else normalize)(text)
+            translated={SYMMETRY:normalize_symmetry,CATALYTIC:normalize_catalytic}.get(source,normalize)(text)
             self.assertEqual(text.count('\n'),translated.count('\n'))
-            if source!=SYMMETRY:self.assertEqual(reading.original_math(text),reading.original_math(translated))
+            if source not in {SYMMETRY,CATALYTIC}:self.assertEqual(reading.original_math(text),reading.original_math(translated))
         with self.assertRaisesRegex(ValueError,'Review changed Quantum source'):
             source_specs(lambda path:load(path)+'\nUnreviewed source change.')
         self.assertTrue(BOOK['partial'])
@@ -66,7 +67,8 @@ class QuantumReadingTests(unittest.TestCase):
             first=match[1];repeated=match[2]
             self.assertEqual(first.strip(),repeated.strip())
             return first
-        semantic=re.sub(r'(\\toprule.*?\\midrule\s*)\\endfirsthead\s*(\\toprule.*?\\midrule\s*)\\endhead',strip_header,raw,flags=re.S)
+        semantic=re.sub(r'\\begin\{longtable\}.*?\\end\{longtable\}',
+            lambda block:re.sub(r'(\\toprule.*?\\midrule\s*)\\endfirsthead\s*(\\toprule.*?\\midrule\s*)\\endhead',strip_header,block[0],flags=re.S),raw,flags=re.S)
         pattern=re.compile(reading.MATH_PATTERN.pattern+r'|\\begin\{equation\}(.*?)\\end\{equation\}',re.S)
         expected=[next(value for value in m.groups() if value is not None) for m in pattern.finditer(semantic)]
         actual=[value for spec in CHAPTERS if spec['source']==SYMMETRY for value in source_math(raw,spec)]
@@ -76,6 +78,25 @@ class QuantumReadingTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'continuation header'):
             normalize_symmetry(raw.replace('full dim. & packet dim.','altered dim. & packet dim.',1))
 
+    def test_catalytic_formula_sequence_including_the_six_numbered_gate_rows(self):
+        raw=(ROOT/CATALYTIC).read_bytes().decode('utf-8-sig')
+        # Extract source displays independently; numbered align rows represent
+        # six separately numbered equations and lose only their layout column.
+        def strip_header(match):
+            self.assertEqual(match[1].strip(),match[2].strip());return match[1]
+        semantic=re.sub(r'\\begin\{longtable\}.*?\\end\{longtable\}',
+            lambda block:re.sub(r'(\\toprule.*?\\midrule\s*)\\endfirsthead\s*(\\toprule.*?\\midrule\s*)\\endhead',strip_header,block[0],flags=re.S),raw,flags=re.S)
+        semantic=re.sub(r'\\begin\{(lstlisting|verbatim)\}(?:\[[^\]]*\])?.*?\\end\{\1\}','',reading.clean_tex(semantic),flags=re.S)
+        pattern=re.compile(reading.MATH_PATTERN.pattern+r'|\\begin\{equation\}(.*?)\\end\{equation\}|\\begin\{align\}(.*?)\\end\{align\}',re.S)
+        expected=[]
+        for match in pattern.finditer(semantic):
+            if match[6] is None:expected.append(next(v for v in match.groups() if v is not None))
+            else:expected.extend(row.replace('&','').strip('\n') for row in reading.split_cells(match[6],r'\\') if row.strip())
+        actual=[value for spec in CHAPTERS if spec['source']==CATALYTIC for value in source_math(raw,spec)]
+        self.assertEqual(actual,expected);self.assertEqual(len(actual),1906)
+        with self.assertRaisesRegex(ValueError,'gate alignment'):
+            normalize_catalytic(raw.replace('g:gate:a6','g:gate:changed'))
+
     def test_published_math_proofs_tables_figures_and_source_lines(self):
         with tempfile.TemporaryDirectory() as folder:
             output=Path(folder);reader=publish_fixture(output)
@@ -83,22 +104,23 @@ class QuantumReadingTests(unittest.TestCase):
             documents=dict(files=list(reader.records.values()))
             with patch.object(reading,'BOOKS',{WORK:BOOK}),patch.object(reading,'CHAPTERS',CHAPTERS):
                 total=check_readable_chapter(output,documents,pages)
-            self.assertEqual(total,1205)
+            self.assertEqual(total,3111)
             nodes=[n for _,_,chapter in reader.readable_books[WORK]['chapters'] for n in chapter.nodes]
-            arithmetic=[n for spec,_,chapter in reader.readable_books[WORK]['chapters'] if spec['source']!=SYMMETRY for n in chapter.nodes]
+            arithmetic=[n for spec,_,chapter in reader.readable_books[WORK]['chapters'] if spec['source'] not in {SYMMETRY,CATALYTIC} for n in chapter.nodes]
             statements=[n for n in arithmetic if n['kind']=='theorem']
             proofs=[n for n in nodes if n['kind']=='proof']
             self.assertEqual([n['number'] for n in statements],['QA'+str(i).zfill(2) for i in range(1,21)])
-            self.assertEqual(len(proofs),39)
+            self.assertEqual(len(proofs),90)
             self.assertTrue(all(r'\(\square\)' in n['body'] for n in arithmetic if n['kind']=='proof'))
             raw=(ROOT/DATA['selected_sources'][0]).read_text(encoding='utf-8')
             expected=[raw.count('\n',0,m.start())+1 for m in re.finditer(r'\\subsection\*\{Theorem QA\d\d\. ',raw)]
             self.assertEqual([n['line'] for n in statements],expected)
-            self.assertEqual(sum(n['kind']=='figure' for n in nodes),39)
-            self.assertEqual(len(reader.images),38)
-            self.assertEqual(sum(n['kind'] in {'longtable','tabular'} for n in nodes),6)
-            self.assertEqual(sum(n['kind']=='question' for n in nodes),12)
-            self.assertEqual(sum(n['kind']=='interpretation' for n in nodes),21)
+            self.assertEqual(sum(n['kind']=='figure' for n in nodes),73)
+            self.assertEqual(len(reader.images),70)
+            nested=[n for _,_,c in reader.readable_books[WORK]['chapters'] for n in c.nested_tables]
+            self.assertEqual(sum(n['kind'] in {'table','longtable','tabular'} for n in nodes)+len(nested),21)
+            self.assertEqual(sum(n['kind']=='question' for n in nodes),44)
+            self.assertEqual(sum(n['kind']=='interpretation' for n in nodes),49)
             # Reconstruct the chapter-wide statement counters from raw source,
             # independently of the reader's section-based parser and renumbering.
             source=(ROOT/SYMMETRY).read_bytes().decode('utf-8-sig');chapter_number=2;counter=0;expected=[]
@@ -119,7 +141,7 @@ class QuantumReadingTests(unittest.TestCase):
                 else:
                     counter+=1
                     for label in re.findall(r'\\label\{([^{}]+)\}',match[1]):expected_equations[label]=str(chapter_number)+'.'+str(counter)
-            self.assertEqual(equations,expected_equations)
+            self.assertEqual({k:v for k,v in equations.items() if k.startswith('s:')},expected_equations)
             proof_page=next(s['url'] for s,_,_ in symmetry_chapters if s['title']=='Permutation-invariant mixed states and commutant compression')
             proof_markup=(output/proof_page).read_text(encoding='utf-8')
             self.assertIn('>Equation (4.8)</a>',proof_markup)
@@ -137,11 +159,64 @@ class QuantumReadingTests(unittest.TestCase):
             self.assertIn('in this HTML selection',(output/directory).read_text(encoding='utf-8'))
             chapters=[(s['url'],(output/s['url']).read_text(encoding='utf-8')) for s in CHAPTERS]
             result=check_directory((output/directory).read_text(encoding='utf-8'),chapters,directory)
-            self.assertEqual(result['proof_links'],39)
-            self.assertEqual(result['statements'],69)
+            self.assertEqual(result['proof_links'],90)
+            self.assertEqual(result['statements'],203)
             references=(output/BOOK['bib_page']).read_text(encoding='utf-8')
             self.assertIn('Życzkowski',references)
             self.assertIn('[17] s:TransferRecords',references)
+            self.assertIn('[45] g:WeedbrookEtAl2012',references)
+            catalytic=[c for c in reader.readable_books[WORK]['chapters'] if c[0]['source']==CATALYTIC]
+            self.assertTrue(all(c.macro_source==CATALYTIC_MACROS for _,_,c in catalytic))
+            source=(ROOT/CATALYTIC).read_bytes().decode('utf-8-sig');number=7;counter=0;expected=[]
+            for match in re.finditer(r'\\chapter\{|\\begin\{('+ '|'.join(sorted(reading.NUMBERED))+r')\}',source):
+                if match[1] is None:number+=1;counter=0
+                else:
+                    counter+=1;expected.append((match[1],str(number)+'.'+str(counter),source.count('\n',0,match.start())+1))
+            actual=[(n['kind'],n['number'],n['line']) for _,_,c in catalytic for n in c.nodes if n['kind'] in reading.NUMBERED]
+            self.assertEqual(actual,expected);self.assertEqual(len(actual),134)
+            # Every cross-page proof link follows an explicitly named source
+            # title; check the destination and return independently of the binder.
+            import posixpath
+            named=list(re.finditer(r'\\begin\{proof\}\[Proof of \\cref\{([^{}]+)\}\]',source))
+            self.assertEqual(len(named),8)
+            for match in named:
+                line=source.count('\n',0,match.start())+1
+                proof_spec=next(s for s,_,_ in catalytic if s['start_line']<=line<=s['end_line'])
+                statement_spec,statement=next((s,n) for s,_,c in catalytic for n in c.nodes if match[1] in n['labels'])
+                proof_href=posixpath.relpath(proof_spec['url'],posixpath.dirname(statement_spec['url']))+'#L'+str(line)
+                statement_href=posixpath.relpath(statement_spec['url'],posixpath.dirname(proof_spec['url']))+'#'+statement['id']
+                self.assertIn('href="'+proof_href+'">Read proof</a>',(output/statement_spec['url']).read_text(encoding='utf-8'))
+                self.assertIn('href="'+statement_href+'">Back to statement</a>',(output/proof_spec['url']).read_text(encoding='utf-8'))
+            # Reconstruct every equation counter from original source order.
+            number=7;counter=0;expected={}
+            for match in re.finditer(r'\\chapter\{|\\begin\{(equation|align)\}(.*?)\\end\{\1\}',source,re.S):
+                if match[1] is None:number+=1;counter=0
+                else:
+                    rows=[match[2]] if match[1]=='equation' else [r for r in reading.split_cells(match[2],r'\\') if r.strip()]
+                    for row in rows:
+                        counter+=1
+                        for label in re.findall(r'\\label\{([^{}]+)\}',row):expected[label]=str(number)+'.'+str(counter)
+            equations=catalytic[0][2].equation_numbers
+            self.assertEqual({k:v for k,v in equations.items() if k.startswith('g:')},expected)
+            gate_page=next(s['url'] for s,_,_ in catalytic if s['title']=='The universal six-row atom')
+            gate_markup=(output/gate_page).read_text(encoding='utf-8')
+            for i in range(1,7):self.assertIn('Equation ('+expected['g:gate:a'+str(i)]+')',gate_markup)
+            # Code is a retained listing, not executed as part of publication.
+            from html.parser import HTMLParser
+            class Listings(HTMLParser):
+                def __init__(self):super().__init__();self.active=False;self.items=[]
+                def handle_starttag(self,tag,attrs):
+                    if tag=='pre':self.active=True;self.items.append('')
+                def handle_endtag(self,tag):
+                    if tag=='pre':self.active=False
+                def handle_data(self,data):
+                    if self.active:self.items[-1]+=data
+            listing=Listings()
+            for spec,_,_ in catalytic:listing.feed((output/spec['url']).read_text(encoding='utf-8'))
+            expected=[m[2].strip('\n') for m in re.finditer(r'\\begin\{(lstlisting|verbatim)\}(?:\[[^\]]*\])?(.*?)\\end\{\1\}',source,re.S)]
+            self.assertEqual(listing.items,expected);self.assertEqual(len(expected),6)
+            self.assertEqual(sum(n['kind']=='algorithm' for n in nodes),3)
+            self.assertEqual(sum(n['kind']=='protocol' for n in nodes),2)
             for spec in CHAPTERS:
                 markup=(output/spec['url']).read_text(encoding='utf-8')
                 self.assertIn('reading-text-size',markup)

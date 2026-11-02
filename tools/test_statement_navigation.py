@@ -73,5 +73,19 @@ class StatementNavigationTests(unittest.TestCase):
         self.assertNotIn('arithmatex',body)
         self.assertEqual(search[0]['url'],'read/paper-i/statements.html')
 
+    def test_named_proof_routes_resolve_across_chapter_directories(self):
+        chapter,report,_,_=self.fixture();chapter.url='read/paper-i/main/results.html'
+        theorem=next(n for n in chapter.nodes if n['kind']=='theorem')
+        chapter.proof_routes={theorem['id']:'read/paper-i/proofs/finite.html#L10'}
+        local=statement_navigation(chapter,{})
+        self.assertIn('href="../proofs/finite.html#L10"',local)
+        article='<article id="chapter-text"><section id="'+theorem['id']+'"><a href="../proofs/finite.html#L10">Read proof</a></section></article>'
+        self.assertEqual(check(local+article,report)['proof_links'],1)
+        directory='<div class="reading-statement-directory"><section data-statement-chapter="'+chapter.url+'"><ul>'+statement_entries(chapter,{},'main/results.html')+'</ul></section></div>'
+        self.assertIn('href="proofs/finite.html#L10"',directory)
+        self.assertEqual(check_directory(directory,[(chapter.url,local)],'read/paper-i/statements.html')['proof_links'],1)
+        with self.assertRaises(AssertionError):
+            check_directory(directory.replace('proofs/finite.html#L10','proofs/other.html#L10'),[(chapter.url,local)],'read/paper-i/statements.html')
+
 
 if __name__=='__main__':unittest.main()
