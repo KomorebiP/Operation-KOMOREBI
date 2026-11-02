@@ -29,7 +29,7 @@ test('compatibility is explicit and diagnostics point to the original proof',()=
   assert.equal(mapDiagnostic('error (line 2, col 0)',source,false,compatibility),'error (browser compatibility lemma, col 0)');
 });
 
-async function simulatedCompiler(probe,main={success:true,messages:[]}) {
+async function simulatedCompiler(probe,main={success:true,messages:[]},source='example : True := by trivial') {
   const oldWorker=globalThis.Worker,oldFetch=globalThis.fetch;
   globalThis.fetch=async()=>new Response('',{status:404});
   globalThis.Worker=class {
@@ -47,13 +47,14 @@ async function simulatedCompiler(probe,main={success:true,messages:[]}) {
   };
   try{
     const compiler=await createCompiler({baseUrl:'https://example.invalid/',syntaxCheck:'full'});
-    try{return await compiler.run('example : True := by trivial');}finally{compiler.dispose();}
+    try{return await compiler.run(source);}finally{compiler.dispose();}
   }finally{globalThis.Worker=oldWorker;globalThis.fetch=oldFetch;}
 }
 const completed={success:true,messages:[{severity:'information',data:'__KOMOREBI_PARSE_COMPLETE__'}]};
 test('a missing or failed syntax probe cannot turn a silent run into success',async()=>{
   await assert.rejects(simulatedCompiler({success:true,messages:[]}),/did not complete the syntax check/);
   await assert.rejects(simulatedCompiler({success:false,error:'parser worker stopped'}),/parser worker stopped/);
+  await assert.rejects(simulatedCompiler(completed,{success:true,messages:[]},'example : False := b\u0000y trivial'),/unsupported control characters/);
 });
 test('runtime failures are not clean checks and warnings remain warnings',async()=>{
   await assert.rejects(simulatedCompiler(completed,{success:false,error:'runtime exited'}),/runtime exited/);

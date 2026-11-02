@@ -272,6 +272,11 @@ export async function createCompiler(options = {}) {
 			if (typeof code !== 'string') {
 				throw new Error('run() needs the program source as its first argument.');
 			}
+			// The parser probe escapes ordinary whitespace but drops other controls.
+			// Reject them rather than checking a different source string.
+			if (/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/.test(code)) {
+				throw new Error('Source contains unsupported control characters. Remove them before checking.');
+			}
 
 			const mode = runOptions.syntaxCheck ?? syntaxCheck;
 			const state = { attempted: new Set(), layers: new Set(), loaded: [], notMirrored: [] };
