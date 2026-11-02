@@ -28,6 +28,8 @@ These introductory calculations lead into this work’s subject. The source and 
 
 - [17. Calculate quantum measurement and dephasing](../examples/17_QUANTUM_MEASUREMENT.md) · [Terms and source routes](../LEARNING_MAP.md#quantum-measurement)
 
+**Complete demonstration with runnable code:** [Quantum phase, measurement, and information loss](../demonstrations/QUANTUM_PHASE_MEASUREMENT.md).
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

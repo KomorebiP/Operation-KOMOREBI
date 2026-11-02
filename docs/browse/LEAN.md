@@ -296,10 +296,11 @@ Jump to a work:
 
 ### [Quantum and Circuits](../works/monographs-quantum-and-circuits.md#lean)
 
+- [Formal replay: setup, pinned runtime, and coverage](../../monographs/quantum-and-circuits/release_tools/README.md)
 - [Quantum Lean source snapshot](../../monographs/quantum-and-circuits/verification/quantum_fresh_20261026/fresh/)
 - [Circuit Lean source snapshot](../../monographs/quantum-and-circuits/verification/circuits_fresh_20261026/fresh_source/)
-- [CLAIMS.md](../../monographs/quantum-and-circuits/sources/circuits/Komorebi_Circuit_Obstructions_Research_Edition_1.0/source/komorebi-circuit-obstructions-v1.2.0/docs/CLAIMS.md)
-- [CLAIMS.md](../../monographs/quantum-and-circuits/sources/circuits/Komorebi_Circuit_Obstructions_Research_Edition_1.0/historical_companion/Komorebi_Theorem_Companion_Source/source_snapshot/docs/CLAIMS.md)
+- [Current circuit claim register (C01–C08)](../../monographs/quantum-and-circuits/sources/circuits/Komorebi_Circuit_Obstructions_Research_Edition_1.0/source/komorebi-circuit-obstructions-v1.2.0/docs/CLAIMS.md)
+- [Historical circuit claim register (preserved companion)](../../monographs/quantum-and-circuits/sources/circuits/Komorebi_Circuit_Obstructions_Research_Edition_1.0/historical_companion/Komorebi_Theorem_Companion_Source/source_snapshot/docs/CLAIMS.md)
 - Coverage: Selected results recorded
 - [Return to this work’s Lean section](../works/monographs-quantum-and-circuits.md#lean)
 - [Work overview](../works/monographs-quantum-and-circuits.md)

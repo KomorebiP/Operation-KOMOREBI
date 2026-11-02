@@ -333,8 +333,8 @@ Jump to a work:
 
 - [Read PDF](../../monographs/quantum-and-circuits/volume/output/Realization_Calculus_Quantum_and_Circuits.pdf)
 - [Manuscript text (TeX)](../../monographs/quantum-and-circuits/volume/volume.tex)
-- [CLAIMS.md](../../monographs/quantum-and-circuits/sources/circuits/Komorebi_Circuit_Obstructions_Research_Edition_1.0/source/komorebi-circuit-obstructions-v1.2.0/docs/CLAIMS.md)
-- [CLAIMS.md](../../monographs/quantum-and-circuits/sources/circuits/Komorebi_Circuit_Obstructions_Research_Edition_1.0/historical_companion/Komorebi_Theorem_Companion_Source/source_snapshot/docs/CLAIMS.md)
+- [Current circuit claim register (C01–C08)](../../monographs/quantum-and-circuits/sources/circuits/Komorebi_Circuit_Obstructions_Research_Edition_1.0/source/komorebi-circuit-obstructions-v1.2.0/docs/CLAIMS.md)
+- [Historical circuit claim register (preserved companion)](../../monographs/quantum-and-circuits/sources/circuits/Komorebi_Circuit_Obstructions_Research_Edition_1.0/historical_companion/Komorebi_Theorem_Companion_Source/source_snapshot/docs/CLAIMS.md)
 - [Return to this work’s written proofs section](../works/monographs-quantum-and-circuits.md#written-proofs)
 - [Work overview](../works/monographs-quantum-and-circuits.md)
 - [Status and evidence](../STATUS_CATALOG.md#monographs-quantum-and-circuits)

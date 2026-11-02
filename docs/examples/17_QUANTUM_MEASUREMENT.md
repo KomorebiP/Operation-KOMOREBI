@@ -87,11 +87,15 @@ require their separately stated constructions.
 
 **Terms in this example:** [Complex conjugate](../GLOSSARY.md#complex-conjugate) · [Adjoint matrix](../GLOSSARY.md#adjoint) · [Unitary matrix](../GLOSSARY.md#unitary) · [Quantum amplitude](../GLOSSARY.md#amplitude) · [Density matrix](../GLOSSARY.md#density-matrix) · [Matrix trace](../GLOSSARY.md#trace) · [Born probability](../GLOSSARY.md#born-probability) · [Purity of a density matrix](../GLOSSARY.md#purity) · [Dephasing](../GLOSSARY.md#dephasing) · [Kraus operators](../GLOSSARY.md#kraus-operator) · [Hermitian matrix](../GLOSSARY.md#hermitian) · [Positive semidefinite matrix](../GLOSSARY.md#positive-semidefinite) · [Coherence in a chosen basis](../GLOSSARY.md#coherence)
 
-Paper VII develops finite quantum constructions and separate continuum research targets. This example covers one two-dimensional state, a unitary phase change and a measurement channel.
+This introductory calculation covers one two-dimensional state, a unitary phase change and a measurement channel. Paper VII develops the finite quantum setting and separate continuum research targets. Quantum and Circuits provides a related route through arithmetic realizations and symmetry; the extended demonstration also reproduces its modulus-12 phase example. These subject routes add no formal claim correspondence.
 
 ### Paper VII: Quantum Seed Calculus
 
 [Read](../works/paper-vii.md#read) · [Written proofs](../works/paper-vii.md#written-proofs) · [Lean coverage](../works/paper-vii.md#lean) · [Code and setup](../works/paper-vii.md#code) · [Evidence](../works/paper-vii.md#evidence)
+
+### Quantum and Circuits
+
+[Read](../works/monographs-quantum-and-circuits.md#read) · [Written proofs](../works/monographs-quantum-and-circuits.md#written-proofs) · [Lean coverage](../works/monographs-quantum-and-circuits.md#lean) · [Code and setup](../works/monographs-quantum-and-circuits.md#code) · [Evidence](../works/monographs-quantum-and-circuits.md#evidence)
 
 **Source passages:**
 

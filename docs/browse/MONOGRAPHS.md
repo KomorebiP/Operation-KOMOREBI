@@ -134,7 +134,7 @@ PDF, manuscript text, Lean sources, code, and existing evidence are linked separ
 
 [Open work page: Quantum and Circuits](../works/monographs-quantum-and-circuits.md)
 
-[PDF](../../monographs/quantum-and-circuits/volume/output/Realization_Calculus_Quantum_and_Circuits.pdf) · [Text](../../monographs/quantum-and-circuits/volume/volume.tex) · [Lean](../../monographs/quantum-and-circuits/verification/quantum_fresh_20261026/fresh/) · [Work page](../works/monographs-quantum-and-circuits.md)
+[PDF](../../monographs/quantum-and-circuits/volume/output/Realization_Calculus_Quantum_and_Circuits.pdf) · [Text](../../monographs/quantum-and-circuits/volume/volume.tex) · [Lean](../../monographs/quantum-and-circuits/verification/quantum_fresh_20261026/fresh/) · [Code](../../monographs/quantum-and-circuits/release_tools/replay_formal.py) · [Work page](../works/monographs-quantum-and-circuits.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 

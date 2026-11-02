@@ -35,6 +35,7 @@ These works have introductory examples in this guide. The [coverage list](EXAMPL
 - [Information Realization](works/information-realization.md#worked-examples-for-this-work): [10. Find a kernel and its fibers](examples/10_KERNELS.md) · [14. Separate averages and details](examples/14_HAAR_PAIRS.md)
 - [Realization Boundaries](works/realization-boundaries.md#worked-examples-for-this-work): [7. Detect lost information](examples/07_OBSTRUCTIONS.md)
 - [Sufficient Resolution](works/sufficient-resolution.md#worked-examples-for-this-work): [22. Recover the memory hidden by a summary](examples/22_HIDDEN_MEMORY.md)
+- [Quantum and Circuits](works/monographs-quantum-and-circuits.md#worked-examples-for-this-work): [17. Calculate quantum measurement and dephasing](examples/17_QUANTUM_MEASUREMENT.md)
 - [Grounded Abstraction](works/monographs-grounded-abstraction.md#worked-examples-for-this-work): [23. Find the reusable part of a calibration](examples/23_CALIBRATED_CONTINUATION.md)
 - [Certified Bayesian Inference](works/research-certified-bayesian-inference.md#worked-examples-for-this-work): [26. Update a Gaussian model from one observation](examples/26_GAUSSIAN_UPDATE.md)
 - [Gaussian Elimination: collected guide](works/gaussian-elimination-guide.md#worked-examples-for-this-work): [12. Eliminate a block of unknowns](examples/12_BLOCK_ELIMINATION.md)
@@ -481,11 +482,15 @@ The Lean links open each work’s recorded coverage and sources. They do not cer
 
 **Terms:** [Complex conjugate](GLOSSARY.md#complex-conjugate) · [Adjoint matrix](GLOSSARY.md#adjoint) · [Unitary matrix](GLOSSARY.md#unitary) · [Quantum amplitude](GLOSSARY.md#amplitude) · [Density matrix](GLOSSARY.md#density-matrix) · [Matrix trace](GLOSSARY.md#trace) · [Born probability](GLOSSARY.md#born-probability) · [Purity of a density matrix](GLOSSARY.md#purity) · [Dephasing](GLOSSARY.md#dephasing) · [Kraus operators](GLOSSARY.md#kraus-operator) · [Hermitian matrix](GLOSSARY.md#hermitian) · [Positive semidefinite matrix](GLOSSARY.md#positive-semidefinite) · [Coherence in a chosen basis](GLOSSARY.md#coherence)
 
-Paper VII develops finite quantum constructions and separate continuum research targets. This example covers one two-dimensional state, a unitary phase change and a measurement channel.
+This introductory calculation covers one two-dimensional state, a unitary phase change and a measurement channel. Paper VII develops the finite quantum setting and separate continuum research targets. Quantum and Circuits provides a related route through arithmetic realizations and symmetry; the extended demonstration also reproduces its modulus-12 phase example. These subject routes add no formal claim correspondence.
 
 ### Paper VII: Quantum Seed Calculus
 
 [Read](works/paper-vii.md#read) · [Written proofs](works/paper-vii.md#written-proofs) · [Lean coverage](works/paper-vii.md#lean) · [Code and setup](works/paper-vii.md#code) · [Evidence](works/paper-vii.md#evidence)
+
+### Quantum and Circuits
+
+[Read](works/monographs-quantum-and-circuits.md#read) · [Written proofs](works/monographs-quantum-and-circuits.md#written-proofs) · [Lean coverage](works/monographs-quantum-and-circuits.md#lean) · [Code and setup](works/monographs-quantum-and-circuits.md#code) · [Evidence](works/monographs-quantum-and-circuits.md#evidence)
 
 **Source passages:**
 

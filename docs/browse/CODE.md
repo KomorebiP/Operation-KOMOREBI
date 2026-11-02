@@ -175,6 +175,7 @@ Jump to a work:
 - [Realization Boundaries](#realization-boundaries)
 - [Sufficient Resolution](#sufficient-resolution)
 - [Machine Native Reasoning](#monographs-machine-native-reasoning)
+- [Quantum and Circuits](#monographs-quantum-and-circuits)
 - [Physics](#monographs-physics)
 - [COS Method](#monographs-cos-method)
 - [COS Method: formal continuation](#monographs-cos-method-formal-continuation)
@@ -292,6 +293,20 @@ Jump to a work:
 - [Return to this work’s code section](../works/monographs-machine-native-reasoning.md#code)
 - [Work overview](../works/monographs-machine-native-reasoning.md)
 - [Status and evidence](../STATUS_CATALOG.md#monographs-machine-native-reasoning)
+
+[Back to collection menu](#collections)
+
+<a id="monographs-quantum-and-circuits"></a>
+
+### [Quantum and Circuits](../works/monographs-quantum-and-circuits.md#code)
+
+- [Portable formal replay wrapper (requires the external Lean kit)](../../monographs/quantum-and-circuits/release_tools/replay_formal.py)
+- [Symmetry packet implementation and exact checks](../../monographs/quantum-and-circuits/sources/symmetry/Symmetry_Collapse_in_Quantum_Computation_Source/code/)
+- [Catalytic gate atlas: mathematical modules](../../monographs/quantum-and-circuits/sources/catalytic/Catalytic_Gate_Set_Distortion_Monograph_Source/code/catalytic_gate_atlas/)
+- [Circuit scientific replay (Python and C++17)](../../monographs/quantum-and-circuits/sources/circuits/Komorebi_Circuit_Obstructions_Research_Edition_1.0/source/komorebi-circuit-obstructions-v1.2.0/scripts/verify.py)
+- [Return to this work’s code section](../works/monographs-quantum-and-circuits.md#code)
+- [Work overview](../works/monographs-quantum-and-circuits.md)
+- [Status and evidence](../STATUS_CATALOG.md#monographs-quantum-and-circuits)
 
 [Back to collection menu](#collections)
 
