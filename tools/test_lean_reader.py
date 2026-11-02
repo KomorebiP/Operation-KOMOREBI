@@ -19,11 +19,14 @@ class LeanReaderTests(unittest.TestCase):
                 'instance : Inhabited Nat := ⟨0⟩\n'
                 'lemma «named result» : True := by trivial\n'
                 'def escaped := "a\\\" -- theorem nope"\n'
+                '@[simp] theorem attributed : True := by trivial\n'
+                '@[simp,\n  aesop safe [constructors]]\nlemma multiline : True := by trivial\n'
                 'axiom assumption : Prop\n')
         result = declarations(text)
         self.assertEqual([(d['kind'],d['name']) for d in result],
                          [('def','message'),('theorem','real'),('structure','Pair'),
-                          ('lemma','«named result»'),('def','escaped'),('axiom','assumption')])
+                          ('lemma','«named result»'),('def','escaped'),('theorem','attributed'),
+                          ('lemma','multiline'),('axiom','assumption')])
         lines = text.splitlines()
         for d in result:self.assertIn(d['kind']+' '+d['name'],lines[d['line']-1])
 

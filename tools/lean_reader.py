@@ -12,7 +12,8 @@ import re
 
 EXCLUDED = {'.lake', '.git', 'build', 'node_modules', '__pycache__'}
 DECLARATION = re.compile(
-    r'^\s*(?:(?:private|protected|noncomputable|unsafe|partial)\s+)*'
+    r'^\s*(?:@\[(?:[^\[\]]|\[[^\[\]]*\])*\]\s*)*'
+    r'(?:(?:private|protected|noncomputable|unsafe|partial)\s+)*'
     r'(theorem|lemma|def|abbrev|structure|class|inductive|axiom|constant|instance)'
     r'\s+(«[^»\n]+»|[\w\u0080-\uffff][\w\u0080-\uffff.\'!?]*)', re.M)
 
