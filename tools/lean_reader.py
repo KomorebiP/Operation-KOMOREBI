@@ -314,7 +314,7 @@ def build(reader):
         body += '</ul></section>'
     body += '</section>'
     site.page('lean/index.html','Inspect Lean',body)
-    site.write('lean/index.json',json.dumps(dict(source_revision=site.revision,works=catalog,new_lean_execution=False),ensure_ascii=False,indent=2)+'\n')
+    site.write('lean/index.json',json.dumps(dict(source_revision=site.revision,works=catalog,new_lean_execution=False),ensure_ascii=False,separators=(',',':'))+'\n')
     return dict(works=len(catalog),files=total,new_lean_execution=False)
 
 

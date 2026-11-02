@@ -472,7 +472,7 @@ class ReadingDocuments:
         from reader_proofreading import publish as publish_proofreading
         publish_proofreading(self)
         records = sorted(self.records.values(), key=lambda r: (r['work'], r['url']))
-        self.site.write('documents/index.json', json.dumps(dict(source_revision=self.site.revision, files=records, images=list(self.images.values())), ensure_ascii=False, indent=2)+'\n')
+        self.site.write('documents/index.json', json.dumps(dict(source_revision=self.site.revision, files=records, images=list(self.images.values())), ensure_ascii=False, separators=(',',':'))+'\n')
 
     def catalog(self):
         e = html.escape
