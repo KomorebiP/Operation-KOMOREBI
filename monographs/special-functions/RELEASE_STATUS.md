@@ -1,5 +1,12 @@
 # Technical publication package with checked coupled-functions block
 
+**2026-11-02 analytic-germ inverse companion:** SF-LEAN-B05 adds 13 checked
+declarations proving all-degree coefficient extraction and Theorem G.2's
+guarded labeled-parameter inverse. Supplied Taylor coefficient-object
+transport is also checked. The registered source scope is 137 names.
+Full component rescaling and Perron growth remain open. See
+`formalization/Block05/REPORT.md`. Earlier notes retain their dated scopes.
+
 **2026-11-02 uniqueness and F.1 companion:** SF-LEAN-B04 adds 16 declarations
 proving analytic germ uniqueness, normalized entire uniqueness and canonical
 series representations. `coupled_F1_contract` covers the principal Theorem
