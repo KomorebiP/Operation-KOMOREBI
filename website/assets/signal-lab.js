@@ -1,5 +1,5 @@
 import {BASES,defaults,settings,referenceSignal,experiment,basisVector,encodeSettings,decodeSettings,parseSamples,signalCsv,curvesCsv,experimentJson,importExperiment} from './signal-lab-core.mjs';
-import {MAX_RUNS,customSettings,paintSegment,SampleHistory,readNotebook,writeNotebook,appendRuns,sameObservation,notebookCsv,starterRuns,compareRuns,comparisonCsv} from './signal-lab-workspace.mjs';
+import {MAX_RUNS,customSettings,paintSegment,SampleHistory,readNotebook,writeNotebook,appendRuns,sameObservation,notebookCsv,starterRuns,compareRuns,comparisonCsv,encodeComparison,decodeComparison} from './signal-lab-workspace.mjs';
 
 const root=document.getElementById('signal-lab');
 const byId=id=>document.getElementById(id);
@@ -10,7 +10,7 @@ const format=value=>Math.abs(value)>0 && (Math.abs(value)<.001||Math.abs(value)>
 const tick=value=>value===0 ? '0' : Math.abs(value)>=10000||Math.abs(value)<.01 ? value.toExponential(0).replace('e+','e') : Number(value.toPrecision(3)).toString();
 let config=defaults(),result=null,renderFrame;
 const editHistory=new SampleHistory(),notebookKey='komorebi-signal-notebook-v1';
-let drawing=false,stroke=null,signalPlot=null,runs=[],savedResults=[],pairA=0,pairB=0,pairAddress=32,notebookMemory=false;
+let drawing=false,stroke=null,signalPlot=null,runs=[],savedResults=[],pairA=0,pairB=0,pairAddress=32,notebookMemory=false,sharedPair=null;
 function node(tag,attributes={},value) {
   const item=document.createElementNS(NS,tag);
   for(const [key,val] of Object.entries(attributes))item.setAttribute(key,val);
@@ -167,12 +167,12 @@ byId('sl-reset').addEventListener('click',()=>{
   cancelStroke();editHistory.clear();drawing=false;text('sl-edit-status','');
   config=defaults();byId('sl-seed').setAttribute('aria-invalid','false');byId('sl-paste').value='';byId('sl-file').value='';
   byId('sl-link-fallback').hidden=true;clearError();status('Default experiment restored.');
-  const url=new URL(location.href);url.searchParams.delete('lab');history.replaceState(null,'',url.href);render();
+  const url=new URL(location.href);url.searchParams.delete('lab');if(url.hash.startsWith('#compare='))url.hash='';history.replaceState(null,'',url.href);render();
 });
 byId('sl-copy').addEventListener('click',async()=>{
-  byId('sl-link-fallback').hidden=true;
+  byId('sl-link-fallback').hidden=true;text('sl-link-label','Experiment link');
   let url;
-  try{ensureResult();url=new URL(location.href);url.searchParams.set('lab',encodeSettings(config));clearError();}
+  try{ensureResult();url=new URL(location.href);url.searchParams.set('lab',encodeSettings(config));if(url.hash.startsWith('#compare='))url.hash='';clearError();}
   catch(error){showError(error.message);return;}
   byId('sl-copy').disabled=true;
   try{await navigator.clipboard.writeText(url.href);status('Experiment link copied. The signal, noise seed, budget, and inspection settings will be restored.');}
@@ -267,6 +267,21 @@ function saveNotebook() {
 function notebookButton(label,action,index) {
   const button=document.createElement('button');button.type='button';button.textContent=label;button.dataset.notebookAction=action;button.dataset.run=index;return button;
 }
+function selectedComparison() {
+  if(sharedPair)return sharedPair;
+  if(runs.length<2)return null;
+  return {entries:[runs[pairA],runs[pairB]],results:[savedResults[pairA],savedResults[pairB]]};
+}
+function renderPairSelectors() {
+  const entries=sharedPair?sharedPair.entries:runs;
+  for(const [id,selected] of [['sl-compare-a',sharedPair?0:pairA],['sl-compare-b',sharedPair?1:pairB]]) {
+    const select=byId(id);select.replaceChildren(...entries.map((entry,i)=>{const option=document.createElement('option');option.value=i;option.textContent=entry.label;return option;}));select.value=selected;select.disabled=Boolean(sharedPair);
+  }
+}
+function clearComparisonHash() {
+  if(!location.hash.startsWith('#compare='))return;
+  const url=new URL(location.href);url.hash='';history.replaceState(null,'',url.href);
+}
 function renderNotebook(resetPair=false) {
   savedResults=runs.map(entry=>experiment(entry.settings));
   text('sl-notebook-count',`${runs.length} / ${MAX_RUNS} saved runs`);
@@ -275,7 +290,9 @@ function renderNotebook(resetPair=false) {
   text('sl-starter-note',runs.length>MAX_RUNS-2?'Free two notebook slots to open a starter experiment. Your saved runs are kept.':'Each starter opens a reference experiment and adds two named runs to your notebook. Existing saved runs are kept.');
   byId('sl-notebook-export').disabled=!runs.length;byId('sl-notebook-csv').disabled=!runs.length;
   byId('sl-notebook-empty').hidden=Boolean(runs.length);byId('sl-notebook-table-wrap').hidden=!runs.length;
-  byId('sl-notebook-comparison').hidden=runs.length<2;
+  byId('sl-notebook-comparison').hidden=!sharedPair&&runs.length<2;
+  byId('sl-shared-preview').hidden=!sharedPair;byId('sl-shared-save').disabled=runs.length>MAX_RUNS-2;
+  text('sl-shared-note',runs.length>MAX_RUNS-2?'Shared comparison preview. Your notebook is unchanged. Free two notebook slots to save these runs.':'Shared comparison preview. Your notebook is unchanged. Save both runs to keep them in this browser.');
   byId('sl-notebook-rows').replaceChildren(...runs.map((entry,i)=>{
     const s=entry.settings,a=savedResults[i].analyses[s.basis],row=document.createElement('tr');row.dataset.run=i;
     const cell=tag=>{const item=document.createElement(tag);row.append(item);return item;};
@@ -285,14 +302,13 @@ function renderNotebook(resetPair=false) {
     const actions=cell('td');actions.append(notebookButton('Restore','restore',i),notebookButton('Remove','remove',i));return row;
   }));
   if(resetPair){pairA=0;pairB=Math.max(0,runs.length-1);}
-  for(const [id,selected] of [['sl-compare-a',pairA],['sl-compare-b',pairB]]) {
-    const select=byId(id);select.replaceChildren(...runs.map((entry,i)=>{const option=document.createElement('option');option.value=i;option.textContent=entry.label;return option;}));select.value=selected;
-  }
+  renderPairSelectors();
   drawSavedComparison();
 }
 function drawSavedComparison() {
-  if(runs.length<2){byId('sl-pair-chart').replaceChildren();byId('sl-pair-table').replaceChildren();return;}
-  const a=savedResults[pairA],b=savedResults[pairB],same=sameObservation(a,b);byId('sl-pair-plot').hidden=!same;
+  const selectedPair=selectedComparison();
+  if(!selectedPair){byId('sl-pair-chart').replaceChildren();byId('sl-pair-table').replaceChildren();return;}
+  const [a,b]=selectedPair.results,same=sameObservation(a,b);byId('sl-pair-plot').hidden=!same;
   byId('sl-pair-inspector').disabled=!same;
   if(!same){text('sl-pair-summary','These runs use different reference or observed samples. Their errors describe different experiments. Save two runs of the same observations to overlay their reconstructions.');byId('sl-pair-chart').replaceChildren();byId('sl-pair-table').replaceChildren();return;}
   const aa=a.analyses[a.config.basis],bb=b.analyses[b.config.basis],delta=bb.referenceError-aa.referenceError;
@@ -302,7 +318,7 @@ function drawSavedComparison() {
   for(const [id,key] of [['sample','address'],['reference','reference'],['observed','observed'],['a','a'],['b','b'],['error-a','errorA'],['error-b','errorB'],['difference','difference']])text('sl-pair-'+id,format(selected[key]));
   text('sl-pair-gap',`Largest absolute difference: ${format(data.maximum)} at address ${data.maximumAddress}. Ties use the first address.`);
   text('sl-pair-summary',`Identical reference and observed samples. A keeps ${a.config.budget} coefficients; B keeps ${b.config.budget}. Reference error B − A: ${format(delta)}${delta<0?' · B is lower.':delta>0?' · A is lower.':' · equal.'}`);
-  text('sl-pair-a-label','A · '+runs[pairA].label);text('sl-pair-b-label','B · '+runs[pairB].label);
+  text('sl-pair-a-label','A · '+selectedPair.entries[0].label);text('sl-pair-b-label','B · '+selectedPair.entries[1].label);
   byId('sl-pair-reference-label').hidden=view!=='overlay';byId('sl-pair-a-label').hidden=view==='difference';byId('sl-pair-b-label').hidden=view==='difference';byId('sl-pair-difference-label').hidden=view!=='difference';
   text('sl-pair-view-note',view==='error'?'Signed error is reconstruction minus reference. Zero means an exact match at that sample. Click the plot or use the sample slider.':view==='difference'?'Signed difference is reconstruction B minus reconstruction A. Zero means the reconstructions agree at that sample. Click the plot or use the sample slider.':'Click the plot or use the sample slider to inspect both reconstructions against the same reference.');
   if(byId('sl-pair-table-details').open)byId('sl-pair-table').replaceChildren(...data.rows.map(point=>{
@@ -320,17 +336,32 @@ function drawSavedComparison() {
 }
 byId('sl-pair-view').addEventListener('change',drawSavedComparison);
 byId('sl-pair-address').addEventListener('input',event=>{pairAddress=Number(event.target.value);drawSavedComparison();});
-byId('sl-pair-chart').addEventListener('click',event=>{if(runs.length<2||byId('sl-pair-plot').hidden)return;pairAddress=clickedIndex(event,'sl-pair-chart',savedResults[pairA].config.n-1);drawSavedComparison();});
+byId('sl-pair-chart').addEventListener('click',event=>{const pair=selectedComparison();if(!pair||byId('sl-pair-plot').hidden)return;pairAddress=clickedIndex(event,'sl-pair-chart',pair.results[0].config.n-1);drawSavedComparison();});
 byId('sl-pair-table-details').addEventListener('toggle',()=>{if(byId('sl-pair-table-details').open)drawSavedComparison();});
-byId('sl-pair-largest').addEventListener('click',()=>{pairAddress=compareRuns(savedResults[pairA],savedResults[pairB]).maximumAddress;drawSavedComparison();byId('sl-pair-address').focus();});
+byId('sl-pair-largest').addEventListener('click',()=>{pairAddress=compareRuns(...selectedComparison().results).maximumAddress;drawSavedComparison();byId('sl-pair-address').focus();});
 byId('sl-pair-csv').addEventListener('click',()=>{
-  try{const href=URL.createObjectURL(new Blob([comparisonCsv(savedResults[pairA],savedResults[pairB])],{type:'text/csv'})),link=document.createElement('a');
-    link.href=href;link.download=`komorebi-comparison-${savedResults[pairA].config.n}.csv`;document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(href),1000);text('sl-notebook-status','Comparison CSV downloaded with reconstructions, signed errors, and B minus A at every address.');
+  try{const pair=selectedComparison(),href=URL.createObjectURL(new Blob([comparisonCsv(...pair.results)],{type:'text/csv'})),link=document.createElement('a');
+    link.href=href;link.download=`komorebi-comparison-${pair.results[0].config.n}.csv`;document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(href),1000);text('sl-notebook-status','Comparison CSV downloaded with reconstructions, signed errors, and B minus A at every address.');
   }catch(error){showError(error.message);}
 });
+byId('sl-pair-copy').addEventListener('click',async()=>{
+  const button=byId('sl-pair-copy');byId('sl-link-fallback').hidden=true;text('sl-link-label','Comparison link');let url;
+  try{const pair=selectedComparison();if(!pair)throw new RangeError('Choose two saved runs first.');url=new URL(location.href);url.searchParams.delete('lab');url.hash='compare='+encodeComparison({v:1,entries:pair.entries,view:byId('sl-pair-view').value,address:pairAddress});clearError();}
+  catch(error){showError(error.message);return;}
+  button.disabled=true;
+  try{await navigator.clipboard.writeText(url.href);text('sl-pair-share-status','Comparison link copied. Both runs, their names, the plot view, and selected sample will open as a preview.');}
+  catch{byId('sl-link').value=url.href;byId('sl-link-fallback').hidden=false;byId('sl-link').focus();byId('sl-link').select();text('sl-pair-share-status','Copy the comparison link from the selected field above.');status('Select and copy the comparison link below.');}
+  finally{button.disabled=false;}
+});
+byId('sl-shared-save').addEventListener('click',()=>{
+  if(!sharedPair)return;
+  try{const first=runs.length,next=appendRuns(runs,sharedPair.entries);runs=next;sharedPair=null;pairA=first;pairB=first+1;clearComparisonHash();saveNotebook();renderNotebook();clearError();status(notebookMemory?'Both runs added for this tab. Download notebook JSON to keep them.':'Both comparison runs saved to the notebook.');}
+  catch(error){showError(error.message);}
+});
+byId('sl-shared-close').addEventListener('click',()=>{sharedPair=null;clearComparisonHash();renderNotebook();clearError();status('Shared preview closed. Your saved notebook is unchanged.');});
 root.querySelectorAll('[data-sl-starter]').forEach(button=>button.addEventListener('click',()=>{
   try{ensureResult();const entries=starterRuns(button.dataset.slStarter),first=runs.length,next=appendRuns(runs,entries);
-    cancelStroke();editHistory.clear();drawing=false;config=settings(entries[0].settings);runs=next;pairA=first;pairB=first+1;pairAddress=Math.min(32,config.n-1);byId('sl-pair-view').value='overlay';
+    cancelStroke();editHistory.clear();drawing=false;sharedPair=null;clearComparisonHash();config=settings(entries[0].settings);runs=next;pairA=first;pairB=first+1;pairAddress=Math.min(32,config.n-1);byId('sl-pair-view').value='overlay';
     saveNotebook();byId('sl-starters').open=false;byId('sl-notebook').open=true;renderNotebook();render();clearError();text('sl-edit-status','');status('Starter opened. Two comparison runs were added to the notebook.');byId('sl-compare-a').focus();
   }catch(error){showError(error.message);}
 }));
@@ -341,7 +372,7 @@ byId('sl-save-run').addEventListener('click',()=>{
 byId('sl-notebook-rows').addEventListener('change',event=>{
   if(!event.target.matches('[data-run-name]'))return;
   const i=Number(event.target.dataset.runName);
-  try{const next=runs.map((entry,j)=>j===i?{...entry,label:event.target.value}:entry);runs=readNotebook(writeNotebook(next));event.target.value=runs[i].label;saveNotebook();for(const id of ['sl-compare-a','sl-compare-b'])byId(id).options[i].textContent=runs[i].label;drawSavedComparison();clearError();}
+  try{const next=runs.map((entry,j)=>j===i?{...entry,label:event.target.value}:entry);runs=readNotebook(writeNotebook(next));event.target.value=runs[i].label;saveNotebook();renderPairSelectors();drawSavedComparison();clearError();}
   catch(error){showError(error.message);event.target.value=runs[i].label;}
 });
 byId('sl-notebook-rows').addEventListener('click',event=>{
@@ -372,6 +403,18 @@ window.addEventListener('storage',event=>{
 });
 const shared=new URL(location.href).searchParams.get('lab');
 if(shared!==null){try{config=decodeSettings(shared);status('Experiment restored from the link.');}catch(error){showError(error.message+' Default settings are shown.');}}
+function restoreComparison(encoded,update=true) {
+  const value=decodeComparison(encoded),preview={entries:value.entries,results:value.entries.map(entry=>experiment(entry.settings))};
+  cancelStroke();editHistory.clear();drawing=false;sharedPair=preview;config=settings(value.entries[0].settings);pairAddress=value.address;byId('sl-pair-view').value=value.view;byId('sl-notebook').open=true;
+  clearError();status('Shared comparison restored. Results were recomputed; your saved notebook is unchanged.');
+  if(update){renderNotebook();render();}
+  requestAnimationFrame(()=>byId('sl-notebook-comparison').scrollIntoView({block:'start'}));
+}
+if(location.hash.startsWith('#compare=')){try{restoreComparison(location.hash.slice(9),false);}catch(error){showError(error.message+' Your saved notebook is unchanged.');}}
+window.addEventListener('hashchange',()=>{
+  if(location.hash.startsWith('#compare=')){try{restoreComparison(location.hash.slice(9));}catch(error){showError(error.message+' The current experiment and notebook are kept.');}}
+  else if(sharedPair){sharedPair=null;renderNotebook();clearError();status('Shared preview closed. Your saved notebook is unchanged.');}
+});
 if(matchMedia('(max-width: 760px)').matches)byId('sl-setup').open=false;
 root.querySelectorAll('fieldset,[data-sl-action],[data-sl-basis],#sl-export-kind').forEach(element=>{element.disabled=false;});
 byId('sl-notebook-file').disabled=false;renderNotebook(true);render();

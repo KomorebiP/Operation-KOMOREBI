@@ -10,7 +10,7 @@ def build(site):
 <p>Compare Haar, cosine, and sample representations under one coefficient budget. Explore compression and controlled noise.</p></header>
 <noscript><p class="notice">Enable JavaScript to run this laboratory. The <a href="collection/demonstrations/HAAR_LAB.html">worked Haar calculation</a> is available without it.</p></noscript>
 <p class="lab-caption" id="sl-status" role="status"></p>
-<label class="lab-share-fallback" id="sl-link-fallback" for="sl-link" hidden>Experiment link<input type="url" id="sl-link" readonly></label>
+<label class="lab-share-fallback" id="sl-link-fallback" for="sl-link" hidden><span id="sl-link-label">Experiment link</span><input type="url" id="sl-link" readonly></label>
 <p class="lab-error" id="sl-error" role="status" hidden></p>
 <details class="sl-data sl-starters" id="sl-starters"><summary>Start with a comparison experiment</summary>
 <p class="lab-caption" id="sl-starter-note">Each starter opens a reference experiment and adds two named runs to your notebook. Existing saved runs are kept.</p>
@@ -67,6 +67,8 @@ SIGNAL_PLOT
 <thead><tr><th scope="col">Run name</th><th scope="col">Setup</th><th scope="col">Retained</th><th scope="col">Error to reference · Σ(x̂ − x)²</th><th scope="col">Discarded energy · Σ(y − x̂)²</th><th scope="col">Actions</th></tr></thead>
 <tbody id="sl-notebook-rows"></tbody></table></div>
 <div id="sl-notebook-comparison" hidden><h2>Compare saved reconstructions</h2>
+<div class="sl-shared-preview" id="sl-shared-preview" hidden><p id="sl-shared-note" role="status">Shared comparison preview. Your notebook is unchanged.</p>
+<div class="sl-pair-actions"><button type="button" id="sl-shared-save">Save both runs to notebook</button><button type="button" id="sl-shared-close">Close shared preview</button></div></div>
 <div class="sl-pair-controls"><label class="lab-label" for="sl-compare-a">Run A<select id="sl-compare-a"></select></label>
 <label class="lab-label" for="sl-compare-b">Run B<select id="sl-compare-b"></select></label></div>
 <p class="sl-readout" id="sl-pair-summary" role="status"></p>
@@ -77,7 +79,8 @@ SIGNAL_PLOT
 <div class="sl-legend"><span class="sl-reference" id="sl-pair-reference-label">Clean reference</span><span class="sl-cosine" id="sl-pair-a-label">Run A</span><span class="sl-samples" id="sl-pair-b-label">Run B</span><span class="sl-difference" id="sl-pair-difference-label" hidden>Difference · B − A</span></div>
 PAIR_PLOT PAIR_ADDRESS
 <p class="sl-readout" id="sl-pair-gap" role="status"></p>
-<div class="sl-pair-actions"><button type="button" id="sl-pair-largest">Inspect largest difference</button><button type="button" id="sl-pair-csv">Download comparison CSV</button></div>
+<div class="sl-pair-actions"><button type="button" id="sl-pair-largest">Inspect largest difference</button><button type="button" id="sl-pair-csv">Download comparison CSV</button><button type="button" id="sl-pair-copy">Copy comparison link</button></div>
+<p class="sl-readout" id="sl-pair-share-status" role="status"></p>
 </fieldset>
 <dl class="sl-pair-readouts" aria-label="Selected sample values"><div><dt>Sample address</dt><dd><output id="sl-pair-sample">—</output></dd></div>
 <div><dt>Reference</dt><dd><output id="sl-pair-reference">—</output></dd></div><div><dt>Observed</dt><dd><output id="sl-pair-observed">—</output></dd></div>

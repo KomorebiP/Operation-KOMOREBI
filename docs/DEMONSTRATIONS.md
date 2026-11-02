@@ -117,6 +117,11 @@ reconstruction, signed-error, and B-minus-A views, with a linked sample
 inspector and a jump to the largest absolute difference. Download comparison
 CSV for both reconstructions and their signed errors at every address.
 
+Copy a comparison link to share both named runs, the chosen plot view, and the
+selected sample. Links open a preview and recompute the results while leaving
+the recipient's saved notebook unchanged. The preview can be saved as two new
+notebook runs when space is available.
+
 The reference signal is known in these experiments. The displayed reference
 minimum uses that knowledge; it does not estimate the clean signal behind an
 unknown real-world recording. Cosine calculations are numerical approximations.
