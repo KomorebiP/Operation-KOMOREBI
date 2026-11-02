@@ -16,7 +16,7 @@ HTML status follows the maintained reading configuration; PDF destinations
 and hashes come from the existing source receipts. Paper I's visual atlas is
 inside its main monograph. The other eleven have separate visual-guide PDFs.
 
-The [current inventory](../verification/reader-visual-guides/2026-11-02-papers-ii-iii.json)
+The [current inventory](../verification/reader-visual-guides/2026-11-02-paper-viii.json)
 checks the committed visual sources against their receipts and identifies the
 remaining ports. Counts below describe source units, which vary by guide;
 they are not counts of theorems or PDF pages. The
@@ -32,15 +32,14 @@ the earlier four-atlas snapshot.
 | V | 40 plates | Complete |
 | VI | 42 plates | Complete |
 | VII | 40 plates | Complete |
-| VIII | 32 plates across two inputs | Pending |
+| VIII | 32 plates across two inputs | Complete |
 | IX | 15 sections | Pending |
 | X | 30 plates | Pending |
 | XI | 47 lessons | Pending |
 | XII | 27 plates | Pending |
 
-Next ports: Paper VIII continues the complete I–VII HTML visual sequence and
-can reuse the worked-atlas approach. Papers IX and XI need their own section
-and lesson conversions. Papers X and XII need explicit handling of their
+Papers I–VIII now have complete HTML visual atlases. The remaining ports are
+IX–XII. Papers IX and XI need their own section and lesson conversions. Papers X and XII need explicit handling of their
 conditional and evidence boundaries. Each port should preserve prose,
 equations, drawing labels and manuscript links before its status is promoted.
 
@@ -90,6 +89,39 @@ The mathematical proofreading self-review covers the new presentation wrappers,
 labels, descriptions, source references and tables. No mathematical tokens or
 imported manuscript bytes are changed; no new proof audit, exact example run or
 Lean replay is claimed.
+
+Paper VIII's complete standalone guide is at `read/paper-viii/atlas/`: 32
+plates, 30 original PDF drawings, 711 selectable drawing labels, 830 mathematical
+expressions, three source tables, and 84 manuscript routes with return links.
+Both standalone source inputs retain their own source-line links. Four literal
+TikZ loops in the extension drawings are expanded with their original node lines
+and explicit bindings; unreviewed values or loops stop conversion.
+
+The audit found that the inherited reference crosswalk records PDF checksum
+`63d0a88a9f5e055c9ddb4e862cb8ee7549342c8bb890c2f15c1c035423097801`, while both
+retained visual PDF copies have checksum
+`a78f1c18c7c36cecbaf9484bc6dc643300c3b5054df338f48be6390af5e520c7`.
+The selected PDF is retained. All 32 titles, printed locators and page labels
+were independently checked against its physical pages 3–34. The crosswalk's
+stable labels, statement numbers, kinds and titles are rechecked against the
+current manuscript source. The one declared kind translation is `fact:cg`:
+the guide's “Classical input 7.5” is the current manuscript's “Standard fact 7.5”.
+The original source, crosswalk and PDF bytes are unchanged. The conversion record
+and provenance details disclose the stale checksum rather than treating it as a
+current PDF identity certificate.
+
+`tools/paper_viii_atlas.py` uses the shared worked-atlas renderer and emits
+`documents/paper-viii-atlas.json`. `tools/paper_viii_atlas_sources.py` records the
+two source inputs, exact crosswalk identity, current PDF and reviewed crop bounds.
+`python -B tools/render_paper_viii_atlas.py` rechecks all PDF pages and regenerates
+the drawing views with pypdfium2; normal website builds need no PDF renderer.
+For V15, the recipe renders its 48 original resized drawing objects alone to
+exclude adjacent page prose from the crop. The PDF file and drawing objects are
+unchanged; no PDF is saved and no TeX is rebuilt.
+Run `python -B -m unittest discover -s tools -p 'test_paper_viii_atlas.py' -v`.
+The mathematical proofreading self-review covers the presentation wrappers,
+labels, descriptions, references and tables. Mathematical tokens are preserved;
+this conversion adds no proof audit, mathematical example run or Lean replay.
 
 The **Komorebi Methodology** also has a complete HTML edition at
 `read/komorebi-methodology/`: preface, nine essay chapters, closing reflection,

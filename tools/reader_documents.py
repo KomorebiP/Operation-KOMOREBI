@@ -164,6 +164,8 @@ class ReadingDocuments:
         prepare_paper_i_atlas(self)
         from core_worked_atlases import prepare as prepare_core_worked_atlases
         prepare_core_worked_atlases(self)
+        from paper_viii_atlas import prepare as prepare_paper_viii_atlas
+        prepare_paper_viii_atlas(self)
         from paper_v_atlas import prepare as prepare_paper_v_atlas
         prepare_paper_v_atlas(self)
         from paper_vi_atlas import prepare as prepare_paper_vi_atlas
@@ -453,6 +455,8 @@ class ReadingDocuments:
         render_paper_i_atlas(self)
         from core_worked_atlases import render as render_core_worked_atlases
         render_core_worked_atlases(self)
+        from paper_viii_atlas import render as render_paper_viii_atlas
+        render_paper_viii_atlas(self)
         from paper_v_atlas import render as render_paper_v_atlas
         render_paper_v_atlas(self)
         from paper_vi_atlas import render as render_paper_vi_atlas
