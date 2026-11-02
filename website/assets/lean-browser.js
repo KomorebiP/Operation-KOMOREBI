@@ -7,13 +7,40 @@ export function moduleSource(source, name) {
   const match = source.match(/^((?:import [^\n]+\n)+)/);
   if (!match) throw new Error('This workspace needs its original import header.');
   const header = match[1], body = source.slice(header.length), folder = name.split('.').slice(0,-1).join('/');
-  return 'import Lean\n'+header+'run_cmd Lean.modifyEnv (fun env => env.setMainModule `'+name+')\npublic section\n'+body+
+  return 'import Lean\n'+header+'run_cmd Lean.modifyEnv (fun env => env.setMainModule `'+name+')\n@[expose] public section\n'+body+
     '\nend\nrun_cmd do\n  IO.FS.createDirAll "/lib/lean/'+folder+'"\n  Lean.writeModule (← Lean.getEnv) "/lib/lean/'+name.replaceAll('.','/')+'.olean"\n';
 }
 
 export function outcome(result) {
   if (!result || result.exitCode !== 0) return 'failed';
   return result.errors.length ? 'warning' : 'passed';
+}
+
+export function withCompatibility(source,compatibility) {
+  if(!compatibility)return source;
+  const header=source.match(/^((?:import [^\n]+\n)+)/)?.[1];
+  if(!header)throw new Error('This workspace needs its original import header.');
+  return header+compatibility+source.slice(header.length);
+}
+
+export function mapDiagnostic(text,source,exported=false,compatibility='') {
+  const header=source.match(/^((?:import [^\n]+\n)+)/)?.[1]||'';
+  const headerLines=(header.match(/\n/g)||[]).length;
+  const sourceLines=source.split('\n').length;
+  const added=(compatibility.match(/\n/g)||[]).length;
+  return text.replace(/line (\d+)/g,(_,number)=>{
+    const n=Number(number);
+    if(exported){
+      if(n===1||n>headerLines+1&&n<=headerLines+3)return 'browser module setup';
+      if(n>sourceLines+3)return 'browser module export';
+      return 'line '+(n<=headerLines+1?n-1:n-3);
+    }
+    if(added&&n>headerLines){
+      if(n<=headerLines+added)return 'browser compatibility lemma';
+      return 'line '+(n-added);
+    }
+    return 'line '+n;
+  });
 }
 
 const root = document.querySelector('[data-lean-local]');
@@ -24,7 +51,9 @@ async function start() {
   const response=await fetch(new URL('examples.json',location.href));
   if (!response.ok) throw new Error('Source record unavailable.');
   const data=await response.json();
+  if(window.top!==window){el('direct').hidden=false;el('direct-link').href=location.href;}
   let compiler=null, bootAbort=null, busy=false, generation=0, workspace, files, current=0;
+  const drafts=new Map();
   const editor=el('code'), picker=el('example'), filePicker=el('file');
   const draftKey='komorebi-lean-browser-reload';
   const log=text=>{el('log').textContent=(el('log').textContent+'\n'+text).slice(-20000);};
@@ -40,10 +69,13 @@ async function start() {
     el('source').textContent=file.module+' · Original SHA-256 '+file.sha256.slice(0,16)+'…';
   }
   function choose(id) {
+    if(workspace){files[current]=editor.value;drafts.set(workspace.id,{files:[...files],current});}
     dispose();workspace=data.examples.find(e=>e.id===id)||data.examples[0];picker.value=workspace.id;
-    files=workspace.files.map(f=>f.text);current=files.length-1;filePicker.replaceChildren();
+    const draft=drafts.get(workspace.id);files=draft?[...draft.files]:workspace.files.map(f=>f.text);current=draft?.current??files.length-1;filePicker.replaceChildren();
     workspace.files.forEach((f,i)=>{const option=document.createElement('option');option.value=String(i);option.textContent=f.module;filePicker.append(option);});
     filePicker.value=String(current);showFile();controls(false);el('output').textContent='No checks yet.';
+    el('compat').hidden=!workspace.compatibility;
+    el('compat-code').textContent=workspace.compatibility?.source||'';
     el('run').textContent='Load Lean and run';setStatus('Ready. Your first run downloads the compiler and required libraries.');
   }
   picker.addEventListener('change',()=>choose(picker.value));
@@ -61,6 +93,7 @@ async function start() {
     el('run').textContent='Load Lean and run';setStatus('Downloaded compiler cache cleared. Your edits are still in this tab.');
   });
   async function isolate() {
+    if(window.top!==window)throw new Error('Open this workspace in its own browser tab using the link above.');
     if (crossOriginIsolated) return true;
     if (!isSecureContext || !navigator.serviceWorker) throw new Error('This browser cannot start the local compiler. Open the page directly in a current desktop browser.');
     log('Preparing browser isolation for the local compiler…');
@@ -95,15 +128,17 @@ async function start() {
       for(let i=0;i<files.length;i++) {
         setStatus('Checking '+workspace.files[i].module+'…','running');
         // Export dependencies only. The last file runs with its original source.
-        const source=i<files.length-1?moduleSource(files[i],workspace.files[i].module):files[i];
+        const dependency=i<files.length-1;
+        const compatibility=dependency?'':workspace.compatibility?.source||'';
+        const source=dependency?moduleSource(files[i],workspace.files[i].module):withCompatibility(files[i],compatibility);
         const result=await compiler.run(source);
         if (ticket!==generation)return;
         const state=outcome(result);warnings ||= state==='warning';
-        results.push(workspace.files[i].module+'\n'+(result.errors.join('\n')||'No diagnostics.')+(result.output?'\n'+result.output:'')+'\nChecked in '+(result.compileMs/1000).toFixed(2)+' s.');
+        results.push(workspace.files[i].module+'\n'+(result.errors.map(text=>mapDiagnostic(text,files[i],dependency,compatibility)).join('\n')||'No diagnostics.')+(result.output?'\n'+result.output:'')+'\nChecked in '+(result.compileMs/1000).toFixed(2)+' s.');
         el('output').textContent=results.join('\n\n');
         if(state==='failed'){setStatus('Lean reported errors. The workspace did not pass.','failed');return;}
       }
-      setStatus(warnings?'Checking completed with warnings. Review Lean’s response; a sorry warning means an unfinished proof.':'Checking completed with no diagnostics.',warnings?'warning':'passed');
+      setStatus(warnings?'Checking completed with warnings. Review Lean’s response; a sorry warning means an unfinished proof.':workspace.compatibility?'Checking completed with no diagnostics. Browser compatibility lemma included.':'Checking completed with no diagnostics.',warnings?'warning':'passed');
     } catch(error) {
       if(ticket!==generation)return;
       el('output').textContent=String(error.message||error);setStatus('Checking could not complete. No successful result.','failed');dispose();

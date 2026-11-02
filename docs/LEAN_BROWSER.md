@@ -61,10 +61,19 @@ This is also why the Lean library is needed even for a small Std proof.
 Workspace dependencies are checked first. A generated wrapper imports Lean,
 names the module, opens a public section for exported-only WASM artifacts, and
 writes its checked environment to the compiler's temporary `/lib/lean` tree.
+The public section is marked `@[expose]` to preserve transparent definition
+bodies for dependent proofs.
 The dependent source imports that actual module. The main file is checked with
 its retained proof text. The workspace environment cache is reset before each
 run to avoid reusing stale dependency environments. Warnings remain visible;
 `sorry` is not a clean result. A clean check is not an axiom audit.
+
+Recovery also needs the newer name `dite_eq_left`, which this runtime lacks.
+Its workspace explicitly includes a visible, downloadable compatibility lemma
+proved from Lean 4.33's `dif_pos`. The lemma is checked in the same run, is
+recorded separately from retained source, and introduces no assumption. The
+editor and original download keep the retained proof text. Diagnostics are
+mapped back to the original lines; wrapper errors are labelled as generated.
 
 Unit tests cover source identity, runtime tampering, pack roundtrips, source
 routing, module wrappers and result states. Browser validation must also check

@@ -9,7 +9,6 @@ import gzip
 import hashlib
 import json
 from pathlib import Path
-import shutil
 import tarfile
 import urllib.request
 
@@ -69,6 +68,7 @@ def mathlib_closure(archive):
 
 def prepare(source, output, mathlib_archive):
     source=source/'public'
+    if output.exists() and any(output.iterdir()):raise ValueError('Use an empty browser runtime output directory')
     output.mkdir(parents=True, exist_ok=True)
     upstream=json.loads((source/'lean-mathlib/real-analysis-layer.json').read_bytes())
     core=json.loads((source/'lean-wasm/core-layer.json').read_bytes())
@@ -79,6 +79,7 @@ def prepare(source, output, mathlib_archive):
         data=(source/path).read_bytes()
         inventory[path]=dict(size=len(data),sha256=sha(data))
         return data
+    record('lean-mathlib/real-analysis-layer.json')
     for p in sorted((source/'lean-wasm').rglob('*')):
         if not p.is_file():continue
         rel=p.relative_to(source).as_posix()

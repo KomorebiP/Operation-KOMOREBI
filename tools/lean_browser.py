@@ -10,6 +10,13 @@ BASE='lean/browser/'
 RESIDUAL='papers/paper-x/current/current_continuation/lean/PaperX/Residual.lean'
 COMPRESSION='monographs/proof-path-theory/formal/ProofPath/Compression.lean'
 RECOVERY='monographs/proof-path-theory/formal/ProofPath/Recovery.lean'
+COMPAT_SOURCE='''-- Browser compatibility: Lean 4.33 calls this lemma dif_pos.
+-- Checked by Lean alongside Recovery; this is not retained paper source.
+universe u
+theorem dite_eq_left {α : Sort u} {p : Prop} [Decidable p]
+    {t : p → α} {e : ¬ p → α} (h : p) : dite p t e = t h := by
+  exact dif_pos h
+'''
 WORKSPACES=[
     ('paper-x-residual','Paper X · Residual partition','paper-x', [('PaperX.Residual',RESIDUAL)]),
     ('proof-path-compression','Proof Path Theory · Compression','proof-path-theory', [('ProofPath.Compression',COMPRESSION)]),
@@ -53,7 +60,10 @@ def build(reader,runtime):
             sources.append(dict(module=module,path=path,sha256=r['sha256'],
                                 inspect=site.rel(r['url'],PAGE),download=site.rel(r['file_url'],PAGE),
                                 text=raw.decode('utf-8-sig').replace('\r\n','\n')))
-        examples.append(dict(id=key,title=title,work=work,files=sources))
+        example=dict(id=key,title=title,work=work,files=sources)
+        if key=='proof-path-recovery':
+            example['compatibility']=dict(source=COMPAT_SOURCE,sha256=hashlib.sha256(COMPAT_SOURCE.encode()).hexdigest())
+        examples.append(example)
     runtime_record=verify_runtime(runtime)
     engine=site.output/BASE/'engine'
     shutil.copytree(runtime,engine,dirs_exist_ok=True)
@@ -62,6 +72,7 @@ def build(reader,runtime):
               mathlib=runtime_record['mathlib'],download_bytes=runtime_record['bytes'],
               execution='local WebAssembly',changes_recorded_verification=False)
     site.write(BASE+'examples.json',json.dumps(data,ensure_ascii=False,indent=2)+'\n')
+    site.write(BASE+'compatibility.lean',COMPAT_SOURCE)
     def asset(name):
         digest=hashlib.sha256((site.root/'website/assets'/name).read_bytes()).hexdigest()[:12]
         return site.rel('assets/'+name,PAGE)+'?v='+digest
@@ -73,9 +84,11 @@ def build(reader,runtime):
 <p class="lean-lede">Explore a published proof, change a step, and check it on your own device. The compiler runs inside this browser.</p></header>
 <div class="lean-local-intro"><p><strong>Free, with no account.</strong> Proof text stays in this tab. The site downloads compiler files; it does not send your edits to a proof service.</p>
 <p class="lean-local-meta">First use downloads a substantial library. Loading can take a minute or more and needs a computer with enough memory. Later checks reuse the loaded compiler; downloaded files are cached when your browser allows it.</p></div>
-<div class="lean-local-selectors"><label>Published workspace<select data-local-example>{opts}</select></label><label>File to edit<select data-local-file></select></label></div>
+<p data-local-direct hidden>This compiler needs its own browser page. <a data-local-direct-link target="_blank" rel="noopener">Open the workspace in a new tab</a>.</p>
+<div class="lean-local-selectors"><div><label for="local-lean-workspace">Published workspace</label><select id="local-lean-workspace" data-local-example>{opts}</select></div><div><label for="local-lean-file">File to edit</label><select id="local-lean-file" data-local-file></select></div></div>
 <nav class="lean-actions" aria-label="Original proof routes"><a data-local-inspect>Inspect original source</a><a data-local-download download>Download original</a></nav>
 <p class="lean-local-meta" data-local-source></p>
+<details data-local-compat hidden><summary>Browser version compatibility lemma included</summary><p>Lean checks this extra lemma alongside the proof. It supplies a name used by the paper that the older browser compiler lacks. The original source below is unchanged.</p><pre data-local-compat-code></pre><p><a href="compatibility.lean" download>Download the compatibility lemma</a></p></details>
 <div class="lean-local-editor"><label for="local-lean-code">Lean source</label><textarea id="local-lean-code" data-local-code spellcheck="false" autocapitalize="off" autocomplete="off" wrap="off"></textarea></div>
 <div class="lean-local-toolbar"><button type="button" data-local-run disabled>Load Lean and run</button><button type="button" data-local-stop disabled>Stop</button><button type="button" data-local-restore disabled>Restore workspace</button><button type="button" data-local-break disabled>Try a false proof</button><button type="button" data-local-save disabled>Save edited file</button></div>
 <p class="lean-local-status" data-local-status role="status" aria-live="polite">Loading the published workspace…</p>
@@ -105,6 +118,11 @@ def verify(root,documents):
     for example,expected in zip(data['examples'],WORKSPACES):
         assert example['id']==expected[0]
         assert [(f['module'],f['path']) for f in example['files']]==expected[3]
+        if example['id']=='proof-path-recovery':
+            assert example['compatibility']['source']==COMPAT_SOURCE
+            assert example['compatibility']['sha256']==hashlib.sha256(COMPAT_SOURCE.encode()).hexdigest()
+            assert (root/BASE/'compatibility.lean').read_text(encoding='utf-8')==COMPAT_SOURCE
+        else:assert 'compatibility' not in example
         for file in example['files']:
             r=records[file['path']];raw=(root/r['file_url']).read_bytes()
             assert file['sha256']==r['sha256']==hashlib.sha256(raw).hexdigest()
