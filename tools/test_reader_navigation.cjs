@@ -23,6 +23,7 @@ function page(hash = '#L50', withSidebar = false, delayedLayout = false) {
       matches() { return false; },
       hasAttribute: key => key in attrs, setAttribute: (key, value) => { attrs[key] = value; },
       getAttribute: key => attrs[key],
+      removeAttribute: key => {delete attrs[key];},
       focus() { document.activeElement = this; }, scrollIntoView() { this.scrolls++; }};
   }
   const targets = {L50: target('L50', disclosure), L51: target('L51'), 'résumé': target('résumé')};
@@ -85,6 +86,17 @@ p.events.hashchange();
 p.flush();
 assert.equal(p.document.activeElement, p.targets.L50, 'Back navigation restores passage focus');
 assert.equal(p.pushes(), 0, 'History navigation does not add duplicate entries');
+
+p=page();
+p.document.activeElement=p.targets.L51;
+p.targets.L51.setAttribute('data-reading-history-focus',p.location.href);
+p.events.hashchange();p.flush();
+assert.equal(p.document.activeElement,p.targets.L51,'Hash navigation preserves an explicit return to a reading control');
+assert.equal(p.targets.L51.getAttribute('data-reading-history-focus'),undefined,'The return marker is consumed once');
+assert.equal(p.targets.L50.scrolls,0,'A restored origin is not scrolled back to the passage anchor');
+p.targets.L51.setAttribute('data-reading-history-focus',p.location.href+'-old');
+p.events.hashchange();p.flush();
+assert.equal(p.document.activeElement,p.targets.L50,'A marker for another URL does not block ordinary passage navigation');
 
 p = page();
 const search = {id: 'search'};

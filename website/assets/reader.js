@@ -136,6 +136,14 @@ window.addEventListener("hashchange", () => {
   const hash = location.hash;
   // Claim and notation filters may reveal the destination in their own handler.
   setTimeout(() => {
+    // A reading tool can restore its origin after Back before this hash task.
+    // Consume that explicit focus return for this URL instead of overriding it.
+    const restored = document.activeElement;
+    const owner = restored?.getAttribute?.("data-reading-history-focus");
+    if (owner) {
+      restored.removeAttribute("data-reading-history-focus");
+      if (owner === location.href) return;
+    }
     const target = location.hash === hash && linkedReadingTarget();
     if (target) focusReadingTarget(target, hash);
   }, 0);
