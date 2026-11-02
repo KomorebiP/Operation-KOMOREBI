@@ -381,16 +381,20 @@ open KRS.Graph KRS.Graph.Examples
 example : (quotientClasses triangle).length = 1 := by decide
 """
             controls["reject-omitted-rank-components"] = """import ResolutionSemantics
-open KRS.Graph KRS.Graph.Examples
-example : cutRank disconnected = 4 := by decide
+open KRS.Graph KRS.Graph.Examples KRS.Graph.CountExamples
+example : cutRank disconnected = 4 := by
+  rw [cut_rank_formula disconnected disconnectedIndex]
+  decide
 """
             controls["reject-premature-natural-subtraction"] = """import ResolutionSemantics
 open KRS.Graph KRS.Graph.Examples
-example : quotientRank (edgeless 4) = 0 - 4 + 4 := by decide
+example : quotientRank (edgeless 4) = 0 - 4 + 4 := by
+  rw [KRS.Graph.RankExamples.edgeless_quotient_rank]
+  decide
 """
             controls["reject-identifying-noncut-field"] = """import ResolutionSemantics
 open KRS.Graph KRS.Graph.Examples
-example : edgeClass triangle (fun i => i == 0) = edgeClass triangle (fun _ => false) := by decide
+example : edgeClass triangle (fun i => i.val == 0) = edgeClass triangle (fun _ => false) := by decide
 """
             for label, source in controls.items():
                 (build / "Control.lean").write_text(source, encoding="utf-8", newline="\n")
