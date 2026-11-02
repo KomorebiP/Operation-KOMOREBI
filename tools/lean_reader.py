@@ -17,6 +17,18 @@ DECLARATION = re.compile(
     r'(?:(?:private|protected|noncomputable|unsafe|partial)\s+)*'
     r'(theorem|lemma|def|abbrev|structure|class|inductive|axiom|constant|instance)'
     r'\s+(«[^»\n]+»|[\w\u0080-\uffff][\w\u0080-\uffff.\'!?]*)', re.M)
+KEYWORDS = set(('import namespace section end open export variable variables universe universes '
+                'structure class inductive coinductive def abbrev theorem lemma example axiom constant '
+                'instance where by fun let have show from match with if then else do return '
+                'noncomputable private protected unsafe partial mutual deriving forall exists '
+                'in include omit set_option attribute syntax macro macro_rules elab scoped local '
+                'infix infixl infixr prefix postfix notation termination_by decreasing_by').split())
+TACTICS = set(('simp simpa rw rfl exact apply intro intros constructor cases rcases obtain '
+              'induction ext refine specialize calc assumption trivial decide norm_num aesop '
+              'change convert unfold dsimp congr omega linarith nlinarith ring field_simp '
+              'subst revert generalize first all_goals any_goals repeat try done').split())
+WORD = re.compile(r'[\w][\w.\'!?]*')
+CHARACTER = re.compile(r"'(?:\\(?:u\{[0-9a-fA-F]+\}|.)|[^'\\])'")
 
 
 def directory(work):
@@ -118,6 +130,73 @@ def declarations(text):
     return result
 
 
+def highlight_lines(text):
+    """Color lexical tokens, preserving each original line as escaped HTML."""
+    result, depth, string = [], 0, False
+    for line in text.splitlines():
+        pieces, index = [], 0
+        while index < len(line):
+            start, kind = index, None
+            if depth or line.startswith('/-',index):
+                kind = 'comment'
+                if not depth: depth, index = 1, index+2
+                while index < len(line) and depth:
+                    pair = line[index:index+2]
+                    if pair == '/-': depth, index = depth+1, index+2
+                    elif pair == '-/': depth, index = depth-1, index+2
+                    else: index += 1
+            elif string or line[index] == '"':
+                kind = 'string'
+                if not string: string, index = True, index+1
+                while index < len(line):
+                    if line[index] == '\\': index = min(index+2,len(line))
+                    elif line[index] == '"':
+                        string, index = False, index+1
+                        break
+                    else: index += 1
+            elif line.startswith('--',index):
+                kind, index = 'comment', len(line)
+            elif line[index] == '«' and '»' in line[index+1:]:
+                index = line.index('»',index+1)+1
+            elif (match := CHARACTER.match(line,index)):
+                kind, index = 'string', match.end()
+            elif (match := WORD.match(line,index)):
+                word, index = match[0], match.end()
+                kind = ('keyword' if word in KEYWORDS else 'tactic' if word in TACTICS else
+                        'number' if re.fullmatch(r'\d+(?:\.\d+)?',word) else None)
+            else:
+                index += 1
+            escaped = html.escape(line[start:index])
+            pieces.append('<span class="lean-token-'+kind+'">'+escaped+'</span>' if kind else escaped)
+        result.append(''.join(pieces))
+    return result
+
+
+def declaration_outline(entries):
+    if not entries: return ''
+    e = html.escape
+    body = ('<aside class="lean-outline" aria-label="Declarations in this source file">'
+            '<details class="lean-declarations" data-lean-outline><summary>Declarations in this file <span>'+str(len(entries))+
+            '</span></summary><form class="lean-outline-filter" role="search" hidden>'
+            '<label for="lean-declaration-query">Find a declaration</label><div>'
+            '<input id="lean-declaration-query" type="search" autocomplete="off" placeholder="Name or kind…">'
+            '<button type="reset">Clear</button></div></form>'
+            '<p class="lean-declaration-count" role="status" aria-live="polite">'+quantity(len(entries),'declaration')+'</p><ul>')
+    body += ''.join('<li data-lean-declaration="'+e(d['kind']+' '+d['name'],quote=True)+'"><a href="#L'+str(d['line'])+'" aria-label="'+e(d['kind']+' '+d['name']+', line '+str(d['line']),quote=True)+'">'
+                    '<span class="lean-declaration-kind">'+e(d['kind'])+'</span><code>'+e(d['name'])+'</code>'
+                    '<span class="lean-declaration-line">L'+str(d['line'])+'</span></a></li>' for d in entries)
+    return body+'</ul><p class="lean-outline-note">Names from source text, not a compiler report. Anonymous and generated declarations may be omitted.</p></details></aside>'
+
+
+def code_view(text, annotations=None):
+    from reader_documents import source_lines
+    entries = declarations(text)
+    body = '<div class="lean-code-layout'+(' has-lean-outline' if entries else '')+'">'
+    if entries: body += '<a class="lean-code-skip" href="#source-navigation">Skip declarations and read code</a>'
+    body += declaration_outline(entries)
+    return body+'<div class="lean-code-panel">'+source_lines(text,annotations,rendered_lines=highlight_lines(text))+'</div></div>'
+
+
 def assets(site, page):
     result = ''
     for name in ('lean-reader.css', 'lean-reader.js'):
@@ -157,14 +236,6 @@ def source_controls(reader, record, text, page):
     module = record['repository_path'].removeprefix(source_root(reader,work))
     body += '<p class="lean-current-path"><code>'+e(module)+'</code><span>'+quantity(len(text.splitlines()),'line')+'</span></p>'
     body += '<details class="lean-source-location"><summary>Original source path</summary><code>'+e(relative)+'</code></details>'
-    entries = declarations(text)
-    if entries:
-        body += ('<details class="lean-declarations"><summary>Declarations in this file <span>'+str(len(entries))+
-                 '</span></summary><p>Names found in the source text; this is not a compiler report. '
-                 'Anonymous and generated declarations may be omitted.</p><ul>')
-        body += ''.join('<li><a href="#L'+str(d['line'])+'"><code>'+e(d['kind']+' '+d['name'])+
-                        '</code></a><span>Line '+str(d['line'])+'</span></li>' for d in entries)
-        body += '</ul></details>'
     return body
 
 
