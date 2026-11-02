@@ -23,14 +23,14 @@ body.open-research {
 .open-research ::selection { background: #dce8cf; color: #183d2a; }
 .open-research h1, .open-research h2, .open-research .brand { font-family: var(--display); font-optical-sizing: auto; }
 /* A typographic masthead with optically centered navigation. */
-.open-research .site-header { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr); max-width: 76rem; align-items: center; gap: 0 1.5rem; padding: 1rem 2rem; border-bottom-color: var(--line); }
+.open-research .site-header { container-type: inline-size; position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr); max-width: 76rem; align-items: center; gap: 0 1.5rem; padding: 1rem 2rem; border-bottom-color: var(--line); }
 .open-research .site-header::after { content: ''; position: absolute; bottom: -1px; left: 2rem; width: 3rem; height: 2px; background: var(--green); }
 .open-research .brand { position: relative; z-index: 1; grid-column: 1; grid-row: 1; justify-self: start; display: inline-flex; align-items: center; gap: .85rem; flex-shrink: 0; font-size: 2.5rem; font-weight: 500; letter-spacing: -.045em; line-height: 1; }
 .open-research .brand .brand-wordmark { font: inherit; color: inherit; letter-spacing: inherit; }
 .open-research .brand small { display: block; margin-top: .5rem; font: 400 .63rem/1.5 system-ui, sans-serif; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
 .open-research .site-navigation { display: grid; grid-template-columns: subgrid; grid-template-rows: subgrid; grid-column: 1 / -1; grid-row: 1 / span 2; align-self: stretch; gap: 0; }
-.open-research .site-navigation-bar { grid-column: 2; grid-row: 1; gap: 0; flex-wrap: nowrap; padding-top: .65rem; }
-.site-nav-links, .site-nav-tools { display: flex; align-items: center; gap: .25rem; }
+.open-research .site-navigation-bar { grid-column: 2; grid-row: 1; gap: 0; flex-wrap: wrap; padding-top: .65rem; }
+.site-nav-links, .site-nav-tools { display: flex; flex-wrap: wrap; align-items: center; gap: .25rem; min-width: 0; max-width: 100%; }
 .site-nav-tools { margin-left: .9rem; padding-left: .9rem; border-left: 1px solid var(--line); }
 .open-research .site-navigation-bar a { display: inline-flex; align-items: center; justify-content: center; gap: .45rem; min-height: 44px; padding: .55rem .8rem; border: 1px solid transparent; border-radius: .2rem; font-size: .88rem; font-weight: 450; text-decoration: none; white-space: nowrap; }
 .open-research .site-navigation-bar a:hover { background: var(--sage-surface); color: var(--green); }
@@ -183,6 +183,7 @@ body.open-research {
   .open-research .site-menu-panel { padding: .8rem; gap: 1rem; }
   .open-research footer { padding: .75rem 1.2rem 1rem; }
   .footer-inner { align-items: flex-start; gap: .6rem; }
+  .footer-github { max-width: 100%; white-space: normal; }
   .open-research .footer-links { flex-direction: column; gap: 0; }
   .home-hero { padding: 1.35rem 0 1.2rem; gap: 1.25rem; }
   .home-hero::before { inset: .4rem -.8rem .35rem; }
@@ -227,6 +228,12 @@ body.open-research {
   .open-research .brand { font-size: 1.95rem; gap: .6rem; }
   .open-research .brand small { font-size: .55rem; letter-spacing: 0; text-transform: none; white-space: nowrap; }
   .open-research .site-nav-tools > button { right: .85rem; }
+}
+@container (max-width: 15rem) {
+  .open-research .brand { max-width: none; }
+  .open-research .brand small { white-space: normal; }
+  .open-research .site-nav-tools > button { position: static; }
+  .site-nav-tools { margin-left: 0; padding-left: 0; border-left: 0; }
 }
 @media print {
   .open-research table { --table-base: white; --table-alt: white; --table-heading: white; }
@@ -307,7 +314,7 @@ body.open-research {
 .reading-page-header .eyebrow { display:flex; flex-wrap:wrap; align-items:baseline; gap:.15rem .4rem; margin:0 0 .3rem; }
 .reading-page-header .eyebrow a { text-decoration:none; }
 .reading-page-header .eyebrow a:hover { text-decoration:underline; }
-.reading-page-header h1 { max-width:30ch; margin:.2rem 0 .4rem; font-size:clamp(1.75rem,2.8vw,2.4rem); line-height:1.18; }
+.reading-page-header h1 { max-width:30ch; margin:.2rem 0 .4rem; font-size:clamp(1.75rem,2.8vw,2.4rem); line-height:1.18; overflow-wrap:anywhere; }
 .reading-actions { display:flex; flex-wrap:wrap; align-items:center; gap:.15rem 1.4rem; }
 .reading-actions .reading-save { margin:.15rem 0; }
 .reading-actions .reading-save:not([hidden]) { display: contents; }
@@ -354,6 +361,7 @@ body.open-research {
 .chapter-reading { grid-column: 1; grid-row: 1; min-width: 0; }
 .chapter-reading .readable-chapter { max-width: 78ch; }
 .chapter-reading article > :first-child { margin-top: .4rem; }
+.chapter-reading.has-repeated-title #chapter-text > h2:first-child:not(:target):not(:focus-within) { position: absolute; width: 1px; height: 1px; margin: 0; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .chapter-sidebar { grid-column: 2; grid-row: 1; position: sticky; top: 1rem; min-width: 0; }
 .chapter-sidebar .reading-outline { max-width: none; margin: 0; border: 1px solid var(--line); background: var(--surface); }
 .chapter-sidebar .reading-outline > summary { display: list-item; min-height: 44px; padding: .5rem .8rem; font-weight: 650; }

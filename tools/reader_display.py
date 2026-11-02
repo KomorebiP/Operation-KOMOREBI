@@ -30,6 +30,15 @@ def take_block(source, tag, class_name):
     return source[:parser.start]+source[parser.end:],source[parser.start:parser.end]
 
 
+def heading_text(markup):
+    class Text(HTMLParser):
+        def __init__(self):
+            super().__init__();self.parts=[]
+        def handle_data(self,data):self.parts.append(data)
+    parser=Text();parser.feed(markup)
+    return ' '.join(''.join(parser.parts).split())
+
+
 def has_statement_finder(config):
     return bool(re.fullmatch(r'paper-[ivx]+',config['work']) or config.get('statement_navigation'))
 
@@ -72,6 +81,10 @@ def standardize(body,path):
     front_end=after.find('<article id="chapter-text"')
     front_end=front_end if front_end>=0 else len(after)
     front,tail=after[:front_end],after[front_end:]
+    first_heading=re.match(r'<article id="chapter-text"[^>]*>\s*(<h2\b[^>]*>.*?</h2>)',tail,re.S)
+    first_title=heading_text(first_heading[1]) if first_heading else ''
+    if first_title and heading_text(title)==first_title:
+        front=front.replace('<div class="chapter-reading">','<div class="chapter-reading has-repeated-title">',1)
     for pattern in (r'<div class="reading-save"[^>]*>.*?</div>',r'<p class="side-launch">.*?</p>'):
         match=re.search(pattern,front,re.S)
         if match:actions.append(match[0]);front=front[:match.start()]+front[match.end():]

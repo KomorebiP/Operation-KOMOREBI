@@ -10,6 +10,22 @@ from reader_usability import enhance
 
 
 class ReaderDisplayTests(unittest.TestCase):
+    def test_only_an_exact_repeated_opening_title_is_marked_without_changing_the_article(self):
+        config=BOOKS['paper-i'];page=config['chapters'][0]['url']
+        cases=[('<h2 id="L1"> A <em>&amp;</em> B </h2>',True),
+               ('<h2 id="L1">A &amp; B: definitions</h2>',False),
+               ('<p>Introduction.</p><h2 id="L1">A &amp; B</h2>',False),
+               ('<h3 id="L1">A &amp; B</h3>',False)]
+        for opening,repeated in cases:
+            article='<article id="chapter-text">'+opening+'<p>\\(x&lt;y\\)</p></article>'
+            body='<h1>'+config['label']+': A &amp; B</h1><div class="chapter-reading">'+article+'</div>'
+            result=standardize(body,page)
+            self.assertEqual('class="chapter-reading has-repeated-title"' in result,repeated)
+            self.assertEqual(result.count(article),1)
+            self.assertEqual(Page(result).ids,Page(body).ids)
+        empty='<h1></h1><div class="chapter-reading"><article id="chapter-text"><h2></h2></article></div>'
+        self.assertNotIn('has-repeated-title',standardize(empty,page))
+
     def test_reading_tools_preserve_every_route_setting_and_exact_article(self):
         article='<article id="chapter-text"><h2 id="L8">A &amp; B</h2><div class="reading-collection-nav">Retained note</div><p>\\(x&lt;y\\)</p></article>'
         save='<div class="reading-save" data-reading-save hidden><button data-save-page>Save page</button><a data-saved-reading-link href="../../reading-list.html">Saved reading</a><span role="status"></span></div>'
