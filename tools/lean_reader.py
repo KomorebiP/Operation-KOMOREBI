@@ -231,11 +231,11 @@ def source_controls(reader, record, text, page):
     from readable_chapters import BOOKS
     from urllib.parse import quote
     body += '<nav class="lean-actions" aria-label="Lean source actions"><a href="'+site.rel(BOOKS[work]['index'],page)+'">Read the paper</a>'
-    body += '<a href="'+quote(site.rel(record['file_url'],page),safe='/')+'" download>Download source</a>'+paired_route(site,page)+'</nav>'
+    body += '<a href="'+quote(site.rel(record['file_url'],page),safe='/')+'" download>Download source</a>'+paired_route(site,page)
     from browser_lean import action
     body += action(site,page,source=record['repository_path'])
     from lean_execution import action as run_action
-    body += run_action(site,page,record['repository_path'])
+    body += run_action(site,page,record['repository_path'])+'</nav>'
     body += scope(reader, work, page)
     module = record['repository_path'].removeprefix(source_root(reader,work))
     body += '<p class="lean-current-path"><code>'+e(module)+'</code><span>'+quantity(len(text.splitlines()),'line')+'</span></p>'
