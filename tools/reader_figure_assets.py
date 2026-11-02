@@ -4,6 +4,7 @@ import json
 from pathlib import PurePosixPath
 import posixpath
 import re
+from collections import Counter
 
 def digest(raw): return hashlib.sha256(raw).hexdigest()
 
@@ -46,8 +47,9 @@ def prepare(reader,config,chapters):
             found=[p for p in candidates(config,spec,match[1]) if p in assets]
             if len(found)!=1: raise ValueError('Unresolved rendered figure: '+match[1])
             used+=found
-    if len(used)!=len(set(used)) or set(used)!=set(assets):
-        raise ValueError('Every rendered figure must appear once')
+    expected={source:record.get('uses',1) for source,record in assets.items()}
+    if any(type(count) is not int or count<1 for count in expected.values()) or Counter(used)!=expected:
+        raise ValueError('Every rendered figure must appear its recorded number of times')
     return assets
 
 def image(reader,config,spec,assets,name,page):

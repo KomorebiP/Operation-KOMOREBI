@@ -100,21 +100,28 @@ Run `python -B -m unittest discover -s tools -p 'test_foundational_reading.py' -
 to check both complete editions, source changes, formula preservation and HTML
 structure. The normal site checker also checks their navigation and source links.
 
-Quantum and Circuits has an opening HTML selection at
-`read/monographs-quantum-and-circuits/`: all of chapters 1–2 in 42 topic pages,
-with QA01–QA20 and their twenty written proofs, twenty original scientific
-figures, four accessible tables, and 638 mathematical expressions. The contents
-page identifies the selection and links the rest of the volume and its sources.
-`tools/quantum_reading.py` translates the retained print wrappers;
+Quantum and Circuits has an HTML selection at
+`read/monographs-quantum-and-circuits/`: all of chapters 1–7 in 72 topic pages,
+with 69 numbered statements, 39 written proofs, 38 original scientific figures
+in 39 manuscript appearances, six accessible tables, and 1,205 mathematical
+expressions. The contents page identifies the selection and links the rest of
+the volume and its sources. `tools/quantum_reading.py` translates the retained print wrappers;
 `tools/quantum_sections.json` binds complete source ranges, original identities,
 chapter groups and table headers. Authored QA labels and source-line links stay
-intact. The shared statement finder links written proofs without adding Lean
+intact. `tools/quantum_symmetry.py` retains the symmetry treatment's chapter-wide
+statement, equation and figure numbering, its scope panels, and all twelve open
+questions. The 21 numbered equations remain part of the complete mathematical
+sequence; identical longtable continuation headers appear once in HTML.
+The shared statement finder links written proofs without adding Lean
 correspondences. This presentation adds no mathematical review or Lean replay.
 
 The arithmetic figure receipts and browser images are in
-`website/assets/figures/quantum-arithmetic/`. Reproduce them from the original
-single-page PDFs with `python -B tools/render_quantum_figures.py`; normal site
-builds check their source identities and publish the retained PNGs. Run
+`website/assets/figures/quantum-arithmetic/`; symmetry figures and receipts are in
+`website/assets/figures/quantum-symmetry/`. Reproduce them from the original
+single-page PDFs with `python -B tools/render_quantum_figures.py` and
+`python -B tools/render_symmetry_figures.py`. Normal site builds check their
+source identities and publish the retained PNGs. Figure receipts default to one
+use; the symmetry compiler diagram explicitly records its two appearances. Run
 `python -B -m unittest discover -s tools -p 'test_quantum_reading.py' -v` for the
 complete selection, formula sequence, proof routes, tables and source anchors.
 
