@@ -150,12 +150,17 @@ def prepare_book(reader,config):
                 chapter.proof_pairs[node['id']]=proof['id']
         for key,node in chapter.labels.items():
             if key in labels:raise ValueError('Repeated Quantum label: '+key)
-            node['url']=chapter.url;labels[key]=dict(node,reference_label=node['number'] or node['title'])
+            reference=node['number'] or node['title']
+            if symmetry and node['number']:
+                kind='Table' if node['kind'] in {'longtable','tabular','table'} else reading.KIND_NAMES.get(node['kind'],node['kind'].capitalize())
+                reference=kind+' '+node['number']
+            node['url']=chapter.url
+            labels[key]=dict(node,reference_label=reference,plain_reference_label=node['number'])
         state={k:getattr(chapter,k) for k in ('section','appendix','part','subsection','subsubsection','counter','section_prefix','figure','table','number_floats')}
         chapters.append((spec,raw,chapter))
     if qa!=['QA'+str(i).zfill(2) for i in range(1,21)]:raise ValueError('Review arithmetic statement inventory')
     for label,number in equations.items():
-        labels[label]['reference_label']=number;labels[label]['equation_number']=number
+        labels[label].update(reference_label='Equation ('+number+')',plain_reference_label=number,equation_number=number)
     for spec,raw,chapter in chapters:
         chapter.labels=labels;chapter.validate_references()
         chapter.equation_numbers=equations

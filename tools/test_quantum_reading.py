@@ -120,6 +120,10 @@ class QuantumReadingTests(unittest.TestCase):
                     counter+=1
                     for label in re.findall(r'\\label\{([^{}]+)\}',match[1]):expected_equations[label]=str(chapter_number)+'.'+str(counter)
             self.assertEqual(equations,expected_equations)
+            proof_page=next(s['url'] for s,_,_ in symmetry_chapters if s['title']=='Permutation-invariant mixed states and commutant compression')
+            proof_markup=(output/proof_page).read_text(encoding='utf-8')
+            self.assertIn('>Equation (4.8)</a>',proof_markup)
+            self.assertIn('>Theorem 6.1</a>',proof_markup)
             self.assertTrue(all(chapter.macro_source==MACROS for _,_,chapter in symmetry_chapters))
             # A figure repeated in the book must match its recorded use count.
             from reader_figure_assets import prepare
