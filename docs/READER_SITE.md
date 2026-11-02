@@ -791,6 +791,15 @@ German title capitalization in the generated bibliography. The record binds
 19 source files and gives the exact source and reading passages. The retained
 text and mathematical tokens are unchanged; the same review exclusions apply.
 
+The [Paper XII proofreading record](../manifests/reader-proofreading-paper-xii-2026-11-01.json)
+covers all 16 main reading sections, including the reading map, abstract,
+publication scope, thirteen manuscript sections and complete verification/revision
+record, plus notation, references, captions, tables, preamble and both bibliography
+files. One bibliography typography correction is recommended for a later edition:
+use “pp.” before the Mazur entry's page range. The record binds four source files
+and gives the exact source and reading passage. The retained text and mathematical
+tokens are unchanged; the same review exclusions apply.
+
 ## Signal Laboratory
 
 `signal-lab.html` is a larger known-reference signal experiment with 16–256
