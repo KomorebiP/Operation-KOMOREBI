@@ -5,7 +5,7 @@ import {readFile} from 'node:fs/promises';
 import {webcrypto} from 'node:crypto';
 import {deflateRawSync} from 'node:zlib';
 globalThis.document={querySelector:()=>null};
-const {moduleSource,outcome,withCompatibility,mapDiagnostic}=await import('../website/assets/lean-browser.js');
+const {moduleSource,outcome,withCompatibility,mapDiagnostic,mapWorkspaceDiagnostic,withCompatibilityImport}=await import('../website/assets/lean-browser.js');
 const {createCompiler}=await import('../website/assets/lean-wasm/compiler.js');
 const {optionalLayers,importedRoots,importLines,sourceHeader}=await import('../website/assets/lean-wasm/roots.js');
 const {zipDirectory,readZipSource,sourceWorkspace,sha256}=await import('../website/assets/lean-source-bundle.js');
@@ -110,7 +110,18 @@ test('compatibility is explicit and diagnostics point to the original proof',()=
   assert.equal(mapDiagnostic('error (line 2, col 0)',source,false,compatibility),'error (browser compatibility lemma, col 0)');
 });
 
-async function simulatedCompiler(probe,main={success:true,messages:[]},source='example : True := by trivial') {
+test('dependency parser locations are not mapped through the export wrapper twice',()=>{
+  const source='import Std\nexample : := by\n';
+  const parser={text:'error: syntax error at line 2, column 10',origin:'syntax-input'};
+  assert.equal(mapWorkspaceDiagnostic(parser,source,true),parser.text);
+  assert.equal(mapWorkspaceDiagnostic({text:'error (line 5, col 10)',origin:'compiled-source'},source,true),'error (line 2, col 10)');
+  const versioned=withCompatibilityImport(source,'KomorebiBrowser.Compatibility');
+  assert.equal(mapWorkspaceDiagnostic({...parser,text:'error: syntax error at line 3, column 10'},versioned,true,'',source),parser.text);
+  const guard={text:'error (line 20, col 2)',origin:'syntax-guard'};
+  assert.equal(mapWorkspaceDiagnostic(guard,versioned,true,'',source),'Browser syntax check: '+guard.text);
+});
+
+async function simulatedCompiler(probe,main={success:true,messages:[]},source='example : True := by trivial',runOptions={}) {
   const oldWorker=globalThis.Worker,oldFetch=globalThis.fetch;
   globalThis.fetch=async()=>new Response('',{status:404});
   globalThis.Worker=class {
@@ -128,7 +139,7 @@ async function simulatedCompiler(probe,main={success:true,messages:[]},source='e
   };
   try{
     const compiler=await createCompiler({baseUrl:'https://example.invalid/',syntaxCheck:'full'});
-    try{return await compiler.run(source);}finally{compiler.dispose();}
+    try{return await compiler.run(source,undefined,runOptions);}finally{compiler.dispose();}
   }finally{globalThis.Worker=oldWorker;globalThis.fetch=oldFetch;}
 }
 const completed={success:true,messages:[{severity:'information',data:'__KOMOREBI_PARSE_COMPLETE__'}]};
@@ -165,6 +176,66 @@ test('a missing or failed syntax probe cannot turn a silent run into success',as
   await assert.rejects(simulatedCompiler({success:true,messages:[]}),/did not complete the syntax check/);
   await assert.rejects(simulatedCompiler({success:false,error:'parser worker stopped'}),/parser worker stopped/);
   await assert.rejects(simulatedCompiler(completed,{success:true,messages:[]},'example : False := b\u0000y trivial'),/unsupported control characters/);
+  for(const separator of ['\u2028','\u2029']) {
+    await assert.rejects(simulatedCompiler(completed,undefined,'example'+separator+': True := by trivial'),/unsupported control characters/);
+    await assert.rejects(simulatedCompiler(completed,undefined,undefined,{syntaxSource:'example'+separator+': True := by trivial'}),/unsupported control characters/);
+  }
+  await assert.rejects(simulatedCompiler(completed,undefined,undefined,{syntaxSource:42}),/syntaxSource must be a source string/);
+});
+
+test('compiler distinguishes input parser coordinates from generated guard diagnostics',async()=>{
+  const parsed=await simulatedCompiler({success:true,messages:[{severity:'error',data:'syntax error at line 2, column 10'}]});
+  assert.equal(parsed.exitCode,1);
+  assert.deepEqual(parsed.diagnostics,[{text:parsed.errors[0],origin:'syntax-input'}]);
+  const guard=await simulatedCompiler({success:true,messages:[{severity:'error',data:'unknown identifier in guard',pos:{line:20,column:2}}]});
+  assert.equal(guard.exitCode,1);
+  assert.deepEqual(guard.diagnostics,[{text:guard.errors[0],origin:'syntax-guard'}]);
+});
+
+test('Stop during each isolation setup wait cannot reload or resume the canceled check',async()=>{
+  const names=['document','fetch','window','location','history','navigator','sessionStorage','crossOriginIsolated','isSecureContext'];
+  const saved=new Map(names.map(name=>[name,Object.getOwnPropertyDescriptor(globalThis,name)]));
+  const install=(name,value)=>Object.defineProperty(globalThis,name,{value,writable:true,configurable:true});
+  try {
+    for(const phase of ['registration','ready','controller']) {
+      const elements=new Map();
+      function element(){return {value:'',textContent:'',dataset:{},listeners:{},children:[],
+        addEventListener(name,fn){this.listeners[name]=fn;},replaceChildren(){this.children=[];},append(child){this.children.push(child);}};}
+      const root={querySelector(selector){const name=selector.match(/data-local-(.*)\]/)[1];if(!elements.has(name))elements.set(name,element());return elements.get(name);}};
+      const mainWindow={};mainWindow.top=mainWindow;
+      let release,reloads=0,controllerChanged;
+      const pending=new Promise(resolve=>{release=resolve;});
+      const worker={
+        register:()=>phase==='registration'?pending:Promise.resolve({}),
+        ready:phase==='ready'?pending:Promise.resolve({}),
+        controller:phase==='controller'?null:{},
+        addEventListener(name,handler){controllerChanged=handler;},
+        removeEventListener(){controllerChanged=null;}
+      };
+      const storage=new Map();
+      install('document',{querySelector:()=>root,createElement:element});
+      install('fetch',async()=>Response.json({examples:[{id:'example',files:[{module:'Example',text:'example : True := by trivial',sha256:'0'.repeat(64),download:'source.lean'}]}]}));
+      install('window',mainWindow);
+      install('location',{href:'https://example.test/lean/browser/index.html',reload(){reloads++;}});
+      install('history',{replaceState(){}});
+      install('navigator',{serviceWorker:worker});
+      install('sessionStorage',{getItem:key=>storage.get(key)??null,setItem:(key,value)=>storage.set(key,value),removeItem:key=>storage.delete(key)});
+      install('crossOriginIsolated',false);install('isSecureContext',true);
+      await import('../website/assets/lean-browser.js?cancel-isolation-'+phase);
+      await new Promise(setImmediate);
+      const running=elements.get('run').listeners.click();
+      await new Promise(setImmediate);
+      elements.get('stop').listeners.click();
+      if(phase==='controller'){assert.equal(typeof controllerChanged,'function');worker.controller={};controllerChanged();}
+      else release({});
+      await running;
+      assert.equal(reloads,0,phase);
+      assert.equal(storage.size,0,phase);
+      assert.equal(elements.get('status').textContent,'Stopped. This run produced no result.',phase);
+    }
+  } finally {
+    for(const [name,descriptor] of saved){if(descriptor)Object.defineProperty(globalThis,name,descriptor);else delete globalThis[name];}
+  }
 });
 test('runtime failures are not clean checks and warnings remain warnings',async()=>{
   await assert.rejects(simulatedCompiler(completed,{success:false,error:'runtime exited'}),/runtime exited/);

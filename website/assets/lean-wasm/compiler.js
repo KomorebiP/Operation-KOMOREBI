@@ -248,7 +248,9 @@ export async function createCompiler(options = {}) {
 		if (!problems.some(p => p.severity === 'error') && !info.some(p => p.text.includes('__KOMOREBI_PARSE_COMPLETE__'))) {
 			throw new Error('Lean did not complete the syntax check.');
 		}
-		return problems;
+		// Parser markers use coordinates in the input passed to the probe. Other
+		// diagnostics belong to the generated guard, not to the user's proof.
+		return problems.map(problem => ({...problem, origin: /syntax error at line \d+, column \d+/.test(problem.text) ? 'syntax-input' : 'syntax-guard'}));
 	}
 
 	return {
@@ -281,9 +283,12 @@ export async function createCompiler(options = {}) {
 			if (typeof code !== 'string') {
 				throw new Error('run() needs the program source as its first argument.');
 			}
-			// The parser probe escapes ordinary whitespace but drops other controls.
-			// Reject them rather than checking a different source string.
-			if (/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/.test(code)) {
+			const syntaxSource = runOptions.syntaxSource ?? code;
+			if (typeof syntaxSource !== 'string') throw new Error('syntaxSource must be a source string.');
+			// The parser probe escapes ordinary whitespace but normalizes these
+			// controls and separators. Reject either input rather than checking
+			// a different source string, including for exported dependencies.
+			if ([code, syntaxSource].some(source => /[\u0000-\u0008\u000b\u000c\u000e-\u001f\u2028\u2029]/.test(source))) {
 				throw new Error('Source contains unsupported control characters. Remove them before checking.');
 			}
 
@@ -306,7 +311,7 @@ export async function createCompiler(options = {}) {
 				if (mode === 'full' || leanReady) {
 					// Export wrappers change module visibility. Parse the supplied
 					// original dependency too, rather than only the generated wrapper.
-					problems.push(...(await findSyntaxErrors(runOptions.syntaxSource??code, state)));
+					problems.push(...(await findSyntaxErrors(syntaxSource, state)));
 				}
 			}
 
@@ -322,6 +327,10 @@ export async function createCompiler(options = {}) {
 			return {
 				output: info.map((entry) => entry.text).join('\n'),
 				errors: [...problemsToLines(problems), ...notes.map((note) => `note: ${note}`)],
+				diagnostics: [
+					...problemsToLines(problems).map((text, i) => ({text, origin: problems[i].origin ?? 'compiled-source'})),
+					...notes.map(note => ({text: `note: ${note}`, origin: 'note'}))
+				],
 				exitCode: hasErrors ? 1 : 0,
 				noise,
 				libraries: state.loaded,

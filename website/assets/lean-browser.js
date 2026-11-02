@@ -53,6 +53,16 @@ export function mapDiagnostic(text,source,exported=false,compatibility='') {
   });
 }
 
+export function mapWorkspaceDiagnostic(diagnostic,source,exported=false,compatibility='',originalSource=null) {
+  if(diagnostic.origin==='syntax-guard')return 'Browser syntax check: '+diagnostic.text;
+  // Dependencies are parsed before the export wrapper is added, so their
+  // parser locations are already in source coordinates. Elaboration locations
+  // still refer to the generated wrapper and need the normal adjustment.
+  const wrapped=exported&&diagnostic.origin!=='syntax-input';
+  const mapped=mapDiagnostic(diagnostic.text,source,wrapped,compatibility);
+  return originalSource===null?mapped:mapCompatibilityImport(mapped,originalSource);
+}
+
 const root = document.querySelector('[data-lean-local]');
 if (root) start().catch(error => setStatus('Could not load the workspace: '+error.message,'failed'));
 function el(name) { return root.querySelector('[data-local-'+name+']'); }
@@ -174,18 +184,21 @@ async function start() {
     dispose();for(const name of await caches.keys())if(name.startsWith('komorebi-lean-'))await caches.delete(name);
     el('run').textContent='Load Lean and run';setStatus('Downloaded compiler cache cleared. Your edits are still in this tab.');
   });
-  async function isolate() {
+  async function isolate(ticket) {
     if(window.top!==window)throw new Error('Open this workspace in its own browser tab using the link above.');
     if (crossOriginIsolated) return true;
     if (!isSecureContext || !navigator.serviceWorker) throw new Error('This browser cannot start the local compiler. Open the page directly in a current desktop browser.');
     log('Preparing browser isolation for the local compiler…');
     const registration=await navigator.serviceWorker.register(new URL('sw.js',location.href),{scope:new URL('./',location.href).pathname});
+    if(ticket!==generation)return false;
     await navigator.serviceWorker.ready;
+    if(ticket!==generation)return false;
     if (!navigator.serviceWorker.controller) await new Promise((resolve,reject)=>{
       const timer=setTimeout(()=>{navigator.serviceWorker.removeEventListener('controllerchange',changed);reject(new Error('Browser setup timed out. Reload this page and try again.'));},20000);
       function changed(){clearTimeout(timer);navigator.serviceWorker.removeEventListener('controllerchange',changed);resolve();}
       navigator.serviceWorker.addEventListener('controllerchange',changed);
     });
+    if(ticket!==generation)return false;
     if (!crossOriginIsolated) {
       if (sessionStorage.getItem(draftKey+'-attempt')==='1') throw new Error('This browser did not enable the memory needed by Lean. Your edits are preserved.');
       sessionStorage.setItem(draftKey,JSON.stringify({id:workspace.id,files,current,run:true}));
@@ -197,7 +210,7 @@ async function start() {
     if (busy)return;files[current]=editor.value;controls(true);const ticket=++generation;
     el('output').textContent='Checking has not completed.';setStatus('Starting Lean on this device…','running');
     try {
-      if (!await isolate())return;
+      if (!await isolate(ticket))return;
       if (ticket!==generation)return;
       // Rewriting a live imported module can stall or retain old definitions.
       // Unchanged dependencies can stay imported; any dependency edit starts fresh.
@@ -224,7 +237,7 @@ async function start() {
         const result=await compiler.run(source,undefined,dependency?{syntaxSource:proof}:{});
         if (ticket!==generation)return;
         const state=outcome(result);warnings ||= state==='warning';
-        results.push(workspace.files[i].module+'\n'+(result.errors.map(text=>{const mapped=mapDiagnostic(text,proof,dependency,compatibility);return versioned?mapCompatibilityImport(mapped,files[i]):mapped;}).join('\n')||'No diagnostics.')+(result.output?'\n'+result.output:'')+'\nChecked in '+(result.compileMs/1000).toFixed(2)+' s.');
+        results.push(workspace.files[i].module+'\n'+(result.diagnostics.map(diagnostic=>mapWorkspaceDiagnostic(diagnostic,proof,dependency,compatibility,versioned?files[i]:null)).join('\n')||'No diagnostics.')+(result.output?'\n'+result.output:'')+'\nChecked in '+(result.compileMs/1000).toFixed(2)+' s.');
         el('output').textContent=results.join('\n\n');
         if(state==='failed'){setStatus('Lean reported errors. The workspace did not pass.','failed');return;}
         if(dependency&&i===files.length-2)checkedDependencies={source:dependencySource,results:[...results],warnings};

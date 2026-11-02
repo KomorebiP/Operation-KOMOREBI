@@ -92,6 +92,9 @@ carried into this separate check as ordinary imports, preserving the imported
 notation without changing the retained proof. An absent marker or failed probe fails checking.
 This is also why the Lean library is needed even for a small Std proof.
 Source controls that the probe cannot preserve are rejected before compilation.
+This includes Unicode line and paragraph separators. The retained dependency's
+parser coordinates are kept separate from generated export-wrapper and
+syntax-guard coordinates, so diagnostics identify the right source line.
 Long guard inputs are assembled from bounded Unicode string chunks, with bounded
 join nesting, before parsing the complete source. Export wrappers also supply the
 original dependency to this syntax check rather than checking only the wrapper.
