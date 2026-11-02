@@ -95,6 +95,8 @@ class ReadingDocuments:
                         mapped.append(row)
         from reader_guidance import INTRODUCTIONS, load_introductions
         self.paper_introductions=load_introductions(self) if (site.root/INTRODUCTIONS).is_file() else {}
+        from lean_reader import prepare as prepare_lean
+        prepare_lean(self)
 
     def add(self, path, label=None):
         if path in self.records:
@@ -206,7 +208,7 @@ class ReadingDocuments:
         targets = self.work_route_targets(work)
         primary = next((label for label in ('Revised edition', 'Read chapters', 'Read PDF')
                         if any(name == label for name, _ in targets)), None)
-        prominent = {primary, 'Read PDF', 'Visual atlas'}
+        prominent = {primary, 'Read PDF', 'Visual atlas', 'Inspect Lean'}
         hub = 'collection/works/'+work+'.html'
         def link(label, url, main=False):
             target = '#'+url.split('#',1)[1] if url.startswith(hub+'#') else self.site.rel(url,page)
@@ -256,6 +258,9 @@ class ReadingDocuments:
             if BOOKS[work].get('diagram_guide'):
                 routes.append(('Diagram descriptions', BOOKS[work]['diagram_guide']))
         if pdf: routes.append(('Original PDF' if edition else 'Read PDF', pdf['url']))
+        if work in getattr(self,'lean_works',{}):
+            from lean_reader import directory
+            routes.append(('Inspect Lean', directory(work)))
         if work in self.manuscript_roots: routes.append(('Claims', 'claims.html#'+work))
         routes += [('Written proofs', hub+'#written-proofs'), ('Lean', hub+'#lean'), ('Code', hub+'#code')]
         if any(work in t['works'] for t in self.learning.get('learning_topics', [])):
@@ -387,6 +392,9 @@ class ReadingDocuments:
             else:
                 text = raw.decode('utf-8-sig')
                 body += '<p><a href="'+file_url+'" download>Download original file</a></p>'
+                if path.endswith('.lean'):
+                    from lean_reader import source_controls
+                    body += source_controls(self, record, text, page)
                 if record['format'] == 'markdown':
                     # Both pages share a directory, so their relative routes agree.
                     source_body = body+'<p><a href="'+self.site.rel(page, record['source_url'])+'">Read the formatted document</a></p>'+source_lines(text)
