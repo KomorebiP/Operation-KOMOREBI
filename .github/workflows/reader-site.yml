@@ -12,7 +12,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 45
     permissions:
       contents: read
       pages: read
@@ -49,6 +49,15 @@ jobs:
           persist-credentials: false
       - name: Install documentation dependencies and the Python library
         run: python -m pip install -r website/requirements.txt ./.reader-libraries/math
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: live-codes/browser-lean
+          ref: a8aed095534e67061e2626b94e8e69193099091d
+          path: .reader-libraries/browser-lean
+          sparse-checkout: public
+          persist-credentials: false
+      - name: Prepare the pinned browser Lean compiler and paper imports
+        run: python -B tools/prepare_lean_wasm.py --source .reader-libraries/browser-lean --output .reader-build/lean-wasm
       - name: Test website safeguards
         run: |
           python -c "from komorebi_math.sequences import reciprocal_coefficients, fubini_sequence"
@@ -59,6 +68,8 @@ jobs:
           node --test tools/test_lean_reader.cjs
           python -B -m unittest discover -s tools -p 'test_browser_lean.py' -v
           node --test tools/test_browser_lean.cjs
+          python -B -m unittest discover -s tools -p 'test_lean_browser.py' -v
+          node --test tools/test_lean_browser.mjs
           python -B -m unittest discover -s tools -p 'test_lean_execution.py' -v
           node --test tools/test_lean_execution.cjs
           python -B -m unittest discover -s tools -p 'test_foundational_reading.py' -v
@@ -165,7 +176,7 @@ jobs:
       - name: Obtain the pinned Python runtime
         run: python -B tools/fetch_python_runtime.py --output .reader-build/python
       - name: Build the reader site and reading ZIPs
-        run: python -B tools/build_reader_site.py --math-root .reader-libraries/math --polyphase-root .reader-libraries/polyphase --mathjax-root .reader-build/mathjax --pdfjs-root .reader-build/pdfjs --python-root .reader-build/python --revision '${{ github.sha }}' --output reader-site
+        run: python -B tools/build_reader_site.py --math-root .reader-libraries/math --polyphase-root .reader-libraries/polyphase --mathjax-root .reader-build/mathjax --pdfjs-root .reader-build/pdfjs --python-root .reader-build/python --lean-wasm-root .reader-build/lean-wasm --revision '${{ github.sha }}' --output reader-site
       - name: Check HTML links, access features and all reading ZIPs
         run: python -B tools/check_reader_site.py --site reader-site
       - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b
