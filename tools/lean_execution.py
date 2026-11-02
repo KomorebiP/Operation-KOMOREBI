@@ -205,7 +205,10 @@ def build(reader):
 def verify(root,documents):
     record=json.loads((root/'lean/run.json').read_bytes());bundle_path=root/'downloads/komorebi-lean-runner.zip'
     assert digest(bundle_path.read_bytes())==record['bundle_sha256']
-    sources={r['repository_path']:r for r in documents['files'] if r['repository_path'].endswith('.lean')}
+    selected={f['path'] for work in json.loads((root/'lean/index.json').read_bytes())['works'] for f in work['files']}
+    sources={r['repository_path']:r for r in documents['files'] if r['repository_path'] in selected}
+    assert set(sources)==selected
+    assert {s['path'] for s in record['files']}==selected
     assert len(record['files'])==len(sources) and len({s['id'] for s in record['files']})==len(sources)
     with zipfile.ZipFile(bundle_path) as archive:
         catalog=json.loads(archive.read('CATALOG.json'))

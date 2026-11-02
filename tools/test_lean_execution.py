@@ -4,9 +4,11 @@ import os
 from pathlib import Path
 import tempfile
 import unittest
+import zipfile
 from unittest.mock import patch
 
 from lean_runner import Collection, digest, diagnostics, execute, imports, prepare, safe_path, validate_workspace
+from lean_execution import identity, verify
 
 
 class LeanExecutionTests(unittest.TestCase):
@@ -118,6 +120,24 @@ def text := "import Wrong.D"
             self.assertEqual(record['target'],'KomorebiExample.lean')
         with tempfile.TemporaryDirectory() as temp:
             with self.assertRaises(ValueError):prepare(collection,source,Path(temp)/'run','bad-name;command')
+
+    def test_publication_scope_is_the_displayed_lean_catalogue_not_unrelated_documents(self):
+        source='paper/Main.lean';raw=b'example : True := True.intro\n';sha=digest(raw)
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp);(root/'lean').mkdir();(root/'downloads').mkdir()
+            (root/'lean/index.json').write_text(json.dumps({'works':[{'files':[{'path':source}]}]}))
+            archive=root/'downloads/komorebi-lean-runner.zip'
+            with zipfile.ZipFile(archive,'w') as z:
+                z.writestr('CATALOG.json',json.dumps({'source_revision':'a'*40,'inputs':{source:{'sha256':sha}}}))
+                z.writestr('inputs/'+source,raw)
+            data=dict(source_revision='a'*40,bundle_sha256=digest(archive.read_bytes()),source_files=1,
+                      files=[dict(path=source,id=identity(source),sha256=sha)],build_runs_lean=False)
+            (root/'lean/run.json').write_text(json.dumps(data))
+            documents={'files':[dict(repository_path=source,sha256=sha),
+                                dict(repository_path='unrelated/Other.lean',sha256='b'*64)]}
+            self.assertEqual(verify(root,documents)['files'],1)
+            documents['files']=documents['files'][1:]
+            with self.assertRaises(AssertionError):verify(root,documents)
 
 
 if __name__=='__main__':unittest.main()
