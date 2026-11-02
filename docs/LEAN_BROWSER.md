@@ -64,8 +64,10 @@ writes its checked environment to the compiler's temporary `/lib/lean` tree.
 The public section is marked `@[expose]` to preserve transparent definition
 bodies for dependent proofs.
 The dependent source imports that actual module. The main file is checked with
-its retained proof text. The workspace environment cache is reset before each
-run to avoid reusing stale dependency environments. Warnings remain visible;
+its retained proof text. Workspaces with local dependencies start a fresh worker
+for every run, reusing cached downloads. Rewriting modules in a reused imported
+environment caused a stall during the edit test. Single-file workspaces retain
+their warm compiler. Warnings remain visible;
 `sorry` is not a clean result. A clean check is not an axiom audit.
 
 Recovery also needs the newer name `dite_eq_left`, which this runtime lacks.

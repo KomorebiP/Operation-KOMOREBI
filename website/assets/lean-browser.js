@@ -87,7 +87,7 @@ async function start() {
     const url=URL.createObjectURL(new Blob([editor.value],{type:'text/plain;charset=utf-8'}));
     const link=document.createElement('a');link.href=url;link.download=workspace.files[current].module.split('.').pop()+'-edited.lean';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
   });
-  el('stop').addEventListener('click',()=>{generation++;dispose();controls(false);setStatus('Stopped. This run produced no result.');el('run').textContent='Restart Lean and run';});
+  el('stop').addEventListener('click',()=>{generation++;dispose();controls(false);el('output').textContent='Stopped. No result for this run.';setStatus('Stopped. This run produced no result.');el('run').textContent='Restart Lean and run';});
   el('clear').addEventListener('click',async()=>{
     dispose();for(const name of await caches.keys())if(name.startsWith('komorebi-lean-'))await caches.delete(name);
     el('run').textContent='Load Lean and run';setStatus('Downloaded compiler cache cleared. Your edits are still in this tab.');
@@ -117,13 +117,16 @@ async function start() {
     try {
       if (!await isolate())return;
       if (ticket!==generation)return;
+      // Imported environments retain compacted module regions. Rewriting a live
+      // module can stall or reuse old state, so project checks get a fresh worker.
+      // Downloads remain cached; single-file checks keep their warm compiler.
+      if(files.length>1){dispose();log('Fresh compiler environment for project imports; cached downloads are reused.');}
       if(!compiler){
         const abort=new AbortController();bootAbort=abort;
         const created=await createCompiler({baseUrl:new URL('engine/',location.href).href,syntaxCheck:'full',signal:abort.signal,onProgress:m=>{if(ticket===generation)log(m);},onStatus:m=>{if(ticket===generation)log(m);}});
         if(ticket!==generation){created.dispose();return;}
         compiler=created;
       }
-      await compiler.reset();
       let warnings=false;const results=[];
       for(let i=0;i<files.length;i++) {
         setStatus('Checking '+workspace.files[i].module+'…','running');

@@ -22,6 +22,9 @@ function isolated(response) {
 }
 async function responseFor(request) {
   const url = new URL(request.url);
+  // A deployment may replace pack bytes. Refresh the record on each navigation;
+  // cache keys include its checksums, so older packs cannot satisfy a new record.
+  if(request.mode==='navigate')manifest=null;
   if (request.method !== 'GET' || url.origin !== engine.origin || !url.pathname.startsWith(engine.pathname)) {
     return isolated(await fetch(request));
   }

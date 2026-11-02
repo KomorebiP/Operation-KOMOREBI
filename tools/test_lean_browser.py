@@ -40,6 +40,10 @@ class LeanBrowserTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             out=Path(tmp);reader,records,runtime=self.fixture(out)
             self.assertEqual(build(reader,runtime)['workspaces'],3)
+            from check_reader_site import Page
+            page=Page((out/PAGE).read_text(encoding='utf-8'))
+            for control in page.inputs:
+                self.assertTrue(control.get('id') in page.labels or control.get('aria-label'))
             self.assertEqual(verify(out,dict(files=records))['source_identity'],'PASS')
             data=json.loads((out/BASE/'examples.json').read_bytes())
             self.assertEqual(len(data['examples'][-1]['files']),2)
