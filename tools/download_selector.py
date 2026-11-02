@@ -72,7 +72,7 @@ def build(site):
         add(None,PurePosixPath(path).name,path,(site.root/path).read_bytes(),required=True)
     catalog=dict(version=1,source_revision=site.revision,scope=SCOPE,works=works,
                  files=sorted(files.values(),key=lambda f:f['id']))
-    site.write('downloads/selection.json',json.dumps(catalog,ensure_ascii=False,indent=2)+'\n')
+    site.write('downloads/selection.json',json.dumps(catalog,ensure_ascii=False,separators=(',',':'))+'\n')
     return catalog
 
 

@@ -1095,7 +1095,7 @@ def render(reader):
             render_special_functions(reader,book)
         else:
             reports.extend(render_book(reader,book))
-    reader.site.write('documents/readable-chapters.json',json.dumps(reports,ensure_ascii=False,indent=2)+'\n')
+    reader.site.write('documents/readable-chapters.json',json.dumps(reports,ensure_ascii=False,separators=(',',':'))+'\n')
     render_reading_index(reader)
     from reading_navigation import publish_record
     publish_record(reader.site,BOOKS)
