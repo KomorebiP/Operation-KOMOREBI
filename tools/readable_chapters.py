@@ -1110,12 +1110,11 @@ def reading_options(description=None):
             '<p><a href="#chapter-text">Skip contents and start reading</a></p>')
 
 
-def statement_navigation(chapter,rows):
-    """Index retained numbered records without adding math to the transcript."""
+def statement_entries(chapter,rows,prefix=''):
+    """Retain the same numbered records and proof routes in either index."""
     records=[node for node in chapter.nodes if node['kind'] in NUMBERED]
-    if not records: return ''
     by_line={node['line']:node for node in chapter.nodes}
-    body='<details class="statement-navigation"><summary>Statements and proofs ('+str(len(records))+')</summary><ol>'
+    body=''
     for node in records:
         name=KIND_NAMES.get(node['kind'],node['kind'].capitalize())+' '+node['number']
         title=typography(plain_math(node['title'].replace('$',''))[0])
@@ -1123,14 +1122,43 @@ def statement_navigation(chapter,rows):
         attributes={'data-statement-entry':node['id'],'data-statement-kind':node['kind'],
                     'data-statement-name':KIND_NAMES.get(node['kind'],node['kind'].capitalize()),
                     'data-statement-number':node['number'],'data-statement-labels':' '.join(node.get('labels',[]))}
-        body+='<li '+ ' '.join(key+'="'+html.escape(value,quote=True)+'"' for key,value in attributes.items())+'><a data-statement-target href="#'+node['id']+'">'+html.escape(label)+'</a>'
+        body+='<li '+ ' '.join(key+'="'+html.escape(value,quote=True)+'"' for key,value in attributes.items())+'><a data-statement-target href="'+html.escape(prefix,quote=True)+'#'+node['id']+'">'+html.escape(label)+'</a>'
         row=rows.get(node['line'])
         if row and row['proof_line']:
             proof=by_line.get(row['proof_line'])
             if not proof or proof['kind']!='proof': raise ValueError('Statement index has no recorded proof target: '+name)
-            body+=' <a class="statement-proof-link" href="#'+proof['id']+'" aria-label="Read proof of '+html.escape(name,quote=True)+'">Read proof</a>'
+            body+=' <a class="statement-proof-link" href="'+html.escape(prefix,quote=True)+'#'+proof['id']+'" aria-label="Read proof of '+html.escape(name,quote=True)+'">Read proof</a>'
         body+='</li>'
-    return body+'</ol></details>'
+    return body
+
+
+def statement_navigation(chapter,rows):
+    """Index retained numbered records without adding math to the transcript."""
+    entries=statement_entries(chapter,rows)
+    if not entries:return ''
+    count=sum(node['kind'] in NUMBERED for node in chapter.nodes)
+    return '<details class="statement-navigation"><summary>Statements and proofs ('+str(count)+')</summary><ol>'+entries+'</ol></details>'
+
+
+def statement_directory_url(config):
+    return posixpath.join(posixpath.dirname(config['index']),'statements.html')
+
+
+def render_statement_directory(reader,book):
+    config=book['config']
+    if not re.fullmatch(r'paper-[ivx]+',config['work']):return
+    site=reader.site;page=statement_directory_url(config);e=html.escape
+    body='<p class="eyebrow">Find in '+e(config['label'])+'</p><h1>'+e(config['label'])+': Statements and proofs</h1>'
+    body+='<p>Find a statement anywhere in this paper by title, printed number, type or source label. Entries follow the chapter order. Each proof link opens the recorded proof passage.</p>'
+    body+='<div class="reading-statement-directory"><h2>Statements by chapter</h2>'
+    for spec,_,chapter in book['chapters']:
+        rows={r['statement_line']:r for r in chapter_claims(reader,spec)}
+        entries=statement_entries(chapter,rows,site.rel(spec['url'],page))
+        if not entries:continue
+        body+='<section class="statement-chapter-group" data-statement-chapter="'+e(spec['url'],quote=True)+'"><h3><a href="'+e(site.rel(spec['url'],page),quote=True)+'">'+e(navigation_title(spec['title']))+'</a></h3><ul>'+entries+'</ul></section>'
+    body+='</div>'
+    site.page(page,config['label']+' statements and proofs',body)
+    site.search.append(dict(title=config['label']+' / Find statements and proofs',group='Collection',kind='Papers and source',work_ids=[config['work']],url=page,text=config['title']+' find statements theorem lemma definition proof printed number source label'))
 
 
 def render_book(reader,book):
@@ -1319,6 +1347,7 @@ def render_book(reader,book):
     if described!=set(descriptions): raise ValueError('Unused figure descriptions for '+work)
     if aided_tables!=set(table_aids): raise ValueError('Review unused table reading aids for '+work)
     render_book_index(reader,book,reports)
+    render_statement_directory(reader,book)
     render_bibliography(reader,book)
     from reading_links import add_reference_routes
     add_reference_routes(reader,book)

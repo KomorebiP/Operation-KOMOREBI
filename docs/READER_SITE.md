@@ -47,6 +47,17 @@ checks complete coverage, source labels, order and agreement with the proof
 links in each passage. Run `test_statement_navigation.py` and
 `node --test tools/test_statement_search.cjs` when changing these controls.
 
+Each core paper also has `read/<paper>/statements.html`, linked as **Find
+statements** from its shared reading controls. The directory uses the same
+statement-entry renderer and recorded proof routes, grouped in chapter order.
+Search hides empty chapter groups; the native full list remains usable without
+JavaScript, and print styles restore all groups. Switching papers from a finder
+opens the other paper's finder. The verifier checks every directory entry,
+chapter context, title and destination against the canonical chapter indexes.
+Finder filters use `q` and `proof=1` query parameters, updated with replaceState.
+Page restoration and Back/Forward apply the URL filters after native form-state
+restoration. Preserve unrelated query parameters and anchors when updating them.
+
 ## Sources
 
 | Content | Source |

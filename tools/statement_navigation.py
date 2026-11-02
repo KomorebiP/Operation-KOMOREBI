@@ -1,6 +1,7 @@
 """Check complete statement indexes against the rendered source passages."""
 from html.parser import HTMLParser
 import json
+import posixpath
 import re
 
 VOID={'area','base','br','col','embed','hr','img','input','link','meta','param','source','track','wbr'}
@@ -15,10 +16,13 @@ class StatementIndex(HTMLParser):
     def handle_starttag(self,tag,attrs):
         attrs=dict(attrs)
         if tag=='li' and 'data-statement-entry' in attrs:
-            self.entries.append(dict(attrs=attrs,targets=[],proofs=[]))
+            chapter=next((a['data-statement-chapter'] for _,a in reversed(self.stack) if 'data-statement-chapter' in a),None)
+            self.entries.append(dict(attrs=attrs,targets=[],proofs=[],chapter=chapter,text=''))
         if tag=='a':
-            if any('statement-navigation' in a.get('class','').split() for _,a in self.stack) and self.entries:
-                if 'data-statement-target' in attrs:self.entries[-1]['targets'].append(attrs.get('href'))
+            if any({'statement-navigation','reading-statement-directory'} & set(a.get('class','').split()) for _,a in self.stack) and self.entries:
+                if 'data-statement-target' in attrs:
+                    self.entries[-1]['targets'].append(attrs.get('href'))
+                    self.anchor=dict(entry=self.entries[-1],text=[])
                 if 'statement-proof-link' in attrs.get('class','').split():self.entries[-1]['proofs'].append(attrs.get('href'))
             elif any(a.get('id')=='chapter-text' for _,a in self.stack):
                 passage=next((a['id'] for _,a in reversed(self.stack) if re.fullmatch(r'L\d+',a.get('id',''))),None)
@@ -30,7 +34,9 @@ class StatementIndex(HTMLParser):
 
     def handle_endtag(self,tag):
         if tag=='a' and self.anchor:
-            if ''.join(self.anchor['text']).strip()=='Read proof' and self.anchor['passage']:
+            if 'entry' in self.anchor:
+                self.anchor['entry']['text']=''.join(self.anchor['text'])
+            elif ''.join(self.anchor['text']).strip()=='Read proof' and self.anchor['passage']:
                 self.body_proofs.setdefault(self.anchor['passage'],[]).append(self.anchor['href'])
             self.anchor=None
         index=next((i for i in range(len(self.stack)-1,-1,-1) if self.stack[i][0]==tag),None)
@@ -56,13 +62,32 @@ def check(markup,report):
     return dict(statements=len(expected),proof_links=proof_links)
 
 
+def check_directory(markup,chapters,page):
+    """Recompute the full directory from canonical chapter indexes."""
+    expected=[]
+    for url,chapter_markup in chapters:
+        prefix=posixpath.relpath(url,posixpath.dirname(page))
+        for entry in StatementIndex(chapter_markup).entries:
+            expected.append(dict(entry,chapter=url,
+                                 targets=[prefix+target for target in entry['targets']],
+                                 proofs=[prefix+target for target in entry['proofs']]))
+    actual=StatementIndex(markup).entries
+    assert actual==expected,('Paper statement finder differs from chapter indexes',page)
+    return dict(statements=len(actual),proof_links=sum(len(entry['proofs']) for entry in actual))
+
+
 def verify(root):
     reports=json.loads((root/'documents/readable-chapters.json').read_bytes())
-    statements=proofs=chapters=0;papers=set()
+    statements=proofs=chapters=0;papers={}
     for report in reports:
         match=re.match(r'read/(paper-[ivx]+)/',report['url'])
         if not match:continue
-        result=check((root/report['url']).read_text(encoding='utf-8'),report)
-        papers.add(match[1]);statements+=result['statements'];proofs+=result['proof_links']
+        markup=(root/report['url']).read_text(encoding='utf-8')
+        result=check(markup,report)
+        papers.setdefault(match[1],[]).append((report['url'],markup))
+        statements+=result['statements'];proofs+=result['proof_links']
         chapters+=bool(result['statements'])
-    return dict(papers=len(papers),chapters_with_statements=chapters,statements=statements,proof_links=proofs)
+    for work,entries in papers.items():
+        page='read/'+work+'/statements.html'
+        check_directory((root/page).read_text(encoding='utf-8'),entries,page)
+    return dict(papers=len(papers),chapters_with_statements=chapters,statements=statements,proof_links=proofs,paper_finders=len(papers))

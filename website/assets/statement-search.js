@@ -50,5 +50,16 @@
         ? token === word : token.startsWith(aliases[word] || word)));
     });
   }
-  return {normalize,search};
+  function readFilters(search) {
+    const params = new URLSearchParams(search);
+    return {query:params.get('q') || '',proofOnly:params.get('proof') === '1'};
+  }
+  function filterUrl(href, query, proofOnly) {
+    const url = new URL(href);
+    query = String(query || '').trim();
+    if (query) url.searchParams.set('q',query);else url.searchParams.delete('q');
+    if (proofOnly) url.searchParams.set('proof','1');else url.searchParams.delete('proof');
+    return url.href;
+  }
+  return {normalize,search,readFilters,filterUrl};
 });
