@@ -57,6 +57,12 @@ export function appendRuns(entries,additional) {
   return readNotebook(writeNotebook([...entries,...additional]));
 }
 export function sameObservation(a,b) {return equal(a.reference,b.reference)&&equal(a.observed,b.observed);}
+function sampleRegion(n,region) {
+  if(region===null)return [0,n-1];
+  if(!Array.isArray(region)||region.length!==2||!region.every(Number.isInteger)||region[0]<0||region[1]>=n||region[0]>region[1])
+    throw new RangeError('Choose an inclusive region with whole-number addresses from 0 to '+(n-1)+', start no later than end.');
+  return [...region];
+}
 export function targetBudgets(result,metric,value) {
   const maximum=metric==='energy'?100:metric==='reference'?64:null;
   if(maximum===null||!Number.isFinite(value)||value<0||value>maximum)throw new RangeError('Choose an energy target from 0 to 100%, or a reference RMS limit from 0 to 64.');
@@ -86,7 +92,13 @@ export function comparisonState(raw) {
   const entries=readNotebook(writeNotebook(raw.entries)),results=entries.map(entry=>experiment(entry.settings));
   if(!sameObservation(...results))throw new RangeError('Shared comparisons require identical reference and observed samples.');
   if(!Number.isInteger(raw.address)||raw.address<0||raw.address>=entries[0].settings.n)throw new RangeError('The comparison sample address is outside the signal.');
-  return {v:1,entries,view:raw.view,address:raw.address};
+  const clean={v:1,entries,view:raw.view,address:raw.address};
+  if(Object.hasOwn(raw,'region')){
+    if(raw.region===null)throw new RangeError('A shared region needs two sample addresses.');
+    clean.region=sampleRegion(entries[0].settings.n,raw.region);
+    if(raw.address<clean.region[0]||raw.address>clean.region[1])throw new RangeError('The selected sample must be inside the shared region.');
+  }
+  return clean;
 }
 export function encodeComparison(raw) {
   const bytes=new TextEncoder().encode(JSON.stringify(comparisonState(raw)));
@@ -119,8 +131,19 @@ export function compareRuns(a,b) {
   const maximum=Math.max(...rows.map(row=>Math.abs(row.difference)));
   return {rows,maximum,maximumAddress:rows.findIndex(row=>Math.abs(row.difference)===maximum)};
 }
-export function comparisonCsv(a,b) {
-  const {rows}=compareRuns(a,b);
+export function compareRegion(a,b,region=null) {
+  const [start,end]=sampleRegion(a.config.n,region),rows=compareRuns(a,b).rows.slice(start,end+1),count=rows.length;
+  const summarize=field=>{
+    const errors=rows.map(row=>row[field]),maximum=Math.max(...errors.map(Math.abs));
+    return {rms:Math.sqrt(errors.reduce((sum,error)=>sum+error*error,0)/count),bias:errors.reduce((sum,error)=>sum+error,0)/count,
+      maximum,maximumAddress:rows[errors.findIndex(error=>Math.abs(error)===maximum)].address};
+  };
+  const maximum=Math.max(...rows.map(row=>Math.abs(row.difference)));
+  return {start,end,count,rows,a:summarize('errorA'),b:summarize('errorB'),maximum,
+    maximumAddress:rows.find(row=>Math.abs(row.difference)===maximum).address};
+}
+export function comparisonCsv(a,b,region=null) {
+  const {rows}=compareRegion(a,b,region);
   return 'address,reference,observed,a_reconstruction,b_reconstruction,a_error_to_reference,b_error_to_reference,b_minus_a\n'+
     rows.map(row=>[row.address,row.reference,row.observed,row.a,row.b,row.errorA,row.errorB,row.difference].join(',')).join('\n')+'\n';
 }

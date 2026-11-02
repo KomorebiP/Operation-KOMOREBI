@@ -1,5 +1,5 @@
 import {BASES,defaults,settings,referenceSignal,experiment,basisVector,encodeSettings,decodeSettings,parseSamples,signalCsv,curvesCsv,experimentJson,importExperiment} from './signal-lab-core.mjs';
-import {MAX_RUNS,customSettings,paintSegment,SampleHistory,readNotebook,writeNotebook,appendRuns,sameObservation,notebookCsv,starterRuns,compareRuns,comparisonCsv,encodeComparison,decodeComparison,targetBudgets,targetRuns} from './signal-lab-workspace.mjs';
+import {MAX_RUNS,customSettings,paintSegment,SampleHistory,readNotebook,writeNotebook,appendRuns,sameObservation,notebookCsv,starterRuns,compareRegion,comparisonCsv,encodeComparison,decodeComparison,targetBudgets,targetRuns} from './signal-lab-workspace.mjs';
 
 const root=document.getElementById('signal-lab');
 const byId=id=>document.getElementById(id);
@@ -10,7 +10,7 @@ const format=value=>Math.abs(value)>0 && (Math.abs(value)<.001||Math.abs(value)>
 const tick=value=>value===0 ? '0' : Math.abs(value)>=10000||Math.abs(value)<.01 ? value.toExponential(0).replace('e+','e') : Number(value.toPrecision(3)).toString();
 let config=defaults(),result=null,renderFrame;
 const editHistory=new SampleHistory(),notebookKey='komorebi-signal-notebook-v1';
-let drawing=false,stroke=null,signalPlot=null,runs=[],savedResults=[],pairA=0,pairB=0,pairAddress=32,notebookMemory=false,sharedPair=null;
+let drawing=false,stroke=null,signalPlot=null,runs=[],savedResults=[],pairA=0,pairB=0,pairAddress=32,pairRegion=null,notebookMemory=false,sharedPair=null;
 function node(tag,attributes={},value) {
   const item=document.createElementNS(NS,tag);
   for(const [key,val] of Object.entries(attributes))item.setAttribute(key,val);
@@ -18,24 +18,24 @@ function node(tag,attributes={},value) {
   return item;
 }
 function label(svg,x,y,value,anchor='middle') {svg.append(node('text',{x,y,'text-anchor':anchor},value));}
-function chart(id,height,description,{xMax,yMin,yMax,xLabel,yLabel,barDomain=false}) {
+function chart(id,height,description,{xMin=0,xMax,yMin,yMax,xLabel,yLabel,barDomain=false}) {
   const host=byId(id),width=Math.max(220,Math.floor(host.getBoundingClientRect().width));
   const svg=node('svg',{viewBox:`0 0 ${width} ${height}`,'aria-hidden':'true',focusable:'false'});
   host.setAttribute('aria-label',description);host.replaceChildren(svg);
   const left=58,right=width-16,top=26,bottom=height-46;
-  const x=v=>left+(barDomain?(v+.5)/(xMax+1):v/xMax)*(right-left),y=v=>bottom-(v-yMin)/(yMax-yMin)*(bottom-top);
+  const x=v=>left+(barDomain?(v+.5)/(xMax+1):(xMin===xMax ? .5 : (v-xMin)/(xMax-xMin)))*(right-left),y=v=>bottom-(v-yMin)/(yMax-yMin)*(bottom-top);
   for(const value of [yMin,(yMin+yMax)/2,yMax]) {
     svg.append(node('line',{x1:left,x2:right,y1:y(value),y2:y(value),class:'sl-chart-grid'}));
     label(svg,left-8,y(value)+4,tick(value),'end');
   }
   svg.append(node('rect',{x:left,y:top,width:right-left,height:bottom-top,class:'sl-chart-frame'}));
   label(svg,left,14,yLabel,'start');
-  for(const value of [...new Set([0,Math.round(xMax/3),Math.round(2*xMax/3),xMax])])label(svg,x(value),bottom+18,value);
+  for(const value of [...new Set([xMin,Math.round(xMin+(xMax-xMin)/3),Math.round(xMin+2*(xMax-xMin)/3),xMax])])label(svg,x(value),bottom+18,value);
   label(svg,(left+right)/2,height-7,xLabel);
   return {svg,width,height,left,right,top,bottom,x,y};
 }
-function trace(plot,values,className) {
-  plot.svg.append(node('polyline',{points:values.map((v,i)=>`${plot.x(i)},${plot.y(v)}`).join(' '),class:'sl-trace '+className}));
+function trace(plot,values,className,start=0) {
+  plot.svg.append(node('polyline',{points:values.map((v,i)=>`${plot.x(i+start)},${plot.y(v)}`).join(' '),class:'sl-trace '+className}));
 }
 function guide(plot,index) {plot.svg.append(node('line',{x1:plot.x(index),x2:plot.x(index),y1:plot.top,y2:plot.bottom,class:'sl-chart-guide'}));}
 function limit(values) {return Math.max(1,Math.ceil(Math.max(...values.map(Math.abs))*1.1));}
@@ -170,7 +170,7 @@ byId('sl-target-rows').addEventListener('click',event=>{
 });
 byId('sl-target-save').addEventListener('click',()=>{
   try{const current=ensureResult(),{metric,value}=targetSpec(),entries=targetRuns(current,metric,value);if(!entries.length)throw new RangeError('No representation reaches this target.');const first=runs.length,next=appendRuns(runs,entries);
-    runs=next;sharedPair=null;clearComparisonHash();pairA=first;pairB=first+entries.length-1;byId('sl-pair-view').value='overlay';saveNotebook();byId('sl-notebook').open=true;renderNotebook();clearError();status(notebookMemory?'Qualifying runs added for this tab. Download notebook JSON to keep them.':'Qualifying runs saved to the notebook.');
+    runs=next;sharedPair=null;resetRegion();clearComparisonHash();pairA=first;pairB=first+entries.length-1;byId('sl-pair-view').value='overlay';saveNotebook();byId('sl-notebook').open=true;renderNotebook();clearError();status(notebookMemory?'Qualifying runs added for this tab. Download notebook JSON to keep them.':'Qualifying runs saved to the notebook.');
     (entries.length>1?byId('sl-compare-a'):byId('sl-notebook-rows').querySelector('[data-run-name="'+first+'"]')).focus();
   }catch(error){showError(error.message);}
 });
@@ -186,10 +186,10 @@ root.querySelectorAll('[data-sl-basis]').forEach(button=>button.addEventListener
 byId('sl-new-noise').addEventListener('click',()=>{
   try{config={...readControls(),seed:(readNumber('sl-seed')+1)>>>0};clearError();schedule();}catch(error){showError(error.message);}
 });
-function clickedIndex(event,id,maximum,cells=false) {
+function clickedIndex(event,id,maximum,cells=false,minimum=0) {
   const svg=byId(id).querySelector('svg'),box=svg.getBoundingClientRect(),width=svg.viewBox.baseVal.width;
   const ratio=((event.clientX-box.left)*width/box.width-58)/(width-74);
-  return Math.max(0,Math.min(maximum,cells?Math.floor(ratio*(maximum+1)):Math.round(ratio*maximum)));
+  return Math.max(minimum,Math.min(maximum,cells?Math.floor(ratio*(maximum+1)):minimum+Math.round(ratio*(maximum-minimum))));
 }
 for(const [id,key,cells] of [['sl-signal-chart','address',false],['sl-frontier-chart','budget',false],['sl-coefficient-chart','coefficient',true]]) {
   byId(id).addEventListener('click',event=>{
@@ -338,10 +338,47 @@ function renderNotebook(resetPair=false) {
     cell('td').textContent=`${s.budget} / ${s.n}`;cell('td').textContent=format(a.referenceError);cell('td').textContent=format(a.observedError);
     const actions=cell('td');actions.append(notebookButton('Restore','restore',i),notebookButton('Remove','remove',i));return row;
   }));
-  if(resetPair){pairA=0;pairB=Math.max(0,runs.length-1);}
+  if(resetPair){pairA=0;pairB=Math.max(0,runs.length-1);if(!sharedPair)resetRegion();}
   renderPairSelectors();
   drawSavedComparison();renderTargets();
 }
+function resetRegion(region=null) {
+  pairRegion=region;byId('sl-region').dataset.range='';byId('sl-region-error').hidden=true;
+  for(const id of ['sl-region-start','sl-region-end'])byId(id).setAttribute('aria-invalid','false');
+}
+function renderRegion(data,n) {
+  const host=byId('sl-region'),key=`${n}:${data.start}:${data.end}`;
+  if(host.dataset.range!==key){
+    for(const [id,value]of [['sl-region-start',data.start],['sl-region-end',data.end]]){byId(id).max=n-1;byId(id).value=value;}
+    host.dataset.range=key;
+  }
+  byId('sl-region-reset').disabled=!pairRegion;
+  text('sl-region-summary',`${pairRegion?'Region':'Full signal'} · addresses ${data.start}–${data.end} · ${data.count} ${data.count===1?'sample':'samples'}. ${data.a.rms===data.b.rms?'Equal RMS error.':(data.a.rms<data.b.rms?'A':'B')+' has lower RMS error here.'}`);
+  byId('sl-region-rows').replaceChildren(...['a','b'].map(run=>{
+    const row=document.createElement('tr'),summary=data[run],name=document.createElement('th');name.scope='row';name.textContent=run.toUpperCase();row.append(name);
+    for(const metric of ['rms','bias']){const cell=document.createElement('td'),output=document.createElement('output');output.dataset.regionMetric=run+'-'+metric;output.textContent=format(summary[metric]);cell.append(output);row.append(cell);}
+    const cell=document.createElement('td'),button=document.createElement('button'),address=document.createElement('span');
+    button.type='button';button.dataset.regionWorst=run;button.textContent=format(summary.maximum);button.setAttribute('aria-label',`Inspect run ${run.toUpperCase()} maximum absolute error at address ${summary.maximumAddress}`);
+    address.textContent='at '+summary.maximumAddress;cell.append(button,address);row.append(cell);return row;
+  }));
+  text('sl-pair-csv',pairRegion?'Download region CSV':'Download comparison CSV');
+}
+byId('sl-region-apply').addEventListener('click',()=>{
+  try{
+    const pair=selectedComparison();if(!pair||byId('sl-pair-plot').hidden)return;
+    const inputs=['sl-region-start','sl-region-end'].map(byId),valid=inputs.map(input=>input.value.trim()!==''&&input.checkValidity());
+    inputs.forEach((input,i)=>input.setAttribute('aria-invalid',String(!valid[i])));
+    if(valid.includes(false))throw new RangeError('Use whole-number addresses from 0 to '+(pair.results[0].config.n-1)+'. The last valid region is kept.');
+    const region=inputs.map(input=>Number(input.value));if(region[0]>region[1])inputs.forEach(input=>input.setAttribute('aria-invalid','true'));compareRegion(...pair.results,region);
+    resetRegion(region[0]===0&&region[1]===pair.results[0].config.n-1?null:region);drawSavedComparison();
+  }catch(error){text('sl-region-error',error.message);byId('sl-region-error').hidden=false;}
+});
+for(const id of ['sl-region-start','sl-region-end'])byId(id).addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();byId('sl-region-apply').click();}});
+byId('sl-region-reset').addEventListener('click',()=>{resetRegion();drawSavedComparison();});
+byId('sl-region-rows').addEventListener('click',event=>{
+  const button=event.target.closest('[data-region-worst]');if(!button)return;
+  pairAddress=compareRegion(...selectedComparison().results,pairRegion)[button.dataset.regionWorst].maximumAddress;drawSavedComparison();byId('sl-pair-address').focus();
+});
 function drawSavedComparison() {
   const selectedPair=selectedComparison();
   if(!selectedPair){byId('sl-pair-chart').replaceChildren();byId('sl-pair-table').replaceChildren();return;}
@@ -349,12 +386,13 @@ function drawSavedComparison() {
   byId('sl-pair-inspector').disabled=!same;
   if(!same){text('sl-pair-summary','These runs use different reference or observed samples. Their errors describe different experiments. Save two runs of the same observations to overlay their reconstructions.');byId('sl-pair-chart').replaceChildren();byId('sl-pair-table').replaceChildren();return;}
   const aa=a.analyses[a.config.basis],bb=b.analyses[b.config.basis],delta=bb.referenceError-aa.referenceError;
-  const data=compareRuns(a,b),view=byId('sl-pair-view').value;
-  pairAddress=Math.min(pairAddress,a.config.n-1);byId('sl-pair-address').max=a.config.n-1;byId('sl-pair-address').value=pairAddress;text('sl-pair-address-value',pairAddress);
-  const selected=data.rows[pairAddress];
+  const data=compareRegion(a,b,pairRegion),view=byId('sl-pair-view').value;
+  renderRegion(data,a.config.n);
+  pairAddress=Math.max(data.start,Math.min(pairAddress,data.end));byId('sl-pair-address').min=data.start;byId('sl-pair-address').max=data.end;byId('sl-pair-address').value=pairAddress;text('sl-pair-address-value',pairAddress);
+  const selected=data.rows[pairAddress-data.start];
   for(const [id,key] of [['sample','address'],['reference','reference'],['observed','observed'],['a','a'],['b','b'],['error-a','errorA'],['error-b','errorB'],['difference','difference']])text('sl-pair-'+id,format(selected[key]));
-  text('sl-pair-gap',`Largest absolute difference: ${format(data.maximum)} at address ${data.maximumAddress}. Ties use the first address.`);
-  text('sl-pair-summary',`Identical reference and observed samples. A keeps ${a.config.budget} coefficients; B keeps ${b.config.budget}. Reference error B − A: ${format(delta)}${delta<0?' · B is lower.':delta>0?' · A is lower.':' · equal.'}`);
+  text('sl-pair-gap',`Largest absolute difference${pairRegion?' in this region':''}: ${format(data.maximum)} at address ${data.maximumAddress}. Ties use the first address.`);
+  text('sl-pair-summary',`Identical reference and observed samples. A keeps ${a.config.budget} coefficients; B keeps ${b.config.budget}. Whole-signal reference error B − A: ${format(delta)}${delta<0?' · B is lower.':delta>0?' · A is lower.':' · equal.'}`);
   text('sl-pair-a-label','A · '+selectedPair.entries[0].label);text('sl-pair-b-label','B · '+selectedPair.entries[1].label);
   byId('sl-pair-reference-label').hidden=view!=='overlay';byId('sl-pair-a-label').hidden=view==='difference';byId('sl-pair-b-label').hidden=view==='difference';byId('sl-pair-difference-label').hidden=view!=='difference';
   text('sl-pair-view-note',view==='error'?'Signed error is reconstruction minus reference. Zero means an exact match at that sample. Click the plot or use the sample slider.':view==='difference'?'Signed difference is reconstruction B minus reconstruction A. Zero means the reconstructions agree at that sample. Click the plot or use the sample slider.':'Click the plot or use the sample slider to inspect both reconstructions against the same reference.');
@@ -363,30 +401,30 @@ function drawSavedComparison() {
     [point.address,point.reference,point.observed,point.a,point.b,point.errorA,point.errorB,point.difference].forEach((value,i)=>{const cell=document.createElement(i===0?'th':'td');if(i===0)cell.scope='row';cell.textContent=format(value);row.append(cell);});return row;
   }));
   if(!byId('sl-notebook').open)return;
-  const series=view==='difference'?[[data.rows.map(row=>row.difference),'sl-difference']]:view==='error'?[[data.rows.map(row=>row.errorA),'sl-cosine'],[data.rows.map(row=>row.errorB),'sl-samples']]:[[a.reference,'sl-reference'],[aa.reconstruction,'sl-cosine'],[bb.reconstruction,'sl-samples']];
+  const series=view==='difference'?[[data.rows.map(row=>row.difference),'sl-difference']]:view==='error'?[[data.rows.map(row=>row.errorA),'sl-cosine'],[data.rows.map(row=>row.errorB),'sl-samples']]:[[data.rows.map(row=>row.reference),'sl-reference'],[data.rows.map(row=>row.a),'sl-cosine'],[data.rows.map(row=>row.b),'sl-samples']];
   const extent=limit(series.flatMap(([values])=>values));
   const yLabel=view==='error'?'Signed error':view==='difference'?'Difference B − A':'Amplitude';
-  const plot=chart('sl-pair-chart',280,`${yLabel} at every address for saved reconstructions of identical reference and observed samples. Inspecting address ${pairAddress}.`,
-    {xMax:a.config.n-1,yMin:-extent,yMax:extent,xLabel:'Sample address',yLabel});
-  for(const [values,style] of series){trace(plot,values,style);plot.svg.append(node('circle',{cx:plot.x(pairAddress),cy:plot.y(values[pairAddress]),r:4,class:'sl-chart-point'}));}
+  const plot=chart('sl-pair-chart',280,`${yLabel} at addresses ${data.start}–${data.end} for saved reconstructions of identical reference and observed samples. Inspecting address ${pairAddress}.`,
+    {xMin:data.start,xMax:data.end,yMin:-extent,yMax:extent,xLabel:'Sample address',yLabel});
+  for(const [values,style] of series){trace(plot,values,style,data.start);plot.svg.append(node('circle',{cx:plot.x(pairAddress),cy:plot.y(values[pairAddress-data.start]),r:4,class:'sl-chart-point'}));}
   guide(plot,pairAddress);
 }
 byId('sl-pair-view').addEventListener('change',drawSavedComparison);
 byId('sl-pair-address').addEventListener('input',event=>{pairAddress=Number(event.target.value);drawSavedComparison();});
-byId('sl-pair-chart').addEventListener('click',event=>{const pair=selectedComparison();if(!pair||byId('sl-pair-plot').hidden)return;pairAddress=clickedIndex(event,'sl-pair-chart',pair.results[0].config.n-1);drawSavedComparison();});
+byId('sl-pair-chart').addEventListener('click',event=>{const pair=selectedComparison();if(!pair||byId('sl-pair-plot').hidden)return;pairAddress=clickedIndex(event,'sl-pair-chart',pairRegion?.[1]??pair.results[0].config.n-1,false,pairRegion?.[0]??0);drawSavedComparison();});
 byId('sl-pair-table-details').addEventListener('toggle',()=>{if(byId('sl-pair-table-details').open)drawSavedComparison();});
-byId('sl-pair-largest').addEventListener('click',()=>{pairAddress=compareRuns(...selectedComparison().results).maximumAddress;drawSavedComparison();byId('sl-pair-address').focus();});
+byId('sl-pair-largest').addEventListener('click',()=>{pairAddress=compareRegion(...selectedComparison().results,pairRegion).maximumAddress;drawSavedComparison();byId('sl-pair-address').focus();});
 byId('sl-pair-csv').addEventListener('click',()=>{
-  try{const pair=selectedComparison(),href=URL.createObjectURL(new Blob([comparisonCsv(...pair.results)],{type:'text/csv'})),link=document.createElement('a');
-    link.href=href;link.download=`komorebi-comparison-${pair.results[0].config.n}.csv`;document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(href),1000);text('sl-notebook-status','Comparison CSV downloaded with reconstructions, signed errors, and B minus A at every address.');
+  try{const pair=selectedComparison(),href=URL.createObjectURL(new Blob([comparisonCsv(...pair.results,pairRegion)],{type:'text/csv'})),link=document.createElement('a');
+    link.href=href;link.download=`komorebi-comparison-${pair.results[0].config.n}${pairRegion?'-region-'+pairRegion.join('-'):''}.csv`;document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(href),1000);text('sl-notebook-status','Comparison CSV downloaded with reconstructions, signed errors, and B minus A '+(pairRegion?'at addresses '+pairRegion.join('–'):'at every address')+'.');
   }catch(error){showError(error.message);}
 });
 byId('sl-pair-copy').addEventListener('click',async()=>{
   const button=byId('sl-pair-copy');byId('sl-link-fallback').hidden=true;text('sl-link-label','Comparison link');let url;
-  try{const pair=selectedComparison();if(!pair)throw new RangeError('Choose two saved runs first.');url=new URL(location.href);url.searchParams.delete('lab');url.hash='compare='+encodeComparison({v:1,entries:pair.entries,view:byId('sl-pair-view').value,address:pairAddress});clearError();}
+  try{const pair=selectedComparison();if(!pair)throw new RangeError('Choose two saved runs first.');url=new URL(location.href);url.searchParams.delete('lab');url.hash='compare='+encodeComparison({v:1,entries:pair.entries,view:byId('sl-pair-view').value,address:pairAddress,...(pairRegion?{region:pairRegion}:{})});clearError();}
   catch(error){showError(error.message);return;}
   button.disabled=true;
-  try{await navigator.clipboard.writeText(url.href);text('sl-pair-share-status','Comparison link copied. Both runs, their names, the plot view, and selected sample will open as a preview.');}
+  try{await navigator.clipboard.writeText(url.href);text('sl-pair-share-status','Comparison link copied. Both runs, their names, the plot view, region, and selected sample will open as a preview.');}
   catch{byId('sl-link').value=url.href;byId('sl-link-fallback').hidden=false;byId('sl-link').focus();byId('sl-link').select();text('sl-pair-share-status','Copy the comparison link from the selected field above.');status('Select and copy the comparison link below.');}
   finally{button.disabled=false;}
 });
@@ -395,10 +433,10 @@ byId('sl-shared-save').addEventListener('click',()=>{
   try{const first=runs.length,next=appendRuns(runs,sharedPair.entries);runs=next;sharedPair=null;pairA=first;pairB=first+1;clearComparisonHash();saveNotebook();renderNotebook();clearError();status(notebookMemory?'Both runs added for this tab. Download notebook JSON to keep them.':'Both comparison runs saved to the notebook.');}
   catch(error){showError(error.message);}
 });
-byId('sl-shared-close').addEventListener('click',()=>{sharedPair=null;clearComparisonHash();renderNotebook();clearError();status('Shared preview closed. Your saved notebook is unchanged.');});
+byId('sl-shared-close').addEventListener('click',()=>{sharedPair=null;resetRegion();clearComparisonHash();renderNotebook();clearError();status('Shared preview closed. Your saved notebook is unchanged.');});
 root.querySelectorAll('[data-sl-starter]').forEach(button=>button.addEventListener('click',()=>{
   try{ensureResult();const entries=starterRuns(button.dataset.slStarter),first=runs.length,next=appendRuns(runs,entries);
-    cancelStroke();editHistory.clear();drawing=false;sharedPair=null;clearComparisonHash();config=settings(entries[0].settings);runs=next;pairA=first;pairB=first+1;pairAddress=Math.min(32,config.n-1);byId('sl-pair-view').value='overlay';
+    cancelStroke();editHistory.clear();drawing=false;sharedPair=null;resetRegion();clearComparisonHash();config=settings(entries[0].settings);runs=next;pairA=first;pairB=first+1;pairAddress=Math.min(32,config.n-1);byId('sl-pair-view').value='overlay';
     saveNotebook();byId('sl-starters').open=false;byId('sl-notebook').open=true;renderNotebook();render();clearError();text('sl-edit-status','');status('Starter opened. Two comparison runs were added to the notebook.');byId('sl-compare-a').focus();
   }catch(error){showError(error.message);}
 }));
@@ -417,7 +455,7 @@ byId('sl-notebook-rows').addEventListener('click',event=>{
   if(button.dataset.notebookAction==='remove'){runs=runs.filter((_,j)=>j!==i);saveNotebook();renderNotebook(true);text('sl-notebook-status',notebookMemory?'Run removed from this tab. Download JSON to keep the notebook.':'Run removed. Notebook saved in this browser.');(byId('sl-notebook-rows').querySelector('[data-notebook-action=restore][data-run="'+Math.min(i,runs.length-1)+'"]')||byId('sl-save-run')).focus();return;}
   cancelStroke();editHistory.clear();drawing=false;config=settings(runs[i].settings);clearError();render();text('sl-edit-status','');status(`Restored ${runs[i].label}. Results were recomputed.`);byId('sl-draw').focus();
 });
-for(const [id,key] of [['sl-compare-a','a'],['sl-compare-b','b']])byId(id).addEventListener('change',event=>{if(key==='a')pairA=Number(event.target.value);else pairB=Number(event.target.value);drawSavedComparison();});
+for(const [id,key] of [['sl-compare-a','a'],['sl-compare-b','b']])byId(id).addEventListener('change',event=>{if(key==='a')pairA=Number(event.target.value);else pairB=Number(event.target.value);resetRegion();drawSavedComparison();});
 byId('sl-notebook').addEventListener('toggle',()=>{if(byId('sl-notebook').open)drawSavedComparison();});
 function downloadNotebook(kind) {
   const content=kind==='json'?writeNotebook(runs):notebookCsv(runs,savedResults),href=URL.createObjectURL(new Blob([content],{type:kind==='json'?'application/json':'text/csv'}));
@@ -442,7 +480,7 @@ const shared=new URL(location.href).searchParams.get('lab');
 if(shared!==null){try{config=decodeSettings(shared);status('Experiment restored from the link.');}catch(error){showError(error.message+' Default settings are shown.');}}
 function restoreComparison(encoded,update=true) {
   const value=decodeComparison(encoded),preview={entries:value.entries,results:value.entries.map(entry=>experiment(entry.settings))};
-  cancelStroke();editHistory.clear();drawing=false;sharedPair=preview;config=settings(value.entries[0].settings);pairAddress=value.address;byId('sl-pair-view').value=value.view;byId('sl-notebook').open=true;
+  cancelStroke();editHistory.clear();drawing=false;sharedPair=preview;resetRegion(value.region??null);config=settings(value.entries[0].settings);pairAddress=value.address;byId('sl-pair-view').value=value.view;byId('sl-notebook').open=true;
   clearError();status('Shared comparison restored. Results were recomputed; your saved notebook is unchanged.');
   if(update){renderNotebook();render();}
   requestAnimationFrame(()=>byId('sl-notebook-comparison').scrollIntoView({block:'start'}));
@@ -450,7 +488,7 @@ function restoreComparison(encoded,update=true) {
 if(location.hash.startsWith('#compare=')){try{restoreComparison(location.hash.slice(9),false);}catch(error){showError(error.message+' Your saved notebook is unchanged.');}}
 window.addEventListener('hashchange',()=>{
   if(location.hash.startsWith('#compare=')){try{restoreComparison(location.hash.slice(9));}catch(error){showError(error.message+' The current experiment and notebook are kept.');}}
-  else if(sharedPair){sharedPair=null;renderNotebook();clearError();status('Shared preview closed. Your saved notebook is unchanged.');}
+  else if(sharedPair){sharedPair=null;resetRegion();renderNotebook();clearError();status('Shared preview closed. Your saved notebook is unchanged.');}
 });
 if(matchMedia('(max-width: 760px)').matches)byId('sl-setup').open=false;
 root.querySelectorAll('fieldset,[data-sl-action],[data-sl-basis],#sl-export-kind').forEach(element=>{element.disabled=false;});

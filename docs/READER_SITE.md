@@ -852,6 +852,24 @@ Closing a preview restores notebook selection; ordinary experiment links omit
 the comparison fragment. Malformed comparison links preserve the current valid
 experiment and notebook. Clipboard failure exposes a selectable link field.
 
+The comparison region inspector accepts inclusive integer addresses, including
+a single sample. `compareRegion` derives local RMS error, mean signed error,
+maximum absolute error and its first address from the existing full-signal
+reconstructions. The chart rescales both axes, while sample selection, the
+largest-difference action, sample table and CSV stay within that region and
+retain original addresses. Maximum-error buttons inspect each run's worst
+local sample. Invalid edits keep the last applied region. Selecting another
+pair or a starter resets the region to the full signal.
+
+Version-1 comparison links optionally include `region: [start, end]`; links
+without it retain the full-signal behavior. A linked selected address must be
+inside the region. Opening a preview leaves notebook storage unchanged; saving
+its runs keeps the current region in the open comparison. Notebook JSON stores
+run settings, so use a comparison link to preserve the selected region. Exact
+sample-coordinate fixtures check regional metrics, CSV boundaries, single
+samples, and ties; regional partitions recover whole-signal squared errors
+across all supported sizes and bases.
+
 The quality-target finder uses the active experiment's existing error curves.
 It scans every budget in order, including zero, for either observed-energy
 retention (0–100%) or reference RMS error (0–64). Reference error need not be
