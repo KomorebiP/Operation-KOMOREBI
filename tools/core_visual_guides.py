@@ -39,14 +39,14 @@ def render(reader):
     rows=inventory(site.root,reader.records.values())
     count=sum(bool(row['html_atlas']) for row in rows)
     body='<p class="eyebrow">The twelve core papers</p><h1>Visual guides and worked atlases</h1>'
-    body+='<p>Choose a visual route into each paper. '+str(count)+' complete atlases have HTML plates with original drawings and selectable mathematics. Every paper also retains its original visual material in an on-site PDF.</p>'
+    body+='<p>Choose a visual route into each paper. '+str(count)+' complete guides have HTML pages with original drawings and selectable mathematics. Every paper also retains its original visual material in an on-site PDF.</p>'
     body+='<p><a href="index.html">Reading library</a> · <a href="'+site.rel('documents.html',INDEX)+'">All papers and PDFs</a></p><div class="work-list">'
     for row in rows:
         body+='<section class="work" id="'+row['work']+'"><p class="eyebrow">'+row['label']+'</p><h2>'+html.escape(row['title'])+'</h2>'
-        body+='<p>'+('Complete visual atlas in HTML.' if row['html_atlas'] else 'Visual atlas available in the PDF.')+'</p>'
+        body+='<p>'+('Complete visual guide in HTML.' if row['html_atlas'] else 'Visual guide available in the PDF.')+'</p>'
         body+='<nav aria-label="'+row['label']+' visual reading routes">'
         if row['html_atlas']:
-            body+='<a class="button" href="'+site.rel(row['html_atlas'],INDEX)+'">Read the HTML atlas</a>'
+            body+='<a class="button" href="'+site.rel(row['html_atlas'],INDEX)+'">Read the HTML guide</a>'
         body+='<a href="'+site.rel(row['visual_pdf'],INDEX)+'">'+('Monograph with visual atlas (PDF)' if row['integrated_pdf'] else 'Visual guide (PDF)')+'</a>'
         body+='<a href="'+site.rel(row['manuscript'],INDEX)+'">Manuscript contents</a><a href="'+site.rel(row['overview'],INDEX)+'">Work and evidence</a></nav></section>'
     body+='</div><p>The guides retain the evidence and hypotheses of their source editions. A reading conversion adds no proof review or Lean execution.</p>'

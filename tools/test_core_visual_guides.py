@@ -25,10 +25,10 @@ class CoreVisualGuidesTests(unittest.TestCase):
                 cls.files.append(dict(repository_path=component['destination']+'/'+resource['path'],
                     url='pdf/'+component['id']+'/'+resource['kind']+'.html',sha256=owned[resource['path']]['sha256']))
 
-    def test_exactly_twelve_guides_and_eight_complete_html_atlases(self):
+    def test_exactly_twelve_guides_and_nine_complete_html_guides(self):
         rows=inventory(ROOT,self.files)
         self.assertEqual(len(rows),12)
-        self.assertEqual([r['work'] for r in rows if r['html_atlas']],['paper-i','paper-ii','paper-iii','paper-iv','paper-v','paper-vi','paper-vii','paper-viii'])
+        self.assertEqual([r['work'] for r in rows if r['html_atlas']],['paper-i','paper-ii','paper-iii','paper-iv','paper-v','paper-vi','paper-vii','paper-viii','paper-ix'])
         self.assertTrue(rows[0]['integrated_pdf'])
         self.assertTrue(all(not r['integrated_pdf'] for r in rows[1:]))
         self.assertEqual(len({r['visual_pdf'] for r in rows}),12)
@@ -46,8 +46,8 @@ class CoreVisualGuidesTests(unittest.TestCase):
             write=lambda path,body:writes.__setitem__(path,body))
         reader=SimpleNamespace(site=site,records={str(i):r for i,r in enumerate(self.files)})
         render(reader)
-        self.assertEqual(pages[INDEX].count('Read the HTML atlas'),8)
-        self.assertEqual(pages[INDEX].count('Visual atlas available in the PDF.'),4)
+        self.assertEqual(pages[INDEX].count('Read the HTML guide'),9)
+        self.assertEqual(pages[INDEX].count('Visual guide available in the PDF.'),3)
         self.assertIn('Monograph with visual atlas (PDF)',pages[INDEX])
         self.assertEqual(json.loads(writes[REPORT])['guides'],inventory(ROOT,self.files))
 
@@ -67,7 +67,7 @@ class CoreVisualGuidesTests(unittest.TestCase):
             output=Path(temporary);target=output/REPORT;target.parent.mkdir(parents=True)
             target.write_text(writes[REPORT],encoding='utf-8')
             documents=dict(source_revision='test',files=self.files)
-            self.assertEqual(verify(output,documents,pages),dict(guides=12,html_atlases=8))
+            self.assertEqual(verify(output,documents,pages),dict(guides=12,html_atlases=9))
             pages.pop(rows[0]['html_atlas'])
             with self.assertRaises(AssertionError):verify(output,documents,pages)
 

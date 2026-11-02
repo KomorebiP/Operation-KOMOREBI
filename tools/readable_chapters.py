@@ -1130,6 +1130,7 @@ def render_reading_index(reader):
            'Paper VI’s complete 42-plate atlas has HTML drawings, descriptions, and selectable labels. '
            'Paper VII’s complete 40-plate atlas has HTML drawings, descriptions, and selectable labels. '
            'Paper VIII’s complete 32-plate atlas has HTML drawings, descriptions, and selectable labels. '
+           'Paper IX’s complete 23-section visual guide includes 20 original figures and eight worked examples. '
            'Companion and atlas coverage varies by work; original visual atlases remain available in the PDFs. '
            'See <a href="'+site.rel('read/visual-guides.html',page)+'">visual guides for all twelve core papers</a> or '
            '<a href="'+site.rel('collection/ACCESSIBILITY.html',page)+'">accessibility and reading options</a> for current coverage and limitations.</p>'
