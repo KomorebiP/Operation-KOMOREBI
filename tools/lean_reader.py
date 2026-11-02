@@ -232,6 +232,8 @@ def source_controls(reader, record, text, page):
     from urllib.parse import quote
     body += '<nav class="lean-actions" aria-label="Lean source actions"><a href="'+site.rel(BOOKS[work]['index'],page)+'">Read the paper</a>'
     body += '<a href="'+quote(site.rel(record['file_url'],page),safe='/')+'" download>Download source</a>'+paired_route(site,page)+'</nav>'
+    from browser_lean import action
+    body += action(site,page,source=record['repository_path'])
     body += scope(reader, work, page)
     module = record['repository_path'].removeprefix(source_root(reader,work))
     body += '<p class="lean-current-path"><code>'+e(module)+'</code><span>'+quantity(len(text.splitlines()),'line')+'</span></p>'
@@ -251,6 +253,8 @@ def build(reader):
         body += '<header class="lean-heading"><p class="eyebrow">'+e(book['label'])+' · Lean sources</p><h1>'+e(short_title(title))+'</h1></header>'
         body += '<nav class="lean-actions" aria-label="Lean reading routes"><a class="button" href="'+site.rel(book['index'],page)+'">Read the paper</a>'
         body += '<a href="'+site.rel('collection/works/'+work+'.html',page)+'">Work overview</a>'+paired_route(site,page)+'</nav>'+scope(reader,work,page)
+        from browser_lean import action
+        body += action(site,page,work=work)
         common = source_root(reader,work)
         root_label = common.removeprefix(site.components[work]['destination']+'/') or './'
         body += ('<div class="lean-directory-heading"><h2>Source files <span>'+str(len(records))+'</span></h2>'
@@ -286,6 +290,7 @@ def build(reader):
     body += '<p class="lean-summary">'+quantity(len(catalog),'reading edition')+'<span aria-hidden="true"> · </span>'+quantity(total,'source file')+'</p></header>'
     body += '<nav class="lean-actions" aria-label="Lean library routes"><a href="'+site.rel('read/index.html','lean/index.html')+'">Reading library</a>'+paired_route(site,'lean/index.html')+'</nav>'
     body += '<p class="lean-library-note">Coverage labels describe the existing evidence. Browsing the source does not run Lean.</p>'
+    body += '<p class="lean-playground-route"><a class="button" href="'+site.rel('lean/playground.html','lean/index.html')+'">Try a proof in Lean</a> <span>Interactive pilot · Paper XII</span></p>'
     for group,core in [('Core papers',True),('Books and monographs',False)]:
         selected = [item for item in catalog if bool(re.fullmatch(r'paper-[ivx]+',item['work'])) == core]
         if not selected: continue
