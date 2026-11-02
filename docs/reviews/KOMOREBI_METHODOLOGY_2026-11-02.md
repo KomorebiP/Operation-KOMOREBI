@@ -66,3 +66,10 @@ from invalidating its existing delivery manifest.
 
 The website workflow includes the new source-preservation tests and runs its
 complete site and link checks before publication.
+
+The first full integration run exposed a test assumption that every HTML edition
+must have Lean sources. The methodology has no selected Lean resource and makes
+no Lean claim. The corrected test still requires receipt-owned source selections
+for every work declaring Lean resources, verifies that every reading edition has
+a component record, and checks that an edition without a Lean selection acquires
+no inspector or implied coverage.

@@ -108,17 +108,33 @@ class LeanReaderTests(unittest.TestCase):
         prepare(reader)
         self.assertEqual(reader.lean_works,{})
 
-    def test_all_current_reading_editions_have_receipt_bound_selected_sources(self):
+    def test_reading_edition_without_lean_selection_has_no_inspector(self):
+        reader=SimpleNamespace(site=SimpleNamespace(registry=dict(components=[
+            dict(id='komorebi-methodology',destination='methodology',
+                 resources=[dict(kind='text',path='essay.tex')])])),
+            owned={'methodology/unselected.lean':dict(work='komorebi-methodology')},
+            add=lambda path:self.fail('Unselected source should not be registered'))
+        prepare(reader)
+        self.assertEqual(reader.lean_works,{})
+
+    def test_reading_editions_with_lean_selections_have_receipt_bound_sources(self):
         from readable_chapters import BOOKS
         root=Path(__file__).resolve().parents[1]
         registry=json.loads((root/'manifests/browse-resources.json').read_bytes())
-        works={}
+        works={};expected=set();registered=set()
         for c in registry['components']:
             if c['id'] not in BOOKS:continue
+            registered.add(c['id'])
             receipt=json.loads((root/('manifests/source-imports/'+c['id']+'.json')).read_bytes())
             owned={c['destination']+'/'+f['path']:{**f,'work':c['id']} for f in receipt['files']}
-            paths=list(selected_paths(c,owned));self.assertTrue(paths,c['id']);works[c['id']]=paths
-        self.assertEqual(set(works),set(BOOKS))
+            paths=list(selected_paths(c,owned))
+            if any(r['kind']=='lean' for r in c['resources']):
+                expected.add(c['id'])
+                self.assertTrue(paths,c['id']);works[c['id']]=paths
+            else:
+                self.assertEqual(paths,[],c['id'])
+        self.assertEqual(registered,set(BOOKS))
+        self.assertEqual(set(works),expected)
 
 
 if __name__=='__main__':unittest.main()
