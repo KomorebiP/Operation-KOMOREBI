@@ -18,7 +18,7 @@ SOURCES = {
     'paper-v':'editable/traditional/atlas-pages.tex',
     'paper-vi':'editable/traditional/atlas-pages.tex',
     'paper-vii':'editable/traditional/monograph_atlas.tex',
-    'paper-viii':'editable/traditional/monograph_atlas.tex',
+    'paper-viii':'editable/visual_guide/source/pages.tex',
     'paper-ix':'sources/visual_body.tex',
     'paper-x':'visual_appendix/source/pages.tex',
     'paper-xi':'publication/source/visual_guide/Paper_XI_Visual_Guide_Final.tex',
@@ -44,8 +44,8 @@ def audit(root,git='git'):
         text=raw.decode('utf-8-sig')
         inputs=[]
         if work=='paper-viii':
-            for name in ('pages.tex','extended_pages.tex'):
-                child='editable/traditional/atlas_sources/'+name
+            for name in ('extended_pages.tex',):
+                child='editable/visual_guide/source/'+name
                 child_path=component['destination']+'/'+child
                 child_raw=subprocess.check_output([git,'show',revision+':'+child_path],cwd=root)
                 digest=hashlib.sha256(child_raw).hexdigest()
@@ -68,6 +68,17 @@ def audit(root,git='git'):
             integrated_pdf=integrated,html_atlas=BOOKS[work].get('atlas_index'),
             remaining='Complete HTML atlas available' if BOOKS[work].get('atlas_index') else
                 'Port the visual companion, its figures, source text and manuscript links'))
+        if work=='paper-viii':
+            crosswalk='editable/visual_guide/VISUAL_TO_TRADITIONAL_CROSSWALK.json'
+            crosswalk_path=component['destination']+'/'+crosswalk
+            crosswalk_raw=subprocess.check_output([git,'show',revision+':'+crosswalk_path],cwd=root)
+            crosswalk_sha=hashlib.sha256(crosswalk_raw).hexdigest()
+            if crosswalk_sha!=retained[crosswalk]['sha256']:raise ValueError('Changed visual crosswalk')
+            declared=json.loads(crosswalk_raw)['visual_pdf_sha256']
+            rows[-1]['reference_crosswalk']=dict(source=crosswalk_path,source_sha256=crosswalk_sha,
+                declared_visual_pdf_sha256=declared,retained_visual_pdf_sha256=retained[resource['path']]['sha256'],
+                pdf_checksum_current=declared==retained[resource['path']]['sha256'],
+                handling='Original crosswalk preserved; PDF plate titles, locators and page labels independently checked, and stable manuscript targets rederived by the HTML converter')
     return dict(source_revision=revision,reading_configuration='working tree',
         scope='Visual reading coverage only; no mathematical audit, example execution or Lean replay.',
         core_papers=len(rows),complete_html_atlases=sum(bool(r['html_atlas']) for r in rows),guides=rows)

@@ -17,8 +17,8 @@ from worked_atlas_drawings import drawing_nodes
 ROOT=Path(__file__).resolve().parents[1]
 
 
-def publish(work,output):
-    atlas=ATLASES[work]
+def publish(work,output,atlas=None):
+    atlas=atlas or ATLASES[work]
     site=SimpleNamespace(root=ROOT,output=output,revision='worked-atlas-test',search=[],cache=None,assessments={},editorial_editions={})
     for name in ('rel','write','page','read_source'):
         setattr(site,name,lambda *args,_method=getattr(Site,name),**kwargs:_method(site,*args,**kwargs))
