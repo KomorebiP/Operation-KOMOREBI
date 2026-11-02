@@ -303,15 +303,28 @@ body.open-research {
 .proofreading-note p { margin: .25rem 0; }
 
 /* Compact chapter controls leave room for the opening mathematical text. */
-.reading-page-header { margin:.2rem 0 .65rem; }
+.reading-page-header { position: relative; margin:.2rem 0 .65rem; }
 .reading-page-header .eyebrow { display:flex; flex-wrap:wrap; align-items:baseline; gap:.15rem .4rem; margin:0 0 .3rem; }
 .reading-page-header .eyebrow a { text-decoration:none; }
 .reading-page-header .eyebrow a:hover { text-decoration:underline; }
 .reading-page-header h1 { max-width:30ch; margin:.2rem 0 .4rem; font-size:clamp(1.75rem,2.8vw,2.4rem); line-height:1.18; }
 .reading-actions { display:flex; flex-wrap:wrap; align-items:center; gap:.15rem 1.4rem; }
 .reading-actions .reading-save { margin:.15rem 0; }
+.reading-actions .reading-save:not([hidden]) { display: contents; }
+.reading-actions .reading-save-status { order: 1; flex-basis: 100%; }
 .reading-actions .side-launch { margin:0; font-size:.85rem; }
 .reading-actions .side-launch a { display:inline-flex; align-items:center; min-height:44px; }
+.reading-page-tools { position: static; }
+.reading-page-tools > summary { display: list-item; min-height: 44px; padding: .55rem .75rem; border: 1px solid var(--line); border-radius: .2rem; background: var(--surface); color: var(--green); cursor: pointer; font-size: .85rem; line-height: 1.45; }
+.reading-page-tools[open] > summary { border-color: var(--green); background: var(--sage-surface); }
+.reading-page-tools-panel { position: absolute; top: calc(100% + .4rem); left: 0; z-index: 9; width: min(36rem, 100%); max-height: 70vh; overflow-y: auto; overflow-wrap: anywhere; padding: .75rem 1rem; border: 1px solid var(--green); background: var(--surface); box-shadow: var(--shadow); }
+.reading-page-tools-panel .reading-collection-nav { display: grid; grid-template-columns: minmax(0, 1fr); gap: .15rem; margin: 0; }
+.reading-page-tools-panel .reading-collection-nav > a { padding: .4rem .2rem; }
+.reading-page-tools-panel .reading-paper-menu > nav, .reading-page-tools-panel .reading-display > div { position: static; width: 100%; max-height: 50vh; box-shadow: none; }
+.reading-page-tools-panel .reading-paper-menu > nav { display: block; }
+.reading-page-tools-panel .reading-paper-menu ul { grid-template-columns: minmax(0, 1fr); }
+.reading-page-tools-panel > p { margin: .25rem 0; font-size: .85rem; }
+.reading-page-tools-panel > p a { display: inline-flex; align-items: center; min-height: 44px; }
 .reading-library-groups { display:flex; flex-wrap:wrap; gap:.4rem 1.5rem; margin:1rem 0 1.5rem; }
 .reading-library-groups a { display:inline-flex; align-items:center; min-height:44px; }
 .reading-page main { padding-top: 1.4rem; }
@@ -375,6 +388,11 @@ body.open-research {
   .reading-resource-menu .reading-resource-groups { grid-template-columns: minmax(0, 1fr); }
   .work-more[open] { flex-basis: 100%; }
   .reading-page main { padding: 1rem 1rem 2.5rem; }
+  .reading-page-header .eyebrow > span { display: none; }
+  .reading-actions { gap: .25rem .6rem; }
+  .reading-page-tools-panel { left: 0; right: 0; width: auto; }
+  /* The sticky contents control replaces this lone link while passage tools are off. */
+  .chapter-reading .readable-chapter > .passage-links:has(> a[href="#contents"]):not(:has(> a:not([href="#contents"]))):has(> .passage-tools[hidden]) { display: none; }
   .reading-page .reading-navigation { display: flex; flex-wrap: wrap; }
   .reading-page .reading-position { flex-basis: 100%; order: 0; }
   .reading-page .reading-navigation .reading-step { flex: 1 0 auto; min-width: max-content; min-height: 44px; padding: .5rem .55rem; }
