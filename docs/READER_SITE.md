@@ -725,6 +725,14 @@ derivations were reviewed. No objective routine correction was identified in
 that scope. The record binds twelve source files and reports the syntax checks.
 The retained text and mathematics are unchanged; the same review exclusions apply.
 
+The [Paper VIII proofreading record](../manifests/reader-proofreading-paper-viii-2026-11-01.json)
+covers its 23 main reading sections: the orientation and abstract, three exact
+models, fifteen manuscript sections and Appendices A–F, together with notation,
+cross-references, captions, preamble and bibliography syntax. No objective
+routine correction was identified in that scope. The record binds ten source
+files and reports the syntax checks. The retained text and mathematics are
+unchanged; the same review exclusions apply.
+
 ## Signal Laboratory
 
 `signal-lab.html` is a larger known-reference signal experiment with 16–256
