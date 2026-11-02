@@ -306,7 +306,7 @@ class Site:
         from reader_usability import enhance
         body,reading_tools = enhance(body,path)
         if reading_tools:
-            for name in ('reading-tools.css','reading-tools.js'):
+            for name in ('reading-tools.css','statement-search.js','reading-tools.js'):
                 url=self.rel('assets/'+name,path)+'?v='+hashlib.sha256((self.root/'website/assets'/name).read_bytes()).hexdigest()[:12]
                 chapter_help_script+=('<link rel="stylesheet" href="'+url+'">') if name.endswith('.css') else ('<script defer src="'+url+'"></script>')
         work_page = path.startswith('collection/works/')
