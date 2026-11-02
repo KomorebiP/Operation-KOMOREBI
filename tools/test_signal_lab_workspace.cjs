@@ -150,3 +150,42 @@ test('target results are minimal across supported sizes and selection policies; 
   assert.deepEqual(w.targetRuns(m.experiment(m.defaults()),'reference',0),[]);
   for(const [metric,value]of [['unknown',1],['energy',-1],['energy',100.1],['reference',64.1],['reference',NaN],['energy',Infinity]])assert.throws(()=>w.targetBudgets(r,metric,value),RangeError);
 });
+
+test('regional metrics and CSV use inclusive original addresses and exact sample-coordinate errors',async()=>{
+  const w=await workspace,m=await core,config={...m.defaults(),n:16,shape:'custom',custom:Array.from({length:16},(_,i)=>i+1),basis:'samples',noise:0,budget:0,address:0};
+  const a=m.experiment(config),b=m.experiment({...config,budget:16}),data=w.compareRegion(a,b,[4,7]);
+  assert.deepEqual([data.start,data.end,data.count],[4,7,4]);assert.deepEqual(data.rows.map(row=>row.address),[4,5,6,7]);
+  assert.deepEqual(data.a,{rms:Math.sqrt(43.5),bias:-6.5,maximum:8,maximumAddress:7});
+  assert.deepEqual(data.b,{rms:0,bias:0,maximum:0,maximumAddress:4});assert.equal(data.maximum,8);assert.equal(data.maximumAddress,7);
+  assert.equal(w.comparisonCsv(a,b,[4,7]),'address,reference,observed,a_reconstruction,b_reconstruction,a_error_to_reference,b_error_to_reference,b_minus_a\n4,5,5,0,5,-5,0,5\n5,6,6,0,6,-6,0,6\n6,7,7,0,7,-7,0,7\n7,8,8,0,8,-8,0,8\n');
+  const single=w.compareRegion(b,a,[15,15]);assert.equal(single.count,1);assert.equal(single.b.rms,16);assert.equal(single.b.bias,-16);assert.equal(single.rows[0].difference,-16);assert.equal(single.maximumAddress,15);
+  const same=w.compareRegion(a,a,[8,12]);assert.equal(same.maximum,0);assert.equal(same.maximumAddress,8);
+  assert.deepEqual(w.compareRegion(a,b).rows,w.compareRuns(a,b).rows);
+});
+
+test('regional partitions recover whole-signal squared errors at every supported size and basis',async()=>{
+  const w=await workspace,m=await core;
+  for(const n of m.SIZES)for(const basis of m.BASES){
+    const a=m.experiment({...m.defaults(),n,basis,address:0}),b=m.experiment({...m.defaults(),n,basis,budget:n,address:0});
+    const left=w.compareRegion(a,b,[0,n/2-1]),right=w.compareRegion(a,b,[n/2,n-1]);
+    for(const [key,result]of [['a',a],['b',b]]){
+      const sum=left[key].rms**2*left.count+right[key].rms**2*right.count;
+      assert.ok(Math.abs(sum-result.analyses[basis].referenceError)<1e-8);
+    }
+    assert.equal(w.comparisonCsv(a,b,[n-1,n-1]).trim().split('\n').length,2);
+    for(const region of [[],[0],[0,1,2],[-1,0],[0,n],[4,3],[0,.5],[NaN,2],'0,1',{}]){
+      assert.throws(()=>w.compareRegion(a,b,region),RangeError);assert.throws(()=>w.comparisonCsv(a,b,region),RangeError);
+    }
+  }
+  assert.throws(()=>w.compareRegion(m.experiment(m.defaults()),m.experiment({...m.defaults(),seed:18}),[0,1]),RangeError);
+});
+
+test('shared regions preserve a bounded range and reject invalid or out-of-region selected samples',async()=>{
+  const w=await workspace,base={v:1,entries:w.starterRuns('ranking'),view:'difference',address:11};
+  for(const region of [[0,15],[8,11],[11,11]]){
+    const state={...base,region},clean=w.decodeComparison(w.encodeComparison(state));assert.deepEqual(clean,state);
+    clean.region[0]=3;assert.deepEqual(w.decodeComparison(w.encodeComparison(state)).region,region);
+  }
+  for(const region of [null,[],[0],[0,16],[-1,15],[12,15],[0,10],[12,11],[1.5,15]])assert.throws(()=>w.encodeComparison({...base,region}),RangeError);
+  assert.deepEqual(w.decodeComparison(w.encodeComparison(base)),base);
+});

@@ -74,6 +74,15 @@ SIGNAL_PLOT
 <p class="sl-readout" id="sl-pair-summary" role="status"></p>
 <div id="sl-pair-plot" hidden>
 <fieldset class="sl-pair-inspector" id="sl-pair-inspector" disabled><legend class="sr-only">Inspect the saved comparison</legend>
+<div class="sl-region" id="sl-region"><h3>Inspect a region</h3>
+<p class="lab-caption">Choose inclusive sample addresses to zoom the plot and compare local errors. Reconstructions still use coefficients selected from the full signal.</p>
+<div class="sl-region-controls"><label class="lab-label" for="sl-region-start">First address<input type="number" id="sl-region-start" min="0" max="63" step="1" value="0" required></label>
+<label class="lab-label" for="sl-region-end">Last address<input type="number" id="sl-region-end" min="0" max="63" step="1" value="63" required></label>
+<button type="button" id="sl-region-apply">Inspect region</button><button type="button" id="sl-region-reset">Show full signal</button></div>
+<p class="lab-error" id="sl-region-error" role="status" hidden></p>
+<p class="sl-readout" id="sl-region-summary" role="status"></p>
+<table class="sl-region-table"><caption>Errors to the known reference within the displayed region</caption><thead><tr><th scope="col">Run</th><th scope="col">RMS error</th><th scope="col">Mean signed error</th><th scope="col">Maximum |error|</th></tr></thead><tbody id="sl-region-rows"></tbody></table>
+<p class="lab-caption">RMS = √(mean squared error). Mean signed error uses reconstruction minus reference. Maximum-error and difference ties use the first address.</p></div>
 <label class="lab-label" for="sl-pair-view">Plot view<select id="sl-pair-view"><option value="overlay">Reconstructions</option><option value="error">Signed error to reference</option><option value="difference">Difference · B − A</option></select></label>
 <p class="lab-caption" id="sl-pair-view-note">Click the plot or use the sample slider to inspect both runs.</p>
 <div class="sl-legend"><span class="sl-reference" id="sl-pair-reference-label">Clean reference</span><span class="sl-cosine" id="sl-pair-a-label">Run A</span><span class="sl-samples" id="sl-pair-b-label">Run B</span><span class="sl-difference" id="sl-pair-difference-label" hidden>Difference · B − A</span></div>
@@ -87,7 +96,7 @@ PAIR_PLOT PAIR_ADDRESS
 <div><dt>Reconstruction A</dt><dd><output id="sl-pair-a">—</output></dd></div><div><dt>Reconstruction B</dt><dd><output id="sl-pair-b">—</output></dd></div>
 <div><dt>A − reference</dt><dd><output id="sl-pair-error-a">—</output></dd></div><div><dt>B − reference</dt><dd><output id="sl-pair-error-b">—</output></dd></div>
 <div><dt>Difference · B − A</dt><dd><output id="sl-pair-difference">—</output></dd></div></dl>
-<details id="sl-pair-table-details" class="sl-pair-table"><summary>Inspect every comparison sample</summary><div class="table-scroll"><table><caption>Signed errors use reconstruction minus reference; differences use B minus A.</caption>
+<details id="sl-pair-table-details" class="sl-pair-table"><summary>Inspect comparison samples in this region</summary><div class="table-scroll"><table><caption>Signed errors use reconstruction minus reference; differences use B minus A. Addresses keep their original full-signal values.</caption>
 <thead><tr><th scope="col">Address</th><th scope="col">Reference</th><th scope="col">Observed</th><th scope="col">Run A</th><th scope="col">Run B</th><th scope="col">A − reference</th><th scope="col">B − reference</th><th scope="col">B − A</th></tr></thead><tbody id="sl-pair-table"></tbody></table></div></details>
 </div></div>
 </details>
@@ -173,4 +182,4 @@ COEFFICIENT_PLOT
     site.page('signal-lab.html', 'Signal laboratory', body)
     site.search.append(dict(title='Signal laboratory: compare Haar, cosine and sample representations',group='Collection',kind='Examples',
                             work_ids=['paper-ii','paper-v','information-realization'],url='signal-lab.html',
-                            text='Interactive signal laboratory quality target minimum budget retained energy RMS threshold starter experiments draw edit undo reference notebook compare saved runs signed residual errors differences inspection wavelets DCT cosine compression denoising coefficient budget weighted energy error curves seeded noise CSV JSON import export'))
+                            text='Interactive signal laboratory region zoom local RMS mean bias maximum error quality target minimum budget retained energy RMS threshold starter experiments draw edit undo reference notebook compare saved runs signed residual errors differences inspection wavelets DCT cosine compression denoising coefficient budget weighted energy error curves seeded noise CSV JSON import export'))

@@ -122,6 +122,14 @@ selected sample. Links open a preview and recompute the results while leaving
 the recipient's saved notebook unchanged. The preview can be saved as two new
 notebook runs when space is available.
 
+Use **Inspect a region** in a saved comparison to zoom to an inclusive address
+range. The local table reports RMS error, mean signed error, and maximum
+absolute error for both runs. Select a maximum to inspect its sample, or jump
+to the largest difference within the region. The sample table and comparison
+CSV use that range and retain the original addresses. Comparison links also
+restore the region; **Show full signal** returns to the complete comparison.
+The reconstructions and coefficient budgets continue to use the full signal.
+
 The quality-target finder scans every coefficient budget to find the first
 that retains a requested percentage of observed energy or meets a reference
 RMS-error limit. Apply a result to the active experiment or save all qualifying
