@@ -1120,7 +1120,10 @@ def statement_navigation(chapter,rows):
         name=KIND_NAMES.get(node['kind'],node['kind'].capitalize())+' '+node['number']
         title=typography(plain_math(node['title'].replace('$',''))[0])
         label=name+(': '+title if title else '')
-        body+='<li><a href="#'+node['id']+'">'+html.escape(label)+'</a>'
+        attributes={'data-statement-entry':node['id'],'data-statement-kind':node['kind'],
+                    'data-statement-name':KIND_NAMES.get(node['kind'],node['kind'].capitalize()),
+                    'data-statement-number':node['number'],'data-statement-labels':' '.join(node.get('labels',[]))}
+        body+='<li '+ ' '.join(key+'="'+html.escape(value,quote=True)+'"' for key,value in attributes.items())+'><a data-statement-target href="#'+node['id']+'">'+html.escape(label)+'</a>'
         row=rows.get(node['line'])
         if row and row['proof_line']:
             proof=by_line.get(row['proof_line'])
@@ -1150,11 +1153,12 @@ def render_book(reader,book):
         rows={r['statement_line']:r for r in chapter_claims(reader,spec)}
         proof_rows={r['proof_line']:r for r in rows.values() if r['proof_line']}
         headings=[n for n in chapter.nodes if n['kind'] in HEADINGS]
-        toc='<nav class="chapter-contents" aria-label="Chapter contents"><h2 id="contents">Contents</h2><ol>'
+        toc='<nav class="chapter-contents" aria-label="Chapter contents"><h2 id="contents">Contents</h2>'
+        if config.get('statement_navigation') or re.fullmatch(r'paper-[ivx]+',work): toc+=statement_navigation(chapter,rows)
+        toc+='<ol>'
         toc+=''.join('<li'+(' class="subsection-entry"' if n['kind']!='section' else '')+'><a href="#'+n['id']+'">'+e((n['number']+' '+navigation_title(n.get('toc_title',n['title']))).strip())+'</a></li>' for n in headings)
         if not headings: toc+='<li><a href="#L'+str(chapter.nodes[0]['line'])+'">'+e(spec['title'])+'</a></li>'
         toc+='</ol>'
-        if config.get('statement_navigation'): toc+=statement_navigation(chapter,rows)
         toc+='</nav>'
         body='<p class="eyebrow">Readable manuscript</p><h1>'+e(title)+'</h1>'
         body+=neighbour_links(spec)+'<p class="reading-start"><a href="#chapter-text">Start reading</a></p>'+outline(toc)
@@ -1305,7 +1309,7 @@ def render_book(reader,book):
         if chapter.math!=expressions:
             difference=next((i for i,(a,b) in enumerate(zip(chapter.math,expressions)) if a!=b),min(len(chapter.math),len(expressions)))
             raise ValueError('Reading math differs at '+source+' expression '+str(difference)+' rendered '+str(chapter.math[difference:difference+1])+' original '+str(expressions[difference:difference+1]))
-        report=dict(source=source,source_sha256=hashlib.sha256(raw).hexdigest(),url=page,math_expressions=len(expressions),math_sequence_sha256=hashlib.sha256(json.dumps(expressions,ensure_ascii=False).encode()).hexdigest(),references=len(chapter.references),labels=sum(len(n['labels']) for n in chapter.nodes),nodes=[{k:n[k] for k in ('kind','id','line','end_line','labels')} for n in chapter.nodes],macro_source=config['main'],macros=chapter.macros,new_proof_review=False,new_lean_execution=False)
+        report=dict(source=source,source_sha256=hashlib.sha256(raw).hexdigest(),url=page,math_expressions=len(expressions),math_sequence_sha256=hashlib.sha256(json.dumps(expressions,ensure_ascii=False).encode()).hexdigest(),references=len(chapter.references),labels=sum(len(n['labels']) for n in chapter.nodes),nodes=[{k:n[k] for k in ('kind','id','line','end_line','labels','number') if k in n} for n in chapter.nodes],macro_source=config['main'],macros=chapter.macros,new_proof_review=False,new_lean_execution=False)
         if getattr(chapter,'nested_tables',None):report['nested_tables']=chapter.nested_tables
         aided_tables.update(getattr(chapter,'table_aids_used',set()))
         reports.append(report)

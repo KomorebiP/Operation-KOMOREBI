@@ -53,6 +53,48 @@
     container.prepend(form);apply();
   }
 
+  for (const [index, container] of Array.from(document.querySelectorAll('.statement-navigation')).entries()) {
+    const engine = window.KomorebiStatementSearch;
+    if (!engine) continue;
+    const entries = Array.from(container.querySelectorAll('[data-statement-entry]')).map(row => ({row,
+      text:row.querySelector('[data-statement-target]').textContent,kind:row.dataset.statementKind,
+      name:row.dataset.statementName,number:row.dataset.statementNumber,labels:row.dataset.statementLabels,
+      hasProof:!!row.querySelector('.statement-proof-link')}));
+    if (!entries.length) continue;
+    const form = element('form', undefined, 'reading-chapter-filter reading-statement-filter');
+    form.setAttribute('role','search');form.setAttribute('aria-label','Statements in this chapter');
+    const id = 'reading-statement-query-'+index;
+    const label = element('label','Find a statement');label.htmlFor = id;
+    const input = element('input');input.id = id;input.type = 'search';input.autocomplete = 'off';
+    input.placeholder = 'Title, number, type or source label';
+    const clear = element('button','Clear');clear.type = 'reset';clear.hidden = true;
+    clear.setAttribute('aria-label','Clear statement search');
+    const proofLabel = element('label',undefined,'reading-statement-proof-filter');
+    const proof = element('input');proof.type = 'checkbox';proof.id = id+'-proof';
+    proofLabel.htmlFor = proof.id;proofLabel.append(proof,document.createTextNode('Proof links only'));
+    const status = element('p',undefined,'reading-chapter-count');status.id = id+'-status';
+    status.setAttribute('role','status');input.setAttribute('aria-describedby',status.id);
+    form.append(label,input,clear,proofLabel,status);
+    function apply() {
+      const found = new Set(engine.search(entries,input.value,proof.checked));
+      for (const entry of entries) entry.row.hidden = !found.has(entry);
+      clear.hidden = !input.value && !proof.checked;
+      status.textContent = found.size ? found.size+' of '+entries.length+' statements' : 'No matching statements. Try fewer words or clear the filters.';
+    }
+    function reset(focus = false) {input.value = '';proof.checked = false;apply();if (focus) input.focus();}
+    form.addEventListener('submit',event=>{event.preventDefault();apply();});
+    form.addEventListener('reset',event=>{event.preventDefault();reset(true);});
+    input.addEventListener('input',apply);proof.addEventListener('change',apply);
+    container.addEventListener('keydown',event=>{
+      if (event.key === 'Escape' && (input.value || proof.checked)) {
+        event.preventDefault();event.stopPropagation();reset();
+      } else if (event.key === 'Escape' && container.open) {
+        event.preventDefault();event.stopPropagation();container.open = false;container.querySelector('summary').focus();
+      }
+    });
+    container.querySelector('summary').after(form);apply();
+  }
+
   const bibliography = document.querySelector('.reading-bibliography');
   const references = bibliography ? Array.from(bibliography.querySelectorAll('section[id^="ref-"]')) : [];
   if (references.length) {

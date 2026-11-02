@@ -39,6 +39,14 @@ verifier recomputes those routes and checks their placement and targets. Run
 original entries in the browser; direct links and Back/Forward reveal an entry
 that a search has hidden. Print styles restore the complete bibliography.
 
+All core chapter statement indexes are rendered from the existing statement
+nodes and proof routes. [Statement matching](../website/assets/statement-search.js)
+supports printed numbers, types, source labels and Greek names. Keep proof-link
+filtering tied to actual rendered links. The [statement-index verifier](../tools/statement_navigation.py)
+checks complete coverage, source labels, order and agreement with the proof
+links in each passage. Run `test_statement_navigation.py` and
+`node --test tools/test_statement_search.cjs` when changing these controls.
+
 ## Sources
 
 | Content | Source |

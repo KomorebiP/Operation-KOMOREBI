@@ -64,6 +64,16 @@ the same. Figures in the core chapters offer **View full-size figure (new tab)**
 so you can inspect the image while keeping your reading place. Captions and text
 descriptions remain beside the original figure.
 
+Chapters in all twelve core papers offer **Statements and proofs** inside
+**Contents** when they contain statement records. **Find a statement** searches
+titles, printed numbers, statement types and source labels. Printed-number
+searches use exact matches; include a type, such as **Theorem 12.6**, to
+distinguish records with the same number. Greek names such as **rho** also match
+their symbols. **Proof links only** selects entries with a recorded **Read proof**
+link. Choose the statement or its proof link to move keyboard focus to the
+passage. Escape clears the filters, then closes the statement list. The complete
+statement list and its links also work without JavaScript.
+
 **On this page** expands the current chapter's section list. **PDF, source &
 reading options** groups the secondary links by purpose. **Start reading** jumps
 past these controls to the text. All of these links and disclosures work with
