@@ -55,7 +55,7 @@ SOURCE_TITLES = {
     'references.tex': 'References',
 }
 CONFIG = dict(work=WORK, label='Special Functions', base=BASE, main=MAIN,
-              index=INDEX, title='Special Functions: Function families and their structure',
+              index=INDEX,bib_page=INDEX.replace('index.html','references.html'), title='Special Functions: Function families and their structure',
               main_chapters=7, chapters=[dict(url=INDEX.replace('index.html', 'reading-map.html'))],
               custom_reader=True)
 
@@ -182,6 +182,7 @@ def prepare_book(reader, config):
     macros = manuscript_macros(main, {'dd', 'A', 'Z'})
     specs = source_specs(load)
     config['chapters'] = specs
+    config['contents_groups']=[dict(start=s['url'],title=s['title']) for s in specs if s['parent']==INDEX]
     references = manuscript_bibliography(normalize(load(BASE+'references.tex')))
     labels, chapters = {}, []
     chapter_number = figure_number = 0
@@ -224,7 +225,7 @@ def prepare_book(reader, config):
 
 
 def render_book(reader, book):
-    from reading_navigation import navigation, outline, resources, work_links
+    from reading_navigation import navigation, outline, resources, work_links,contents_list
     from readable_chapters import (HEADINGS, chapter_text, original_math, render_table,
                                    group, passage_links, reading_options, typography, plain_math)
     site, reports = reader.site, []
@@ -236,7 +237,7 @@ def render_book(reader, book):
         headings = [n for n in chapter.nodes if n['kind'] in HEADINGS]
         body += outline('<nav class="chapter-contents" aria-label="On this page"><h2>On this page</h2><ol>'+''.join('<li><a href="#'+n['id']+'">'+html.escape(typography(n['title']))+'</a></li>' for n in headings)+'</ol></nav>')
         body += resources(work_links(reader,WORK,page)+'<p><a href="'+reader.resolve(spec['source'],page)+'">Original TeX with line links</a></p>'+reading_options())
-        body += '<article id="chapter-text" class="readable-chapter">'
+        body += '<article id="chapter-text" class="readable-chapter'+(' reading-bibliography' if page==book['config']['bib_page'] else '')+'">'
         proof_targets = proof_links(headings)
         for node in chapter.nodes:
             kind = node['kind']
@@ -279,16 +280,8 @@ def render_book(reader, book):
         reports.append(dict(**spec,source_sha256=hashlib.sha256(reader.site.read_source(reader.records[spec['source']])).hexdigest(),math_expressions=len(expressions),math_sequence_sha256=hashlib.sha256(json.dumps(expressions,ensure_ascii=False).encode()).hexdigest(),macros=book['macros'],nodes=[{k:n[k] for k in ('id','line','end_line','kind')} for n in chapter.nodes],new_proof_review=False,new_lean_execution=False))
     site.write(REPORT,json.dumps(reports,ensure_ascii=False,indent=2)+'\n')
     body = '<p class="eyebrow">Read Special Functions</p><h1>Special Functions</h1><p class="lede">Function families and their structure</p><p>Read the seven main chapters, the ten proof appendices, and the notation, references and evidence notes. The HTML edition follows the retained monograph, with selectable equations, original figures, and links to the source of each passage.</p>'+reader.work_routes(WORK,INDEX)
-    body += '<p><a class="button" href="reading-map.html">Start reading</a> <a href="'+site.rel(source_url('notation.tex'),INDEX)+'">Notation and glossary</a> · <a href="'+site.rel(source_url('references.tex'),INDEX)+'">References</a></p>'
-    body += '<nav class="chapter-contents" aria-label="Special Functions contents"><h2>Contents</h2><ol>'
-    for spec,raw,chapter in chapters:
-        if spec['parent']==INDEX:
-            body += '<li><a href="'+site.rel(spec['url'],INDEX)+'">'+html.escape(spec['title'])+'</a>'
-            descendants = [s for s,_,_ in chapters if s['parent']!=INDEX and next((p['url'] for p,_,_ in chapters if p['url']==s['parent']),None)==spec['url']]
-            if descendants:
-                body += '<ul>'+''.join('<li><a href="'+site.rel(s['url'],INDEX)+'">'+html.escape(s['title'])+'</a></li>' for s in descendants)+'</ul>'
-            body += '</li>'
-    body += '</ol></nav><h2>Proof appendices</h2><ol>'+''.join('<li><a href="'+site.rel(s['url'],INDEX)+'">'+html.escape(s['title'])+'</a></li>' for s,_,_ in chapters if s['title'].startswith('Appendix '))+'</ol>'
+    body += '<p class="reading-start"><a class="button" href="'+site.rel(chapters[0][0]['url'],INDEX)+'">Start reading</a> <a href="'+site.rel(source_url('notation.tex'),INDEX)+'">Notation and glossary</a> · <a href="'+site.rel(source_url('references.tex'),INDEX)+'">References</a></p>'
+    body += '<nav class="chapter-contents reading-contents-index" aria-label="Special Functions chapters"><h2>Contents</h2>'+contents_list(book['config'],INDEX)+'</nav>'
     body += '<h2>Formal coverage and evidence</h2><p>The recorded formal companion covers 68 named declarations in a finite core and Block 1. The full analytic monograph is not formalized in Lean. The evidence notes distinguish analytic proofs, finite computations, classical inputs and open questions.</p><p><a href="'+site.rel('collection/works/'+WORK+'.html',INDEX)+'#lean">Lean sources and recorded scope</a> · <a href="'+site.rel(source_url('evidence_notes.tex'),INDEX)+'">Evidence notes and open questions</a></p>'
     pdfs = [r for r in reader.records.values() if r['work']==WORK and r['format']=='pdf']
     body += '<h2>PDF and companion volumes</h2><ul>'+''.join('<li><a href="'+site.rel(r['url'],INDEX)+'">'+html.escape(r['title'])+'</a></li>' for r in pdfs)+'</ul>'
