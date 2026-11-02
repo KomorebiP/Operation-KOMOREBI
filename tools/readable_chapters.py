@@ -174,6 +174,9 @@ CHAPTERS += PROOF_PATH_CHAPTERS
 from foundational_reading import BOOKS as FOUNDATIONAL_BOOKS, CHAPTERS as FOUNDATIONAL_CHAPTERS
 BOOKS.update(FOUNDATIONAL_BOOKS)
 CHAPTERS += FOUNDATIONAL_CHAPTERS
+from methodology_reading import BOOK as METHODOLOGY_BOOK, CHAPTERS as METHODOLOGY_CHAPTERS
+BOOKS[METHODOLOGY_BOOK['work']] = METHODOLOGY_BOOK
+CHAPTERS.extend(METHODOLOGY_CHAPTERS)
 BY_SOURCE = {c['source']:c for c in reversed(CHAPTERS)}
 NUMBERED = {'definition', 'theorem', 'proposition', 'lemma', 'corollary', 'remark', 'example', 'standardfact', 'certificate','boundary','roadmap','construction','classicalinput','classical','conjecture','problem','warning'}
 NUMBERED.update('hist'+kind for kind in ('theorem','proposition','lemma','corollary','definition','example','remark','standardfact'))
@@ -850,7 +853,9 @@ def prepare(reader):
     reader.readable_books={}
     for work,config in BOOKS.items():
         if config.get('custom_reader'):
-            if config['custom_reader'] == 'foundational':
+            if config['custom_reader'] == 'methodology':
+                from methodology_reading import prepare_book
+            elif config['custom_reader'] == 'foundational':
                 from foundational_reading import prepare_book
             elif config['custom_reader'] == 'proof_path':
                 from proof_path_reading import prepare_book
@@ -1357,7 +1362,10 @@ def render_book(reader,book):
         body=apply_copyediting(reader,page,body)
         site.page(page,title,body)
         expressions=original_math(chapter_text(raw.decode('utf-8-sig'),spec))
-        if config.get('custom_reader')=='foundational':
+        if config.get('custom_reader')=='methodology':
+            from methodology_reading import source_math
+            expressions=source_math(raw.decode('utf-8-sig'),spec)
+        elif config.get('custom_reader')=='foundational':
             from foundational_reading import source_math
             expressions=source_math(raw.decode('utf-8-sig'),spec)
         elif config.get('custom_reader')=='proof_path':

@@ -47,6 +47,18 @@ The report identifies the committed source revision and states that HTML
 configuration is read from the working tree. `test_core_visual_guides.py`
 checks the twelve destinations and distinct integrated/separate PDF routes.
 
+The **Komorebi Methodology** also has a complete HTML edition at
+`read/komorebi-methodology/`: preface, nine essay chapters, closing reflection,
+verification notes, and references. Its 12 text pages preserve 164 mathematical
+expressions, three numbered equations, nine references, and the three original
+diagrams. [The proofreading and conversion record](reviews/KOMOREBI_METHODOLOGY_2026-11-02.md)
+states the review scope and validation. The source package and PDF are unchanged.
+`tools/methodology_sections.json` binds the exact source ranges and identities;
+`tools/methodology_reading.py` translates only the reviewed print wrappers.
+Run `python -B -m unittest discover -s tools -p 'test_methodology_reading.py' -v`
+to check the complete edition, source drift, numbering, equations, figures, and
+chapter/citation links. This conversion adds no proof audit or Lean coverage.
+
 Komorebi Space and Realization Boundaries also have complete HTML editions at
 `read/komorebi-space/` and `read/realization-boundaries/`. Their 52 source sections
 retain 137 proof blocks, 46 original figures and 4,828 mathematical expressions.
