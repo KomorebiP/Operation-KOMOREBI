@@ -245,7 +245,7 @@ Publication completion and checked subresults leave wider formal or implementati
 
 **Done when:** Choose one precise next theorem/refinement contract, establish its dependencies, and admit it only with corresponding source and verification evidence.
 
-**Progress:** Special Functions SF-LEAN-B09 adds 16 theorem declarations proving the explicit lower logarithmic power comparison for all R>=2, positive canonical coefficients and uniform growth-ratio lower bounds. The registered scope is 217 names. Source-bound 42-step replay, nine coupled kernel replays and hashed I/O are recorded; upper comparison and full asymptotic/type conclusions remain open.
+**Progress:** Special Functions SF-LEAN-B10 adds 34 theorem declarations proving the explicit upper logarithmic power comparison for all R>=e, parameter-only seed constants and index existence, positive upper coefficients and two-sided growth-ratio bounds. The registered scope is 251 names. Source-bound 45-step replay, ten coupled kernel replays and hashed I/O are recorded; formal real type bounds, radial exponent limit and F.3 proportions remain open.
 
 Related works and source records: [Paper III: Typed Transfer, Nonlinear Packets, and Obstruction Theory](works/paper-iii.md) · [Special Functions](works/monographs-special-functions.md) · [Quantum and Circuits](works/monographs-quantum-and-circuits.md) · [Signal Reconstruction](works/signal-reconstruction.md) · [COS Method: formal continuation](works/monographs-cos-method-formal-continuation.md) · [p-adic Canonical Realization](works/padic-canonical-realization.md) · [Model-Theory Normalization](works/model-theory-normalization.md).
 
