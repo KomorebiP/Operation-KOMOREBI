@@ -35,6 +35,7 @@ Use the links below to read this work and its supporting files. Ctrl+click (Comm
 
 ## Read
 
+- [Worked visual atlas: all 24 HTML plates](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-iii/atlas/index.html)
 - [Edition README](../../papers/paper-iii/current/README.md)
 - [Read PDF](../../papers/paper-iii/current/publication/Paper_III_Final_v1.0.0.pdf)
 - [Visual guide (PDF)](../../papers/paper-iii/current/publication/Paper_III_Visual_Guide_v1.0.0.pdf)

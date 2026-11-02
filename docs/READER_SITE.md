@@ -16,7 +16,7 @@ HTML status follows the maintained reading configuration; PDF destinations
 and hashes come from the existing source receipts. Paper I's visual atlas is
 inside its main monograph. The other eleven have separate visual-guide PDFs.
 
-The [current inventory](../verification/reader-visual-guides/2026-11-02-paper-i.json)
+The [current inventory](../verification/reader-visual-guides/2026-11-02-papers-ii-iii.json)
 checks the committed visual sources against their receipts and identifies the
 remaining ports. Counts below describe source units, which vary by guide;
 they are not counts of theorems or PDF pages. The
@@ -26,8 +26,8 @@ the earlier four-atlas snapshot.
 | Paper | Retained visual source | HTML visual coverage |
 |---|---|---|
 | I | 22 plates | Complete |
-| II | 24 plates | Pending |
-| III | 24 plates | Pending |
+| II | 24 plates | Complete |
+| III | 24 plates | Complete |
 | IV | 26 plates | Complete |
 | V | 40 plates | Complete |
 | VI | 42 plates | Complete |
@@ -38,7 +38,7 @@ the earlier four-atlas snapshot.
 | XI | 47 lessons | Pending |
 | XII | 27 plates | Pending |
 
-Next ports: Papers II–III continue the foundational visual sequence; Paper VIII
+Next ports: Paper VIII continues the complete I–VII HTML visual sequence and
 can reuse the worked-atlas approach. Papers IX and XI need their own section
 and lesson conversions. Papers X and XII need explicit handling of their
 conditional and evidence boundaries. Each port should preserve prose,
@@ -65,6 +65,31 @@ physical pages 83–104. To regenerate only those original drawing views, use
 builds need no PDF renderer or TeX engine. Run
 `python -B -m unittest discover -s tools -p 'test_paper_i_atlas.py' -v`.
 This conversion adds no proof audit, mathematical example run or Lean replay.
+
+Papers II and III each have a complete atlas at `read/paper-ii/atlas/` and
+`read/paper-iii/atlas/`. Each retains 24 plates and 22 original PDF drawings.
+Paper II preserves 754 selectable labels, 1,043 mathematical expressions, and
+40 manuscript routes; Paper III preserves 488 labels, 747 expressions, and
+44 routes. Each manuscript destination has a return link. Four source tables
+and the gridded matrix-label transcripts retain semantic headers. Both PDFs
+have two front-matter pages, so V1–V24 open physical pages 3–26.
+
+`tools/worked_visual_atlas.py` implements these two source-bound conversions;
+`tools/core_worked_atlases.py` declares the source table schemas. Figure sources,
+PDF hashes, physical pages and crop bounds are recorded in
+`tools/worked_atlas_sources.py` and the per-paper figure receipts. Render the
+unchanged drawings with `python -B tools/render_worked_atlases.py`; ordinary
+website builds use the committed images and need no PDF renderer or TeX engine.
+Paper II's multiline drawing label retains both formulas, and V24 includes its
+separate current-scope source verbatim with a source link. Its recorded counts
+are inherited evidence statements, not a new replay. The verifier reconstructs
+the numbered manuscript destinations from the published source chapters and
+rejects reachable-but-wrong destinations. Run
+`python -B -m unittest discover -s tools -p 'test_core_worked_atlases.py' -v`.
+The mathematical proofreading self-review covers the new presentation wrappers,
+labels, descriptions, source references and tables. No mathematical tokens or
+imported manuscript bytes are changed; no new proof audit, exact example run or
+Lean replay is claimed.
 
 The **Komorebi Methodology** also has a complete HTML edition at
 `read/komorebi-methodology/`: preface, nine essay chapters, closing reflection,

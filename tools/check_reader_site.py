@@ -324,6 +324,8 @@ def inspect_site(root):
     atlas = verify_atlas(root,documents,pages)
     from paper_i_atlas import verify as verify_paper_i_atlas
     paper_i_atlas = verify_paper_i_atlas(root,documents,pages)
+    from core_worked_atlases import verify as verify_core_worked_atlases
+    core_worked_atlases = verify_core_worked_atlases(root,documents,pages)
     from paper_vi_atlas import verify as verify_paper_vi_atlas
     from paper_v_atlas import verify as verify_paper_v_atlas
     paper_v_atlas = verify_paper_v_atlas(root,documents,pages)
@@ -385,7 +387,7 @@ def inspect_site(root):
     assert site_bytes < 1024**3, 'Published reader site exceeds GitHub Pages size limit: '+str(site_bytes)
     return dict(status='PASS',html_pages=len(pages),local_links=links,fragments=fragments,euler_worked_examples=euler_cases,factorial_worked_examples=factorial_cases,wavelet_worked_examples=wavelet_cases,stirling_worked_examples=stirling_cases,roots_newton_worked_examples=roots_newton_cases,
                 quantum_worked_examples=quantum_cases,search_pages=len(index),reading_bundles=len(bundles),checked_bundle_files=zipped_files,download_selection=download_selection,side_reader=side_reader,
-                reading_documents=len(documents['files']),pdfs=pdf_count,editorial_editions=len(editions),readable_math_expressions=readable_math,paper_vii=paper_vii,atlas=atlas,paper_i_atlas=paper_i_atlas,paper_v_atlas=paper_v_atlas,paper_vi_atlas=paper_vi_atlas,paper_vii_atlas=paper_vii_atlas,notation=notation,special_functions=special_functions,reading_navigation=reading_navigation,
+                reading_documents=len(documents['files']),pdfs=pdf_count,editorial_editions=len(editions),readable_math_expressions=readable_math,paper_vii=paper_vii,atlas=atlas,paper_i_atlas=paper_i_atlas,core_worked_atlases=core_worked_atlases,paper_v_atlas=paper_v_atlas,paper_vi_atlas=paper_vi_atlas,paper_vii_atlas=paper_vii_atlas,notation=notation,special_functions=special_functions,reading_navigation=reading_navigation,
                 proofreading=proofreading,copyediting=copyediting,reading_links=reading_links,statement_navigation=statement_navigation,reference_previews=reference_previews,lean_reader=lean_reader,lean_playground=lean_playground,lean_execution=lean_execution,scope='Static navigation, HTML structure and ZIP source identities. Not WCAG certification or mathematical review.')
 
 

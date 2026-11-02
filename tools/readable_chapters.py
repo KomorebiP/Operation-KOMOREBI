@@ -73,6 +73,12 @@ BOOKS = {'paper-i': dict(work='paper-i', label='Paper I', base=FIRST_BASE,
                         reading_note='All 22 worked atlas plates have HTML pages with original drawings, selectable equations and labels, and links to the manuscript. The original monograph retains its complete visual appendix.',
                         html_inputs={'visual_atlas.tex':dict(url='read/paper-i/atlas/index.html',title='Explore all 22 worked atlas plates in HTML',note='')}), **BOOKS}
 CHAPTERS = FIRST_CHAPTERS + CHAPTERS
+for work in ('paper-ii','paper-iii'):
+    atlas_index='read/'+work+'/atlas/index.html'
+    BOOKS[work].update(atlas_index=atlas_index,
+        atlas_link_text='Explore all 24 worked atlas plates in HTML',
+        reading_note='All 24 worked atlas plates have HTML pages with original drawings, selectable equations and labels, and links to the manuscript. The original visual guide remains available as a PDF.',
+        html_inputs={'visual_atlas.tex':dict(url=atlas_index,title='Explore all 24 worked atlas plates in HTML',note='')})
 BOOKS['paper-i']['table_reading_aids']={
     ('01_orientation.tex','L4'): dict(caption='Statement status classes',
         headers=[r'\textbf{Status class}',r'\textbf{Meaning}'],row_header_column=0),
@@ -1116,6 +1122,7 @@ def render_reading_index(reader):
            'MathJax provides equation exploration and assistive reading options through its context menu.</p>'
            '<p>All twelve core papers have HTML reading editions that follow the retained manuscripts. '
            '<a href="'+site.rel('read/paper-i/atlas/index.html',page)+'">Paper I’s 22 atlas plates</a> have HTML drawings, descriptions, and selectable labels. '
+           'Papers II and III each have complete 24-plate HTML atlases with original drawings, selectable equations and labels, and manuscript links. '
            '<a href="'+site.rel('read/paper-iv/atlas/index.html',page)+'">Paper IV’s 26 atlas plates</a> also have HTML pages with drawings, descriptions, and tables. '
            'Paper V’s complete 40-plate atlas has HTML drawings, descriptions, and selectable TikZ labels. '
            'Paper VI’s complete 42-plate atlas has HTML drawings, descriptions, and selectable labels. '
