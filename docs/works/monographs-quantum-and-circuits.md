@@ -59,7 +59,7 @@ Use the links below to read this work and its supporting files. Ctrl+click (Comm
 
 ## Read
 
-- [Read online: chapters 1–21, proofs, figures and code listings](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-quantum-and-circuits/index.html)
+- [Read online: complete volume, appendices, proofs and sources](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-quantum-and-circuits/index.html)
 - [Edition README](../../monographs/quantum-and-circuits/README.md)
 - [Read PDF](../../monographs/quantum-and-circuits/volume/output/Realization_Calculus_Quantum_and_Circuits.pdf)
 - [Visual guide (PDF)](../../monographs/quantum-and-circuits/sources/quantum/Quantum_Arithmetic_Complete_Release/output/Komorebi_Quantum_Arithmetic_Visual_Guide.pdf)

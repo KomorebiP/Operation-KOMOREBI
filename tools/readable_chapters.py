@@ -1257,6 +1257,7 @@ def render_book(reader,book):
         tools+='<p><a href="'+reader.resolve(source,page)+'">Original TeX with line links</a> · <a href="'+site.rel(reader.records[source]['file_url'],page)+'" download>Download TeX</a></p>'
         tools+='<p>The wording and mathematics follow the retained manuscript. This reading format does not add a proof review or extend Lean coverage.</p>'+reading_options()
         body+=resources(tools)
+        if spec.get('evidence_note'):body+='<p class="reading-context">'+e(spec['evidence_note'])+'</p>'
         body+='<article id="chapter-text" class="readable-chapter" aria-label="'+e(title,quote=True)+'">'
         level=2
         for node in chapter.nodes:

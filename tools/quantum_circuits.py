@@ -53,19 +53,3 @@ def source_macros(load,visual=False):
         raise ValueError('Review circuit field and Boolean conventions')
     macros.update(F=r'\mathbb F' if visual else r'\mathbb F_2',B=r'\{0,1\}')
     return macros
-
-
-def bind_source_references(reader,load,labels):
-    """Route the one cited unconverted appendix section to its retained lines."""
-    text=load(SUPPLEMENT)
-    headings=list(re.finditer(r'\\section\{([^{}]+)\}',text))
-    match=re.search(r'\\label\{c:app:evidence\}',text)
-    if not match:raise ValueError('Missing circuit evidence section')
-    section=max((i,m) for i,m in enumerate(headings,1) if m.start()<match.start())
-    number,heading=section
-    if number!=4 or heading[1]!='Baseline domains reproduced by the full run':
-        raise ValueError('Review circuit appendix reference')
-    record=reader.add(SUPPLEMENT)
-    labels['c:app:evidence']=dict(kind='heading',number='E.4',title=heading[1],
-        reference_label='Section E.4 (manuscript source)',plain_reference_label='E.4',
-        url=record['url'],id='L'+str(text.count('\n',0,heading.start())+1))

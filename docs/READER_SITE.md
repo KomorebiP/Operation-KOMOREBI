@@ -157,12 +157,12 @@ Run `python -B -m unittest discover -s tools -p 'test_foundational_reading.py' -
 to check both complete editions, source changes, formula preservation and HTML
 structure. The normal site checker also checks their navigation and source links.
 
-Quantum and Circuits has an HTML selection at
-`read/monographs-quantum-and-circuits/`: all of chapters 1–21 in 148 topic pages,
+Quantum and Circuits has a complete HTML reading edition at
+`read/monographs-quantum-and-circuits/`: chapters 1–21, appendices A–F and back matter in 206 topic pages,
 with 233 numbered statements, 120 written proofs, 82 original scientific figures
-in 85 manuscript appearances, 31 accessible tables, and 3,886 mathematical
-expressions. The contents page identifies the selection and links the rest of
-the volume and its sources. `tools/quantum_reading.py` translates the retained print wrappers;
+in 85 manuscript appearances, 61 accessible tables, and 4,200 mathematical
+expressions. The contents page groups the main chapters, appendices, glossary and sources,
+with a preface and volume guide retaining the part introductions and general glossary. `tools/quantum_reading.py` translates the retained print wrappers;
 `tools/quantum_sections.json` binds complete source ranges, original identities,
 chapter groups and table headers. Authored QA labels and source-line links stay
 intact. `tools/quantum_symmetry.py` retains the symmetry treatment's chapter-wide
@@ -180,10 +180,22 @@ have links from their earlier statements and return links across chapter pages.
 original figures, ten tables, two literal reproduction listings, and 775
 mathematical expressions. It preserves C01–C08 claim labels, five named scope
 panels, and six printed equation numbers. The binary-field main treatment and
-general-field visual scope retain their separate macro contexts. The cited
-unconverted Appendix E.4 links to the exact retained source lines. All 54
-collected references are available; appendices A–F and the remaining glossary
-and source notes remain linked as TeX and in the full PDF.
+general-field visual scope retain their separate macro contexts. The Appendix E.4 citation now opens the HTML evidence ledger. All 54
+collected references retain their original numbering.
+`tools/quantum_companions.py` completes the reading edition with 58 pages:
+the volume orientation, appendices A–F, glossary and source notes. The new
+pages add 314 mathematical expressions, 30 accessible tables, and 157 literal
+code extracts. All 115 circuit declaration types retain their full Unicode
+text, source locators, block labels and axiom sets. The arithmetic guide keeps
+its 96-theorem inventory and its distinct inherited checkpoints. Visible scope
+notes distinguish retained verification statements from this HTML conversion.
+The 30-entry circuit result index keeps its printed page column, linking the
+original PDF at the corresponding physical page; its source digest and page
+map are in `tools/quantum_sections.json`. Recheck the PDF map with `python -B tools/check_quantum_pdf_pages.py`
+(using the same PDFium dependency as the figure helpers). The volume guide routes all 21
+chapters and six appendices to their first HTML topics. Literal code bodies
+are protected before any print-wrapper translation, and source lines remain
+unchanged. The complete sequence has 207 pages including references.
 The shared statement finder links all written proofs without adding Lean
 correspondences. This presentation adds no mathematical review or Lean replay.
 
@@ -200,7 +212,7 @@ source identities and publish the retained PNGs. Figure receipts default to one
 use; the symmetry compiler diagram and catalytic Pareto and packet diagrams
 explicitly record their two appearances. Run
 `python -B -m unittest discover -s tools -p 'test_quantum_reading.py' -v` for the
-complete selection, formula sequence, proof routes, tables and source anchors.
+complete edition, formula sequence, proof routes, tables and source anchors.
 
 The twelve core editions share collection switching, chapter filtering,
 persistent text size and font choices, and sidebar chapter shortcuts. The
