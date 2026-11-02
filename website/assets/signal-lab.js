@@ -1,5 +1,5 @@
 import {BASES,defaults,settings,referenceSignal,experiment,basisVector,encodeSettings,decodeSettings,parseSamples,signalCsv,curvesCsv,experimentJson,importExperiment} from './signal-lab-core.mjs';
-import {MAX_RUNS,customSettings,paintSegment,SampleHistory,readNotebook,writeNotebook,appendRuns,sameObservation,notebookCsv,starterRuns,compareRuns,comparisonCsv,encodeComparison,decodeComparison} from './signal-lab-workspace.mjs';
+import {MAX_RUNS,customSettings,paintSegment,SampleHistory,readNotebook,writeNotebook,appendRuns,sameObservation,notebookCsv,starterRuns,compareRuns,comparisonCsv,encodeComparison,decodeComparison,targetBudgets,targetRuns} from './signal-lab-workspace.mjs';
 
 const root=document.getElementById('signal-lab');
 const byId=id=>document.getElementById(id);
@@ -135,8 +135,45 @@ function render() {
   text('sl-sample-status',`Address ${address} · reference ${format(result.reference[address])} · observed ${format(result.observed[address])} · reconstructed ${format(a.reconstruction[address])} · discarded residual ${format(result.observed[address]-a.reconstruction[address])}`);
   text('sl-coefficient-status',`${m.label} · ${m.start===m.end?'address '+m.start:'addresses '+m.start+'–'+m.end} · ${a.chosen[i]?'kept':'omitted'}. Coefficient ${format(c)}; support weight ${a.weights[i]}; weighted energy ${format(a.weights[i]*c*c)}.`);
   text('sl-best-note',`${names[config.basis]} · reference minimum at ${a.bestBudget} of ${config.n} coefficients, within numerical tolerance. This comparison uses the known clean reference.`);
-  drawAll();renderTable();root.dataset.ready='true';
+  drawAll();renderTable();renderTargets();root.dataset.ready='true';
 }
+function targetSpec() {
+  const input=byId('sl-target-value'),valid=input.value.trim()!==''&&input.checkValidity();input.setAttribute('aria-invalid',String(!valid));
+  if(!valid)throw new RangeError('Enter a numeric target from 0 to '+input.max+'.');
+  return {metric:byId('sl-target-metric').value,value:Number(input.value)};
+}
+function renderTargets() {
+  if(!result)return;
+  try{
+    const {metric,value}=targetSpec(),outcome=targetBudgets(result,metric,value),eligible=outcome.rows.filter(row=>row.budget!==null);
+    byId('sl-target-error').hidden=true;text('sl-target-result-label',metric==='energy'?'Energy retained':'Reference RMS');
+    text('sl-target-note',metric==='energy'?`Find the first budget retaining at least ${value}% of observed energy under the current selection rule.`:`Find the first budget with reference RMS error at most ${value}. Reference error can rise again as more coefficients are kept.`);
+    byId('sl-target-rows').replaceChildren(...outcome.rows.map(row=>{
+      const tr=document.createElement('tr');tr.dataset.targetBasis=row.basis;
+      const name=document.createElement('th');name.scope='row';name.textContent=names[row.basis];tr.append(name);
+      const count=document.createElement('td');count.textContent=row.budget===null?'Not reached':`${row.budget} / ${result.config.n}`;count.dataset.targetCount='';tr.append(count);
+      const quality=document.createElement('td');quality.textContent=row.budget===null?'Best RMS: '+format(row.bestReferenceRms):metric==='energy'?format(row.retainedPercent)+'%':format(row.referenceRms);tr.append(quality);
+      const action=document.createElement('td'),button=document.createElement('button');button.type='button';button.textContent='Use budget';button.dataset.targetApply=row.basis;button.disabled=row.budget===null;button.setAttribute('aria-label','Use target budget for '+names[row.basis]);action.append(button);tr.append(action);return tr;
+    }));
+    byId('sl-target-save').disabled=!eligible.length||runs.length+eligible.length>MAX_RUNS;
+    text('sl-target-capacity',!eligible.length?'No representation reaches this target.':runs.length+eligible.length>MAX_RUNS?`Free ${eligible.length} notebook slots to save these qualifying runs.`:`${eligible.length} qualifying runs can be added to the notebook.`);
+  }catch(error){byId('sl-target-rows').replaceChildren();byId('sl-target-save').disabled=true;text('sl-target-error',error.message);byId('sl-target-error').hidden=false;text('sl-target-capacity','');}
+}
+byId('sl-target-metric').addEventListener('change',()=>{
+  const reference=byId('sl-target-metric').value==='reference';byId('sl-target-value').max=reference?64:100;byId('sl-target-value').value=reference?1:95;text('sl-target-label',reference?'Maximum reference RMS error':'Target energy retained · %');renderTargets();
+});
+byId('sl-target-value').addEventListener('input',renderTargets);
+byId('sl-target-rows').addEventListener('click',event=>{
+  const button=event.target.closest('[data-target-apply]');if(!button)return;
+  try{const current=ensureResult(),{metric,value}=targetSpec(),row=targetBudgets(current,metric,value).rows.find(row=>row.basis===button.dataset.targetApply);if(row?.budget===null||!row)throw new RangeError('This target is not reached.');config={...config,basis:row.basis,budget:row.budget};clearError();render();status('The smallest qualifying budget was applied to '+names[row.basis]+'.');}
+  catch(error){showError(error.message);}
+});
+byId('sl-target-save').addEventListener('click',()=>{
+  try{const current=ensureResult(),{metric,value}=targetSpec(),entries=targetRuns(current,metric,value);if(!entries.length)throw new RangeError('No representation reaches this target.');const first=runs.length,next=appendRuns(runs,entries);
+    runs=next;sharedPair=null;clearComparisonHash();pairA=first;pairB=first+entries.length-1;byId('sl-pair-view').value='overlay';saveNotebook();byId('sl-notebook').open=true;renderNotebook();clearError();status(notebookMemory?'Qualifying runs added for this tab. Download notebook JSON to keep them.':'Qualifying runs saved to the notebook.');
+    (entries.length>1?byId('sl-compare-a'):byId('sl-notebook-rows').querySelector('[data-run-name="'+first+'"]')).focus();
+  }catch(error){showError(error.message);}
+});
 function schedule() {syncControls();root.dataset.ready='false';cancelAnimationFrame(renderFrame);renderFrame=requestAnimationFrame(render);}
 function ensureResult() {if(stroke)throw new RangeError('Finish or cancel the current stroke first.');cancelAnimationFrame(renderFrame);config=readControls();render();return result;}
 function updateFromControls(event) {try{const next=readControls();cancelStroke();config=next;if(['sl-shape','sl-size','sl-amplitude','sl-cycles'].includes(event.target.id)){editHistory.clear();text('sl-edit-status','');}clearError();schedule();}catch(error){cancelAnimationFrame(renderFrame);if(result)root.dataset.ready='true';showError(error.message);}}
@@ -303,7 +340,7 @@ function renderNotebook(resetPair=false) {
   }));
   if(resetPair){pairA=0;pairB=Math.max(0,runs.length-1);}
   renderPairSelectors();
-  drawSavedComparison();
+  drawSavedComparison();renderTargets();
 }
 function drawSavedComparison() {
   const selectedPair=selectedComparison();

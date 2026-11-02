@@ -102,7 +102,17 @@ PAIR_PLOT PAIR_ADDRESS
 <div class="sl-legend"><span class="sl-haar">Haar wavelets</span><span class="sl-cosine">Cosine modes</span><span class="sl-samples">Sample coordinates</span></div>
 FRONTIER_PLOT
 <button type="button" id="sl-best" data-sl-action disabled>Use minimum for selected representation</button>
-<p class="lab-caption" id="sl-best-note"></p></section>
+<p class="lab-caption" id="sl-best-note"></p>
+<details class="sl-targets" id="sl-target-details"><summary>Find a budget for a quality target</summary>
+<fieldset id="sl-target-controls" disabled><legend class="sr-only">Find the smallest qualifying coefficient budgets</legend>
+<div class="sl-target-form"><label class="lab-label" for="sl-target-metric">Quality measure<select id="sl-target-metric"><option value="energy">Observed energy retained</option><option value="reference">RMS error to known reference</option></select></label>
+<label class="lab-label" for="sl-target-value"><span id="sl-target-label">Target energy retained · %</span><input type="number" id="sl-target-value" min="0" max="100" step="any" value="95" required></label></div>
+<p class="lab-caption" id="sl-target-note"></p><p class="lab-error" id="sl-target-error" role="status" hidden></p>
+<div class="table-scroll"><table class="sl-target-table"><caption>Smallest qualifying budget in each representation</caption><thead><tr><th scope="col">Basis</th><th scope="col">Kept</th><th scope="col" id="sl-target-result-label">Energy retained</th><th scope="col">Apply</th></tr></thead><tbody id="sl-target-rows"></tbody></table></div>
+<button type="button" id="sl-target-save" disabled>Save qualifying runs to notebook</button>
+<p class="lab-caption" id="sl-target-capacity" role="status"></p>
+<p class="lab-caption">RMS means √(squared error / sample count). Reference-error targets use the known clean signal and are experimental comparisons. Every coefficient budget is checked; a target may be unreachable. Numerical comparisons allow 10⁻¹⁰ × max(1, the relevant signal energy) in squared-error units. A zero-energy observation meets energy-retention targets with zero coefficients.</p>
+</fieldset></details></section>
 <section aria-labelledby="sl-coefficients-title"><h2 id="sl-coefficients-title">Which components survive?</h2>
 <p class="lab-caption">Weighted coefficient energy. Solid bars are kept; outlined bars are omitted. Tap a bar to inspect it.</p>
 COEFFICIENT_PLOT
@@ -163,4 +173,4 @@ COEFFICIENT_PLOT
     site.page('signal-lab.html', 'Signal laboratory', body)
     site.search.append(dict(title='Signal laboratory: compare Haar, cosine and sample representations',group='Collection',kind='Examples',
                             work_ids=['paper-ii','paper-v','information-realization'],url='signal-lab.html',
-                            text='Interactive signal laboratory starter experiments draw edit undo reference notebook compare saved runs signed residual errors differences inspection wavelets DCT cosine compression denoising coefficient budget weighted energy error curves seeded noise CSV JSON import export'))
+                            text='Interactive signal laboratory quality target minimum budget retained energy RMS threshold starter experiments draw edit undo reference notebook compare saved runs signed residual errors differences inspection wavelets DCT cosine compression denoising coefficient budget weighted energy error curves seeded noise CSV JSON import export'))

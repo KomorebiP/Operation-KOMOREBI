@@ -122,6 +122,11 @@ selected sample. Links open a preview and recompute the results while leaving
 the recipient's saved notebook unchanged. The preview can be saved as two new
 notebook runs when space is available.
 
+The quality-target finder scans every coefficient budget to find the first
+that retains a requested percentage of observed energy or meets a reference
+RMS-error limit. Apply a result to the active experiment or save all qualifying
+representations as notebook runs. Unreachable limits are reported explicitly.
+
 The reference signal is known in these experiments. The displayed reference
 minimum uses that knowledge; it does not estimate the clean signal behind an
 unknown real-world recording. Cosine calculations are numerical approximations.
