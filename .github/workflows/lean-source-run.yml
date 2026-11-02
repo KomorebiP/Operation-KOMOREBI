@@ -1,0 +1,114 @@
+name: Run a selected Lean source
+on:
+  workflow_dispatch:
+    inputs:
+      source:
+        description: Exact repository path from the site's Run with dependencies page
+        required: true
+        default: papers/paper-v/current/source/complete/original_snapshot/formalization/lean/KomorebiPaperV/HaarChannels.lean
+      timeout:
+        description: Total compiler/runtime timeout in seconds (1–7200)
+        default: '1200'
+        required: true
+  pull_request:
+    paths:
+      - 'tools/lean_runner.py'
+      - 'tools/lean_execution.py'
+      - 'tools/test_lean_execution.py'
+      - '.github/workflows/lean-source-run.yml'
+permissions:
+  contents: read
+jobs:
+  run-source:
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ github.event_name == 'workflow_dispatch' && fromJSON('[{"name":"selected","source":"manual","expected":"compiler_success"}]') || fromJSON('[{"name":"retained-project","source":"papers/paper-v/current/source/complete/original_snapshot/formalization/lean/KomorebiPaperV/HaarChannels.lean","expected":"compiler_success"},{"name":"reconstructed-imports","source":"papers/paper-xii/current/core/publication/source/lean_guide/formal_release/lean/PaperXII/SupportTransport.lean","expected":"compiler_success"},{"name":"false-statement","source":"papers/paper-ix/current/preserved/PRSC_IX_Consolidated_Manuscript/review/fresh_baseline/negative_false_dyadic_sign_collapse.lean","expected":"compiler_failure"},{"name":"unfinished-proof","source":"papers/paper-ix/current/preserved/PRSC_IX_Consolidated_Manuscript/review/fresh_baseline/negative_placeholder.lean","expected":"compiler_success_with_warnings"}]') }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    env:
+      LEAN_SOURCE: ${{ inputs.source || matrix.source }}
+      LEAN_TIMEOUT: ${{ inputs.timeout || '1200' }}
+      RUN_DIR: ${{ github.workspace }}/.lean-run/source
+      BUNDLE_DIR: ${{ github.workspace }}/.lean-run/bundle
+      LEAN_NUM_THREADS: '2'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.13'
+      - name: Test routing, source identity, and result handling
+        run: python -B -m unittest discover -s tools -p test_lean_execution.py -v
+      - name: Install source catalogue build dependencies
+        run: python -m pip install -r website/requirements.txt
+      - name: Build the exact source bundle and prepare the selected project
+        id: prepare
+        run: |
+          python - <<'PY'
+          import os, pathlib, subprocess, sys, zipfile
+          archive = pathlib.Path(os.environ['RUNNER_TEMP'])/'lean-runner.zip'
+          subprocess.run([sys.executable, 'tools/lean_execution.py', '--output', str(archive)], check=True)
+          with zipfile.ZipFile(archive) as z:
+              z.extractall(os.environ['BUNDLE_DIR'])
+          subprocess.run([sys.executable, os.environ['BUNDLE_DIR']+'/run_lean.py',
+              '--source', os.environ['LEAN_SOURCE'], '--output', os.environ['RUN_DIR'],
+              '--prepare-only', '--github-output', os.environ['GITHUB_OUTPUT']], check=True)
+          PY
+      - name: Install the selected toolchain and locked Mathlib cache
+        uses: leanprover/lean-action@50fcf42d2e460296f1a34b402e990d1b24f8b596
+        with:
+          lake-package-directory: .lean-run/source/project
+          auto-config: 'false'
+          build: 'false'
+          test: 'false'
+          lint: 'false'
+          use-mathlib-cache: 'true'
+          use-github-cache: 'false'
+          check-reservoir-eligibility: 'false'
+          leanchecker: 'false'
+          nanoda: 'false'
+          axiom-audit: 'false'
+      - name: Build imports and check the selected file with native Lean
+        env:
+          EXPECTED_STATUS: ${{ matrix.expected }}
+          TRIGGER: ${{ github.event_name }}
+        run: |
+          python - <<'PY'
+          import json, os, pathlib, subprocess, sys
+          result = subprocess.run([sys.executable, os.environ['BUNDLE_DIR']+'/run_lean.py',
+              '--execute', os.environ['RUN_DIR'], '--skip-cache', '--timeout', os.environ['LEAN_TIMEOUT']])
+          if os.environ['TRIGGER'] == 'workflow_dispatch':
+              raise SystemExit(result.returncode)
+          record = json.loads((pathlib.Path(os.environ['RUN_DIR'])/'RESULT.json').read_bytes())
+          assert record['status'] == os.environ['EXPECTED_STATUS'], record['status']
+          if os.environ['EXPECTED_STATUS'] == 'compiler_success_with_warnings':
+              assert record['sorry_diagnostic'], 'Unfinished proof must be identified by Lean'
+          PY
+      - name: Record a setup failure when the compiler was never reached
+        if: always()
+        env:
+          PREPARE_OUTCOME: ${{ steps.prepare.outcome }}
+        run: |
+          python - <<'PY'
+          import json, os, pathlib
+          output = pathlib.Path(os.environ['RUN_DIR']); output.mkdir(parents=True, exist_ok=True)
+          result = output/'RESULT.json'
+          if not result.exists():
+              result.write_text(json.dumps({'status': 'bootstrap_failed' if os.environ['PREPARE_OUTCOME']=='success' else 'preparation_failed',
+                  'source':os.environ['LEAN_SOURCE'], 'compiler_exit_code':None,
+                  'compiler_reached':False, 'source_revision':os.environ['GITHUB_SHA'],
+                  'changes_recorded_verification':False}, indent=2)+'\n')
+          PY
+      - name: Keep the source binding, exact results, and diagnostics
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: lean-source-${{ matrix.name }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            .lean-run/source/RUN_INPUTS.json
+            .lean-run/source/RESULT.json
+            .lean-run/source/*.log
+          if-no-files-found: warn
+          retention-days: 30
