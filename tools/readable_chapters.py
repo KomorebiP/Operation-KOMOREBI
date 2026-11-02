@@ -177,6 +177,9 @@ CHAPTERS += FOUNDATIONAL_CHAPTERS
 from methodology_reading import BOOK as METHODOLOGY_BOOK, CHAPTERS as METHODOLOGY_CHAPTERS
 BOOKS[METHODOLOGY_BOOK['work']] = METHODOLOGY_BOOK
 CHAPTERS.extend(METHODOLOGY_CHAPTERS)
+from quantum_reading import BOOK as QUANTUM_BOOK, CHAPTERS as QUANTUM_CHAPTERS
+BOOKS[QUANTUM_BOOK['work']] = QUANTUM_BOOK
+CHAPTERS += QUANTUM_CHAPTERS
 BY_SOURCE = {c['source']:c for c in reversed(CHAPTERS)}
 NUMBERED = {'definition', 'theorem', 'proposition', 'lemma', 'corollary', 'remark', 'example', 'standardfact', 'certificate','boundary','roadmap','construction','classicalinput','classical','conjecture','problem','warning'}
 NUMBERED.update('hist'+kind for kind in ('theorem','proposition','lemma','corollary','definition','example','remark','standardfact'))
@@ -859,6 +862,8 @@ def prepare(reader):
                 from foundational_reading import prepare_book
             elif config['custom_reader'] == 'proof_path':
                 from proof_path_reading import prepare_book
+            elif config['custom_reader'] == 'quantum':
+                from quantum_reading import prepare_book
             elif config['custom_reader'] == 'paper_ix':
                 from paper_ix_reading import prepare_book
             elif config['custom_reader'] == 'paper_x':
@@ -1182,7 +1187,8 @@ def render_statement_directory(reader,book):
     if not has_statement_finder(config):return
     site=reader.site;page=statement_directory_url(config);e=html.escape
     body='<p class="eyebrow">Find in '+e(config['label'])+'</p><h1>'+e(config['label'])+': Statements and proofs</h1>'
-    body+='<p>Find a statement anywhere in this work by title, printed number, type or source label. Entries follow the chapter order. Each proof link opens the written proof passage.</p>'
+    scope='in this HTML selection' if config.get('partial') else 'anywhere in this work'
+    body+='<p>Find a statement '+scope+' by title, printed number, type or source label. Entries follow the chapter order. Each proof link opens the written proof passage.</p>'
     body+='<div class="reading-statement-directory"><h2>Statements by chapter</h2>'
     for spec,_,chapter in book['chapters']:
         rows={r['statement_line']:r for r in chapter_claims(reader,spec)}
@@ -1440,7 +1446,8 @@ def render_book_index(reader,book,reports):
         body+='<p><a href="'+site.rel(config['atlas_index'],page)+'">'+html.escape(config.get('atlas_link_text','Explore all 26 atlas plates in HTML'))+'</a> '+html.escape(config.get('atlas_note','With drawings, text descriptions, equations, and tables.'))+'</p>'
     body+='<p>'+html.escape(config.get('reading_note','The original visual atlas remains available in the PDF and visual guide. The HTML chapters preserve the source wording, mathematical statements, and recorded limits. They do not add a proof assessment.'))+'</p>'
     site.page(page,'Read '+label,body)
-    site.search.append(dict(title=label+' / Read all chapters',group='Collection',kind='Papers and source',work_ids=[work],url=page,text=config['title']+' readable chapters '+ ' '.join(c['title'] for c in config['chapters'])))
+    directory_title='Read opening chapters' if config.get('partial') else 'Read all chapters'
+    site.search.append(dict(title=label+' / '+directory_title,group='Collection',kind='Papers and source',work_ids=[work],url=page,text=config['title']+' readable chapters '+ ' '.join(c['title'] for c in config['chapters'])))
 
 
 def render_bibliography(reader,book):
@@ -1462,6 +1469,8 @@ def render_bibliography(reader,book):
     page,work,label=config['bib_page'],config['work'],config['label']
     body='<h1>'+label+' bibliography</h1>'+navigation(config,page)
     body+=resources(work_links(reader,work,page))+'<article id="chapter-text" class="reading-bibliography">'
+    if config.get('bibliography_introduction'):
+        body+='<p>'+html.escape(config['bibliography_introduction'])+'</p>'
     if config.get('bibliography_source_only'):
         body+='<p>The complete bibliography, including the recovered historical references, remains in the original manuscript and its linked TeX sources.</p><p><a href="'+reader.resolve(config['bib'],page)+'">Read the bibliography in the manuscript source</a></p>'
         body+='</article>'+navigation(config,page,'bottom')
