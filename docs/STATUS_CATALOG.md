@@ -234,13 +234,13 @@ Reviewed essay with written arguments and 40 finite exact-check groups. No new L
 
 **Reading edition complete** · Lean: **Selected results recorded** · Confidence basis: **Recorded formal evidence**
 
-Proofread reading volumes plus 201 named theorem declarations: 39 in the inherited finite core and 29, 21, 19, 16, 13, 19, 23, 22 in Blocks01 through 08. Checked scope includes the principal ordinary-series F.1 contract, coefficient transport, the guarded G.2 inverse, G.1 rescaling, F.2 characteristic prerequisites, and now positive-real embeddings, maximum-modulus identities and lower recurrences. Explicit F.2 power/type bounds, the radial exponent limit, type-vector proportions, operator decoupling and full monograph coverage remain open.
+Proofread reading volumes plus 217 named theorem declarations: 39 in the inherited finite core and 29, 21, 19, 16, 13, 19, 23, 22, 16 in Blocks01 through 09. Checked scope includes the principal ordinary-series F.1 contract, coefficient transport, guarded G.2 inverse, G.1 rescaling, F.2 characteristic prerequisites, positive-real embeddings, maximum-modulus identities, lower recurrences, and the explicit lower logarithmic power comparison with positive uniform growth-ratio bounds. The upper comparison, formal liminf/limsup type bounds, radial exponent limit, type-vector proportions, operator decoupling and full monograph coverage remain open.
 
-**Next step:** Prove the explicit lower power comparison using the seed interval, shifted child radii and finite descent/interval induction. Then establish the upper type bound, radial exponent limit and type-vector proportions; the current lower recurrences alone do not prove them.
+**Next step:** Prove full-radius product upper recurrences and the geometric seed ladder with its explicit logarithmic bound. Then establish the upper comparison, formal type bounds, radial exponent limit and type-vector proportions.
 
 [Return to this work: paper, proofs, Lean, and code](works/monographs-special-functions.md)
 
-[Latest written review and its scope](SPECIAL_FUNCTIONS_POSITIVE_REAL_BLOCK08.md)
+[Latest written review and its scope](SPECIAL_FUNCTIONS_LOWER_GROWTH_BLOCK09.md)
 
 [Source directory](../monographs/special-functions) · [LEAN_STATUS.md](../monographs/special-functions/LEAN_STATUS.md) · [README.md](../monographs/special-functions/README.md) · [lean/README.md](../monographs/special-functions/lean/README.md)
 
