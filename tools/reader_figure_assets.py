@@ -28,6 +28,7 @@ def prepare(reader,config,chapters):
             rendered=reader.add(record['render_source'])
             if not rendered or digest(reader.site.read_source(rendered))!=record['render_source_sha256']:
                 raise ValueError('Rendered figure parent differs: '+record['render_source'])
+            if '/figures/' in record['render_source']:rendered['figure_source']=True
         if record.get('render_image'):
             image_entry=reader.owned.get(record['render_image'])
             if not image_entry or digest(reader.site.read_source(image_entry))!=record['render_image_sha256']:
