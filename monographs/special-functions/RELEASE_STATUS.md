@@ -1,5 +1,13 @@
 # Technical publication package with checked coupled-functions block
 
+**2026-11-02 uniqueness and F.1 companion:** SF-LEAN-B04 adds 16 declarations
+proving analytic germ uniqueness, normalized entire uniqueness and canonical
+series representations. `coupled_F1_contract` covers the principal Theorem
+F.1 statement in its ordinary odd-series formulation. The registered source
+scope is 124 names. Analytic-germ parameter recovery, Perron growth and full
+component rescaling remain open. See `formalization/Block04/REPORT.md`.
+The notes below retain the earlier checkpoints and their original scope.
+
 **2026-11-02 entire-existence companion:** SF-LEAN-B03 adds 19 checked
 declarations proving absolute convergence, holomorphy and both coupled
 equations on the whole plane for strict positive contractions. The registered
