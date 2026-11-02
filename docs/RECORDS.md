@@ -84,6 +84,7 @@ These files include test contracts, source records, run outputs, publication rec
 - [verification/special-functions/block02/record.json](../verification/special-functions/block02/record.json)
 - [verification/special-functions/block03/record.json](../verification/special-functions/block03/record.json)
 - [verification/special-functions/block04/record.json](../verification/special-functions/block04/record.json)
+- [verification/special-functions/block05/record.json](../verification/special-functions/block05/record.json)
 
 ## Reading and updating a record
 

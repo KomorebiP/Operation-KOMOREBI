@@ -245,7 +245,7 @@ Publication completion and checked subresults leave wider formal or implementati
 
 **Done when:** Choose one precise next theorem/refinement contract, establish its dependencies, and admit it only with corresponding source and verification evidence.
 
-**Progress:** Special Functions SF-LEAN-B04 adds 16 declarations proving analytic uniqueness and the canonical series bridge, completing the principal ordinary-series Theorem F.1 contract. The source scope is 124 named theorem declarations. Germ-to-finite-jet parameter recovery, Perron growth and full component rescaling remain open; all earlier blocks are preserved.
+**Progress:** Special Functions SF-LEAN-B05 adds 13 declarations proving all-degree coefficient extraction, supplied Taylor coefficient-object transport, and Theorem G.2’s guarded labeled analytic-germ parameter inverse. The source scope is 137 named theorem declarations. Full component rescaling and Perron growth remain open; all earlier blocks are preserved.
 
 Related works and source records: [Paper III: Typed Transfer, Nonlinear Packets, and Obstruction Theory](works/paper-iii.md) · [Special Functions](works/monographs-special-functions.md) · [Quantum and Circuits](works/monographs-quantum-and-circuits.md) · [Signal Reconstruction](works/signal-reconstruction.md) · [COS Method: formal continuation](works/monographs-cos-method-formal-continuation.md) · [p-adic Canonical Realization](works/padic-canonical-realization.md) · [Model-Theory Normalization](works/model-theory-normalization.md).
 

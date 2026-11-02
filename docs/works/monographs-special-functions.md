@@ -14,9 +14,9 @@ Cyclic families, sequence constructions, reciprocal structure, and exact methods
 
 **Suggested background:** Begin with the introduction and glossary. Then use the volume's own definitions to identify the background needed for its subject.
 
-**Recorded results and limits:** Proofread reading volumes plus 124 named theorem declarations: 39 in the inherited finite core, 29 in Block01, 21 in Block02, 19 in Block03, and 16 in Block04. The principal Theorem F.1 contract is checked in its ordinary odd-series formulation: a unique normalized entire pair, its positive recurrence coefficients, global expansions and oddness. Analytic-germ parameter recovery, Perron growth and full monograph coverage remain open.
+**Recorded results and limits:** Proofread reading volumes plus 137 named theorem declarations: 39 in the inherited finite core, 29 in Block01, 21 in Block02, 19 in Block03, 16 in Block04, and 13 in Block05. The principal ordinary-series Theorem F.1 contract, all-degree Taylor coefficient transport, and the guarded labeled analytic-germ inverse of Theorem G.2 are checked. Full component rescaling, Perron growth and full monograph coverage remain open.
 
-**Remaining work:** Extract the degree-three, degree-five and degree-seven coefficient jet from equality of canonical analytic germs, then apply the existing positive-scale, nonzero-defect inverse. Generic Taylor coefficient-object transport, Perron growth and full component-rescaling equivalence remain later obligations.
+**Remaining work:** Formalize the full analytic component-rescaling equivalence of Appendix G.1, preserving both exceptional parameter surfaces and amplitude/argument normalization. Perron order/type growth remains a separate larger obligation.
 
 The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
 
@@ -90,7 +90,7 @@ These links include code, examples, checks, or build tools. Read the [edition gu
 ## Evidence
 
 - [Completion, Lean coverage, confidence, and cited evidence](../STATUS_CATALOG.md#monographs-special-functions)
-- [Latest recorded written review](../SPECIAL_FUNCTIONS_UNIQUENESS_BLOCK04.md)
+- [Latest recorded written review](../SPECIAL_FUNCTIONS_GERM_INVERSE_BLOCK05.md)
 - [Source-file receipt (identity and availability)](../../manifests/source-imports/monographs-special-functions.json)
 - [All files in this source edition](../../monographs/special-functions/)
 
