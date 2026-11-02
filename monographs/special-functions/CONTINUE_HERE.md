@@ -1,9 +1,31 @@
 # Continue Special Functions formalization
 
-Current block: **SF-LEAN-B01**. Begin with `formalization/Block01/REPORT.md`, `CLAIM_MAP.json`, `declarations.json`, and `PROGRESS_v0.1.0.json`.
+Current checkpoint: **SF-LEAN-B02**, based on repository commit
+`cfff62cde8c8a5aac109fc84bf89c73b0e3daad1`. Start with
+`formalization/Block02/REPORT.md`, then its claim map, declaration map,
+self-review and source-bound execution receipt.
 
-The source is `lean/CoupledFormal.lean`. Its 29 named declarations pass compilation, axiom audit and same-kernel module replay. The unchanged 39-declaration finite projector core also passes. The compact runtime kit is restored from Lean_Compact_01.zip through Lean_Compact_05.zip, with combined SHA-256 f7548038f94ea30789ce28fc2ff769c40e9c37d8879ea133e9bea821056342c7. Do not stop merely because lean or lake is absent from PATH.
+`lean/CoupledAnalytic.lean` adds 21 checked declarations: the actual recurrence
+sums are holomorphic on `norm(z)^2<2` and satisfy the normalized coupled
+differential equations there. Block01's 29 coupled declarations and the
+39-declaration finite core retain their earlier records. The full monograph
+remains open. Do not stop merely because Lean is absent from PATH.
 
-Next: connect the proved local absolute convergence to holomorphic germs and verify the termwise derivative/product identities. Then prove extension along radii R/max(q,r,a,b) for strict contractions. The existing results do not yet formalize entire continuation or Perron growth.
+Next executable step: for strict contractions `Q=max(q,r,a,b)<1`, construct
+holomorphic primitives of the contracted products on radius `R/Q`, prove their
+agreement with the old functions on radius `R`, and preserve the equations.
+Then glue the unbounded radius ladder. Analytic uniqueness and the reverse
+coefficient bridge still require their own proofs; Perron growth remains open.
 
-Run `tools/verify_coupled_block.py` against the stored kit and a fresh external work directory. Review receipts from every stage. Preserve this ledger and add a new immutable ledger for the next block. Do not overwrite evidence with a stronger status than the actual declaration map supports.
+Use `tools/verify_coupled_analytic.py` with Lean 4.34.0-rc2, Mathlib
+`aeb72f1e9981b6d35b426b16dca7759be3e7ba06`, and a fresh external work
+directory. The native Windows run is distinguished from the preserved offline
+Linux kit and its assembly instructions in `formalization/Block01/REPORT.md`.
+
+The uniform-convergence and Cauchy-product route resolved the local target.
+Sparse formal power-series packaging and direct derivative majorants were
+deferred, not disproved. There are no delegated or delayed runs to reconcile.
+
+Preserve both blocks' records and put the next theorem family in a new block.
+The root package manifest remains an earlier release snapshot; use each
+block's source-bound records for its current formal claims.

@@ -1,5 +1,12 @@
 # Technical publication package with checked coupled-functions block
 
+**2026-11-02 formal companion:** SF-LEAN-B02 adds 21 checked local analytic
+declarations; see `formalization/Block02/REPORT.md`. The current source scope is
+89 named declarations including the preceding 68. Entire continuation remains
+open. The paragraphs below retain the Block01 packaged-release snapshot. The
+current Git companion is bound by Block02's source manifest and replay receipt;
+no new complete archive validation is claimed.
+
 All three current books, eight original paper releases, registry, consolidated core/reader, editable mathematical sources, figures and laboratories remain included and unchanged. The new formal source and evidence are in `lean/` and `formalization/Block01/`.
 
 The current Lean block adds 29 named declarations to the unchanged 39-declaration supporting core. All are compiled and axiom-audited; the new module also passes kernel replay. Current tests and formalization boundaries are recorded in the block companion. The full analytic special-function monograph is not yet formalized.
