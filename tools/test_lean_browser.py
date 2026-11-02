@@ -7,7 +7,8 @@ from types import SimpleNamespace
 import unittest
 
 from lean_browser import BASE, PAGE, WORKSPACES, build, verify, verify_runtime, action
-from prepare_lean_wasm import UPSTREAM, LEAN, MATHLIB, pack
+from prepare_lean_wasm import UPSTREAM, LEAN, MATHLIB, pack, mathlib_closure,mathlib_closures
+from lean_workspaces import mathlib_seeds,mathlib_seed_groups
 
 
 class LeanBrowserTests(unittest.TestCase):
@@ -33,20 +34,24 @@ class LeanBrowserTests(unittest.TestCase):
                      'lean-mathlib/real-analysis-layer.json']:
             raw=b'packaging test fixture';p=runtime/name;p.parent.mkdir(exist_ok=True,parents=True);p.write_bytes(raw)
             files[name]=dict(size=len(raw),sha256=hashlib.sha256(raw).hexdigest())
-        (runtime/'SOURCE.json').write_text(json.dumps(dict(upstream=UPSTREAM,lean=LEAN,mathlib=MATHLIB,files=files,bytes=sum(f['size'] for f in files.values()))))
+        groups=mathlib_seed_groups(root)
+        for key in groups:
+            name='lean-mathlib/workspaces/'+key+'.json';p=runtime/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(b'workspace fixture')
+            files[name]=dict(size=p.stat().st_size,sha256=hashlib.sha256(p.read_bytes()).hexdigest())
+        (runtime/'SOURCE.json').write_text(json.dumps(dict(upstream=UPSTREAM,lean=LEAN,mathlib=MATHLIB,files=files,bytes=sum(f['size'] for f in files.values()),mathlib_modules=mathlib_seeds(root),workspace_modules=groups)))
         return SimpleNamespace(site=site,lean_works={k:list(v.values()) for k,v in works.items()}),list(records.values()),runtime
 
     def test_receipt_bound_sources_and_local_execution_record(self):
         with tempfile.TemporaryDirectory() as tmp:
             out=Path(tmp);reader,records,runtime=self.fixture(out)
-            self.assertEqual(build(reader,runtime)['workspaces'],3)
+            self.assertEqual(build(reader,runtime)['workspaces'],len(WORKSPACES))
             from check_reader_site import Page
             page=Page((out/PAGE).read_text(encoding='utf-8'))
             for control in page.inputs:
                 self.assertTrue(control.get('id') in page.labels or control.get('aria-label'))
             self.assertEqual(verify(out,dict(files=records))['source_identity'],'PASS')
             data=json.loads((out/BASE/'examples.json').read_bytes())
-            self.assertEqual(len(data['examples'][-1]['files']),2)
+            self.assertEqual(len(next(e for e in data['examples'] if e['id']=='proof-path-recovery')['files']),2)
 
     def test_changed_runtime_and_source_fail_closed(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -83,6 +88,35 @@ class LeanBrowserTests(unittest.TestCase):
             verify_runtime(runtime)
             record['url']='https://example.com/unpinned.js';path.write_text(json.dumps(data))
             with self.assertRaisesRegex(ValueError,'Unpinned'):verify_runtime(runtime)
+
+    def test_workspace_imports_cannot_outgrow_the_runtime(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out=Path(tmp);reader,_,runtime=self.fixture(out)
+            path=runtime/'SOURCE.json';data=json.loads(path.read_bytes());data['mathlib_modules']=[]
+            path.write_text(json.dumps(data))
+            with self.assertRaisesRegex(ValueError,'Missing browser Mathlib imports'):build(reader,runtime)
+        with tempfile.TemporaryDirectory() as tmp:
+            out=Path(tmp);reader,_,runtime=self.fixture(out)
+            path=runtime/'SOURCE.json';data=json.loads(path.read_bytes())
+            data['files'].pop('lean-mathlib/workspaces/proof-path-compression.json')
+            path.write_text(json.dumps(data))
+            with self.assertRaisesRegex(ValueError,'Missing workspace Mathlib imports'):build(reader,runtime)
+        from unittest.mock import patch
+        from lean_workspaces import RECOVERY
+        with patch('lean_workspaces.WORKSPACES',[('broken','Broken','proof-path-theory',[('ProofPath.Recovery',RECOVERY)])]):
+            with self.assertRaisesRegex(ValueError,'must precede'):mathlib_seeds(Path(__file__).resolve().parents[1])
+
+    def test_mathlib_archive_closure_follows_public_imports_and_ignores_comments(self):
+        import io,tarfile
+        with tempfile.TemporaryDirectory() as tmp:
+            path=Path(tmp)/'sources.tar.gz'
+            with tarfile.open(path,'w:gz') as archive:
+                for name,text in [('A','public import Mathlib.B\n-- import Mathlib.Missing\n'),('B','import Lean\n')]:
+                    raw=text.encode();entry=tarfile.TarInfo('snapshot/Mathlib/'+name+'.lean');entry.size=len(raw)
+                    archive.addfile(entry,io.BytesIO(raw))
+            self.assertEqual(mathlib_closure(path,['Mathlib.A']),{'Mathlib.A','Mathlib.B','Lean'})
+            self.assertEqual(mathlib_closures(path,{'small':['Mathlib.B'],'larger':['Mathlib.A']}),
+                             {'small':{'Mathlib.B','Lean'},'larger':{'Mathlib.A','Mathlib.B','Lean'}})
 
 
 if __name__=='__main__':unittest.main()

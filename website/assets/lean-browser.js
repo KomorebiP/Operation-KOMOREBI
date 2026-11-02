@@ -123,7 +123,7 @@ async function start() {
       if(files.length>1){dispose();log('Fresh compiler environment for project imports; cached downloads are reused.');}
       if(!compiler){
         const abort=new AbortController();bootAbort=abort;
-        const created=await createCompiler({baseUrl:new URL('engine/',location.href).href,syntaxCheck:'full',signal:abort.signal,onProgress:m=>{if(ticket===generation)log(m);},onStatus:m=>{if(ticket===generation)log(m);}});
+        const created=await createCompiler({baseUrl:new URL('engine/',location.href).href,mathlibManifest:workspace.mathlib_manifest,syntaxCheck:'full',signal:abort.signal,onProgress:m=>{if(ticket===generation)log(m);},onStatus:m=>{if(ticket===generation)log(m);}});
         if(ticket!==generation){created.dispose();return;}
         compiler=created;
       }

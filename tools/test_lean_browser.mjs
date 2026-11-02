@@ -6,6 +6,24 @@ import {webcrypto} from 'node:crypto';
 globalThis.document={querySelector:()=>null};
 const {moduleSource,outcome,withCompatibility,mapDiagnostic}=await import('../website/assets/lean-browser.js');
 const {createCompiler}=await import('../website/assets/lean-wasm/compiler.js');
+const {optionalLayers,importedRoots,importLines}=await import('../website/assets/lean-wasm/roots.js');
+const {syntaxProbeSource}=await import('../website/assets/lean-wasm/syntax-probe.js');
+
+test('module-format public imports supply the same notation to the syntax check',()=>{
+  const source='module\npublic import Mathlib.Analysis.Complex.Basic\npublic import Std Lean\npublic section\nexample : (1 : ℂ) = 1 := rfl';
+  assert.deepEqual(importedRoots(source),['Mathlib','Std','Lean']);
+  assert.equal(importLines(source),'import Mathlib.Analysis.Complex.Basic\nimport Std Lean');
+  assert.ok(syntaxProbeSource(source).startsWith(importLines(source)+'\nopen Lean'));
+});
+
+test('workspace libraries use their own manifest without changing the shared pack base',()=>{
+  const assets={layerBase:'https://example.test/engine/lean-mathlib'};
+  const [layer]=optionalLayers(assets,'workspaces/proof-path-compression.json');
+  assert.equal(layer.manifestUrl,assets.layerBase+'/workspaces/proof-path-compression.json');
+  assert.equal(layer.packBase,assets.layerBase);
+  assert.throws(()=>optionalLayers(assets,'../other.json'),/Invalid workspace/);
+  assert.throws(()=>optionalLayers(assets,'https://other.test/manifest.json'),/Invalid workspace/);
+});
 
 test('only a completed clean check receives the clean state',()=>{
   assert.equal(outcome({exitCode:0,errors:[]}),'passed');

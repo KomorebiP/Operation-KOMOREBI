@@ -4,24 +4,11 @@ import html
 import json
 from pathlib import Path
 import shutil
+from lean_workspaces import WORKSPACES, RESIDUAL, COMPRESSION, RECOVERY, COMPAT_SOURCE, mathlib_seeds, mathlib_seed_groups
+from lean_runner import imports
 
 PAGE='lean/browser/index.html'
 BASE='lean/browser/'
-RESIDUAL='papers/paper-x/current/current_continuation/lean/PaperX/Residual.lean'
-COMPRESSION='monographs/proof-path-theory/formal/ProofPath/Compression.lean'
-RECOVERY='monographs/proof-path-theory/formal/ProofPath/Recovery.lean'
-COMPAT_SOURCE='''-- Browser compatibility: Lean 4.33 calls this lemma dif_pos.
--- Checked by Lean alongside Recovery; this is not retained paper source.
-universe u
-theorem dite_eq_left {α : Sort u} {p : Prop} [Decidable p]
-    {t : p → α} {e : ¬ p → α} (h : p) : dite p t e = t h := by
-  exact dif_pos h
-'''
-WORKSPACES=[
-    ('paper-x-residual','Paper X · Residual partition','paper-x', [('PaperX.Residual',RESIDUAL)]),
-    ('proof-path-compression','Proof Path Theory · Compression','proof-path-theory', [('ProofPath.Compression',COMPRESSION)]),
-    ('proof-path-recovery','Proof Path Theory · Recovery with its local import','proof-path-theory', [('ProofPath.Compression',COMPRESSION),('ProofPath.Recovery',RECOVERY)]),
-]
 
 
 def action(site,page,*,source=None,work=None):
@@ -72,6 +59,17 @@ def build(reader,runtime):
             example['compatibility']=dict(source=COMPAT_SOURCE,sha256=hashlib.sha256(COMPAT_SOURCE.encode()).hexdigest())
         examples.append(example)
     runtime_record=verify_runtime(runtime)
+    missing=set(mathlib_seeds(site.root))-set(runtime_record.get('mathlib_modules',[]))
+    if missing:raise ValueError('Missing browser Mathlib imports: '+', '.join(sorted(missing)))
+    seed_groups=mathlib_seed_groups(site.root)
+    for example in examples:
+        seeds=seed_groups.get(example['id'])
+        if not seeds:continue
+        available=runtime_record.get('workspace_modules',{}).get(example['id'],[])
+        manifest='workspaces/'+example['id']+'.json'
+        if not set(seeds)<=set(available) or 'lean-mathlib/'+manifest not in runtime_record['files']:
+            raise ValueError('Missing workspace Mathlib imports: '+example['id'])
+        example['mathlib_manifest']=manifest
     engine=site.output/BASE/'engine'
     shutil.copytree(runtime,engine,dirs_exist_ok=True)
     shutil.copyfile(site.root/'website/assets/lean-browser-sw.js',site.output/BASE/'sw.js')
@@ -83,12 +81,17 @@ def build(reader,runtime):
     def asset(name):
         digest=hashlib.sha256((site.root/'website/assets'/name).read_bytes()).hexdigest()[:12]
         return site.rel('assets/'+name,PAGE)+'?v='+digest
-    opts=''.join('<option value="'+e['id']+'">'+html.escape(e['title'])+'</option>' for e in examples)
+    groups={}
+    for example in examples:groups.setdefault(example['title'].split(' · ')[0],[]).append(example)
+    opts=''.join('<optgroup label="'+html.escape(label,quote=True)+'">'+''.join(
+        '<option value="'+e['id']+'">'+html.escape(e['title'])+'</option>' for e in entries)+'</optgroup>'
+        for label,entries in groups.items())
     body=f'''<link rel="stylesheet" href="{asset('lean-browser.css')}">
 <section class="lean-local" data-lean-local>
 <nav class="breadcrumbs" aria-label="Lean navigation"><a href="{site.rel('lean/index.html',PAGE)}">Inspect Lean</a></nav>
 <header class="lean-heading"><p class="eyebrow">The papers · A local proof workspace</p><h1>Edit a proof. Ask Lean.</h1>
 <p class="lean-lede">Explore a published proof, change a step, and check it on your own device. The compiler runs inside this browser.</p></header>
+<p class="lean-local-meta">{len(examples)} prepared workspaces across {len(groups)} reading editions.</p>
 <div class="lean-local-intro"><p><strong>Free, with no account.</strong> Proof text stays in this tab. The site downloads compiler files; it does not send your edits to a proof service.</p>
 <p class="lean-local-meta">First use downloads a substantial library. Loading can take a minute or more and needs a computer with enough memory. Later checks reuse the loaded compiler; downloaded files are cached when your browser allows it.</p></div>
 <p data-local-direct hidden>This compiler needs its own browser page. <a data-local-direct-link target="_blank" rel="noopener">Open the workspace in a new tab</a>.</p>
@@ -103,7 +106,7 @@ def build(reader,runtime):
 <details><summary>Download and compiler activity</summary><pre data-local-log></pre></details>
 <details><summary>Versions, source and limits</summary>
 <p>This pilot uses Lean 4.33.0, compiler revision <code>{runtime_record['lean'][:12]}</code>, and selected Mathlib modules from <code>{runtime_record['mathlib'][:12]}</code>. The papers’ retained projects may use different versions. Results here are browser experiments and do not change the collection’s recorded verification.</p>
-<p>Choose from three prepared workspaces. You can edit any file in a workspace. Required project files are compiled first, then the dependent file. Imports outside the packaged libraries produce an error. Compiler crashes and interrupted checks produce no successful result.</p>
+<p>Choose from {len(examples)} prepared workspaces. Each loads the Mathlib modules its retained sources need. You can edit any file in a workspace. Required project files are compiled first, then the dependent file. Imports outside that workspace’s libraries produce an error. Compiler crashes and interrupted checks produce no successful result.</p>
 <p>For local imports, a generated wrapper names and exports the module into the compiler’s temporary filesystem. Original downloads remain byte for byte identical to the retained sources. A clean result means Lean completed checking these files with no reported warnings; it is not an audit of axioms or an entire paper.</p>
 <p>Compiler download cache: about {runtime_record['bytes']/1048576:.0f} MiB across all available libraries. Proofs using only Std need less. Large files come from pinned public GitHub assets and are checked against the download record. Edits live in this tab; save a copy before leaving.</p>
 <p><a href="examples.json">Source checksums</a> · <a href="engine/SOURCE.json">Compiler download record</a> · <a href="{site.rel('assets/lean-wasm/NOTICE.txt',PAGE)}">Open source credits</a></p>
@@ -112,8 +115,8 @@ def build(reader,runtime):
 </section><script type="module" src="{asset('lean-browser.js')}"></script>'''
     site.page(PAGE,'Edit and run Lean in your browser',body)
     site.search.append(dict(title='Edit and run Lean in your browser',group='Collection',kind='Lean',
-                            work_ids=['paper-x','proof-path-theory'],url=PAGE,
-                            text='Free local browser WebAssembly Lean compiler edit check proofs residual compression recovery'))
+                            work_ids=sorted({e['work'] for e in examples}),url=PAGE,
+                            text='Free local browser WebAssembly Lean compiler edit check proofs '+' '.join(e['title'] for e in examples)))
     return dict(workspaces=len(examples),execution='local WebAssembly',compiler_bytes=runtime_record['bytes'],build_runs_lean=False)
 
 
@@ -125,6 +128,8 @@ def verify(root,documents):
     for example,expected in zip(data['examples'],WORKSPACES):
         assert example['id']==expected[0]
         assert [(f['module'],f['path']) for f in example['files']]==expected[3]
+        if any(name.startswith('Mathlib.') for f in example['files'] for name in imports(f['text'])):
+            assert example['mathlib_manifest']=='workspaces/'+example['id']+'.json'
         if example['id']=='proof-path-recovery':
             assert example['compatibility']['source']==COMPAT_SOURCE
             assert example['compatibility']['sha256']==hashlib.sha256(COMPAT_SOURCE.encode()).hexdigest()

@@ -8,11 +8,12 @@
 export const OPTIONAL_LIBRARIES = ['Std', 'Lean', 'Batteries'];
 
 /** Packed layers, each answering for a set of roots. */
-export function optionalLayers(assets) {
+export function optionalLayers(assets,manifest) {
+	if(manifest!==undefined && !/^workspaces\/[a-z0-9-]+\.json$/.test(manifest)) throw new Error('Invalid workspace library manifest.');
 	return [
 		{
 			label: 'Mathlib',
-			manifestUrl: `${assets.layerBase}/real-analysis-layer.json`,
+			manifestUrl: `${assets.layerBase}/${manifest||'real-analysis-layer.json'}`,
 			packBase: assets.layerBase,
 			roots: [
 				'Mathlib',
@@ -41,21 +42,24 @@ export function stripComments(code) {
 /** The distinct top-level roots a program imports, in order. */
 export function importedRoots(code) {
 	const roots = [];
-	for (const line of stripComments(code).split('\n')) {
-		const match = /^\s*import\s+([A-Za-z0-9_'.]+)/.exec(line);
-		if (!match) continue;
-		const root = match[1].replace(/^'/, '').split('.')[0];
-		if (root && !roots.includes(root)) roots.push(root);
+	for (const line of importLines(code).split('\n')) {
+		for (const name of line.replace(/^import\s+(?:all\s+)?/, '').split(/\s+/)) {
+			const root = name.replace(/^'/, '').split('.')[0];
+			if (root && !roots.includes(root)) roots.push(root);
+		}
 	}
 	return roots;
 }
 
-/** The program's `import` lines, verbatim — the syntax probe shares the program's environment. */
+/** Imports for the separate syntax probe, retaining the program's imported notation. */
 export function importLines(code) {
 	return stripComments(code)
 		.split('\n')
-		.filter((line) => /^\s*import\s+\S/.test(line))
-		.map((line) => line.trim())
+		.map((line) => /^\s*(?:(?:public|private|meta)\s+)*import\s+(\S.*)$/.exec(line))
+		.filter(Boolean)
+		// The separate parser check needs the same imported notation; it does
+		// not export a module, so visibility modifiers do not belong in its header.
+		.map((match) => 'import '+match[1].trim())
 		.join('\n');
 }
 

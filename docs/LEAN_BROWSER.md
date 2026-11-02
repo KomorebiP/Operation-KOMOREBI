@@ -5,9 +5,11 @@ WebAssembly in a persistent Web Worker. It needs no reader account or compiler
 service. The page fetches static compiler artifacts; proof edits are never sent
 to a remote proof checker.
 
-The initial prepared workspaces are Paper X's complete `Residual.lean`, Proof
-Path Theory's `Compression.lean` with Mathlib, and `Recovery.lean` with its actual
-local `ProofPath.Compression` import. These are experiments in the browser
+The picker offers 16 prepared workspaces across nine existing reading editions:
+Papers II, III, VII, IX, X, XI and XII, Proof Path Theory and Komorebi Space.
+The complete retained files are listed in
+`tools/lean_workspaces.py`; the picker groups them by reading edition. Recovery
+also compiles its actual local `ProofPath.Compression` import. These are experiments in the browser
 environment, not replays of every retained Lake environment or the collection's
 2,249 displayed files. Original source bytes, receipts and verification labels
 are unchanged. Unsupported imports fail.
@@ -33,8 +35,11 @@ headers. A single-threaded binary could later remove this isolation step.
 `prepare_lean_wasm.py` prepares small manifests over compiler-matched public
 packs, following imports in the exact Mathlib source revision. Std/Lean/Batteries
 artifacts are compared byte for byte with the per-file tree; matching packed
-entries are shared, with any remaining files supplied individually. The site
-stores about 2.6 MB of metadata. Large binaries remain at immutable URLs in the
+entries are shared, with any remaining files supplied individually. Each
+workspace has its own Mathlib import closure, so a small workspace does not
+load modules needed only by another. The source archive is read in one sequential
+pass and its import parsing is shared across closures. The site stores about
+9 MB of metadata. Large binaries remain at immutable URLs in the
 pinned upstream public GitHub repository. No additional hosting account is used.
 SOURCE.json records every remote URL, size and SHA-256, plus local metadata and
 input identities. The final site checker verifies these records and enforces
@@ -56,11 +61,16 @@ An exit, abort, missing artifact, timeout, stopped worker or failed syntax probe
 cannot produce a successful result. The Stop control terminates checking and
 startup. The initial artifact requires substantial desktop memory and downloads;
 mobile support and Firefox/Safari compatibility are not established.
+The retained Special Functions `BrowserCoreLocal.lean` was also tried, but hit
+`Maximum call stack size exceeded` in this runtime. It is excluded from the
+prepared picker; its original source remains inspectable through the reader.
 
 The fork loses some parser diagnostics. The page therefore always runs Lean's
 parser in a separate elaboration, against the same import environment. A
 completion marker is required; errors in this check are retained, including
-errors unrelated to the marker. An absent marker or failed probe fails checking.
+errors unrelated to the marker. Module-format `public import` headers are
+carried into this separate check as ordinary imports, preserving the imported
+notation without changing the retained proof. An absent marker or failed probe fails checking.
 This is also why the Lean library is needed even for a small Std proof.
 Source controls that the probe cannot preserve are rejected before compilation.
 
@@ -91,8 +101,11 @@ dependency changes, Stop/restart, the setup reload, and a narrow viewport.
 ## Extending coverage
 
 Add only receipt-owned sources from existing reading editions to `WORKSPACES`
-in `lean_browser.py`. List local modules in dependency order and add necessary
-Mathlib seeds to `prepare_lean_wasm.py`. Missing artifacts in the upstream
+in `lean_workspaces.py`. List local modules in dependency order. Runtime
+preparation derives Mathlib seeds and a separate manifest for each workspace
+from those exact sources; the page build rejects missing imports or manifests.
+Run the original source and an intentionally false edit in the actual browser
+before making an addition available. Missing artifacts in the upstream
 closure require a compiler-matched artifact build; a native `.olean` from an
 unrelated Lean version is not sufficient. Keep the compiler/download identities
 and the browser cache version coordinated when replacing the runtime.
