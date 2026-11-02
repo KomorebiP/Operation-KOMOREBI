@@ -227,7 +227,10 @@ def verify(root, pages, documents):
     count=0
     for work,original in BOOKS.items():
         config=dict(original)
-        if config.get('custom_reader') == 'foundational':
+        if config.get('custom_reader') == 'methodology':
+            from methodology_reading import source_specs as methodology_specs
+            config['chapters']=methodology_specs(load)
+        elif config.get('custom_reader') == 'foundational':
             from foundational_reading import source_specs as foundational_specs
             config['chapters']=foundational_specs(load,config)
         elif config.get('custom_reader') == 'proof_path':
