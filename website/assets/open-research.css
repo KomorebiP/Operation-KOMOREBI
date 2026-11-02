@@ -318,16 +318,18 @@ body.open-research {
 .reading-page h1 { font-size: clamp(1.8rem, 3.5vw, 2.65rem); margin: .3rem 0 .5rem; }
 .reading-page .eyebrow { margin: 0 0 .3rem; }
 .reading-page .side-launch { margin: 0 0 .35rem; font-size: .85rem; }
-.reading-page .reading-navigation { margin: .4rem 0; padding: .4rem 0; gap: .1rem .8rem; }
-.reading-page .reading-position { display: flex; grid-column: 2; grid-row: 1; align-items: center; justify-content: center; gap: .6rem; }
-.reading-page .reading-position > span { font-size: .76rem; text-align: center; }
+.reading-page .reading-navigation { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); margin: .4rem 0; padding: .65rem 0; gap: .5rem .6rem; }
+.reading-page .reading-position { display: flex; grid-column: 1 / -1; grid-row: 1; min-width: 0; align-items: baseline; justify-content: space-between; gap: .75rem; }
+.reading-page .reading-position > span { font-size: .78rem; line-height: 1.45; text-align: left; }
+.reading-page .reading-position > span:first-child { min-width: 0; overflow-wrap: anywhere; }
+.reading-page .reading-position > span:last-child { flex-shrink: 0; white-space: nowrap; }
 .reading-page .reading-steps { display: contents; }
-.reading-page .reading-step { min-height: 64px; padding: .4rem .65rem; }
-.reading-page .reading-previous { grid-column: 1; grid-row: 1 / span 2; }
-.reading-page .reading-next { grid-column: 3; grid-row: 1 / span 2; }
+.reading-page .reading-navigation .reading-step { min-height: 64px; padding: .4rem .65rem; }
+.reading-page .reading-previous { grid-column: 1; grid-row: 2; }
+.reading-page .reading-next { grid-column: 3; grid-row: 2; }
 .reading-page .reading-step-title { font-size: .85rem; }
 .reading-page .reading-menu { grid-column: 2; grid-row: 2; }
-.reading-page .reading-menu > summary { min-height: 36px; padding: .25rem .5rem; font-size: .85rem; }
+.reading-page .reading-menu > summary { min-height: 44px; padding: .55rem .75rem; font-size: .85rem; line-height: 1.45; }
 .reading-page .reading-menu-panel { top: 100%; }
 .reading-page .reading-navigation[data-reading-placement=bottom] .reading-menu-panel { top: auto; }
 .chapter-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: .3rem 1.5rem; margin-bottom: .6rem; }
@@ -358,6 +360,9 @@ body.open-research {
   .chapter-sidebar .chapter-contents { max-height: 60vh; }
   .chapter-sidebar .reading-outline > summary { background: var(--surface); }
   .chapter-sidebar .reading-outline[open] { box-shadow: var(--shadow); }
+  /* The chapter bar already has these routes; keep them in the open outline
+     while leaving just one compact section control visible during reading. */
+  .chapter-sidebar:has(.reading-outline:not([open])) .reading-return { display: none; }
   .reading-current-section { display: inline-block; max-width: 65%; vertical-align: bottom; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-left: .8rem; font-size: .78rem; font-weight: 400; }
   .chapter-reading h2, .chapter-reading h3, .chapter-reading h4, .chapter-reading h5, .chapter-reading section, .chapter-reading figure, .chapter-reading .proofreading-note { scroll-margin-top: 4.5rem; }
   .chapter-reading [id], .chapter-reading .proofreading-note { scroll-margin-top: var(--reading-clearance, 6rem); }
@@ -369,12 +374,17 @@ body.open-research {
   .work-more-links.reading-resource-menu { width: 100%; }
   .reading-resource-menu .reading-resource-groups { grid-template-columns: minmax(0, 1fr); }
   .work-more[open] { flex-basis: 100%; }
-  .reading-page .reading-navigation { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); }
-  .reading-page .reading-step { min-height: 60px; }
+  .reading-page main { padding: 1rem 1rem 2.5rem; }
+  .reading-page .reading-navigation .reading-step { min-height: 44px; padding: .5rem .55rem; }
+  .reading-page .reading-step-label { font-size: .78rem; line-height: 1.45; white-space: nowrap; letter-spacing: 0; }
+  .reading-page .reading-next { align-items: center; text-align: center; }
+  .reading-page .reading-previous { align-items: center; text-align: center; }
   .reading-page .reading-step-title { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
   .reading-page .reading-menu-panel, .reading-page .reading-navigation[data-reading-placement=bottom] .reading-menu-panel { position: absolute; top: 100%; left: 0; right: 0; }
   .reading-page .reading-navigation[data-reading-placement=bottom] .reading-menu-panel { top: auto; bottom: 100%; }
   .chapter-toolbar { gap: 0 1rem; }
+  .chapter-toolbar .reading-start { display: none; }
+  .chapter-sidebar .reading-current-section { display: none; }
   .chapter-toolbar .reading-resources > div { position: static; width: 100%; box-shadow: none; }
   .chapter-toolbar .reading-resources[open] { flex-basis: 100%; }
 }
@@ -397,11 +407,11 @@ body.open-research {
 .paper-reading-path a > span::before { content: counter(reading-step) ' · '; }
 .paper-reading-path a:hover { border-color: var(--green); background: var(--sage-surface); }
 .chapter-notation-controls { display: inline-flex; align-items: center; }
-.chapter-sidebar-tools { position: absolute; top: 0; right: .65rem; z-index: 1; }
+.chapter-sidebar-tools { position: absolute; top: 0; right: .65rem; z-index: 1; display: flex; align-items: center; min-height: 44px; }
 .has-reading-tools .reading-outline > summary { padding-right: 7.4rem; }
 .open-research .chapter-notation-open { min-height: 44px; padding: .4rem .1rem; border: 0; background: transparent; color: var(--green); font-size: .85rem; text-decoration: underline; text-underline-offset: .18em; }
 .chapter-notation-open[hidden], .chapter-notation-fallback[hidden] { display: none !important; }
-.chapter-notation-fallback { font-size: .85rem; }
+.chapter-notation-fallback { display: inline-flex; align-items: center; min-height: 44px; font-size: .85rem; }
 .chapter-notation { width: min(46rem, calc(100vw - 2rem)); max-height: calc(100dvh - 2rem); padding: 1.1rem 1.3rem; border: 1px solid var(--green); border-radius: .3rem; background: var(--paper); color: var(--ink); box-shadow: var(--shadow); }
 .chapter-notation::backdrop { background: #183d2a55; }
 .chapter-notation-heading { display: flex; justify-content: space-between; align-items: start; gap: 1rem; }
