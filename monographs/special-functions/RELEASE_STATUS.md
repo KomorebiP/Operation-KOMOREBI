@@ -1,5 +1,13 @@
 # Technical publication package with checked coupled-functions block
 
+**2026-11-02 positive-real comparison companion:** SF-LEAN-B08 adds 22
+checked declarations proving real-axis embeddings, positivity and linear
+lower bounds, real derivative equations, attained maximum-modulus identities,
+unit-shift/log lower recurrences and the child-radius threshold. The registered
+scope is 201 names, with actual I/O hashed. F.2's explicit power/type and
+asymptotic bounds remain open. See `formalization/Block08/REPORT.md`.
+Earlier notes retain their dated scopes.
+
 **2026-11-02 characteristic-exponent companion:** SF-LEAN-B07 adds 23
 checked declarations proving the unique positive characteristic exponent,
 positive right and left vectors, a max-normalized right vector, exact complex
