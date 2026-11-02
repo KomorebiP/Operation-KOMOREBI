@@ -28,11 +28,11 @@ These introductory calculations lead into this work’s subject. The source and 
 
 - [24. Calculate coefficients of contracted feedback](../examples/24_CONTRACTED_FEEDBACK.md) · [Terms and source routes](../LEARNING_MAP.md#contracted-feedback)
 
-**Complete demonstration with runnable code:** [Komorebi sequence shapes](../demonstrations/SEQUENCE_SHAPES.md) · [Stirling, Bell and Fubini](../demonstrations/STIRLING_BELL_FUBINI.md).
+**Complete demonstration with runnable code:** [Komorebi sequence shapes](../demonstrations/SEQUENCE_SHAPES.md) · [Stirling, Bell, and Fubini](../demonstrations/STIRLING_BELL_FUBINI.md).
 
 ### Explore Special Functions
 
-[Books, five families and the coupled-function lab](../SPECIAL_FUNCTIONS.md)
+[Books, five families, and the coupled-function lab](../SPECIAL_FUNCTIONS.md)
 
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 

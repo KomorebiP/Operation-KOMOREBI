@@ -1,4 +1,4 @@
-# From examples to papers, proofs, Lean and code
+# From examples to papers, proofs, Lean, and code
 
 Choose a topic to move from a hand calculation to definitions and related source material. Each linked work has return links to these examples. These are subject routes, not new theorem-to-Lean correspondences.
 

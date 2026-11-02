@@ -1,6 +1,6 @@
 # 3. Change coordinates and transport an operator
 
-[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: coordinate change](../GLOSSARY.md#coordinate-change) · [Papers, proofs, Lean and code](#papers-proofs-lean-and-code)
+[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: coordinate change](../GLOSSARY.md#coordinate-change) · [Papers, proofs, Lean, and code](#papers-proofs-lean-and-code)
 
 Let $x$ and $y$ be two coordinate descriptions of the same object, related by
 $y=Cx$. This convention fixes the direction of the change.
@@ -87,7 +87,7 @@ $(3,2)^{\mathsf T}$ in the new coordinates.
 
 <!-- learning-navigation -->
 
-## Papers, proofs, Lean and code
+## Papers, proofs, Lean, and code
 
 **Terms in this example:** [Coordinates](../GLOSSARY.md#coordinates) · [Coordinate change](../GLOSSARY.md#coordinate-change) · [Inverse](../GLOSSARY.md#inverse) · [Operator conjugation](../GLOSSARY.md#conjugation) · [Linear isomorphism](../GLOSSARY.md#isomorphism)
 

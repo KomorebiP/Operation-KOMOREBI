@@ -1,6 +1,6 @@
 # 17. Calculate quantum measurement and dephasing
 
-[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: density matrix](../GLOSSARY.md#density-matrix) · [Papers, proofs, Lean and code](#papers-proofs-lean-and-code)
+[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: density matrix](../GLOSSARY.md#density-matrix) · [Papers, proofs, Lean, and code](#papers-proofs-lean-and-code)
 
 Work in $\mathbb C^2$ with its usual inner product. The normalized state
 
@@ -83,7 +83,7 @@ require their separately stated constructions.
 
 <!-- learning-navigation -->
 
-## Papers, proofs, Lean and code
+## Papers, proofs, Lean, and code
 
 **Terms in this example:** [Complex conjugate](../GLOSSARY.md#complex-conjugate) · [Adjoint matrix](../GLOSSARY.md#adjoint) · [Unitary matrix](../GLOSSARY.md#unitary) · [Quantum amplitude](../GLOSSARY.md#amplitude) · [Density matrix](../GLOSSARY.md#density-matrix) · [Matrix trace](../GLOSSARY.md#trace) · [Born probability](../GLOSSARY.md#born-probability) · [Purity of a density matrix](../GLOSSARY.md#purity) · [Dephasing](../GLOSSARY.md#dephasing) · [Kraus operators](../GLOSSARY.md#kraus-operator) · [Hermitian matrix](../GLOSSARY.md#hermitian) · [Positive semidefinite matrix](../GLOSSARY.md#positive-semidefinite) · [Coherence in a chosen basis](../GLOSSARY.md#coherence)
 

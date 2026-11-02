@@ -2,7 +2,7 @@
 
 [Browse the collection](BROWSE.md) · [Completion guide](COMPLETION_STATUS.md) · [Evidence catalogue](STATUS_CATALOG.md)
 
-Recorded 2026-10-27. This queue tracks documentation, research, formalization and experimental work. An item marked done has met its stated completion requirements. Progress on an open item leaves its remaining requirements in place. Use the item links below to read those requirements, then follow the work links to its paper, proofs, Lean, and code.
+Recorded 2026-10-27. This queue tracks documentation, research, formalization, and experimental work. An item marked done has met its stated completion requirements. Progress on an open item leaves its remaining requirements in place. Use the item links below to read those requirements, then follow the work links to its paper, proofs, Lean, and code.
 
 **Current maintenance focus:** Repository navigation, edition records, and reproducibility instructions are the current maintenance priority. Further proof reviews are deferred. Their existing findings and completion requirements remain open. All software remains beta / work in progress.
 
@@ -231,7 +231,7 @@ Thirteen additional collections were imported before the availability and assess
 
 Related works and source records: [Recovery v14](STATUS_CATALOG.md#certified-inference-recovery-v14-supporting-sources) · [Large Signal Model software](works/large-signal-model.md) · [Supporting sources](STATUS_CATALOG.md#large-signal-model-ancestry-supporting-sources) · [Machine Theory Compendium](works/machine-theory-compendium.md) · [Physics: curvature states](works/physics-curvature-states.md) · [Physics: energy and backreaction](works/physics-energy-backreaction.md) · [Physics: origin locking](works/physics-origin-locking.md) · [Realization Calculus: twin edition](works/realization-calculus-twin-edition.md).
 
-## Formal, mathematical and empirical development
+## Formal, mathematical, and empirical development
 
 <a id="f11"></a>
 

@@ -1,10 +1,10 @@
-# Completion, Lean coverage and confidence
+# Completion, Lean coverage, and confidence
 
 Recorded 2026-10-27 · **Komorebi P.**
 
 [Filter by discipline, completion and proof evidence](https://KomorebiP.github.io/Operation-KOMOREBI/works.html) · [Browse the collection](BROWSE.md) · [Start here](START_HERE.md) · [Repository home](../README.md)
 
-**Completion, Lean coverage and confidence describe different things.** A finished book may contain open research. A checked Lean proof may belong to an unfinished project. Choose a completion stage below, open a work's evidence record, then follow its paper, proofs, Lean, and code link.
+**Completion, Lean coverage, and confidence describe different things.** A finished book may contain open research. A checked Lean proof may belong to an unfinished project. Choose a completion stage below, open a work's evidence record, then follow its paper, proofs, Lean, and code link.
 
 This guide summarizes the existing release and status records at [source revision `4c09d41f2793`](https://github.com/KomorebiP/Operation-KOMOREBI/commit/4c09d41f2793cde15485eb52b789c081d1cfa27c). It covers **90 primary components** and **71 supporting collections**. The labels report those records, rather than a new proof review or Lean run. Each recorded pass keeps its original date and scope.
 
@@ -56,7 +56,7 @@ These categories describe the state of a work. They are not percentages or a ran
 | Experimental evidence | Confidence is limited to the stated experiment, fixture, prototype or engineering tests. Generalization and scientific endpoints remain separate. |
 | Unassessed | There is not enough assessed evidence for a confidence classification. |
 
-Confidence labels identify the **strongest recorded evidence for the stated subset**. They do not assign a probability that the whole project is correct. A record can contain checked results alongside open or refuted claims. A written review covers only its stated scope and does not imply external peer review. Lean proofs still need correct hypotheses and a faithful match to the written statements. Experiments support claims about the populations, inputs and conditions actually tested.
+Confidence labels identify the **strongest recorded evidence for the stated subset**. They do not assign a probability that the whole project is correct. A record can contain checked results alongside open or refuted claims. A written review covers only its stated scope and does not imply external peer review. Lean proofs still need correct hypotheses and a faithful match to the written statements. Experiments support claims about the populations, inputs, and conditions actually tested.
 
 All executable software remains **beta / work in progress**, including implementations attached to completed mathematical releases. See [LICENSE.md](../LICENSE.md) for the current reuse terms. Older undecided notices remain part of the historical record.
 
@@ -199,7 +199,7 @@ The **71 supporting collections** are listed separately in the [evidence catalog
 
 ## Maintaining the distinctions
 
-Maintainers can edit the assessments and cited evidence in `manifests/project-status.json`, then run `python tools/update_completion_status.py`. Use `--check` to validate IDs, evidence bindings and generated pages without writing them. The component index uses the same labels. A changed source, expanded statement or new accepted run requires a reviewed status update. Uploading files alone does not change their completion or confidence status.
+Maintainers can edit the assessments and cited evidence in `manifests/project-status.json`, then run `python tools/update_completion_status.py`. Use `--check` to validate IDs, evidence bindings, and generated pages without writing them. The component index uses the same labels. A changed source, expanded statement or new accepted run requires a reviewed status update. Uploading files alone does not change their completion or confidence status.
 
 To strengthen a formal status, supply the exact claim map, pinned source and environment, accepted compiler and axiom records, appropriate controls, and any required review of how the formal and written statements correspond. To finalize a reading edition, identify its editable source and matching PDF, complete the relevant build and page checks, and preserve its mathematical scope. Wider research and experimental goals remain separate queue items.
 

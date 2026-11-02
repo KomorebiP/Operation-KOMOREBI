@@ -20,8 +20,8 @@ for work,entry in DATA.items():
         figure_source_root=entry['base'] if work=='komorebi-space' else entry['base'].removesuffix('manuscript/'),
         table_reading_aids={(t['source'].removeprefix(entry['base']),t['id']):t['aid'] for t in entry.get('tables',[])},
         require_table_reading_aids=True,
-        reading_introduction='Read the complete retained manuscript in its authored order, with proofs, diagrams, references and appendices. Choose a chapter below or start at the preface.',
-        reading_note='The chapters retain the manuscript wording, hypotheses and recorded limits. The original PDF and companion files remain available above.')
+        reading_introduction='Read the complete retained manuscript in its authored order, with proofs, diagrams, references, and appendices. Choose a chapter below or start at the preface.',
+        reading_note='The chapters retain the manuscript wording, hypotheses, and recorded limits. The original PDF and companion files remain available above.')
     BOOKS[work]=config
     CHAPTERS.extend(chapters)
 

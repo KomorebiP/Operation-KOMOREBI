@@ -1,6 +1,6 @@
 # 14. Separate averages and differences
 
-[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: Haar pair](../GLOSSARY.md#haar-pair) · [Papers, proofs, Lean and code](#papers-proofs-lean-and-code)
+[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: Haar pair](../GLOSSARY.md#haar-pair) · [Papers, proofs, Lean, and code](#papers-proofs-lean-and-code)
 
 [Explore the 16-sample interactive Haar lab](https://KomorebiP.github.io/Operation-KOMOREBI/interactive.html#haar)
 for four levels of decomposition, selectable details, and exact reconstruction errors.
@@ -70,7 +70,7 @@ $4(16+4)+2(1+1)=84$, the original squared norm.
 
 <!-- learning-navigation -->
 
-## Papers, proofs, Lean and code
+## Papers, proofs, Lean, and code
 
 **Terms in this example:** [Haar pair](../GLOSSARY.md#haar-pair) · [Detail coefficient](../GLOSSARY.md#detail-coefficient) · [Normalization](../GLOSSARY.md#normalization) · [Orthogonal matrix](../GLOSSARY.md#orthogonal-matrix) · [Refinement](../GLOSSARY.md#refinement)
 

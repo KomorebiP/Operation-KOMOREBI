@@ -235,7 +235,7 @@ Realization Calculus develops the mathematics of decomposition, transfer, refine
 | What would you like to do? | Begin here |
 |---|---|
 | Understand the ideas | [Read the introduction](docs/START_HERE.md), then explore the [complete demonstrations](docs/DEMONSTRATIONS.md). |
-| Browse by field or proof status | [Filter mathematics, computer science, physics and other works](https://KomorebiP.github.io/Operation-KOMOREBI/works.html) by completion, Lean coverage and evidence. The [repository reading index](docs/BROWSE.md) provides file links. |
+| Browse by field or proof status | [Filter mathematics, computer science, physics, and other works](https://KomorebiP.github.io/Operation-KOMOREBI/works.html) by completion, Lean coverage, and evidence. The [repository reading index](docs/BROWSE.md) provides file links. |
 | Use the software | [Install a library and run a first example](docs/FIRST_RUN.md), or explore the [software guide](docs/LIBRARIES.md). |
 
 > **Author’s note:** This work remains in progress and has, in many respects, been rushed because of circumstances shaped by the AI industry. I am continuing to correct, verify, and organize it.

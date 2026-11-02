@@ -1,6 +1,6 @@
 # 16. Split reciprocal coefficients into cyclic packets
 
-[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: formal reciprocal](../GLOSSARY.md#formal-reciprocal) · [Papers, proofs, Lean and code](#papers-proofs-lean-and-code)
+[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: formal reciprocal](../GLOSSARY.md#formal-reciprocal) · [Papers, proofs, Lean, and code](#papers-proofs-lean-and-code)
 
 This example introduces the coefficient operations behind Paper IV. Work over
 the rational numbers and seek the formal reciprocal of $A(z)=1+z+z^2$.
@@ -78,7 +78,7 @@ $A(z)B_{<9}(z)=1-z^9$. The coefficient pattern repeats in blocks of three.
 
 <!-- learning-navigation -->
 
-## Papers, proofs, Lean and code
+## Papers, proofs, Lean, and code
 
 **Terms in this example:** [Coefficient](../GLOSSARY.md#coefficient) · [Power series](../GLOSSARY.md#power-series) · [Truncation](../GLOSSARY.md#truncation) · [Formal reciprocal](../GLOSSARY.md#formal-reciprocal) · [Coefficient convolution](../GLOSSARY.md#convolution) · [Root of unity](../GLOSSARY.md#root-of-unity)
 

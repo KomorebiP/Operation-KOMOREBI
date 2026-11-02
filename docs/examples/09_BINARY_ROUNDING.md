@@ -1,6 +1,6 @@
 # 9. Round a binary number by hand
 
-[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: precision](../GLOSSARY.md#precision) · [Papers, proofs, Lean and code](#papers-proofs-lean-and-code)
+[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: precision](../GLOSSARY.md#precision) · [Papers, proofs, Lean, and code](#papers-proofs-lean-and-code)
 
 Consider positive binary floating-point numbers with three significant bits,
 including the leading one. We stay away from exponent limits and subnormal
@@ -78,7 +78,7 @@ contracts beyond this small rounding model.
 
 <!-- learning-navigation -->
 
-## Papers, proofs, Lean and code
+## Papers, proofs, Lean, and code
 
 **Terms in this example:** [Precision](../GLOSSARY.md#precision) · [Dyadic rational](../GLOSSARY.md#dyadic-rational) · [Rounding](../GLOSSARY.md#rounding) · [ULP](../GLOSSARY.md#ulp) · [Numerical ternary](../GLOSSARY.md#ternary) · [Exact](../GLOSSARY.md#exact) · [Numerical](../GLOSSARY.md#numerical)
 

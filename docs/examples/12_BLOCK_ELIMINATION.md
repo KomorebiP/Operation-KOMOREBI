@@ -1,6 +1,6 @@
 # 12. Eliminate one block and recover the solution
 
-[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: Schur complement](../GLOSSARY.md#schur-complement) · [Papers, proofs, Lean and code](#papers-proofs-lean-and-code)
+[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: Schur complement](../GLOSSARY.md#schur-complement) · [Papers, proofs, Lean, and code](#papers-proofs-lean-and-code)
 
 Solve the real system
 
@@ -72,7 +72,7 @@ Substitution gives $2(7/5)+1/5=3$ and $3(7/5)+4/5=5$.
 
 <!-- learning-navigation -->
 
-## Papers, proofs, Lean and code
+## Papers, proofs, Lean, and code
 
 **Terms in this example:** [Block matrix](../GLOSSARY.md#block-matrix) · [Schur complement](../GLOSSARY.md#schur-complement) · [Elimination](../GLOSSARY.md#elimination) · [Determinant](../GLOSSARY.md#determinant) · [Inverse](../GLOSSARY.md#inverse)
 

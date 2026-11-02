@@ -46,7 +46,7 @@ print("Surface grid: 41 x 41")
 print("Center height:", Z[20, 20])
 '''),
     'curve-3d': dict(title='Explore a 3D curve', group='Graphs', packages=['numpy'],
-        description='A sampled helix with labelled axes, rotation, zoom and downloadable coordinates.',
+        description='A sampled helix with labelled axes, rotation, zoom, and downloadable coordinates.',
         expected='Helix samples: 201\n',
         code='''import numpy as np
 from komorebi_browser import show_plot

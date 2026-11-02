@@ -1,6 +1,6 @@
 # 24. Calculate coefficients of contracted feedback
 
-[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: coefficient recurrence](../GLOSSARY.md#coefficient-recurrence) · [Papers, proofs, Lean and code](#papers-proofs-lean-and-code)
+[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: coefficient recurrence](../GLOSSARY.md#coefficient-recurrence) · [Papers, proofs, Lean, and code](#papers-proofs-lean-and-code)
 
 The Special Functions monograph places contracted arguments inside a nonlinear
 differential equation. We will calculate the first coefficients for its scales
@@ -86,7 +86,7 @@ analytic existence, growth and separation results require their full arguments.
 
 <!-- learning-navigation -->
 
-## Papers, proofs, Lean and code
+## Papers, proofs, Lean, and code
 
 **Terms in this example:** [Derivative in the series example](../GLOSSARY.md#derivative) · [Differential equation](../GLOSSARY.md#differential-equation) · [Initial condition](../GLOSSARY.md#initial-condition) · [Contracted argument](../GLOSSARY.md#contracted-argument) · [Coefficient recurrence](../GLOSSARY.md#coefficient-recurrence)
 

@@ -1,6 +1,6 @@
 # 6. Reconstruct from redundant coordinates
 
-[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: analysis and synthesis](../GLOSSARY.md#analysis-synthesis) · [Papers, proofs, Lean and code](#papers-proofs-lean-and-code)
+[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: analysis and synthesis](../GLOSSARY.md#analysis-synthesis) · [Papers, proofs, Lean, and code](#papers-proofs-lean-and-code)
 
 Three measurements can describe a two-dimensional vector. They may reconstruct
 it exactly even though their individual reconstruction components are not
@@ -95,7 +95,7 @@ They sum to the original vector.
 
 <!-- learning-navigation -->
 
-## Papers, proofs, Lean and code
+## Papers, proofs, Lean, and code
 
 **Terms in this example:** [Analysis and synthesis](../GLOSSARY.md#analysis-synthesis) · [Left inverse](../GLOSSARY.md#left-inverse) · [Redundant coordinates](../GLOSSARY.md#redundancy) · [Reconstruction](../GLOSSARY.md#reconstruction)
 

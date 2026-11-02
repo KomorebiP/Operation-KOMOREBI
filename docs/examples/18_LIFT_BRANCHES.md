@@ -1,6 +1,6 @@
 # 18. Follow modular solutions through a lift tree
 
-[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: lift branch](../GLOSSARY.md#lift-branch) · [Papers, proofs, Lean and code](#papers-proofs-lean-and-code)
+[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: lift branch](../GLOSSARY.md#lift-branch) · [Papers, proofs, Lean, and code](#papers-proofs-lean-and-code)
 
 Solve $x^2\equiv1\pmod{2^n}$ for four successive positive levels. This is
 elementary background for Paper X’s residual and compatibility constructions.
@@ -64,7 +64,7 @@ level five.
 
 <!-- learning-navigation -->
 
-## Papers, proofs, Lean and code
+## Papers, proofs, Lean, and code
 
 **Terms in this example:** [Prime power](../GLOSSARY.md#prime-power) · [Modular reduction](../GLOSSARY.md#modular-reduction) · [Lift branch](../GLOSSARY.md#lift-branch) · [Compatible tower](../GLOSSARY.md#compatible-tower) · [p-adic integer](../GLOSSARY.md#padic-integer) · [Survival to a finite level](../GLOSSARY.md#surviving-branch)
 

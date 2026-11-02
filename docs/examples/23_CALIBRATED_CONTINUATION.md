@@ -1,6 +1,6 @@
 # 23. Find the part of a calibration that can be reused
 
-[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: reusable calibrated core](../GLOSSARY.md#reusable-core) · [Papers, proofs, Lean and code](#papers-proofs-lean-and-code)
+[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: reusable calibrated core](../GLOSSARY.md#reusable-core) · [Papers, proofs, Lean, and code](#papers-proofs-lean-and-code)
 
 This example expands the three-coordinate calibration in Grounded Abstraction.
 Work over the rational numbers with basis $e_1,e_2,e_3$. The unknown operation
@@ -80,7 +80,7 @@ models, the identifiable domain must be reconsidered under that class.
 
 <!-- learning-navigation -->
 
-## Papers, proofs, Lean and code
+## Papers, proofs, Lean, and code
 
 **Terms in this example:** [Exact operator calibration](../GLOSSARY.md#calibration) · [Calibration span](../GLOSSARY.md#calibration-span) · [Compatible model](../GLOSSARY.md#compatible-model) · [Linear extension](../GLOSSARY.md#linear-extension) · [Reusable calibrated core](../GLOSSARY.md#reusable-core) · [Identifiability relative to a model class](../GLOSSARY.md#identifiability)
 

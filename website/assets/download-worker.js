@@ -61,7 +61,7 @@ self.onmessage = async event => {
     add("CONTENTS.json", encoder.encode(JSON.stringify(manifest, null, 2) + "\n"));
     add("SHA256SUMS", encoder.encode(plan.files.map(file => file.sha256 + "  " + file.archive_path).join("\n") + "\n"));
     add("README.txt", encoder.encode("Komorebi download selection\n\n" + catalog.scope +
-      "\n\nSource revision: " + catalog.source_revision + "\n\nCONTENTS.json lists every file, its checksum and its online reading link.\n" +
+      "\n\nSource revision: " + catalog.source_revision + "\n\nCONTENTS.json lists every file, its checksum, and its online reading link.\n" +
       "License and authorship notices are included. Markdown and TeX sources may refer to files outside this selection.\n" +
       "For complete sources and build instructions: " + new URL("collection/DOWNLOADS.html#obtain-a-full-component", base).href + "\n"));
     zip.end();

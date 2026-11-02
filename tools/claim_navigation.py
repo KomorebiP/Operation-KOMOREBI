@@ -203,7 +203,7 @@ def render_claim_index(site):
               'classical':'Classical input', 'numericalcertificate':'Numerical certificate'}
     name = lambda kind: labels.get(kind, kind.replace('_', ' ').capitalize())
     filter_kind = lambda kind: 'classical' if kind == 'classicalinput' else kind
-    body = '<h1>Follow a written claim</h1><p>All 12 core papers are here. Find a statement, open its source passage and follow the available proof, Lean guide and evidence.</p>'
+    body = '<h1>Follow a written claim</h1><p>All 12 core papers are here. Find a statement, open its source passage, and follow the available proof, Lean guide, and evidence.</p>'
     body += '<p>Paper I retains its 108 correspondence records, including 69 labeled covered by that source. Papers II through XII index explicit statement blocks in their current manuscripts. These are reading locations, not new proof reviews or Lean coverage assessments.</p>'
     body += '<h2 id="core-papers">Choose a core paper</h2><nav class="paper-jumps" aria-label="Choose a core paper">'
     for work in site.claims['works']:
@@ -231,7 +231,7 @@ def render_claim_index(site):
                   ('Worked examples',hub+'#worked-examples-for-this-work')]
         if wid in BOOKS: routes.insert(0, ('Read chapters', BOOKS[wid]['index']))
         body += ''.join('<a href="'+url+'">'+label+'</a>' for label,url in routes)
-        body += '<a href="'+hub+'#written-proofs">Written proofs</a><a href="search.html?work='+wid+'">Search this paper</a></nav><p class="status">'+('The original record keeps its status and scope. A mapped module does not imply that every statement in this paper has been formalized.' if work['mode']=='correspondence' else 'Statement types are taken from the manuscript. Conjectures, definitions, classical inputs and certificates remain distinct. Lean mappings for individual claims are not assigned by this index.')+'</p>'
+        body += '<a href="'+hub+'#written-proofs">Written proofs</a><a href="search.html?work='+wid+'">Search this paper</a></nav><p class="status">'+('The original record keeps its status and scope. A mapped module does not imply that every statement in this paper has been formalized.' if work['mode']=='correspondence' else 'Statement types are taken from the manuscript. Conjectures, definitions, classical inputs, and certificates remain distinct. Lean mappings for individual claims are not assigned by this index.')+'</p>'
         for row in rows:
             identifier = row['id'].lower()
             statement = site.reader.resolve(row['statement_path'], 'claims.html', 'L'+str(row['statement_line']))

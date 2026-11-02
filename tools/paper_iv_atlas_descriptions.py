@@ -38,11 +38,11 @@ FIGURES = {
               [[6,7,8,9,''],[10,11,12,13,''],[14,15,16,17,'Selected lane'],[18,19,20,21,'']]),text(22)),
     'cyclic_product': figure(
         'A three-by-three product table highlights the three mixed pairs contributing to residue zero.',
-        'Columns are the selected sections of the second polynomial and rows are those of the first. Each interior cell is their exact product. The top-left, middle-right and bottom-middle cells are shaded: together they supply the residue-zero output. Reading only the top-left cell omits the two mixed contributions.',
+        'Columns are the selected sections of the second polynomial and rows are those of the first. Each interior cell is their exact product. The top-left, middle-right, and bottom-middle cells are shaded: together they supply the residue-zero output. Reading only the top-left cell omits the two mixed contributions.',
         table('Products of the selected sections',['First section / second section',0,1,2],
               [[3,4,5,6],[7,8,9,10],[11,12,13,14]]),text(15,16)),
     'signed_shift': figure(
-        'The signed shift matrix and its exponential are shown beside their cycle, initial-value and determinant identities.',
+        'The signed shift matrix and its exponential are shown beside their cycle, initial-value, and determinant identities.',
         'Read the two matrices by row and column in the ordered basis e₀, e₁, e₂. Columns describe inputs and rows describe outputs. The minus sign in the top-right corner closes the signed cycle. In the exponential matrix, each upper-triangular minus sign records a wrap across that edge. The derivative rules underneath use the abbreviated section names explained in the plate.',
         matrix(0,1,3),matrix(10,11,3),text(20,21,22,23,title='Identities below the matrices')),
     'signed_addition': figure(

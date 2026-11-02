@@ -51,7 +51,7 @@ function drawSignal(reference=result.reference) {
 }
 function drawFrontier() {
   const maximum=Math.max(1,...BASES.flatMap(b=>result.analyses[b].curve.map(p=>p.referenceError)))*1.06;
-  const plot=chart('sl-frontier-chart',280,'Squared reference error at every coefficient budget for Haar wavelets, cosine modes and sample coordinates.',
+  const plot=chart('sl-frontier-chart',280,'Squared reference error at every coefficient budget for Haar wavelets, cosine modes, and sample coordinates.',
     {xMax:config.n,yMin:0,yMax:maximum,xLabel:'Retained coefficients',yLabel:'Squared reference error'});
   for(const basis of BASES)trace(plot,result.analyses[basis].curve.map(p=>p.referenceError),'sl-'+basis);
   guide(plot,config.budget);

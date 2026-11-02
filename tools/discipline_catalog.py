@@ -36,7 +36,7 @@ def load_catalog(root, registry, assessments):
         raise ValueError('Unsupported discipline catalogue schema')
     subjects = data.get('disciplines', {})
     if set(subjects) != {'math', 'cs', 'physics', 'other'}:
-        raise ValueError('Disciplines must be mathematics, CS, physics and other')
+        raise ValueError('Disciplines must be mathematics, CS, physics, and other')
     entries = data.get('components', [])
     ids = [row['id'] for row in entries]
     expected = {row['id'] for row in registry['components']}

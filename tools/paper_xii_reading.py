@@ -22,7 +22,7 @@ BOOK=dict(work=WORK,label='Paper XII',base=BASE,main=MAIN,bib=BIB,inline_bibliog
     figure_receipts='assets/figures/paper-xii/figures.json',
     required_macros=['OO','FF','QQ','ZZ','TT','Spec','Supp','wideotimes'],
     require_table_reading_aids=True,
-    reading_introduction='Read all 13 main sections, the reading map and the complete verification '
+    reading_introduction='Read all 13 main sections, the reading map, and the complete verification '
         'and revision record. The algebraic results retain their supplied arithmetic hypotheses '
         'and conditional conclusions. The visual and Lean companions remain available in PDF.')
 BOOK['table_reading_aids']={

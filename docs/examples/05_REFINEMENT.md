@@ -1,6 +1,6 @@
 # 5. Refine a signal into smaller packets
 
-[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: polyphase](../GLOSSARY.md#polyphase) · [Papers, proofs, Lean and code](#papers-proofs-lean-and-code)
+[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: polyphase](../GLOSSARY.md#polyphase) · [Papers, proofs, Lean, and code](#papers-proofs-lean-and-code)
 
 Follow the [complete refinement demonstration](../demonstrations/REFINEMENT.md)
 for runnable code, expected output and a direct route to the written theorem.
@@ -94,7 +94,7 @@ $4+16+36+64=120$.
 
 <!-- learning-navigation -->
 
-## Papers, proofs, Lean and code
+## Papers, proofs, Lean, and code
 
 **Terms in this example:** [Refinement](../GLOSSARY.md#refinement) · [Coarsening](../GLOSSARY.md#coarsening) · [Polyphase decomposition](../GLOSSARY.md#polyphase) · [Residue class](../GLOSSARY.md#residue-class) · [Compatibility](../GLOSSARY.md#compatibility)
 

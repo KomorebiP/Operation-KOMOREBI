@@ -146,7 +146,7 @@ def session_controls():
 <button type="button" id="side-session-resume-button">Resume last reading session</button>
 <p id="side-session-last"></p></div>
 <details class="side-sessions" id="side-sessions"><summary>Save and resume reading</summary>
-<p>Sessions are kept in this browser. They include both documents, reading positions, layout and PDF page and zoom.</p>
+<p>Sessions are kept in this browser. They include both documents, reading positions, layout, and PDF page and zoom.</p>
 <label class="side-send" for="side-session-remember"><input type="checkbox" id="side-session-remember" checked>Remember my last reading session</label>
 <p class="status">Turn this off to clear the automatic session. Named sessions stay until you delete them.</p>
 <form id="side-session-save"><label for="side-session-name">Session name</label>

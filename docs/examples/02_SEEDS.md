@@ -1,6 +1,6 @@
 # 2. Generate a space from one seed
 
-[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: seed](../GLOSSARY.md#seed) · [Papers, proofs, Lean and code](#papers-proofs-lean-and-code)
+[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: seed](../GLOSSARY.md#seed) · [Papers, proofs, Lean, and code](#papers-proofs-lean-and-code)
 
 The same vector space can require different generating data under different
 allowed operations. Here the allowed operations are real linear combinations
@@ -68,7 +68,7 @@ Paper I's broader definitions may use modules, topology and cardinalities.
 
 <!-- learning-navigation -->
 
-## Papers, proofs, Lean and code
+## Papers, proofs, Lean, and code
 
 **Terms in this example:** [Seed](../GLOSSARY.md#seed) · [Seed rank](../GLOSSARY.md#seed-rank) · [Cyclic vector](../GLOSSARY.md#cyclic) · [Span](../GLOSSARY.md#span) · [Operator algebra](../GLOSSARY.md#operator-algebra)
 

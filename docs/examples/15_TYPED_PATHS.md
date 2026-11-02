@@ -1,6 +1,6 @@
 # 15. Compose operations with matching types
 
-[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: typed path](../GLOSSARY.md#typed-path) · [Papers, proofs, Lean and code](#papers-proofs-lean-and-code)
+[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: typed path](../GLOSSARY.md#typed-path) · [Papers, proofs, Lean, and code](#papers-proofs-lean-and-code)
 
 Let $V=\mathbb R^2$ and $W=\mathbb R$. Define an observation $A:V\to W$
 and an insertion $B:W\to V$ by
@@ -68,7 +68,7 @@ It is another projector, with a different selected range.
 
 <!-- learning-navigation -->
 
-## Papers, proofs, Lean and code
+## Papers, proofs, Lean, and code
 
 **Terms in this example:** [Typed system](../GLOSSARY.md#typed-system) · [Typed path](../GLOSSARY.md#typed-path) · [Operator relation](../GLOSSARY.md#relation) · [Domain and codomain](../GLOSSARY.md#domain-codomain) · [Intertwiner](../GLOSSARY.md#intertwiner) · [Commutator](../GLOSSARY.md#commutator)
 

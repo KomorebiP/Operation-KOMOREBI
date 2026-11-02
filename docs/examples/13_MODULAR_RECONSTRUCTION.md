@@ -1,6 +1,6 @@
 # 13. Reconstruct an integer from residues
 
-[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: Chinese remainder theorem](../GLOSSARY.md#chinese-remainder) · [Papers, proofs, Lean and code](#papers-proofs-lean-and-code)
+[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: Chinese remainder theorem](../GLOSSARY.md#chinese-remainder) · [Papers, proofs, Lean, and code](#papers-proofs-lean-and-code)
 
 Find an integer with remainder $2$ modulo $3$ and remainder $3$ modulo $5$:
 
@@ -59,7 +59,7 @@ and $4$ modulo $5$.
 
 <!-- learning-navigation -->
 
-## Papers, proofs, Lean and code
+## Papers, proofs, Lean, and code
 
 **Terms in this example:** [Integer congruence](../GLOSSARY.md#congruence) · [Coprime integers](../GLOSSARY.md#coprime) · [Modular inverse](../GLOSSARY.md#modular-inverse) · [Chinese remainder theorem](../GLOSSARY.md#chinese-remainder) · [Residue class](../GLOSSARY.md#residue-class)
 

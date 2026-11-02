@@ -347,10 +347,10 @@ BOOK = {'work': 'paper-vi',
  'figure_directory': 'core_figures',
  'atlas_index': 'read/paper-vi/atlas/index.html',
  'atlas_link_text': 'Explore the Paper VI visual atlas',
- 'atlas_note': 'All 42 plates have HTML reading pages with original drawings, selectable labels and manuscript links.',
+ 'atlas_note': 'All 42 plates have HTML reading pages with original drawings, selectable labels, and manuscript links.',
  'html_inputs': {'atlas-pages.tex': dict(url='read/paper-vi/atlas/index.html',title='Explore all 42 Paper VI atlas plates',note='')},
  'figure_previews': 'website/paper-vi-figure-previews.json',
- 'reading_introduction': 'Read the 46 manuscript sections across Parts I, II and III, with separate orientation '
+ 'reading_introduction': 'Read the 46 manuscript sections across Parts I, II, and III, with separate orientation '
                 'pages, the bibliography and the worked visual atlas.',
  'table_reading_aids': {
      'L1632': dict(headers=['Realization','Seed','Transfer','Packet/reconstruction law'],row_header_column=0),

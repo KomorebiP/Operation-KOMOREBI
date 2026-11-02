@@ -2,7 +2,7 @@
 
 The [searchable claim index](https://KomorebiP.github.io/Operation-KOMOREBI/claims.html) covers all 12 core papers with 1159 reading records. Search by title, statement text, source label or recorded Lean name. Filter by paper and statement type, then share the page address or a record’s permanent link.
 
-Paper I retains its 108 correspondence records. The source labels 69 as covered. Papers II through XII index explicit statement blocks in their current TeX manuscripts and literal included sections. The index keeps definitions, conjectures, classical inputs and numerical certificates distinct from theorems. Historical environments and statements introduced only through macro expansion are outside this extraction. Counts describe reading entries, not the number of proved or formalized results.
+Paper I retains its 108 correspondence records. The source labels 69 as covered. Papers II through XII index explicit statement blocks in their current TeX manuscripts and literal included sections. The index keeps definitions, conjectures, classical inputs, and numerical certificates distinct from theorems. Historical environments and statements introduced only through macro expansion are outside this extraction. Counts describe reading entries, not the number of proved or formalized results.
 
 A proof link identifies the recorded passage or an immediately following proof block. It does not assess correctness. Paper I’s existing Lean mappings are retained. Lean correspondence for individual claims for Papers II through XII has not been transcribed into this index. Their formal guides, Lean coverage, code and evidence remain linked at paper level. This update performs no new proof review or Lean run.
 

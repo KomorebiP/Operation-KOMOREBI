@@ -1,6 +1,6 @@
 # 11. Build projectors from an operator
 
-[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: spectral projector](../GLOSSARY.md#spectral-projector) · [Papers, proofs, Lean and code](#papers-proofs-lean-and-code)
+[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: spectral projector](../GLOSSARY.md#spectral-projector) · [Papers, proofs, Lean, and code](#papers-proofs-lean-and-code)
 
 Work over the real numbers with
 
@@ -72,7 +72,7 @@ T^2=\begin{pmatrix}4&5\\0&9\end{pmatrix}.
 
 <!-- learning-navigation -->
 
-## Papers, proofs, Lean and code
+## Papers, proofs, Lean, and code
 
 **Terms in this example:** [Eigenvector](../GLOSSARY.md#eigenvector) · [Eigenvalue](../GLOSSARY.md#eigenvalue) · [Eigenspace](../GLOSSARY.md#eigenspace) · [Diagonalizable operator](../GLOSSARY.md#diagonalizable) · [Polynomial in an operator](../GLOSSARY.md#polynomial-in-operator) · [Minimal polynomial](../GLOSSARY.md#minimal-polynomial) · [Spectral projector](../GLOSSARY.md#spectral-projector)
 

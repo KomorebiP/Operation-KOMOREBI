@@ -157,7 +157,7 @@ COEFFICIENT_PLOT
         'CYCLES': slider('sl-cycles', 'Frequency parameter', 3, 1, 16),
         'ADDRESS': slider('sl-address', 'Inspect sample address', 32, 0, 63),
         'COEFFICIENT': slider('sl-coefficient', 'Inspect coefficient index', 1, 0, 63),
-        'SIGNAL_PLOT': diagram('sl-signal-chart', 'Reference, noisy observations and selected signal reconstruction'),
+        'SIGNAL_PLOT': diagram('sl-signal-chart', 'Reference, noisy observations, and selected signal reconstruction'),
         'FRONTIER_PLOT': diagram('sl-frontier-chart', 'Reference reconstruction errors for all coefficient budgets and all three representations'),
         'COEFFICIENT_PLOT': diagram('sl-coefficient-chart', 'Weighted coefficient energy and retained selection'),
         'BASIS_PLOT': diagram('sl-basis-chart', 'Selected coefficient contribution at every sample address'),
@@ -180,6 +180,6 @@ COEFFICIENT_PLOT
     body = '<link rel="stylesheet" href="'+asset('interactive-diagrams.css')+'"><link rel="stylesheet" href="'+asset('signal-lab.css')+'">'+body
     body += '<script type="module" src="assets/signal-lab.js?v='+hashlib.sha256(script.encode()).hexdigest()[:12]+'"></script>'
     site.page('signal-lab.html', 'Signal laboratory', body)
-    site.search.append(dict(title='Signal laboratory: compare Haar, cosine and sample representations',group='Collection',kind='Examples',
+    site.search.append(dict(title='Signal laboratory: compare Haar, cosine, and sample representations',group='Collection',kind='Examples',
                             work_ids=['paper-ii','paper-v','information-realization'],url='signal-lab.html',
                             text='Interactive signal laboratory region zoom local RMS mean bias maximum error quality target minimum budget retained energy RMS threshold starter experiments draw edit undo reference notebook compare saved runs signed residual errors differences inspection wavelets DCT cosine compression denoising coefficient budget weighted energy error curves seeded noise CSV JSON import export'))

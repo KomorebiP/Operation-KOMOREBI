@@ -1,6 +1,6 @@
 # 4. Assemble an operator from transfer blocks
 
-[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: transfer block](../GLOSSARY.md#transfer-block) · [Papers, proofs, Lean and code](#papers-proofs-lean-and-code)
+[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: transfer block](../GLOSSARY.md#transfer-block) · [Papers, proofs, Lean, and code](#papers-proofs-lean-and-code)
 
 Use the coordinate projectors $P_1,P_2$ from
 [Example 1](01_PACKETS.md), and let
@@ -82,7 +82,7 @@ of a particular hardware implementation.
 
 <!-- learning-navigation -->
 
-## Papers, proofs, Lean and code
+## Papers, proofs, Lean, and code
 
 **Terms in this example:** [Transfer block](../GLOSSARY.md#transfer-block) · [Composition](../GLOSSARY.md#composition) · [Block matrix](../GLOSSARY.md#block-matrix)
 
