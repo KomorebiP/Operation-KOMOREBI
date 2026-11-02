@@ -1,5 +1,61 @@
 "use strict";
 
+// Only formulas that need horizontal scrolling gain an extra keyboard stop.
+// Recheck after typesetting, text settings, responsive layout and live results.
+{
+  const managed = new Map();
+  let scheduled = false;
+  const attributes = {tabindex: "0", role: "group",
+    "aria-label": "Inline equation. Scroll horizontally if needed.",
+    title: "Scroll horizontally to read the full equation."};
+  function restore(formula, added) {
+    for (const name of added) {
+      if (formula.getAttribute(name) === attributes[name]) formula.removeAttribute(name);
+    }
+    formula.classList.remove("math-overflow");
+  }
+  const observer = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(schedule);
+  function update() {
+    scheduled = false;
+    for (const [formula, added] of managed) {
+      if (!formula.isConnected) {
+        restore(formula, added);
+        formula.classList.remove("math-fits");
+        if (observer) observer.unobserve(formula);
+        managed.delete(formula);
+      }
+    }
+    for (const formula of document.querySelectorAll("span.arithmatex")) {
+      if (!managed.has(formula)) {
+        managed.set(formula, new Set());
+        if (observer) observer.observe(formula);
+      }
+      const added = managed.get(formula);
+      const math = formula.querySelector("mjx-container");
+      // SVG glyph overhang is intentional; only constrain the equation's box.
+      const contentWidth = math ? math.getBoundingClientRect().width : formula.scrollWidth;
+      if (formula.clientWidth > 0 && contentWidth > formula.clientWidth + 1) {
+        formula.classList.remove("math-fits");
+        formula.classList.add("math-overflow");
+        for (const [name, value] of Object.entries(attributes)) {
+          if (!formula.hasAttribute(name)) { formula.setAttribute(name, value); added.add(name); }
+        }
+      } else { restore(formula, added); added.clear(); formula.classList.add("math-fits"); }
+    }
+  }
+  function schedule() {
+    if (!scheduled) { scheduled = true; requestAnimationFrame(update); }
+  }
+  schedule();
+  window.addEventListener("resize", schedule);
+  window.addEventListener("load", schedule, {once: true});
+  if (typeof MutationObserver !== "undefined") new MutationObserver(records => {
+    if (records.some(record => record.target.closest?.("span.arithmatex") ||
+        [...record.addedNodes].some(node => node.nodeType === 1 &&
+          (node.matches("span.arithmatex") || node.querySelector("span.arithmatex"))))) schedule();
+  }).observe(document.body, {childList: true, subtree: true});
+}
+
 const sideReaderLink = document.querySelector("[data-side-reader-link]");
 if (sideReaderLink) {
   function updateSideReaderLink() {

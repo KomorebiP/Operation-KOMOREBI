@@ -19,6 +19,16 @@ adding separate versions to individual papers. Run
 `python -B -m unittest discover -s tools -p 'test_reader_usability.py' -v` along
 with the reading-navigation and source-preservation checks when changing them.
 
+Inline formulas retain their source and full rendering scale while scrolling
+within the available text width on narrow screens and with enlarged text.
+The shared reader adds a named keyboard scroll stop only when a formula
+overflows, and rechecks after typesetting, resizing, text preferences and live
+search results. Existing accessible names and author-supplied focus settings
+are retained. CSS provides touch scrolling without JavaScript; print layout
+removes the scrolling treatment. Run `node tools/test_math_overflow.cjs` for
+the adaptive keyboard behavior and check a real rendered chapter at narrow
+phone widths with extra-large text.
+
 [Citation and figure navigation](../tools/reading_links.py) adds native links
 to the existing figure assets and return links from bibliography entries to
 their citing HTML passages. Return routes are derived from the rendered
