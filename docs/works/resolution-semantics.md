@@ -8,15 +8,15 @@
 
 **Completion:** Active development · **Lean:** Selected results recorded · **Confidence:** Recorded formal evidence
 
-Active development with checked binary reconstruction, exact counts with arbitrary vertex pins, and a sound and complete solver for supplied checked rooted traversals. Automatic traversal construction, rank formulas and wider transport and forcing claims remain open.
+Active development with automatic checked finite-graph traversal and reconstruction, exact counts with arbitrary vertex pins, and the inherited two-world obstruction. Rank formulas, sparse forest/complexity results and wider transport and forcing claims remain open.
 
 ## Before you start
 
 **Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
 
-**Recorded results and limits:** The separate Lean 4.24.0 companion checks 182 declarations. It retains binary graph reconstruction and exact unpinned and partial-pin counts, and adds a solver that reconstructs from supplied checked component-root walks without enumerating vertex assignments. Soundness, completeness and agreement with the reference on existence are proved; equal outputs require component-covering pins. Twelve inherited sources are unchanged, and both two-world obstruction theorems remain axiom-free. Automatic traversal/forest construction, rank formulas and wider transport/forcing results remain outside this formal scope.
+**Recorded results and limits:** The separate Lean 4.24.0 companion checks 216 theorem declarations. It retains binary graph reconstruction, exact unpinned/partial-pin counts and the supplied-traversal solver. A new automatic constructor computes actual component indices and root walks using a checked indexed path table; every reachable pair is covered after n rounds on Fin n. The automatic solver is sound and complete for arbitrary proposed binary edge fields and pins, without caller-supplied traversals or assignment enumeration. Fifteen inherited sources are unchanged, and both two-world obstruction theorems remain axiom-free. Rank formulas, sparse forest/complexity results and wider transport/forcing claims remain outside this formal scope.
 
-**Remaining work:** Construct and verify component-root traversals or a spanning forest automatically from a finite input graph, and formalize the rank formulas n-c and m-n+c. Preserve the reference solver, original source and earlier companions.
+**Remaining work:** Formalize the rank formulas n-c and m-n+c. Develop a verified sparse spanning-forest implementation and state any proved complexity bounds. Preserve the reference solver, original source and earlier companions.
 
 The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
 
@@ -46,7 +46,7 @@ Find the statement number or section in the [reading files](#read), then read it
 
 Start with the [maintained edition guide](../components/RESOLUTION_SEMANTICS_LEAN.md) and the build instructions below. Check the correspondence records to see which written claims the Lean declarations cover. Source links lead to `.lean` files. PDF guides explain the formalization.
 
-- [Checked formal companion: source and reproduction](../../formal/resolution-semantics-v0.6.0/README.md)
+- [Checked formal companion: source and reproduction](../../formal/resolution-semantics-v0.7.0/README.md)
 - [Preserved original edition: Lean sources (directory)](../../research/resolution-semantics/formal/)
 
 [Find this work among other Lean projects](../browse/LEAN.md#resolution-semantics)
@@ -66,7 +66,7 @@ These links include code, examples, checks, or build tools. Read the [maintained
 ## Evidence
 
 - [Completion, Lean coverage, confidence, and cited evidence](../STATUS_CATALOG.md#resolution-semantics)
-- [Separate Lean companion replay and scope](../../verification/resolution-semantics/traversal-windows-2026-11-01-run1/receipt.json)
+- [Separate Lean companion replay and scope](../../verification/resolution-semantics/automatic-windows-2026-11-01-run1/receipt.json)
 - [Source-file receipt (identity and availability)](../../manifests/source-imports/resolution-semantics.json)
 - [All files in this source edition](../../research/resolution-semantics/)
 

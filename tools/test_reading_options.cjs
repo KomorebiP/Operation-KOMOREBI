@@ -20,7 +20,8 @@ function openChapter(storage, present = true) {
     querySelectorAll(selector) { return selector === '.readable-chapter .passage-tools' ? groups : []; },
     addEventListener() {}
   };
-  vm.runInNewContext(source, {document, localStorage: storage, window: {addEventListener() {}}});
+  vm.runInNewContext(source, {document, localStorage: storage, window: {addEventListener() {}},
+    requestAnimationFrame: callback => callback()});
   return {groups, options, checkbox, change(show) { checkbox.checked = show; events.change(); }};
 }
 

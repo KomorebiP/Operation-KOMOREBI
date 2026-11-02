@@ -2426,8 +2426,8 @@
       "stage": "development",
       "lean": "partial",
       "confidence": "formal",
-      "scope": "The separate Lean 4.24.0 companion checks 182 declarations. It retains binary graph reconstruction and exact unpinned and partial-pin counts, and adds a solver that reconstructs from supplied checked component-root walks without enumerating vertex assignments. Soundness, completeness and agreement with the reference on existence are proved; equal outputs require component-covering pins. Twelve inherited sources are unchanged, and both two-world obstruction theorems remain axiom-free. Automatic traversal/forest construction, rank formulas and wider transport/forcing results remain outside this formal scope.",
-      "next_step": "Construct and verify component-root traversals or a spanning forest automatically from a finite input graph, and formalize the rank formulas n-c and m-n+c. Preserve the reference solver, original source and earlier companions.",
+      "scope": "The separate Lean 4.24.0 companion checks 216 theorem declarations. It retains binary graph reconstruction, exact unpinned/partial-pin counts and the supplied-traversal solver. A new automatic constructor computes actual component indices and root walks using a checked indexed path table; every reachable pair is covered after n rounds on Fin n. The automatic solver is sound and complete for arbitrary proposed binary edge fields and pins, without caller-supplied traversals or assignment enumeration. Fifteen inherited sources are unchanged, and both two-world obstruction theorems remain axiom-free. Rank formulas, sparse forest/complexity results and wider transport/forcing claims remain outside this formal scope.",
+      "next_step": "Formalize the rank formulas n-c and m-n+c. Develop a verified sparse spanning-forest implementation and state any proved complexity bounds. Preserve the reference solver, original source and earlier companions.",
       "evidence": [
         {
           "path": "research/resolution-semantics/README.md",
@@ -2448,12 +2448,12 @@
           "kind": "release/status record"
         }
       ],
-      "reader_summary": "Active development with checked binary reconstruction, exact counts with arbitrary vertex pins, and a sound and complete solver for supplied checked rooted traversals. Automatic traversal construction, rank formulas and wider transport and forcing claims remain open.",
+      "reader_summary": "Active development with automatic checked finite-graph traversal and reconstruction, exact counts with arbitrary vertex pins, and the inherited two-world obstruction. Rank formulas, sparse forest/complexity results and wider transport and forcing claims remain open.",
       "reader_guide": "docs/components/RESOLUTION_SEMANTICS_LEAN.md",
       "formal_verification": {
-        "path": "verification/resolution-semantics/traversal-windows-2026-11-01-run1/receipt.json",
-        "sha256": "99adf27f55a125f51ad6b32b251a3edc4c2fb19000bd36ada6fb90e1d74ced12",
-        "source_root": "formal/resolution-semantics-v0.6.0",
+        "path": "verification/resolution-semantics/automatic-windows-2026-11-01-run1/receipt.json",
+        "sha256": "8f12aa504a9e56f63aecc75f7108a8336858ce1c887d2eaf6b1bc24ed9334cb9",
+        "source_root": "formal/resolution-semantics-v0.7.0",
         "main_theorems": [
           "KRS.TwoWorld.no_swap_equivariant_additive_retraction",
           "KRS.TwoWorld.no_swap_equivariant_boolean_retraction"
@@ -2705,6 +2705,110 @@
           "KRS.Graph.traversal_solve_unique_when_covered": [
             "propext",
             "Quot.sound"
+          ],
+          "KRS.Graph.transport_cache_entry": [],
+          "KRS.Graph.cache_get_of_fn": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "KRS.Graph.find_first_some_is_some": [
+            "propext",
+            "Quot.sound"
+          ],
+          "KRS.Graph.mem_finite_vertices": [
+            "propext"
+          ],
+          "KRS.Graph.path_at_tabulate": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "KRS.Graph.extend_paths_keeps": [
+            "propext"
+          ],
+          "KRS.Graph.extend_paths_cons": [
+            "propext",
+            "Quot.sound"
+          ],
+          "KRS.Graph.bounded_paths_complete": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "KRS.Graph.nodup_length_le_of_mem": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "KRS.Graph.Walk.vertices_length": [
+            "propext"
+          ],
+          "KRS.Graph.Walk.zero_integral": [],
+          "KRS.Graph.bounded_paths_reachable": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "KRS.Graph.get_list_position": [
+            "propext"
+          ],
+          "KRS.Graph.list_position_get": [
+            "propext"
+          ],
+          "KRS.Graph.selected_root_some": [
+            "propext",
+            "Quot.sound"
+          ],
+          "KRS.Graph.selected_root_path": [
+            "propext",
+            "Quot.sound"
+          ],
+          "KRS.Graph.selected_root_constant": [
+            "propext",
+            "Quot.sound"
+          ],
+          "KRS.Graph.selected_root_idempotent": [
+            "propext",
+            "Quot.sound"
+          ],
+          "KRS.Graph.automatic_roots_nodup": [
+            "propext"
+          ],
+          "KRS.Graph.selected_root_mem": [
+            "propext"
+          ],
+          "KRS.Graph.automatic_root_at_position": [
+            "propext"
+          ],
+          "KRS.Graph.automatic_root_fixed": [
+            "propext",
+            "Quot.sound"
+          ],
+          "KRS.Graph.automatic_solve_sound": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "KRS.Graph.automatic_solve_complete": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "KRS.Graph.automatic_solve_none_iff_no_solution": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "KRS.Graph.automatic_solve_agrees_on_existence": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "KRS.Graph.automatic_solve_unique_when_covered": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
           ]
         },
         "required_controls": [
@@ -2722,13 +2826,19 @@
           "reject-omit-nontree-edge-check",
           "reject-ignore-nonroot-pin",
           "reject-traversal-conflicting-pins",
-          "reject-uncovered-exact-reference-equality"
+          "reject-uncovered-exact-reference-equality",
+          "reject-zero-round-reachability",
+          "reject-insufficient-search-rounds",
+          "reject-merging-disconnected-components",
+          "reject-automatic-conflicting-pins",
+          "reject-phantom-empty-component"
         ],
         "required_positive_steps": [
           "run-graph-examples",
           "run-count-examples",
           "run-pin-examples",
-          "run-traversal-examples"
+          "run-traversal-examples",
+          "run-automatic-examples"
         ]
       }
     },
@@ -4572,7 +4682,7 @@
       ],
       "reason": "Source text or static inventories are not compiler acceptance.",
       "done_when": "Compile the exact intended source with pinned dependencies, record diagnostics and axioms, and map accepted statements to the manuscript. Retain missing mathematical inputs.",
-      "progress": "Resolution Semantics has a separate 0.6.0 companion with 182 accepted declarations. It retains binary graph reconstruction, the two-world obstruction and exact unpinned/partial-pin counts. A new solver reconstructs from supplied checked component-root walks, without assignment enumeration; soundness, completeness and reference agreement on existence are proved. Equal returned labelings require component-covering pins. The clean source-bound Windows replay passes 41 executable cases and 15 rejection controls. Standard axiom dependencies are recorded, and both obstruction theorems remain axiom-free. The original and earlier companions are preserved. Automatic traversal/forest construction, rank formulas, the wider paper, Hodge and Stratified Universality obligations remain open."
+      "progress": "Resolution Semantics has a separate 0.7.0 companion with 216 accepted theorem declarations. It retains the earlier obstruction, graph and counting contracts, and automatically constructs actual component indices and rooted walks with a complete tabulated finite search. The automatic solver is sound and complete for arbitrary proposed binary fields and pins, without supplied traversals or assignment enumeration. The clean source-bound Windows replay passes 62 executable cases and 20 rejection controls. Standard axiom dependencies are recorded, and both obstruction theorems remain axiom-free. The original and earlier companions are preserved. Rank formulas, a sparse forest implementation, complexity bounds, the wider paper, Hodge and Stratified Universality obligations remain open."
     },
     {
       "id": "F07",
@@ -4867,10 +4977,12 @@
     "verification/resolution-semantics/counting-windows-2026-11-01-run1/receipt.json",
     "verification/resolution-semantics/pins-windows-2026-11-01-run1/receipt.json",
     "verification/resolution-semantics/traversal-windows-2026-11-01-run1/receipt.json",
+    "verification/resolution-semantics/automatic-windows-2026-11-01-run1/receipt.json",
     "manifests/reader-proofreading-2026-11-01.json",
     "manifests/reader-proofreading-papers-iii-iv-2026-11-01.json",
     "manifests/reader-proofreading-papers-v-vi-2026-11-01.json",
-    "manifests/reader-proofreading-paper-vii-2026-11-01.json"
+    "manifests/reader-proofreading-paper-vii-2026-11-01.json",
+    "manifests/reader-proofreading-paper-viii-2026-11-01.json"
   ],
   "new_python_execution": true,
   "reader_curation_reviews": [

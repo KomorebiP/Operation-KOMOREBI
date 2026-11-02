@@ -19,6 +19,16 @@ adding separate versions to individual papers. Run
 `python -B -m unittest discover -s tools -p 'test_reader_usability.py' -v` along
 with the reading-navigation and source-preservation checks when changing them.
 
+Inline formulas retain their source and full rendering scale while scrolling
+within the available text width on narrow screens and with enlarged text.
+The shared reader adds a named keyboard scroll stop only when a formula
+overflows, and rechecks after typesetting, resizing, text preferences and live
+search results. Existing accessible names and author-supplied focus settings
+are retained. CSS provides touch scrolling without JavaScript; print layout
+removes the scrolling treatment. Run `node tools/test_math_overflow.cjs` for
+the adaptive keyboard behavior and check a real rendered chapter at narrow
+phone widths with extra-large text.
+
 [Citation and figure navigation](../tools/reading_links.py) adds native links
 to the existing figure assets and return links from bibliography entries to
 their citing HTML passages. Return routes are derived from the rendered
@@ -725,6 +735,14 @@ derivations were reviewed. No objective routine correction was identified in
 that scope. The record binds twelve source files and reports the syntax checks.
 The retained text and mathematics are unchanged; the same review exclusions apply.
 
+The [Paper VIII proofreading record](../manifests/reader-proofreading-paper-viii-2026-11-01.json)
+covers its 23 main reading sections: the orientation and abstract, three exact
+models, fifteen manuscript sections and Appendices A–F, together with notation,
+cross-references, captions, preamble and bibliography syntax. No objective
+routine correction was identified in that scope. The record binds ten source
+files and reports the syntax checks. The retained text and mathematics are
+unchanged; the same review exclusions apply.
+
 ## Signal Laboratory
 
 `signal-lab.html` is a larger known-reference signal experiment with 16–256
@@ -758,6 +776,16 @@ absolute separation. A numeric comparison CSV and sample table retain both
 reconstructions and all signed values. Mismatched data disables these views and
 exports. The workspace tests cover starters and an exact zero-versus-full
 sample-coordinate fixture for the comparison values and CSV signs.
+
+Comparison links use a bounded, versioned UTF-8 payload in the `#compare=`
+fragment. The payload contains exactly two validated named settings records,
+one of the three plot views, and an in-range comparison address. Results are
+recomputed and the data-compatibility guard is checked on restoration. The
+preview is separate from notebook storage and works even when the notebook is
+full. Saving both runs is an explicit append action and requires two free slots.
+Closing a preview restores notebook selection; ordinary experiment links omit
+the comparison fragment. Malformed comparison links preserve the current valid
+experiment and notebook. Clipboard failure exposes a selectable link field.
 
 The lab compares averaging-normalized Haar wavelets with their support
 weights, an orthonormal DCT-II, and sample coordinates. Seeded bounded integer

@@ -41,6 +41,11 @@ rejection controls. These include 182 inherited declarations and 34 new
 supporting, construction, solver and example declarations. They are not 216
 manuscript theorems.
 
+The [source-bound Windows replay](../../verification/resolution-semantics/automatic-windows-2026-11-01-run1/receipt.json)
+passed at source commit `67705ca23b7f6c95fdfdce72efa4ef8a482e0ca0` with no local
+companion changes. It binds every compiled input hash and retains exact output
+and rejection diagnostics.
+
 ## Exact contracts
 
 | Claim | Lean declaration |

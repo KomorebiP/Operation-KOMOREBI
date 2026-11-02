@@ -70,7 +70,7 @@ not a bound on its quantified claim.
 | Reference comparison | Passed: agreement on existence is general; equality uses the inherited component-covering pin hypothesis. |
 | Array implementation | Passed: the array cache replaces a slow linked prototype while preserving the lookup theorem. Final sources use the array implementation. No timing claim is promoted to a theorem. |
 | Concrete outputs | Checked by replay: 21 new executable cases include 8/32-vertex paths and four component counts. The generic correctness theorems establish the universal conclusion. |
-| Assumption controls | Required by replay: reject zero/insufficient rounds, merged disconnected components, contradictory pins and a phantom empty component. |
+| Assumption controls | Passed by source-bound fresh replay: reject zero/insufficient rounds, merged disconnected components, contradictory pins and a phantom empty component. |
 | Sparse spanning forest, rank and runtime formulas | Out of scope. |
 | General Boolean algebras, ZFC models and forcing realizations | Out of scope. |
 
