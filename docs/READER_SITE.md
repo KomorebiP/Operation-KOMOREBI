@@ -29,6 +29,14 @@ removes the scrolling treatment. Run `node tools/test_math_overflow.cjs` for
 the adaptive keyboard behavior and check a real rendered chapter at narrow
 phone widths with extra-large text.
 
+Direct passage links and in-page navigation correct their scroll position once
+MathJax and web fonts have finished loading. This correction retains the target
+and existing browser history. Pointer, touch, wheel and keyboard input cancel
+the pending correction, as do a newer destination, changed focus or a removed
+passage. Readers who have already interacted before page load keep their place.
+Run `node tools/test_reader_navigation.cjs` for delayed layout, cancellation,
+safe hashes, disclosure opening and browser-history behavior.
+
 [Citation and figure navigation](../tools/reading_links.py) adds native links
 to the existing figure assets and return links from bibliography entries to
 their citing HTML passages. Return routes are derived from the rendered
