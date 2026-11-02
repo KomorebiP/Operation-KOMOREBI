@@ -234,13 +234,13 @@ Reviewed essay with written arguments and 40 finite exact-check groups. No new L
 
 **Reading edition complete** · Lean: **Selected results recorded** · Confidence basis: **Recorded formal evidence**
 
-Proofread reading volumes plus 156 named theorem declarations: 39 in the inherited finite core and 29, 21, 19, 16, 13, 19 in Blocks01 through 06. The principal ordinary-series F.1 contract, Taylor coefficient transport, guarded G.2 germ inverse, and full G.1 component-rescaling equivalence with explicit scalar representation are checked. The boundary example now has equal full labeled entire pairs at distinct tuples. Perron growth, operator decoupling and full monograph coverage remain open.
+Proofread reading volumes plus 179 named theorem declarations: 39 in the inherited finite core and 29, 21, 19, 16, 13, 19, 23 in Blocks01 through 07. The principal ordinary-series F.1 contract, coefficient transport, guarded G.2 inverse, full G.1 rescaling contract, and characteristic-exponent/vector/spectral prerequisites for F.2 are checked. F.2 analytic order/type bounds and type-vector proportions, operator decoupling and full monograph coverage remain open.
 
-**Next step:** Prove the unique positive root of (1-q^rho)(1-b^rho)=(ar)^rho and its positive characteristic-matrix eigenvector, then establish the analytic order, lower-order and type bounds. Operator decoupling and broader coverage remain separate.
+**Next step:** Identify positive-real values by their convergent real series, prove the lower comparisons along contracted radii, then establish F.2 lower/upper type bounds and the radial exponent limit. The characteristic exponent and spectral radius alone do not prove these growth bounds.
 
 [Return to this work: paper, proofs, Lean, and code](works/monographs-special-functions.md)
 
-[Latest written review and its scope](SPECIAL_FUNCTIONS_RESCALING_BLOCK06.md)
+[Latest written review and its scope](SPECIAL_FUNCTIONS_CHARACTERISTIC_BLOCK07.md)
 
 [Source directory](../monographs/special-functions) · [LEAN_STATUS.md](../monographs/special-functions/LEAN_STATUS.md) · [README.md](../monographs/special-functions/README.md) · [lean/README.md](../monographs/special-functions/lean/README.md)
 

@@ -14,9 +14,9 @@ Cyclic families, sequence constructions, reciprocal structure, and exact methods
 
 **Suggested background:** Begin with the introduction and glossary. Then use the volume's own definitions to identify the background needed for its subject.
 
-**Recorded results and limits:** Proofread reading volumes plus 156 named theorem declarations: 39 in the inherited finite core and 29, 21, 19, 16, 13, 19 in Blocks01 through 06. The principal ordinary-series F.1 contract, Taylor coefficient transport, guarded G.2 germ inverse, and full G.1 component-rescaling equivalence with explicit scalar representation are checked. The boundary example now has equal full labeled entire pairs at distinct tuples. Perron growth, operator decoupling and full monograph coverage remain open.
+**Recorded results and limits:** Proofread reading volumes plus 179 named theorem declarations: 39 in the inherited finite core and 29, 21, 19, 16, 13, 19, 23 in Blocks01 through 07. The principal ordinary-series F.1 contract, coefficient transport, guarded G.2 inverse, full G.1 rescaling contract, and characteristic-exponent/vector/spectral prerequisites for F.2 are checked. F.2 analytic order/type bounds and type-vector proportions, operator decoupling and full monograph coverage remain open.
 
-**Remaining work:** Prove the unique positive root of (1-q^rho)(1-b^rho)=(ar)^rho and its positive characteristic-matrix eigenvector, then establish the analytic order, lower-order and type bounds. Operator decoupling and broader coverage remain separate.
+**Remaining work:** Identify positive-real values by their convergent real series, prove the lower comparisons along contracted radii, then establish F.2 lower/upper type bounds and the radial exponent limit. The characteristic exponent and spectral radius alone do not prove these growth bounds.
 
 The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
 
@@ -90,7 +90,7 @@ These links include code, examples, checks, or build tools. Read the [edition gu
 ## Evidence
 
 - [Completion, Lean coverage, confidence, and cited evidence](../STATUS_CATALOG.md#monographs-special-functions)
-- [Latest recorded written review](../SPECIAL_FUNCTIONS_RESCALING_BLOCK06.md)
+- [Latest recorded written review](../SPECIAL_FUNCTIONS_CHARACTERISTIC_BLOCK07.md)
 - [Source-file receipt (identity and availability)](../../manifests/source-imports/monographs-special-functions.json)
 - [All files in this source edition](../../monographs/special-functions/)
 
