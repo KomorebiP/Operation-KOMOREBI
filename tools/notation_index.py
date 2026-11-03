@@ -15,6 +15,7 @@ import re
 import unicodedata
 
 VERSION = 1
+PACKED_DATA_VERSION = 2
 TEXT_SUFFIXES = {'.tex', '.md', '.txt'}
 GREEK = dict(zip(
     'alpha beta gamma delta epsilon varepsilon zeta eta theta vartheta iota kappa lambda mu nu xi pi varpi rho varrho sigma varsigma tau upsilon phi varphi chi psi omega Gamma Delta Theta Lambda Xi Pi Sigma Upsilon Phi Psi Omega'.split(),
@@ -371,6 +372,58 @@ def source_url(source, line):
     return source.get('source_url',source['url'])+'#L'+str(line)
 
 
+def unpack_work_data(data):
+    """Restore logical v1 passages from either supported per-work JSON format."""
+    if not isinstance(data,dict):
+        raise ValueError('Notation work data must be an object')
+    version=data.get('version')
+    if type(version) is not int or version not in {VERSION,PACKED_DATA_VERSION}:
+        raise ValueError('Unsupported notation work data version')
+    passages=data.get('passages')
+    if not isinstance(passages,list) or any(not isinstance(p,dict) for p in passages):
+        raise ValueError('Notation passages must be a list of objects')
+    if version==VERSION:
+        if 'contexts' in data:
+            raise ValueError('The contexts field is reserved for packed notation data')
+        if any(not isinstance(p.get('context'),str) for p in passages):
+            raise ValueError('Logical notation contexts must be strings')
+        return data
+    contexts=data.get('contexts')
+    if not isinstance(contexts,list) or any(not isinstance(c,str) for c in contexts):
+        raise ValueError('Packed notation contexts must be a list of strings')
+    restored=[]
+    for passage in passages:
+        index=passage.get('context')
+        if type(index) is not int or not 0<=index<len(contexts):
+            raise ValueError('Invalid packed notation context reference')
+        restored.append({**passage,'context':contexts[index]})
+    return {**{k:v for k,v in data.items() if k!='contexts'},
+            'version':VERSION,'passages':restored}
+
+
+def pack_work_data(data):
+    """Intern exact context strings only when the UTF-8 JSON becomes smaller.
+
+    Rendering and search continue to use the unchanged logical v1 object.
+    The v2 wire format changes only its version and passage context references,
+    and adds the context table; all other fields retain their values.
+    """
+    unpack_work_data(data)
+    if data['version']!=VERSION:
+        raise ValueError('Packing requires logical notation work data version 1')
+    contexts=[];indices={};passages=[]
+    for passage in data['passages']:
+        context=passage['context']
+        if context not in indices:
+            indices[context]=len(contexts)
+            contexts.append(context)
+        passages.append({**passage,'context':indices[context]})
+    packed={**data,'version':PACKED_DATA_VERSION,'contexts':contexts,'passages':passages}
+    def size(value):
+        return len(json.dumps(value,ensure_ascii=False,separators=(',',':')).encode('utf-8'))
+    return packed if size(packed)<size(data) else data
+
+
 def extract_work(site, work):
     reader=site.reader
     records=sorted((r for r in reader.records.values() if r['work']==work and
@@ -488,7 +541,7 @@ def build(site):
     for component in site.registry['components']:
         work=component['id'];data=extract_work(site,work)
         page='notation/'+work+'.html';data_url='notation/data/'+work+'.json'
-        site.write(data_url,json.dumps(data,ensure_ascii=False,separators=(',',':'))+'\n')
+        site.write(data_url,json.dumps(pack_work_data(data),ensure_ascii=False,separators=(',',':'))+'\n')
         count=len(data['entries']);npass=len(data['passages'])
         row=dict(id=work,title=data['title'],url=page,data_url=data_url,sources=len(data['sources']),
                  passages=npass,symbols=count,pdfs=len(data['pdfs']),
@@ -585,7 +638,7 @@ def verify(root,documents,pages):
     for work in manifest['works']:
         raw=(root/work['data_url']).read_bytes()
         assert hashlib.sha256(raw).hexdigest()==work['data_sha256']
-        data=json.loads(raw)
+        data=unpack_work_data(json.loads(raw))
         assert data['source_revision']==manifest['source_revision']
         assert data['work']==work['id']
         expected_sources={p for p,r in records.items() if r['work']==work['id'] and PurePosixPath(p).suffix.lower() in TEXT_SUFFIXES}

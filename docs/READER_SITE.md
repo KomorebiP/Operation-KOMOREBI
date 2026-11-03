@@ -767,6 +767,21 @@ Generated metadata JSON uses compact syntax to keep the reader within the
 inside source strings. Receipt-bound files under `documents/files/` and frozen
 asset receipts retain their exact bytes. The site-size guard remains active.
 
+Generated browser Lean layer and workspace manifests use the same compact JSON
+syntax. Their source record is computed after serialization, so its sizes and
+hashes bind the compact files. The copied upstream core manifest, compiler,
+binary packs, import selections, and source strings are unchanged.
+
+Per-work notation downloads may use version 2 to store repeated surrounding
+source text once in a `contexts` array. Each passage's `context` then identifies
+the corresponding array entry. The serialization is used only when it is smaller;
+version 1 remains valid for other files. The notation decoder restores the complete
+logical data before source verification, including all whitespace and TeX in the
+context strings. HTML excerpts, source occurrences, global notation search, and
+chapter notation search retain their existing data and behavior. This storage
+change keeps both K-COS and Machine Native Reasoning within the publication
+budget without removing reading material or weakening the size check.
+
 [Paper X](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-x/index.html)
 has 30 reading pages and a bibliography. It covers all 15 main sections,
 the algorithms and reproducibility appendices, the dated Block 27 discussion,

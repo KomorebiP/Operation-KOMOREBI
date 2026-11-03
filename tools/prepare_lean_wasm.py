@@ -39,7 +39,9 @@ def sha(raw):
 
 def write_json(path, value):
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(value, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
+    # Only generated manifests pass through this helper. Their receipts are
+    # calculated after serialization; copied upstream assets keep exact bytes.
+    path.write_text(json.dumps(value, ensure_ascii=False, separators=(',', ':'))+'\n', encoding='utf-8')
 
 
 def pack(entries, output, prefix, identity):

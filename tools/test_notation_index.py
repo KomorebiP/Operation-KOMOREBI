@@ -1,13 +1,97 @@
 """Regression cases for notation extraction and source fidelity."""
 import hashlib
 import json
+from copy import deepcopy
 from pathlib import Path
 import tempfile
 from types import SimpleNamespace
 import unittest
 from notation_index import (passages, symbol_tokens, index_document, macro_definitions,
                             aliases, display_math, symbol_id, context_for,table_preview,reader_index,context_text,
-                            prepare_sources,extract_work)
+                            prepare_sources,extract_work,pack_work_data,unpack_work_data)
+
+
+class NotationDataEncodingTests(unittest.TestCase):
+    def data(self, contexts):
+        return dict(version=1,work='sample',title='Notation α',source_revision='revision',
+                    sources=[dict(repository_path='sample/main.tex',sha256='source hash',
+                                  macros={'R':r'\mathbb{R}'})],pdfs=[],
+                    passages=[dict(context=context,source=0,line=i+1,start=i,end=i+1,
+                                   expression=r'\alpha+x',kind='use',definition_title=None,
+                                   extension={'values':[None,True,'kept']})
+                              for i,context in enumerate(contexts)],
+                    entries=[dict(tex=r'\alpha',occurrences=list(range(len(contexts))))],
+                    extension={'contexts':['This nested field is not reserved.']})
+
+    def encoded(self, data):
+        return json.dumps(data,ensure_ascii=False,separators=(',',':')).encode('utf-8')
+
+    def test_packed_roundtrip_keeps_every_field_and_does_not_mutate_inputs(self):
+        first=('A repeated α / 文 context with '+r'\frac{x}{y}'+', "quotes", and\nnewlines.\n')*4
+        second='Distinct e\u0301 and é; '+r'\begin{equation}x\end{equation}'
+        data=self.data([first,second,first,first,second,first,''])
+        original=deepcopy(data)
+        packed=pack_work_data(data)
+        self.assertEqual(packed['version'],2)
+        self.assertEqual(packed['contexts'],[first,second,''])
+        self.assertEqual([p['context'] for p in packed['passages']],[0,1,0,0,1,0,2])
+        self.assertLess(len(self.encoded(packed)),len(self.encoded(data)))
+        self.assertEqual(data,original)
+        wire=json.loads(self.encoded(packed));snapshot=deepcopy(wire)
+        restored=unpack_work_data(wire)
+        self.assertEqual(restored,original)
+        self.assertEqual(wire,snapshot)
+        restored['passages'][0]['context']='changed after decoding'
+        self.assertEqual(wire,snapshot)
+        self.assertEqual(data,original)
+
+    def test_legacy_empty_and_short_singleton_data_remain_unchanged(self):
+        for contexts in ([],[''],['x'],['x','y']):
+            with self.subTest(contexts=contexts):
+                data=self.data(contexts);original=deepcopy(data)
+                self.assertIs(unpack_work_data(data),data)
+                self.assertIs(pack_work_data(data),data)
+                self.assertEqual(data,original)
+
+    def test_size_selection_uses_utf8_bytes_instead_of_character_counts(self):
+        data=self.data(['α'*8]*2)
+        packed=pack_work_data(data)
+        self.assertEqual(packed['version'],2)
+        self.assertLess(len(self.encoded(packed)),len(self.encoded(data)))
+        self.assertGreaterEqual(len(self.encoded(packed).decode()),len(self.encoded(data).decode()))
+        self.assertEqual(unpack_work_data(packed),data)
+
+    def test_invalid_logical_inputs_and_reserved_field_are_rejected(self):
+        invalid=[None,[],True,'data',{},self.data([])|{'contexts':[]}]
+        for version in (None,True,False,1.0,'1',0,-1,3):
+            invalid.append(self.data([])|{'version':version})
+        for passages in (None,{},'passages',(),[None],[[]],['passage']):
+            invalid.append(self.data([])|{'passages':passages})
+        missing=self.data([]);del missing['passages'];invalid.append(missing)
+        for context in (None,True,0,1.0,[],{}):
+            invalid.append(self.data([context]))
+        missing=self.data(['x']);del missing['passages'][0]['context'];invalid.append(missing)
+        for data in invalid:
+            for operation in (pack_work_data,unpack_work_data):
+                with self.subTest(data=data,operation=operation.__name__):
+                    with self.assertRaises(ValueError):operation(data)
+
+    def test_malformed_packed_tables_references_and_versions_are_rejected(self):
+        packed=pack_work_data(self.data(['Repeated context '*20]*3))
+        invalid=[]
+        for contexts in (None,'context',{},(),[None],[True],[1],[[]],[{}]):
+            invalid.append(packed|{'contexts':contexts})
+        missing=deepcopy(packed);del missing['contexts'];invalid.append(missing)
+        for index in (None,True,False,0.0,'0',-1,len(packed['contexts']),[],{}):
+            bad=deepcopy(packed);bad['passages'][0]['context']=index;invalid.append(bad)
+        missing=deepcopy(packed);del missing['passages'][0]['context'];invalid.append(missing)
+        for version in (None,True,False,2.0,'2',0,3):
+            invalid.append(packed|{'version':version})
+        for data in invalid:
+            with self.subTest(data=data):
+                with self.assertRaises(ValueError):unpack_work_data(data)
+        with self.assertRaisesRegex(ValueError,'requires logical'):
+            pack_work_data(packed)
 
 
 class NotationTests(unittest.TestCase):
