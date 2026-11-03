@@ -67,6 +67,14 @@ class RecoveryLaboratoryTests(unittest.TestCase):
                 if path.startswith(('assets/recovery-', 'assets/interactive-')):
                     self.assertTrue((site.root/'website'/path).is_file(), target)
             self.assertIn('recovery-lab.html', source)
+            guidance = (site.output/'assets/recovery-lab-guidance.mjs').read_text(encoding='utf-8')
+            self.assertIn("'./recovery-lab-guidance.mjs?v="+hashlib.sha256(guidance.encode()).hexdigest()[:12]+"'", script)
+            self.assertIn("'./recovery-lab-core.mjs?v="+hashlib.sha256(model).hexdigest()[:12]+"'", guidance)
+            for description in ('rl-motion-help', 'rl-fiber-description', 'rl-response-description'):
+                self.assertIn(description, page.ids)
+            self.assertIn('Read all nine graph samples as exact values', source)
+            self.assertIn('aria-describedby="rl-response-description"', source)
+            self.assertNotIn('id="rl-certificate" aria-live=', source)
 
 
 if __name__ == '__main__':

@@ -1216,6 +1216,37 @@ fractions whose numerator is in that range and whose denominator is 1–99.
 Checkboxes select the available measurement rows. Six starters distinguish
 recoverability, partial loss, redundancy, fractional rules, and full recovery.
 
+The four-step guided investigation introduces information loss, a recoverable
+combination, partial recovery, and minimal repair. Each step loads a tested
+starter, gives a prediction with explanatory feedback, and suggests a concrete
+experiment. A changed-workspace note distinguishes edited settings from the
+guide's starting example. The guide is optional and can be collapsed.
+
+`website/assets/recovery-lab-guidance.mjs` supplies these explanations and
+consumes the existing exact model. Worked substitutions use the actual enabled
+measurement values. Obstruction examples use a separating pair at t = 1 even
+when the exploration slider is zero. “Read the rows as equations” connects
+matrix coefficients to weighted sums and values at the current base input.
+
+For two-coordinate inputs, the fiber picture distinguishes a line, a point,
+and the whole plane according to nullity. For every supported dimension, the
+answer-versus-t graph compares the selected answer with its base value.
+All nine integer samples are recomputed by the exact model and available in a
+captioned table. The description explicitly distinguishes a single flat trace
+from the certificate's check of every invisible direction. Neither graph
+changes the audited core or the scope of the recovery claim.
+
+Graphs have visible descriptions, exact tables, and shape/line distinctions.
+Motion controls have keyboard instructions, value descriptions, and step
+buttons. Overflowing table regions are named and keyboard-focusable. Changes
+announce concise results on committed edits and slider changes; full
+certificates are outside live regions. Native controls, visible focus,
+forced-color styles, wrapping formulas, and layouts at 320 CSS pixels support
+access. These checks do not establish screen-reader compatibility or WCAG
+conformance. The descriptions and status behavior follow the approaches in
+[WAI's complex image guidance](https://www.w3.org/WAI/tutorials/images/complex/)
+and [status message guidance](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html).
+
 `tools/recovery_lab.py` publishes the page and search entry. Its model,
 `website/assets/recovery-lab-core.mjs`, uses reduced BigInt fractions throughout
 row reduction, kernel construction, recovery weights, and rank-based repair.

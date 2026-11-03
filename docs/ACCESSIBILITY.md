@@ -249,6 +249,29 @@ table navigation can associate values with their labels. These aids and the
 glossary supplement the original definitions. They do not establish that
 every mathematical expression or diagram has an adequate spoken description.
 
+## Recovery Laboratory
+
+The [Recovery Laboratory](https://KomorebiP.github.io/Operation-KOMOREBI/recovery-lab.html)
+has a collapsible four-step guide, prediction explanations, a notation guide,
+and numerical examples for the current matrices. “Read the rows as equations”
+connects the editable coefficients to weighted sums.
+
+Use native buttons and fields with Tab, Enter, and Space. Sliders respond to
+arrow keys, Home, and End; the invisible-direction parameter also has decrease
+and increase buttons. Selecting a question retains focus on its button.
+“Next guided step” focuses the new explanation. Result announcements occur
+on committed edits and movement; graphs and full certificates remain
+available as ordinary reading content.
+
+The two-coordinate fiber picture and answer graph have visible descriptions
+and exact tables. Series use line styles and mark shapes alongside color.
+There is no automatic animation. Formulas wrap, wide tables scroll locally,
+and overflowing table regions can receive keyboard focus. Invalid matrix
+entries are marked and described while the last valid calculation remains
+visible. The [written recovery example](demonstrations/RECOVERY.md) also works
+without JavaScript. Keyboard and narrow-layout checks cover these controls;
+testing with a screen reader remains open.
+
 ## PDFs and downloads
 
 Use **Papers and PDFs** in **Browse** to open papers, visual guides, and formal
