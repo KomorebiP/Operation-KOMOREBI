@@ -59,6 +59,7 @@ Use these guides to find works, software, and project records. Each dated review
 |---|---|
 | A starting point for your background or task | [Reading routes](READING_ROUTES.md) and the [public website](https://KomorebiP.github.io/Operation-KOMOREBI/) |
 | The central idea and current direction | [Project overview](START_HERE.md) |
+| Future research priorities and site improvements | [Future Developments](FUTURE_DEVELOPMENTS.md) |
 | How the papers and books connect | [Project map and documented dependencies](PROJECT_MAP.md) |
 | A complete path from calculation to code and evidence | [Three demonstrations](DEMONSTRATIONS.md) |
 | Introductory terminology and notation | [Glossary](GLOSSARY.md) |

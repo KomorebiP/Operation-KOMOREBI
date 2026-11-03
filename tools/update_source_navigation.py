@@ -230,6 +230,14 @@ Realization Calculus develops the mathematics of decomposition, transfer, refine
 
 [Open the reading website](https://KomorebiP.github.io/Operation-KOMOREBI/).
 
+## Future Developments
+
+Follow the [current development directions](docs/FUTURE_DEVELOPMENTS.md):
+Hilbert's 12th and 24th problems, Strong Artin, the Langlands program, and
+refining machine learning and reasoning. Further work will improve the current
+mathematics, reading editions, Lean support, interactive tools, and website and
+GitHub accessibility and use.
+
 ## Start here
 
 | What would you like to do? | Begin here |

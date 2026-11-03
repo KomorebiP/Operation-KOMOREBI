@@ -83,6 +83,7 @@ def site_navigation(page):
                  ('Interactive diagrams', 'interactive.html'),
                  ('Run Python', 'playground.html'), ('Software', 'software.html'),
                  ('Downloads', 'downloads.html'),
+                 ('Future Developments', 'collection/FUTURE_DEVELOPMENTS.html'),
                  ('Accessibility', 'collection/ACCESSIBILITY.html')]),
     ]
     panel = ''.join('<div><p class="site-nav-label">'+title+'</p><ul>'+''.join(
