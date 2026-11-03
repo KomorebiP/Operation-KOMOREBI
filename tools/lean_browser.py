@@ -90,9 +90,14 @@ def build(reader,runtime):
         return site.rel('assets/'+name,PAGE)+'?v='+digest
     groups={}
     for example in examples:groups.setdefault(example['title'].split(' · ')[0],[]).append(example)
+    reading_order=['paper-'+number for number in ('i','ii','iii','iv','v','vi','vii','viii','ix','x','xi','xii')]+[
+        'proof-path-theory','monographs-special-functions','komorebi-space']
+    work_order={work:i for i,work in enumerate(reading_order)}
+    # Keep the default example and each work's curated sequence independent of menu order.
+    ordered_groups=sorted(groups.items(),key=lambda group:work_order.get(group[1][0]['work'],len(work_order)))
     opts=''.join('<optgroup label="'+html.escape(label,quote=True)+'">'+''.join(
-        '<option value="'+e['id']+'">'+html.escape(e['title'])+'</option>' for e in entries)+'</optgroup>'
-        for label,entries in groups.items())
+        '<option value="'+e['id']+'"'+(' selected' if e['id']==examples[0]['id'] else '')+'>'+html.escape(e['title'])+'</option>' for e in entries)+'</optgroup>'
+        for label,entries in ordered_groups)
     body=f'''<link rel="stylesheet" href="{asset('lean-browser.css')}">
 <section class="lean-local" data-lean-local>
 <nav class="breadcrumbs" aria-label="Lean navigation"><a href="{site.rel('lean/index.html',PAGE)}">Inspect Lean</a></nav>
