@@ -7,19 +7,21 @@
   const frame = document.getElementById('jl-frame');
   const launch = document.getElementById('jl-launch');
   const reset = document.getElementById('jl-reset');
+  const resume = document.getElementById('jl-return');
   const start = document.getElementById('jl-start-panel');
   const status = document.getElementById('jl-status');
   const note = document.getElementById('jl-guide-note');
   const title = document.getElementById('jl-workspace-title');
   const label = document.getElementById('jl-step-label');
   const buttons = [...root.querySelectorAll('[data-jl-guide]')];
+  const jumps = [...root.querySelectorAll('[data-jl-jump]')];
   const guides = {
-    edit: {tab: 'causal', label: '01 / State edit', title: 'Can an edit change the answer?', start: 'Start state edit', note: 'Choose a target pair and adjust the edit strength. Compare the two agents’ answers, then audit their remembered facts.'},
-    relay: {tab: 'relay', demo: 'mDemo', label: '02 / Message trace', title: 'Does the change reach the other agent?', start: 'Start message trace', note: 'Choose which agent to edit, then select “Run message trace”. Compare the recipient’s answer with the original, restored-message and replayed-message branches.'},
-    persistence: {tab: 'challenge', demo: 'tDemo', label: '03 / Persistence', title: 'Will the change last?', start: 'Start persistence test', note: 'Choose what happens after the edit, then select “Run persistence test”. Compare the original, edited and donor states, including the facts each agent can still recall.'}
+    edit: {tab: 'causal', label: '01 / State edit', title: 'Can an edit change the answer?', start: 'Start state edit', steps: ['Choose edit', 'Compare answers', 'Check facts'], note: 'Change a small part of the agents’ internal states. Test whether the answers change while the remembered facts stay retrievable.'},
+    relay: {tab: 'relay', demo: 'mDemo', label: '02 / Message trace', title: 'Does the change reach the other agent?', start: 'Start message trace', steps: ['Set up trace', 'Read the message effect', 'Check facts'], note: 'Edit one agent, then test whether its first message carries the effect to its partner. Restoration and replay help isolate that first connection.'},
+    persistence: {tab: 'challenge', demo: 'tDemo', label: '03 / Persistence', title: 'Will the change last?', start: 'Start persistence test', steps: ['Choose later steps', 'Read the results', 'Inspect recall'], note: 'Continue computing after a single edit. Check when the intended answer fails and whether stored facts can still be recalled.'}
   };
   let pending = 'edit', loaded = false, ready = false, busy = false;
-  let timer, watchdog, generation = 0, view;
+  let timer, watchdog, generation = 0, view, returnGuide;
   function selection(key) {
     pending = key;
     const guide = guides[key];
@@ -27,13 +29,16 @@
     label.textContent = guide.label;
     note.textContent = guide.note;
     for (const button of buttons) button.setAttribute('aria-pressed', String(button.dataset.jlGuide === key));
+    jumps.forEach((button, index) => { button.textContent = (index + 1) + ' · ' + guide.steps[index]; });
     if (!loaded) launch.textContent = guide.start + ' →';
   }
   function setBusy(value) {
     busy = value;
     for (const button of buttons) button.disabled = value;
     reset.disabled = !ready || value;
-    if (ready) status.textContent = value ? 'Experiment running. Stop or cancel it before changing experiments.' : 'Ready · Saved models run locally in this browser.';
+    for (const button of jumps) button.disabled = !ready;
+    resume.disabled = !ready || value;
+    if (ready) status.textContent = value ? 'Test running. You can inspect results; stop or cancel before switching examples.' : 'Ready · Use the steps below. Predictions run on your device.';
   }
   function chooseGuide() {
     const app = frame.contentWindow, guide = guides[pending];
@@ -54,6 +59,8 @@
     frame.hidden = true;
     start.hidden = false;
     reset.hidden = true;
+    resume.hidden = true;
+    returnGuide = undefined;
     launch.disabled = false;
     launch.textContent = 'Retry loading the lab →';
     setBusy(false);
@@ -70,6 +77,12 @@
             if (key) selection(key);
           },
           onBusyChange: setBusy,
+          onEditSettings(key) {
+            returnGuide = key;
+            resume.hidden = false;
+            resume.disabled = false;
+            note.textContent = 'Adjust the target or edit amount, then use “Return to message trace with these settings”. Your settings will be kept; run the trace again to measure the new setup.';
+          },
           onReady() {
             if (ticket !== generation) return;
             clearTimeout(watchdog);
@@ -103,6 +116,9 @@
       start.hidden = false;
       reset.hidden = true;
       reset.disabled = true;
+      resume.hidden = true;
+      returnGuide = undefined;
+      for (const button of jumps) button.disabled = true;
     }
     if (!loaded) {
       loaded = true;
@@ -124,10 +140,23 @@
   launch.disabled = false;
   launch.addEventListener('click', () => open(null, true));
   reset.addEventListener('click', () => open(pending, true, true));
+  resume.addEventListener('click', () => {
+    if (!ready || busy || !returnGuide) return;
+    const key = returnGuide;
+    returnGuide = undefined;
+    resume.hidden = true;
+    selection(key);
+    frame.contentWindow.document.querySelector('[data-tab="' + guides[key].tab + '"]').click();
+    view?.useEditorSettings(key);
+    view?.jump(0);
+  });
   for (const button of buttons) {
     button.disabled = false;
     button.addEventListener('click', () => open(button.dataset.jlGuide, false));
   }
+  jumps.forEach((button, index) => {
+    button.addEventListener('click', () => { if (ready) view?.jump(index); });
+  });
   const hash = window.location.hash.slice(1);
   if (Object.hasOwn(guides, hash)) open(hash, false);
 })();

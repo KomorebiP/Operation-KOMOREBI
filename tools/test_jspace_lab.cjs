@@ -7,6 +7,8 @@ const source = fs.readFileSync(require('node:path').join(__dirname, '../website/
 function shell(hash = '') {
   const nodes = new Map(), timers = new Map();
   let nextTimer = 0, resets = 0, tab, demo, focus = 0, callbacks;
+  const jumped = [];
+  const resumed = [];
   function node(id) {
     if (!nodes.has(id)) nodes.set(id, {hidden: true, disabled: true, dataset: {}, textContent: '',
       listeners: {}, addEventListener(event, fn) { this.listeners[event] = fn; },
@@ -17,16 +19,17 @@ function shell(hash = '') {
   const buttons = ['edit', 'relay', 'persistence'].map(guide => {
     const b = node(guide); b.dataset.jlGuide = guide; return b;
   });
-  node('j-lab').querySelectorAll = () => buttons;
+  const workflow = [0, 1, 2].map(index => node('jump-' + index));
+  node('j-lab').querySelectorAll = selector => selector === '[data-jl-guide]' ? buttons : workflow;
   const frame = node('jl-frame'); frame.dataset.src = 'assets/j-space/causal-lab.html?v=frozen'; frame.contentWindow = {};
   const document = {getElementById: node};
   vm.runInNewContext(source, {document, window: {location: {hash}, JSpaceWorkbench: {
-    mount(frame, events) {callbacks = events; events.onReady(); return {resize() {}, destroy() {}};}
+    mount(frame, events) {callbacks = events; events.onReady(); return {resize() {}, jump(index) {jumped.push(index);}, useEditorSettings(key) {resumed.push(key);}, destroy() {}};}
   }},
     setTimeout(fn, delay) { const id = ++nextTimer; timers.set(id, {fn, delay}); return id; },
     clearTimeout(id) { timers.delete(id); }});
-  return {node, frame, buttons, timers,
-    get result() { return {resets, tab, demo, focus}; },
+  return {node, frame, buttons, workflow, timers,
+    get result() { return {resets, tab, demo, focus, jumped, resumed}; },
     get presentation() { return callbacks; },
     makeReady() {
       frame.contentWindow = {JCausalLab: {resetDemo() {resets++;}}, JRelayLab: {}, JChallengeLab: {},
@@ -132,4 +135,39 @@ test('a presentation load failure offers a working retry', () => {
   assert.match(s.node('jl-status').textContent, /full research lab/);
   s.node('jl-launch').click(); s.makeReady();
   assert.equal(s.frame.hidden, false);
+});
+
+test('step navigation changes the view without rerunning or resetting the experiment', () => {
+  const s = shell();
+  s.workflow[2].click();
+  assert.deepEqual(s.result.jumped, []);
+  assert.equal(s.frame.src, undefined);
+  s.node('jl-launch').click(); s.makeReady();
+  s.workflow[2].click();
+  assert.deepEqual(s.result.jumped, [2]);
+  assert.equal(s.result.resets, 1);
+  s.presentation.onBusyChange(true);
+  s.workflow[1].click();
+  assert.deepEqual(s.result.jumped, [2, 1]);
+  s.presentation.onBusyChange(false);
+  s.buttons[2].click();
+  assert.ok(s.workflow.every(button => button.disabled));
+  s.makeReady();
+  assert.match(s.workflow[2].textContent, /Inspect recall/);
+  s.workflow[0].click();
+  assert.deepEqual(s.result.jumped, [2, 1, 0]);
+  assert.equal(s.result.resets, 2);
+});
+
+test('returning from the editor keeps custom settings instead of loading a new example', () => {
+  const s = shell('#relay'); s.makeReady();
+  s.presentation.onTabChange('causal');
+  s.presentation.onEditSettings('relay');
+  assert.equal(s.node('jl-return').hidden, false);
+  s.node('jl-return').click();
+  assert.equal(s.result.resets, 1);
+  assert.equal(s.result.tab, '[data-tab="relay"]');
+  assert.deepEqual(s.result.resumed, ['relay']);
+  assert.equal(s.node('jl-return').hidden, true);
+  assert.equal(s.buttons[1].attributes['aria-pressed'], 'true');
 });

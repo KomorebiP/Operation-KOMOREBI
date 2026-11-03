@@ -44,7 +44,8 @@ def build(site):
     body = '''<div class="jlab" id="j-lab">
 <header class="jlab-intro">
 <div><p class="jlab-kicker">Interactive research</p><h1>J-Space lab</h1>
-<p>Explore two saved neural agents. Change their temporary working values, follow a message, or check what survives later.</p></div>
+<p class="jlab-purpose">Can a small internal edit change an answer while preserving remembered facts?</p>
+<p>Two small neural agents receive eight 0/1 facts, then work with a temporary pair of values. Edit part of their internal states, then test the answers, messages and recall.</p></div>
 <div class="jlab-meta"><span class="jlab-local">Runs on your device · No installation</span>
 <a href="assets/j-space/causal-lab.html" target="_blank" rel="noopener">Open the full research lab <span aria-hidden="true">↗</span></a>
 <a href="assets/j-space/causal-lab.html" download="Komorebi_JSpace_Causal_Lab_v1_4.html">Download offline · 4.4 MB <span aria-hidden="true">↓</span></a></div>
@@ -59,15 +60,16 @@ def build(site):
 
 <section class="jlab-workspace" id="jl-workspace" aria-labelledby="jl-workspace-title">
 <div class="jlab-workspace-head"><div><p class="jlab-kicker" id="jl-step-label">01 / State edit</p><h2 id="jl-workspace-title" tabindex="-1">Can an edit change the answer?</h2></div><button type="button" id="jl-reset" class="jlab-secondary" hidden disabled>Reset example</button></div>
-<p id="jl-guide-note" class="jlab-guide-note">Choose a target pair and adjust the edit strength. Compare the two agents’ answers, then audit their remembered facts.</p>
-<details class="jlab-help"><summary>A quick guide to the terms</summary><dl><div><dt>Working pair</dt><dd>Two temporary values, written as [left, right]. These are what the agents are currently using.</dd></div><div><dt>Donor</dt><dd>A reference state with the working values you want. The edit tries to transfer a small part of that state.</dd></div><div><dt>Facts</dt><dd>Eight stored values tested separately. Changing an answer can also harm recall.</dd></div></dl></details>
-<div id="jl-start-panel" class="jlab-start-panel"><p>Start with a prepared example, then explore the controls.</p><button type="button" id="jl-launch" disabled>Start state edit <span aria-hidden="true">→</span></button></div>
+<p id="jl-guide-note" class="jlab-guide-note">Change a small part of the agents’ internal states. Test whether the answers change while the remembered facts stay retrievable.</p>
+<details class="jlab-help"><summary>New here? Understand the experiment</summary><dl><div><dt>Agent</dt><dd>A saved neural network with its own internal state. The two agents exchange short numerical messages.</dd></div><div><dt>Working pair</dt><dd>Two temporary 0/1 values, written as [left, right]. Later operations can flip or swap them.</dd></div><div><dt>Remembered facts</dt><dd>Eight 0/1 values supplied at the start. Recall is tested separately from the current working answer.</dd></div><div><dt>Target reference (donor)</dt><dd>A comparison execution with the working pair you want. The default J edit transfers only a projection of its state.</dd></div><div><dt>Candidate J-space</dt><dd>Three selected directions inside each agent’s 64-number state. The experiment tests what editing those directions does.</dd></div><div><dt>Reference check</dt><dd>The original and whole-target runs check whether the models can do the task. Their failures must be considered when judging the edit.</dd></div></dl></details>
+<div id="jl-start-panel" class="jlab-start-panel"><div><strong>Begin with the prepared example.</strong><p>Then use the three steps to change a setting, read the result and check what survived.</p></div><button type="button" id="jl-launch" disabled>Start state edit <span aria-hidden="true">→</span></button></div>
 <p id="jl-status" role="status" aria-live="polite"></p>
+<div class="jlab-steps" role="group" aria-label="Navigate this experiment"><button type="button" id="jl-return" hidden disabled>Return to message trace with these settings <span aria-hidden="true">→</span></button><button type="button" data-jl-jump="0" disabled>1 · Choose edit</button><button type="button" data-jl-jump="1" disabled>2 · Compare answers</button><button type="button" data-jl-jump="2" disabled>3 · Check facts</button></div>
 <iframe id="jl-frame" title="J-Space experiment controls and actual neural-model results" data-src="assets/j-space/causal-lab.html?v=APP_VERSION" data-style="WORKBENCH_STYLE" hidden></iframe>
 </section>
 <noscript><p class="jlab-note">Enable JavaScript to run the agents, or <a href="assets/j-space/causal-lab.html" download="Komorebi_JSpace_Causal_Lab_v1_4.html">download the self-contained lab</a> and open it in a browser with JavaScript enabled.</p></noscript>
 
-<aside class="jlab-context" aria-label="About this experiment"><p><strong>A research experiment.</strong> These are small saved neural models. An edit can work at first and fail later; a successful case is not a J-space certificate. All predictions and failed reference checks come from the original instrument.</p>
+<aside class="jlab-context" aria-label="About this experiment"><p><strong>How far does a result go?</strong> A changed answer shows an effect in this case. It does not establish a naturally writable J-space or show that the edit works on other states, models or long sequences. Keep the failed cases and reference errors alongside the successes.</p>
 <div class="jlab-resources"><a href="collection/works/experiments-jspace-causal-lab.html">Methods and source files <span aria-hidden="true">↗</span></a><a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/REVISION/experiments/jspace-causal-lab/REPORT.md">Laboratory report <span aria-hidden="true">↗</span></a><a href="interactive.html">More interactive mathematics <span aria-hidden="true">→</span></a></div></aside>
 </div>'''
     body = body.replace('APP_VERSION', APP_SHA256[:12]).replace('REVISION', site.revision).replace('WORKBENCH_STYLE', asset('jspace-workbench.css'))
