@@ -98,16 +98,17 @@ def quantum_reading_guide(page):
 
 
 ROUTES = {
-    'NEW_READER': ('New to Komorebi', '''This route introduces the project through the Euler research example and its connections to the wider collection.
+    'NEW_READER': ('New to Komorebi', '''Begin with a complete signal calculation, then compare the arithmetic and quantum case studies. Each can also be read independently.
 
 1. Read the [project introduction](../START_HERE.md) and [authorship statement](../PROJECT_STATEMENT.md).
 2. Use the [glossary](../GLOSSARY.md) for the terms **packet**, **transfer**, **residual**, and **realization**.
-3. Follow [Euler numbers through packets, polynomials, and residuals](../demonstrations/EULER_PACKETS.md). Work through the reciprocal series, coordinate changes, and exact residual calculations, then use the standalone checker to reproduce the results.
-4. Use the [project map](../PROJECT_MAP.md) to choose another subject, or the [first software examples](../FIRST_RUN.md) to try a library.
-5. Read the [common computational language](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md).
-6. Choose one [work](../BROWSE.md). Read its introduction and recorded limits before following technical references.
+3. Follow [wavelets and polyphase transfer](../demonstrations/WAVELET_POLYPHASE.md). Track one signal and its filter through four Haar levels, calculate the missing interactions, and reproduce the exact results with its standalone checker.
+4. Compare the arithmetic route through [Euler numbers](../demonstrations/EULER_PACKETS.md) and [factorial lanes](../demonstrations/FACTORIAL_LANES.md), then the information-preservation questions in [quantum phase and measurement](../demonstrations/QUANTUM_PHASE_MEASUREMENT.md). The [case-study index](../DEMONSTRATIONS.md#extended-case-studies) offers further counting and polynomial routes.
+5. Use the [project map](../PROJECT_MAP.md) to choose another subject, or the [first software examples](../FIRST_RUN.md) to try a library.
+6. Read the [common computational language](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md).
+7. Choose one [work](../BROWSE.md). Read its introduction and recorded limits before following technical references.
 
-Familiarity with power series and polynomial calculations will help with the Euler derivation. The [elementary demonstrations](../DEMONSTRATIONS.md) offer shorter introductions. You can read the calculations and work introductions without installing software.
+The wavelet study uses finite vectors and matrices; power series and polynomial calculations help with the arithmetic studies. The [three elementary demonstrations](../DEMONSTRATIONS.md#three-elementary-demonstrations) offer shorter introductions. You can read the calculations and work introductions without installing software.
 '''),
     'MATHEMATICS': ('Read the mathematics', '''This is a suggested sequence, not a prerequisite chain for every work.
 
@@ -154,7 +155,7 @@ def render_reader_pages(root, components, assessments):
     for key,(title,body) in ROUTES.items():
         out['docs/routes/'+key+'.md'] = '# '+title+'\n\n'+body+footer
     out['docs/READING_ROUTES.md'] = '# Choose a reading route\n\nStart with the task you want to complete. These routes are editorial suggestions and do not change the recorded status of any work.\n\n'+ '\n'.join('- ['+title+'](routes/'+key+'.md)' for key,(title,_) in ROUTES.items())+'\n\n[Hand-worked examples](HAND_WORKED_EXAMPLES.md) · [Searchable website]('+SITE+') · [Browse works](BROWSE.md) · [Glossary](GLOSSARY.md) · [First runs](FIRST_RUN.md)\n'
-    out['docs/READING_ROUTES.md']=out['docs/READING_ROUTES.md'].replace('\n- [New to Komorebi]', '\nFor the collection as a whole, read the [project overview](START_HERE.md) and [project map](PROJECT_MAP.md). For the research preview, follow [Euler numbers through packets, polynomials, and residuals](demonstrations/EULER_PACKETS.md). The [elementary demonstrations](DEMONSTRATIONS.md) offer shorter introductions.\n\n- [New to Komorebi]',1)
+    out['docs/READING_ROUTES.md']=out['docs/READING_ROUTES.md'].replace('\n- [New to Komorebi]', '\nFor the collection as a whole, read the [project overview](START_HERE.md) and [project map](PROJECT_MAP.md). For a complete calculation, start with [wavelets and polyphase transfer](demonstrations/WAVELET_POLYPHASE.md), then compare the arithmetic and quantum routes in the [extended case-study index](DEMONSTRATIONS.md#extended-case-studies). The [three elementary demonstrations](DEMONSTRATIONS.md#three-elementary-demonstrations) offer shorter introductions.\n\n- [New to Komorebi]',1)
     out['docs/GLOSSARY.md']=render_glossary(config)
     out['docs/READING_ROUTES.md']+='\n[Explore the physics collection](PHYSICS_COLLECTION.md): packet currents, quantum phase, continuum approximation, special functions, and research studies.\n'
     out['docs/READING_ROUTES.md']+='\n[Explore Special Functions](SPECIAL_FUNCTIONS.md): current reading volumes, five families, an exact coupled-function lab, and formal evidence.\n'
