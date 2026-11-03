@@ -24,7 +24,12 @@ MATHLIB_SOURCE_SHA256 = '0d5e8732a746d65215a8124f257f8ce2e88601d1d7d958f966312ad
 # binary runtime. Browser execution remains the check; this is not a certificate.
 SOURCE_MODULES = (
     'Mathlib.Tactic.Ext', 'Mathlib.Util.AssertNoSorry',
+    'Mathlib.Tactic.Positivity.Finset', 'Mathlib.Tactic.Positivity',
 )
+# This module changes parser context while elaborating its original source.
+# Its fallback must use the synchronous evolving frontend, never the fixed
+# parser-context probe. Keep that requirement bound to the known source module.
+SOURCE_FRONTEND_MODULES = frozenset({'Mathlib.Tactic.Positivity.Finset'})
 LIMIT = 8 * 1024 * 1024
 
 
@@ -107,6 +112,7 @@ def source_library(members,available,modules=SOURCE_MODULES):
                              revision=MATHLIB,imports=imports(text),
                              asset='lean-mathlib/sources/'+path,
                              url='https://github.com/leanprover-community/mathlib4/blob/'+MATHLIB+'/'+path)
+        if module in SOURCE_FRONTEND_MODULES:records[module]['syntaxCheck']='frontend'
     validate_source_library(records,available)
     return records
 
@@ -120,6 +126,9 @@ def validate_source_library(records,available):
         active.add(module);record=records[module]
         if not module.startswith('Mathlib.') or module in available:
             raise ValueError('Invalid or shadowed Mathlib source module: '+module)
+        syntax_check='frontend' if module in SOURCE_FRONTEND_MODULES else None
+        if record.get('syntaxCheck')!=syntax_check:
+            raise ValueError('Mathlib fallback syntax-check requirement mismatch: '+module)
         path=module.replace('.','/')+'.lean';safe_path(path)
         raw=record['source'].encode('utf-8')
         if (record['module']!=module or record['path']!=path or record['revision']!=MATHLIB or

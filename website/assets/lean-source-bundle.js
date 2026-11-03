@@ -69,9 +69,10 @@ export async function sourceWorkspace(catalog,entry,bundle,{signal}={}) {
     signal?.throwIfAborted();
     const record=catalog.librarySources?.[module];
     if(!record||record.module!==module||record.path!==module.replaceAll('.','/')+'.lean'||record.revision!==catalog.mathlibRevision||!/^Mathlib(?:\.[A-Za-z_][A-Za-z_0-9]*)+$/.test(module)||!/^[0-9a-f]{40}$/.test(record.revision)||record.url!=='https://github.com/leanprover-community/mathlib4/blob/'+record.revision+'/'+record.path)throw new Error('Invalid pinned library source record.');
+    if(record.syntaxCheck!==undefined&&record.syntaxCheck!=='frontend')throw new Error('Unsupported library source syntax check: '+module);
     const bytes=new TextEncoder().encode(record.source);
     if(bytes.length!==record.size||bytes.length>MAX_SOURCE||await sha256(bytes)!==record.sha256)throw new Error('Pinned library source checksum mismatch: '+module);
-    files.push({module,path:record.path,text:record.source,originalBytes:bytes,sha256:record.sha256,library:true,revision:record.revision,inspect:record.url});
+    files.push({module,path:record.path,text:record.source,originalBytes:bytes,sha256:record.sha256,library:true,revision:record.revision,inspect:record.url,...(record.syntaxCheck?{syntaxCheck:record.syntaxCheck}:{})});
   }
   if(entry.legacy) {
     const compatibility=catalog.legacy,bytes=new TextEncoder().encode(compatibility.source);

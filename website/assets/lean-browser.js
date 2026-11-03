@@ -1,6 +1,11 @@
 import { createCompiler } from './lean-wasm/index.js?v=20261102-frontend-env1';
 import { sourceHeader } from './lean-wasm/roots.js';
-import { loadSourceBundle, sourceWorkspace } from './lean-source-bundle.js?v=20261102';
+import { loadSourceBundle, sourceWorkspace } from './lean-source-bundle.js?v=20261102-positivity1';
+
+export function workspaceCheckMode(workspace, preferred=false) {
+  const required=(workspace?.files||[]).some(file=>file.library&&file.syntaxCheck==='frontend');
+  return {required,frontend:preferred||required};
+}
 
 export function moduleSource(source, name) {
   if (!/^[\p{ID_Start}_][\p{ID_Continue}']*(\.[\p{ID_Start}_][\p{ID_Continue}']*)*$/u.test(name)) throw new Error('Invalid project module name.');
@@ -79,12 +84,14 @@ async function start() {
   const drafts=new Map();
   const editor=el('code'), picker=el('example'), filePicker=el('file');
   const frontend=el('frontend');
-  frontend.checked=new URL(location.href).searchParams.get('frontend')==='1';
+  let preferredFrontend=new URL(location.href).searchParams.get('frontend')==='1';
   const draftKey='komorebi-lean-browser-reload';
   const log=text=>{el('log').textContent=(el('log').textContent+'\n'+text).slice(-20000);};
   function dispose() {bootAbort?.abort();bootAbort=null;compiler?.dispose();compiler=null;checkedDependencies=null;}
   function controls(value) {
-    busy=value;editor.readOnly=value;picker.disabled=value;filePicker.disabled=value;frontend.disabled=value;
+    busy=value;editor.readOnly=value;picker.disabled=value;filePicker.disabled=value;
+    const mode=workspaceCheckMode(workspace,preferredFrontend);
+    frontend.checked=mode.frontend;frontend.disabled=value||mode.required;
     for(const name of ['run','restore','break','save'])el(name).disabled=value;
     el('stop').disabled=!value;el('clear').disabled=value;
     el('catalog-open').disabled=value||!catalog||!el('catalog-choice').value;
@@ -111,6 +118,7 @@ async function start() {
     el('route-notes').textContent=workspace.exploratory?[
       ...(workspace.issues.length?workspace.issues:['The recorded import route uses available browser libraries. Run Lean to check the sources.']),
       ...(workspace.library?.length?['This route compiles '+workspace.library.length+' pinned Mathlib source module(s) before the retained sources. They are visible in the file picker and must pass Lean too.']:[]),
+      ...(workspaceCheckMode(workspace).required?['This library route requires experimental source-defined syntax checking, enabled automatically. Each run starts a fresh compiler; background tasks remain unsupported.']:[]),
       ...(workspace.tactics?['A generated Mathlib.Tactic module supplies the available tactic subset. It is checked first and is visible in the file picker.']:[]),
       ...(workspace.legacy?['A generated version-compatibility module proves the newer dite_eq_left name using this runtime’s dif_pos. It is checked first and imported without changing the retained proof body.']:[])
     ].join('\n\n'):'';
@@ -175,6 +183,7 @@ async function start() {
   el('catalog-ready').addEventListener('change',renderCatalog);
   el('catalog-open').addEventListener('click',()=>openSource(el('catalog-choice').value));
   frontend.addEventListener('change',()=>{
+    preferredFrontend=frontend.checked;
     dispose();
     const address=new URL(location.href);
     if(frontend.checked)address.searchParams.set('frontend','1');else address.searchParams.delete('frontend');
@@ -219,7 +228,7 @@ async function start() {
   }
   async function run() {
     if (busy)return;files[current]=editor.value;controls(true);const ticket=++generation;
-    const freshFrontend=frontend.checked;
+    const freshFrontend=workspaceCheckMode(workspace,preferredFrontend).frontend;
     el('output').textContent='Checking has not completed.';setStatus('Starting Lean on this device…','running');
     try {
       if (!await isolate(ticket))return;

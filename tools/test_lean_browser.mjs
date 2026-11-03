@@ -5,7 +5,7 @@ import {readFile} from 'node:fs/promises';
 import {webcrypto} from 'node:crypto';
 import {deflateRawSync} from 'node:zlib';
 globalThis.document={querySelector:()=>null};
-const {moduleSource,outcome,withCompatibility,mapDiagnostic,mapWorkspaceDiagnostic,withCompatibilityImport}=await import('../website/assets/lean-browser.js');
+const {moduleSource,outcome,withCompatibility,mapDiagnostic,mapWorkspaceDiagnostic,withCompatibilityImport,workspaceCheckMode}=await import('../website/assets/lean-browser.js');
 const {createCompiler}=await import('../website/assets/lean-wasm/compiler.js');
 const {optionalLayers,importedRoots,importLines,sourceHeader}=await import('../website/assets/lean-wasm/roots.js');
 const {zipDirectory,readZipSource,sourceWorkspace,sha256}=await import('../website/assets/lean-source-bundle.js');
@@ -112,9 +112,23 @@ test('pinned library sources are checked separately and cannot replace receipt-b
   assert.equal(workspace.files[0].library,true);assert.equal(workspace.files[0].generated,undefined);
   assert.equal(workspace.files[0].text,source);assert.deepEqual(workspace.files[0].originalBytes,new Uint8Array(Buffer.from(source)));
   assert.equal(workspace.files[1].path,path);assert.equal(workspace.files[1].library,undefined);
+  record.syntaxCheck='frontend';
+  const required=await sourceWorkspace(catalog,entry,bundle);
+  assert.equal(required.files[0].syntaxCheck,'frontend');
+  assert.deepEqual(workspaceCheckMode(required),{required:true,frontend:true});
+  record.syntaxCheck='skip';await assert.rejects(sourceWorkspace(catalog,entry,bundle),/Unsupported library source syntax check/);delete record.syntaxCheck;
   record.source+='-- changed';await assert.rejects(sourceWorkspace(catalog,entry,bundle),/library source checksum/);record.source=source;
   record.revision='b'.repeat(40);await assert.rejects(sourceWorkspace(catalog,entry,bundle),/Invalid pinned/);record.revision=revision;
   entry.library=['Mathlib.Missing'];await assert.rejects(sourceWorkspace(catalog,entry,bundle),/Invalid pinned/);
+});
+
+test('required library mode does not overwrite the reader preference for other workspaces',()=>{
+  assert.deepEqual(workspaceCheckMode(undefined),{required:false,frontend:false});
+  const standard={files:[{module:'Main'}]},required={files:[{module:'Library',library:true,syntaxCheck:'frontend'},{module:'Main'}]};
+  assert.deepEqual(workspaceCheckMode(required,false),{required:true,frontend:true});
+  assert.deepEqual(workspaceCheckMode(standard,false),{required:false,frontend:false});
+  assert.deepEqual(workspaceCheckMode(standard,true),{required:false,frontend:true});
+  assert.deepEqual(workspaceCheckMode(required,true),{required:true,frontend:true});
 });
 
 test('compatibility is explicit and diagnostics point to the original proof',()=>{
