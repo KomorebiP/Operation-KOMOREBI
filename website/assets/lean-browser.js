@@ -99,7 +99,7 @@ async function start() {
   if (!response.ok) throw new Error('Source record unavailable.');
   const data=await response.json();
   if(window.top!==window){el('direct').hidden=false;el('direct-link').href=location.href;}
-  let compiler=null, bootAbort=null, busy=false, generation=0, workspace, files, current=0;
+  let compiler=null, bootAbort=null, retiringClosed=Promise.resolve(), busy=false, generation=0, workspace, files, current=0;
   let catalog=null,catalogPending=null,openedGroup=null;
   let checkedDependencies=null;
   const drafts=new Map();
@@ -108,7 +108,10 @@ async function start() {
   let preferredFrontend=new URL(location.href).searchParams.get('frontend')==='1';
   const draftKey='komorebi-lean-browser-reload';
   const log=text=>{el('log').textContent=(el('log').textContent+'\n'+text).slice(-20000);};
-  function dispose() {bootAbort?.abort();bootAbort=null;compiler?.dispose();compiler=null;checkedDependencies=null;}
+  function retireCompiler(retiring) {
+    if(retiring)retiringClosed=Promise.all([retiringClosed,retiring.dispose()]).then(()=>{});
+  }
+  function dispose() {bootAbort?.abort();bootAbort=null;retireCompiler(compiler);compiler=null;checkedDependencies=null;}
   function controls(value) {
     busy=value;editor.readOnly=value;picker.disabled=value;filePicker.disabled=value;
     const mode=workspaceCheckMode(workspace,preferredFrontend);
@@ -262,9 +265,11 @@ async function start() {
       const reuse=!freshFrontend&&files.length>1&&compiler&&checkedDependencies?.source===dependencySource;
       if(files.length>1&&!reuse){dispose();log('Fresh compiler environment for changed project imports; cached downloads are reused.');}
       if(!compiler){
+        await retiringClosed;
+        if(ticket!==generation)return;
         const abort=new AbortController();bootAbort=abort;
         const created=await createCompiler({baseUrl:new URL('engine/',location.href).href,mathlibManifest:workspace.mathlib_manifest,syntaxCheck:freshFrontend?'frontend':'full',signal:abort.signal,onProgress:m=>{if(ticket===generation)log(m);},onStatus:m=>{if(ticket===generation)log(m);}});
-        if(ticket!==generation){created.dispose();return;}
+        if(ticket!==generation){retireCompiler(created);return;}
         compiler=created;
       }
       let warnings=reuse?checkedDependencies.warnings:false;

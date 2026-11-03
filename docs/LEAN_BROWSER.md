@@ -241,8 +241,10 @@ with a 100 ms hard-termination fallback. Stop during startup or an active reques
 terminates immediately; fatal and incomplete checks also force termination.
 `compiler.dispose()` returns `compiler.closed`, which resolves after termination
 was requested and the owned URLs were revoked. This does not certify immediate
-physical reclamation of every shared-memory mapping. Exhausted memory is reported
-separately from unavailable cross-origin isolation, without an automatic retry.
+physical reclamation of every shared-memory mapping. The page waits for the prior
+compiler's closure before creating its replacement, including after Stop.
+Exhausted memory is reported separately from unavailable cross-origin isolation,
+without an automatic retry.
 This mode retains the fork's exported-only import and synchronous command
 semantics; it does not establish equivalence with every native project or
 whole-file linter. The private-theorem visibility issue is separate.
