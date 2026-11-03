@@ -55,8 +55,11 @@ def math_fences(rendered):
 
 def site_navigation(page):
     """Ordinary links with a progressively enhanced, nonmodal disclosure."""
+    from core_visual_guides import is_visual_guide
+    work=page.split('/')[1] if page.startswith('read/') and page.count('/')>1 else ''
+    visual_location=bool(work and is_visual_guide(work,page))
     def link(title, target):
-        current = ' aria-current="page"' if target == page else (' aria-current="location"' if target=='read/visual-guides.html' and re.fullmatch(r'read/paper-[ivx]+/atlas/[^/]+\.html',page) else '')
+        current = ' aria-current="page"' if target == page else (' aria-current="location"' if target=='read/visual-guides.html' and visual_location else '')
         url = posixpath.relpath(target, posixpath.dirname(page) or '.')
         icon = ('<svg class="site-search-icon" viewBox="0 0 20 20" width="17" height="17" '
                 'aria-hidden="true" focusable="false"><circle cx="8.5" cy="8.5" r="5.5"/>'

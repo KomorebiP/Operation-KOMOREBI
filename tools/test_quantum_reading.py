@@ -142,6 +142,13 @@ class QuantumReadingTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             output=Path(folder);reader=publish_fixture(output)
             pages={p.relative_to(output).as_posix():Page(p.read_text(encoding='utf-8')) for p in output.rglob('*.html')}
+            from quantum_visual_guides import PAGE as VISUAL_INDEX,sequences,verify as verify_visual_guides
+            self.assertEqual(verify_visual_guides(pages),50)
+            for sequence in sequences():
+                for visual in sequence['pages']:
+                    self.assertIn('visual-guides.html',pages[visual['url']].links)
+                    self.assertIn('../visual-guides.html',pages[visual['url']].links)
+                    self.assertIn('../paper-xii/atlas/index.html',pages[visual['url']].links)
             from quantum_start import PAGE,PATHS
             guide=pages[PAGE]
             self.assertEqual(guide.h1,1)

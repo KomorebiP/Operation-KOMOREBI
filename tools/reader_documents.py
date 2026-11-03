@@ -283,8 +283,9 @@ class ReadingDocuments:
         from readable_chapters import BOOKS
         if work in BOOKS:
             routes.append(('Read chapters', BOOKS[work]['index']))
-            if BOOKS[work].get('atlas_index'):
-                routes.append(('Visual guide', BOOKS[work]['atlas_index']))
+            visual=BOOKS[work].get('atlas_index') or BOOKS[work].get('visual_guide_index')
+            if visual:
+                routes.append(('Visual guide',visual))
             if BOOKS[work].get('diagram_guide'):
                 routes.append(('Diagram descriptions', BOOKS[work]['diagram_guide']))
         if pdf: routes.append(('Original PDF' if edition else 'Read PDF', pdf['url']))
@@ -306,7 +307,7 @@ class ReadingDocuments:
             more+=work_links(self,work,page,exclude={'Read chapters','Visual guide'})
             from readable_chapters import BOOKS
             pair=self.site.rel('side-by-side.html',page)+'?left='+quote(page,safe='')+'&right='+quote(BOOKS[work]['index'],safe='')
-            more+='<a data-side-reader-link href="'+html.escape(pair,quote=True)+'">Read beside paper</a>'
+            more+='<a data-side-reader-link href="'+html.escape(pair,quote=True)+'">Read beside '+('paper' if work.startswith('paper-') else 'volume')+'</a>'
             more+='<a href="'+html.escape(self.site.rel('read/index.html',page),quote=True)+'">Reading library</a></div></details>'
             return guide_navigation(work,page,more)
         primary = {'Paper overview', 'Read chapters', 'Visual guide', 'Read PDF', 'Revised edition'}

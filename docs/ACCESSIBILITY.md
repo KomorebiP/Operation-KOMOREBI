@@ -11,7 +11,7 @@ technology.
 <thead><tr><th scope="col">What you want to do</th><th scope="col">Where to begin</th></tr></thead>
 <tbody>
 <tr><th scope="row">Read a paper or book in HTML</th><td><a href="https://KomorebiP.github.io/Operation-KOMOREBI/read/index.html">Reading library</a></td></tr>
-<tr><th scope="row">Read diagrams and worked visual guides</th><td><a href="https://KomorebiP.github.io/Operation-KOMOREBI/read/visual-guides.html">Core visual guides</a></td></tr>
+<tr><th scope="row">Read diagrams and worked visual guides</th><td><a href="https://KomorebiP.github.io/Operation-KOMOREBI/read/visual-guides.html">Visual guides</a></td></tr>
 <tr><th scope="row">Keep two documents open together</th><td><a href="https://KomorebiP.github.io/Operation-KOMOREBI/side-by-side.html">Read side by side</a></td></tr>
 <tr><th scope="row">Find a passage or term</th><td><a href="https://KomorebiP.github.io/Operation-KOMOREBI/search.html">Site search</a> or the <a href="GLOSSARY.md">glossary</a></td></tr>
 <tr><th scope="row">Open or download an original PDF</th><td><a href="https://KomorebiP.github.io/Operation-KOMOREBI/documents.html">Papers and PDFs</a></td></tr>
@@ -212,15 +212,16 @@ The editions retain their manuscripts' assumptions, open questions, and
 evidence qualifications. Reviewed punctuation corrections in the HTML are
 listed in the [correction record](https://KomorebiP.github.io/Operation-KOMOREBI/documents/reader-copyediting.json).
 
-The [core visual-guide directory](https://KomorebiP.github.io/Operation-KOMOREBI/read/visual-guides.html)
-links every paper's visual material and original PDF. Current HTML coverage is:
+The [visual-guide directory](https://KomorebiP.github.io/Operation-KOMOREBI/read/visual-guides.html)
+links all twelve core guides, the Quantum and Circuits visual collection, and
+their original PDFs. Current HTML coverage is:
 
 <table>
-<caption>Core-paper visual-guide coverage</caption>
-<thead><tr><th scope="col">Core papers</th><th scope="col">Visual-guide reading options</th></tr></thead>
+<caption>Visual-guide coverage</caption>
+<thead><tr><th scope="col">Works</th><th scope="col">Visual-guide reading options</th></tr></thead>
 <tbody>
-<tr><th scope="row">I–IX</th><td>Complete HTML visual guides, alongside the original PDFs. The guides retain source prose, equations, and drawing labels, with text descriptions and structured tables where applicable.</td></tr>
-<tr><th scope="row">X–XII</th><td>Original visual-guide PDFs. Separate HTML visual guides remain to be added.</td></tr>
+<tr><th scope="row">I–XII</th><td>Complete HTML visual guides, alongside the original PDFs. The guides retain source prose, equations, and drawing labels, with text descriptions and structured tables where applicable.</td></tr>
+<tr><th scope="row">Quantum and Circuits</th><td><a href="https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-quantum-and-circuits/visual-guides.html">Two complete visual sequences</a>: 25 quantum-arithmetic pages and 25 circuit-obstruction pages, with original drawings, selectable equations, and links to the volume.</td></tr>
 </tbody>
 </table>
 

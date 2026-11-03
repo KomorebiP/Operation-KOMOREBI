@@ -1124,7 +1124,8 @@ def render_reading_index(reader):
             if config.get('reading_guide'):body+='<a class="button" href="'+site.rel(config['reading_guide'],page)+'">Start here</a>'
             else:body+='<a class="button" href="'+site.rel(config['chapters'][0]['url'],page)+'">Start reading</a>'
             body+='<a href="'+site.rel(config['index'],page)+'">Contents</a>'
-            if config.get('atlas_index'):body+='<a href="'+site.rel(config['atlas_index'],page)+'">Visual guide</a>'
+            visual=config.get('atlas_index') or config.get('visual_guide_index')
+            if visual:body+='<a href="'+site.rel(visual,page)+'">Visual guide</a>'
             pdf=reader.primary_pdf(work)
             if pdf:body+='<a href="'+site.rel(pdf['url'],page)+'">Read PDF</a>'
             body+='</nav></section>'
@@ -1229,6 +1230,7 @@ def render_book(reader,book):
     from reader_proofreading import render as proofreading_notes
     from side_reader import pair_link
     from reading_navigation import outline, resources, work_links
+    from core_visual_guides import is_visual_guide
     site=reader.site
     config=book['config']
     work=config['work']
@@ -1253,8 +1255,10 @@ def render_book(reader,book):
         toc+='</ol>'
         toc+='</nav>'
         body='<p class="eyebrow">Readable manuscript</p><h1>'+e(title)+'</h1>'
+        visual=is_visual_guide(work,page)
+        if visual:body+=reader.work_routes(work,page)
         body+=neighbour_links(spec)+'<p class="reading-start"><a href="#chapter-text">Start reading</a></p>'+outline(toc)
-        tools=work_links(reader,work,page)
+        tools='' if visual else work_links(reader,work,page)
         tools+='<p><a href="'+reader.resolve(source,page)+'">Original TeX with line links</a> · <a href="'+site.rel(reader.records[source]['file_url'],page)+'" download>Download TeX</a></p>'
         tools+='<p>The wording and mathematics follow the retained manuscript. This reading format does not add a proof review or extend Lean coverage.</p>'+reading_options()
         body+=resources(tools)
@@ -1485,6 +1489,8 @@ def render_book_index(reader,book,reports):
     if config.get('custom_reader')=='quantum':
         from quantum_start import publish
         publish(reader,book)
+        from quantum_visual_guides import publish as publish_visual_guides
+        publish_visual_guides(reader)
 
 
 def render_bibliography(reader,book):
