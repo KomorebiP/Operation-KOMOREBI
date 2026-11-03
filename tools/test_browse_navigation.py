@@ -157,6 +157,10 @@ class BrowseNavigationTests(unittest.TestCase):
             (root/REGISTRY).write_text(json.dumps(registry),encoding='utf-8')
             text=Browser(root,state,status,tracked).render()['docs/works/monographs-special-functions.md']
             self.assertIn('[Read online: chapters, proof appendices, figures and glossary](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/index.html)',text)
+            lean=text.split('## Lean\n')[1].split('## Code\n')[0]
+            self.assertIn('[Current formalization checkpoint and continuation](../../research/open-work/current/README.md)',lean)
+            self.assertIn('(../../research/open-work/formal/)',lean)
+            self.assertNotIn('current/README.md',json.dumps(contents))
 
     def test_no_resource_selection_does_not_claim_proofs_or_sources_absent(self):
         with tempfile.TemporaryDirectory() as tmp:

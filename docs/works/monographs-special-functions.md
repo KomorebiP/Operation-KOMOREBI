@@ -66,6 +66,7 @@ Find the statement number or section in the [reading files](#read), then read it
 
 Start with the [edition guide](../../monographs/special-functions/README.md) and the build instructions below. Check the correspondence records to see which written claims the Lean declarations cover. Source links lead to `.lean` files. PDF guides explain the formalization.
 
+- [Current formalization checkpoint and continuation](../../monographs/special-functions/current/README.md)
 - [Current formal coverage and replay instructions](../../monographs/special-functions/LEAN_STATUS.md)
 - [Coupled recurrence formal companion and limitations](../../monographs/special-functions/formalization/Block01/REPORT.md)
 - [Finite core and coupled Lean sources (directory)](../../monographs/special-functions/lean/)

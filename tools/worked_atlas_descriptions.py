@@ -8,7 +8,7 @@ DESCRIPTIONS={
   'division_free_masks':('Binary coefficients selected by even and odd masks','The first row is the input over the field with two elements. The next two rows retain disjoint address classes, and the last row reconstructs their sum without division.'),
   'finite_fourier_table':('A finite orthogonality table modulo seven','The entries are exact residues. The successful inverse normalization is compared with a failed certificate over a different ring; the lower failure is part of the example.'),
   'crt_address_grid':('One address indexed by two residue classes','The rectangular grid lists the twelve residue addresses once. Row and column selectors identify a common cell; shading selects its congruence class.'),
-  'weighted_word_cutoff':('Signed inverse terms below a precision cutoff','Rows give the retained operator words, their total weights and signed matrix contributions. The first discarded nonzero word reaches the cutoff. A short word can still vanish algebraically.'),
+  'weighted_word_cutoff':('Signed inverse terms below a precision cutoff','Rows give the displayed operator words, their total weights and signed matrix contributions. The first discarded nonzero word reaches the cutoff. A short word can still vanish algebraically.'),
   'modular_inverse':('An inverse checked on both sides modulo thirty-two','The matrices display the operator, its proposed inverse and both product orders. Entries are canonical residues; the identity products are exact modular statements.'),
   'inverse_residual_depth':('Exact residual valuations by truncation length','The plotted minimum entry valuations are compared with the horizontal requested precision. The points describe exact dyadic arithmetic rather than measured floating-point convergence.'),
   'weighted_multigraph':('A weighted multigraph and its edge words','Parallel edges remain separate choices. The word list reads traversals chronologically from left to right and permits repeated edges and vertices.'),
@@ -64,4 +64,10 @@ FIGURES['paper-ii']['coefficient_tower']['blocks']=[
          rows=[[45,43,44],[48,46,47],[51,49,50],[54,52,53],[57,55,56],[60,58,59],[63,61,62],[66,64,65]]),
     dict(kind='text',title='Total addresses',nodes=[67]),
     dict(kind='text',nodes=[68]),
+]
+
+FIGURES['paper-ii']['weighted_word_cutoff']['blocks']=[
+    dict(kind='text',nodes=[31]),
+    dict(kind='table',caption='Weighted words and signed contributions',
+         headers=[28,29,30,'Status'],rows=[list(range(i,i+4)) for i in range(0,28,4)]),
 ]

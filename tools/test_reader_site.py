@@ -41,14 +41,17 @@ def manuscript_table_fixtures(root,work):
 
 class ReaderSiteTests(unittest.TestCase):
     def test_live_special_functions_guidance_uses_current_repository_links(self):
-        paths=['monographs/special-functions/CONTINUE_HERE.md',
-               'monographs/special-functions/RELEASE_STATUS.md']
-        retained='monographs/special-functions/LEAN_STATUS.md'
+        paths=['monographs/special-functions/current/README.md',
+               'monographs/special-functions/current/CONTINUE_HERE.md',
+               'monographs/special-functions/current/RELEASE_STATUS.md']
+        retained=['monographs/special-functions/CONTINUE_HERE.md',
+                  'monographs/special-functions/RELEASE_STATUS.md',
+                  'monographs/special-functions/LEAN_STATUS.md']
         reader=object.__new__(ReadingDocuments)
         reader.records={}
         reader.owned={p:dict(mode='100644',size=10,work='monographs-special-functions',
                              git_blob_sha1='b'*40,sha256='c'*64,repository_path=p)
-                      for p in paths+[retained]}
+                      for p in paths+retained}
         site=SimpleNamespace(repos={'collection':'KomorebiP/Operation-KOMOREBI'},
             revisions={'collection':'a'*40},documents={},reader=reader,
             roots={'collection':Path('.')})
@@ -58,7 +61,8 @@ class ReaderSiteTests(unittest.TestCase):
             self.assertNotIn(path,reader.records)
             self.assertEqual(Site.resolve(site,'collection','docs/guide.md','collection/guide.html','../'+path),
                 'https://github.com/KomorebiP/Operation-KOMOREBI/blob/'+'a'*40+'/'+path)
-        self.assertEqual(reader.add(retained)['sha256'],'c'*64)
+        for path in retained:
+            self.assertEqual(reader.add(path)['sha256'],'c'*64)
 
     def test_generated_json_is_compact_without_changing_source_strings_or_frozen_files(self):
         data={'F':r'\mathbb F','f':'  x\n y  ','labels':['α','1/5'],'nested':{'exact':True,'value':1.25}}
@@ -602,6 +606,20 @@ class ReaderSiteTests(unittest.TestCase):
         self.assertEqual(values['7'],r'$\frac{1}{2}$')
         self.assertEqual(values['12'],r'$- \frac{5}{2}$')
         self.assertEqual(sorted(transcript_order(info,nodes)),list(range(49)))
+
+    def test_weighted_word_table_keeps_words_signs_weights_and_cutoff_status(self):
+        from worked_atlas_descriptions import FIGURES
+        from worked_atlas_drawings import drawing_nodes
+        from reader_atlas import transcript_order
+        root=Path(__file__).resolve().parents[1]
+        nodes=drawing_nodes((root/'papers/paper-ii/current/editable/traditional/visual_graphics/weighted_word_cutoff.tex').read_text(encoding='utf-8-sig'))
+        info=FIGURES['paper-ii']['weighted_word_cutoff'];table=info['blocks'][1]
+        self.assertEqual([nodes[i]['text'] for i in table['headers'][:3]],['word','cumulative weight','signed contribution'])
+        self.assertEqual(len(table['rows']),7)
+        self.assertEqual([nodes[i]['text'] for i in table['rows'][3]],['$ab$','$3$','$+8E_{00}$','keep'])
+        self.assertEqual([nodes[i]['text'] for i in table['rows'][-1]],['$bab$','$5$','$-32E_{10}$','zero mod 32'])
+        self.assertEqual(nodes[info['blocks'][0]['nodes'][0]]['text'],'$L=5$')
+        self.assertEqual(sorted(transcript_order(info,nodes)),list(range(32)))
 
     def test_incomplete_grids_and_bar_rows_keep_all_labels_without_guessing_cells(self):
         from reader_drawing_transcripts import drawing_nodes,matrix_label_blocks

@@ -112,7 +112,7 @@ class PaperXIIAtlas(WorkedAtlas):
         for plate in selected:
             assert len(pages[plate['url']].ids)==len(set(pages[plate['url']].ids)),('Duplicate Paper XII passage or figure IDs',plate['number'])
             chapter=self.chapter_for(plate,macros);chapter.labels=labels;chapter.url=plate['url'];chapter.included_sources={}
-            chapter.command_links={'pagerefV':{str(p['number']):(p['url'],'V'+str(p['number'])) for p in selected}}
+            chapter.command_links={'pagerefV':{str(p['number']):(p['url'],'Visual '+str(p['number'])) for p in selected}}
             markup=(root/plate['url']).read_text(encoding='utf-8')
             assert chapter.inline(plate['locator']) in markup
             for node in chapter.nodes:

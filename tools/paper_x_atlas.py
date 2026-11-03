@@ -85,7 +85,7 @@ class PaperXAtlas(WorkedAtlas):
             scope='Historical 17/20, checked conditional 20/20, and later unpromoted 19/20 contracts remain distinct')
 
     def edition_note(self):
-        return '<p>The retained PDF has three opening pages before V1. Its two opening scope sections and their separate-output diagram are retained on the atlas contents page. The later 19/20 attempt is a different input contract from the checked conditional 20/20 release.</p>'
+        return '<p>The retained PDF has three opening pages before the first visual. Its two opening scope sections and their separate-output diagram are retained on the atlas contents page. The later 19/20 attempt is a different input contract from the checked conditional 20/20 release.</p>'
 
     def front_markup(self,reader,atlas,read):
         chapter=AtlasChapter(self.atlas_tex(opening_fragment(read(self.DEFINITIONS).decode('utf-8-sig'))),atlas['macros'])
@@ -125,7 +125,7 @@ class PaperXAtlas(WorkedAtlas):
         for plate in selected:
             chapter=AtlasChapter(self.atlas_tex(plate['body']),macros)
             chapter.url=plate['url'];chapter.included_sources={}
-            chapter.command_links={'pagerefV':{str(p['number']):(p['url'],'V'+str(p['number'])) for p in selected}}
+            chapter.command_links={'pagerefV':{str(p['number']):(p['url'],'Visual '+str(p['number'])) for p in selected}}
             markup=(root/plate['url']).read_text(encoding='utf-8')
             for node in chapter.nodes:
                 if node['kind']=='text' or node['kind'] in PANELS:
