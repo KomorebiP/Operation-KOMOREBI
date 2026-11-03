@@ -199,6 +199,7 @@ class Browser:
             if title=='Read' and c['id']=='monographs-large-signal-model':
                 links.insert(0,'[Read online: all 100 sections, 87 propositions and written proofs](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-large-signal-model/index.html)')
                 links.insert(1,'[Start here: mathematics, formal scope and software](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-large-signal-model/start.html)')
+                links.insert(2,'[Visual atlas: 17 plates, diagrams and an exact example](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-large-signal-model/atlas/index.html)')
             if title=='Read' and c['id']=='monographs-quantum-and-circuits':
                 links.insert(0,'[Read online: complete volume, appendices, proofs and sources](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-quantum-and-circuits/index.html)')
             if title=='Read' and c['id'] in {'paper-v','paper-vi','paper-vii'}:

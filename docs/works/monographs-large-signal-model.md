@@ -28,6 +28,7 @@ Use the links below to read this work and its supporting files. Ctrl+click (Comm
 
 - [Read online: all 100 sections, 87 propositions and written proofs](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-large-signal-model/index.html)
 - [Start here: mathematics, formal scope and software](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-large-signal-model/start.html)
+- [Visual atlas: 17 plates, diagrams and an exact example](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-large-signal-model/atlas/index.html)
 - [Edition README](../../monographs/large-signal-model/README.md)
 - [Read PDF](../../monographs/large-signal-model/Monograph/build/Realization_Calculus_Large_Signal_Model.pdf)
 - [Visual guide (PDF)](../../monographs/large-signal-model/Visual_Companion/build/Realization_Calculus_Large_Signal_Model_Theoretical_Atlas.pdf)

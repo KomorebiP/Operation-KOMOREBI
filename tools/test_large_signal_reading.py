@@ -38,8 +38,11 @@ def publish_fixture(output):
     reader.add('monographs/large-signal-model/Monograph/build/Realization_Calculus_Large_Signal_Model.pdf','Read PDF')
     with patch.object(reading,'BOOKS',{WORK:BOOK}):
         reading.prepare(reader)
+        from large_signal_atlas import prepare as prepare_atlas,render as render_atlas
+        prepare_atlas(reader)
         prepared = set(reader.records)
         reading.render(reader)
+        render_atlas(reader)
         if set(reader.records) != prepared:
             raise AssertionError('Reading resources must be registered before source pages are rendered')
     for record in reader.records.values():
@@ -94,7 +97,7 @@ class LargeSignalReadingTests(unittest.TestCase):
                 [raw.count('\n',0,m.start())+1 for m in re.finditer(r'^\*\*Proof\.\*\*',raw,re.M)])
             self.assertEqual(len(proofs),87)
             self.assertEqual(sum(len(c.proof_pairs) for _,_,c in reader.readable_books[WORK]['chapters']),87)
-            self.assertEqual(len(reader.images),2)
+            self.assertEqual(sum('/Monograph/' in path for path in reader.images),2)
             statements = (output/'read'/WORK/'statements.html').read_text(encoding='utf-8')
             self.assertEqual(statements.count('data-statement-entry='),87)
             self.assertEqual(statements.count('class="statement-proof-link"'),87)

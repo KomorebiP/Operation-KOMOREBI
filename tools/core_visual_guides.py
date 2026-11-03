@@ -38,7 +38,9 @@ def guide_choices():
     # Keep these routes available when a focused book fixture selects one BOOK.
     from quantum_visual_guides import WORK,PAGE
     return [(work,'Paper '+work.removeprefix('paper-').upper(),info[0],'read/'+work+'/atlas/index.html')
-            for work,info in GUIDES.items()]+[(WORK,'Quantum and Circuits','Arithmetic and circuit diagrams',PAGE)]
+            for work,info in GUIDES.items()]+[(WORK,'Quantum and Circuits','Arithmetic and circuit diagrams',PAGE),
+            ('monographs-large-signal-model','Large Signal Model','Predictive state, memory, and probability',
+             'read/monographs-large-signal-model/atlas/index.html')]
 
 
 def guide_navigation(work,page,more=''):
@@ -96,7 +98,8 @@ def inventory(root,files):
 
 def all_inventory(root,files):
     from quantum_visual_guides import inventory as quantum_inventory
-    return inventory(root,files)+[quantum_inventory(root,files)]
+    from large_signal_atlas import inventory as large_signal_inventory
+    return inventory(root,files)+[quantum_inventory(root,files),large_signal_inventory(root,files)]
 
 
 def render(reader):
@@ -104,9 +107,9 @@ def render(reader):
     rows=all_inventory(site.root,reader.records.values())
     count=sum(bool(row['html_atlas']) for row in rows)
     body='<div class="visual-directory"><p class="eyebrow">Core papers and books</p><h1>Visual guides</h1>'
-    body+='<p class="visual-directory-intro">Explore all twelve core papers and the Quantum and Circuits visual collection. Choose a subject or work for original diagrams, selectable mathematics, and links to the text. <a href="'+site.rel('search.html',INDEX)+'?type=Visual+guides">Search all visual pages</a>.</p>'
+    body+='<p class="visual-directory-intro">Explore all twelve core papers, Quantum and Circuits, and the Large Signal Model. Choose a subject or work for original diagrams, selectable mathematics, and links to the text. <a href="'+site.rel('search.html',INDEX)+'?type=Visual+guides">Search all visual pages</a>.</p>'
     body+='<form id="visual-guide-filter" class="visual-guide-filter" role="search" hidden><label for="visual-guide-query">Find a visual guide</label><div><input id="visual-guide-query" type="search" name="q" placeholder="Paper number, title, or topic" aria-controls="visual-guide-list" aria-describedby="visual-guide-count"><button type="reset">Clear</button></div></form>'
-    body+='<div class="visual-directory-tools"><nav class="visual-guide-jump" aria-label="Jump to a paper or book">'+''.join('<a href="#'+r['work']+'" aria-label="'+r['label']+'">'+(r['label'].removeprefix('Paper ') if r['number'] else 'Quantum and Circuits')+'</a>' for r in rows)+'</nav><p id="visual-guide-count" role="status" aria-live="polite">'+str(count)+' guides</p></div>'
+    body+='<div class="visual-directory-tools"><nav class="visual-guide-jump" aria-label="Jump to a paper or book">'+''.join('<a href="#'+r['work']+'" aria-label="'+r['label']+'">'+r['label'].removeprefix('Paper ')+'</a>' for r in rows)+'</nav><p id="visual-guide-count" role="status" aria-live="polite">'+str(count)+' guides</p></div>'
     body+='<p id="visual-guide-empty" hidden>No guides match. Try another subject or clear the search.</p><ol id="visual-guide-list" class="visual-guide-grid">'
     for row in rows:
         e=html.escape;identifier=row['work'];preview=row['preview']
@@ -126,7 +129,7 @@ def render(reader):
     site.write(REPORT,json.dumps(dict(source_revision=site.revision,guides=rows[:12]),indent=2)+'\n')
     site.write(ALL_REPORT,json.dumps(dict(source_revision=site.revision,guides=rows),indent=2)+'\n')
     site.search.append(dict(title='Visual guides',group='Collection',kind='Guides',visual_guide=True,url=INDEX,
-        text='Visual guides and worked atlases for all twelve core papers and Quantum and Circuits',work_ids=[r['work'] for r in rows]))
+        text='Visual guides and worked atlases for all twelve core papers, Quantum and Circuits, and the Large Signal Model',work_ids=[r['work'] for r in rows]))
 
 
 def verify(root,documents,pages):
