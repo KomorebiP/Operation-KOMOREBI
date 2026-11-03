@@ -7,7 +7,7 @@ import posixpath
 import re
 from urllib.parse import quote, unquote, urlsplit
 
-TEXT_SUFFIXES = {'.md', '.tex', '.txt', '.json', '.lean', '.py', '.bib', '.bbl', '.aux', '.c', '.h'}
+TEXT_SUFFIXES = {'.md', '.tex', '.sty', '.txt', '.json', '.lean', '.py', '.bib', '.bbl', '.aux', '.c', '.h'}
 
 # Maintained guidance resolves at the current repository revision. The parent
 # files retain their receipt-bound imported bytes and normal source inspection.

@@ -288,6 +288,9 @@ def verify(root, pages, documents):
         elif config.get('custom_reader') == 'proof_path':
             from proof_path_reading import source_specs as proof_path_specs
             config['chapters']=proof_path_specs(load)
+        elif config.get('custom_reader') == 'kcos':
+            from kcos_reading import source_specs as kcos_specs
+            config['chapters']=kcos_specs(load)
         elif config.get('custom_reader') == 'quantum':
             from quantum_reading import source_specs as quantum_specs
             config['chapters']=quantum_specs(load)

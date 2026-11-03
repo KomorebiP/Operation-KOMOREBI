@@ -147,6 +147,30 @@ their original bytes and `SOURCE.json`; `assets/mathjax/PUBLISHED.json` records
 the distribution profile and omitted bundles. `tools/reader_runtime.py` packages
 this profile; `test_reader_runtime.py` checks retained modules and source records.
 
+## K-COS reading edition
+
+The complete K-COS monograph is available at
+`read/monographs-cos-method/index.html`. Its 24 reading pages retain the
+preface and reading guidance, four part introductions, twelve chapters,
+four appendices, and references. The opening guide links the full
+matrix-to-tail route, the supplied-spectrum route, the visual studies, and
+four stages of the running example.
+
+The reader preserves 61 numbered statements, 39 written proofs, 1,443
+mathematical expressions, all 50 original production figures, and seven
+references. The three included results files appear in their authored
+positions, with links to the actual included source lines. The theorem
+finder, notation lookup, chapter navigation, and site search use the same
+reading structure as the other monographs.
+
+`tools/kcos_reading.py` checks the source order, statement and figure
+inventories, mathematical expressions, and the style-file macros.
+`tools/kcos_routes.py` resolves introductory routes from manuscript labels.
+Run `python -B -m unittest discover -s tools -p 'test_kcos_reading.py' -v`.
+The published mathematical sources and their recorded scope remain unchanged.
+Appendix B retains the official finite Gram/enclosure companion; the reading
+guide links the separately maintained formal continuation.
+
 ## Core visual-guide coverage
 
 The **Browse → Core visual guides** directory at `read/visual-guides.html`

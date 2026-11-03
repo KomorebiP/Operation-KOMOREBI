@@ -195,6 +195,9 @@ CHAPTERS += LARGE_SIGNAL_CHAPTERS
 from machine_native_reasoning_reading import BOOK as MACHINE_NATIVE_BOOK, CHAPTERS as MACHINE_NATIVE_CHAPTERS
 BOOKS[MACHINE_NATIVE_BOOK['work']] = MACHINE_NATIVE_BOOK
 CHAPTERS += MACHINE_NATIVE_CHAPTERS
+from kcos_reading import BOOK as KCOS_BOOK, CHAPTERS as KCOS_CHAPTERS
+BOOKS[KCOS_BOOK['work']] = KCOS_BOOK
+CHAPTERS += KCOS_CHAPTERS
 # One full chapter menu per page; footers keep direct reading routes.
 for _book in BOOKS.values():_book['footer_index_only']=True
 BY_SOURCE = {c['source']:c for c in reversed(CHAPTERS)}
@@ -890,6 +893,8 @@ def prepare(reader):
                 from foundational_reading import prepare_book
             elif config['custom_reader'] == 'proof_path':
                 from proof_path_reading import prepare_book
+            elif config['custom_reader'] == 'kcos':
+                from kcos_reading import prepare_book
             elif config['custom_reader'] == 'quantum':
                 from quantum_reading import prepare_book
             elif config['custom_reader'] == 'paper_ix':
@@ -1278,8 +1283,13 @@ def render_book(reader,book):
         for node in chapter.nodes:
             kind=node['kind']
             label=node.get('display_title') or ((node['number']+' '+node['title']).strip() if kind in HEADINGS else (KIND_NAMES.get(kind,kind.capitalize())+' '+node['number']+(': '+node['title'] if node['title'] else '')).strip())
-            source_link=reader.resolve(source,page,'L'+str(node['line']))
+            node_source=node.get('source',source)
+            source_link=reader.resolve(node_source,page,'L'+str(node['line']))
             links='<a href="#'+node['id']+'">Permalink</a> · <a href="'+source_link+'">Source line '+str(node['line'])+'</a>'
+            for span in node.get('source_spans',[]):
+                if (span['source'],span['line'])==(node_source,node['line']):continue
+                target=reader.resolve(span['source'],page,'L'+str(span['line']))
+                links+=' · <a href="'+target+'">'+e(posixpath.basename(span['source']))+', line '+str(span['line'])+'</a>'
             reading_links=related_reading_links(chapter,node['id'])
             if kind in HEADINGS:
                 level=min(level+1,5) if kind=='paragraph' else HEADINGS[kind]
@@ -1327,7 +1337,7 @@ def render_book(reader,book):
                         image=site.rel(preview['asset'],page)
                         used_previews.add(pdf_path)
                     figure_source_sha256=reader.images[path]['sha256'] if path in reader.images else preview['source_sha256']
-                alt=plain_math(caption.replace('$',''))[0]
+                alt=node.get('alt') or plain_math(caption.replace('$',''))[0]
                 description_link=''
                 if config.get('figure_descriptions'):
                     name=posixpath.basename(path).removesuffix('.pdf')+'.png' if path.endswith('.pdf') else posixpath.basename(path)
@@ -1427,6 +1437,9 @@ def render_book(reader,book):
         elif config.get('custom_reader')=='proof_path':
             from proof_path_reading import source_math
             expressions=source_math(book['main'],spec)
+        elif config.get('custom_reader')=='kcos':
+            from kcos_reading import source_math
+            expressions=source_math(raw.decode('utf-8-sig'),spec,book['source_texts'])
         elif config.get('custom_reader')=='paper_ix':
             from paper_ix_reading import source_math
             expressions=source_math(raw.decode('utf-8-sig'),spec)
@@ -1442,7 +1455,7 @@ def render_book(reader,book):
         if chapter.math!=expressions:
             difference=next((i for i,(a,b) in enumerate(zip(chapter.math,expressions)) if a!=b),min(len(chapter.math),len(expressions)))
             raise ValueError('Reading math differs at '+source+' expression '+str(difference)+' rendered '+str(chapter.math[difference:difference+1])+' original '+str(expressions[difference:difference+1]))
-        report=dict(source=source,source_sha256=hashlib.sha256(raw).hexdigest(),url=page,math_expressions=len(expressions),math_sequence_sha256=hashlib.sha256(json.dumps(expressions,ensure_ascii=False).encode()).hexdigest(),references=len(chapter.references),labels=sum(len(n['labels']) for n in chapter.nodes),nodes=[{k:n[k] for k in ('kind','id','line','end_line','labels','number') if k in n} for n in chapter.nodes],macro_source=getattr(chapter,'macro_source',config['main']),macros=chapter.macros,new_proof_review=False,new_lean_execution=False)
+        report=dict(source=source,source_sha256=hashlib.sha256(raw).hexdigest(),url=page,math_expressions=len(expressions),math_sequence_sha256=hashlib.sha256(json.dumps(expressions,ensure_ascii=False).encode()).hexdigest(),references=len(chapter.references),labels=sum(len(n['labels']) for n in chapter.nodes),nodes=[{k:n[k] for k in ('kind','id','line','end_line','labels','number','source','source_spans') if k in n} for n in chapter.nodes],macro_source=getattr(chapter,'macro_source',config.get('macro_source',config['main'])),macros=chapter.macros,new_proof_review=False,new_lean_execution=False)
         if getattr(chapter,'nested_tables',None):report['nested_tables']=chapter.nested_tables
         aided_tables.update(getattr(chapter,'table_aids_used',set()))
         reports.append(report)
@@ -1453,7 +1466,8 @@ def render_book(reader,book):
     if aided_tables!=set(table_aids): raise ValueError('Review unused table reading aids for '+work)
     render_book_index(reader,book,reports)
     render_statement_directory(reader,book)
-    render_bibliography(reader,book)
+    if not config.get('bibliography_in_chapters'):
+        render_bibliography(reader,book)
     from reading_links import add_reference_routes
     add_reference_routes(reader,book)
     if work=='paper-vii':
@@ -1472,6 +1486,9 @@ def render_book_index(reader,book,reports):
     introduction=(config.get('reading_introduction') or 'Read the '+str(config['main_chapters'])+' main manuscript chapters in order, or choose a topic below.')
     body='<p class="eyebrow">Read '+label+'</p><h1>'+html.escape(config['title'])+'</h1><p>'+html.escape(introduction)+'</p>'+reader.work_routes(work,page)
     body+='<p class="reading-start"><a class="button" href="'+site.rel(config['chapters'][0]['url'],page)+'">Start reading</a></p>'
+    if config.get('custom_reader')=='kcos':
+        from kcos_routes import reading_paths
+        body+=reading_paths(reader,book,page)
     if config.get('reading_guide'):
         body+='<p class="quantum-guide-entry"><a href="'+site.rel(config['reading_guide'],page)+'">Start here: choose a reading path</a> · '+html.escape(config.get('reading_guide_description','A visual introduction, full study, or formal companion.'))+'</p>'
     for anchor in config.get('contents_anchors',[]):body+='<span id="'+html.escape(anchor,quote=True)+'"></span>'

@@ -1,10 +1,82 @@
 """Regression cases for notation extraction and source fidelity."""
+import hashlib
+import json
+from pathlib import Path
+import tempfile
+from types import SimpleNamespace
 import unittest
 from notation_index import (passages, symbol_tokens, index_document, macro_definitions,
-                            aliases, display_math, symbol_id, context_for,table_preview,reader_index,context_text)
+                            aliases, display_math, symbol_id, context_for,table_preview,reader_index,context_text,
+                            prepare_sources,extract_work)
 
 
 class NotationTests(unittest.TestCase):
+    def notation_site(self, config, sources):
+        """Use the document reader's receipt-only registration in a small site."""
+        from reader_documents import ReadingDocuments
+        temporary=tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        root=Path(temporary.name)
+        (root/'manifests').mkdir()
+        (root/'manifests/notation-sources.json').write_text(json.dumps(config),encoding='utf-8')
+        works=sorted({path.split('/')[0] for path in sources})
+        site=SimpleNamespace(root=root,revision='revision',
+                             registry=dict(components=[dict(id=work,destination=work) for work in works]),
+                             components={work:dict(title=work) for work in works})
+        reader=ReadingDocuments.__new__(ReadingDocuments)
+        reader.site=site;reader.records={};reader.owned={};reader.manuscript_roots={}
+        raw={path:text.encode('utf-8') for path,text in sources.items()}
+        for path,data in raw.items():
+            work,relative=path.split('/',1)
+            reader.owned[path]=dict(work=work,path=relative,repository_path=path,mode='100644',
+                                   size=len(data),sha256=hashlib.sha256(data).hexdigest(),
+                                   git_blob_sha1=hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest())
+            if not path.endswith('.sty'):reader.add(path)
+        site.reader=reader
+        site.read_source=lambda record:raw[record['repository_path']]
+        prepare_sources(reader)
+        return site
+
+    def test_style_macros_follow_one_manuscript_without_indexing_style_passages(self):
+        site=self.notation_site(
+            dict(additional_entrypoints={'cos':['book/main.tex'],'other':['main.tex']},
+                 additional_macro_sources={'cos':{'book/main.tex':['book/monograph.sty']}}),
+            {'cos/book/main.tex':r'\usepackage{monograph}\begin{document}\input{chapters/first}\end{document}',
+             'cos/book/chapters/first.tex':r'$\R+\Pp+\phit+\eps$',
+             'cos/book/monograph.sty':r'\newcommand{\R}{\mathbb R}\newcommand{\Pp}{\mathbb P}'
+                                      r'\newcommand{\phit}{\phi_{\theta}}\newcommand{\eps}{\varepsilon}'
+                                      r'\newcommand{\layout}{$z_{\mathrm{style}}$}',
+             'cos/history/main.tex':r'\begin{document}$\Pp$\end{document}',
+             'other/main.tex':r'\begin{document}$\Pp$\end{document}'})
+        # ReadingDocuments propagates this root when resolving the literal input.
+        site.reader.notation_roots['cos/book/chapters/first.tex']='cos/book/main.tex'
+        site.reader.manuscript_roots['cos']='cos/book/main.tex'
+        data=extract_work(site,'cos')
+        source={row['repository_path']:row for row in data['sources']}
+        self.assertIn('cos/book/monograph.sty',site.reader.records)
+        self.assertNotIn('cos/book/monograph.sty',source)
+        self.assertEqual([row['expression'] for row in data['passages']],[r'\R+\Pp+\phit+\eps',r'\Pp'])
+        macros=source['cos/book/chapters/first.tex']['macros']
+        self.assertEqual(display_math(r'\Pp',macros),r'{\mathbb P}')
+        self.assertEqual(display_math(r'\R',macros),r'{\mathbb R}')
+        self.assertIn('varepsilon',aliases(r'\eps',macros))
+        entries={row['tex']:row for row in data['entries']}
+        self.assertEqual(entries[r'\phit']['display'],r'{\phi_{\theta}}')
+        self.assertEqual(source['cos/history/main.tex']['macros'],{})
+        self.assertIsNone(entries[r'\Pp']['display'],'An unexpanded historical spelling keeps its separate meaning')
+        other=extract_work(site,'other')
+        self.assertEqual(other['sources'][0]['macros'],{})
+        self.assertIsNone(other['entries'][0]['display'])
+
+    def test_macro_sources_must_belong_to_a_declared_receipt_bound_root(self):
+        sources={'cos/main.tex':r'\begin{document}$\R$\end{document}'}
+        with self.assertRaisesRegex(ValueError,'Missing notation macro source'):
+            self.notation_site(dict(additional_entrypoints={'cos':['main.tex']},
+                                    additional_macro_sources={'cos':{'main.tex':['missing.sty']}}),sources)
+        with self.assertRaisesRegex(ValueError,'declared manuscript root'):
+            self.notation_site(dict(additional_entrypoints={'cos':['main.tex']},
+                                    additional_macro_sources={'cos':{'history.tex':['missing.sty']}}),sources)
+
     def test_definition_titles_follow_the_explicit_source_scope(self):
         text='$a$\n\\begin{definition}[Generator number]\n$x$\n'+('Long explanatory text. '*250)+'\n$y$\n\\end{definition}\n$z$'
         records=index_document(text,'.tex')
