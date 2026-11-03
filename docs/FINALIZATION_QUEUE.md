@@ -245,7 +245,7 @@ Publication completion and checked subresults leave wider formal or implementati
 
 **Done when:** Choose one precise next theorem/refinement contract, establish its dependencies, and admit it only with corresponding source and verification evidence.
 
-**Progress:** Special Functions SF-LEAN-B15 adds 36 theorem declarations, for 405 names. The J mathematical certificate proves arbitrary-radius majorants, actual complex Taylor error and exact rational endpoints, including the worked last=30 error <1.6e-13. All 60 source-bound replay steps pass across fifteen coupled modules. Formal/assessment I/O is recorded. Python refinement, other J/F/H correspondence, I and broad A-E coverage remain.
+**Progress:** Special Functions SF-LEAN-B16 adds 30 theorem declarations, for 435 names. All-index factorial normalization, finite append-array conversion and certified polynomial equality are proved. All 63 source-bound replay steps pass across sixteen coupled modules. Exact formal/assessment I/O is recorded. Full Python refinement, guarded majorant/resource/dictionary semantics, other J/F/H, I and A-E remain.
 
 Related works and source records: [Paper III: Typed Transfer, Nonlinear Packets, and Obstruction Theory](works/paper-iii.md) · [Special Functions](works/monographs-special-functions.md) · [Quantum and Circuits](works/monographs-quantum-and-circuits.md) · [Signal Reconstruction](works/signal-reconstruction.md) · [COS Method: formal continuation](works/monographs-cos-method-formal-continuation.md) · [p-adic Canonical Realization](works/padic-canonical-realization.md) · [Model-Theory Normalization](works/model-theory-normalization.md).
 
