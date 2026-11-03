@@ -120,6 +120,9 @@ def home_page():
 <div class="home-tool-links"><a href="interactive.html"><span class="home-tool-icon" aria-hidden="true">↔</span><span><strong>Interactive diagrams</strong><small>Change the inputs. Follow the result.</small></span><span aria-hidden="true">↗</span></a>
 <a href="search.html"><svg class="home-tool-icon site-search-icon" viewBox="0 0 20 20" width="24" height="24" aria-hidden="true" focusable="false"><circle cx="8.5" cy="8.5" r="5.5"/><path d="m12.5 12.5 4 4"/></svg><span><strong>Search the collection</strong><small>Find a work, statement, or passage.</small></span><span aria-hidden="true">↗</span></a>
 <a href="notation.html"><span class="home-tool-icon" aria-hidden="true">α</span><span><strong>Look up notation</strong><small>Find symbols and their source context.</small></span><span aria-hidden="true">↗</span></a></div></section>
+<section class="home-future" aria-labelledby="home-future-title"><div class="home-section-heading"><h2 id="home-future-title">Future Developments</h2><a href="collection/FUTURE_DEVELOPMENTS.html">See what’s next <span aria-hidden="true">→</span></a></div>
+<p>Future research will focus on Hilbert’s 12th and 24th problems, Strong Artin, the Langlands program, and refining machine learning and reasoning.</p>
+<div class="home-future-links"><a href="collection/FUTURE_DEVELOPMENTS.html#main-research-directions">Research directions</a><a href="collection/FUTURE_DEVELOPMENTS.html#refining-the-current-work">Refining the current work</a><a href="collection/FUTURE_DEVELOPMENTS.html#website-and-github-accessibility-and-use">Website and GitHub improvements</a></div></section>
 <div class="home-notes"><details class="home-more"><summary>Explore the collections and how they connect</summary>
 <div class="home-collection-list"><h2>Three repositories, one place to begin</h2><dl>
 <dt><a href="collection/index.html">Operation KOMOREBI</a></dt><dd>Papers, books, research programs, formal sources, and evidence.</dd>
