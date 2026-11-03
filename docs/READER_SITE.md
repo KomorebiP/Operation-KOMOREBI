@@ -31,6 +31,36 @@ This conversion adds no mathematical proof audit, Lean replay, or empirical
 validation. Mathematical proofreading self-review covers only the presentation
 wrappers and navigation; there are no mathematical-token changes.
 
+## Interactive J-Space laboratory
+
+`j-lab.html` introduces the saved neural-agent experiment with guided starting
+points for state edits, message tracing and persistence. It is linked from
+Browse → Use, interactive mathematics, site search, saved reading and the
+J-Space Causal Lab work page. The 4.4 MB self-contained instrument loads when
+requested; inference and JSON trace exports run locally. The full-tab route
+also works directly and provides the offline download.
+
+`tools/jspace_lab.py` authenticates the retained 1.4 HTML against its source
+receipt and copies its bytes to `assets/j-space/causal-lab.html`. It does not
+rebuild, rewrite or run the preserved source package. The source record and
+published asset have independent fixed identity checks. Only that exact,
+authenticated HTML asset keeps its original interface; the landing page gets
+the ordinary reader-site structure, navigation, links and labeling checks.
+
+The three guided buttons select the instrument's existing tabs and examples.
+All inference, grading and JSON exports remain in the saved 1.4 instrument.
+Run `python -B -m unittest discover -s tools -p 'test_jspace_lab.py' -v` and
+`node --test tools/test_jspace_lab.cjs` for publication and loading safeguards.
+This integration adds no new scientific evaluation or J-space certificate.
+
+The site uses MathJax's `tex-svg-full.js` entry bundle. Its build retains all
+extension, output, font and accessibility modules, while omitting eight complete
+alternative entry bundles to keep the site within its hosting size budget.
+The fetched package remains complete and verified. Published runtime files keep
+their original bytes and `SOURCE.json`; `assets/mathjax/PUBLISHED.json` records
+the distribution profile and omitted bundles. `tools/reader_runtime.py` packages
+this profile; `test_reader_runtime.py` checks retained modules and source records.
+
 ## Core visual-guide coverage
 
 The **Browse → Core visual guides** directory at `read/visual-guides.html`

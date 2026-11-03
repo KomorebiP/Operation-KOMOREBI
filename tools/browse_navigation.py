@@ -189,6 +189,8 @@ class Browser:
             if title=='Read' and edition:
                 text+=link('Revised reading edition',edition['manuscript'],page)+' · '+link('Monograph PDF',edition['pdf'],page)+'\n\n'
             links = self.resources(c,kinds,page)
+            if title=='Read' and c['id']=='experiments-jspace-causal-lab':
+                links.insert(0,'[Open the interactive J-Space laboratory](https://KomorebiP.github.io/Operation-KOMOREBI/j-lab.html)')
             if title=='Lean' and c['id'] in CURRENT_GUIDANCE:
                 links.insert(0,link('Current formalization checkpoint and continuation',
                     c['destination']+'/'+CURRENT_GUIDANCE[c['id']],page))
