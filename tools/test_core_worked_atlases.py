@@ -69,6 +69,9 @@ class CoreWorkedAtlasTests(unittest.TestCase):
             self.assertTrue(entry['title'].startswith(atlas.label+' visual guide / '))
             self.assertNotIn('/ V3:',entry['title'])
             self.assertIn('Visual 3 V3',entry['text'])
+            self.assertTrue(entry['visual_guide'])
+            self.assertTrue(entry['preview_parts'])
+            self.assertFalse(any(p['text'].startswith('Visual 3 V3') for p in entry['preview_parts']))
 
     def test_every_label_and_source_table_is_present(self):
         for work,atlas in ATLASES.items():

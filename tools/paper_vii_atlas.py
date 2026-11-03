@@ -13,7 +13,7 @@ from readable_chapters import (Chapter, HEADINGS, MATH_PATTERN, PANELS, clean_te
                                group, manuscript_macros, original_math,
                                passage_links, plain_math, presentation_tex,
                                reading_options, render_table)
-from reading_navigation import atlas_config, navigation, outline, resources, visual_title, visual_backlink, visual_position, visual_contents, visual_search_terms
+from reading_navigation import atlas_config, navigation, outline, resources, visual_title, visual_backlink, visual_position, visual_contents, visual_search_terms, visual_search_preview
 from reader_documents import png_dimensions
 from reader_drawing_transcripts import (label_tex,drawing_nodes,coordinate,
                                         expand_drawing_loops,matrix_label_blocks)
@@ -241,8 +241,8 @@ def render(reader):
         if chapter.math != expected:
             raise ValueError('Paper VII atlas mathematics differ on V'+str(number))
         site.page(page,title,body)
-        site.search.append(dict(title=title,group='Collection',kind='Papers and source',work_ids=['paper-vii'],
-                                url=page,text=visual_search_terms(plate)+' '+plain_math(plate['body'])[0]+' '+plate['title']))
+        site.search.append(dict(title=title,group='Collection',kind='Papers and source',visual_guide=True,work_ids=['paper-vii'],
+                                url=page,text=visual_search_terms(plate)+' '+plain_math(plate['body'])[0]+' '+plate['title'],**visual_search_preview(chapter,atlas['figures'])))
         reports.append(dict(number=number,url=page,start_line=plate['line'],end_line=plate['end_line'],
                             math_expressions=len(expected),math_sequence_sha256=digest(json.dumps(expected,ensure_ascii=False).encode()),
                             nodes=[{k:n[k] for k in ('kind','id','line','end_line')} for n in chapter.nodes]))
@@ -260,7 +260,7 @@ def render(reader):
     body += visual_contents(atlas['plates'],INDEX,site.rel,lambda p:reader.viewer_url(pdf,INDEX,'page='+str(p['number']+117)))
     body += '<p><a href="'+reader.resolve(SOURCE,INDEX)+'">Complete selectable atlas source</a> · <a href="'+site.rel(REPORT,INDEX)+'">Conversion records</a></p>'
     site.page(INDEX,'Paper VII visual guide',body)
-    site.search.append(dict(title='Paper VII / Visual guide',group='Collection',kind='Papers and source',work_ids=['paper-vii'],
+    site.search.append(dict(title='Paper VII / Visual guide',group='Collection',kind='Papers and source',visual_guide=True,work_ids=['paper-vii'],
                             url=INDEX,text=' '.join(p['title'] for p in atlas['plates'])))
 
 

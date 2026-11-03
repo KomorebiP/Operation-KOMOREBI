@@ -144,6 +144,14 @@ class QuantumReadingTests(unittest.TestCase):
             pages={p.relative_to(output).as_posix():Page(p.read_text(encoding='utf-8')) for p in output.rglob('*.html')}
             from quantum_visual_guides import PAGE as VISUAL_INDEX,sequences,verify as verify_visual_guides
             self.assertEqual(verify_visual_guides(pages),50)
+            visual_pages={p['url'] for sequence in sequences() for p in sequence['pages']}
+            hits=[item for item in reader.site.search if item['url'].partition('#')[0] in visual_pages]
+            self.assertEqual({item['url'].partition('#')[0] for item in hits},visual_pages)
+            self.assertTrue(all(item.get('visual_guide') for item in hits))
+            proof_hits=[item for item in reader.site.search if item['kind']=='Written proofs']
+            self.assertTrue(proof_hits)
+            self.assertTrue(all(not item.get('visual_guide') for item in proof_hits
+                                if item['url'].partition('#')[0] not in visual_pages))
             for sequence in sequences():
                 for visual in sequence['pages']:
                     self.assertIn('visual-guides.html',pages[visual['url']].links)

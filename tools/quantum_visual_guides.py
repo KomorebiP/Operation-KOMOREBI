@@ -66,7 +66,7 @@ def publish(reader):
         body+='</ol></section>'
     body+='</div><p>For a shorter suggested route, use <a href="start.html#visual">the visual introduction</a>. For definitions and proofs, return to <a href="index.html">the full volume contents</a>.</p>'
     site.page(PAGE,'Quantum and Circuits: Visual guides',body)
-    site.search.append(dict(title='Quantum and Circuits / Visual guides',group='Collection',kind='Guides',
+    site.search.append(dict(title='Quantum and Circuits / Visual guides',group='Collection',kind='Guides',visual_guide=True,
         work_ids=[WORK],url=PAGE,text='50 visual pages quantum arithmetic circuits Fourier amplitudes measurement restoration boundaries'))
 
 
