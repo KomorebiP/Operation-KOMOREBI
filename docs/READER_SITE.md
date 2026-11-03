@@ -10,8 +10,8 @@ on the individual reading pages.
 
 ## Interactive J-Space laboratory
 
-`j-lab.html` introduces the saved neural-agent experiment with guided starting
-points for state edits, message tracing and persistence. It is linked from
+`j-lab.html` presents the saved neural-agent experiment with three choices:
+state edits, message tracing and persistence. It is linked from
 Browse → Use, interactive mathematics, site search, saved reading and the
 J-Space Causal Lab work page. The 4.4 MB self-contained instrument loads when
 requested; inference and JSON trace exports run locally. The full-tab route
@@ -21,10 +21,20 @@ also works directly and provides the offline download.
 receipt and copies its bytes to `assets/j-space/causal-lab.html`. It does not
 rebuild, rewrite or run the preserved source package. The source record and
 published asset have independent fixed identity checks. Only that exact,
-authenticated HTML asset keeps its original interface; the landing page gets
-the ordinary reader-site structure, navigation, links and labeling checks.
+authenticated HTML asset is exempt from reader-site chrome checks; the entry
+page gets the ordinary structure, navigation, links and labeling checks.
 
-The three guided buttons select the instrument's existing tabs and examples.
+The experiment picker selects the instrument's existing tabs and examples.
+`jspace-workbench.js` adds the embedded presentation at runtime, using
+`jspace-workbench.css`: duplicate headers and navigation are omitted, optional
+controls use disclosures, and the iframe follows its content height so the
+page has one scroll area. Existing DOM controls and handlers are retained.
+The main outputs, failed references and factual audits remain available;
+the unadapted full lab and offline download remain direct links. Selecting
+the current experiment preserves edits; changing experiments or selecting
+Reset example reloads the instrument with a fresh example, so old measurements
+cannot be presented as results of the new setup. During message or persistence runs the
+picker and reset are disabled until the run completes or is cancelled.
 All inference, grading and JSON exports remain in the saved 1.4 instrument.
 Run `python -B -m unittest discover -s tools -p 'test_jspace_lab.py' -v` and
 `node --test tools/test_jspace_lab.cjs` for publication and loading safeguards.
