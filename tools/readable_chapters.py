@@ -189,6 +189,8 @@ CHAPTERS.extend(METHODOLOGY_CHAPTERS)
 from quantum_reading import BOOK as QUANTUM_BOOK, CHAPTERS as QUANTUM_CHAPTERS
 BOOKS[QUANTUM_BOOK['work']] = QUANTUM_BOOK
 CHAPTERS += QUANTUM_CHAPTERS
+# One full chapter menu per page; footers keep direct reading routes.
+for _book in BOOKS.values():_book['footer_index_only']=True
 BY_SOURCE = {c['source']:c for c in reversed(CHAPTERS)}
 NUMBERED = {'definition', 'theorem', 'proposition', 'lemma', 'corollary', 'remark', 'example', 'standardfact', 'certificate','boundary','roadmap','construction','classicalinput','classical','conjecture','problem','warning'}
 NUMBERED.update('hist'+kind for kind in ('theorem','proposition','lemma','corollary','definition','example','remark','standardfact'))

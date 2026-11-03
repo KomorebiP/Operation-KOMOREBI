@@ -215,6 +215,12 @@ explicitly record their two appearances. Run
 `python -B -m unittest discover -s tools -p 'test_quantum_reading.py' -v` for the
 complete edition, formula sequence, proof routes, tables and source anchors.
 
+Reading editions keep one complete, native chapter menu in the top navigation.
+Footers keep previous/next links and a direct Full contents link, avoiding the
+quadratic storage cost of repeating a second full menu on every topic page.
+Atlas-specific menus retain their existing behavior. The site-size guard
+continues to enforce the 1 GiB GitHub Pages ceiling.
+
 The twelve core editions share collection switching, chapter filtering,
 persistent text size and font choices, and sidebar chapter shortcuts. The
 [control renderer](../tools/reader_usability.py) runs after chapter layout and
