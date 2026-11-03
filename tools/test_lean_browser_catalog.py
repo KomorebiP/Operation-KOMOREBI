@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
-from lean_browser_catalog import plans,tactic_umbrella,runtime_library
+from lean_browser_catalog import plans,tactic_umbrella,runtime_library,validate_order,verify as verify_catalog
 from prepare_lean_wasm import MATHLIB,MATHLIB_SOURCE_SHA256,SOURCE_MODULES,source_library,validate_source_library
 
 
@@ -23,6 +23,7 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual([f['path'] for f in entry['files']],['paper/lean/Demo/Helper.lean','paper/lean/Demo/Main.lean'])
         self.assertEqual(entry['files'][0]['module'],'Demo.Helper')
         self.assertTrue(entry['tactics']);self.assertEqual(entry['issues'],[])
+        self.assertEqual(entry['order'],[{'file':0},{'file':1}])
         self.assertNotIn('other/lean/Demo/Helper.lean',inputs)
 
     def test_unavailable_imports_cycles_and_changed_bytes_are_not_ready_routes(self):
@@ -52,11 +53,54 @@ class CatalogTests(unittest.TestCase):
         members,available,sources=self.library()
         entries,_=plans(catalog,raws.__getitem__,available,sources)
         self.assertEqual(entries[0]['library'],['Mathlib.Pilot.Helper','Mathlib.Tactic.Pilot'])
+        self.assertEqual(entries[0]['order'],[{'library':'Mathlib.Pilot.Helper'},{'library':'Mathlib.Tactic.Pilot'},{'file':0},{'file':1}])
         self.assertEqual(entries[0]['issues'],[])
         self.assertNotIn('Mathlib.Tactic.Pilot',tactic_umbrella(available))
         self.assertEqual(sources['Mathlib.Pilot.Helper']['source'].encode(),members['Mathlib/Pilot/Helper.lean'])
         entries,_=plans(catalog,raws.__getitem__,available)
         self.assertIn('Unavailable browser import: Mathlib.Tactic.Pilot',entries[0]['issues'])
+
+    def test_library_fallbacks_wait_for_the_first_retained_importer(self):
+        catalog,raws=self.fixture();path='paper/lean/Demo/Main.lean'
+        raws[path]=b'import Demo.Helper\nimport Mathlib.Tactic.Pilot\nexample : value = 1 := rfl\n'
+        catalog['inputs'][path].update(size=len(raws[path]),sha256=hashlib.sha256(raws[path]).hexdigest())
+        _,available,sources=self.library();entries,_=plans(catalog,raws.__getitem__,available,sources)
+        self.assertEqual(entries[0]['order'],[{'file':0},{'library':'Mathlib.Pilot.Helper'},{'library':'Mathlib.Tactic.Pilot'},{'file':1}])
+        # A second importer uses the same checked module, rather than executing
+        # its source and any commands with effects a second time.
+        helper='paper/lean/Demo/Helper.lean';raws[helper]=b'import Mathlib.Tactic.Pilot\ndef value : Nat := 1\n'
+        catalog['inputs'][helper].update(size=len(raws[helper]),sha256=hashlib.sha256(raws[helper]).hexdigest())
+        entries,_=plans(catalog,raws.__getitem__,available,sources)
+        self.assertEqual(entries[0]['order'],[{'library':'Mathlib.Pilot.Helper'},{'library':'Mathlib.Tactic.Pilot'},{'file':0},{'file':1}])
+
+    def test_source_order_rejects_skipped_repeated_invalid_or_unselected_final_steps(self):
+        entry=dict(files=[{},{}],library=['Mathlib.Pilot.Helper'],order=[{'file':0},{'library':'Mathlib.Pilot.Helper'},{'file':1}])
+        validate_order(entry)
+        invalid=[[],[{'file':0},{'file':1}],entry['order']+[{'file':1}],
+                 [{'file':0},{'library':'Mathlib.Pilot.Helper'},{'file':2}],
+                 [{'file':False},{'library':'Mathlib.Pilot.Helper'},{'file':1}],
+                 [{'file':0},{'library':'Mathlib.Missing'},{'file':1}],
+                 [{'file':0},{'file':1},{'library':'Mathlib.Pilot.Helper'}],
+                 [{'file':0,'library':'Mathlib.Pilot.Helper'},{'file':1}],
+                 [{'file':0},{'other':0},{'library':'Mathlib.Pilot.Helper'},{'file':1}]]
+        for order in invalid:
+            with self.subTest(order=order),self.assertRaisesRegex(ValueError,'source order'):
+                validate_order({**entry,'order':order})
+
+    def test_catalogue_verification_binds_order_and_module_names_to_the_receipt_graph(self):
+        from test_lean_browser import LeanBrowserTests
+        from lean_browser import build
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);reader,records,runtime=LeanBrowserTests().fixture(root)
+            build(reader,runtime);documents=dict(files=records);verify_catalog(root,documents)
+            path=root/'lean/browser/catalog.json';catalog=json.loads(path.read_bytes())
+            entry=next(e for e in catalog['entries'] if len(e['files'])>1)
+            original=entry['files'][0]['module'];entry['files'][0]['module']='Changed.Module'
+            path.write_text(json.dumps(catalog))
+            with self.assertRaises(AssertionError):verify_catalog(root,documents)
+            entry['files'][0]['module']=original;entry['order']=list(reversed(entry['order']))
+            path.write_text(json.dumps(catalog))
+            with self.assertRaisesRegex(ValueError,'selected file is not last'):verify_catalog(root,documents)
 
     def test_library_fallback_rejects_changed_bytes_provenance_and_open_import_closures(self):
         _,available,sources=self.library()

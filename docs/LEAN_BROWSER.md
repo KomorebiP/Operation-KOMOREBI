@@ -34,7 +34,13 @@ reader's device. A bounded allowlist is extracted from the checksum-verified
 Mathlib source archive at the compiler-matched revision. Each source retains its
 copyright header, exact bytes, upstream link, revision, size and SHA-256. The
 catalog lists these separately from the receipt-bound paper sources and orders
-their dependencies first. The browser checks their bytes and compiles each
+their dependencies first. Library sources and retained sources share a single
+import order: each library is compiled before the first file that imports it,
+after earlier independent project dependencies. This avoids an observed runtime
+trap when the positivity sources were loaded before the unrelated quantum
+arithmetic and Fourier modules. The order is recomputed from the original import
+graph during site verification; duplicate, missing and invalid steps are rejected.
+The browser checks their bytes and compiles each
 library module with the same syntax check and module-export wrapper used for
 local dependencies. A failed library check stops the workspace. Library source
 edits invalidate the worker's dependency cache just like paper dependency edits.
@@ -138,7 +144,7 @@ Long guard inputs are assembled from bounded Unicode string chunks, with bounded
 join nesting, before parsing the complete source. Export wrappers also supply the
 original dependency to this syntax check rather than checking only the wrapper.
 
-Workspace dependencies are checked first. A generated wrapper imports Lean,
+Workspace dependencies are checked before their importers. A generated wrapper imports Lean,
 names the module, opens a public section for exported-only WASM artifacts, and
 writes its checked environment to the compiler's temporary `/lib/lean` tree.
 The public section is marked `@[expose]` to preserve transparent definition
@@ -152,6 +158,13 @@ Cached dependency warnings remain warnings, and the result explicitly labels
 reused checks. Stop and runtime failures discard this cache. Single-file
 workspaces retain their warm compiler. Warnings remain visible;
 `sorry` is not a clean result. A clean check is not an axiom audit.
+Runtime failures identify the file being checked and retain earlier completed
+results, without giving the interrupted workspace a successful result.
+
+Drafts saved across the browser-isolation reload include module, path and source
+role identities. They are matched by identity if the checking order changes.
+An older or mismatched draft is kept in session storage and offered as a download,
+without applying its text to different files or automatically running it.
 
 Recovery also needs the newer name `dite_eq_left`, which this runtime lacks.
 Its workspace explicitly includes a visible, downloadable compatibility lemma

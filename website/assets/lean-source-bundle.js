@@ -63,8 +63,29 @@ export async function loadSourceBundle(record,{signal,onProgress=()=>{}}={}) {
   signal?.throwIfAborted();
   const value={bytes,entries:zipDirectory(bytes)};cachedBundle={sha:record.sha256,value};return value;
 }
+function sourceOrder(entry) {
+  const library=entry.library||[],files=entry.files;
+  if(!Array.isArray(files)||!files.length||!Array.isArray(library)||library.some(module=>typeof module!=='string')||new Set(library).size!==library.length)throw new Error('Invalid browser source order.');
+  // Older catalogues used libraries first. New builds record the full import
+  // order so an unrelated retained dependency runs before later library imports.
+  const order=entry.order===undefined?[...library.map(module=>({library:module})),...files.map((_,index)=>({file:index}))]:entry.order;
+  if(!Array.isArray(order))throw new Error('Invalid browser source order.');
+  const fileDone=new Set(),libraryDone=new Set();
+  for(const step of order) {
+    if(!step||typeof step!=='object'||Array.isArray(step)||Object.keys(step).length!==1)throw new Error('Invalid browser source order step.');
+    if(Object.hasOwn(step,'file')) {
+      if(!Number.isInteger(step.file)||step.file<0||step.file>=files.length||fileDone.has(step.file))throw new Error('Invalid or repeated browser source order file.');
+      fileDone.add(step.file);
+    } else if(Object.hasOwn(step,'library')) {
+      if(typeof step.library!=='string'||!library.includes(step.library)||libraryDone.has(step.library))throw new Error('Invalid or repeated browser source order library.');
+      libraryDone.add(step.library);
+    } else throw new Error('Invalid browser source order step.');
+  }
+  if(fileDone.size!==files.length||libraryDone.size!==library.length||!Object.hasOwn(order.at(-1)||{},'file')||order.at(-1).file!==files.length-1)throw new Error('Incomplete browser source order or selected file is not last.');
+  return order;
+}
 export async function sourceWorkspace(catalog,entry,bundle,{signal}={}) {
-  const files=[];
+  const order=sourceOrder(entry),libraryFiles=new Map(),retainedFiles=[],generatedFiles=[];
   for(const module of entry.library||[]) {
     signal?.throwIfAborted();
     const record=catalog.librarySources?.[module];
@@ -72,17 +93,17 @@ export async function sourceWorkspace(catalog,entry,bundle,{signal}={}) {
     if(record.syntaxCheck!==undefined&&record.syntaxCheck!=='frontend')throw new Error('Unsupported library source syntax check: '+module);
     const bytes=new TextEncoder().encode(record.source);
     if(bytes.length!==record.size||bytes.length>MAX_SOURCE||await sha256(bytes)!==record.sha256)throw new Error('Pinned library source checksum mismatch: '+module);
-    files.push({module,path:record.path,text:record.source,originalBytes:bytes,sha256:record.sha256,library:true,revision:record.revision,inspect:record.url,...(record.syntaxCheck?{syntaxCheck:record.syntaxCheck}:{})});
+    libraryFiles.set(module,{module,path:record.path,text:record.source,originalBytes:bytes,sha256:record.sha256,library:true,revision:record.revision,inspect:record.url,...(record.syntaxCheck?{syntaxCheck:record.syntaxCheck}:{})});
   }
   if(entry.legacy) {
     const compatibility=catalog.legacy,bytes=new TextEncoder().encode(compatibility.source);
     if(await sha256(bytes)!==compatibility.sha256)throw new Error('Browser compatibility source checksum mismatch.');
-    files.push({module:compatibility.module,text:compatibility.source,originalBytes:bytes,sha256:compatibility.sha256,generated:true,inspect:'version-compatibility.lean'});
+    generatedFiles.push({module:compatibility.module,text:compatibility.source,originalBytes:bytes,sha256:compatibility.sha256,generated:true,inspect:'version-compatibility.lean'});
   }
   if(entry.tactics) {
     const compatibility=catalog.compatibility,bytes=new TextEncoder().encode(compatibility.source);
     if(await sha256(bytes)!==compatibility.sha256)throw new Error('Browser compatibility source checksum mismatch.');
-    files.push({module:compatibility.module,text:compatibility.source,originalBytes:bytes,sha256:compatibility.sha256,generated:true,inspect:'tactic-compatibility.lean'});
+    generatedFiles.push({module:compatibility.module,text:compatibility.source,originalBytes:bytes,sha256:compatibility.sha256,generated:true,inspect:'tactic-compatibility.lean'});
   }
   const routes=new Map(catalog.entries.map(e=>[e.path,e.inspect]));
   for(const file of entry.files) {
@@ -90,9 +111,11 @@ export async function sourceWorkspace(catalog,entry,bundle,{signal}={}) {
     const input=catalog.inputs[file.input];
     if(!input||input.work!==entry.work)throw new Error('Source dependency ownership mismatch.');
     const raw=await readZipSource(bundle.bytes,bundle.entries,input.path,input);
-    files.push({module:file.module,path:input.path,sha256:input.sha256,originalBytes:raw,
+    retainedFiles.push({module:file.module,path:input.path,sha256:input.sha256,originalBytes:raw,
       text:utf8.decode(raw).replace(/^\uFEFF/,'').replace(/\r\n/g,'\n'),inspect:routes.get(input.path)||null});
   }
+  if(retainedFiles.at(-1).path!==entry.path)throw new Error('Selected retained source identity mismatch.');
+  const files=[...generatedFiles,...order.map(step=>Object.hasOwn(step,'file')?retainedFiles[step.file]:libraryFiles.get(step.library))];
   return {id:'source-'+entry.id,title:entry.label+' · '+entry.path.split('/').pop(),work:entry.work,files,
     exploratory:true,issues:entry.issues,library:entry.library||[],tactics:entry.tactics,legacy:entry.legacy?catalog.legacy.module:null};
 }

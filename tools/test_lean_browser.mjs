@@ -5,7 +5,7 @@ import {readFile} from 'node:fs/promises';
 import {webcrypto} from 'node:crypto';
 import {deflateRawSync} from 'node:zlib';
 globalThis.document={querySelector:()=>null};
-const {moduleSource,outcome,withCompatibility,mapDiagnostic,mapWorkspaceDiagnostic,withCompatibilityImport,workspaceCheckMode}=await import('../website/assets/lean-browser.js');
+const {moduleSource,outcome,withCompatibility,mapDiagnostic,mapWorkspaceDiagnostic,withCompatibilityImport,workspaceCheckMode,savedWorkspaceDraft,restoreWorkspaceDraft}=await import('../website/assets/lean-browser.js');
 const {createCompiler}=await import('../website/assets/lean-wasm/compiler.js');
 const {optionalLayers,importedRoots,importLines,sourceHeader}=await import('../website/assets/lean-wasm/roots.js');
 const {zipDirectory,readZipSource,sourceWorkspace,sha256}=await import('../website/assets/lean-source-bundle.js');
@@ -122,6 +122,39 @@ test('pinned library sources are checked separately and cannot replace receipt-b
   entry.library=['Mathlib.Missing'];await assert.rejects(sourceWorkspace(catalog,entry,bundle),/Invalid pinned/);
 });
 
+test('workspace assembly follows the full import order with compatibility helpers first',async()=>{
+  const helperPath='paper/Helper.lean',path='paper/Main.lean',helperRaw=Buffer.from('\uFEFFimport Std\r\ndef value : Nat := 1\r\n');
+  const raw=Buffer.from('import Helper\nimport Mathlib.Tactic.Positivity\nexample : value = 1 := rfl\n');
+  const bytes=sourceZip([['inputs/'+helperPath,helperRaw],['inputs/'+path,raw]]),bundle={bytes,entries:zipDirectory(bytes)},revision='a'.repeat(40);
+  const finset='Mathlib.Tactic.Positivity.Finset',umbrella='Mathlib.Tactic.Positivity';
+  async function libraryRecord(module,source,syntaxCheck) {
+    const libraryPath=module.replaceAll('.','/')+'.lean';
+    return {module,path:libraryPath,source,size:Buffer.byteLength(source),sha256:await sha256(Buffer.from(source)),revision,url:'https://github.com/leanprover-community/mathlib4/blob/'+revision+'/'+libraryPath,...(syntaxCheck?{syntaxCheck}:{})};
+  }
+  const entry={id:'a',path,work:'paper',label:'Paper',files:[{module:'Helper',input:0},{module:'Main',input:1}],library:[finset,umbrella],order:[{file:0},{library:finset},{library:umbrella},{file:1}],issues:[],legacy:true,tactics:true};
+  const compatibility={module:'Mathlib.Tactic',source:'import Mathlib.Tactic.Ring\n',sha256:await sha256(Buffer.from('import Mathlib.Tactic.Ring\n'))};
+  const legacy={module:'Browser.Legacy',source:'import Std\n',sha256:await sha256(Buffer.from('import Std\n'))};
+  const catalog={entries:[entry],inputs:[{path:helperPath,work:'paper',size:helperRaw.length,sha256:await sha256(helperRaw)},{path,work:'paper',size:raw.length,sha256:await sha256(raw)}],mathlibRevision:revision,
+    librarySources:{[finset]:await libraryRecord(finset,'import Std\n','frontend'),[umbrella]:await libraryRecord(umbrella,'public import '+finset+'\n')},compatibility,legacy};
+  const workspace=await sourceWorkspace(catalog,entry,bundle);
+  assert.deepEqual(workspace.files.map(file=>file.module),['Browser.Legacy','Mathlib.Tactic','Helper',finset,umbrella,'Main']);
+  assert.equal(workspace.files[2].text,'import Std\ndef value : Nat := 1\n');
+  assert.deepEqual(workspace.files[2].originalBytes,new Uint8Array(helperRaw));
+  assert.equal(workspace.files[3].syntaxCheck,'frontend');assert.equal(workspace.files.at(-1).path,path);
+  assert.equal(workspaceCheckMode(workspace).frontend,true);
+  const invalid=[[],[{file:0},{file:1}],entry.order.concat({file:1}),
+    [{file:0},{library:finset},{library:umbrella},{file:2}],
+    [{file:false},{library:finset},{library:umbrella},{file:1}],
+    [{file:0},{library:finset},{library:'Mathlib.Missing'},{file:1}],
+    [{file:0},{library:finset},{file:1},{library:umbrella}],
+    [{file:0},{library:finset,file:1},{library:umbrella}],
+    [{file:0},{other:0},{library:finset},{library:umbrella},{file:1}]];
+  for(const order of invalid)await assert.rejects(sourceWorkspace(catalog,{...entry,order},bundle),/source order/);
+  await assert.rejects(sourceWorkspace(catalog,{...entry,path:'paper/Other.lean'},bundle),/Selected retained source identity/);
+  const oldEntry={...entry};delete oldEntry.order;
+  assert.deepEqual((await sourceWorkspace(catalog,oldEntry,bundle)).files.map(file=>file.module),['Browser.Legacy','Mathlib.Tactic',finset,umbrella,'Helper','Main']);
+});
+
 test('required library mode does not overwrite the reader preference for other workspaces',()=>{
   assert.deepEqual(workspaceCheckMode(undefined),{required:false,frontend:false});
   const standard={files:[{module:'Main'}]},required={files:[{module:'Library',library:true,syntaxCheck:'frontend'},{module:'Main'}]};
@@ -129,6 +162,21 @@ test('required library mode does not overwrite the reader preference for other w
   assert.deepEqual(workspaceCheckMode(standard,false),{required:false,frontend:false});
   assert.deepEqual(workspaceCheckMode(standard,true),{required:false,frontend:true});
   assert.deepEqual(workspaceCheckMode(required,true),{required:true,frontend:true});
+});
+
+test('saved drafts follow source identities when dependencies change checking order',()=>{
+  const library={module:'Mathlib.Tactic.Pilot',path:'Mathlib/Tactic/Pilot.lean',library:true};
+  const dependency={module:'Helper',path:'paper/Helper.lean'},main={module:'Main',path:'paper/Main.lean'};
+  const old={id:'source-main',files:[library,dependency,main]};
+  const draft=savedWorkspaceDraft(old,['edited library','edited helper','edited main'],0);
+  const next={id:old.id,files:[dependency,library,main]};
+  assert.deepEqual(restoreWorkspaceDraft(next,draft),{files:['edited helper','edited library','edited main'],current:1});
+  assert.deepEqual(draft.files,['edited library','edited helper','edited main']);
+  for(const bad of [
+    {...draft,fileKeys:undefined}, {...draft,fileKeys:[draft.fileKeys[0],draft.fileKeys[0],draft.fileKeys[2]]},
+    {...draft,files:[1,'helper','main']}, {...draft,id:'another-source'},
+    {...draft,fileKeys:['unknown',...draft.fileKeys.slice(1)]}
+  ])assert.throws(()=>restoreWorkspaceDraft(next,bad),/saved draft could not be matched/);
 });
 
 test('compatibility is explicit and diagnostics point to the original proof',()=>{
