@@ -13,7 +13,7 @@ from readable_chapters import (Chapter, HEADINGS, MATH_PATTERN, PANELS, clean_te
                                group, manuscript_macros, original_math,
                                passage_links, plain_math, presentation_tex,
                                reading_options, render_table)
-from reading_navigation import atlas_config, navigation, outline, resources, visual_title, visual_backlink, visual_position, visual_contents
+from reading_navigation import atlas_config, navigation, outline, resources, visual_title, visual_backlink, visual_position, visual_contents, visual_search_terms
 from reader_documents import png_dimensions
 from reader_drawing_transcripts import (label_tex,drawing_nodes,coordinate,
                                         expand_drawing_loops,matrix_label_blocks)
@@ -242,7 +242,7 @@ def render(reader):
             raise ValueError('Paper VII atlas mathematics differ on V'+str(number))
         site.page(page,title,body)
         site.search.append(dict(title=title,group='Collection',kind='Papers and source',work_ids=['paper-vii'],
-                                url=page,text=plain_math(plate['body'])[0]+' '+plate['title']))
+                                url=page,text=visual_search_terms(plate)+' '+plain_math(plate['body'])[0]+' '+plate['title']))
         reports.append(dict(number=number,url=page,start_line=plate['line'],end_line=plate['end_line'],
                             math_expressions=len(expected),math_sequence_sha256=digest(json.dumps(expected,ensure_ascii=False).encode()),
                             nodes=[{k:n[k] for k in ('kind','id','line','end_line')} for n in chapter.nodes]))

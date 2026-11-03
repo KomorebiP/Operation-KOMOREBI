@@ -13,7 +13,7 @@ from readable_chapters import (HEADINGS,PANELS,KIND_NAMES,clean_tex,group,origin
 from worked_visual_atlas import AtlasChapter
 from reader_atlas import digest
 from reader_documents import png_dimensions
-from reading_navigation import atlas_config,navigation,outline,resources,visual_title,visual_backlink,visual_position
+from reading_navigation import atlas_config,navigation,outline,resources,visual_title,visual_backlink,visual_position, visual_search_terms
 from paper_ix_atlas_descriptions import DESCRIPTIONS,data_tables
 
 BASE='papers/paper-ix/current/'
@@ -247,7 +247,7 @@ def render(reader):
         expected=expected_math(row,atlas['figures'],atlas['inputs'])
         if chapter.math!=expected:raise ValueError('Paper IX visual mathematical sequence changed in section '+str(number))
         site.page(page,title,body)
-        site.search.append(dict(title=title,group='Collection',kind='Papers and source',work_ids=['paper-ix'],url=page,text=row['title']+' '+row['body']))
+        site.search.append(dict(title=title,group='Collection',kind='Papers and source',work_ids=['paper-ix'],url=page,text=visual_search_terms(row)+' '+row['title']+' '+row['body']))
         reports.append(dict(number=number,url=page,source=row['source'],start_line=row['start_line'],end_line=row['end_line'],math_expressions=len(expected),math_sequence_sha256=digest(json.dumps(expected,ensure_ascii=False).encode()),nodes=[{k:n[k] for k in ('kind','id','line','end_line')} for n in chapter.nodes]))
     record=dict(collection_revision=site.revision,source_inputs=SPEC['source_inputs'],source_pdf=SPEC['pdf'],source_pdf_sha256=SPEC['pdf_sha256'],
         index=INDEX,total_sections=23,html_sections=reports,figures=atlas['figures'],macros=atlas['macros'],manuscript_references=atlas['targets'],

@@ -118,6 +118,12 @@ def visual_position(label, number, total):
     return label+' visual guide · Visual '+str(number)+' of '+str(total)
 
 
+def visual_search_terms(entry):
+    number=str(entry['number'])
+    prefix={'v':'V','s':'Section ','l':'Lesson '}.get(entry['url'].rsplit('/',1)[-1][0])
+    return 'Visual '+number+(' '+prefix+number if prefix else '')
+
+
 def visual_contents(plates, index, relative, pdf_page, render_title=None):
     """Title-first reading links, with the original PDF as a secondary route."""
     from readable_chapters import navigation_title

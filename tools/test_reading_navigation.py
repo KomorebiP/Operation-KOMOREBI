@@ -111,12 +111,16 @@ class ReadingNavigationTests(unittest.TestCase):
         self.assertEqual(neighbours(config,plates[-1]['url'])[3]['url'],config['index'])
 
     def test_visual_labels_use_the_subject_and_keep_position_separate(self):
+        from reading_navigation import visual_search_terms
         entry=dict(number=3,title=r'Residues in $\mathbb{F}_5$',url='read/test/atlas/v03.html')
         config=atlas_config('test','Paper test','read/test/atlas/index.html',[entry])
         self.assertEqual(entries(config)[0]['title'],'Residues in F_5')
         self.assertEqual(visual_title('Paper test',entry),'Paper test visual guide / Residues in F_5')
         self.assertEqual(visual_backlink(entry),'Visual guide: Residues in F_5')
         self.assertEqual(visual_position('Paper test',3,24),'Paper test visual guide · Visual 3 of 24')
+        self.assertEqual(visual_search_terms(entry),'Visual 3 V3')
+        self.assertEqual(visual_search_terms(dict(entry,url='read/test/atlas/s03.html')),'Visual 3 Section 3')
+        self.assertEqual(visual_search_terms(dict(entry,url='read/test/atlas/l03.html')),'Visual 3 Lesson 3')
 
     def test_visual_contents_link_titles_directly_and_keep_pdf_context_and_anchors(self):
         import posixpath

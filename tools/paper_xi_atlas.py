@@ -13,7 +13,7 @@ from readable_chapters import (HEADINGS,PANELS,KIND_NAMES,clean_tex,group,origin
 from worked_visual_atlas import AtlasChapter
 from reader_atlas import digest
 from reader_documents import png_dimensions
-from reading_navigation import atlas_config,navigation,outline,resources,visual_title,visual_backlink,visual_position
+from reading_navigation import atlas_config,navigation,outline,resources,visual_title,visual_backlink,visual_position, visual_search_terms
 from paper_ix_atlas import render_figure
 from paper_xi_atlas_descriptions import DESCRIPTIONS,data_tables
 
@@ -203,7 +203,7 @@ def render(reader):
         expected=original_math(row['locator'])+expected_math(row['body'],atlas['figures'])
         if chapter.math!=expected:raise ValueError('Changed Paper XI lesson mathematics: '+str(row['number']))
         body+='<details class="document-provenance"><summary>Source and conversion record</summary><p>This edition preserves all 47 lessons, the opening orientation and both route sections. Figures are rendered from retained vector PDFs. Descriptions and recorded-data tables are reading aids. No mathematical generator, TeX build, proof audit or Lean replay was run for this conversion.</p><p><a href="'+site.rel(REPORT,page)+'">Source hashes and conversion checks</a></p></details>'
-        site.page(page,title,body);site.search.append(dict(title=title,group='Collection',kind='Papers and source',work_ids=['paper-xi'],url=page,text=row['title']+' '+row['body']))
+        site.page(page,title,body);site.search.append(dict(title=title,group='Collection',kind='Papers and source',work_ids=['paper-xi'],url=page,text=visual_search_terms(row)+' '+row['title']+' '+row['body']))
         reports.append(dict(number=row['number'],url=page,math=expected,source=row['source'],start_line=row['start_line'],end_line=row['end_line']))
     body='<p class="eyebrow">Paper XI visual guide</p><h1>Explore all 47 visuals</h1><p>Follow finite tame coordinates and finite wild comparison into the restricted arithmetic constructions, then the realization and comparison boundary. All 23 original vector figures have descriptions and selectable labels.</p>'+reader.work_routes('paper-xi',INDEX)
     for first,last,title in [(1,11,'Finite tame coordinates'),(12,23,'Finite wild comparison'),(24,39,'Actual arithmetic construction'),(40,45,'Realization and comparison'),(46,47,'Evidence and source map')]:

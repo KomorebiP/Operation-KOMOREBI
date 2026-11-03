@@ -7,7 +7,7 @@ from html.parser import HTMLParser
 from readable_chapters import BOOKS
 from reader_atlas import atlas_tex as original_atlas_tex, digest, expected_math, render_drawing as original_render_drawing, transcript_order
 from readable_chapters import Chapter, HEADINGS, MATH_PATTERN, PANELS, clean_tex, group, manuscript_macros, original_math, passage_links, plain_math, presentation_tex, reading_options, render_table, chapter_text
-from reading_navigation import atlas_config, navigation, outline, resources, visual_title, visual_backlink, visual_position, visual_contents
+from reading_navigation import atlas_config, navigation, outline, resources, visual_title, visual_backlink, visual_position, visual_contents, visual_search_terms
 from reader_documents import png_dimensions
 from worked_atlas_drawings import drawing_nodes
 
@@ -295,7 +295,7 @@ class WorkedAtlas:
             if chapter.math != expected:
                 raise ValueError('Worked atlas mathematics differ on V' + str(number))
             site.page(page, title, body)
-            site.search.append(dict(title=title, group='Collection', kind='Papers and source', work_ids=[self.work], url=page, text=plain_math(plate['body'])[0] + ' ' + plate['title']))
+            site.search.append(dict(title=title, group='Collection', kind='Papers and source', work_ids=[self.work], url=page, text=visual_search_terms(plate)+' '+plain_math(plate['body'])[0] + ' ' + plate['title']))
             reports.append(dict(number=number, source=source_path, url=page, start_line=plate['line'], end_line=plate['end_line'], math_expressions=len(expected), math_sequence_sha256=digest(json.dumps(expected, ensure_ascii=False).encode()), nodes=[{k: n[k] for k in ('kind', 'id', 'line', 'end_line')} for n in chapter.nodes]))
         if aided != set(self.TABLE_AIDS):
             raise ValueError('Worked atlas table coverage differs')
