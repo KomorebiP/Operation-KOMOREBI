@@ -238,7 +238,7 @@ class ReadingDocuments:
         targets = self.work_route_targets(work)
         primary = next((label for label in ('Revised edition', 'Read chapters', 'Read PDF')
                         if any(name == label for name, _ in targets)), None)
-        prominent = {primary, 'Read PDF', 'Visual atlas', 'Inspect Lean'}
+        prominent = {primary, 'Read PDF', 'Visual guide', 'Inspect Lean'}
         hub = 'collection/works/'+work+'.html'
         def link(label, url, main=False):
             target = '#'+url.split('#',1)[1] if url.startswith(hub+'#') else self.site.rel(url,page)
@@ -284,7 +284,7 @@ class ReadingDocuments:
         if work in BOOKS:
             routes.append(('Read chapters', BOOKS[work]['index']))
             if BOOKS[work].get('atlas_index'):
-                routes.append(('Visual atlas', BOOKS[work]['atlas_index']))
+                routes.append(('Visual guide', BOOKS[work]['atlas_index']))
             if BOOKS[work].get('diagram_guide'):
                 routes.append(('Diagram descriptions', BOOKS[work]['diagram_guide']))
         if pdf: routes.append(('Original PDF' if edition else 'Read PDF', pdf['url']))
@@ -300,12 +300,21 @@ class ReadingDocuments:
 
     def work_routes(self, work, page):
         from reading_navigation import work_links
-        primary = {'Paper overview', 'Read chapters', 'Visual atlas', 'Read PDF', 'Revised edition'}
+        from core_visual_guides import is_visual_guide,guide_navigation
+        if is_visual_guide(work,page):
+            more='<details class="work-more"><summary>More resources</summary><div class="work-more-links reading-resource-menu">'
+            more+=work_links(self,work,page,exclude={'Read chapters','Visual guide'})
+            from readable_chapters import BOOKS
+            pair=self.site.rel('side-by-side.html',page)+'?left='+quote(page,safe='')+'&right='+quote(BOOKS[work]['index'],safe='')
+            more+='<a data-side-reader-link href="'+html.escape(pair,quote=True)+'">Read beside paper</a>'
+            more+='<a href="'+html.escape(self.site.rel('read/index.html',page),quote=True)+'">Reading library</a></div></details>'
+            return guide_navigation(work,page,more)
+        primary = {'Paper overview', 'Read chapters', 'Visual guide', 'Read PDF', 'Revised edition'}
         body = '<nav class="work-overview-nav paper-routes" aria-label="Reading routes for this work">'
         for label, url in self.work_route_targets(work):
             if label not in primary: continue
             current = (' aria-current="page"' if url == page else
-                       ' aria-current="location"' if label == 'Visual atlas' and page.startswith(url.removesuffix('index.html')) else '')
+                       ' aria-current="location"' if label == 'Visual guide' and page.startswith(url.removesuffix('index.html')) else '')
             display={'Paper overview':'Work overview','Read chapters':'Contents'}.get(label,label)
             body += '<a href="'+html.escape(self.site.rel(url,page),quote=True)+'"'+current+'>'+html.escape(display)+'</a>'
         body += '<details class="work-more"><summary>More resources</summary><div class="work-more-links reading-resource-menu">'

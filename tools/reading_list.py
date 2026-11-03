@@ -4,6 +4,7 @@ import re
 
 
 def saveable(path):
+    if path=='read/visual-guides.html':return False
     return path.startswith(('collection/', 'read/', 'math/', 'polyphase/')) or path in {
         'interactive.html', 'signal-lab.html', 'playground.html'}
 

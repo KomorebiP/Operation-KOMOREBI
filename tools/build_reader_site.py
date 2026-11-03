@@ -56,7 +56,7 @@ def math_fences(rendered):
 def site_navigation(page):
     """Ordinary links with a progressively enhanced, nonmodal disclosure."""
     def link(title, target):
-        current = ' aria-current="page"' if target == page else ''
+        current = ' aria-current="page"' if target == page else (' aria-current="location"' if target=='read/visual-guides.html' and re.fullmatch(r'read/paper-[ivx]+/atlas/[^/]+\.html',page) else '')
         url = posixpath.relpath(target, posixpath.dirname(page) or '.')
         icon = ('<svg class="site-search-icon" viewBox="0 0 20 20" width="17" height="17" '
                 'aria-hidden="true" focusable="false"><circle cx="8.5" cy="8.5" r="5.5"/>'
@@ -68,7 +68,6 @@ def site_navigation(page):
                   ('Physics collection', 'collection/PHYSICS_COLLECTION.html'),
                   ('Special Functions', 'collection/SPECIAL_FUNCTIONS.html'),
                   ('Papers and PDFs', 'documents.html'),
-                  ('Core visual guides', 'read/visual-guides.html'),
                   ('Read side by side', 'side-by-side.html'),
                   ('Worked examples', 'collection/HAND_WORKED_EXAMPLES.html')]),
         ('Look up', [('Claims', 'claims.html'),
@@ -84,7 +83,7 @@ def site_navigation(page):
         '<li>'+link(label, target)+'</li>' for label, target in links)+'</ul></div>'
         for title, links in groups)
     return ('<nav class="site-navigation" aria-label="Main navigation">'
-            '<div class="site-navigation-bar"><div class="site-nav-links">'+link('Read', 'read/index.html')+link('Collection', 'works.html')+
+            '<div class="site-navigation-bar"><div class="site-nav-links">'+link('Read', 'read/index.html')+link('Visual guides', 'read/visual-guides.html')+link('Collection', 'works.html')+
             link('Glossary', 'collection/GLOSSARY.html')+link('About', 'collection/START_HERE.html')+
             '</div><div class="site-nav-tools">'+link('Search', 'search.html')+
             '<button id="site-menu-toggle" type="button" aria-expanded="true" '
@@ -328,7 +327,7 @@ class Site:
         article_start=body.find('<article id="chapter-text"')
         side_context=body[:article_start] if edition(path) and article_start>=0 else body
         has_side_action=('class="side-launch"' in side_context) if edition(path) else ('data-side-reader-link' in side_context)
-        if not work_page and not has_side_action and path not in {'side-by-side.html','index.html','404.html','interactive.html','signal-lab.html','works.html','reading-list.html','lean/playground.html','lean/run.html'}:
+        if not work_page and not has_side_action and path not in {'side-by-side.html','index.html','404.html','interactive.html','signal-lab.html','works.html','reading-list.html','lean/playground.html','lean/run.html','read/visual-guides.html'}:
             pair=self.rel('side-by-side.html',path)+'?left='+quote(path,safe='')
             launch='<p class="side-launch"><a data-side-reader-link href="'+esc(pair,quote=True)+'">Read side by side</a></p>'
             body=re.sub(r'(</h1>)',lambda match:match[1]+launch,body,count=1)
