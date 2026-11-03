@@ -20,11 +20,14 @@ BOOK=dict(work=WORK,label='Paper XII',base=BASE,main=MAIN,bib=BIB,inline_bibliog
     title='Patching Support, Hecke Packets, and Conditional Automorphic Completion',main_chapters=13,
     custom_reader='paper_xii',number_floats=True,statement_navigation=True,
     figure_receipts='assets/figures/paper-xii/figures.json',
+    atlas_index='read/paper-xii/atlas/index.html',
+    atlas_link_text='Explore all 27 visual plates in HTML',
+    reading_note='The complete 27-plate visual guide has HTML pages with 23 original drawings, selectable labels and source tables, and links to the manuscript. The original PDF remains available.',
     required_macros=['OO','FF','QQ','ZZ','TT','Spec','Supp','wideotimes'],
     require_table_reading_aids=True,
     reading_introduction='Read all 13 main sections, the reading map, and the complete verification '
         'and revision record. The algebraic results retain their supplied arithmetic hypotheses '
-        'and conditional conclusions. The visual and Lean companions remain available in PDF.')
+        'and conditional conclusions. The complete visual guide is available in HTML; the Lean companion remains in PDF.')
 BOOK['table_reading_aids']={
     ('reading_route.tex','L7'):dict(caption='Reading routes through the three companions',
         headers=['Topic','Main statement','Visual','Lean section'],row_header_column=0),

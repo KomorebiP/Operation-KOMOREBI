@@ -12,14 +12,14 @@
 //   const lean = await self.leanWasm.createCompiler({ baseUrl });
 
 import { DEFAULT_BASE_URL, requiredAssetPaths, resolveAssets } from './assets.js';
-import { createCompiler } from './compiler.js?v=20261102';
+import { createCompiler } from './compiler.js?v=20261102-frontend-env1';
 import { fetchableRoots, optionalLayers } from './roots.js';
 
 /** Lean is one language here; the variable shape matches the other @live-codes language packages. */
 export const LANGUAGES = ['lean'];
 
 /** The accepted values of `syntaxCheck`. */
-export const SYNTAX_MODES = ['auto', 'full', 'off'];
+export const SYNTAX_MODES = ['auto', 'full', 'off', 'frontend'];
 
 export { createCompiler, DEFAULT_BASE_URL, requiredAssetPaths, resolveAssets };
 

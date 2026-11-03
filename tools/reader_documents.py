@@ -62,8 +62,10 @@ def source_lines(text, annotations=None, *, rendered_lines=None):
                        '<button type="submit">Go to line</button></div>'
                        '<p class="status">Jump directly to a line, then copy its address from your browser.</p></form>')
     navigation += '</div>'
+    # These unquoted attributes contain only generated safe ASCII tokens.
+    # Omitting optional quotes saves six bytes per line with the same DOM.
     return navigation+'<pre class="source-lines" tabindex="0" aria-label="Source text with linked line numbers"><code>'+''.join(
-        '<span class="source-line" id="L'+str(n)+'">'+annotations.get(n, '')+'<a class="line-number" href="#L'+str(n)+'" aria-label="Line '+str(n)+'">'+str(n)+'</a> '+rendered_lines[n-1]+'\n</span>'
+        '<span class=source-line id="L'+str(n)+'">'+annotations.get(n, '')+'<a class=line-number href=#L'+str(n)+' aria-label="Line '+str(n)+'">'+str(n)+'</a> '+rendered_lines[n-1]+'\n</span>'
         for n, line in enumerate(lines, 1))+'</code></pre><p id="source-end" tabindex="-1"><a href="#source-navigation">Back to source controls</a></p>'
 
 
@@ -170,6 +172,10 @@ class ReadingDocuments:
         prepare_paper_ix_atlas(self)
         from paper_x_atlas import prepare as prepare_paper_x_atlas
         prepare_paper_x_atlas(self)
+        from paper_xi_atlas import prepare as prepare_paper_xi_atlas
+        prepare_paper_xi_atlas(self)
+        from paper_xii_atlas import prepare as prepare_paper_xii_atlas
+        prepare_paper_xii_atlas(self)
         from paper_v_atlas import prepare as prepare_paper_v_atlas
         prepare_paper_v_atlas(self)
         from paper_vi_atlas import prepare as prepare_paper_vi_atlas
@@ -468,6 +474,10 @@ class ReadingDocuments:
         render_paper_ix_atlas(self)
         from paper_x_atlas import render as render_paper_x_atlas
         render_paper_x_atlas(self)
+        from paper_xi_atlas import render as render_paper_xi_atlas
+        render_paper_xi_atlas(self)
+        from paper_xii_atlas import render as render_paper_xii_atlas
+        render_paper_xii_atlas(self)
         from paper_v_atlas import render as render_paper_v_atlas
         render_paper_v_atlas(self)
         from paper_vi_atlas import render as render_paper_vi_atlas
