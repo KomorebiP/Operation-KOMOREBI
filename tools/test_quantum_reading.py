@@ -142,6 +142,16 @@ class QuantumReadingTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             output=Path(folder);reader=publish_fixture(output)
             pages={p.relative_to(output).as_posix():Page(p.read_text(encoding='utf-8')) for p in output.rglob('*.html')}
+            from quantum_start import PAGE,PATHS
+            guide=pages[PAGE]
+            self.assertEqual(guide.h1,1)
+            self.assertTrue({'visual','study','formal','top'}.issubset(guide.ids))
+            for _,_,_,_,steps,_ in PATHS:
+                for slug,_,_ in steps:
+                    self.assertIn(BOOK['index'].rsplit('/',1)[0]+'/'+slug+'.html',pages)
+                    self.assertIn(slug+'.html',guide.links)
+            self.assertIn('start.html',pages[BOOK['index']].links)
+            self.assertTrue(any(s['url']==PAGE and s['work_ids']==[WORK] for s in reader.site.search))
             documents=dict(files=list(reader.records.values()))
             with patch.object(reading,'BOOKS',{WORK:BOOK}),patch.object(reading,'CHAPTERS',CHAPTERS):
                 total=check_readable_chapter(output,documents,pages)

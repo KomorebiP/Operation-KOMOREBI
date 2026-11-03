@@ -22,6 +22,8 @@ The background advice is an editorial starting point. The work itself states its
 
 [Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#monographs-quantum-and-circuits) · [Download this work](../DOWNLOADS.md#monographs-quantum-and-circuits)
 
+[Start here: choose a visual introduction, full study, or formal companion](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-quantum-and-circuits/start.html). Each path links directly to the HTML edition and explains useful background.
+
 ### A route through the volume
 
 The book asks what a change of representation makes accessible, and what it costs to reach, update, and reconstruct that representation. Its four treatments use distinct models.

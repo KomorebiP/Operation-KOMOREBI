@@ -1116,7 +1116,9 @@ def render_reading_index(reader):
             if bool(re.fullmatch(r'paper-[ivx]+',work))!=core:continue
             body+='<section class="work"><p class="eyebrow">'+config['label']+'</p><h3>'+html.escape(config['title'])+'</h3><p>'+str(len(entries(config)))+' reading pages'+(' · opening selection' if config.get('partial') else '')+'</p><nav aria-label="'+config['label']+' reading formats">'
             if config.get('partial'):body+='<p>Opening chapters are available in HTML; continue in the PDF or linked sources.</p>'
-            body+='<a class="button" href="'+site.rel(config['chapters'][0]['url'],page)+'">Start reading</a><a href="'+site.rel(config['index'],page)+'">Contents</a>'
+            if config.get('reading_guide'):body+='<a class="button" href="'+site.rel(config['reading_guide'],page)+'">Start here</a>'
+            else:body+='<a class="button" href="'+site.rel(config['chapters'][0]['url'],page)+'">Start reading</a>'
+            body+='<a href="'+site.rel(config['index'],page)+'">Contents</a>'
             pdf=reader.primary_pdf(work)
             if pdf:body+='<a href="'+site.rel(pdf['url'],page)+'">Read PDF</a>'
             body+='</nav></section>'
@@ -1454,6 +1456,8 @@ def render_book_index(reader,book,reports):
     introduction=(config.get('reading_introduction') or 'Read the '+str(config['main_chapters'])+' main manuscript chapters in order, or choose a topic below.')
     body='<p class="eyebrow">Read '+label+'</p><h1>'+html.escape(config['title'])+'</h1><p>'+html.escape(introduction)+'</p>'+reader.work_routes(work,page)
     body+='<p class="reading-start"><a class="button" href="'+site.rel(config['chapters'][0]['url'],page)+'">Start reading</a></p>'
+    if config.get('reading_guide'):
+        body+='<p class="quantum-guide-entry"><a href="'+site.rel(config['reading_guide'],page)+'">Start here: choose a reading path</a> · A visual introduction, full study, or formal companion.</p>'
     for anchor in config.get('contents_anchors',[]):body+='<span id="'+html.escape(anchor,quote=True)+'"></span>'
     body+='<nav class="chapter-contents reading-contents-index" aria-label="'+label+' chapters"><h2>Contents</h2>'
     body+=contents_list(config,page)+'</nav>'
@@ -1483,6 +1487,9 @@ def render_book_index(reader,book,reports):
     site.page(page,'Read '+label,body)
     directory_title='Read opening chapters' if config.get('partial') else 'Read all chapters'
     site.search.append(dict(title=label+' / '+directory_title,group='Collection',kind='Papers and source',work_ids=[work],url=page,text=config['title']+' readable chapters '+ ' '.join(c['title'] for c in config['chapters'])))
+    if config.get('custom_reader')=='quantum':
+        from quantum_start import publish
+        publish(reader,book)
 
 
 def render_bibliography(reader,book):

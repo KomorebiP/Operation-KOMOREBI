@@ -216,6 +216,12 @@ explicitly record their two appearances. Run
 complete edition, formula sequence, proof routes, tables and source anchors.
 
 Reading editions keep one complete, native chapter menu in the top navigation.
+Quantum and Circuits also provides `read/monographs-quantum-and-circuits/start.html`:
+three editorial reading paths with prerequisites, chapter links, and checkpoints.
+The visual tour, four-treatment study route, and formal companion link into the
+retained edition. Its contents, reading-library card, work overview, and search
+entry expose the guide without changing the chapter sequence.
+
 Footers keep previous/next links and a direct Full contents link, avoiding the
 quadratic storage cost of repeating a second full menu on every topic page.
 Atlas-specific menus retain their existing behavior. The site-size guard
