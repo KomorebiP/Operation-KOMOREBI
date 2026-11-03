@@ -25,8 +25,7 @@ authenticated HTML asset keeps its original interface; the landing page gets
 the ordinary reader-site structure, navigation, links and labeling checks.
 
 The three guided buttons select the instrument's existing tabs and examples.
-They do not insert model answers or change the inference code. Later relay and
-writer studies are linked separately and are not claimed as features of 1.4.
+All inference, grading and JSON exports remain in the saved 1.4 instrument.
 Run `python -B -m unittest discover -s tools -p 'test_jspace_lab.py' -v` and
 `node --test tools/test_jspace_lab.cjs` for publication and loading safeguards.
 This integration adds no new scientific evaluation or J-space certificate.
