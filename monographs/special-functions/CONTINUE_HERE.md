@@ -51,3 +51,14 @@ must not be assumed simultaneous. Neither alternative is refuted or exhausted.
 No delegated or delayed research run remains. Preserve all twelve blocks,
 dated guides, manuscript sources and reading PDFs. New proofs belong in a
 new block. Root archive manifests remain earlier release snapshots.
+
+Publication: the complete Block12 history through
+`c6e93f265bbfed4924ccd41a6cb161b90745d204` is on the GitHub branch
+`codex/special-functions-local-analysis`. The native Git client has no saved
+GitHub credentials in this checkout. The connected GitHub/Composio tools can
+publish exact Git trees and commits, including original author/committer dates;
+verify every returned hash and read main before a fast-forward ref update.
+Large merge trees may need bottom-up immediate subtree creation. The `.io`
+reader site deploys from main through `.github/workflows/reader-site.yml`.
+After a merge, run the catalogue generator before its check: sparse checkout
+can omit generated root README files until the generator materializes them.
