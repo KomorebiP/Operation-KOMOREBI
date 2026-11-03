@@ -1111,14 +1111,17 @@ def render_reading_index(reader):
     site=reader.site
     page='read/index.html'
     from reading_navigation import entries
-    body='<p class="eyebrow">HTML reading editions</p><h1>Reading library</h1><p>Read papers and books with chapter contents, selectable equations, and links to proofs and original sources. Begin with Paper I for the foundations, or choose a work below.</p><nav class="reading-library-groups" aria-label="Reading collections"><a href="start.html">Start here for all works</a><a href="#core-papers">Core papers</a><a href="#books">Books and monographs</a></nav>'
+    from reading_paths import guide_enabled
+    body='<p class="eyebrow">HTML reading editions</p><h1>Reading library</h1><p>Read papers and books with chapter contents, selectable equations, and links to proofs and original sources. Begin with Paper I for the foundations, or choose a work below.</p><nav class="reading-library-groups" aria-label="Reading collections">'
+    if getattr(site,'guided_reading',False):body+='<a href="start.html">Start here for all works</a>'
+    body+='<a href="#core-papers">Core papers</a><a href="#books">Books and monographs</a></nav>'
     for group,identifier,core in [('Core papers','core-papers',True),('Books and monographs','books',False)]:
         body+='<section id="'+identifier+'"><h2>'+group+'</h2><div class="work-list">'
         for work,config in BOOKS.items():
             if bool(re.fullmatch(r'paper-[ivx]+',work))!=core:continue
             body+='<section class="work"><p class="eyebrow">'+config['label']+'</p><h3>'+html.escape(config['title'])+'</h3><p>'+str(len(entries(config)))+' reading pages'+(' · opening selection' if config.get('partial') else '')+'</p><nav aria-label="'+config['label']+' reading formats">'
             if config.get('partial'):body+='<p>Opening chapters are available in HTML; continue in the PDF or linked sources.</p>'
-            if config.get('reading_guide'):body+='<a class="button" href="'+site.rel(config['reading_guide'],page)+'">Start here</a>'
+            if config.get('reading_guide') and guide_enabled(site,work):body+='<a class="button" href="'+site.rel(config['reading_guide'],page)+'">Start here</a>'
             else:body+='<a class="button" href="'+site.rel(config['chapters'][0]['url'],page)+'">Start reading</a>'
             body+='<a href="'+site.rel(config['index'],page)+'">Contents</a>'
             pdf=reader.primary_pdf(work)
@@ -1452,13 +1455,14 @@ def render_book(reader,book):
 
 def render_book_index(reader,book,reports):
     from reading_navigation import contents_list
+    from reading_paths import guide_enabled
     site=reader.site
     config=book['config']
     page,work,label=config['index'],config['work'],config['label']
     introduction=(config.get('reading_introduction') or 'Read the '+str(config['main_chapters'])+' main manuscript chapters in order, or choose a topic below.')
     body='<p class="eyebrow">Read '+label+'</p><h1>'+html.escape(config['title'])+'</h1><p>'+html.escape(introduction)+'</p>'+reader.work_routes(work,page)
     body+='<p class="reading-start"><a class="button" href="'+site.rel(config['chapters'][0]['url'],page)+'">Start reading</a></p>'
-    if config.get('reading_guide'):
+    if config.get('reading_guide') and guide_enabled(site,work):
         body+='<p class="reading-guide-entry"><a href="'+site.rel(config['reading_guide'],page)+'">Start here: choose a reading path</a> · An introduction, study sequence, and evidence route.</p>'
     for anchor in config.get('contents_anchors',[]):body+='<span id="'+html.escape(anchor,quote=True)+'"></span>'
     body+='<nav class="chapter-contents reading-contents-index" aria-label="'+label+' chapters"><h2>Contents</h2>'

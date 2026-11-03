@@ -261,7 +261,7 @@ class ReadingDocuments:
         hub = 'collection/works/'+work+'.html'
         pdf = self.primary_pdf(work)
         routes = [('Paper overview', hub)]
-        if any(c['id']==work for c in getattr(self.site,'registry',{}).get('components',[])):
+        if getattr(self.site,'guided_reading',False) and any(c['id']==work for c in getattr(self.site,'registry',{}).get('components',[])):
             from reading_paths import guide_url
             routes.append(('Start here',guide_url(work)))
         edition = getattr(self.site,'assessments',{}).get(work,{}).get('editorial_edition')

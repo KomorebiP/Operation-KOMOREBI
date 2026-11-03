@@ -14,6 +14,12 @@ def guide_url(work):
     return 'read/'+work+'/start.html'
 
 
+def guide_enabled(site,work):
+    """Quantum publishes its own guide; other guides require a selected site work."""
+    return work==QUANTUM or (getattr(site,'guided_reading',False) and
+        any(c['id']==work for c in getattr(site,'registry',{}).get('components',[])))
+
+
 def guide_model(reader, component):
     """Choose published resources, retaining their own labels and evidence scope."""
     from readable_chapters import BOOKS, statement_directory_url

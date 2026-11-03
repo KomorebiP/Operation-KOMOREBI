@@ -4,6 +4,7 @@ from pathlib import Path
 from types import SimpleNamespace
 import tempfile
 import unittest
+from unittest.mock import patch
 
 from build_reader_site import Site
 from check_reader_site import Page
@@ -16,7 +17,7 @@ ROOT=Path(__file__).resolve().parents[1]
 def fixture(output):
     load=lambda name:json.loads((ROOT/'manifests'/name).read_bytes())
     registry=load('browse-resources.json');status=load('project-status.json')
-    site=SimpleNamespace(root=ROOT,output=output,revision='reading-paths-test',registry=registry,
+    site=SimpleNamespace(root=ROOT,output=output,revision='reading-paths-test',registry=registry,guided_reading=True,
         status=status,assessments={r['id']:r for r in status['components']},
         components={r['id']:r for r in load('source-components.json')['components']},
         claims=load('claim-navigation.json'),search=[],editorial_editions={},cache=None)
@@ -134,6 +135,26 @@ class ReadingPathsTests(unittest.TestCase):
             primary=body.split('<details class="work-more">')[0]
             self.assertIn('<a class="button" href="'+reader.site.rel(guide_url(work),page)+'">Start here</a>',primary)
             self.assertEqual(Page(body).links.count(reader.site.rel(guide_url(work),page)),1)
+
+    def test_standalone_reading_library_omits_unpublished_site_guides(self):
+        import readable_chapters as reading
+        with tempfile.TemporaryDirectory() as folder:
+            reader=fixture(Path(folder));reader.primary_pdf=lambda work:None
+            work='komorebi-methodology'
+            config=dict(work=work,label='Standalone',title='A retained book',
+                        index='read/'+work+'/index.html',reading_guide=guide_url(work),
+                        chapters=[dict(url='read/'+work+'/one.html',title='Opening chapter')])
+            reader.site.guided_reading=False
+            with patch.object(reading,'BOOKS',{work:config}):reading.render_reading_index(reader)
+            page=Page((reader.site.output/'read/index.html').read_text(encoding='utf-8'))
+            self.assertNotIn('start.html',page.links)
+            self.assertNotIn(work+'/start.html',page.links)
+            self.assertIn(work+'/one.html',page.links)
+            reader.site.guided_reading=True
+            with patch.object(reading,'BOOKS',{work:config}):reading.render_reading_index(reader)
+            page=Page((reader.site.output/'read/index.html').read_text(encoding='utf-8'))
+            self.assertIn('start.html',page.links)
+            self.assertIn(work+'/start.html',page.links)
 
 
 if __name__=='__main__':unittest.main()

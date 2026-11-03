@@ -275,6 +275,7 @@ class Site:
         self.documents={}
         self.search=[]
         self.asset_count=0
+        self.guided_reading=True
         self.bundle_records=[]
         self.editorial_editions={}
         self.claims=validate_claims(root,{c['destination']+'/'+f['path'] for c in self.components.values() for f in json.loads((root/c['receipt']).read_bytes())['files']})
