@@ -93,7 +93,6 @@ def entry_slides():
             '<div class="home-entry-feature"><p class="home-kicker">The Komorebi research collection</p>'
             '<h1 id="home-title">Explore the ideas.<br><em>Follow the evidence.</em></h1>'
             '<div class="home-entry-panels">'+panels+'</div>'
-            '<a class="home-jump" href="#home-studies-title">Choose a complete case study <span aria-hidden="true">↓</span></a>'
             '<div class="home-slide-controls home-entry-controls" hidden>'
             '<p class="home-slide-position" aria-live="polite" aria-atomic="true"></p>'
             '<div class="home-slide-arrows"><button type="button" data-slide-previous aria-label="Previous starting point">'
@@ -114,11 +113,6 @@ def home_page():
         '<span class="home-route-arrow" aria-hidden="true">↗</span></a>'
         for title, description, key, label in routes)
     return '<section class="home-hero" aria-labelledby="home-title">'+entry_slides()+research_slides()+'''</section>
-<section class="home-toolbox" aria-labelledby="home-studies-title"><div class="home-section-heading"><h2 id="home-studies-title">Extended case studies.</h2><a href="collection/DEMONSTRATIONS.html#extended-case-studies">All six studies <span aria-hidden="true">↗</span></a></div>
-<p>Start with Euler numbers, continue through wavelets, then compare quantum measurement.</p>
-<div class="home-tool-links"><a href="collection/demonstrations/EULER_PACKETS.html"><span class="home-tool-icon" aria-hidden="true">1</span><span><strong>Euler numbers</strong><small>Reciprocal packets, coordinates, and arithmetic.</small></span><span aria-hidden="true">↗</span></a>
-<a href="collection/demonstrations/WAVELET_POLYPHASE.html"><span class="home-tool-icon" aria-hidden="true">2</span><span><strong>Signals and wavelets</strong><small>Four levels, a filter, and exact residual repair.</small></span><span aria-hidden="true">↗</span></a>
-<a href="collection/demonstrations/QUANTUM_PHASE_MEASUREMENT.html"><span class="home-tool-icon" aria-hidden="true">3</span><span><strong>Quantum measurement</strong><small>Recoverable information and discarded coherence.</small></span><span aria-hidden="true">↗</span></a></div></section>
 <section class="home-ways" aria-labelledby="home-ways-title"><div class="home-section-heading"><h2 id="home-ways-title">Find your starting point.</h2><a href="collection/READING_ROUTES.html">All reading routes <span aria-hidden="true">↗</span></a></div>
 <div class="home-route-grid">'''+cards+'''</div></section>
 <section class="home-toolbox" id="home-interactive-title" aria-labelledby="home-toolbox-title"><div class="home-section-heading"><h2 id="home-toolbox-title">A few useful tools.</h2><p>Explore an idea, or find a specific passage.</p></div>
