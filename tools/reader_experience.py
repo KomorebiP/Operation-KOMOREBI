@@ -77,7 +77,8 @@ def introduction(root, component, assessment, page):
 def quantum_reading_guide(page):
     """Editorial routes through the retained volume, with its evidence limits."""
     base='monographs/quantum-and-circuits/'
-    text='### A route through the volume\n\n'
+    text='[Start here: choose a visual introduction, full study, or formal companion]('+SITE+'read/monographs-quantum-and-circuits/start.html). Each path links directly to the HTML edition and explains useful background.\n\n'
+    text+='### A route through the volume\n\n'
     text+='The book asks what a change of representation makes accessible, and what it costs to reach, update, and reconstruct that representation. Its four treatments use distinct models.\n\n'
     text+='| Treatment | Chapters | Question to follow |\n|---|---|---|\n'
     for title,chapters,question in [
