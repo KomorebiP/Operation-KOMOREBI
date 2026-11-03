@@ -105,7 +105,9 @@ class WorkedAtlas:
 
     def reading_aids(self, name, nodes, source):
         from reader_drawing_transcripts import matrix_label_blocks
-        return dict(**self.FIGURES[name], blocks=matrix_label_blocks(nodes, source))
+        info=self.FIGURES[name]
+        return info if info.get('blocks') else dict(**{k:v for k,v in info.items() if k!='blocks'},
+                                                   blocks=matrix_label_blocks(nodes,source))
 
     def drawing_tex(self, text):
         return re.sub('\\\\vfig\\[[^\\]]+\\]', lambda m: '\\vfig', text)

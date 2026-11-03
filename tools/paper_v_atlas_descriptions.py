@@ -39,3 +39,12 @@ DESCRIPTIONS = {
     'annals_gibbs_comparison': ('Fourier comparison with a retained discontinuity packet', 'The plot compares a signal containing a jump, a Fourier approximation and a reconstruction that retains the jump packet. The Fourier curve oscillates near the jump while the packet reconstruction follows the chosen target. This plot illustrates a conditional approximation comparison; it supplies no independent recovery certificate.'),
 }
 FIGURES = {name:dict(alt=alt,description=description,blocks=[]) for name,(alt,description) in DESCRIPTIONS.items()}
+
+# Keep the source's sample addresses, signs, fractions and formulas verbatim.
+FIGURES['error_budget']['blocks']=[
+    dict(kind='text',nodes=[47]),
+    dict(kind='table',caption='Sample values and reconstruction error',
+         headers=['Signal / sample address',*range(36,47)],
+         rows=[[0,*range(1,12)],[12,*range(13,24)],[24,*range(25,36)]]),
+    dict(kind='text',nodes=[48]),
+]

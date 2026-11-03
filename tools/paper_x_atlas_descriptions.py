@@ -7,7 +7,7 @@ DESCRIPTIONS={
  '03_residual_grid':('The 27 addresses grouped by residual class modulo three',
     'Rows are residual classes zero, one and two. Columns hold the higher-digit address. Adding three moves within a row; adding one can change the residual class. The highlighted row lists the addresses reducing to one.'),
  '04_digits':('Six compatible five-adic residues of one quarter',
-    'Rows display successive representatives and columns display powers of five. Filled cells are fixed digits; unfilled cells are digits not yet retained at that depth. Each new row appends a digit while keeping every earlier digit. The exact error formula is printed at the right.'),
+    'Rows display successive representatives and columns display powers of five. Filled cells are fixed digits; unfilled cells are digits not yet retained at that depth. Dashes in the label table have the same meaning as unfilled cells in the drawing. Each new row appends a digit while keeping every earlier digit. The exact error formula is printed at the right.'),
  '05_smooth_grid':('All 81 points of the supplied two-parameter smooth chart',
     'The nine-by-nine grid gives parameter values divisible by three modulo 27. Every point is displayed. The reduction has nine children above each parent because both parameters are independent in this particular power-series chart.'),
  '06_weights':('Free binary digits in three weighted coordinates',
