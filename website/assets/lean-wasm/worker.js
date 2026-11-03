@@ -31,6 +31,10 @@ let compileBusy = false;
 // Blob URL the runtime was bootstrapped from; pthread sub-workers load it too, so
 // it must outlive the boot.
 let mainScriptBlob = null;
+let shuttingDown = false;
+let nextBlobRequest = 1;
+const blobRequests = new Map();
+const ownedBlobUrls = new Set();
 
 // Configuration arrives either as a global or as a query string. The packaged runtime
 // (@live-codes/lean-wasm) hands this file over as a blob, and a blob URL carries no query string, so
@@ -69,7 +73,54 @@ const bake = workerConfig.bake ?? null;
 const PROBE_PATH = '/workspace/probe.lean';
 const SNAPSHOT_PATH = '/workspace/init.snap';
 
-const post = (msg) => self.postMessage(msg);
+const post = (msg) => {
+  if (!shuttingDown || msg.type === 'disposed' || msg.type === 'result' && msg.fatal) self.postMessage(msg);
+};
+
+async function runtimeBlobUrl(blob, kind) {
+  if (shuttingDown) throw new Error('The compiler was disposed.');
+  let url;
+  if (workerConfig.hostOwnsBlobUrls) {
+    const id = nextBlobRequest++;
+    url = await new Promise((resolve, reject) => {
+      const timer = setTimeout(() => {
+        blobRequests.delete(id);reject(new Error('Creating a runtime asset URL timed out.'));
+      }, 60000);
+      blobRequests.set(id, {resolve, reject, timer});
+      post({type: 'create_blob_url', id, kind, blob});
+    });
+  } else {
+    // Preserve the standalone-worker API; packaged runtimes own URLs in the host.
+    url = URL.createObjectURL(blob);
+  }
+  if (shuttingDown) { URL.revokeObjectURL(url);throw new Error('The compiler was disposed.'); }
+  ownedBlobUrls.add(url);
+  return url;
+}
+
+function releaseRuntimeResources() {
+  shuttingDown = true;moduleReady = false;
+  const cleanup = {threadShutdownRequested: false, assetUrls: ownedBlobUrls.size};
+  // The pinned glue exposes PThread globally, not as Module.PThread. This is
+  // JS-only teardown: no C++ finalizers, task joins, or Wasm stack calls after a
+  // fatal trap. terminateAllThreads requests worker termination without freeing
+  // pthread data that a not-yet-stopped thread might still access.
+  try {
+    if (typeof PThread !== 'undefined' && typeof PThread.terminateAllThreads === 'function') {
+      cleanup.threadsBefore = {running: PThread.runningWorkers?.length ?? 0, unused: PThread.unusedWorkers?.length ?? 0};
+      PThread.terminateAllThreads();cleanup.threadShutdownRequested = true;
+    }
+  } catch (error) { cleanup.error = String(error?.message || error); }
+  for (const request of blobRequests.values()) {
+    clearTimeout(request.timer);request.reject(new Error('The compiler was disposed.'));
+  }
+  blobRequests.clear();
+  for (const url of ownedBlobUrls) {
+    try { URL.revokeObjectURL(url); } catch { /* continue releasing other assets */ }
+  }
+  ownedBlobUrls.clear();mainScriptBlob = null;wasmBlobUrl = null;libraryFiles = [];
+  return cleanup;
+}
 
 function isDebugLine(text) {
   return DEBUG_LINE.test(text);
@@ -129,8 +180,10 @@ function writeLibEntry(FS, name, data) {
  * cannot produce that mismatch — it only has to stay under the ceiling.
  */
 const MAX_PAGES = 65536;
+let memoryReservationError = null;
 
 function pickMemory() {
+  memoryReservationError = null;
   const PAGE = 65536;
   // The declared maximum is a ceiling and the declared minimum is a floor. Falling back to our own
   // ceiling when the artifact could not be read keeps the pre-probe behaviour unchanged.
@@ -144,8 +197,12 @@ function pickMemory() {
       const memory = new WebAssembly.Memory({ initial, maximum, shared: true });
       post({ type: 'memory', mb, initialPages: initial, maximumPages: maximum, declared: declaredMemory !== null });
       return { memory, bytes: initial * PAGE };
-    } catch {
+    } catch (error) {
+      memoryReservationError = String(error?.message || error);
       post({ type: 'memory', mb, failed: true });
+      // Keep engine-specific causes in the activity log. The resource error
+      // below must not look like an isolation failure and trigger a reload.
+      post({type: 'status', data: `Memory reservation (${mb} MB) failed: ${memoryReservationError}`});
     }
   }
   return null;
@@ -220,7 +277,7 @@ async function loadWasmUrl(script) {
         post({ type: 'status', data: `using original runtime calls: ${error?.message || error}` });
       }
     }
-    wasmBlobUrl = URL.createObjectURL(new Blob([bytes], { type: 'application/wasm' }));
+    wasmBlobUrl = await runtimeBlobUrl(new Blob([bytes], { type: 'application/wasm' }), 'wasm');
     return wasmBlobUrl;
   }
 
@@ -634,6 +691,7 @@ function compileCode(code, fileName) {
     return { success: true, elapsed };
   } catch (err) {
     moduleReady = false;
+    if (typeof releaseRuntimeResources === 'function') releaseRuntimeResources();
     return { success: false, fatal: true, error: (err && err.message) || String(err) };
   } finally {
     compileBusy = false;
@@ -749,6 +807,10 @@ async function startLeanModule() {
   if (artifactIsThreaded) {
     picked = pickMemory();
     if (!picked) {
+      if (typeof SharedArrayBuffer !== 'undefined') {
+        post({type: 'error', data: 'The browser could not reserve enough memory for Lean. Close other Lean workspaces and try again.'});
+        return;
+      }
       post({
         type: 'error',
         data:
@@ -917,7 +979,7 @@ async function startLeanModule() {
     await loadWasmUrl(script);
     // Create this after the optional paired Wasm/glue transformation, and keep
     // it for the runtime's lifetime because pthread workers load it lazily.
-    mainScriptBlob = URL.createObjectURL(new Blob([script.source], { type: 'text/javascript' }));
+    mainScriptBlob = await runtimeBlobUrl(new Blob([script.source], { type: 'text/javascript' }), 'script');
     if (artifactIsThreaded) Module.mainScriptUrlOrBlob = mainScriptBlob;
   } catch (err) {
     post({ type: 'error', data: 'Failed to fetch the Lean runtime: ' + ((err && err.message) || err) });
@@ -935,6 +997,22 @@ async function startLeanModule() {
 
 self.onmessage = async (event) => {
   const msg = event.data || {};
+  if (msg.type === 'blob_url') {
+    const request = blobRequests.get(msg.id);
+    if (!request) return;
+    blobRequests.delete(msg.id);clearTimeout(request.timer);
+    if (msg.error) request.reject(new Error(msg.error));
+    else if (typeof msg.url !== 'string' || !msg.url.startsWith('blob:')) request.reject(new Error('Invalid runtime asset URL.'));
+    else request.resolve(msg.url);
+    return;
+  }
+  if (msg.type === 'dispose') {
+    const cleanup = releaseRuntimeResources();
+    post({type: 'disposed', id: msg.id, cleanup});
+    self.close();
+    return;
+  }
+  if (shuttingDown) return;
   if (msg.type === 'start') {
     try {
       libraryFiles = await loadLibrary();
