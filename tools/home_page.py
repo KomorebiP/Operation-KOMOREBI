@@ -4,6 +4,13 @@ import html
 
 def research_slides():
     examples = [
+        ('wavelet', 'Wavelets', 'One signal.<br><em>Exact multiresolution.</em>',
+         'Follow four Haar levels, transport a finite filter, and calculate the exact error from omitted interactions.',
+         'WAVELET_POLYPHASE', 'Read the wavelet and polyphase derivation',
+         '<div class="home-motif home-wavelet" aria-hidden="true"><svg viewBox="0 0 360 62" '
+         'fill="none" stroke="currentColor" stroke-width="2"><path '
+         'd="M0 31h22V9h24v42h24V21h24v20h24V5h24v52h24V19h24v24h24V13h24v36h24V25h24v12h24V17h24v28h26"/>'
+         '</svg></div>'),
         ('euler', 'Euler numbers', 'One sequence.<br><em>Several perspectives.</em>',
          'Follow packets, polynomial coordinates, and exact residual correction through one extended derivation.',
          'EULER_PACKETS', 'Read the Euler derivation',
@@ -16,13 +23,11 @@ def research_slides():
          '<div class="home-motif home-lanes" aria-hidden="true"><span>34!</span>'
          '<span class="home-motif-arrow">↔</span><div>'
          + ''.join('<span>'+str(n)+'</span>' for n in range(10)) + '</div></div>'),
-        ('wavelet', 'Wavelets', 'One signal.<br><em>Exact multiresolution.</em>',
-         'Follow four Haar levels, a finite filter, and exact residual repair. A complete Python calculation is included.',
-         'WAVELET_POLYPHASE', 'Read the wavelet and polyphase derivation',
-         '<div class="home-motif home-wavelet" aria-hidden="true"><svg viewBox="0 0 360 62" '
-         'fill="none" stroke="currentColor" stroke-width="2"><path '
-         'd="M0 31h22V9h24v42h24V21h24v20h24V5h24v52h24V19h24v24h24V13h24v36h24V25h24v12h24V17h24v28h26"/>'
-         '</svg></div>'),
+        ('quantum', 'Quantum phase', 'One state.<br><em>Phase and measurement.</em>',
+         'Change measurement settings, reconstruct a qubit, and calculate which coherence a discarded outcome removes.',
+         'QUANTUM_PHASE_MEASUREMENT', 'Read the quantum phase and measurement study',
+         '<div class="home-motif" aria-hidden="true"><span>Coherence</span>'
+         '<span class="home-motif-arrow">→</span><span>Measurement</span></div>'),
         ('stirling', 'Counting families', 'One partition triangle.<br><em>Two families.</em>',
          'Start with set partitions, obtain Bell and ordered Bell numbers, and follow the signed inverse and reciprocal packets.',
          'STIRLING_BELL_FUBINI', 'Read the Stirling, Bell, and Fubini derivation',
@@ -36,18 +41,18 @@ def research_slides():
     ]
     panels = ''.join(
         '<section class="home-slide" id="home-research-'+key+'" aria-labelledby="home-'+key+'-title">'
-        '<p class="home-feature-kicker">Research preview <span aria-hidden="true">/</span> '+label+'</p>'
+        '<p class="home-feature-kicker">Extended case study <span aria-hidden="true">/</span> '+label+'</p>'
         '<h2 id="home-'+key+'-title">'+title+'</h2><p class="home-feature-description">'+description+'</p>'
         +motif+'<a class="home-feature-link" href="collection/demonstrations/'+target+'.html">'+link+
         '<span aria-hidden="true">↗</span></a></section>'
         for key, label, title, description, target, link, motif in examples)
-    topic_labels = {'euler': 'Euler', 'factorial': 'Factorials', 'wavelet': 'Wavelets',
-                    'stirling': 'Counting', 'roots': 'Polynomials'}
+    topic_labels = {'wavelet': 'Wavelets', 'euler': 'Euler', 'factorial': 'Factorials',
+                    'quantum': 'Quantum', 'stirling': 'Counting', 'roots': 'Polynomials'}
     topics = ''.join(
         '<button type="button" id="home-topic-'+key+'" aria-controls="home-research-'+key+'">'+topic_labels[key]+'</button>'
         for key, label, *_ in examples)
-    return ('<div class="home-showcase" aria-label="Research examples">'
-            '<div class="home-topics" aria-label="Choose a research example" hidden>'+topics+'</div>'
+    return ('<div class="home-showcase" aria-label="Extended case studies">'
+            '<div class="home-topics" aria-label="Choose an extended case study" hidden>'+topics+'</div>'
             '<div class="home-feature">'+panels+
             '<div class="home-slide-controls" hidden><p class="home-slide-position" aria-live="polite" aria-atomic="true"></p>'
             '<div class="home-slide-arrows"><button type="button" data-slide-previous aria-label="Previous research example">'
@@ -57,7 +62,7 @@ def research_slides():
 
 def home_page():
     routes = [
-        ('Understand the project', 'An introduction and a first worked example.', 'NEW_READER', 'Start here'),
+        ('Understand the project', 'An introduction through signals, arithmetic, and quantum information.', 'NEW_READER', 'Start here'),
         ('Read the mathematics', 'Papers and books, with assumptions in view.', 'MATHEMATICS', 'Papers & books'),
         ('Examine a proof', 'Statements, formal sources, and recorded evidence.', 'PROOF_REVIEW', 'Proofs & sources'),
         ('Try the software', 'Runnable examples and their expected output.', 'SOFTWARE', 'Examples & tools'),
@@ -72,8 +77,13 @@ def home_page():
 <h1 id="home-title">Explore the ideas.<br><em>Follow the evidence.</em></h1>
 <p class="home-lede">A place to read mathematics, inspect the reasoning, and try the calculations for yourself.</p>
 <div class="home-actions"><a class="button" href="collection/START_HERE.html">Start with the introduction <span aria-hidden="true">→</span></a><a class="button button-secondary" href="works.html">Browse all works</a></div>
-<a class="home-jump" href="#home-ways-title">Find your starting point <span aria-hidden="true">↓</span></a>
+<a class="home-jump" href="#home-studies-title">Choose a complete case study <span aria-hidden="true">↓</span></a>
 </div>'''+research_slides()+'''</section>
+<section class="home-toolbox" aria-labelledby="home-studies-title"><div class="home-section-heading"><h2 id="home-studies-title">Extended case studies.</h2><a href="collection/DEMONSTRATIONS.html#extended-case-studies">All six studies <span aria-hidden="true">↗</span></a></div>
+<p>Start with wavelets, continue through arithmetic, then compare quantum measurement.</p>
+<div class="home-tool-links"><a href="collection/demonstrations/WAVELET_POLYPHASE.html"><span class="home-tool-icon" aria-hidden="true">1</span><span><strong>Signals and wavelets</strong><small>Four levels, a filter, and exact residual repair.</small></span><span aria-hidden="true">↗</span></a>
+<a href="collection/demonstrations/EULER_PACKETS.html"><span class="home-tool-icon" aria-hidden="true">2</span><span><strong>Euler numbers</strong><small>Reciprocal packets, coordinates, and arithmetic.</small></span><span aria-hidden="true">↗</span></a>
+<a href="collection/demonstrations/QUANTUM_PHASE_MEASUREMENT.html"><span class="home-tool-icon" aria-hidden="true">3</span><span><strong>Quantum measurement</strong><small>Recoverable information and discarded coherence.</small></span><span aria-hidden="true">↗</span></a></div></section>
 <section class="home-ways" aria-labelledby="home-ways-title"><div class="home-section-heading"><h2 id="home-ways-title">Find your starting point.</h2><a href="collection/READING_ROUTES.html">All reading routes <span aria-hidden="true">↗</span></a></div>
 <div class="home-route-grid">'''+cards+'''</div></section>
 <section class="home-toolbox" id="home-interactive-title" aria-labelledby="home-toolbox-title"><div class="home-section-heading"><h2 id="home-toolbox-title">A few useful tools.</h2><p>Explore an idea, or find a specific passage.</p></div>
