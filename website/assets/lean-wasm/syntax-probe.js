@@ -73,9 +73,12 @@ run_cmd do
   let mut done := false
   while !done do
     let (cmd, ps', log') := Parser.parseCommand ictx pmctx pstate log
+    let reachedEnd := cmd.isOfKind \`\`Parser.Command.eoi && ictx.atEnd ps'.pos
+    if Parser.isTerminalCommand cmd && !reachedEnd then
+      throwError "Checking stopped before the end of the source. Remove the early stopping command to check the complete file."
     pstate := ps'
     log := log'
-    done := Parser.isTerminalCommand cmd
+    done := reachedEnd
   let errs := log.toList.filter (fun m => m.severity == MessageSeverity.error)
   if !errs.isEmpty then
     let mut out := ""
