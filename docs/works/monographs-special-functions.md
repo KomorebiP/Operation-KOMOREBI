@@ -14,9 +14,9 @@ Cyclic families, sequence constructions, reciprocal structure, and exact methods
 
 **Suggested background:** Begin with the introduction and glossary. Then use the volume's own definitions to identify the background needed for its subject.
 
-**Recorded results and limits:** Proofread reading volumes plus 299 named theorem declarations: 39 inherited finite-core names and 29, 21, 19, 16, 13, 19, 23, 22, 16, 34, 22, 26 in Blocks01 through 12. Registered canonical F.1-F.3 contracts, G.1 component-rescaling equivalence and guarded G.2 inverse are complete. F.3 gives positive ordered Perron type proportions, exact component ratios and equivalence of ordinary type-limit existence; convergence is not asserted unconditionally. Ancillary Appendix F identities, H.1 operator classification, I-J resolution/evaluator refinement and broad A-E analytic coverage remain open; no whole-book coverage percentage is established.
+**Recorded results and limits:** Proofread reading volumes plus 342 named theorem declarations: 39 inherited finite-core names and 29, 21, 19, 16, 13, 19, 23, 22, 16, 34, 22, 26, 43 in Blocks01 through 13. Registered canonical F.1-F.3, G.1 and guarded G.2 contracts are complete. Ancillary F additions prove exact global component equality, half-scale sinh, unequal-example data, characteristic-order surfaces and actual local remainders. Ordinary type convergence is conditional. H.1 operator classification, some explanatory F correspondence, I-J resolution/evaluator refinement and broad A-E analytic coverage remain; no whole-book coverage percentage is established.
 
-**Remaining work:** Prove ancillary Appendix F exact component equality/scalar reduction, symmetric sinh closed form and remaining parameter/example wrappers; retain H.1 operator classification, I-J certificates and broader analytic development in the source-bound remaining-work inventory.
+**Remaining work:** Formalize H.1 all-analytic-input autonomous scalar projections and constant invertible decoupling obstruction; retain explanatory F correspondence, I-J certificates and broader A-E analytic development in the source-bound inventory.
 
 The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
 
@@ -90,7 +90,7 @@ These links include code, examples, checks, or build tools. Read the [edition gu
 ## Evidence
 
 - [Completion, Lean coverage, confidence, and cited evidence](../STATUS_CATALOG.md#monographs-special-functions)
-- [Latest recorded written review](../SPECIAL_FUNCTIONS_TYPE_PROPORTIONS_BLOCK12.md)
+- [Latest recorded written review](../SPECIAL_FUNCTIONS_SCALAR_REDUCTION_BLOCK13.md)
 - [Source-file receipt (identity and availability)](../../manifests/source-imports/monographs-special-functions.json)
 - [All files in this source edition](../../monographs/special-functions/)
 
