@@ -33,6 +33,7 @@ export function checkedFrontendSource(code, {mainModule = null, nonce} = {}) {
   // Anonymous matches the fork's ordinary input environment. A dependency may
   // supply its real module name before mkState derives private auxiliary names.
   const values = {
+    FRONTEND_NAMESPACE_HERE: 'KomorebiFrontend_' + nonce,
     SOURCE_EXPRESSION_HERE: leanSourceExpression(code),
     MAIN_MODULE_HERE: mainModule === null ? 'Name.anonymous' : '`' + mainModule,
     INPUT_FILE_NAME_HERE: leanStringLiteral(markers.fileName),
@@ -40,7 +41,7 @@ export function checkedFrontendSource(code, {mainModule = null, nonce} = {}) {
     __COMPLETED_NONCE__: markers.completed
   };
   // One callback pass: source text is not rescanned, and $&/$`/$' stay literal.
-  return TEMPLATE.replace(/SOURCE_EXPRESSION_HERE|MAIN_MODULE_HERE|INPUT_FILE_NAME_HERE|__STARTED_NONCE__|__COMPLETED_NONCE__/g,
+  return TEMPLATE.replace(/FRONTEND_NAMESPACE_HERE|SOURCE_EXPRESSION_HERE|MAIN_MODULE_HERE|INPUT_FILE_NAME_HERE|__STARTED_NONCE__|__COMPLETED_NONCE__/g,
     token => values[token]);
 }
 
@@ -48,6 +49,118 @@ const TEMPLATE = `module
 import Lean
 meta import Lean.Elab.Frontend
 open Lean
+-- Keep executable definitions separate: a larger nested run_cmd exceeded the
+-- browser Wasm stack during elaboration even when its input source was trivial.
+-- The transport executes the supplied source exactly once.
+
+-- Shell output includes unreported messages only. A snapshot may hold already
+-- reported errors, so preserve both halves as visible diagnostics.
+meta def FRONTEND_NAMESPACE_HERE.normalizeMessages (log : MessageLog) : MessageLog :=
+  { log with reported := {}, unreported := log.reportedPlusUnreported }
+
+-- get is used only after hasFinished, which guarantees immediate return.
+-- Cancellation and fatal state remain failures even for completed tasks.
+meta def FRONTEND_NAMESPACE_HERE.readCompletedSnapshot
+    (task : Language.SnapshotTask Language.SnapshotTree) : IO Language.SnapshotTree := do
+  match task.cancelTk? with
+  | some token =>
+    if (← token.isSet) then
+      throw (IO.userError "Experimental frontend rejects cancelled command tasks")
+  | none => pure ()
+  if !(← IO.hasFinished task.task) then
+    throw (IO.userError "Experimental frontend rejects unfinished command tasks")
+  let tree : Language.SnapshotTree := Language.SnapshotTask.get task
+  if tree.element.isFatal then
+    throw (IO.userError "Experimental frontend rejects fatal command snapshots")
+  return tree
+
+-- The second argument is the exact length of the pending list. Checking it
+-- before appending children bounds both total visits and the live frontier.
+meta def FRONTEND_NAMESPACE_HERE.collectCompletedSnapshots : Nat → Nat →
+    List (Language.SnapshotTask Language.SnapshotTree) → MessageLog → IO MessageLog
+  | _, _, [], messages => pure messages
+  | 0, _, _ :: _, _ =>
+    throw (IO.userError "Experimental frontend snapshot tree exceeds the completion bound")
+  | fuel + 1, pendingCount, task :: rest, messages => do
+    let tree ← FRONTEND_NAMESPACE_HERE.readCompletedSnapshot task
+    let nextCount := pendingCount - 1 + tree.children.size
+    if nextCount > fuel then
+      throw (IO.userError "Experimental frontend snapshot tree exceeds the completion bound")
+    let current := FRONTEND_NAMESPACE_HERE.normalizeMessages tree.element.diagnostics.msgLog
+    FRONTEND_NAMESPACE_HERE.collectCompletedSnapshots fuel nextCount (tree.children.toList ++ rest) (messages ++ current)
+
+-- The checked environment must be ready and use kernel trust level zero.
+-- A command is cleared only after every reachable snapshot was validated.
+meta def FRONTEND_NAMESPACE_HERE.finishCommand (state : Elab.Command.State) :
+    IO (Elab.Command.State × MessageLog) := do
+  if !(← IO.hasFinished state.env.checked) then
+    throw (IO.userError "Experimental frontend rejects unfinished kernel checking")
+  let checked : Kernel.Environment := Task.get state.env.checked
+  if checked.header.trustLevel != 0 then
+    throw (IO.userError "Experimental frontend requires kernel trust level zero")
+  if state.snapshotTasks.size > 10000 then
+    throw (IO.userError "Experimental frontend snapshot tree exceeds the completion bound")
+  let messages ← FRONTEND_NAMESPACE_HERE.collectCompletedSnapshots 10000 state.snapshotTasks.size state.snapshotTasks.toList
+    (FRONTEND_NAMESPACE_HERE.normalizeMessages state.messages)
+  return ({state with snapshotTasks := #[]}, messages)
+
+
+-- Explicit async scopes are unsupported; the previous command must already
+-- have consumed its complete snapshot tree before parsing the next command.
+meta def FRONTEND_NAMESPACE_HERE.checkBeforeCommand (state : Elab.Command.State) (phase : String) : IO Unit := do
+  if state.scopes.any (fun scope => Elab.async.get scope.opts) then
+    throw <| IO.userError ("Experimental frontend rejects asynchronous elaboration " ++ phase)
+  if !state.snapshotTasks.isEmpty then
+    throw <| IO.userError ("Experimental frontend rejects pending command tasks " ++ phase)
+
+-- Check parsed literal opt-ins before execution, including temporary command,
+-- term, and tactic scopes. Quoted syntax is data and is not executed here.
+meta def FRONTEND_NAMESPACE_HERE.hasAsyncOptIn (command : Syntax) : Bool :=
+  (command.findStack?
+    (fun stx => !stx.isQuot && !stx.isOfKind \`\`Parser.Tactic.quotSeq)
+    (fun stx =>
+      (stx.isOfKind \`\`Parser.Command.«set_option» ||
+       stx.isOfKind \`\`Parser.Term.«set_option» ||
+       stx.isOfKind \`\`Parser.Tactic.«set_option») &&
+      stx[1].getId.eraseMacroScopes == \`Elab.async &&
+      stx[3].getAtomVal == "true")).isSome
+
+
+meta def FRONTEND_NAMESPACE_HERE.execute (ictx : Parser.InputContext)
+    (headerMessages : MessageLog) : Elab.Frontend.FrontendM MessageLog := do
+  let mut messages := FRONTEND_NAMESPACE_HERE.normalizeMessages headerMessages
+  let mut done := false
+  while !done do
+    Elab.Frontend.updateCmdPos
+    let commandState ← Elab.Frontend.getCommandState
+    FRONTEND_NAMESPACE_HERE.checkBeforeCommand commandState "before command"
+    let parserState ← Elab.Frontend.getParserState
+    let scope := commandState.scopes.head!
+    let parserContext : Parser.ParserModuleContext :=
+      { env := commandState.env, options := scope.opts,
+        currNamespace := scope.currNamespace, openDecls := scope.openDecls }
+    let (command, nextParserState, parseMessages) :=
+      Parser.parseCommand ictx parserContext parserState {}
+    if FRONTEND_NAMESPACE_HERE.hasAsyncOptIn command then
+      throw <| IO.userError "Experimental frontend rejects explicit asynchronous elaboration options"
+    if Parser.isTerminalCommand command && !command.isOfKind \`\`Parser.Command.eoi then
+      throw <| IO.userError "Experimental frontend requires end of input; early terminal command rejected"
+    if command.isOfKind \`\`Parser.Command.eoi && !ictx.atEnd nextParserState.pos then
+      throw <| IO.userError "Experimental frontend requires actual end of input; premature eoi node rejected"
+    -- Save parse errors BEFORE elabCommandTopLevel clears its own message log.
+    messages := messages ++ FRONTEND_NAMESPACE_HERE.normalizeMessages parseMessages
+    Elab.Frontend.setParserState nextParserState
+    Elab.Frontend.setMessages parseMessages
+    Elab.Frontend.elabCommandAtFrontend command
+    let afterCommand ← Elab.Frontend.getCommandState
+    if afterCommand.scopes.any (fun scope => Elab.async.get scope.opts) then
+      throw <| IO.userError "Experimental frontend rejects asynchronous elaboration after command"
+    let (completedState, commandMessages) ← FRONTEND_NAMESPACE_HERE.finishCommand afterCommand
+    Elab.Frontend.setCommandState completedState
+    messages := messages ++ commandMessages
+    done := command.isOfKind \`\`Parser.Command.eoi
+  return messages
+
 run_cmd do
   let src := SOURCE_EXPRESSION_HERE
   let ictx := Parser.mkInputContext src INPUT_FILE_NAME_HERE
@@ -67,41 +180,8 @@ run_cmd do
   let frontendState : Elab.Frontend.State :=
     { commandState, parserState := ps, cmdPos := ps.pos }
   logInfo "__STARTED_NONCE__"
-  let ensureSynchronous (state : Elab.Command.State) (phase : String) : IO Unit := do
-    if state.scopes.any (fun scope => Elab.async.get scope.opts) then
-      throw <| IO.userError ("Experimental frontend rejects asynchronous elaboration " ++ phase)
-    if !state.snapshotTasks.isEmpty then
-      throw <| IO.userError ("Experimental frontend rejects pending command tasks " ++ phase)
-  let execute : Elab.Frontend.FrontendM MessageLog := do
-    let mut messages : MessageLog := headerMessages
-    let mut done := false
-    while !done do
-      Elab.Frontend.updateCmdPos
-      let commandState ← Elab.Frontend.getCommandState
-      ensureSynchronous commandState "before command"
-      let parserState ← Elab.Frontend.getParserState
-      let scope := commandState.scopes.head!
-      let parserContext : Parser.ParserModuleContext :=
-        { env := commandState.env, options := scope.opts,
-          currNamespace := scope.currNamespace, openDecls := scope.openDecls }
-      let (command, nextParserState, parseMessages) :=
-        Parser.parseCommand ictx parserContext parserState {}
-      if Parser.isTerminalCommand command && !command.isOfKind \`\`Parser.Command.eoi then
-        throw <| IO.userError "Experimental frontend requires end of input; early terminal command rejected"
-      if command.isOfKind \`\`Parser.Command.eoi && !ictx.atEnd nextParserState.pos then
-        throw <| IO.userError "Experimental frontend requires actual end of input; premature eoi node rejected"
-      -- Save parse errors BEFORE elabCommandTopLevel clears its own message log.
-      messages := messages ++ parseMessages
-      Elab.Frontend.setParserState nextParserState
-      Elab.Frontend.setMessages parseMessages
-      Elab.Frontend.elabCommandAtFrontend command
-      let afterCommand ← Elab.Frontend.getCommandState
-      ensureSynchronous afterCommand "after command"
-      messages := messages ++ afterCommand.messages
-      done := command.isOfKind \`\`Parser.Command.eoi
-    return messages
   let execution : IO (MessageLog × Elab.Frontend.State) :=
-    StateRefT'.run (ReaderT.run execute frontendContext) frontendState
+    StateRefT'.run (ReaderT.run (FRONTEND_NAMESPACE_HERE.execute ictx headerMessages) frontendContext) frontendState
   let (messages, finalState) ← execution
   -- Outer command linters still run after this action. Carry its final
   -- environment forward without replacing the outer scopes or file context.

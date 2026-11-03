@@ -209,8 +209,23 @@ parser and elaboration messages are copied back with their source coordinates.
 The browser preloads available libraries and invokes the transport exactly
 once per source, with no retry after execution. A fresh random nonce identifies
 distinct started and completed messages. A result needs the exact completed
-message, successful runtime completion and no errors. Early terminal commands,
-pending command tasks and asynchronous elaboration are rejected. Both checking
+message, successful runtime completion and no errors. The frontend consumes
+already completed command snapshots, including all descendants and both reported
+and unreported diagnostics. It checks readiness before reading any task, rejects
+cancelled or fatal snapshots, and bounds both visits and the pending frontier to
+10,000 nodes per command. The checked kernel environment must also be ready with
+trust level zero; snapshot diagnostics remain necessary because kernel failures
+can retain the previous environment. Tasks are cleared only after these checks.
+Small nonce-named transport helpers keep the generated driver within the browser's
+elaboration stack limit and stay outside the source's exact import environment.
+
+Unfinished tasks, early terminal commands and active asynchronous scopes are
+rejected. Literal `set_option Elab.async true` forms in commands, terms and tactics
+are rejected before elaboration, including scoped forms that restore their options
+before the next command. Comments, strings and quoted syntax do not trigger this
+syntax check. Macro-generated options and arbitrary metaprogram option changes are
+not comprehensively observed by that check; task and diagnostic validation still
+applies to every executed command. Both checking
 paths require actual end of input, so `#exit` cannot leave an unchecked tail.
 Internal panic output fails checking even if captured as information or followed
 by a completion message.
@@ -223,6 +238,15 @@ testing. Large dependency chains can still exhaust memory within one run.
 This mode retains the fork's exported-only import and synchronous command
 semantics; it does not establish equivalence with every native project or
 whole-file linter. The private-theorem visibility issue is separate.
+
+Manual browser controls are saved in
+[`tools/fixtures/lean_frontend_tasks.json`](../tools/fixtures/lean_frontend_tasks.json).
+Copy one case's `source` into a single-file prepared workspace with experimental
+checking enabled and run it with a fresh compiler. Check both `expected_outcome`
+and the literal `expected_marker` in Lean's response. The corpus includes hidden
+reported errors, descendant warnings, unfinished/cancelled/fatal tasks, bounds,
+scoped options, import isolation and a filesystem counter that detects replay.
+These are browser fixtures, not a claim that the JavaScript unit suite executes Lean.
 
 ## Extending coverage
 
