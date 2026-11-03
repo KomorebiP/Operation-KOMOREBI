@@ -260,6 +260,75 @@ These are browser fixtures, not a claim that the JavaScript unit suite executes 
 
 ## Extending coverage
 
+### Selected checks and bounded loading
+
+The page offers **Check selected file** alongside the complete workspace check.
+It plans the selected file's transitive local imports from the current edited
+sources, checks each ancestor once in deterministic dependency order, and checks
+the selected file with its original target role. Unrelated files are omitted.
+The response identifies the target and how many workspace files were included;
+a successful selected check does not claim that the whole workspace passed.
+The whole-workspace action remains available.
+
+Selected planning accepts ordinary line-based import headers, including supported
+module markers and import visibility flags. Missing project imports, cycles,
+duplicate modules and ambiguous or unsupported headers fail before compilation.
+Quoted or multiline import forms and some custom command layouts may need an
+explicit whole-workspace check. Generated compatibility dependencies are included.
+The intended check scope survives the isolation setup reload. A target-role or
+dependency-source change retires the old compiler; standard checks can reuse
+unchanged checked dependency results and their warnings in the same worker.
+Recovery's inline version-compatibility lemma accompanies its final file only.
+Experimental checking still starts fresh and retains all existing completion guards.
+
+Library loading overlaps up to two encoded pack downloads. Each prefetchable pack
+is at most 8 MiB, so the worker retains at most 16 MiB of those encoded bodies,
+including completed lookahead. Unknown or larger sizes use an exclusive serial
+fallback. SHA verification, decompression and filesystem installation stay serial,
+in manifest order. A download or installation failure aborts and drains pending
+prefetch work. Stop still terminates the active compiler immediately. This budget
+does not include decoded libraries, the Wasm heap, or browser/network internals;
+service-worker upstream requests may finish caching after a client is stopped.
+
+### Route to broader browser support
+
+1. **Smaller verified library assets.** Publish immutable, compiler-matched module
+   packs with content hashes and source provenance, then select only the required
+   closure. A local pinned-input experiment for Paper III's 298 module triplets
+   (894 files) reduced its Mathlib-layer transport from about 110.9 MiB of shared
+   packs to 24.5 MiB of module packs, with identical selected artifact bytes.
+   That is a packaging measurement, not a published format or browser speed result.
+   Request overhead, global deduplication, hosting limits and cache migration still
+   need validation. HTTP byte ranges cannot directly select members of these gzip
+   containers because manifest offsets describe the uncompressed bytes.
+2. **Checked module artifacts before parallel compilers.** First qualify a tiny
+   complete export/import round trip in a fresh compiler, then exercise corrupted
+   parts, stale generations, edits, warnings, initializers and Stop. The current
+   heavy checkpoint experiment exported artifacts but did not establish successful
+   fresh-worker import. Cache authorization must come from successful checks,
+   not just matching byte hashes. Bind source, module role, ordered imports,
+   transitive dependency receipts, compiler/library versions and guard policy;
+   invalidate edited nodes and every dependent module.
+3. **Memory-budgeted independent branches.** Keep one heavy compiler active by
+   default. Only independent modules in the dependency graph are candidates for
+   separate workers, after artifact interchange and aggregate memory limits are
+   validated. The Quantum/Finite/Semantic chain is inherently dependent. Fresh
+   imports can repeat initialization effects and reset mutable state; arbitrary
+   command splitting does not preserve parser, namespace and environment state.
+4. **Compiler compatibility and larger individual modules.** Add missing
+   compiler-matched artifacts and qualify asynchronous elaboration separately,
+   preserving false-proof, kernel-error, cancellation and completion controls.
+   Scheduling cannot make a single module fit if its own environment exceeds the
+   browser runtime's memory capacity. A compatible larger-memory compiler build
+   is a separate investigation.
+
+Pinned source archives and upstream runtime inputs are also candidates for CI
+caching, with independently reviewed receipt checks on every cache hit. A cache's
+own checksum manifest is not sufficient provenance. This can shorten publishing
+without weakening source or runtime validation.
+
+### Adding a published workspace
+
 Add only receipt-owned sources from existing reading editions to `WORKSPACES`
 in `lean_workspaces.py`. List local modules in dependency order. Runtime
 preparation derives Mathlib seeds and a separate manifest for each workspace

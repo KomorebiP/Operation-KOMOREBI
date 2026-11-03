@@ -17,7 +17,7 @@ import {
 	outsideClosureNotes,
 	unavailableImportNotes
 } from './roots.js';
-import { createRuntime } from './runtime.js?v=20261103-lifecycle1';
+import { createRuntime } from './runtime.js?v=20261103-staged1';
 import { SYNTAX_ERROR_MARKER, syntaxProbeSource } from './syntax-probe.js?v=20261102-frontend1';
 import { checkedFrontendSource, frontendMarkers } from './frontend-check.js?v=20261103-completed1';
 

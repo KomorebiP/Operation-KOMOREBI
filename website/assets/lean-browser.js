@@ -1,6 +1,7 @@
-import { createCompiler } from './lean-wasm/index.js?v=20261103-lifecycle1';
+import { createCompiler } from './lean-wasm/index.js?v=20261103-staged1';
 import { sourceHeader } from './lean-wasm/roots.js';
 import { loadSourceBundle, sourceWorkspace } from './lean-source-bundle.js?v=20261103-order1';
+import { planSelectedFile } from './lean-workspace-plan.js?v=20261103-staged1';
 
 export function workspaceCheckMode(workspace, preferred=false) {
   const required=(workspace?.files||[]).some(file=>file.library&&file.syntaxCheck==='frontend');
@@ -101,7 +102,7 @@ async function start() {
   if(window.top!==window){el('direct').hidden=false;el('direct-link').href=location.href;}
   let compiler=null, bootAbort=null, retiringClosed=Promise.resolve(), busy=false, generation=0, workspace, files, current=0;
   let catalog=null,catalogPending=null,openedGroup=null;
-  let checkedDependencies=null;
+  let checkedDependencies=null,compilerPlan=null;
   const drafts=new Map();
   const editor=el('code'), picker=el('example'), filePicker=el('file');
   const frontend=el('frontend');
@@ -111,12 +112,12 @@ async function start() {
   function retireCompiler(retiring) {
     if(retiring)retiringClosed=Promise.all([retiringClosed,retiring.dispose()]).then(()=>{});
   }
-  function dispose() {bootAbort?.abort();bootAbort=null;retireCompiler(compiler);compiler=null;checkedDependencies=null;}
+  function dispose() {bootAbort?.abort();bootAbort=null;retireCompiler(compiler);compiler=null;compilerPlan=null;checkedDependencies=null;}
   function controls(value) {
     busy=value;editor.readOnly=value;picker.disabled=value;filePicker.disabled=value;
     const mode=workspaceCheckMode(workspace,preferredFrontend);
     frontend.checked=mode.frontend;frontend.disabled=value||mode.required;
-    for(const name of ['run','restore','break','save'])el(name).disabled=value;
+    for(const name of ['run','run-selected','restore','break','save'])el(name).disabled=value;
     el('stop').disabled=!value;el('clear').disabled=value;
     el('catalog-open').disabled=value||!catalog||!el('catalog-choice').value;
     el('catalog-choice').disabled=value||!catalog;
@@ -228,7 +229,7 @@ async function start() {
     dispose();for(const name of await caches.keys())if(name.startsWith('komorebi-lean-'))await caches.delete(name);
     el('run').textContent='Load Lean and run';setStatus('Downloaded compiler cache cleared. Your edits are still in this tab.');
   });
-  async function isolate(ticket) {
+  async function isolate(ticket,selectedOnly) {
     if(window.top!==window)throw new Error('Open this workspace in its own browser tab using the link above.');
     if (crossOriginIsolated) return true;
     if (!isSecureContext || !navigator.serviceWorker) throw new Error('This browser cannot start the local compiler. Open the page directly in a current desktop browser.');
@@ -245,42 +246,49 @@ async function start() {
     if(ticket!==generation)return false;
     if (!crossOriginIsolated) {
       if (sessionStorage.getItem(draftKey+'-attempt')==='1') throw new Error('This browser did not enable the memory needed by Lean. Your edits are preserved.');
-      sessionStorage.setItem(draftKey,JSON.stringify({...savedWorkspaceDraft(workspace,files,current),run:true}));
+      sessionStorage.setItem(draftKey,JSON.stringify({...savedWorkspaceDraft(workspace,files,current),run:true,runScope:selectedOnly?'selected':'workspace'}));
       sessionStorage.setItem(draftKey+'-attempt','1');location.reload();return false;
     }
     return true;
   }
-  async function run() {
+  async function run(selectedOnly=false) {
     if (busy)return;files[current]=editor.value;controls(true);const ticket=++generation;
     const freshFrontend=workspaceCheckMode(workspace,preferredFrontend).frontend;
     let failureContext='';
     el('output').textContent='Checking has not completed.';setStatus('Starting Lean on this device…','running');
     try {
-      if (!await isolate(ticket))return;
+      const indices=selectedOnly?planSelectedFile(workspace,files,current):files.map((_,index)=>index);
+      const target=indices.at(-1),dependencies=indices.slice(0,-1);
+      const planIdentity=JSON.stringify(indices.map(i=>[fileIdentity(workspace.files[i]),i===target?'target':'dependency']));
+      const scope=selectedOnly?'Selected file: '+workspace.files[target].module+' · '+indices.length+' of '+files.length+' workspace files in this check.':'';
+      const render=results=>[scope,...results].filter(Boolean).join('\n\n');
+      if(selectedOnly)log(scope);
+      if (!await isolate(ticket,selectedOnly))return;
       if (ticket!==generation)return;
       if(freshFrontend){dispose();log('Fresh compiler for experimental source-defined syntax; each source executes once.');}
+      if(compiler&&compilerPlan!==planIdentity){dispose();log('Fresh compiler for the changed check target; cached downloads are reused.');}
       // Rewriting a live imported module can stall or retain old definitions.
       // Unchanged dependencies can stay imported; any dependency edit starts fresh.
-      const dependencySource=JSON.stringify(files.slice(0,-1));
-      const reuse=!freshFrontend&&files.length>1&&compiler&&checkedDependencies?.source===dependencySource;
-      if(files.length>1&&!reuse){dispose();log('Fresh compiler environment for changed project imports; cached downloads are reused.');}
+      const dependencySource=JSON.stringify(dependencies.map(i=>[fileIdentity(workspace.files[i]),files[i]]));
+      const reuse=!freshFrontend&&dependencies.length>0&&compiler&&checkedDependencies?.source===dependencySource;
+      if(dependencies.length>0&&!reuse){dispose();log('Fresh compiler environment for changed project imports; cached downloads are reused.');}
       if(!compiler){
         await retiringClosed;
         if(ticket!==generation)return;
         const abort=new AbortController();bootAbort=abort;
         const created=await createCompiler({baseUrl:new URL('engine/',location.href).href,mathlibManifest:workspace.mathlib_manifest,syntaxCheck:freshFrontend?'frontend':'full',signal:abort.signal,onProgress:m=>{if(ticket===generation)log(m);},onStatus:m=>{if(ticket===generation)log(m);}});
         if(ticket!==generation){retireCompiler(created);return;}
-        compiler=created;
+        compiler=created;compilerPlan=planIdentity;
       }
       let warnings=reuse?checkedDependencies.warnings:false;
       const results=reuse?checkedDependencies.results.map(r=>'Reused unchanged checked dependency.\n'+r):[];
       if(reuse)log('Reusing unchanged checked dependencies in this compiler environment.');
-      for(let i=reuse?files.length-1:0;i<files.length;i++) {
+      for(const i of indices.slice(reuse?-1:0)) {
         setStatus('Checking '+workspace.files[i].module+'…','running');
-        failureContext=[...results,workspace.files[i].module].join('\n\n');
-        // Export dependencies only. The last file runs with its original source.
-        const dependency=i<files.length-1;
-        const compatibility=dependency?'':workspace.compatibility?.source||'';
+        failureContext=render([...results,workspace.files[i].module]);
+        // Only ancestors are exported; the chosen target keeps its original role.
+        const dependency=i!==target;
+        const compatibility=!dependency&&target===files.length-1?workspace.compatibility?.source||'':'';
         const versioned=workspace.legacy&&!workspace.files[i].generated&&!workspace.files[i].library;
         const proof=versioned?withCompatibilityImport(files[i],workspace.legacy):files[i];
         const source=dependency?moduleSource(proof,workspace.files[i].module):withCompatibility(proof,compatibility);
@@ -288,11 +296,11 @@ async function start() {
         if (ticket!==generation)return;
         const state=outcome(result);warnings ||= state==='warning';
         results.push(workspace.files[i].module+'\n'+(result.diagnostics.map(diagnostic=>mapWorkspaceDiagnostic(diagnostic,proof,dependency,compatibility,versioned?files[i]:null)).join('\n')||'No diagnostics.')+(result.output?'\n'+result.output:'')+'\nChecked in '+(result.compileMs/1000).toFixed(2)+' s.');
-        el('output').textContent=results.join('\n\n');
-        if(state==='failed'){setStatus('Lean reported errors. The workspace did not pass.','failed');return;}
-        if(!freshFrontend&&dependency&&i===files.length-2)checkedDependencies={source:dependencySource,results:[...results],warnings};
+        el('output').textContent=render(results);
+        if(state==='failed'){setStatus(selectedOnly?'Lean reported errors. The selected-file check did not pass.':'Lean reported errors. The workspace did not pass.','failed');return;}
+        if(!freshFrontend&&dependency&&i===dependencies.at(-1))checkedDependencies={source:dependencySource,results:[...results],warnings};
       }
-      setStatus(warnings?'Checking completed with warnings. Review Lean’s response; a sorry warning means an unfinished proof.':workspace.compatibility?'Checking completed with no diagnostics. Browser compatibility lemma included.':'Checking completed with no diagnostics.',warnings?'warning':'passed');
+      setStatus(warnings?(selectedOnly?'Selected-file check completed with warnings. Review Lean’s response; a sorry warning means an unfinished proof.':'Checking completed with warnings. Review Lean’s response; a sorry warning means an unfinished proof.'):selectedOnly?'Selected file and its dependencies checked with no diagnostics.':workspace.compatibility?'Checking completed with no diagnostics. Browser compatibility lemma included.':'Checking completed with no diagnostics.',warnings?'warning':'passed');
     } catch(error) {
       if(ticket!==generation)return;
       el('output').textContent=(failureContext?failureContext+'\n':'')+String(error.message||error);setStatus('Checking could not complete. No successful result.','failed');dispose();
@@ -300,7 +308,8 @@ async function start() {
       if(ticket===generation){if(freshFrontend)dispose();controls(false);el('run').textContent=freshFrontend||compiler?'Run workspace':'Restart Lean and run';}
     }
   }
-  el('run').addEventListener('click',run);
+  el('run').addEventListener('click',()=>run());
+  el('run-selected').addEventListener('click',()=>run(true));
   const requested=new URL(location.href);
   await chooseId(requested.searchParams.has('file')?'source-'+requested.searchParams.get('file'):requested.searchParams.get('example'));
   const saved=sessionStorage.getItem(draftKey);
@@ -310,7 +319,9 @@ async function start() {
       if(workspace.id!==draft.id){setStatus('Your saved draft is preserved. Reload to retry loading its source.','failed');return;}
       const restored=restoreWorkspaceDraft(workspace,draft);
       files=restored.files;current=restored.current;filePicker.value=String(current);showFile();
-      sessionStorage.removeItem(draftKey);if(draft.run)await run();
+      if(draft.runScope!==undefined&&!['selected','workspace'].includes(draft.runScope))throw new Error('Your saved check scope is unsupported. Download the draft to recover your edits.');
+      if(draft.run!==undefined&&typeof draft.run!=='boolean')throw new Error('Your saved check request is unsupported. Download the draft to recover your edits.');
+      sessionStorage.removeItem(draftKey);if(draft.run===true)await run(draft.runScope==='selected');
     }catch(error){
       const recovery=el('draft-recovery');recovery.hidden=false;
       el('draft-download').href=URL.createObjectURL(new Blob([saved],{type:'application/json;charset=utf-8'}));

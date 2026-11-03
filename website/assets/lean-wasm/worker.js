@@ -35,6 +35,7 @@ let shuttingDown = false;
 let nextBlobRequest = 1;
 const blobRequests = new Map();
 const ownedBlobUrls = new Set();
+const packDownloadControllers = new Set();
 
 // Configuration arrives either as a global or as a query string. The packaged runtime
 // (@live-codes/lean-wasm) hands this file over as a blob, and a blob URL carries no query string, so
@@ -101,6 +102,7 @@ async function runtimeBlobUrl(blob, kind) {
 function releaseRuntimeResources() {
   shuttingDown = true;moduleReady = false;
   const cleanup = {threadShutdownRequested: false, assetUrls: ownedBlobUrls.size};
+  for (const controller of packDownloadControllers) controller.abort();
   // The pinned glue exposes PThread globally, not as Module.PThread. This is
   // JS-only teardown: no C++ finalizers, task joins, or Wasm stack calls after a
   // fatal trap. terminateAllThreads requests worker termination without freeing
@@ -213,6 +215,148 @@ async function gunzip(bytes) {
   return new Uint8Array(await new Response(stream).arrayBuffer());
 }
 
+// Retain at most two small encoded packs, including completed lookahead bodies.
+// Unknown/large packs take an exclusive slot and keep the old serial behavior.
+const PACK_PREFETCH_BYTES = 8 * 1024 * 1024;
+let packSlots = 0, exclusivePackSlot = false;
+const packSlotWaiters = [];
+let packInstallTail = Promise.resolve();
+
+function checkPackActive(signal) {
+  if (shuttingDown) throw new Error('The compiler was disposed.');
+  if (signal.aborted) throw signal.reason || new Error('Library download canceled.');
+}
+
+function encodedPackSize(pack) {
+  if (pack.compressedBytes == null) return null;
+  if (!Number.isSafeInteger(pack.compressedBytes) || pack.compressedBytes < 0) {
+    throw new Error(`${pack.file}: invalid compressed size`);
+  }
+  return pack.compressedBytes;
+}
+
+function drainPackSlots() {
+  while (packSlotWaiters.length) {
+    const next = packSlotWaiters[0];
+    if (exclusivePackSlot || packSlots >= 2 || next.exclusive && packSlots) return;
+    packSlotWaiters.shift();next.signal.removeEventListener('abort', next.cancel);
+    packSlots++;exclusivePackSlot = next.exclusive;
+    let released = false;
+    next.resolve(() => {
+      if (released) return;
+      released = true;packSlots--;exclusivePackSlot = false;drainPackSlots();
+    });
+  }
+}
+
+function reservePackSlot(exclusive, signal) {
+  checkPackActive(signal);
+  return new Promise((resolve, reject) => {
+    const waiter = {exclusive, signal, resolve, cancel: null};
+    waiter.cancel = () => {
+      const index = packSlotWaiters.indexOf(waiter);
+      if (index < 0) return;
+      packSlotWaiters.splice(index, 1);reject(signal.reason || new Error('Library download canceled.'));
+      drainPackSlots();
+    };
+    signal.addEventListener('abort', waiter.cancel, {once: true});
+    packSlotWaiters.push(waiter);drainPackSlots();
+  });
+}
+
+async function readEncodedPack(response, pack, expected, signal) {
+  if (expected === null) return new Uint8Array(await response.arrayBuffer());
+  // Measure the actual asset body. HTTP content decoding can change its length
+  // relative to Content-Length before fetch exposes the response stream.
+  const bytes = new Uint8Array(expected);
+  const reader = response.body?.getReader();
+  if (!reader) {
+    if (expected === 0) return bytes;
+    throw new Error(`${pack.file}: no readable download body`);
+  }
+  const cancel = () => { reader.cancel(signal.reason).catch(() => {}); };
+  signal.addEventListener('abort', cancel, {once: true});
+  let offset = 0;
+  try {
+    for (;;) {
+      checkPackActive(signal);
+      const {done, value} = await reader.read();
+      checkPackActive(signal);
+      if (done) break;
+      if (value.byteLength > expected - offset) throw new Error(`${pack.file}: encoded length exceeds ${expected} bytes`);
+      bytes.set(value, offset);offset += value.byteLength;
+    }
+    if (offset !== expected) throw new Error(`${pack.file}: got ${offset} encoded bytes, manifest says ${expected}`);
+    return bytes;
+  } catch (error) {
+    try { await reader.cancel(error); } catch { /* preserve the download failure */ }
+    throw error;
+  } finally { signal.removeEventListener('abort', cancel);reader.releaseLock(); }
+}
+
+async function verifyPackHash(pack, bytes, signal) {
+  if (!pack.sha256) return;
+  const hash = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes)), b => b.toString(16).padStart(2, '0')).join('');
+  checkPackActive(signal);
+  if (hash !== pack.sha256) throw new Error(`${pack.file}: checksum mismatch`);
+}
+
+async function forEachDownloadedPack(packs, urlFor, consume) {
+  const controller = new AbortController(), {signal} = controller;
+  packDownloadControllers.add(controller);
+  const pending = new Map();
+  let failure;
+  function launch(index) {
+    if (index >= packs.length || pending.has(index)) return;
+    const pack = packs[index], expected = encodedPackSize(pack);
+    const job = {bytes: null, release: null, result: null};
+    // Handle every rejection immediately, including an out-of-order lookahead
+    // failure. Its peers are canceled before any further pack is installed.
+    job.result = (async () => {
+      job.release = await reservePackSlot(expected === null || expected > PACK_PREFETCH_BYTES, signal);
+      checkPackActive(signal);
+      const response = await fetch(urlFor(pack), {signal});
+      if (!response.ok) throw new Error(`${pack.file}: HTTP ${response.status}`);
+      job.bytes = await readEncodedPack(response, pack, expected, signal);
+      checkPackActive(signal);
+      return {ok: true};
+    })().catch(error => {
+      failure ??= error;controller.abort(failure);
+      return {ok: false};
+    });
+    pending.set(index, job);
+  }
+  try {
+    for (let index = 0; index < packs.length; index++) {
+      launch(index);
+      const size = encodedPackSize(packs[index]);
+      if (size !== null && size <= PACK_PREFETCH_BYTES && index + 1 < packs.length) {
+        const nextSize = encodedPackSize(packs[index + 1]);
+        if (nextSize !== null && nextSize <= PACK_PREFETCH_BYTES) launch(index + 1);
+      }
+      const job = pending.get(index);
+      if (!(await job.result).ok) throw failure;
+      checkPackActive(signal);
+      // One hash/inflate/install stage across all library requests, in each
+      // manifest's order. The encoded slot stays leased until consumption ends.
+      const install = packInstallTail.then(() => {
+        checkPackActive(signal);
+        return consume(packs[index], job.bytes, index, signal);
+      });
+      packInstallTail = install.then(() => {}, () => {});
+      try { await install;checkPackActive(signal); }
+      finally { job.bytes = null;job.release?.();job.release = null;pending.delete(index); }
+    }
+  } catch (error) {
+    failure ??= error;controller.abort(failure);throw failure;
+  } finally {
+    controller.abort();
+    await Promise.all([...pending.values()].map(job => job.result));
+    for (const job of pending.values()) { job.bytes = null;job.release?.(); }
+    pending.clear();packDownloadControllers.delete(controller);
+  }
+}
+
 /**
  * `fetch` reports a network failure as a bare `TypeError: Failed to fetch`, which says nothing about which
  * of several URLs it was — and this worker fetches several. Naming the URL here is the difference between
@@ -292,7 +436,9 @@ async function loadWasmUrl(script) {
  * requests are needed — one 6 MB pack replaces ~380 round trips.
  */
 async function loadLibrary() {
-  const manifest = await (await fetch(`${assetBase}/core-layer.json`)).json();
+  const response = await fetch(`${assetBase}/core-layer.json`);
+  if (!response.ok) throw new Error(`core-layer.json: HTTP ${response.status}`);
+  const manifest = await response.json();
   const build = await checkBuildIdentity('the core layer', manifest);
   post({
     type: 'library',
@@ -306,20 +452,21 @@ async function loadLibrary() {
 
   const files = [];
   let done = 0;
-  for (const pack of manifest.packs) {
-    const response = await fetch(`${assetBase}/core-lib/${pack.file}`);
-    if (!response.ok) throw new Error(`${pack.file}: HTTP ${response.status}`);
-    let bytes = new Uint8Array(await response.arrayBuffer());
+  await forEachDownloadedPack(manifest.packs, pack => `${assetBase}/core-lib/${pack.file}`, async (pack, bytes, _index, signal) => {
+    await verifyPackHash(pack, bytes, signal);
+    checkPackActive(signal);
     if (bytes[0] === 0x1f && bytes[1] === 0x8b) bytes = await gunzip(bytes);
+    checkPackActive(signal);
     if (bytes.length !== pack.bytes) {
       throw new Error(`${pack.file}: got ${bytes.length} bytes, manifest says ${pack.bytes}`);
     }
     for (const entry of pack.entries) {
+      checkPackActive(signal);
       files.push({ name: entry.path, data: bytes.subarray(entry.offset, entry.offset + entry.bytes) });
     }
     done += 1;
     post({ type: 'library', stage: 'pack', loaded: done, total: manifest.packs.length, file: pack.file });
-  }
+  });
 
   post({ type: 'library', stage: 'done', files: files.length });
   return files;
@@ -595,7 +742,9 @@ async function loadPackedLayer({ manifestUrl, packBase, label }) {
   // 408 MB and takes ~170 s to deserialize); if the layer is not published at all, loading it only to fail
   // on the missing packs wastes that time. The packs are required regardless, because the program's header
   // must resolve its imports.
-  const manifest = await (await fetch(manifestUrl)).json();
+  const response = await fetch(manifestUrl);
+  if (!response.ok) throw new Error(`${label}: manifest HTTP ${response.status}`);
+  const manifest = await response.json();
   if (!manifest.packs || !Array.isArray(manifest.packs)) {
     throw new Error(`${label}: manifest has no packs`);
   }
@@ -607,21 +756,17 @@ async function loadPackedLayer({ manifestUrl, packBase, label }) {
 
   let files = 0;
   let bytes = 0;
-  for (const [index, pack] of manifest.packs.entries()) {
-    const response = await fetch(`${packBase}/${pack.file}`);
-    if (!response.ok) throw new Error(`${pack.file}: HTTP ${response.status}`);
-
-    let raw = new Uint8Array(await response.arrayBuffer());
-    if (pack.sha256) {
-      const hash = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', raw)), b => b.toString(16).padStart(2, '0')).join('');
-      if (hash !== pack.sha256) throw new Error(`${pack.file}: checksum mismatch`);
-    }
+  await forEachDownloadedPack(manifest.packs, pack => `${packBase}/${pack.file}`, async (pack, raw, index, signal) => {
+    await verifyPackHash(pack, raw, signal);
+    checkPackActive(signal);
     if (raw[0] === 0x1f && raw[1] === 0x8b) raw = await gunzip(raw);
+    checkPackActive(signal);
     if (raw.length !== pack.bytes) {
       throw new Error(`${pack.file}: got ${raw.length} bytes, manifest says ${pack.bytes}`);
     }
 
     for (const entry of pack.entries) {
+      checkPackActive(signal);
       writeLibEntry(Module.FS, entry.path, raw.subarray(entry.offset, entry.offset + entry.bytes));
     }
     files += pack.entries.length;
@@ -629,7 +774,7 @@ async function loadPackedLayer({ manifestUrl, packBase, label }) {
     raw = null; // release this pack before the next one
 
     post({ type: 'layer', stage: 'progress', label, pack: index + 1, packs: manifest.packs.length, files, bytes });
-  }
+  });
 
   const loose=manifest.loose || [];
   let next=0,completed=0;
