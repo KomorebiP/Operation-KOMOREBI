@@ -103,6 +103,8 @@ def matrix_label_blocks(nodes,source):
     number=r'([-+]?\d*\.?\d+)'
     rectangle=r'\\(?:path|draw|filldraw)(?:\[[^\]]*\])?\s*\(\s*'+number+r'\s*,\s*'+number+r'\s*\)\s*rectangle\s*(\+\+)?\(\s*'+number+r'\s*,\s*'+number+r'\s*\)'
     for match in re.finditer(rectangle,source):
+        command=match[0].split('(',1)[0]
+        if command.startswith(r'\path') and not re.search(r'(?:\[|,)\s*(?:draw|fill)(?:=|,|\])',command):continue
         x0,y0=float(match[1]),float(match[2]);x1,y1=float(match[4]),float(match[5])
         if match[3]:x1+=x0;y1+=y0
         x0,x1=sorted((x0,x1));y0,y1=sorted((y0,y1))
@@ -114,7 +116,10 @@ def matrix_label_blocks(nodes,source):
         if len(found)!=1:continue
         index=found[0];value=nodes[index]['text'].strip()
         if not (MATH_PATTERN.fullmatch(value) or re.fullmatch(r'[-+\d./·⋅…]+',value)):continue
-        if any(c['index']==index for c in cells):continue
+        previous=next((c for c in cells if c['index']==index),None)
+        if previous:
+            if (previous['x1']-previous['x0'])*(previous['y1']-previous['y0'])<=width*height:continue
+            cells.remove(previous)
         cells.append(dict(x0=round(x0,5),y0=round(y0,5),x1=round(x1,5),y1=round(y1,5),index=index))
     all_cells={c['index'] for c in cells}
     groups=[]

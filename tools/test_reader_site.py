@@ -546,6 +546,16 @@ class ReaderSiteTests(unittest.TestCase):
         self.assertEqual(blocks[0]['rows'],[[2,3,4],[5,6,7]])
         self.assertEqual(transcript_order(dict(alt='Grid',description='A grid.',blocks=blocks),nodes),list(range(8)))
 
+    def test_grid_cells_are_not_replaced_by_bounding_boxes_or_outer_rules(self):
+        from reader_drawing_transcripts import drawing_nodes,matrix_label_blocks
+        source=r'\path[use as bounding box] (0,0) rectangle (3,3);\draw (0,0) rectangle (3,3);'
+        source+=''.join(r'\draw ('+str(x)+','+str(y)+r') rectangle ++(1,1);'
+                        r'\node at ('+str(x+.5)+','+str(y+.5)+') {$'+str(n)+'$};'
+                        for n,(x,y) in enumerate((x,y) for y in [2,1,0] for x in [0,1,2]))
+        blocks=matrix_label_blocks(drawing_nodes(source),source)
+        self.assertEqual(len(blocks),1)
+        self.assertEqual(blocks[0]['rows'],[['Row 1',0,1,2],['Row 2',3,4,5],['Row 3',6,7,8]])
+
     def test_incomplete_grids_and_bar_rows_keep_all_labels_without_guessing_cells(self):
         from reader_drawing_transcripts import drawing_nodes,matrix_label_blocks
         from reader_atlas import transcript_order
