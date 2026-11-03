@@ -11,10 +11,11 @@
 // `worker/lean-worker.js`), so there is one implementation and the demo in this repo consumes it too.
 
 // Separate same-origin worker source keeps the vendored implementation reviewable.
-const RUNTIME_WORKER_SOURCE = 'importScripts(' + JSON.stringify(new URL('./worker.js?v=20261102', import.meta.url).href) + ');';
+const RUNTIME_WORKER_SOURCE = 'importScripts(' + JSON.stringify(new URL('./worker.js?v=20261103-lifecycle1', import.meta.url).href) + ');';
 const NATIVE_INVOKES_URL = new URL('./native-invokes.js', import.meta.url).href;
 
 const COMPILE_PATH = '/workspace/input.lean';
+const SHUTDOWN_TIMEOUT_MS = 100;
 
 function createWorkerSource(config) {
 	// A blob URL carries no query string, so the config travels as a global the worker reads first.
@@ -28,6 +29,19 @@ export function createRuntime({ assetBase, libBase, memory, onProgress, onStatus
 	let stdout = '';
 	let stderr = '';
 	let nextId = 1;
+	let ready = false;
+	let operations = 0;
+	let disposed = false;
+	let retiringWorker = null;
+	let retirementId = null;
+	let retirementTimer = null;
+	let closedResolved = false;
+	let resolveClosed;
+	const closed = new Promise(resolve => { resolveClosed = resolve; });
+	// Worker-created object URLs do not have a specified worker-unload cleanup
+	// hook. Create the runtime's large Blob URLs here so hard Stop owns them too.
+	const ownedBlobUrls = new Set();
+	const assetUrls = new Map();
 	const waiters = [];
 	// Build identities the worker has seen, so the compiler can make its fallback notes build-aware.
 	const build = { artifact: null, core: null, layer: null };
@@ -43,10 +57,35 @@ export function createRuntime({ assetBase, libBase, memory, onProgress, onStatus
 		if (message) onProgress?.(message);
 	};
 
-	function dispatch(event) {
+	function dispatch(event, source) {
 		const msg = event.data || {};
+		if (disposed) {
+			if (source === retiringWorker && msg.type === 'disposed' && msg.id === retirementId) {
+				finishClose({acknowledged: true, cleanup: msg.cleanup});
+			}
+			return;
+		}
+		if (source !== worker) return;
 
 		switch (msg.type) {
+			case 'create_blob_url': {
+				try {
+					if (!Number.isSafeInteger(msg.id) || msg.id < 1 ||
+						!['wasm', 'script'].includes(msg.kind) || !(msg.blob instanceof Blob) || assetUrls.has(msg.kind)) {
+						throw new Error('Invalid runtime asset URL request.');
+					}
+					const url = URL.createObjectURL(msg.blob);
+					ownedBlobUrls.add(url);assetUrls.set(msg.kind, url);
+					source.postMessage({type: 'blob_url', id: msg.id, url});
+				} catch (error) {
+					try { source.postMessage({type: 'blob_url', id: msg.id, error: String(error.message || error)}); }
+					catch { dispose({force: true}); }
+				}
+				return;
+			}
+			case 'ready':
+				ready = true;
+				break;
 			case 'stdout':
 				stdout += msg.data + '\n';
 				return;
@@ -95,6 +134,7 @@ export function createRuntime({ assetBase, libBase, memory, onProgress, onStatus
 
 		if (msg.type === 'error') {
 			failAll(new Error(msg.data));
+			dispose({force: true});
 		}
 	}
 
@@ -118,33 +158,51 @@ export function createRuntime({ assetBase, libBase, memory, onProgress, onStatus
 	}
 
 	function post(message) {
-		if (!worker) throw new Error('The Lean runtime is not running.');
+		if (disposed || !worker) throw new Error('The Lean runtime is not running.');
 		worker.postMessage(message);
 	}
 
-	async function start() {
-		objectUrl = URL.createObjectURL(new Blob([createWorkerSource({ assetBase, libBase, memory, nativeInvokesUrl: NATIVE_INVOKES_URL })], { type: 'text/javascript' }));
-		worker = new Worker(objectUrl);
-		worker.onmessage = dispatch;
-		worker.onerror = (event) => failAll(new Error(event.message || 'Lean runtime error'));
+	async function request(message, match, label, timeoutMs) {
+		operations++;
+		try {
+			post(message);
+			return await waitFor(match, label, timeoutMs);
+		} catch (error) {
+			ready = false;
+			dispose({force: true});
+			throw error;
+		} finally { operations--; }
+	}
 
-		post({ type: 'start' });
+	async function start() {
+		if (disposed || worker) throw new Error('The Lean runtime cannot be started again.');
+		objectUrl = URL.createObjectURL(new Blob([createWorkerSource({ assetBase, libBase, memory, nativeInvokesUrl: NATIVE_INVOKES_URL, hostOwnsBlobUrls: true })], { type: 'text/javascript' }));
+		ownedBlobUrls.add(objectUrl);
+		try { worker = new Worker(objectUrl); }
+		catch (error) { dispose({force: true});throw error; }
+		const startedWorker = worker;
+		worker.onmessage = event => dispatch(event, startedWorker);
+		worker.onerror = (event) => {
+			if (startedWorker !== worker && startedWorker !== retiringWorker) return;
+			failAll(new Error(event.message || 'Lean runtime error'));
+			dispose({force: true});
+		};
+
 		// The Init import is the long part, and it reports progress through the heartbeats the worker
 		// forwards, so the timeout only has to be generous enough to notice a wedged boot.
-		await waitFor((msg) => msg.type === 'ready', 'Starting the Lean runtime', 120_000);
+		try { await request({type: 'start'}, msg => msg.type === 'ready', 'Starting the Lean runtime', 120_000); }
+		catch (error) { dispose({force: true});throw error; }
 	}
 
 	async function loadModules(roots) {
 		const id = nextId++;
-		post({ type: 'load_modules', id, roots });
-		const reply = await waitFor((msg) => msg.type === 'modules_loaded' && msg.id === id, `Loading ${roots.join(', ')}`, 300_000);
+		const reply = await request({type: 'load_modules', id, roots}, msg => msg.type === 'modules_loaded' && msg.id === id, `Loading ${roots.join(', ')}`, 300_000);
 		return reply.results ?? [];
 	}
 
 	async function loadLayer(layer) {
 		const id = nextId++;
-		post({ type: 'load_layer', id, label: layer.label, manifestUrl: layer.manifestUrl, packBase: layer.packBase });
-		const reply = await waitFor((msg) => msg.type === 'layer_loaded' && msg.label === layer.label, `Loading ${layer.label}`, 600_000);
+		const reply = await request({type: 'load_layer', id, label: layer.label, manifestUrl: layer.manifestUrl, packBase: layer.packBase}, msg => msg.type === 'layer_loaded' && msg.label === layer.label, `Loading ${layer.label}`, 600_000);
 		return reply;
 	}
 
@@ -152,28 +210,53 @@ export function createRuntime({ assetBase, libBase, memory, onProgress, onStatus
 		const id = nextId++;
 		stdout = '';
 		stderr = '';
-		post({ type: 'compile', id, code, path: COMPILE_PATH });
-		const reply = await waitFor((msg) => msg.type === 'result' && msg.id === id, 'Compiling', 600_000);
+		const reply = await request({type: 'compile', id, code, path: COMPILE_PATH}, msg => msg.type === 'result' && msg.id === id, 'Compiling', 600_000);
 		// A trap or escaped exception may leave the native stack unusable. Plain
 		// Lean IO errors remain retryable so missing imports can still be loaded.
-		if (reply.fatal) dispose();
+		if (reply.fatal) dispose({force: true});
 		return { ...reply, stdout, stderr };
 	}
 
 	async function reset() {
 		const id = nextId++;
-		post({type: 'reset', id});
-		await waitFor(msg => msg.type === 'reset_done' && msg.id === id, 'Resetting the workspace', 30000);
+		await request({type: 'reset', id}, msg => msg.type === 'reset_done' && msg.id === id, 'Resetting the workspace', 30000);
 	}
 
-	function dispose() {
-		failAll(new Error('The compiler was disposed.'));
-		worker?.terminate();
-		worker = null;
-		if (objectUrl) {
-			URL.revokeObjectURL(objectUrl);
-			objectUrl = null;
+	function finishClose(info = {acknowledged: false}) {
+		clearTimeout(retirementTimer);retirementTimer = null;
+		const retiring = retiringWorker;retiringWorker = null;
+		if (retiring) {
+			retiring.onmessage = null;retiring.onerror = null;
+			try { retiring.terminate(); } catch { /* ownership still ends here */ }
 		}
+		for (const url of ownedBlobUrls) {
+			try { URL.revokeObjectURL(url); } catch { /* revoke the remaining URLs too */ }
+		}
+		ownedBlobUrls.clear();assetUrls.clear();objectUrl = null;
+		if (!closedResolved) { closedResolved = true;resolveClosed(info); }
+	}
+
+	/** Stop is immediate while work is pending. Idle disposal first asks the
+	 * owning worker to terminate its pthread pool, with a bounded hard fallback.
+	 * An acknowledgement means cleanup requests were issued, not that the browser
+	 * has physically reclaimed every shared-memory mapping yet. */
+	function dispose({force = false} = {}) {
+		if (disposed) {
+			if (force && retiringWorker) finishClose({acknowledged: false, forced: true});
+			return closed;
+		}
+		disposed = true;
+		failAll(new Error('The compiler was disposed.'));
+		retiringWorker = worker;worker = null;
+		if (!retiringWorker || force || !ready || operations > 0) {
+			finishClose({acknowledged: false, forced: true});
+		} else {
+			retirementId = nextId++;
+			retirementTimer = setTimeout(() => finishClose({acknowledged: false}), SHUTDOWN_TIMEOUT_MS);
+			try { retiringWorker.postMessage({type: 'dispose', id: retirementId}); }
+			catch { finishClose({acknowledged: false, forced: true}); }
+		}
+		return closed;
 	}
 
 	return {
@@ -183,6 +266,8 @@ export function createRuntime({ assetBase, libBase, memory, onProgress, onStatus
 		compile,
 		reset,
 		dispose,
+		/** Resolves after terminal worker termination is requested and owned URLs revoked. */
+		closed,
 		/** What the worker has learned about the artifact and the layers, once each has been fetched. */
 		get build() {
 			return { ...build };

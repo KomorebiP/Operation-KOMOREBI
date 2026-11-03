@@ -17,7 +17,7 @@ import {
 	outsideClosureNotes,
 	unavailableImportNotes
 } from './roots.js';
-import { createRuntime } from './runtime.js?v=20261102';
+import { createRuntime } from './runtime.js?v=20261103-lifecycle1';
 import { SYNTAX_ERROR_MARKER, syntaxProbeSource } from './syntax-probe.js?v=20261102-frontend1';
 import { checkedFrontendSource, frontendMarkers } from './frontend-check.js?v=20261103-completed1';
 
@@ -114,7 +114,7 @@ function describeMemory(artifact) {
  * @param {(artifact: object) => void} [options.onArtifact] - called once the artifact's memory mode is
  *   known, before the boot and before the cross-origin-isolation gate — so a caller can report what the
  *   artifact needs even when it is what stops the boot. Same shape as the returned `artifact`.
- * @returns {Promise<{language: string, assets: object, artifact: object, run: Function, dispose: Function}>}
+ * @returns {Promise<{language: string, assets: object, artifact: object, run: Function, dispose: Function, closed: Promise}>}
  */
 export async function createCompiler(options = {}) {
 	assertEnvironment();
@@ -280,7 +280,7 @@ export async function createCompiler(options = {}) {
 			// Never retry this call: the source may contain commands with effects.
 			result = await runtime.compile(transport);
 		} catch (error) {
-			runtime.dispose();
+			runtime.dispose({force: true});
 			throw error;
 		}
 		const parsed = collect(result.stdout, result.stderr);
@@ -303,7 +303,7 @@ export async function createCompiler(options = {}) {
 				.filter(line => !isToolchainNoise(line.trim())).join('\n')}))
 			.filter(entry => entry.text.trim() !== '');
 		if (!result.success || !completed || hasPanic) {
-			runtime.dispose();
+			runtime.dispose({force: true});
 			const diagnostics = problemsToLines(parsed.problems).map((line, index) =>
 				parsed.problems[index].fileName === markers.fileName ? line : `Browser frontend check: ${line}`);
 			const failure = hasPanic
@@ -403,10 +403,13 @@ export async function createCompiler(options = {}) {
 			};
 		},
 
-		/** Terminate the runtime worker. Further runs throw. */
+		/** Resolves after terminal worker termination is requested and its asset URLs revoked. */
+		closed: runtime.closed,
+
+		/** Dispose the runtime. Further runs throw; await the returned promise before replacing it. */
 		dispose() {
 			options.signal?.removeEventListener('abort',abort);
-			runtime.dispose();
+			return runtime.dispose();
 		}
 	};
 }
