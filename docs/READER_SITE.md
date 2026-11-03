@@ -8,6 +8,133 @@ All twelve core papers have formatted HTML reading editions. Each retains its
 recorded mathematical scope; companion guides and atlas coverage are described
 on the individual reading pages.
 
+## Core visual-guide coverage
+
+The **Browse → Core visual guides** directory at `read/visual-guides.html`
+links every core paper's visual material, manuscript and evidence overview.
+HTML status follows the maintained reading configuration; PDF destinations
+and hashes come from the existing source receipts. Paper I's visual atlas is
+inside its main monograph. The other eleven have separate visual-guide PDFs.
+
+The [current inventory](../verification/reader-visual-guides/2026-11-02-paper-x.json)
+checks the committed visual sources against their receipts and identifies the
+remaining ports. Counts below describe source units, which vary by guide;
+they are not counts of theorems or PDF pages. The
+[initial inventory](../verification/reader-visual-guides/2026-11-02.json) retains
+the earlier four-atlas snapshot.
+
+| Paper | Retained visual source | HTML visual coverage |
+|---|---|---|
+| I | 22 plates | Complete |
+| II | 24 plates | Complete |
+| III | 24 plates | Complete |
+| IV | 26 plates | Complete |
+| V | 40 plates | Complete |
+| VI | 42 plates | Complete |
+| VII | 40 plates | Complete |
+| VIII | 32 plates across two inputs | Complete |
+| IX | 23 sections across two inputs, plus a generated coefficient input | Complete |
+| X | 30 plates, two opening scope sections and their diagram | Complete |
+| XI | 47 lessons | Pending |
+| XII | 27 plates | Pending |
+
+Papers I–X now have complete HTML visual guides. The remaining ports are
+XI–XII. Paper XI needs its own lesson conversion. Paper XII needs explicit
+handling of its evidence boundaries. Each port should preserve prose,
+equations, drawing labels and manuscript links before its status is promoted.
+
+Run `python -B tools/audit_core_visual_guides.py` to inspect the current coverage.
+The report identifies the committed source revision and states that HTML
+configuration is read from the working tree. `test_core_visual_guides.py`
+checks the twelve destinations and distinct integrated/separate PDF routes.
+
+Paper I's complete atlas is at `read/paper-i/atlas/`. Its 22 plates preserve
+20 original monograph drawings, 435 selectable labels, and 699 mathematical
+expressions, including formulas in the plate headings. Native source theorem
+references resolve to manuscript passages with return links. The path, cycle,
+coordinate-ring and evidence plates also link their explicitly selected source
+sections. Three source tables and the matrix-label transcripts have semantic
+headers. The first source table has no printed headings; its reading-aid
+headings retain all three original data rows.
+
+`tools/paper_i_atlas.py` records the source, macro and figure identities in
+`documents/paper-i-atlas.json`. PDF routes keep the integrated monograph's
+physical pages 83–104. To regenerate only those original drawing views, use
+`python -B tools/render_paper_i_atlas.py` with pypdfium2 available. Normal
+builds need no PDF renderer or TeX engine. Run
+`python -B -m unittest discover -s tools -p 'test_paper_i_atlas.py' -v`.
+This conversion adds no proof audit, mathematical example run or Lean replay.
+
+Papers II and III each have a complete atlas at `read/paper-ii/atlas/` and
+`read/paper-iii/atlas/`. Each retains 24 plates and 22 original PDF drawings.
+Paper II preserves 754 selectable labels, 1,043 mathematical expressions, and
+40 manuscript routes; Paper III preserves 488 labels, 747 expressions, and
+44 routes. Each manuscript destination has a return link. Four source tables
+and the gridded matrix-label transcripts retain semantic headers. Both PDFs
+have two front-matter pages, so V1–V24 open physical pages 3–26.
+
+`tools/worked_visual_atlas.py` implements these two source-bound conversions;
+`tools/core_worked_atlases.py` declares the source table schemas. Figure sources,
+PDF hashes, physical pages and crop bounds are recorded in
+`tools/worked_atlas_sources.py` and the per-paper figure receipts. Render the
+unchanged drawings with `python -B tools/render_worked_atlases.py`; ordinary
+website builds use the committed images and need no PDF renderer or TeX engine.
+Paper II's multiline drawing label retains both formulas, and V24 includes its
+separate current-scope source verbatim with a source link. Its recorded counts
+are inherited evidence statements, not a new replay. The verifier reconstructs
+the numbered manuscript destinations from the published source chapters and
+rejects reachable-but-wrong destinations. Run
+`python -B -m unittest discover -s tools -p 'test_core_worked_atlases.py' -v`.
+The mathematical proofreading self-review covers the new presentation wrappers,
+labels, descriptions, source references and tables. No mathematical tokens or
+imported manuscript bytes are changed; no new proof audit, exact example run or
+Lean replay is claimed.
+
+Paper VIII's complete standalone guide is at `read/paper-viii/atlas/`: 32
+plates, 30 original PDF drawings, 711 selectable drawing labels, 830 mathematical
+expressions, three source tables, and 84 manuscript routes with return links.
+Both standalone source inputs retain their own source-line links. Four literal
+TikZ loops in the extension drawings are expanded with their original node lines
+and explicit bindings; unreviewed values or loops stop conversion.
+
+The audit found that the inherited reference crosswalk records PDF checksum
+`63d0a88a9f5e055c9ddb4e862cb8ee7549342c8bb890c2f15c1c035423097801`, while both
+retained visual PDF copies have checksum
+`a78f1c18c7c36cecbaf9484bc6dc643300c3b5054df338f48be6390af5e520c7`.
+The selected PDF is retained. All 32 titles, printed locators and page labels
+were independently checked against its physical pages 3–34. The crosswalk's
+stable labels, statement numbers, kinds and titles are rechecked against the
+current manuscript source. The one declared kind translation is `fact:cg`:
+the guide's “Classical input 7.5” is the current manuscript's “Standard fact 7.5”.
+The original source, crosswalk and PDF bytes are unchanged. The conversion record
+and provenance details disclose the stale checksum rather than treating it as a
+current PDF identity certificate.
+
+`tools/paper_viii_atlas.py` uses the shared worked-atlas renderer and emits
+`documents/paper-viii-atlas.json`. `tools/paper_viii_atlas_sources.py` records the
+two source inputs, exact crosswalk identity, current PDF and reviewed crop bounds.
+`python -B tools/render_paper_viii_atlas.py` rechecks all PDF pages and regenerates
+the drawing views with pypdfium2; normal website builds need no PDF renderer.
+For V15, the recipe renders its 48 original resized drawing objects alone to
+exclude adjacent page prose from the crop. The PDF file and drawing objects are
+unchanged; no PDF is saved and no TeX is rebuilt.
+Run `python -B -m unittest discover -s tools -p 'test_paper_viii_atlas.py' -v`.
+The mathematical proofreading self-review covers the presentation wrappers,
+labels, descriptions, references and tables. Mathematical tokens are preserved;
+this conversion adds no proof audit, mathematical example run or Lean replay.
+
+The **Komorebi Methodology** also has a complete HTML edition at
+`read/komorebi-methodology/`: preface, nine essay chapters, closing reflection,
+verification notes, and references. Its 12 text pages preserve 164 mathematical
+expressions, three numbered equations, nine references, and the three original
+diagrams. [The proofreading and conversion record](reviews/KOMOREBI_METHODOLOGY_2026-11-02.md)
+states the review scope and validation. The source package and PDF are unchanged.
+`tools/methodology_sections.json` binds the exact source ranges and identities;
+`tools/methodology_reading.py` translates only the reviewed print wrappers.
+Run `python -B -m unittest discover -s tools -p 'test_methodology_reading.py' -v`
+to check the complete edition, source drift, numbering, equations, figures, and
+chapter/citation links. This conversion adds no proof audit or Lean coverage.
+
 Komorebi Space and Realization Boundaries also have complete HTML editions at
 `read/komorebi-space/` and `read/realization-boundaries/`. Their 52 source sections
 retain 137 proof blocks, 46 original figures and 4,828 mathematical expressions.
@@ -29,6 +156,70 @@ with pypdfium2; it is separate from the normal website build.
 Run `python -B -m unittest discover -s tools -p 'test_foundational_reading.py' -v`
 to check both complete editions, source changes, formula preservation and HTML
 structure. The normal site checker also checks their navigation and source links.
+
+Quantum and Circuits has a complete HTML reading edition at
+`read/monographs-quantum-and-circuits/`: chapters 1–21, appendices A–F and back matter in 206 topic pages,
+with 233 numbered statements, 120 written proofs, 82 original scientific figures
+in 85 manuscript appearances, 61 accessible tables, and 4,200 mathematical
+expressions. The contents page groups the main chapters, appendices, glossary and sources,
+with a preface and volume guide retaining the part introductions and general glossary. `tools/quantum_reading.py` translates the retained print wrappers;
+`tools/quantum_sections.json` binds complete source ranges, original identities,
+chapter groups and table headers. Authored QA labels and source-line links stay
+intact. `tools/quantum_symmetry.py` retains the symmetry treatment's chapter-wide
+statement, equation and figure numbering, its scope panels, and all twelve open
+questions. The 21 numbered equations remain part of the complete mathematical
+sequence; identical longtable continuation headers appear once in HTML.
+`tools/quantum_catalytic.py` adds the complete catalytic treatment: 28 topic
+pages, 134 numbered statements, 51 proofs, 32 figures in 34 appearances,
+15 tables, six literal listings, and 1,906 mathematical expressions. The six
+numbered gates in the linear atom appear as separate displays, retaining their
+original equation numbers and source lines. The eight explicitly named proofs
+have links from their earlier statements and return links across chapter pages.
+`tools/quantum_circuits.py` adds chapters 13–20 in 23 topics and the complete
+25-topic circuit visual study: 30 numbered results with written proofs, 12
+original figures, ten tables, two literal reproduction listings, and 775
+mathematical expressions. It preserves C01–C08 claim labels, five named scope
+panels, and six printed equation numbers. The binary-field main treatment and
+general-field visual scope retain their separate macro contexts. The Appendix E.4 citation now opens the HTML evidence ledger. All 54
+collected references retain their original numbering.
+`tools/quantum_companions.py` completes the reading edition with 58 pages:
+the volume orientation, appendices A–F, glossary and source notes. The new
+pages add 314 mathematical expressions, 30 accessible tables, and 157 literal
+code extracts. All 115 circuit declaration types retain their full Unicode
+text, source locators, block labels and axiom sets. The arithmetic guide keeps
+its 96-theorem inventory and its distinct inherited checkpoints. Visible scope
+notes distinguish retained verification statements from this HTML conversion.
+The 30-entry circuit result index keeps its printed page column, linking the
+original PDF at the corresponding physical page; its source digest and page
+map are in `tools/quantum_sections.json`. Recheck the PDF map with `python -B tools/check_quantum_pdf_pages.py`
+(using the same PDFium dependency as the figure helpers). The volume guide routes all 21
+chapters and six appendices to their first HTML topics. Literal code bodies
+are protected before any print-wrapper translation, and source lines remain
+unchanged. The complete sequence has 207 pages including references. The former
+`#source-continuations` bookmark remains an alias for the complete contents.
+The shared statement finder links all written proofs without adding Lean
+correspondences. This presentation adds no mathematical review or Lean replay.
+
+The arithmetic figure receipts and browser images are in
+`website/assets/figures/quantum-arithmetic/`; symmetry figures and receipts are in
+`website/assets/figures/quantum-symmetry/`; catalytic figures are in
+`website/assets/figures/quantum-catalytic/`; circuit figures are in
+`website/assets/figures/quantum-circuits/`. Reproduce them from the original
+single-page PDFs with `python -B tools/render_quantum_figures.py` and
+`python -B tools/render_symmetry_figures.py`, plus
+`python -B tools/render_catalytic_figures.py` and
+`python -B tools/render_circuit_figures.py`. Normal site builds check their
+source identities and publish the retained PNGs. Figure receipts default to one
+use; the symmetry compiler diagram and catalytic Pareto and packet diagrams
+explicitly record their two appearances. Run
+`python -B -m unittest discover -s tools -p 'test_quantum_reading.py' -v` for the
+complete edition, formula sequence, proof routes, tables and source anchors.
+
+Reading editions keep one complete, native chapter menu in the top navigation.
+Footers keep previous/next links and a direct Full contents link, avoiding the
+quadratic storage cost of repeating a second full menu on every topic page.
+Atlas-specific menus retain their existing behavior. The site-size guard
+continues to enforce the 1 GiB GitHub Pages ceiling.
 
 The twelve core editions share collection switching, chapter filtering,
 persistent text size and font choices, and sidebar chapter shortcuts. The
@@ -234,7 +425,20 @@ workflow runs the rendering and browser-state regressions alongside reader tests
 has 40 reading pages plus contents and bibliography. Its contiguous source ranges
 retain both manuscript branches, four appendices, 1,219 mathematical expressions,
 83 proof bodies, 35 manuscript figures and ten tables. Chapter navigation uses
-the shared reading controls. The forty-plate visual atlas stays in the PDF.
+the shared reading controls. All forty visual-atlas plates also have HTML pages
+at `read/paper-v/atlas/`, retaining 37 drawings, 550 selectable TikZ labels,
+962 mathematical expressions, six semantic tables, original source-line links
+and 73 manuscript links with return routes.
+The reused Gibbs plot has a separate text description; its labels remain in
+the original image and PDF. Historical computation totals retain their
+source-edition scope and do not describe a new execution during conversion.
+
+`tools/paper_v_atlas.py` checks plate numbering, source and image identities,
+the complete equation sequence and both directions of manuscript links.
+`documents/paper-v-atlas.json` records those checks. Regenerate the reviewed
+PDF crops with `python -B tools/render_paper_v_atlas.py` (pypdfium2 required).
+Normal builds verify committed images without a PDF renderer or TeX compiler.
+Run `python -B -m unittest discover -s tools -p 'test_paper_v_atlas.py' -v`.
 
 The [chapter configuration](../tools/paper_v_chapters.py) records the original
 line ranges and E-prefixed numbering. The [figure publisher](../tools/reader_figure_assets.py)
@@ -293,8 +497,37 @@ proof assessment, Lean replay or new hardware measurement.
 has 56 reading pages and a bibliography. The route covers all 13 main sections,
 the edition summary and all five mathematical appendices. It retains 5,252
 mathematical expressions, 153 proof environments, 14 manuscript figures,
-33 tables and all 27 bibliography entries. The worked visual atlas remains
-in the PDF. Historical headings and checkpoint notices keep their source scope.
+33 tables and all 27 bibliography entries. Historical headings and checkpoint
+notices keep their source scope.
+
+The [complete visual guide](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-ix/atlas/index.html)
+has 23 HTML sections, 20 original figures, 278 mathematical expressions, six
+source tables and 35 manuscript routes with return links. The entrypoint
+`sources/visual.tex` includes both `visual_body.tex` and `worked_atlas.tex`;
+the latter includes the generated Newton coefficients. The older retained
+`visual_README.md` still describes 15 sections and 12 figures. The audit follows
+the actual input graph and checks the retained 25-page PDF instead of using that
+stale inventory. All imported source bytes remain unchanged.
+
+`tools/paper_ix_atlas.py` preserves source wording, captions, mathematical
+sequences and line anchors. Figure math labels are read from the retained
+generator's Python AST without executing it. Other native figure labels are
+selectable PDF text, with descriptions and semantic data tables for reading
+order. Tables project the retained exact records, including every residue in
+the four displayed periods. The 5,490 illustration assertions and 463 worked
+example checks are inherited records, not executions performed by this port.
+Manuscript targets are reconstructed using the manuscript reader's own
+normalization and printed-label map. `documents/paper-ix-atlas.json` records
+these bindings and the stale README count.
+
+Run `python -B tools/render_paper_ix_atlas.py` with pypdfium2 to check all 23
+PDF section titles and render the 20 retained vector figures. Normal builds
+use frozen images and extraction receipts without PDF or TeX dependencies.
+Run `python -B -m unittest discover -s tools -p 'test_paper_ix_atlas.py' -v`
+for source coverage, formula preservation, transcripts, data tables and
+two-way manuscript links. The mathematical proofreading self-review covers the
+presentation, captions and labels; this port adds no mathematical proof audit,
+new example execution or Lean replay.
 
 The [chapter map](../tools/paper_ix_sections.json) fixes the reading ranges;
 the [conversion module](../tools/paper_ix_reading.py) checks the complete input
@@ -309,13 +542,43 @@ bibliography and reading links. No proof assessment or Lean replay is added.
 
 ## Paper X HTML reading edition
 
+The [complete Paper X visual guide](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-x/atlas/index.html)
+has 30 numbered HTML plates and retains both opening scope sections on its
+contents page. Its 29 drawings include the opening diagram that distinguishes
+the transported target family from the independently recovered carrier summand.
+The guide retains 754 selectable labels, 969 mathematical expressions, two
+source tables and 50 manuscript routes with return links.
+
+The audit follows `visual_appendix/appendix.tex`, including its opening contract
+and `source/pages.tex`. Physical PDF pages 2–3 hold the opening scopes; V1–V30
+are pages 4–33. The historical 17/20, checked conditional 20/20 and later
+unpromoted 19/20 records retain their different input contracts. Conversion
+checks reconstruct all authored prose and table cells as well as the equations,
+so changes to conditional scope wording fail verification.
+
+`tools/paper_x_atlas.py` uses the shared worked-atlas renderer and emits
+`documents/paper-x-atlas.json`. The source and crop bindings are in
+`tools/paper_x_atlas_sources.json`. Three crops touch adjacent page prose:
+V11, V19 and V22 render only the original drawing objects at scale 1.18541,
+with independently checked counts of 104, 83 and 135 objects. No PDF is saved
+or rebuilt. `python -B tools/render_paper_x_atlas.py` checks all 32 source
+section titles and regenerates the 29 drawing views with pypdfium2.
+Run `python -B -m unittest discover -s tools -p 'test_paper_x_atlas.py' -v`.
+Descriptions were checked against the rendered figures. This presentation
+conversion adds no proof audit, mathematical example execution or Lean replay.
+
+Generated metadata JSON uses compact syntax to keep the reader within the
+1 GiB publication limit. Parsing preserves every data value and all whitespace
+inside source strings. Receipt-bound files under `documents/files/` and frozen
+asset receipts retain their exact bytes. The site-size guard remains active.
+
 [Paper X](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-x/index.html)
 has 30 reading pages and a bibliography. It covers all 15 main sections,
 the algorithms and reproducibility appendices, the dated Block 27 discussion,
 the residue-counting continuation and the final conditional completion.
 The conversion retains 1,080 mathematical expressions, all 16 main proof
 bodies, 16 original figures, three tables and all 23 bibliography entries.
-The thirty-page visual atlas remains in the PDF.
+The complete visual guide is linked above; its retained PDF also remains available.
 
 The [chapter map](../tools/paper_x_sections.json) fixes contiguous source
 ranges. The [conversion module](../tools/paper_x_reading.py) checks every
@@ -487,7 +750,10 @@ python -B tools/update_completion_status.py --check
 python -B tools/fetch_reader_runtime.py --output ../reader-runtime
 python -B tools/fetch_pdf_runtime.py --output ../pdf-reader-runtime
 python -B tools/fetch_python_runtime.py --output ../python-reader-runtime
-python -B tools/build_reader_site.py --math-root ../komorebi-math --polyphase-root ../polyphase-float --mathjax-root ../reader-runtime --pdfjs-root ../pdf-reader-runtime --python-root ../python-reader-runtime --revision FULL_COLLECTION_COMMIT --output ../reader-site
+git clone https://github.com/live-codes/browser-lean.git ../browser-lean
+git -C ../browser-lean checkout a8aed095534e67061e2626b94e8e69193099091d
+python -B tools/prepare_lean_wasm.py --source ../browser-lean --output ../lean-browser-runtime
+python -B tools/build_reader_site.py --math-root ../komorebi-math --polyphase-root ../polyphase-float --mathjax-root ../reader-runtime --pdfjs-root ../pdf-reader-runtime --python-root ../python-reader-runtime --lean-wasm-root ../lean-browser-runtime --revision FULL_COLLECTION_COMMIT --output ../reader-site
 python -B tools/check_reader_site.py --site ../reader-site
 python -m http.server 8765 --directory ../reader-site
 ```
@@ -977,6 +1243,12 @@ explicit Haar support vectors. Its report records the tested range and
 numerical errors; it does not change manuscript or proof status.
 
 ## Interactive Lean pilot
+
+The collection-wide native runner at `lean/run.html` extends execution beyond
+the single-file pilot. Every displayed Lean source links to its selected
+workspace and command. See [Running the retained Lean sources](LEAN_EXECUTION.md)
+for the source bundle, manual GitHub workflow, retained/reconstructed
+environments, compiler receipts and dedicated-server export path.
 
 `lean/playground.html` embeds the official `live.lean-lang.org` editor only
 after a visitor presses **Load Lean editor**. A normal external link works

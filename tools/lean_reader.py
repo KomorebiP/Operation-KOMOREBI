@@ -231,9 +231,13 @@ def source_controls(reader, record, text, page):
     from readable_chapters import BOOKS
     from urllib.parse import quote
     body += '<nav class="lean-actions" aria-label="Lean source actions"><a href="'+site.rel(BOOKS[work]['index'],page)+'">Read the paper</a>'
-    body += '<a href="'+quote(site.rel(record['file_url'],page),safe='/')+'" download>Download source</a>'+paired_route(site,page)+'</nav>'
+    body += '<a href="'+quote(site.rel(record['file_url'],page),safe='/')+'" download>Download source</a>'+paired_route(site,page)
     from browser_lean import action
     body += action(site,page,source=record['repository_path'])
+    from lean_browser import action as local_action
+    body += local_action(site,page,source=record['repository_path'],retained=True)
+    from lean_execution import action as run_action
+    body += run_action(site,page,record['repository_path'])+'</nav>'
     body += scope(reader, work, page)
     module = record['repository_path'].removeprefix(source_root(reader,work))
     body += '<p class="lean-current-path"><code>'+e(module)+'</code><span>'+quantity(len(text.splitlines()),'line')+'</span></p>'
@@ -255,6 +259,8 @@ def build(reader):
         body += '<a href="'+site.rel('collection/works/'+work+'.html',page)+'">Work overview</a>'+paired_route(site,page)+'</nav>'+scope(reader,work,page)
         from browser_lean import action
         body += action(site,page,work=work)
+        from lean_browser import action as local_action
+        body += local_action(site,page,work=work)
         common = source_root(reader,work)
         root_label = common.removeprefix(site.components[work]['destination']+'/') or './'
         body += ('<div class="lean-directory-heading"><h2>Source files <span>'+str(len(records))+'</span></h2>'
@@ -290,7 +296,10 @@ def build(reader):
     body += '<p class="lean-summary">'+quantity(len(catalog),'reading edition')+'<span aria-hidden="true"> · </span>'+quantity(total,'source file')+'</p></header>'
     body += '<nav class="lean-actions" aria-label="Lean library routes"><a href="'+site.rel('read/index.html','lean/index.html')+'">Reading library</a>'+paired_route(site,'lean/index.html')+'</nav>'
     body += '<p class="lean-library-note">Coverage labels describe the existing evidence. Browsing the source does not run Lean.</p>'
-    body += '<p class="lean-playground-route"><a class="button" href="'+site.rel('lean/playground.html','lean/index.html')+'">Try a proof in Lean</a> <span>Interactive pilot · Paper XII</span></p>'
+    from lean_workspaces import WORKSPACES
+    body += '<p class="lean-playground-route"><a class="button" href="'+site.rel('lean/browser/index.html','lean/index.html')+'">Edit and run in your browser</a> <span>Free local compiler · '+str(len(WORKSPACES))+' prepared workspaces</span></p>'
+    body += '<p class="lean-playground-route"><a href="'+site.rel('lean/playground.html','lean/index.html')+'">Hosted Paper XII editor</a> <span>External Lean service</span></p>'
+    body += '<p class="lean-playground-route"><a class="button" href="'+site.rel('lean/run.html','lean/index.html')+'">Run with dependencies</a> <span>All displayed source files · native Lean</span></p>'
     for group,core in [('Core papers',True),('Books and monographs',False)]:
         selected = [item for item in catalog if bool(re.fullmatch(r'paper-[ivx]+',item['work'])) == core]
         if not selected: continue
@@ -305,7 +314,7 @@ def build(reader):
         body += '</ul></section>'
     body += '</section>'
     site.page('lean/index.html','Inspect Lean',body)
-    site.write('lean/index.json',json.dumps(dict(source_revision=site.revision,works=catalog,new_lean_execution=False),ensure_ascii=False,indent=2)+'\n')
+    site.write('lean/index.json',json.dumps(dict(source_revision=site.revision,works=catalog,new_lean_execution=False),ensure_ascii=False,separators=(',',':'))+'\n')
     return dict(works=len(catalog),files=total,new_lean_execution=False)
 
 

@@ -41,7 +41,7 @@ function memory(initial = null) {
   return {value:initial,getItem(){return this.value;},setItem(key,value){if(this.blocked)throw Error('Blocked');this.value=value;}};
 }
 
-function fixture({storage=memory(), listing=false, hash=''} = {}) {
+function fixture({storage=memory(), listing=false, hash='', separateLink=false} = {}) {
   const document = {activeElement:null,addEventListener(){}};
   class Element {
     constructor(tag='div') { this.tagName=tag.toUpperCase();this.children=[];this.dataset={};this.attrs={};this.events={};this.value='';this.textContent='';this.hidden=true; }
@@ -59,20 +59,29 @@ function fixture({storage=memory(), listing=false, hash=''} = {}) {
   const bar = new Element(), list = new Element(), button = new Element('button'), label = new Element('span');
   bar.dataset.pageTitle='Chapter one';button.append(label);bar.pageButton=button;
   const link = new Element('a'), status = new Element('span');status.className='reading-save-status';
-  bar.savedLink=link;bar.append(button,link,status);
+  bar.savedLink=separateLink?null:link;bar.append(button,...(separateLink?[]:[link]),status);
   const input=new Element('input'),count=new Element('p'),output=new Element('ol'),empty=new Element(),listStatus=new Element('p');
   count.className='saved-reading-count';empty.className='reading-list-empty';listStatus.className='reading-list-status';
   list.append(input,count,output,empty,listStatus);
   const heading = new Element('h2');heading.id='lemma';heading.textContent='A lemma';
   const brand={href:base+'index.html'},work={textContent:'Paper I'};
-  document.querySelector=s=>({'[data-reading-save]':listing?null:bar,'[data-reading-list]':listing?list:null,'.brand':brand,'.reading-position a':work}[s]||null);
+  document.querySelector=s=>({'[data-reading-save]':listing?null:bar,'[data-reading-list]':listing?list:null,'[data-saved-reading-link]':link,'.brand':brand,'.reading-position a':work}[s]||null);
   document.querySelectorAll=()=>listing?[]:[heading];
   document.getElementById=id=>id==='lemma'?heading:null;
   document.createElement=tag=>new Element(tag);
   const events={},window={document,localStorage:storage,setTimeout,location:new URL(base+'read/paper-i/chapter.html'+hash),addEventListener(name,callback){events[name]=callback;}};
   api.start(window);
-  return {bar,list,button,label,status,listStatus,heading,input,output,empty,count,document,storage,events,window};
+  return {bar,list,button,label,link,status,listStatus,heading,input,output,empty,count,document,storage,events,window};
 }
+
+test('the saved-reading count updates when its link is in reading tools', () => {
+  const p=fixture({separateLink:true});
+  assert.equal(p.link.textContent,'Saved reading');
+  p.button.click();
+  assert.equal(p.link.textContent,'Saved reading (1)');
+  p.button.click();
+  assert.equal(p.link.textContent,'Saved reading');
+});
 
 test('page and passage saves persist and update pressed states across tabs', () => {
   const p=fixture();

@@ -187,6 +187,7 @@ def render_collected_core(reader,book):
 
 def verify_site(root,pages,documents):
     from reader_documents import png_dimensions
+    from check_reader_site import Page
     record=json.loads((root/'documents/paper-vii-figures.json').read_bytes())
     assert record['core_pages']==[c['url'] for c in CORE_CHAPTERS]
     assert len(record['figures'])==38
@@ -197,8 +198,11 @@ def verify_site(root,pages,documents):
         page=pages[spec['url']]
         assert not page.iframes, 'Paper VII figures must render inline'
         markup=(root/spec['url']).read_text(encoding='utf-8')
-        assert markup.count('<summary>Text description</summary>')==len(page.images)
-        for image in page.images:
+        chapter=re.search(r'<article id="chapter-text"[^>]*>(.*?)</article>',markup,re.S)
+        assert chapter, 'Missing Paper VII reading article'
+        images=Page(chapter[1]).images
+        assert chapter[1].count('<summary>Text description</summary>')==len(images)
+        for image in images:
             seen.append(posixpath.normpath(posixpath.join(posixpath.dirname(spec['url']),image['src'])))
             assert image['alt'] and int(image['width'])>0 and int(image['height'])>0
     assert len(seen)==38 and len(set(seen))==38

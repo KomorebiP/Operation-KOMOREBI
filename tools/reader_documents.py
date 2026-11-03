@@ -160,6 +160,18 @@ class ReadingDocuments:
         prepare_proofreading(self)
         from reader_atlas import prepare as prepare_atlas
         prepare_atlas(self)
+        from paper_i_atlas import prepare as prepare_paper_i_atlas
+        prepare_paper_i_atlas(self)
+        from core_worked_atlases import prepare as prepare_core_worked_atlases
+        prepare_core_worked_atlases(self)
+        from paper_viii_atlas import prepare as prepare_paper_viii_atlas
+        prepare_paper_viii_atlas(self)
+        from paper_ix_atlas import prepare as prepare_paper_ix_atlas
+        prepare_paper_ix_atlas(self)
+        from paper_x_atlas import prepare as prepare_paper_x_atlas
+        prepare_paper_x_atlas(self)
+        from paper_v_atlas import prepare as prepare_paper_v_atlas
+        prepare_paper_v_atlas(self)
         from paper_vi_atlas import prepare as prepare_paper_vi_atlas
         prepare_paper_vi_atlas(self)
         from paper_vii_atlas import prepare as prepare_paper_vii_atlas
@@ -443,14 +455,28 @@ class ReadingDocuments:
         render(self)
         from reader_atlas import render as render_atlas
         render_atlas(self)
+        from paper_i_atlas import render as render_paper_i_atlas
+        render_paper_i_atlas(self)
+        from core_worked_atlases import render as render_core_worked_atlases
+        render_core_worked_atlases(self)
+        from paper_viii_atlas import render as render_paper_viii_atlas
+        render_paper_viii_atlas(self)
+        from paper_ix_atlas import render as render_paper_ix_atlas
+        render_paper_ix_atlas(self)
+        from paper_x_atlas import render as render_paper_x_atlas
+        render_paper_x_atlas(self)
+        from paper_v_atlas import render as render_paper_v_atlas
+        render_paper_v_atlas(self)
         from paper_vi_atlas import render as render_paper_vi_atlas
         render_paper_vi_atlas(self)
         from paper_vii_atlas import render as render_paper_vii_atlas
         render_paper_vii_atlas(self)
+        from core_visual_guides import render as render_core_visual_guides
+        render_core_visual_guides(self)
         from reader_proofreading import publish as publish_proofreading
         publish_proofreading(self)
         records = sorted(self.records.values(), key=lambda r: (r['work'], r['url']))
-        self.site.write('documents/index.json', json.dumps(dict(source_revision=self.site.revision, files=records, images=list(self.images.values())), ensure_ascii=False, indent=2)+'\n')
+        self.site.write('documents/index.json', json.dumps(dict(source_revision=self.site.revision, files=records, images=list(self.images.values())), ensure_ascii=False, separators=(',',':'))+'\n')
 
     def catalog(self):
         e = html.escape

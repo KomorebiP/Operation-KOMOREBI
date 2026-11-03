@@ -50,6 +50,20 @@ class ReadingNavigationTests(unittest.TestCase):
         self.assertNotIn(' open',outline('<nav>Sections</nav>'))
         self.assertNotIn(' open',resources('Sources'))
 
+    def test_book_footer_keeps_neighbors_and_contents_without_a_second_full_menu(self):
+        config=self.config();config['footer_index_only']=True
+        top=Navigation(navigation(config,'read/test/two.html')).controls[0]
+        footer=navigation(config,'read/test/two.html','bottom');bottom=Navigation(footer).controls[0]
+        self.assertEqual(len([a for a in top['links'] if 'data-reading-entry' in a]),3)
+        self.assertFalse(any('data-reading-entry' in a for a in bottom['links']))
+        self.assertEqual([a['href'] for a in bottom['links'] if 'reading-menu-link' in a.get('class','')],['index.html'])
+        self.assertIn('rel="prev" href="one.html"',footer)
+        self.assertIn('rel="next" href="references.html"',footer)
+        self.assertNotIn('<script',footer);self.assertNotIn(' hidden',footer)
+        # Adding hundreds of topics must not multiply every footer's markup.
+        config['chapters'] += [dict(url='read/test/topic-'+str(i)+'.html',title='Topic '+str(i)) for i in range(1000)]
+        self.assertLess(len(navigation(config,'read/test/two.html','bottom').encode()),2000)
+
     def test_secondary_routes_are_grouped_without_losing_unique_destinations(self):
         targets=[('Read chapters','read/test/index.html'),('Read PDF','read/test/pdf.html'),
                  ('Lean','work.html#lean'),('Evidence','work.html#evidence'),
@@ -151,7 +165,7 @@ class ReadingNavigationTests(unittest.TestCase):
 
     def test_verifier_rejects_wrong_next_menu_and_missing_footer(self):
         import readable_chapters
-        config=self.config()
+        config=self.config();config['footer_index_only']=True
         with tempfile.TemporaryDirectory() as temporary:
             root=Path(temporary)
             def write(path,text):
@@ -170,6 +184,7 @@ class ReadingNavigationTests(unittest.TestCase):
                             original.replace('class="reading-work-overview" href="../../collection/works/test.html"','class="reading-work-overview" href="../../collection/works/other.html"'),
                             original.replace('class="reading-full-contents" href="index.html"','class="reading-full-contents" href="two.html"'),
                             original.replace('class="reading-return"','class="other-return"'),
+                            original.replace('class="reading-menu-link button" rel="contents" href="index.html"','class="reading-menu-link button" rel="contents" href="two.html"'),
                             navigation(config,'read/test/one.html')]:
                     page.write_text(bad,encoding='utf-8')
                     with self.assertRaises(AssertionError):verify(root,pages,dict(files=[]))

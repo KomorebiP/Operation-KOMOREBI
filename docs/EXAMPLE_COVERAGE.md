@@ -1,6 +1,6 @@
 # Introductory example coverage by work
 
-23 of 90 work pages have introductory example routes in this guide. 67 do not yet have a tutorial linked here. Their source editions may contain their own examples.
+24 of 90 work pages have introductory example routes in this guide. 66 do not yet have a tutorial linked here. Their source editions may contain their own examples.
 
 This is a reading aid. An example route does not measure proof completion, Lean coverage or confidence. Those records remain on each work page.
 
@@ -35,7 +35,7 @@ This is a reading aid. An example route does not measure proof completion, Lean 
 - [Realization Boundaries](works/realization-boundaries.md#worked-examples-for-this-work): [7. Detect lost information](examples/07_OBSTRUCTIONS.md)
 - [Sufficient Resolution](works/sufficient-resolution.md#worked-examples-for-this-work): [22. Recover the memory hidden by a summary](examples/22_HIDDEN_MEMORY.md)
 - [Machine Native Reasoning](works/monographs-machine-native-reasoning.md#read): No introductory tutorial linked in this guide yet.
-- [Quantum and Circuits](works/monographs-quantum-and-circuits.md#read): No introductory tutorial linked in this guide yet.
+- [Quantum and Circuits](works/monographs-quantum-and-circuits.md#worked-examples-for-this-work): [17. Calculate quantum measurement and dephasing](examples/17_QUANTUM_MEASUREMENT.md)
 - [Physics](works/monographs-physics.md#read): No introductory tutorial linked in this guide yet.
 - [COS Method](works/monographs-cos-method.md#read): No introductory tutorial linked in this guide yet.
 - [COS Method: formal continuation](works/monographs-cos-method-formal-continuation.md#read): No introductory tutorial linked in this guide yet.

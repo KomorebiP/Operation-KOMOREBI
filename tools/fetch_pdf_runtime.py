@@ -11,6 +11,10 @@ import zipfile
 VERSION = '6.4.299'
 URL = 'https://github.com/mozilla/pdf.js/releases/download/v6.4.299/pdfjs-6.4.299-dist.zip'
 SHA256 = 'f2245eb7ef3f674c872fe568a177bfec15874f5c034613e55d8e307f93ebd86d'
+# Debugger metadata is not needed by the published viewer. Keep every runtime,
+# accessibility, font, locale and license file from the pinned release.
+DEBUG_SOURCE_MAPS = frozenset({'build/pdf.mjs.map', 'build/pdf.sandbox.mjs.map',
+                              'build/pdf.worker.mjs.map', 'web/viewer.mjs.map'})
 CONFIG = '''"use strict";
 // Configure the viewer before it opens a document, including when embedded.
 const eventDocument = window.parent.document;
@@ -46,6 +50,7 @@ def extract(raw, output):
         raise ValueError('Use a new empty PDF.js runtime directory')
     output.mkdir(parents=True, exist_ok=True)
     files = {}
+    omitted_source_maps = {}
     with zipfile.ZipFile(io.BytesIO(raw)) as archive:
         for member in archive.infolist():
             if member.is_dir():
@@ -54,6 +59,9 @@ def extract(raw, output):
             if path.is_absolute() or '..' in path.parts or '\\' in member.filename or ':' in member.filename:
                 raise ValueError('Unsafe PDF.js archive path')
             data = archive.read(member)
+            if member.filename in DEBUG_SOURCE_MAPS:
+                omitted_source_maps[member.filename] = dict(size=len(data), sha256=hashlib.sha256(data).hexdigest())
+                continue
             if member.filename == 'web/viewer.html':
                 marker = b'<script src="viewer.mjs" type="module"></script>'
                 if data.count(marker) != 1:
@@ -70,7 +78,7 @@ def extract(raw, output):
     files['web/komorebi-config.css'] = hashlib.sha256(CSS.encode()).hexdigest()
     record = dict(runtime='PDF.js', version=VERSION, url=URL, archive_sha256=SHA256, reader_revision=RUNTIME_ID,
                   customization='Load Komorebi settings and return-link styles before viewer.mjs. Disable PDF scripting and saved preference overrides. Add a validated return link to the work page.',
-                  files=files)
+                  files=files, omitted_source_maps=omitted_source_maps)
     (output/'SOURCE.json').write_text(json.dumps(record, indent=2)+'\n', encoding='utf-8')
     return record
 

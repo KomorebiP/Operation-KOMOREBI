@@ -8,11 +8,11 @@ permissions:
   contents: read
 concurrency:
   group: reader-site-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 jobs:
   build:
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 45
     permissions:
       contents: read
       pages: read
@@ -24,6 +24,9 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
           python-version: '3.13'
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
       - name: Read pinned library revisions
         id: pins
         run: |
@@ -49,6 +52,15 @@ jobs:
           persist-credentials: false
       - name: Install documentation dependencies and the Python library
         run: python -m pip install -r website/requirements.txt ./.reader-libraries/math
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: live-codes/browser-lean
+          ref: a8aed095534e67061e2626b94e8e69193099091d
+          path: .reader-libraries/browser-lean
+          sparse-checkout: public
+          persist-credentials: false
+      - name: Prepare the pinned browser Lean compiler and paper imports
+        run: python -B tools/prepare_lean_wasm.py --source .reader-libraries/browser-lean --output .reader-build/lean-wasm
       - name: Test website safeguards
         run: |
           python -c "from komorebi_math.sequences import reciprocal_coefficients, fubini_sequence"
@@ -59,12 +71,26 @@ jobs:
           node --test tools/test_lean_reader.cjs
           python -B -m unittest discover -s tools -p 'test_browser_lean.py' -v
           node --test tools/test_browser_lean.cjs
+          python -B -m unittest discover -s tools -p 'test_lean_browser*.py' -v
+          node --test tools/test_lean_browser.mjs
+          node --test tools/test_lean_native_invokes.mjs
+          python -B -m unittest discover -s tools -p 'test_lean_execution.py' -v
+          node --test tools/test_lean_execution.cjs
+          python -B -m unittest discover -s tools -p 'test_methodology_reading.py' -v
           python -B -m unittest discover -s tools -p 'test_foundational_reading.py' -v
+          python -B -m unittest discover -s tools -p 'test_quantum_reading.py' -v
           python -B -m unittest discover -s tools -p 'test_proof_path_reading.py' -v
           python -B -m unittest discover -s tools -p 'test_reader_site.py' -v
           python -B -m unittest discover -s tools -p 'test_reader_proofreading.py' -v
           python -B -m unittest discover -s tools -p 'test_reader_copyediting.py' -v
           python -B -m unittest discover -s tools -p 'test_paper_v_reading.py' -v
+          python -B -m unittest discover -s tools -p 'test_paper_v_atlas.py' -v
+          python -B -m unittest discover -s tools -p 'test_paper_i_atlas.py' -v
+          python -B -m unittest discover -s tools -p 'test_core_worked_atlases.py' -v
+          python -B -m unittest discover -s tools -p 'test_paper_viii_atlas.py' -v
+          python -B -m unittest discover -s tools -p 'test_paper_ix_atlas.py' -v
+          python -B -m unittest discover -s tools -p 'test_paper_x_atlas.py' -v
+          python -B -m unittest discover -s tools -p 'test_core_visual_guides.py' -v
           python -B -m unittest discover -s tools -p 'test_paper_vii_reading.py' -v
           python -B -m unittest discover -s tools -p 'test_paper_vii_atlas.py' -v
           python -B -m unittest discover -s tools -p 'test_paper_viii_reading.py' -v
@@ -163,7 +189,7 @@ jobs:
       - name: Obtain the pinned Python runtime
         run: python -B tools/fetch_python_runtime.py --output .reader-build/python
       - name: Build the reader site and reading ZIPs
-        run: python -B tools/build_reader_site.py --math-root .reader-libraries/math --polyphase-root .reader-libraries/polyphase --mathjax-root .reader-build/mathjax --pdfjs-root .reader-build/pdfjs --python-root .reader-build/python --revision '${{ github.sha }}' --output reader-site
+        run: python -B tools/build_reader_site.py --math-root .reader-libraries/math --polyphase-root .reader-libraries/polyphase --mathjax-root .reader-build/mathjax --pdfjs-root .reader-build/pdfjs --python-root .reader-build/python --lean-wasm-root .reader-build/lean-wasm --revision '${{ github.sha }}' --output reader-site
       - name: Check HTML links, access features and all reading ZIPs
         run: python -B tools/check_reader_site.py --site reader-site
       - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b

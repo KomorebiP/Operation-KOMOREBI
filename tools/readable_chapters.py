@@ -68,8 +68,17 @@ BOOKS = {'paper-i': dict(work='paper-i', label='Paper I', base=FIRST_BASE,
                         chapters=FIRST_CHAPTERS, main_chapters=6, chapter_prefix='',
                         diagram_guide='collection/PAPER_I_DIAGRAMS.html',
                         figure_descriptions='website/paper-i-figure-descriptions.json',
-                        pdf_inputs={'visual_atlas.tex': 'Read the 22-plate visual atlas in the PDF'}), **BOOKS}
+                        atlas_index='read/paper-i/atlas/index.html',
+                        atlas_link_text='Explore all 22 worked atlas plates in HTML',
+                        reading_note='All 22 worked atlas plates have HTML pages with original drawings, selectable equations and labels, and links to the manuscript. The original monograph retains its complete visual appendix.',
+                        html_inputs={'visual_atlas.tex':dict(url='read/paper-i/atlas/index.html',title='Explore all 22 worked atlas plates in HTML',note='')}), **BOOKS}
 CHAPTERS = FIRST_CHAPTERS + CHAPTERS
+for work in ('paper-ii','paper-iii'):
+    atlas_index='read/'+work+'/atlas/index.html'
+    BOOKS[work].update(atlas_index=atlas_index,
+        atlas_link_text='Explore all 24 worked atlas plates in HTML',
+        reading_note='All 24 worked atlas plates have HTML pages with original drawings, selectable equations and labels, and links to the manuscript. The original visual guide remains available as a PDF.',
+        html_inputs={'visual_atlas.tex':dict(url=atlas_index,title='Explore all 24 worked atlas plates in HTML',note='')})
 BOOKS['paper-i']['table_reading_aids']={
     ('01_orientation.tex','L4'): dict(caption='Statement status classes',
         headers=[r'\textbf{Status class}',r'\textbf{Meaning}'],row_header_column=0),
@@ -174,10 +183,20 @@ CHAPTERS += PROOF_PATH_CHAPTERS
 from foundational_reading import BOOKS as FOUNDATIONAL_BOOKS, CHAPTERS as FOUNDATIONAL_CHAPTERS
 BOOKS.update(FOUNDATIONAL_BOOKS)
 CHAPTERS += FOUNDATIONAL_CHAPTERS
+from methodology_reading import BOOK as METHODOLOGY_BOOK, CHAPTERS as METHODOLOGY_CHAPTERS
+BOOKS[METHODOLOGY_BOOK['work']] = METHODOLOGY_BOOK
+CHAPTERS.extend(METHODOLOGY_CHAPTERS)
+from quantum_reading import BOOK as QUANTUM_BOOK, CHAPTERS as QUANTUM_CHAPTERS
+BOOKS[QUANTUM_BOOK['work']] = QUANTUM_BOOK
+CHAPTERS += QUANTUM_CHAPTERS
+# One full chapter menu per page; footers keep direct reading routes.
+for _book in BOOKS.values():_book['footer_index_only']=True
 BY_SOURCE = {c['source']:c for c in reversed(CHAPTERS)}
 NUMBERED = {'definition', 'theorem', 'proposition', 'lemma', 'corollary', 'remark', 'example', 'standardfact', 'certificate','boundary','roadmap','construction','classicalinput','classical','conjecture','problem','warning'}
 NUMBERED.update('hist'+kind for kind in ('theorem','proposition','lemma','corollary','definition','example','remark','standardfact'))
 NUMBERED.add('numericalcertificate')
+NUMBERED.update({'principle','question'})
+NUMBERED.update({'algorithm','protocol','counterexample'})
 KIND_NAMES = {'classical':'Classical input','statement':'Supplementary statement','standardfact':'Standard fact','certificate':'Numerical certificate','text':'Passage','roadmap':'Formalization target','classicalinput':'Classical input'}
 KIND_NAMES.update({'hist'+kind:'Historical '+('standard fact' if kind=='standardfact' else kind)
                   for kind in ('theorem','proposition','lemma','corollary','definition','example','remark','standardfact')})
@@ -221,7 +240,7 @@ def presentation_tex(text):
     text = re.sub(r'\\renewcommand\{\\arraystretch\}\{[0-9.]+\}', mask, text)
     text = re.sub(r'\\startreadingpart\{([^{}]+)\}', r'\\part{\1}', text)
     text = re.sub(r'\\(?:begin|end)\{center\}|\\begin\{multicols\}\{2\}|\\end\{multicols\}', mask, text)
-    text = re.sub(r'\\addcontentsline\{toc\}\{(?:section|part)\}\{[^{}]*\}', mask, text)
+    text = re.sub(r'\\addcontentsline\{toc\}\{(?:section|part|chapter)\}\{[^{}]*\}', mask, text)
     text = re.sub(r'\\fontsize\{[\d.]+\}\{[\d.]+\}|\\setstretch\{[\d.]+\}|\\selectfont\b', mask, text)
     text = re.sub(r'\\setlength\{\\(?:parindent|parskip)\}\{[^{}]*\}', mask, text)
     text = re.sub(r'\\(?:begin|end)\{document\}|\\(?:KomorebiCover|tableofcontents|listoffigures|listoftables)\b|\\pagenumbering\{arabic\}', mask, text)
@@ -272,8 +291,8 @@ def original_math(text):
 
 
 def tex_accents(text):
-    accents={"'":'\u0301','`':'\u0300','"':'\u0308','^':'\u0302'}
-    return re.sub(r'''\\(['`"^])(?:\{([A-Za-z])\}|([A-Za-z]))''',lambda m:unicodedata.normalize('NFC',(m[2] or m[3])+accents[m[1]]),text)
+    accents={"'":'\u0301','`':'\u0300','"':'\u0308','^':'\u0302','.':'\u0307'}
+    return re.sub(r'''\\(['`"^.])(?:\{([A-Za-z])\}|([A-Za-z]))''',lambda m:unicodedata.normalize('NFC',(m[2] or m[3])+accents[m[1]]),text)
 
 
 def typography(text):
@@ -589,15 +608,15 @@ class Chapter:
                     out.append(html.escape(text[pos+1]));pos+=2;continue
                 if text[pos:pos+2] in {r'\ ',r'\,',r'\;',r'\:',r'\!'}:
                     out.append('' if text[pos+1]=='!' else ' ');pos+=2;continue
-                accent = re.match(r'''\\['`"^](?:\{[A-Za-z]\}|[A-Za-z])''',text[pos:])
+                accent = re.match(r'''\\['`"^.](?:\{[A-Za-z]\}|[A-Za-z])''',text[pos:])
                 if accent:
                     out.append(html.escape(typography(accent[0]))); pos += accent.end(); continue
                 m = re.match(r'\\([A-Za-z]+)', text[pos:])
                 if not m: raise ValueError('Unsupported prose escape at '+text[pos:pos+40])
                 name = m[1]
                 pos += m.end()
-                if name in {'S','textquotesingle','o','ldots','textbackslash'}:
-                    out.append({'S':'§','textquotesingle':'’','o':'ø','ldots':'…','textbackslash':'\\'}[name])
+                if name in {'S','textquotesingle','o','ldots','textbackslash','textemdash','textendash'}:
+                    out.append({'S':'§','textquotesingle':'’','o':'ø','ldots':'…','textbackslash':'\\','textemdash':'—','textendash':'–'}[name])
                     if text[pos:pos+1]==' ': pos+=1
                     continue
                 if name in {'quad','qquad','hfill'}:
@@ -614,8 +633,8 @@ class Chapter:
                     if value not in self.command_links[name]: raise ValueError('Unresolved reading link: '+name+' '+value)
                     target,label=self.command_links[name][value]
                     out.append('<a href="'+html.escape(self.relative(target),quote=True)+'">'+html.escape(label)+'</a>')
-                elif name in {'textbf','emph','textit','texttt','leanname','path','nolinkurl','code','mcode','target','lean','text'}:
-                    tag = {'textbf':'strong','texttt':'code','leanname':'code','path':'code','nolinkurl':'code','code':'code','mcode':'code','target':'code','lean':'code','text':'span'}.get(name,'em')
+                elif name in {'textbf','emph','textit','texttt','leanname','path','nolinkurl','code','mcode','target','lean','text','pathref'}:
+                    tag = {'textbf':'strong','texttt':'code','leanname':'code','path':'code','nolinkurl':'code','code':'code','mcode':'code','target':'code','lean':'code','text':'span','pathref':'code'}.get(name,'em')
                     content=html.escape(value.replace(r'\_','_')) if tag=='code' else self.inline(value)
                     out.append('<'+tag+'>'+content+'</'+tag+'>')
                 elif name in {'statusleanthree','statusleanprior','statusroadmap'}:
@@ -850,10 +869,14 @@ def prepare(reader):
     reader.readable_books={}
     for work,config in BOOKS.items():
         if config.get('custom_reader'):
-            if config['custom_reader'] == 'foundational':
+            if config['custom_reader'] == 'methodology':
+                from methodology_reading import prepare_book
+            elif config['custom_reader'] == 'foundational':
                 from foundational_reading import prepare_book
             elif config['custom_reader'] == 'proof_path':
                 from proof_path_reading import prepare_book
+            elif config['custom_reader'] == 'quantum':
+                from quantum_reading import prepare_book
             elif config['custom_reader'] == 'paper_ix':
                 from paper_ix_reading import prepare_book
             elif config['custom_reader'] == 'paper_x':
@@ -1074,7 +1097,7 @@ def render(reader):
             render_special_functions(reader,book)
         else:
             reports.extend(render_book(reader,book))
-    reader.site.write('documents/readable-chapters.json',json.dumps(reports,ensure_ascii=False,indent=2)+'\n')
+    reader.site.write('documents/readable-chapters.json',json.dumps(reports,ensure_ascii=False,separators=(',',':'))+'\n')
     render_reading_index(reader)
     from reading_navigation import publish_record
     publish_record(reader.site,BOOKS)
@@ -1102,11 +1125,18 @@ def render_reading_index(reader):
            'Find a chapter filters the contents by title or reading-page number. Wide equations and tables have separate areas that can be scrolled with the keyboard. '
            'MathJax provides equation exploration and assistive reading options through its context menu.</p>'
            '<p>All twelve core papers have HTML reading editions that follow the retained manuscripts. '
+           '<a href="'+site.rel('read/paper-i/atlas/index.html',page)+'">Paper I’s 22 atlas plates</a> have HTML drawings, descriptions, and selectable labels. '
+           'Papers II and III each have complete 24-plate HTML atlases with original drawings, selectable equations and labels, and manuscript links. '
            '<a href="'+site.rel('read/paper-iv/atlas/index.html',page)+'">Paper IV’s 26 atlas plates</a> also have HTML pages with drawings, descriptions, and tables. '
+           'Paper V’s complete 40-plate atlas has HTML drawings, descriptions, and selectable TikZ labels. '
            'Paper VI’s complete 42-plate atlas has HTML drawings, descriptions, and selectable labels. '
            'Paper VII’s complete 40-plate atlas has HTML drawings, descriptions, and selectable labels. '
+           'Paper VIII’s complete 32-plate atlas has HTML drawings, descriptions, and selectable labels. '
+           'Paper IX’s complete 23-section visual guide includes 20 original figures and eight worked examples. '
+           'Paper X’s complete 30-plate guide includes its opening scope contract and 29 original drawings. '
            'Companion and atlas coverage varies by work; original visual atlases remain available in the PDFs. '
-           'See <a href="'+site.rel('collection/ACCESSIBILITY.html',page)+'">accessibility and reading options</a> for current coverage and limitations.</p>'
+           'See <a href="'+site.rel('read/visual-guides.html',page)+'">visual guides for all twelve core papers</a> or '
+           '<a href="'+site.rel('collection/ACCESSIBILITY.html',page)+'">accessibility and reading options</a> for current coverage and limitations.</p>'
            '<p><a href="'+site.rel('documents.html',page)+'">Browse all papers and PDFs</a> · '
            '<a href="'+site.rel('collection/READING_ROUTES.html',page)+'">Choose a reading route</a></p>')
     site.page(page,'Reading library',body)
@@ -1135,6 +1165,14 @@ def reading_options(description=None):
             '<p><a href="#chapter-text">Skip contents and start reading</a></p>')
 
 
+def written_proof_href(chapter,identifier,prefix=''):
+    target=getattr(chapter,'proof_routes',{}).get(identifier)
+    if target:
+        return posixpath.normpath(posixpath.join(posixpath.dirname(prefix),chapter.relative(target)))
+    target=getattr(chapter,'proof_pairs',{}).get(identifier)
+    return prefix+'#'+target if target else None
+
+
 def statement_entries(chapter,rows,prefix=''):
     """Retain the same numbered records and proof routes in either index."""
     records=[node for node in chapter.nodes if node['kind'] in NUMBERED]
@@ -1153,8 +1191,8 @@ def statement_entries(chapter,rows,prefix=''):
             proof=by_line.get(row['proof_line'])
             if not proof or proof['kind']!='proof': raise ValueError('Statement index has no recorded proof target: '+name)
             body+=' <a class="statement-proof-link" href="'+html.escape(prefix,quote=True)+'#'+proof['id']+'" aria-label="Read proof of '+html.escape(name,quote=True)+'">Read proof</a>'
-        elif node['id'] in getattr(chapter,'proof_pairs',{}):
-            body+=' <a class="statement-proof-link" href="'+html.escape(prefix,quote=True)+'#'+chapter.proof_pairs[node['id']]+'" aria-label="Read proof of '+html.escape(name,quote=True)+'">Read proof</a>'
+        elif proof_href:=written_proof_href(chapter,node['id'],prefix):
+            body+=' <a class="statement-proof-link" href="'+html.escape(proof_href,quote=True)+'" aria-label="Read proof of '+html.escape(name,quote=True)+'">Read proof</a>'
         body+='</li>'
     return body
 
@@ -1177,7 +1215,8 @@ def render_statement_directory(reader,book):
     if not has_statement_finder(config):return
     site=reader.site;page=statement_directory_url(config);e=html.escape
     body='<p class="eyebrow">Find in '+e(config['label'])+'</p><h1>'+e(config['label'])+': Statements and proofs</h1>'
-    body+='<p>Find a statement anywhere in this work by title, printed number, type or source label. Entries follow the chapter order. Each proof link opens the written proof passage.</p>'
+    scope='in this HTML selection' if config.get('partial') else 'anywhere in this work'
+    body+='<p>Find a statement '+scope+' by title, printed number, type or source label. Entries follow the chapter order. Each proof link opens the written proof passage.</p>'
     body+='<div class="reading-statement-directory"><h2>Statements by chapter</h2>'
     for spec,_,chapter in book['chapters']:
         rows={r['statement_line']:r for r in chapter_claims(reader,spec)}
@@ -1222,11 +1261,12 @@ def render_book(reader,book):
         tools+='<p><a href="'+reader.resolve(source,page)+'">Original TeX with line links</a> · <a href="'+site.rel(reader.records[source]['file_url'],page)+'" download>Download TeX</a></p>'
         tools+='<p>The wording and mathematics follow the retained manuscript. This reading format does not add a proof review or extend Lean coverage.</p>'+reading_options()
         body+=resources(tools)
+        if spec.get('evidence_note'):body+='<p class="reading-context">'+e(spec['evidence_note'])+'</p>'
         body+='<article id="chapter-text" class="readable-chapter" aria-label="'+e(title,quote=True)+'">'
         level=2
         for node in chapter.nodes:
             kind=node['kind']
-            label=(node['number']+' '+node['title']).strip() if kind in HEADINGS else (KIND_NAMES.get(kind,kind.capitalize())+' '+node['number']+(': '+node['title'] if node['title'] else '')).strip()
+            label=node.get('display_title') or ((node['number']+' '+node['title']).strip() if kind in HEADINGS else (KIND_NAMES.get(kind,kind.capitalize())+' '+node['number']+(': '+node['title'] if node['title'] else '')).strip())
             source_link=reader.resolve(source,page,'L'+str(node['line']))
             links='<a href="#'+node['id']+'">Permalink</a> · <a href="'+source_link+'">Source line '+str(node['line'])+'</a>'
             reading_links=related_reading_links(chapter,node['id'])
@@ -1293,7 +1333,7 @@ def render_book(reader,book):
                     width,height=png_dimensions(preview_raw)
                     dimensions=dict(width=width,height=height)
                 size=' width="'+str(dimensions['width'])+'" height="'+str(dimensions['height'])+'"'
-                figure_number=('Figure '+node['number']+'. ') if config.get('show_figure_numbers') else ''
+                figure_number=('Figure '+node['number']+'. ') if node['number'] and (config.get('show_figure_numbers') or getattr(chapter,'show_figure_numbers',False)) else ''
                 body+='<figure id="'+node['id']+'" tabindex="-1"><img src="'+image+'"'+size+' alt="'+e(alt,quote=True)+'" loading="lazy"><figcaption>'+figure_number+chapter.inline(caption)+'</figcaption>'+description_link+passage_links(links)+'</figure>'
             elif kind in {'table','longtable','tabularx','tabular'}:
                 aid_key,aid=table_reading_aid(config,source,node['id'])
@@ -1313,11 +1353,13 @@ def render_book(reader,book):
             else:
                 row=rows.get(node['line']) or proof_rows.get(node['line'])
                 pairs=getattr(chapter,'proof_pairs',{})
-                if not row and node['id'] in pairs:
-                    reading_links=' · '.join(filter(None,['<a href="#'+pairs[node['id']]+'">Read proof</a>',reading_links]))
+                if not row and (proof_href:=written_proof_href(chapter,node['id'])):
+                    reading_links=' · '.join(filter(None,['<a href="'+e(proof_href,quote=True)+'">Read proof</a>',reading_links]))
                 if not row and kind=='proof':
                     parent=next((key for key,value in pairs.items() if value==node['id']),None)
-                    if parent:reading_links=' · '.join(filter(None,['<a href="#'+parent+'">Back to statement</a>',reading_links]))
+                    target=getattr(chapter,'proof_returns',{}).get(node['id'])
+                    back=chapter.relative(target) if target else '#'+parent if parent else None
+                    if back:reading_links=' · '.join(filter(None,['<a href="'+e(back,quote=True)+'">Back to statement</a>',reading_links]))
                 if row:
                     links+=' · <a href="'+site.rel('claims.html',page)+'#'+row['id'].lower()+'">Claim record</a>'
                     other=row['statement_line'] if kind=='proof' else row['proof_line']
@@ -1339,7 +1381,7 @@ def render_book(reader,book):
                 plain,aliases=plain_math(re.sub(r'\\label\{[^}]+\}','',node['body']).replace('$',''))
                 parent=next((n['title'] for n in reversed(headings) if n['line']<=node['line']),spec['title'])
                 literal_derivation=kind=='verbatim' and config.get('literal_derivations')
-                search_title=(parent+' / '+('Algorithm' if kind=='lstlisting' else 'Literal derivation' if literal_derivation else 'Commands' if kind=='verbatim' else 'Passage at line '+str(node['line']))) if kind in {'text','lstlisting','verbatim'} else label
+                search_title=node.get('search_title') or ((parent+' / '+('Algorithm' if kind=='lstlisting' else 'Literal derivation' if literal_derivation else 'Commands' if kind=='verbatim' else 'Passage at line '+str(node['line']))) if kind in {'text','lstlisting','verbatim'} else label)
                 item=dict(title=config['label']+' / '+typography(search_title),group='Collection',kind='Code' if kind in {'lstlisting','verbatim'} and not literal_derivation else ('Written proofs' if kind=='proof' else 'Papers and source'),work_ids=[work],url=page+'#'+node['id'],text=parent+' '+plain+' '+aliases,preview=plain[:240] or label)
                 # Preview prose only when it has no list/table/input syntax.
                 snippet=re.split(r'\\\[|\\begin',node['body'],maxsplit=1)[0]
@@ -1355,7 +1397,13 @@ def render_book(reader,book):
         body=apply_copyediting(reader,page,body)
         site.page(page,title,body)
         expressions=original_math(chapter_text(raw.decode('utf-8-sig'),spec))
-        if config.get('custom_reader')=='foundational':
+        if config.get('custom_reader')=='quantum':
+            from quantum_reading import source_math
+            expressions=source_math(raw.decode('utf-8-sig'),spec)
+        if config.get('custom_reader')=='methodology':
+            from methodology_reading import source_math
+            expressions=source_math(raw.decode('utf-8-sig'),spec)
+        elif config.get('custom_reader')=='foundational':
             from foundational_reading import source_math
             expressions=source_math(raw.decode('utf-8-sig'),spec)
         elif config.get('custom_reader')=='proof_path':
@@ -1376,7 +1424,7 @@ def render_book(reader,book):
         if chapter.math!=expressions:
             difference=next((i for i,(a,b) in enumerate(zip(chapter.math,expressions)) if a!=b),min(len(chapter.math),len(expressions)))
             raise ValueError('Reading math differs at '+source+' expression '+str(difference)+' rendered '+str(chapter.math[difference:difference+1])+' original '+str(expressions[difference:difference+1]))
-        report=dict(source=source,source_sha256=hashlib.sha256(raw).hexdigest(),url=page,math_expressions=len(expressions),math_sequence_sha256=hashlib.sha256(json.dumps(expressions,ensure_ascii=False).encode()).hexdigest(),references=len(chapter.references),labels=sum(len(n['labels']) for n in chapter.nodes),nodes=[{k:n[k] for k in ('kind','id','line','end_line','labels','number') if k in n} for n in chapter.nodes],macro_source=config['main'],macros=chapter.macros,new_proof_review=False,new_lean_execution=False)
+        report=dict(source=source,source_sha256=hashlib.sha256(raw).hexdigest(),url=page,math_expressions=len(expressions),math_sequence_sha256=hashlib.sha256(json.dumps(expressions,ensure_ascii=False).encode()).hexdigest(),references=len(chapter.references),labels=sum(len(n['labels']) for n in chapter.nodes),nodes=[{k:n[k] for k in ('kind','id','line','end_line','labels','number') if k in n} for n in chapter.nodes],macro_source=getattr(chapter,'macro_source',config['main']),macros=chapter.macros,new_proof_review=False,new_lean_execution=False)
         if getattr(chapter,'nested_tables',None):report['nested_tables']=chapter.nested_tables
         aided_tables.update(getattr(chapter,'table_aids_used',set()))
         reports.append(report)
@@ -1406,6 +1454,7 @@ def render_book_index(reader,book,reports):
     introduction=(config.get('reading_introduction') or 'Read the '+str(config['main_chapters'])+' main manuscript chapters in order, or choose a topic below.')
     body='<p class="eyebrow">Read '+label+'</p><h1>'+html.escape(config['title'])+'</h1><p>'+html.escape(introduction)+'</p>'+reader.work_routes(work,page)
     body+='<p class="reading-start"><a class="button" href="'+site.rel(config['chapters'][0]['url'],page)+'">Start reading</a></p>'
+    for anchor in config.get('contents_anchors',[]):body+='<span id="'+html.escape(anchor,quote=True)+'"></span>'
     body+='<nav class="chapter-contents reading-contents-index" aria-label="'+label+' chapters"><h2>Contents</h2>'
     body+=contents_list(config,page)+'</nav>'
     for collected in config.get('collected_parts',[]):
@@ -1432,7 +1481,8 @@ def render_book_index(reader,book,reports):
         body+='<p><a href="'+site.rel(config['atlas_index'],page)+'">'+html.escape(config.get('atlas_link_text','Explore all 26 atlas plates in HTML'))+'</a> '+html.escape(config.get('atlas_note','With drawings, text descriptions, equations, and tables.'))+'</p>'
     body+='<p>'+html.escape(config.get('reading_note','The original visual atlas remains available in the PDF and visual guide. The HTML chapters preserve the source wording, mathematical statements, and recorded limits. They do not add a proof assessment.'))+'</p>'
     site.page(page,'Read '+label,body)
-    site.search.append(dict(title=label+' / Read all chapters',group='Collection',kind='Papers and source',work_ids=[work],url=page,text=config['title']+' readable chapters '+ ' '.join(c['title'] for c in config['chapters'])))
+    directory_title='Read opening chapters' if config.get('partial') else 'Read all chapters'
+    site.search.append(dict(title=label+' / '+directory_title,group='Collection',kind='Papers and source',work_ids=[work],url=page,text=config['title']+' readable chapters '+ ' '.join(c['title'] for c in config['chapters'])))
 
 
 def render_bibliography(reader,book):
@@ -1454,6 +1504,8 @@ def render_bibliography(reader,book):
     page,work,label=config['bib_page'],config['work'],config['label']
     body='<h1>'+label+' bibliography</h1>'+navigation(config,page)
     body+=resources(work_links(reader,work,page))+'<article id="chapter-text" class="reading-bibliography">'
+    if config.get('bibliography_introduction'):
+        body+='<p>'+html.escape(config['bibliography_introduction'])+'</p>'
     if config.get('bibliography_source_only'):
         body+='<p>The complete bibliography, including the recovered historical references, remains in the original manuscript and its linked TeX sources.</p><p><a href="'+reader.resolve(config['bib'],page)+'">Read the bibliography in the manuscript source</a></p>'
         body+='</article>'+navigation(config,page,'bottom')

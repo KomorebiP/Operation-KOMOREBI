@@ -40,6 +40,19 @@ def manuscript_table_fixtures(root,work):
 
 
 class ReaderSiteTests(unittest.TestCase):
+    def test_generated_json_is_compact_without_changing_source_strings_or_frozen_files(self):
+        data={'F':r'\mathbb F','f':'  x\n y  ','labels':['α','1/5'],'nested':{'exact':True,'value':1.25}}
+        pretty=json.dumps(data,ensure_ascii=False,indent=2)+'\n'
+        with tempfile.TemporaryDirectory() as temporary:
+            site=SimpleNamespace(output=Path(temporary))
+            Site.write(site,'documents/conversion.json',pretty)
+            encoded=(site.output/'documents/conversion.json').read_text(encoding='utf-8')
+            self.assertEqual(json.loads(encoded),data)
+            self.assertLess(len(encoded.encode()),len(pretty.encode()))
+            for path in ('documents/files/source/record.json','files/source.json','assets/atlas/frozen.json'):
+                Site.write(site,path,pretty)
+                self.assertEqual((site.output/path).read_bytes(),pretty.encode())
+
     def test_quantum_parts_keep_printed_numbers_and_unnumbered_supplements(self):
         source=r'\section{Seeds}\begin{theorem}A.\end{theorem} Text.\setcounter{section}{14}\section{Conclusion}\begin{statement}B.\end{statement}'
         chapter=Chapter(source,{},state={'part':1,'part_numbering':True})
@@ -656,8 +669,9 @@ class ReaderSiteTests(unittest.TestCase):
         self.assertIn('../reading-list.html', [a['href'] for a in links])
         self.assertIn('../lean/index.html', [a['href'] for a in links])
         self.assertIn('../read/index.html', [a['href'] for a in links])
-        self.assertEqual(len(links),21)
-        self.assertEqual(len({a['href'] for a in links}),21)
+        self.assertIn('../read/visual-guides.html', [a['href'] for a in links])
+        self.assertEqual(len(links),22)
+        self.assertEqual(len({a['href'] for a in links}),22)
         self.assertIn('SPECIAL_FUNCTIONS.html', [a['href'] for a in links])
         special=Links(site_navigation('collection/SPECIAL_FUNCTIONS.html')).links
         self.assertEqual([a['href'] for a in special if a.get('aria-current')=='page'], ['SPECIAL_FUNCTIONS.html'])

@@ -14,6 +14,7 @@ GUIDED_DEMONSTRATIONS = {
     'docs/demonstrations/EULER_PACKETS.md': ('Euler packets, polynomials, and residuals', ['paper-iii','paper-iv','paper-ix','euler-signal-bridge','machine-native-mathematics-essay']),
     'docs/demonstrations/WAVELET_POLYPHASE.md': ('Wavelets and polyphase transfer', ['paper-v','information-realization']),
     'docs/demonstrations/STIRLING_BELL_FUBINI.md': ('Stirling, Bell, and Fubini', ['monographs-special-functions']),
+    'docs/demonstrations/QUANTUM_PHASE_MEASUREMENT.md': ('Quantum phase, measurement, and information loss', ['paper-vii','monographs-quantum-and-circuits']),
 }
 
 
@@ -45,6 +46,10 @@ def introduction(root, component, assessment, page):
         return ''
     data = load(root)
     background = data['background'][component['group']]
+    if component['id']=='monographs-quantum-and-circuits':
+        background = ('Complex vectors and matrices, orthogonal projectors, and finite Fourier transforms for the arithmetic and symmetry parts; '
+                      'linear algebra and explicit gate costs for the catalytic part; Boolean functions and polynomials over the binary field for the circuit part. '
+                      'The introductory measurement example below offers a shorter starting point.')
     text = ('## Before you start\n\n**Suggested background:** '+background+'\n\n'
             '**Recorded results and limits:** '+assessment['scope']+'\n\n'
             '**Remaining work:** '+assessment['next_step']+'\n\n'
@@ -52,6 +57,8 @@ def introduction(root, component, assessment, page):
             ' · '.join(link(t,p,page) for t,p in [('Reading routes','docs/READING_ROUTES.md'),
             ('Glossary','docs/GLOSSARY.md'),('Claim links','docs/CLAIM_LINKS.md#'+component['id']),
             ('Download this work','docs/DOWNLOADS.md#'+component['id'])])+'\n\n')
+    if component['id']=='monographs-quantum-and-circuits':
+        text+=quantum_reading_guide(page)
     topics=[t for t in data.get('learning_topics',[]) if component['id'] in t['works']]
     if topics:
         text+='### Worked examples for this work\n\n'
@@ -64,6 +71,28 @@ def introduction(root, component, assessment, page):
             text+='**Complete demonstration with runnable code:** '+' · '.join(demonstrations)+'.\n\n'
     if component['id']=='monographs-special-functions':
         text+='### Explore Special Functions\n\n'+link('Books, five families, and the coupled-function lab','docs/SPECIAL_FUNCTIONS.md',page)+'\n\n'
+    return text
+
+
+def quantum_reading_guide(page):
+    """Editorial routes through the retained volume, with its evidence limits."""
+    base='monographs/quantum-and-circuits/'
+    text='### A route through the volume\n\n'
+    text+='The book asks what a change of representation makes accessible, and what it costs to reach, update, and reconstruct that representation. Its four treatments use distinct models.\n\n'
+    text+='| Treatment | Chapters | Question to follow |\n|---|---|---|\n'
+    for title,chapters,question in [
+        ('Arithmetic realizations','1–2','How does an arithmetic selector become a Fourier projector and a normalized quantum state? Begin with the twelve-dimensional example.'),
+        ('Symmetry collapse','3–7','When do invariant packets and moving frames give an accessible simulation? Track coordinate, update, and measurement costs alongside dimension.'),
+        ('Catalytic gate set distortion','8–12','Can temporarily leaving a restricted gate model reduce cost while restoring the required boundary state? Keep the gate alphabet and resource convention fixed.'),
+        ('Circuit obstructions','13–21','What do restoration, safe discrepancy covers, and projection imply within the stated circuit and linear-summary models?')]:
+        text+='| '+title+' | '+chapters+' | '+question+' |\n'
+    text+='\nStart with chapters 1–2, then choose the treatment closest to your question. Appendices A–F give the formal and computational companions, claim coverage, and verification boundaries. The glossary and collected references follow them.\n\n'
+    text+='### Read with the evidence\n\n'
+    text+='The recorded formal inventory has **96 arithmetic declarations and 115 circuit declarations across thirteen modules**. These include supporting statements. They cover selected developments; the symmetry and catalytic treatments retain their written arguments and bounded computational evidence.\n\n'
+    text+='For circuits, the formal companion covers C01, the sharing-aware degree dependency, and the numerical C02 bound. Read the maintained claim register for C03–C08 and their written or finite evidence. Universal efficient quantum simulation, unrestricted circuit hardness, and the wider catalytic synthesis questions remain open in this edition.\n\n'
+    text+=link('Formal replay requirements and exact coverage',base+'release_tools/README.md',page)+' · '+link('Current circuit claim register',base+'sources/circuits/Komorebi_Circuit_Obstructions_Research_Edition_1.0/source/komorebi-circuit-obstructions-v1.2.0/docs/CLAIMS.md',page)+'\n\n'
+    text+='### Try the arithmetic phase example\n\n'
+    text+='Follow '+link('the modulus-12 calculation','docs/demonstrations/QUANTUM_PHASE_MEASUREMENT.md#10-the-collections-modulus-12-phase-example',page)+', then [change the phase in the browser]('+SITE+'playground.html#physics-arithmetic-phase). Compare coherent sign replacement with coordinate dephasing. The '+link('exact Python program','examples/quantum_phase_measurement.py',page)+' reproduces this finite teaching example using the standard library; it does not run Lean.\n\n'
     return text
 
 

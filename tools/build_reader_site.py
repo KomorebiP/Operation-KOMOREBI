@@ -68,6 +68,7 @@ def site_navigation(page):
                   ('Physics collection', 'collection/PHYSICS_COLLECTION.html'),
                   ('Special Functions', 'collection/SPECIAL_FUNCTIONS.html'),
                   ('Papers and PDFs', 'documents.html'),
+                  ('Core visual guides', 'read/visual-guides.html'),
                   ('Read side by side', 'side-by-side.html'),
                   ('Worked examples', 'collection/HAND_WORKED_EXAMPLES.html')]),
         ('Look up', [('Claims', 'claims.html'),
@@ -254,7 +255,7 @@ class Rewriter(HTMLParser):
 
 
 class Site:
-    def __init__(self,root,math_root,poly_root,output,revision,source_cache=None,mathjax_root=None,pdfjs_root=None,python_root=None):
+    def __init__(self,root,math_root,poly_root,output,revision,source_cache=None,mathjax_root=None,pdfjs_root=None,python_root=None,lean_wasm_root=None):
         self.root=root
         self.roots={'collection':root,'math':math_root,'polyphase':poly_root}
         self.output=output
@@ -263,6 +264,7 @@ class Site:
         self.mathjax_root=mathjax_root
         self.pdfjs_root=pdfjs_root
         self.python_root=python_root
+        self.lean_wasm_root=lean_wasm_root
         self.registry=json.loads((root/'manifests/browse-resources.json').read_bytes())
         self.status=json.loads((root/'manifests/project-status.json').read_bytes())
         self.assessments={c['id']:c for c in self.status['components']}
@@ -281,6 +283,11 @@ class Site:
     def write(self,path,text):
         target=self.output/safe_path(path)
         target.parent.mkdir(parents=True,exist_ok=True)
+        # These are generated metadata files. Compact their JSON syntax while
+        # retaining every value, including whitespace inside source strings.
+        # Retained source files and frozen asset receipts keep their bytes.
+        if str(path).endswith('.json') and not str(path).startswith(('files/','documents/files/','assets/')):
+            text=json.dumps(json.loads(text),ensure_ascii=False,separators=(',',':'))+'\n'
         target.write_text(text,encoding='utf-8',newline='\n')
     def rel(self,target,page):
         return posixpath.relpath(target,posixpath.dirname(page) or '.')
@@ -321,7 +328,7 @@ class Site:
         article_start=body.find('<article id="chapter-text"')
         side_context=body[:article_start] if edition(path) and article_start>=0 else body
         has_side_action=('class="side-launch"' in side_context) if edition(path) else ('data-side-reader-link' in side_context)
-        if not work_page and not has_side_action and path not in {'side-by-side.html','index.html','404.html','interactive.html','signal-lab.html','works.html','reading-list.html','lean/playground.html'}:
+        if not work_page and not has_side_action and path not in {'side-by-side.html','index.html','404.html','interactive.html','signal-lab.html','works.html','reading-list.html','lean/playground.html','lean/run.html'}:
             pair=self.rel('side-by-side.html',path)+'?left='+quote(path,safe='')
             launch='<p class="side-launch"><a data-side-reader-link href="'+esc(pair,quote=True)+'">Read side by side</a></p>'
             body=re.sub(r'(</h1>)',lambda match:match[1]+launch,body,count=1)
@@ -335,16 +342,22 @@ class Site:
             for name in ('home.css','home-slides.js'):
                 url=self.rel('assets/'+name,path)+'?v='+hashlib.sha256((self.root/'website/assets'/name).read_bytes()).hexdigest()[:12]
                 home_assets+=('<link rel="stylesheet" href="'+url+'">') if name.endswith('.css') else ('<script defer src="'+url+'"></script>')
+        brand_assets={name:self.rel('assets/brand/'+name,path)+'?v='+hashlib.sha256(
+            (self.root/'website/assets/brand'/name).read_bytes()).hexdigest()[:12]
+            for name in ('komorebi-logo.svg','favicon.svg','favicon-32.png','apple-touch-icon.png')}
         doc='''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Read Komorebi papers, follow recorded proofs, and run finite mathematical examples.">
-<meta name="theme-color" content="#20583c">
+<meta name="theme-color" content="#233d32">
+<link rel="icon" type="image/svg+xml" sizes="any" href="'''+brand_assets['favicon.svg']+'''">
+<link rel="icon" type="image/png" sizes="32x32" href="'''+brand_assets['favicon-32.png']+'''">
+<link rel="apple-touch-icon" sizes="180x180" href="'''+brand_assets['apple-touch-icon.png']+'''">
 <title>'''+esc(title)+''' · Komorebi</title><link rel="stylesheet" href="'''+self.rel('assets/reader.css',path)+'?v='+hashlib.sha256((self.root/'website/assets/reader.css').read_bytes()).hexdigest()[:12]+'''">
 <link rel="stylesheet" href="'''+self.rel('assets/open-research.css',path)+'?v='+hashlib.sha256((self.root/'website/assets/open-research.css').read_bytes()).hexdigest()[:12]+'''">
 <link rel="stylesheet" href="'''+self.rel('assets/side-reader.css',path)+'?v='+hashlib.sha256((self.root/'website/assets/side-reader.css').read_bytes()).hexdigest()[:12]+'''">
 <script defer src="'''+self.rel('assets/mathjax-config.js',path)+'''"></script><script defer src="'''+self.rel('assets/mathjax/tex-svg-full.js',path)+'''"></script>
 <script defer src="'''+self.rel('assets/reader.js',path)+'?v='+hashlib.sha256((self.root/'website/assets/reader.js').read_bytes()).hexdigest()[:12]+'''"></script>'''+glossary_script+chapter_help_script+home_assets+reading_list_assets+'''</head><body class="open-research'''+(' home-page' if path == 'index.html' else '')+(' reading-page' if reading_page else '')+(' work-page' if work_page else '')+'''">
-<a class="skip-link" href="#main">Skip to main content</a><header class="site-header"><a class="brand" href="'''+root+'''"><span class="brand-wordmark">Komorebi<small>Mathematics · proofs · software</small></span></a>'''+nav_html+'''</header>
+<a class="skip-link" href="#main">Skip to main content</a><header class="site-header"><a class="brand" href="'''+root+'''" aria-label="Komorebi home"><span class="brand-wordmark"><img class="brand-logo" src="'''+brand_assets['komorebi-logo.svg']+'''" alt="Komorebi" width="1320" height="240"><span class="brand-fallback" aria-hidden="true">Komorebi</span><small>Mathematics · proofs · software</small></span></a>'''+nav_html+'''</header>
 <main id="main" tabindex="-1">'''+body+'''</main><footer><div class="footer-inner"><nav class="footer-links" aria-label="Project information">'''+source_html+'''<a href="'''+self.rel('collection/PROJECT_STATEMENT.html',path)+'''">Project and authorship statement</a><a href="'''+self.rel('collection/ACCESSIBILITY.html',path)+'''">Accessibility and reporting problems</a></nav><a class="footer-github" href="https://github.com/'''+REPOSITORY+'''">Return to GitHub <span aria-hidden="true">↗</span></a></div></footer></body></html>'''
         self.write(path,doc)
     def collect_documents(self):
@@ -660,6 +673,11 @@ class Site:
         lean = build_lean(self.reader)
         from browser_lean import build as build_lean_playground
         lean_playground = build_lean_playground(self.reader)
+        from lean_execution import build as build_lean_execution
+        lean_execution = build_lean_execution(self.reader)
+        from lean_browser import build as build_lean_browser
+        if not self.lean_wasm_root:raise ValueError('The pinned browser Lean runtime is required')
+        lean_browser = build_lean_browser(self.reader,self.lean_wasm_root)
         self.bundles()
         self.reader.catalog()
         self.demonstration_program()
@@ -682,6 +700,8 @@ class Site:
         result['notation'] = notation
         result['lean_reader'] = lean
         result['lean_playground'] = lean_playground
+        result['lean_execution'] = lean_execution
+        result['lean_browser'] = lean_browser
         result['side_reader'] = side_reader
         self.write('build-info.json',json.dumps(result,indent=2)+'\n')
         print(json.dumps(result))
@@ -698,9 +718,10 @@ def main():
     p.add_argument('--mathjax-root',type=Path,required=True)
     p.add_argument('--pdfjs-root',type=Path,required=True)
     p.add_argument('--python-root',type=Path,required=True)
+    p.add_argument('--lean-wasm-root',type=Path,required=True)
     args=p.parse_args()
     if not re.fullmatch(r'[0-9a-f]{40}',args.revision):p.error('A full collection commit is required')
-    Site(args.root.resolve(),args.math_root.resolve(),args.polyphase_root.resolve(),args.output.resolve(),args.revision,args.source_cache,args.mathjax_root,args.pdfjs_root,args.python_root).build()
+    Site(args.root.resolve(),args.math_root.resolve(),args.polyphase_root.resolve(),args.output.resolve(),args.revision,args.source_cache,args.mathjax_root,args.pdfjs_root,args.python_root,args.lean_wasm_root).build()
 
 
 if __name__=='__main__':main()

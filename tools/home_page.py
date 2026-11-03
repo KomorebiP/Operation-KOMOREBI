@@ -63,10 +63,10 @@ def home_page():
         ('Try the software', 'Runnable examples and their expected output.', 'SOFTWARE', 'Examples & tools'),
     ]
     cards = ''.join(
-        '<a class="home-route" href="collection/routes/'+key+'.html"><span class="home-route-number" aria-hidden="true">'+str(index).zfill(2)+'</span>'
+        '<a class="home-route" href="collection/routes/'+key+'.html">'
         '<div class="home-route-content"><p class="home-route-label">'+html.escape(label)+'</p><h3>'+title+'</h3><p>'+description+'</p></div>'
         '<span class="home-route-arrow" aria-hidden="true">↗</span></a>'
-        for index, (title, description, key, label) in enumerate(routes, 1))
+        for title, description, key, label in routes)
     return '''<section class="home-hero" aria-labelledby="home-title">
 <div class="home-copy"><p class="home-kicker">The Komorebi research collection</p>
 <h1 id="home-title">Explore the ideas.<br><em>Follow the evidence.</em></h1>

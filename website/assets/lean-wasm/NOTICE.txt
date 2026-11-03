@@ -1,0 +1,27 @@
+Browser Lean runtime adapter
+
+Vendored from live-codes/browser-lean, revision
+a8aed095534e67061e2626b94e8e69193099091d.
+Copyright 2026 Hatem Hosny. MIT license: LICENSE-MIT.txt.
+
+worker.js is adapted from cauli/lean4-wasm-in-browser (Apache 2.0),
+via the live-codes adapter. See UPSTREAM-NOTICES.md and LICENSE-APACHE.txt.
+Lean 4, the cauli compiler fork, Mathlib and supporting Lean packages
+retain their Apache 2.0 licenses and author attributions.
+
+Komorebi modifications: separate worker source; packed standard libraries;
+Emscripten runtime keep-alive; workspace cache reset; fatal exit handling;
+checksum checks; syntax-probe completion checks; per-workspace library manifests;
+module-format import handling; bounded syntax-probe input construction;
+expansion to additional compiler-matched imports. These are marked in source.
+Native Wasm invoke wrappers preserve the pinned compiler's indirect-call and
+exception behavior while avoiding recursive JavaScript trampoline frames.
+Selected missing Mathlib modules are retained with their original copyright
+headers and compiled from the exact pinned source on the reader's device.
+
+The isolation service worker follows the MIT coi-serviceworker approach:
+Guido Zuidhof and contributors, https://github.com/gzuidhof/coi-serviceworker.
+It is limited to the browser Lean page, with checksum-verified compiler caching.
+
+The compiler's exact upstream revisions and packaged file checksums appear in
+lean/browser/engine/SOURCE.json. Source proof checksums are in examples.json.

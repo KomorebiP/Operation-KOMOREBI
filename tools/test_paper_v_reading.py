@@ -140,7 +140,7 @@ class PaperVReadingTests(unittest.TestCase):
             formal=(output/'read/paper-v/formalization.html').read_text(encoding='utf-8')
             self.assertIn('September 2026',formal)
             self.assertIn('does not add a proof review',formal)
-            self.assertIn('this atlas is not converted to HTML',(output/'read/paper-v/visual-atlas.html').read_text(encoding='utf-8'))
+            self.assertIn('atlas/index.html',(output/'read/paper-v/visual-atlas.html').read_text(encoding='utf-8'))
 
     def test_bold_tokens_and_spanning_table_cells_retain_math(self):
         source=(ROOT/MAIN).read_text(encoding='utf-8-sig')
