@@ -52,7 +52,7 @@ test('idle shutdown acknowledges pthread cleanup then terminates and revokes eve
     await runtime.start();
     assert.equal(h.created.length, 3, 'wrapper, Wasm and pthread script must all be owned');
     assert.match(await h.created[0].blob.text(), /"hostOwnsBlobUrls":true/);
-    assert.match(await h.created[0].blob.text(), /worker\.js\?v=20261103-lifecycle1/);
+    assert.match(await h.created[0].blob.text(), /worker\.js\?v=20261103-staged1/);
     const closing = runtime.dispose();
     assert.equal(closing, runtime.closed);
     assert.equal(h.workers[0].terminations, 0, 'idle disposal allows a cleanup acknowledgement');
