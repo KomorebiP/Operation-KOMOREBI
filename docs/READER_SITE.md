@@ -1035,7 +1035,7 @@ and 4 MB in total. The run receives a snapshot in `uploaded_files`. A run report
 records the executed code, output, package and collection revisions, figures, and
 input-file checksums. It omits the uploaded file contents. Edited code, printed
 output and individual results have separate download controls. Draft saving is
-explicit and local to this browser. No account or server execution is involved.
+explicit and local to this browser. Code runs locally.
 
 The helper limits interactive figures to 50,000 samples, messages to 2 MB and
 combined figures and exports to 8 MB per run. Unsupported graphics or unavailable

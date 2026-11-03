@@ -9,11 +9,12 @@ from urllib.parse import quote, unquote, urlsplit
 
 TEXT_SUFFIXES = {'.md', '.tex', '.txt', '.json', '.lean', '.py', '.bib', '.bbl', '.aux', '.c', '.h'}
 
-# These live checkpoints resolve at the current repository revision. Their
-# imported copies remain in `owned` for provenance of the retained edition.
+# Maintained guidance resolves at the current repository revision. The parent
+# files retain their receipt-bound imported bytes and normal source inspection.
 CURRENT_REPOSITORY_GUIDANCE = {
-    'monographs/special-functions/CONTINUE_HERE.md',
-    'monographs/special-functions/RELEASE_STATUS.md',
+    'monographs/special-functions/current/README.md',
+    'monographs/special-functions/current/CONTINUE_HERE.md',
+    'monographs/special-functions/current/RELEASE_STATUS.md',
 }
 
 

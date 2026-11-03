@@ -161,7 +161,7 @@ records the default example and its expected results.
 [Open the Python playground](https://KomorebiP.github.io/Operation-KOMOREBI/playground.html).
 Choose a demonstration, press Run and compare its output with the hand calculation.
 You can edit the code, stop a calculation and reset the original example.
-Python loads on the first run. No account or local installation is needed.
+Python loads on the first run; allow extra time for the initial download.
 The playground also includes a tested introductory Komorebi Math example.
 
 For examples drawn directly from the sequence work, use

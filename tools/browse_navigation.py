@@ -21,6 +21,8 @@ CODE_EXTENSIONS = ('.py', '.c', '.cpp', '.ipynb', '.rs', '.jl', '.h', '.hpp')
 CORRECTED_CODE = {'research-sric-external-admission': (
     'Corrected runtime 0.3.3 (source and setup)', 'packages/sric-admission-v0.3.3/',
     'docs/SRIC_REPAIR_2026-10-27.md')}
+# Current companion guidance is separate from the receipt-owned source edition.
+CURRENT_GUIDANCE = {'monographs-special-functions': 'current/README.md'}
 
 
 def page_for(group):
@@ -187,6 +189,9 @@ class Browser:
             if title=='Read' and edition:
                 text+=link('Revised reading edition',edition['manuscript'],page)+' · '+link('Monograph PDF',edition['pdf'],page)+'\n\n'
             links = self.resources(c,kinds,page)
+            if title=='Lean' and c['id'] in CURRENT_GUIDANCE:
+                links.insert(0,link('Current formalization checkpoint and continuation',
+                    c['destination']+'/'+CURRENT_GUIDANCE[c['id']],page))
             if title=='Read' and c['id']=='monographs-special-functions':
                 links.insert(0,'[Read online: chapters, proof appendices, figures and glossary](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/index.html)')
             if title=='Read' and c['id']=='monographs-quantum-and-circuits':
