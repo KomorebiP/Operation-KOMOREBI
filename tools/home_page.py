@@ -52,12 +52,12 @@ def research_slides():
         '<button type="button" id="home-topic-'+key+'" aria-controls="home-research-'+key+'">'+topic_labels[key]+'</button>'
         for key, label, *_ in examples)
     return ('<div class="home-showcase" aria-label="Extended case studies">'
-            '<div class="home-topics" aria-label="Choose an extended case study" hidden>'+topics+'</div>'
             '<div class="home-feature">'+panels+
             '<div class="home-slide-controls" hidden><p class="home-slide-position" aria-live="polite" aria-atomic="true"></p>'
             '<div class="home-slide-arrows"><button type="button" data-slide-previous aria-label="Previous research example">'
             '<span aria-hidden="true">←</span></button><button type="button" data-slide-next aria-label="Next research example">'
-            '<span aria-hidden="true">→</span></button></div></div></div></div>')
+            '<span aria-hidden="true">→</span></button></div></div></div>'
+            '<div class="home-topics" aria-label="Choose an extended case study" hidden>'+topics+'</div></div>')
 
 
 def entry_slides():
