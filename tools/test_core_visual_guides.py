@@ -107,7 +107,8 @@ class CoreVisualGuidesTests(unittest.TestCase):
         from readable_chapters import BOOKS
         rows=inventory(ROOT,self.files)
         self.assertEqual(sum(row['units'] for row in rows),377)
-        self.assertEqual([r['unit_kind'] for r in rows[-4:]],['sections','plates','lessons','plates'])
+        self.assertTrue(all(r['unit_kind']=='visuals' for r in rows))
+        self.assertEqual([r['source_unit_kind'] for r in rows[-4:]],['sections','plates','lessons','plates'])
         for row in rows:
             self.assertEqual(row['title'],BOOKS[row['work']]['title'])
             self.assertTrue((ROOT/'website'/row['preview']['image']).is_file())

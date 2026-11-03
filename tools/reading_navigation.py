@@ -98,9 +98,37 @@ def navigation(config, page, placement='top'):
 
 
 def atlas_config(work, label, index, plates):
-    return dict(work=work,label=label+' atlas',overview_label=label,index=index,
-                chapters=[dict(url=p['url'],title='V'+str(p['number'])+' · '+p['title']) for p in plates],
-                menu_title='Atlas plates',index_title='All '+str(len(plates))+' atlas plates')
+    from readable_chapters import navigation_title
+    return dict(work=work,label=label+' visual guide',overview_label=label,index=index,
+                chapters=[dict(url=p['url'],title=navigation_title(p['title'])) for p in plates],
+                menu_title='Visuals',index_title='All '+str(len(plates))+' visuals',footer_index_only=True)
+
+
+def visual_title(label, entry):
+    from readable_chapters import navigation_title
+    return label+' visual guide / '+navigation_title(entry['title'])
+
+
+def visual_backlink(entry):
+    from readable_chapters import navigation_title
+    return 'Visual guide: '+navigation_title(entry['title'])
+
+
+def visual_position(label, number, total):
+    return label+' visual guide · Visual '+str(number)+' of '+str(total)
+
+
+def visual_contents(plates, index, relative, pdf_page, render_title=None):
+    """Title-first reading links, with the original PDF as a secondary route."""
+    from readable_chapters import navigation_title
+    render_title=render_title or (lambda title:html.escape(navigation_title(title)))
+    body='<nav class="chapter-contents visual-guide-contents" aria-label="Visual guide contents"><h2>Choose a visual</h2><ol class="visual-contents">'
+    for plate in plates:
+        number=str(plate['number'])
+        body+='<li id="v'+number.zfill(2)+'"><span class="reading-entry-number" aria-hidden="true">'+number+'</span>'
+        body+='<a href="'+html.escape(relative(plate['url'],index),quote=True)+'">'+render_title(plate['title'])+'</a>'
+        body+='<a class="visual-source-link" href="'+html.escape(pdf_page(plate),quote=True)+'" aria-label="Original PDF: '+html.escape(navigation_title(plate['title']),quote=True)+'">PDF</a></li>'
+    return body+'</ol></nav>'
 
 
 def outline(contents):

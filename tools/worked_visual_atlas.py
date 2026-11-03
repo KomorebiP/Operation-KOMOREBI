@@ -7,7 +7,7 @@ from html.parser import HTMLParser
 from readable_chapters import BOOKS
 from reader_atlas import atlas_tex as original_atlas_tex, digest, expected_math, render_drawing as original_render_drawing, transcript_order
 from readable_chapters import Chapter, HEADINGS, MATH_PATTERN, PANELS, clean_tex, group, manuscript_macros, original_math, passage_links, plain_math, presentation_tex, reading_options, render_table, chapter_text
-from reading_navigation import atlas_config, navigation, outline, resources
+from reading_navigation import atlas_config, navigation, outline, resources, visual_title, visual_backlink, visual_position, visual_contents
 from reader_documents import png_dimensions
 from worked_atlas_drawings import drawing_nodes
 
@@ -223,7 +223,7 @@ class WorkedAtlas:
                     raise ValueError('Worked atlas manuscript reference no longer resolves: ' + str(key))
                 chapter, node = references[key]
                 resolved[plate['number']].append(self.reference_route(key, (chapter, node)))
-                chapter.related_readings.setdefault(node['id'], []).append(('Atlas V' + str(plate['number']) + ': ' + plate['title'], plate['url']))
+                chapter.related_readings.setdefault(node['id'], []).append((visual_backlink(plate), plate['url']))
         if not hasattr(reader, 'worked_atlases'): reader.worked_atlases = {}
         inputs = {}
         for name in re.findall(r'\\input\{([^{}]+)\}', raw.decode('utf-8-sig')):
@@ -247,22 +247,22 @@ class WorkedAtlas:
         for plate in atlas['plates'][:self.HTML_COUNT]:
             number, page = (plate['number'], plate['url'])
             source_path=plate['source']
-            title = self.label + ' atlas / V' + str(number) + ': ' + plate['title']
+            title = visual_title(self.label,plate)
             chapter = self.chapter_for(plate,atlas['macros'])
             chapter.included_sources=atlas['inputs']
             chapter.labels = atlas['labels']
             chapter.validate_references()
             chapter.url = page
-            chapter.command_links = {'pagerefV': {str(p['number']): (p['url'], 'V' + str(p['number'])) for p in atlas['plates']}}
-            body = '<p class="eyebrow">' + self.label + ' visual atlas · V' + str(number) + ' · ' + chapter.inline(plate['category']) + '</p><h1>' + chapter.inline(plate['title']) + '</h1>'
+            chapter.command_links = {'pagerefV': {str(p['number']): (p['url'], 'Visual ' + str(p['number'])) for p in atlas['plates']}}
+            body = '<p class="eyebrow">' + visual_position(self.label,number,self.HTML_COUNT) + ' · ' + chapter.inline(plate['category']) + '</p><h1>' + chapter.inline(plate['title']) + '</h1>'
             body += '<p>' + chapter.inline(plate['locator']) + '</p>' + reader.work_routes(self.work, page) + self.neighbours(reader, plate)
-            body += '<nav class="document-routes" aria-label="Manuscript passages illustrated on this plate">' + ''.join(('<a href="' + site.rel(target, page) + '">' + e(label) + '</a>' for label, target in atlas['references'][number])) + '</nav>'
+            body += '<nav class="document-routes" aria-label="Manuscript passages illustrated here">' + ''.join(('<a href="' + site.rel(target, page) + '">' + e(label) + '</a>' for label, target in atlas['references'][number])) + '</nav>'
             if number == self.HTML_COUNT:
                 body += '<p><a href="' + site.rel('collection/works/'+self.work+'.html#evidence', page) + '">Recorded evidence for '+self.label+'</a></p>'
             tools = '<p><a href="' + reader.viewer_url(pdf, page, 'page=' + str(number + self.PDF_PAGE_OFFSET)) + '">Original plate in the visual-guide PDF</a> · <a href="' + reader.resolve(source_path, page, 'L' + str(plate['line'])) + '">Original atlas source</a></p>'
             tools += reading_options('Show each passage’s permalink and source line. Manuscript links and plate navigation remain visible.')
             body += resources(tools) + '<p class="reading-start"><a href="#chapter-text">Start reading</a></p>'
-            toc = '<nav class="chapter-contents" aria-label="Plate contents"><h2 id="contents">On this plate</h2><ul>'
+            toc = '<nav class="chapter-contents" aria-label="Visual contents"><h2 id="contents">On this visual</h2><ul>'
             for node in chapter.nodes:
                 if node['kind'] in HEADINGS or node['kind'] == 'figure':
                     toc += '<li><a href="#' + node['id'] + '">' + e(node['title'] if node['kind'] in HEADINGS else 'Drawing and text description') + '</a></li>'
@@ -302,19 +302,13 @@ class WorkedAtlas:
         report = dict(collection_revision=site.revision, source=self.SOURCE,source_inputs=atlas['source_inputs'], source_sha256=atlas['source_sha256'], definitions=self.DEFINITIONS, definitions_sha256=atlas['definitions_sha256'], macro_source=self.BOOK['main'], macros=atlas['macros'], source_pdf=self.PDF, source_pdf_sha256=self.PDF_SHA256, index=self.INDEX, total_plates=self.HTML_COUNT, html_plates=reports, figures={name: dict(**f['receipt'], nodes=f['nodes'], node_order=f['order'], reading_aid=f['description']) for name, f in atlas['figures'].items()}, included_sources=atlas['inputs'], manuscript_references=atlas['references'], new_proof_review=False, new_lean_execution=False, new_mathematical_example_execution=False, new_tex_build=False)
         report['edition_checks']=self.edition_checks()
         site.write(self.REPORT, json.dumps(report, ensure_ascii=False, indent=2) + '\n')
-        body = '<p class="eyebrow">' + self.label + ' · Visual atlas</p><h1>Explore the '+str(self.HTML_COUNT)+' atlas plates</h1>'
-        body += '<p>Read all '+str(self.HTML_COUNT)+' worked plates with '+str(len(self.FIGURES))+' original drawings, selectable equations, descriptions, and transcripts of the drawing labels. Each mathematical plate links to the manuscript passages it illustrates; evidence notes retain their source edition’s scope.</p>' + reader.work_routes(self.work, self.INDEX)
+        body = '<p class="eyebrow">' + self.label + ' · Visual guide</p><h1>Explore the '+str(self.HTML_COUNT)+' visuals</h1>'
+        body += '<p>Read all '+str(self.HTML_COUNT)+' visuals with '+str(len(self.FIGURES))+' original drawings, selectable equations, descriptions, and transcripts of the drawing labels. Each worked example links to the manuscript passages it illustrates; evidence notes retain their source edition’s scope.</p>' + reader.work_routes(self.work, self.INDEX)
         body += self.index_introduction(reader,atlas,chapter)
-        body += '<nav class="chapter-contents" aria-label="Atlas plates"><h2>Choose a plate</h2><ol>'
-        for plate in atlas['plates']:
-            number = plate['number']
-            body += '<li id="v' + str(number).zfill(2) + '"><strong>V' + str(number) + ': ' + chapter.inline(plate['title']) + '</strong><p>'
-            if number <= self.HTML_COUNT:
-                body += '<a href="' + site.rel(plate['url'], self.INDEX) + '">Read V' + str(number) + ' in HTML</a> · '
-            body += '<a href="' + reader.viewer_url(pdf, self.INDEX, 'page=' + str(number + self.PDF_PAGE_OFFSET)) + '">Open V' + str(number) + ' in the PDF</a></p></li>'
-        body += '</ol></nav><p>'+ ' · '.join('<a href="'+reader.resolve(path,self.INDEX)+'">Selectable atlas source'+(' '+str(i+1) if len(self.SOURCES)>1 else '')+'</a>' for i,path in enumerate(self.SOURCES))+' · <a href="' + site.rel(self.REPORT, self.INDEX) + '">Conversion records</a></p>'
-        site.page(self.INDEX, self.label + ' visual atlas', body)
-        site.search.append(dict(title=self.label + ' / Visual atlas', group='Collection', kind='Papers and source', work_ids=[self.work], url=self.INDEX, text=' '.join((p['title'] for p in atlas['plates']))))
+        body += visual_contents(atlas['plates'],self.INDEX,site.rel,lambda p:reader.viewer_url(pdf,self.INDEX,'page='+str(p['number']+self.PDF_PAGE_OFFSET)),chapter.inline)
+        body += '<p>'+ ' · '.join('<a href="'+reader.resolve(path,self.INDEX)+'">Selectable atlas source'+(' '+str(i+1) if len(self.SOURCES)>1 else '')+'</a>' for i,path in enumerate(self.SOURCES))+' · <a href="' + site.rel(self.REPORT, self.INDEX) + '">Conversion records</a></p>'
+        site.page(self.INDEX, self.label + ' visual guide', body)
+        site.search.append(dict(title=self.label + ' / Visual guide', group='Collection', kind='Papers and source', work_ids=[self.work], url=self.INDEX, text=' '.join((p['title'] for p in atlas['plates']))))
 
     def verify(self, root, documents, pages):
         from check_reader_site import check_png_image_sizes

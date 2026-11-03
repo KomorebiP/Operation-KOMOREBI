@@ -5,7 +5,7 @@ from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
-from reading_navigation import entries, neighbours, navigation, outline, resources, work_links, Navigation, publish_record, verify, chapter_layout, sequence_groups, contents_list, atlas_config
+from reading_navigation import entries, neighbours, navigation, outline, resources, work_links, Navigation, publish_record, verify, chapter_layout, sequence_groups, contents_list, atlas_config, visual_title, visual_backlink, visual_position, visual_contents
 
 
 class ReadingNavigationTests(unittest.TestCase):
@@ -99,16 +99,47 @@ class ReadingNavigationTests(unittest.TestCase):
     def test_atlas_controls_use_the_full_sequence_and_preserve_boundaries(self):
         plates=[dict(number=i,url='read/test/atlas/v'+str(i)+'.html',title='Plate '+str(i)) for i in range(1,4)]
         config=atlas_config('test','Paper test','read/test/atlas/index.html',plates)
-        self.assertIn('<summary>Atlas plates</summary>',navigation(config,plates[1]['url']))
-        self.assertIn('All 3 atlas plates',navigation(config,plates[1]['url']))
+        self.assertIn('<summary>Visuals</summary>',navigation(config,plates[1]['url']))
+        self.assertIn('All 3 visuals',navigation(config,plates[1]['url']))
         for plate in plates:
             for placement in ('top','bottom'):
                 control=Navigation(navigation(config,plate['url'],placement)).controls[0]
-                self.assertEqual(len([a for a in control['links'] if 'data-reading-entry' in a]),3)
+                self.assertEqual(len([a for a in control['links'] if 'data-reading-entry' in a]),3 if placement=='top' else 0)
                 self.assertEqual(control['attrs']['data-reading-placement'],placement)
                 self.assertIn('../../../collection/works/test.html',[a['href'] for a in control['links']])
         self.assertEqual(neighbours(config,plates[0]['url'])[2]['url'],config['index'])
         self.assertEqual(neighbours(config,plates[-1]['url'])[3]['url'],config['index'])
+
+    def test_visual_labels_use_the_subject_and_keep_position_separate(self):
+        entry=dict(number=3,title=r'Residues in $\mathbb{F}_5$',url='read/test/atlas/v03.html')
+        config=atlas_config('test','Paper test','read/test/atlas/index.html',[entry])
+        self.assertEqual(entries(config)[0]['title'],'Residues in F_5')
+        self.assertEqual(visual_title('Paper test',entry),'Paper test visual guide / Residues in F_5')
+        self.assertEqual(visual_backlink(entry),'Visual guide: Residues in F_5')
+        self.assertEqual(visual_position('Paper test',3,24),'Paper test visual guide · Visual 3 of 24')
+
+    def test_visual_contents_link_titles_directly_and_keep_pdf_context_and_anchors(self):
+        import posixpath
+        entry=dict(number=3,title='Packets & coordinates',url='read/test/atlas/v03.html')
+        relative=lambda target,page:posixpath.relpath(target,posixpath.dirname(page))
+        body=visual_contents([entry],'read/test/atlas/index.html',relative,lambda p:'pdf.html#page=5')
+        self.assertIn('id="v03"',body)
+        self.assertIn('<a href="v03.html">Packets &amp; coordinates</a>',body)
+        self.assertIn('href="pdf.html#page=5" aria-label="Original PDF: Packets &amp; coordinates"',body)
+        self.assertNotIn('Read V3',body)
+
+    def test_section_and_lesson_guides_share_visual_controls_and_group_boundaries(self):
+        from paper_ix_atlas import reading_config as ix
+        from paper_xi_atlas import reading_config as xi
+        for builder,total,starts in [(ix,23,[1,16]),(xi,47,[1,12,24,40,46])]:
+            from inspect import getmodule
+            module=getmodule(builder)
+            selected=[dict(number=n,title='Subject '+str(n),url=module.section_url(n)) for n in range(1,total+1)]
+            config=builder(selected)
+            self.assertEqual(config['menu_title'],'Visuals')
+            self.assertTrue(config['footer_index_only'])
+            self.assertEqual([e['title'] for e in entries(config)],[r['title'] for r in selected])
+            self.assertEqual([g['start'] for g in config['contents_groups']],[module.section_url(n) for n in starts])
 
     def test_paper_vi_groups_cover_every_page_once(self):
         from paper_vi_reading import BOOK
