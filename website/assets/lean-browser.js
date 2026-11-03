@@ -1,10 +1,31 @@
 import { createCompiler } from './lean-wasm/index.js?v=20261102-frontend-env1';
 import { sourceHeader } from './lean-wasm/roots.js';
-import { loadSourceBundle, sourceWorkspace } from './lean-source-bundle.js?v=20261102-positivity1';
+import { loadSourceBundle, sourceWorkspace } from './lean-source-bundle.js?v=20261103-order1';
 
 export function workspaceCheckMode(workspace, preferred=false) {
   const required=(workspace?.files||[]).some(file=>file.library&&file.syntaxCheck==='frontend');
   return {required,frontend:preferred||required};
+}
+
+function fileIdentity(file) {
+  return JSON.stringify([file.module,file.path||null,file.library?'library':file.generated?'generated':'source']);
+}
+
+export function savedWorkspaceDraft(workspace, files, current) {
+  return {id:workspace.id,files:[...files],fileKeys:workspace.files.map(fileIdentity),current};
+}
+
+export function restoreWorkspaceDraft(workspace, draft) {
+  const keys=workspace.files.map(fileIdentity);
+  if(draft.id!==workspace.id||!keys.length||!Array.isArray(draft.fileKeys)||!Array.isArray(draft.files)||draft.files.length!==keys.length||
+      draft.fileKeys.length!==keys.length||draft.files.some(text=>typeof text!=='string')||
+      draft.fileKeys.some(key=>typeof key!=='string')||new Set(draft.fileKeys).size!==keys.length||
+      new Set(keys).size!==keys.length||keys.some(key=>!draft.fileKeys.includes(key))) {
+    throw new Error('Your saved draft could not be matched to these files. Download it to recover your edits.');
+  }
+  const source=new Map(draft.fileKeys.map((key,index)=>[key,draft.files[index]]));
+  const oldIndex=Math.max(0,Math.min(Number.isInteger(draft.current)?draft.current:0,keys.length-1));
+  return {files:keys.map(key=>source.get(key)),current:keys.indexOf(draft.fileKeys[oldIndex])};
 }
 
 export function moduleSource(source, name) {
@@ -117,7 +138,7 @@ async function start() {
     el('route').hidden=!workspace.exploratory;
     el('route-notes').textContent=workspace.exploratory?[
       ...(workspace.issues.length?workspace.issues:['The recorded import route uses available browser libraries. Run Lean to check the sources.']),
-      ...(workspace.library?.length?['This route compiles '+workspace.library.length+' pinned Mathlib source module(s) before the retained sources. They are visible in the file picker and must pass Lean too.']:[]),
+      ...(workspace.library?.length?['This route compiles '+workspace.library.length+' pinned Mathlib source module(s) before the files that import them. They are visible in the file picker and must pass Lean too.']:[]),
       ...(workspaceCheckMode(workspace).required?['This library route requires experimental source-defined syntax checking, enabled automatically. Each run starts a fresh compiler; background tasks remain unsupported.']:[]),
       ...(workspace.tactics?['A generated Mathlib.Tactic module supplies the available tactic subset. It is checked first and is visible in the file picker.']:[]),
       ...(workspace.legacy?['A generated version-compatibility module proves the newer dite_eq_left name using this runtime’s dif_pos. It is checked first and imported without changing the retained proof body.']:[])
@@ -221,7 +242,7 @@ async function start() {
     if(ticket!==generation)return false;
     if (!crossOriginIsolated) {
       if (sessionStorage.getItem(draftKey+'-attempt')==='1') throw new Error('This browser did not enable the memory needed by Lean. Your edits are preserved.');
-      sessionStorage.setItem(draftKey,JSON.stringify({id:workspace.id,files,current,run:true}));
+      sessionStorage.setItem(draftKey,JSON.stringify({...savedWorkspaceDraft(workspace,files,current),run:true}));
       sessionStorage.setItem(draftKey+'-attempt','1');location.reload();return false;
     }
     return true;
@@ -229,6 +250,7 @@ async function start() {
   async function run() {
     if (busy)return;files[current]=editor.value;controls(true);const ticket=++generation;
     const freshFrontend=workspaceCheckMode(workspace,preferredFrontend).frontend;
+    let failureContext='';
     el('output').textContent='Checking has not completed.';setStatus('Starting Lean on this device…','running');
     try {
       if (!await isolate(ticket))return;
@@ -250,6 +272,7 @@ async function start() {
       if(reuse)log('Reusing unchanged checked dependencies in this compiler environment.');
       for(let i=reuse?files.length-1:0;i<files.length;i++) {
         setStatus('Checking '+workspace.files[i].module+'…','running');
+        failureContext=[...results,workspace.files[i].module].join('\n\n');
         // Export dependencies only. The last file runs with its original source.
         const dependency=i<files.length-1;
         const compatibility=dependency?'':workspace.compatibility?.source||'';
@@ -267,7 +290,7 @@ async function start() {
       setStatus(warnings?'Checking completed with warnings. Review Lean’s response; a sorry warning means an unfinished proof.':workspace.compatibility?'Checking completed with no diagnostics. Browser compatibility lemma included.':'Checking completed with no diagnostics.',warnings?'warning':'passed');
     } catch(error) {
       if(ticket!==generation)return;
-      el('output').textContent=String(error.message||error);setStatus('Checking could not complete. No successful result.','failed');dispose();
+      el('output').textContent=(failureContext?failureContext+'\n':'')+String(error.message||error);setStatus('Checking could not complete. No successful result.','failed');dispose();
     } finally {
       if(ticket===generation){if(freshFrontend)dispose();controls(false);el('run').textContent=freshFrontend||compiler?'Run workspace':'Restart Lean and run';}
     }
@@ -280,9 +303,14 @@ async function start() {
     try{
       const draft=JSON.parse(saved);await chooseId(draft.id);
       if(workspace.id!==draft.id){setStatus('Your saved draft is preserved. Reload to retry loading its source.','failed');return;}
-      if(Array.isArray(draft.files)&&draft.files.length===files.length&&draft.files.every(f=>typeof f==='string')){files=draft.files;current=Math.max(0,Math.min(Number.isInteger(draft.current)?draft.current:0,files.length-1));filePicker.value=String(current);showFile();}
+      const restored=restoreWorkspaceDraft(workspace,draft);
+      files=restored.files;current=restored.current;filePicker.value=String(current);showFile();
       sessionStorage.removeItem(draftKey);if(draft.run)await run();
-    }catch{setStatus('Browser setup finished. Run Lean to begin.');}
+    }catch(error){
+      const recovery=el('draft-recovery');recovery.hidden=false;
+      el('draft-download').href=URL.createObjectURL(new Blob([saved],{type:'application/json;charset=utf-8'}));
+      setStatus(error.message||'Your saved draft could not be restored. Download it to recover your edits.','failed');
+    }
   }
   if(crossOriginIsolated)sessionStorage.removeItem(draftKey+'-attempt');
 }
