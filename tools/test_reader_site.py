@@ -556,6 +556,53 @@ class ReaderSiteTests(unittest.TestCase):
         self.assertEqual(len(blocks),1)
         self.assertEqual(blocks[0]['rows'],[['Row 1',0,1,2],['Row 2',3,4,5],['Row 3',6,7,8]])
 
+    def test_grid_markers_preserve_unretained_digits_separately_from_zero(self):
+        from reader_drawing_transcripts import drawing_nodes,matrix_label_blocks
+        from reader_atlas import render_drawing,transcript_order
+        source=''.join(r'\draw ('+str(x)+','+str(y)+r') rectangle ++(1,1);'
+                       r'\node at ('+str(x+.5)+','+str(y+.5)+') {'+value+'};'
+                       for (x,y),value in zip([(0,1),(1,1),(0,0),(1,0)],['$0$',r'\textemdash','$1$',r'\textemdash']))
+        nodes=drawing_nodes(source);blocks=matrix_label_blocks(nodes,source)
+        info=dict(alt='Digits',description='Dashes are unretained places.',blocks=blocks)
+        self.assertEqual(transcript_order(info,nodes),[0,1,2,3])
+        self.assertEqual(blocks[0]['rows'],[['Row 1',0,1],['Row 2',2,3]])
+        reader=SimpleNamespace(site=SimpleNamespace(rel=lambda path,page:path),resolve=lambda path,page:'source.html')
+        chapter=Chapter('',{});rendered=render_drawing(dict(description=info,nodes=nodes,
+            receipt=dict(image='image.png',source='figure.tex'),width=800,height=400),chapter,reader)
+        self.assertEqual(chapter.math,['0','1'])
+        self.assertEqual(rendered.count('—'),2)
+        self.assertEqual(rendered.count('id="drawing-label-'),4)
+
+    def test_packet_arrangements_retain_the_displayed_residue_order(self):
+        from worked_atlas_descriptions import FIGURES
+        from worked_atlas_drawings import drawing_nodes
+        from reader_atlas import transcript_order
+        root=Path(__file__).resolve().parents[1]
+        nodes=drawing_nodes((root/'papers/paper-ii/current/editable/traditional/visual_graphics/coefficient_tower.tex').read_text(encoding='utf-8-sig'))
+        info=FIGURES['paper-ii']['coefficient_tower']
+        tables=[b for b in info['blocks'] if b['kind']=='table']
+        self.assertEqual([len(b['rows'][0])-1 for b in tables],[8,4,2])
+        self.assertEqual([[nodes[row[0]]['text'] for row in b['rows']] for b in tables],
+            [['$r=0$','$r=1$'],['$r=0$','$r=2$','$r=1$','$r=3$'],
+             ['$r=0$','$r=4$','$r=2$','$r=6$','$r=1$','$r=5$','$r=3$','$r=7$']])
+        for table in tables:
+            self.assertEqual(sorted(int(nodes[index]['text'].strip('$')) for row in table['rows'] for index in row[1:]),list(range(16)))
+        self.assertEqual(sorted(transcript_order(info,nodes)),list(range(69)))
+
+    def test_signal_error_table_keeps_original_sample_addresses_and_signs(self):
+        from paper_v_atlas_descriptions import FIGURES
+        from worked_atlas_drawings import drawing_nodes
+        from reader_atlas import transcript_order
+        root=Path(__file__).resolve().parents[1]
+        nodes=drawing_nodes((root/'papers/paper-v/current/editable/traditional/visual_graphics/error_budget.tex').read_text(encoding='utf-8-sig'))
+        info=FIGURES['error_budget'];table=info['blocks'][1]
+        self.assertEqual([nodes[index]['text'] for index in table['headers'][1:]],[str(i) for i in range(4,15)])
+        values={nodes[header]['text']:nodes[index]['text'] for header,index in zip(table['headers'][1:],table['rows'][2][1:])}
+        self.assertEqual(values['6'],'$3$')
+        self.assertEqual(values['7'],r'$\frac{1}{2}$')
+        self.assertEqual(values['12'],r'$- \frac{5}{2}$')
+        self.assertEqual(sorted(transcript_order(info,nodes)),list(range(49)))
+
     def test_incomplete_grids_and_bar_rows_keep_all_labels_without_guessing_cells(self):
         from reader_drawing_transcripts import drawing_nodes,matrix_label_blocks
         from reader_atlas import transcript_order

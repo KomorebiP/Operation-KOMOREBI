@@ -115,7 +115,8 @@ def matrix_label_blocks(nodes,source):
         found=[i for i,n in enumerate(nodes) if n.get('position') and all(abs(a-b)<=tolerance for a,b in zip(n['position'],center))]
         if len(found)!=1:continue
         index=found[0];value=nodes[index]['text'].strip()
-        if not (MATH_PATTERN.fullmatch(value) or re.fullmatch(r'[-+\d./·⋅…]+',value)):continue
+        marker=value in {r'\textemdash',r'\textendash','—','–'}
+        if not (marker or MATH_PATTERN.fullmatch(value) or re.fullmatch(r'[-+\d./·⋅…]+',value)):continue
         previous=next((c for c in cells if c['index']==index),None)
         if previous:
             if (previous['x1']-previous['x0'])*(previous['y1']-previous['y0'])<=width*height:continue
