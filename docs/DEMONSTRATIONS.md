@@ -5,15 +5,16 @@
 ## Extended case studies
 
 Follow one object through several representations, transport its operations,
-and calculate what is preserved or lost. Start with **wavelets and polyphase
-transfer** for a complete signal calculation. Continue with **Euler numbers
-and factorial lanes**, then compare **quantum phase and measurement**.
+and calculate what is preserved or lost. Start with **Euler numbers** for a
+complete arithmetic calculation. Continue with **wavelets and polyphase
+transfer**, explore the companion **factorial lanes**, then compare
+**quantum phase and measurement**.
 These are suggested reading choices; each study can also be read on its own.
 
 | Case study | Starting problem | What the derivation delivers |
 |---|---|---|
-| [Wavelets and polyphase transfer](demonstrations/WAVELET_POLYPHASE.md) | Filter a sixteen-sample signal across four Haar levels. | Exact operator transport, sharp finite stability, cross-scale interactions, and the errors caused by omitted transfers or a changed operation order. |
 | [Euler numbers](demonstrations/EULER_PACKETS.md) | Reconstruct a reciprocal sequence through other coordinates. | Packet matrices, quartic reconstruction, polynomial identities, refinement, and exact residual repair. |
+| [Wavelets and polyphase transfer](demonstrations/WAVELET_POLYPHASE.md) | Filter a sixteen-sample signal across four Haar levels. | Exact operator transport, sharp finite stability, cross-scale interactions, and the errors caused by omitted transfers or a changed operation order. |
 | [Factorial lanes](demonstrations/FACTORIAL_LANES.md) | Follow one residue section of the exponential. | Reconstruction of 34!, hypergeometric coordinates, reciprocal inversion, a sharpened 5-adic displacement bound, and refinement. |
 | [Quantum phase and measurement](demonstrations/QUANTUM_PHASE_MEASUREMENT.md) | Determine which information a measurement retains. | Exact tomography, a coherence-loss obstruction, reversible records, amplitude damping, and finite syndrome recovery. |
 | [Stirling, Bell and Fubini numbers](demonstrations/STIRLING_BELL_FUBINI.md) | Transfer between counting families and coordinate profiles. | Inverse triangular kernels, generating functions, moment representations, residue transfer, and exact interpolation. |

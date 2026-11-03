@@ -16,12 +16,12 @@ Each work's contribution is expressed in its definitions, results, constructions
 
 ## Start with an extended case study
 
-Follow one problem through several representations, including the operations and information retained at each step. A suggested route begins with signals, continues through arithmetic, and then compares quantum measurement.
+Follow one problem through several representations, including the operations and information retained at each step. A suggested route begins with Euler numbers, continues through signals, and then compares quantum measurement.
 
 | Route | Begin here | What to follow |
 |---|---|---|
-| Signals and operations | [Wavelets and polyphase transfer](demonstrations/WAVELET_POLYPHASE.md) | Four Haar levels, filter transport, finite stability, and the exact error from omitted interactions. |
 | Arithmetic and coordinates | [Euler numbers](demonstrations/EULER_PACKETS.md), then [factorial lanes](demonstrations/FACTORIAL_LANES.md) | Reciprocal series, changes of basis, prime-adic bounds, refinement, and residual repair. |
+| Signals and operations | [Wavelets and polyphase transfer](demonstrations/WAVELET_POLYPHASE.md) | Four Haar levels, filter transport, finite stability, and the exact error from omitted interactions. |
 | Quantum information | [Quantum phase and measurement](demonstrations/QUANTUM_PHASE_MEASUREMENT.md) | Recoverable measurements, discarded coherence, reversible records, and finite recovery. |
 
 The [extended case-study index](DEMONSTRATIONS.md#extended-case-studies) includes further counting and polynomial derivations. Each study provides hand calculations, failure controls, and exact executable checks. [Special Functions](SPECIAL_FUNCTIONS.md) offers a route into function constructions and their analytic questions.
@@ -35,7 +35,7 @@ Start with the subject or kind of work that interests you. Each route leads to t
 | Understand the common language | [Realization Calculus](works/realization-calculus-book.md) and [Komorebi Space](works/komorebi-space.md) |
 | Study the individual developments | [Papers I–XII](../papers/README.md) |
 | Understand limits of representation | [Realization Boundaries](works/realization-boundaries.md) |
-| Follow a complete calculation | [Extended case studies](DEMONSTRATIONS.md#extended-case-studies), beginning with [wavelets and polyphase transfer](demonstrations/WAVELET_POLYPHASE.md) |
+| Follow a complete calculation | [Extended case studies](DEMONSTRATIONS.md#extended-case-studies), beginning with [Euler numbers](demonstrations/EULER_PACKETS.md) |
 | Follow an application | [Monographs and companion volumes](../monographs/README.md) |
 | Explore an open mathematical program | [Research programs and their scope](../research/README.md) |
 | Work with executable mathematics | [Software guide](LIBRARIES.md) and [experimental laboratories](../experiments/README.md) |
