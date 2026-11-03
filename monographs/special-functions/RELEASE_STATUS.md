@@ -1,5 +1,14 @@
 # Technical publication package with checked coupled-functions block
 
+**2026-11-02 Autonomous projections companion:** SF-LEAN-B14 adds 27
+checked theorem declarations, for 369 registered names. Main H.1 is proved
+for arbitrary scalar functionals, entire inputs and local analytic germs:
+ordered equal rows and nonzero multiples of (1,-1) are the only autonomous
+projections, and no constant invertible linear decoupling exists. All 57
+fresh replay steps pass; actual I/O is hashed. Appendix J exact evaluation
+is next; explanatory F/H variants, I and broad A-E coverage remain. See
+`formalization/Block14/REPORT.md`. Earlier notes retain their dated scopes.
+
 **2026-11-02 Scalar reduction and local certificates companion:** SF-LEAN-B13
 adds 43 checked theorem declarations, for 342 registered names. Exact global
 component equality, half-scale sinh, unequal-example data, prescribed-order
