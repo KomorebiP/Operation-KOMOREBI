@@ -25,7 +25,7 @@ their written proofs, 2,123 mathematical expressions, two original figures, and
 28 references. Every proposition links to its proof and its recorded coverage
 row. The editable `Monograph/source/FOUNDATIONS.md` is the source of this HTML
 edition. The original 174-page publication retains its additional glossary and
-formal registers in PDF; the theoretical atlas remains a separate PDF.
+formal registers in PDF. The theoretical atlas also has a complete HTML guide.
 
 `tools/large_signal_reading.py` translates the reviewed Markdown wrappers while
 preserving source lines and mathematical tokens. A pinned source digest and
@@ -35,6 +35,33 @@ Run `python -B -m unittest discover -s tools -p 'test_large_signal_reading.py' -
 This conversion adds no mathematical proof audit, Lean replay, or empirical
 validation. Mathematical proofreading self-review covers only the presentation
 wrappers and navigation; there are no mathematical-token changes.
+
+The visual guide at `read/monographs-large-signal-model/atlas/` contains the
+orientation and all 17 plates, with 16 original diagrams and 194 selectable
+mathematical expressions. It adds searchable questions, three reading paths,
+diagram descriptions, and links to the mapped propositions, written proofs,
+recorded Lean scope and source modules. The main statements link back to their
+plates. The original 19-page atlas PDF remains available.
+
+`tools/large_signal_atlas.py` binds the HTML to the retained TeX, proof map and
+figure receipts. `tools/large_signal_atlas_sources.json` pins those inputs and
+source ranges. Regenerate only the browser images with
+`python -B tools/render_large_signal_atlas.py` (pypdfium2 required); normal builds
+check the source and image hashes without rebuilding the PDFs.
+
+Plate 3 adds a bounded, exact comparison for the atlas's fixed rational matrix.
+The browser uses BigInt fractions; an independent Python Fraction replay checks
+all 45 settings, 80 delay forecasts, and the retained 13-state trajectory with
+its finite delay and memory identities. The causal delay state is withheld
+until one observation step has elapsed. Run
+`python -B tools/check_large_signal_explorer.py --node PATH_TO_NODE` to replay
+the checks. The declared domain, execution inputs, limits and results are in
+`verification/large-signal-atlas/`. These finite checks illustrate the retained
+example; they add no universal theorem, empirical validation or Lean replay.
+
+Run `python -B -m unittest discover -s tools -p 'test_large_signal_atlas.py' -v`
+and `node --test tools/test_large_signal_atlas.cjs` for source coverage,
+mathematics, diagram identity, proof routes, navigation and explorer edge cases.
 
 ## Interactive J-Space laboratory
 

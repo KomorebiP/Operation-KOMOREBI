@@ -27,6 +27,8 @@ BOOK = dict(work=WORK, label='Large Signal Model', base=BASE, main=MAIN,
     bib_page='read/' + WORK + '/references.html', chapters=CHAPTERS,
     title='Realization, refinement, and predictive closure', main_chapters=100,
     custom_reader='large_signal', required_macros=[], statement_navigation=True,
+    atlas_index='read/'+WORK+'/atlas/index.html',
+    atlas_link_text='Explore the visual atlas: 17 plates and an exact example',
     lean_reader_paths=('Lean/KomorebiLSM.lean', 'Lean/KomorebiLSM/'),
     lean_reader_note='This inspector shows the 254 mathematical modules and their root import file. '
         'The full retained project, including rejection controls and test sources, remains available '
@@ -42,7 +44,7 @@ BOOK = dict(work=WORK, label='Large Signal Model', base=BASE, main=MAIN,
     reading_note='This edition preserves the corrected editable mathematical body, '
         'its two figures, references, and source-line links. The full 174-page '
         'publication retains its additional glossary and formal registers in PDF. '
-        'The theoretical atlas is available as a separate PDF. Recorded Lean '
+        'The theoretical atlas has an HTML guide and an original PDF. Recorded Lean '
         'mappings retain their stated assumptions; this conversion adds no proof '
         'audit, Lean execution, or empirical validation.')
 BOOK['contents_groups'] = [dict(start=CHAPTERS[0]['url'],title='Orientation'),
@@ -200,6 +202,7 @@ def publish_start(reader, book):
     body = '<p class="eyebrow">Large Signal Model</p><h1>From an observation to a predictive state</h1>'
     body += '<p>An exact archive preserves an observation. A useful predictive state must also retain what the declared future questions need. Start with that distinction, then follow the construction and its evidence.</p>'
     body += '<p>'+link('Read the mathematical body',BOOK['index'])+' · '+link('Find a proposition or proof','read/'+WORK+'/statements.html')+'</p>'
+    body += '<p>'+link('Explore the visual atlas',BOOK['atlas_index'])+' · 17 plates, original diagrams, and an exact closure explorer.</p>'
     body += '<h2>A first reading path</h2><ol>'
     for n,label in [(1,'Distinguish observations, archives, and predictive states'),
                     (5,'See when a summary supports a reduced transition'),
@@ -219,7 +222,7 @@ def publish_start(reader, book):
     body += '<p>'+link('Open the PR-LASM software work page','collection/works/large-signal-model.html')+'</p>'
     record=reader.records[RESOURCES[-1][0]]
     body += '<p>'+link('Run the retained reference examples',record['url'])+'</p>'
-    body += '<h2>Original publication and atlas</h2><p>The 174-page PDF retains the full publication layout, additional glossary, and formal registers. Its theoretical atlas remains a separate PDF.</p><p>'+link('Open publication and companion links','collection/works/'+WORK+'.html#read')+'</p>'
+    body += '<h2>Original publication and atlas</h2><p>The 174-page PDF retains the full publication layout, additional glossary, and formal registers. The visual atlas is available in HTML alongside its original 19-page PDF.</p><p>'+link('Open the visual atlas',BOOK['atlas_index'])+' · '+link('Open publication and companion links','collection/works/'+WORK+'.html#read')+'</p>'
     site.page(page,'Start reading the Large Signal Model',body)
     site.search.append(dict(title='Large Signal Model / Start here',group='Collection',kind='Guides',
         work_ids=[WORK,'large-signal-model'],url=page,
