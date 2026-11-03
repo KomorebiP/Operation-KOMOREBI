@@ -16,9 +16,9 @@ HTML status follows the maintained reading configuration; PDF destinations
 and hashes come from the existing source receipts. Paper I's visual atlas is
 inside its main monograph. The other eleven have separate visual-guide PDFs.
 
-The [current inventory](../verification/reader-visual-guides/2026-11-02-paper-x.json)
+The [current inventory](../verification/reader-visual-guides/2026-11-02-final.json)
 checks the committed visual sources against their receipts and identifies the
-remaining ports. Counts below describe source units, which vary by guide;
+complete ports. Counts below describe source units, which vary by guide;
 they are not counts of theorems or PDF pages. The
 [initial inventory](../verification/reader-visual-guides/2026-11-02.json) retains
 the earlier four-atlas snapshot.
@@ -35,13 +35,28 @@ the earlier four-atlas snapshot.
 | VIII | 32 plates across two inputs | Complete |
 | IX | 23 sections across two inputs, plus a generated coefficient input | Complete |
 | X | 30 plates, two opening scope sections and their diagram | Complete |
-| XI | 47 lessons | Pending |
-| XII | 27 plates | Pending |
+| XI | 47 lessons, opening orientation and two reader-route sections | Complete |
+| XII | 27 plates, including final claim and evidence records | Complete |
 
-Papers I–X now have complete HTML visual guides. The remaining ports are
-XI–XII. Paper XI needs its own lesson conversion. Paper XII needs explicit
-handling of its evidence boundaries. Each port should preserve prose,
-equations, drawing labels and manuscript links before its status is promoted.
+All twelve core papers now have complete HTML visual guides. Paper XI retains
+all 47 lessons, 23 original vector figures, three source tables, six recorded-data
+tables, the opening orientation and both reader-route sections. Its conversion
+preserves 436 mathematical expressions and 66 manuscript return links. The
+historical theorem number, open Conjecture 66 and same-candidate H5 comparison
+remain distinct. Placeholder companion aliases resolve to the actual reader PDFs.
+
+Paper XII retains all 27 plates, 23 drawings (including two embedded directly in
+the page source), 335 selectable labels and 15 source tables. Its conversion
+preserves 752 mathematical expressions and 53 manuscript return links. The
+revised contract, historical original wording and evidence kinds retain their
+source distinctions. The unused `support_rotated` drawing stays in the archive.
+
+`render_paper_xi_atlas.py` checks all 47 lesson titles and three opening pages in
+the retained 53-page PDF, then renders its original single-page vector figures.
+`render_paper_xii_atlas.py` checks all 27 titles in the retained 28-page PDF and
+renders the original drawing regions. These conversions do not rebuild TeX,
+run mathematical generators or examples, audit proofs, or replay Lean. The new
+atlas tests run alongside the existing source and website checks in CI.
 
 Run `python -B tools/audit_core_visual_guides.py` to inspect the current coverage.
 The report identifies the committed source revision and states that HTML

@@ -642,6 +642,11 @@ class Chapter:
                     label=html.escape(self.formal_labels[name])
                     content=self.inline(value) if name=='statusroadmap' else '<code>'+html.escape(value)+'</code>'
                     out.append('<span class="source-formal-note"><strong>'+label+'</strong> '+content+'</span>')
+                elif name=='hyperref':
+                    if option not in self.labels:raise ValueError('Unresolved explicit reading reference: '+str(option))
+                    node=self.labels[option]
+                    out.append('<a href="'+self.relative(node.get('url',''))+'#'+node['id']+'">'+self.inline(value)+'</a>')
+                    self.references.append(option)
                 elif name in {'cref','Cref','ref','eqref'}:
                     links = []
                     for key in value.split(','):
@@ -682,7 +687,7 @@ class Chapter:
                 elif name=='url':
                     if not value.startswith(('https://','http://')):raise ValueError('Unsupported bibliography URL')
                     out.append('<a href="'+html.escape(value,quote=True)+'">'+html.escape(value)+'</a>')
-                else: raise ValueError('Unsupported prose command: '+name)
+                else: raise ValueError('Unsupported prose command: '+name+' in '+repr(text[:200]))
             else:
                 m = re.match(r'[^$\\{}]+', text[pos:])
                 if not m:raise ValueError('Unparsed prose grouping')
@@ -1134,6 +1139,8 @@ def render_reading_index(reader):
            'Paper VIII’s complete 32-plate atlas has HTML drawings, descriptions, and selectable labels. '
            'Paper IX’s complete 23-section visual guide includes 20 original figures and eight worked examples. '
            'Paper X’s complete 30-plate guide includes its opening scope contract and 29 original drawings. '
+           'Paper XI’s complete 47-lesson guide includes 23 original figures and the opening reader routes. '
+           'Paper XII’s complete 27-plate guide includes 23 original drawings and its final claim and evidence records. '
            'Companion and atlas coverage varies by work; original visual atlases remain available in the PDFs. '
            'See <a href="'+site.rel('read/visual-guides.html',page)+'">visual guides for all twelve core papers</a> or '
            '<a href="'+site.rel('collection/ACCESSIBILITY.html',page)+'">accessibility and reading options</a> for current coverage and limitations.</p>'
