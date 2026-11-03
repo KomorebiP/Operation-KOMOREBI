@@ -1,10 +1,13 @@
 """Source coverage and fail-closed publication checks for the LSM visual guide."""
 import json
 import html
+import hashlib
 from html.parser import HTMLParser
 from pathlib import Path
 import posixpath
 import re
+import shutil
+import subprocess
 import tempfile
 import unittest
 
@@ -50,6 +53,25 @@ class LargeSignalAtlasTests(unittest.TestCase):
             return raw+b'\nChanged source' if path==SOURCE else raw
         with self.assertRaisesRegex(ValueError,'Review changed LSM visual source'):
             validate_source(changed)
+
+    def test_audited_bytes_and_scoped_checkout_attributes(self):
+        manifest=json.loads((ROOT/'verification/large-signal-atlas/run/manifest.json').read_bytes())
+        for entry in manifest['input_artifacts']+manifest['outputs']:
+            self.assertEqual(hashlib.sha256((ROOT/entry['path']).read_bytes()).hexdigest(),entry['sha256'])
+        text_inputs=[entry['path'] for entry in manifest['input_artifacts']
+                     if not entry['path'].endswith('/exact_example.json')]
+        captured='verification/large-signal-atlas/run/stdout.txt'
+        output=subprocess.check_output([shutil.which('git') or 'git','check-attr','text','eol','whitespace','--',
+            *text_inputs,captured],cwd=ROOT,text=True,encoding='utf-8')
+        attrs={}
+        for line in output.splitlines():
+            path,attribute,value=line.split(': ',2);attrs[path,attribute]=value
+        for path in text_inputs:
+            self.assertEqual(attrs[path,'text'],'set')
+            self.assertEqual(attrs[path,'eol'],'lf')
+        self.assertEqual(attrs[captured,'text'],'unset')
+        self.assertEqual(attrs[captured,'eol'],'unspecified')
+        self.assertEqual(attrs[captured,'whitespace'],'cr-at-eol')
 
     def test_source_identity_math_proofs_diagrams_and_backlinks(self):
         self.assertEqual(verify(self.output,self.documents,self.pages),
