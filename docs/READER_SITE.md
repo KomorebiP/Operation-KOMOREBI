@@ -58,6 +58,11 @@ renders the original drawing regions. These conversions do not rebuild TeX,
 run mathematical generators or examples, audit proofs, or replay Lean. The new
 atlas tests run alongside the existing source and website checks in CI.
 
+Source-page line wrappers use compact HTML attribute syntax. The generated
+class names and fragment links are safe ASCII tokens; optional quotes
+are omitted to save six bytes per source line. Original source bytes,
+whitespace, accessible line labels and browser DOM values remain unchanged.
+
 Run `python -B tools/audit_core_visual_guides.py` to inspect the current coverage.
 The report identifies the committed source revision and states that HTML
 configuration is read from the working tree. `test_core_visual_guides.py`
