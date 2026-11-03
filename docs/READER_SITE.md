@@ -64,6 +64,19 @@ Reset example reloads the instrument with a fresh example, so old measurements
 cannot be presented as results of the new setup. During message or persistence runs the
 picker and reset are disabled until the run completes or is cancelled.
 All inference, grading and JSON exports remain in the saved 1.4 instrument.
+The embedded presentation adds explanations beside target selection, edit
+amount, reference comparisons and recall. A sticky three-step bar moves focus
+and scrolls the parent page to the real controls, predictions or factual checks;
+it does not apply an edit or start a run. Message-branch and persistence-label
+keys explain the existing measured comparisons. The entry glossary distinguishes
+temporary working values, remembered facts, donor references and the candidate
+J-space. Labels remain presentation only; option values and numerical routines
+are retained. Mobile controls use readable text and 44-pixel touch targets.
+The message test's edit-settings button exposes a return path that keeps the
+current edit instead of choosing a fresh example. On return, a notice asks for
+a new measurement and identifies earlier results as recorded runs. Result
+captions use plain terms while retaining the underlying numeric values, failure
+conditions and exported trace objects.
 Run `python -B -m unittest discover -s tools -p 'test_jspace_lab.py' -v` and
 `node --test tools/test_jspace_lab.cjs` for publication and loading safeguards.
 This integration adds no new scientific evaluation or J-space certificate.
