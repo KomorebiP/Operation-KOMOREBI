@@ -179,6 +179,10 @@ parses the original header and imports that exact ordered set of import records
 into a separate environment, preserving meta/public/all flags. It does not
 give a Std-only source access to the transport's extra Lean imports. The main
 module is set before creating fresh command state for a project dependency.
+The transport adopts the source's imported and final environments so outer
+command callbacks see all newly registered environment extensions. The
+compiler's header-environment cache is reset before each source; checked
+module files remain in the worker's filesystem for dependent sources.
 Parser messages are saved before command elaboration clears them, then genuine
 parser and elaboration messages are copied back with their source coordinates.
 
@@ -188,6 +192,8 @@ distinct started and completed messages. A result needs the exact completed
 message, successful runtime completion and no errors. Early terminal commands,
 pending command tasks and asynchronous elaboration are rejected. Both checking
 paths require actual end of input, so `#exit` cannot leave an unchecked tail.
+Internal panic output fails checking even if captured as information or followed
+by a completion message.
 Original source controls are rejected before any string encoding or wrapping.
 
 Every experimental Run starts a fresh worker and disposes it on completion,

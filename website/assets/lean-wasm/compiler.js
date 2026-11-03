@@ -19,7 +19,7 @@ import {
 } from './roots.js';
 import { createRuntime } from './runtime.js?v=20261102';
 import { SYNTAX_ERROR_MARKER, syntaxProbeSource } from './syntax-probe.js?v=20261102-frontend1';
-import { checkedFrontendSource, frontendMarkers } from './frontend-check.js?v=20261102-frontend1';
+import { checkedFrontendSource, frontendMarkers } from './frontend-check.js?v=20261102-frontend-env1';
 
 /** Backstop against an asset host that never satisfies an import. */
 const MAX_LOAD_ROUNDS = 8;
@@ -274,6 +274,9 @@ export async function createCompiler(options = {}) {
 		const transport = checkedFrontendSource(code, {mainModule: runOptions.mainModule, nonce});
 		let result;
 		try {
+			// Inner imports can register process-global extensions. Rebuild the
+			// outer Shell environment while retaining checked modules in the FS.
+			await runtime.reset();
 			// Never retry this call: the source may contain commands with effects.
 			result = await runtime.compile(transport);
 		} catch (error) {
@@ -281,6 +284,12 @@ export async function createCompiler(options = {}) {
 			throw error;
 		}
 		const parsed = collect(result.stdout, result.stderr);
+		// A panic can be captured as informational output by Lean's stream
+		// isolation, even when the transport later prints its completion marker.
+		// Inspect before removing trace lines and retain the original panic text.
+		const isPanic = entry => /(?:^|\n)\s*(?:PANIC at [^\r\n]+|INTERNAL PANIC:)|invalid environment extension has been accessed/.test(String(entry.text));
+		const panicInfo = parsed.info.filter(isPanic);
+		const hasPanic = panicInfo.length > 0 || parsed.problems.some(isPanic);
 		parsed.problems = parsed.problems.map(problem => ({
 			...problem,
 			origin: problem.fileName === markers.fileName ? 'compiled-source' : 'frontend-guard'
@@ -293,14 +302,16 @@ export async function createCompiler(options = {}) {
 			.map(entry => ({...entry, text: String(entry.text).split('\n')
 				.filter(line => !isToolchainNoise(line.trim())).join('\n')}))
 			.filter(entry => entry.text.trim() !== '');
-		if (!result.success || !completed) {
+		if (!result.success || !completed || hasPanic) {
 			runtime.dispose();
 			const diagnostics = problemsToLines(parsed.problems).map((line, index) =>
 				parsed.problems[index].fileName === markers.fileName ? line : `Browser frontend check: ${line}`);
-			const failure = result.error || (result.success
+			const failure = hasPanic
+				? [result.error, 'The Lean frontend runtime reported an internal panic.'].filter(Boolean).join('\n')
+				: result.error || (result.success
 				? 'Lean did not complete the frontend check.'
 				: 'The Lean frontend runtime did not complete checking.');
-			throw new Error([...diagnostics, failure].join('\n'));
+			throw new Error([...diagnostics, ...panicInfo.map(entry => `Browser frontend check: ${entry.text}`), failure].join('\n'));
 		}
 		return {result, parsed};
 	}

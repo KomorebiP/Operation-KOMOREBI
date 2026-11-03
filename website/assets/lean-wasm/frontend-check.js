@@ -59,6 +59,9 @@ run_cmd do
   let importedEnv ← importModules (Elab.headerToImports header) opts 0
     (level := .exported) (loadExts := true) (leakEnv := true)
   let env := importedEnv.setMainModule MAIN_MODULE_HERE
+  -- Import initializers can grow the global extension registry. The outer
+  -- command must use the updated environment before logging or running linters.
+  setEnv env
   let commandState := Elab.Command.mkState env {} opts
   let frontendContext : Elab.Frontend.Context := { inputCtx := ictx }
   let frontendState : Elab.Frontend.State :=
@@ -99,7 +102,10 @@ run_cmd do
     return messages
   let execution : IO (MessageLog × Elab.Frontend.State) :=
     StateRefT'.run (ReaderT.run execute frontendContext) frontendState
-  let (messages, _) ← execution
+  let (messages, finalState) ← execution
+  -- Outer command linters still run after this action. Carry its final
+  -- environment forward without replacing the outer scopes or file context.
+  setEnv finalState.commandState.env
   modify fun s => { s with messages := s.messages ++ messages }
   logInfo "__COMPLETED_NONCE__"
 `;

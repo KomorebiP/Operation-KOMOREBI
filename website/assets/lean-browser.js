@@ -1,4 +1,4 @@
-import { createCompiler } from './lean-wasm/index.js?v=20261102-frontend3';
+import { createCompiler } from './lean-wasm/index.js?v=20261102-frontend-env1';
 import { sourceHeader } from './lean-wasm/roots.js';
 import { loadSourceBundle, sourceWorkspace } from './lean-source-bundle.js?v=20261102';
 
