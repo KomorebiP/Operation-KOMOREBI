@@ -1,7 +1,7 @@
 """Source-bound HTML edition of Paper IV's 26 visual-atlas plates."""
 import hashlib
 import html
-from reading_navigation import visual_title, visual_backlink, visual_position, visual_contents, visual_search_terms
+from reading_navigation import visual_title, visual_backlink, visual_position, visual_contents, visual_search_terms, visual_search_preview
 import json
 import posixpath
 import re
@@ -280,7 +280,7 @@ def render(reader):
         site.page(page,title,body)
         plain=plain_math(plate['body'])[0]
         descriptions=' '.join(atlas['figures'][n]['description']['description']+' '+' '.join(v['text'] for v in atlas['figures'][n]['nodes']) for n in re.findall(r'\\vfig\{([^{}]+)\}',plate['body']))
-        site.search.append(dict(title=title,group='Collection',kind='Papers and source',work_ids=['paper-iv'],url=page,text=visual_search_terms(plate)+' '+plain+' '+plain_math(descriptions)[0]))
+        site.search.append(dict(title=title,group='Collection',kind='Papers and source',visual_guide=True,work_ids=['paper-iv'],url=page,text=visual_search_terms(plate)+' '+plain+' '+plain_math(descriptions)[0],**visual_search_preview(chapter,atlas['figures'])))
         reports.append(dict(number=plate['number'],url=page,start_line=plate['line'],end_line=plate['end_line'],
                             source_math_expressions=len(original_math(plate['body'])),math_expressions=len(expected),
                             math_sequence_sha256=digest(json.dumps(expected,ensure_ascii=False).encode()),
@@ -297,7 +297,7 @@ def render(reader):
     body+=visual_contents(atlas['plates'],INDEX,site.rel,lambda p:reader.viewer_url(pdf,INDEX,'page='+str(p['number']+2)))
     body+='<p>The source’s test and release statements describe the retained atlas edition. This HTML conversion adds reading aids and does not establish new mathematical or formal verification.</p>'
     site.page(INDEX,'Paper IV visual guide',body)
-    site.search.append(dict(title='Paper IV / Visual guide: 26 visuals',group='Collection',kind='Papers and source',work_ids=['paper-iv'],url=INDEX,text='Accessible atlas diagrams descriptions equations tables '+' '.join(p['title'] for p in atlas['plates'])))
+    site.search.append(dict(title='Paper IV / Visual guide: 26 visuals',group='Collection',kind='Papers and source',visual_guide=True,work_ids=['paper-iv'],url=INDEX,text='Accessible atlas diagrams descriptions equations tables '+' '.join(p['title'] for p in atlas['plates'])))
 
 
 def verify(root, documents, pages):

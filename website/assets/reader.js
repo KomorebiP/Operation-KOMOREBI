@@ -339,7 +339,7 @@ if (claimQuery) {
       if (match) { shown++; visiblePapers.add(item.dataset.paper); }
     }
     for (const section of sections) section.hidden = !visiblePapers.has(section.dataset.paper);
-    count.textContent = `${shown} of ${items.length} records across ${visiblePapers.size} papers`;
+    count.textContent = `${shown} of ${items.length} records across ${visiblePapers.size} ${visiblePapers.size === 1 ? "paper" : "papers"}`;
     empty.hidden = shown > 0;
     saveParams({q: claimQuery.value, paper: paper.value, kind: kind.value}, clearHash);
   }
@@ -387,6 +387,7 @@ if (form) {
   const status = document.querySelector("#search-status");
   const results = document.querySelector("#search-results");
   const sizeControl = document.querySelector("#search-size");
+  const extraOptions = document.querySelector("#search-extra-options");
   const pagers = Array.from(document.querySelectorAll(".search-pagination"));
   let indexPromise, facetPromise, found = [], page = 1, pageSize = 40, generation = 0, queryWords = [];
   let mathQueue = Promise.resolve();
@@ -407,7 +408,9 @@ if (form) {
       heading.append(link);
       const context = document.createElement("p");
       context.className = "status";
-      context.textContent = `${item.group} · ${item.kind}`;
+      const resultKind = item.visual_guide ? "Visual guide" : item.kind;
+      const detail = item.visual_guide && !["Papers and source", "Guides"].includes(item.kind) ? ` · ${item.kind}` : "";
+      context.textContent = `${item.group} · ${resultKind}${detail}`;
       const excerpt = document.createElement("p");
       const preview = item.preview || item.text;
       const at = preview.toLocaleLowerCase().indexOf(queryWords[0] || "");
@@ -436,10 +439,10 @@ if (form) {
       }
       results.append(li);
     }
-    status.textContent = found.length ? `${found.length} results. Showing ${startIndex + 1}–${Math.min(startIndex + pageSize, found.length)}.` :
+    status.textContent = found.length === 1 ? "1 result." : found.length ? `${found.length} results. Showing ${startIndex + 1}–${Math.min(startIndex + pageSize, found.length)}.` :
       "No results. Try fewer words, clear the filters or browse the glossary.";
     for (const pager of pagers) {
-      pager.hidden = found.length === 0;
+      pager.hidden = pages === 1;
       pager.querySelector(".search-page-status").textContent = "of " + pages;
       const picker = pager.querySelector(".search-page-select");
       const options = Array.from({ length: pages }, (_, index) => {
@@ -475,6 +478,10 @@ if (form) {
     const selectedFacets = Object.fromEntries(
       Object.entries(facets).map(([name, control]) => [name, control.value]));
     const hasWorkFacets = Object.values(selectedFacets).some(Boolean);
+    if (extraOptions) {
+      const active = Number(Boolean(repository)) + Object.values(selectedFacets).filter(Boolean).length;
+      extraOptions.querySelector("summary").textContent = "More options" + (active ? ` · ${active} active` : "") + (pageSize !== 40 ? ` · ${pageSize} per page` : "");
+    }
     const words = wordsFor(query);
     saveParams({q: query, repository, type, work: workId, ...selectedFacets,
       page: page > 1 ? String(page) : "", per_page: pageSize !== 40 ? String(pageSize) : ""});
@@ -510,7 +517,7 @@ if (form) {
           !code || record[name === "evidence" ? "evidence" : name] === code);
       });
       found = index.filter(item => (!repository || item.group === repository) &&
-        (!type || item.kind === type) && (!workId || (item.work_ids || []).includes(workId)) &&
+        (!type || item.kind === type || type === "Visual guides" && item.visual_guide) && (!workId || (item.work_ids || []).includes(workId)) &&
         matchesWorkFacets(item) && words.every(word => item.normalizedText.includes(word)));
       const score = item => (normalized(query) === item.normalizedTitle ? 100 : 0) +
         words.filter(word => item.normalizedTitle.includes(word)).length * 10 +
@@ -551,6 +558,7 @@ if (form) {
     found = [];
     page = 1;
     pageSize = 40;
+    if (extraOptions) { extraOptions.open = false; extraOptions.querySelector("summary").textContent = "More options"; }
     results.start = 1;
     for (const pager of pagers) pager.hidden = true;
     status.textContent = "Enter a term or choose a filter.";
@@ -570,6 +578,7 @@ if (form) {
     const requestedSize = params.get("per_page") || "40";
     sizeControl.value = Array.from(sizeControl.options).some(option => option.value === requestedSize) ? requestedSize : "40";
     pageSize = Number(sizeControl.value);
+    if (extraOptions) extraOptions.open = Boolean(group.value || Object.values(facets).some(control => control.value) || pageSize !== 40);
   }
   window.addEventListener("popstate", () => { restoreSearch(); search(null, true); });
   restoreSearch();

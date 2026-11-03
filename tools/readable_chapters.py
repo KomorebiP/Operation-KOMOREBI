@@ -1384,6 +1384,7 @@ def render_book(reader,book):
                 literal_derivation=kind=='verbatim' and config.get('literal_derivations')
                 search_title=node.get('search_title') or ((parent+' / '+('Algorithm' if kind=='lstlisting' else 'Literal derivation' if literal_derivation else 'Commands' if kind=='verbatim' else 'Passage at line '+str(node['line']))) if kind in {'text','lstlisting','verbatim'} else label)
                 item=dict(title=config['label']+' / '+typography(search_title),group='Collection',kind='Code' if kind in {'lstlisting','verbatim'} and not literal_derivation else ('Written proofs' if kind=='proof' else 'Papers and source'),work_ids=[work],url=page+'#'+node['id'],text=parent+' '+plain+' '+aliases,preview=plain[:240] or label)
+                if visual:item['visual_guide']=True
                 # Preview prose only when it has no list/table/input syntax.
                 snippet=re.split(r'\\\[|\\begin',node['body'],maxsplit=1)[0]
                 snippet=re.sub(r'\\label\{[^}]+\}','',snippet).strip()

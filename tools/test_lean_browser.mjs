@@ -338,6 +338,78 @@ test('Stop during each isolation setup wait cannot reload or resume the canceled
     for(const [name,descriptor] of saved){if(descriptor)Object.defineProperty(globalThis,name,descriptor);else delete globalThis[name];}
   }
 });
+
+for(const cancelWaitingRun of [false,true])test(`new Run waits for idle compiler cleanup${cancelWaitingRun?' across repeated Stop and canceled waits':''}`,async()=>{
+  const names=['document','fetch','Worker','crypto','window','location','history','sessionStorage','crossOriginIsolated','setTimeout'];
+  const saved=new Map(names.map(name=>[name,Object.getOwnPropertyDescriptor(globalThis,name)]));
+  const install=(name,value)=>Object.defineProperty(globalThis,name,{value,writable:true,configurable:true});
+  const schedule=globalThis.setTimeout;
+  const elements=new Map(),workers=[],events=[];
+  function element(){return {value:'',textContent:'',dataset:{},listeners:{},children:[],
+    addEventListener(name,fn){this.listeners[name]=fn;},replaceChildren(){this.children=[];},append(child){this.children.push(child);}};}
+  const root={querySelector(selector){const name=selector.match(/data-local-(.*)\]/)[1];if(!elements.has(name))elements.set(name,element());return elements.get(name);}};
+  const mainWindow={};mainWindow.top=mainWindow;
+  class FakeWorker {
+    constructor(){this.index=workers.length;workers.push(this);events.push('create '+this.index);}
+    send(data){this.onmessage?.({data});}
+    postMessage(message){
+      if(message.type==='dispose'){this.disposal=message;return;}
+      queueMicrotask(()=>{
+        if(message.type==='start')this.send({type:'ready'});
+        if(message.type==='load_modules')this.send({type:'modules_loaded',id:message.id,results:message.roots.map(root=>({root,files:1}))});
+        if(message.type==='load_layer')this.send({type:'layer_loaded',id:message.id,label:message.label,ok:true,files:1});
+        if(message.type==='reset')this.send({type:'reset_done',id:message.id});
+        if(message.type==='compile'){
+          const nonce=message.code.match(/__KOMOREBI_FRONTEND_STARTED_([0-9a-f]{32})__/)[1];
+          for(const phase of ['STARTED','COMPLETED'])this.send({type:'stdout',data:JSON.stringify({severity:'information',data:`__KOMOREBI_FRONTEND_${phase}_${nonce}__`})});
+          this.send({type:'result',id:message.id,success:true});
+        }
+      });
+    }
+    terminate(){this.terminated=true;events.push('terminate '+this.index);}
+    acknowledge(){assert.ok(this.disposal);this.send({type:'disposed',id:this.disposal.id});}
+  }
+  try {
+    install('document',{querySelector:()=>root,createElement:element});
+    install('fetch',async input=>String(input).endsWith('examples.json')
+      ?Response.json({examples:[{id:'example',files:[{module:'Example',text:'example : True := by trivial',sha256:'0'.repeat(64),download:'source.lean'}]}]})
+      :new Response('',{status:404}));
+    install('Worker',FakeWorker);install('crypto',webcrypto);install('window',mainWindow);
+    // Hold the idle fallback deterministically; the runtime suite separately
+    // tests its 100 ms bound. This test releases the matching acknowledgement.
+    install('setTimeout',(fn,delay,...args)=>schedule(fn,delay===100?60000:delay,...args));
+    install('location',{href:'https://example.test/lean/browser/index.html?frontend=1'});
+    install('history',{replaceState(){}});
+    install('sessionStorage',{getItem:()=>null,removeItem(){}});install('crossOriginIsolated',true);
+    await import('../website/assets/lean-browser.js?retiring-compiler-'+cancelWaitingRun);
+    await new Promise(setImmediate);
+    const run=()=>elements.get('run').listeners.click();
+    await run();
+    assert.equal(elements.get('status').dataset.state,'passed');
+    assert.equal(workers.length,1);assert.ok(workers[0].disposal);
+    let waiting=run();
+    await new Promise(setImmediate);
+    assert.equal(workers.length,1,'idle cleanup must finish before a replacement worker is created');
+    if(cancelWaitingRun){
+      elements.get('stop').listeners.click();
+      const canceled=waiting;
+      waiting=run();
+      await new Promise(setImmediate);
+      assert.equal(workers.length,1,'repeated dispose with compiler=null must retain the pending closure');
+      workers[0].acknowledge();
+      await canceled;
+    }else workers[0].acknowledge();
+    await waiting;
+    assert.equal(workers.length,2,'a canceled generation must not create another compiler after its wait');
+    assert.ok(events.indexOf('terminate 0')<events.indexOf('create 1'));
+    assert.equal(elements.get('status').dataset.state,'passed');
+    workers[1].acknowledge();
+    await new Promise(setImmediate);
+  } finally {
+    for(const worker of workers)if(worker.disposal&&!worker.terminated)worker.acknowledge();
+    for(const [name,descriptor] of saved){if(descriptor)Object.defineProperty(globalThis,name,descriptor);else delete globalThis[name];}
+  }
+});
 test('runtime failures are not clean checks and warnings remain warnings',async()=>{
   await assert.rejects(simulatedCompiler(completed,{success:false,error:'runtime exited'}),/runtime exited/);
   const warning=await simulatedCompiler(completed,{success:true,messages:[{severity:'warning',data:'declaration uses sorry'}]});

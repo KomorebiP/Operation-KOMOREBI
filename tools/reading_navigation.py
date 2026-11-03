@@ -124,6 +124,16 @@ def visual_search_terms(entry):
     return 'Visual '+number+(' '+prefix+number if prefix else '')
 
 
+def visual_search_preview(chapter, figures):
+    """Show the drawing's reading description without exposing raw source TeX."""
+    for node in chapter.nodes:
+        if node['kind']=='figure':
+            info=figures[node['body']]['description']
+            description=info['description'] if isinstance(info,dict) else info
+            return dict(preview_parts=chapter.preview(description))
+    return {}
+
+
 def visual_contents(plates, index, relative, pdf_page, render_title=None):
     """Title-first reading links, with the original PDF as a secondary route."""
     from readable_chapters import navigation_title

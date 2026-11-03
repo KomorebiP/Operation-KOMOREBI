@@ -1,5 +1,12 @@
 # Technical publication package with checked coupled-functions block
 
+**2026-11-03 Guarded-majorant companion:** SF-LEAN-B17 adds 30 checked
+theorems, for 465 registered names. Exact bounded ladders, guarded reverse
+folds, explicit resource failures and abstract validation order are proved;
+successful results certify actual bounds and endpoints. All 66 replay steps
+pass. Full Python runtime/dictionary refinement and other J/F/H, I and A-E
+remain. See formalization/Block17/REPORT.md. Earlier notes retain dated scopes.
+
 **2026-11-03 Factorial normalization companion:** SF-LEAN-B16 adds 30 checked
 theorems, for 435 registered names. All-index rational derivative normalization,
 finite append-array conversion and certified polynomial equality are proved.

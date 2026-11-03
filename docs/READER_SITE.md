@@ -1207,6 +1207,53 @@ use “pp.” before the Mazur entry's page range. The record binds four source 
 and gives the exact source and reading passage. The retained text and mathematical
 tokens are unchanged; the same review exclusions apply.
 
+## Recovery Laboratory
+
+`recovery-lab.html` extends the introductory shared-summary diagram to exact
+linear measurements on 2–4 real input coordinates. Readers edit up to four
+measurement rows and three question rows, using integers from −99 to 99 or
+fractions whose numerator is in that range and whose denominator is 1–99.
+Checkboxes select the available measurement rows. Six starters distinguish
+recoverability, partial loss, redundancy, fractional rules, and full recovery.
+
+`tools/recovery_lab.py` publishes the page and search entry. Its model,
+`website/assets/recovery-lab-core.mjs`, uses reduced BigInt fractions throughout
+row reduction, kernel construction, recovery weights, and rank-based repair.
+The model and controller imports use content versions. A successful question
+shows weights giving its row exactly; an unsuccessful one shows a vector w
+with Rw = 0 and Fw ≠ 0. The input and summary plots approximate the exact values
+in the adjacent table. A zero motion parameter makes the displayed points
+coincide without changing the global obstruction certificate.
+
+The repair retains an independent subset of enabled measurement rows, removes
+redundant and disabled rows, and adds independent question rows until every
+question is recoverable. The additional row count is rank([R; F]) − rank(R).
+Undo restores the original settings. Versioned share links retain all matrices,
+selections, base inputs, and inspection settings; malformed links are rejected.
+JSON downloads contain settings and recomputed exact certificates. Invalid
+matrix edits keep the last valid result visible and disable sharing and repair
+until the entries are complete.
+
+Run `node --test tools/test_recovery_lab.cjs` and
+`python -B -m unittest discover -s tools -p 'test_recovery_lab.py' -v`.
+`tools/audit_recovery_lab.py` independently checks 1,604 cases with Python
+Fraction arithmetic and ranks from determinants of minors. These comprise
+1,354 exhaustive two-coordinate cases and 250 seeded rational cases, including
+coefficients at the supported bounds. The checks verify recovery products,
+kernel bases, obstruction witnesses, row-operation matrices, collisions, and
+minimal sufficient repairs. The page explains the general linear-algebra
+argument separately; finite software checks add no manuscript proof review or
+Lean coverage.
+The [bounded run manifest](../verification/recovery-lab/run-2026-11-03/manifest.json)
+binds the audited model and oracle bytes; its
+[result](../verification/recovery-lab/run-2026-11-03/result.json) records the
+tested case and certificate counts.
+Recovery-specific line-ending rules live in `tools/.gitattributes`,
+`website/assets/.gitattributes`, and `verification/recovery-lab/.gitattributes`.
+The root attributes file is retained byte for byte because the Euler
+publication record binds it. The recovery tests check both that binding and
+the scoped attributes.
+
 ## Signal Laboratory
 
 `signal-lab.html` is a larger known-reference signal experiment with 16–256

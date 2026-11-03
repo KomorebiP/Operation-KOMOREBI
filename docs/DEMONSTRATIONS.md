@@ -170,6 +170,15 @@ signal, and move inputs along a shared-summary line. The controls update the
 diagrams and exact whole-number results immediately, without writing code.
 Each experiment links back to its hand calculation and sources.
 
+The [Recovery Laboratory](https://KomorebiP.github.io/Operation-KOMOREBI/recovery-lab.html)
+extends the shared-summary example to 2–4 input coordinates, up to four
+measurements, and up to three linear questions. Edit integer or rational
+coefficients, disable measurements, and inspect either an exact recovery rule
+or a kernel direction that changes the requested answer. Move two inputs while
+their enabled measurements stay fixed. The repair action adds the minimum
+number of independent linear measurements needed for all the questions, with
+undo. Share the complete settings or download the exact calculation as JSON.
+
 Use **Copy experiment link** to save or share the selected experiment's exact
 inputs and packet or coefficient choices. A Haar link also restores the
 coefficient and sample address being inspected. Open the link to return to
