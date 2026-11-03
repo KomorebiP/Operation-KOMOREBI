@@ -245,7 +245,7 @@ Publication completion and checked subresults leave wider formal or implementati
 
 **Done when:** Choose one precise next theorem/refinement contract, establish its dependencies, and admit it only with corresponding source and verification evidence.
 
-**Progress:** Special Functions SF-LEAN-B14 adds 27 theorem declarations, for 369 names. Main H.1 classifies arbitrary-functional autonomous rows on entire inputs and local analytic germs and excludes invertible constant linear decoupling. All 57 source-bound replay steps pass across fourteen coupled modules. Formal/assessment I/O is recorded. Appendix J exact evaluation is next; explanatory F/H variants, I and broad A-E coverage remain.
+**Progress:** Special Functions SF-LEAN-B15 adds 36 theorem declarations, for 405 names. The J mathematical certificate proves arbitrary-radius majorants, actual complex Taylor error and exact rational endpoints, including the worked last=30 error <1.6e-13. All 60 source-bound replay steps pass across fifteen coupled modules. Formal/assessment I/O is recorded. Python refinement, other J/F/H correspondence, I and broad A-E coverage remain.
 
 Related works and source records: [Paper III: Typed Transfer, Nonlinear Packets, and Obstruction Theory](works/paper-iii.md) · [Special Functions](works/monographs-special-functions.md) · [Quantum and Circuits](works/monographs-quantum-and-circuits.md) · [Signal Reconstruction](works/signal-reconstruction.md) · [COS Method: formal continuation](works/monographs-cos-method-formal-continuation.md) · [p-adic Canonical Realization](works/padic-canonical-realization.md) · [Model-Theory Normalization](works/model-theory-normalization.md).
 

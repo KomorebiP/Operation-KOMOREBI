@@ -14,9 +14,9 @@ Cyclic families, sequence constructions, reciprocal structure, and exact methods
 
 **Suggested background:** Begin with the introduction and glossary. Then use the volume's own definitions to identify the background needed for its subject.
 
-**Recorded results and limits:** Proofread reading volumes plus 369 named theorem declarations: 39 inherited finite-core names and 29, 21, 19, 16, 13, 19, 23, 22, 16, 34, 22, 26, 43, 27 in Blocks01 through 14. Registered canonical F.1-F.3, G.1, guarded G.2, named ancillary F contracts and main H.1 operator classification are complete. H.1 covers arbitrary scalar functionals on entire inputs and local analytic germs and rules out invertible constant linear decoupling for positive scales without contraction. Ordinary type convergence is conditional. Arbitrary-radius evaluation, I resolution certificates, explanatory F/H variants and broad A-E development remain; no whole-book coverage percentage is established.
+**Recorded results and limits:** Proofread reading volumes plus 405 named theorem declarations: 39 inherited finite-core names and 29, 21, 19, 16, 13, 19, 23, 22, 16, 34, 22, 26, 43, 27, 36 in Blocks01 through 15. Registered F.1-F.3, G.1, guarded G.2, named ancillary F, main H.1 and the J mathematical evaluation contract are complete. J supplies arbitrary-radius majorants, actual complex Taylor error and exact rational endpoint enclosures; Python program refinement remains open. Ordinary type convergence is conditional. Other J/F/H correspondence, I resolution certificates and broad A-E development remain; no whole-book coverage percentage is established.
 
-**Remaining work:** Prove Appendix J arbitrary-radius disk-majorant and outer-radius Taylor evaluation certificates, then exact interval/Python refinement; retain explanatory F/H variants, I resolution mechanisms and broad A-E analytic coverage in the source-bound inventory.
+**Remaining work:** Prove J implementation correspondence: factorial-normalized arrays and ordinary coefficient conversion, then the guarded Python majorant/evaluation behavior and exact endpoints; retain other J/F/H correspondence, I resolution mechanisms and broad A-E analytic coverage.
 
 The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
 
@@ -90,7 +90,7 @@ These links include code, examples, checks, or build tools. Read the [edition gu
 ## Evidence
 
 - [Completion, Lean coverage, confidence, and cited evidence](../STATUS_CATALOG.md#monographs-special-functions)
-- [Latest recorded written review](../SPECIAL_FUNCTIONS_OPERATOR_BLOCK14.md)
+- [Latest recorded written review](../SPECIAL_FUNCTIONS_EVALUATION_BLOCK15.md)
 - [Source-file receipt (identity and availability)](../../manifests/source-imports/monographs-special-functions.json)
 - [All files in this source edition](../../monographs/special-functions/)
 
