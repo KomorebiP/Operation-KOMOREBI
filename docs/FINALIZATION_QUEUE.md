@@ -245,7 +245,7 @@ Publication completion and checked subresults leave wider formal or implementati
 
 **Done when:** Choose one precise next theorem/refinement contract, establish its dependencies, and admit it only with corresponding source and verification evidence.
 
-**Progress:** Special Functions SF-LEAN-B16 adds 30 theorem declarations, for 435 names. All-index factorial normalization, finite append-array conversion and certified polynomial equality are proved. All 63 source-bound replay steps pass across sixteen coupled modules. Exact formal/assessment I/O is recorded. Full Python refinement, guarded majorant/resource/dictionary semantics, other J/F/H, I and A-E remain.
+**Progress:** Special Functions SF-LEAN-B17 adds 30 theorems, for 465 registered names. The exact guarded-majorant algorithm specification, explicit failures and abstract validation order are proved; successful returns certify actual bounds and endpoints. All 66 replay steps pass across seventeen modules. Exact formal/assessment I/O is recorded. Full Python runtime/dictionary refinement, other J/F/H, I and A-E remain.
 
 Related works and source records: [Paper III: Typed Transfer, Nonlinear Packets, and Obstruction Theory](works/paper-iii.md) · [Special Functions](works/monographs-special-functions.md) · [Quantum and Circuits](works/monographs-quantum-and-circuits.md) · [Signal Reconstruction](works/signal-reconstruction.md) · [COS Method: formal continuation](works/monographs-cos-method-formal-continuation.md) · [p-adic Canonical Realization](works/padic-canonical-realization.md) · [Model-Theory Normalization](works/model-theory-normalization.md).
 

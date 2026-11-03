@@ -234,13 +234,13 @@ Reviewed essay with written arguments and 40 finite exact-check groups. No new L
 
 **Reading edition complete** · Lean: **Selected results recorded** · Confidence basis: **Recorded formal evidence**
 
-Proofread reading volumes plus 435 named theorem declarations: 39 inherited finite-core names and 29, 21, 19, 16, 13, 19, 23, 22, 16, 34, 22, 26, 43, 27, 36, 30 in Blocks01 through 16. Registered F.1-F.3, G.1, guarded G.2, named ancillary F, main H.1 and J mathematical evaluation are complete. J now also has all-index rational factorial normalization, finite append-array conversion and certified polynomial equality. Full Python refinement remains open, including guarded majorant/resource/dictionary behavior. Ordinary type convergence is conditional. Other J/F/H, I and A-E development remain; no whole-book percentage is established.
+Proofread reading volumes plus 465 named theorem declarations: 39 inherited finite-core names and 29, 21, 19, 16, 13, 19, 23, 22, 16, 34, 22, 26, 43, 27, 36, 30, 30 in Blocks01 through 17. Registered F.1-F.3, G.1, guarded G.2, named ancillary F, main H.1 and J mathematical evaluation/normalization/finite arrays are complete. J now also has an exact guarded-majorant algorithm specification with explicit resource failures and abstract validation order; successful returns certify actual bounds and endpoints. Full Python runtime/dictionary refinement remains open. Ordinary type convergence is conditional. Other J/F/H, I and A-E remain; no whole-book percentage is established.
 
-**Next step:** Prove J successful guarded majorant ladder/reverse-fold traces match the fuel model, preserve step/bit/validation failures and connect the Python call path/dictionary to exact endpoints with explicit interpreter/arithmetic assumptions; retain other J/F/H, I and A-E.
+**Next step:** Compose typed certified-evaluation metadata, tail and endpoint fields from the proved arrays and guarded majorant, then establish actual Python source/runtime/dictionary refinement with explicit assumptions; retain other J/F/H, I and A-E.
 
 [Return to this work: paper, proofs, Lean, and code](works/monographs-special-functions.md)
 
-[Latest written review and its scope](SPECIAL_FUNCTIONS_NORMALIZATION_BLOCK16.md)
+[Latest written review and its scope](SPECIAL_FUNCTIONS_GUARDED_MAJORANT_BLOCK17.md)
 
 [Source directory](../monographs/special-functions) · [LEAN_STATUS.md](../monographs/special-functions/LEAN_STATUS.md) · [README.md](../monographs/special-functions/README.md) · [lean/README.md](../monographs/special-functions/lean/README.md)
 
