@@ -1,6 +1,9 @@
 """Check the published recovery page and independently verify its exact model."""
 import hashlib
+import json
 from pathlib import Path
+import shutil
+import subprocess
 import tempfile
 import unittest
 from urllib.parse import urlsplit
@@ -12,6 +15,26 @@ from recovery_lab import build
 
 
 class RecoveryLaboratoryTests(unittest.TestCase):
+    def test_scoped_line_endings_preserve_the_existing_euler_publication(self):
+        root = Path(__file__).resolve().parents[1]
+        record = json.loads((root/'manifests/euler-packets-worked-example-2026-10-29.json').read_bytes())
+        entry = next(item for item in record['files'] if item['path'] == '.gitattributes')
+        self.assertEqual(hashlib.sha256((root/'.gitattributes').read_bytes()).hexdigest(), entry['sha256'])
+        paths = ['website/assets/recovery-lab-core.mjs', 'tools/audit_recovery_lab.py',
+                 'verification/recovery-lab/run-2026-11-03/manifest.json']
+        output = subprocess.check_output([shutil.which('git') or 'git', 'check-attr', 'text', 'eol', 'whitespace', '--', *paths],
+                                         cwd=root, text=True, encoding='utf-8')
+        attributes = {}
+        for line in output.splitlines():
+            path, attribute, value = line.split(': ', 2)
+            attributes[path, attribute] = value
+        for path in paths[:2]:
+            self.assertEqual(attributes[path, 'text'], 'set')
+            self.assertEqual(attributes[path, 'eol'], 'lf')
+        self.assertEqual(attributes[paths[2], 'text'], 'unset')
+        self.assertEqual(attributes[paths[2], 'eol'], 'unspecified')
+        self.assertEqual(attributes[paths[2], 'whitespace'], 'unset')
+
     def test_exact_model_against_independent_minor_and_fraction_oracle(self):
         report = audit()
         self.assertEqual(report['status'], 'passed')

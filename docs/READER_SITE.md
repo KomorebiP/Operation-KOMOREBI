@@ -1218,6 +1218,11 @@ The [bounded run manifest](../verification/recovery-lab/run-2026-11-03/manifest.
 binds the audited model and oracle bytes; its
 [result](../verification/recovery-lab/run-2026-11-03/result.json) records the
 tested case and certificate counts.
+Recovery-specific line-ending rules live in `tools/.gitattributes`,
+`website/assets/.gitattributes`, and `verification/recovery-lab/.gitattributes`.
+The root attributes file is retained byte for byte because the Euler
+publication record binds it. The recovery tests check both that binding and
+the scoped attributes.
 
 ## Signal Laboratory
 
