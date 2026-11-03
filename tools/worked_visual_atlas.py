@@ -148,6 +148,9 @@ class WorkedAtlas:
     def plate_url(self, number):
         return 'read/'+self.work+'/atlas/v' + str(number).zfill(2) + '.html'
 
+    def chapter_for(self,plate,macros):
+        return AtlasChapter(self.atlas_tex(plate['body']),macros,check_refs=False)
+
     def plates(self, source, start=1, expected=None, path=None):
         starts = list(re.finditer('\\\\vpage\\{', source))
         if not starts or presentation_tex(clean_tex(source[:starts[0].start()])).strip():
@@ -243,7 +246,7 @@ class WorkedAtlas:
             number, page = (plate['number'], plate['url'])
             source_path=plate['source']
             title = self.label + ' atlas / V' + str(number) + ': ' + plate['title']
-            chapter = AtlasChapter(self.atlas_tex(plate['body']), atlas['macros'], check_refs=False)
+            chapter = self.chapter_for(plate,atlas['macros'])
             chapter.included_sources=atlas['inputs']
             chapter.labels = atlas['labels']
             chapter.validate_references()

@@ -59,7 +59,10 @@ export function collect(stdout, stderr) {
 			}
 
 			if (msg && typeof msg === 'object' && msg.severity) {
-				const entry = { severity: msg.severity, text: messageText(msg), pos: msg.pos ?? null };
+				const entry = {
+					severity: msg.severity, text: messageText(msg), pos: msg.pos ?? null,
+					...(msg.fileName !== undefined ? {fileName: msg.fileName} : {})
+				};
 				(msg.severity === 'information' ? info : problems).push(entry);
 			} else {
 				const entry = {

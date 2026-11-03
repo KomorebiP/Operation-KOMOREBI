@@ -45,7 +45,8 @@ def audit(root,git='git'):
         inputs=[]
         children={'paper-viii':['editable/visual_guide/source/extended_pages.tex'],
             'paper-ix':['sources/visual_body.tex','sources/worked_atlas.tex','sources/generated/worked_newton_values.tex'],
-            'paper-x':['visual_appendix/source/pages.tex']}.get(work,[])
+            'paper-x':['visual_appendix/source/pages.tex'],
+            'paper-xi':['publication/source/visual_guide/reader_route.tex']}.get(work,[])
         if children:
             for child in children:
                 child_path=component['destination']+'/'+child
@@ -79,6 +80,10 @@ def audit(root,git='git'):
         if work=='paper-x':
             rows[-1]['opening_scope']=dict(sections=2,drawings=1,
                 handling='The HTML contents retain both opening scope sections and the separate-output diagram, before the 30 numbered plates')
+        if work=='paper-xi':
+            rows[-1]['opening_scope']=dict(orientation=True,reader_route_sections=2,handling='The contents page preserves the opening orientation, both reader-route sections, theorem-number corrections and evidence scope')
+        if work=='paper-xii':
+            rows[-1]['drawing_inventory']=dict(separate_drawings_used=21,inline_drawings=2,total_drawings=23,retained_unused=['support_rotated'])
         if work=='paper-ix':
             readme='sources/visual_README.md'
             readme_raw=subprocess.check_output([git,'show',revision+':'+component['destination']+'/'+readme],cwd=root)
