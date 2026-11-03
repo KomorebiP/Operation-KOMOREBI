@@ -893,7 +893,7 @@ class ReaderSiteTests(unittest.TestCase):
         reader.records={'paper.pdf':dict(work='paper-vi',format='pdf',title='Read PDF',url='read/paper-vi/pdf.html')}
         reader.manuscript_roots={'paper-vi':'main.tex'}
         reader.learning={'learning_topics':[{'works':['paper-vi']}]}
-        markup=reader.work_routes('paper-vi','read/paper-vi/atlas/index.html')
+        markup=reader.work_routes('paper-vi','read/paper-vi/index.html')
         primary=markup.split('<details class="work-more">')[0]
         self.assertEqual(Page(primary).links,['collection/works/paper-vi.html','read/paper-vi/index.html',
                                              'read/paper-vi/atlas/index.html','read/paper-vi/pdf.html'])
@@ -904,9 +904,12 @@ class ReaderSiteTests(unittest.TestCase):
         self.assertIn('Proofs and implementation',markup)
         self.assertIn('<summary>More resources</summary>',markup)
         plate=reader.work_routes('paper-vi','read/paper-vi/atlas/v29.html')
-        self.assertIn('href="read/paper-vi/atlas/index.html" aria-current="location"',plate)
+        self.assertIn('href="index.html" aria-current="location"',plate)
+        self.assertIn('Switch guide',plate)
+        self.assertIn('Read beside paper',plate)
+        self.assertIn('left=read%2Fpaper-vi%2Fatlas%2Fv29.html',plate)
         overview=reader.work_intro('paper-vi','collection/works/paper-vi.html')
-        self.assertIn('Visual atlas',overview.split('<details class="work-more">')[0])
+        self.assertIn('Visual guide',overview.split('<details class="work-more">')[0])
 
     def test_example_search_membership_follows_recorded_learning_routes(self):
         reader = ReadingDocuments.__new__(ReadingDocuments)

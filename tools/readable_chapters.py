@@ -1114,7 +1114,7 @@ def render_reading_index(reader):
     site=reader.site
     page='read/index.html'
     from reading_navigation import entries
-    body='<p class="eyebrow">HTML reading editions</p><h1>Reading library</h1><p>Read papers and books with chapter contents, selectable equations, and links to proofs and original sources. Begin with Paper I for the foundations, or choose a work below.</p><nav class="reading-library-groups" aria-label="Reading collections"><a href="#core-papers">Core papers</a><a href="#books">Books and monographs</a></nav>'
+    body='<p class="eyebrow">HTML reading editions</p><h1>Reading library</h1><p>Read papers and books with chapter contents, selectable equations, and links to proofs and original sources. Begin with Paper I for the foundations, or choose a work below.</p><nav class="reading-library-groups" aria-label="Reading collections"><a href="#core-papers">Core papers</a><a href="visual-guides.html">Visual guides</a><a href="#books">Books and monographs</a></nav>'
     for group,identifier,core in [('Core papers','core-papers',True),('Books and monographs','books',False)]:
         body+='<section id="'+identifier+'"><h2>'+group+'</h2><div class="work-list">'
         for work,config in BOOKS.items():
@@ -1124,6 +1124,7 @@ def render_reading_index(reader):
             if config.get('reading_guide'):body+='<a class="button" href="'+site.rel(config['reading_guide'],page)+'">Start here</a>'
             else:body+='<a class="button" href="'+site.rel(config['chapters'][0]['url'],page)+'">Start reading</a>'
             body+='<a href="'+site.rel(config['index'],page)+'">Contents</a>'
+            if config.get('atlas_index'):body+='<a href="'+site.rel(config['atlas_index'],page)+'">Visual guide</a>'
             pdf=reader.primary_pdf(work)
             if pdf:body+='<a href="'+site.rel(pdf['url'],page)+'">Read PDF</a>'
             body+='</nav></section>'
@@ -1131,21 +1132,8 @@ def render_reading_index(reader):
     body+=('<h2>Reading options</h2><p>Use Text settings in a chapter to choose a text size and font, or use browser zoom. '
            'Find a chapter filters the contents by title or reading-page number. Wide equations and tables have separate areas that can be scrolled with the keyboard. '
            'MathJax provides equation exploration and assistive reading options through its context menu.</p>'
-           '<p>All twelve core papers have HTML reading editions that follow the retained manuscripts. '
-           '<a href="'+site.rel('read/paper-i/atlas/index.html',page)+'">Paper I’s 22 atlas plates</a> have HTML drawings, descriptions, and selectable labels. '
-           'Papers II and III each have complete 24-plate HTML atlases with original drawings, selectable equations and labels, and manuscript links. '
-           '<a href="'+site.rel('read/paper-iv/atlas/index.html',page)+'">Paper IV’s 26 atlas plates</a> also have HTML pages with drawings, descriptions, and tables. '
-           'Paper V’s complete 40-plate atlas has HTML drawings, descriptions, and selectable TikZ labels. '
-           'Paper VI’s complete 42-plate atlas has HTML drawings, descriptions, and selectable labels. '
-           'Paper VII’s complete 40-plate atlas has HTML drawings, descriptions, and selectable labels. '
-           'Paper VIII’s complete 32-plate atlas has HTML drawings, descriptions, and selectable labels. '
-           'Paper IX’s complete 23-section visual guide includes 20 original figures and eight worked examples. '
-           'Paper X’s complete 30-plate guide includes its opening scope contract and 29 original drawings. '
-           'Paper XI’s complete 47-lesson guide includes 23 original figures and the opening reader routes. '
-           'Paper XII’s complete 27-plate guide includes 23 original drawings and its final claim and evidence records. '
-           'Companion and atlas coverage varies by work; original visual atlases remain available in the PDFs. '
-           'See <a href="'+site.rel('read/visual-guides.html',page)+'">visual guides for all twelve core papers</a> or '
-           '<a href="'+site.rel('collection/ACCESSIBILITY.html',page)+'">accessibility and reading options</a> for current coverage and limitations.</p>'
+           '<p>All twelve core papers have complete <a href="visual-guides.html">visual guides</a> with original drawings, selectable mathematics, and manuscript links. '
+           'Original PDFs remain available for every work. See <a href="'+site.rel('collection/ACCESSIBILITY.html',page)+'">accessibility and reading options</a> for current coverage and limitations.</p>'
            '<p><a href="'+site.rel('documents.html',page)+'">Browse all papers and PDFs</a> · '
            '<a href="'+site.rel('collection/READING_ROUTES.html',page)+'">Choose a reading route</a></p>')
     site.page(page,'Reading library',body)

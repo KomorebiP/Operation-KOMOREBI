@@ -183,7 +183,7 @@ def resources(contents):
 def work_links(reader, work, page, exclude=('Read chapters',)):
     """Group secondary routes and omit the chapter link already in the reading bar."""
     targets=[(label,url) for label,url in reader.work_route_targets(work) if label not in exclude]
-    groups=[('Read and explore',{'Read chapters','Read PDF','Original PDF','Revised edition','Monograph PDF','Visual atlas','Diagram descriptions','Worked examples','Notation'}),
+    groups=[('Read and explore',{'Read chapters','Read PDF','Original PDF','Revised edition','Monograph PDF','Visual guide','Diagram descriptions','Worked examples','Notation'}),
             ('Proofs and implementation',{'Claims','Written proofs','Lean','Code'}),
             ('About this work',{'Paper overview','Evidence','Search this work'})]
     used=set();body='<div class="reading-resource-groups">'
