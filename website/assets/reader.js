@@ -190,6 +190,7 @@ if (chapterSidebar) {
   const article = document.querySelector("#chapter-text");
   const returnLinks = chapterSidebar.querySelector(".reading-return");
   const wide = window.matchMedia("(min-width: 64rem)");
+  const visualReader = Boolean(document.body.classList?.contains("visual-reading"));
   const sections = Array.from(contents.querySelectorAll('.chapter-contents a[href^="#"]')).flatMap(link => {
     let target;
     try { target = document.getElementById(decodeURIComponent(link.hash.slice(1))); } catch { return []; }
@@ -197,7 +198,7 @@ if (chapterSidebar) {
   });
   let scheduled = false;
   function readingClearance() {
-    if (!returnLinks || wide.matches) { article.style.removeProperty("--reading-clearance"); return 110; }
+    if (visualReader || !returnLinks || wide.matches) { article.style.removeProperty("--reading-clearance"); return visualReader ? 16 : 110; }
     const clearance = Math.ceil(summary.getBoundingClientRect().height + returnLinks.getBoundingClientRect().height + 12);
     article.style.setProperty("--reading-clearance", clearance + "px");
     return clearance + 8;
@@ -220,7 +221,7 @@ if (chapterSidebar) {
   function scheduleSectionUpdate() {
     if (!scheduled) { scheduled = true; requestAnimationFrame(updateCurrentSection); }
   }
-  function setContentsLayout() { contents.open = wide.matches; readingClearance(); scheduleSectionUpdate(); }
+  function setContentsLayout() { contents.open = wide.matches && !visualReader; readingClearance(); scheduleSectionUpdate(); }
   setContentsLayout();
   wide.addEventListener("change", setContentsLayout);
   window.addEventListener("scroll", scheduleSectionUpdate, {passive: true});
@@ -232,10 +233,10 @@ if (chapterSidebar) {
   }
   contents.addEventListener("click", event => {
     const link = event.target.closest('a[href^="#"]');
-    if (link && !wide.matches && !event.button && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey) contents.open = false;
+    if (link && (!wide.matches || visualReader) && !event.button && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey) contents.open = false;
   });
   contents.addEventListener("keydown", event => {
-    if (event.key === "Escape" && !wide.matches && contents.open) {
+    if (event.key === "Escape" && (!wide.matches || visualReader) && contents.open) {
       contents.open = false;
       summary.focus();
       event.preventDefault();

@@ -175,24 +175,39 @@ def render_drawing(figure, chapter, reader):
         return '<span id="drawing-label-'+str(value)+'">'+chapter.inline(node['text'])+'</span>'
     def passage(index):
         value=nodes[index]['text']
-        sole=MATH_PATTERN.fullmatch(value.strip())
         def display(match):
             tex=next(part for part in match.groups() if part is not None)
-            return r'\['+tex+r'\]' if sole or len(tex)>40 else match[0]
+            return r'\['+tex+r'\]' if len(tex)>40 else match[0]
         # Long drawing labels get the manuscript's keyboard-scrollable display
         # treatment. The exact expression remains unchanged in the transcript.
         value=MATH_PATTERN.sub(display,value)
         return '<div id="drawing-label-'+str(index)+'">'+chapter.paragraphs(value)+'</div>'
     image=reader.site.rel(record['image'],chapter.url)
     size=' width="'+str(figure['width'])+'" height="'+str(figure['height'])+'"'
-    body='<figure class="atlas-drawing"><img src="'+image+'"'+size+' alt="'+e(info['alt'],quote=True)+'" loading="lazy"><figcaption>Original drawing. A text description and its labels follow.</figcaption></figure>'
+    caption='Original drawing. Read the description below; expand the labels and data for selectable text.' if nodes else 'Original drawing. A text description follows.'
+    body='<figure class="atlas-drawing"><img src="'+image+'"'+size+' alt="'+e(info['alt'],quote=True)+'" loading="lazy"><figcaption>'+caption+'</figcaption></figure>'
     body+='<section aria-labelledby="drawing-description"><h2 id="drawing-description">Reading the drawing</h2><p>'+e(info['description'])+'</p>'
+    if nodes:
+        body+='<details class="drawing-transcript"><summary>Drawing labels and data <span>'+str(len(nodes))+(' label' if len(nodes)==1 else ' labels')+'</span></summary><p class="drawing-transcript-help">Read the original labels as selectable text. Tables preserve grid relationships; other short labels are grouped compactly.</p>'
     for block_number,block in enumerate(info['blocks'],1):
         if block['kind']=='text':
             if block.get('title'): body+='<h3>'+e(block['title'])+'</h3>'
             if (block.get('title') or '').endswith('ticks'):
                 body+='<p>'+', '.join(cell(index) for index in block['nodes'])+'</p>'
-            else: body+=''.join(passage(index) for index in block['nodes'])
+            else:
+                compact=[]
+                def flush():
+                    nonlocal body
+                    if compact:
+                        body+='<ul class="drawing-label-list">'+''.join('<li>'+cell(index)+'</li>' for index in compact)+'</ul>'
+                        compact.clear()
+                for index in block['nodes']:
+                    value=nodes[index]['text']
+                    if len(value)<=48 and not any(command in value for command in (r'\newline',r'\begin',r'\[',r'\frac',r'\mat')):
+                        compact.append(index)
+                    else:
+                        flush();body+=passage(index)
+                flush()
         else:
             # A real caption and row/column headers preserve relationships at zoom
             # and in assistive reading, without using the image's coordinates.
@@ -203,6 +218,7 @@ def render_drawing(figure, chapter, reader):
             for row in block['rows']:
                 body+='<tr>'+''.join(('<th scope="row">' if i==0 else '<td>')+cell(c)+('</th>' if i==0 else '</td>') for i,c in enumerate(row))+'</tr>'
             body+='</tbody></table></div>'
+    if nodes:body+='</details>'
     body+='<p><a href="'+image+'">Open the full-size drawing</a></p>'
     body+=passage_links('<a href="'+reader.resolve(record['source'],chapter.url)+'">Drawing source with line numbers</a>')+'</section>'
     return body

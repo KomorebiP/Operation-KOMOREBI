@@ -515,8 +515,70 @@ class ReaderSiteTests(unittest.TestCase):
         chapter=Chapter('',{})
         rendered=render_drawing(drawing,chapter,reader)
         self.assertEqual(chapter.math,[formula,'x'])
-        self.assertEqual(rendered.count('role="group" aria-label="Displayed equation. Scroll horizontally if needed."'),2)
-        self.assertEqual(rendered.count('tabindex="0"'),2)
+        self.assertEqual(rendered.count('role="group" aria-label="Displayed equation. Scroll horizontally if needed."'),1)
+        self.assertEqual(rendered.count('tabindex="0"'),1)
+        self.assertIn('<ul class="drawing-label-list">',rendered)
+        self.assertIn('<details class="drawing-transcript">',rendered)
+        self.assertNotIn('<details class="drawing-transcript" open',rendered)
+
+    def test_relative_matrix_cells_retain_rows_columns_and_every_label(self):
+        from reader_drawing_transcripts import drawing_nodes,matrix_label_blocks
+        from reader_atlas import transcript_order
+        source=''.join(r'\draw[draw=black!45] ('+str(x)+','+str(y)+r') rectangle ++(1,1);'
+                       r'\node at ('+str(x+.5)+','+str(y+.5)+') {$'+str(n)+'$};'
+                       for n,(x,y) in enumerate([(0,1),(1,1),(0,0),(1,0)]))
+        nodes=drawing_nodes(source);blocks=matrix_label_blocks(nodes,source)
+        self.assertEqual([b['kind'] for b in blocks],['table'])
+        self.assertEqual(blocks[0]['rows'],[['Row 1',0,1],['Row 2',2,3]])
+        self.assertEqual(transcript_order(dict(alt='Grid',description='A grid.',blocks=blocks),nodes),[0,1,2,3])
+
+    def test_gapped_grid_uses_unique_original_axis_labels_as_headers(self):
+        from reader_drawing_transcripts import drawing_nodes,matrix_label_blocks
+        from reader_atlas import transcript_order
+        source=r'\node at (.5,2) {$c_1$};\node at (1.8,2) {$c_2$};'
+        for row,y in enumerate([.95,.25],1):
+            source+=r'\node at (-.4,'+str(y+.25)+') {$r_'+str(row)+'$};'
+            for column,x in enumerate([0,1.3],1):
+                source+=r'\path[draw=black!25,fill=white] ('+str(x)+','+str(y)+') rectangle ('+str(x+1)+','+str(y+.5)+');'
+                source+=r'\node at ('+str(x+.5)+','+str(y+.25)+') {$a_{'+str(row)+str(column)+'}$};'
+        nodes=drawing_nodes(source);blocks=matrix_label_blocks(nodes,source)
+        self.assertEqual(blocks[0]['headers'],['Row / column',0,1])
+        self.assertEqual(blocks[0]['rows'],[[2,3,4],[5,6,7]])
+        self.assertEqual(transcript_order(dict(alt='Grid',description='A grid.',blocks=blocks),nodes),list(range(8)))
+
+    def test_grid_cells_are_not_replaced_by_bounding_boxes_or_outer_rules(self):
+        from reader_drawing_transcripts import drawing_nodes,matrix_label_blocks
+        source=r'\path[use as bounding box] (0,0) rectangle (3,3);\draw (0,0) rectangle (3,3);'
+        source+=''.join(r'\draw ('+str(x)+','+str(y)+r') rectangle ++(1,1);'
+                        r'\node at ('+str(x+.5)+','+str(y+.5)+') {$'+str(n)+'$};'
+                        for n,(x,y) in enumerate((x,y) for y in [2,1,0] for x in [0,1,2]))
+        blocks=matrix_label_blocks(drawing_nodes(source),source)
+        self.assertEqual(len(blocks),1)
+        self.assertEqual(blocks[0]['rows'],[['Row 1',0,1,2],['Row 2',3,4,5],['Row 3',6,7,8]])
+
+    def test_incomplete_grids_and_bar_rows_keep_all_labels_without_guessing_cells(self):
+        from reader_drawing_transcripts import drawing_nodes,matrix_label_blocks
+        from reader_atlas import transcript_order
+        for positions in ([(0,0),(1,0),(0,1)],[(0,0),(1,0),(2,0)]):
+            source=''.join(r'\draw ('+str(x)+','+str(y)+r') rectangle ++(1,1);'
+                           r'\node at ('+str(x+.5)+','+str(y+.5)+') {$'+str(n)+'$};'
+                           for n,(x,y) in enumerate(positions))
+            nodes=drawing_nodes(source);blocks=matrix_label_blocks(nodes,source)
+            self.assertTrue(all(b['kind']=='text' for b in blocks))
+            self.assertEqual(transcript_order(dict(alt='Values',description='Three labels.',blocks=blocks),nodes),[0,1,2])
+
+    def test_short_numeric_labels_stay_inline_in_a_compact_transcript(self):
+        from reader_atlas import render_drawing
+        from paper_iv_atlas_descriptions import figure,text
+        drawing=dict(description=figure('Ticks','Description',text(0,1,2)),
+                     receipt=dict(image='image.png',source='figure.tex'),
+                     nodes=[dict(text='$0$'),dict(text='$1$'),dict(text='$2$')],width=1200,height=450)
+        reader=SimpleNamespace(site=SimpleNamespace(rel=lambda path,page:path),resolve=lambda path,page:'source.html')
+        chapter=Chapter('',{});rendered=render_drawing(drawing,chapter,reader)
+        self.assertEqual(chapter.math,['0','1','2'])
+        self.assertEqual(rendered.count('id="drawing-label-'),3)
+        self.assertEqual(rendered.count('<li>'),3)
+        self.assertNotIn('Displayed equation',rendered)
 
     def test_reading_tools_preserve_proof_links_and_no_script_access(self):
         from html.parser import HTMLParser
