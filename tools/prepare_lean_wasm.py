@@ -19,6 +19,12 @@ from lean_workspaces import mathlib_seeds, mathlib_seed_groups
 UPSTREAM = 'a8aed095534e67061e2626b94e8e69193099091d'
 LEAN = '62b6a2291302d4bbeace37642a066b7510d0145c'
 MATHLIB = 'de3a9cf33016bbb6d15880d7680643f7ca2d25ba'
+MATHLIB_SOURCE_SHA256 = '0d5e8732a746d65215a8124f257f8ce2e88601d1d7d958f966312ad8f41d59ff'
+# Small missing modules whose complete source import closures fit the pinned
+# binary runtime. Browser execution remains the check; this is not a certificate.
+SOURCE_MODULES = (
+    'Mathlib.Tactic.Ext', 'Mathlib.Util.AssertNoSorry',
+)
 LIMIT = 8 * 1024 * 1024
 
 
@@ -56,15 +62,24 @@ def mathlib_closure(archive,seeds):
     return mathlib_closures(archive,{'selected':seeds})['selected']
 
 
-def mathlib_closures(archive,groups):
+def mathlib_sources(archive,expected_sha256=None):
     # Random access through a gzip tar re-inflates it for each backward seek.
     # Keep only Lean source bytes from one sequential pass, then follow imports.
+    if expected_sha256 and sha(archive.read_bytes())!=expected_sha256:
+        raise ValueError('Pinned Mathlib source archive checksum mismatch')
     members={}
     with tarfile.open(archive,mode='r|gz') as source:
         for member in source:
             path=member.name.split('/',1)[-1]
             if member.isfile() and path.startswith('Mathlib/') and path.endswith('.lean'):
+                safe_path(path)
+                if path in members:raise ValueError('Duplicate Mathlib source: '+path)
                 members[path]=source.extractfile(member).read()
+    return members
+
+
+def mathlib_closures(archive,groups,*,members=None):
+    if members is None:members=mathlib_sources(archive)
     parsed={};result={}
     for key,seeds in groups.items():
         pending=list(seeds); found=set()
@@ -79,6 +94,46 @@ def mathlib_closures(archive,groups):
             pending.extend(parsed[name])
         result[key]=found
     return result
+
+
+def source_library(members,available,modules=SOURCE_MODULES):
+    """Retain exact pinned sources; never synthesize replacement declarations."""
+    records={}
+    for module in modules:
+        path=module.replace('.','/')+'.lean'
+        if path not in members:raise ValueError('Missing Mathlib fallback source: '+module)
+        raw=members[path];text=raw.decode('utf-8')
+        records[module]=dict(module=module,path=path,source=text,size=len(raw),sha256=sha(raw),
+                             revision=MATHLIB,imports=imports(text),
+                             asset='lean-mathlib/sources/'+path,
+                             url='https://github.com/leanprover-community/mathlib4/blob/'+MATHLIB+'/'+path)
+    validate_source_library(records,available)
+    return records
+
+
+def validate_source_library(records,available):
+    """Verify source identity, pinned provenance and the entire import closure."""
+    available=set(available);active=set();done=set()
+    def visit(module):
+        if module in done:return
+        if module in active:raise ValueError('Mathlib source import cycle: '+module)
+        active.add(module);record=records[module]
+        if not module.startswith('Mathlib.') or module in available:
+            raise ValueError('Invalid or shadowed Mathlib source module: '+module)
+        path=module.replace('.','/')+'.lean';safe_path(path)
+        raw=record['source'].encode('utf-8')
+        if (record['module']!=module or record['path']!=path or record['revision']!=MATHLIB or
+                record['asset']!='lean-mathlib/sources/'+path or
+                record['url']!='https://github.com/leanprover-community/mathlib4/blob/'+MATHLIB+'/'+path or
+                record['size']!=len(raw) or record['sha256']!=sha(raw)):
+            raise ValueError('Mathlib fallback source identity mismatch: '+module)
+        dependencies=imports(record['source'])
+        if record['imports']!=dependencies:raise ValueError('Mathlib source imports changed: '+module)
+        for dependency in dependencies:
+            if dependency in records:visit(dependency)
+            elif dependency not in available:raise ValueError('Unavailable Mathlib source dependency: '+dependency)
+        active.remove(module);done.add(module)
+    for module in records:visit(module)
 
 
 def prepare(source, output, mathlib_archive):
@@ -126,12 +181,18 @@ def prepare(source, output, mathlib_archive):
         roots[root]=dict(leanCommit=LEAN,files=names,packs=[],loose=[])
     collection=Path(__file__).resolve().parents[1]
     seeds=mathlib_seeds(collection);seed_groups=mathlib_seed_groups(collection)
-    closures=mathlib_closures(mathlib_archive,{'all':seeds,**seed_groups})
+    members=mathlib_sources(mathlib_archive,MATHLIB_SOURCE_SHA256)
+    closures=mathlib_closures(mathlib_archive,{'all':seeds,**seed_groups},members=members)
     selected=closures['all']
     # Exploratory sources and edited imports can use every compiler-matched
     # module already published by upstream, while prepared workspaces stay small.
     full_mathlib={p[:-6].replace('/','.') for p in upstream['files']
                   if p.startswith('Mathlib/') and p.endswith('.olean')}
+    core_modules={p[:-6].replace('/','.') for p in set(core['files'])|set(expected) if p.endswith('.olean')}
+    upstream_modules={p[:-6].replace('/','.') for p in upstream['files'] if p.endswith('.olean')}
+    library_sources=source_library(members,upstream_modules|core_modules)
+    # Do not retain the full Mathlib source tree while large binary packs inflate.
+    del members
     layer=dict(leanCommit=LEAN,mathlibCommit=MATHLIB,version='komorebi-browser-pilot-2',files=[],packs=[])
     work_layers={key:dict(leanCommit=LEAN,mathlibCommit=MATHLIB,files=[],packs=[]) for key in seed_groups}
     covered=set()
@@ -170,6 +231,10 @@ def prepare(source, output, mathlib_archive):
                                                  sha256=receipt['sha256'],bytes=wanted['bytes']))
     for root,manifest in roots.items():write_json(output/'lean-lib'/(root+'-layer.json'),manifest)
     available={p[:-6].replace('/','.') for p in layer['files'] if p.endswith('.olean')}
+    validate_source_library(library_sources,available|core_modules)
+    for record in library_sources.values():
+        target=output/record['asset'];target.parent.mkdir(parents=True,exist_ok=True)
+        target.write_bytes(record['source'].encode('utf-8'))
     missing={n for n in selected if n.startswith('Mathlib.')}-available
     if missing:raise ValueError('Mathlib artifacts not in upstream layer: '+', '.join(sorted(missing)))
     write_json(output/'lean-mathlib/real-analysis-layer.json',layer)
@@ -183,6 +248,7 @@ def prepare(source, output, mathlib_archive):
     source_record=dict(schema=1,upstream=UPSTREAM,lean=LEAN,mathlib=MATHLIB,
                        mathlib_source_sha256=sha(mathlib_archive.read_bytes()),
                        mathlib_seeds=seeds,mathlib_modules=sorted(available),
+                       core_modules=sorted(core_modules),mathlib_source_modules=library_sources,
                        workspace_modules=workspace_modules,
                        inputs=inventory,files=files,remote_files=remote,
                        bytes=sum(p['size'] for p in files.values())+sum(p['size'] for p in remote.values()),

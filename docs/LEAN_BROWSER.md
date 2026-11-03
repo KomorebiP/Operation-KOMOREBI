@@ -5,13 +5,14 @@ WebAssembly in a persistent Web Worker. It needs no reader account or compiler
 service. The page fetches static compiler artifacts; proof edits are never sent
 to a remote proof checker.
 
-The picker offers 16 prepared workspaces across nine existing reading editions:
-Papers II, III, VII, IX, X, XI and XII, Proof Path Theory and Komorebi Space.
+The picker offers 17 prepared workspaces across ten existing reading editions:
+Papers II, III, VII, IX, X, XI and XII, Proof Path Theory, Komorebi Space and
+Special Functions.
 The complete retained files are listed in
 `tools/lean_workspaces.py`; the picker groups them by reading edition. Recovery
 also compiles its actual local `ProofPath.Compression` import. These are experiments in the browser
-environment, not replays of every retained Lake environment or the collection's
-2,249 displayed files. Original source bytes, receipts and verification labels
+environment, not replays of every retained Lake environment or the full reading
+collection. Original source bytes, receipts and verification labels
 are unchanged. Unsupported imports fail.
 
 “Open another retained Lean file” browses the full reading collection, using the
@@ -27,6 +28,23 @@ checks every requested source against the individual receipt-bound hash and size
 Dependencies cannot cross reading-edition ownership. Original downloads use the
 exact extracted bytes, including any BOM or CRLF; only the editor normalizes text.
 `catalog.json` records each source route, input identity and compatibility source.
+
+Some missing Mathlib modules can be compiled from their original source on the
+reader's device. A bounded allowlist is extracted from the checksum-verified
+Mathlib source archive at the compiler-matched revision. Each source retains its
+copyright header, exact bytes, upstream link, revision, size and SHA-256. The
+catalog lists these separately from the receipt-bound paper sources and orders
+their dependencies first. The browser checks their bytes and compiles each
+library module with the same syntax check and module-export wrapper used for
+local dependencies. A failed library check stops the workspace. Library source
+edits invalidate the worker's dependency cache just like paper dependency edits.
+The file picker labels these as library sources; they are not generated stubs or
+additions to the Mathlib.Tactic compatibility umbrella.
+The initial source allowlist is `Mathlib.Tactic.Ext` and
+`Mathlib.Util.AssertNoSorry`. Other candidates remain unavailable until their
+actual browser compilation succeeds. The current syntax probe can reject
+same-file namespace or notation changes, and the runtime still has private
+declaration and interpreter limits.
 
 ## Environment and static hosting
 
@@ -78,11 +96,25 @@ An exit, abort, missing artifact, timeout, stopped worker or failed syntax probe
 cannot produce a successful result. The Stop control terminates checking and
 startup. The initial artifact requires substantial desktop memory and downloads;
 mobile support and Firefox/Safari compatibility are not established.
-The retained Special Functions `BrowserCoreLocal.lean` was also tried, but hit
-`Maximum call stack size exceeded` in this runtime. It is excluded from the
-prepared picker; it can be opened experimentally. Its library-only import check
-passes, while its declarations still fail. Changing interpreter preference,
-deferring compilation and lowering Lean's recursion option did not remove it.
+An incomplete library installation reports its download or unpacking error
+immediately instead of continuing with a partially installed library tree.
+The pinned binary routes exception-aware indirect calls through JavaScript,
+which exhausted the browser stack on the retained Special Functions
+`BrowserCoreLocal.lean`. The adapter now moves those calls into a small Wasm
+module, sharing the compiler's original function table. All original function
+indices, bodies and table entries remain unchanged. The original start function
+runs after the native stack helpers are bound, before Emscripten initialization.
+The unchanged Special Functions file completed with no diagnostics in the
+browser after this change. Larger sources can still exceed runtime limits.
+
+The transformation happens in memory after the original pinned downloads pass
+integrity checks. It validates all 39 original invoke-wrapper bodies and their
+signatures, including numeric exception handling and return coercions. The
+script and Wasm change as one pair; unsupported browser features or an
+unrecognized artifact keep the complete original pair and report the fallback.
+JavaScript and native exceptions restore the linear-memory stack before
+propagation. Direct Wasm traps are fatal: the failed check discards its worker.
+The original downloaded bytes and their checksum cache are unchanged.
 
 The fork loses some parser diagnostics. The page therefore always runs Lean's
 parser in a separate elaboration, against the same import environment. A
@@ -142,6 +174,6 @@ preparation derives Mathlib seeds and a separate manifest for each workspace
 from those exact sources; the page build rejects missing imports or manifests.
 Run the original source and an intentionally false edit in the actual browser
 before making an addition available. Missing artifacts in the upstream
-closure require a compiler-matched artifact build; a native `.olean` from an
+closure require compiler-matched source compilation or an artifact build; a native `.olean` from an
 unrelated Lean version is not sufficient. Keep the compiler/download identities
 and the browser cache version coordinated when replacing the runtime.

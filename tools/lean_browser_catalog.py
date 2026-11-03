@@ -10,6 +10,7 @@ import zipfile
 
 from lean_runner import Collection, EXTERNAL_ROOTS, safe_path
 from lean_workspaces import COMPAT_SOURCE
+from prepare_lean_wasm import MATHLIB, MATHLIB_SOURCE_SHA256, validate_source_library
 
 
 def tactic_umbrella(available):
@@ -20,11 +21,19 @@ def tactic_umbrella(available):
             ''.join('import '+name+'\n' for name in modules))
 
 
-def plans(catalog,read,available):
+def plans(catalog,read,available,library_sources=None):
+    library_sources=library_sources or {}
+    validate_source_library(library_sources,available)
     collection=Collection(catalog,read)
     entries=[];needed=set()
     for source in catalog['sources']:
         ordered=[];done={};active=set();modules={};issues=set();needs_tactics=False;needs_legacy=False
+        library=[];library_done=set()
+        def library_visit(module):
+            if module in library_done:return
+            for dependency in library_sources[module]['imports']:
+                if dependency in library_sources:library_visit(dependency)
+            library_done.add(module);library.append(module)
         def visit(path,module):
             nonlocal needs_tactics,needs_legacy
             if path in active:
@@ -42,7 +51,8 @@ def plans(catalog,read,available):
                 root=name.split('.')[0]
                 if name=='Mathlib.Tactic':needs_tactics=True;continue
                 if root in EXTERNAL_ROOTS:
-                    if root not in {'Init','Std','Lean','Batteries'} and name not in available:
+                    if name in library_sources:library_visit(name)
+                    elif root not in {'Init','Std','Lean','Batteries'} and name not in available:
                         issues.add('Unavailable browser import: '+name)
                     continue
                 try:
@@ -57,8 +67,24 @@ def plans(catalog,read,available):
         visit(source['path'],PurePosixPath(source['path']).stem)
         entries.append(dict(id=source['id'],path=source['path'],work=source['work'],
                             label=source['label'],inspect=source['url'],files=ordered,
+                            library=library,
                             tactics=needs_tactics,legacy=needs_legacy,issues=sorted(issues)))
     return entries,{p:{k:catalog['inputs'][p][k] for k in ('sha256','size','work')} for p in sorted(needed)}
+
+
+def runtime_library(root,runtime):
+    sources=runtime.get('mathlib_source_modules',{})
+    available=set(runtime['mathlib_modules'])|set(runtime.get('core_modules',[]))
+    validate_source_library(sources,available)
+    if sources:
+        if runtime['mathlib']!=MATHLIB or runtime.get('mathlib_source_sha256')!=MATHLIB_SOURCE_SHA256:
+            raise ValueError('Unpinned Mathlib fallback source archive')
+        for module,record in sources.items():
+            asset=safe_path(record['asset']);raw=(root/asset).read_bytes()
+            identity=dict(size=len(raw),sha256=hashlib.sha256(raw).hexdigest())
+            if raw!=record['source'].encode('utf-8') or runtime['files'].get(asset)!=identity:
+                raise ValueError('Mathlib fallback source asset mismatch: '+module)
+    return sources,available
 
 
 def build(site,runtime):
@@ -66,18 +92,19 @@ def build(site,runtime):
     bundle=site.output/'downloads/komorebi-lean-runner.zip';raw=bundle.read_bytes()
     if len(raw)!=record['bundle_bytes'] or hashlib.sha256(raw).hexdigest()!=record['bundle_sha256']:
         raise ValueError('Browser source bundle identity failed')
-    available=set(runtime['mathlib_modules'])
+    library_sources,available=runtime_library(site.output/'lean/browser/engine',runtime)
     with zipfile.ZipFile(bundle) as archive:
         catalog=json.loads(archive.read('CATALOG.json'))
-        entries,inputs=plans(catalog,lambda p:archive.read('inputs/'+safe_path(p)),available)
+        entries,inputs=plans(catalog,lambda p:archive.read('inputs/'+safe_path(p)),available,library_sources)
     page='lean/browser/index.html'
     paths=list(inputs);indices={p:i for i,p in enumerate(paths)}
     for entry in entries:
         entry['inspect']=site.rel(entry['inspect'],page)
         for file in entry['files']:file['input']=indices[file.pop('path')]
-    compatibility=tactic_umbrella(available)
+    # Source fallbacks must be opt-in through the selected file's imports.
+    compatibility=tactic_umbrella(set(runtime['mathlib_modules']))
     legacy='import Std\n'+COMPAT_SOURCE
-    data=dict(schema=1,revision=site.revision,entries=entries,
+    data=dict(schema=1,revision=site.revision,entries=entries,mathlibRevision=runtime['mathlib'],librarySources=library_sources,
               inputs=[dict(path=p,**inputs[p]) for p in paths],
               bundle=dict(url=site.rel('downloads/komorebi-lean-runner.zip',page),
                           size=len(raw),sha256=record['bundle_sha256']),
@@ -93,16 +120,22 @@ def build(site,runtime):
 
 def verify(root,documents):
     data=json.loads((root/'lean/browser/catalog.json').read_bytes())
+    engine=root/'lean/browser/engine';runtime=json.loads((engine/'SOURCE.json').read_bytes())
+    library_sources,available=runtime_library(engine,runtime)
+    assert data['mathlibRevision']==runtime['mathlib'] and data['librarySources']==library_sources
     owned={r['repository_path']:r for r in documents['files']}
     bundle=root/'downloads/komorebi-lean-runner.zip';raw=bundle.read_bytes()
     assert len(raw)==data['bundle']['size'] and hashlib.sha256(raw).hexdigest()==data['bundle']['sha256']
     with zipfile.ZipFile(bundle) as archive:
         source=json.loads(archive.read('CATALOG.json'))
+        expected,_=plans(source,lambda p:archive.read('inputs/'+safe_path(p)),available,library_sources)
+        expected={entry['path']:entry for entry in expected}
         assert {e['path'] for e in data['entries']}=={s['path'] for s in source['sources']}
         for entry in data['entries']:
             assert entry['path'] in owned
             original=next(s for s in source['sources'] if s['path']==entry['path'])
             assert entry['id']==original['id'] and entry['work']==original['work']
+            assert entry['library']==expected[entry['path']]['library']
             selected=data['inputs'][entry['files'][-1]['input']]
             assert selected['path']==entry['path'] and selected['sha256']==owned[entry['path']]['sha256']
             for file in entry['files']:

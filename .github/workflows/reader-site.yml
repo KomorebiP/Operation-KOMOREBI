@@ -24,6 +24,9 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
           python-version: '3.13'
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
       - name: Read pinned library revisions
         id: pins
         run: |
@@ -70,6 +73,7 @@ jobs:
           node --test tools/test_browser_lean.cjs
           python -B -m unittest discover -s tools -p 'test_lean_browser*.py' -v
           node --test tools/test_lean_browser.mjs
+          node --test tools/test_lean_native_invokes.mjs
           python -B -m unittest discover -s tools -p 'test_lean_execution.py' -v
           node --test tools/test_lean_execution.cjs
           python -B -m unittest discover -s tools -p 'test_methodology_reading.py' -v

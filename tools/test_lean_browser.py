@@ -8,7 +8,7 @@ import unittest
 import zipfile
 
 from lean_browser import BASE, PAGE, WORKSPACES, build, verify, verify_runtime, action
-from prepare_lean_wasm import UPSTREAM, LEAN, MATHLIB, pack, mathlib_closure,mathlib_closures
+from prepare_lean_wasm import UPSTREAM, LEAN, MATHLIB, pack, mathlib_closure,mathlib_closures,mathlib_sources
 from lean_workspaces import mathlib_seeds,mathlib_seed_groups
 
 
@@ -62,6 +62,9 @@ class LeanBrowserTests(unittest.TestCase):
             self.assertEqual(verify(out,dict(files=records))['source_identity'],'PASS')
             data=json.loads((out/BASE/'examples.json').read_bytes())
             self.assertEqual(len(next(e for e in data['examples'] if e['id']=='proof-path-recovery')['files']),2)
+            catalog=out/BASE/'catalog.json';value=json.loads(catalog.read_bytes())
+            value['entries'][0]['library']=['Mathlib.Unrequested'];catalog.write_text(json.dumps(value))
+            with self.assertRaises(AssertionError):verify(out,dict(files=records))
 
     def test_changed_runtime_and_source_fail_closed(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -128,6 +131,8 @@ class LeanBrowserTests(unittest.TestCase):
             self.assertEqual(mathlib_closure(path,['Mathlib.A']),{'Mathlib.A','Mathlib.B','Lean'})
             self.assertEqual(mathlib_closures(path,{'small':['Mathlib.B'],'larger':['Mathlib.A']}),
                              {'small':{'Mathlib.B','Lean'},'larger':{'Mathlib.A','Mathlib.B','Lean'}})
+            with self.assertRaisesRegex(ValueError,'archive checksum'):
+                mathlib_sources(path,'0'*64)
 
 
 if __name__=='__main__':unittest.main()

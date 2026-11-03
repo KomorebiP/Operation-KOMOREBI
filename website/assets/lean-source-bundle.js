@@ -65,6 +65,14 @@ export async function loadSourceBundle(record,{signal,onProgress=()=>{}}={}) {
 }
 export async function sourceWorkspace(catalog,entry,bundle,{signal}={}) {
   const files=[];
+  for(const module of entry.library||[]) {
+    signal?.throwIfAborted();
+    const record=catalog.librarySources?.[module];
+    if(!record||record.module!==module||record.path!==module.replaceAll('.','/')+'.lean'||record.revision!==catalog.mathlibRevision||!/^Mathlib(?:\.[A-Za-z_][A-Za-z_0-9]*)+$/.test(module)||!/^[0-9a-f]{40}$/.test(record.revision)||record.url!=='https://github.com/leanprover-community/mathlib4/blob/'+record.revision+'/'+record.path)throw new Error('Invalid pinned library source record.');
+    const bytes=new TextEncoder().encode(record.source);
+    if(bytes.length!==record.size||bytes.length>MAX_SOURCE||await sha256(bytes)!==record.sha256)throw new Error('Pinned library source checksum mismatch: '+module);
+    files.push({module,path:record.path,text:record.source,originalBytes:bytes,sha256:record.sha256,library:true,revision:record.revision,inspect:record.url});
+  }
   if(entry.legacy) {
     const compatibility=catalog.legacy,bytes=new TextEncoder().encode(compatibility.source);
     if(await sha256(bytes)!==compatibility.sha256)throw new Error('Browser compatibility source checksum mismatch.');
@@ -85,5 +93,5 @@ export async function sourceWorkspace(catalog,entry,bundle,{signal}={}) {
       text:utf8.decode(raw).replace(/^\uFEFF/,'').replace(/\r\n/g,'\n'),inspect:routes.get(input.path)||null});
   }
   return {id:'source-'+entry.id,title:entry.label+' · '+entry.path.split('/').pop(),work:entry.work,files,
-    exploratory:true,issues:entry.issues,tactics:entry.tactics,legacy:entry.legacy?catalog.legacy.module:null};
+    exploratory:true,issues:entry.issues,library:entry.library||[],tactics:entry.tactics,legacy:entry.legacy?catalog.legacy.module:null};
 }

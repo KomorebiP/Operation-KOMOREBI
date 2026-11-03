@@ -11,7 +11,8 @@
 // `worker/lean-worker.js`), so there is one implementation and the demo in this repo consumes it too.
 
 // Separate same-origin worker source keeps the vendored implementation reviewable.
-const RUNTIME_WORKER_SOURCE = 'importScripts(' + JSON.stringify(new URL('./worker.js', import.meta.url).href) + ');';
+const RUNTIME_WORKER_SOURCE = 'importScripts(' + JSON.stringify(new URL('./worker.js?v=20261102', import.meta.url).href) + ');';
+const NATIVE_INVOKES_URL = new URL('./native-invokes.js', import.meta.url).href;
 
 const COMPILE_PATH = '/workspace/input.lean';
 
@@ -122,7 +123,7 @@ export function createRuntime({ assetBase, libBase, memory, onProgress, onStatus
 	}
 
 	async function start() {
-		objectUrl = URL.createObjectURL(new Blob([createWorkerSource({ assetBase, libBase, memory })], { type: 'text/javascript' }));
+		objectUrl = URL.createObjectURL(new Blob([createWorkerSource({ assetBase, libBase, memory, nativeInvokesUrl: NATIVE_INVOKES_URL })], { type: 'text/javascript' }));
 		worker = new Worker(objectUrl);
 		worker.onmessage = dispatch;
 		worker.onerror = (event) => failAll(new Error(event.message || 'Lean runtime error'));
@@ -153,6 +154,9 @@ export function createRuntime({ assetBase, libBase, memory, onProgress, onStatus
 		stderr = '';
 		post({ type: 'compile', id, code, path: COMPILE_PATH });
 		const reply = await waitFor((msg) => msg.type === 'result' && msg.id === id, 'Compiling', 600_000);
+		// A trap or escaped exception may leave the native stack unusable. Plain
+		// Lean IO errors remain retryable so missing imports can still be loaded.
+		if (reply.fatal) dispose();
 		return { ...reply, stdout, stderr };
 	}
 
