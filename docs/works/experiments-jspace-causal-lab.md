@@ -26,6 +26,7 @@ Use the links below to read this work and its supporting files. Ctrl+click (Comm
 
 ## Read
 
+- [Open the interactive J-Space laboratory](https://KomorebiP.github.io/Operation-KOMOREBI/j-lab.html)
 - [Edition README](../../experiments/jspace-causal-lab/README.md)
 
 [Back to work navigation](#work-navigation)
