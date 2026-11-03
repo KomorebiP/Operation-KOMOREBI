@@ -653,9 +653,8 @@ class Site:
         self.collect_documents()
         self.reader.prepare()
         shutil.copytree(self.root/'website/assets',self.output/'assets',dirs_exist_ok=True)
-        if not self.mathjax_root or not (self.mathjax_root/'a11y/explorer.js').is_file():
-            raise ValueError('The complete pinned MathJax runtime is required')
-        shutil.copytree(self.mathjax_root,self.output/'assets/mathjax')
+        from reader_runtime import publish_mathjax
+        publish_mathjax(self.mathjax_root,self.output/'assets/mathjax')
         from fetch_pdf_runtime import verify as verify_pdf_runtime
         if not self.pdfjs_root:
             raise ValueError('The pinned PDF.js runtime is required')

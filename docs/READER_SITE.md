@@ -30,6 +30,14 @@ Run `python -B -m unittest discover -s tools -p 'test_jspace_lab.py' -v` and
 `node --test tools/test_jspace_lab.cjs` for publication and loading safeguards.
 This integration adds no new scientific evaluation or J-space certificate.
 
+The site uses MathJax's `tex-svg-full.js` entry bundle. Its build retains all
+extension, output, font and accessibility modules, while omitting eight complete
+alternative entry bundles to keep the site within its hosting size budget.
+The fetched package remains complete and verified. Published runtime files keep
+their original bytes and `SOURCE.json`; `assets/mathjax/PUBLISHED.json` records
+the distribution profile and omitted bundles. `tools/reader_runtime.py` packages
+this profile; `test_reader_runtime.py` checks retained modules and source records.
+
 ## Core visual-guide coverage
 
 The **Browse → Core visual guides** directory at `read/visual-guides.html`
