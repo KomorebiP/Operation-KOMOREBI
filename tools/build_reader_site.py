@@ -614,8 +614,9 @@ class Site:
         self.claim_index()
         self.reader.search_routes()
         learning=json.loads((self.root/'manifests/reader-experience.json').read_bytes())
+        from glossary_reader import glossary_search_text
         for term in learning['glossary']:
-            self.search.append(dict(title=term['term'], group='Collection', kind='Glossary', url='collection/GLOSSARY.html#'+term['id'], text=term['term']+' '+term['definition']+' '+' '.join(term.get('related',[])),work_ids=sorted({w for t in learning.get('learning_topics',[]) if term['id'] in t['terms'] for w in t['works']})))
+            self.search.append(dict(title=term['term'], group='Collection', kind='Glossary', url='collection/GLOSSARY.html#'+term['id'], text=glossary_search_text(term)+' '+' '.join(term.get('related',[])),work_ids=sorted({w for t in learning.get('learning_topics',[]) if term['id'] in t['terms'] for w in t['works']})))
         for item in self.search:
             if 'kind' not in item:
                 url=item['url']

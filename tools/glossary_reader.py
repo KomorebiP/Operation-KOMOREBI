@@ -25,11 +25,11 @@ def glossary_lookup(config):
     terms = sorted(config['glossary'], key=lambda t: t['term'].casefold())
     body = ('<section id="glossary-lookup" class="glossary-lookup" aria-labelledby="glossary-lookup-title">'
             '<h2 id="glossary-lookup-title">Find a glossary term</h2>'
-            '<p id="glossary-help">Search a term or words in its definition. Matches link to the full entry, '
+            '<p id="glossary-help">Search a name, abbreviation or words in a definition or example. Try “nullspace”, “projection” or “CRT”. Matches link to the full entry, '
             'with examples and related terms. You can also browse the subjects and alphabetical index below.</p>'
             '<noscript><p>Quick lookup needs JavaScript. Use the subject links and alphabetical index below, or your browser’s Find command.</p></noscript>'
             '<form id="glossary-form" role="search" aria-label="Glossary" aria-describedby="glossary-help" hidden>'
-            '<label for="glossary-query">Term or words in a definition</label>'
+            '<label for="glossary-query">Term, abbreviation or words to find</label>'
             '<input id="glossary-query" type="search" name="q" autocomplete="off">'
             '<label for="glossary-subject">Subject</label><select id="glossary-subject" name="subject">'
             '<option value="">All subjects</option>')
@@ -41,12 +41,24 @@ def glossary_lookup(config):
              '<ul id="glossary-results">')
     for term in terms:
         subject = sections[term['section']]
-        search = term['term']+' '+term['definition']+' '+term.get('note', '')
+        aliases = term.get('aliases', [])
+        search = glossary_search_text(term)
         body += ('<li data-glossary-entry data-subject="'+e(term['section'], quote=True)+'" '
+                 'data-aliases="'+e('\n'.join(aliases), quote=True)+'" '
                  'data-term="'+e(term['term'], quote=True)+'" data-search="'+e(search, quote=True)+'">'
                  '<h4><a href="#'+e(term['id'], quote=True)+'">'+e(term['term'])+'</a></h4>'
                  '<p class="glossary-subject">'+e(subject)+'</p><p>'+e(term['definition'])+'</p>')
+        if aliases:
+            body += '<p class="glossary-aliases"><strong>Also called:</strong> '+e(', '.join(aliases))+'.</p>'
+        if term.get('example_text'):
+            body += '<p class="glossary-example"><strong>In the worked example:</strong> '+e(term['example_text'])+'</p>'
         if term.get('note'):
             body += '<p><strong>Keep in mind:</strong> '+e(term['note'])+'</p>'
         body += '</li>'
     return body+'</ul></div></section>'
+
+
+def glossary_search_text(term):
+    """Use the same vocabulary in local lookup and the collection search."""
+    return ' '.join([term['term'], *term.get('aliases', []), term['definition'],
+                     term.get('example_text', ''), term.get('note', '')])

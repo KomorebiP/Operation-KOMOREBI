@@ -549,6 +549,18 @@ Reading routes, glossary, download guides and work introductions are generated
 with the collection's normal status command. Edit their source records or
 templates. Keep each claim's exact recorded scope when changing navigation.
 
+The glossary’s maintained records in `manifests/reader-experience.json` include
+alternate names and abbreviations, short excerpts from the worked examples,
+a first reading route, and comparisons of nearby concepts. Edit those records
+and regenerate `docs/GLOSSARY.md` with `tools/reader_experience.py` through the
+normal status command. The GitHub reference and website lookup share the same
+definitions, examples and original term anchors. Both glossary lookup and
+collection search include the alternate names and short examples. Exact term
+names rank first in glossary lookup, followed by exact alternate names, name
+prefixes and definition matches. Subject filters also apply to alternate names.
+Without JavaScript, the first reading route, comparisons, subject lists, letter
+groups and complete entries remain available.
+
 The homepage keeps its five research previews in one manually selected panel,
 with named topic tabs, previous/next buttons, touch swipes, and standard tab-list
 keyboard controls (Left/Right, Home/End). It never advances automatically. All

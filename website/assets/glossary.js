@@ -2,7 +2,7 @@
 
 // Match text and compatibility spellings such as subscript digits and ligatures.
 function glossaryWords(value) {
-  return value.normalize("NFKC").toLocaleLowerCase("en").replace(/[-\u2010-\u2015\u2212]/g, " ").replace(/\s+/g, " ");
+  return value.normalize("NFKC").toLocaleLowerCase("en").replace(/[-\u2010-\u2015\u2212]/g, " ").replace(/\s+/g, " ").trim();
 }
 
 const glossary = document.querySelector("#glossary-lookup");
@@ -16,6 +16,7 @@ if (glossary) {
   const list = document.querySelector("#glossary-results");
   const entries = Array.from(list.children, node => ({node,
     term: glossaryWords(node.dataset.term), text: glossaryWords(node.dataset.search),
+    aliases: (node.dataset.aliases || '').split('\n').filter(Boolean).map(glossaryWords),
     subject: node.dataset.subject}));
   let announcement;
 
@@ -26,7 +27,7 @@ if (glossary) {
     const active = !!(text || subject.value);
     const ranked = entries.map(entry => ({...entry,
       visible: active && (!subject.value || entry.subject === subject.value) && words.every(word => entry.text.includes(word)),
-      rank: entry.term === text ? 0 : entry.term.startsWith(text) ? 1 : 2}));
+      rank: entry.term === text ? 0 : entry.aliases.includes(text) ? 1 : entry.term.startsWith(text) ? 2 : 3}));
     ranked.sort((a, b) => a.rank - b.rank); // Preserve alphabetical order within each rank.
     let count = 0;
     for (const entry of ranked) {

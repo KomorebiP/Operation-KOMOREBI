@@ -15,9 +15,10 @@ function lookupPage(search = '') {
       focus() { document.activeElement = this; }, scrollIntoView() { this.scrolled = true; }};
   }
   const entries = [
-    node('cokernel', {dataset: {term: 'Cokernel', search: 'Cokernel Quotient by the image of a linear map.', subject: 'linear'}}),
-    node('kernel', {dataset: {term: 'Kernel', search: 'Kernel Vectors sent to zero by a linear map.', subject: 'linear'}}),
+    node('cokernel', {dataset: {term: 'Cokernel', search: 'Cokernel Quotient by the image of a linear map. Contrast nullspace.', subject: 'linear'}}),
+    node('kernel', {dataset: {term: 'Kernel', aliases: 'Nullspace\nNull space', search: 'Kernel Nullspace Null space Vectors sent to zero by a linear map.', subject: 'linear'}}),
     node('kernel-pair', {dataset: {term: 'Kernel pair', search: 'Kernel pair Two inputs with the same image.', subject: 'linear'}}),
+    node('nullspace-notes', {dataset: {term: 'Nullspace notes', search: 'Nullspace notes A longer term beginning with the alias.', subject: 'linear'}}),
     node('seed-rank', {dataset: {term: 'Seed rank', search: 'Seed rank Least generating family.', subject: 'operators'}}),
     node('ulp', {dataset: {term: 'ULP', search: 'ULP Spacing at precision 3 in R².', subject: 'arithmetic'}})
   ];
@@ -75,6 +76,16 @@ for (const query of ['SEED-RANK', 'seed–rank']) {
   p.search(query);
   assert.deepEqual(p.visible(), ['seed-rank']);
 }
+for (const query of ['NULLSPACE', 'nullspace', '  null space  ', 'null-space']) {
+  p.search(query);
+  assert.equal(p.visible()[0], 'kernel', 'An exact alias precedes name prefixes and incidental definition matches');
+}
+p.nodes['#glossary-subject'].value = 'operators';
+p.event('glossary-subject','change');
+assert.deepEqual(p.visible(), [], 'Alias matches still respect the subject filter');
+p.event('glossary-form','reset');
+p.search(' – ');
+assert.equal(p.nodes['#glossary-matches'].hidden, true, 'A normalized blank query does not show every entry');
 p.search('r2');
 assert.deepEqual(p.visible(), ['ulp'], 'Compatibility characters match ordinary keyboard spellings');
 p.search('kernel');
@@ -90,7 +101,9 @@ p.backOrForward();
 assert.equal(p.nodes['#glossary-query'].value, 'least');
 assert.deepEqual(p.visible(), ['seed-rank'], 'Back and Forward restore the lookup described by the address');
 assert.equal(p.document.activeElement, null, 'History restores filters without stealing passage focus');
+p = lookupPage('?q=nullspace&subject=linear');
+assert.equal(p.visible()[0], 'kernel', 'Shared alias queries use the same ranking');
 p = lookupPage('?subject=unknown&q=%3Cscript%3E');
 assert.equal(p.nodes['#glossary-subject'].value, '');
 assert.deepEqual(p.visible(), []);
-console.log('PASS: glossary ranking, definition search, subjects, keyboard focus, clear, safe shared addresses and announcements');
+console.log('PASS: glossary names, aliases, ranking, definition search, subjects, keyboard focus, clear, safe shared addresses and announcements');

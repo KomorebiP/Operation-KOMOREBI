@@ -32,6 +32,15 @@ def load(root):
     for term in data['glossary']:
         if sections:assert term['section'] in sections
         assert set(term.get('related',[])) <= identifiers
+        assert isinstance(term.get('aliases', []), list)
+        assert all(isinstance(alias, str) and alias.strip() for alias in term.get('aliases', []))
+        if 'example_text' in term:
+            assert isinstance(term['example_text'], str) and term['example_text'].strip()
+            assert term.get('example'), 'A short example needs a worked-example link'
+    for step in data.get('glossary_start', []):
+        assert step['terms'] and set(step['terms']) <= identifiers
+    for comparison in data.get('glossary_comparisons', []):
+        assert len(comparison['terms']) == 2 and set(comparison['terms']) <= identifiers
     topics=data.get('learning_topics',[])
     assert len({x['id'] for x in topics})==len(topics)
     assert len({x['example'] for x in topics})==len(topics)
@@ -186,12 +195,25 @@ def render_glossary(config):
     terms={x['id']:x for x in config['glossary']}
     text='# Glossary and notation\n\n'
     text+='This guide explains '+str(len(terms))+' terms used in the collection and its finite examples. '
-    text+='Start with a subject below, use the [alphabetical index](#alphabetical-index), or look up [symbols](#symbols-in-the-introductory-example).\n\n'
-    text+='[Find a glossary term on the reading website]('+SITE+'collection/GLOSSARY.html#glossary-lookup): search terms and definitions, or choose a subject. Open the glossary beside a paper with **Read side by side**.\n\n'
+    text+='Use the [first reading route](#a-first-reading), [compare nearby ideas](#compare-nearby-ideas), browse a subject, or open the [alphabetical index](#alphabetical-index).\n\n'
+    text+='[Find a glossary term on the reading website]('+SITE+'collection/GLOSSARY.html#glossary-lookup): search names, abbreviations, definitions and short examples, or choose a subject. Open the glossary beside a paper with **Read side by side**.\n\n'
     text+='A word can have a more specific meaning in another paper. The paper’s definitions and hypotheses take precedence. Examples and source links provide context without changing any recorded evidence status.\n\n'
     text+='[Look up notation across the collection](NOTATION_INDEX.md) · [Work through the calculations by hand](HAND_WORKED_EXAMPLES.md) · [Papers, proofs, Lean, and code by topic](LEARNING_MAP.md) · [First software runs](FIRST_RUN.md)\n\n'
+    if config.get('glossary_start'):
+        text+='## A first reading\n\nFollow these terms for a short route through the finite examples. Each definition links to a worked calculation.\n\n'
+        for index, step in enumerate(config['glossary_start'], 1):
+            text+=str(index)+'. '+' · '.join('['+terms[key]['term']+'](#'+key+')' for key in step['terms'])+' — '+step['description']+'\n'
+        text+='\n'
+    if config.get('glossary_comparisons'):
+        text+='## Compare nearby ideas\n\nThese distinctions use the glossary’s stated settings. Follow both entries for their definitions and examples.\n\n'
+        text+='| Terms | Distinction to keep in view |\n|---|---|\n'
+        for comparison in config['glossary_comparisons']:
+            text+='| '+' / '.join('['+terms[key]['term']+'](#'+key+')' for key in comparison['terms'])+' | '+comparison['distinction']+' |\n'
+        text+='\n'
+    text+='## Browse by subject\n\n'
     for section in config['glossary_sections']:
-        text+='- ['+section['title']+'](#'+section['id']+')\n'
+        count=sum(term['section']==section['id'] for term in terms.values())
+        text+='- ['+section['title']+'](#'+section['id']+') — '+str(count)+' terms\n'
     text+='\n'
     for section in config['glossary_sections']:
         group=[x for x in config['glossary'] if x['section']==section['id']]
@@ -199,6 +221,8 @@ def render_glossary(config):
         text+=' · '.join('['+x['term']+'](#'+x['id']+')' for x in group)+'\n\n'
         for term in group:
             text+='<a id="'+term['id']+'"></a>\n\n### '+term['term']+'\n\n'+term['definition']+'\n\n'
+            if term.get('aliases'):text+='**Also called:** '+', '.join(term['aliases'])+'.\n\n'
+            if term.get('example_text'):text+='**In the worked example:** '+term['example_text']+'\n\n'
             if term.get('note'):text+='**Keep in mind:** '+term['note']+'\n\n'
             links=[]
             if term.get('example'):links.append('[Hand-worked example]('+term['example']+')')
@@ -218,7 +242,13 @@ def render_glossary(config):
         text+='| '+' | '.join(row)+' |\n'
     text+='\nSymbols are local to their definitions. In another paper, the same letter can denote a different object.\n\n'
     text+='## Alphabetical index\n\n'
-    text+=' · '.join('['+x['term']+'](#'+x['id']+')' for x in sorted(config['glossary'],key=lambda x:x['term'].casefold()))+'\n\n'
+    alphabet={}
+    for term in sorted(config['glossary'],key=lambda x:x['term'].casefold()):
+        alphabet.setdefault(term['term'][0].upper(),[]).append(term)
+    text+=' · '.join('['+letter+'](#index-'+letter.lower()+')' for letter in alphabet)+'\n\n'
+    for letter, group in alphabet.items():
+        text+='<a id="index-'+letter.lower()+'"></a>\n\n### '+letter+'\n\n'
+        text+=' · '.join('['+x['term']+'](#'+x['id']+')' for x in group)+'\n\n'
     text+='[Reading routes](READING_ROUTES.md) · [Hand-worked examples](HAND_WORKED_EXAMPLES.md) · [First runs](FIRST_RUN.md) · [Browse works](BROWSE.md)\n'
     return text
 
