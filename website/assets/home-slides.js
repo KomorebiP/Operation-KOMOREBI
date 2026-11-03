@@ -1,10 +1,9 @@
 "use strict";
 
-// All examples are ordinary visible sections until enhancement succeeds.
+// All panels are ordinary visible sections until enhancement succeeds.
 // Selection is always manual: no timer, motion, or unexpected focus changes.
-const showcase = document.querySelector(".home-showcase");
-if (showcase) {
-  const slides = Array.from(showcase.querySelectorAll(".home-slide"));
+document.querySelectorAll(".home-showcase, .home-entry-showcase").forEach(showcase => {
+  const slides = Array.from(showcase.querySelectorAll(".home-slide, .home-entry-slide"));
   const topics = showcase.querySelector(".home-topics");
   const tabs = Array.from(topics.querySelectorAll("button"));
   const controls = showcase.querySelector(".home-slide-controls");
@@ -47,7 +46,7 @@ if (showcase) {
 
     // Swipe only on noninteractive content, leaving links and vertical scroll alone.
     let start;
-    const feature = showcase.querySelector(".home-feature");
+    const feature = showcase.querySelector(".home-feature, .home-entry-feature");
     feature.addEventListener("pointerdown", event => {
       start = event.isPrimary && event.pointerType === "touch" && !event.target.closest("a,button")
         ? {x: event.clientX, y: event.clientY, id: event.pointerId} : null;
@@ -76,4 +75,4 @@ if (showcase) {
     controls.hidden = false;
     showcase.classList.add("home-slides-ready");
   }
-}
+});
