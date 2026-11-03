@@ -14,9 +14,9 @@ Cyclic families, sequence constructions, reciprocal structure, and exact methods
 
 **Suggested background:** Begin with the introduction and glossary. Then use the volume's own definitions to identify the background needed for its subject.
 
-**Recorded results and limits:** Proofread reading volumes plus 251 named theorem declarations: 39 in the inherited finite core and 29, 21, 19, 16, 13, 19, 23, 22, 16, 34 in Blocks01 through 10. Checked scope includes the principal ordinary-series F.1 contract, coefficient transport, guarded G.2 inverse, G.1 rescaling, F.2 characteristic prerequisites, positive-real embeddings and maxima, and both explicit lower and upper logarithmic power comparisons with positive finite two-sided growth-ratio bounds. Formal real liminf/limsup type bounds, radial exponent limit, F.3 proportions, operator decoupling and full monograph coverage remain open.
+**Recorded results and limits:** Proofread reading volumes plus 273 named theorem declarations: 39 inherited finite-core names and 29, 21, 19, 16, 13, 19, 23, 22, 16, 34, 22 in Blocks01 through 11. Registered canonical F.1 and F.2 contracts, G.1 component-rescaling equivalence and guarded G.2 inverse are complete. F.2 includes actual maximum-modulus real type bounds, full radial exponent limit and exact order. F.3 Perron proportions, ancillary Appendix F identities, H.1 operator classification, I-J resolution/evaluator refinement and broad A-E analytic coverage remain open; no whole-book coverage percentage is established.
 
-**Remaining work:** Formalize eventual boundedness and real liminf/limsup type bounds from the two-sided growth ratios, then prove the radial exponent limit. Continue with scaled type transport and the F.3 proportions; operator decoupling and wider coverage remain separate.
+**Remaining work:** Prove scaled real liminf/limsup transport and F.3 Perron type-vector proportions, then complete the source-mapped ancillary, operator, certificate and wider analytic obligations in the remaining-work inventory.
 
 The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
 
@@ -90,7 +90,7 @@ These links include code, examples, checks, or build tools. Read the [edition gu
 ## Evidence
 
 - [Completion, Lean coverage, confidence, and cited evidence](../STATUS_CATALOG.md#monographs-special-functions)
-- [Latest recorded written review](../SPECIAL_FUNCTIONS_UPPER_GROWTH_BLOCK10.md)
+- [Latest recorded written review](../SPECIAL_FUNCTIONS_GROWTH_TYPES_BLOCK11.md)
 - [Source-file receipt (identity and availability)](../../manifests/source-imports/monographs-special-functions.json)
 - [All files in this source edition](../../monographs/special-functions/)
 
