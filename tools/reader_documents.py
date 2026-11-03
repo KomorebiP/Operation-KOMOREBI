@@ -9,6 +9,13 @@ from urllib.parse import quote, unquote, urlsplit
 
 TEXT_SUFFIXES = {'.md', '.tex', '.txt', '.json', '.lean', '.py', '.bib', '.bbl', '.aux', '.c', '.h'}
 
+# These live checkpoints resolve at the current repository revision. Their
+# imported copies remain in `owned` for provenance of the retained edition.
+CURRENT_REPOSITORY_GUIDANCE = {
+    'monographs/special-functions/CONTINUE_HERE.md',
+    'monographs/special-functions/RELEASE_STATUS.md',
+}
+
 
 def png_dimensions(raw):
     """Read the intrinsic size without decoding or changing a retained image."""
@@ -104,6 +111,8 @@ class ReadingDocuments:
         prepare_lean(self)
 
     def add(self, path, label=None):
+        if path in CURRENT_REPOSITORY_GUIDANCE:
+            return None
         if path in self.records:
             return self.records[path]
         entry = self.owned.get(path)
