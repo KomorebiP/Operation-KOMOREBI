@@ -8,6 +8,37 @@ All twelve core papers have formatted HTML reading editions. Each retains its
 recorded mathematical scope; companion guides and atlas coverage are described
 on the individual reading pages.
 
+## Machine-Native Reasoning reading edition
+
+The Reviewed Mathematical Core is available at
+`read/monographs-machine-native-reasoning/`. Its start page follows the sensor
+example through evidence, correction, inquiry, and revision. Thirteen reading
+pages preserve the two opening sections, nine numbered chapters, and two source
+and review registers. The authored formal correspondence chapter is available
+in full from its original input location and the formal-scope page.
+
+The edition retains all 27 selected statements and written proofs, 12
+counterexamples, 618 mathematical expressions, six original figures, and ten
+source descriptions. The statement finder links to proofs and recorded formal
+scope. That scope connects all 174 mapped declaration endpoints to exact lines
+in the 79 registered production Lean files. The older map's printed page and
+line numbers remain linked to the original core source, separately from the
+refreshed reader's source lines.
+
+`tools/machine_native_reasoning_reading.py` checks the retained source digest,
+contiguous reading ranges, printed statement identities, mathematical sequence,
+and source lines. `tools/machine_native_reasoning_scope.py` binds the accepted
+release record to the result map and reader publication record. Figure receipts
+authenticate the retained PDFs and their browser images; regenerate the latter
+with `python -B tools/render_machine_native_reasoning_figures.py` (pypdfium2).
+Run `python -B -m unittest discover -s tools -p 'test_machine_native_reasoning*.py' -v`.
+
+The accepted 27/27 selected-core scope remains distinct from the 74-page older
+continuation and the separately unrecovered expanded 1,155-page monograph.
+This conversion adds no mathematical proof audit, Lean execution, or empirical
+validation. The mathematical proofreading self-review concerns presentation and
+navigation; there are no mathematical-token changes.
+
 ## Large Signal Model reading edition
 
 The Large Signal Model is available at `read/monographs-large-signal-model/`.

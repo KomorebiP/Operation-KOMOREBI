@@ -124,7 +124,7 @@ PDF, manuscript text, Lean sources, code, and existing evidence are linked separ
 
 [Open work page: Machine Native Reasoning](../works/monographs-machine-native-reasoning.md)
 
-[PDF](../../monographs/machine-native-reasoning/reader/Machine_Native_Reasoning_Reviewed_Core.pdf) · [Text](../../monographs/machine-native-reasoning/reader/source/book.tex) · [Lean](../../monographs/machine-native-reasoning/MachineTheory.lean) · [Code](../../monographs/machine-native-reasoning/tools/) · [Work page](../works/monographs-machine-native-reasoning.md)
+[PDF](../../monographs/machine-native-reasoning/reader/Machine_Native_Reasoning_Reviewed_Core.pdf) · [Text](../../monographs/machine-native-reasoning/reader/source/book.tex) · [Lean](../../monographs/machine-native-reasoning/MachineTheory/) · [Code](../../monographs/machine-native-reasoning/tools/) · [Work page](../works/monographs-machine-native-reasoning.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
