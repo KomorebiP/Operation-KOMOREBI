@@ -1,63 +1,60 @@
 # Continue Special Functions formalization
 
-Current checkpoint: **SF-LEAN-B10**, based on repository commit
-`2661894c45768d240e9c2fcc4524061e404a0411`. Start with
-`formalization/Block10/REPORT.md`, its claim/declaration maps, self-review,
-I/O inventory and source-bound execution receipt.
+Current checkpoint: **SF-LEAN-B11**, based on repository commit
+`1c7814ef551709f44547561fe9b04ff7f9faa505`. Start with
+`formalization/Block11/REPORT.md`, its claim/declaration maps, self-review,
+I/O inventory and source-bound receipt. The dated remaining-work inventory
+is `formalization/Block11/REMAINING_WORK.md` (also available as JSON).
 
-`lean/CoupledUpperGrowth.lean` adds 34 theorem declarations proving the
-explicit F.2 upper comparison log(F_i(R))<=c_plus*w_i*R^rho-log(R)-D for
-every R>=e and both actual canonical functions. The manuscript constants
-use only the parameters and characteristic data; an admissible seed index
-exists and the canonical wrapper chooses the least one. The geometric
-seed and W_N formula, positive upper coefficients, and two-sided positive
-finite bounds on log(F_i(R))/R^rho are proved. This includes rho<1.
+`lean/CoupledGrowthTypes.lean` adds 22 theorem declarations. The registered
+canonical **F.2 growth contract is complete**: both explicit comparisons,
+positive real lower and finite upper types, the actual maximum-modulus radial
+exponent limit, and exact limsup order rho. Boundedness/coboundedness and
+supremum nonemptiness are supplied explicitly. The registered scope is 273
+names, including supporting lemmas and the preceding 251 names. This does
+not assert ordinary type convergence or complete all Appendix F.
 
-The registered scope is 251 names, including supporting lemmas and the
-preceding 217 names. Both explicit comparison subsections of F.2 are proved.
-Real liminf/limsup type bounds, the radial exponent limit and F.3 type-vector
-proportions remain open as formal statements.
+Next executable target: **Theorem F.3**, lines 354-422 in
+`monograph/sections_v11/coupled_growth_full.tex`. Prove scaled liminf/limsup
+transport for p(R-1) and pR, including the factors (p(R-1))^rho/R^rho and
+vanishing log(R)/R^rho terms. Derive lowerTypeVector>=P(rho)*lowerTypeVector
+and upperTypeVector<=P(rho)*upperTypeVector from the proved recurrences.
+Dot with the strictly positive left characteristic vector to force equality
+coordinatewise. Prove the eigenvalue-one space is one-dimensional, obtain
+both Perron proportions and explicit component ratios, then the equivalence
+of ordinary type-limit existence for the two components. F.2 supplies the
+positive finite real type bounds needed for these operations.
 
-Next executable target in `monograph/sections_v11/coupled_growth_full.tex`:
-finish F.2's type bounds and radial exponent limit. Begin with
-`canonical_two_sided_growth_ratio`: for every R>=e, each ratio lies between
-its positive canonical lower and upper coefficients. Use this to prove the
-eventual boundedness premises for real filter liminf/limsup atTop, then
-identify positive finite lower/upper types and their order. Do not rely on
-the default real liminf/limsup value without the boundedness hypotheses.
+Do not confuse the type ratio with the radial exponent profile. The manuscript
+does not assert that ordinary type limits always exist. Continue from the
+actual real types and spherical supremum definitions in CoupledGrowthTypes;
+retain all real filter boundedness premises during scaled transport.
 
-For the radial exponent, take logarithms of the two-sided comparison for
-large R. Squeeze log(log(F_i(R)))/log(R) between rho plus the constant log
-coefficients divided by log(R). Make log(F_i(R))>0, R^rho>0, log(R)>0 and
-the eventual domains explicit. Transport to maximum-modulus language through
-Block08's attained maximum identity. F.3 then needs scaled liminf/limsup
-transport, both coupled row inequalities, the positive left eigenvector and
-the one-dimensional eigenvalue-one space. Operator and wider coverage remain
-separate obligations.
+Further source-mapped work: ancillary Appendix F identities/examples and
+parameter structure; H.1 autonomous projections/operator obstruction; I-J
+resolution and arbitrary-radius certified-evaluator correspondence; and the
+broader multi-tap, arithmetic, sieve, spectral and polyphase development in
+A-E. G.1 and guarded G.2 registered contracts are complete. There is no full
+manuscript-wide theorem correspondence map or honest completion percentage.
+Reading-edition proofreading and finite foundations are distinct evidence.
 
-Pinned API entry points are Filter.limsup_le_of_le, Filter.le_liminf_of_le
-and Filter.liminf_le_limsup in Mathlib/Order/LiminfLimsup.lean:141-185.
-Supply the bounded/cobounded premises explicitly. For the squeeze error,
-Tendsto.div_atTop with Real.tendsto_log_atTop sends each constant/log(R) to
-zero; the logarithmic-growth lemma need not assume the growth ratio converges.
-
-Replay `tools/verify_coupled_upper_growth.py` with Lean 4.34.0-rc2,
+Replay `tools/verify_coupled_growth_types.py` with Lean 4.34.0-rc2,
 Mathlib `aeb72f1e9981b6d35b426b16dca7759be3e7ba06`, and a new external
-directory. The native Windows toolchain and imports remain cached. All 45
-steps cover ten coupled modules, freshly axiom-auditing 212 declarations
-and inheriting the finite core's 39-name evidence. Imported Mathlib is not
-freshly rebuilt/replayed. Review is self-review.
+directory. All 48 steps cover eleven coupled modules, freshly axiom-auditing
+234 declarations and inheriting the finite core's 39-name evidence. Imported
+Mathlib is cached rather than freshly rebuilt/replayed. Review is self-review.
 
-`formalization/Block10/IO_MANIFEST.json` inventories 38 inputs, 46 packaged
-outputs, ten unbundled generated objects and 25 staged source copies with
-hashes. Source, audits, controls, verifier, correspondence, status, catalogue
-and this live file are updated together. Immutable manifests exclude live
-guidance. Preserve all ten blocks, dated guides, manuscripts and reading PDFs.
+Block11/IO_MANIFEST.json inventories the accepted run's 41 formal inputs, 49 packaged outputs,
+eleven unbundled generated objects, 27 staged source copies, and separately
+16 remaining-work assessment inputs/two outputs and the preserved resource-
+failed first replay with hashes. Source, audits,
+controls, verifier, correspondence, status, catalogue and this live file are
+updated together. Immutable manifests exclude live guidance. Preserve all
+eleven blocks, dated guides, manuscripts and reading PDFs.
 
-The mean-value/geometric-seed/log-delay route succeeded. The FTC route is
-deferred for future integral identities; its first uncertainty is the
-integral/embedding API. A direct weighted supersolution is deferred for
-sharper constants; its first uncertainty is a parameter-only seed for rho<1.
-Neither is exhausted or refuted. Older reports retain earlier alternatives.
-No delegated or delayed runs remain. New proofs belong in a new block.
-The root archive manifest remains an older release snapshot.
+The real bounded-filter/logarithmic-squeeze route succeeded. An extended-real
+route is deferred for unbounded profiles (infinity conversion unresolved);
+a little-o route is deferred for sharper errors (positive-domain transport
+untried). Neither is refuted or exhausted. Older reports retain earlier
+alternatives. No delegated or delayed runs remain. New proofs belong in a
+new block. The root archive manifest remains an older release snapshot.

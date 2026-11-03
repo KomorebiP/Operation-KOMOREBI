@@ -1,5 +1,13 @@
 # Technical publication package with checked coupled-functions block
 
+**2026-11-02 real types and radial order companion:** SF-LEAN-B11 adds
+22 checked theorem declarations, completing the registered canonical F.2
+growth contract: real type bounds, actual maximum-modulus radial exponent
+limit and exact limsup order. The registered scope is 273 names. Actual I/O
+and a source-based remaining-work inventory are hashed. F.3 proportions,
+operator classification and broader analytic coverage remain open. See
+`formalization/Block11/REPORT.md`. Earlier notes retain their dated scopes.
+
 **2026-11-02 explicit upper growth companion:** SF-LEAN-B10 adds 34
 checked theorem declarations proving the explicit F.2 upper comparison for
 all R>=e, parameter-only seed constants and index existence, positive upper
