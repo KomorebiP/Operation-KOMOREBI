@@ -23,7 +23,10 @@ BOOK=dict(work=WORK,label='Paper X',base=BASE,main=MAIN,bib=BIB,inline_bibliogra
     require_table_reading_aids=True,
     reading_introduction='Read all 15 main sections, the algorithms and reproducibility appendices, '
         'the retained historical checkpoints and residue-counting continuation, and the final '
-        'conditional occupied-system completion. The thirty-page visual atlas remains in the PDF.')
+        'conditional occupied-system completion. The complete 30-plate visual atlas and its opening scope contract also have HTML pages.',
+    atlas_index=PREFIX+'atlas/index.html',atlas_link_text='Explore all 30 visual plates and the opening scope contract',
+    atlas_note='With 29 original drawings, selectable labels, descriptions and manuscript links.',
+    reading_note='The complete visual guide has 30 numbered plates and two opening scope sections in HTML. Historical and conditional input contracts remain distinct.')
 BOOK['table_reading_aids']={
     ('reading_contract.tex','L10'):dict(caption='Routes through the complete reading edition',
         headers=['Read for','Follow this route'],row_header_column=0),

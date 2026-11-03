@@ -283,6 +283,11 @@ class Site:
     def write(self,path,text):
         target=self.output/safe_path(path)
         target.parent.mkdir(parents=True,exist_ok=True)
+        # These are generated metadata files. Compact their JSON syntax while
+        # retaining every value, including whitespace inside source strings.
+        # Retained source files and frozen asset receipts keep their bytes.
+        if str(path).endswith('.json') and not str(path).startswith(('files/','documents/files/','assets/')):
+            text=json.dumps(json.loads(text),ensure_ascii=False,separators=(',',':'))+'\n'
         target.write_text(text,encoding='utf-8',newline='\n')
     def rel(self,target,page):
         return posixpath.relpath(target,posixpath.dirname(page) or '.')

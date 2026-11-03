@@ -19,7 +19,7 @@ def build(root,work,spec=None):
     records=[]
     with pdfium.PdfDocument(raw) as document:
         for name,number,bounds in spec['crops']:
-            page=document[number+spec['offset']-1]
+            page=document[spec.get('pdf_pages',{}).get(name,number+spec['offset'])-1]
             try:
                 isolation=spec.get('isolate_drawings',{}).get(name)
                 if isolation:
@@ -34,10 +34,10 @@ def build(root,work,spec=None):
                 image=bitmap.to_pil().convert('RGB').crop(tuple(x*3 for x in bounds))
                 target=output/(name+'.png');image.save(target);bitmap.close()
             finally:page.close()
-            source=spec.get('drawing_base',spec['base']+'visual_graphics/')+name+'.tex'
+            source=spec.get('drawing_sources',{}).get(name,spec.get('drawing_base',spec.get('base','')+'visual_graphics/')+name+'.tex')
             records.append(dict(name=name,plate=number,source=source,source_sha256=digest((root/source).read_bytes()),
                 image=target.relative_to(root/'website').as_posix(),image_sha256=digest(target.read_bytes()),
-                pdf_page=number+spec['offset'],crop_pdf_points=bounds))
+                pdf_page=spec.get('pdf_pages',{}).get(name,number+spec['offset']),crop_pdf_points=bounds))
             if isolation:records[-1]['isolated_drawing_objects']=isolation
     receipt=dict(source_pdf=spec['pdf'],source_pdf_sha256=spec['sha256'],renderer='pypdfium2 '+version('pypdfium2'),dpi=216,
         figures=records,scope='Original visual-guide drawings; no TeX rebuild, example execution, proof audit or Lean replay.')

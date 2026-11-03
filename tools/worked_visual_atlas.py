@@ -37,6 +37,9 @@ class WorkedAtlas:
         self.EXTRAS = spec.get('extra_sources',{})
         self.DEFINITIONS = spec.get('definitions_path',self.BOOK['base'] + spec.get('definitions',''))
         self.DRAWING_BASE = spec.get('drawing_base',self.BOOK['base']+'visual_graphics/')
+        self.DRAWING_SOURCES = spec.get('drawing_sources',{})
+        self.PDF_PAGES = spec.get('pdf_pages',{})
+        self.INDEX_DRAWINGS = spec.get('index_drawings',[])
         self.INDEX = 'read/' + work + '/atlas/index.html'
         self.REPORT = 'documents/' + work + '-atlas.json'
         self.RECEIPTS = 'assets/atlas/' + work + '/figures.json'
@@ -51,7 +54,9 @@ class WorkedAtlas:
         self.ISOLATED_DRAWINGS = spec.get('isolate_drawings',{})
 
     def drawing_source(self, name):
-        return self.DRAWING_BASE + name + '.tex'
+        return self.DRAWING_SOURCES.get(name,self.DRAWING_BASE + name + '.tex')
+
+    def drawing_pdf_page(self,name,number):return self.PDF_PAGES.get(name,number+self.PDF_PAGE_OFFSET)
 
     def drawing_nodes(self,source,name):
         return drawing_nodes(source)
@@ -62,6 +67,10 @@ class WorkedAtlas:
     def edition_checks(self):return {}
 
     def edition_note(self):return ''
+
+    def index_introduction(self,reader,atlas,chapter):return ''
+
+    def verify_index_introduction(self,root,documents,pages,report,read,macros):pass
 
     def reference_keys(self, plate):
         keys = re.findall(r'(Section|Definition|Theorem|Proposition|Corollary|Remark|Lemma|Example|Formalization target) ((?:[A-Z]|\d+)(?:\.\d+)*)', plate['locator'])
@@ -106,6 +115,21 @@ class WorkedAtlas:
 
     def atlas_macros(self, main, definitions):
         return manuscript_macros(main + '\n' + definitions, self.BOOK.get('required_macros'))
+
+    def source_macros(self,read,main,definitions):return self.atlas_macros(main,definitions)
+
+    def manuscript_chapters(self,read,macros):
+        manuscript=[];state={'number_floats':self.BOOK.get('number_floats',False)}
+        for spec in self.BOOK['chapters']:
+            if 'section_prefix' in spec:state.update(section=0,appendix=False,figure=0,table=0,section_prefix=spec['section_prefix'])
+            state.update(spec.get('numbering_state',{}))
+            raw=read(spec['source'])
+            chapter=Chapter(chapter_text(raw.decode('utf-8-sig'),spec),macros,state=state,check_refs=False)
+            chapter.url=spec['url']
+            for node in chapter.labels.values():node['url']=chapter.url
+            manuscript.append((spec,raw,chapter))
+            state={key:getattr(chapter,key) for key in ('section','appendix','part','subsection','subsubsection','counter','section_prefix','figure','table','number_floats')}
+        return manuscript
 
     def plate_math(self, plate, figures):
         return original_math(plate['category']) + original_math(plate['title']) + original_math(plate['locator']) + expected_math(dict(plate, body=self.drawing_tex(plate['body'])), figures)
@@ -156,7 +180,7 @@ class WorkedAtlas:
         if digest(reader.site.read_source(reader.records[self.PDF])) != self.PDF_SHA256:
             raise ValueError('Worked atlas PDF differs from the frozen guide')
         main = reader.readable_books[self.work]['main']
-        macros = self.atlas_macros(main, definitions.decode('utf-8-sig'))
+        macros = self.source_macros(read,main,definitions.decode('utf-8-sig'))
         selected = self.read_plates(read)
         receipts = json.loads((reader.site.root / 'website' / self.RECEIPTS).read_bytes())
         if receipts['source_pdf'] != self.PDF or receipts['source_pdf_sha256'] != self.PDF_SHA256:
@@ -171,7 +195,7 @@ class WorkedAtlas:
                 raise ValueError('Unexpected Worked atlas drawing source')
             number, bounds = crops[name]
             if record.get('isolated_drawing_objects')!=self.ISOLATED_DRAWINGS.get(name):raise ValueError('Changed drawing object extraction')
-            if record['image'] != 'assets/atlas/'+self.work+'/' + name + '.png' or record['plate'] != number or record['pdf_page'] != number + self.PDF_PAGE_OFFSET or (record['crop_pdf_points'] != bounds):
+            if record['image'] != 'assets/atlas/'+self.work+'/' + name + '.png' or record['plate'] != number or record['pdf_page'] != self.drawing_pdf_page(name,number) or (record['crop_pdf_points'] != bounds):
                 raise ValueError('Worked atlas drawing crop or image path changed')
             reader.add(record['source'])
             source = reader.site.read_source(reader.records[record['source']])
@@ -183,7 +207,7 @@ class WorkedAtlas:
             info = self.reading_aids(name, nodes, source.decode('utf-8-sig'))
             figures[name] = dict(receipt=record, nodes=nodes, description=info, order=transcript_order(info, nodes), width=width, height=height)
         used = [name for p in selected[:self.HTML_COUNT] for name in re.findall('\\\\vfig\\{([^{}]+)\\}', self.drawing_tex(p['body']))]
-        if sorted(used) != sorted(self.FIGURES) or set(figures) != set(self.FIGURES):
+        if sorted(used+self.INDEX_DRAWINGS) != sorted(self.FIGURES) or set(figures) != set(self.FIGURES):
             raise ValueError('Worked atlas drawing coverage changed')
         references = self.reference_map(reader.readable_books[self.work]['chapters'])
         resolved = {}
@@ -275,6 +299,7 @@ class WorkedAtlas:
         site.write(self.REPORT, json.dumps(report, ensure_ascii=False, indent=2) + '\n')
         body = '<p class="eyebrow">' + self.label + ' · Visual atlas</p><h1>Explore the '+str(self.HTML_COUNT)+' atlas plates</h1>'
         body += '<p>Read all '+str(self.HTML_COUNT)+' worked plates with '+str(len(self.FIGURES))+' original drawings, selectable equations, descriptions, and transcripts of the drawing labels. Each mathematical plate links to the manuscript passages it illustrates; evidence notes retain their source edition’s scope.</p>' + reader.work_routes(self.work, self.INDEX)
+        body += self.index_introduction(reader,atlas,chapter)
         body += '<nav class="chapter-contents" aria-label="Atlas plates"><h2>Choose a plate</h2><ol>'
         for plate in atlas['plates']:
             number = plate['number']
@@ -298,7 +323,7 @@ class WorkedAtlas:
         for path,sha in self.EXTRAS.items():assert digest(read(path))==sha
         assert digest(source) == report['source_sha256'] and digest(definitions) == report['definitions_sha256']
         assert report['source_pdf'] == self.PDF and digest(read(self.PDF)) == report['source_pdf_sha256'] == self.PDF_SHA256
-        macros = self.atlas_macros(read(self.BOOK['main']).decode('utf-8-sig'), definitions.decode('utf-8-sig'))
+        macros = self.source_macros(read,read(self.BOOK['main']).decode('utf-8-sig'),definitions.decode('utf-8-sig'))
         assert report['macros'] == macros
         assert report['collection_revision'] == documents['source_revision']
         assert not any((report[k] for k in ('new_proof_review', 'new_lean_execution', 'new_mathematical_example_execution', 'new_tex_build')))
@@ -318,7 +343,7 @@ class WorkedAtlas:
             assert record.get('isolated_drawing_objects')==self.ISOLATED_DRAWINGS.get(name)
             assert record['source']==self.drawing_source(name)
             assert record['image']=='assets/atlas/'+self.work+'/'+name+'.png'
-            assert (record['plate'],record['pdf_page'],record['crop_pdf_points'])==(number,number+self.PDF_PAGE_OFFSET,bounds)
+            assert (record['plate'],record['pdf_page'],record['crop_pdf_points'])==(number,self.drawing_pdf_page(name,number),bounds)
             nodes = self.drawing_nodes(read(record['source']).decode('utf-8-sig'),name)
             assert digest(read(record['source'])) == record['source_sha256']
             assert digest((root / record['image']).read_bytes()) == record['image_sha256']
@@ -367,18 +392,7 @@ class WorkedAtlas:
             count += len(expected)
         assert all(('v' + str(n).zfill(2) in pages[self.INDEX].ids for n in range(1, self.HTML_COUNT + 1)))
         returns = 0
-        manuscript = []
-        state = {'number_floats': self.BOOK.get('number_floats', False)}
-        for spec in self.BOOK['chapters']:
-            if 'section_prefix' in spec:state.update(section=0,appendix=False,figure=0,table=0,section_prefix=spec['section_prefix'])
-            state.update(spec.get('numbering_state',{}))
-            raw = read(spec['source'])
-            chapter = Chapter(chapter_text(raw.decode('utf-8-sig'), spec), macros, state=state, check_refs=False)
-            chapter.url = spec['url']
-            for node in chapter.labels.values():
-                node['url'] = chapter.url
-            manuscript.append((spec, raw, chapter))
-            state = {key: getattr(chapter, key) for key in ('section', 'appendix', 'part', 'subsection', 'subsubsection', 'counter', 'section_prefix', 'figure', 'table', 'number_floats')}
+        manuscript = self.manuscript_chapters(read,macros)
         references = self.reference_map(manuscript)
         for plate in selected:
             targets = report['manuscript_references'][str(plate['number'])]
@@ -389,4 +403,5 @@ class WorkedAtlas:
                 assert posixpath.relpath(target, posixpath.dirname(plate['url'])) in pages[plate['url']].links
                 assert posixpath.relpath(plate['url'], posixpath.dirname(chapter)) in pages[chapter].links
                 returns += 1
+        self.verify_index_introduction(root,documents,pages,report,read,macros)
         return dict(total_plates=self.HTML_COUNT, html_plates=self.HTML_COUNT, drawings=len(figures), transcribed_labels=sum((len(f['nodes']) for f in figures.values())), math_expressions=count, return_links=returns)
