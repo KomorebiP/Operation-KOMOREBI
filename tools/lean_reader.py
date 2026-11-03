@@ -215,16 +215,24 @@ def assets(site, page):
 
 
 def scope(reader, work, page):
+    from readable_chapters import BOOKS
     assessment = reader.site.assessments[work]
     label, description = reader.site.status['labels']['lean'][assessment['lean']]
     e = html.escape
     coverage = reader.site.rel('collection/works/'+work+'.html', page)+'#lean'
     evidence = reader.site.rel('collection/works/'+work+'.html', page)+'#evidence'
+    runtime = ''
+    book = BOOKS[work]
+    if book.get('lean_runtime_note'):
+        runtime = '<p class="lean-runtime-note">'+e(book['lean_runtime_note'])
+        if book.get('lean_runtime_guide'):
+            runtime += ' <a href="'+e(reader.resolve(book['lean_runtime_guide'],page),quote=True)+'">Retained runtime and replay instructions</a>.'
+        runtime += '</p>'
     return ('<details class="lean-scope"><summary><span class="lean-badge">'+e(label)+
             '</span> <span class="lean-scope-label">Coverage and evidence</span></summary><div><p>'+e(description)+
             '</p><p>This viewer reads the retained source; it does not run Lean or assign new claim mappings.</p>'
             '<nav aria-label="Recorded Lean evidence"><a href="'+coverage+'">Coverage and setup</a>'
-            '<a href="'+evidence+'">Recorded evidence</a></nav></div></details>')
+            '<a href="'+evidence+'">Recorded evidence</a></nav></div></details>'+runtime)
 
 
 def source_controls(reader, record, text, page):

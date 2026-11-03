@@ -26,6 +26,8 @@ Use the links below to read this work and its supporting files. Ctrl+click (Comm
 
 ## Read
 
+- [Read online: reviewed core, nine chapters and written proofs](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-machine-native-reasoning/index.html)
+- [Start here: reading paths, formal scope and editions](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-machine-native-reasoning/start.html)
 - [Edition README](../../monographs/machine-native-reasoning/README.md)
 - [Read PDF](../../monographs/machine-native-reasoning/reader/Machine_Native_Reasoning_Reviewed_Core.pdf)
 
@@ -36,6 +38,7 @@ Use the links below to read this work and its supporting files. Ctrl+click (Comm
 Find the statement number or section in the [reading files](#read), then read its assumptions and argument. A claim map may cover only part of the written result.
 
 - [Manuscript text (TeX)](../../monographs/machine-native-reasoning/reader/source/book.tex)
+- [Selected results and formal correspondence](../../monographs/machine-native-reasoning/THEOREM_MAP.md)
 
 [Find this work among other written proofs](../browse/PROOFS.md#monographs-machine-native-reasoning)
 
@@ -45,7 +48,10 @@ Find the statement number or section in the [reading files](#read), then read it
 
 Start with the [edition guide](../../monographs/machine-native-reasoning/README.md) and the build instructions below. Check the correspondence records to see which written claims the Lean declarations cover. Source links lead to `.lean` files. PDF guides explain the formalization.
 
-- [Lean sources (file)](../../monographs/machine-native-reasoning/MachineTheory.lean)
+- [Portable Lean replay instructions](../../monographs/machine-native-reasoning/release/RUNTIME_REPRODUCTION.md)
+- [Selected results and formal correspondence](../../monographs/machine-native-reasoning/THEOREM_MAP.md)
+- [Lean mathematical modules](../../monographs/machine-native-reasoning/MachineTheory/)
+- [Lean root imports](../../monographs/machine-native-reasoning/MachineTheory.lean)
 
 [Find this work among other Lean projects](../browse/LEAN.md#monographs-machine-native-reasoning)
 

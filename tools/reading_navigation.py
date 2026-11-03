@@ -276,6 +276,9 @@ def verify(root, pages, documents):
         if config.get('custom_reader') == 'large_signal':
             from large_signal_reading import source_specs as large_signal_specs
             config['chapters']=large_signal_specs(load)
+        elif config.get('custom_reader') == 'machine_native_reasoning':
+            from machine_native_reasoning_reading import source_specs as machine_native_specs
+            config['chapters']=machine_native_specs(load)
         elif config.get('custom_reader') == 'methodology':
             from methodology_reading import source_specs as methodology_specs
             config['chapters']=methodology_specs(load)

@@ -130,6 +130,9 @@ def check_readable_chapter(root, documents, pages):
         if BOOKS[spec['work']].get('custom_reader')=='large_signal':
             from large_signal_reading import source_math
             expressions=source_math(raw.decode('utf-8-sig'),spec)
+        elif BOOKS[spec['work']].get('custom_reader')=='machine_native_reasoning':
+            from machine_native_reasoning_reading import source_math
+            expressions=source_math(raw.decode('utf-8-sig'),spec)
         elif BOOKS[spec['work']].get('custom_reader')=='methodology':
             from methodology_reading import source_math
             expressions=source_math(raw.decode('utf-8-sig'),spec)

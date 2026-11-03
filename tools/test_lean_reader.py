@@ -63,6 +63,18 @@ class LeanReaderTests(unittest.TestCase):
         self.assertEqual(set(selected_paths(c,owned)),expected)
         self.assertEqual(len(expected),255)
 
+    def test_machine_native_inspector_matches_accepted_production_module_registry(self):
+        root=Path(__file__).resolve().parents[1]
+        work='monographs-machine-native-reasoning'
+        c=next(c for c in json.loads((root/'manifests/browse-resources.json').read_bytes())['components'] if c['id']==work)
+        receipt=json.loads((root/('manifests/source-imports/'+work+'.json')).read_bytes())
+        owned={c['destination']+'/'+f['path']:{**f,'work':work} for f in receipt['files']}
+        modules=json.loads((root/c['destination']/'MODULES.json').read_bytes())
+        expected={c['destination']+'/'+name.replace('.','/')+'.lean' for name in modules}
+        self.assertEqual(set(selected_paths(c,owned)),expected)
+        self.assertEqual(len(expected),79)
+        self.assertFalse(any('/checks/' in p or '/source/' in p for p in expected))
+
     def fixture(self, output):
         root=Path(__file__).resolve().parents[1]
         text='-- preserved source <&>\ntheorem result : True := by\n  trivial\n'

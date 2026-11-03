@@ -192,6 +192,9 @@ CHAPTERS += QUANTUM_CHAPTERS
 from large_signal_reading import BOOK as LARGE_SIGNAL_BOOK, CHAPTERS as LARGE_SIGNAL_CHAPTERS
 BOOKS[LARGE_SIGNAL_BOOK['work']] = LARGE_SIGNAL_BOOK
 CHAPTERS += LARGE_SIGNAL_CHAPTERS
+from machine_native_reasoning_reading import BOOK as MACHINE_NATIVE_BOOK, CHAPTERS as MACHINE_NATIVE_CHAPTERS
+BOOKS[MACHINE_NATIVE_BOOK['work']] = MACHINE_NATIVE_BOOK
+CHAPTERS += MACHINE_NATIVE_CHAPTERS
 from kcos_reading import BOOK as KCOS_BOOK, CHAPTERS as KCOS_CHAPTERS
 BOOKS[KCOS_BOOK['work']] = KCOS_BOOK
 CHAPTERS += KCOS_CHAPTERS
@@ -882,6 +885,8 @@ def prepare(reader):
         if config.get('custom_reader'):
             if config['custom_reader'] == 'large_signal':
                 from large_signal_reading import prepare_book
+            elif config['custom_reader'] == 'machine_native_reasoning':
+                from machine_native_reasoning_reading import prepare_book
             elif config['custom_reader'] == 'methodology':
                 from methodology_reading import prepare_book
             elif config['custom_reader'] == 'foundational':
@@ -1420,6 +1425,9 @@ def render_book(reader,book):
         if config.get('custom_reader')=='large_signal':
             from large_signal_reading import source_math
             expressions=source_math(raw.decode('utf-8-sig'),spec)
+        elif config.get('custom_reader')=='machine_native_reasoning':
+            from machine_native_reasoning_reading import source_math
+            expressions=source_math(raw.decode('utf-8-sig'),spec)
         elif config.get('custom_reader')=='methodology':
             from methodology_reading import source_math
             expressions=source_math(raw.decode('utf-8-sig'),spec)
@@ -1519,6 +1527,9 @@ def render_book_index(reader,book,reports):
         publish_visual_guides(reader)
     elif config.get('custom_reader')=='large_signal':
         from large_signal_reading import publish_start
+        publish_start(reader,book)
+    elif config.get('custom_reader')=='machine_native_reasoning':
+        from machine_native_reasoning_reading import publish_start
         publish_start(reader,book)
 
 

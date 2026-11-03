@@ -284,7 +284,10 @@ Jump to a work:
 
 ### [Machine Native Reasoning](../works/monographs-machine-native-reasoning.md#lean)
 
-- [Lean sources (file)](../../monographs/machine-native-reasoning/MachineTheory.lean)
+- [Portable Lean replay instructions](../../monographs/machine-native-reasoning/release/RUNTIME_REPRODUCTION.md)
+- [Selected results and formal correspondence](../../monographs/machine-native-reasoning/THEOREM_MAP.md)
+- [Lean mathematical modules](../../monographs/machine-native-reasoning/MachineTheory/)
+- [Lean root imports](../../monographs/machine-native-reasoning/MachineTheory.lean)
 - Coverage: Declared contract recorded
 - [Return to this work’s Lean section](../works/monographs-machine-native-reasoning.md#lean)
 - [Work overview](../works/monographs-machine-native-reasoning.md)
