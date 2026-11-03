@@ -101,19 +101,19 @@ def entry_slides():
 
 
 def home_page():
-    routes = [
-        ('Understand the project', 'An introduction through signals, arithmetic, and quantum information.', 'NEW_READER', 'Start here'),
-        ('Read the mathematics', 'Papers and books, with assumptions in view.', 'MATHEMATICS', 'Papers & books'),
-        ('Examine a proof', 'Statements, formal sources, and recorded evidence.', 'PROOF_REVIEW', 'Proofs & sources'),
-        ('Try the software', 'Runnable examples and their expected output.', 'SOFTWARE', 'Examples & tools'),
+    features = [
+        ('Recovery laboratory', 'Find what a linear measurement loses and the extra information needed to recover an answer.', 'recovery-lab.html', 'Experiment'),
+        ('Read side by side', 'Keep a statement beside its proof, or compare two reading pages.', 'side-by-side.html', 'Compare'),
+        ('Saved reading', 'Collect useful works and passages in this browser, then return to them.', 'reading-list.html', 'Save'),
+        ('Python playground', 'Choose a worked example, edit the code, and inspect the results.', 'playground.html', 'Calculate'),
     ]
     cards = ''.join(
-        '<a class="home-route" href="collection/routes/'+key+'.html">'
+        '<a class="home-route" href="'+html.escape(target, quote=True)+'">'
         '<div class="home-route-content"><p class="home-route-label">'+html.escape(label)+'</p><h3>'+title+'</h3><p>'+description+'</p></div>'
         '<span class="home-route-arrow" aria-hidden="true">↗</span></a>'
-        for title, description, key, label in routes)
+        for title, description, target, label in features)
     return '<section class="home-hero" aria-labelledby="home-title">'+entry_slides()+research_slides()+'''</section>
-<section class="home-ways" aria-labelledby="home-ways-title"><div class="home-section-heading"><h2 id="home-ways-title">Find your starting point.</h2><a href="collection/READING_ROUTES.html">All reading routes <span aria-hidden="true">↗</span></a></div>
+<section class="home-ways" aria-labelledby="home-ways-title"><div class="home-section-heading"><h2 id="home-ways-title">Explore more of the site.</h2><p>Experiment, compare pages, and keep a reading list.</p></div>
 <div class="home-route-grid">'''+cards+'''</div></section>
 <section class="home-toolbox" id="home-interactive-title" aria-labelledby="home-toolbox-title"><div class="home-section-heading"><h2 id="home-toolbox-title">A few useful tools.</h2><p>Explore an idea, or find a specific passage.</p></div>
 <div class="home-tool-links"><a href="interactive.html"><span class="home-tool-icon" aria-hidden="true">↔</span><span><strong>Interactive diagrams</strong><small>Change the inputs. Follow the result.</small></span><span aria-hidden="true">↗</span></a>
