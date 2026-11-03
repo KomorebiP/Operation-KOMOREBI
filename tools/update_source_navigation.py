@@ -232,11 +232,12 @@ Realization Calculus develops the mathematics of decomposition, transfer, refine
 
 ## Future Developments
 
-Follow the [current development directions](docs/FUTURE_DEVELOPMENTS.md):
-Hilbert's 12th and 24th problems, Strong Artin, the Langlands program, and
-refining machine learning and reasoning. Further work will improve the current
-mathematics, reading editions, Lean support, interactive tools, and website and
-GitHub accessibility and use.
+My [future research plans](docs/FUTURE_DEVELOPMENTS.md) focus on Hilbert's 12th
+and 24th problems, the Strong Artin conjecture, and the Langlands program. I will
+also continue refining my work on machine learning and reasoning and improving the existing
+mathematics, reading editions, Lean support, and interactive tools. Further
+improvements will make the website and GitHub repositories easier to access and
+use.
 
 ## Start here
 
