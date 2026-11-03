@@ -308,15 +308,29 @@ def index_document(text, suffix):
 
 
 def prepare_sources(reader):
-    """Add declared manuscript entrypoints before following their includes."""
+    """Add manuscript roots and their explicitly scoped, receipt-bound macros."""
     config=json.loads((reader.site.root/'manifests/notation-sources.json').read_bytes())
     roots={c['id']:c['destination'] for c in reader.site.registry['components']}
     reader.notation_roots={}
+    reader.notation_macro_sources={}
     for work, paths in config['additional_entrypoints'].items():
         for path in paths:
             full=roots[work]+'/'+path
             if not reader.add(full): raise ValueError('Missing notation source: '+full)
             reader.notation_roots[full]=full
+    for work, manuscripts in config.get('additional_macro_sources',{}).items():
+        for manuscript, paths in manuscripts.items():
+            main=roots[work]+'/'+manuscript
+            if reader.notation_roots.get(main)!=main:
+                raise ValueError('Notation macro source needs a declared manuscript root: '+main)
+            sources=[]
+            for path in paths:
+                full=roots[work]+'/'+path
+                record=reader.add(full)
+                if not record or record['work']!=work:
+                    raise ValueError('Missing notation macro source for '+work+': '+full)
+                sources.append(full)
+            reader.notation_macro_sources[main]=sources
 
 
 KINDS = {'notation-table':'Notation table', 'definition-passage':'Definition passage',
@@ -364,10 +378,24 @@ def extract_work(site, work):
     sources=[]; passages_all=[]; symbols=collections.defaultdict(list)
     spellings=collections.defaultdict(set); displays={}
     texts={r['repository_path']:site.read_source(r).decode('utf-8-sig') for r in records}
+    supplemental={}
+    for main, paths in getattr(reader,'notation_macro_sources',{}).items():
+        if main not in texts: continue
+        macros={}
+        for path in paths:
+            record=reader.records[path]
+            if record['work']!=work:
+                raise ValueError('Notation macro source belongs to another work: '+path)
+            macros.update(macro_definitions(site.read_source(record).decode('utf-8-sig')))
+        supplemental[main]=macros
     for number,record in enumerate(records):
         path=record['repository_path'];text=texts[path]
-        main=reader.notation_roots.get(path) or reader.manuscript_roots.get(work)
-        macros=macro_definitions(texts.get(main,''))
+        notation_main=reader.notation_roots.get(path)
+        main=notation_main or reader.manuscript_roots.get(work)
+        # Only the declared root and its includes inherit the supplemental
+        # definitions. Style/layout files never become mathematical passages.
+        macros=dict(supplemental.get(notation_main,{}))
+        macros.update(macro_definitions(texts.get(main,'')))
         macros.update(macro_definitions(text))
         found=index_document(text,PurePosixPath(path).suffix.lower())
         sources.append({k:record[k] for k in ('repository_path','file_url','url','sha256','git_blob_sha1','size')})

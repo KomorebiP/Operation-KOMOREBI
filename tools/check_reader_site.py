@@ -110,7 +110,7 @@ def check_readable_chapter(root, documents, pages):
         if BOOKS[spec['work']].get('monolithic'):
             validate_monolithic(main,BOOKS[spec['work']])
             assert (report['start_line'],report['end_line'])==(spec['start_line'],spec['end_line'])
-        macro_source=main_path
+        macro_source=BOOKS[spec['work']].get('macro_source',main_path)
         if BOOKS[spec['work']].get('custom_reader')=='quantum':
             from quantum_symmetry import SOURCE,MACROS
             if source==SOURCE:macro_source=MACROS
@@ -139,6 +139,10 @@ def check_readable_chapter(root, documents, pages):
         elif BOOKS[spec['work']].get('custom_reader')=='proof_path':
             from proof_path_reading import source_math
             expressions=source_math(main,spec)
+        elif BOOKS[spec['work']].get('custom_reader')=='kcos':
+            from kcos_reading import source_math
+            expressions=source_math(raw.decode('utf-8-sig'),spec,
+                lambda path:(root/records[path]['file_url']).read_text(encoding='utf-8-sig'))
         elif BOOKS[spec['work']].get('custom_reader')=='paper_ix':
             from paper_ix_reading import source_math
             expressions=source_math(raw.decode('utf-8-sig'),spec)
@@ -165,13 +169,22 @@ def check_readable_chapter(root, documents, pages):
         elif BOOKS[spec['work']].get('custom_reader')=='quantum':
             from quantum_reading import source_macros
             expected_macros=source_macros(lambda path:(root/records[path]['file_url']).read_text(encoding='utf-8-sig'),spec)
+        elif BOOKS[spec['work']].get('custom_reader')=='kcos':
+            from kcos_reading import source_macros
+            expected_macros=source_macros((root/records[macro_source]['file_url']).read_text(encoding='utf-8-sig'))
         else:expected_macros=manuscript_macros(main,BOOKS[spec['work']].get('required_macros'))
         assert report['macros']==expected_macros
         assert not report['new_proof_review'] and not report['new_lean_execution']
         for node in report['nodes']+report.get('nested_tables',[]):
             assert node['id'] in pages[page].ids
-            source_page=records[source].get('source_url',records[source]['url'])
+            node_source=node.get('source',source)
+            source_page=records[node_source].get('source_url',records[node_source]['url'])
             assert 'L'+str(node['line']) in pages[source_page].ids
+            for span in node.get('source_spans',[]):
+                span_record=records[span['source']]
+                span_page=span_record.get('source_url',span_record['url'])
+                assert 'L'+str(span['line']) in pages[span_page].ids
+                assert 'L'+str(span['end_line']) in pages[span_page].ids
         markup=(root/page).read_text(encoding='utf-8')
         aids={}
         config=BOOKS[spec['work']]
