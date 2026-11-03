@@ -4,6 +4,12 @@ import html
 
 def research_slides():
     examples = [
+        ('euler', 'Euler numbers', 'One sequence.<br><em>Several perspectives.</em>',
+         'Follow packets, polynomial coordinates, and exact residual correction through one extended derivation.',
+         'EULER_PACKETS', 'Read the Euler derivation',
+         '<dl class="home-sequence" aria-label="Signed even Euler numbers">'
+         + ''.join('<div><dt>E<sub>'+str(n)+'</sub></dt><dd>'+value+'</dd></div>'
+                   for n, value in [(0, '1'), (2, '−1'), (4, '5'), (6, '−61'), (8, '1385')]) + '</dl>'),
         ('wavelet', 'Wavelets', 'One signal.<br><em>Exact multiresolution.</em>',
          'Follow four Haar levels, transport a finite filter, and calculate the exact error from omitted interactions.',
          'WAVELET_POLYPHASE', 'Read the wavelet and polyphase derivation',
@@ -11,12 +17,6 @@ def research_slides():
          'fill="none" stroke="currentColor" stroke-width="2"><path '
          'd="M0 31h22V9h24v42h24V21h24v20h24V5h24v52h24V19h24v24h24V13h24v36h24V25h24v12h24V17h24v28h26"/>'
          '</svg></div>'),
-        ('euler', 'Euler numbers', 'One sequence.<br><em>Several perspectives.</em>',
-         'Follow packets, polynomial coordinates, and exact residual correction through one extended derivation.',
-         'EULER_PACKETS', 'Read the Euler derivation',
-         '<dl class="home-sequence" aria-label="Signed even Euler numbers">'
-         + ''.join('<div><dt>E<sub>'+str(n)+'</sub></dt><dd>'+value+'</dd></div>'
-                   for n, value in [(0, '1'), (2, '−1'), (4, '5'), (6, '−61'), (8, '1385')]) + '</dl>'),
         ('factorial', 'Factorial lanes', 'One factorial.<br><em>Ten exact lanes.</em>',
          'Reconstruct 34!, then follow hypergeometric coordinates and an exact five-adic reciprocal calculation.',
          'FACTORIAL_LANES', 'Read the factorial-lane derivation',
@@ -46,7 +46,7 @@ def research_slides():
         +motif+'<a class="home-feature-link" href="collection/demonstrations/'+target+'.html">'+link+
         '<span aria-hidden="true">↗</span></a></section>'
         for key, label, title, description, target, link, motif in examples)
-    topic_labels = {'wavelet': 'Wavelets', 'euler': 'Euler', 'factorial': 'Factorials',
+    topic_labels = {'euler': 'Euler', 'wavelet': 'Wavelets', 'factorial': 'Factorials',
                     'quantum': 'Quantum', 'stirling': 'Counting', 'roots': 'Polynomials'}
     topics = ''.join(
         '<button type="button" id="home-topic-'+key+'" aria-controls="home-research-'+key+'">'+topic_labels[key]+'</button>'
@@ -80,9 +80,9 @@ def home_page():
 <a class="home-jump" href="#home-studies-title">Choose a complete case study <span aria-hidden="true">↓</span></a>
 </div>'''+research_slides()+'''</section>
 <section class="home-toolbox" aria-labelledby="home-studies-title"><div class="home-section-heading"><h2 id="home-studies-title">Extended case studies.</h2><a href="collection/DEMONSTRATIONS.html#extended-case-studies">All six studies <span aria-hidden="true">↗</span></a></div>
-<p>Start with wavelets, continue through arithmetic, then compare quantum measurement.</p>
-<div class="home-tool-links"><a href="collection/demonstrations/WAVELET_POLYPHASE.html"><span class="home-tool-icon" aria-hidden="true">1</span><span><strong>Signals and wavelets</strong><small>Four levels, a filter, and exact residual repair.</small></span><span aria-hidden="true">↗</span></a>
-<a href="collection/demonstrations/EULER_PACKETS.html"><span class="home-tool-icon" aria-hidden="true">2</span><span><strong>Euler numbers</strong><small>Reciprocal packets, coordinates, and arithmetic.</small></span><span aria-hidden="true">↗</span></a>
+<p>Start with Euler numbers, continue through wavelets, then compare quantum measurement.</p>
+<div class="home-tool-links"><a href="collection/demonstrations/EULER_PACKETS.html"><span class="home-tool-icon" aria-hidden="true">1</span><span><strong>Euler numbers</strong><small>Reciprocal packets, coordinates, and arithmetic.</small></span><span aria-hidden="true">↗</span></a>
+<a href="collection/demonstrations/WAVELET_POLYPHASE.html"><span class="home-tool-icon" aria-hidden="true">2</span><span><strong>Signals and wavelets</strong><small>Four levels, a filter, and exact residual repair.</small></span><span aria-hidden="true">↗</span></a>
 <a href="collection/demonstrations/QUANTUM_PHASE_MEASUREMENT.html"><span class="home-tool-icon" aria-hidden="true">3</span><span><strong>Quantum measurement</strong><small>Recoverable information and discarded coherence.</small></span><span aria-hidden="true">↗</span></a></div></section>
 <section class="home-ways" aria-labelledby="home-ways-title"><div class="home-section-heading"><h2 id="home-ways-title">Find your starting point.</h2><a href="collection/READING_ROUTES.html">All reading routes <span aria-hidden="true">↗</span></a></div>
 <div class="home-route-grid">'''+cards+'''</div></section>
