@@ -1,64 +1,53 @@
 # Continue Special Functions formalization
 
-Current checkpoint: **SF-LEAN-B12**, based on `c6c529a58b70ebdedac1d0a7dc232153688735b3`.
-Start with formalization/Block12/REPORT.md, CLAIM_MAP.json, declarations.json,
+Current checkpoint: **SF-LEAN-B13**, based on `718a037fd39c0f1bbad6c66e5e1b6fa570553447`.
+Start with formalization/Block13/REPORT.md, CLAIM_MAP.json, declarations.json,
 SELF_REVIEW.md, IO_MANIFEST.json and evidence/receipt.json. The current
-source-bound backlog is formalization/Block12/REMAINING_WORK.md (also JSON).
+source-bound backlog is formalization/Block13/REMAINING_WORK.md (also JSON).
 
-`lean/CoupledTypeProportions.lean` adds 26 theorem declarations. The registered
-canonical **F.3 contract is complete**: positive ordered scalar proportions
-of both type vectors, both explicit component ratios, equivalence of ordinary
-component type-limit existence and the conditional vector limit. Actual
-maximum-modulus profiles are identified. The registered scope is **299 names**,
-including supporting lemmas. F.1, F.2, G.1 and guarded G.2 remain complete
-within their registered scopes. Ordinary type convergence is not asserted
-unconditionally, nor is a ratio limit under persistent type oscillations.
+`lean/CoupledScalarReduction.lean` adds 43 theorem declarations, for 342
+registered names. New contracts: actual global U=V iff unordered scale rows
+coincide; normalized half-scale sinh formula and order one; unequal example
+coefficients, type ratios and lower bounds; characteristic-order invariants
+and strict-budget prescribed-order surfaces; actual local complex polynomial
+remainder. The degree-seven example error is <=|z|^9/8 on the closed unit disk.
+The general geometric truncation contract requires |z|^2<2.
 
-Next executable target: **ancillary Appendix F**, lines 425 onward of
-monograph/sections_v11/coupled_growth_full.tex. Prove exactly U=V iff the
-unordered scale pairs coincide, equivalently (q=a and r=b) or (q=b and r=a)
-under positive strict contractions. Necessity can use the degree-three and
-degree-five coefficient identities to recover equal products and square sums.
-Sufficiency can use the existing global scalar representation or canonical
-uniqueness. Retain global complex function equality, not just finite jets.
-Then establish the q=r=a=b=1/2 sinh closed form and remaining example/parameter
-wrappers. Check source definitions before adding a new contract.
+Registered F.1-F.3, G.1 and guarded G.2 remain complete. Ordinary type convergence
+is not asserted unconditionally. Exhaustive ancillary F correspondence is not
+claimed: scalar row-order maximum comparison and generic function/vector
+variation along parameter surfaces remain separate explanatory wrappers.
 
-Further work: H.1 all-analytic-input autonomous projections and operator
-decoupling obstruction; I-J analytic resolution and arbitrary-radius certified
-evaluation/Python refinement; full multi-tap, arithmetic, sieve, spectral and
-polyphase development in A-E. No full manuscript-wide correspondence map or
-completion percentage is established. Reading proofreading remains distinct.
+Next executable major target: **Theorem H.1**, in
+monograph/sections_v11/coupled_structure_full.tex. Define the functional field
+on all analytic inputs with its exact quantifiers; classify nonzero constant
+linear autonomous scalar projections allowing arbitrary scalar functionals, then derive
+the constant invertible linear decoupling obstruction. Recheck source
+hypotheses before implementation. Component equality/rescaling along the
+canonical solution is a different contract from an identity for all inputs.
 
-Replay tools/verify_coupled_type_proportions.py with Lean 4.34.0-rc2 and
+Further work: I-J analytic resolution and arbitrary-radius rational evaluator
+certification/Python refinement; full multi-tap, arithmetic, sieve, spectral
+and polyphase A-E development. Preserve G.2's nonzero-defect guard. No complete
+manuscript claim map or coverage percentage is established. Reading edition
+proofreading and mathematical proof review remain separate records.
+
+Replay tools/verify_coupled_scalar_reduction.py with Lean 4.34.0-rc2 and
 Mathlib aeb72f1e9981b6d35b426b16dca7759be3e7ba06, in a new external directory.
-All 51 steps pass: twelve coupled module compilations/audits/kernel replays,
-260 fresh theorem axiom audits, four rejection controls and one positive
-fixture. Inherited finite core evidence covers 39 names. Imported Mathlib
-is cached rather than freshly rebuilt/replayed. Review provenance: self-review.
+All 54 steps pass: thirteen compilations/audits/kernel replays, 303 fresh
+theorem axiom audits, four rejection controls and one positive fixture.
+Inherited finite-core evidence covers 39 names. Mathlib imports are cached.
+Review provenance: self-review. Actual I/O records 47 formal inputs, 55 raw
+packaged outputs, thirteen unbundled objects and 31 staging copies; 23
+assessment inputs and two outputs are separate. No input changed during the
+accepted replay. Earlier failures and historical records remain preserved.
 
-Actual I/O records 44 formal inputs, 52 packaged outputs, twelve unbundled
-objects and 29 staging copies; twenty source-assessment inputs/two outputs
-are separate. Earlier failed Block11 execution is preserved unchanged.
-Source, controls, maps, evidence, status, catalogue and dated guide are updated
-together. The website reading index now takes its formal scope from maintained
-status instead of a hardcoded historical count. The subject hub links the
-current guide and repository additions without rewriting imported ZIP receipts.
-
-Primary epsilon-envelope route succeeded. Exact scaled-liminf equalities are
-deferred for reuse if needed; joint-cluster route is deferred because extrema
-must not be assumed simultaneous. Neither alternative is refuted or exhausted.
-No delegated or delayed research run remains. Preserve all twelve blocks,
-dated guides, manuscript sources and reading PDFs. New proofs belong in a
-new block. Root archive manifests remain earlier release snapshots.
-
-Publication: the complete Block12 history through
-`c6e93f265bbfed4924ccd41a6cb161b90745d204` is on the GitHub branch
-`codex/special-functions-local-analysis`. The native Git client has no saved
-GitHub credentials in this checkout. The connected GitHub/Composio tools can
-publish exact Git trees and commits, including original author/committer dates;
-verify every returned hash and read main before a fast-forward ref update.
-Large merge trees may need bottom-up immediate subtree creation. The `.io`
-reader site deploys from main through `.github/workflows/reader-site.yml`.
-After a merge, run the catalogue generator before its check: sparse checkout
-can omit generated root README files until the generator materializes them.
+The direct route succeeded: coefficient invariants and entire uniqueness for
+scalar reduction, cached exponential derivatives for sinh, characteristic
+balance for surfaces and actual HasSum decomposition for remainders. A
+product-only equality criterion is refuted by a checked fixture. Stronger
+whole-plane evaluation and parameter-variation routes remain open. No
+delegated or delayed research run remains. Preserve all thirteen blocks,
+dated guides, manuscripts, reading PDFs and frozen imported bundle receipts.
+Root archive manifests remain earlier release snapshots. The live website
+scope comes from maintained status; current guidance links to the repository.

@@ -1,5 +1,13 @@
 # Technical publication package with checked coupled-functions block
 
+**2026-11-02 Scalar reduction and local certificates companion:** SF-LEAN-B13
+adds 43 checked theorem declarations, for 342 registered names. Exact global
+component equality, half-scale sinh, unequal-example data, prescribed-order
+surfaces and actual local polynomial error are proved. All 54 fresh replay
+steps pass; formal and assessment I/O are hashed. H.1 is the next major target;
+some explanatory F correspondence, I-J certificates and broader A-E coverage
+remain. See `formalization/Block13/REPORT.md`. Earlier notes keep their scopes.
+
 **2026-11-02 Perron type proportions companion:** SF-LEAN-B12 adds 26
 checked theorem declarations, completing the registered canonical F.3
 proportions, explicit type ratios and conditional limit equivalence. The
