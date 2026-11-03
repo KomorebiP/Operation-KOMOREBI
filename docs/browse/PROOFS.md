@@ -321,6 +321,7 @@ Jump to a work:
 
 - [Read PDF](../../monographs/machine-native-reasoning/reader/Machine_Native_Reasoning_Reviewed_Core.pdf)
 - [Manuscript text (TeX)](../../monographs/machine-native-reasoning/reader/source/book.tex)
+- [Selected results and formal correspondence](../../monographs/machine-native-reasoning/THEOREM_MAP.md)
 - [Return to this work’s written proofs section](../works/monographs-machine-native-reasoning.md#written-proofs)
 - [Work overview](../works/monographs-machine-native-reasoning.md)
 - [Status and evidence](../STATUS_CATALOG.md#monographs-machine-native-reasoning)
