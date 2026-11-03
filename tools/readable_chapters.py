@@ -1230,6 +1230,7 @@ def render_book(reader,book):
     from reader_proofreading import render as proofreading_notes
     from side_reader import pair_link
     from reading_navigation import outline, resources, work_links
+    from core_visual_guides import is_visual_guide
     site=reader.site
     config=book['config']
     work=config['work']
@@ -1254,8 +1255,10 @@ def render_book(reader,book):
         toc+='</ol>'
         toc+='</nav>'
         body='<p class="eyebrow">Readable manuscript</p><h1>'+e(title)+'</h1>'
+        visual=is_visual_guide(work,page)
+        if visual:body+=reader.work_routes(work,page)
         body+=neighbour_links(spec)+'<p class="reading-start"><a href="#chapter-text">Start reading</a></p>'+outline(toc)
-        tools=work_links(reader,work,page)
+        tools='' if visual else work_links(reader,work,page)
         tools+='<p><a href="'+reader.resolve(source,page)+'">Original TeX with line links</a> · <a href="'+site.rel(reader.records[source]['file_url'],page)+'" download>Download TeX</a></p>'
         tools+='<p>The wording and mathematics follow the retained manuscript. This reading format does not add a proof review or extend Lean coverage.</p>'+reading_options()
         body+=resources(tools)
