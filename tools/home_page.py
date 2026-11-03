@@ -60,6 +60,47 @@ def research_slides():
             '<span aria-hidden="true">→</span></button></div></div></div></div>')
 
 
+def entry_slides():
+    entries = [
+        ('introduction', 'Introduction',
+         'A place to read mathematics, inspect the reasoning, and try the calculations for yourself.',
+         'collection/START_HERE.html', 'Start with the introduction',
+         'works.html', 'Browse all works'),
+        ('mathematics', 'Mathematics',
+         'Find a paper or book, choose a reading route, and follow the mathematics with its assumptions in view.',
+         'collection/routes/MATHEMATICS.html', 'Explore papers and books',
+         'collection/PROJECT_MAP.html', 'See the project map'),
+        ('proofs', 'Proofs',
+         'Follow a statement to its argument, inspect the formal sources, and see what the recorded evidence supports.',
+         'collection/routes/PROOF_REVIEW.html', 'Examine a proof',
+         'collection/VERIFICATION.html', 'How verification works'),
+        ('software', 'Software',
+         'Try a runnable example, change the inputs in an interactive diagram, and compare the results for yourself.',
+         'collection/routes/SOFTWARE.html', 'Try the software',
+         'interactive.html', 'Open interactive diagrams'),
+    ]
+    topics = ''.join(
+        '<button type="button" id="home-entry-topic-'+key+'" aria-controls="home-entry-'+key+'">'+label+'</button>'
+        for key, label, *_ in entries)
+    panels = ''.join(
+        '<section class="home-entry-slide" id="home-entry-'+key+'" aria-label="'+label+'">'
+        '<p class="home-lede">'+description+'</p><div class="home-actions">'
+        '<a class="button" href="'+target+'">'+link+' <span aria-hidden="true">→</span></a>'
+        '<a class="button button-secondary" href="'+secondary_target+'">'+secondary_link+'</a></div></section>'
+        for key, label, description, target, link, secondary_target, secondary_link in entries)
+    return ('<div class="home-copy home-entry-showcase" aria-label="Ways into the collection">'
+            '<div class="home-topics home-entry-topics" aria-label="Choose a starting point" hidden>'+topics+'</div>'
+            '<div class="home-entry-feature"><p class="home-kicker">The Komorebi research collection</p>'
+            '<h1 id="home-title">Explore the ideas.<br><em>Follow the evidence.</em></h1>'
+            '<div class="home-entry-panels">'+panels+'</div>'
+            '<a class="home-jump" href="#home-studies-title">Choose a complete case study <span aria-hidden="true">↓</span></a>'
+            '<div class="home-slide-controls home-entry-controls" hidden>'
+            '<p class="home-slide-position" aria-live="polite" aria-atomic="true"></p>'
+            '<div class="home-slide-arrows"><button type="button" data-slide-previous aria-label="Previous starting point">'
+            '<span aria-hidden="true">←</span></button><button type="button" data-slide-next aria-label="Next starting point">'
+            '<span aria-hidden="true">→</span></button></div></div></div></div>')
+
+
 def home_page():
     routes = [
         ('Understand the project', 'An introduction through signals, arithmetic, and quantum information.', 'NEW_READER', 'Start here'),
@@ -72,13 +113,7 @@ def home_page():
         '<div class="home-route-content"><p class="home-route-label">'+html.escape(label)+'</p><h3>'+title+'</h3><p>'+description+'</p></div>'
         '<span class="home-route-arrow" aria-hidden="true">↗</span></a>'
         for title, description, key, label in routes)
-    return '''<section class="home-hero" aria-labelledby="home-title">
-<div class="home-copy"><p class="home-kicker">The Komorebi research collection</p>
-<h1 id="home-title">Explore the ideas.<br><em>Follow the evidence.</em></h1>
-<p class="home-lede">A place to read mathematics, inspect the reasoning, and try the calculations for yourself.</p>
-<div class="home-actions"><a class="button" href="collection/START_HERE.html">Start with the introduction <span aria-hidden="true">→</span></a><a class="button button-secondary" href="works.html">Browse all works</a></div>
-<a class="home-jump" href="#home-studies-title">Choose a complete case study <span aria-hidden="true">↓</span></a>
-</div>'''+research_slides()+'''</section>
+    return '<section class="home-hero" aria-labelledby="home-title">'+entry_slides()+research_slides()+'''</section>
 <section class="home-toolbox" aria-labelledby="home-studies-title"><div class="home-section-heading"><h2 id="home-studies-title">Extended case studies.</h2><a href="collection/DEMONSTRATIONS.html#extended-case-studies">All six studies <span aria-hidden="true">↗</span></a></div>
 <p>Start with wavelets, continue through arithmetic, then compare quantum measurement.</p>
 <div class="home-tool-links"><a href="collection/demonstrations/WAVELET_POLYPHASE.html"><span class="home-tool-icon" aria-hidden="true">1</span><span><strong>Signals and wavelets</strong><small>Four levels, a filter, and exact residual repair.</small></span><span aria-hidden="true">↗</span></a>
