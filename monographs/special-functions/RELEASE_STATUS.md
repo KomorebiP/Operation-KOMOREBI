@@ -1,5 +1,12 @@
 # Technical publication package with checked coupled-functions block
 
+**2026-11-03 Factorial normalization companion:** SF-LEAN-B16 adds 30 checked
+theorems, for 435 registered names. All-index rational derivative normalization,
+finite append-array conversion and certified polynomial equality are proved.
+All 63 replay steps pass; exact formal/assessment I/O is recorded. Full Python
+refinement, guarded majorant/dictionary behavior, other J/F/H, I and A-E remain.
+See formalization/Block16/REPORT.md. Earlier notes retain their dated scopes.
+
 **2026-11-03 Exact evaluation certificates companion:** SF-LEAN-B15 adds 36
 checked theorem declarations, for 405 registered names. The J mathematical
 certificate now covers arbitrary-radius majorants, actual complex Taylor
