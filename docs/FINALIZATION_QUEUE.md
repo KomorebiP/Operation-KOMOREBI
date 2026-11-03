@@ -245,7 +245,7 @@ Publication completion and checked subresults leave wider formal or implementati
 
 **Done when:** Choose one precise next theorem/refinement contract, establish its dependencies, and admit it only with corresponding source and verification evidence.
 
-**Progress:** Special Functions SF-LEAN-B13 adds 43 theorem declarations, for 342 names: exact component equality/scalar reduction, half-scale sinh, unequal-example data, characteristic-order surfaces and actual local truncation error. All 54 source-bound replay steps pass across thirteen coupled modules. Formal/assessment I/O is recorded. H.1 operator classification, explanatory F correspondence, I-J certificates and broad A-E coverage remain.
+**Progress:** Special Functions SF-LEAN-B14 adds 27 theorem declarations, for 369 names. Main H.1 classifies arbitrary-functional autonomous rows on entire inputs and local analytic germs and excludes invertible constant linear decoupling. All 57 source-bound replay steps pass across fourteen coupled modules. Formal/assessment I/O is recorded. Appendix J exact evaluation is next; explanatory F/H variants, I and broad A-E coverage remain.
 
 Related works and source records: [Paper III: Typed Transfer, Nonlinear Packets, and Obstruction Theory](works/paper-iii.md) · [Special Functions](works/monographs-special-functions.md) · [Quantum and Circuits](works/monographs-quantum-and-circuits.md) · [Signal Reconstruction](works/signal-reconstruction.md) · [COS Method: formal continuation](works/monographs-cos-method-formal-continuation.md) · [p-adic Canonical Realization](works/padic-canonical-realization.md) · [Model-Theory Normalization](works/model-theory-normalization.md).
 

@@ -234,13 +234,13 @@ Reviewed essay with written arguments and 40 finite exact-check groups. No new L
 
 **Reading edition complete** · Lean: **Selected results recorded** · Confidence basis: **Recorded formal evidence**
 
-Proofread reading volumes plus 342 named theorem declarations: 39 inherited finite-core names and 29, 21, 19, 16, 13, 19, 23, 22, 16, 34, 22, 26, 43 in Blocks01 through 13. Registered canonical F.1-F.3, G.1 and guarded G.2 contracts are complete. Ancillary F additions prove exact global component equality, half-scale sinh, unequal-example data, characteristic-order surfaces and actual local remainders. Ordinary type convergence is conditional. H.1 operator classification, some explanatory F correspondence, I-J resolution/evaluator refinement and broad A-E analytic coverage remain; no whole-book coverage percentage is established.
+Proofread reading volumes plus 369 named theorem declarations: 39 inherited finite-core names and 29, 21, 19, 16, 13, 19, 23, 22, 16, 34, 22, 26, 43, 27 in Blocks01 through 14. Registered canonical F.1-F.3, G.1, guarded G.2, named ancillary F contracts and main H.1 operator classification are complete. H.1 covers arbitrary scalar functionals on entire inputs and local analytic germs and rules out invertible constant linear decoupling for positive scales without contraction. Ordinary type convergence is conditional. Arbitrary-radius evaluation, I resolution certificates, explanatory F/H variants and broad A-E development remain; no whole-book coverage percentage is established.
 
-**Next step:** Formalize H.1 all-analytic-input autonomous scalar projections and constant invertible decoupling obstruction; retain explanatory F correspondence, I-J certificates and broader A-E analytic development in the source-bound inventory.
+**Next step:** Prove Appendix J arbitrary-radius disk-majorant and outer-radius Taylor evaluation certificates, then exact interval/Python refinement; retain explanatory F/H variants, I resolution mechanisms and broad A-E analytic coverage in the source-bound inventory.
 
 [Return to this work: paper, proofs, Lean, and code](works/monographs-special-functions.md)
 
-[Latest written review and its scope](SPECIAL_FUNCTIONS_SCALAR_REDUCTION_BLOCK13.md)
+[Latest written review and its scope](SPECIAL_FUNCTIONS_OPERATOR_BLOCK14.md)
 
 [Source directory](../monographs/special-functions) · [LEAN_STATUS.md](../monographs/special-functions/LEAN_STATUS.md) · [README.md](../monographs/special-functions/README.md) · [lean/README.md](../monographs/special-functions/lean/README.md)
 
