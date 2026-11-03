@@ -15,6 +15,7 @@ from large_signal_reading import WORK, MAIN, BOOK, CHAPTERS, DATA, SCOPE_PAGE, n
 from build_reader_site import Site
 from reader_documents import ReadingDocuments, source_lines
 from check_reader_site import Page, check_readable_chapter
+from reading_navigation import verify as verify_reading_navigation
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -80,6 +81,8 @@ class LargeSignalReadingTests(unittest.TestCase):
             pages = {p.relative_to(output).as_posix():Page(p.read_text(encoding='utf-8')) for p in output.rglob('*.html')}
             with patch.object(reading,'BOOKS',{WORK:BOOK}),patch.object(reading,'CHAPTERS',CHAPTERS):
                 self.assertEqual(check_readable_chapter(output,dict(files=list(reader.records.values())),pages),2123)
+                self.assertEqual(verify_reading_navigation(output,pages,dict(files=list(reader.records.values()))),
+                    dict(editions=1,reading_pages=110,navigation_controls=220))
             nodes = [n for _,_,c in reader.readable_books[WORK]['chapters'] for n in c.nodes]
             propositions = [n for n in nodes if n['kind']=='proposition']
             proofs = [n for n in nodes if n['kind']=='proof']

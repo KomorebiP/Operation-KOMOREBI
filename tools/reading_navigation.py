@@ -273,7 +273,10 @@ def verify(root, pages, documents):
     count=0
     for work,original in BOOKS.items():
         config=dict(original)
-        if config.get('custom_reader') == 'methodology':
+        if config.get('custom_reader') == 'large_signal':
+            from large_signal_reading import source_specs as large_signal_specs
+            config['chapters']=large_signal_specs(load)
+        elif config.get('custom_reader') == 'methodology':
             from methodology_reading import source_specs as methodology_specs
             config['chapters']=methodology_specs(load)
         elif config.get('custom_reader') == 'foundational':
@@ -300,7 +303,7 @@ def verify(root, pages, documents):
         elif config.get('custom_reader'):
             config['chapters']=source_specs(load)
         sequence=entries(config)
-        assert records[work]==dict(index=config['index'],label=config['label'],partial=bool(config.get('partial')),entries=sequence)
+        assert records[work]==dict(index=config['index'],label=config['label'],partial=bool(config.get('partial')),entries=sequence), ('Reading navigation differs from declared edition',work)
         for entry in sequence:
             page=entry['url'];_,position,previous,following=neighbours(config,page)
             assert page in pages, ('Missing reading page',page)
