@@ -1044,10 +1044,29 @@ class ReaderSiteTests(unittest.TestCase):
 
     def test_source_lines_preserve_targets_and_escape_active_content(self):
         result=source_lines('line one\n<script>alert(1)</script>\n')
-        self.assertIn('id="L2"',result)
+        self.assertIn('L2',Page(result).ids)
         self.assertIn('&lt;script&gt;',result)
         self.assertNotIn('<script>',result)
         self.assertIn('aria-label="Line 2"',result)
+
+    def test_compact_source_markup_preserves_code_whitespace_and_accessible_links(self):
+        from html.parser import HTMLParser
+        class Source(HTMLParser):
+            def __init__(self):super().__init__();self.rows=[];self.links=[];self.row=None;self.link=False
+            def handle_starttag(self,tag,attrs):
+                attrs=dict(attrs)
+                if tag=='span' and attrs.get('class')=='source-line':self.row=dict(attrs,text='');self.rows.append(self.row)
+                if tag=='a' and attrs.get('class')=='line-number':self.links.append(attrs);self.link=True
+            def handle_endtag(self,tag):
+                if tag=='a':self.link=False
+                if tag=='span':self.row=None
+            def handle_data(self,value):
+                if self.row is not None and not self.link:self.row['text']+=value
+        text='  α < β\n\tA&B "x"\n\nlast'
+        parsed=Source();parsed.feed(source_lines(text))
+        self.assertEqual([r['text'] for r in parsed.rows],[' '+line+'\n' for line in text.splitlines()])
+        self.assertEqual([r['id'] for r in parsed.rows],['L1','L2','L3','L4'])
+        self.assertEqual([(a['href'],a['aria-label']) for a in parsed.links],[('#L'+str(n),'Line '+str(n)) for n in range(1,5)])
 
     def test_source_navigation_bounds_match_real_lines_and_links_have_targets(self):
         for text in ('', 'one\n', 'one\n\nthree'):

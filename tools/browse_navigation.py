@@ -210,6 +210,10 @@ class Browser:
                 links.insert(0,'[Visual guide: all 23 HTML sections and 20 figures](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-ix/atlas/index.html)')
             if title=='Read' and c['id']=='paper-x':
                 links.insert(0,'[Visual guide: all 30 HTML plates and the opening scope contract](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-x/atlas/index.html)')
+            if title=='Read' and c['id']=='paper-xi':
+                links.insert(0,'[Visual guide: all 47 HTML lessons and the opening reader routes](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-xi/atlas/index.html)')
+            if title=='Read' and c['id']=='paper-xii':
+                links.insert(0,'[Visual guide: all 27 HTML plates and 23 drawings](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-xii/atlas/index.html)')
             if title=='Read' and c['id']=='paper-ix':
                 links.insert(0,'[Read online: complete manuscript, strengthening and historical appendices](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-ix/index.html)')
             if title=='Read' and c['id']=='paper-x':
