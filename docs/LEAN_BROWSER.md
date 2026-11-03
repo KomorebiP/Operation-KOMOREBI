@@ -40,11 +40,18 @@ local dependencies. A failed library check stops the workspace. Library source
 edits invalidate the worker's dependency cache just like paper dependency edits.
 The file picker labels these as library sources; they are not generated stubs or
 additions to the Mathlib.Tactic compatibility umbrella.
-The initial source allowlist is `Mathlib.Tactic.Ext` and
-`Mathlib.Util.AssertNoSorry`. Other candidates remain unavailable until their
-actual browser compilation succeeds. The current syntax probe can reject
-same-file namespace or notation changes, and the runtime still has private
-declaration and interpreter limits.
+The source allowlist is `Mathlib.Tactic.Ext`, `Mathlib.Util.AssertNoSorry`,
+`Mathlib.Tactic.Positivity.Finset` and `Mathlib.Tactic.Positivity`. The latter two
+provide the original finset positivity extensions and their small import
+umbrella. Routes that need Finset automatically enable experimental
+source-defined syntax checking for the whole workspace. The checkbox is checked
+and locked for that route, and the route notes explain why. Selecting a different
+workspace restores the reader's chosen mode. This requirement is recorded with
+the pinned library source; unknown checking modes are rejected. These routes
+start a fresh compiler on every run and reject background tasks. Other candidates
+remain unavailable until their actual browser compilation succeeds. The standard
+syntax probe can reject same-file namespace or notation changes, and the runtime
+still has private declaration and interpreter limits.
 
 ## Environment and static hosting
 

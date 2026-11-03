@@ -5,7 +5,7 @@ from pathlib import Path
 import tempfile
 import unittest
 from lean_browser_catalog import plans,tactic_umbrella,runtime_library
-from prepare_lean_wasm import MATHLIB,MATHLIB_SOURCE_SHA256,source_library,validate_source_library
+from prepare_lean_wasm import MATHLIB,MATHLIB_SOURCE_SHA256,SOURCE_MODULES,source_library,validate_source_library
 
 
 class CatalogTests(unittest.TestCase):
@@ -69,6 +69,43 @@ class CatalogTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'shadowed'):validate_source_library(sources,available|{'Mathlib.Tactic.Pilot'})
         with self.assertRaisesRegex(ValueError,'cycle'):
             source_library({'Mathlib/A.lean':b'import Mathlib.B\n','Mathlib/B.lean':b'import Mathlib.A\n'},available,['Mathlib.A','Mathlib.B'])
+
+    def test_finset_fallback_requires_the_evolving_frontend_and_preserves_import_plans(self):
+        module='Mathlib.Tactic.Positivity.Finset';available={'Std'}
+        self.assertIn(module,SOURCE_MODULES)
+        sources=source_library({module.replace('.','/')+'.lean':b'import Std\n'},available,[module])
+        self.assertEqual(sources[module]['syntaxCheck'],'frontend')
+        catalog,raws=self.fixture();path='paper/lean/Demo/Helper.lean'
+        raws[path]=('import '+module+'\ndef value : Nat := 1\n').encode()
+        catalog['inputs'][path].update(size=len(raws[path]),sha256=hashlib.sha256(raws[path]).hexdigest())
+        entries,_=plans(catalog,raws.__getitem__,available,sources)
+        self.assertEqual(entries[0]['library'],[module])
+        self.assertEqual(entries[0]['issues'],[])
+        for value in (None,'full','unknown'):
+            bad=copy.deepcopy(sources)
+            if value is None:del bad[module]['syntaxCheck']
+            else:bad[module]['syntaxCheck']=value
+            with self.subTest(value=value),self.assertRaisesRegex(ValueError,'syntax-check requirement'):
+                validate_source_library(bad,available)
+        _,available,ordinary=self.library();ordinary['Mathlib.Tactic.Pilot']['syntaxCheck']='frontend'
+        with self.assertRaisesRegex(ValueError,'syntax-check requirement'):
+            validate_source_library(ordinary,available)
+
+    def test_positivity_umbrella_orders_its_required_frontend_dependency_first(self):
+        finset='Mathlib.Tactic.Positivity.Finset';umbrella='Mathlib.Tactic.Positivity'
+        self.assertIn(umbrella,SOURCE_MODULES)
+        members={finset.replace('.','/')+'.lean':b'import Std\n',
+                 umbrella.replace('.','/')+'.lean':('public import '+finset+'\n').encode()}
+        sources=source_library(members,{'Std'},[finset,umbrella])
+        catalog,raws=self.fixture();path='paper/lean/Demo/Helper.lean'
+        raws[path]=('import '+umbrella+'\ndef value : Nat := 1\n').encode()
+        catalog['inputs'][path].update(size=len(raws[path]),sha256=hashlib.sha256(raws[path]).hexdigest())
+        entries,_=plans(catalog,raws.__getitem__,{'Std'},sources)
+        self.assertEqual(entries[0]['library'],[finset,umbrella])
+        self.assertEqual(entries[0]['issues'],[])
+        self.assertEqual(sources[entries[0]['library'][0]]['syntaxCheck'],'frontend')
+        self.assertNotIn('syntaxCheck',sources[umbrella])
+        self.assertNotIn(umbrella,tactic_umbrella({'Mathlib.Tactic.Ring'}))
 
     def test_library_runtime_record_binds_exact_local_assets_and_pinned_archive(self):
         _,available,sources=self.library()
