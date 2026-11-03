@@ -216,16 +216,24 @@ explicitly record their two appearances. Run
 complete edition, formula sequence, proof routes, tables and source anchors.
 
 Reading editions keep one complete, native chapter menu in the top navigation.
-Quantum and Circuits also provides `read/monographs-quantum-and-circuits/start.html`:
-three editorial reading paths with prerequisites, chapter links, and checkpoints.
-The visual tour, four-treatment study route, and formal companion link into the
-retained edition. Its contents, reading-library card, work overview, and search
-entry expose the guide without changing the chapter sequence.
-
 Footers keep previous/next links and a direct Full contents link, avoiding the
 quadratic storage cost of repeating a second full menu on every topic page.
 Atlas-specific menus retain their existing behavior. The site-size guard
 continues to enforce the 1 GiB GitHub Pages ceiling.
+
+All 90 selected works have `read/<work>/start.html` guides, listed in the
+filterable `read/start.html` directory. Three paths introduce the available
+examples or visual material, give a reading sequence, and connect statements
+with their recorded evidence. The twelve core papers reuse their specific
+questions, examples, setup passages, and written-proof links. Other guides use
+their selected reading resources and exact assessment scope; PDF-only and
+experimental works retain their availability and evidence qualifications.
+The curated Quantum and Circuits guide remains in place with its three paths.
+Contents pages, reading-library cards, work toolbars, catalog cards, and search
+expose the guides. `documents/reading-paths.json` records coverage and destinations;
+the site checker requires one guide per selected work and checks all path targets.
+Run `python -B -m unittest discover -s tools -p 'test_reading_paths.py' -v` for
+coverage, source ownership, missing-resource, scope, and route regressions.
 
 The twelve core editions share collection switching, chapter filtering,
 persistent text size and font choices, and sidebar chapter shortcuts. The

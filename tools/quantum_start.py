@@ -38,15 +38,15 @@ def publish(reader, book):
         target=PREFIX+slug+'.html'
         if target not in available:raise ValueError('Unknown Quantum reading-path destination: '+target)
         return '<a href="'+escape(site.rel(target,PAGE),quote=True)+'">'+escape(title)+'</a>'
-    body='<div class="quantum-start"><p class="eyebrow">Quantum and Circuits · Guided reading</p><h1>Start with a question</h1>'
+    body='<div class="reading-guide"><p class="eyebrow">Quantum and Circuits · Guided reading</p><h1>Start with a question</h1>'
     body+='<p class="lede">Choose a visual introduction, study the four treatments, or trace a selected result into its formal record.</p>'
-    body+='<p class="quantum-guide-facts">21 chapters · 6 appendices · '+str(len(CHAPTERS)+1)+' reading pages</p>'
-    body+='<nav class="quantum-path-cards" aria-label="Choose a reading path">'
+    body+='<p class="reading-guide-facts">21 chapters · 6 appendices · '+str(len(CHAPTERS)+1)+' reading pages</p>'
+    body+='<nav class="reading-path-cards" aria-label="Choose a reading path">'
     for i,(key,title,summary,*_) in enumerate(PATHS,1):
         body+='<a class="route" href="#'+key+'"><span class="eyebrow">Path '+str(i).zfill(2)+'</span><h2>'+escape(title)+'</h2><p>'+escape(summary)+'</p><span>Explore this path →</span></a>'
     body+='</nav><p>These are suggested reading sequences. Each destination retains the volume’s statements, figures, and source links.</p>'
     for key,title,summary,background,steps,checkpoint in PATHS:
-        body+='<section class="quantum-path" id="'+key+'" aria-labelledby="'+key+'-title"><h2 id="'+key+'-title">'+escape(title)+'</h2><p>'+escape(background)+'</p><ol>'
+        body+='<section class="reading-guide-path" id="'+key+'" aria-labelledby="'+key+'-title"><h2 id="'+key+'-title">'+escape(title)+'</h2><p>'+escape(background)+'</p><ol>'
         for slug,label,description in steps:
             body+='<li>'+link(slug,label)+'<p>'+escape(description)+'</p></li>'
         body+='</ol><p class="notice">'+escape(checkpoint)+'</p>'
@@ -57,8 +57,8 @@ def publish(reader, book):
         if key=='formal':
             body+='<p>For the other treatments, consult the '+link('symmetry-companion-theorem-and-evidence-status-ledger','symmetry evidence ledger')+' and '+link('catalytic-companion-conjecture-and-obligation-ledger','catalytic obligation ledger')+'.</p>'
         body+='<p><a href="#top">Choose another path ↑</a></p></section>'
-    body+='<nav class="quantum-guide-return" aria-label="Volume resources"><a class="button" href="index.html">Full contents</a><a href="'+site.rel('collection/works/'+WORK+'.html',PAGE)+'">Work overview and sources</a></nav></div>'
-    body=body.replace('<div class="quantum-start">','<div class="quantum-start" id="top">',1)
+    body+='<nav class="reading-guide-return" aria-label="Volume resources"><a class="button" href="index.html">Full contents</a><a href="'+site.rel('collection/works/'+WORK+'.html',PAGE)+'">Work overview and sources</a><a href="../start.html">Guides for all works</a></nav></div>'
+    body=body.replace('<div class="reading-guide">','<div class="reading-guide" id="top">',1)
     site.page(PAGE,'Quantum and Circuits: Start here',body)
     site.search.append(dict(title='Quantum and Circuits / Start here',group='Collection',kind='Guides',work_ids=[WORK],url=PAGE,
         text='Guided reading prerequisites visual introduction full study formal companion '+ ' '.join(p[1]+' '+p[2] for p in PATHS)))

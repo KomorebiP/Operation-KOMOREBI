@@ -190,7 +190,9 @@ from quantum_reading import BOOK as QUANTUM_BOOK, CHAPTERS as QUANTUM_CHAPTERS
 BOOKS[QUANTUM_BOOK['work']] = QUANTUM_BOOK
 CHAPTERS += QUANTUM_CHAPTERS
 # One full chapter menu per page; footers keep direct reading routes.
-for _book in BOOKS.values():_book['footer_index_only']=True
+for _book in BOOKS.values():
+    _book['footer_index_only']=True
+    _book['reading_guide']='read/'+_book['work']+'/start.html'
 BY_SOURCE = {c['source']:c for c in reversed(CHAPTERS)}
 NUMBERED = {'definition', 'theorem', 'proposition', 'lemma', 'corollary', 'remark', 'example', 'standardfact', 'certificate','boundary','roadmap','construction','classicalinput','classical','conjecture','problem','warning'}
 NUMBERED.update('hist'+kind for kind in ('theorem','proposition','lemma','corollary','definition','example','remark','standardfact'))
@@ -1109,7 +1111,7 @@ def render_reading_index(reader):
     site=reader.site
     page='read/index.html'
     from reading_navigation import entries
-    body='<p class="eyebrow">HTML reading editions</p><h1>Reading library</h1><p>Read papers and books with chapter contents, selectable equations, and links to proofs and original sources. Begin with Paper I for the foundations, or choose a work below.</p><nav class="reading-library-groups" aria-label="Reading collections"><a href="#core-papers">Core papers</a><a href="#books">Books and monographs</a></nav>'
+    body='<p class="eyebrow">HTML reading editions</p><h1>Reading library</h1><p>Read papers and books with chapter contents, selectable equations, and links to proofs and original sources. Begin with Paper I for the foundations, or choose a work below.</p><nav class="reading-library-groups" aria-label="Reading collections"><a href="start.html">Start here for all works</a><a href="#core-papers">Core papers</a><a href="#books">Books and monographs</a></nav>'
     for group,identifier,core in [('Core papers','core-papers',True),('Books and monographs','books',False)]:
         body+='<section id="'+identifier+'"><h2>'+group+'</h2><div class="work-list">'
         for work,config in BOOKS.items():
@@ -1457,7 +1459,7 @@ def render_book_index(reader,book,reports):
     body='<p class="eyebrow">Read '+label+'</p><h1>'+html.escape(config['title'])+'</h1><p>'+html.escape(introduction)+'</p>'+reader.work_routes(work,page)
     body+='<p class="reading-start"><a class="button" href="'+site.rel(config['chapters'][0]['url'],page)+'">Start reading</a></p>'
     if config.get('reading_guide'):
-        body+='<p class="quantum-guide-entry"><a href="'+site.rel(config['reading_guide'],page)+'">Start here: choose a reading path</a> · A visual introduction, full study, or formal companion.</p>'
+        body+='<p class="reading-guide-entry"><a href="'+site.rel(config['reading_guide'],page)+'">Start here: choose a reading path</a> · An introduction, study sequence, and evidence route.</p>'
     for anchor in config.get('contents_anchors',[]):body+='<span id="'+html.escape(anchor,quote=True)+'"></span>'
     body+='<nav class="chapter-contents reading-contents-index" aria-label="'+label+' chapters"><h2>Contents</h2>'
     body+=contents_list(config,page)+'</nav>'
