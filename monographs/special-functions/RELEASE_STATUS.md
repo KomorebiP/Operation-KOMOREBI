@@ -1,5 +1,14 @@
 # Technical publication package with checked coupled-functions block
 
+**2026-11-02 Perron type proportions companion:** SF-LEAN-B12 adds 26
+checked theorem declarations, completing the registered canonical F.3
+proportions, explicit type ratios and conditional limit equivalence. The
+registered scope is 299 names. All 51 fresh replay steps pass, and actual
+I/O plus remaining-work assessment sources are hashed. Ordinary type
+convergence is not claimed unconditionally. Ancillary F identities, H.1,
+I-J certificates and broader A-E coverage remain. See
+`formalization/Block12/REPORT.md`. Earlier notes keep their dated scopes.
+
 **2026-11-02 real types and radial order companion:** SF-LEAN-B11 adds
 22 checked theorem declarations, completing the registered canonical F.2
 growth contract: real type bounds, actual maximum-modulus radial exponent
