@@ -20,7 +20,7 @@ SOURCES = {
     'paper-vii':'editable/traditional/monograph_atlas.tex',
     'paper-viii':'editable/visual_guide/source/pages.tex',
     'paper-ix':'sources/visual.tex',
-    'paper-x':'visual_appendix/source/pages.tex',
+    'paper-x':'visual_appendix/appendix.tex',
     'paper-xi':'publication/source/visual_guide/Paper_XI_Visual_Guide_Final.tex',
     'paper-xii':'core/publication/source/visual_guide/source/pages.tex',
 }
@@ -44,7 +44,8 @@ def audit(root,git='git'):
         text=raw.decode('utf-8-sig')
         inputs=[]
         children={'paper-viii':['editable/visual_guide/source/extended_pages.tex'],
-            'paper-ix':['sources/visual_body.tex','sources/worked_atlas.tex','sources/generated/worked_newton_values.tex']}.get(work,[])
+            'paper-ix':['sources/visual_body.tex','sources/worked_atlas.tex','sources/generated/worked_newton_values.tex'],
+            'paper-x':['visual_appendix/source/pages.tex']}.get(work,[])
         if children:
             for child in children:
                 child_path=component['destination']+'/'+child
@@ -75,6 +76,9 @@ def audit(root,git='git'):
             integrated_pdf=integrated,html_atlas=BOOKS[work].get('atlas_index'),
             remaining='Complete HTML visual guide available' if BOOKS[work].get('atlas_index') else
                 'Port the visual companion, its figures, source text and manuscript links'))
+        if work=='paper-x':
+            rows[-1]['opening_scope']=dict(sections=2,drawings=1,
+                handling='The HTML contents retain both opening scope sections and the separate-output diagram, before the 30 numbered plates')
         if work=='paper-ix':
             readme='sources/visual_README.md'
             readme_raw=subprocess.check_output([git,'show',revision+':'+component['destination']+'/'+readme],cwd=root)

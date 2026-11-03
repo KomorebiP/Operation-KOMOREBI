@@ -26,16 +26,21 @@ def label_tex(text):
 
 def drawing_nodes(text):
     text=expand_drawing_loops(text)
-    result=[]
+    result=[];label_spans=[]
     pattern=r'(?:\\node|(?<!\\)\bnode)(?:\[[^\]]*\])?(?:\s*\([A-Za-z0-9_:-]+\))?(?:\s*at\s*\(([-+\d.]+),\s*([-+\d.]+)\))?\s*\{'
     for match in re.finditer(pattern,text):
         value,end=group(text,match.end()-1)
+        label_spans.append((match.end(),end-1))
         if not text[end:].lstrip().startswith((';','(')):
             raise ValueError('Unsupported drawing label tail')
         result.append(dict(text=label_tex(value),source_text=value,
                            position=[coordinate(match[1]),coordinate(match[2])] if match[1] else None,
                            line=text.count('\n',0,match.start())+1))
-    if len(result)!=len(re.findall(r'(?:\\node|(?<!\\)\bnode)\b',text)):
+    # A label may itself say "Filled node". Inventory commands outside the
+    # label bodies, rather than treating that ordinary word as TikZ syntax.
+    outside=text
+    for start,end in reversed(label_spans):outside=outside[:start]+(' '*(end-start))+outside[end:]
+    if len(result)!=len(re.findall(r'(?:\\node|(?<!\\)\bnode)\b',outside)):
         raise ValueError('Unsupported drawing label')
     if [m for n in result for m in original_math(n['text'])]!=original_math(label_tex(text)):
         raise ValueError('Mathematics outside the drawing label transcript')

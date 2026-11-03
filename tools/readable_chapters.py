@@ -613,8 +613,8 @@ class Chapter:
                 if not m: raise ValueError('Unsupported prose escape at '+text[pos:pos+40])
                 name = m[1]
                 pos += m.end()
-                if name in {'S','textquotesingle','o','ldots','textbackslash'}:
-                    out.append({'S':'§','textquotesingle':'’','o':'ø','ldots':'…','textbackslash':'\\'}[name])
+                if name in {'S','textquotesingle','o','ldots','textbackslash','textemdash','textendash'}:
+                    out.append({'S':'§','textquotesingle':'’','o':'ø','ldots':'…','textbackslash':'\\','textemdash':'—','textendash':'–'}[name])
                     if text[pos:pos+1]==' ': pos+=1
                     continue
                 if name in {'quad','qquad','hfill'}:
@@ -1131,6 +1131,7 @@ def render_reading_index(reader):
            'Paper VII’s complete 40-plate atlas has HTML drawings, descriptions, and selectable labels. '
            'Paper VIII’s complete 32-plate atlas has HTML drawings, descriptions, and selectable labels. '
            'Paper IX’s complete 23-section visual guide includes 20 original figures and eight worked examples. '
+           'Paper X’s complete 30-plate guide includes its opening scope contract and 29 original drawings. '
            'Companion and atlas coverage varies by work; original visual atlases remain available in the PDFs. '
            'See <a href="'+site.rel('read/visual-guides.html',page)+'">visual guides for all twelve core papers</a> or '
            '<a href="'+site.rel('collection/ACCESSIBILITY.html',page)+'">accessibility and reading options</a> for current coverage and limitations.</p>'

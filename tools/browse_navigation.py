@@ -208,6 +208,8 @@ class Browser:
                 links.insert(0,'[Read online: manuscript, six appendices and figures](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-viii/index.html)')
             if title=='Read' and c['id']=='paper-ix':
                 links.insert(0,'[Visual guide: all 23 HTML sections and 20 figures](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-ix/atlas/index.html)')
+            if title=='Read' and c['id']=='paper-x':
+                links.insert(0,'[Visual guide: all 30 HTML plates and the opening scope contract](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-x/atlas/index.html)')
             if title=='Read' and c['id']=='paper-ix':
                 links.insert(0,'[Read online: complete manuscript, strengthening and historical appendices](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-ix/index.html)')
             if title=='Read' and c['id']=='paper-x':

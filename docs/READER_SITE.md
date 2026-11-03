@@ -16,7 +16,7 @@ HTML status follows the maintained reading configuration; PDF destinations
 and hashes come from the existing source receipts. Paper I's visual atlas is
 inside its main monograph. The other eleven have separate visual-guide PDFs.
 
-The [current inventory](../verification/reader-visual-guides/2026-11-02-paper-ix.json)
+The [current inventory](../verification/reader-visual-guides/2026-11-02-paper-x.json)
 checks the committed visual sources against their receipts and identifies the
 remaining ports. Counts below describe source units, which vary by guide;
 they are not counts of theorems or PDF pages. The
@@ -34,13 +34,13 @@ the earlier four-atlas snapshot.
 | VII | 40 plates | Complete |
 | VIII | 32 plates across two inputs | Complete |
 | IX | 23 sections across two inputs, plus a generated coefficient input | Complete |
-| X | 30 plates | Pending |
+| X | 30 plates, two opening scope sections and their diagram | Complete |
 | XI | 47 lessons | Pending |
 | XII | 27 plates | Pending |
 
-Papers I–IX now have complete HTML visual guides. The remaining ports are
-X–XII. Paper XI needs its own lesson conversion. Papers X and XII need explicit handling of their
-conditional and evidence boundaries. Each port should preserve prose,
+Papers I–X now have complete HTML visual guides. The remaining ports are
+XI–XII. Paper XI needs its own lesson conversion. Paper XII needs explicit
+handling of its evidence boundaries. Each port should preserve prose,
 equations, drawing labels and manuscript links before its status is promoted.
 
 Run `python -B tools/audit_core_visual_guides.py` to inspect the current coverage.
@@ -523,13 +523,43 @@ bibliography and reading links. No proof assessment or Lean replay is added.
 
 ## Paper X HTML reading edition
 
+The [complete Paper X visual guide](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-x/atlas/index.html)
+has 30 numbered HTML plates and retains both opening scope sections on its
+contents page. Its 29 drawings include the opening diagram that distinguishes
+the transported target family from the independently recovered carrier summand.
+The guide retains 754 selectable labels, 969 mathematical expressions, two
+source tables and 50 manuscript routes with return links.
+
+The audit follows `visual_appendix/appendix.tex`, including its opening contract
+and `source/pages.tex`. Physical PDF pages 2–3 hold the opening scopes; V1–V30
+are pages 4–33. The historical 17/20, checked conditional 20/20 and later
+unpromoted 19/20 records retain their different input contracts. Conversion
+checks reconstruct all authored prose and table cells as well as the equations,
+so changes to conditional scope wording fail verification.
+
+`tools/paper_x_atlas.py` uses the shared worked-atlas renderer and emits
+`documents/paper-x-atlas.json`. The source and crop bindings are in
+`tools/paper_x_atlas_sources.json`. Three crops touch adjacent page prose:
+V11, V19 and V22 render only the original drawing objects at scale 1.18541,
+with independently checked counts of 104, 83 and 135 objects. No PDF is saved
+or rebuilt. `python -B tools/render_paper_x_atlas.py` checks all 32 source
+section titles and regenerates the 29 drawing views with pypdfium2.
+Run `python -B -m unittest discover -s tools -p 'test_paper_x_atlas.py' -v`.
+Descriptions were checked against the rendered figures. This presentation
+conversion adds no proof audit, mathematical example execution or Lean replay.
+
+Generated metadata JSON uses compact syntax to keep the reader within the
+1 GiB publication limit. Parsing preserves every data value and all whitespace
+inside source strings. Receipt-bound files under `documents/files/` and frozen
+asset receipts retain their exact bytes. The site-size guard remains active.
+
 [Paper X](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-x/index.html)
 has 30 reading pages and a bibliography. It covers all 15 main sections,
 the algorithms and reproducibility appendices, the dated Block 27 discussion,
 the residue-counting continuation and the final conditional completion.
 The conversion retains 1,080 mathematical expressions, all 16 main proof
 bodies, 16 original figures, three tables and all 23 bibliography entries.
-The thirty-page visual atlas remains in the PDF.
+The complete visual guide is linked above; its retained PDF also remains available.
 
 The [chapter map](../tools/paper_x_sections.json) fixes contiguous source
 ranges. The [conversion module](../tools/paper_x_reading.py) checks every
