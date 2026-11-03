@@ -1,5 +1,14 @@
 # Technical publication package with checked coupled-functions block
 
+**2026-11-03 Exact evaluation certificates companion:** SF-LEAN-B15 adds 36
+checked theorem declarations, for 405 registered names. The J mathematical
+certificate now covers arbitrary-radius majorants, actual complex Taylor
+error, real enclosures and exact rational endpoints. The worked last-index-30
+error is <1.6e-13 on the unit disk. All 60 fresh replay steps pass; I/O is
+hashed. Python refinement and other J correspondence, I and broad A-E
+coverage remain. See `formalization/Block15/REPORT.md`. Earlier notes retain
+their dated scopes.
+
 **2026-11-02 Autonomous projections companion:** SF-LEAN-B14 adds 27
 checked theorem declarations, for 369 registered names. Main H.1 is proved
 for arbitrary scalar functionals, entire inputs and local analytic germs:
