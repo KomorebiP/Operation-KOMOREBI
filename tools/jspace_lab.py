@@ -43,54 +43,36 @@ def build(site):
 
     body = '''<div class="jlab" id="j-lab">
 <header class="jlab-intro">
-<div><p class="jlab-kicker">Neural agents / working states / causal tests</p>
-<h1>J-Space laboratory</h1>
-<p class="jlab-lead">Change a working state.<br><em>Follow what survives.</em></p>
-<p>Run two saved neural agents in your browser. Edit a candidate working state, trace its messages, and test whether remembered facts and later answers survive.</p>
-<div class="jlab-actions"><button type="button" id="jl-launch" disabled>Open the interactive lab <span aria-hidden="true">→</span></button>
-<a href="assets/j-space/causal-lab.html" target="_blank" rel="noopener">Open in a full tab <span aria-hidden="true">↗</span></a></div>
-<p class="jlab-local">Frozen models · Local inference · No installation</p></div>
-<figure class="jlab-model" aria-labelledby="jl-model-caption">
-<div class="jlab-model-top"><span>Two agents. One experiment.</span><span class="jlab-live">Saved weights</span></div>
-<svg viewBox="0 0 440 190" role="img" aria-labelledby="jl-diagram-title jl-diagram-desc">
-<title id="jl-diagram-title">Messages between two neural agents</title>
-<desc id="jl-diagram-desc">Each agent has a 64-coordinate hidden state. Eight-component messages pass in both directions. Readouts test temporary content, remembered facts and private labels.</desc>
-<defs><marker id="jl-arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0L6 3L0 6" fill="currentColor"/></marker></defs>
-<g class="jlab-node"><rect x="18" y="35" width="132" height="115" rx="6"/><rect x="290" y="35" width="132" height="115" rx="6"/></g>
-<g class="jlab-wire" marker-end="url(#jl-arrow)"><path d="M154 70H282"/><path d="M286 120H158"/></g>
-<g class="jlab-svg-label"><text x="84" y="73">Agent 1</text><text x="356" y="73">Agent 2</text></g>
-<g class="jlab-svg-small"><text x="84" y="99">64 coordinates</text><text x="356" y="99">64 coordinates</text><text x="220" y="53">8-component</text><text x="220" y="97">messages</text><text x="220" y="146">Read → compare → continue</text></g>
-</svg><figcaption id="jl-model-caption">Observe the actual model outputs. An edit can work at first and fail after the next exchange.</figcaption>
-</figure></header>
+<div><p class="jlab-kicker">Interactive research</p><h1>J-Space lab</h1>
+<p>Explore two saved neural agents. Change their temporary working values, follow a message, or check what survives later.</p></div>
+<div class="jlab-meta"><span class="jlab-local">Runs on your device · No installation</span>
+<a href="assets/j-space/causal-lab.html" target="_blank" rel="noopener">Open the full research lab <span aria-hidden="true">↗</span></a>
+<a href="assets/j-space/causal-lab.html" download="Komorebi_JSpace_Causal_Lab_v1_4.html">Download offline · 4.4 MB <span aria-hidden="true">↓</span></a></div>
+</header>
 
-<section class="jlab-start" aria-labelledby="jl-start-title"><div class="jlab-section-title"><h2 id="jl-start-title">Choose a question to explore</h2><p>Each starting point loads a guided case.</p></div>
-<div class="jlab-guides">
-<article><p class="jlab-kicker">State → answer</p><h3>Can an edit change the answer?</h3><p>Move a candidate J-space state. Compare the edited answer with the original and whole-donor references.</p><button type="button" data-jl-guide="edit" disabled>Explore a state edit <span aria-hidden="true">→</span></button></article>
-<article><p class="jlab-kicker">Agent → agent</p><h3>Does the message carry the change?</h3><p>Edit one agent, follow the outgoing packet, and compare message restoration with packet-only replay.</p><button type="button" data-jl-guide="relay" disabled>Trace a message <span aria-hidden="true">→</span></button></article>
-<article><p class="jlab-kicker">Now → later</p><h3>Will the change last?</h3><p>Continue the calculation after editing. Reload remembered facts and inspect where the branches agree or fail.</p><button type="button" data-jl-guide="persistence" disabled>Test persistence <span aria-hidden="true">→</span></button></article>
-</div></section>
+<div class="jlab-picker" role="group" aria-label="Choose an experiment">
+<button type="button" data-jl-guide="edit" aria-pressed="true" aria-controls="jl-workspace" disabled><span class="jlab-number" aria-hidden="true">01</span><span><strong>State edit</strong><small>Change a value. Compare the answers.</small></span></button>
+<button type="button" data-jl-guide="relay" aria-pressed="false" aria-controls="jl-workspace" disabled><span class="jlab-number" aria-hidden="true">02</span><span><strong>Message trace</strong><small>Follow the change to the other agent.</small></span></button>
+<button type="button" data-jl-guide="persistence" aria-pressed="false" aria-controls="jl-workspace" disabled><span class="jlab-number" aria-hidden="true">03</span><span><strong>Persistence</strong><small>Keep computing. Check what survives.</small></span></button>
+</div>
+<p class="jlab-switch-note">Changing experiments loads a fresh example. Use the export controls to keep a run.</p>
 
-<section class="jlab-workspace" id="jl-workspace" aria-labelledby="jl-workspace-title" hidden>
-<div class="jlab-section-title"><h2 id="jl-workspace-title" tabindex="-1">Interactive workbench</h2><a href="assets/j-space/causal-lab.html" target="_blank" rel="noopener">Use the full tab <span aria-hidden="true">↗</span></a></div>
-<p id="jl-guide-note" class="jlab-guide-note"></p>
+<section class="jlab-workspace" id="jl-workspace" aria-labelledby="jl-workspace-title">
+<div class="jlab-workspace-head"><div><p class="jlab-kicker" id="jl-step-label">01 / State edit</p><h2 id="jl-workspace-title" tabindex="-1">Can an edit change the answer?</h2></div><button type="button" id="jl-reset" class="jlab-secondary" hidden disabled>Reset example</button></div>
+<p id="jl-guide-note" class="jlab-guide-note">Choose a target pair and adjust the edit strength. Compare the two agents’ answers, then audit their remembered facts.</p>
+<details class="jlab-help"><summary>A quick guide to the terms</summary><dl><div><dt>Working pair</dt><dd>Two temporary values, written as [left, right]. These are what the agents are currently using.</dd></div><div><dt>Donor</dt><dd>A reference state with the working values you want. The edit tries to transfer a small part of that state.</dd></div><div><dt>Facts</dt><dd>Eight stored values tested separately. Changing an answer can also harm recall.</dd></div></dl></details>
+<div id="jl-start-panel" class="jlab-start-panel"><p>Start with a prepared example, then explore the controls.</p><button type="button" id="jl-launch" disabled>Start state edit <span aria-hidden="true">→</span></button></div>
 <p id="jl-status" role="status" aria-live="polite"></p>
-<iframe id="jl-frame" title="Interactive J-Space causal lab with saved neural models" data-src="assets/j-space/causal-lab.html?v=APP_VERSION" hidden></iframe>
-<p class="jlab-frame-note">The workbench has its own scroll area. Export JSON inside the lab to keep a trace. Guided starting points reset the example; reopening the current lab keeps your changes.</p>
+<iframe id="jl-frame" title="J-Space experiment controls and actual neural-model results" data-src="assets/j-space/causal-lab.html?v=APP_VERSION" data-style="WORKBENCH_STYLE" hidden></iframe>
 </section>
-<noscript><p class="jlab-note">Enable JavaScript to run the agents. You can also <a href="assets/j-space/causal-lab.html" download="Komorebi_JSpace_Causal_Lab_v1_4.html">download the self-contained lab</a> and open it in a browser with JavaScript enabled. Read the <a href="collection/works/experiments-jspace-causal-lab.html">experiment overview</a> for its methods and limits.</p></noscript>
+<noscript><p class="jlab-note">Enable JavaScript to run the agents, or <a href="assets/j-space/causal-lab.html" download="Komorebi_JSpace_Causal_Lab_v1_4.html">download the self-contained lab</a> and open it in a browser with JavaScript enabled.</p></noscript>
 
-<section class="jlab-context" aria-labelledby="jl-context-title"><div><p class="jlab-kicker">Interpreting a run</p><h2 id="jl-context-title">A research instrument.<br>Failures stay visible.</h2>
-<p>This is the preserved causal lab 1.4: two small trained neural lineages, saved weights, candidate state directions, and explicit reference branches. A successful edit in one case is experimental evidence, not a J-space certificate.</p>
-<p>Compare the reference branches, inspect individual checkpoints, and keep the failed cases alongside the successes. Read the laboratory report for its recorded tests and remaining questions.</p></div>
-<div class="jlab-resources"><h3>Keep exploring</h3>
-<a href="collection/works/experiments-jspace-causal-lab.html">Methods, source files and evidence <span aria-hidden="true">↗</span></a>
-<a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/REVISION/experiments/jspace-causal-lab/REPORT.md">Read the laboratory report <span aria-hidden="true">↗</span></a>
-<a href="assets/j-space/causal-lab.html" download="Komorebi_JSpace_Causal_Lab_v1_4.html">Download the offline lab · 4.4 MB <span aria-hidden="true">↓</span></a>
-<a href="interactive.html">Explore interactive mathematics <span aria-hidden="true">→</span></a>
-<p>The model runs on your device after the lab loads. The offline file includes its weights and interface.</p></div></section>
+<aside class="jlab-context" aria-label="About this experiment"><p><strong>A research experiment.</strong> These are small saved neural models. An edit can work at first and fail later; a successful case is not a J-space certificate. All predictions and failed reference checks come from the original instrument.</p>
+<div class="jlab-resources"><a href="collection/works/experiments-jspace-causal-lab.html">Methods and source files <span aria-hidden="true">↗</span></a><a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/REVISION/experiments/jspace-causal-lab/REPORT.md">Laboratory report <span aria-hidden="true">↗</span></a><a href="interactive.html">More interactive mathematics <span aria-hidden="true">→</span></a></div></aside>
 </div>'''
-    body = body.replace('APP_VERSION', APP_SHA256[:12]).replace('REVISION', site.revision)
+    body = body.replace('APP_VERSION', APP_SHA256[:12]).replace('REVISION', site.revision).replace('WORKBENCH_STYLE', asset('jspace-workbench.css'))
     body = '<link rel="stylesheet" href="'+asset('jspace-lab.css')+'">'+body
+    body += '<script defer src="'+asset('jspace-workbench.js')+'"></script>'
     body += '<script defer src="'+asset('jspace-lab.js')+'"></script>'
     site.page('j-lab.html', 'J-Space laboratory', body)
     site.search.append(dict(title='J-Space laboratory: state edits, messages and persistence',
