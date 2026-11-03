@@ -89,7 +89,6 @@ def entry_slides():
         '<a class="button button-secondary" href="'+secondary_target+'">'+secondary_link+'</a></div></section>'
         for key, label, description, target, link, secondary_target, secondary_link in entries)
     return ('<div class="home-copy home-entry-showcase" aria-label="Ways into the collection">'
-            '<div class="home-topics home-entry-topics" aria-label="Choose a starting point" hidden>'+topics+'</div>'
             '<div class="home-entry-feature"><p class="home-kicker">The Komorebi research collection</p>'
             '<h1 id="home-title">Explore the ideas.<br><em>Follow the evidence.</em></h1>'
             '<div class="home-entry-panels">'+panels+'</div>'
@@ -97,7 +96,8 @@ def entry_slides():
             '<p class="home-slide-position" aria-live="polite" aria-atomic="true"></p>'
             '<div class="home-slide-arrows"><button type="button" data-slide-previous aria-label="Previous starting point">'
             '<span aria-hidden="true">←</span></button><button type="button" data-slide-next aria-label="Next starting point">'
-            '<span aria-hidden="true">→</span></button></div></div></div></div>')
+            '<span aria-hidden="true">→</span></button></div></div></div>'
+            '<div class="home-topics home-entry-topics" aria-label="Choose a starting point" hidden>'+topics+'</div></div>')
 
 
 def home_page():
@@ -133,3 +133,4 @@ def home_page():
 <li><a href="collection/DEMONSTRATIONS.html">Follow a complete demonstration</a> — work through a calculation, run its program, and follow the source evidence.</li>
 <li><a href="collection/SPECIAL_FUNCTIONS.html">Explore Special Functions</a> — read the current volumes, compare five families, and run the coupled-function lab.</li></ul></div></details>
 <details class="home-status"><summary>How to read completion and verification</summary><p>The collection records completion, formal coverage, and confidence separately. A linked file does not mean every claim has been verified. Software is beta.</p><p><a href="collection/COMPLETION_STATUS.html">Read the guide to evidence and status</a></p></details></div>'''
+
