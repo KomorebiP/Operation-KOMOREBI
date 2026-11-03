@@ -128,7 +128,14 @@
     editorNotice.hidden = true;
     byId('relay').prepend(editorNotice);
     listen(byId('mEditor'), 'click', () => callbacks.onEditSettings('relay'));
-    for (const id of ['mRun', 'mBank']) listen(byId(id), 'click', () => { editorNotice.hidden = true; });
+    let recordedTrace;
+    const traceObserver = new MutationObserver(() => {
+      // A bank run or a rejected run can leave the displayed trace intact.
+      // Clear the notice only after the renderer presents a different trace.
+      if (frame.contentWindow.JRelayLab.getTrace() !== recordedTrace) editorNotice.hidden = true;
+    });
+    traceObserver.observe(byId('mMeta'), {childList: true});
+    copyObservers.push(traceObserver);
     heading('.relay-layout > .stack:first-child h2', '1  Set up the trace');
     intro(relayControls[0], 'Edit one agent and watch its partner. The restored-message and replayed-message runs test the role of the first message.');
     label('mWriter', 'Which agent gets the edit?');
@@ -262,7 +269,10 @@
     doc.head.append(style);
     notifyBusy();
     return {resize, jump, useEditorSettings(key) {
-      if (key === 'relay') editorNotice.hidden = false;
+      if (key === 'relay') {
+        recordedTrace = frame.contentWindow.JRelayLab.getTrace();
+        editorNotice.hidden = false;
+      }
       resize();
     }, destroy() {
       destroyed = true;
