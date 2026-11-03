@@ -219,8 +219,8 @@ links every paper's visual material and original PDF. Current HTML coverage is:
 <caption>Core-paper visual-guide coverage</caption>
 <thead><tr><th scope="col">Core papers</th><th scope="col">Visual-guide reading options</th></tr></thead>
 <tbody>
-<tr><th scope="row">I–IX</th><td>Complete HTML visual guides, alongside the original PDFs. The guides retain source prose, equations, and drawing labels, with text descriptions and structured tables where applicable.</td></tr>
-<tr><th scope="row">X–XII</th><td>Original visual-guide PDFs. Separate HTML visual guides remain to be added.</td></tr>
+<tr><th scope="row">I–XII</th><td>Complete HTML visual guides, alongside the original PDFs. The guides retain source prose, equations, and drawing labels, with text descriptions and structured tables where applicable.</td></tr>
+<tr><th scope="row">Quantum and Circuits</th><td><a href="https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-quantum-and-circuits/visual-guides.html">Two complete visual sequences</a>: 25 quantum-arithmetic pages and 25 circuit-obstruction pages, with original drawings, selectable equations, and links to the volume.</td></tr>
 </tbody>
 </table>
 

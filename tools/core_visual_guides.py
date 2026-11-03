@@ -1,4 +1,4 @@
-"""One source-derived directory of visual reading routes for the core sequence."""
+"""Source-derived visual reading routes for the core sequence and books."""
 import html
 import json
 import re
@@ -7,6 +7,7 @@ import posixpath
 
 INDEX='read/visual-guides.html'
 REPORT='documents/core-visual-guides.json'
+ALL_REPORT='documents/visual-guides.json'
 
 # Editorial navigation labels; the original manuscript titles remain in the inventory.
 GUIDES={
@@ -26,24 +27,33 @@ GUIDES={
 
 
 def is_visual_guide(work,page):
+    from quantum_visual_guides import WORK,is_page
+    if work==WORK:return is_page(page)
     from readable_chapters import BOOKS
     index=BOOKS.get(work,{}).get('atlas_index')
     return bool(index and page.startswith(index.removesuffix('index.html')))
+
+
+def guide_choices():
+    # Keep these routes available when a focused book fixture selects one BOOK.
+    from quantum_visual_guides import WORK,PAGE
+    return [(work,'Paper '+work.removeprefix('paper-').upper(),info[0],'read/'+work+'/atlas/index.html')
+            for work,info in GUIDES.items()]+[(WORK,'Quantum and Circuits','Arithmetic and circuit diagrams',PAGE)]
 
 
 def guide_navigation(work,page,more=''):
     """Keep visual readers in the visual format when they change papers."""
     from readable_chapters import BOOKS
     e=html.escape;relative=lambda target:posixpath.relpath(target,posixpath.dirname(page))
-    book=BOOKS[work];index=book['atlas_index']
+    book=BOOKS[work];index=book.get('atlas_index') or book['visual_guide_index']
     body='<nav class="work-overview-nav paper-routes visual-guide-routes" aria-label="Visual guide navigation">'
     body+='<a href="'+relative(INDEX)+'">All visual guides</a>'
     body+='<a href="'+relative(index)+'"'+(' aria-current="page"' if page==index else '')+'>Guide contents</a>'
-    body+='<a href="'+relative(book['index'])+'">Read paper</a>'
+    body+='<a href="'+relative(book['index'])+'">Read '+('paper' if work in GUIDES else 'volume')+'</a>'
     body+='<details class="visual-guide-switch"><summary>Switch guide</summary><nav aria-label="Choose a visual guide"><ul>'
-    for identifier,info in GUIDES.items():
-        other=BOOKS[identifier];current=' aria-current="'+('page' if page==index else 'location')+'"' if identifier==work else ''
-        body+='<li><a href="'+relative(other['atlas_index'])+'"'+current+'><strong>'+e(other['label'])+'</strong><span>'+e(info[0])+'</span></a></li>'
+    for identifier,label,title,target in guide_choices():
+        current=' aria-current="'+('page' if page==index else 'location')+'"' if identifier==work else ''
+        body+='<li><a href="'+relative(target)+'"'+current+'><strong>'+e(label)+'</strong><span>'+e(title)+'</span></a></li>'
     return body+'</ul></nav></details>'+more+'</nav>'
 
 
@@ -83,30 +93,39 @@ def inventory(root,files):
     return result
 
 
+def all_inventory(root,files):
+    from quantum_visual_guides import inventory as quantum_inventory
+    return inventory(root,files)+[quantum_inventory(root,files)]
+
+
 def render(reader):
     site=reader.site
-    rows=inventory(site.root,reader.records.values())
+    rows=all_inventory(site.root,reader.records.values())
     count=sum(bool(row['html_atlas']) for row in rows)
-    body='<div class="visual-directory"><p class="eyebrow">The twelve core papers</p><h1>Visual guides</h1>'
-    body+='<p class="visual-directory-intro">Choose a subject or paper. Each complete guide has original diagrams, selectable mathematics, and links back to the paper.</p>'
+    body='<div class="visual-directory"><p class="eyebrow">Core papers and books</p><h1>Visual guides</h1>'
+    body+='<p class="visual-directory-intro">Explore all twelve core papers and the Quantum and Circuits visual collection. Choose a subject or work for original diagrams, selectable mathematics, and links to the text.</p>'
     body+='<form id="visual-guide-filter" class="visual-guide-filter" role="search" hidden><label for="visual-guide-query">Find a visual guide</label><div><input id="visual-guide-query" type="search" name="q" placeholder="Paper number, title, or topic" aria-controls="visual-guide-list" aria-describedby="visual-guide-count"><button type="reset">Clear</button></div></form>'
-    body+='<div class="visual-directory-tools"><nav class="visual-guide-jump" aria-label="Jump to a paper">'+''.join('<a href="#'+r['work']+'" aria-label="'+r['label']+'">'+r['label'].removeprefix('Paper ')+'</a>' for r in rows)+'</nav><p id="visual-guide-count" role="status" aria-live="polite">'+str(count)+' guides</p></div>'
+    body+='<div class="visual-directory-tools"><nav class="visual-guide-jump" aria-label="Jump to a paper or book">'+''.join('<a href="#'+r['work']+'" aria-label="'+r['label']+'">'+(r['label'].removeprefix('Paper ') if r['number'] else 'Quantum and Circuits')+'</a>' for r in rows)+'</nav><p id="visual-guide-count" role="status" aria-live="polite">'+str(count)+' guides</p></div>'
     body+='<p id="visual-guide-empty" hidden>No guides match. Try another subject or clear the search.</p><ol id="visual-guide-list" class="visual-guide-grid">'
     for row in rows:
         e=html.escape;identifier=row['work'];preview=row['preview']
-        search=' '.join([row['label'],'Paper '+str(row['number']),row['title'],row['short_title'],row['summary'],row['topics']])
-        body+='<li class="visual-guide-card" id="'+identifier+'" data-number="'+str(row['number'])+'" data-roman="'+row['label'].removeprefix('Paper ').lower()+'" data-search="'+e(search,quote=True)+'">'
+        search=' '.join([row['label'],('Paper '+str(row['number']) if row['number'] else ''),row['title'],row['short_title'],row['summary'],row['topics']])
+        number=(' data-number="'+str(row['number'])+'" data-roman="'+row['label'].removeprefix('Paper ').lower()+'"') if row['number'] else ''
+        body+='<li class="visual-guide-card" id="'+identifier+'"'+number+' data-search="'+e(search,quote=True)+'">'
         body+='<a class="visual-guide-open" href="'+site.rel(row['html_atlas'],INDEX)+'" aria-labelledby="'+identifier+'-label '+identifier+'-title" title="'+e(row['title'],quote=True)+'">'
         body+='<div class="visual-guide-preview"><img src="'+site.rel(preview['image'],INDEX)+'" width="'+str(preview['width'])+'" height="'+str(preview['height'])+'" alt="" loading="lazy" decoding="async"></div>'
         body+='<div class="visual-guide-copy"><p class="eyebrow" id="'+identifier+'-label">'+row['label']+' <span>'+str(row['units'])+' '+row['unit_kind']+'</span></p><h2 id="'+identifier+'-title">'+e(row['short_title'])+'</h2><p>'+e(row['summary'])+'</p><span class="visual-guide-action">Open visual guide <span aria-hidden="true">→</span></span></div></a>'
-        body+='<nav class="visual-guide-formats" aria-label="'+row['label']+' other reading formats"><a href="'+site.rel(row['manuscript'],INDEX)+'">Read paper</a><a href="'+site.rel(row['visual_pdf'],INDEX)+'">'+('Atlas in monograph PDF' if row['integrated_pdf'] else 'Guide PDF')+'</a><a href="'+site.rel(row['overview'],INDEX)+'">About this paper</a></nav></li>'
-    body+='</ol><div class="visual-directory-footer"><p>The guides retain their papers’ assumptions and recorded limits.</p><nav aria-label="Other reading collections"><a href="index.html">Reading library</a><a href="'+site.rel('documents.html',INDEX)+'">All papers and PDFs</a></nav></div></div>'
+        is_paper=bool(row['number']);noun='paper' if is_paper else 'volume'
+        pdf_label=('Atlas in monograph PDF' if is_paper else 'Volume PDF') if row['integrated_pdf'] else 'Guide PDF'
+        body+='<nav class="visual-guide-formats" aria-label="'+row['label']+' other reading formats"><a href="'+site.rel(row['manuscript'],INDEX)+'">Read '+noun+'</a><a href="'+site.rel(row['visual_pdf'],INDEX)+'">'+pdf_label+'</a><a href="'+site.rel(row['overview'],INDEX)+'">About this '+noun+'</a></nav></li>'
+    body+='</ol><div class="visual-directory-footer"><p>The guides retain their works’ assumptions and recorded limits.</p><nav aria-label="Other reading collections"><a href="index.html">Reading library</a><a href="'+site.rel('documents.html',INDEX)+'">All papers and PDFs</a></nav></div></div>'
     script=site.rel('assets/visual-guides.js',INDEX)+'?v='+hashlib.sha256((site.root/'website/assets/visual-guides.js').read_bytes()).hexdigest()[:12]
     body+='<script defer src="'+script+'"></script>'
-    site.page(INDEX,'Core visual guides',body)
-    site.write(REPORT,json.dumps(dict(source_revision=site.revision,guides=rows),indent=2)+'\n')
-    site.search.append(dict(title='Core visual guides',group='Collection',kind='Guides',url=INDEX,
-        text='Visual guides and worked atlases for all twelve core papers',work_ids=[r['work'] for r in rows]))
+    site.page(INDEX,'Visual guides',body)
+    site.write(REPORT,json.dumps(dict(source_revision=site.revision,guides=rows[:12]),indent=2)+'\n')
+    site.write(ALL_REPORT,json.dumps(dict(source_revision=site.revision,guides=rows),indent=2)+'\n')
+    site.search.append(dict(title='Visual guides',group='Collection',kind='Guides',url=INDEX,
+        text='Visual guides and worked atlases for all twelve core papers and Quantum and Circuits',work_ids=[r['work'] for r in rows]))
 
 
 def verify(root,documents,pages):
@@ -116,9 +135,14 @@ def verify(root,documents,pages):
     repository=__import__('pathlib').Path(__file__).resolve().parents[1]
     rows=inventory(repository,documents['files'])
     assert record==dict(source_revision=documents['source_revision'],guides=rows)
+    all_rows=all_inventory(repository,documents['files'])
+    assert json.loads((root/ALL_REPORT).read_bytes())==dict(source_revision=documents['source_revision'],guides=all_rows)
+    assert {r['work'] for r in all_rows}<=set(pages[INDEX].ids)
+    from quantum_visual_guides import verify as verify_quantum
+    verify_quantum(pages)
     assert {r['work'] for r in rows}<=set(pages[INDEX].ids)
     import posixpath
-    for row in rows:
+    for row in all_rows:
         targets=[row['visual_pdf'],row['manuscript'],row['overview']]
         if row['html_atlas']:targets.append(row['html_atlas'])
         for target in targets:
@@ -126,11 +150,14 @@ def verify(root,documents,pages):
             assert posixpath.relpath(target,posixpath.dirname(INDEX)) in pages[INDEX].links
         preview=row['preview'];raw=(root/preview['image']).read_bytes()
         assert hashlib.sha256(raw).hexdigest()==preview['sha256']
-        prefix=row['html_atlas'].removesuffix('index.html')
-        guide_pages=[path for path in pages if path.startswith(prefix)]
+        if row.get('sequences'):
+            guide_pages=[row['html_atlas']]+[p['url'] for s in row['sequences'] for p in s['pages']]
+        else:
+            prefix=row['html_atlas'].removesuffix('index.html')
+            guide_pages=[path for path in pages if path.startswith(prefix)]
         assert len(guide_pages)==row['units']+1,('Wrong visual directory unit count',row['work'])
         for page in guide_pages:
             links=pages[page].links
-            for target in [INDEX,row['manuscript'],*[r['html_atlas'] for r in rows]]:
+            for target in [INDEX,row['manuscript'],*[r['html_atlas'] for r in all_rows]]:
                 assert posixpath.relpath(target,posixpath.dirname(page)) in links,('Missing visual reading route',page,target)
     return dict(guides=len(rows),html_atlases=sum(bool(r['html_atlas']) for r in rows))

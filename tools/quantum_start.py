@@ -51,6 +51,7 @@ def publish(reader, book):
             body+='<li>'+link(slug,label)+'<p>'+escape(description)+'</p></li>'
         body+='</ol><p class="notice">'+escape(checkpoint)+'</p>'
         if key=='visual':
+            body+='<p><a href="visual-guides.html">Explore both complete visual sequences: all 50 pages</a>.</p>'
             body+='<p>Try the existing <a href="'+site.rel('read/quantum-phase-measurement.html',PAGE)+'">phase and measurement walkthrough</a>, then <a href="'+site.rel('playground.html',PAGE)+'#physics-arithmetic-phase">change the phase in the browser</a>.</p>'
         if key=='study':
             body+='<p>'+link('volume-preface-and-volume-guide','Preface and volume guide')+' · '+link('glossary-shared-glossary','Shared glossary')+'</p>'

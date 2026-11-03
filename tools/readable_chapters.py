@@ -1124,7 +1124,8 @@ def render_reading_index(reader):
             if config.get('reading_guide'):body+='<a class="button" href="'+site.rel(config['reading_guide'],page)+'">Start here</a>'
             else:body+='<a class="button" href="'+site.rel(config['chapters'][0]['url'],page)+'">Start reading</a>'
             body+='<a href="'+site.rel(config['index'],page)+'">Contents</a>'
-            if config.get('atlas_index'):body+='<a href="'+site.rel(config['atlas_index'],page)+'">Visual guide</a>'
+            visual=config.get('atlas_index') or config.get('visual_guide_index')
+            if visual:body+='<a href="'+site.rel(visual,page)+'">Visual guide</a>'
             pdf=reader.primary_pdf(work)
             if pdf:body+='<a href="'+site.rel(pdf['url'],page)+'">Read PDF</a>'
             body+='</nav></section>'
@@ -1485,6 +1486,8 @@ def render_book_index(reader,book,reports):
     if config.get('custom_reader')=='quantum':
         from quantum_start import publish
         publish(reader,book)
+        from quantum_visual_guides import publish as publish_visual_guides
+        publish_visual_guides(reader)
 
 
 def render_bibliography(reader,book):
