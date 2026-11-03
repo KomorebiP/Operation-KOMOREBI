@@ -1,4 +1,4 @@
-"""Check the twenty-one main chapters against the retained manuscript."""
+"""Check the complete retained volume against the retained manuscript."""
 import json
 from pathlib import Path
 import re
@@ -12,6 +12,7 @@ from quantum_reading import BOOK,CHAPTERS,DATA,WORK,normalize,source_specs,sourc
 from quantum_symmetry import SOURCE as SYMMETRY,MACROS,FIGURES,normalize as normalize_symmetry
 from quantum_catalytic import SOURCE as CATALYTIC,MACROS as CATALYTIC_MACROS,normalize as normalize_catalytic
 from quantum_circuits import SOURCE as CIRCUITS,VISUAL,MACROS as CIRCUIT_MACROS,normalize as normalize_circuits,normalize_visual,source_macros as circuit_macros
+from quantum_companions import SOURCES as COMPANIONS,MAIN as VOLUME,ARITHMETIC as FORMAL_ARITHMETIC,CIRCUIT as FORMAL_CIRCUIT,COVERAGE,EVIDENCE_NOTE,normalize as normalize_companion
 from build_reader_site import Site
 from check_reader_site import Page,check_readable_chapter
 from reader_documents import ReadingDocuments,source_lines
@@ -44,19 +45,20 @@ def publish_fixture(output):
 
 
 class QuantumReadingTests(unittest.TestCase):
-    def test_selection_covers_chapters_one_through_twenty_one_and_fails_closed(self):
+    def test_complete_volume_selection_and_source_identities_fail_closed(self):
         load=lambda path:(ROOT/path).read_bytes().decode('utf-8-sig')
         self.assertEqual(source_specs(load),CHAPTERS)
-        self.assertEqual(len(CHAPTERS),148)
+        self.assertEqual(len(CHAPTERS),206)
         for source in DATA['selected_sources']:
             text=load(source)
-            translated={SYMMETRY:normalize_symmetry,CATALYTIC:normalize_catalytic,CIRCUITS:normalize_circuits,VISUAL:normalize_visual}.get(source,normalize)(text)
+            translated=normalize_companion(text,source) if source in COMPANIONS else {SYMMETRY:normalize_symmetry,CATALYTIC:normalize_catalytic,CIRCUITS:normalize_circuits,VISUAL:normalize_visual}.get(source,normalize)(text)
             self.assertEqual(text.count('\n'),translated.count('\n'))
             if source in DATA['selected_sources'][:2]:self.assertEqual(reading.original_math(text),reading.original_math(translated))
         with self.assertRaisesRegex(ValueError,'Review changed Quantum source'):
             source_specs(lambda path:load(path)+'\nUnreviewed source change.')
-        self.assertTrue(BOOK['partial'])
-        self.assertIn('appendices remain available',BOOK['reading_introduction'])
+        self.assertFalse(BOOK['partial'])
+        self.assertEqual(BOOK['continuation_sources'],[])
+        self.assertIn('complete volume',BOOK['reading_introduction'])
         with self.assertRaisesRegex(ValueError,'Unsupported'):
             reading.Chapter('',{}).inline(normalize(r'\unreviewedcommand{lost prose}'))
 
@@ -112,6 +114,30 @@ class QuantumReadingTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'field and Boolean conventions'):
             circuit_macros(lambda path:load(path).replace(r'\mathbb F_2',r'\mathbb F_3'))
 
+    def test_companion_math_and_literal_code_are_independent_of_print_wrappers(self):
+        literal=re.compile(r'\\begin\{(lstlisting|verbatim|Verbatim)\}(?:\[[^\]]*\])?(.*?)\\end\{\1\}',re.S)
+        total=0;listings=0
+        for source in COMPANIONS:
+            raw=(ROOT/source).read_bytes().decode('utf-8-sig')
+            without_code=literal.sub('',raw)
+            # Repeated running headers carry no additional semantic row. The
+            # independent extractor checks the copies before removing them.
+            def header(match):
+                first=match[1][match[1].index(r'\toprule'):]
+                self.assertEqual(re.sub(r'\s+','',first),re.sub(r'\s+','',match[2]))
+                return match[1]
+            semantic=re.sub(r'(\\begin\{longtable\}.*?)\\endfirsthead(.*?)\\endhead',header,without_code,flags=re.S)
+            expected=reading.original_math(semantic)
+            actual=[v for s in CHAPTERS if s['source']==source for v in source_math(raw,s)]
+            self.assertEqual(actual,expected,source);total+=len(actual)
+            translated=normalize_companion(raw,source)
+            self.assertEqual([m[2] for m in literal.finditer(raw)],[m[2] for m in literal.finditer(translated)],source)
+            self.assertEqual(raw.count('\n'),translated.count('\n'))
+            listings+=len(literal.findall(raw))
+        self.assertEqual((total,listings),(314,157))
+        with self.assertRaisesRegex(ValueError,'literal-code options'):
+            normalize_companion((ROOT/FORMAL_ARITHMETIC).read_text(encoding='utf-8').replace('breakanywhere=true','unreviewed=true',1),FORMAL_ARITHMETIC)
+
     def test_published_math_proofs_tables_figures_and_source_lines(self):
         with tempfile.TemporaryDirectory() as folder:
             output=Path(folder);reader=publish_fixture(output)
@@ -119,7 +145,7 @@ class QuantumReadingTests(unittest.TestCase):
             documents=dict(files=list(reader.records.values()))
             with patch.object(reading,'BOOKS',{WORK:BOOK}),patch.object(reading,'CHAPTERS',CHAPTERS):
                 total=check_readable_chapter(output,documents,pages)
-            self.assertEqual(total,3886)
+            self.assertEqual(total,4200)
             nodes=[n for _,_,chapter in reader.readable_books[WORK]['chapters'] for n in chapter.nodes]
             arithmetic=[n for spec,_,chapter in reader.readable_books[WORK]['chapters'] if spec['source'] in DATA['selected_sources'][:2] for n in chapter.nodes]
             statements=[n for n in arithmetic if n['kind']=='theorem']
@@ -133,9 +159,9 @@ class QuantumReadingTests(unittest.TestCase):
             self.assertEqual(sum(n['kind']=='figure' for n in nodes),85)
             self.assertEqual(len(reader.images),82)
             nested=[n for _,_,c in reader.readable_books[WORK]['chapters'] for n in c.nested_tables]
-            self.assertEqual(sum(n['kind'] in {'table','longtable','tabular'} for n in nodes)+len(nested),31)
+            self.assertEqual(sum(n['kind'] in {'table','longtable','tabular','tabularx'} for n in nodes)+len(nested),61)
             self.assertEqual(sum(n['kind']=='question' for n in nodes),44)
-            self.assertEqual(sum(n['kind']=='interpretation' for n in nodes),54)
+            self.assertEqual(sum(n['kind']=='interpretation' for n in nodes),57)
             # Reconstruct the chapter-wide statement counters from raw source,
             # independently of the reader's section-based parser and renumbering.
             source=(ROOT/SYMMETRY).read_bytes().decode('utf-8-sig');chapter_number=2;counter=0;expected=[]
@@ -171,7 +197,7 @@ class QuantumReadingTests(unittest.TestCase):
                 prepare(reader,dict(BOOK,figure_receipts=FIGURES),symmetry_chapters)
             compiler.nodes.pop()
             directory=reading.statement_directory_url(BOOK)
-            self.assertIn('in this HTML selection',(output/directory).read_text(encoding='utf-8'))
+            self.assertIn('anywhere in this work',(output/directory).read_text(encoding='utf-8'))
             chapters=[(s['url'],(output/s['url']).read_text(encoding='utf-8')) for s in CHAPTERS]
             result=check_directory((output/directory).read_text(encoding='utf-8'),chapters,directory)
             self.assertEqual(result['proof_links'],120)
@@ -270,10 +296,64 @@ class QuantumReadingTests(unittest.TestCase):
             self.assertEqual(len(guide_listing.items),2)
             appendix=next(r for r in reader.records.values() if r['repository_path'].endswith('c_supplement.tex'))
             citation_page=next(s['url'] for s,_,_ in circuits if s['title']=='What the comparison does and does not require')
-            self.assertIn(appendix['url'].split('/')[-1]+'#L85',(output/citation_page).read_text(encoding='utf-8'))
+            evidence_spec=next(s for s in CHAPTERS if s['source']==COVERAGE and s['start_line']<=85<=s['end_line'])
+            self.assertIn(evidence_spec['url'].split('/')[-1]+'#L85',(output/citation_page).read_text(encoding='utf-8'))
             self.assertIn('id="L85"',(output/appendix['url']).read_text(encoding='utf-8'))
             self.assertIn('[54] c:beckli',references)
             self.assertIn('<code>docs/FOUNDATIONS.md</code>',references)
+            # All literal source extracts and 115 elaborated declaration
+            # types survive byte-for-byte, including Unicode and backslashes.
+            literal=re.compile(r'\\begin\{(lstlisting|verbatim|Verbatim)\}(?:\[[^\]]*\])?(.*?)\\end\{\1\}',re.S)
+            for source in COMPANIONS:
+                parsed=Listings()
+                for spec in CHAPTERS:
+                    if spec['source']==source:parsed.feed((output/spec['url']).read_text(encoding='utf-8'))
+                raw=(ROOT/source).read_bytes().decode('utf-8-sig')
+                self.assertEqual(parsed.items,[m[2].strip('\n') for m in literal.finditer(raw)],source)
+            formal=[(s,c) for s,_,c in reader.readable_books[WORK]['chapters'] if s['source']==FORMAL_CIRCUIT]
+            register=[]
+            for spec,chapter in formal:
+                parent=None
+                for n in chapter.nodes:
+                    if n['kind']=='paragraph' and re.fullmatch(r'L\d{3} [A-Za-z0-9_]+',n['title']):parent=n
+                    if n['kind']=='lstlisting' and n.get('search_title','').startswith('Formal type '):
+                        register.append((parent,n))
+                        search=next(e for e in reader.site.search if e['url']==spec['url']+'#'+n['id'])
+                        self.assertEqual(search['title'],BOOK['label']+' / Formal type '+parent['title'])
+            raw=(ROOT/FORMAL_CIRCUIT).read_bytes().decode('utf-8-sig')
+            authored=list(re.finditer(r'\{\\small\\bfseries (L\d{3})\\enspace\\texttt\{([^{}]+)\}\\par\}',raw))
+            self.assertEqual(len(register),115)
+            self.assertEqual([n['title'] for n,_ in register],[m[1]+' '+m[2].replace(r'\_','_') for m in authored])
+            self.assertEqual([n['line'] for n,_ in register],[raw.count('\n',0,m.start())+1 for m in authored])
+            for spec in CHAPTERS:
+                if spec.get('evidence_note'):
+                    markup=(output/spec['url']).read_text(encoding='utf-8')
+                    self.assertIn(EVIDENCE_NOTE,markup)
+                    self.assertLess(markup.index(EVIDENCE_NOTE),markup.index('<article id="chapter-text"'))
+            # The printed result index still names the same 30 statements. Its
+            # page column links the bound original PDF, with printed numbers.
+            pdf=DATA['result_index_pdf'];record=reader.records[pdf['source']]
+            raw=(ROOT/COVERAGE).read_text(encoding='utf-8')
+            self.assertEqual([r['label'] for r in pdf['rows']],re.findall(r'\\resultrow\{([^{}]+)\}',raw))
+            self.assertEqual(len(pdf['rows']),30)
+            index_spec=next(s for s in CHAPTERS if s['source']==COVERAGE and s['start_line']<=45<=s['end_line'])
+            markup=(output/index_spec['url']).read_text(encoding='utf-8')
+            labels=formal[0][1].labels
+            for row in pdf['rows']:
+                self.assertEqual(labels[row['label']]['number'],row['number'])
+                target=posixpath.relpath(record['file_url'],posixpath.dirname(index_spec['url']))+'#page='+str(row['pdf_page'])
+                self.assertIn('href="'+target+'">'+str(row['printed_page'])+'</a>',markup)
+            # Full-volume orientation keeps the six general glossary entries,
+            # part introductions, preface and explicit chapter/appendix routes.
+            orientation=next(s for s in CHAPTERS if s['source']==VOLUME)
+            markup=(output/orientation['url']).read_text(encoding='utf-8')
+            for term in ('Preface','How to read the volume','Ambient realization','Arithmetic selector','Complete safe cover','Gate set defect','Residual','Restoration'):
+                self.assertIn(term,markup)
+            self.assertNotIn('Source: preamble.tex',markup)
+            self.assertIn('Appendix F.',(output/BOOK['index']).read_text(encoding='utf-8'))
+            self.assertIn('id="source-continuations"',(output/BOOK['index']).read_text(encoding='utf-8'))
+            self.assertNotIn('Continue in the manuscript sources',(output/BOOK['index']).read_text(encoding='utf-8'))
+            self.assertEqual(sum(e['title'].startswith(BOOK['label']+' / Formal type ') for e in reader.site.search),115)
             for spec in CHAPTERS:
                 markup=(output/spec['url']).read_text(encoding='utf-8')
                 self.assertIn('reading-text-size',markup)

@@ -189,6 +189,8 @@ CHAPTERS.extend(METHODOLOGY_CHAPTERS)
 from quantum_reading import BOOK as QUANTUM_BOOK, CHAPTERS as QUANTUM_CHAPTERS
 BOOKS[QUANTUM_BOOK['work']] = QUANTUM_BOOK
 CHAPTERS += QUANTUM_CHAPTERS
+# One full chapter menu per page; footers keep direct reading routes.
+for _book in BOOKS.values():_book['footer_index_only']=True
 BY_SOURCE = {c['source']:c for c in reversed(CHAPTERS)}
 NUMBERED = {'definition', 'theorem', 'proposition', 'lemma', 'corollary', 'remark', 'example', 'standardfact', 'certificate','boundary','roadmap','construction','classicalinput','classical','conjecture','problem','warning'}
 NUMBERED.update('hist'+kind for kind in ('theorem','proposition','lemma','corollary','definition','example','remark','standardfact'))
@@ -1258,6 +1260,7 @@ def render_book(reader,book):
         tools+='<p><a href="'+reader.resolve(source,page)+'">Original TeX with line links</a> · <a href="'+site.rel(reader.records[source]['file_url'],page)+'" download>Download TeX</a></p>'
         tools+='<p>The wording and mathematics follow the retained manuscript. This reading format does not add a proof review or extend Lean coverage.</p>'+reading_options()
         body+=resources(tools)
+        if spec.get('evidence_note'):body+='<p class="reading-context">'+e(spec['evidence_note'])+'</p>'
         body+='<article id="chapter-text" class="readable-chapter" aria-label="'+e(title,quote=True)+'">'
         level=2
         for node in chapter.nodes:
@@ -1450,6 +1453,7 @@ def render_book_index(reader,book,reports):
     introduction=(config.get('reading_introduction') or 'Read the '+str(config['main_chapters'])+' main manuscript chapters in order, or choose a topic below.')
     body='<p class="eyebrow">Read '+label+'</p><h1>'+html.escape(config['title'])+'</h1><p>'+html.escape(introduction)+'</p>'+reader.work_routes(work,page)
     body+='<p class="reading-start"><a class="button" href="'+site.rel(config['chapters'][0]['url'],page)+'">Start reading</a></p>'
+    for anchor in config.get('contents_anchors',[]):body+='<span id="'+html.escape(anchor,quote=True)+'"></span>'
     body+='<nav class="chapter-contents reading-contents-index" aria-label="'+label+' chapters"><h2>Contents</h2>'
     body+=contents_list(config,page)+'</nav>'
     for collected in config.get('collected_parts',[]):

@@ -118,6 +118,9 @@ def check_readable_chapter(root, documents, pages):
             if source==SOURCE:macro_source=MACROS
             from quantum_circuits import SOURCE,VISUAL,MACROS
             if source in {SOURCE,VISUAL}:macro_source=MACROS
+            from quantum_companions import SOURCES,source_macros as companion_macros
+            if source in SOURCES:
+                macro_source=companion_macros(lambda p:(root/records[p]['file_url']).read_text(encoding='utf-8-sig'),source)[0]
         assert report['macro_source']==macro_source
         raw=(root/records[source]['file_url']).read_bytes()
         expressions=original_math(chapter_text(raw.decode('utf-8-sig'),spec))

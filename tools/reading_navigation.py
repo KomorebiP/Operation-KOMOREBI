@@ -90,6 +90,8 @@ def navigation(config, page, placement='top'):
     body += '<div class="reading-position"><span><a href="'+overview+'" aria-label="'+e(overview_label+' overview',quote=True)+'">'+e(overview_label)+'</a></span><span>'+str(position+1)+' of '+str(len(sequence))+'</span></div>'
     body += '<div class="reading-steps">'+step(previous,'previous','← Previous' if position else '← Contents')
     body += step(following,'next','Next →' if position+1<len(sequence) else ('Continue reading →' if config.get('partial') else 'Contents →'))+'</div>'
+    if placement=='bottom' and config.get('footer_index_only'):
+        return body+'<a class="reading-menu-link button" rel="contents" href="'+relative(config['index'])+'">'+e(config.get('index_title','Full contents'))+'</a></nav>'
     body += '<details class="reading-menu"><summary>'+e(config.get('menu_title','Chapters'))+'</summary><div class="reading-menu-panel"><p><a rel="contents" href="'+relative(config['index'])+'">'+e(config.get('index_title','Full contents'))+'</a></p>'
     body += contents_list(config,page,position)+'</div></details></nav>'
     return body
@@ -273,8 +275,13 @@ def verify(root, pages, documents):
                     link=[a for a in control['links'] if 'reading-'+direction in a.get('class','').split()]
                     assert len(link)==1 and target(link[0])==expected['url'], ('Wrong reading neighbour',page,direction)
                 menu=[a for a in control['links'] if 'data-reading-entry' in a]
-                assert [target(a) for a in menu]==[e['url'] for e in sequence], ('Incomplete reading menu',page)
-                assert [i for i,a in enumerate(menu) if a.get('aria-current')=='page']==[position], ('Wrong current chapter',page)
+                if config.get('footer_index_only') and control['attrs']['data-reading-placement']=='bottom':
+                    assert not menu,('Duplicate full reading menu in footer',page)
+                    index_links=[a for a in control['links'] if 'reading-menu-link' in a.get('class','').split()]
+                    assert len(index_links)==1 and target(index_links[0])==config['index'],('Wrong footer contents route',page)
+                else:
+                    assert [target(a) for a in menu]==[e['url'] for e in sequence], ('Incomplete reading menu',page)
+                    assert [i for i,a in enumerate(menu) if a.get('aria-current')=='page']==[position], ('Wrong current chapter',page)
             assert len(parsed.returns)==int(parsed.has_sidebar),('Missing or duplicate reading return links',page)
             if parsed.returns:
                 assert [target(a) for a in parsed.returns[0]['links']]==[previous['url'],'collection/works/'+work+'.html',config['index'],following['url']],('Wrong reading return destination',page)
