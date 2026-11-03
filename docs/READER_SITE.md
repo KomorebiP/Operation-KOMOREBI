@@ -8,6 +8,29 @@ All twelve core papers have formatted HTML reading editions. Each retains its
 recorded mathematical scope; companion guides and atlas coverage are described
 on the individual reading pages.
 
+## Large Signal Model reading edition
+
+The Large Signal Model is available at `read/monographs-large-signal-model/`.
+Its start page connects a first reading path, all 100 mathematical sections in
+eight parts, the statement finder, recorded Lean scope, the reference laboratory,
+and the separately assessed PR-LASM software work page.
+
+The 109 source-based reading pages preserve all 87 numbered propositions and
+their written proofs, 2,123 mathematical expressions, two original figures, and
+28 references. Every proposition links to its proof and its recorded coverage
+row. The editable `Monograph/source/FOUNDATIONS.md` is the source of this HTML
+edition. The original 174-page publication retains its additional glossary and
+formal registers in PDF; the theoretical atlas remains a separate PDF.
+
+`tools/large_signal_reading.py` translates the reviewed Markdown wrappers while
+preserving source lines and mathematical tokens. A pinned source digest and
+contiguous ranges in `tools/large_signal_sections.json` reject unreviewed body
+changes. Figure receipts bind the two browser images to their retained PDFs.
+Run `python -B -m unittest discover -s tools -p 'test_large_signal_reading.py' -v`.
+This conversion adds no mathematical proof audit, Lean replay, or empirical
+validation. Mathematical proofreading self-review covers only the presentation
+wrappers and navigation; there are no mathematical-token changes.
+
 ## Core visual-guide coverage
 
 The **Browse → Core visual guides** directory at `read/visual-guides.html`

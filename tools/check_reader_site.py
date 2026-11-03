@@ -127,7 +127,10 @@ def check_readable_chapter(root, documents, pages):
         if BOOKS[spec['work']].get('custom_reader')=='quantum':
             from quantum_reading import source_math
             expressions=source_math(raw.decode('utf-8-sig'),spec)
-        if BOOKS[spec['work']].get('custom_reader')=='methodology':
+        if BOOKS[spec['work']].get('custom_reader')=='large_signal':
+            from large_signal_reading import source_math
+            expressions=source_math(raw.decode('utf-8-sig'),spec)
+        elif BOOKS[spec['work']].get('custom_reader')=='methodology':
             from methodology_reading import source_math
             expressions=source_math(raw.decode('utf-8-sig'),spec)
         elif BOOKS[spec['work']].get('custom_reader')=='foundational':
@@ -167,7 +170,8 @@ def check_readable_chapter(root, documents, pages):
         assert not report['new_proof_review'] and not report['new_lean_execution']
         for node in report['nodes']+report.get('nested_tables',[]):
             assert node['id'] in pages[page].ids
-            assert 'L'+str(node['line']) in pages[records[source]['url']].ids
+            source_page=records[source].get('source_url',records[source]['url'])
+            assert 'L'+str(node['line']) in pages[source_page].ids
         markup=(root/page).read_text(encoding='utf-8')
         aids={}
         config=BOOKS[spec['work']]
