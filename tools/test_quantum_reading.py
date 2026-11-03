@@ -323,7 +323,7 @@ class QuantumReadingTests(unittest.TestCase):
             citation_page=next(s['url'] for s,_,_ in circuits if s['title']=='What the comparison does and does not require')
             evidence_spec=next(s for s in CHAPTERS if s['source']==COVERAGE and s['start_line']<=85<=s['end_line'])
             self.assertIn(evidence_spec['url'].split('/')[-1]+'#L85',(output/citation_page).read_text(encoding='utf-8'))
-            self.assertIn('id="L85"',(output/appendix['url']).read_text(encoding='utf-8'))
+            self.assertIn('L85',Page((output/appendix['url']).read_text(encoding='utf-8')).ids)
             self.assertIn('[54] c:beckli',references)
             self.assertIn('<code>docs/FOUNDATIONS.md</code>',references)
             # All literal source extracts and 115 elaborated declaration

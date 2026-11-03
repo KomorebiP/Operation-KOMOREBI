@@ -8,6 +8,34 @@ All twelve core papers have formatted HTML reading editions. Each retains its
 recorded mathematical scope; companion guides and atlas coverage are described
 on the individual reading pages.
 
+## Large Signal Model reading edition
+
+The Large Signal Model is available at `read/monographs-large-signal-model/`.
+Its Lean inspector includes all 254 mathematical modules and their root import
+file. Auxiliary rejection controls and test sources remain in the full retained
+project downloads and on GitHub. The native runner still bundles the complete
+retained project and its configuration; inspector selection only narrows the
+displayed file routes.
+Its start page connects a first reading path, all 100 mathematical sections in
+eight parts, the statement finder, recorded Lean scope, the reference laboratory,
+and the separately assessed PR-LASM software work page.
+
+The 109 source-based reading pages preserve all 87 numbered propositions and
+their written proofs, 2,123 mathematical expressions, two original figures, and
+28 references. Every proposition links to its proof and its recorded coverage
+row. The editable `Monograph/source/FOUNDATIONS.md` is the source of this HTML
+edition. The original 174-page publication retains its additional glossary and
+formal registers in PDF; the theoretical atlas remains a separate PDF.
+
+`tools/large_signal_reading.py` translates the reviewed Markdown wrappers while
+preserving source lines and mathematical tokens. A pinned source digest and
+contiguous ranges in `tools/large_signal_sections.json` reject unreviewed body
+changes. Figure receipts bind the two browser images to their retained PDFs.
+Run `python -B -m unittest discover -s tools -p 'test_large_signal_reading.py' -v`.
+This conversion adds no mathematical proof audit, Lean replay, or empirical
+validation. Mathematical proofreading self-review covers only the presentation
+wrappers and navigation; there are no mathematical-token changes.
+
 ## Interactive J-Space laboratory
 
 `j-lab.html` presents the saved neural-agent experiment with three choices:
@@ -385,6 +413,12 @@ disclosure. Its optional name/kind filter changes the outline only. The source
 verifier extracts rendered code text and compares every line with the original
 download, independently of its token spans. Colors and declaration names are
 navigation aids, not a Lean compiler result.
+
+Source rows use their existing `L<number>` IDs inside the source container for
+styling, line controls and saved reading positions. Repeated per-line classes
+are omitted, and Lean token classes are compact. Accessible line labels, source
+text, direct links and original downloads are unchanged. This reduces the
+generated site's storage without removing reading or proof material.
 
 The inspector expands only receipt-owned `.lean` files within the existing
 Lean resource selections. It excludes package caches, build directories and

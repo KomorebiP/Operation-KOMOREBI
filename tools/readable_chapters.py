@@ -189,6 +189,9 @@ CHAPTERS.extend(METHODOLOGY_CHAPTERS)
 from quantum_reading import BOOK as QUANTUM_BOOK, CHAPTERS as QUANTUM_CHAPTERS
 BOOKS[QUANTUM_BOOK['work']] = QUANTUM_BOOK
 CHAPTERS += QUANTUM_CHAPTERS
+from large_signal_reading import BOOK as LARGE_SIGNAL_BOOK, CHAPTERS as LARGE_SIGNAL_CHAPTERS
+BOOKS[LARGE_SIGNAL_BOOK['work']] = LARGE_SIGNAL_BOOK
+CHAPTERS += LARGE_SIGNAL_CHAPTERS
 # One full chapter menu per page; footers keep direct reading routes.
 for _book in BOOKS.values():_book['footer_index_only']=True
 BY_SOURCE = {c['source']:c for c in reversed(CHAPTERS)}
@@ -874,7 +877,9 @@ def prepare(reader):
     reader.readable_books={}
     for work,config in BOOKS.items():
         if config.get('custom_reader'):
-            if config['custom_reader'] == 'methodology':
+            if config['custom_reader'] == 'large_signal':
+                from large_signal_reading import prepare_book
+            elif config['custom_reader'] == 'methodology':
                 from methodology_reading import prepare_book
             elif config['custom_reader'] == 'foundational':
                 from foundational_reading import prepare_book
@@ -1402,7 +1407,10 @@ def render_book(reader,book):
         if config.get('custom_reader')=='quantum':
             from quantum_reading import source_math
             expressions=source_math(raw.decode('utf-8-sig'),spec)
-        if config.get('custom_reader')=='methodology':
+        if config.get('custom_reader')=='large_signal':
+            from large_signal_reading import source_math
+            expressions=source_math(raw.decode('utf-8-sig'),spec)
+        elif config.get('custom_reader')=='methodology':
             from methodology_reading import source_math
             expressions=source_math(raw.decode('utf-8-sig'),spec)
         elif config.get('custom_reader')=='foundational':
@@ -1457,7 +1465,7 @@ def render_book_index(reader,book,reports):
     body='<p class="eyebrow">Read '+label+'</p><h1>'+html.escape(config['title'])+'</h1><p>'+html.escape(introduction)+'</p>'+reader.work_routes(work,page)
     body+='<p class="reading-start"><a class="button" href="'+site.rel(config['chapters'][0]['url'],page)+'">Start reading</a></p>'
     if config.get('reading_guide'):
-        body+='<p class="quantum-guide-entry"><a href="'+site.rel(config['reading_guide'],page)+'">Start here: choose a reading path</a> · A visual introduction, full study, or formal companion.</p>'
+        body+='<p class="quantum-guide-entry"><a href="'+site.rel(config['reading_guide'],page)+'">Start here: choose a reading path</a> · '+html.escape(config.get('reading_guide_description','A visual introduction, full study, or formal companion.'))+'</p>'
     for anchor in config.get('contents_anchors',[]):body+='<span id="'+html.escape(anchor,quote=True)+'"></span>'
     body+='<nav class="chapter-contents reading-contents-index" aria-label="'+label+' chapters"><h2>Contents</h2>'
     body+=contents_list(config,page)+'</nav>'
@@ -1492,6 +1500,9 @@ def render_book_index(reader,book,reports):
         publish(reader,book)
         from quantum_visual_guides import publish as publish_visual_guides
         publish_visual_guides(reader)
+    elif config.get('custom_reader')=='large_signal':
+        from large_signal_reading import publish_start
+        publish_start(reader,book)
 
 
 def render_bibliography(reader,book):

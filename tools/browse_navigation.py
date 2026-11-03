@@ -196,6 +196,9 @@ class Browser:
                     c['destination']+'/'+CURRENT_GUIDANCE[c['id']],page))
             if title=='Read' and c['id']=='monographs-special-functions':
                 links.insert(0,'[Read online: chapters, proof appendices, figures and glossary](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/index.html)')
+            if title=='Read' and c['id']=='monographs-large-signal-model':
+                links.insert(0,'[Read online: all 100 sections, 87 propositions and written proofs](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-large-signal-model/index.html)')
+                links.insert(1,'[Start here: mathematics, formal scope and software](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-large-signal-model/start.html)')
             if title=='Read' and c['id']=='monographs-quantum-and-circuits':
                 links.insert(0,'[Read online: complete volume, appendices, proofs and sources](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-quantum-and-circuits/index.html)')
             if title=='Read' and c['id'] in {'paper-v','paper-vi','paper-vii'}:
