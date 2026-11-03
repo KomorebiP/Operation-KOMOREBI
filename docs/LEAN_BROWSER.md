@@ -166,6 +166,38 @@ routing, module wrappers and result states. Browser validation must also check
 the original workspaces, a valid edit, a false proof, malformed syntax, `sorry`,
 dependency changes, Stop/restart, the setup reload, and a narrow viewport.
 
+## Experimental source-defined syntax
+
+The optional “Support syntax defined in this file” checkbox selects a single
+synchronous frontend pass. It parses and elaborates commands in order, using
+the evolving namespace, options, open declarations and parser environment.
+This supports commands and scoped notation declared earlier in the same file.
+The default checker remains the existing compiler plus separate syntax probe.
+
+The experimental transport imports only its fixed Lean implementation. It
+parses the original header and imports that exact ordered set of import records
+into a separate environment, preserving meta/public/all flags. It does not
+give a Std-only source access to the transport's extra Lean imports. The main
+module is set before creating fresh command state for a project dependency.
+Parser messages are saved before command elaboration clears them, then genuine
+parser and elaboration messages are copied back with their source coordinates.
+
+The browser preloads available libraries and invokes the transport exactly
+once per source, with no retry after execution. A fresh random nonce identifies
+distinct started and completed messages. A result needs the exact completed
+message, successful runtime completion and no errors. Early terminal commands,
+pending command tasks and asynchronous elaboration are rejected. Both checking
+paths require actual end of input, so `#exit` cannot leave an unchecked tail.
+Original source controls are rejected before any string encoding or wrapping.
+
+Every experimental Run starts a fresh worker and disposes it on completion,
+failure or Stop. Imported environments use leaked compacted regions in this
+fork, so reusing these environments across repeated runs exhausted memory in
+testing. Large dependency chains can still exhaust memory within one run.
+This mode retains the fork's exported-only import and synchronous command
+semantics; it does not establish equivalence with every native project or
+whole-file linter. The private-theorem visibility issue is separate.
+
 ## Extending coverage
 
 Add only receipt-owned sources from existing reading editions to `WORKSPACES`

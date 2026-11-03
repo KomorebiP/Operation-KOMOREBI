@@ -8,7 +8,7 @@
 
 import { probeArtifactMemory } from './artifact-probe.js';
 import { resolveAssets } from './assets.js';
-import { collect, problemsToLines } from './messages.js';
+import { collect, isToolchainNoise, problemsToLines } from './messages.js?v=20261102-frontend1';
 import {
 	OPTIONAL_LIBRARIES,
 	importedRoots,
@@ -18,12 +18,13 @@ import {
 	unavailableImportNotes
 } from './roots.js';
 import { createRuntime } from './runtime.js?v=20261102';
-import { SYNTAX_ERROR_MARKER, syntaxProbeSource } from './syntax-probe.js';
+import { SYNTAX_ERROR_MARKER, syntaxProbeSource } from './syntax-probe.js?v=20261102-frontend1';
+import { checkedFrontendSource, frontendMarkers } from './frontend-check.js?v=20261102-frontend1';
 
 /** Backstop against an asset host that never satisfies an import. */
 const MAX_LOAD_ROUNDS = 8;
 
-const SYNTAX_MODES = ['auto', 'full', 'off'];
+const SYNTAX_MODES = ['auto', 'full', 'off', 'frontend'];
 
 function assertEnvironment() {
 	if (typeof Worker !== 'function' || typeof Blob !== 'function') {
@@ -103,10 +104,11 @@ function describeMemory(artifact) {
  * @param {object} options
  * @param {string} options.baseUrl - where the mirrored `lean-wasm/`, `lean-lib/` and `lean-mathlib/`
  *   directories are served from. Required unless this build sets `DEFAULT_BASE_URL`.
- * @param {'auto'|'full'|'off'} [options.syntaxCheck] - how hard to look for syntax errors the runtime
+ * @param {'auto'|'full'|'off'|'frontend'} [options.syntaxCheck] - how to check syntax errors the runtime
  *   swallows (it reports elaboration errors but not parse errors; see FINDINGS.md §6.1).
  *   `auto` (default) parses the source only once the Lean library is loaded, so the check is free;
  *   `full` always parses, loading Lean and Std if needed (~350 MiB); `off` never parses.
+ *   `frontend` preloads available imports and checks syntax and elaboration in one frontend pass.
  * @param {(message: string) => void} [options.onProgress] - human-readable progress, for a spinner.
  * @param {(message: string) => void} [options.onStatus] - the wasm build's own status lines.
  * @param {(artifact: object) => void} [options.onArtifact] - called once the artifact's memory mode is
@@ -123,7 +125,12 @@ export async function createCompiler(options = {}) {
 		throw new Error(`syntaxCheck must be one of ${SYNTAX_MODES.join(', ')}, not ${syntaxCheck}`);
 	}
 
-	const layers = optionalLayers(assets,options.mathlibManifest);
+	const layers = optionalLayers(assets,syntaxCheck === 'frontend' ? undefined : options.mathlibManifest);
+	// A frontend run must have the complete published layer before it executes.
+	// A separate label avoids reusing a prior workspace-limited installation when
+	// an API caller switches an existing compiler to frontend mode for one run.
+	const frontendLayers = optionalLayers(assets).map(layer => options.mathlibManifest
+		? {...layer, label: `Frontend ${layer.label}`} : layer);
 
 	// What the artifact declares, read from the first ~64 KiB of it rather than the whole 96.17 MiB, so a
 	// document that cannot run the runtime finds that out before paying for the runtime (FINDINGS.md §2).
@@ -184,14 +191,14 @@ export async function createCompiler(options = {}) {
 	 * per-file library tree (Std, Lean, Batteries). Resolves to whether anything was installed, which
 	 * is what decides whether a recompile is worth doing.
 	 */
-	async function ensureRoots(roots, state) {
+	async function ensureRoots(roots, state, availableLayers = layers) {
 		const wanted = roots.filter((root) => !state.attempted.has(root));
 		if (wanted.length === 0) return false;
 		wanted.forEach((root) => state.attempted.add(root));
 
 		let progress = false;
 
-		for (const layer of layers) {
+		for (const layer of availableLayers) {
 			if (!wanted.some((root) => layer.roots.includes(root))) continue;
 			if (state.layers.has(layer.label)) continue;
 			state.layers.add(layer.label);
@@ -254,6 +261,50 @@ export async function createCompiler(options = {}) {
 		return problems.map(problem => ({...problem, origin: /syntax error at line \d+, column \d+/.test(problem.text) ? 'syntax-input' : 'syntax-guard'}));
 	}
 
+	/** Execute the original source once, with the frontend's complete message log. */
+	async function compileFrontend(code, state, runOptions) {
+		await ensureRoots([...new Set([...importedRoots(code), 'Lean', 'Std', 'Batteries'])], state, frontendLayers);
+		const random = new Uint8Array(16);
+		if (typeof globalThis.crypto?.getRandomValues !== 'function') {
+			throw new Error('Secure random numbers are required for the frontend completion check.');
+		}
+		globalThis.crypto.getRandomValues(random);
+		const nonce = Array.from(random, byte => byte.toString(16).padStart(2, '0')).join('');
+		const markers = frontendMarkers(nonce);
+		const transport = checkedFrontendSource(code, {mainModule: runOptions.mainModule, nonce});
+		let result;
+		try {
+			// Never retry this call: the source may contain commands with effects.
+			result = await runtime.compile(transport);
+		} catch (error) {
+			runtime.dispose();
+			throw error;
+		}
+		const parsed = collect(result.stdout, result.stderr);
+		parsed.problems = parsed.problems.map(problem => ({
+			...problem,
+			origin: problem.fileName === markers.fileName ? 'compiled-source' : 'frontend-guard'
+		}));
+		const completed = parsed.info.some(entry => entry.severity === 'information' && entry.text === markers.completed);
+		parsed.info = parsed.info
+			.filter(entry => entry.text !== markers.started && entry.text !== markers.completed)
+			// Inner import progress can arrive inside one informational message.
+			// Remove only the runtime's known trace lines, retaining user output.
+			.map(entry => ({...entry, text: String(entry.text).split('\n')
+				.filter(line => !isToolchainNoise(line.trim())).join('\n')}))
+			.filter(entry => entry.text.trim() !== '');
+		if (!result.success || !completed) {
+			runtime.dispose();
+			const diagnostics = problemsToLines(parsed.problems).map((line, index) =>
+				parsed.problems[index].fileName === markers.fileName ? line : `Browser frontend check: ${line}`);
+			const failure = result.error || (result.success
+				? 'Lean did not complete the frontend check.'
+				: 'The Lean frontend runtime did not complete checking.');
+			throw new Error([...diagnostics, failure].join('\n'));
+		}
+		return {result, parsed};
+	}
+
 	return {
 		language: 'lean',
 
@@ -274,7 +325,7 @@ export async function createCompiler(options = {}) {
 		 * @param {string} code - the Lean source.
 		 * @param {string} [input] - accepted for API symmetry with other language packages and
 		 *   **ignored**: this runtime has no stdin (`Stdout`/`Stdin` are not wired into the wasm build).
-		 * @param {object} [runOptions] - per-run overrides: `syntaxCheck`.
+		 * @param {object} [runOptions] - per-run overrides: `syntaxCheck`, `syntaxSource`, `mainModule`.
 		 * @returns {Promise<{output: string, errors: string[], exitCode: number, noise: number,
 		 *   libraries: string[], compileMs: number}>}
 		 *   `output` is the program's own messages (`#eval` and `#check` results). `errors` holds the
@@ -294,20 +345,22 @@ export async function createCompiler(options = {}) {
 			}
 
 			const mode = runOptions.syntaxCheck ?? syntaxCheck;
+			if (!SYNTAX_MODES.includes(mode)) throw new Error(`syntaxCheck must be one of ${SYNTAX_MODES.join(', ')}, not ${mode}`);
 			const state = { attempted: new Set(), layers: new Set(), loaded: [], notMirrored: [] };
 			const started = performance.now();
 
 			options.onProgress?.('Checking proof declarations…');
-			const result = await compileWithLibraries(code, state);
+			const frontend = mode === 'frontend' ? await compileFrontend(code, state, runOptions) : null;
+			const result = frontend ? frontend.result : await compileWithLibraries(code, state);
 			if (!result.success) {
 				const diagnostics = problemsToLines(collect(result.stdout,result.stderr).problems);
 				throw new Error([...diagnostics,result.error || 'The Lean runtime did not complete checking.'].join('\n'));
 			}
-			const { info, problems, noise } = collect(result.stdout, result.stderr);
+			const { info, problems, noise } = frontend ? frontend.parsed : collect(result.stdout, result.stderr);
 
 			// A clean run is the one that cannot be trusted — the runtime says nothing whether the file
 			// elaborated or merely failed to parse — so that is when the parser is asked.
-			if (mode !== 'off' && code.trim() !== '' && !problems.some((p) => p.severity === 'error')) {
+			if (mode !== 'off' && mode !== 'frontend' && code.trim() !== '' && !problems.some((p) => p.severity === 'error')) {
 				const leanReady = loadedRoots.has('Lean') || loadedLayers.size > 0;
 				if (mode === 'full' || leanReady) {
 					// Export wrappers change module visibility. Parse the supplied
