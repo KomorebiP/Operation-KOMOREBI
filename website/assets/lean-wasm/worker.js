@@ -187,7 +187,7 @@ async function fetchOrThrow(url) {
  */
 let wasmBlobUrl = null;
 
-async function loadWasmUrl() {
+async function loadWasmUrl(script) {
   if (wasmBlobUrl) return wasmBlobUrl;
 
   for (const candidate of [`${assetBase}/lean.wasm.gz`, `${assetBase}/lean.wasm`]) {
@@ -203,6 +203,23 @@ async function loadWasmUrl() {
 
     let bytes = new Uint8Array(await response.arrayBuffer());
     if (bytes[0] === 0x1f && bytes[1] === 0x8b) bytes = await gunzip(bytes);
+    // Transform the in-memory pair after the original pinned downloads pass
+    // integrity checks. Remote asset URLs and cached provenance stay unchanged.
+    if (script && workerConfig.nativeInvokesUrl) {
+      try {
+        const { prepareNativeInvokePair } = await import(workerConfig.nativeInvokesUrl);
+        const prepared = prepareNativeInvokePair(script.source, bytes);
+        if (prepared.applied) {
+          script.source = prepared.source;
+          bytes = prepared.bytes;
+          post({ type: 'status', data: `native Wasm calls enabled (${prepared.descriptor.signatures.length} invoke signatures)` });
+        } else {
+          post({ type: 'status', data: `using original runtime calls: ${prepared.reason}` });
+        }
+      } catch (error) {
+        post({ type: 'status', data: `using original runtime calls: ${error?.message || error}` });
+      }
+    }
     wasmBlobUrl = URL.createObjectURL(new Blob([bytes], { type: 'application/wasm' }));
     return wasmBlobUrl;
   }
@@ -616,7 +633,8 @@ function compileCode(code, fileName) {
     }
     return { success: true, elapsed };
   } catch (err) {
-    return { success: false, error: (err && err.message) || String(err) };
+    moduleReady = false;
+    return { success: false, fatal: true, error: (err && err.message) || String(err) };
   } finally {
     compileBusy = false;
   }
@@ -871,6 +889,7 @@ async function startLeanModule() {
   // Three separate steps, reported separately. Wrapping all of them in one `catch` that said "Failed to
   // load lean.js" made a failure to fetch the 97 MB wasm look like a failure to fetch the 48 MB script —
   // both fetched from the same base, and the message named only one of them.
+  let script;
   try {
     // Fetch lean.js ourselves and hand it to the runtime as a **same-origin blob**.
     //
@@ -881,16 +900,13 @@ async function startLeanModule() {
     // "the script at … failed to load" — with every other asset fetching fine, which
     // points at the wrong thing entirely. A blob URL is same-origin, and is what
     // `mainScriptUrlOrBlob` exists for.
-    const script = await loadLeanScript();
+    script = await loadLeanScript();
     post({
       type: 'status',
       data:
         `lean.js: ${(script.transferBytes / 1048576).toFixed(1)} MB` +
         (script.layout === 'gzip' ? ` gzipped (${(script.decodedBytes / 1048576).toFixed(1)} MB unpacked)` : '')
     });
-    // Kept for the lifetime of the runtime: pthread sub-workers load it lazily.
-    mainScriptBlob = URL.createObjectURL(new Blob([script.source], { type: 'text/javascript' }));
-    if (artifactIsThreaded) Module.mainScriptUrlOrBlob = mainScriptBlob;
   } catch (err) {
     post({ type: 'error', data: 'Failed to load lean.js: ' + ((err && err.message) || err) });
     return;
@@ -898,7 +914,11 @@ async function startLeanModule() {
 
   try {
     // Emscripten and every pthread sub-worker instantiate from this same blob URL.
-    await loadWasmUrl();
+    await loadWasmUrl(script);
+    // Create this after the optional paired Wasm/glue transformation, and keep
+    // it for the runtime's lifetime because pthread workers load it lazily.
+    mainScriptBlob = URL.createObjectURL(new Blob([script.source], { type: 'text/javascript' }));
+    if (artifactIsThreaded) Module.mainScriptUrlOrBlob = mainScriptBlob;
   } catch (err) {
     post({ type: 'error', data: 'Failed to fetch the Lean runtime: ' + ((err && err.message) || err) });
     return;

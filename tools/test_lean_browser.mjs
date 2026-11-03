@@ -101,6 +101,22 @@ test('opened workspaces bind each dependency to its edition and keep generated c
   catalog.inputs[0].work='other';await assert.rejects(sourceWorkspace(catalog,entry,bundle),/ownership/);
   catalog.compatibility.sha256='0'.repeat(64);await assert.rejects(sourceWorkspace(catalog,entry,bundle),/compatibility source checksum/);
 });
+test('pinned library sources are checked separately and cannot replace receipt-bound paper sources',async()=>{
+  const path='paper/Main.lean',raw=Buffer.from('import Mathlib.Tactic.Ext\nexample : True := by trivial\n');
+  const bytes=sourceZip([['inputs/'+path,raw]]),revision='a'.repeat(40),module='Mathlib.Tactic.Ext';
+  const source='import Mathlib.Init\n-- exact library bytes 🌿\n',libraryPath='Mathlib/Tactic/Ext.lean';
+  const record={module,path:libraryPath,source,size:Buffer.byteLength(source),sha256:await sha256(Buffer.from(source)),revision,url:'https://github.com/leanprover-community/mathlib4/blob/'+revision+'/'+libraryPath};
+  const entry={id:'a',path,work:'paper',label:'Paper',inspect:'source.html',files:[{module:'Main',input:0}],library:[module],issues:[]};
+  const catalog={entries:[entry],inputs:[{path,work:'paper',size:raw.length,sha256:await sha256(raw)}],mathlibRevision:revision,librarySources:{[module]:record}};
+  const bundle={bytes,entries:zipDirectory(bytes)},workspace=await sourceWorkspace(catalog,entry,bundle);
+  assert.equal(workspace.files[0].library,true);assert.equal(workspace.files[0].generated,undefined);
+  assert.equal(workspace.files[0].text,source);assert.deepEqual(workspace.files[0].originalBytes,new Uint8Array(Buffer.from(source)));
+  assert.equal(workspace.files[1].path,path);assert.equal(workspace.files[1].library,undefined);
+  record.source+='-- changed';await assert.rejects(sourceWorkspace(catalog,entry,bundle),/library source checksum/);record.source=source;
+  record.revision='b'.repeat(40);await assert.rejects(sourceWorkspace(catalog,entry,bundle),/Invalid pinned/);record.revision=revision;
+  entry.library=['Mathlib.Missing'];await assert.rejects(sourceWorkspace(catalog,entry,bundle),/Invalid pinned/);
+});
+
 test('compatibility is explicit and diagnostics point to the original proof',()=>{
   const source='import A\n\nexample : True := by trivial\n';
   const compatibility='theorem helper : True := by trivial\n';
@@ -172,6 +188,29 @@ test('edited imports expand a prepared library once and genuinely unavailable mo
     }
   }finally{globalThis.Worker=oldWorker;globalThis.fetch=oldFetch;}
 });
+test('partial library installation reports its cause before attempting compilation',async()=>{
+  const oldWorker=globalThis.Worker,oldFetch=globalThis.fetch;
+  try {
+    for(const source of ['import Mathlib.Init','import Lean']) {
+      let compiled=false;
+      globalThis.fetch=async()=>new Response('',{status:404});
+      globalThis.Worker=class {
+        postMessage(message){queueMicrotask(()=>{
+          const send=data=>this.onmessage?.({data});
+          if(message.type==='start')send({type:'ready'});
+          if(message.type==='load_layer')send({type:'layer_loaded',id:message.id,label:message.label,ok:false,error:'pack checksum mismatch'});
+          if(message.type==='load_modules')send({type:'modules_loaded',id:message.id,results:[{root:'Lean',files:0,error:'pack checksum mismatch'}]});
+          if(message.type==='compile'){compiled=true;send({type:'result',id:message.id,success:true});}
+        });}
+        terminate(){}
+      };
+      const compiler=await createCompiler({baseUrl:'https://example.invalid/',syntaxCheck:'full'});
+      try {await assert.rejects(compiler.run(source),/Loading (Mathlib|Lean): pack checksum mismatch/);assert.equal(compiled,false);}
+      finally{compiler.dispose();}
+    }
+  }finally{globalThis.Worker=oldWorker;globalThis.fetch=oldFetch;}
+});
+
 test('a missing or failed syntax probe cannot turn a silent run into success',async()=>{
   await assert.rejects(simulatedCompiler({success:true,messages:[]}),/did not complete the syntax check/);
   await assert.rejects(simulatedCompiler({success:false,error:'parser worker stopped'}),/parser worker stopped/);

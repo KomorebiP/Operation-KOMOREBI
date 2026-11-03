@@ -17,7 +17,7 @@ import {
 	outsideClosureNotes,
 	unavailableImportNotes
 } from './roots.js';
-import { createRuntime } from './runtime.js';
+import { createRuntime } from './runtime.js?v=20261102';
 import { SYNTAX_ERROR_MARKER, syntaxProbeSource } from './syntax-probe.js';
 
 /** Backstop against an asset host that never satisfies an import. */
@@ -166,6 +166,7 @@ export async function createCompiler(options = {}) {
 
 	/** Record one library fetch, and remember what could not be supplied. */
 	function noteLoadResult(entry, state) {
+		if (entry.error) throw new Error(`Loading ${entry.root}: ${entry.error}`);
 		if (entry.files > 0) {
 			loadedRoots.add(entry.root);
 			state.loaded.push(`${entry.root} (${entry.files} files${entry.failed ? `, ${entry.failed} failed` : ''})`);
@@ -203,7 +204,7 @@ export async function createCompiler(options = {}) {
 					progress = true;
 				}
 			} else {
-				if (!state.notMirrored.includes(layer.label)) state.notMirrored.push(layer.label);
+				throw new Error(`Loading ${layer.label}: ${result.error || 'Library installation did not complete.'}`);
 			}
 		}
 

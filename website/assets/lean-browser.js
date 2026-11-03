@@ -1,6 +1,6 @@
-import { createCompiler } from './lean-wasm/index.js';
+import { createCompiler } from './lean-wasm/index.js?v=20261102';
 import { sourceHeader } from './lean-wasm/roots.js';
-import { loadSourceBundle, sourceWorkspace } from './lean-source-bundle.js';
+import { loadSourceBundle, sourceWorkspace } from './lean-source-bundle.js?v=20261102';
 
 export function moduleSource(source, name) {
   if (!/^[\p{ID_Start}_][\p{ID_Continue}']*(\.[\p{ID_Start}_][\p{ID_Continue}']*)*$/u.test(name)) throw new Error('Invalid project module name.');
@@ -92,21 +92,22 @@ async function start() {
     const file=workspace.files[current];editor.value=files[current];
     el('inspect').hidden=!file.inspect;if(file.inspect)el('inspect').href=file.inspect;
     el('download').href=file.download;
-    el('inspect').textContent=file.generated?'Inspect browser compatibility source':'Inspect original source';
-    el('download').textContent=file.generated?'Download compatibility source':'Download original';
-    el('source').textContent=file.module+' · '+(file.generated?'Browser compatibility':'Original')+' SHA-256 '+file.sha256.slice(0,16)+'…';
+    el('inspect').textContent=file.library?'Inspect pinned Mathlib source':file.generated?'Inspect browser compatibility source':'Inspect original source';
+    el('download').textContent=file.library?'Download library source':file.generated?'Download compatibility source':'Download original';
+    el('source').textContent=file.module+' · '+(file.library?'Pinned Mathlib '+file.revision.slice(0,8):file.generated?'Browser compatibility':'Original')+' SHA-256 '+file.sha256.slice(0,16)+'…';
   }
   function choose(id) {
     if(workspace){files[current]=editor.value;drafts.set(workspace.id,{files:[...files],current});}
     dispose();workspace=data.examples.find(e=>e.id===id)||data.examples[0];picker.value=workspace.id;
     const draft=drafts.get(workspace.id);files=draft?[...draft.files]:workspace.files.map(f=>f.text);current=draft?.current??files.length-1;filePicker.replaceChildren();
-    workspace.files.forEach((f,i)=>{const option=document.createElement('option');option.value=String(i);option.textContent=f.module;filePicker.append(option);});
+    workspace.files.forEach((f,i)=>{const option=document.createElement('option');option.value=String(i);option.textContent=f.module+(f.library?' · library source':'');filePicker.append(option);});
     filePicker.value=String(current);showFile();controls(false);el('output').textContent='No checks yet.';
     el('compat').hidden=!workspace.compatibility;
     el('compat-code').textContent=workspace.compatibility?.source||'';
     el('route').hidden=!workspace.exploratory;
     el('route-notes').textContent=workspace.exploratory?[
       ...(workspace.issues.length?workspace.issues:['The recorded import route uses available browser libraries. Run Lean to check the sources.']),
+      ...(workspace.library?.length?['This route compiles '+workspace.library.length+' pinned Mathlib source module(s) before the retained sources. They are visible in the file picker and must pass Lean too.']:[]),
       ...(workspace.tactics?['A generated Mathlib.Tactic module supplies the available tactic subset. It is checked first and is visible in the file picker.']:[]),
       ...(workspace.legacy?['A generated version-compatibility module proves the newer dite_eq_left name using this runtime’s dif_pos. It is checked first and imported without changing the retained proof body.']:[])
     ].join('\n\n'):'';
@@ -231,7 +232,7 @@ async function start() {
         // Export dependencies only. The last file runs with its original source.
         const dependency=i<files.length-1;
         const compatibility=dependency?'':workspace.compatibility?.source||'';
-        const versioned=workspace.legacy&&!workspace.files[i].generated;
+        const versioned=workspace.legacy&&!workspace.files[i].generated&&!workspace.files[i].library;
         const proof=versioned?withCompatibilityImport(files[i],workspace.legacy):files[i];
         const source=dependency?moduleSource(proof,workspace.files[i].module):withCompatibility(proof,compatibility);
         const result=await compiler.run(source,undefined,dependency?{syntaxSource:proof}:{});

@@ -29,6 +29,7 @@ WORKSPACES=[
     ('komorebi-space-projective','Komorebi Space · Projective example','komorebi-space', [('KomorebiSpace.ProjectiveExample','monographs/komorebi-space/lean/KomorebiSpace/ProjectiveExample.lean')]),
     ('komorebi-space-correction','Komorebi Space · Correction','komorebi-space', [('KomorebiSpace.Correction','monographs/komorebi-space/lean/KomorebiSpace/Correction.lean')]),
     ('komorebi-space-cohomology','Komorebi Space · Cohomology','komorebi-space', [('KomorebiSpace.Cohomology','monographs/komorebi-space/lean/KomorebiSpace/Cohomology.lean')]),
+    ('special-functions-core','Special Functions · Projector calculus core','monographs-special-functions', [('BrowserCoreLocal','monographs/special-functions/lean/BrowserCoreLocal.lean')]),
 ]
 
 
