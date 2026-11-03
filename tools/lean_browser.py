@@ -2,6 +2,7 @@
 import hashlib
 import html
 import json
+import math
 from pathlib import Path
 import shutil
 from lean_workspaces import WORKSPACES, RESIDUAL, COMPRESSION, RECOVERY, COMPAT_SOURCE, mathlib_seeds, mathlib_seed_groups
@@ -98,11 +99,12 @@ def build(reader,runtime):
 <header class="lean-heading"><p class="eyebrow">The papers · A local proof workspace</p><h1>Edit a proof. Ask Lean.</h1>
 <p class="lean-lede">Explore a published proof, change a step, and check it on your own device. The compiler runs inside this browser.</p></header>
 <p class="lean-local-meta">{len(examples)} prepared workspaces across {len(groups)} reading editions.</p>
-<div class="lean-local-intro"><p><strong>Free, with no account.</strong> Proof text stays in this tab. The site downloads compiler files; it does not send your edits to a proof service.</p>
-<p class="lean-local-meta">First use downloads a substantial library. Loading can take a minute or more and needs a computer with enough memory. Later checks reuse the loaded compiler; downloaded files are cached when your browser allows it.</p></div>
+<div class="lean-local-intro"><p>First run: download the Lean compiler and libraries, up to {math.ceil(runtime_record['bytes']/1048576)} MiB. Smaller workspaces need less.</p>
+<p class="lean-local-meta">Allow a few minutes for the first load, plus time for proof checking. Downloaded files are reused when your browser can cache them.</p></div>
 <p data-local-direct hidden>This compiler needs its own browser page. <a data-local-direct-link target="_blank" rel="noopener">Open the workspace in a new tab</a>.</p>
 <details data-local-catalog><summary>Open another retained Lean file</summary>
 <p>Explore any of the {collection['sources']:,} files already included in the reading collection. The browser opens its retained local dependencies too. {collection['available_import_routes']:,} files have import routes using the available libraries. These routes still need an actual Lean check; version differences, missing tactics and runtime limits can cause errors.</p>
+<p class="lean-local-meta">Opening a retained file downloads a {(site.output/'downloads/komorebi-lean-runner.zip').stat().st_size/1048576:.0f} MiB source bundle.</p>
 <div class="lean-local-catalog-controls"><label for="local-catalog-search">Find a retained Lean file</label><input id="local-catalog-search" data-local-catalog-search type="search" placeholder="Paper, module or filename">
 <label for="local-catalog-ready" class="lean-local-catalog-filter"><input id="local-catalog-ready" type="checkbox" data-local-catalog-ready checked> Only show files with available imports</label>
 <label for="local-catalog-choice">Retained source file</label><select id="local-catalog-choice" data-local-catalog-choice disabled></select>
@@ -126,7 +128,7 @@ def build(reader,runtime):
 <p>Choose from {len(examples)} prepared workspaces, or open another retained file above. Each prepared workspace starts with the Mathlib modules its sources need. Edited imports can load more available modules. You can edit any file in a workspace. Required project files are compiled first, then the dependent file. Imports outside the compiler-matched library set produce an error. Compiler crashes and interrupted checks produce no successful result.</p>
 <p>For sources importing <code>Mathlib.Tactic</code>, the browser first checks a clearly labelled compatibility module importing the available tactics. It adds no declarations or assumptions. It is a subset of the original umbrella; missing tactics remain errors. Original source downloads stay unchanged.</p>
 <p>For local imports, a generated wrapper names and exports the module into the compiler’s temporary filesystem. Original downloads remain byte for byte identical to the retained sources. A clean result means Lean completed checking these files with no reported warnings; it is not an audit of axioms or an entire paper.</p>
-<p>Compiler download cache: about {runtime_record['bytes']/1048576:.0f} MiB across all available libraries. Proofs using only Std need less. Large files come from pinned public GitHub assets and are checked against the download record. Edits live in this tab; save a copy before leaving.</p>
+<p>Compiler and library downloads: up to {math.ceil(runtime_record['bytes']/1048576)} MiB across all available libraries. Proofs using only Std need less. Large files come from pinned public GitHub assets and are checked against the download record. Proof text stays in this tab and is not sent to a proof service; save a copy before leaving.</p>
 <p><a href="examples.json">Source checksums</a> · <a href="engine/SOURCE.json">Compiler download record</a> · <a href="{site.rel('assets/lean-wasm/NOTICE.txt',PAGE)}">Open source credits</a></p>
 <button type="button" data-local-clear>Clear downloaded compiler cache</button></details>
 <noscript><p>JavaScript is needed to run Lean. Original sources remain available through <a href="{site.rel('lean/index.html',PAGE)}">Inspect Lean</a>.</p></noscript>
@@ -134,7 +136,7 @@ def build(reader,runtime):
     site.page(PAGE,'Edit and run Lean in your browser',body)
     site.search.append(dict(title='Edit and run Lean in your browser',group='Collection',kind='Lean',
                             work_ids=sorted({e['work'] for e in examples}),url=PAGE,
-                            text='Free local browser WebAssembly Lean compiler edit check proofs '+' '.join(e['title'] for e in examples)))
+                            text='Local browser WebAssembly Lean compiler edit check proofs '+' '.join(e['title'] for e in examples)))
     return dict(workspaces=len(examples),execution='local WebAssembly',compiler_bytes=runtime_record['bytes'],build_runs_lean=False)
 
 

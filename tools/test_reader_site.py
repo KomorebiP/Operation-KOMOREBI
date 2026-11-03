@@ -41,14 +41,17 @@ def manuscript_table_fixtures(root,work):
 
 class ReaderSiteTests(unittest.TestCase):
     def test_live_special_functions_guidance_uses_current_repository_links(self):
-        paths=['monographs/special-functions/CONTINUE_HERE.md',
-               'monographs/special-functions/RELEASE_STATUS.md']
-        retained='monographs/special-functions/LEAN_STATUS.md'
+        paths=['monographs/special-functions/current/README.md',
+               'monographs/special-functions/current/CONTINUE_HERE.md',
+               'monographs/special-functions/current/RELEASE_STATUS.md']
+        retained=['monographs/special-functions/CONTINUE_HERE.md',
+                  'monographs/special-functions/RELEASE_STATUS.md',
+                  'monographs/special-functions/LEAN_STATUS.md']
         reader=object.__new__(ReadingDocuments)
         reader.records={}
         reader.owned={p:dict(mode='100644',size=10,work='monographs-special-functions',
                              git_blob_sha1='b'*40,sha256='c'*64,repository_path=p)
-                      for p in paths+[retained]}
+                      for p in paths+retained}
         site=SimpleNamespace(repos={'collection':'KomorebiP/Operation-KOMOREBI'},
             revisions={'collection':'a'*40},documents={},reader=reader,
             roots={'collection':Path('.')})
@@ -58,7 +61,8 @@ class ReaderSiteTests(unittest.TestCase):
             self.assertNotIn(path,reader.records)
             self.assertEqual(Site.resolve(site,'collection','docs/guide.md','collection/guide.html','../'+path),
                 'https://github.com/KomorebiP/Operation-KOMOREBI/blob/'+'a'*40+'/'+path)
-        self.assertEqual(reader.add(retained)['sha256'],'c'*64)
+        for path in retained:
+            self.assertEqual(reader.add(path)['sha256'],'c'*64)
 
     def test_generated_json_is_compact_without_changing_source_strings_or_frozen_files(self):
         data={'F':r'\mathbb F','f':'  x\n y  ','labels':['α','1/5'],'nested':{'exact':True,'value':1.25}}
