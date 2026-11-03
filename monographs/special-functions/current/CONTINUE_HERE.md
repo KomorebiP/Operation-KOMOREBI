@@ -1,54 +1,53 @@
 # Continue Special Functions formalization
 
-Current checkpoint: **SF-LEAN-B16**, mathematical base `b5faff8889c48150e1fa41be11b6a3d2c47f493b`.
-Publication preserves reading-table parent `6c05060c54d96aabf73fb7ab937d150cb6ff80ae`.
-Start with formalization/Block16/CLOSEOUT.md, REPORT.md, CLAIM_MAP.json,
-declarations.json, SELF_REVIEW.md, IO_MANIFEST.json and evidence/receipt.json.
-The source-bound backlog is REMAINING_WORK.md/.json in that block.
+Current checkpoint: **SF-LEAN-B17**, mathematical base `200a2798532028f863f923028cb0ead95563975a`,
+editorial parent `0eae1fe6a4bf55db27af69ef40b405643aa2e5a9`. Start with formalization/Block17/CLOSEOUT.md,
+REPORT.md, CLAIM_MAP.json, declarations.json, SELF_REVIEW.md, IO_MANIFEST.json
+and evidence/receipt.json. The exact backlog is REMAINING_WORK.md/.json there.
+Paths here are relative to monographs/special-functions/ unless stated otherwise.
 
-`lean/CoupledNormalization.lean` adds 30 theorems, for 435 registered names.
-For every rational scale tuple and index, the derivative arrays satisfy
-A_n=(2n+1)!u_n and B_n=(2n+1)!v_n. A paired append-array model equals the
-inclusive prefix, enumerate/divide conversion gives ordinary coefficients,
-and enumerate/multiply/sum gives the certified polynomial. Analytic endpoint
-transfer retains strict positive contractions and adequate fuel. This is a
-mathematical specification, not full Python execution refinement.
+lean/CoupledGuardedMajorant.lean adds 30 theorems, for 465 registered names.
+The exact rational first-small ladder and guarded reverse fold are proved:
+success supplies trace length<=budget, adequate fuel and the proved majorant
+value. Successful results bound actual complex functions and enclose real
+components using the Block16 array polynomial. Step and post-update size
+errors stay errors. The abstract wrapper preserves scale/radius/resource
+validation order. This is an algorithm specification, not full Python refinement.
 
-**Next executable target: J guarded-majorant refinement.** Model the first-small
-radius ladder and reverse fold, prove a successful bounded trace equals
-rationalDiskMajorant with adequate fuel, and preserve step/bit failures.
-Then connect the source call path and returned certified_evaluation dictionary
-to exact endpoints, stating Python interpreter/Fraction/stdlib assumptions.
-Guard order in research/coupled_lab.py: validate strict contractions, radius>=0,
-then return zero before validating resources if radius==0. For nonzero radii,
-max_steps is an exact int (not bool) and nonnegative, max_bits an exact positive
-int. Step guard precedes push; bit guard follows each reverse-fold step.
-The threshold radius 1 still requires a ladder push. Adequate mathematical
-fuel does not guarantee success under fixed limits. Inputs for the enclosure
-remain x>=0 and S>x. Other J degree/denominator/symmetry claims remain to map.
+**Next: typed certified-evaluation result and source correspondence.** Compose
+arrayPolynomial with checkedMajorant into metadata, tail and U/V endpoint
+fields; prove every successful result encloses both actual functions and
+preserves last_index=N, N+1 coefficients and exponent 2N+3. Then connect the
+actual certified_evaluation call path with explicit interpreter, Fraction,
+stdlib, runtime type/exception and mutation assumptions. None resource inputs
+are abstract invalid tags; no Python runtime type classifier is proved.
+
+Preserve critical source cases: radius zero skips resource checks after valid
+scales/radius; nonzero steps validate before positive bits. Radius one needs
+a step. The seed for radius<1 is not bit-checked. Checks follow each reverse
+update, not just the final value. Q=1/2,R=2 records [2,1] and gives 500/81;
+forward folding gives the wrong 757/81. Adequate mathematical fuel does not
+guarantee fixed resource limits succeed. Analytic inputs retain contractions
+and x>=0,S>x. No error is treated as a weaker certificate.
 
 Registered F.1-F.3, G.1, guarded G.2, named ancillary F, main H.1 and J's
-mathematical arbitrary-radius evaluation contract remain complete. Last N
-retains N+1 coefficients and omits degree 2N+3 first. The worked last=30
-error remains <1.6e-13 on the unit disk. Ordinary type convergence is
-conditional. Other F/H correspondence, I and A-E analytic development remain.
-No full-book claim map or completion percentage is established.
+mathematical evaluation/normalization/finite-array contracts remain complete.
+Other J degree/denominator/symmetry, F/H correspondence, I and A-E remain.
+Ordinary type convergence is conditional; G.2's nonzero-defect guard remains.
+No full manuscript claim map or completion percentage is established.
 
-Replay tools/verify_coupled_normalization.py with Lean 4.34.0-rc2 and Mathlib
+Replay tools/verify_coupled_guarded_majorant.py with Lean 4.34.0-rc2 and Mathlib
 aeb72f1e9981b6d35b426b16dca7759be3e7ba06 in a new external directory.
-All 63 steps pass: sixteen compilations/audits/kernel replays, 396 fresh
-theorem axiom audits, four rejection controls and one positive fixture.
-Inherited finite-core evidence covers 39 names; Mathlib imports are cached.
-Review provenance is self-review. Formal I/O records 56 inputs, 64 packaged
-outputs, sixteen generated objects and 37 staging copies. Assessment has
-34 inputs/two outputs; five development source/log pairs and a batch preflight
-are diagnostics. Python assessment inputs are not trusted proof leaves.
-No accepted replay input changed during execution.
+All 66 steps pass: seventeen compilations/audits/kernel replays, 426 fresh
+coupled axiom audits, four rejection controls and one positive fixture.
+39 finite-core names retain inherited evidence; Mathlib is cached. Review is
+self-review. Formal I/O: 59 inputs, 67 packaged outputs, seventeen objects,
+39 staging copies. Assessment: 37 inputs/two outputs. Development and preflight
+source/log pairs are diagnostics; Python sources are not trusted proof leaves.
 
-The factorial-scaling/uniqueness and finite append-invariant routes succeeded.
-Direct normalization is deferred for reverse interfaces, not exhausted.
-No delegated or delayed mathematical run remains. Preserve all sixteen blocks,
-dated guides, manuscripts, Python, PDFs and frozen imported receipts. Root
-archive manifests are historical. Live website scope comes from maintained
-status and current guidance links to repository files. Reading proofreading
-is separate from mathematical proof review and formalization.
+Trace and guarded-fold routes succeeded; a direct while-state invariant is
+deferred for source-language refinement, not exhausted. No delegation or
+delayed mathematical run remains. Preserve all seventeen blocks, dated guides,
+manuscripts, Python, PDFs and imported parent guidance. Only current/ guidance
+is maintained; root archive manifests and parent guides are historical. Reading
+proofreading remains separate from proof review and formalization.

@@ -15,14 +15,13 @@ Their bytes are bound by the original source receipt and must remain unchanged.
 Dated reports retain their recorded links and hashes; use this directory for
 current continuation instructions.
 
-Latest checkpoint: **SF-LEAN-B16**, with 435 registered declarations. The
-[normalization report](../formalization/Block16/REPORT.md),
-[exact I/O inventory](../formalization/Block16/IO_MANIFEST.json) and
-[remaining-work inventory](../formalization/Block16/REMAINING_WORK.md) record
-the new all-index factorial normalization and finite-array specification.
-The next task is guarded majorant/source-program refinement. Dated reports
-may link to the imported parent guidance as it stood at their source commits;
-the continuation file in this directory is the maintained restart point.
+Latest checkpoint: **SF-LEAN-B17**, with 465 registered declarations. The
+[guarded-majorant report](../formalization/Block17/REPORT.md),
+[exact I/O inventory](../formalization/Block17/IO_MANIFEST.json) and
+[remaining-work inventory](../formalization/Block17/REMAINING_WORK.md) bind
+the exact guarded-algorithm specification. The next task is typed evaluation
+results and actual Python source/runtime correspondence. Dated reports retain
+their source links; this directory is the maintained restart point.
 
 [Work, current scope and evidence](../../../docs/works/monographs-special-functions.md)
 · [Original source receipt](../../../manifests/source-imports/monographs-special-functions.json)

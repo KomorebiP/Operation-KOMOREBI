@@ -1,0 +1,32 @@
+import CoupledGuardedMajorant
+
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.ladder_terminal
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.ladder_terminal_small
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.ladder_adequate
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.ladder_fold_eq
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.build_ladder_ok
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.build_ladder_of_trace
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.build_ladder_ok_iff
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.build_ladder_not_bits
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.build_ladder_exists_of_adequate
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.guarded_fold_not_steps
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.guarded_fold_ok_iff
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.guarded_fold_bits_iff
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.guarded_majorant_success
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.guarded_majorant_small
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.guarded_majorant_zero
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.guarded_majorant_no_steps
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.guarded_majorant_disk_bound
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.guarded_majorant_endpoint_enclosure
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.guarded_majorant_step_failure
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.guarded_majorant_bit_failure
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.size_fits_iff
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.checked_invalid_scales
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.checked_negative_radius
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.checked_zero_before_resources
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.checked_invalid_steps
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.checked_invalid_bits
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.checked_valid_inputs
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.checked_small_seed_unchecked
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.checked_success_core
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.checked_endpoint_enclosure

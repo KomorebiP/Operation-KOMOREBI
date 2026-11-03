@@ -1,0 +1,44 @@
+import CoupledGuardedMajorant
+noncomputable section
+open Komorebi.SpecialFunctions.Coupled.Scales
+
+example : buildLadder (1/2) 2 2 = .ok ([2,1],1/2) := by norm_num [buildLadder]
+example : buildLadder (1/2) 1 2 = .error .steps := by norm_num [buildLadder]
+example : guardedFold (fun _ => true) (2/3) [2,1] = .ok (500/81) := by
+  norm_num [guardedFold,majorantStep]
+example : guardedMajorant (1/2) 2 (fun _ => true) 2 = .ok (500/81) := by
+  norm_num [guardedMajorant,buildLadder,guardedFold,majorantSeed,majorantStep]
+example : guardedMajorant (1/2) 1 (fun _ => false) 2 = .error .steps := by
+  norm_num [guardedMajorant,buildLadder]
+example : guardedMajorant (1/2) 2 (fun _ => false) 2 = .error .bits := by
+  norm_num [guardedMajorant,buildLadder,guardedFold]
+example : guardedMajorant (1/2) 0 (fun _ => true) 1 = .error .steps := by
+  exact guarded_majorant_no_steps _ _ _ (by norm_num)
+example : checkedMajorant (⟨1/2,1/2,1/2,1/2⟩ : RationalScales) 0 none none = .ok 0 := by
+  exact checked_zero_before_resources _ _ _ (by norm_num [RationalScales.strictRational])
+example : checkedMajorant (⟨1,1/2,1/2,1/2⟩ : RationalScales) 0 none none = .error .scales := by
+  exact checked_invalid_scales _ _ _ _ (by norm_num [RationalScales.strictRational])
+example : checkedMajorant (⟨1/2,1/2,1/2,1/2⟩ : RationalScales) (3/4)
+    (some 0) (some 1) = .ok (12/7) := by
+  have h := checked_small_seed_unchecked (⟨1/2,1/2,1/2,1/2⟩ : RationalScales) (3/4) 0 0
+    (by norm_num [RationalScales.strictRational]) (by norm_num) (by norm_num)
+  norm_num [majorantSeed] at h ⊢
+  exact h
+example : sizeFits 1 (12/7) = false := by
+  have h12 : Nat.log2 12 = 3 := (Nat.log2_eq_iff (by decide)).mpr (by decide)
+  have h7 : Nat.log2 7 = 2 := (Nat.log2_eq_iff (by decide)).mpr (by decide)
+  norm_num [sizeFits,rationalBitSize,integerWidth,h12,h7]
+example : checkedMajorant (⟨1/2,1/2,1/2,1/2⟩ : RationalScales) 2 (some 2) (some 1) =
+    .error (.resource .bits) := by
+  have h13 : Nat.log2 13 = 3 := (Nat.log2_eq_iff (by decide)).mpr (by decide)
+  have h9 : Nat.log2 9 = 3 := (Nat.log2_eq_iff (by decide)).mpr (by decide)
+  norm_num [checkedMajorant,RationalScales.strictRational,guardedMajorant,buildLadder,guardedFold,
+    majorantSeed,majorantStep,sizeFits,rationalBitSize,integerWidth,RationalScales.maxScale,h13,h9]
+example (Q R t : ℚ) (xs : List ℚ) (h : LadderTrace Q R xs t) : Q^xs.length*R < 1 :=
+  ladder_adequate Q R t xs h
+example (p : RationalScales) (hs : p.toReal.positive)
+    (hc : p.toReal.q < 1 ∧ p.toReal.r < 1 ∧ p.toReal.a < 1 ∧ p.toReal.b < 1)
+    (R B : ℚ) (hR : 0 ≤ R) (budget : ℕ) (fits : ℚ → Bool)
+    (h : guardedMajorant p.maxScale budget fits R = .ok B) (i : Fin 2)
+    (z : ℂ) (hz : ‖z‖ ≤ (R : ℝ)) : ‖p.toReal.complexComponent i z‖ ≤ (B : ℝ) :=
+  guarded_majorant_disk_bound p hs hc R B hR budget fits h i z hz
