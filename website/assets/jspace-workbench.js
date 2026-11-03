@@ -123,6 +123,21 @@
     fold(byId('cExport').closest('.panel'), 'Coordinates and trial export');
     fold(byId('rLivePanel'), 'Continue the edited state step by step');
 
+    const methods = byId('cMeasured').closest('details');
+    methods.querySelector('summary').textContent = 'Methods and limits';
+    const methodParagraphs = methods.querySelectorAll('p');
+    methodParagraphs[0].textContent = "The default J frame comes from the centered, averaged gradients of four exact-report logits through the two silent updates. It therefore uses output information. Four centered rows have rank at most three, so the frame’s three dimensions reflect the construction and do not establish emergence.";
+    methodParagraphs[1].textContent = "The projected edits alter the agents’ hidden states directly. Earlier studies failed stronger checks for whether the resulting states could occur naturally, and this editor does not establish that they can. A whole paired donor replaces both agents’ full states, providing a native-state control rather than a localized write. Controls of the same rank can also change the output.";
+    methodParagraphs[3].textContent = "These experiments use the small, saved GRU models included with the editor. The results do not establish a J-space in language models or address general intelligence or consciousness.";
+    methodParagraphs[4].textContent = "The model weights and candidate directions stay fixed. All edits take place during inference, and the original answer network produces every prediction. The exact evaluator supplies reference answers for comparison only.";
+    explainLabels('cMeasured', [
+      ["This editor’s numerical port matched ","The numerical port reproduced all "],
+      [" tested decisions over "," tested decisions across "],
+      ["The fixed-frame assay used 256 histories per lineage; both lineages reached 100% immediate exact donor answers with bilateral J edits.","A separate fixed-frame test used 256 histories per lineage. With J edits applied to both agents, each lineage returned the exact donor answer immediately in 100% of cases."],
+      ["Factual-memory preservation was imperfect.","The edits did not always preserve factual recall."],
+      ["These are sampled development checks, not a general guarantee.","These development tests measure performance on the sampled cases; they do not guarantee results elsewhere."]
+    ]);
+
     const relayControls = [...doc.querySelectorAll('.relay-layout > .stack:first-child > .panel')];
     const editorNotice = element('p', 'jl-editor-notice', 'Using the editor’s settings. Run message trace to measure this setup. Any earlier results below retain their recorded settings.');
     editorNotice.hidden = true;
