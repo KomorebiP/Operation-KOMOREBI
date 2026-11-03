@@ -122,6 +122,23 @@ class ReadingNavigationTests(unittest.TestCase):
         self.assertEqual(visual_search_terms(dict(entry,url='read/test/atlas/s03.html')),'Visual 3 Section 3')
         self.assertEqual(visual_search_terms(dict(entry,url='read/test/atlas/l03.html')),'Visual 3 Lesson 3')
 
+    def test_visual_search_preview_uses_the_drawing_description_and_preserves_math(self):
+        from reading_navigation import visual_search_preview
+        from readable_chapters import Chapter
+        chapter=Chapter('',{})
+        chapter.math=[r'Q=I']
+        chapter.nodes=[dict(kind='figure',body='drawing')]
+        figures={'drawing':dict(description=dict(description=r'The grid retains $P_\alpha=Q_\alpha$.'))}
+        preview=visual_search_preview(chapter,figures)
+        self.assertEqual(preview['preview_parts'],[dict(type='text',text='The grid retains '),
+            dict(type='math',text=r'P_\alpha=Q_\alpha'),dict(type='text',text='.')])
+        self.assertEqual(chapter.math,[r'Q=I'])
+        figures['drawing']['description']='A source-bound diagram description.'
+        self.assertEqual(visual_search_preview(chapter,figures)['preview_parts'],
+                         [dict(type='text',text='A source-bound diagram description.')])
+        chapter.nodes=[]
+        self.assertEqual(visual_search_preview(chapter,figures),{})
+
     def test_visual_contents_link_titles_directly_and_keep_pdf_context_and_anchors(self):
         import posixpath
         entry=dict(number=3,title='Packets & coordinates',url='read/test/atlas/v03.html')

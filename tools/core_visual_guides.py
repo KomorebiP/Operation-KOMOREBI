@@ -49,6 +49,7 @@ def guide_navigation(work,page,more=''):
     body='<nav class="work-overview-nav paper-routes visual-guide-routes" aria-label="Visual guide navigation">'
     body+='<a href="'+relative(INDEX)+'">All visual guides</a>'
     body+='<a href="'+relative(index)+'"'+(' aria-current="page"' if page==index else '')+'>Guide contents</a>'
+    body+='<a href="'+relative('search.html')+'?type=Visual+guides&amp;work='+e(work,quote=True)+'">Search this guide</a>'
     body+='<a href="'+relative(book['index'])+'">Read '+('paper' if work in GUIDES else 'volume')+'</a>'
     body+='<details class="visual-guide-switch"><summary>Switch guide</summary><nav aria-label="Choose a visual guide"><ul>'
     for identifier,label,title,target in guide_choices():
@@ -103,7 +104,7 @@ def render(reader):
     rows=all_inventory(site.root,reader.records.values())
     count=sum(bool(row['html_atlas']) for row in rows)
     body='<div class="visual-directory"><p class="eyebrow">Core papers and books</p><h1>Visual guides</h1>'
-    body+='<p class="visual-directory-intro">Explore all twelve core papers and the Quantum and Circuits visual collection. Choose a subject or work for original diagrams, selectable mathematics, and links to the text.</p>'
+    body+='<p class="visual-directory-intro">Explore all twelve core papers and the Quantum and Circuits visual collection. Choose a subject or work for original diagrams, selectable mathematics, and links to the text. <a href="'+site.rel('search.html',INDEX)+'?type=Visual+guides">Search all visual pages</a>.</p>'
     body+='<form id="visual-guide-filter" class="visual-guide-filter" role="search" hidden><label for="visual-guide-query">Find a visual guide</label><div><input id="visual-guide-query" type="search" name="q" placeholder="Paper number, title, or topic" aria-controls="visual-guide-list" aria-describedby="visual-guide-count"><button type="reset">Clear</button></div></form>'
     body+='<div class="visual-directory-tools"><nav class="visual-guide-jump" aria-label="Jump to a paper or book">'+''.join('<a href="#'+r['work']+'" aria-label="'+r['label']+'">'+(r['label'].removeprefix('Paper ') if r['number'] else 'Quantum and Circuits')+'</a>' for r in rows)+'</nav><p id="visual-guide-count" role="status" aria-live="polite">'+str(count)+' guides</p></div>'
     body+='<p id="visual-guide-empty" hidden>No guides match. Try another subject or clear the search.</p><ol id="visual-guide-list" class="visual-guide-grid">'
@@ -124,7 +125,7 @@ def render(reader):
     site.page(INDEX,'Visual guides',body)
     site.write(REPORT,json.dumps(dict(source_revision=site.revision,guides=rows[:12]),indent=2)+'\n')
     site.write(ALL_REPORT,json.dumps(dict(source_revision=site.revision,guides=rows),indent=2)+'\n')
-    site.search.append(dict(title='Visual guides',group='Collection',kind='Guides',url=INDEX,
+    site.search.append(dict(title='Visual guides',group='Collection',kind='Guides',visual_guide=True,url=INDEX,
         text='Visual guides and worked atlases for all twelve core papers and Quantum and Circuits',work_ids=[r['work'] for r in rows]))
 
 
@@ -136,6 +137,10 @@ def verify(root,documents,pages):
     rows=inventory(repository,documents['files'])
     assert record==dict(source_revision=documents['source_revision'],guides=rows)
     all_rows=all_inventory(repository,documents['files'])
+    search_path=root/'search-index.json'
+    visual_search={entry['url'].partition('#')[0] for entry in json.loads(search_path.read_bytes())
+                   if entry.get('visual_guide')} if search_path.is_file() else None
+    if visual_search is not None:assert INDEX in visual_search,('Missing visual search entry',INDEX)
     assert json.loads((root/ALL_REPORT).read_bytes())==dict(source_revision=documents['source_revision'],guides=all_rows)
     assert {r['work'] for r in all_rows}<=set(pages[INDEX].ids)
     from quantum_visual_guides import verify as verify_quantum
@@ -156,6 +161,8 @@ def verify(root,documents,pages):
             prefix=row['html_atlas'].removesuffix('index.html')
             guide_pages=[path for path in pages if path.startswith(prefix)]
         assert len(guide_pages)==row['units']+1,('Wrong visual directory unit count',row['work'])
+        if visual_search is not None:
+            assert set(guide_pages)<=visual_search,('Missing visual search entry',row['work'],set(guide_pages)-visual_search)
         for page in guide_pages:
             links=pages[page].links
             for target in [INDEX,row['manuscript'],*[r['html_atlas'] for r in all_rows]]:

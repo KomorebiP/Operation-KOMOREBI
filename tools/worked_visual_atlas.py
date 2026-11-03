@@ -7,7 +7,7 @@ from html.parser import HTMLParser
 from readable_chapters import BOOKS
 from reader_atlas import atlas_tex as original_atlas_tex, digest, expected_math, render_drawing as original_render_drawing, transcript_order
 from readable_chapters import Chapter, HEADINGS, MATH_PATTERN, PANELS, clean_tex, group, manuscript_macros, original_math, passage_links, plain_math, presentation_tex, reading_options, render_table, chapter_text
-from reading_navigation import atlas_config, navigation, outline, resources, visual_title, visual_backlink, visual_position, visual_contents, visual_search_terms
+from reading_navigation import atlas_config, navigation, outline, resources, visual_title, visual_backlink, visual_position, visual_contents, visual_search_terms, visual_search_preview
 from reader_documents import png_dimensions
 from worked_atlas_drawings import drawing_nodes
 
@@ -295,7 +295,7 @@ class WorkedAtlas:
             if chapter.math != expected:
                 raise ValueError('Worked atlas mathematics differ on V' + str(number))
             site.page(page, title, body)
-            site.search.append(dict(title=title, group='Collection', kind='Papers and source', work_ids=[self.work], url=page, text=visual_search_terms(plate)+' '+plain_math(plate['body'])[0] + ' ' + plate['title']))
+            site.search.append(dict(title=title, group='Collection', kind='Papers and source', visual_guide=True, work_ids=[self.work], url=page, text=visual_search_terms(plate)+' '+plain_math(plate['body'])[0] + ' ' + plate['title'],**visual_search_preview(chapter,atlas['figures'])))
             reports.append(dict(number=number, source=source_path, url=page, start_line=plate['line'], end_line=plate['end_line'], math_expressions=len(expected), math_sequence_sha256=digest(json.dumps(expected, ensure_ascii=False).encode()), nodes=[{k: n[k] for k in ('kind', 'id', 'line', 'end_line')} for n in chapter.nodes]))
         if aided != set(self.TABLE_AIDS):
             raise ValueError('Worked atlas table coverage differs')
@@ -308,7 +308,7 @@ class WorkedAtlas:
         body += visual_contents(atlas['plates'],self.INDEX,site.rel,lambda p:reader.viewer_url(pdf,self.INDEX,'page='+str(p['number']+self.PDF_PAGE_OFFSET)),chapter.inline)
         body += '<p>'+ ' · '.join('<a href="'+reader.resolve(path,self.INDEX)+'">Selectable atlas source'+(' '+str(i+1) if len(self.SOURCES)>1 else '')+'</a>' for i,path in enumerate(self.SOURCES))+' · <a href="' + site.rel(self.REPORT, self.INDEX) + '">Conversion records</a></p>'
         site.page(self.INDEX, self.label + ' visual guide', body)
-        site.search.append(dict(title=self.label + ' / Visual guide', group='Collection', kind='Papers and source', work_ids=[self.work], url=self.INDEX, text=' '.join((p['title'] for p in atlas['plates']))))
+        site.search.append(dict(title=self.label + ' / Visual guide', group='Collection', kind='Papers and source', visual_guide=True, work_ids=[self.work], url=self.INDEX, text=' '.join((p['title'] for p in atlas['plates']))))
 
     def verify(self, root, documents, pages):
         from check_reader_site import check_png_image_sizes
