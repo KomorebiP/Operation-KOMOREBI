@@ -3,6 +3,59 @@ const assert=require('node:assert/strict');
 const {pathToFileURL}=require('node:url');
 const path=require('node:path');
 const core=import(pathToFileURL(path.join(__dirname,'../website/assets/recovery-lab-core.mjs')));
+const guidance=import(pathToFileURL(path.join(__dirname,'../website/assets/recovery-lab-guidance.mjs')));
+
+test('guided examples agree with their exact certificates and repair claims',async()=>{
+  const {analyzeRecovery,repairExperiment}=await core;
+  const {lessonExperiment}=await guidance;
+  const lessons=[0,1,2,3].map(i=>analyzeRecovery(lessonExperiment(i)));
+  assert.equal(lessons[0].questions[0].recoverable,false);
+  assert.deepEqual(lessons[1].questions[0].weights,['2','1']);
+  assert.equal(lessons[1].nullity,1);
+  assert.deepEqual(lessons[2].questions.map(q=>q.recoverable),[true,false]);
+  assert.equal(lessons[2].questions[1].change,'2');
+  assert.equal(lessons[3].repair.additional,1);
+  assert.equal(analyzeRecovery(repairExperiment(lessonExperiment(3))).recoverable,2);
+  const repeated={...lessonExperiment(3),R:[['1','1','0'],['0','0','1'],['1','1','0']],enabled:[true,true,true]};
+  assert.equal(analyzeRecovery(repeated).questions[1].recoverable,false);
+});
+
+test('worked obstruction uses a separating proof pair even when the slider is zero',async()=>{
+  const {analyzeRecovery,presetExperiment}=await core;
+  const {workedExplanation}=await guidance;
+  const state={...presetExperiment('sum'),t:0};
+  const text=workedExplanation(analyzeRecovery(state));
+  assert.match(text.calculation,/x = \(1, 0\); x \+ w = \(2, -1\)/);
+  assert.match(text.text,/answers are 1 and 2/);
+  assert.equal(state.t,0);
+});
+
+test('worked substitutions retain fractions and ignore disabled measurement values',async()=>{
+  const {analyzeRecovery,presetExperiment}=await core;
+  const {workedExplanation,linearExpression}=await guidance;
+  const fractional=workedExplanation(analyzeRecovery(presetExperiment('fractions')));
+  assert.equal(fractional.calculation,'1/2 × (5) + 1/2 × (2) = 7/2');
+  const disabled={...presetExperiment('sum'),R:[['99','99'],['1','1']],enabled:[false,true],F:[['-1','-1']]};
+  assert.equal(workedExplanation(analyzeRecovery(disabled)).calculation,'−(1) = -1');
+  assert.equal(linearExpression(['0','-2/3','1'],['x₁','x₂','x₃']),'−2/3 × x₂ + x₃');
+});
+
+test('answer-graph exact samples distinguish a collision from a constant direction',async()=>{
+  const {presetExperiment,analyzeRecovery}=await core;
+  const {motionSamples}=await guidance;
+  const samples=motionSamples(presetExperiment('sum'));
+  assert.deepEqual(samples.map(s=>s.answer),['-3','-2','-1','0','1','2','3','4','5']);
+  assert.ok(samples.every(s=>s.summary[0]==='1'));
+  const flat=motionSamples(presetExperiment('sufficient'));
+  assert.ok(flat.every(s=>s.answer==='7'));
+  const zero={...presetExperiment('sum'),enabled:[false],F:[['0','0']]};
+  assert.ok(motionSamples(zero).every(s=>s.answer==='0'&&s.summary.length===0));
+  // A question can be flat on one kernel vector and obstructed on another.
+  const r=analyzeRecovery({...zero,F:[['0','1']]});
+  assert.deepEqual(r.kernel,[['1','0'],['0','1']]);
+  assert.deepEqual(r.questions[0].witness,['0','1']);
+  assert.equal(motionSamples(r.state).at(-1).answer,'4');
+});
 
 test('starters distinguish recovery, lost questions, redundancy, and fractional rules',async()=>{
   const {analyzeRecovery,presetExperiment}=await core;

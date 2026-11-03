@@ -255,7 +255,7 @@ if (sourceLineForm) {
   });
   // The direct-line control replaces hundreds of repetitive Tab stops.
   // Without JavaScript, the original line links remain keyboard reachable.
-  for (const link of document.querySelectorAll(".source-lines .line-number")) link.tabIndex = -1;
+  for (const link of document.querySelectorAll(".source-lines > code > span[id] > a[aria-label]")) link.tabIndex = -1;
   sourceLineForm.hidden = false;
 }
 

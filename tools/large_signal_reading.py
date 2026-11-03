@@ -27,6 +27,10 @@ BOOK = dict(work=WORK, label='Large Signal Model', base=BASE, main=MAIN,
     bib_page='read/' + WORK + '/references.html', chapters=CHAPTERS,
     title='Realization, refinement, and predictive closure', main_chapters=100,
     custom_reader='large_signal', required_macros=[], statement_navigation=True,
+    lean_reader_paths=('Lean/KomorebiLSM.lean', 'Lean/KomorebiLSM/'),
+    lean_reader_note='This inspector shows the 254 mathematical modules and their root import file. '
+        'The full retained project, including rejection controls and test sources, remains available '
+        'in the source downloads and through the work overview.',
     reading_guide='read/' + WORK + '/start.html',
     reading_guide_description='A first pass through the mathematics, the recorded Lean scope, or the software.',
     figure_receipts='assets/figures/large-signal-model/figures.json',
@@ -206,6 +210,7 @@ def publish_start(reader, book):
     body += '<p>'+link('Open all chapters',BOOK['index'])+' · '+link('Try the Signal laboratory','signal-lab.html')+'</p>'
     body += '<h2>Inspect the recorded formal scope</h2><p>The retained coverage map records complete mappings for 87 registered proposition cores under explicit assumptions. Each HTML proposition links to its written proof and its recorded scope. The publication conversion adds no compiler run or mathematical review.</p>'
     body += '<p>'+link('Read the scope of each proposition',SCOPE_PAGE)+'</p><ul>'
+    body += '<li>'+link('Inspect the mathematical Lean sources','lean/'+WORK+'/index.html')+'</li>'
     for path,title in RESOURCES[:3]:
         record=reader.records[path]
         body += '<li>'+link(title,record['url'])+'</li>'

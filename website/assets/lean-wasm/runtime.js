@@ -11,7 +11,7 @@
 // `worker/lean-worker.js`), so there is one implementation and the demo in this repo consumes it too.
 
 // Separate same-origin worker source keeps the vendored implementation reviewable.
-const RUNTIME_WORKER_SOURCE = 'importScripts(' + JSON.stringify(new URL('./worker.js?v=20261103-lifecycle1', import.meta.url).href) + ');';
+const RUNTIME_WORKER_SOURCE = 'importScripts(' + JSON.stringify(new URL('./worker.js?v=20261103-staged1', import.meta.url).href) + ');';
 const NATIVE_INVOKES_URL = new URL('./native-invokes.js', import.meta.url).href;
 
 const COMPILE_PATH = '/workspace/input.lean';

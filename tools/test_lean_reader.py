@@ -4,6 +4,7 @@ from pathlib import Path
 import tempfile
 from types import SimpleNamespace
 import unittest
+from unittest.mock import patch
 
 from lean_reader import build, code_view, declarations, highlight_lines, prepare, selected_paths, source_controls, verify
 from reader_documents import ReadingDocuments, source_lines
@@ -40,6 +41,27 @@ class LeanReaderTests(unittest.TestCase):
         self.assertEqual(list(selected_paths(c,owned)),['papers/current/formal/A.lean','papers/current/formal/Main.lean'])
         c['resources'][0]['path']='../unsafe/'
         with self.assertRaises(ValueError):list(selected_paths(c,owned))
+
+    def test_reading_subset_cannot_expand_receipt_resource_selections(self):
+        c=dict(id='fixture',destination='work',resources=[dict(kind='lean',path='formal/')])
+        owned={p:dict(work='fixture') for p in ['work/formal/Main.lean','work/formal/Tests.lean',
+            'work/formal/Main.lean.extra','work/outside/Leak.lean']}
+        book=dict(lean_reader_paths=['formal/Main.lean','outside/'])
+        with patch('readable_chapters.BOOKS',{'fixture':book}):
+            self.assertEqual(list(selected_paths(c,owned)),['work/formal/Main.lean'])
+            book['lean_reader_paths']=['../unsafe/']
+            with self.assertRaises(ValueError):list(selected_paths(c,owned))
+
+    def test_large_signal_inspector_contains_all_mathematical_modules_and_root(self):
+        root=Path(__file__).resolve().parents[1]
+        work='monographs-large-signal-model'
+        c=next(c for c in json.loads((root/'manifests/browse-resources.json').read_bytes())['components'] if c['id']==work)
+        receipt=json.loads((root/('manifests/source-imports/'+work+'.json')).read_bytes())
+        owned={c['destination']+'/'+f['path']:{**f,'work':work} for f in receipt['files']}
+        expected={p for p in owned if p.endswith('.lean') and
+            ('/Lean/KomorebiLSM/' in p or p.endswith('/Lean/KomorebiLSM.lean'))}
+        self.assertEqual(set(selected_paths(c,owned)),expected)
+        self.assertEqual(len(expected),255)
 
     def fixture(self, output):
         root=Path(__file__).resolve().parents[1]
@@ -93,10 +115,10 @@ class LeanReaderTests(unittest.TestCase):
         self.assertEqual(len(highlighted),len(text.splitlines()))
         for original,markup in zip(text.splitlines(),highlighted):
             parser=Text();parser.feed(markup);self.assertEqual(''.join(parser.parts),original)
-        self.assertIn('lean-token-comment',highlighted[1])
-        self.assertIn('lean-token-string',highlighted[2]);self.assertIn('lean-token-string',highlighted[3])
-        self.assertIn('lean-token-keyword',highlighted[4]);self.assertIn('lean-token-tactic',highlighted[5])
-        self.assertNotIn('lean-token-comment',highlighted[6])
+        self.assertIn('class=lc',highlighted[1])
+        self.assertIn('class=ls',highlighted[2]);self.assertIn('class=ls',highlighted[3])
+        self.assertIn('class=lk',highlighted[4]);self.assertIn('class=lt',highlighted[5])
+        self.assertNotIn('class=lc',highlighted[6])
         self.assertNotIn('<script>', ''.join(highlighted))
         with self.assertRaises(ValueError):source_lines('one\ntwo',rendered_lines=['one'])
 

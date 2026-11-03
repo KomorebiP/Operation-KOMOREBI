@@ -2,6 +2,7 @@
 import unittest
 import hashlib
 import json
+import re
 from pathlib import Path
 import tempfile
 from types import SimpleNamespace
@@ -1208,8 +1209,8 @@ class ReaderSiteTests(unittest.TestCase):
             def __init__(self):super().__init__();self.rows=[];self.links=[];self.row=None;self.link=False
             def handle_starttag(self,tag,attrs):
                 attrs=dict(attrs)
-                if tag=='span' and attrs.get('class')=='source-line':self.row=dict(attrs,text='');self.rows.append(self.row)
-                if tag=='a' and attrs.get('class')=='line-number':self.links.append(attrs);self.link=True
+                if tag=='span' and re.fullmatch(r'L\d+',attrs.get('id','')):self.row=dict(attrs,text='');self.rows.append(self.row)
+                if tag=='a' and re.fullmatch(r'#L\d+',attrs.get('href','')):self.links.append(attrs);self.link=True
             def handle_endtag(self,tag):
                 if tag=='a':self.link=False
                 if tag=='span':self.row=None

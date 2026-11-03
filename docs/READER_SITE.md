@@ -11,6 +11,11 @@ on the individual reading pages.
 ## Large Signal Model reading edition
 
 The Large Signal Model is available at `read/monographs-large-signal-model/`.
+Its Lean inspector includes all 254 mathematical modules and their root import
+file. Auxiliary rejection controls and test sources remain in the full retained
+project downloads and on GitHub. The native runner still bundles the complete
+retained project and its configuration; inspector selection only narrows the
+displayed file routes.
 Its start page connects a first reading path, all 100 mathematical sections in
 eight parts, the statement finder, recorded Lean scope, the reference laboratory,
 and the separately assessed PR-LASM software work page.
@@ -33,8 +38,8 @@ wrappers and navigation; there are no mathematical-token changes.
 
 ## Interactive J-Space laboratory
 
-`j-lab.html` introduces the saved neural-agent experiment with guided starting
-points for state edits, message tracing and persistence. It is linked from
+`j-lab.html` presents the saved neural-agent experiment with three choices:
+state edits, message tracing and persistence. It is linked from
 Browse → Use, interactive mathematics, site search, saved reading and the
 J-Space Causal Lab work page. The 4.4 MB self-contained instrument loads when
 requested; inference and JSON trace exports run locally. The full-tab route
@@ -44,10 +49,20 @@ also works directly and provides the offline download.
 receipt and copies its bytes to `assets/j-space/causal-lab.html`. It does not
 rebuild, rewrite or run the preserved source package. The source record and
 published asset have independent fixed identity checks. Only that exact,
-authenticated HTML asset keeps its original interface; the landing page gets
-the ordinary reader-site structure, navigation, links and labeling checks.
+authenticated HTML asset is exempt from reader-site chrome checks; the entry
+page gets the ordinary structure, navigation, links and labeling checks.
 
-The three guided buttons select the instrument's existing tabs and examples.
+The experiment picker selects the instrument's existing tabs and examples.
+`jspace-workbench.js` adds the embedded presentation at runtime, using
+`jspace-workbench.css`: duplicate headers and navigation are omitted, optional
+controls use disclosures, and the iframe follows its content height so the
+page has one scroll area. Existing DOM controls and handlers are retained.
+The main outputs, failed references and factual audits remain available;
+the unadapted full lab and offline download remain direct links. Selecting
+the current experiment preserves edits; changing experiments or selecting
+Reset example reloads the instrument with a fresh example, so old measurements
+cannot be presented as results of the new setup. During message or persistence runs the
+picker and reset are disabled until the run completes or is cancelled.
 All inference, grading and JSON exports remain in the saved 1.4 instrument.
 Run `python -B -m unittest discover -s tools -p 'test_jspace_lab.py' -v` and
 `node --test tools/test_jspace_lab.cjs` for publication and loading safeguards.
@@ -398,6 +413,12 @@ disclosure. Its optional name/kind filter changes the outline only. The source
 verifier extracts rendered code text and compares every line with the original
 download, independently of its token spans. Colors and declaration names are
 navigation aids, not a Lean compiler result.
+
+Source rows use their existing `L<number>` IDs inside the source container for
+styling, line controls and saved reading positions. Repeated per-line classes
+are omitted, and Lean token classes are compact. Accessible line labels, source
+text, direct links and original downloads are unchanged. This reduces the
+generated site's storage without removing reading or proof material.
 
 The inspector expands only receipt-owned `.lean` files within the existing
 Lean resource selections. It excludes package caches, build directories and
@@ -1238,6 +1259,37 @@ measurement rows and three question rows, using integers from −99 to 99 or
 fractions whose numerator is in that range and whose denominator is 1–99.
 Checkboxes select the available measurement rows. Six starters distinguish
 recoverability, partial loss, redundancy, fractional rules, and full recovery.
+
+The four-step guided investigation introduces information loss, a recoverable
+combination, partial recovery, and minimal repair. Each step loads a tested
+starter, gives a prediction with explanatory feedback, and suggests a concrete
+experiment. A changed-workspace note distinguishes edited settings from the
+guide's starting example. The guide is optional and can be collapsed.
+
+`website/assets/recovery-lab-guidance.mjs` supplies these explanations and
+consumes the existing exact model. Worked substitutions use the actual enabled
+measurement values. Obstruction examples use a separating pair at t = 1 even
+when the exploration slider is zero. “Read the rows as equations” connects
+matrix coefficients to weighted sums and values at the current base input.
+
+For two-coordinate inputs, the fiber picture distinguishes a line, a point,
+and the whole plane according to nullity. For every supported dimension, the
+answer-versus-t graph compares the selected answer with its base value.
+All nine integer samples are recomputed by the exact model and available in a
+captioned table. The description explicitly distinguishes a single flat trace
+from the certificate's check of every invisible direction. Neither graph
+changes the audited core or the scope of the recovery claim.
+
+Graphs have visible descriptions, exact tables, and shape/line distinctions.
+Motion controls have keyboard instructions, value descriptions, and step
+buttons. Overflowing table regions are named and keyboard-focusable. Changes
+announce concise results on committed edits and slider changes; full
+certificates are outside live regions. Native controls, visible focus,
+forced-color styles, wrapping formulas, and layouts at 320 CSS pixels support
+access. These checks do not establish screen-reader compatibility or WCAG
+conformance. The descriptions and status behavior follow the approaches in
+[WAI's complex image guidance](https://www.w3.org/WAI/tutorials/images/complex/)
+and [status message guidance](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html).
 
 `tools/recovery_lab.py` publishes the page and search entry. Its model,
 `website/assets/recovery-lab-core.mjs`, uses reduced BigInt fractions throughout
