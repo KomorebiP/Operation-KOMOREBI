@@ -14,6 +14,7 @@ WORK = 'monographs-large-signal-model'
 BASE = 'monographs/large-signal-model/Monograph/source/'
 MAIN = BASE + 'FOUNDATIONS.md'
 COVERAGE = 'monographs/large-signal-model/Lean/COVERAGE.md'
+SCOPE_PAGE = 'read/' + WORK + '/formal-scope.html'
 RESOURCES = [
     (COVERAGE,'Read the proposition coverage map'),
     ('monographs/large-signal-model/Lean/LEAN_GUIDE.md','Read the Lean companion guide'),
@@ -130,9 +131,9 @@ def prepare_book(reader, config):
         if not reader.add(path,title):
             raise ValueError('Missing Large Signal Model reading resource: '+path)
     coverage = load(COVERAGE)
-    coverage_record = reader.records[COVERAGE]
-    scopes = {int(m[1]): (i, m[2]) for i,line in enumerate(coverage.splitlines(),1)
-              if (m := re.match(r'\| P(\d+): (.*?) \| complete \|', line))}
+    scopes = {int(m[1]): dict(line=i,title=m[2],scope=m[3])
+              for i,line in enumerate(coverage.splitlines(),1)
+              if (m := re.fullmatch(r'\| P(\d+): (.*?) \| complete \| (.*?) \|', line))}
     if set(scopes) != set(range(1,88)):
         raise ValueError('Review recorded Large Signal Model coverage rows')
     references = [dict(key=m[1], line=main.count('\n',0,m.start())+1,
@@ -154,16 +155,18 @@ def prepare_book(reader, config):
                 count += 1
                 node['number'] = str(count)
                 node['url'] = spec['url']
-                line, title = scopes[count]
-                if node['title'] != title:
+                scope = scopes[count]
+                if node['title'] != scope['title']:
                     raise ValueError('Large Signal Model recorded title differs at P' + str(count))
                 chapter.related_readings[node['id']] = [('Recorded Lean scope',
-                    coverage_record['source_url'] + '#L' + str(line))]
+                    SCOPE_PAGE + '#p' + str(count))]
+                scope['statement_url'] = spec['url']+'#'+node['id']
                 pending = node
             elif node['kind'] == 'proof':
                 if pending is None:
                     raise ValueError('Unpaired Large Signal Model proof')
                 chapter.proof_pairs[pending['id']] = node['id']
+                scopes[int(pending['number'])]['proof_url'] = spec['url']+'#'+node['id']
                 pending = None
         if pending is not None:
             raise ValueError('Missing Large Signal Model proof')
@@ -179,7 +182,7 @@ def prepare_book(reader, config):
         chapter.labels = labels
         chapter.validate_references()
     from reader_figure_assets import prepare
-    return dict(config=config, chapters=chapters, references=references, macros={},
+    return dict(config=config, chapters=chapters, references=references, macros={},scopes=scopes,
         main=main, figure_assets=prepare(reader,config,chapters))
 
 
@@ -202,7 +205,7 @@ def publish_start(reader, book):
     body += '</ol><h2>Study the full construction</h2><p>Continue through learning and stability, controlled stochastic realization, certified probability domains, continuous observations, and robustness under data uncertainty. The contents group the 100 sections into eight parts.</p>'
     body += '<p>'+link('Open all chapters',BOOK['index'])+' · '+link('Try the Signal laboratory','signal-lab.html')+'</p>'
     body += '<h2>Inspect the recorded formal scope</h2><p>The retained coverage map records complete mappings for 87 registered proposition cores under explicit assumptions. Each HTML proposition links to its written proof and its recorded scope. The publication conversion adds no compiler run or mathematical review.</p>'
-    body += '<ul>'
+    body += '<p>'+link('Read the scope of each proposition',SCOPE_PAGE)+'</p><ul>'
     for path,title in RESOURCES[:3]:
         record=reader.records[path]
         body += '<li>'+link(title,record['url'])+'</li>'
@@ -216,3 +219,23 @@ def publish_start(reader, book):
     site.search.append(dict(title='Large Signal Model / Start here',group='Collection',kind='Guides',
         work_ids=[WORK,'large-signal-model'],url=page,
         text='Large Signal Model PR-LASM realization predictive closure learning probability domains Lean coverage software reference laboratory'))
+    publish_scopes(reader,book)
+
+
+def publish_scopes(reader, book):
+    """Present the retained coverage rows alongside their written passages."""
+    site=reader.site
+    def link(label,target):
+        return '<a href="'+html.escape(site.rel(target,SCOPE_PAGE),quote=True)+'">'+html.escape(label)+'</a>'
+    body='<p class="eyebrow">Large Signal Model · Retained formal evidence</p><h1>Propositions and their recorded Lean scope</h1>'
+    body+='<p>These are the 87 complete mappings recorded in the retained coverage guide. Each scope statement keeps its original qualifications. Counts are not weighted by proof difficulty. This page reports existing evidence and adds no Lean execution or proof audit.</p>'
+    body+='<p>'+link('Start here',BOOK['reading_guide'])+' · '+link('Find a written statement','read/'+WORK+'/statements.html')+'</p>'
+    source=reader.records[COVERAGE]
+    for number,scope in book['scopes'].items():
+        body+='<section id="p'+str(number)+'"><h2>Proposition '+str(number)+': '+html.escape(scope['title'])+'</h2>'
+        body+='<p>'+html.escape(scope['scope'])+'</p>'
+        body+='<p>'+link('Written statement',scope['statement_url'])+' · '+link('Written proof',scope['proof_url'])+' · '+link('Retained coverage row',source['source_url']+'#L'+str(scope['line']))+'</p></section>'
+    site.page(SCOPE_PAGE,'Large Signal Model recorded Lean scope',body)
+    site.search.append(dict(title='Large Signal Model / Recorded Lean scope',group='Collection',kind='Guides',
+        work_ids=[WORK],url=SCOPE_PAGE,text='87 registered propositions formal mapping assumptions scope '+
+        ' '.join(scope['title']+' '+scope['scope'] for scope in book['scopes'].values())))

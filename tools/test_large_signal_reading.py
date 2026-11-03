@@ -11,7 +11,7 @@ from unittest.mock import patch
 from urllib.parse import unquote, urlsplit
 
 import readable_chapters as reading
-from large_signal_reading import WORK, MAIN, BOOK, CHAPTERS, DATA, normalize, source_specs, source_math
+from large_signal_reading import WORK, MAIN, BOOK, CHAPTERS, DATA, SCOPE_PAGE, normalize, source_specs, source_math
 from build_reader_site import Site
 from reader_documents import ReadingDocuments, source_lines
 from check_reader_site import Page, check_readable_chapter
@@ -102,6 +102,8 @@ class LargeSignalReadingTests(unittest.TestCase):
                 self.assertEqual(len(page.ids),len(set(page.ids)))
                 self.assertNotRegex(markup,r'\*\*Proposition|\$\$|\\begin\{proposition\}')
             self.assertEqual(len(reader.readable_books[WORK]['references']),28)
+            scope_page=pages[SCOPE_PAGE]
+            self.assertTrue({'p'+str(n) for n in range(1,88)} <= set(scope_page.ids))
             # Every reading destination and all source/proof fragment links exist.
             for name,page in pages.items():
                 for link in page.links:
