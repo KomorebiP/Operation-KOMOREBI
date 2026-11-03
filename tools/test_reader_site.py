@@ -607,6 +607,20 @@ class ReaderSiteTests(unittest.TestCase):
         self.assertEqual(values['12'],r'$- \frac{5}{2}$')
         self.assertEqual(sorted(transcript_order(info,nodes)),list(range(49)))
 
+    def test_weighted_word_table_keeps_words_signs_weights_and_cutoff_status(self):
+        from worked_atlas_descriptions import FIGURES
+        from worked_atlas_drawings import drawing_nodes
+        from reader_atlas import transcript_order
+        root=Path(__file__).resolve().parents[1]
+        nodes=drawing_nodes((root/'papers/paper-ii/current/editable/traditional/visual_graphics/weighted_word_cutoff.tex').read_text(encoding='utf-8-sig'))
+        info=FIGURES['paper-ii']['weighted_word_cutoff'];table=info['blocks'][1]
+        self.assertEqual([nodes[i]['text'] for i in table['headers'][:3]],['word','cumulative weight','signed contribution'])
+        self.assertEqual(len(table['rows']),7)
+        self.assertEqual([nodes[i]['text'] for i in table['rows'][3]],['$ab$','$3$','$+8E_{00}$','keep'])
+        self.assertEqual([nodes[i]['text'] for i in table['rows'][-1]],['$bab$','$5$','$-32E_{10}$','zero mod 32'])
+        self.assertEqual(nodes[info['blocks'][0]['nodes'][0]]['text'],'$L=5$')
+        self.assertEqual(sorted(transcript_order(info,nodes)),list(range(32)))
+
     def test_incomplete_grids_and_bar_rows_keep_all_labels_without_guessing_cells(self):
         from reader_drawing_transcripts import drawing_nodes,matrix_label_blocks
         from reader_atlas import transcript_order

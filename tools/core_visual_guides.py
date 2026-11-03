@@ -82,7 +82,7 @@ def inventory(root,files):
         if hashlib.sha256(raw).hexdigest()!=figure['image_sha256']:raise ValueError('Changed visual directory preview: '+work)
         width,height=png_dimensions(raw)
         result.append(dict(work=work,label=config['label'],title=config['title'],number=len(result)+1,
-            short_title=short,summary=summary,units=units,unit_kind=kind,topics=topics,
+            short_title=short,summary=summary,units=units,unit_kind='visuals',source_unit_kind=kind,topics=topics,
             preview=dict(image=figure['image'],sha256=figure['image_sha256'],width=width,height=height),
             manuscript=config['index'],overview='collection/works/'+work+'.html',
             html_atlas=config.get('atlas_index'),

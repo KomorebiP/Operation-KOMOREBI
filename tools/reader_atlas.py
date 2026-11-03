@@ -1,6 +1,7 @@
 """Source-bound HTML edition of Paper IV's 26 visual-atlas plates."""
 import hashlib
 import html
+from reading_navigation import visual_title, visual_backlink, visual_position, visual_contents, visual_search_terms
 import json
 import posixpath
 import re
@@ -94,7 +95,7 @@ def atlas_tex(text):
 
 
 def prepare(reader):
-    reader.add(SOURCE,'Paper IV visual atlas source')
+    reader.add(SOURCE,'Paper IV visual guide source')
     reader.add(DEFINITIONS,'Paper IV atlas notation and layout definitions')
     raw=reader.site.read_source(reader.records[SOURCE])
     defs=reader.site.read_source(reader.records[DEFINITIONS])
@@ -128,7 +129,7 @@ def prepare(reader):
     for _,_,chapter in reader.readable_books['paper-iv']['chapters']:
         for node in chapter.nodes:
             linked=backlinks.get(chapter.url+'#'+node['id'],[])
-            chapter.related_readings[node['id']]=[('Atlas V'+str(p['number'])+': '+p['title'],p['url']) for p in linked]
+            chapter.related_readings[node['id']]=[(visual_backlink(p),p['url']) for p in linked]
     reader.atlas=dict(plates=selected,figures=figures,macros=macros,references=references,
                       backlinks=backlinks,
                       source_sha256=digest(raw),definitions_sha256=digest(defs))
@@ -240,17 +241,17 @@ def render(reader):
     aided_tables=set()
     pdf=next(r for r in reader.records.values() if r['work']=='paper-iv' and r.get('title')=='Visual guide (PDF)')
     for plate in atlas['plates']:
-        page=plate['url']; title='Paper IV atlas / V'+str(plate['number'])+': '+plate['title']
+        page=plate['url']; title = visual_title('Paper IV',plate)
         chapter=Chapter(atlas_tex(plate['body']),atlas['macros'])
         chapter.url=page
-        chapter.command_links={'pagerefV':{str(p['number']):(p['url'],'V'+str(p['number'])) for p in atlas['plates']}}
-        body='<p class="eyebrow">Paper IV visual atlas · V'+str(plate['number'])+' · '+e(plate['category'])+'</p><h1>'+e(plate['title'])+'</h1>'
+        chapter.command_links={'pagerefV':{str(p['number']):(p['url'],'Visual '+str(p['number'])) for p in atlas['plates']}}
+        body='<p class="eyebrow">'+visual_position('Paper IV',plate['number'],len(atlas['plates']))+ ' · '+e(plate['category'])+'</p><h1>'+e(plate['title'])+'</h1>'
         body+='<p>'+source_references(plate['locator'],atlas['references'],chapter.relative)+'</p>'
         body+=reader.work_routes('paper-iv',page)+neighbours(reader,plate)
         tools='<p><a href="'+reader.viewer_url(pdf,page,'page='+str(plate['number']+2))+'">Original plate in the PDF</a></p>'
-        tools+='<p>Evidence notes retain the source edition’s scope. <a href="v26.html">Read the evidence guide (V26).</a></p>'+reading_options('Show each passage’s permalink and original source. Manuscript links and plate navigation are always available.')
+        tools+='<p>Evidence notes retain the source edition’s scope. <a href="v26.html">Read the evidence guide.</a></p>'+reading_options('Show each passage’s permalink and original source. Manuscript links and plate navigation are always available.')
         body+=resources(tools)+'<p class="reading-start"><a href="#chapter-text">Start reading</a></p>'
-        toc='<nav class="chapter-contents" aria-label="Plate contents"><h2 id="contents">On this plate</h2><ul>'
+        toc='<nav class="chapter-contents" aria-label="Visual contents"><h2 id="contents">On this visual</h2><ul>'
         for node in chapter.nodes:
             if node['kind'] in HEADINGS or node['kind']=='figure':
                 toc+='<li><a href="#'+node['id']+'">'+e(node['title'] if node['kind'] in HEADINGS else 'Drawing and text description')+'</a></li>'
@@ -279,7 +280,7 @@ def render(reader):
         site.page(page,title,body)
         plain=plain_math(plate['body'])[0]
         descriptions=' '.join(atlas['figures'][n]['description']['description']+' '+' '.join(v['text'] for v in atlas['figures'][n]['nodes']) for n in re.findall(r'\\vfig\{([^{}]+)\}',plate['body']))
-        site.search.append(dict(title=title,group='Collection',kind='Papers and source',work_ids=['paper-iv'],url=page,text=plain+' '+plain_math(descriptions)[0]))
+        site.search.append(dict(title=title,group='Collection',kind='Papers and source',work_ids=['paper-iv'],url=page,text=visual_search_terms(plate)+' '+plain+' '+plain_math(descriptions)[0]))
         reports.append(dict(number=plate['number'],url=page,start_line=plate['line'],end_line=plate['end_line'],
                             source_math_expressions=len(original_math(plate['body'])),math_expressions=len(expected),
                             math_sequence_sha256=digest(json.dumps(expected,ensure_ascii=False).encode()),
@@ -290,13 +291,13 @@ def render(reader):
                 macros=atlas['macros'],plates=reports,manuscript_backlinks=atlas['backlinks'],figures={name:dict(**f['receipt'],node_order=f['order'],nodes=f['nodes']) for name,f in atlas['figures'].items()},
                 new_proof_review=False,new_lean_execution=False,new_mathematical_example_execution=False)
     site.write(REPORT,json.dumps(report,ensure_ascii=False,indent=2)+'\n')
-    body='<p class="eyebrow">Paper IV · Visual atlas</p><h1>Explore the 26 atlas plates</h1><p>Read the worked models with their original drawings, selectable equations, text descriptions, and tables. Each plate links to the manuscript statements it illustrates.</p>'
+    body='<p class="eyebrow">Paper IV · Visual guide</p><h1>Explore the 26 visuals</h1><p>Read the worked models with their original drawings, selectable equations, text descriptions, and tables. Each visual links to the manuscript statements it illustrates.</p>'
     body+=reader.work_routes('paper-iv',INDEX)+'<p><a href="'+site.rel(pdf['url'],INDEX)+'">Visual guide PDF</a></p>'
-    body+='<p>For algebra, follow V3–V16. For zero geometry, follow V17–V24. V25 follows one coefficient through the whole calculation, and V26 explains the evidence.</p><nav class="chapter-contents" aria-label="Atlas plates"><h2>Choose a plate</h2><ol>'
-    body+=''.join('<li><a href="'+site.rel(p['url'],INDEX)+'">V'+str(p['number'])+' · '+e(p['title'])+'</a></li>' for p in atlas['plates'])
-    body+='</ol></nav><p>The source’s test and release statements describe the retained atlas edition. This HTML conversion adds reading aids and does not establish new mathematical or formal verification.</p>'
-    site.page(INDEX,'Paper IV visual atlas',body)
-    site.search.append(dict(title='Paper IV / Visual atlas: 26 HTML plates',group='Collection',kind='Papers and source',work_ids=['paper-iv'],url=INDEX,text='Accessible atlas diagrams descriptions equations tables '+' '.join(p['title'] for p in atlas['plates'])))
+    body+='<p>Start with <a href="v03.html">the algebra of cyclic functions</a>, then explore <a href="v17.html">zero geometry</a>. <a href="v25.html">The coefficient walkthrough</a> follows one coefficient through the whole calculation; <a href="v26.html">the evidence guide</a> explains the recorded checks.</p>'
+    body+=visual_contents(atlas['plates'],INDEX,site.rel,lambda p:reader.viewer_url(pdf,INDEX,'page='+str(p['number']+2)))
+    body+='<p>The source’s test and release statements describe the retained atlas edition. This HTML conversion adds reading aids and does not establish new mathematical or formal verification.</p>'
+    site.page(INDEX,'Paper IV visual guide',body)
+    site.search.append(dict(title='Paper IV / Visual guide: 26 visuals',group='Collection',kind='Papers and source',work_ids=['paper-iv'],url=INDEX,text='Accessible atlas diagrams descriptions equations tables '+' '.join(p['title'] for p in atlas['plates'])))
 
 
 def verify(root, documents, pages):
@@ -354,7 +355,7 @@ def verify(root, documents, pages):
         assert [m[2:-2] for m in parsed.expressions]==[expand_math(m,macros) for m in expected],plate['url']
         chapter=Chapter(atlas_tex(plate['body']),macros)
         chapter.url=plate['url']
-        chapter.command_links={'pagerefV':{str(p['number']):(p['url'],'V'+str(p['number'])) for p in selected}}
+        chapter.command_links={'pagerefV':{str(p['number']):(p['url'],'Visual '+str(p['number'])) for p in selected}}
         for node in chapter.nodes:
             if node['kind'] in {'table','tabularx'}:
                 key=(plate['number'],node['id'])

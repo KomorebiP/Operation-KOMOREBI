@@ -14,7 +14,7 @@ from readable_chapters import (Chapter, HEADINGS, MATH_PATTERN, PANELS, clean_te
                                group, manuscript_macros, original_math,
                                passage_links, plain_math, presentation_tex,
                                reading_options, render_table)
-from reading_navigation import atlas_config, navigation, outline, resources
+from reading_navigation import atlas_config, navigation, outline, resources, visual_title, visual_backlink, visual_position, visual_contents, visual_search_terms
 from reader_documents import png_dimensions
 from render_paper_vi_atlas import CROPS, PDF, PDF_SHA256
 
@@ -199,7 +199,7 @@ def prepare(reader):
             target = chapter.url+'#'+node['id']
             resolved[plate['number']].append((' '.join(key),target))
             chapter.related_readings.setdefault(node['id'],[]).append(
-                ('Atlas V'+str(plate['number'])+': '+plate['title'],plate['url']))
+                (visual_backlink(plate),plate['url']))
     reader.paper_vi_atlas = dict(plates=selected,figures=figures,macros=macros,
                                  references=resolved,source_sha256=digest(raw),
                                  definitions_sha256=digest(definitions))
@@ -218,20 +218,20 @@ def render(reader):
     aided = set()
     for plate in atlas['plates'][:HTML_COUNT]:
         number,page = plate['number'],plate['url']
-        title = 'Paper VI atlas / V'+str(number)+': '+plate['title']
+        title = visual_title('Paper VI',plate)
         chapter = AtlasChapter(atlas_tex(plate['body']),atlas['macros'])
         chapter.url = page
-        chapter.command_links = {'pagerefV':{str(p['number']):(p['url'],'V'+str(p['number'])) for p in atlas['plates']}}
-        body = '<p class="eyebrow">Paper VI visual atlas · V'+str(number)+' · '+e(plate['category'])+'</p><h1>'+e(plate['title'])+'</h1>'
+        chapter.command_links = {'pagerefV':{str(p['number']):(p['url'],'Visual '+str(p['number'])) for p in atlas['plates']}}
+        body = '<p class="eyebrow">'+visual_position('Paper VI',plate['number'],HTML_COUNT)+ ' · '+e(plate['category'])+'</p><h1>'+e(plate['title'])+'</h1>'
         body += '<p>'+e(plate['locator'])+'</p>'+reader.work_routes('paper-vi',page)+neighbours(reader,plate)
-        body += '<nav class="document-routes" aria-label="Manuscript passages illustrated on this plate">'+''.join(
+        body += '<nav class="document-routes" aria-label="Manuscript passages illustrated here">'+''.join(
             '<a href="'+site.rel(target,page)+'">'+e(label)+'</a>' for label,target in atlas['references'][number])+'</nav>'
         if number in (28,42):
             body += '<p><a href="'+site.rel('collection/works/paper-vi.html#evidence',page)+'">Recorded evidence for Paper VI</a></p>'
         tools = '<p><a href="'+reader.viewer_url(pdf,page,'page='+str(number+2))+'">Original plate in the visual guide PDF</a> · <a href="'+reader.resolve(SOURCE,page,'L'+str(plate['line']))+'">Original atlas source</a></p>'
         tools += reading_options('Show each passage’s permalink and source line. Manuscript links and plate navigation remain visible.')
         body += resources(tools)+'<p class="reading-start"><a href="#chapter-text">Start reading</a></p>'
-        toc = '<nav class="chapter-contents" aria-label="Plate contents"><h2 id="contents">On this plate</h2><ul>'
+        toc = '<nav class="chapter-contents" aria-label="Visual contents"><h2 id="contents">On this visual</h2><ul>'
         for node in chapter.nodes:
             if node['kind'] in HEADINGS or node['kind']=='figure':
                 toc += '<li><a href="#'+node['id']+'">'+e(node['title'] if node['kind'] in HEADINGS else 'Drawing and text description')+'</a></li>'
@@ -263,7 +263,7 @@ def render(reader):
             raise ValueError('Paper VI atlas mathematics differ on V'+str(number))
         site.page(page,title,body)
         site.search.append(dict(title=title,group='Collection',kind='Papers and source',work_ids=['paper-vi'],
-                                url=page,text=plain_math(plate['body'])[0]+' '+plate['title']))
+                                url=page,text=visual_search_terms(plate)+' '+plain_math(plate['body'])[0]+' '+plate['title']))
         reports.append(dict(number=number,url=page,start_line=plate['line'],end_line=plate['end_line'],
                             math_expressions=len(expected),math_sequence_sha256=digest(json.dumps(expected,ensure_ascii=False).encode()),
                             nodes=[{k:n[k] for k in ('kind','id','line','end_line')} for n in chapter.nodes]))
@@ -276,18 +276,12 @@ def render(reader):
                   manuscript_references=atlas['references'],new_proof_review=False,new_lean_execution=False,
                   new_mathematical_example_execution=False,new_tex_build=False)
     site.write(REPORT,json.dumps(report,ensure_ascii=False,indent=2)+'\n')
-    body = '<p class="eyebrow">Paper VI · Visual atlas</p><h1>Explore the 42 atlas plates</h1>'
-    body += '<p>Read all 42 worked plates with their original drawings, selectable equations, descriptions, and label transcripts. Each mathematical plate links to the manuscript passages it illustrates; the two evidence guides retain their source edition’s scope.</p>'+reader.work_routes('paper-vi',INDEX)
-    body += '<nav class="chapter-contents" aria-label="Atlas plates"><h2>Choose a plate</h2><ol>'
-    for plate in atlas['plates']:
-        number = plate['number']
-        body += '<li id="v'+str(number).zfill(2)+'"><strong>V'+str(number)+': '+e(plate['title'])+'</strong><p>'
-        if number<=HTML_COUNT:
-            body += '<a href="'+site.rel(plate['url'],INDEX)+'">Read V'+str(number)+' in HTML</a> · '
-        body += '<a href="'+reader.viewer_url(pdf,INDEX,'page='+str(number+2))+'">Open V'+str(number)+' in the PDF</a></p></li>'
-    body += '</ol></nav><p><a href="'+reader.resolve(SOURCE,INDEX)+'">Complete selectable atlas source</a> · <a href="'+site.rel(REPORT,INDEX)+'">Conversion records</a></p>'
-    site.page(INDEX,'Paper VI visual atlas',body)
-    site.search.append(dict(title='Paper VI / Visual atlas',group='Collection',kind='Papers and source',work_ids=['paper-vi'],
+    body = '<p class="eyebrow">Paper VI · Visual guide</p><h1>Explore the 42 visuals</h1>'
+    body += '<p>Read all 42 visuals with their original drawings, selectable equations, descriptions, and label transcripts. Each worked example links to the manuscript passages it illustrates; the two evidence guides retain their source edition’s scope.</p>'+reader.work_routes('paper-vi',INDEX)
+    body += visual_contents(atlas['plates'],INDEX,site.rel,lambda p:reader.viewer_url(pdf,INDEX,'page='+str(p['number']+2)))
+    body += '<p><a href="'+reader.resolve(SOURCE,INDEX)+'">Complete selectable atlas source</a> · <a href="'+site.rel(REPORT,INDEX)+'">Conversion records</a></p>'
+    site.page(INDEX,'Paper VI visual guide',body)
+    site.search.append(dict(title='Paper VI / Visual guide',group='Collection',kind='Papers and source',work_ids=['paper-vi'],
                             url=INDEX,text=' '.join(p['title'] for p in atlas['plates'])))
 
 

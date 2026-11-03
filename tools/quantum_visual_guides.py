@@ -45,7 +45,7 @@ def inventory(root,files):
     return dict(work=WORK,label='Quantum and Circuits',title=BOOK['title'],number=None,
         short_title='Quantum arithmetic and circuit diagrams',
         summary='Two complete visual sequences: 25 pages of quantum arithmetic and 25 pages of circuit obstructions.',
-        units=50,unit_kind='visual pages',topics='quantum arithmetic circuits Fourier measurement gates boundaries restoration',
+        units=50,unit_kind='visuals',source_unit_kind='visual pages',topics='quantum arithmetic circuits Fourier measurement gates boundaries restoration',
         preview=dict(image=figure['image'],sha256=figure['image_sha256'],width=width,height=height),
         manuscript=BOOK['index'],overview='collection/works/'+WORK+'.html',html_atlas=PAGE,
         visual_pdf=record['url'],pdf_source=PDF,pdf_sha256=record['sha256'],integrated_pdf=True,
