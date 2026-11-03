@@ -1,0 +1,24 @@
+import CoupledGrowthTypes
+
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.realComponent_positive
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.canonical_growth_ratio_bounds
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.canonical_growth_ratio_eventually
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.canonical_growth_ratio_bounded
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.real_type_sandwich
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.canonical_type_bounds
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.canonical_types_positive
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.loglog_ratio_sandwich
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.tendsto_loglog_of_ratio_bounds
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.canonical_radial_exponent_limit
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.canonical_radial_order
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.component_spherical_maximum
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.component_real_norm
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.norm_growth_ratio_eventually_eq
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.norm_type_identification
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.canonical_norm_radial_limit
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.maximumModulus_eq
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.maximum_growth_ratio_eventually_eq
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.maximum_type_identification
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.canonical_maximum_type_bounds
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.canonical_maximum_radial_limit
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.canonical_maximum_order

@@ -1,0 +1,28 @@
+import CoupledTypeProportions
+
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.affine_scale_tendsto
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.affine_power_ratio_tendsto
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.lower_comparison_of_tendsto
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.upper_comparison_of_tendsto
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.canonical_type_envelopes
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.scaled_log_factorization
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.scaled_type_envelopes
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.log_power_correction_tendsto
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.lower_type_row
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.upper_type_row
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.canonical_lower_type_superinvariant
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.canonical_upper_type_subinvariant
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.positive_dot_rigidity
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.left_eigenvector_preserves_dot
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.canonical_type_fixed_vectors
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.characteristic_fixed_proportion
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.canonical_type_proportions
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.canonical_positive_type_proportions
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.characteristic_fixed_ratios
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.canonical_type_ratios
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.ordinary_type_limit_iff
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.type_equality_iff_scalar_equality
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.canonical_type_limit_equivalence
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.canonical_type_limit_vector
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.canonical_maximum_type_proportions
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.canonical_maximum_type_limit_equivalence

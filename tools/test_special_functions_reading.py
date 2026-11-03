@@ -87,6 +87,10 @@ class SpecialFunctionsReadingTests(unittest.TestCase):
             self.assertEqual(result,dict(reading_sections=37,mathematical_expressions=2123))
             self.assertEqual(len(reader.images),32)
             self.assertIn('Appendix J.',(output/INDEX).read_text(encoding='utf-8'))
+            from html import escape
+            assessment=next(c for c in json.loads((ROOT/'manifests/project-status.json').read_bytes())['components'] if c['id']==WORK)
+            self.assertIn(escape(assessment['scope']),(output/INDEX).read_text(encoding='utf-8'))
+            self.assertNotIn('covers 68 named declarations',(output/INDEX).read_text(encoding='utf-8'))
             chapter=next(p for p in output.rglob('dilation-full.html'))
             chapter.write_text(chapter.read_text(encoding='utf-8').replace('c_-','c_+',1),encoding='utf-8')
             with self.assertRaisesRegex(AssertionError,'HTML math changed'):

@@ -1,0 +1,21 @@
+import CoupledRescaling
+
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.denseOddComplex_odd
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.complex_odd_series_hasFPowerSeriesAt
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.complex_odd_coefficients_eq
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.rescaling_coefficient_identity
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.rescaling_forces_defect_zero
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.scalar_components_equal
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.scalarT_solution
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.reductionScale_positive_sq
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.reductionScale_surface
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.effective_scalar_scales
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.scalar_rescaled_solution
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.reductionRoot_positive_sq
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.coupled_scalar_representation
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.canonical_component_rescaling
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.component_rescaling_iff_defect
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.component_rescaling_iff_surfaces
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.scalarT_unique
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.scalarT_symm
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.boundary_entire_collision

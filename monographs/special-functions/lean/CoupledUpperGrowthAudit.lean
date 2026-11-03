@@ -1,0 +1,36 @@
+import CoupledUpperGrowth
+
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.full_radius_upper_from_deriv
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.real_axis_full_upper
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.real_axis_at_one_le_two
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.upperRadius_ge_one
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.upperRadius_child
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.upperSeed_ge_one
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.real_axis_upper_ladder
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.upperLogSeed_recurrence
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.upperSeed_log_le
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.scaleDelay_positive
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.scaleDelay_bounds
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.upperCorrection_positive
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.upperCorrection_rows
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.exp_one_lt_three
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.exists_upper_seed_index
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.upper_seed_exp_radius
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.real_axis_upper_log_seed
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.log_upper_from_full
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.real_axis_log_full_upper
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.upperSeedBudget_positive
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.upperPowerConstant_positive
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.upper_power_seed
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.exp_sub_scaleDelay
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.real_axis_log_delayed_upper
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.exp_weight_shift
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.real_log_delay_induction
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.upper_power_step
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.coupled_upper_log_power
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.canonical_upper_log_power
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.upperSeedIndex_spec
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.canonicalUpperCoefficient_positive
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.canonical_upper_growth_ratio
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.canonical_two_sided_growth_ratio
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.canonical_upper_norm_power

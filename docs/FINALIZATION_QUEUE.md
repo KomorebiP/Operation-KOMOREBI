@@ -245,6 +245,8 @@ Publication completion and checked subresults leave wider formal or implementati
 
 **Done when:** Choose one precise next theorem/refinement contract, establish its dependencies, and admit it only with corresponding source and verification evidence.
 
+**Progress:** Special Functions SF-LEAN-B12 adds 26 theorem declarations, completing the registered canonical F.3 positive Perron type proportions, explicit ratios and conditional component-limit equivalence. The registered scope is 299 names. All 51 source-bound replay steps pass across twelve coupled modules. Actual formal/assessment I/O is recorded. Ancillary F identities, H.1 operator classification, I-J certificates and broader A-E analytic coverage remain open.
+
 Related works and source records: [Paper III: Typed Transfer, Nonlinear Packets, and Obstruction Theory](works/paper-iii.md) · [Special Functions](works/monographs-special-functions.md) · [Quantum and Circuits](works/monographs-quantum-and-circuits.md) · [Signal Reconstruction](works/signal-reconstruction.md) · [COS Method: formal continuation](works/monographs-cos-method-formal-continuation.md) · [p-adic Canonical Realization](works/padic-canonical-realization.md) · [Model-Theory Normalization](works/model-theory-normalization.md).
 
 <a id="f12"></a>

@@ -234,11 +234,13 @@ Reviewed essay with written arguments and 40 finite exact-check groups. No new L
 
 **Reading edition complete** · Lean: **Selected results recorded** · Confidence basis: **Recorded formal evidence**
 
-Proofread reading volumes plus 68 named formal declarations in a finite core and Block 1. The full analytic monograph is not formalized.
+Proofread reading volumes plus 299 named theorem declarations: 39 inherited finite-core names and 29, 21, 19, 16, 13, 19, 23, 22, 16, 34, 22, 26 in Blocks01 through 12. Registered canonical F.1-F.3 contracts, G.1 component-rescaling equivalence and guarded G.2 inverse are complete. F.3 gives positive ordered Perron type proportions, exact component ratios and equivalence of ordinary type-limit existence; convergence is not asserted unconditionally. Ancillary Appendix F identities, H.1 operator classification, I-J resolution/evaluator refinement and broad A-E analytic coverage remain open; no whole-book coverage percentage is established.
 
-**Next step:** Select the next analytic theorem family and state its formal dependencies before extending the finite core.
+**Next step:** Prove ancillary Appendix F exact component equality/scalar reduction, symmetric sinh closed form and remaining parameter/example wrappers; retain H.1 operator classification, I-J certificates and broader analytic development in the source-bound remaining-work inventory.
 
 [Return to this work: paper, proofs, Lean, and code](works/monographs-special-functions.md)
+
+[Latest written review and its scope](SPECIAL_FUNCTIONS_TYPE_PROPORTIONS_BLOCK12.md)
 
 [Source directory](../monographs/special-functions) · [LEAN_STATUS.md](../monographs/special-functions/LEAN_STATUS.md) · [README.md](../monographs/special-functions/README.md) · [lean/README.md](../monographs/special-functions/lean/README.md)
 
