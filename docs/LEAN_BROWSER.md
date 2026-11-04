@@ -9,9 +9,29 @@ The homepage opens this general workspace without selecting a paper or source
 file in the URL. The former `lean/playground.html` address redirects to the same
 workspace; the Lean source index and source actions use this local compiler.
 
-The picker offers 17 prepared workspaces across ten existing reading editions:
-Papers II, III, VII, IX, X, XI and XII, Proof Path Theory, Komorebi Space and
+The picker offers 19 prepared workspaces across eleven existing reading editions:
+Papers I, II, III, VII, IX, X, XI and XII, Proof Path Theory, Komorebi Space and
 Special Functions.
+
+Paper I adds its original basic algebra checks and complete projector-calculus
+core. These two workspaces use a visible, generated import-only profile in place
+of the much larger retained `KomorebiVerification.MathlibImports` umbrella. The
+profile adds no mathematical declarations or assumptions. Original proof text,
+source hashes and downloads stay unchanged; this does not reproduce the complete
+retained import environment or verify the entire paper. Other retained Paper I
+routes keep their full-import availability checks.
+
+The profile's 17 imports must be available in the pinned binary runtime and belong
+to the original umbrella's transitive imports in the pinned Mathlib sources.
+Preparation checks both conditions and the exact retained umbrella hash. The
+profile is a separate editable file in the workspace, is checked before the
+proof, and requires a fresh completed frontend check on each Run. An edited
+profile cannot reuse old checked dependencies. Missing declarations and tactics
+remain Lean errors. The unchanged basic and projector-core sources passed actual
+browser checks; appending a false equality to the core produced a normal `rfl`
+error. No new compiler binary or library artifact is required.
+The [recorded browser checks](../verification/browser-lean/paper-i-import-profile-2026-11-04.json)
+bind these observations to the profile, original sources and adapter files.
 The complete retained files are listed in
 `tools/lean_workspaces.py`; the picker groups them by reading edition. Recovery
 also compiles its actual local `ProofPath.Compression` import. These are experiments in the browser

@@ -4,12 +4,23 @@ import html
 import json
 import math
 from pathlib import Path
+import posixpath
 import shutil
 from lean_workspaces import WORKSPACES, RESIDUAL, COMPRESSION, RECOVERY, COMPAT_SOURCE, mathlib_seeds, mathlib_seed_groups
 from lean_runner import imports, safe_path
+from lean_browser_imports import uses_profile, validate_profile, checked_original, profile_definition, PAPER_I_PATH, PROFILE_ASSET
 
 PAGE='lean/browser/index.html'
 BASE='lean/browser/'
+
+
+def import_profile_files(original, relative):
+    profile=profile_definition()
+    generated=dict(module=profile['module'],text=profile['source'],sha256=profile['sha256'],
+        generated=True,syntaxCheck='frontend',inspect=relative(PROFILE_ASSET),download=relative(PROFILE_ASSET))
+    notice={k:profile[k] for k in ('id','module','original_path','original_sha256')}
+    notice.update(original_inspect=relative(original['url']),original_download=relative(original['file_url']))
+    return generated,notice
 
 
 def action(site,page,*,source=None,work=None,retained=False):
@@ -73,12 +84,24 @@ def build(reader,runtime):
     runtime_record=verify_runtime(runtime)
     missing=set(mathlib_seeds(site.root))-set(runtime_record.get('mathlib_modules',[]))
     if missing:raise ValueError('Missing browser Mathlib imports: '+', '.join(sorted(missing)))
+    if any(uses_profile(example['id']) for example in examples):
+        profile=validate_profile(site.root,set(runtime_record['mathlib_modules'])|set(runtime_record.get('core_modules',[])))
+        original=records[PAPER_I_PATH]
+        checked_original(site.read_source(original))
+        site.write(PROFILE_ASSET,profile['source'])
+        for example in examples:
+            if uses_profile(example['id']):
+                generated,notice=import_profile_files(original,lambda target:site.rel(target,PAGE))
+                example['files'].insert(0,generated);example['import_profile']=notice
     seed_groups=mathlib_seed_groups(site.root)
     expanded_plan=None
     if runtime_record.get('module_pilots'):
         from lean_download_plan import download_plan
         expanded_plan=download_plan(runtime,runtime_record,'real-analysis-layer.json')
     for example in examples:
+        if uses_profile(example['id']):
+            example['mathlib_manifest']='real-analysis-layer.json'
+            continue
         seeds=seed_groups.get(example['id'])
         if not seeds:continue
         available=runtime_record.get('workspace_modules',{}).get(example['id'],[])
@@ -134,6 +157,7 @@ def build(reader,runtime):
 <div class="lean-local-selectors"><div><label for="local-lean-workspace">Published workspace</label><select id="local-lean-workspace" data-local-example>{opts}</select></div><div><label for="local-lean-file">File to edit</label><select id="local-lean-file" data-local-file></select></div></div>
 <nav class="lean-actions" aria-label="Original proof routes"><a data-local-inspect>Inspect original source</a><a data-local-download download>Download original</a></nav>
 <p class="lean-local-meta" data-local-source></p>
+<p class="lean-local-meta" data-local-profile-note hidden>This workspace checks the original proof text with a browser import subset, shown in the file picker. It does not check the entire paper or its <a data-local-profile-original>complete retained import module</a>.</p>
 <details data-local-route hidden><summary>Browser import route and compatibility</summary><p>These retained sources run in the pinned browser environment. An available import route does not establish that the proof passes here.</p><pre data-local-route-notes></pre></details>
 <details data-local-compat hidden><summary>Browser version compatibility lemma included</summary><p>Lean checks this extra lemma alongside the workspace's final file. It supplies a name used by the paper that the older browser compiler lacks. Selected checks of earlier files do not add it. The original source below is unchanged.</p><pre data-local-compat-code></pre><p><a href="compatibility.lean" download>Download the compatibility lemma</a></p></details>
 <label class="lean-local-mode" for="local-frontend"><input id="local-frontend" type="checkbox" data-local-frontend aria-describedby="local-frontend-help"> Support syntax defined in this file (experimental)</label>
@@ -170,15 +194,26 @@ def verify(root,documents):
     assert len(data['examples'])==len(WORKSPACES)
     for example,expected in zip(data['examples'],WORKSPACES):
         assert example['id']==expected[0]
-        assert [(f['module'],f['path']) for f in example['files']]==expected[3]
+        proof_files=example['files']
+        if uses_profile(example['id']):
+            original=records[PAPER_I_PATH]
+            checked_original((root/original['file_url']).read_bytes())
+            generated,notice=import_profile_files(original,lambda target:posixpath.relpath(target,posixpath.dirname(PAGE)))
+            assert example['files'][0]==generated and example['import_profile']==notice
+            assert (root/PROFILE_ASSET).read_bytes()==profile_definition()['source'].encode()
+            proof_files=example['files'][1:]
+        else:
+            assert 'import_profile' not in example
+        assert [(f['module'],f['path']) for f in proof_files]==expected[3]
         if any(name.startswith('Mathlib.') for f in example['files'] for name in imports(f['text'])):
-            assert example['mathlib_manifest']==runtime_record.get('workspace_manifest_aliases',{}).get(example['id'],'workspaces/'+example['id']+'.json')
+            expected_manifest='real-analysis-layer.json' if uses_profile(example['id']) else runtime_record.get('workspace_manifest_aliases',{}).get(example['id'],'workspaces/'+example['id']+'.json')
+            assert example['mathlib_manifest']==expected_manifest
         if example['id']=='proof-path-recovery':
             assert example['compatibility']['source']==COMPAT_SOURCE
             assert example['compatibility']['sha256']==hashlib.sha256(COMPAT_SOURCE.encode()).hexdigest()
             assert (root/BASE/'compatibility.lean').read_text(encoding='utf-8')==COMPAT_SOURCE
         else:assert 'compatibility' not in example
-        for file in example['files']:
+        for file in proof_files:
             r=records[file['path']];raw=(root/r['file_url']).read_bytes()
             assert file['sha256']==r['sha256']==hashlib.sha256(raw).hexdigest()
             assert file['text']==raw.decode('utf-8-sig').replace('\r\n','\n')

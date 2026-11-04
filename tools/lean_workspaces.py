@@ -1,6 +1,7 @@
 """Prepared browser workspaces, restricted to retained reading-edition sources."""
 from pathlib import Path
 from lean_runner import EXTERNAL_ROOTS, imports, safe_path
+from lean_browser_imports import uses_profile, PAPER_I_MODULE
 
 RESIDUAL='papers/paper-x/current/current_continuation/lean/PaperX/Residual.lean'
 COMPRESSION='monographs/proof-path-theory/formal/ProofPath/Compression.lean'
@@ -14,6 +15,8 @@ theorem dite_eq_left {α : Sort u} {p : Prop} [Decidable p]
 '''
 WORKSPACES=[
     ('paper-x-residual','Paper X · Residual partition','paper-x', [('PaperX.Residual',RESIDUAL)]),
+    ('paper-i-projector-core','Paper I · Projector calculus core with browser imports','paper-i', [('KomorebiVerification.ProjectorCore','papers/paper-i/current/formal/current/KomorebiVerification/ProjectorCore.lean')]),
+    ('paper-i-basic','Paper I · Basic algebra with browser imports','paper-i', [('KomorebiVerification.Basic','papers/paper-i/current/formal/current/KomorebiVerification/Basic.lean')]),
     ('proof-path-compression','Proof Path Theory · Compression','proof-path-theory', [('ProofPath.Compression',COMPRESSION)]),
     ('proof-path-recovery','Proof Path Theory · Recovery with its local import','proof-path-theory', [('ProofPath.Compression',COMPRESSION),('ProofPath.Recovery',RECOVERY)]),
     ('paper-ii-linear-defects','Paper II · Linear defects','paper-ii', [('PaperII.LinearDefects','papers/paper-ii/current/formal/current/KomorebiVerification/PaperII/LinearDefects.lean')]),
@@ -39,6 +42,10 @@ def mathlib_seeds(root,workspaces=None):
     for key,_,_,files in WORKSPACES if workspaces is None else workspaces:
         if key in ids:raise ValueError('Duplicate browser workspace: '+key)
         ids.add(key);available=set()
+        if uses_profile(key):
+            # These profiles require the existing complete frontend layer. Their
+            # pinned imports are validated separately; no duplicate cohort is built.
+            available.add(PAPER_I_MODULE)
         for module,path in files:
             safe_path(path)
             if module in available:raise ValueError('Duplicate project module: '+module)
@@ -52,4 +59,4 @@ def mathlib_seeds(root,workspaces=None):
 
 def mathlib_seed_groups(root):
     return {workspace[0]:seeds for workspace in WORKSPACES
-            if (seeds:=mathlib_seeds(root,[workspace]))}
+            if not uses_profile(workspace[0]) and (seeds:=mathlib_seeds(root,[workspace]))}

@@ -10,6 +10,7 @@ import zipfile
 from lean_browser import BASE, PAGE, WORKSPACES, build, verify, verify_runtime, action
 from prepare_lean_wasm import UPSTREAM, LEAN, MATHLIB, pack, mathlib_closure,mathlib_closures,mathlib_sources
 from lean_workspaces import mathlib_seeds,mathlib_seed_groups
+from lean_browser_imports import PAPER_I_PATH,PAPER_I_IMPORTS
 
 
 class LeanBrowserTests(unittest.TestCase):
@@ -23,8 +24,13 @@ class LeanBrowserTests(unittest.TestCase):
                 records[path]=r
                 dest=out/r['file_url'];dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(raw)
                 works.setdefault(work,{})[path]=r
+        raw=(root/PAPER_I_PATH).read_bytes()
+        r=dict(repository_path=PAPER_I_PATH,work='paper-i',sha256=hashlib.sha256(raw).hexdigest(),
+               url='read/paper-i/imports.html',file_url='files/paper-i-imports.lean')
+        records[PAPER_I_PATH]=r;works.setdefault('paper-i',{})[PAPER_I_PATH]=r
+        dest=out/r['file_url'];dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(raw)
         def write(path,text):
-            p=out/path;p.parent.mkdir(parents=True,exist_ok=True);p.write_text(text,encoding='utf-8')
+            p=out/path;p.parent.mkdir(parents=True,exist_ok=True);p.write_text(text,encoding='utf-8',newline='\n')
         site=SimpleNamespace(root=root,output=out,revision='a'*40,search=[],
              rel=lambda target,page:posixpath.relpath(target,posixpath.dirname(page)),write=write,
              page=lambda path,title,body:write(path,body),read_source=lambda r:(root/r['repository_path']).read_bytes())
@@ -39,7 +45,7 @@ class LeanBrowserTests(unittest.TestCase):
         for key in groups:
             name='lean-mathlib/workspaces/'+key+'.json';p=runtime/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(b'{}')
             files[name]=dict(size=p.stat().st_size,sha256=hashlib.sha256(p.read_bytes()).hexdigest())
-        (runtime/'SOURCE.json').write_text(json.dumps(dict(upstream=UPSTREAM,lean=LEAN,mathlib=MATHLIB,files=files,bytes=sum(f['size'] for f in files.values()),mathlib_modules=mathlib_seeds(root),workspace_modules=groups)))
+        (runtime/'SOURCE.json').write_text(json.dumps(dict(upstream=UPSTREAM,lean=LEAN,mathlib=MATHLIB,files=files,bytes=sum(f['size'] for f in files.values()),mathlib_modules=sorted(set(mathlib_seeds(root))|set(PAPER_I_IMPORTS)),workspace_modules=groups)))
         from lean_execution import identity
         catalog=dict(sources=[dict(id=identity(p),path=p,work=r['work'],label=r['work'],url=r['url']) for p,r in records.items()],
                      inputs={p:dict(sha256=r['sha256'],size=(root/p).stat().st_size,work=r['work']) for p,r in records.items()})
@@ -62,6 +68,17 @@ class LeanBrowserTests(unittest.TestCase):
             self.assertEqual(verify(out,dict(files=records))['source_identity'],'PASS')
             data=json.loads((out/BASE/'examples.json').read_bytes())
             self.assertEqual(len(next(e for e in data['examples'] if e['id']=='proof-path-recovery')['files']),2)
+            paper=next(e for e in data['examples'] if e['id']=='paper-i-projector-core')
+            self.assertTrue(paper['files'][0]['generated'])
+            self.assertEqual(paper['files'][0]['syntaxCheck'],'frontend')
+            self.assertEqual(paper['import_profile']['original_path'],PAPER_I_PATH)
+            self.assertIn('does not check the entire paper',(out/PAGE).read_text(encoding='utf8'))
+            example_file=out/BASE/'examples.json'
+            original=example_file.read_bytes()
+            paper['files'][0]['text']+='\naxiom forged : False\n'
+            example_file.write_text(json.dumps(data),encoding='utf8')
+            with self.assertRaises(AssertionError):verify(out,dict(files=records))
+            example_file.write_bytes(original)
             catalog=out/BASE/'catalog.json';value=json.loads(catalog.read_bytes())
             value['entries'][0]['library']=['Mathlib.Unrequested'];catalog.write_text(json.dumps(value))
             with self.assertRaises(AssertionError):verify(out,dict(files=records))

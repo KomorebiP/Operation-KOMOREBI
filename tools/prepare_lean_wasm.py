@@ -207,6 +207,8 @@ def prepare(source, output, mathlib_archive):
     core_modules={p[:-6].replace('/','.') for p in set(core['files'])|set(expected) if p.endswith('.olean')}
     upstream_modules={p[:-6].replace('/','.') for p in upstream['files'] if p.endswith('.olean')}
     library_sources=source_library(members,upstream_modules|core_modules)
+    from lean_browser_imports import validate_profile
+    validate_profile(collection, upstream_modules|core_modules, members)
     # Do not retain the full Mathlib source tree while large binary packs inflate.
     del members
     layer=dict(leanCommit=LEAN,mathlibCommit=MATHLIB,version='komorebi-browser-pilot-2',files=[],packs=[])
