@@ -4,7 +4,7 @@
 
 These companions connect selected formulas in the reading site to explicit Lean statements. The source files, claim maps, compiler diagnostics, and replay commands identify exactly what was checked. The mathematical scope belongs to the individual theorems.
 
-The current batch contains **58 named theorem declarations and 13 definitions** across four modules. These totals include helper lemmas and three finite data checks. Reused K-COS prerequisites and positive controls are excluded from the new theorem total.
+The initial companions contain **58 named theorem declarations and 13 definitions** across four modules. These totals include helper lemmas and three finite data checks. Reused K-COS prerequisites and positive controls are excluded from the new theorem total.
 
 | Module | Theorem declarations | Definitions |
 |---|---:|---:|
@@ -12,6 +12,8 @@ The current batch contains **58 named theorem declarations and 13 definitions** 
 | Residue packets and additive transport | 19 | 3 |
 | Stirling polynomial recovery and obstruction | 11 | 4 |
 | K-COS logarithmic certification | 15 | 3 |
+
+The subsequent [polynomial transport companion](LEAN_POLYNOMIAL_TRANSPORT.md) adds **66 named theorem declarations and 10 definitions**. It constructs the actual falling-factorial basis equivalence, proves the complex polynomial roots-of-unity average, connects the two coordinate descriptions, and proves the transported product and its cyclic packet convolution. Its declaration count includes supporting lemmas, explicit witnesses, and one restated classical Stirling helper.
 
 ## Factorial lanes and coefficient packets
 
@@ -27,7 +29,7 @@ The [reader example project](../formal/reader-examples/README.md) covers the fol
 | [Coordinate transport](demonstrations/ROOTS_UNITY_FALLING_FACTORIAL.md#4-transport-the-projector-into-falling-factorial-coordinates) | Conjugation, projector laws, reconstruction, and complete input/output block reconstruction under a supplied additive equivalence and the stated projector hypotheses. |
 | [Recovery from a complete parameter polynomial](demonstrations/STIRLING_BELL_FUBINI.md#the-sharp-recovery-distinction) | The exact factorial-weighted polynomial retains every rational coordinate. Its coefficients give an inverse, whereas the two scalar summaries have an explicit noninjectivity witness. |
 
-The coordinate-transport theorems work on arbitrary additive carriers. The sequence specialization concerns full coefficient sequences. The falling-factorial reading example concerns polynomials and finite coefficient support. These are distinct domains. This companion proves the conditional transport algebra and does not construct the concrete Stirling basis equivalence or establish the complex roots-of-unity formula.
+The coordinate-transport theorems in the initial project work on arbitrary additive carriers. Its sequence specialization concerns full coefficient sequences. The falling-factorial reading example concerns polynomials and finite coefficient support. These are distinct domains. The [polynomial extension](LEAN_POLYNOMIAL_TRANSPORT.md) supplies the actual rational falling-factorial equivalence and the complex polynomial roots-of-unity formula, with its own claim map and source-bound evidence.
 
 The factorial results establish finite-product and rational-coefficient identities. Analytic convergence of hypergeometric series, the full formal-series reciprocal construction, prime-adic estimates, and the other sections of the extended demonstrations keep their separate written and computational evidence.
 
@@ -58,10 +60,11 @@ With the pinned portable runtime already extracted, run from the repository root
 ```text
 python -B tools/verify_lean_companion.py --project formal/reader-examples --runtime /absolute/path/Komorebi_Portable_Lean_4.34.0-rc2 --output /tmp/reader-examples-replay
 python -B tools/verify_lean_companion.py --project formal/kcos-certification --runtime /absolute/path/Komorebi_Portable_Lean_4.34.0-rc2 --output /tmp/kcos-certification-replay
+python -B tools/verify_lean_companion.py --project formal/polynomial-transport --runtime /absolute/path/Komorebi_Portable_Lean_4.34.0-rc2 --output /tmp/polynomial-transport-replay
 ```
 
 Each output directory must be new or empty. The runner uses the existing dependency cache and does not update it. On a standard Lean installation, prepare the dependencies for the pinned project and omit `--runtime`.
 
-The [Reader Lean companions workflow](https://github.com/KomorebiP/Operation-KOMOREBI/actions/workflows/reader-lean-companions.yml) rebuilds both companions on relevant pull requests and changes to `main`. Its artifacts keep fresh compiler diagnostics and rejection results for the recorded revision.
+The [Reader Lean companions workflow](https://github.com/KomorebiP/Operation-KOMOREBI/actions/workflows/reader-lean-companions.yml) rebuilds all three companions on relevant pull requests and changes to `main`. Its artifacts keep fresh compiler diagnostics and rejection results for the recorded revision.
 
 [Demonstrations](DEMONSTRATIONS.md) · [Run and verify](VERIFICATION.md) · [Formal source finder](browse/LEAN.md)
