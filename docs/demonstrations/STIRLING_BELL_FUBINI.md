@@ -701,7 +701,7 @@ The standalone checker uses only standard-library exact integers and fractions. 
 - Coupled reciprocal packet transfers for moduli two through five, including the three-residue coefficient-five paths.
 - The explicit \(n=4\) aggregation obstruction.
 
-Finite computation is a regression check, not a substitute for the displayed general proofs. All sequences and identities here are classical. The broader analytic and formalized Special Functions volume has its own claim map and scope. Nothing on this page asserts new Lean compilation, universal recovery from finite summaries, or new results on unrelated conjectures.
+Finite computation is a regression check, not a substitute for the displayed general proofs. All sequences and identities here are classical. The broader analytic and formalized Special Functions volume has its own claim map and scope. The [Lean companion](../LEAN_READER_COMPANIONS.md) separately verifies the classical rational-polynomial Stirling expansion, full factorial-weighted polynomial recovery, uniqueness from enough distinct samples, and the explicit two-summary obstruction. Its [claim map](../../formal/reader-examples/CLAIM_MAP.json) records the precise boundaries. The moment integrals, EGF identities, signed-Stirling inverse, derivative recovery formula, and constructive Newton interpolation algorithm are outside that formal scope. No universal recovery from insufficient summaries or result about an unrelated conjecture is claimed.
 
 ## 9. Reproduce the exact records
 

@@ -57,7 +57,7 @@ Each command must finish with exit status zero. Read its scope and diagnostics a
 
 Source identity does not establish mathematical correctness. These commands do not perform a new SHA-256 read of every source blob or replay every Lean project. For a package's own tests, use its instructions and supported dependencies.
 
-The [workflow guide](WORKFLOWS.md) maps the eight workflows, their triggers, and their publication effects. The [collection workflow](../.github/workflows/artifact-checks.yml) also runs the preview's receipt/upload-guard tests and proof-diagnostic classifier self-test. To reproduce those steps, change to `formal/research-preview-1/` and run:
+The [workflow guide](WORKFLOWS.md) maps the workflows, their triggers, and their publication effects. The [collection workflow](../.github/workflows/artifact-checks.yml) also runs the preview's receipt/upload-guard tests and proof-diagnostic classifier self-test. To reproduce those steps, change to `formal/research-preview-1/` and run:
 
 ```text
 python -B -m unittest discover -s tests -p "test_*.py" -v
@@ -127,3 +127,7 @@ python -B packages/sric-admission-v0.3.3/tests/test_admission_boundaries.py
 This includes a synthetic CLI round trip and rejection controls. No real checkpoint is downloaded or tested. The earlier [admission audit](SRIC_ADMISSION_AUDIT_2026-10-27.md) retains seven diagnostic fixture executions and three reproduced gaps in the old pipeline. Its harness is a historical counterexample record, not the repaired runtime's acceptance suite.
 
 [Documentation](README.md) · [Records guide](RECORDS.md) · [Public project statement](PROJECT_STATEMENT.md) · [Collection](../README.md)
+
+## Replay the reader Lean companions
+
+The [reader companion guide](LEAN_READER_COMPANIONS.md) links the newly checked factorial, coefficient-projector, Stirling recovery, and K-COS logarithmic claims. Each companion has its own exact inventory, source-bound replay receipt, and rejection controls. The dedicated [Reader Lean companions workflow](https://github.com/KomorebiP/Operation-KOMOREBI/actions/workflows/reader-lean-companions.yml) performs fresh isolated builds on relevant changes.

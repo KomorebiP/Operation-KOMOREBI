@@ -110,7 +110,8 @@ def publish(site):
                "formal packet EGFs, general translation and cyclic carry, "
                "finite-characteristic spectral obstructions, star multiplication "
                "and explicit failed controls. "
-               "No new Lean or novelty claim."),
+               "This Python record does not establish Lean acceptance; selected formal "
+               "claims have a separate reader companion. No novelty claim."),
     )
     site.write(RECORD, json.dumps(record, ensure_ascii=False, indent=2) + "\n")
 

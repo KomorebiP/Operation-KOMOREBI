@@ -1,0 +1,275 @@
+{
+  "schema": 1,
+  "policy": "Exact conditional real-number consequences only. Each signature is copied from the corresponding new Lean declaration. Retained theorem dependencies are provenance-mapped and excluded from the new declaration count.",
+  "baseline_commit": "cdaf825cc0547fe58973b1770b7cba2fff9bcfa4",
+  "new_theorems": 15,
+  "new_definitions": 3,
+  "formal_source": "KCosCertification/Logarithmic.lean",
+  "manuscript_anchor": "Directed-rounding deep-tail enclosure; Accuracy-driven certification. The original concordance enclosure_arithmetic row explicitly omitted the positive-domain logarithm rule.",
+  "reused_prerequisites": [
+    {
+      "source": "monographs/cos-method/formal-continuation/lean/KomorebiQCOS/Certificates.lean",
+      "copy": "Prerequisites/KomorebiQCOS/Certificates.lean",
+      "sha256": "c0b6d688410ef0403f8dbdb08fdc9cdb938d0897d233d3b7d320d2e4a81ba956"
+    },
+    {
+      "source": "monographs/cos-method/formal-continuation/lean/KomorebiQCOS/Acceptance.lean",
+      "copy": "Prerequisites/KomorebiQCOS/Acceptance.lean",
+      "sha256": "e43b665bc614e50739cec107c134426a2c5d5cef807513ac43deeb2bff240516"
+    }
+  ],
+  "reference_sources": [
+    {
+      "path": "monographs/cos-method/lean/Claim_Lean_Concordance.json",
+      "sha256": "410a85b1aa2684423b29c92a97ee02473488ded88e95eb13d0d2e91efa6d9bc5"
+    },
+    {
+      "path": "docs/KCOS_NUMERICAL_CERTIFICATION_AUDIT.md",
+      "sha256": "bd36d04823296a07cb63e3a3968d7dfdae5058c858279ac053a944ecf4708218"
+    },
+    {
+      "path": "monographs/cos-method/engine/directed_accuracy.py",
+      "sha256": "50e3c263fd75affdcf1f00f69fea78fbd4e3532a3c55771370dc14ba4bd7365c"
+    },
+    {
+      "path": "monographs/cos-method/engine/interval_kcos.py",
+      "sha256": "fe266689c73569d6b3eea48344d2e5f2cf5b18db60887d95a82f588c614d3ec0"
+    }
+  ],
+  "declarations": [
+    {
+      "name": "KCosCertification.decimalLog",
+      "kind": "def",
+      "source": "KCosCertification/Logarithmic.lean",
+      "signature": "noncomputable def decimalLog (x : ℝ) : ℝ",
+      "claim": "Base-ten logarithmic coordinates.",
+      "boundary": "Real-valued formula; positive-value restrictions are explicit in theorems that require them.",
+      "category": "definition",
+      "implementation_anchors": [
+        "monographs/cos-method/engine/directed_accuracy.py:directed_relative_accuracy",
+        "monographs/cos-method/engine/interval_kcos.py:interval_positive_logsf"
+      ]
+    },
+    {
+      "name": "KCosCertification.decimalExp",
+      "kind": "def",
+      "source": "KCosCertification/Logarithmic.lean",
+      "signature": "noncomputable def decimalExp (x : ℝ) : ℝ",
+      "claim": "Positive real value represented by a base-ten logarithmic endpoint.",
+      "boundary": "Exact exponential; no computable numerical approximation is supplied.",
+      "category": "definition",
+      "implementation_anchors": [
+        "monographs/cos-method/engine/directed_accuracy.py:directed_relative_accuracy",
+        "monographs/cos-method/engine/interval_kcos.py:interval_positive_logsf"
+      ]
+    },
+    {
+      "name": "KCosCertification.logWidthRatio",
+      "kind": "def",
+      "source": "KCosCertification/Logarithmic.lean",
+      "signature": "noncomputable def logWidthRatio (lower upper : ℝ) : ℝ",
+      "claim": "Exact semantic counterpart of expm1(log(10) * (right - left)).",
+      "boundary": "Defines exp(x)-1 over real numbers; it does not model the interval-library expm1 implementation.",
+      "category": "definition",
+      "implementation_anchors": [
+        "monographs/cos-method/engine/directed_accuracy.py:directed_relative_accuracy",
+        "monographs/cos-method/engine/interval_kcos.py:interval_positive_logsf"
+      ]
+    },
+    {
+      "name": "KCosCertification.enclosed_log",
+      "kind": "theorem",
+      "source": "KCosCertification/Logarithmic.lean",
+      "signature": "theorem enclosed_log {p lower upper : ℝ}\n    (h : Enclosed p lower upper) (hl : 0 < lower) :\n    Enclosed (Real.log p) (Real.log lower) (Real.log upper)",
+      "claim": "A positive-lower-endpoint enclosure yields a natural-log enclosure.",
+      "boundary": "Requires lower > 0 and a true supplied enclosure. Lean totalizes log at zero and negative inputs, so global log monotonicity is not assumed.",
+      "category": "positive-log",
+      "implementation_anchors": [
+        "monographs/cos-method/lean/Claim_Lean_Concordance.json:enclosure_arithmetic",
+        "monographs/cos-method/engine/interval_kcos.py:interval_positive_logsf"
+      ]
+    },
+    {
+      "name": "KCosCertification.enclosed_decimalLog",
+      "kind": "theorem",
+      "source": "KCosCertification/Logarithmic.lean",
+      "signature": "theorem enclosed_decimalLog {p lower upper : ℝ}\n    (h : Enclosed p lower upper) (hl : 0 < lower) :\n    Enclosed (decimalLog p) (decimalLog lower) (decimalLog upper)",
+      "claim": "The same enclosure transports into base-ten logarithmic coordinates.",
+      "boundary": "Uses log(10) > 0; endpoint arithmetic is exact.",
+      "category": "positive-log",
+      "implementation_anchors": [
+        "monographs/cos-method/lean/Claim_Lean_Concordance.json:enclosure_arithmetic",
+        "monographs/cos-method/engine/interval_kcos.py:interval_positive_logsf"
+      ]
+    },
+    {
+      "name": "KCosCertification.decimalExp_pos",
+      "kind": "theorem",
+      "source": "KCosCertification/Logarithmic.lean",
+      "signature": "theorem decimalExp_pos (x : ℝ) : 0 < decimalExp x",
+      "claim": "Every finite real log endpoint corresponds to a strictly positive value.",
+      "boundary": "No overflow, underflow, infinity or endpoint serialization is represented.",
+      "category": "coordinate-transform",
+      "implementation_anchors": [
+        "monographs/cos-method/engine/interval_kcos.py:interval_positive_logsf"
+      ]
+    },
+    {
+      "name": "KCosCertification.decimalExp_decimalLog",
+      "kind": "theorem",
+      "source": "KCosCertification/Logarithmic.lean",
+      "signature": "theorem decimalExp_decimalLog {p : ℝ} (hp : 0 < p) :\n    decimalExp (decimalLog p) = p",
+      "claim": "The positive probability value is recovered by the coordinate round trip.",
+      "boundary": "Requires p > 0; this is an exact-real inverse identity, not a floating-point round-trip guarantee.",
+      "category": "coordinate-transform",
+      "implementation_anchors": [
+        "monographs/cos-method/engine/interval_kcos.py:interval_positive_logsf"
+      ]
+    },
+    {
+      "name": "KCosCertification.decimalLog_enclosure_iff",
+      "kind": "theorem",
+      "source": "KCosCertification/Logarithmic.lean",
+      "signature": "theorem decimalLog_enclosure_iff {p lower upper : ℝ} (hp : 0 < p) :\n    Enclosed (decimalLog p) lower upper ↔\n      Enclosed p (decimalExp lower) (decimalExp upper)",
+      "claim": "A log enclosure of p is equivalent to a positive-probability enclosure between the exponentiated endpoints.",
+      "boundary": "Requires p > 0. The actual interval output still must enclose its true logarithm.",
+      "category": "coordinate-transform",
+      "implementation_anchors": [
+        "monographs/cos-method/engine/interval_kcos.py:interval_positive_logsf"
+      ]
+    },
+    {
+      "name": "KCosCertification.decimalExp_ratio",
+      "kind": "theorem",
+      "source": "KCosCertification/Logarithmic.lean",
+      "signature": "theorem decimalExp_ratio (lower upper : ℝ) :\n    decimalExp upper / decimalExp lower - 1 = logWidthRatio lower upper",
+      "claim": "The endpoint ratio minus one equals the exponential of the log width minus one.",
+      "boundary": "Exact base-ten endpoint semantics; no claim about rounding the width or exponential.",
+      "category": "log-acceptance",
+      "implementation_anchors": [
+        "monographs/cos-method/engine/directed_accuracy.py:directed_relative_accuracy",
+        "monographs/cos-method/formal-continuation/lean/KomorebiQCOS/Acceptance.lean:multiplicativeBudget_relative_error"
+      ]
+    },
+    {
+      "name": "KCosCertification.logWidthRatio_budget_iff",
+      "kind": "theorem",
+      "source": "KCosCertification/Logarithmic.lean",
+      "signature": "theorem logWidthRatio_budget_iff {lower upper tolerance : ℝ} :\n    MultiplicativeBudget (decimalExp lower) (decimalExp upper) tolerance ↔\n      logWidthRatio lower upper ≤ tolerance",
+      "claim": "The existing multiplicative budget is exactly equivalent to the log-width test.",
+      "boundary": "Reuses the retained KomorebiQCOS.multiplicativeBudget_iff_ratio proof; the earlier real/rational acceptance theorem is not counted as new work.",
+      "category": "log-acceptance",
+      "implementation_anchors": [
+        "monographs/cos-method/engine/directed_accuracy.py:directed_relative_accuracy",
+        "monographs/cos-method/formal-continuation/lean/KomorebiQCOS/Acceptance.lean:multiplicativeBudget_relative_error"
+      ]
+    },
+    {
+      "name": "KCosCertification.log_enclosure_relative_error",
+      "kind": "theorem",
+      "source": "KCosCertification/Logarithmic.lean",
+      "signature": "theorem log_enclosure_relative_error {p estimate lower upper tolerance : ℝ}\n    (hp : 0 < p) (he : Enclosed (decimalLog p) lower upper)\n    (hx : Enclosed estimate (decimalExp lower) (decimalExp upper))\n    (hb : logWidthRatio lower upper ≤ tolerance) :\n    |estimate - p| / p ≤ tolerance",
+      "claim": "Every estimate inside an accepted positive enclosure has absolute relative error at most tolerance.",
+      "boundary": "Requires both the true log enclosure and estimate enclosure plus the exact width bound; the underlying real relative-error theorem is reused.",
+      "category": "log-acceptance",
+      "implementation_anchors": [
+        "monographs/cos-method/engine/directed_accuracy.py:directed_relative_accuracy",
+        "monographs/cos-method/formal-continuation/lean/KomorebiQCOS/Acceptance.lean:multiplicativeBudget_relative_error"
+      ]
+    },
+    {
+      "name": "KCosCertification.directed_log_acceptance",
+      "kind": "theorem",
+      "source": "KCosCertification/Logarithmic.lean",
+      "signature": "theorem directed_log_acceptance {p estimate lower upper ratioUpper toleranceLower tolerance : ℝ}\n    (hp : 0 < p) (he : Enclosed (decimalLog p) lower upper)\n    (hx : Enclosed estimate (decimalExp lower) (decimalExp upper))\n    (hr : logWidthRatio lower upper ≤ ratioUpper)\n    (ht : toleranceLower ≤ tolerance) (ha : ratioUpper ≤ toleranceLower) :\n    |estimate - p| / p ≤ tolerance",
+      "claim": "A valid directed upper width bound accepted against a valid directed lower tolerance bound implies the real relative-error contract.",
+      "boundary": "Both directed enclosure premises are explicit. This does not verify mpmath.iv, Decimal, the parser, or endpoint conversion.",
+      "category": "directed-acceptance",
+      "implementation_anchors": [
+        "monographs/cos-method/engine/directed_accuracy.py:directed_relative_accuracy"
+      ]
+    },
+    {
+      "name": "KCosCertification.logWidthRatio_nonneg",
+      "kind": "theorem",
+      "source": "KCosCertification/Logarithmic.lean",
+      "signature": "theorem logWidthRatio_nonneg {lower upper : ℝ} (h : lower ≤ upper) :\n    0 ≤ logWidthRatio lower upper",
+      "claim": "Ordered log endpoints have nonnegative ratio excess.",
+      "boundary": "The endpoint order premise is explicit; arbitrary crossed endpoints are not treated as a valid enclosure.",
+      "category": "log-refinement",
+      "implementation_anchors": [
+        "monographs/cos-method/engine/directed_accuracy.py:directed_relative_accuracy"
+      ]
+    },
+    {
+      "name": "KCosCertification.logWidthRatio_narrow",
+      "kind": "theorem",
+      "source": "KCosCertification/Logarithmic.lean",
+      "signature": "theorem logWidthRatio_narrow {lower upper innerLower innerUpper : ℝ}\n    (hl : lower ≤ innerLower) (hu : innerUpper ≤ upper) :\n    logWidthRatio innerLower innerUpper ≤ logWidthRatio lower upper",
+      "claim": "Increasing the lower endpoint and decreasing the upper endpoint decreases the exact ratio excess.",
+      "boundary": "Pure endpoint inequality. It does not establish that a refinement contains the true value or that the controller constructs such a refinement.",
+      "category": "log-refinement",
+      "implementation_anchors": [
+        "monographs/cos-method/engine/directed_accuracy.py:directed_relative_accuracy"
+      ]
+    },
+    {
+      "name": "KCosCertification.logWidthRatio_narrow_accepts",
+      "kind": "theorem",
+      "source": "KCosCertification/Logarithmic.lean",
+      "signature": "theorem logWidthRatio_narrow_accepts {lower upper innerLower innerUpper tolerance : ℝ}\n    (hl : lower ≤ innerLower) (hu : innerUpper ≤ upper)\n    (hb : logWidthRatio lower upper ≤ tolerance) :\n    logWidthRatio innerLower innerUpper ≤ tolerance",
+      "claim": "A narrower log interval satisfies any tolerance satisfied by the outer log interval.",
+      "boundary": "This certifies the width test only. Relative-error soundness additionally needs valid true-value and estimate enclosures.",
+      "category": "log-refinement",
+      "implementation_anchors": [
+        "monographs/cos-method/engine/directed_accuracy.py:directed_relative_accuracy"
+      ]
+    },
+    {
+      "name": "KCosCertification.prefactor_log_enclosure",
+      "kind": "theorem",
+      "source": "KCosCertification/Logarithmic.lean",
+      "signature": "theorem prefactor_log_enclosure {s lower upper : ℝ}\n    (h : Enclosed s lower upper) (hl : 0 < lower) (c : ℝ) :\n    Enclosed (decimalLog (Real.exp c * s))\n      ((c + Real.log lower) / Real.log 10)\n      ((c + Real.log upper) / Real.log 10)",
+      "claim": "A positive tilted-sum enclosure becomes a log-probability enclosure after multiplication by an exact exp(c).",
+      "boundary": "Uses a supplied exact common log-prefactor c and a supplied positive sum enclosure.",
+      "category": "prefactor-transform",
+      "implementation_anchors": [
+        "monographs/cos-method/engine/interval_kcos.py:interval_positive_logsf"
+      ]
+    },
+    {
+      "name": "KCosCertification.prefactor_interval_log_enclosure",
+      "kind": "theorem",
+      "source": "KCosCertification/Logarithmic.lean",
+      "signature": "theorem prefactor_interval_log_enclosure {s lower upper c cLower cUpper : ℝ}\n    (hs : Enclosed s lower upper) (hl : 0 < lower)\n    (hc : Enclosed c cLower cUpper) :\n    Enclosed (decimalLog (Real.exp c * s))\n      ((cLower + Real.log lower) / Real.log 10)\n      ((cUpper + Real.log upper) / Real.log 10)",
+      "claim": "An independently enclosed log-prefactor combines with the positive tilted-sum enclosure using its own lower and upper endpoints.",
+      "boundary": "Both sum and log-prefactor enclosures are supplied. Analytic support/alias and omitted-mode bounds, CGF evaluation, and numerical outward rounding remain separate obligations.",
+      "category": "prefactor-transform",
+      "implementation_anchors": [
+        "monographs/cos-method/engine/interval_kcos.py:interval_positive_logsf"
+      ]
+    },
+    {
+      "name": "KCosCertification.prefactor_log_width",
+      "kind": "theorem",
+      "source": "KCosCertification/Logarithmic.lean",
+      "signature": "theorem prefactor_log_width {lower upper : ℝ}\n    (hl : 0 < lower) (hu : 0 < upper) (c : ℝ) :\n    logWidthRatio (decimalLog (Real.exp c * lower))\n      (decimalLog (Real.exp c * upper)) = upper / lower - 1",
+      "claim": "A common exact exponential prefactor cancels from the multiplicative width.",
+      "boundary": "Requires both endpoints positive; numerical widening of an interval-valued prefactor is not asserted to cancel.",
+      "category": "prefactor-transform",
+      "implementation_anchors": [
+        "monographs/cos-method/engine/interval_kcos.py:interval_positive_logsf"
+      ]
+    }
+  ],
+  "not_proved": [
+    "COS inversion, exponential tilting validity, support/alias estimates, or omitted-mode bounds.",
+    "Numerical spectrum inclusion or the supplied matrix-to-spectrum enclosure.",
+    "mpmath.iv or Decimal implementation, expm1/log rounding, decimal parsing, output serialization, or float conversion.",
+    "The engine positivity guard implies exact positivity; the formal theorems instead require exact positive lower bounds.",
+    "Actual controller refinement narrows valid enclosures, converges, terminates, or respects resource limits.",
+    "Displayed or rounded numerical estimates remain in the certified endpoint interval.",
+    "End-to-end formal correctness of the K-COS numerical engine."
+  ],
+  "verification_config": "verification.json"
+}

@@ -158,6 +158,10 @@ The candidate validates finite positive integer resource settings, rejects initi
 
 The automatic parameter designer additionally requires a threshold above the supplied spectrum's mean. This is narrower than the fixed-parameter interval backend's nonnegative-threshold domain.
 
+## Subsequent Lean companion
+
+A separate [logarithmic certification companion](LEAN_READER_COMPANIONS.md#k-cos-positive-logarithm-certificates) now proves positive-domain natural-log and base-ten-log enclosure transport, the exact log-width acceptance bridge, and the consequences of directed upper-error and lower-tolerance premises. It also handles an enclosed exponential prefactor. The numerical audit above keeps its original scope. Valid numerical enclosure construction, rounding, parsing, and the COS remainder remain separate obligations.
+
 ## Reproduce
 
 Use a checkout containing this companion and the audited source bytes. Run the following commands from the repository root:

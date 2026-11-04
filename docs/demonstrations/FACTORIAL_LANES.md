@@ -548,6 +548,12 @@ a sufficient condition for it to be a $p$-adic unit at every $n$ is $p\mid N$ an
 
 None of these calculations alone proves a global number-theoretic conjecture or a general Mahler-transfer theorem for an unrelated sequence. They exhibit the finite algebra and the precise hypotheses that further transfer results must respect.
 
+## Lean verification of selected identities
+
+The [Lean companion](../LEAN_READER_COMPANIONS.md) now verifies the universal factorial-lane reconstruction, rational Pochhammer coefficient factorization, unit-parameter factorial identity, reciprocal-binomial normalization, and the diagonal coefficient bridge. The [exact claim map](../../formal/reader-examples/CLAIM_MAP.json) records the hypotheses and theorem names. Coefficient residue reconstruction and divisible refinement also have general Lean proofs.
+
+These results cover the finite products and rational coefficient identities used here. The full hypergeometric power-series object, reciprocal construction, and prime-adic estimates retain their separate written and finite-check evidence.
+
 ## Run and audit the exact arithmetic
 
 The standalone [factorial-lane checker](../../examples/factorial_lanes.py) uses Python 3.10 or later and only the standard library. From the repository root:

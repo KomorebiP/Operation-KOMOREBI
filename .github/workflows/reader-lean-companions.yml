@@ -1,0 +1,64 @@
+name: Reader Lean companions
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'formal/reader-examples/**'
+      - 'formal/kcos-certification/**'
+      - 'tools/verify_lean_companion.py'
+      - '.github/workflows/reader-lean-companions.yml'
+  pull_request:
+    paths:
+      - 'formal/reader-examples/**'
+      - 'formal/kcos-certification/**'
+      - 'tools/verify_lean_companion.py'
+      - '.github/workflows/reader-lean-companions.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  replay:
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [reader-examples, kcos-certification]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            formal/reader-examples
+            formal/kcos-certification
+            tools
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.13'
+      - name: Prepare the pinned Lean toolchain and Mathlib cache
+        uses: leanprover/lean-action@50fcf42d2e460296f1a34b402e990d1b24f8b596
+        with:
+          lake-package-directory: formal/${{ matrix.project }}
+          auto-config: 'false'
+          build: 'false'
+          test: 'false'
+          lint: 'false'
+          use-mathlib-cache: 'true'
+          use-github-cache: 'false'
+          check-reservoir-eligibility: 'false'
+          leanchecker: 'false'
+          nanoda: 'false'
+          axiom-audit: 'false'
+      - name: Fresh build, exact axiom audit, kernel replay, and rejection controls
+        run: >-
+          python -B tools/verify_lean_companion.py
+          --project formal/${{ matrix.project }}
+          --output '${{ runner.temp }}/reader-lean-${{ matrix.project }}'
+      - name: Retain compiler evidence and failure diagnostics
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: reader-lean-${{ matrix.project }}-${{ github.sha }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/reader-lean-${{ matrix.project }}/
+          if-no-files-found: warn
+          retention-days: 90
