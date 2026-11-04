@@ -96,5 +96,37 @@ class ReaderGuidanceTests(unittest.TestCase):
         self.assertIsNone(reading_passage_url(reader,'other.tex',17))
         self.assertIsNone(reading_passage_url(reader,'main.tex',28))
 
+    def test_imported_line_numbers_do_not_shadow_parent_source_passages(self):
+        chapter=SimpleNamespace(nodes=[
+            dict(source='main.tex',line=11,end_line=28,id='L11',source_spans=[
+                dict(source='main.tex',line=11,end_line=28)]),
+            dict(source='results.tex',line=18,end_line=32,id='results-L18',source_spans=[
+                dict(source='results.tex',line=18,end_line=32),
+                dict(source='main.tex',line=67,end_line=78)])])
+        reader=SimpleNamespace(readable_books={'test':{
+            'included_sources':[dict(source='results.tex',input_source='main.tex')],
+            'chapters':[(dict(source='main.tex',url='read/test/main.html'),b'',chapter)]}})
+        self.assertEqual(reading_passage_url(reader,'main.tex',24),'read/test/main.html#L11')
+        self.assertEqual(reading_passage_url(reader,'results.tex',24),'read/test/main.html#results-L18')
+        self.assertEqual(reading_passage_url(reader,'main.tex',70),'read/test/main.html#results-L18')
+        self.assertIsNone(reading_passage_url(reader,'main.tex',32))
+        self.assertIsNone(reading_passage_url(reader,'results.tex',70))
+
+    def test_nested_input_paths_follow_the_recorded_source_chain(self):
+        chapter=SimpleNamespace(nodes=[
+            dict(source='main.tex',line=10,end_line=20,id='L10'),
+            dict(source='inputs/outer.tex',line=10,end_line=20,id='outer-L10'),
+            dict(source='inputs/nested/inner.tex',line=10,end_line=20,id='inner-L10',source_spans=[
+                dict(source='inputs/nested/inner.tex',line=10,end_line=20)])])
+        reader=SimpleNamespace(readable_books={'test':{
+            'included_sources':[
+                dict(source='inputs/nested/inner.tex',input_source='inputs/outer.tex'),
+                dict(source='inputs/outer.tex',input_source='main.tex')],
+            'chapters':[(dict(source='main.tex',url='read/test/main.html'),b'',chapter)]}})
+        self.assertEqual(reading_passage_url(reader,'main.tex',15),'read/test/main.html#L10')
+        self.assertEqual(reading_passage_url(reader,'inputs/outer.tex',15),'read/test/main.html#outer-L10')
+        self.assertEqual(reading_passage_url(reader,'inputs/nested/inner.tex',15),'read/test/main.html#inner-L10')
+        self.assertIsNone(reading_passage_url(reader,'inputs/other.tex',15))
+
 
 if __name__=='__main__':unittest.main()

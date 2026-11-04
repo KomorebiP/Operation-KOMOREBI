@@ -140,9 +140,15 @@ def symbol_tokens(expression):
                     if body: pos = body[1]
                     continue
                 if command in FORMATS | ACCENTS:
+                    argument_start = pos
                     while pos < len(text) and text[pos].isspace(): pos += 1
                     body = atom(text, pos)
                     if body:
+                        # A control word followed by an unbraced letter needs
+                        # its source separator: \mathbb R is not \mathbbR.
+                        # Braced and command arguments keep their existing keys.
+                        if re.match(r'[A-Za-z]', body[0]):
+                            base += text[argument_start:pos]
                         base += body[0]; pos = body[1]
                     else: continue
                 elif command in STRUCTURAL or not command.isalpha():
@@ -368,6 +374,24 @@ def symbol_id(tex):
     return 'symbol-'+hashlib.sha256(tex.encode()).hexdigest()[:16]
 
 
+def legacy_symbol_anchors(entries):
+    """Preserve unambiguous links made before control-word separators were kept."""
+    canonical={entry['id'] for entry in entries}
+    candidates=collections.defaultdict(set)
+    commands=FORMATS | ACCENTS
+    for entry in entries:
+        leading=re.match(r'^(\\[A-Za-z]+)\s+(?=[A-Za-z])',entry['tex'])
+        if not leading or leading[1][1:] not in commands: continue
+        # Only this leading separator was lost. Nested/braced spelling stays exact.
+        previous=leading[1]+entry['tex'][leading.end():]
+        anchor=symbol_id(previous)
+        if anchor not in canonical: candidates[anchor].add(entry['id'])
+    result=collections.defaultdict(list)
+    for anchor,targets in candidates.items():
+        if len(targets)==1: result[next(iter(targets))].append(anchor)
+    return {target:sorted(anchors) for target,anchors in result.items()}
+
+
 def source_url(source, line):
     return source.get('source_url',source['url'])+'#L'+str(line)
 
@@ -558,6 +582,7 @@ def build(site):
             body+='<form class="notation-filter" data-notation-work="'+e(work)+'" data-source="data/'+work+'.json"><label for="notation-query">Find a symbol, TeX spelling or word in a source excerpt</label><input id="notation-query" name="q" type="search" placeholder="For example: alpha, \\Phi, packet"><label for="notation-kind">Passage type</label><select id="notation-kind"><option value="">All passages</option>'+''.join('<option value="'+k+'">'+v+'</option>' for k,v in KINDS.items())+'</select><button type="submit">Find notation</button><button type="reset">Clear</button></form><p id="notation-status" role="status" aria-live="polite">All '+str(count)+' entries are available below.</p><div id="notation-entries">'
         introduction=body
         entry_blocks=[]
+        legacy_anchors=legacy_symbol_anchors(data['entries'])
         for entry in data['entries']:
             body=''
             sample=preview_occurrences(data,entry)
@@ -581,7 +606,9 @@ def build(site):
                     table=table_preview(primary['context'],source['macros']) if primary['kind']=='notation-table' else None))
             search_entries.append({k:v for k,v in item.items() if k!='excerpt'} |
                                   dict(context=context_ids[key],names=symbol_names(entry['tex'],entry['display'])))
-            body+='<details class="notation-entry" id="'+entry['id']+'" data-kind="'+entry['kind']+'" data-search="'+e(search,quote=True)+'"><summary><code>'+e(entry['tex'])+'</code><span>'+KINDS[entry['kind']]+' · '+str(len(entry['occurrences']))+' passages</span></summary>'
+            body+='<details class="notation-entry" id="'+entry['id']+'" data-kind="'+entry['kind']+'" data-search="'+e(search,quote=True)+'"><summary><code>'
+            body+=''.join('<span id="'+e(anchor,quote=True)+'" class="notation-legacy-anchor" aria-hidden="true"></span>' for anchor in legacy_anchors.get(entry['id'],[]))
+            body+=e(entry['tex'])+'</code><span>'+KINDS[entry['kind']]+' · '+str(len(entry['occurrences']))+' passages</span></summary>'
             if entry['display']:
                 body+='<p class="notation-display" data-math="'+e(entry['display'],quote=True)+'"></p>'
             body+='<p class="notation-aliases">Search aliases: '+e(entry['aliases'])+'</p>'

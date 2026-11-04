@@ -1083,8 +1083,11 @@ def render_table(node,chapter,reading_aid=None):
             raise ValueError('Invalid table row-header column')
         if any(not row[column].strip() for row in rows[header_rows:] for column in row_headers):
             raise ValueError('A table row header is empty')
-    body='<div class="table-scroll" tabindex="0" role="region" aria-label="'+html.escape(caption or 'Notation table',quote=True)+'"><table>'
-    if caption: body+='<caption>'+chapter.inline(caption)+'</caption>'
+    table_number=''
+    if caption and node.get('number') and getattr(chapter,'table_config',{}).get('show_table_numbers'):
+        table_number='Table '+str(node['number'])+'. '
+    body='<div class="table-scroll" tabindex="0" role="region" aria-label="'+html.escape(table_number+caption if caption else 'Notation table',quote=True)+'"><table>'
+    if caption: body+='<caption>'+html.escape(table_number)+chapter.inline(caption)+'</caption>'
     for index,row in enumerate(rows):
         if index==0: body+='<thead>'
         if index==header_rows: body+='<tbody>'
@@ -1294,7 +1297,6 @@ def render_book(reader,book):
             if kind in HEADINGS:
                 level=min(level+1,5) if kind=='paragraph' else HEADINGS[kind]
                 body+='<h'+str(level)+' id="'+node['id']+'">'+e(node['number'])+' '+chapter.inline(node['title'])+'</h'+str(level)+'>'
-                body+=proofreading_notes(reader,page,node['id'])
                 if kind=='part' and config.get('part_figures'):
                     part_number=sum(c.get('kind')=='part' and c['start_line']<=spec['start_line']
                                     for c in config['chapters'])
@@ -1398,6 +1400,7 @@ def render_book(reader,book):
                     heading_level=str(min(level+1,6))
                     body+='<h'+heading_level+'>'+chapter.inline(label)+'</h'+heading_level+'>'
                 body+=chapter.paragraphs(node['body'])+passage_links(links,reading_links)+'</section>'
+            body+=proofreading_notes(reader,page,node['id'])
             if kind not in {'figure','thebibliography'}:
                 plain,aliases=plain_math(re.sub(r'\\label\{[^}]+\}','',node['body']).replace('$',''))
                 parent=next((n['title'] for n in reversed(headings) if n['line']<=node['line']),spec['title'])
@@ -1508,7 +1511,7 @@ def render_book_index(reader,book,reports):
         parser.url=page
         parser.labels=book['chapters'][0][2].labels
         parser.citations={r['key']:(r['key'],parser.relative(config['bib_page'])+'#ref-'+r['key']) for r in book['references']}
-        body+='<section><h2>Abstract</h2>'+proofreading_notes(reader,page,'abstract')+parser.paragraphs(abstract[1])+'</section>'
+        body+='<section id="abstract"><h2>Abstract</h2>'+parser.paragraphs(abstract[1])+'</section>'+proofreading_notes(reader,page,'abstract')
     body+='<h2>PDF and companion guides</h2><ul>'
     for record in reader.records.values():
         if record['work']==work and record['format']=='pdf' and not record.get('figure') and not record.get('figure_source'):

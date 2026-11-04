@@ -157,11 +157,14 @@ matrix-to-tail route, the supplied-spectrum route, the visual studies, and
 four stages of the running example.
 
 The reader preserves 61 numbered statements, 39 written proofs, 1,443
-mathematical expressions, all 50 original production figures, and seven
+mathematical expressions, all 50 original production figures, all seven
+printed table numbers with their captions, and seven
 references. The three included results files appear in their authored
 positions, with links to the actual included source lines. The theorem
 finder, notation lookup, chapter navigation, and site search use the same
 reading structure as the other monographs.
+Passage lookup matches both the source file and its retained line spans, so
+imported results cannot shadow equal line numbers in their parent chapter.
 
 `tools/kcos_reading.py` checks the source order, statement and figure
 inventories, mathematical expressions, and the style-file macros.
@@ -170,6 +173,14 @@ Run `python -B -m unittest discover -s tools -p 'test_kcos_reading.py' -v`.
 The published mathematical sources and their recorded scope remain unchanged.
 Appendix B retains the official finite Gram/enclosure companion; the reading
 guide links the separately maintained formal continuation.
+
+The [K-COS proofreading record](../manifests/reader-proofreading-kcos-2026-11-03.json)
+records the complete edition review. Four labelled reading notes clarify a
+stale chapter reference, the precision of a numerical reference, the Python
+failure flag, and a shared scientific-notation scale. Their text and links are
+bound to exact retained source lines. The numerical-reference note also records
+the original CSV hash and its two full-dimensional rows. These notes do not
+change an authored mathematical expression or assert a new proof review.
 
 ## Core visual-guide coverage
 
@@ -1271,6 +1282,13 @@ records and proof assessments retain their previous scope.
 The [notation index](NOTATION_INDEX.md) provides symbol search and a source inventory for every work. Entries link to exact source lines and retain the paper’s own context. Its JSON downloads record every detected occurrence in the selected TeX, Markdown and text sources. PDF and image notation remain explicit coverage limits.
 
 `tools/notation_index.py` builds the reference. `manifests/notation-sources.json` declares additional manuscript entrypoints. The reader follows their literal includes and checks source receipts before indexing. Parser regression tests and the site checker validate extraction, source positions, counts and links.
+
+Unbraced letter arguments retain the separator after their TeX control word.
+For example, `\mathbb R` and `\widehat T` remain valid symbol spellings in the
+index. Braced arguments and arguments that are commands retain their existing
+entry keys. Complete source expressions and their positions remain unchanged.
+Unambiguous legacy fragment anchors remain available for previously joined
+spellings. They open the corrected entry without changing its canonical ID.
 
 Search excerpts omit recognized layout commands and source bookkeeping such as
 `Needspace` and `RecordID`. Balanced arguments keep nested metadata out of the

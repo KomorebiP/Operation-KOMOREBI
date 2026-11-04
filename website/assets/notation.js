@@ -164,8 +164,8 @@
   kind.addEventListener('change',filter);
   more.addEventListener('click',()=>page()?.focus());
   function openHash() {
-    const entry=document.getElementById(location.hash.slice(1));
-    if(!entry?.classList.contains('notation-entry'))return;
+    const entry=document.getElementById(location.hash.slice(1))?.closest('.notation-entry');
+    if(!entry)return;
     entry.hidden=false;entry.open=true;
     requestAnimationFrame(()=>entry.scrollIntoView({block:'start'}));
   }
