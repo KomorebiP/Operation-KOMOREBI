@@ -4,7 +4,7 @@ import { loadSourceBundle, sourceWorkspace } from './lean-source-bundle.js?v=202
 import { planSelectedFile } from './lean-workspace-plan.js?v=20261103-staged1';
 
 export function workspaceCheckMode(workspace, preferred=false) {
-  const required=(workspace?.files||[]).some(file=>file.library&&file.syntaxCheck==='frontend');
+  const required=(workspace?.files||[]).some(file=>(file.library||file.generated)&&file.syntaxCheck==='frontend');
   return {required,frontend:preferred||required};
 }
 
@@ -146,10 +146,12 @@ async function start() {
     if(workspace){files[current]=editor.value;drafts.set(workspace.id,{files:[...files],current});}
     dispose();workspace=data.examples.find(e=>e.id===id)||data.examples[0];picker.value=workspace.id;
     const draft=drafts.get(workspace.id);files=draft?[...draft.files]:workspace.files.map(f=>f.text);current=draft?.current??files.length-1;filePicker.replaceChildren();
-    workspace.files.forEach((f,i)=>{const option=document.createElement('option');option.value=String(i);option.textContent=f.module+(f.library?' · library source':'');filePicker.append(option);});
+    workspace.files.forEach((f,i)=>{const option=document.createElement('option');option.value=String(i);option.textContent=f.module+(f.library?' · library source':f.generated?' · browser compatibility':'');filePicker.append(option);});
     filePicker.value=String(current);showFile();controls(false);el('output').textContent='No checks yet.';
     el('compat').hidden=!workspace.compatibility;
     el('compat-code').textContent=workspace.compatibility?.source||'';
+    el('profile-note').hidden=!workspace.import_profile;
+    if(workspace.import_profile)el('profile-original').href=workspace.import_profile.original_inspect;
     el('route').hidden=!workspace.exploratory;
     el('route-notes').textContent=workspace.exploratory?[
       ...(workspace.issues.length?workspace.issues:['The recorded import route uses available browser libraries. Run Lean to check the sources.']),

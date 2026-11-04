@@ -52,6 +52,11 @@ test('only a completed clean check receives the clean state',()=>{
   assert.equal(outcome({exitCode:1,errors:[]}),'failed');
   assert.equal(outcome(undefined),'failed');
 });
+
+test('generated import profiles require a fresh completed frontend without changing other workspace modes',()=>{
+  assert.deepEqual(workspaceCheckMode({files:[{generated:true,syntaxCheck:'frontend'}]}),{required:true,frontend:true});
+  assert.deepEqual(workspaceCheckMode({files:[{syntaxCheck:'frontend'}]}),{required:false,frontend:false});
+});
 test('module export wrapper keeps the original proof body and names the real import',()=>{
   const original='import Mathlib.Data.Set.Function\n\nnamespace ProofPath\ntheorem t : True := by trivial\nend ProofPath\n';
   const wrapped=moduleSource(original,'ProofPath.Compression');
