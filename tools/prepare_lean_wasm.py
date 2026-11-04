@@ -259,6 +259,9 @@ def prepare(source, output, mathlib_archive):
     from lean_proof_path_modules import build as build_proof_path, WORKSPACES as PROOF_PATH, ALIASES, COHORT
     shared,extension_stats,extension_remotes=build_proof_path(source,output,{key:work_layers[key] for key in PROOF_PATH},seed_groups)
     remote.update(extension_remotes)
+    from lean_transfer_bundles import records as transfer_records
+    transfer_plan,transfer_remotes=transfer_records(remote)
+    remote.update(transfer_remotes)
     for key in PROOF_PATH:work_layers[key]=shared
     workspace_modules={}
     for key,manifest in work_layers.items():
@@ -275,6 +278,7 @@ def prepare(source, output, mathlib_archive):
                        workspace_modules=workspace_modules,
                        module_pilots={MODULE_PILOT:pilot_stats},
                        module_extensions={COHORT:extension_stats},workspace_manifest_aliases=ALIASES,
+                       transfer_groups=transfer_plan,
                        inputs=inventory,files=files,remote_files=remote,
                        bytes=sum(p['size'] for p in files.values())+sum(p['size'] for p in remote.values()),
                        local_bytes=sum(p['size'] for p in files.values()),
