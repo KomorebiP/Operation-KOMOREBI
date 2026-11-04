@@ -93,6 +93,10 @@ serves about 24.5 MiB of smaller compiled module packs from a separate asset-onl
 branch in this repository. The source pins immutable asset commit
 `d309a96db5a7d17cdb8aa579da92fc5c9316d53a`; this branch must not be merged into
 main. Pack binaries and provenance JSON stay outside the Pages artifact.
+Proof Path's Compression and Recovery workspaces reuse those same 298 packs
+and add 62 qualified module triplets from immutable asset commit
+`d91c4cd35509edc4e57bd19ee427bf4a36660ce2`. Both use one shared library manifest;
+their source files, compatibility helper and checking order remain separate.
 SOURCE.json records every remote URL, size and SHA-256, plus local metadata and
 input identities. The final site checker verifies these records and enforces
 the 1 GiB Pages publication limit.
@@ -330,6 +334,18 @@ service-worker upstream requests may finish caching after a client is stopped.
    Wider rollout needs request-overhead and shared-cache measurements across
    workspaces. HTTP byte ranges cannot directly select members of the original
    gzip containers because manifest offsets describe the uncompressed bytes.
+   The Proof Path extension covers 360 complete triplets (1,080 unchanged
+   artifact files), with 298 reused from Paper III and 62 additions. Its layer
+   totals about 29.9 MiB instead of 117.6 MiB in original shared packs. The
+   independent `manifests/lean-proof-path-modules.json` binds the original member
+   hashes and both import closures; `manifests/lean-proof-path-delivery.json`
+   freezes the output pack tables and encoded hashes. Preparation rechecks every
+   original member without recompressing the frozen extension. Both workspaces
+   share `workspaces/proof-path-compression.json`, and the verifier pins that
+   alias, each workspace's module set, all new asset records and reuse totals.
+   No extension binaries or receipt JSON are copied into Pages.
+   Generated JSON uses LF endings and standard-root inventories use POSIX-path
+   ordering, so Windows and Linux produce the same metadata bodies.
 2. **Checked module artifacts before parallel compilers.** First qualify a tiny
    complete export/import round trip in a fresh compiler, then exercise corrupted
    parts, stale generations, edits, warnings, initializers and Stop. The current
