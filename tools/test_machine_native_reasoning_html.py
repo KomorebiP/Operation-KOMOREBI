@@ -1,6 +1,6 @@
 """The packed reading cache must retain complete articles and fail closed."""
 from copy import deepcopy
-import json,posixpath,tempfile,unittest
+import json,posixpath,re,tempfile,unittest
 from pathlib import Path
 from urllib.parse import urlsplit,unquote
 from reading_payload import decode,PREFIX
@@ -10,6 +10,25 @@ from check_reader_site import Page
 ROOT=Path(__file__).resolve().parents[1]
 
 class HTMLMNRTests(unittest.TestCase):
+    def test_proofread_revision_restores_source_names_and_preserves_mathematics(self):
+        base=json.loads((ROOT/PREFIX/'READING.json').read_bytes());data=load(ROOT)
+        def article(page):
+            record=dict(page['payload']);record['path']=PREFIX+record.pop('part');record['figure_root']='mnr-figure/'
+            return decode(record)
+        math=r'<span\b[^>]*class="[^"]*arithmatex[^"]*"[^>]*>.*?</span>'
+        texts={}
+        for old,new in zip(base['pages'],data['pages']):
+            self.assertEqual(old['file'],new['file'])
+            before,after=article(old),article(new);texts[new['file']]=after
+            self.assertEqual(re.findall(math,before,re.S),re.findall(math,after,re.S),new['file'])
+            self.assertEqual(Page(before).ids,Page(after).ids,new['file'])
+            self.assertEqual(Page(before).links,Page(after).links,new['file'])
+        self.assertIn('<code>alternative_proofs.json</code>',texts['chapter-50.html'])
+        self.assertIn('<code>ViewSections</code>',texts['ks-additional-mathematical-material.html'])
+        self.assertIn('in the 64-case example.',texts['chapter-62.html'])
+        self.assertIn('visible at least two nodes',texts['chapter-88.html'])
+        self.assertNotIn('visible at at least',texts['chapter-88.html'])
+
     def test_authenticated_article_inventory_and_corruption(self):
         data=load(ROOT);proofs=statements=0
         for page in data['pages']:
@@ -24,6 +43,10 @@ class HTMLMNRTests(unittest.TestCase):
         from machine_native_reasoning_expanded import publish as whole
         with tempfile.TemporaryDirectory() as tmp:
             site=fixture(tmp,True);whole(site);self.assertEqual(verify(tmp)['pages'],121)
+            atlas=(Path(tmp)/'read/research-machine-native-reasoning-wider/large-signal-model-visual-atlas.html').read_text(encoding='utf-8')
+            menu=re.search(r'<nav class="chapter-contents"[^>]*>(.*?)</nav>',atlas,re.S)
+            self.assertIsNotNone(menu)
+            self.assertEqual(menu[1].count('<li>'),13)
             pages={p.name:Page(p.read_text(encoding='utf-8')) for p in (Path(tmp)/'read/research-machine-native-reasoning-wider').glob('*.html')}
             checked=0
             for name,page in pages.items():

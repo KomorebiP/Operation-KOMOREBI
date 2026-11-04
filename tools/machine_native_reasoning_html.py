@@ -3,12 +3,15 @@ import html,json,posixpath,re
 from pathlib import Path
 from reading_payload import PREFIX,decode,sha
 from machine_native_reasoning_expanded import PAGE,WORK,BOOK,RECORD
-MANIFEST=PREFIX+'READING.json'
+MANIFEST=PREFIX+'FINAL_READING.json'
 SCRIPT='assets/mnr-chapter.js'
 STYLE='assets/mnr-reading.css'
 
 def load(root):
     data=json.loads((root/MANIFEST).read_bytes())
+    edition=data.get('reading_edition',{})
+    if edition.get('id')!='mnr-html-proofread-2026-11-04' or edition.get('base_manifest')!=PREFIX+'READING.json':raise ValueError('Unknown MNR proofreading revision')
+    if sha((root/edition['base_manifest']).read_bytes())!=edition['base_manifest_sha256']:raise ValueError('MNR base reading record changed')
     if len(data['pages'])!=121 or [p['chapter'] for p in data['pages'] if p['chapter']]!=list(range(1,98)):raise ValueError('Incomplete MNR HTML edition')
     if data['proofs']!=527 or data['statement_count']!=803 or data['mathjax_validation']['errors']:raise ValueError('MNR conversion checks changed')
     if len(data['images'])!=141:raise ValueError('MNR figures incomplete')
@@ -65,7 +68,9 @@ def welcome(data):
         body+='<li'+(' id="chapter-'+number+'"' if number else '')+'><a data-reading-entry="'+e(key,quote=True)+'" href="'+e(p['file'],quote=True)+'"><span class="reading-entry-number" aria-hidden="true">'+number+'</span><span>'+e(p['title'])+'</span></a></li>'
     body+='</ol></details></div></nav>'
     body+='<details id="edition" class="reading-resources"><summary>Edition and source notes</summary><div><p>This expanded reading edition contains 97 chapters in 13 parts. The accepted 27-result core retains its separate scope. Production and rendering checks are not an independent proof audit.</p>'
-    body+='<p><a href="book.html">Complete 977-page PDF and editable TeX</a> · <a href="../../'+RECORD+'">Publication record</a></p></div></details>'
+    body+='<p><a href="book.html">Complete 977-page PDF and editable TeX</a> · <a href="../../'+RECORD+'">Publication record</a>'
+    if data.get('proofreading_url'):body+=' · <a href="'+e(data['proofreading_url'],quote=True)+'">Proofreading record</a>'
+    body+='</p></div></details>'
     return body
 
 def publish(site):
@@ -73,6 +78,7 @@ def publish(site):
     from build_reader_site import github,REPOSITORY
     from reader_display import EXTRA_EDITIONS
     data=load(site.root);config=configuration(data);EXTRA_EDITIONS[WORK]=config;e=html.escape
+    data['proofreading_url']=github(REPOSITORY,site.revision,data['reading_edition']['review'])
     base='https://raw.githubusercontent.com/'+REPOSITORY+'/'+site.revision+'/'+PREFIX
     for asset in (SCRIPT,STYLE):
         target=site.output/asset;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes((site.root/'website'/asset).read_bytes())
@@ -81,7 +87,8 @@ def publish(site):
         path='read/'+WORK+'/'+p['file'];payload=dict(p['payload']);payload['path']=PREFIX+payload.pop('part');payload['url']=base+payload['path'][len(PREFIX):];payload['figure_root']=base+'figures/'
         full=decode(payload,site.root)
         title=(str(p['chapter'])+'. ' if p['chapter'] else '')+p['title']
-        contents='<nav class="chapter-contents" aria-label="Sections in this chapter"><ol>'+''.join('<li><a href="#'+e(h['id'],quote=True)+'">'+e(h['title'])+'</a></li>' for h in p['headings'] if h['level']==2)+'</ol></nav>'
+        outline_level=min((h['level'] for h in p['headings']),default=2)
+        contents='<nav class="chapter-contents" aria-label="Sections in this chapter"><ol>'+''.join('<li><a href="#'+e(h['id'],quote=True)+'">'+e(h['title'])+'</a></li>' for h in p['headings'] if h['level']==outline_level)+'</ol></nav>'
         source=github(REPOSITORY,site.revision,PREFIX+p['source'],p['line'])
         resource='<a href="book.html">PDF and editable source</a> · <a href="'+e(source,quote=True)+'">Chapter source</a> · <a href="reconstructed-edition.html#edition">About this edition</a>'
         def chapter_navigation(placement='top'):
@@ -103,7 +110,7 @@ def publish(site):
     decorate(site,PAGE)
     # Replace the older PDF-only chapter search entries, keeping one index entry.
     site.search[:]=[r for r in site.search if not (r['url'].startswith(PAGE+'#chapter-'))]
-    record=json.loads((site.output/RECORD).read_bytes());record['html_reading']=dict(index=PAGE,pages=len(data['pages']),chapters=97,manifest=MANIFEST,math_expressions=16476,new_proof_audit=False)
+    record=json.loads((site.output/RECORD).read_bytes());record['html_reading']=dict(index=PAGE,pages=len(data['pages']),chapters=97,manifest=MANIFEST,edition=data['reading_edition']['id'],proofreading_record=data['reading_edition']['review'],math_expressions=16476,new_proof_audit=False)
     site.write(RECORD,json.dumps(record))
     site.write('documents/mnr-html-reading.json',json.dumps(dict(schema=1,pages=[dict(url='read/'+WORK+'/'+p['file'],payload=p['payload']) for p in data['pages']],manifest=MANIFEST,chapter_shell_bytes=added,proofs=527,statements=803)))
     if added>1800000:raise ValueError('MNR chapter shells exceed their Pages budget')
