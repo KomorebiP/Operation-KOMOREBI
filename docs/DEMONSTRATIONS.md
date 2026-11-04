@@ -11,6 +11,10 @@ transfer**, explore the companion **factorial lanes**, then compare
 **quantum phase and measurement**.
 These are suggested reading choices; each study can also be read on its own.
 
+[Sources and contributions](SOURCES_AND_CONTRIBUTIONS.md) identifies the
+classical inputs to the Euler and wavelet studies and the introductory
+seed-generation example.
+
 | Case study | Starting problem | What the derivation delivers |
 |---|---|---|
 | [Euler numbers](demonstrations/EULER_PACKETS.md) | Reconstruct a reciprocal sequence through other coordinates. | Packet matrices, quartic reconstruction, polynomial identities, refinement, and exact residual repair. |

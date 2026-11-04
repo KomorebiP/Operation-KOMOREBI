@@ -136,6 +136,18 @@ class EulerNavigationTests(unittest.TestCase):
         self.assertLess(result.index('<strong>Date</strong>'),result.index('id="euler-reading-guide"'))
         self.assertLess(result.index('id="euler-reading-guide"'),result.index('id="'+PARTS[0][1]+'"'))
 
+    def test_quartic_credit_preserves_the_source_section_and_its_mathematics(self):
+        section='<h2 id="identify-the-quartic-reciprocal-family">Quartic family</h2><p>\\[G(t^4)=\\cos t\\cosh t\\]</p>'
+        source=self.manuscript().replace('<h2 id="'+PARTS[1][1]+'">',section+'<h2 id="'+PARTS[1][1]+'">')
+        result=decorate(source)
+        self.assertEqual(headings(source),headings(result))
+        self.assertIn('<p>\\[G(t^4)=\\cos t\\cosh t\\]</p>',result)
+        self.assertEqual(result.count('class="source-attribution"'),1)
+        self.assertIn('Ilya Gutkovskiy (27 January 2020)',result)
+        self.assertIn('Michael Wallner (17 November 2020)',result)
+        self.assertIn('https://oeis.org/A211212',result)
+        self.assertLess(result.index('Quartic family</h2>'),result.index('class="source-attribution"'))
+
     def test_missing_duplicate_and_reordered_section_anchors_fail_closed(self):
         source=self.manuscript()
         cases=(source.replace(PARTS[0][1],'missing'),source.replace(TAP_SECTION,'missing'),

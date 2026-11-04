@@ -14,6 +14,9 @@ The aim is a reusable mathematical language for resolving objects into parts, tr
 
 Each work's contribution is expressed in its definitions, results, constructions, and proofs. A connection between subjects requires an argument showing that the relevant structures and hypotheses survive the transfer. The scope of that argument determines where the result applies.
 
+For the introductory calculations, [sources and contributions](SOURCES_AND_CONTRIBUTIONS.md)
+identify the classical inputs and the role of the Euler, wavelet, and seed-generation walkthroughs.
+
 ## Start with an extended case study
 
 Follow one problem through several representations, including the operations and information retained at each step. A suggested route begins with Euler numbers, continues through signals, and then compares quantum measurement.

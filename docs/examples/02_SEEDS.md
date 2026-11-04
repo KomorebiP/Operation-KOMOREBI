@@ -53,6 +53,12 @@ the two standard basis vectors span $\mathbb R^2$. The minimum is now two.
 The seed count therefore belongs to the space **and its declared action**.
 It is not automatically the dimension of the vector space.
 
+This is the classical cyclic-vector viewpoint: a linear operator defines a
+polynomial-module action. See Paul Garrett's *Abstract Algebra* (June 2007),
+[§10.4, especially Corollary 10.4.1 and Example 10.4.3](https://www-users.cse.umn.edu/~garrett/m/algebra/Whole#page=140).
+The [sources and contributions guide](../SOURCES_AND_CONTRIBUTIONS.md#seed-generation-and-the-central-framework)
+places this tutorial within Paper I's broader development.
+
 ## Try it
 
 Which single seeds $v=(a,b)^{\mathsf T}$ generate $\mathbb R^2$ under $N$?
