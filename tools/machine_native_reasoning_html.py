@@ -81,7 +81,7 @@ def publish(site):
         path='read/'+WORK+'/'+p['file'];payload=dict(p['payload']);payload['path']=PREFIX+payload.pop('part');payload['url']=base+payload['path'][len(PREFIX):];payload['figure_root']=base+'figures/'
         full=decode(payload,site.root)
         title=(str(p['chapter'])+'. ' if p['chapter'] else '')+p['title']
-        contents='<ol>'+''.join('<li><a href="#'+e(h['id'],quote=True)+'">'+e(h['title'])+'</a></li>' for h in p['headings'] if h['level']==2)+'</ol>'
+        contents='<nav class="chapter-contents" aria-label="Sections in this chapter"><ol>'+''.join('<li><a href="#'+e(h['id'],quote=True)+'">'+e(h['title'])+'</a></li>' for h in p['headings'] if h['level']==2)+'</ol></nav>'
         source=github(REPOSITORY,site.revision,PREFIX+p['source'],p['line'])
         resource='<a href="book.html">PDF and editable source</a> · <a href="'+e(source,quote=True)+'">Chapter source</a> · <a href="reconstructed-edition.html#edition">About this edition</a>'
         def chapter_navigation(placement='top'):
