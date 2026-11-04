@@ -3,11 +3,11 @@ import assert from 'node:assert/strict';
 import {webcrypto} from 'node:crypto';
 
 // UI/protocol integration only. Real Lean source acceptance is checked in a browser.
-async function withPage(workspace, check, {isolated=true,savedDraft=null,frontend=true,expandedPlan}={}) {
+async function withPage(workspace, check, {isolated=true,savedDraft=null,frontend=true,expandedPlan,requireFreshMetadata=false}={}) {
   const names=['document','fetch','Worker','crypto','window','location','history','sessionStorage','crossOriginIsolated','isSecureContext','navigator'];
   const saved=new Map(names.map(name=>[name,Object.getOwnPropertyDescriptor(globalThis,name)]));
   const install=(name,value)=>Object.defineProperty(globalThis,name,{value,writable:true,configurable:true});
-  const elements=new Map(),workers=[],calls=[],storage=new Map();let reloads=0;
+  const elements=new Map(),workers=[],calls=[],requests=[],messages=[],storage=new Map();let reloads=0;
   if(savedDraft)storage.set('komorebi-lean-browser-reload',JSON.stringify(savedDraft));
   function element(){return {value:'',textContent:'',dataset:{},listeners:{},children:[],
     addEventListener(name,fn){this.listeners[name]=fn;},replaceChildren(){this.children=[];},append(child){this.children.push(child);}};}
@@ -15,7 +15,7 @@ async function withPage(workspace, check, {isolated=true,savedDraft=null,fronten
   class FakeWorker {
     constructor(){this.index=workers.length;workers.push(this);}
     send(data){this.onmessage?.({data});}
-    postMessage(message){queueMicrotask(()=>{
+    postMessage(message){messages.push(message);queueMicrotask(()=>{
       if(message.type==='dispose'){this.send({type:'disposed',id:message.id});return;}
       if(message.type==='start')this.send({type:'ready'});
       if(message.type==='reset')this.send({type:'reset_done',id:message.id});
@@ -41,7 +41,12 @@ async function withPage(workspace, check, {isolated=true,savedDraft=null,fronten
   try {
     const mainWindow={};mainWindow.top=mainWindow;
     install('document',{querySelector:()=>root,createElement:element});
-    install('fetch',async input=>String(input).endsWith('examples.json')?Response.json({examples:[workspace],expanded_download_plan:expandedPlan}):new Response('',{status:404}));
+    install('fetch',async(input,options)=>{
+      requests.push({url:String(input),options});
+      if(!String(input).endsWith('examples.json'))return new Response('',{status:404});
+      if(requireFreshMetadata&&options?.cache!=='no-cache')return new Response('Stale workspace metadata',{status:409});
+      return Response.json({examples:[workspace],expanded_download_plan:expandedPlan});
+    });
     install('Worker',FakeWorker);install('crypto',webcrypto);install('window',mainWindow);
     install('location',{href:'https://example.test/lean/browser/index.html'+(frontend?'?frontend=1':''),reload(){reloads++;}});
     install('history',{replaceState(){}});install('sessionStorage',{getItem:key=>storage.get(key)??null,setItem:(key,value)=>storage.set(key,value),removeItem:key=>storage.delete(key)});
@@ -52,7 +57,7 @@ async function withPage(workspace, check, {isolated=true,savedDraft=null,fronten
     const pick=index=>{elements.get('file').value=String(index);elements.get('file').listeners.change();};
     const runSelected=()=>elements.get('run-selected').listeners.click();
     const runWorkspace=()=>elements.get('run').listeners.click();
-    await check({elements,workers,calls,pick,runSelected,runWorkspace,storage,get reloads(){return reloads;}});
+    await check({elements,workers,calls,requests,messages,pick,runSelected,runWorkspace,storage,get reloads(){return reloads;}});
   } finally {
     if(elements.has('stop'))elements.get('stop').listeners.click();
     if(elements.get('draft-download')?.href)URL.revokeObjectURL(elements.get('draft-download').href);
@@ -61,6 +66,18 @@ async function withPage(workspace, check, {isolated=true,savedDraft=null,fronten
   }
 }
 const file=(module,text)=>({module,text,path:module+'.lean',sha256:'0'.repeat(64),download:'source.lean'});
+
+test('workspace metadata is revalidated before the current shared-manifest alias is used',async()=>{
+  const workspace={id:'fresh-shared-manifest',mathlib_manifest:'workspaces/proof-path-compression.json',
+    mathlib_modules:['Mathlib.Data.Set.Function'],files:[file('Main','import Mathlib.Data.Set.Function\n-- SELECTED_CASE_MAIN\nexample : True := by trivial')]};
+  await withPage(workspace,async({elements,requests,messages,runWorkspace})=>{
+    assert.equal(elements.get('code').value,workspace.files[0].text);
+    assert.deepEqual(requests[0].options,{cache:'no-cache',credentials:'omit'});
+    await runWorkspace();
+    assert.match(JSON.stringify(messages.filter(m=>m.type==='load_layer')),/workspaces\/proof-path-compression\.json/);
+    assert.equal(elements.get('status').textContent,'Checking completed with no diagnostics.');
+  },{frontend:false,requireFreshMetadata:true});
+});
 
 test('first-download notice follows standard and experimental plans without starting a compiler',async()=>{
   const workspace={id:'download-plans',files:[file('Main','import Std')],download_plan:{bytes:4*1048576+1,files:12}};

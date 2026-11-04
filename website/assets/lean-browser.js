@@ -96,7 +96,7 @@ if (root) start().catch(error => setStatus('Could not load the workspace: '+erro
 function el(name) { return root.querySelector('[data-local-'+name+']'); }
 function setStatus(text,state='idle') {el('status').textContent=text;el('status').dataset.state=state;}
 async function start() {
-  const response=await fetch(new URL('examples.json',location.href));
+  const response=await fetch(new URL('examples.json',location.href),{cache:'no-cache',credentials:'omit'});
   if (!response.ok) throw new Error('Source record unavailable.');
   const data=await response.json();
   if(window.top!==window){el('direct').hidden=false;el('direct-link').href=location.href;}
