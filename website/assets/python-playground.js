@@ -127,7 +127,7 @@ function createWorker() {
       if (active !== request) return;
       const entry = manifest.examples[active.name];
       status.textContent = visualErrors ? "Calculation finished, but a figure could not be drawn. Its data may still be available below." : active.modified
-        ? "Finished edited code or uploaded data. This output has not been compared with the published example."
+        ? "Finished with edited code or uploaded data. This output has not been compared with the published example."
         : stdout === entry.expected_output && !stderr
           ? "Finished. Output matches the published example."
           : "Finished, but output differs from the published example. Review the output and errors.";

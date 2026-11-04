@@ -666,7 +666,7 @@ Its squared norm is \(64+64+576+64=768\). For the other order, the omitted fines
 =\boxed{880}.
 \]
 
-The three values are distinct questions. In particular, the commutator energy **cannot** be obtained by simply subtracting the two approximation errors.
+The three values answer distinct questions. In particular, the commutator energy **cannot** be obtained by simply subtracting the two approximation errors.
 
 The [operation-order ledger (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/wavelet-polyphase/operation-order.csv) records the complete sixteen-component vectors and both residuals. The [scale-energy ledger (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/wavelet-polyphase/multiscale-energy.csv) records each original and filtered Haar band.
 

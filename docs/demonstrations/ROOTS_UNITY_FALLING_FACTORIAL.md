@@ -364,7 +364,7 @@ The second equality counts surjections onto \(k\) labelled targets by inclusion 
 For the fifth power, the Newton coefficients are
 
 \[
-\left(\frac{\Delta^k x^5(0)}{k!}\right)_{k=0}^5
+\left(\frac{(\Delta^k x^5)(0)}{k!}\right)_{k=0}^5
 =(0,1,15,25,10,1).
 \]
 

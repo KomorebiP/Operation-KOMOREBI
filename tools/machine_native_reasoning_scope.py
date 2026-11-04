@@ -235,7 +235,10 @@ def publish_scope(reader, book):
     body += '<h2>Keep the editions separate</h2><ul>'
     body += '<li><strong>Reviewed Mathematical Core:</strong> the '+str(publication['pages'])+'-page reader presented here, with 27 selected results and their written proofs. '+resource('Reader publication record', READER_RECORD)+'.</li>'
     body += '<li><strong>Wider reviewed continuation:</strong> a separate 74-page working edition retaining an older 23/27 map. '+link('Open its work page', 'collection/works/research-machine-native-reasoning-wider.html')+'.</li>'
-    body += '<li><strong>Expanded monograph:</strong> the accepted release records the later 1,155-page edition as unrecovered. Its publication and coverage remain a separate task. '+resource('Read the source recovery boundary', BASE+'release/BOOK_RECOVERY.md')+'.</li></ul>'
+    body += ('<li><strong>Expanded monograph:</strong> '+
+             link('the reconstructed editorial edition', 'read/research-machine-native-reasoning-wider/reconstructed-edition.html')+
+             ' is now available: 97 chapters, thirteen parts, and 977 pages. It was rebuilt from retained component manuscripts and the recovered 1,155-page reading PDF. The original full TeX archive remains unrecovered. Its component-specific assurance remains separate from the accepted 27-result core. '+
+             resource('Historical source recovery record', BASE+'release/BOOK_RECOVERY.md')+'.</li></ul>')
     body += '<p>The formal counterparts apply to their declared mathematical contracts. They do not establish learned representations, empirical performance, a deployed system, or external permission to act. A source-map entry alone is not an acceptance receipt.</p>'
     body += '<h2>27 selected results</h2>'
     body += '<p>Numbers follow the authored core, including gaps occupied by counterexamples. Original source-page and line references in the map belong to <code>source/core_v0.2.tex</code>; the HTML statement links open the refreshed reader. Declaration links resolve namespace-qualified names in retained source bytes and are navigation aids.</p>'

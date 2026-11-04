@@ -6,7 +6,7 @@ to refine my work on machine learning and reasoning, improve the existing
 mathematics and software, and make the website and its GitHub repositories
 easier to access and use.
 
-Updated 3 November 2026. The linked records describe progress, remaining
+Updated 4 November 2026. The linked records describe progress, remaining
 requirements, and the evidence for each work.
 
 These plans and the existing work will likely evolve as I review research and
@@ -81,12 +81,15 @@ linked together.
 
 Plans for the reading library include more guided paths, additional books, and
 closer connections between explanations and worked examples. The expanded
-Machine Native Reasoning book still needs its own source and edition checks
-before publication.
+Machine Native Reasoning book is now available as a reconstructed editorial
+edition, with 97 chapters, an editable TeX package, and recorded source and
+build checks. Reconciling its statements with the accepted core and reviewing
+the wider claims remain separate tasks.
 
 [Read online](https://KomorebiP.github.io/Operation-KOMOREBI/read/index.html) ·
 [Explore visual guides](https://KomorebiP.github.io/Operation-KOMOREBI/read/visual-guides.html) ·
-[Expanded-book requirements](FINALIZATION_QUEUE.md#f03)
+[Read the expanded book](https://KomorebiP.github.io/Operation-KOMOREBI/read/research-machine-native-reasoning-wider/reconstructed-edition.html) ·
+[Expanded-book review requirements](FINALIZATION_QUEUE.md#f03)
 
 ## Lean and reproducible checks
 
