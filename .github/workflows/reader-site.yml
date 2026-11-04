@@ -61,10 +61,13 @@ jobs:
           persist-credentials: false
       - name: Prepare the pinned browser Lean compiler and paper imports
         run: python -B tools/prepare_lean_wasm.py --source .reader-libraries/browser-lean --output .reader-build/lean-wasm
-      - name: Build and test the fixed-source module transfer probe
+      - name: Build and test the fixed-source module transfer probes
         run: |
           python -B tools/lean_checkpoint_probe.py --runtime .reader-build/lean-wasm --output .reader-build/checkpoint-probe
           node tools/test_lean_checkpoint_probe.mjs .reader-build/checkpoint-probe
+          python -B tools/lean_checkpoint_heavy_probe.py --runtime .reader-build/lean-wasm --output .reader-build/checkpoint-heavy-probe
+          node tools/test_lean_checkpoint_probe.mjs .reader-build/checkpoint-heavy-probe
+          node tools/test_lean_checkpoint_memory.mjs .reader-build/checkpoint-heavy-probe
       - name: Test website safeguards
         run: |
           python -c "from komorebi_math.sequences import reciprocal_coefficients, fubini_sequence"
