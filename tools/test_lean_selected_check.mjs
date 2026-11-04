@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {webcrypto} from 'node:crypto';
 
 // UI/protocol integration only. Real Lean source acceptance is checked in a browser.
-async function withPage(workspace, check, {isolated=true,savedDraft=null,frontend=true}={}) {
+async function withPage(workspace, check, {isolated=true,savedDraft=null,frontend=true,expandedPlan}={}) {
   const names=['document','fetch','Worker','crypto','window','location','history','sessionStorage','crossOriginIsolated','isSecureContext','navigator'];
   const saved=new Map(names.map(name=>[name,Object.getOwnPropertyDescriptor(globalThis,name)]));
   const install=(name,value)=>Object.defineProperty(globalThis,name,{value,writable:true,configurable:true});
@@ -41,7 +41,7 @@ async function withPage(workspace, check, {isolated=true,savedDraft=null,fronten
   try {
     const mainWindow={};mainWindow.top=mainWindow;
     install('document',{querySelector:()=>root,createElement:element});
-    install('fetch',async input=>String(input).endsWith('examples.json')?Response.json({examples:[workspace]}):new Response('',{status:404}));
+    install('fetch',async input=>String(input).endsWith('examples.json')?Response.json({examples:[workspace],expanded_download_plan:expandedPlan}):new Response('',{status:404}));
     install('Worker',FakeWorker);install('crypto',webcrypto);install('window',mainWindow);
     install('location',{href:'https://example.test/lean/browser/index.html'+(frontend?'?frontend=1':''),reload(){reloads++;}});
     install('history',{replaceState(){}});install('sessionStorage',{getItem:key=>storage.get(key)??null,setItem:(key,value)=>storage.set(key,value),removeItem:key=>storage.delete(key)});
@@ -61,6 +61,35 @@ async function withPage(workspace, check, {isolated=true,savedDraft=null,fronten
   }
 }
 const file=(module,text)=>({module,text,path:module+'.lean',sha256:'0'.repeat(64),download:'source.lean'});
+
+test('first-download notice follows standard and experimental plans without starting a compiler',async()=>{
+  const workspace={id:'download-plans',files:[file('Main','import Std')],download_plan:{bytes:4*1048576+1,files:12}};
+  await withPage(workspace,async({elements,workers})=>{
+    assert.match(elements.get('download-note').textContent,/up to 5 MiB in 12/);
+    elements.get('frontend').checked=true;elements.get('frontend').listeners.change();
+    assert.match(elements.get('download-note').textContent,/experimental syntax: up to 10 MiB in 40/);
+    elements.get('frontend').checked=false;elements.get('frontend').listeners.change();
+    assert.match(elements.get('download-note').textContent,/this workspace: up to 5 MiB in 12/);
+    assert.equal(workers.length,0);
+  },{frontend:false,expandedPlan:{bytes:10*1048576,files:40}});
+});
+
+test('required frontend routes cannot display the smaller standard download plan',async()=>{
+  const workspace={id:'forced-download-plan',files:[{...file('Library','import Std'),library:true,syntaxCheck:'frontend',revision:'a'.repeat(40)}],download_plan:{bytes:1048576,files:3}};
+  await withPage(workspace,async({elements,workers})=>{
+    assert.equal(elements.get('frontend').checked,true);
+    assert.match(elements.get('download-note').textContent,/experimental syntax: up to 10 MiB in 40/);
+    assert.equal(workers.length,0);
+  },{frontend:false,expandedPlan:{bytes:10*1048576,files:40}});
+});
+
+test('invalid workspace plan falls back to the broader recorded plan',async()=>{
+  const workspace={id:'bad-download-plan',files:[file('Main','import Std')],download_plan:{bytes:-1,files:3}};
+  await withPage(workspace,async({elements,workers})=>{
+    assert.match(elements.get('download-note').textContent,/up to 10 MiB in 40/);
+    assert.equal(workers.length,0);
+  },{frontend:false,expandedPlan:{bytes:10*1048576,files:40}});
+});
 
 test('selected checking executes exactly the ancestor closure and cannot claim the workspace passed',async()=>{
   const workspace={id:'selection',files:[

@@ -86,9 +86,13 @@ load modules needed only by another. An edited import can expand to the complete
 set of compiler-matched modules already present in the pinned upstream packs.
 Exploratory workspaces use that set directly; it remains a subset of Mathlib.
 The source archive is read in one sequential
-pass and its import parsing is shared across closures. The site stores about
-9 MB of metadata. Large binaries remain at immutable URLs in the
-pinned upstream public GitHub repository. No additional hosting account is used.
+pass and its import parsing is shared across closures. The site stores compact
+manifests and source metadata. Most large binaries remain at immutable URLs in
+the pinned upstream public GitHub repository. A bounded Paper III pilot also
+serves about 24.5 MiB of smaller compiled module packs from a separate asset-only
+branch in this repository. The source pins immutable asset commit
+`d309a96db5a7d17cdb8aa579da92fc5c9316d53a`; this branch must not be merged into
+main. Pack binaries and provenance JSON stay outside the Pages artifact.
 SOURCE.json records every remote URL, size and SHA-256, plus local metadata and
 input identities. The final site checker verifies these records and enforces
 the 1 GiB Pages publication limit.
@@ -100,6 +104,13 @@ Shared packs are downloaded once across library layers. Quota failures allow
 checking to continue without persistent caching.
 Its cache contains compiler artifacts, not proof edits. Readers can clear it on
 the page. The worker is started only after pressing Run.
+
+The first-load notice counts unique compiler/library asset bodies for the
+selected workspace, including its manifests and download record. Shared paths
+are counted once, and all three standard-library roots are budgeted. Experimental
+syntax uses the broader library plan. These are conservative plans for the
+original imports; edited imports can load more. The notice updates without
+starting a compiler.
 
 ## Checks and failure states
 
@@ -292,15 +303,33 @@ service-worker upstream requests may finish caching after a client is stopped.
 
 ### Route to broader browser support
 
-1. **Smaller verified library assets.** Publish immutable, compiler-matched module
-   packs with content hashes and source provenance, then select only the required
-   closure. A local pinned-input experiment for Paper III's 298 module triplets
-   (894 files) reduced its Mathlib-layer transport from about 110.9 MiB of shared
-   packs to 24.5 MiB of module packs, with identical selected artifact bytes.
-   That is a packaging measurement, not a published format or browser speed result.
-   Request overhead, global deduplication, hosting limits and cache migration still
-   need validation. HTTP byte ranges cannot directly select members of these gzip
-   containers because manifest offsets describe the uncompressed bytes.
+1. **Smaller verified library assets.** Paper III's Coordinate naturality workspace
+   uses a delivery pilot of 298 complete module triplets (894 unchanged files).
+   Its Mathlib-layer packs contain about 24.5 MiB instead of 110.9 MiB in the
+   original shared packs. Each new pack is addressed by its compressed SHA-256.
+   The independently pinned `manifests/lean-module-pilot.json` binds original
+   compressed inputs, original member tables and every decoded artifact hash.
+   Original-input qualification stages one original pack at a time through
+   temporary files and compresses one module at a time. Generated-output checks
+   reject altered decoded bytes even after output hashes are recomputed.
+   The independently pinned `manifests/lean-module-pilot-delivery.json` freezes
+   the already qualified publication bytes, avoiding gzip differences across
+   Python/zlib versions. Build and site verification bind every remote URL,
+   size, checksum, member table and delivery total to these receipts. The browser
+   verifies the frozen compressed hashes before inflation and installation.
+   Standard libraries retain their original delivery; experimental frontend mode
+   and expanded edited imports can still use the broad original Mathlib layer.
+   The reduction describes this layer's asset bodies, not the whole compiler
+   download, a proof-speed result or a Wasm-heap reduction. The separate asset
+   branch keeps pilot binaries outside Pages; its existing size limit still applies.
+   Paired browser controls with the original proof requested about 292.1 MiB
+   versus 229.7 MiB of unique engine response bodies, including download records
+   and manifests: about 21% less data. The number of unique responses rose from
+   401 to 685. These counts describe response bodies, not HTTP overhead, network
+   cache behavior or a controlled latency benchmark.
+   Wider rollout needs request-overhead and shared-cache measurements across
+   workspaces. HTTP byte ranges cannot directly select members of the original
+   gzip containers because manifest offsets describe the uncompressed bytes.
 2. **Checked module artifacts before parallel compilers.** First qualify a tiny
    complete export/import round trip in a fresh compiler, then exercise corrupted
    parts, stale generations, edits, warnings, initializers and Stop. The current

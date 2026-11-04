@@ -38,11 +38,15 @@ def verify_runtime(root):
         if len(raw)!=record['size'] or hashlib.sha256(raw).hexdigest()!=record['sha256']:
             raise ValueError('Browser compiler checksum mismatch: '+path)
     prefix='https://raw.githubusercontent.com/live-codes/browser-lean/'+UPSTREAM+'/public/'
+    from lean_module_packs import module_asset_url, verify_module_pilot
     for path,record in remotes.items():
         from lean_runner import safe_path
         safe_path(path)
-        if (not record['url'].startswith(prefix) or len(record['sha256'])!=64 or record['size']<1):
+        pilot_url=module_asset_url(path)
+        pinned=record['url']==pilot_url if pilot_url else record['url'].startswith(prefix)
+        if (not pinned or len(record['sha256'])!=64 or record['size']<1):
             raise ValueError('Unpinned remote compiler asset: '+path)
+    verify_module_pilot(root,data)
     return data
 
 
@@ -66,6 +70,10 @@ def build(reader,runtime):
     missing=set(mathlib_seeds(site.root))-set(runtime_record.get('mathlib_modules',[]))
     if missing:raise ValueError('Missing browser Mathlib imports: '+', '.join(sorted(missing)))
     seed_groups=mathlib_seed_groups(site.root)
+    expanded_plan=None
+    if runtime_record.get('module_pilots'):
+        from lean_download_plan import download_plan
+        expanded_plan=download_plan(runtime,runtime_record,'real-analysis-layer.json')
     for example in examples:
         seeds=seed_groups.get(example['id'])
         if not seeds:continue
@@ -74,6 +82,9 @@ def build(reader,runtime):
         if not set(seeds)<=set(available) or 'lean-mathlib/'+manifest not in runtime_record['files']:
             raise ValueError('Missing workspace Mathlib imports: '+example['id'])
         example['mathlib_manifest']=manifest
+    if expanded_plan:
+        for example in examples:
+            example['download_plan']=download_plan(runtime,runtime_record,example.get('mathlib_manifest'))
     engine=site.output/BASE/'engine'
     shutil.copytree(runtime,engine,dirs_exist_ok=True)
     shutil.copyfile(site.root/'website/assets/lean-browser-sw.js',site.output/BASE/'sw.js')
@@ -83,6 +94,7 @@ def build(reader,runtime):
               mathlib=runtime_record['mathlib'],download_bytes=runtime_record['bytes'],
               execution='local WebAssembly',changes_recorded_verification=False,
               collection_catalog='catalog.json',collection=collection)
+    if expanded_plan:data['expanded_download_plan']=expanded_plan
     site.write(BASE+'examples.json',json.dumps(data,ensure_ascii=False,indent=2)+'\n')
     site.write(BASE+'compatibility.lean',COMPAT_SOURCE)
     def asset(name):
@@ -104,7 +116,7 @@ def build(reader,runtime):
 <header class="lean-heading"><p class="eyebrow">The papers · A local proof workspace</p><h1>Edit a proof. Ask Lean.</h1>
 <p class="lean-lede">Explore a published proof, change a step, and check it on your own device. The compiler runs inside this browser.</p></header>
 <p class="lean-local-meta">{len(examples)} prepared workspaces across {len(groups)} reading editions.</p>
-<div class="lean-local-intro"><p>First run: download the Lean compiler and libraries, up to {math.ceil(runtime_record['bytes']/1048576)} MiB. Smaller workspaces need less.</p>
+<div class="lean-local-intro"><p data-local-download-note>First run: download the Lean compiler and libraries, up to {math.ceil(runtime_record['bytes']/1048576)} MiB. Smaller workspaces need less.</p>
 <p class="lean-local-meta">Allow a few minutes for the first load, plus time for proof checking. Downloaded files are reused when your browser can cache them.</p></div>
 <p data-local-direct hidden>This compiler needs its own browser page. <a data-local-direct-link target="_blank" rel="noopener">Open the workspace in a new tab</a>.</p>
 <details data-local-catalog><summary>Open another retained Lean file</summary>
