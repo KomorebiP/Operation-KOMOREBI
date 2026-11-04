@@ -1265,6 +1265,10 @@ def render_book(reader,book):
     used_previews=set()
     table_aids=config.get('table_reading_aids',{})
     aided_tables=set()
+    calculation_links={}
+    if config.get('custom_reader')=='kcos':
+        from kcos_routes import calculation_navigation
+        calculation_links=calculation_navigation(reader,book)
     for spec,raw,chapter in book['chapters']:
         source,page,title=spec['source'],spec['url'],config['label']+': '+spec['title']
         rows={r['statement_line']:r for r in chapter_claims(reader,spec)}
@@ -1406,6 +1410,7 @@ def render_book(reader,book):
                     body+='<h'+heading_level+'>'+chapter.inline(label)+'</h'+heading_level+'>'
                 body+=chapter.paragraphs(node['body'])+passage_links(links,reading_links)+'</section>'
             body+=proofreading_notes(reader,page,node['id'])
+            body+=calculation_links.get((page,node['id']),'')
             if kind not in {'figure','thebibliography'}:
                 plain,aliases=plain_math(re.sub(r'\\label\{[^}]+\}','',node['body']).replace('$',''))
                 parent=next((n['title'] for n in reversed(headings) if n['line']<=node['line']),spec['title'])

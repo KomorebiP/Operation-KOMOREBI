@@ -319,6 +319,40 @@ $x+\alpha$ % $WRONG$
         self.assertIsNone(display_math(r'\href{bad}{x}',macros))
         self.assertIsNone(display_math(r'\loop',{'loop':r'\loop'}))
 
+    def test_reviewed_builtin_symbols_keep_their_literal_display_spelling(self):
+        for command in ('succeq','preceq','succ','sqcup','arctan','downarrow',
+                        'uparrow','lceil','rceil','Longleftrightarrow','Longrightarrow'):
+            tex='\\'+command
+            with self.subTest(tex=tex):
+                self.assertEqual(display_math(tex,{}),tex)
+
+    def test_braced_roman_labels_display_without_rewriting_source(self):
+        for tex in (r'\mathcal D_{\rm spectrum}',r'E_{\rm support}',
+                    r'M_{ \rm full }',r'\varepsilon_{{\rm req}}',
+                    r'x_{\rm lower}^{\rm upper}'):
+            with self.subTest(tex=tex):
+                self.assertEqual(display_math(tex,{}),tex)
+        self.assertEqual(display_math(r'\named',{'named':r'x_{\rm label}'}),
+                         r'{x_{\rm label}}')
+
+    def test_incomplete_or_unscoped_declarations_remain_exact_tex_fallbacks(self):
+        for tex in (r'\rm',r'{\rm}',r'{{\rm }}',r'\rm x',r'x_{\rm}',
+                    r'x_{\rm \alpha}',r'x_{{\rm support}',r'\{\rm x}',
+                    r'x_{\rm support}}',r'\overset'):
+            with self.subTest(tex=tex):
+                self.assertIsNone(display_math(tex,{}))
+        self.assertIsNone(display_math(r'\roman',{'roman':r'\rm'}))
+
+    def test_reviewed_commands_do_not_relax_display_safety_boundaries(self):
+        for tex in (r'x_{\rm label}\href{https://example.test}{x}',
+                    r'x_{\rm label}\htmlClass{external}{x}',
+                    r'x_{\rm label}\require{html}',
+                    r'x_{\rm label}\input{file}',r'\unknown{x}',
+                    r'x_{\rm label}\color{red}',r'\rmLabel',
+                    r'x_{\rm '+('a'*501)+'}'):
+            with self.subTest(tex=tex):
+                self.assertIsNone(display_math(tex,{}))
+
     def test_no_definition_inferred_from_ordinary_use(self):
         text='Let $x=y$.\n\n\\begin{definition}A space $V$.\\end{definition}'
         records=index_document(text,'.tex')
@@ -354,6 +388,72 @@ $x+\alpha$ % $WRONG$
         self.assertEqual(result['label'],'')
         self.assertEqual(result['tex'],'x_i')
         self.assertIsNone(table_preview('Ordinary prose without a table.',{}))
+
+
+class NotationReadingRouteTests(unittest.TestCase):
+    def site(self):
+        site=NotationTests.notation_site(self,
+            dict(scope='Selected test sources.',additional_entrypoints={'cos':['main.tex']}),
+            {'cos/main.tex':'Opening \\(x\\).\n\nParent \\(y\\).\n',
+             'cos/included.tex':'Imported \\(z\\).\n\nOutside the rendered range \\(w\\).\n',
+             'cos/history.tex':'Historical \\(h\\).\n'})
+        chapter=SimpleNamespace(nodes=[
+            dict(id='L1',line=1,end_line=1,
+                 source_spans=[dict(source='cos/main.tex',line=1,end_line=1)]),
+            dict(id='included-L1',line=1,end_line=1,
+                 source_spans=[dict(source='cos/included.tex',line=1,end_line=1)]),
+            dict(id='L3',line=3,end_line=3,
+                 source_spans=[dict(source='cos/main.tex',line=3,end_line=3)])])
+        site.reader.readable_books={'cos':dict(
+            chapters=[(dict(source='cos/main.tex',url='read/cos/chapter.html'),'unused',chapter)],
+            included_sources=[dict(source='cos/included.tex',input_source='cos/main.tex')])}
+        site.reader.records['cos/main.tex']['source_url']='read/cos/source-main.html'
+        site.reader.records['cos/included.tex']['source_url']='read/cos/source-included.html'
+        return site
+
+    def test_every_occurrence_uses_its_actual_source_and_rendered_range(self):
+        site=self.site();data=extract_work(site,'cos')
+        passages={p['expression']:p for p in data['passages']}
+        self.assertEqual(passages['x']['reading_url'],'read/cos/chapter.html#L1')
+        self.assertEqual(passages['y']['reading_url'],'read/cos/chapter.html#L3')
+        self.assertEqual(passages['z']['reading_url'],'read/cos/chapter.html#included-L1')
+        self.assertNotIn('reading_url',passages['w'],'Unrendered lines must keep their source-only route')
+        self.assertNotIn('reading_url',passages['h'],'Historical sources must not inherit a chapter route')
+        self.assertEqual(unpack_work_data(pack_work_data(data)),data)
+
+    def test_reading_routes_only_add_navigation_to_retained_data(self):
+        site=self.site();with_routes=extract_work(site,'cos')
+        site.reader.readable_books={}
+        source_only=extract_work(site,'cos')
+        for passage in with_routes['passages']:passage.pop('reading_url',None)
+        self.assertEqual(with_routes,source_only)
+
+    def test_entry_preview_and_search_share_the_reading_route_and_keep_source(self):
+        import posixpath
+        from notation_index import build
+        site=self.site();site.output=site.root/'output';site.search=[]
+        def write(path,text):
+            target=site.output/path;target.parent.mkdir(parents=True,exist_ok=True)
+            target.write_text(text,encoding='utf-8')
+        site.write=write;site.page=lambda path,title,body:write(path,body)
+        site.rel=lambda target,page:posixpath.relpath(target,posixpath.dirname(page))
+        site.reader.work_routes=lambda work,page:''
+        assets=site.root/'website/assets';assets.mkdir(parents=True)
+        for name in ('notation.js','notation-search.js'):
+            (assets/name).write_bytes((Path(__file__).resolve().parents[1]/'website/assets'/name).read_bytes())
+        build(site)
+        html=(site.output/'notation/cos.html').read_text()
+        def entry(tex):
+            return html.split('id="'+symbol_id(tex)+'"',1)[1].split('<details class="notation-entry"',1)[0]
+        self.assertIn('href="../read/cos/chapter.html#included-L1"',entry('z'))
+        self.assertIn('href="../read/cos/source-included.html#L1"',entry('z'))
+        self.assertIn('>Read passage</a>',entry('z'))
+        self.assertNotIn('>Read passage</a>',entry('w'))
+        search=json.loads((site.output/'notation/search.json').read_text())
+        contexts={row['tex']:search['contexts'][row['context']] for row in search['entries']}
+        self.assertEqual(contexts['z']['reading_url'],'read/cos/chapter.html#included-L1')
+        self.assertEqual(contexts['z']['source_url'],'read/cos/source-included.html#L1')
+        self.assertEqual(contexts['w']['reading_url'],contexts['w']['source_url'])
 
 
 if __name__=='__main__':unittest.main()

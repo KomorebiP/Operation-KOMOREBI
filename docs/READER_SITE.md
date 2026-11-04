@@ -155,6 +155,10 @@ preface and reading guidance, four part introductions, twelve chapters,
 four appendices, and references. The opening guide links the full
 matrix-to-tail route, the supplied-spectrum route, the visual studies, and
 four stages of the running example.
+Each worked section ends with links to the adjacent calculation stages and
+the complete calculation route. These controls follow the same manuscript
+labels as the contents guide. The Start-here guide opens directly at the worked
+enclosure section in Chapter 9.
 
 The reader preserves 61 numbered statements, 39 written proofs, 1,443
 mathematical expressions, all 50 original production figures, all seven
@@ -1332,7 +1336,7 @@ records and proof assessments retain their previous scope.
 
 ## Notation reference
 
-The [notation index](NOTATION_INDEX.md) provides symbol search and a source inventory for every work. Entries link to exact source lines and retain the paper’s own context. Its JSON downloads record every detected occurrence in the selected TeX, Markdown and text sources. PDF and image notation remain explicit coverage limits.
+The [notation index](NOTATION_INDEX.md) provides symbol search and a source inventory for every work. Entries link to exact source lines and retain the paper’s own context. When an occurrence belongs to a rendered chapter passage, entry previews, expanded occurrence lists, and global search also offer **Read passage**. Its JSON downloads record every detected occurrence in the selected TeX, Markdown and text sources, with an optional `reading_url` resolved from the actual source file and line spans. Occurrences without a rendered destination keep their source link. PDF and image notation remain explicit coverage limits.
 
 `tools/notation_index.py` builds the reference. `manifests/notation-sources.json` declares additional manuscript entrypoints. The reader follows their literal includes and checks source receipts before indexing. Parser regression tests and the site checker validate extraction, source positions, counts and links.
 
@@ -1342,6 +1346,12 @@ index. Braced arguments and arguments that are commands retain their existing
 entry keys. Complete source expressions and their positions remain unchanged.
 Unambiguous legacy fragment anchors remain available for previously joined
 spellings. They open the corrected entry without changing its canonical ID.
+
+Display permits the reviewed standard mathematical commands and literal braced
+roman labels such as `\mathcal D_{\rm spectrum}`. The exact TeX spelling remains
+available for copying and source comparison. Unfamiliar macros, parameterized
+macros, incomplete commands, and unsupported declaration forms remain source-TeX
+fallbacks. The K-COS display audit uses the pinned MathJax runtime.
 
 Search excerpts omit recognized layout commands and source bookkeeping such as
 `Needspace` and `RecordID`. Balanced arguments keep nested metadata out of the

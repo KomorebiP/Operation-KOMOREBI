@@ -62,7 +62,7 @@
         const title=table?.label || definitionTitle;
         const symbol=table?.display || (!table ? entry.display : null);
         const li=node('li'), heading=node('h2'), link=node('a');
-        link.href=table ? context.source_url : definitionTitle ? (context.reading_url || context.source_url) : entry.url;
+        link.href=table || definitionTitle ? (context.reading_url || context.source_url) : entry.url;
         if(title)link.textContent=title;
         else if(symbol)formula(link,symbol);
         else link.append(node('code',table?.tex || entry.tex));
@@ -81,6 +81,10 @@
         const end=excerpt.length>280 ? Math.max(excerpt.lastIndexOf(' ',280),200) : excerpt.length;
         li.append(node('p',excerpt.slice(0,end)+(end<excerpt.length?'…':''),'notation-excerpt'));
         const actions=node('p',undefined,'notation-result-actions');
+        if(context.reading_url && context.reading_url!==context.source_url) {
+          const passageLink=node('a','Read passage');passageLink.href=context.reading_url;
+          passageLink.title=context.source_label;actions.append(passageLink,node('span',' · '));
+        }
         const sourceLink=node('a','Read source');sourceLink.href=context.source_url;
         sourceLink.title=context.source_label;actions.append(sourceLink);
         const entryLink=node('a','Open entry');entryLink.href=entry.url;
@@ -190,8 +194,13 @@
           const first=list.children.length;
           for(const number of record.occurrences.slice(cursor,cursor+100)) {
             const passage=data.passages[number],source=data.sources[passage.source];
-            const li=node('li'),link=node('a',source.repository_path.split('/').at(-1)+', line '+passage.line);
+            const sourceLabel=source.repository_path.split('/').at(-1)+', line '+passage.line;
+            const li=node('li'),link=node('a',sourceLabel);
             link.href='../'+(source.source_url || source.url)+'#L'+passage.line;
+            if(passage.reading_url) {
+              const passageLink=node('a','Read passage');passageLink.href='../'+passage.reading_url;
+              passageLink.title=sourceLabel;li.append(passageLink,node('span',' · '));
+            }
             li.append(link,node('span',' · '+labels[passage.kind]));list.append(li);
           }
           cursor=Math.min(cursor+100,record.occurrences.length);next.hidden=cursor===record.occurrences.length;

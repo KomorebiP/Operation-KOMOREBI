@@ -349,7 +349,9 @@ SAFE_COMMANDS = set(GLYPHS) | FORMATS | ACCENTS | STRUCTURAL | TEXT_COMMANDS | s
     'lvert rvert lVert rVert vert Vert ldots cdots vdots ddots setminus smallsetminus '
     'top bot prime bullet triangle square Box land lor neg wedge vee bigwedge bigvee '
     'hookrightarrow twoheadrightarrow rightarrow leftleftharpoons rightharpoonup '
-    'mathscr mathrm mathit mathnormal Re Im arg degree deg'.split())
+    'mathscr mathrm mathit mathnormal Re Im arg degree deg '
+    'succeq preceq succ sqcup arctan downarrow uparrow lceil rceil '
+    'Longleftrightarrow Longrightarrow rm'.split())
 
 
 def display_math(tex, macros):
@@ -360,6 +362,18 @@ def display_math(tex, macros):
     forbidden = {'href','url','begin','end','label','ref','eqref','cite','color','textcolor'}
     if len(expanded)>500 or commands-SAFE_COMMANDS or commands & forbidden:
         return None
+    if 'rm' in commands:
+        # Admit the literal braced roman labels used in subscripts, retaining
+        # their source spelling. A declaration alone has no visible symbol.
+        # Complex declaration bodies remain exact-TeX fallbacks.
+        depth=0
+        for token in re.findall(r'\\[A-Za-z]+|\\[\s\S]|[{}]',expanded):
+            if token=='{':depth+=1
+            elif token=='}':depth-=1
+            if depth<0:return None
+        if depth:return None
+        without_labels=re.sub(r'(?<!\\)\{\s*\\rm\s+[A-Za-z0-9][A-Za-z0-9\s]*\}','',expanded)
+        if re.search(r'\\rm\b',without_labels):return None
     return expanded
 
 
@@ -449,12 +463,17 @@ def pack_work_data(data):
 
 
 def extract_work(site, work):
+    from reader_guidance import reading_passage_url
     reader=site.reader
     records=sorted((r for r in reader.records.values() if r['work']==work and
                     PurePosixPath(r['path']).suffix.lower() in TEXT_SUFFIXES),key=lambda r:r['repository_path'])
     sources=[]; passages_all=[]; symbols=collections.defaultdict(list)
     spellings=collections.defaultdict(set); displays={}
     texts={r['repository_path']:site.read_source(r).decode('utf-8-sig') for r in records}
+    reading_sources=set()
+    for book in getattr(reader,'readable_books',{}).values():
+        reading_sources.update(spec['source'] for spec,_,_ in book.get('chapters',[]))
+        reading_sources.update(row['source'] for row in book.get('included_sources',[]))
     supplemental={}
     for main, paths in getattr(reader,'notation_macro_sources',{}).items():
         if main not in texts: continue
@@ -479,9 +498,14 @@ def extract_work(site, work):
         if 'source_url' in record: sources[-1]['source_url']=record['source_url']
         sources[-1]['passages']=len(found)
         sources[-1]['macros']=macros
-        alias_cache={};display_cache={}
+        alias_cache={};display_cache={};reading_cache={}
         for item in found:
             terms=item.pop('symbols');item['source']=number
+            if path in reading_sources:
+                line=item['line']
+                if line not in reading_cache:
+                    reading_cache[line]=reading_passage_url(reader,path,line)
+                if reading_cache[line]:item['reading_url']=reading_cache[line]
             index=len(passages_all);passages_all.append(item)
             for tex in terms:
                 symbols[tex].append(index)
@@ -600,10 +624,9 @@ def build(site):
             search+=' '+(title or '')
             key=(work,source['repository_path'],primary['context'],title)
             if key not in context_ids:
-                from reader_guidance import reading_passage_url
                 context_ids[key]=len(contexts)
                 contexts.append(dict(work=work,title=title,excerpt=excerpts[0][:450],source_url=source_url(source,primary['line']),
-                    reading_url=reading_passage_url(site.reader,source['repository_path'],primary['line']) or source_url(source,primary['line']),
+                    reading_url=primary.get('reading_url') or source_url(source,primary['line']),
                     source_label=PurePosixPath(source['repository_path']).name+', line '+str(primary['line']),
                     table=table_preview(primary['context'],source['macros']) if primary['kind']=='notation-table' else None))
             search_entries.append({k:v for k,v in item.items() if k!='excerpt'} |
@@ -620,7 +643,11 @@ def build(site):
                 excerpt=context_text(p['context'],source['macros'])
                 name=context_text(p.get('definition_title',''),source['macros'])
                 name=': '+name if name and len(name)<=160 else ''
-                body+='<li><p><strong>'+KINDS[p['kind']]+e(name)+'</strong> · <a href="'+site.rel(source_url(source,p['line']),page)+'">'+e(PurePosixPath(source['repository_path']).name)+', line '+str(p['line'])+'</a></p><p class="notation-excerpt">'+e(excerpt[:500]+('…' if len(excerpt)>500 else ''))+'</p><details><summary>Exact mathematical passage</summary><pre><code>'+e(p['expression'])+'</code></pre></details></li>'
+                source_label=PurePosixPath(source['repository_path']).name+', line '+str(p['line'])
+                body+='<li><p><strong>'+KINDS[p['kind']]+e(name)+'</strong> · '
+                if p.get('reading_url'):
+                    body+='<a href="'+e(site.rel(p['reading_url'],page),quote=True)+'" title="'+e(source_label,quote=True)+'">Read passage</a> · '
+                body+='<a href="'+site.rel(source_url(source,p['line']),page)+'">'+e(source_label)+'</a></p><p class="notation-excerpt">'+e(excerpt[:500]+('…' if len(excerpt)>500 else ''))+'</p><details><summary>Exact mathematical passage</summary><pre><code>'+e(p['expression'])+'</code></pre></details></li>'
             occurrence_label='List the source passage' if occurrence_count==1 else 'List all '+str(occurrence_count)+' source passages'
             body+='</ul><button type="button" class="notation-occurrences" data-symbol="'+entry['id']+'" hidden>'+occurrence_label+'</button><div class="notation-all"></div></details>'
             entry_blocks.append(body)
@@ -687,6 +714,9 @@ def verify(root,documents,pages):
             assert p.get('definition_title')==(definition_at(source_definitions[p['source']],p['start'])[1] or None)
             source=data['sources'][p['source']]
             assert 'L'+str(p['line']) in pages[source.get('source_url',source['url'])].ids
+            if p.get('reading_url'):
+                path,fragment=p['reading_url'].split('#',1)
+                assert path in pages and fragment in pages[path].ids
             bysource[p['source']]+=1
         for n,source in enumerate(data['sources']):assert source['passages']==bysource[n]
         assert len(data['entries'])==len({e['tex'] for e in data['entries']})==work['symbols']

@@ -13,6 +13,7 @@ from types import SimpleNamespace
 import unittest
 
 import kcos_reading as kcos
+from kcos_routes import REQUIRED_LABELS, WORKED_EXAMPLE, calculation_navigation, label_targets
 from readable_chapters import expand_math, original_math, render_book
 from reader_documents import ReadingDocuments
 from check_reader_site import Page
@@ -41,6 +42,33 @@ class MathText(HTMLParser):
     def handle_data(self, data):
         if self.depth:
             self.math[-1] += data
+
+
+class CalculationControls(HTMLParser):
+    VOID = {'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input',
+            'link', 'meta', 'param', 'source', 'track', 'wbr'}
+
+    def __init__(self, markup):
+        super().__init__()
+        self.stack, self.controls, self.active = [], [], None
+        self.feed(markup)
+
+    def handle_starttag(self, tag, attrs):
+        attrs = dict(attrs)
+        if tag == 'nav' and 'data-kcos-calculation' in attrs:
+            self.active = dict(attrs=attrs, parent=self.stack[-1],
+                               depth=len(self.stack), links=[])
+            self.controls.append(self.active)
+        if tag == 'a' and self.active is not None:
+            self.active['links'].append(attrs)
+        if tag not in self.VOID:
+            self.stack.append((tag, attrs.get('id')))
+
+    def handle_endtag(self, tag):
+        if self.stack and self.stack[-1][0] == tag:
+            self.stack.pop()
+        if tag == 'nav' and self.active is not None and len(self.stack) == self.active['depth']:
+            self.active = None
 
 
 class KcosReadingTests(unittest.TestCase):
@@ -180,6 +208,69 @@ class KcosReadingTests(unittest.TestCase):
             self.assertEqual(numbers, expected.get(spec.get('printed_chapter'), []), spec['title'])
             self.assertEqual(markup.count('<caption>'), len(numbers),
                              'Uncaptioned source tables must remain unnumbered')
+
+    def test_calculation_routes_follow_source_labels_and_complete_section_boundaries(self):
+        source_labels = self.book['chapters'][0][2].labels
+        targets = {name: source_labels[name]['url']+'#'+source_labels[name]['id']
+                   for name in REQUIRED_LABELS}
+        self.assertEqual(label_targets(self.book), targets)
+        # These boundaries bracket the complete retained examples, including
+        # their figures, imported enclosure result, and closing qualifications.
+        boundaries = [('L329', None), ('L421', None),
+                      ('L200', 'L203'), ('L216', 'L218')]
+        for position, ((label, _, _), (last, following)) in enumerate(zip(WORKED_EXAMPLE, boundaries)):
+            page, _ = targets[label].split('#')
+            markup = (self.output / page).read_text()
+            controls = CalculationControls(markup).controls
+            self.assertEqual(len(controls), 1)
+            control = controls[0]
+            self.assertEqual(control['parent'], ('article', 'chapter-text'))
+            self.assertEqual(control['attrs']['data-kcos-calculation'], label)
+            self.assertEqual(control['attrs']['aria-label'],
+                             'Worked calculation, step '+str(position+1)+' of 4')
+            expected = []
+            if position:
+                expected.append(targets[WORKED_EXAMPLE[position-1][0]])
+            expected.append(kcos.INDEX+'#kcos-worked-example')
+            if position+1 < len(WORKED_EXAMPLE):
+                expected.append(targets[WORKED_EXAMPLE[position+1][0]])
+            self.assertEqual([a['href'] for a in control['links']],
+                             [self.reader.site.rel(url, page) for url in expected])
+            marker = markup.index('data-kcos-calculation="'+label+'"')
+            start = markup.rfind('<nav ', 0, marker)
+            end = markup.index('</nav>', marker)+len('</nav>')
+            self.assertGreater(start, markup.index('id="'+last+'"'))
+            self.assertTrue(markup[:start].endswith('</section>'))
+            if following:
+                self.assertLess(end, markup.index('id="'+following+'"'))
+            else:
+                self.assertTrue(markup[end:].startswith('</article>'))
+            self.assertEqual(markup.count('data-reading-placement="top"'), 1)
+            self.assertEqual(markup.count('data-reading-placement="bottom"'), 1)
+        self.assertEqual(sum(len(CalculationControls((self.output / spec['url']).read_text()).controls)
+                             for spec, _, _ in self.book['chapters']), 4)
+
+    def test_calculation_routes_fail_closed_on_missing_ambiguous_or_nonsection_labels(self):
+        def copied_book():
+            return {**self.book, 'chapters': [
+                (dict(spec), raw, SimpleNamespace(nodes=[{**node, 'labels': list(node['labels'])}
+                                                         for node in chapter.nodes]))
+                for spec, raw, chapter in self.book['chapters']]}
+        def owner(book, label):
+            return next(node for _, _, chapter in book['chapters'] for node in chapter.nodes
+                        if label in node['labels'])
+        book = copied_book()
+        owner(book, 'sec:worked-tilt')['labels'].remove('sec:worked-tilt')
+        with self.assertRaisesRegex(ValueError, 'Missing K-COS reading-path labels'):
+            calculation_navigation(self.reader, book)
+        book = copied_book()
+        owner(book, 'sec:worked-law')['labels'].append('sec:worked-stream')
+        with self.assertRaisesRegex(ValueError, 'Duplicate K-COS reading-path label'):
+            label_targets(book)
+        book = copied_book()
+        owner(book, 'sec:worked-tilt')['kind'] = 'text'
+        with self.assertRaisesRegex(ValueError, 'section heading'):
+            calculation_navigation(self.reader, book)
 
     def test_reading_notes_are_bound_to_the_reviewed_sources_and_evidence(self):
         from reader_guidance import reading_passage_url

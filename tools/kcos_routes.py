@@ -20,7 +20,7 @@ WORKED_EXAMPLE = (
 )
 
 
-def _label_targets(book):
+def label_targets(book):
     """Resolve each route once, using the nodes that own the source labels.
 
     Prepared chapters share a cross-reference dictionary, so iterating each
@@ -53,9 +53,61 @@ def _label_targets(book):
     return labels
 
 
+def calculation_navigation(reader, book):
+    """Place a route control after each complete worked-example section.
+
+    Controls are separate from authored nodes. A following heading at the same
+    or a higher level ends the section; a final section ends with its chapter.
+    """
+    from readable_chapters import HEADINGS
+    labels = label_targets(book)
+    controls = {}
+    total = len(WORKED_EXAMPLE)
+    for position, (label, _, _) in enumerate(WORKED_EXAMPLE):
+        page, anchor = labels[label].split('#', 1)
+        owners = [(chapter, i) for spec, _, chapter in book['chapters']
+                  if spec['url'] == page for i, node in enumerate(chapter.nodes)
+                  if node.get('id') == anchor]
+        if len(owners) != 1:
+            raise ValueError('K-COS calculation label needs one owning section: '+label)
+        chapter, start = owners[0]
+        heading = chapter.nodes[start]
+        if heading['kind'] not in HEADINGS:
+            raise ValueError('K-COS calculation label must identify a section heading: '+label)
+        level = HEADINGS[heading['kind']]
+        end = next((i for i in range(start+1, len(chapter.nodes))
+                    if chapter.nodes[i]['kind'] in HEADINGS and
+                    HEADINGS[chapter.nodes[i]['kind']] <= level), len(chapter.nodes))
+        if end == start+1:
+            raise ValueError('K-COS calculation section has no content: '+label)
+        placement = (page, chapter.nodes[end-1]['id'])
+        if placement in controls:
+            raise ValueError('Overlapping K-COS calculation sections: '+label)
+
+        def link(target, text, description=None):
+            aria = ' aria-label="'+escape(description, quote=True)+'"' if description else ''
+            return '<a href="'+escape(reader.site.rel(target, page), quote=True)+'"'+aria+'>'+escape(text)+'</a>'
+
+        body = ('<nav class="reading-guide-return reading-actions" '
+                'aria-label="Worked calculation, step '+str(position+1)+' of '+str(total)+'" '
+                'data-kcos-calculation="'+escape(label, quote=True)+'">'
+                '<strong>Worked calculation · '+str(position+1)+' of '+str(total)+'</strong>')
+        if position:
+            previous, title, _ = WORKED_EXAMPLE[position-1]
+            body += link(labels[previous], '← Previous: '+title,
+                         'Previous calculation step: '+title)
+        body += link(book['config']['index']+'#kcos-worked-example', 'All calculation steps')
+        if position+1 < total:
+            following, title, _ = WORKED_EXAMPLE[position+1]
+            body += link(labels[following], 'Next: '+title+' →',
+                         'Next calculation step: '+title)
+        controls[placement] = body+'</nav>'
+    return controls
+
+
 def reading_paths(reader, book, page):
     """Return a small index guide, with every manuscript link label-resolved."""
-    labels = _label_targets(book)
+    labels = label_targets(book)
 
     def link(label, title):
         target = escape(reader.site.rel(labels[label], page), quote=True)
