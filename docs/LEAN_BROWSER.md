@@ -378,9 +378,10 @@ service-worker upstream requests may finish caching after a client is stopped.
    it does not establish a public-network speed or memory improvement. Virtual
    response counts include local metadata and differ from upstream requests.
 
-2. **Checked module artifacts before parallel compilers.** First qualify a tiny
-   complete export/import round trip in a fresh compiler, then exercise corrupted
-   parts, stale generations, edits, warnings, initializers and Stop. The current
+2. **Checked module artifacts before parallel compilers.** Qualify complete
+   export/import round trips in a fresh compiler, including corrupted parts,
+   stale generations, edits, warnings, initializers and Stop. The fixed Proof Path
+   qualification below exercises a real retained-source dependency and consumer. The current
    heavy checkpoint experiment exported artifacts but did not establish successful
    fresh-worker import. Cache authorization must come from successful checks,
    not just matching byte hashes. Bind source, module role, ordered imports,
@@ -403,6 +404,58 @@ Pinned source archives and upstream runtime inputs are also candidates for CI
 caching, with independently reviewed receipt checks on every cache hit. A cache's
 own checksum manifest is not sufficient provenance. This can shorten publishing
 without weakening source or runtime validation.
+
+### Reproducing the module-transfer qualification
+
+`tools/lean_checkpoint_probe.py` creates a separate developer probe from a verified
+prepared runtime and the current production adapter. It preserves the public
+loader. The probe accepts only the original `ProofPath.Compression` wrapper and
+original `ProofPath.Recovery` with the existing, separately recorded compatibility
+lemma, plus its explicitly false consumer control. This fixed-source policy uses
+the independently qualified Proof Path import closure before source execution;
+it does not add a general selective frontend or cache API.
+
+From a prepared checkout, use a new output directory:
+
+```sh
+python -B tools/lean_checkpoint_probe.py --runtime .reader-build/lean-wasm --output .reader-build/checkpoint-trial --serve --port 8000
+```
+
+Open `http://127.0.0.1:8000/lean/browser/checkpoint.html` and press **Run transfer
+controls**. The local server supplies the isolation headers needed by the pinned
+pthread compiler. The generated graph records every adapter file and the exact
+runtime, frontend, wrapper, original sources, library manifests and native runtime
+pair. Node must be available; `--node /path/to/node` selects an explicit executable.
+The output directory is never overwritten and cannot be inside the runtime.
+
+The browser qualification exported five complete Compression parts totaling
+19,144 bytes, closed the producer, and checked Recovery successfully in a distinct
+fresh compiler. Its false equality was rejected. Corrupt and missing-part controls
+ran zero consumer compiles. The source producer ran once; these observations do
+not establish a speedup, lower peak memory or initialization-state continuity.
+The [recorded browser result](../verification/browser-lean/proof-path-checkpoint-2026-11-04.json)
+binds this observation to its generated graph and source inputs.
+
+Export authorization requires a final clean synchronous frontend result, including
+its completion marker; warnings cannot mint a receipt. A private in-memory issuance
+seal binds the exact five parts to one originating run. Recomputed public hashes
+cannot authorize a replacement. Installation clones inputs before awaiting hashes,
+consumes its seal once, checks source/build/session bindings and limits before
+writing, and runs with an exclusive worker phase. Any stage or rename failure
+invalidates the receiver, including a partially committed filesystem. All five
+parts are required, with 16 MiB per-part and 64 MiB total limits checked before
+export reads. Stop aborts the run's authorization and cannot schedule a consumer.
+The pause checkbox makes Stop before handoff reproducible; an explicit later Run
+starts a fresh producer. Source and import failures never trigger source retries.
+
+For the generated graph, `node tools/test_lean_checkpoint_probe.mjs
+.reader-build/checkpoint-trial` tests receipt issuance, tampering, competing
+installs, cancellation, owned buffers and injected filesystem failures with mocked
+native compilation. These checks do not run Lean; the browser control above is
+separate. CI builds and checks this probe but does not publish it into Pages.
+Imports in fresh processes can execute initializers again. Persistent artifacts,
+arbitrary edited modules, heavier checkpoints and parallel compilers still need
+separate qualification.
 
 ### Adding a published workspace
 
