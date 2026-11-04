@@ -4,7 +4,7 @@
 
 One polynomial will pass through a Fourier-style residue projector, a Newton/falling-factorial coordinate change, finite differences, exact shift-transfer blocks, and residue refinement. We will keep the objects and operations separate. In particular, we will see why projecting *after* a change of coordinates requires transporting the projector, not reusing its old formula.
 
-The mathematical identities are classical: the roots-of-unity filter, Stirling inversion, Newton interpolation, umbral polynomial coordinates, and the forward difference. The purpose of this example is to exhibit their precise composition and recovery conditions in the realization-and-transfer language of the collection. No new theorem, Lean compilation, general analytic continuation, or novelty claim is made here.
+The mathematical identities are classical: the roots-of-unity filter, Stirling inversion, Newton interpolation, umbral polynomial coordinates, and the forward difference. The purpose of this example is to exhibit their precise composition and recovery conditions in the realization-and-transfer language of the collection. The [Lean companion](../LEAN_READER_COMPANIONS.md) verifies selected coefficient-projector, additive-transport, and rational-polynomial Stirling claims. These classical identities carry no novelty or general analytic-continuation claim.
 
 [Read the complete exact Python source](https://KomorebiP.github.io/Operation-KOMOREBI/read/roots-unity-falling-factorial.html) · [Download all source and results](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/roots-unity-falling-factorial/source-and-results.zip) · [Review the generated exact diagram](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/roots-unity-falling-factorial/projection-diagram.svg)
 
@@ -847,6 +847,12 @@ Except for the explicitly identified characteristic-three example, the construct
 The program tests the general finite identities, not merely the displayed numerical example. It checks independent Stirling/finite-difference coefficient routes, inverse triangular matrices, idempotence and orthogonality, exact cyclic traces for moduli two through six, operator conjugation in ordinary-power matrices, finite-difference and general translation transfers, refinements, transported multiplication, the rational spectral formula, exhaustive function enumeration, filtered formal EGFs, explicit modular basis-inversion and characteristic-three difference controls, and deliberately invalid operator substitutions.
 
 No assertion about an unrelated arithmetic conjecture follows from these finite polynomial identities.
+
+### Lean coverage and the coordinate-domain boundary
+
+The [formal claim map](../../formal/reader-examples/CLAIM_MAP.json) links this example to the compiled coefficient-projector and additive-transport laws, and to the classical Stirling expansion as an actual identity in \(\mathbb Q[X]\). The generic transport theorem requires the actual additive equivalence and the relevant source-projector laws as premises. It does not construct the concrete falling-factorial basis equivalence on this page. Full coefficient sequences and finite polynomial carriers are kept distinct.
+
+The roots-of-unity averaging identity, Newton interpolation algorithm, characteristic-three arguments, and the specific translated or differentiated polynomial operators are outside this companion's formal coverage. The [verification guide](../LEAN_READER_COMPANIONS.md) provides the exact sources, receipts, and replay commands.
 
 ## 11. Run, inspect, and reproduce
 
