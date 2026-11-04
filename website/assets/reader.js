@@ -389,17 +389,34 @@ if (form) {
   const sizeControl = document.querySelector("#search-size");
   const extraOptions = document.querySelector("#search-extra-options");
   const pagers = Array.from(document.querySelectorAll(".search-pagination"));
+  const engine = window.KomorebiSearch && new window.KomorebiSearch.Client(form.dataset.index);
   let indexPromise, facetPromise, found = [], page = 1, pageSize = 40, generation = 0, queryWords = [];
+  let renderGeneration = 0, shownPage = 1;
   let mathQueue = Promise.resolve();
-  function renderPage() {
-    if (window.MathJax && window.MathJax.typesetClear) window.MathJax.typesetClear([results]);
-    results.replaceChildren();
+  async function renderPage() {
+    const display = ++renderGeneration, request = generation;
     const pages = Math.max(1, Math.ceil(found.length / pageSize));
     page = Math.max(1, Math.min(page, pages));
     const startIndex = (page - 1) * pageSize;
+    const batch = found.slice(startIndex, startIndex + pageSize);
+    results.setAttribute("aria-busy", "true");
+    let visibleRows;
+    try { visibleRows = await engine.details(batch); }
+    catch {
+      if (display === renderGeneration && request === generation) {
+        page = shownPage;
+        saveParams({page: page > 1 ? String(page) : ""});
+        status.textContent = "Results could not load. Try Search again or browse the work index.";
+        results.removeAttribute("aria-busy");
+      }
+      return;
+    }
+    if (display !== renderGeneration || request !== generation) return;
+    if (window.MathJax && window.MathJax.typesetClear) window.MathJax.typesetClear([results]);
+    results.replaceChildren();
     results.start = startIndex + 1;
     const equations = [];
-    for (const item of found.slice(startIndex, startIndex + pageSize)) {
+    for (const item of visibleRows) {
       const li = document.createElement("li");
       const heading = document.createElement("h2");
       const link = document.createElement("a");
@@ -458,6 +475,8 @@ if (form) {
       pager.querySelector('[data-search-page="next"]').disabled = page === pages;
     }
     saveParams({page: page > 1 ? String(page) : "", per_page: pageSize !== 40 ? String(pageSize) : ""});
+    shownPage = page;
+    results.removeAttribute("aria-busy");
     mathQueue = mathQueue.then(async () => {
       if (window.MathJax && window.MathJax.startup) {
         await window.MathJax.startup.promise;
@@ -468,7 +487,7 @@ if (form) {
   }
   async function search(event, preservePage = false) {
     if (event) event.preventDefault();
-    if (!preservePage) page = 1;
+    if (!preservePage) { page = 1; shownPage = 1; }
     pageSize = Number(sizeControl.value);
     const request = ++generation;
     const query = input.value;
@@ -496,19 +515,17 @@ if (form) {
     status.textContent = "Searching…";
     results.setAttribute("aria-busy", "true");
     try {
-      if (!indexPromise) indexPromise = fetch(form.dataset.index).then(response => {
-        if (!response.ok) throw new Error("Search index could not be loaded");
-        return response.json();
-      }).then(rows => rows.map(item => ({...item, normalizedTitle: normalized(item.title),
-        normalizedText: normalized(item.title + " " + item.text)}))).catch(error => { indexPromise = null; throw error; });
+      if (!engine) throw new Error("Search could not be initialized");
+      if (!indexPromise) indexPromise = engine.load().then(rows => rows.map(item => ({...item,
+        normalizedTitle: normalized(item.title)}))).catch(error => { indexPromise = null; throw error; });
       if (hasWorkFacets && !facetPromise) {
         facetPromise = fetch(form.dataset.facets).then(response => {
           if (!response.ok) throw new Error("Work facets could not be loaded");
           return response.json();
         }).catch(error => { facetPromise = null; throw error; });
       }
-      const [index, subjectIndex] = await Promise.all([
-        indexPromise, hasWorkFacets ? facetPromise : Promise.resolve(null)
+      const [index, subjectIndex, matches] = await Promise.all([
+        indexPromise, hasWorkFacets ? facetPromise : Promise.resolve(null), engine.match(words)
       ]);
       if (request !== generation) return;
       const matchesWorkFacets = item => !hasWorkFacets || (item.work_ids || []).some(id => {
@@ -518,16 +535,19 @@ if (form) {
       });
       found = index.filter(item => (!repository || item.group === repository) &&
         (!type || item.kind === type || type === "Visual guides" && item.visual_guide) && (!workId || (item.work_ids || []).includes(workId)) &&
-        matchesWorkFacets(item) && words.every(word => item.normalizedText.includes(word)));
+        matchesWorkFacets(item) && (matches === null || matches.has(item.id)));
       const score = item => (normalized(query) === item.normalizedTitle ? 100 : 0) +
         words.filter(word => item.normalizedTitle.includes(word)).length * 10 +
         (item.kind === "Claims" || item.kind === "Glossary" ? 1 : 0);
       found.sort((a, b) => score(b) - score(a) || a.title.localeCompare(b.title));
       queryWords = words;
-      renderPage();
+      await renderPage();
     } catch (error) {
-      if (request === generation) status.textContent = "Search could not load. Use the work index or glossary, or try again.";
-    } finally { if (request === generation) results.removeAttribute("aria-busy"); }
+      if (request === generation) {
+        status.textContent = "Search could not load. Use the work index or glossary, or try again.";
+        results.removeAttribute("aria-busy");
+      }
+    }
   }
   form.addEventListener("submit", search);
   group.addEventListener("change", search);
@@ -557,6 +577,7 @@ if (form) {
     results.removeAttribute("aria-busy");
     found = [];
     page = 1;
+    shownPage = 1;
     pageSize = 40;
     if (extraOptions) { extraOptions.open = false; extraOptions.querySelector("summary").textContent = "More options"; }
     results.start = 1;

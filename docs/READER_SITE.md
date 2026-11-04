@@ -8,6 +8,21 @@ All twelve core papers have formatted HTML reading editions. Each retains its
 recorded mathematical scope; companion guides and atlas coverage are described
 on the individual reading pages.
 
+## Search catalogue
+
+`tools/search_catalog.py` generates the compact catalogue at `search-index.json`.
+The browser loads titles, facets, and a shared term dictionary, then fetches
+postings for matching terms and previews for the visible results. All indexed
+text remains searchable, including substring and symbol-name matches. Authored
+math previews and result links are retained. Empty search pages load no catalogue.
+
+The assets use revision-specific paths. Preview requests are shared and bounded
+in memory; failed requests can be retried. The site checker verifies the complete
+posting/preview signatures, target links, revision, and payload budgets. These
+budgets catch a return to sending all source text with the initial search.
+Run `python -B -m unittest discover -s tools -p 'test_search_catalog.py' -v`
+and `node --test tools/test_search_engine.cjs tools/test_search_interface.cjs`.
+
 ## Machine-Native Reasoning reading edition
 
 The Reviewed Mathematical Core is available at
