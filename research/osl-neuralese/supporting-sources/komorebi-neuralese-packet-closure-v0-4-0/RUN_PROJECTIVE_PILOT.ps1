@@ -1,1 +1,0 @@
-$ErrorActionPreference="Stop"; $Root=Split-Path -Parent $MyInvocation.MyCommand.Path; Set-Location $Root; python .\run_projective_training.py --profile pilot --output-dir .\results\local\projective_pilot

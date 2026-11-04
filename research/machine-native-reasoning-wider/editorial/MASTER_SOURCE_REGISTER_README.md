@@ -1,1 +1,0 @@
-Original 24-document source catalog, with latest editions explicitly selected for LSM, PPT and MS. This table is a publication source register, not a new proof audit. Full provenance remains in `sources/compendium/SOURCE_CATALOG.json`.

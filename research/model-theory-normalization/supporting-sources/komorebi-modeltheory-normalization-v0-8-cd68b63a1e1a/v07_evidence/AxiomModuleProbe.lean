@@ -1,3 +1,0 @@
-module
-import NormalizedComputed09
-#print axioms Komorebi.NormalizedRegression.NormalizedComputed09.c108_computed

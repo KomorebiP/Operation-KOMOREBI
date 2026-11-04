@@ -1,1 +1,0 @@
-$ErrorActionPreference="Stop"; Set-Location $PSScriptRoot; python .\run_ambient_diagnostics.py --profile pilot --output-dir .\results\local\ambient_pilot; if($LASTEXITCODE){throw "Ambient pilot assay failed with exit code $LASTEXITCODE"}

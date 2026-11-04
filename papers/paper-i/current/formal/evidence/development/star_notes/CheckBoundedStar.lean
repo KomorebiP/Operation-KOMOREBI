@@ -1,4 +1,0 @@
-import PaperIRelease.BoundedStar
-#print axioms Komorebi.PaperIRelease.BoundedSupport.adjoint_closed_iff_symmetric
-#print axioms Komorebi.PaperIRelease.BoundedSupport.star_subalgebra_iff_equivalence
-#print axioms Komorebi.PaperIRelease.BoundedSupport.directed_two_packet_boundary

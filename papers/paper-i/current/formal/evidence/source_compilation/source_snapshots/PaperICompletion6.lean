@@ -1,1 +1,0 @@
-import PaperICompletion6.SixWayCyclicCriterion
