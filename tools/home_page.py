@@ -106,7 +106,7 @@ def home_page():
         ('Read side by side', 'Keep a statement beside its proof, or compare two reading pages.', 'side-by-side.html', 'Compare'),
         ('Saved reading', 'Collect useful works and passages in this browser, then return to them.', 'reading-list.html', 'Save'),
         ('Python playground', 'Choose a worked example, edit the code, and inspect the results.', 'playground.html', 'Calculate'),
-        ('Try a proof in Lean', 'Explore a proof from Paper XII, edit its steps, and see what Lean says.', 'lean/playground.html', 'Prove'),
+        ('Lean workspace', 'Choose a published workspace, edit a proof, and check it with our browser compiler.', 'lean/browser/index.html', 'Check'),
     ]
     cards = ''.join(
         '<a class="home-route" href="'+html.escape(target, quote=True)+'">'

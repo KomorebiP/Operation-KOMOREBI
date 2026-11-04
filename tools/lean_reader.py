@@ -247,8 +247,6 @@ def source_controls(reader, record, text, page):
     from urllib.parse import quote
     body += '<nav class="lean-actions" aria-label="Lean source actions"><a href="'+site.rel(BOOKS[work]['index'],page)+'">Read the paper</a>'
     body += '<a href="'+quote(site.rel(record['file_url'],page),safe='/')+'" download>Download source</a>'+paired_route(site,page)
-    from browser_lean import action
-    body += action(site,page,source=record['repository_path'])
     from lean_browser import action as local_action
     body += local_action(site,page,source=record['repository_path'],retained=True)
     from lean_execution import action as run_action
@@ -293,8 +291,6 @@ def build(reader):
             body += '<p class="lean-library-note">'+e(book['lean_reader_note'])+'</p>'
         if book.get('lean_reader_guide'):
             body += '<p><a class="button" href="'+site.rel(book['lean_reader_guide'],page)+'">Current source and coverage guide</a></p>'
-        from browser_lean import action
-        body += action(site,page,work=work)
         from lean_browser import action as local_action
         body += local_action(site,page,work=work)
         common = source_root(reader,work)
@@ -333,8 +329,7 @@ def build(reader):
     body += '<nav class="lean-actions" aria-label="Lean library routes"><a href="'+site.rel('read/index.html','lean/index.html')+'">Reading library</a>'+paired_route(site,'lean/index.html')+'</nav>'
     body += '<p class="lean-library-note">Coverage labels describe the existing evidence. Browsing the source does not run Lean.</p>'
     from lean_workspaces import WORKSPACES
-    body += '<p class="lean-playground-route"><a class="button" href="'+site.rel('lean/browser/index.html','lean/index.html')+'">Edit and run in your browser</a> <span>Free local compiler · '+str(len(WORKSPACES))+' prepared workspaces</span></p>'
-    body += '<p class="lean-playground-route"><a href="'+site.rel('lean/playground.html','lean/index.html')+'">Hosted Paper XII editor</a> <span>External Lean service</span></p>'
+    body += '<p class="lean-playground-route"><a class="button" href="'+site.rel('lean/browser/index.html','lean/index.html')+'">Open the Lean workspace</a> <span>Compiler runs in this browser · '+str(len(WORKSPACES))+' prepared workspaces</span></p>'
     body += '<p class="lean-playground-route"><a class="button" href="'+site.rel('lean/run.html','lean/index.html')+'">Run with dependencies</a> <span>All displayed source files · native Lean</span></p>'
     for group,core in [('Core papers',True),('Books and monographs',False)]:
         selected = [item for item in catalog if bool(re.fullmatch(r'paper-[ivx]+',item['work'])) == core]
