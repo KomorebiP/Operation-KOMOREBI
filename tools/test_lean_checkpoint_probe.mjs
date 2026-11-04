@@ -10,11 +10,14 @@ const base=resolve(process.argv[2],'assets/lean-wasm')+sep;
 const load=name=>import(pathToFileURL(base+name));
 const codec=await load('checkpoint-codec.js');
 const {CHECKPOINT,expectedParts,sha256,validateCapsule,assertLengths,MAX_PART,MAX_TOTAL}=codec;
+const moduleCount=CHECKPOINT.modules.length,partCount=expectedParts().length,syntheticBytes=partCount*2;
+assert.ok(moduleCount===1||moduleCount===3);
+const partError=new RegExp('exactly '+(moduleCount===1?'five':'fifteen'));
 const fixture=await load('fixture.js');
 const {createCompiler}=await load('compiler.js');
-const session={workspace:CHECKPOINT.workspace,generation:1,run:'a'.repeat(32),boundary:1};
+const session={workspace:CHECKPOINT.workspace,generation:1,run:'a'.repeat(32),boundary:CHECKPOINT.boundary};
 const identity='b'.repeat(64);
-const receipts=CHECKPOINT.modules.map(entry=>({...entry,nonce:'1'.repeat(32)}));
+const receipts=CHECKPOINT.modules.map((entry,i)=>({...entry,nonce:String(i+1).repeat(32)}));
 async function capsuleFor(receiptsOverride=receipts,sessionOverride=session){
   const parts=[];
   for(const [i,entry] of expectedParts().entries()){
@@ -24,13 +27,13 @@ async function capsuleFor(receiptsOverride=receipts,sessionOverride=session){
   return {schema:1,scope:CHECKPOINT.scope,session:sessionOverride,identity,receipts:receiptsOverride,parts};
 }
 const capsule=await capsuleFor();let checks=0;
-assert.equal(await validateCapsule(capsule,session,identity),10);checks++;
+assert.equal(await validateCapsule(capsule,session,identity),syntheticBytes);checks++;
 async function rejects(change,pattern){const bad=structuredClone(capsule);change(bad);await assert.rejects(validateCapsule(bad,session,identity),pattern);checks++;}
 await rejects(c=>{c.parts[0].bytes[0]^=1;},/checksum/);
 await rejects(c=>{c.parts[0].sha256='c'.repeat(64);},/checksum/);
 await rejects(c=>{c.parts[0].size++;},/own its exact byte buffer/);
-await rejects(c=>{c.parts.pop();},/exactly five/);
-await rejects(c=>{c.parts.push(c.parts[0]);},/exactly five/);
+await rejects(c=>{c.parts.pop();},partError);
+await rejects(c=>{c.parts.push(c.parts[0]);},partError);
 await rejects(c=>{c.parts[1].suffix=c.parts[0].suffix;},/identity/);
 await rejects(c=>{c.parts[0].module='../CheckpointTiny.Pure42';},/identity/);
 await rejects(c=>{c.parts[0].path='/lib/lean/arbitrary';},/fields/);
@@ -40,7 +43,7 @@ await rejects(c=>{c.receipts[0].wrappedSha='c'.repeat(64);},/receipt/);
 await rejects(c=>{c.receipts[0].nonce='';},/receipt/);
 await rejects(c=>{c.session.run='d'.repeat(32);},/stale/);
 await rejects(c=>{c.session.generation++;},/stale/);
-await rejects(c=>{c.session.boundary=3;},/boundary/);
+await rejects(c=>{c.session.boundary=CHECKPOINT.boundary+1;},/boundary/);
 await rejects(c=>{c.scope='conventions-original-a3-v2';},/identity/);
 await rejects(c=>{c.identity='d'.repeat(64);},/identity/);
 await rejects(c=>{c.parts[0].size=MAX_PART+1;},/budget/);
@@ -53,7 +56,7 @@ assert.equal(assertLengths(lengths),MAX_TOTAL);checks++;
 lengths[4].size=1;assert.throws(()=>assertLengths(lengths),/total byte budget/);checks++;
 
 // Protocol tests only: the fake worker never executes Lean. Actual proof and
-// five-part filesystem import acceptance remain required in the browser.
+// complete filesystem import acceptance remain required in the browser.
 let behavior='complete',onLoadLayer=null;const workers=[];
 class FakeWorker{
   constructor(){this.messages=[];workers.push(this);}
@@ -77,15 +80,20 @@ class FakeWorker{
       this.send({type:'result',id:message.id,success:true});
     }
     if(message.type==='checkpoint_export')this.send({type:'checkpoint_exported',id:message.id,capsule:await capsuleFor(message.receipts,message.session)});
-    if(message.type==='checkpoint_install')this.send({type:'checkpoint_installed',id:message.id,parts:5,bytes:10,identity});
+    if(message.type==='checkpoint_install')this.send({type:'checkpoint_installed',id:message.id,parts:partCount,bytes:syntheticBytes,identity});
   });}
   terminate(){this.terminated=true;}
 }
 globalThis.Worker=FakeWorker;
 globalThis.fetch=async()=>new Response('',{status:404});
 const compiler=signal=>createCompiler({baseUrl:'https://example.test/engine/',syntaxCheck:'frontend',signal});
-const run=compiler=>compiler.run(fixture.moduleSource(fixture.SOURCE,fixture.MODULE),undefined,
-  {syntaxSource:fixture.SOURCE,mainModule:fixture.MODULE,checkpointModule:fixture.MODULE});
+const run=async compiler=>{
+  let result;
+  for(const row of fixture.A_SOURCES??[{module:fixture.MODULE,source:fixture.SOURCE}])
+    result=await compiler.run(fixture.moduleSource(row.source,row.module),undefined,
+      {syntaxSource:row.source,mainModule:row.module,checkpointModule:row.module});
+  return result;
+};
 const never=await compiler();
 await assert.rejects(never.exportCheckpoint(session,receipts),/exact completed probe source/);checks++;
 assert.equal(workers.at(-1).messages.filter(m=>m.type==='checkpoint_export').length,0);checks++;
@@ -103,10 +111,10 @@ behavior='complete';const a=await compiler();
 await assert.rejects(a.run(fixture.moduleSource(fixture.SOURCE+'\n',fixture.MODULE),undefined,
   {syntaxSource:fixture.SOURCE+'\n',mainModule:fixture.MODULE,checkpointModule:fixture.MODULE}),/allowlisted/);checks++;
 assert.equal(workers.at(-1).messages.filter(m=>m.type==='compile').length,0);checks++;
-assert.equal((await run(a)).exitCode,0);await assert.rejects(run(a),/executes once/);checks++;assert.equal(workers.at(-1).messages.filter(m=>m.type==='compile').length,1);checks++;const issued=await a.exportCheckpoint(session);checks++;
+assert.equal((await run(a)).exitCode,0);await assert.rejects(run(a),/executes once/);checks++;assert.equal(workers.at(-1).messages.filter(m=>m.type==='compile').length,moduleCount);checks++;const issued=await a.exportCheckpoint(session);checks++;
 await a.dispose();await a.closed;
 const forged=structuredClone(issued);forged.parts[0].bytes[0]^=1;forged.parts[0].sha256=await sha256(forged.parts[0].bytes);
-assert.equal(await validateCapsule(forged,session),10);checks++;
+assert.equal(await validateCapsule(forged,session),syntheticBytes);checks++;
 const b=await compiler();await assert.rejects(b.installCheckpoint(forged,session),/privately issued artifact provenance/);checks++;
 assert.equal(workers.at(-1).messages.filter(m=>m.type==='checkpoint_install'||m.type==='compile').length,0);checks++;
 await b.closed;
@@ -124,7 +132,7 @@ await run(a2);const issued2=await a2.exportCheckpoint(session2);await a2.dispose
 const receiver=await compiler(),receiverWorker=workers.at(-1),mutable=structuredClone(issued2),mutableSession=structuredClone(session2);
 const installing=receiver.installCheckpoint(mutable,mutableSession);
 mutable.parts[0].bytes[0]^=1;mutable.parts[0].sha256='f'.repeat(64);mutableSession.run='f'.repeat(32);mutable.scope='mutated';
-assert.equal((await installing).parts,5);checks++;
+assert.equal((await installing).parts,partCount);checks++;
 const posted=receiverWorker.messages.find(m=>m.type==='checkpoint_install');
 assert.equal(posted.capsule.parts[0].bytes[0],issued2.parts[0].bytes[0]);checks++;
 assert.equal(posted.session.run,session2.run);assert.equal(posted.capsule.scope,CHECKPOINT.scope);checks++;
@@ -162,7 +170,11 @@ await assert.rejects(loadingReceiver.installCheckpoint(loadingCapsule,loadSessio
 onLoadLayer=null;
 assert.equal(loadingWorker.messages.filter(m=>m.type==='checkpoint_install'||m.type==='compile').length,0);checks++;
 await loadingReceiver.closed;
-for(let i=0;i<5;i++)await rejects(c=>{c.parts.splice(i,1);},/exactly five/);
+for(let i=0;i<partCount;i++)await rejects(c=>{c.parts.splice(i,1);},partError);
+if(moduleCount>1){
+  await rejects(c=>{c.receipts.pop();},/exact completed source receipt/);
+  await rejects(c=>{c.receipts[1].nonce=c.receipts[0].nonce;},/receipt/);
+}
 
 // Exercise the generated real worker's checkpoint RPC and filesystem transaction.
 // Its native compiler and build measurement are mocked here, not Lean's proof result.
@@ -192,7 +204,7 @@ function transaction({writeFailure=0,renameFailure=0,corruptStage=false,collisio
   const context=vm.createContext({self,location:{search:''},URLSearchParams,URL,Uint8Array,ArrayBuffer,crypto:webcrypto,
     setTimeout,clearTimeout,TextEncoder,TextDecoder,performance,codecInjected:codec,identityInjected:identity,
     fetch(){bootFetches++;throw Error('Unexpected boot after terminal failure');},
-    compileCountInjected:exporting?1:0,Module:{FS,_lean_wasm_compile(){nativeCompiles++;throw Error('No native compile in this control');}}});
+    compileCountInjected:exporting?moduleCount:0,Module:{FS,_lean_wasm_compile(){nativeCompiles++;throw Error('No native compile in this control');}}});
   const inspect=vm.runInContext(workerSource+`
     moduleReady=true;checkpointCompileCount=compileCountInjected;
     checkpointCodecPromise=Promise.resolve(codecInjected);
@@ -204,11 +216,11 @@ function transaction({writeFailure=0,renameFailure=0,corruptStage=false,collisio
 const install={type:'checkpoint_install',id:1,session,capsule};
 const validTransaction=transaction();await validTransaction.dispatch(install);
 assert.equal(validTransaction.messages.at(-1).message.type,'checkpoint_installed');checks++;
-assert.equal(validTransaction.inspect.committed(),true);assert.equal(validTransaction.renames,5);checks++;
+assert.equal(validTransaction.inspect.committed(),true);assert.equal(validTransaction.renames,partCount);checks++;
 for(const part of capsule.parts)assert.deepEqual(validTransaction.files.get(codec.artifactPath(part.module,part.suffix)),part.bytes);checks++;
 await validTransaction.dispatch(install);
-assert.equal(validTransaction.inspect.ready(),false);assert.equal(validTransaction.renames,5);checks++;
-for(const fault of [{writeFailure:3},{renameFailure:3},{corruptStage:true},{collision:true}]) {
+assert.equal(validTransaction.inspect.ready(),false);assert.equal(validTransaction.renames,partCount);checks++;
+for(const fault of [{writeFailure:3},{renameFailure:3},...(moduleCount>1?[{renameFailure:6},{renameFailure:11}]:[]),{corruptStage:true},{collision:true}]) {
   const tx=transaction(fault);await tx.dispatch(install);
   assert.equal(tx.messages.at(-1).message.type,'checkpoint_error');assert.equal(tx.inspect.ready(),false);checks++;
   assert.ok(!tx.messages.some(row=>row.message.type==='checkpoint_installed'));checks++;
@@ -225,7 +237,7 @@ const oversized=transaction({exporting:true,oversize:true});
 await oversized.dispatch({type:'checkpoint_export',id:4,session,receipts});
 assert.equal(oversized.messages.at(-1).message.type,'checkpoint_error');assert.equal(oversized.reads,0);checks++;
 const owned=transaction({exporting:true});await owned.dispatch({type:'checkpoint_export',id:5,session,receipts});
-const exported=owned.messages.at(-1);assert.equal(exported.message.type,'checkpoint_exported');assert.equal(exported.transfers.length,5);checks++;
+const exported=owned.messages.at(-1);assert.equal(exported.message.type,'checkpoint_exported');assert.equal(exported.transfers.length,partCount);checks++;
 for(const part of exported.message.capsule.parts) {
   assert.equal(part.bytes.buffer.byteLength,part.size);
   assert.notEqual(part.bytes,owned.files.get(codec.artifactPath(part.module,part.suffix)));

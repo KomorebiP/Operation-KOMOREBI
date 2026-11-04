@@ -381,9 +381,10 @@ service-worker upstream requests may finish caching after a client is stopped.
 2. **Checked module artifacts before parallel compilers.** Qualify complete
    export/import round trips in a fresh compiler, including corrupted parts,
    stale generations, edits, warnings, initializers and Stop. The fixed Proof Path
-   qualification below exercises a real retained-source dependency and consumer. The current
-   heavy checkpoint experiment exported artifacts but did not establish successful
-   fresh-worker import. Cache authorization must come from successful checks,
+   qualification below exercises a real retained-source dependency and consumer.
+   The separate Conventions diagnostic also exercises a three-module handoff;
+   it closes its receiver after the selected final target. Reusing that receiver
+   for an extra check failed in earlier trials. Cache authorization must come from successful checks,
    not just matching byte hashes. Bind source, module role, ordered imports,
    transitive dependency receipts, compiler/library versions and guard policy;
    invalidate edited nodes and every dependent module.
@@ -456,8 +457,59 @@ installs, cancellation, owned buffers and injected filesystem failures with mock
 native compilation. These checks do not run Lean; the browser control above is
 separate. CI builds and checks this probe but does not publish it into Pages.
 Imports in fresh processes can execute initializers again. Persistent artifacts,
-arbitrary edited modules, heavier checkpoints and parallel compilers still need
+arbitrary edited producers, initializer effects, reusable receiver processes and parallel compilers still need
 separate qualification.
+
+### Reproducing the three-module Conventions diagnostic
+
+`tools/lean_checkpoint_heavy_probe.py` builds a separate fixed-source developer
+diagnostic. It checks original `QuantumArithmeticBridge`, `FiniteFourier` and
+`SemanticBridge` once in producer A, exports all fifteen parts, closes A, and
+installs the artifacts into fresh receiver B. B checks the pinned original
+`Mathlib.Tactic.Positivity.Finset` and `Mathlib.Tactic.Positivity` sources followed
+by its final Conventions target. Original source and library hashes are checked
+before creating the output directory. The full existing Mathlib layer is used;
+this does not qualify a new selective import closure.
+
+```sh
+python -B tools/lean_checkpoint_heavy_probe.py --runtime .reader-build/lean-wasm --output .reader-build/conventions-trial --serve --port 8001
+node tools/test_lean_checkpoint_probe.mjs .reader-build/conventions-trial
+node tools/test_lean_checkpoint_memory.mjs .reader-build/conventions-trial
+```
+
+Open `http://127.0.0.1:8001/lean/browser/checkpoint.html`. A normal Run checks the
+original final target. Select **Check a false edit in the final Conventions
+target** for a separate explicit Run with the original target plus `1 = 2` proved
+incorrectly by `rfl`. Each Run creates fresh compilers and retains the single-use
+issuance and shared-abort-signal guards. Both scenarios stop after the selected
+target, with exactly three compile requests to A and three to B. The pause control
+supports checking Stop between producer export and receiver startup.
+
+This diagnostic requests a 1024 MiB initial shared memory, falling back to
+768 MiB only if allocation fails. It still respects the artifact's declared
+minimum and maximum. The activity log records the actual initial and maximum
+page counts; a 1 GiB initial allocation with a 4 GiB maximum does not measure heap
+growth, peak physical memory, or memory reclamation after closing a worker.
+Public compiler memory selection is unchanged.
+
+The automated controls cover fifteen-part shape and byte budgets, distinct
+completion receipts, private issuance, cancellation, and failures during each
+module's filesystem installation. The original five-part probe retains its
+93 control groups; the three-module graph runs 115, plus five mocked allocation
+selection controls. Mocked controls do not establish native Lean success.
+CI builds and tests both private probes without putting their generated files
+into Pages.
+
+Earlier trials checked the original Conventions chain successfully, then hit a
+native IO error when an extra source was checked in the same receiver. Both an
+initializer-inspection source and a separate false proof encountered that error.
+An independent fresh-worker initializer API control completed successfully; this
+does not establish the error's cause or rule out initialization effects. Finishing
+the receiver at its actual target is a bounded workaround, not a general compiler
+call limit or state-continuity claim. See the
+[recorded observations](../verification/browser-lean/conventions-checkpoint-2026-11-04.json)
+for graph identities, successful controls and retained failures. Arbitrary edited
+producers, persistent artifact caching and parallel compilers remain unqualified.
 
 ### Adding a published workspace
 
