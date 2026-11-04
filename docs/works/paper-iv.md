@@ -38,7 +38,6 @@ Use the links below to read this work and its supporting files. Ctrl+click (Comm
 - [Edition README](../../papers/paper-iv/current/README.md)
 - [Read PDF](../../papers/paper-iv/current/readers/Paper_IV_Traditional_Final.pdf)
 - [Visual guide (PDF)](../../papers/paper-iv/current/readers/Paper_IV_Visual_Guide_Final.pdf)
-- [Maintained edition guide](../PAPER_IV_VISUAL_RECONSTRUCTION.md)
 
 [Back to work navigation](#work-navigation) · [Worked examples](#worked-examples-for-this-work)
 
@@ -54,7 +53,7 @@ Find the statement number or section in the [reading files](#read), then read it
 
 ## Lean
 
-Start with the [maintained edition guide](../PAPER_IV_VISUAL_RECONSTRUCTION.md) and the build instructions below. Check the correspondence records to see which written claims the Lean declarations cover. Source links lead to `.lean` files. PDF guides explain the formalization.
+Start with the [edition guide](../../papers/paper-iv/current/README.md) and the build instructions below. Check the correspondence records to see which written claims the Lean declarations cover. Source links lead to `.lean` files. PDF guides explain the formalization.
 
 - [Lean guide (PDF)](../../papers/paper-iv/current/readers/Paper_IV_Lean_Guide_Final.pdf)
 - [Lean sources (directory)](../../papers/paper-iv/current/Paper_IV_Verification_Closeout_v1.1.0/formalization/lean/)
@@ -65,7 +64,7 @@ Start with the [maintained edition guide](../PAPER_IV_VISUAL_RECONSTRUCTION.md) 
 
 ## Code
 
-These links include code, examples, checks, or build tools. Read the [maintained edition guide](../PAPER_IV_VISUAL_RECONSTRUCTION.md) for setup instructions and what each command does. All software is beta and work in progress.
+These links include code, examples, checks, or build tools. Read the [edition guide](../../papers/paper-iv/current/README.md) for setup instructions and what each command does. All software is beta and work in progress.
 
 - [Code / scripts: scripts](../../papers/paper-iv/current/scripts/)
 

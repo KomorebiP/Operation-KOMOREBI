@@ -58,8 +58,6 @@ Technical reading release is complete. The accepted 16-module core does not cove
 
 [Return to this work: paper, proofs, Lean, and code](works/paper-iv.md)
 
-[Edition and reader guide](PAPER_IV_VISUAL_RECONSTRUCTION.md)
-
 [Source directory](../papers/paper-iv/current) · [README.md](../papers/paper-iv/current/README.md) · [Paper_IV_Verification_Closeout_v1.1.0/README.md](../papers/paper-iv/current/Paper_IV_Verification_Closeout_v1.1.0/README.md) · [Paper_IV_Verification_Closeout_v1.1.0/RELEASE_SCOPE.md](../papers/paper-iv/current/Paper_IV_Verification_Closeout_v1.1.0/RELEASE_SCOPE.md)
 
 <a id="paper-v"></a>
