@@ -1152,6 +1152,8 @@ def render_reading_index(reader):
             pdf=reader.primary_pdf(work)
             if pdf:body+='<a href="'+site.rel(pdf['url'],page)+'">Read PDF</a>'
             body+='</nav></section>'
+        if not core:
+            body+='<section class="work"><p class="eyebrow">Expanded Machine-Native Reasoning</p><h3>Machine-Native Reasoning: complete reading edition</h3><p>97 chapters in 13 parts, plus glossary, appendices, and references.</p><nav aria-label="Expanded Machine-Native Reasoning reading formats"><a class="button" href="research-machine-native-reasoning-wider/preface.html">Start reading</a><a href="research-machine-native-reasoning-wider/reconstructed-edition.html">Contents</a><a href="research-machine-native-reasoning-wider/book.html">PDF and source</a></nav></section>'
         body+='</div></section>'
     body+=('<h2>Reading options</h2><p>Use Text settings in a chapter to choose a text size and font, or use browser zoom. '
            'Find a chapter filters the contents by title or reading-page number. Wide equations and tables have separate areas that can be scrolled with the keyboard. '

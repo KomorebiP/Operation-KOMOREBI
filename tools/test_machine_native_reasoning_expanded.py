@@ -50,9 +50,9 @@ class ExpandedMNRTests(unittest.TestCase):
             self.assertEqual(len([x for x in page.ids if x.startswith('chapter-')]),97)
             self.assertEqual(len(set(page.ids)),len(page.ids))
             urls=[unquote(x) for x in page.links if 'book.html' in x and 'download=' not in urlsplit(x).query]
-            self.assertEqual(len(urls),98)
+            self.assertEqual(len(urls),2)
             for chapter in record['chapters']:
-                self.assertTrue(any(parse_qs(urlsplit(x).query).get('page')==[str(chapter['physical_page'])] for x in urls))
+                self.assertIn('chapter-'+str(chapter['number']).zfill(2)+'.html',page.links)
             generated={p.relative_to(tmp).as_posix():Page(p.read_text(encoding='utf-8')) for p in Path(tmp).rglob('*.html')}
             for name,content in generated.items():
                 for url in content.links:
@@ -61,13 +61,13 @@ class ExpandedMNRTests(unittest.TestCase):
                     target=posixpath.normpath(posixpath.join(posixpath.dirname(name),unquote(split.path))) if split.path else name
                     if target in generated and split.fragment:
                         self.assertIn(unquote(split.fragment),generated[target].ids,(name,url))
-            self.assertEqual(len(site.search),98)
+            self.assertEqual(len(site.search),122)
             self.assertTrue(all(x['work_ids']==['research-machine-native-reasoning-wider'] for x in site.search))
             self.assertFalse(record['new_lean_execution']);self.assertFalse(record['new_proof_review'])
             self.assertIn('not an independent proof audit',markup)
             self.assertTrue((Path(tmp)/BOOK).is_file())
             self.assertTrue((Path(tmp)/SCRIPT).is_file())
-            self.assertLess(sum(p.stat().st_size for p in Path(tmp).rglob('*') if p.is_file()),200000)
+            self.assertLess(sum(p.stat().st_size for p in Path(tmp).rglob('*') if p.is_file()),1800000)
             self.assertEqual(record['delivery'],'verified-browser-download-from-pinned-github-parts')
             self.assertEqual(hashlib.sha256(artifact_bytes(ROOT,record['assets']['source'])).hexdigest(),SOURCE_SHA256)
 

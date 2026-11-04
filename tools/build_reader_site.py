@@ -317,7 +317,7 @@ class Site:
         if reading_page:
             from reading_navigation import chapter_layout
             work=re.search(r'data-reading-work="([a-z0-9-]+)"',body)
-            if work and 'class="reading-outline"' in body:
+            if work and 'class="reading-outline"' in body and 'data-reading-no-notation="true"' not in body:
                 from reader_guidance import notation_help
                 controls,dialog=notation_help(self,path,work[1])
                 body=chapter_layout(body,controls)+dialog

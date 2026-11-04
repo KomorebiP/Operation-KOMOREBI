@@ -23,7 +23,8 @@ class Page(HTMLParser):
         self.navigation=0;self.menu_buttons=[];self.menu_panels=[]
         self.metadata=[];self.canonicals=[];self.head_title=[]
         self._head_open=False;self._title_open=False
-        self.feed(text)
+        from reading_payload import expand
+        self.feed(expand(text))
     def handle_starttag(self,tag,attrs):
         a=dict(attrs)
         if tag=='head':self._head_open=True
@@ -335,6 +336,8 @@ def inspect_site(root):
     for name, entry in python['examples'].items():
         assert editors['code-'+name] == (root/entry['url']).read_text(encoding='utf-8')
     documents=json.loads((root/'documents/index.json').read_bytes())
+    from machine_native_reasoning_html import verify as verify_mnr_html
+    verify_mnr_html(root)
     from machine_native_reasoning_expanded import verify as verify_expanded_mnr
     verify_expanded_mnr(root)
     editions=json.loads((root/'editorial-editions.json').read_bytes()) if (root/'editorial-editions.json').is_file() else []

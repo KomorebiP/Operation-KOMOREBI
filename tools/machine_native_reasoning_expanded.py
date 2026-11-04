@@ -135,6 +135,8 @@ def publish(site):
     reader_body+='<noscript><p>The PDF reader and verified downloads require JavaScript. '+link('Return to the contents and artifact records',PAGE)+'</p></noscript></section>'
     reader_body+='<script type="module" src="'+e(site.rel(SCRIPT,BOOK),quote=True)+'?v='+record['delivery_script_sha256'][:12]+'"></script>'
     site.page(BOOK,'Machine-Native Reasoning: PDF reader and downloads',reader_body,github(REPOSITORY,site.revision,MANIFEST))
+    from machine_native_reasoning_html import publish as publish_html
+    publish_html(site)
     return record
 
 def verify(root):

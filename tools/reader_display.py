@@ -43,11 +43,13 @@ def has_statement_finder(config):
     return bool(re.fullmatch(r'paper-[ivx]+',config['work']) or config.get('statement_navigation'))
 
 
+EXTRA_EDITIONS={}
+
 def edition(path):
     from readable_chapters import BOOKS,statement_directory_url
     match=re.fullmatch(r'read/([a-z0-9-]+)/[^/]+\.html',path)
-    if not match or match[1] not in BOOKS:return None
-    config=BOOKS[match[1]]
+    if not match or match[1] not in {**BOOKS,**EXTRA_EDITIONS}:return None
+    config={**BOOKS,**EXTRA_EDITIONS}[match[1]]
     pages={config['index'],*[c['url'] for c in config['chapters']]}
     if config.get('bib_page'):pages.add(config['bib_page'])
     if has_statement_finder(config):pages.add(statement_directory_url(config))

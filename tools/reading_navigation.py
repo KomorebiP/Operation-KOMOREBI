@@ -67,6 +67,7 @@ def contents_list(config, page, position=None):
         return listing(sequence)
     body = '<div class="reading-contents-groups">'
     for title, group in groups:
+        if config.get('menu_current_group_only') and position is not None and not any(positions[entry['url']]==position for entry in group):continue
         active = any(positions[entry['url']] == position for entry in group)
         body += '<details class="reading-contents-group"'+(' open' if active else '')+'><summary>'+html.escape(title)+' <span>('+str(len(group))+')</span></summary>'+listing(group)+'</details>'
     return body+'</div>'
@@ -90,7 +91,7 @@ def navigation(config, page, placement='top'):
     body += '<div class="reading-position"><span><a href="'+overview+'" aria-label="'+e(overview_label+' overview',quote=True)+'">'+e(overview_label)+'</a></span><span>'+str(position+1)+' of '+str(len(sequence))+'</span></div>'
     body += '<div class="reading-steps">'+step(previous,'previous','← Previous' if position else '← Contents')
     body += step(following,'next','Next →' if position+1<len(sequence) else ('Continue reading →' if config.get('partial') else 'Contents →'))+'</div>'
-    if placement=='bottom' and config.get('footer_index_only'):
+    if config.get('menu_index_only') or (placement=='bottom' and config.get('footer_index_only')):
         return body+'<a class="reading-menu-link button" rel="contents" href="'+relative(config['index'])+'">'+e(config.get('index_title','Full contents'))+'</a></nav>'
     body += '<details class="reading-menu"><summary>'+e(config.get('menu_title','Chapters'))+'</summary><div class="reading-menu-panel"><p><a rel="contents" href="'+relative(config['index'])+'">'+e(config.get('index_title','Full contents'))+'</a></p>'
     body += contents_list(config,page,position)+'</div></details></nav>'

@@ -26,16 +26,17 @@ def enhance(body, page, lean_works=None):
     from lean_reader import directory
     if work in (BOOKS if lean_works is None else lean_works):
         controls+='<a href="'+relative(directory(work))+'">Inspect Lean</a>'
-    controls+='<details class="reading-paper-menu"><summary>Switch work</summary><nav aria-label="Reading editions">'
-    for group,core in [('Core papers',True),('Books and monographs',False)]:
-        controls+='<section><h2>'+group+'</h2><ul>'
-        for identifier,book in BOOKS.items():
-            if bool(re.fullmatch(r'paper-[ivx]+',identifier))!=core:continue
-            current = ' aria-current="'+('page' if is_index or is_directory else 'location')+'"' if identifier == work else ''
-            target=statement_directory_url(book) if is_directory and has_statement_finder(book) else book['index']
-            controls+='<li><a href="'+relative(target)+'"'+current+'><strong>'+e(book['label'])+'</strong><span>'+e(book['title'])+'</span></a></li>'
-        controls+='</ul></section>'
-    controls+='</nav></details>'
+    if not config.get('compact_chrome'):
+        controls+='<details class="reading-paper-menu"><summary>Switch work</summary><nav aria-label="Reading editions">'
+        for group,core in [('Core papers',True),('Books and monographs',False)]:
+            controls+='<section><h2>'+group+'</h2><ul>'
+            for identifier,book in BOOKS.items():
+                if bool(re.fullmatch(r'paper-[ivx]+',identifier))!=core:continue
+                current = ' aria-current="'+('page' if is_index or is_directory else 'location')+'"' if identifier == work else ''
+                target=statement_directory_url(book) if is_directory and has_statement_finder(book) else book['index']
+                controls+='<li><a href="'+relative(target)+'"'+current+'><strong>'+e(book['label'])+'</strong><span>'+e(book['title'])+'</span></a></li>'
+            controls+='</ul></section>'
+        controls+='</nav></details>'
     if not is_index and not is_directory:
         controls += ('<details class="reading-display" hidden><summary>Text settings</summary>'
                      '<div><label for="reading-text-size">Text size</label>'
