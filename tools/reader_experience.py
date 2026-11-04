@@ -63,7 +63,7 @@ def introduction(root, component, assessment, page):
             '**Recorded results and limits:** '+assessment['scope']+'\n\n'
             '**Remaining work:** '+assessment['next_step']+'\n\n'
             'The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.\n\n'+
-            ' · '.join(link(t,p,page) for t,p in [('Reading routes','docs/READING_ROUTES.md'),
+            ' � '.join(link(t,p,page) for t,p in [('Reading routes','docs/READING_ROUTES.md'),
             ('Glossary','docs/GLOSSARY.md'),('Claim links','docs/CLAIM_LINKS.md#'+component['id']),
             ('Download this work','docs/DOWNLOADS.md#'+component['id'])])+'\n\n')
     if component['id']=='monographs-quantum-and-circuits':
@@ -71,13 +71,13 @@ def introduction(root, component, assessment, page):
     topics=[t for t in data.get('learning_topics',[]) if component['id'] in t['works']]
     if topics:
         text+='### Worked examples for this work\n\n'
-        text+='These introductory calculations lead into this work’s subject. The source and evidence links below retain the work’s recorded scope.\n\n'
+        text+='These introductory calculations lead into this work�s subject. The source and evidence links below retain the work�s recorded scope.\n\n'
         for topic in topics:
-            text+='- '+link(str(topic['number'])+'. '+topic['title'],topic['example'],page)+' · '+link('Terms and source routes','docs/LEARNING_MAP.md#'+topic['id'],page)+'\n'
+            text+='- '+link(str(topic['number'])+'. '+topic['title'],topic['example'],page)+' � '+link('Terms and source routes','docs/LEARNING_MAP.md#'+topic['id'],page)+'\n'
         text+='\n'
         demonstrations=[link(title,path,page) for path,(title,works) in GUIDED_DEMONSTRATIONS.items() if component['id'] in works]
         if demonstrations:
-            text+='**Complete demonstration with runnable code:** '+' · '.join(demonstrations)+'.\n\n'
+            text+='**Complete demonstration with runnable code:** '+' � '.join(demonstrations)+'.\n\n'
     if component['id']=='monographs-special-functions':
         text+='### Explore Special Functions\n\n'+link('Books, five families, and the coupled-function lab','docs/SPECIAL_FUNCTIONS.md',page)+'\n\n'
     return text
@@ -91,16 +91,16 @@ def quantum_reading_guide(page):
     text+='The book asks what a change of representation makes accessible, and what it costs to reach, update, and reconstruct that representation. Its four treatments use distinct models.\n\n'
     text+='| Treatment | Chapters | Question to follow |\n|---|---|---|\n'
     for title,chapters,question in [
-        ('Arithmetic realizations','1–2','How does an arithmetic selector become a Fourier projector and a normalized quantum state? Begin with the twelve-dimensional example.'),
-        ('Symmetry collapse','3–7','When do invariant packets and moving frames give an accessible simulation? Track coordinate, update, and measurement costs alongside dimension.'),
-        ('Catalytic gate set distortion','8–12','Can temporarily leaving a restricted gate model reduce cost while restoring the required boundary state? Keep the gate alphabet and resource convention fixed.'),
-        ('Circuit obstructions','13–21','What do restoration, safe discrepancy covers, and projection imply within the stated circuit and linear-summary models?')]:
+        ('Arithmetic realizations','1�2','How does an arithmetic selector become a Fourier projector and a normalized quantum state? Begin with the twelve-dimensional example.'),
+        ('Symmetry collapse','3�7','When do invariant packets and moving frames give an accessible simulation? Track coordinate, update, and measurement costs alongside dimension.'),
+        ('Catalytic gate set distortion','8�12','Can temporarily leaving a restricted gate model reduce cost while restoring the required boundary state? Keep the gate alphabet and resource convention fixed.'),
+        ('Circuit obstructions','13�21','What do restoration, safe discrepancy covers, and projection imply within the stated circuit and linear-summary models?')]:
         text+='| '+title+' | '+chapters+' | '+question+' |\n'
-    text+='\nStart with chapters 1–2, then choose the treatment closest to your question. Appendices A–F give the formal and computational companions, claim coverage, and verification boundaries. The glossary and collected references follow them.\n\n'
+    text+='\nStart with chapters 1�2, then choose the treatment closest to your question. Appendices A�F give the formal and computational companions, claim coverage, and verification boundaries. The glossary and collected references follow them.\n\n'
     text+='### Read with the evidence\n\n'
     text+='The recorded formal inventory has **96 arithmetic declarations and 115 circuit declarations across thirteen modules**. These include supporting statements. They cover selected developments; the symmetry and catalytic treatments retain their written arguments and bounded computational evidence.\n\n'
-    text+='For circuits, the formal companion covers C01, the sharing-aware degree dependency, and the numerical C02 bound. Read the maintained claim register for C03–C08 and their written or finite evidence. Universal efficient quantum simulation, unrestricted circuit hardness, and the wider catalytic synthesis questions remain open in this edition.\n\n'
-    text+=link('Formal replay requirements and exact coverage',base+'release_tools/README.md',page)+' · '+link('Current circuit claim register',base+'sources/circuits/Komorebi_Circuit_Obstructions_Research_Edition_1.0/source/komorebi-circuit-obstructions-v1.2.0/docs/CLAIMS.md',page)+'\n\n'
+    text+='For circuits, the formal companion covers C01, the sharing-aware degree dependency, and the numerical C02 bound. Read the maintained claim register for C03�C08 and their written or finite evidence. Universal efficient quantum simulation, unrestricted circuit hardness, and the wider catalytic synthesis questions remain open in this edition.\n\n'
+    text+=link('Formal replay requirements and exact coverage',base+'release_tools/README.md',page)+' � '+link('Current circuit claim register',base+'sources/circuits/Komorebi_Circuit_Obstructions_Research_Edition_1.0/source/komorebi-circuit-obstructions-v1.2.0/docs/CLAIMS.md',page)+'\n\n'
     text+='### Try the arithmetic phase example\n\n'
     text+='Follow '+link('the modulus-12 calculation','docs/demonstrations/QUANTUM_PHASE_MEASUREMENT.md#10-the-collections-modulus-12-phase-example',page)+', then [change the phase in the browser]('+SITE+'playground.html#physics-arithmetic-phase). Compare coherent sign replacement with coordinate dephasing. The '+link('exact Python program','examples/quantum_phase_measurement.py',page)+' reproduces this finite teaching example using the standard library; it does not run Lean.\n\n'
     return text
@@ -160,11 +160,12 @@ def render_reader_pages(root, components, assessments):
     config = load(root)
     out = {}
     out.update(render_learning_pages(root, config, components))
-    footer = '\n[Reading routes](../READING_ROUTES.md) · [Hand-worked examples](../HAND_WORKED_EXAMPLES.md) · [Browse works](../BROWSE.md) · [Glossary](../GLOSSARY.md)\n'
+    footer = '\n[Reading routes](../READING_ROUTES.md) � [Hand-worked examples](../HAND_WORKED_EXAMPLES.md) � [Browse works](../BROWSE.md) � [Glossary](../GLOSSARY.md)\n'
     for key,(title,body) in ROUTES.items():
         out['docs/routes/'+key+'.md'] = '# '+title+'\n\n'+body+footer
-    out['docs/READING_ROUTES.md'] = '# Choose a reading route\n\nStart with the task you want to complete. These routes are editorial suggestions and do not change the recorded status of any work.\n\n'+ '\n'.join('- ['+title+'](routes/'+key+'.md)' for key,(title,_) in ROUTES.items())+'\n\n[Hand-worked examples](HAND_WORKED_EXAMPLES.md) · [Searchable website]('+SITE+') · [Browse works](BROWSE.md) · [Glossary](GLOSSARY.md) · [First runs](FIRST_RUN.md)\n'
+    out['docs/READING_ROUTES.md'] = '# Choose a reading route\n\nStart with the task you want to complete. These routes are editorial suggestions and do not change the recorded status of any work.\n\n'+ '\n'.join('- ['+title+'](routes/'+key+'.md)' for key,(title,_) in ROUTES.items())+'\n\n[Hand-worked examples](HAND_WORKED_EXAMPLES.md) � [Searchable website]('+SITE+') � [Browse works](BROWSE.md) � [Glossary](GLOSSARY.md) � [First runs](FIRST_RUN.md)\n'
     out['docs/READING_ROUTES.md']=out['docs/READING_ROUTES.md'].replace('\n- [New to Komorebi]', '\nFor the collection as a whole, read the [project overview](START_HERE.md) and [project map](PROJECT_MAP.md). For a complete calculation, start with [Euler numbers](demonstrations/EULER_PACKETS.md), then compare the signal and quantum routes in the [extended case-study index](DEMONSTRATIONS.md#extended-case-studies). The [three elementary demonstrations](DEMONSTRATIONS.md#three-elementary-demonstrations) offer shorter introductions.\n\n- [New to Komorebi]',1)
+    out['docs/READING_ROUTES.md']=out['docs/READING_ROUTES.md'].replace('\nFor the collection as a whole,', '\n[Choose a guided reading path]('+SITE+'read/start.html)\nfor a paper or book with both a complete HTML manuscript and an HTML visual guide.\nEach guide offers a visual introduction, a study sequence, and supporting evidence.\n\nFor the collection as a whole,',1)
     out['docs/GLOSSARY.md']=render_glossary(config)
     out['docs/READING_ROUTES.md']+='\n[Explore the physics collection](PHYSICS_COLLECTION.md): packet currents, quantum phase, continuum approximation, special functions, and research studies.\n'
     out['docs/READING_ROUTES.md']+='\n[Explore Special Functions](SPECIAL_FUNCTIONS.md): current reading volumes, five families, an exact coupled-function lab, and formal evidence.\n'
@@ -172,10 +173,10 @@ def render_reader_pages(root, components, assessments):
     downloads=downloads.replace('These are reading selections.', 'Use [Build your own ZIP]('+SITE+'downloads.html#build-a-zip) to combine files from several works. Start with reading files or PDFs, then adjust individual manuscript sources, Lean files, code, guides, and worked examples. The selector shows the file count and size, adds available license notices, and checks each file against its recorded SHA-256 checksum. Choose Prepare ZIP, then Save ZIP when it is ready. You can cancel preparation without losing your choices. Custom ZIPs support up to 200 MiB of source files and are prepared in your browser. The ready-made ZIPs also work without JavaScript.\n\nThese are reading selections.',1)
     claim_data=json.loads((root/'manifests/claim-navigation.json').read_bytes())
     counts={w['id']:sum(r['work_id']==w['id'] for r in claim_data['records']) for w in claim_data['works']}
-    claims='# Follow a written claim\n\nThe [searchable claim index]('+SITE+'claims.html) covers all 12 core papers with '+str(len(claim_data['records']))+' reading records. Search by title, statement text, source label or recorded Lean name. Filter by paper and statement type, then share the page address or a record’s permanent link.\n\nPaper I retains its 108 correspondence records. The source labels 69 as covered. Papers II through XII index explicit statement blocks in their current TeX manuscripts and literal included sections. The index keeps definitions, conjectures, classical inputs, and numerical certificates distinct from theorems. Historical environments and statements introduced only through macro expansion are outside this extraction. Counts describe reading entries, not the number of proved or formalized results.\n\nA proof link identifies the recorded passage or an immediately following proof block. It does not assess correctness. Paper I’s existing Lean mappings are retained. Lean correspondence for individual claims for Papers II through XII has not been transcribed into this index. Their formal guides, Lean coverage, code and evidence remain linked at paper level. This update performs no new proof review or Lean run.\n\n'
+    claims='# Follow a written claim\n\nThe [searchable claim index]('+SITE+'claims.html) covers all 12 core papers with '+str(len(claim_data['records']))+' reading records. Search by title, statement text, source label or recorded Lean name. Filter by paper and statement type, then share the page address or a record�s permanent link.\n\nPaper I retains its 108 correspondence records. The source labels 69 as covered. Papers II through XII index explicit statement blocks in their current TeX manuscripts and literal included sections. The index keeps definitions, conjectures, classical inputs, and numerical certificates distinct from theorems. Historical environments and statements introduced only through macro expansion are outside this extraction. Counts describe reading entries, not the number of proved or formalized results.\n\nA proof link identifies the recorded passage or an immediately following proof block. It does not assess correctness. Paper I�s existing Lean mappings are retained. Lean correspondence for individual claims for Papers II through XII has not been transcribed into this index. Their formal guides, Lean coverage, code and evidence remain linked at paper level. This update performs no new proof review or Lean run.\n\n'
     for c in components:
         identifier=c['id']
-        downloads += '<a id="'+identifier+'"></a>\n\n## '+c['title']+'\n\n[Reading ZIP and contents]('+SITE+'downloads.html#'+identifier+') · '+link('Work and evidence','docs/works/'+identifier+'.md','docs/DOWNLOADS.md')+'\n\n'
+        downloads += '<a id="'+identifier+'"></a>\n\n## '+c['title']+'\n\n[Reading ZIP and contents]('+SITE+'downloads.html#'+identifier+') � '+link('Work and evidence','docs/works/'+identifier+'.md','docs/DOWNLOADS.md')+'\n\n'
         if assessments[identifier].get('editorial_edition'):
             downloads+='[Revised reading edition and editable sources]('+SITE+'downloads/'+identifier+'-reading-edition.zip). The original source selection above remains available.\n\n'
         claims += '<a id="'+identifier+'"></a>\n\n## '+c['title']+'\n\n'
@@ -183,9 +184,9 @@ def render_reader_pages(root, components, assessments):
             claims+='[Open '+str(counts[identifier])+' '+('correspondence records' if identifier=='paper-i' else 'written statement records')+']('+SITE+'claims.html#'+identifier+').\n\n'
         else:
             claims+='A detailed statement index has not yet been transcribed for this work. Follow its written proofs and any linked correspondence map. This does not imply that a map or proof is absent from the source edition.\n\n'
-        claims += link('Written proofs','docs/works/'+identifier+'.md#written-proofs','docs/CLAIM_LINKS.md')+' · '+link('Lean','docs/works/'+identifier+'.md#lean','docs/CLAIM_LINKS.md')+' · '+link('Code','docs/works/'+identifier+'.md#code','docs/CLAIM_LINKS.md')+' · '+link('Evidence','docs/works/'+identifier+'.md#evidence','docs/CLAIM_LINKS.md')+'\n\n'
-    downloads+='## Obtain a full component\n\nUse Git 2.25 or later for sparse checkout. Replace COMPONENT_PATH with the exact source directory linked from the work page. Record the checked-out revision.\n\n```text\ngit clone --filter=blob:none --no-checkout https://github.com/KomorebiP/Operation-KOMOREBI.git komorebi-work\ncd komorebi-work\ngit sparse-checkout init --cone\ngit sparse-checkout set COMPONENT_PATH\ngit checkout main\ngit rev-parse HEAD\n```\n\nThis obtains the selected component and root files. Dependencies or sibling projects named by its build instructions may still need to be added. For the complete collection checks, use a full checkout as described in [Verification](VERIFICATION.md).\n\n[Browse works](BROWSE.md) · [Reading routes](READING_ROUTES.md)\n'
-    claims+='[Browse works](BROWSE.md) · [Evidence labels](COMPLETION_STATUS.md)\n'
+        claims += link('Written proofs','docs/works/'+identifier+'.md#written-proofs','docs/CLAIM_LINKS.md')+' � '+link('Lean','docs/works/'+identifier+'.md#lean','docs/CLAIM_LINKS.md')+' � '+link('Code','docs/works/'+identifier+'.md#code','docs/CLAIM_LINKS.md')+' � '+link('Evidence','docs/works/'+identifier+'.md#evidence','docs/CLAIM_LINKS.md')+'\n\n'
+    downloads+='## Obtain a full component\n\nUse Git 2.25 or later for sparse checkout. Replace COMPONENT_PATH with the exact source directory linked from the work page. Record the checked-out revision.\n\n```text\ngit clone --filter=blob:none --no-checkout https://github.com/KomorebiP/Operation-KOMOREBI.git komorebi-work\ncd komorebi-work\ngit sparse-checkout init --cone\ngit sparse-checkout set COMPONENT_PATH\ngit checkout main\ngit rev-parse HEAD\n```\n\nThis obtains the selected component and root files. Dependencies or sibling projects named by its build instructions may still need to be added. For the complete collection checks, use a full checkout as described in [Verification](VERIFICATION.md).\n\n[Browse works](BROWSE.md) � [Reading routes](READING_ROUTES.md)\n'
+    claims+='[Browse works](BROWSE.md) � [Evidence labels](COMPLETION_STATUS.md)\n'
     out['docs/DOWNLOADS.md']=downloads
     out['docs/CLAIM_LINKS.md']=claims
     return {p:s.rstrip()+'\n' for p,s in out.items()}
@@ -197,15 +198,15 @@ def render_glossary(config):
     text+='This guide explains '+str(len(terms))+' terms used in the collection and its finite examples. '
     text+='Use the [first reading route](#a-first-reading), [compare nearby ideas](#compare-nearby-ideas), browse a subject, or open the [alphabetical index](#alphabetical-index).\n\n'
     text+='[Find a glossary term on the reading website]('+SITE+'collection/GLOSSARY.html#glossary-lookup): search names, abbreviations, definitions and short examples, or choose a subject. Open the glossary beside a paper with **Read side by side**.\n\n'
-    text+='A word can have a more specific meaning in another paper. The paper’s definitions and hypotheses take precedence. Examples and source links provide context without changing any recorded evidence status.\n\n'
-    text+='[Look up notation across the collection](NOTATION_INDEX.md) · [Work through the calculations by hand](HAND_WORKED_EXAMPLES.md) · [Papers, proofs, Lean, and code by topic](LEARNING_MAP.md) · [First software runs](FIRST_RUN.md)\n\n'
+    text+='A word can have a more specific meaning in another paper. The paper�s definitions and hypotheses take precedence. Examples and source links provide context without changing any recorded evidence status.\n\n'
+    text+='[Look up notation across the collection](NOTATION_INDEX.md) � [Work through the calculations by hand](HAND_WORKED_EXAMPLES.md) � [Papers, proofs, Lean, and code by topic](LEARNING_MAP.md) � [First software runs](FIRST_RUN.md)\n\n'
     if config.get('glossary_start'):
         text+='## A first reading\n\nFollow these terms for a short route through the finite examples. Each definition links to a worked calculation.\n\n'
         for index, step in enumerate(config['glossary_start'], 1):
-            text+=str(index)+'. '+' · '.join('['+terms[key]['term']+'](#'+key+')' for key in step['terms'])+' — '+step['description']+'\n'
+            text+=str(index)+'. '+' � '.join('['+terms[key]['term']+'](#'+key+')' for key in step['terms'])+' � '+step['description']+'\n'
         text+='\n'
     if config.get('glossary_comparisons'):
-        text+='## Compare nearby ideas\n\nThese distinctions use the glossary’s stated settings. Follow both entries for their definitions and examples.\n\n'
+        text+='## Compare nearby ideas\n\nThese distinctions use the glossary�s stated settings. Follow both entries for their definitions and examples.\n\n'
         text+='| Terms | Distinction to keep in view |\n|---|---|\n'
         for comparison in config['glossary_comparisons']:
             text+='| '+' / '.join('['+terms[key]['term']+'](#'+key+')' for key in comparison['terms'])+' | '+comparison['distinction']+' |\n'
@@ -213,12 +214,12 @@ def render_glossary(config):
     text+='## Browse by subject\n\n'
     for section in config['glossary_sections']:
         count=sum(term['section']==section['id'] for term in terms.values())
-        text+='- ['+section['title']+'](#'+section['id']+') — '+str(count)+' terms\n'
+        text+='- ['+section['title']+'](#'+section['id']+') � '+str(count)+' terms\n'
     text+='\n'
     for section in config['glossary_sections']:
         group=[x for x in config['glossary'] if x['section']==section['id']]
         text+='<a id="'+section['id']+'"></a>\n\n## '+section['title']+'\n\n'+section['description']+'\n\n'
-        text+=' · '.join('['+x['term']+'](#'+x['id']+')' for x in group)+'\n\n'
+        text+=' � '.join('['+x['term']+'](#'+x['id']+')' for x in group)+'\n\n'
         for term in group:
             text+='<a id="'+term['id']+'"></a>\n\n### '+term['term']+'\n\n'+term['definition']+'\n\n'
             if term.get('aliases'):text+='**Also called:** '+', '.join(term['aliases'])+'.\n\n'
@@ -234,7 +235,7 @@ def render_glossary(config):
             elif term['section']=='claims-and-evidence':
                 links.append('[How to inspect a proof](routes/PROOF_REVIEW.md)')
             links.extend('['+terms[key]['term']+'](#'+key+')' for key in term.get('related',[]))
-            text+=' · '.join(links)+'\n\n'
+            text+=' � '.join(links)+'\n\n'
     text+='## Symbols in the introductory example\n\n'
     text+='The examples use the following notation. The reading column spells out symbols for readers who are unfamiliar with them.\n\n'
     text+='| Symbol | Read as | Meaning here |\n|---|---|---|\n'
@@ -245,11 +246,11 @@ def render_glossary(config):
     alphabet={}
     for term in sorted(config['glossary'],key=lambda x:x['term'].casefold()):
         alphabet.setdefault(term['term'][0].upper(),[]).append(term)
-    text+=' · '.join('['+letter+'](#index-'+letter.lower()+')' for letter in alphabet)+'\n\n'
+    text+=' � '.join('['+letter+'](#index-'+letter.lower()+')' for letter in alphabet)+'\n\n'
     for letter, group in alphabet.items():
         text+='<a id="index-'+letter.lower()+'"></a>\n\n### '+letter+'\n\n'
-        text+=' · '.join('['+x['term']+'](#'+x['id']+')' for x in group)+'\n\n'
-    text+='[Reading routes](READING_ROUTES.md) · [Hand-worked examples](HAND_WORKED_EXAMPLES.md) · [First runs](FIRST_RUN.md) · [Browse works](BROWSE.md)\n'
+        text+=' � '.join('['+x['term']+'](#'+x['id']+')' for x in group)+'\n\n'
+    text+='[Reading routes](READING_ROUTES.md) � [Hand-worked examples](HAND_WORKED_EXAMPLES.md) � [First runs](FIRST_RUN.md) � [Browse works](BROWSE.md)\n'
     return text
 
 
@@ -259,7 +260,7 @@ def source_routes(topic, components, page):
         component=components[identifier]
         base='docs/works/'+identifier+'.md'
         text+='### '+component['title']+'\n\n'
-        text+=' · '.join(link(label,base+'#'+anchor,page) for label,anchor in
+        text+=' � '.join(link(label,base+'#'+anchor,page) for label,anchor in
             [('Read','read'),('Written proofs','written-proofs'),('Lean coverage','lean'),('Code and setup','code'),('Evidence','evidence')])+'\n\n'
     if topic.get('source_passages'):
         text+='**Source passages:**\n\n'
@@ -270,7 +271,7 @@ def source_routes(topic, components, page):
     text+=topic.get('code_guide_note','The guide covers related constructions and their software interfaces.')+'\n\n'
     if topic.get('check'):
         text+=link('Python arithmetic check for this example: '+topic['check']+'()', 'tools/check_hand_examples.py#L'+str(topic['_check_line']),page)+'. This checks the displayed rational, modular or finite-set calculations exactly.\n\n'
-    text+='The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.\n\n'
+    text+='The Lean links open each work�s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.\n\n'
     return text
 
 
@@ -289,12 +290,12 @@ def render_learning_pages(root, config, components):
     related=[c for c in components if c['group']!='papers' and any(c['id'] in t['works'] for t in topics)]
     text='# From examples to papers, proofs, Lean, and code\n\n'
     text+='Choose a topic to move from a hand calculation to definitions and related source material. Each linked work has return links to these examples. These are subject routes, not new theorem-to-Lean correspondences.\n\n'
-    text+='[All hand-worked examples](HAND_WORKED_EXAMPLES.md) · [Glossary](GLOSSARY.md) · [Browse works](BROWSE.md) · [Example coverage by work](EXAMPLE_COVERAGE.md)\n\n'
+    text+='[All hand-worked examples](HAND_WORKED_EXAMPLES.md) � [Glossary](GLOSSARY.md) � [Browse works](BROWSE.md) � [Example coverage by work](EXAMPLE_COVERAGE.md)\n\n'
     jumps=[]
     if core:jumps.append('[Core papers](#start-from-a-core-paper)')
     if related:jumps.append('[Monographs and other works](#start-from-a-monograph-or-another-work)')
     jumps.append('[Topics](#topics)')
-    text+='Jump to: '+' · '.join(jumps)+'\n\n'
+    text+='Jump to: '+' � '.join(jumps)+'\n\n'
     if core:
         text+='## Start from a core paper\n\n'
         text+='Choose the paper you are reading. The examples introduce selected ideas. They do not cover every result or establish new Lean correspondences.\n\n'
@@ -302,7 +303,7 @@ def render_learning_pages(root, config, components):
             relevant=[t for t in topics if component['id'] in t['works']]
             label=component['title'].split(':',1)[0]
             text+='- '+link(label,'docs/works/'+component['id']+'.md'+('#worked-examples-for-this-work' if relevant else '#read'),page)+': '
-            text+=(' · '.join(link(str(t['number'])+'. '+t['title'],t['example'],page) for t in relevant) if relevant else 'No introductory example is listed yet.')+'\n'
+            text+=(' � '.join(link(str(t['number'])+'. '+t['title'],t['example'],page) for t in relevant) if relevant else 'No introductory example is listed yet.')+'\n'
         text+='\n'
     if related:
         text+='## Start from a monograph or another work\n\n'
@@ -310,7 +311,7 @@ def render_learning_pages(root, config, components):
         for component in related:
             relevant=[t for t in topics if component['id'] in t['works']]
             text+='- '+link(component['title'],'docs/works/'+component['id']+'.md#worked-examples-for-this-work',page)+': '
-            text+=' · '.join(link(str(t['number'])+'. '+t['title'],t['example'],page) for t in relevant)+'\n'
+            text+=' � '.join(link(str(t['number'])+'. '+t['title'],t['example'],page) for t in relevant)+'\n'
         text+='\n'
     text+='## Topics\n\n'+ '\n'.join('- ['+str(t['number'])+'. '+t['title']+'](#'+t['id']+')' for t in topics)+'\n\n'
     out={}
@@ -318,7 +319,7 @@ def render_learning_pages(root, config, components):
     for index,topic in enumerate(topics):
         text+='<a id="'+topic['id']+'"></a>\n\n## '+str(topic['number'])+'. '+topic['title']+'\n\n'
         text+=link('Work through the example',topic['example'],page)+'\n\n'
-        text+='**Terms:** '+' · '.join(link(terms[x],'docs/GLOSSARY.md#'+x,page) for x in topic['terms'])+'\n\n'
+        text+='**Terms:** '+' � '.join(link(terms[x],'docs/GLOSSARY.md#'+x,page) for x in topic['terms'])+'\n\n'
         text+=source_routes(topic,works,page)+'[Back to topics](#topics)\n\n'
         example=topic['example']
         body=(root/example).read_text(encoding='utf-8').split(marker)[0].rstrip()
@@ -326,26 +327,26 @@ def render_learning_pages(root, config, components):
         jump='[Papers, proofs, Lean, and code](#papers-proofs-lean-and-code)'
         body=body.replace('[Papers, proofs, Lean and code](#papers-proofs-lean-and-code)',jump)
         if jump not in body:
-            body=re.sub(r'(^\[All examples\][^\n]*)',lambda m:m[1]+' · '+jump,body,count=1,flags=re.M)
+            body=re.sub(r'(^\[All examples\][^\n]*)',lambda m:m[1]+' � '+jump,body,count=1,flags=re.M)
         body+='\n\n'+marker+'\n\n## Papers, proofs, Lean, and code\n\n'
-        body+='**Terms in this example:** '+' · '.join(link(terms[x],'docs/GLOSSARY.md#'+x,example) for x in topic['terms'])+'\n\n'
+        body+='**Terms in this example:** '+' � '.join(link(terms[x],'docs/GLOSSARY.md#'+x,example) for x in topic['terms'])+'\n\n'
         body+=source_routes(topic,works,example)
         footer=[]
         if index:footer.append(link('Previous: '+topics[index-1]['title'],topics[index-1]['example'],example))
         if index+1<len(topics):footer.append(link('Next: '+topics[index+1]['title'],topics[index+1]['example'],example))
         footer.extend([link('All examples','docs/HAND_WORKED_EXAMPLES.md',example),link('Topic map',page+'#'+topic['id'],example),link('Example coverage by work','docs/EXAMPLE_COVERAGE.md',example)])
         out[example]=body+'\n'.join('- '+item for item in footer)+'\n'
-    out[page]=text+'[All hand-worked examples](HAND_WORKED_EXAMPLES.md) · [Glossary](GLOSSARY.md) · [Reading routes](READING_ROUTES.md)\n'
+    out[page]=text+'[All hand-worked examples](HAND_WORKED_EXAMPLES.md) � [Glossary](GLOSSARY.md) � [Reading routes](READING_ROUTES.md)\n'
     coverage_page='docs/EXAMPLE_COVERAGE.md'
     covered={identifier for topic in topics for identifier in topic['works']}
     coverage='# Introductory example coverage by work\n\n'
     coverage+=str(len(covered))+' of '+str(len(components))+' work pages have introductory example routes in this guide. '
     coverage+=str(len(components)-len(covered))+' do not yet have a tutorial linked here. Their source editions may contain their own examples.\n\n'
     coverage+='This is a reading aid. An example route does not measure proof completion, Lean coverage or confidence. Those records remain on each work page.\n\n'
-    coverage+='[All examples](HAND_WORKED_EXAMPLES.md) · [Topic map](LEARNING_MAP.md) · [Glossary](GLOSSARY.md) · [Browse works](BROWSE.md)\n\n'
+    coverage+='[All examples](HAND_WORKED_EXAMPLES.md) � [Topic map](LEARNING_MAP.md) � [Glossary](GLOSSARY.md) � [Browse works](BROWSE.md)\n\n'
     groups={'papers':'Core papers','monographs':'Monographs and companion volumes','packages':'Software packages','research':'Research programs','experiments':'Experimental laboratories'}
     assert {c['group'] for c in components}<=set(groups)
-    coverage+=' · '.join('['+label+'](#'+label.lower().replace(' ','-')+')' for group,label in groups.items() if any(c['group']==group for c in components))+'\n\n'
+    coverage+=' � '.join('['+label+'](#'+label.lower().replace(' ','-')+')' for group,label in groups.items() if any(c['group']==group for c in components))+'\n\n'
     for group,label in groups.items():
         members=[c for c in components if c['group']==group]
         if not members:continue
@@ -354,8 +355,8 @@ def render_learning_pages(root, config, components):
             relevant=[t for t in topics if component['id'] in t['works']]
             anchor='#worked-examples-for-this-work' if relevant else '#read'
             coverage+='- '+link(component['title'],'docs/works/'+component['id']+'.md'+anchor,coverage_page)+': '
-            coverage+=(' · '.join(link(str(t['number'])+'. '+t['title'],t['example'],coverage_page) for t in relevant) if relevant else 'No introductory tutorial linked in this guide yet.')+'\n'
+            coverage+=(' � '.join(link(str(t['number'])+'. '+t['title'],t['example'],coverage_page) for t in relevant) if relevant else 'No introductory tutorial linked in this guide yet.')+'\n'
         coverage+='\n'
-    out[coverage_page]=coverage+'[Back to the topic map](LEARNING_MAP.md) · [All examples](HAND_WORKED_EXAMPLES.md)\n'
+    out[coverage_page]=coverage+'[Back to the topic map](LEARNING_MAP.md) � [All examples](HAND_WORKED_EXAMPLES.md)\n'
     return out
 

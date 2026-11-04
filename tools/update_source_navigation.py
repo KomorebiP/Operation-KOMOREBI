@@ -58,8 +58,8 @@ def library_qualification_table():
         name='Komorebi Math' if library['repository']=='komorebi-math' else 'Polyphase Float'
         revision=library['remote_commit']
         record=f"[Commit `{revision[:12]}`]({library['repository_url']}/commit/{revision})"
-        record+=' · '+' · '.join(f"[{run['name']}]({run['url']})" for run in library['checks'])
-        record+=' · observed '+library['remote_observation_date']
+        record+=' � '+' � '.join(f"[{run['name']}]({run['url']})" for run in library['checks'])
+        record+=' � observed '+library['remote_observation_date']
         rows.append((name,record,library['qualification_scope']))
     return table(['Library','Checked commit and runs','Result and scope'],rows)
 
@@ -213,7 +213,7 @@ class Renderer:
             if rows:
                 text += '\n## '+label+'\n\n'+table(['Work','Scope' if boundary else 'Focus']+(['Files'] if self.browser else []),self.rows(rows,page,boundary))
         text += '\n'+extra if extra else ''
-        text += '\nAll executable software is **beta and work in progress**.\n\n'+link('Reading guide','docs/START_HERE.md',page)+' · '+link('Complete component index','docs/COMPONENT_INDEX.md',page)+' · '+link('Collection','README.md',page)+'\n'
+        text += '\nAll executable software is **beta and work in progress**.\n\n'+link('Reading guide','docs/START_HERE.md',page)+' � '+link('Complete component index','docs/COMPONENT_INDEX.md',page)+' � '+link('Collection','README.md',page)+'\n'
         self.put(page,text)
 
     def reader_pages(self):
@@ -222,7 +222,7 @@ class Renderer:
         page='README.md'; w=lambda i,t=None:self.work(i,page,t)
         text='''# Realization Calculus and Komorebi Space
 
-**Komorebi P. · Work in progress**
+**Komorebi P. � Work in progress**
 
 Komorebi studies how mathematical objects can be represented in parts, transformed through those parts, and reconstructed. It asks what a change of representation preserves, what it loses, and how the difference can be measured.
 
@@ -246,7 +246,7 @@ GitHub repositories easier to access and use is another priority.
 | Browse by field or proof status | [Filter mathematics, computer science, physics, and other works](https://KomorebiP.github.io/Operation-KOMOREBI/works.html) by completion, Lean coverage, and evidence. The [repository reading index](docs/BROWSE.md) provides file links. |
 | Use the software | [Install a library and run a first example](docs/FIRST_RUN.md), or explore the [software guide](docs/LIBRARIES.md). |
 
-> **Author’s note:** This work remains in progress and has, in many respects, been rushed because of circumstances shaped by the AI industry. I am continuing to correct, verify, and organize it.
+> **Author�s note:** This work remains in progress and has, in many respects, been rushed because of circumstances shaped by the AI industry. I am continuing to correct, verify, and organize it.
 
 The [public project and authorship statement](docs/PROJECT_STATEMENT.md) explains the pseudonym, AI assistance, and publication circumstances. Each work is at a different stage of completion and review. All executable software remains **beta and work in progress**.
 
@@ -290,7 +290,7 @@ Each study includes written derivations, explicit failure controls, and exact Py
 - [Additional packages](packages/README.md): research implementations and their worked examples.
 - [Experimental laboratories](experiments/README.md): computational models, protocols, and recorded results.
 
-The [software guide](docs/LIBRARIES.md) links documentation and instructions for checking each package, including [Constructive Repair’s qualified beta and platform results](docs/components/CONSTRUCTIVE_REPAIR.md). Each project in this collection has its own setup instructions and supported environment.
+The [software guide](docs/LIBRARIES.md) links documentation and instructions for checking each package, including [Constructive Repair�s qualified beta and platform results](docs/components/CONSTRUCTIVE_REPAIR.md). Each project in this collection has its own setup instructions and supported environment.
 
 <a id="run-a-small-example"></a>
 
@@ -326,11 +326,11 @@ A finished reading edition can contain open conjectures. A passing collection ch
 
 ## Find a specific resource
 
-[Discipline and evidence filters](https://KomorebiP.github.io/Operation-KOMOREBI/works.html) · [Reading routes](docs/READING_ROUTES.md) · [Project map](docs/PROJECT_MAP.md) · [Glossary](docs/GLOSSARY.md) · [Completion and confidence](docs/COMPLETION_STATUS.md)
+[Discipline and evidence filters](https://KomorebiP.github.io/Operation-KOMOREBI/works.html) � [Reading routes](docs/READING_ROUTES.md) � [Project map](docs/PROJECT_MAP.md) � [Glossary](docs/GLOSSARY.md) � [Completion and confidence](docs/COMPLETION_STATUS.md)
 
-[Hand-worked examples](docs/HAND_WORKED_EXAMPLES.md) · [Papers](docs/browse/PAPERS.md) · [Written proofs](docs/browse/PROOFS.md) · [Lean sources](docs/browse/LEAN.md) · [Code](docs/browse/CODE.md) · [Downloads](docs/DOWNLOADS.md)
+[Hand-worked examples](docs/HAND_WORKED_EXAMPLES.md) � [Papers](docs/browse/PAPERS.md) � [Written proofs](docs/browse/PROOFS.md) � [Lean sources](docs/browse/LEAN.md) � [Code](docs/browse/CODE.md) � [Downloads](docs/DOWNLOADS.md)
 
-[Accessibility and reading options](docs/ACCESSIBILITY.md) · [Report an accessibility or reading problem](https://github.com/KomorebiP/Operation-KOMOREBI/issues/new?template=04-accessibility.md)
+[Accessibility and reading options](docs/ACCESSIBILITY.md) � [Report an accessibility or reading problem](https://github.com/KomorebiP/Operation-KOMOREBI/issues/new?template=04-accessibility.md)
 
 ## Repository map
 
@@ -355,7 +355,7 @@ The [contribution guide](CONTRIBUTING.md) explains how to report a correction an
 
 Original source packages and dated evidence are preserved. Corrections to a sealed component need an identified revision and new evidence. Navigation pages are generated by `tools/update_source_navigation.py` and refreshed with `python -B tools/update_completion_status.py`. See the [maintenance instructions](docs/VERIFICATION.md#maintaining-reader-pages).
 
-[Documentation](docs/README.md) · [Records guide](docs/RECORDS.md) · [Contribution index](CONTRIBUTIONS.md) · [Complete component index](docs/COMPONENT_INDEX.md) · [Source coverage](docs/SOURCE_COVERAGE.md) · [Publication status](docs/PUBLICATION_STATUS.md)
+[Documentation](docs/README.md) � [Records guide](docs/RECORDS.md) � [Contribution index](CONTRIBUTIONS.md) � [Complete component index](docs/COMPONENT_INDEX.md) � [Source coverage](docs/SOURCE_COVERAGE.md) � [Publication status](docs/PUBLICATION_STATUS.md)
 '''
         self.put(page,text)
         page='papers/README.md'
@@ -364,7 +364,7 @@ Original source packages and dated evidence are preserved. Corrections to a seal
         papers.sort(key=lambda r:order.get(r['id'],99))
         text='''# The twelve core papers
 
-**Realization Calculus · Komorebi P.**
+**Realization Calculus � Komorebi P.**
 
 The core sequence develops a common language of typed operators, packets, transfer, refinement, and realization. The papers proceed from foundational constructions to signals, stochastic and quantum models, computation, and arithmetic.
 
@@ -376,13 +376,13 @@ Each paper directory contains the manuscript and the source, formal, computation
 
 ## Reading routes
 
-**Foundations:** Papers I–III develop operators, coordinates, refinement, nonlinear transfer, and obstructions.
+**Foundations:** Papers I�III develop operators, coordinates, refinement, nonlinear transfer, and obstructions.
 
-**Analysis and signals:** Papers IV–VI connect cyclic analytic families, polyphase signals, and transfer semigroups.
+**Analysis and signals:** Papers IV�VI connect cyclic analytic families, polyphase signals, and transfer semigroups.
 
-**Quantum and computation:** Papers VII–VIII develop finite quantum constructions, packet algorithms, and compilation.
+**Quantum and computation:** Papers VII�VIII develop finite quantum constructions, packet algorithms, and compilation.
 
-**Arithmetic and comparison:** Papers IX–XII develop arithmetic packets, residual seeds, comparison, and patching. Paper X's completion statements are conditional. The general endpoint in Paper XI remains open as Conjecture 66. Paper XII keeps its arithmetic and patching inputs explicit.
+**Arithmetic and comparison:** Papers IX�XII develop arithmetic packets, residual seeds, comparison, and patching. Paper X's completion statements are conditional. The general endpoint in Paper XI remains open as Conjecture 66. Paper XII keeps its arithmetic and patching inputs explicit.
 
 The [monographs](../monographs/README.md) provide extended accounts and further applications. The [formalization guide](../formal/README.md) explains how to identify the finite claims covered by each formalization.
 '''
@@ -391,7 +391,7 @@ The [monographs](../monographs/README.md) provide extended accounts and further 
             p='papers/paper-'+roman+'/README.md'
             if self.existing(p):legacy.append(link('Paper '+roman.upper(),'papers/paper-'+roman+'/',page))
         if legacy:text+='\nEarlier source editions remain available: '+', '.join(legacy)+'.\n'
-        self.put(page,text+'\n[Reading guide](../docs/START_HERE.md) · [Collection](../README.md)\n')
+        self.put(page,text+'\n[Reading guide](../docs/START_HERE.md) � [Collection](../README.md)\n')
         self.group_page('monographs/README.md','Monographs and companion volumes',
             'Read Realization Calculus and Komorebi Space together. Realization Boundaries develops questions about finite representation and its limits. The remaining volumes extend the framework into analysis, physical models, signals, computation, and mathematical method.',
             [r for r in self.primary if r['group']=='monographs'])
@@ -427,11 +427,11 @@ Additional implementations accompany the [research programs](../research/README.
 
 Use a component's documented installation and examples. A mathematical result in an accompanying paper does not expand the tested platform, numerical range, or supported input contract of its software.
 
-[Software guide](../docs/LIBRARIES.md) · [Collection](../README.md)
+[Software guide](../docs/LIBRARIES.md) � [Collection](../README.md)
 ''')
         self.put('docs/LIBRARIES.md','''# Software guide
 
-[Read the software website](https://KomorebiP.github.io/Operation-KOMOREBI/software.html) · [First runs and expected output](FIRST_RUN.md) · [Hand-worked examples](HAND_WORKED_EXAMPLES.md) · [Glossary](GLOSSARY.md)
+[Read the software website](https://KomorebiP.github.io/Operation-KOMOREBI/software.html) � [First runs and expected output](FIRST_RUN.md) � [Hand-worked examples](HAND_WORKED_EXAMPLES.md) � [Glossary](GLOSSARY.md)
 
 **All Komorebi software is beta and work in progress.** Version numbers and earlier release names identify revisions. The current public software status is beta.
 
@@ -459,13 +459,13 @@ The [corrected SRIC 0.3.3 source runtime](../packages/sric-admission-v0.3.3/READ
 
 A passing test applies to the exercised behavior. A finite computation, numerical approximation, formal theorem, and software qualification record provide different kinds of evidence. Read each result with its assumptions.
 
-[Recorded publication and qualification status](GITHUB_IMPORT_STATUS.md) · [Reading guide](START_HERE.md)
+[Recorded publication and qualification status](GITHUB_IMPORT_STATUS.md) � [Reading guide](START_HERE.md)
 ''')
         self.put('formal/README.md','''# Formalizations and proof contracts
 
 The collection includes Lean source projects with explicit statements, imports, assumptions, and reproduction instructions. Start with the component's claim map and specified build environment.
 
-[Find Lean source files](../docs/browse/LEAN.md) · [Find written statements and proofs](../docs/browse/PROOFS.md) · [Browse all works](../docs/BROWSE.md)
+[Find Lean source files](../docs/browse/LEAN.md) � [Find written statements and proofs](../docs/browse/PROOFS.md) � [Browse all works](../docs/BROWSE.md)
 
 The [twelve core papers](../papers/README.md) link their current paper projects. [Komorebi Space and the companion volumes](../monographs/README.md) supply further developments, and the [research programs](../research/README.md) keep their finite formal statements alongside the questions still open.
 
@@ -481,12 +481,12 @@ Current and historical projects may use different environments and entry points.
 
 A successful file-integrity check identifies exact source bytes. A separate replay record shows whether Lean compiled a particular revision.
 
-[Reading guide](../docs/START_HERE.md) · [Core papers](../papers/README.md) · [Component index](../docs/COMPONENT_INDEX.md)
+[Reading guide](../docs/START_HERE.md) � [Core papers](../papers/README.md) � [Component index](../docs/COMPONENT_INDEX.md)
 ''')
         page='docs/START_HERE.md'; w=lambda i,t=None:self.work(i,page,t)
         self.put(page,'''# Start here
 
-**Realization Calculus and Komorebi Space · Komorebi P.**
+**Realization Calculus and Komorebi Space � Komorebi P.**
 
 Komorebi studies how mathematical structure behaves when its description changes. Decomposing an object, changing coordinates, or forming an abstraction can make a problem easier to approach. The question is whether that description retains enough information for the task, and how to account for what is lost.
 
@@ -516,9 +516,13 @@ The [extended case-study index](DEMONSTRATIONS.md#extended-case-studies) include
 
 Start with the subject or kind of work that interests you. Each route leads to the relevant manuscripts, sources, and recorded evidence.
 
+For papers and books with a complete online manuscript and visual guide,
+[choose a guided reading path](https://KomorebiP.github.io/Operation-KOMOREBI/read/start.html):
+begin with the visual introduction, study the work, or inspect its supporting evidence.
+
 '''+table(['Goal','Begin with'],[
             ('Understand the common language',w('realization-calculus-book','Realization Calculus')+' and '+w('komorebi-space','Komorebi Space')),
-            ('Study the individual developments','[Papers I–XII](../papers/README.md)'),
+            ('Study the individual developments','[Papers I�XII](../papers/README.md)'),
             ('Understand limits of representation',w('realization-boundaries','Realization Boundaries')),
             ('Follow a complete calculation','[Extended case studies](DEMONSTRATIONS.md#extended-case-studies), beginning with [Euler numbers](demonstrations/EULER_PACKETS.md)'),
             ('Follow an application','[Monographs and companion volumes](../monographs/README.md)'),
@@ -588,14 +592,14 @@ All software is **beta and work in progress**. Follow the [citation guidance](..
 
 The [public project and authorship statement](PROJECT_STATEMENT.md) explains the pseudonym, AI assistance, and publication circumstances. For installation and check commands, use the [verification guide](VERIFICATION.md).
 
-[Notation index](NOTATION_INDEX.md) · [Papers](browse/PAPERS.md) · [Written proofs](browse/PROOFS.md) · [Lean](browse/LEAN.md) · [Code](browse/CODE.md) · [Complete component index](COMPONENT_INDEX.md) · [Collection](../README.md)
+[Notation index](NOTATION_INDEX.md) � [Papers](browse/PAPERS.md) � [Written proofs](browse/PROOFS.md) � [Lean](browse/LEAN.md) � [Code](browse/CODE.md) � [Complete component index](COMPONENT_INDEX.md) � [Collection](../README.md)
 ''')
 
     def status_pages(self):
         totals=self.state['totals']; date=self.state['as_of']
         page='docs/COMPONENT_INDEX.md'
         text='# Component index\n\nRecorded '+date+'.\n\n'+str(totals['available_primary_components'])+' primary components and '+str(totals['available_supporting_components'])+' supporting source collections are present with verified file receipts. The receipts cover **'+format(totals['unique_source_files'],',')+' distinct source files**. Older source imports remain separately available.\n'
-        text+='\n[Browse by completion stage, Lean coverage and confidence](COMPLETION_STATUS.md) · [Cleanup and finalization queue](FINALIZATION_QUEUE.md). Status labels describe the scope of each linked record. File counts do not measure proof or completion.\n'
+        text+='\n[Browse by completion stage, Lean coverage and confidence](COMPLETION_STATUS.md) � [Cleanup and finalization queue](FINALIZATION_QUEUE.md). Status labels describe the scope of each linked record. File counts do not measure proof or completion.\n'
         text+='\nFor direct PDFs, manuscript text, Lean, and code, use the [clickable browse hub](BROWSE.md). The inventory below retains all source and receipt details.\n'
         for group,label in GROUP_LABELS.items():
             rows=[r for r in self.primary if r['group']==group]
@@ -632,7 +636,7 @@ The [public project and authorship statement](PROJECT_STATEMENT.md) explains the
 
 Recorded {date}.
 
-[Completion stages, Lean coverage and confidence](COMPLETION_STATUS.md) · [Cleanup and finalization queue](FINALIZATION_QUEUE.md). Public availability and scientific completion are separate statuses.
+[Completion stages, Lean coverage and confidence](COMPLETION_STATUS.md) � [Cleanup and finalization queue](FINALIZATION_QUEUE.md). Public availability and scientific completion are separate statuses.
 
 The three canonical repositories are public:
 
@@ -650,7 +654,7 @@ The current source-import receipts cover **{totals['available_primary_components
         if totals['pending_components']:
             text+=f"\n**{totals['pending_components']} selected components still await verified source receipts.** They are listed separately in the component index and are not included in the availability totals.\n"
         text+='''
-Earlier Papers I–IV, the Quadratic-Form Engine / K-COS, Research Preview 1, and AM-SPD source editions remain available. A newer source directory does not rewrite an older edition's evidence.
+Earlier Papers I�IV, the Quadratic-Form Engine / K-COS, Research Preview 1, and AM-SPD source editions remain available. A newer source directory does not rewrite an older edition's evidence.
 
 ## Release assets
 
@@ -673,7 +677,7 @@ Paper XI retains Conjecture 66. Conditional arithmetic and automorphic statement
 
 Public attribution is **Komorebi P.** Read the [collection reuse terms](../LICENSE.md), current component licenses, and retained third-party notices. The current grant explains how to interpret historical licensing notices. The [qualification and import record](GITHUB_IMPORT_STATUS.md) distinguishes current source availability from dated test results. The [contribution ledger](../CONTRIBUTIONS.md) preserves historical results and current source bindings.
 
-[Reading guide](START_HERE.md) · [Collection](../README.md)
+[Reading guide](START_HERE.md) � [Collection](../README.md)
 '''
         self.put('docs/PUBLICATION_STATUS.md',text)
         revision=self.state.get('source_revision')
@@ -717,12 +721,12 @@ The [7 October import report](history/GITHUB_IMPORT_STATUS_2026-10-07.md) preser
 
 Source-file import does not overwrite sealed proof receipts or historical numerical logs. Fresh Lean compilation, numerical reproduction, and empirical replication require their own explicit records.
 
-[Current publication status](PUBLICATION_STATUS.md) · [Collection](../README.md)
+[Current publication status](PUBLICATION_STATUS.md) � [Collection](../README.md)
 ''')
         page='CONTRIBUTIONS.md'
         text=f'''# Contribution index
 
-**Komorebi P. · Recorded {date}**
+**Komorebi P. � Recorded {date}**
 
 The collection centers on Realization Calculus and Komorebi Space and extends through core papers, companion volumes, formal developments, software, and research programs. Current source availability and mathematical completion are recorded separately.
 
@@ -744,7 +748,7 @@ All 87 rows of the 21 September 2026 Part I register remain in the [machine-read
 
 The current ledger adds exact source-component bindings and receipt locations. Supporting source collections are enumerated in the [component manifest](manifests/source-components.json). No historical mathematical status is promoted merely because its files are now public.
 
-[Reading guide](docs/START_HERE.md) · [Publication status](docs/PUBLICATION_STATUS.md) · [Collection](README.md)
+[Reading guide](docs/START_HERE.md) � [Publication status](docs/PUBLICATION_STATUS.md) � [Collection](README.md)
 '''
         self.put(page,text)
 
