@@ -84,11 +84,15 @@ def guide_model(reader, component):
         first.append(step('Maintained edition guide',document_url('collection',maintained),'Read the edition-specific orientation and qualifications.'))
     first.append(step('Question, background, and scope',overview,'Use the work overview to identify the problem and required background.'))
     if work=='monographs-cos-method':
+        from kcos_routes import label_targets
+        book=reader.readable_books.get(work)
+        if book is None:raise ValueError('K-COS reading guide requires its prepared manuscript')
+        targets=label_targets(book)
         prefix='read/'+work+'/'
         background='Useful background: multivariate Gaussian distributions, quadratic forms, eigenvalues, and numerical integration.'
         first=[step('How to read this book',prefix+'how-to-read.html','Choose the probability, operator, or numerical route that matches your background.'),
                step('Visual studies',visual,'Follow the Gaussian form, spectral packets, and probability enclosure through the visual examples.'),
-               step('A worked probability enclosure',prefix+'09-intervals.html','Follow the directed-enclosure calculation and its stated input and error requirements.')]
+               step('A worked probability enclosure',targets['sec:worked-enclosure'],'Follow the directed-enclosure calculation and its stated input and error requirements.')]
     first=unique(first)
     study=[]
     edition=assessment.get('editorial_edition')

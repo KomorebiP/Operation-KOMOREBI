@@ -39,10 +39,40 @@ def fixture(output):
         for path in paths:
             if path not in owned:continue  # Directory shortcuts use the work's file list.
             full=base+path;reader.records[full]=dict(work=work,url=page_path(work,full))
+    # A prepared-book stand-in lets guide tests move source anchors without
+    # coupling them to current manuscript line numbers.
+    from kcos_routes import REQUIRED_LABELS
+    work='monographs-cos-method'
+    reader.readable_books[work]=dict(chapters=[
+        (dict(source='monographs/cos-method/book/fixture.tex',url='read/'+work+'/fixture-chapter.html'),
+         b'',SimpleNamespace(nodes=[dict(id='fixture-'+str(i),kind='subsection',labels=[label])
+                                   for i,label in enumerate(REQUIRED_LABELS)]))])
     return reader
 
 
 class ReadingPathsTests(unittest.TestCase):
+    def test_kcos_worked_enclosure_uses_the_prepared_manuscript_label(self):
+        with tempfile.TemporaryDirectory() as folder:
+            reader=fixture(Path(folder));work='monographs-cos-method'
+            component=next(c for c in reader.site.registry['components'] if c['id']==work)
+            spec,_,chapter=reader.readable_books[work]['chapters'][0]
+            enclosure=next(n for n in chapter.nodes if 'sec:worked-enclosure' in n['labels'])
+            enclosure['id']='enclosure-after-source-move'
+            spec['url']='read/'+work+'/moved-enclosure.html'
+            model=guide_model(reader,component)
+            step=next(s for s in model['paths'][0]['steps'] if s['title']=='A worked probability enclosure')
+            self.assertEqual(step['url'],spec['url']+'#enclosure-after-source-move')
+            render_guide(reader.site,model)
+            page=Page((reader.site.output/model['url']).read_text())
+            self.assertIn('moved-enclosure.html#enclosure-after-source-move',page.links)
+            self.assertNotIn('09-intervals.html',page.links)
+            enclosure['labels']=[]
+            with self.assertRaisesRegex(ValueError,'Missing K-COS reading-path labels'):
+                guide_model(reader,component)
+            del reader.readable_books[work]
+            with self.assertRaisesRegex(ValueError,'requires its prepared manuscript'):
+                guide_model(reader,component)
+
     def test_only_complete_html_manuscripts_with_html_visual_guides_get_paths(self):
         reader=fixture(Path('unused'))
         models=[guide_model(reader,c) for c in reader.site.registry['components'] if c['id'] in eligible_books()]
