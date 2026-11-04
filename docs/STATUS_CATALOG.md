@@ -52,9 +52,9 @@ Technical reading release is complete. The accepted 16-module core does not cove
 
 **Reading edition complete** · Lean: **Selected results recorded** · Confidence basis: **Recorded formal evidence**
 
-68 scoped results have recorded formal acceptance. Visual source correspondence is resolved by the labeled 3 November 2026 reconstruction: all 27 content pages match the selected PDF and all 28 pages have a recorded visual review.
+68 scoped results have recorded formal acceptance.
 
-**Next step:** Maintain the reconstructed visual source and its PDF comparison record alongside the scoped formal evidence. See the visual reconstruction report.
+**Next step:** Maintain the scoped release and its reproducible sources.
 
 [Return to this work: paper, proofs, Lean, and code](works/paper-iv.md)
 

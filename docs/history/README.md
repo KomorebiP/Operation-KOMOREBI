@@ -5,6 +5,7 @@ These snapshots describe earlier checkpoints. Private staging, missing-source, p
 - [CONTRIBUTIONS_2026-10-09.md](CONTRIBUTIONS_2026-10-09.md)
 - [DISTRIBUTION_STATUS_2026-10-27.md](DISTRIBUTION_STATUS_2026-10-27.md)
 - [GITHUB_IMPORT_STATUS_2026-10-07.md](GITHUB_IMPORT_STATUS_2026-10-07.md)
+- [PAPER_IV_VISUAL_RECONSTRUCTION_2026-11-03.md](PAPER_IV_VISUAL_RECONSTRUCTION_2026-11-03.md)
 - [contributions-2026-10-09.json](../../manifests/history/contributions-2026-10-09.json)
 - [release-candidate-2026-10-09.json](../../manifests/history/release-candidate-2026-10-09.json)
 

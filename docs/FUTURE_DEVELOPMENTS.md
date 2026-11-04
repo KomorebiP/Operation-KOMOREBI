@@ -131,13 +131,9 @@ ways to report corrections.
 
 Accessibility reviews cover keyboard and screen-reader access, mobile reading,
 mathematical reading order, diagram descriptions, and the original PDFs.
-Paper IV's visual source correspondence is resolved by the
-[reconstructed edition](PAPER_IV_VISUAL_RECONSTRUCTION.md), with a reproducible
-source package, a full PDF text comparison and a rendered-page review.
 
 [Reading and accessibility options](ACCESSIBILITY.md) ·
-[Using and contributing to the repositories](../CONTRIBUTING.md) ·
-[Paper IV reconstruction record](PAPER_IV_VISUAL_RECONSTRUCTION.md)
+[Using and contributing to the repositories](../CONTRIBUTING.md)
 
 [Research directions](PROJECT_MAP.md) ·
 [Detailed development queue](FINALIZATION_QUEUE.md) ·
