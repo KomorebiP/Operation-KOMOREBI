@@ -361,9 +361,13 @@ class Site:
         from core_visual_guides import is_visual_guide
         visual_work=path.split('/')[1] if path.startswith('read/') and path.count('/')>1 else ''
         visual_page=bool(visual_work and '<article id="chapter-text"' in body and is_visual_guide(visual_work,path))
+        from site_metadata import head_metadata
+        metadata=head_metadata(path,title,body,self.root)
+        if not hasattr(self,'discovery_pages'):self.discovery_pages=set()
+        self.discovery_pages.add(path)
         doc='''<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Read Komorebi papers, follow recorded proofs, and run finite mathematical examples.">
+<html lang="en" prefix="og: https://ogp.me/ns#"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+'''+metadata+'''
 <meta name="theme-color" content="#233d32">
 <link rel="icon" type="image/svg+xml" sizes="any" href="'''+brand_assets['favicon.svg']+'''">
 <link rel="icon" type="image/png" sizes="32x32" href="'''+brand_assets['favicon-32.png']+'''">
@@ -374,7 +378,7 @@ class Site:
 <script defer src="'''+self.rel('assets/mathjax-config.js',path)+'''"></script><script defer src="'''+self.rel('assets/mathjax/tex-svg-full.js',path)+'''"></script>
 '''+search_script+'''<script defer src="'''+self.rel('assets/reader.js',path)+'?v='+hashlib.sha256((self.root/'website/assets/reader.js').read_bytes()).hexdigest()[:12]+'''"></script>'''+glossary_script+chapter_help_script+home_assets+reading_list_assets+'''</head><body class="open-research'''+(' home-page' if path == 'index.html' else '')+(' reading-page' if reading_page else '')+(' work-page' if work_page else '')+(' visual-reading' if visual_page else '')+'''">
 <a class="skip-link" href="#main">Skip to main content</a><header class="site-header"><a class="brand" href="'''+root+'''" aria-label="Komorebi home"><span class="brand-wordmark"><img class="brand-logo" src="'''+brand_assets['komorebi-logo.svg']+'''" alt="Komorebi" width="1320" height="240"><span class="brand-fallback" aria-hidden="true">Komorebi</span><small>Mathematics · proofs · software</small></span></a>'''+nav_html+'''</header>
-<main id="main" tabindex="-1">'''+body+'''</main><footer><div class="footer-inner"><nav class="footer-links" aria-label="Project information">'''+source_html+'''<a href="'''+self.rel('collection/PROJECT_STATEMENT.html',path)+'''">Project and authorship statement</a><a href="'''+self.rel('collection/ACCESSIBILITY.html',path)+'''">Accessibility and reporting problems</a></nav><a class="footer-github" href="https://github.com/'''+REPOSITORY+'''">Return to GitHub <span aria-hidden="true">↗</span></a></div></footer></body></html>'''
+<main id="main" tabindex="-1">'''+body+'''</main><footer><div class="footer-inner"><nav class="footer-links" aria-label="Project information">'''+source_html+'''<a href="'''+self.rel('collection/PROJECT_STATEMENT.html',path)+'''">Project and authorship statement</a><a href="'''+self.rel('collection/ACCESSIBILITY.html',path)+'''">Accessibility and reporting problems</a><a href="'''+self.rel('sitemap.xml',path)+'''">Sitemap</a></nav><a class="footer-github" href="https://github.com/'''+REPOSITORY+'''">Return to GitHub <span aria-hidden="true">↗</span></a></div></footer></body></html>'''
         self.write(path,doc)
     def collect_documents(self):
         maintained=set(self.status['maintained_documents'])
@@ -717,6 +721,8 @@ class Site:
         build_reading_list(self)
         from side_reader import build as build_side_reader
         side_reader = build_side_reader(self)
+        from site_metadata import publish as publish_metadata
+        discovery = publish_metadata(self)
         self.write('.nojekyll','')
         result=dict(collection_revision=self.revision,library_revisions=self.revisions,html_guides=len(self.documents),works=len(self.registry['components']),claim_records=len(self.claims['records']),reading_bundles=len(self.bundle_records),bundle_bytes=sum(x['archive_bytes'] for x in self.bundle_records),new_proof_review=False,new_lean_execution=False)
         result.update(reading_documents=len(self.reader.records),pdfs=sum(r['format']=='pdf' for r in self.reader.records.values()))
@@ -728,6 +734,7 @@ class Site:
         result['side_reader'] = side_reader
         result['jspace_lab'] = jspace_lab
         result['search'] = self.search_summary
+        result['discovery'] = discovery
         self.write('build-info.json',json.dumps(result,indent=2)+'\n')
         print(json.dumps(result))
 
