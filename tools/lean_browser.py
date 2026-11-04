@@ -6,7 +6,7 @@ import math
 from pathlib import Path
 import shutil
 from lean_workspaces import WORKSPACES, RESIDUAL, COMPRESSION, RECOVERY, COMPAT_SOURCE, mathlib_seeds, mathlib_seed_groups
-from lean_runner import imports
+from lean_runner import imports, safe_path
 
 PAGE='lean/browser/index.html'
 BASE='lean/browser/'
@@ -39,14 +39,16 @@ def verify_runtime(root):
             raise ValueError('Browser compiler checksum mismatch: '+path)
     prefix='https://raw.githubusercontent.com/live-codes/browser-lean/'+UPSTREAM+'/public/'
     from lean_module_packs import module_asset_url, verify_module_pilot
+    from lean_proof_path_modules import asset_url as extension_asset_url, verify as verify_module_extensions
     for path,record in remotes.items():
         from lean_runner import safe_path
         safe_path(path)
-        pilot_url=module_asset_url(path)
+        pilot_url=module_asset_url(path) or extension_asset_url(path)
         pinned=record['url']==pilot_url if pilot_url else record['url'].startswith(prefix)
         if (not pinned or len(record['sha256'])!=64 or record['size']<1):
             raise ValueError('Unpinned remote compiler asset: '+path)
     verify_module_pilot(root,data)
+    verify_module_extensions(root,data)
     return data
 
 
@@ -78,7 +80,7 @@ def build(reader,runtime):
         seeds=seed_groups.get(example['id'])
         if not seeds:continue
         available=runtime_record.get('workspace_modules',{}).get(example['id'],[])
-        manifest='workspaces/'+example['id']+'.json'
+        manifest=safe_path(runtime_record.get('workspace_manifest_aliases',{}).get(example['id'],'workspaces/'+example['id']+'.json'))
         if not set(seeds)<=set(available) or 'lean-mathlib/'+manifest not in runtime_record['files']:
             raise ValueError('Missing workspace Mathlib imports: '+example['id'])
         example['mathlib_manifest']=manifest
@@ -161,13 +163,14 @@ def build(reader,runtime):
 def verify(root,documents):
     data=json.loads((root/BASE/'examples.json').read_bytes())
     records={r['repository_path']:r for r in documents['files']}
+    runtime_record=verify_runtime(root/BASE/'engine')
     assert data['execution']=='local WebAssembly' and data['changes_recorded_verification'] is False
     assert len(data['examples'])==len(WORKSPACES)
     for example,expected in zip(data['examples'],WORKSPACES):
         assert example['id']==expected[0]
         assert [(f['module'],f['path']) for f in example['files']]==expected[3]
         if any(name.startswith('Mathlib.') for f in example['files'] for name in imports(f['text'])):
-            assert example['mathlib_manifest']=='workspaces/'+example['id']+'.json'
+            assert example['mathlib_manifest']==runtime_record.get('workspace_manifest_aliases',{}).get(example['id'],'workspaces/'+example['id']+'.json')
         if example['id']=='proof-path-recovery':
             assert example['compatibility']['source']==COMPAT_SOURCE
             assert example['compatibility']['sha256']==hashlib.sha256(COMPAT_SOURCE.encode()).hexdigest()
@@ -177,7 +180,6 @@ def verify(root,documents):
             r=records[file['path']];raw=(root/r['file_url']).read_bytes()
             assert file['sha256']==r['sha256']==hashlib.sha256(raw).hexdigest()
             assert file['text']==raw.decode('utf-8-sig').replace('\r\n','\n')
-    verify_runtime(root/BASE/'engine')
     from lean_browser_catalog import verify as verify_catalog
     assert verify_catalog(root,documents)==data['collection']
     return dict(workspaces=len(WORKSPACES),source_identity='PASS',execution='local WebAssembly')
