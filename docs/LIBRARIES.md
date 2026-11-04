@@ -15,7 +15,7 @@ The documentation links above follow each library's `main` branch. For a reprodu
 
 Use the [code and script finder](browse/CODE.md) for direct file links across the collection, or the [browse hub](BROWSE.md) to move between a work's manuscript, formal sources, and evidence.
 
-The [collection verification guide](VERIFICATION.md) provides Git checkout instructions, a small standard-library example, and commands for source and navigation checks. For a concrete package record, see [Constructive Repair](components/CONSTRUCTIVE_REPAIR.md): its engine and installed cases passed on the recorded Windows environment, while full release qualification remains incomplete.
+The [collection verification guide](VERIFICATION.md) provides Git checkout instructions, a small standard-library example, and commands for source and navigation checks. For a concrete package record, see [Constructive Repair](components/CONSTRUCTIVE_REPAIR.md): its qualified beta distribution completed the recorded Linux and Windows acceptance checks. The component guide separates that qualification from the earlier partial Windows run and from Lean proof evidence.
 
 The [corrected SRIC 0.3.3 source runtime](../packages/sric-admission-v0.3.3/README.md) has passed the recorded admission and CLI checks. It remains beta, with execution on a real model still pending.
 

@@ -658,6 +658,23 @@ and return links on the related work pages. Edit tutorial explanations above
 the `learning-navigation` marker. The status command replaces the section
 below that marker. A subject route does not establish a theorem correspondence.
 
+## Current formal-source additions
+
+`manifests/reader-source-additions.json` explicitly selects later committed sources
+from dated publication inventories. The reader, resource validator, reading ZIPs,
+and native runner share `tools/reader_source_additions.py`. It verifies the pinned
+inventory hash and every selected file, rejects conflicts with original import
+records, and leaves those records intact. The runner also checks each input
+against its committed Git blob.
+
+The Special Functions selection includes the seventeen coupled production modules,
+their audit files, selected controls, declaration registers, and Block17 evidence.
+The inspector links its current source guide and labels the old Block01 status as
+historical. Realization Boundaries selects its root and all 66 production modules,
+with coverage and replay guides. Source pages link exact selected local imports.
+The execution guide refers to generated catalogue counts instead of repeating a
+fixed total. These publishing changes perform no Lean replay or proof review.
+
 ## Saved reading
 
 **Browse → Saved reading** opens a personal list of pages and passages stored in

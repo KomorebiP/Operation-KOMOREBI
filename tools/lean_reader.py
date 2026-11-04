@@ -1,7 +1,7 @@
 """Browse retained Lean sources for works with an existing HTML reading edition.
 
 Declaration lists are lexical navigation aids, never compiler or coverage results.
-Source bytes and ownership still pass through ReadingDocuments and its receipts.
+Source bytes and ownership pass through import receipts or dated publication records.
 """
 import hashlib
 import html
@@ -254,10 +254,27 @@ def source_controls(reader, record, text, page):
     from lean_execution import action as run_action
     body += run_action(site,page,record['repository_path'])+'</nav>'
     body += scope(reader, work, page)
+    body += local_imports(reader,record,text,page)
     module = record['repository_path'].removeprefix(source_root(reader,work))
     body += '<p class="lean-current-path"><code>'+e(module)+'</code><span>'+quantity(len(text.splitlines()),'line')+'</span></p>'
     body += '<details class="lean-source-location"><summary>Original source path</summary><code>'+e(relative)+'</code></details>'
     return body
+
+
+def local_imports(reader, record, text, page):
+    """Link exact local module paths in this work's selected source tree."""
+    from lean_runner import imports
+    root=source_root(reader,record['work'])
+    files={r['repository_path']:r for r in reader.lean_works[record['work']]}
+    links=[]
+    try:modules=imports(text)
+    except ValueError:return ''  # Inspection also serves malformed and historical inputs.
+    for module in modules:
+        target=files.get(root+module.replace('.','/')+'.lean')
+        if target and target['repository_path']!=record['repository_path']:
+            links.append('<li><a href="'+html.escape(reader.site.rel(target['url'],page),quote=True)+'"><code>'+html.escape(module)+'</code></a></li>')
+    if not links:return ''
+    return '<details class="lean-local-imports"><summary>Local imports ('+str(len(links))+')</summary><nav aria-label="Local Lean imports"><ul>'+''.join(links)+'</ul></nav></details>'
 
 
 def build(reader):
@@ -274,6 +291,8 @@ def build(reader):
         body += '<a href="'+site.rel('collection/works/'+work+'.html',page)+'">Work overview</a>'+paired_route(site,page)+'</nav>'+scope(reader,work,page)
         if book.get('lean_reader_note'):
             body += '<p class="lean-library-note">'+e(book['lean_reader_note'])+'</p>'
+        if book.get('lean_reader_guide'):
+            body += '<p><a class="button" href="'+site.rel(book['lean_reader_guide'],page)+'">Current source and coverage guide</a></p>'
         from browser_lean import action
         body += action(site,page,work=work)
         from lean_browser import action as local_action

@@ -1,7 +1,7 @@
 """Generate accessible Markdown routes to selected component resources.
 
 Resource selections are explicit; source files and scientific labels are never
-changed. Validate every resource against its own import receipt and Git tree.
+changed. Validate resources against import receipts or dated publication records and Git.
 """
 import json
 import posixpath
@@ -55,6 +55,8 @@ def validate_resources(root, registry, state, tracked_paths=None):
     assert len(rows)==len({r['id'] for r in rows}), 'Duplicate browse component'
     assert {r['id'] for r in rows}==set(primary), 'Browse/source component mismatch'
     count = 0
+    from reader_source_additions import extend_owned
+    additions=extend_owned(root,registry,{})
     for row in rows:
         c = primary[row['id']]
         assert row['destination']==c['destination'], 'Browse destination mismatch: '+row['id']
@@ -62,6 +64,7 @@ def validate_resources(root, registry, state, tracked_paths=None):
         receipt = json.loads((root/c['receipt']).read_bytes())
         assert receipt['component']==c['id'] and receipt['destination']==c['destination'], c['id']
         owned = {f['path'] for f in receipt['files']}
+        owned.update(r['path'] for r in additions.values() if r['work']==c['id'])
         seen = set()
         for a in row['resources']:
             p = a['path']
@@ -72,7 +75,7 @@ def validate_resources(root, registry, state, tracked_paths=None):
             seen.add(p)
             assert a['kind'] in KINDS and a['label'].strip() and '\n' not in a['label'], p
             members = {f for f in owned if f.startswith(p)} if p.endswith('/') else ({p} & owned)
-            assert members, 'Resource absent from component receipt: '+row['id']+'/'+p
+            assert members, 'Resource absent from component receipt or publication record: '+row['id']+'/'+p
             if tracked_paths is not None:
                 assert all(c['destination']+'/'+f in tracked_paths for f in members), 'Resource absent from Git tree: '+p
             kind = a['kind']

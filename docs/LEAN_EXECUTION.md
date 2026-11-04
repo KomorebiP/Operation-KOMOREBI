@@ -1,7 +1,10 @@
 # Running the retained Lean sources
 
-The website's **Run with dependencies** page selects any of the 2,249 displayed
-Lean files from its 16 reading editions. The native runner preserves source
+The website's [Run with dependencies](https://KomorebiP.github.io/Operation-KOMOREBI/lean/run.html)
+page selects every retained Lean file displayed in Inspect Lean. Its generated
+catalogue gives the current file and reading-edition counts, environment modes,
+and setup status. These counts describe source availability, not accepted proofs.
+The native runner preserves source
 bytes, builds local imports and records compiler diagnostics. It does not
 declare that every retained file is a valid proof. Negative controls,
 unfinished proofs, historical code and axiom audits remain distinct inputs.
@@ -41,13 +44,13 @@ a false-statement control and an unfinished-proof control with native Lean.
 
 ## Two kinds of environment
 
-For 1,026 source files, eight retained Lake projects provide the package
+For files with a **retained project**, the original Lake project provides the package
 configuration, `lean-toolchain` and `lake-manifest.json`. Their source and
 configuration inputs are copied into a new workspace. Compiled objects,
 dependency caches, historical result logs and binary publications are omitted.
 The original imported package stays untouched.
 
-The other 1,223 files use a **reconstructed workspace**. Local module imports
+Other files use a **reconstructed workspace**. Local module imports
 are collected from the retained sources of the same work. Resolution prefers
 the closest source edition; distinct equally close candidates stop preparation.
 Identical leaf modules with only pinned external imports may share one copy.

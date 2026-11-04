@@ -95,6 +95,12 @@ class ReadingDocuments:
                 self.owned[path] = {**f, 'repository_path': path, 'work': component['id']}
             for resource in component['resources']:
                 self.add(component['destination']+'/'+resource['path'], resource['label'])
+        from reader_source_additions import extend_owned
+        extend_owned(site.root,site.registry,self.owned)
+        # Retry explicit resources that belong to a later, separately bound edition.
+        for component in site.registry['components']:
+            for resource in component['resources']:
+                self.add(component['destination']+'/'+resource['path'],resource['label'])
         for source in site.claims.get('sources', []):
             self.add(source['path'])
         for row in site.claims['records']:
@@ -378,6 +384,10 @@ class ReadingDocuments:
 
     def document_works(self, repo, path):
         if repo != 'collection': return []
+        from readable_chapters import BOOKS
+        from build_reader_site import document_url
+        formal_guides=[work for work,book in BOOKS.items() if book.get('lean_reader_guide')==document_url(repo,path)]
+        if formal_guides:return formal_guides
         editions=[work for work,assessment in getattr(self.site,'assessments',{}).items()
                   if assessment.get('editorial_edition',{}).get('manuscript')==path]
         if editions:return editions
