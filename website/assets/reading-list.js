@@ -132,7 +132,7 @@
         row.append(content, remove); output.append(row);
       }
       list.querySelector('.saved-reading-count').textContent = query
-        ? visible.length + ' of ' + items.length + ' saved places match'
+        ? visible.length + (visible.length === 1 ? ' matching saved place' : ' matching saved places') + ' out of ' + items.length
         : items.length + (items.length === 1 ? ' saved place' : ' saved places');
       const empty = list.querySelector('.reading-list-empty');
       empty.hidden = items.length !== 0;

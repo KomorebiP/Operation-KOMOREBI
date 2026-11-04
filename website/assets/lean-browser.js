@@ -182,7 +182,7 @@ async function start() {
     const picker=el('catalog-choice');picker.replaceChildren();
     for(const entry of entries){const option=document.createElement('option');option.value=entry.id;option.textContent=entry.label+' · '+entry.path;picker.append(option);}
     picker.disabled=busy||!entries.length;el('catalog-open').disabled=busy||!entries.length;
-    el('catalog-status').textContent=entries.length+' source files match. Import availability is a preflight check; Run Lean determines the actual result.';
+    el('catalog-status').textContent=entries.length+(entries.length===1?' source file matches.':' source files match.')+' Import availability is a preflight check; Run Lean determines the actual result.';
   }
   async function openSource(id) {
     const ticket=++generation;dispose();controls(true);setStatus('Opening retained source and local dependencies…','running');

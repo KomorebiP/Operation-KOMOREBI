@@ -67,7 +67,7 @@
       section.querySelector("h2 small").textContent = shown + " shown";
     }
     count.textContent = matches.length ? "Showing " + (start + 1) + "–" + Math.min(start + pageSize, matches.length) +
-      " of " + matches.length + " works" : "0 matching works";
+      " of " + matches.length + (matches.length === 1 ? " work" : " works") : "0 matching works";
     empty.hidden = matches.length !== 0;
     for (const pager of pagers) {
       pager.hidden = matches.length === 0;

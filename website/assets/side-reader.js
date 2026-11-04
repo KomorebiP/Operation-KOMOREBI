@@ -301,7 +301,7 @@
     if (matches.some(row => row.url === state[side])) select.value = state[side];
     else if (matches.some(row => row.url === previous)) select.value = previous;
     else if (matches.length) select.selectedIndex = 0;
-    $(side + "-count").textContent = matches.length + " documents and passages" + (matches.length ? "." : ". Try fewer words or clear the filters.");
+    $(side + "-count").textContent = matches.length + (matches.length === 1 ? " document or passage" : " documents and passages") + (matches.length ? "." : ". Try fewer words or clear the filters.");
     $(side + "-form").querySelector("button[type=submit]").disabled = !matches.length;
   }
   for (const work of data.works) {
