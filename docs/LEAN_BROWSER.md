@@ -346,6 +346,38 @@ service-worker upstream requests may finish caching after a client is stopped.
    No extension binaries or receipt JSON are copied into Pages.
    Generated JSON uses LF endings and standard-root inventories use POSIX-path
    ordering, so Windows and Linux produce the same metadata bodies.
+   Optional transfer bundles address the request overhead without changing those
+   individual artifact identities. The independently pinned
+   `manifests/lean-transfer-bundles.json` groups 708 existing encoded module packs
+   and Batteries files into 40 concatenated bodies totaling 37,250,418 bytes.
+   No member is recompressed. Each body is at most 1 MiB (the largest is
+   1,045,291 bytes). Immutable assets live on a separate asset branch; build and
+   site verification reject transfer binaries copied into Pages. SOURCE includes
+   the pinned group projection and remote records; its metadata grows by 69,242
+   bytes for this delivery revision.
+
+   The service worker serves existing checked individual cache keys first. On a
+   miss it considers a bundle only when at least two members and half of its
+   encoded bytes are missing. Otherwise it fetches the missing file individually.
+   Concurrent requests share one group task, with at most two active downloads
+   and eight pending groups; excess work uses ordinary individual delivery.
+   A group has an exact bounded length, an outer SHA-256, and a separate hash
+   check for every member before any member enters the cache. A failed optional
+   transfer falls back to the original individually checked URL. Legacy SOURCE
+   records remain usable. Quota failures retain at most two encoded groups in
+   temporary service-worker memory, separate from the compiler. These limits do
+   not bound the Wasm heap or browser/network memory. Stop terminates compilation;
+   already active service-worker transfers can finish populating artifact caches.
+
+   A controlled cold-cache browser pair checked the original Proof Path Compression
+   source successfully with 747 virtual engine bodies in both cases. Upstream
+   asset requests fell from 741 to 73 (40 bundles plus 33 other bodies), while
+   upstream encoded payload stayed exactly 243,846,832 bytes. Switching to Recovery
+   then checked both original workspace files without another upstream asset fetch.
+   The pair used identical verified local bodies and a fixed 50 ms response delay;
+   it does not establish a public-network speed or memory improvement. Virtual
+   response counts include local metadata and differ from upstream requests.
+
 2. **Checked module artifacts before parallel compilers.** First qualify a tiny
    complete export/import round trip in a fresh compiler, then exercise corrupted
    parts, stale generations, edits, warnings, initializers and Stop. The current

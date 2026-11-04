@@ -40,15 +40,17 @@ def verify_runtime(root):
     prefix='https://raw.githubusercontent.com/live-codes/browser-lean/'+UPSTREAM+'/public/'
     from lean_module_packs import module_asset_url, verify_module_pilot
     from lean_proof_path_modules import asset_url as extension_asset_url, verify as verify_module_extensions
+    from lean_transfer_bundles import asset_url as transfer_asset_url, verify as verify_transfers
     for path,record in remotes.items():
         from lean_runner import safe_path
         safe_path(path)
-        pilot_url=module_asset_url(path) or extension_asset_url(path)
+        pilot_url=module_asset_url(path) or extension_asset_url(path) or transfer_asset_url(path)
         pinned=record['url']==pilot_url if pilot_url else record['url'].startswith(prefix)
         if (not pinned or len(record['sha256'])!=64 or record['size']<1):
             raise ValueError('Unpinned remote compiler asset: '+path)
     verify_module_pilot(root,data)
     verify_module_extensions(root,data)
+    verify_transfers(root,data)
     return data
 
 
