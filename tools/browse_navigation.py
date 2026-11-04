@@ -220,9 +220,6 @@ class Browser:
             if title=='Read' and c['id']=='paper-viii':
                 links.insert(0,'[Worked visual atlas: all 32 HTML plates](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-viii/atlas/index.html)')
                 links.insert(0,'[Read online: manuscript, six appendices and figures](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-viii/index.html)')
-            if title=='Read' and c['id']=='paper-iv':
-                links.insert(0,link('Reconstructed visual guide: PDF, editable sources and page comparison',
-                    'docs/PAPER_IV_VISUAL_RECONSTRUCTION.md',page))
             if title=='Read' and c['id']=='paper-ix':
                 links.insert(0,'[Visual guide: all 23 HTML sections and 20 figures](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-ix/atlas/index.html)')
             if title=='Read' and c['id']=='paper-x':

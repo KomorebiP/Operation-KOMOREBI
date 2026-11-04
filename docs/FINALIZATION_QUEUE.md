@@ -69,7 +69,7 @@ Resolved by the explicitly labeled 3 November 2026 reconstructed edition: a comp
 
 **Done when:** An authenticated matching source or explicitly new reconstructed edition has a documented PDF/text comparison and page review.
 
-**Progress:** [Reconstruction, PDF and comparison record](PAPER_IV_VISUAL_RECONSTRUCTION.md). The HTML guide now uses the restored later wording. The original import remains historical.
+**Progress:** [GitHub maintenance note and comparison record](history/PAPER_IV_VISUAL_RECONSTRUCTION_2026-11-03.md). The corrected guide and editable sources are available through the normal reading routes.
 
 Related works and source records: [Paper IV: Cyclic Analytic Functions, Reciprocal Families, and Spectral Zero Data](works/paper-iv.md).
 

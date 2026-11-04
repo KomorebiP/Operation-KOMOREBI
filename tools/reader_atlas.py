@@ -98,7 +98,7 @@ def atlas_tex(text):
 
 def prepare(reader):
     register_visual_sources(reader,'paper-iv')
-    reader.add(IV_PDF,'Reconstructed visual guide (PDF)')
+    reader.add(IV_PDF,'Visual guide (PDF)')
     reader.add(SOURCE,'Paper IV visual guide source')
     reader.add(DEFINITIONS,'Paper IV atlas notation and layout definitions')
     raw=reader.site.read_source(reader.records[SOURCE])
@@ -278,7 +278,7 @@ def render(reader):
                 body+=chapter.paragraphs(node['body'])+passage_links(links)+'</section>'
             else: raise ValueError('Unsupported atlas node '+kind)
         body+='</article>'+neighbours(reader,plate,'bottom')
-        body+='<details class="document-provenance"><summary>Source and conversion record</summary><p>This guide uses the reconstructed 3 November 2026 source. All 27 content pages match the selected 16 October PDF after Unicode and whitespace normalization; the cover identifies the reconstruction. Drawing labels retain their original sources. The evidence statements describe the retained dated checks. This reconstruction does not rerun mathematical examples or Lean.</p><p><a href="'+reader.resolve(SOURCE,page,'L'+str(plate['line']))+'">Reconstructed atlas source</a> · <a href="'+site.rel(REPORT,page)+'">Conversion checks</a></p></details>'
+        body+='<details class="document-provenance"><summary>Source and conversion record</summary><p>The editable source, drawings and PDF are matched to this edition. Text descriptions and table headings are reading aids. Recorded mathematical and formal checks retain their stated dates and scope.</p><p><a href="'+reader.resolve(SOURCE,page,'L'+str(plate['line']))+'">Editable atlas source</a> · <a href="'+site.rel(REPORT,page)+'">Conversion checks</a></p></details>'
         expected=expected_math(plate,atlas['figures'])
         if chapter.math!=expected: raise ValueError('Atlas mathematical sequence differs on V'+str(plate['number']))
         site.page(page,title,body)
@@ -303,7 +303,7 @@ def render(reader):
     with zipfile.ZipFile(target,'w',compression=zipfile.ZIP_DEFLATED) as bundle:
         for item in visual_provenance(site.root)['works']['paper-iv']['published_files']:
             bundle.writestr(item['path'][len(IV_BASE):],(site.root/item['path']).read_bytes())
-    body+=reader.work_routes('paper-iv',INDEX)+'<p><a href="'+site.rel(pdf['url'],INDEX)+'">Reconstructed visual guide PDF</a> · <a href="'+site.rel(archive,INDEX)+'">Download editable sources</a></p>'
+    body+=reader.work_routes('paper-iv',INDEX)+'<p><a href="'+site.rel(pdf['url'],INDEX)+'">Visual guide PDF</a> · <a href="'+site.rel(archive,INDEX)+'">Download editable sources</a></p>'
     body+='<p>Start with <a href="v03.html">the algebra of cyclic functions</a>, then explore <a href="v17.html">zero geometry</a>. <a href="v25.html">The coefficient walkthrough</a> follows one coefficient through the whole calculation; <a href="v26.html">the evidence guide</a> explains the recorded checks.</p>'
     body+=visual_contents(atlas['plates'],INDEX,site.rel,lambda p:reader.viewer_url(pdf,INDEX,'page='+str(p['number']+2)))
     body+='<p>The source’s test and release statements describe the retained atlas edition. This HTML conversion adds reading aids and does not establish new mathematical or formal verification.</p>'

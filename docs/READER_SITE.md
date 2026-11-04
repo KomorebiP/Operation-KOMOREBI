@@ -311,7 +311,9 @@ PDF after Unicode NFKC and whitespace normalization, while the cover identifies
 the reconstruction. All pages have a recorded visual review. The online V12 and
 V26 now include the selected later PDF's branch clarification and evidence table.
 The atlas exposes the rebuilt PDF and a complete editable-source download.
-[The reconstruction report](PAPER_IV_VISUAL_RECONSTRUCTION.md) closes F04.
+[The GitHub maintenance note](history/PAPER_IV_VISUAL_RECONSTRUCTION_2026-11-03.md)
+records the source reconciliation and F04 closeout. Routine repair notes stay
+in `docs/history/` on GitHub; the public reader presents the updated guide in place.
 
 `tools/visual_guide_provenance.py` validates the new source and crosswalk
 identities without changing either frozen import. Run it with `--pdf` to repeat

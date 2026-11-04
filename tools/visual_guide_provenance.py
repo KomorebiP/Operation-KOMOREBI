@@ -26,12 +26,11 @@ def load(root):
 
 
 def register(reader, work):
-    """Publish the reviewed supplement without changing the original import receipt."""
+    """Register reviewed inputs; callers publish only their needed reading resources."""
     section=load(reader.site.root)['works'][work]
     for item in section['published_files']:
         validate_file(reader.site.root,item)
         reader.owned[item['path']]=dict(item,repository_path=item['path'],work=work)
-        reader.add(item['path'])
     return section
 
 
