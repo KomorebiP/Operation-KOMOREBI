@@ -1,1 +1,0 @@
-import PaperXI.SingleCandidateComparison

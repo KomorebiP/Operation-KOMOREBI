@@ -1,4 +1,0 @@
-import KomorebiLSM.RegressionExponential
-#check @Komorebi.LSM.RegressionConfidence.ConditionalSubgaussian.random_factor_condExp_le
-#check @Komorebi.LSM.RegressionConfidence.ConditionalSubgaussian.weighted_factor_integrable
-#check @Komorebi.LSM.RegressionConfidence.exponentialMixture_supermartingale

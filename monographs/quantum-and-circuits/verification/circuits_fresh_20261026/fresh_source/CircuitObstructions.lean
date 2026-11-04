@@ -1,8 +1,0 @@
-import CircuitObstructions.Gates
-import CircuitObstructions.CutComparison
-import CircuitObstructions.Examples
-import CircuitObstructions.Degree
-import CircuitObstructions.MultiplicativeDegree
-import CircuitObstructions.SafeDegree
-import CircuitObstructions.AffineOutput
-import CircuitObstructions.DegreeChecks

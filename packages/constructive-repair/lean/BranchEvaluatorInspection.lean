@@ -1,4 +1,0 @@
-import KomorebiRepair.BranchCertificate
-set_option pp.all true
-#print KomorebiRepair.RationalCertificates.intervalExcluded
-#print KomorebiRepair.RationalCertificates.checkBranch

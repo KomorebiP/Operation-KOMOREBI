@@ -1,3 +1,0 @@
-module
-public import NormalizationBoundary
-example : (1:ℕ)=0 := by sorry
