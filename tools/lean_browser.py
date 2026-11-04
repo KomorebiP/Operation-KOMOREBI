@@ -43,6 +43,8 @@ def verify_runtime(root):
         safe_path(path)
         if (not record['url'].startswith(prefix) or len(record['sha256'])!=64 or record['size']<1):
             raise ValueError('Unpinned remote compiler asset: '+path)
+    from lean_module_packs import verify_module_pilot
+    verify_module_pilot(root,data)
     return data
 
 

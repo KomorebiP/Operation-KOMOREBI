@@ -2,8 +2,9 @@
 
 Inputs come from the reader workflow's pinned upstream checkout. Mathlib imports
 are followed in the exact source revision recorded by its artifact manifest.
-Large artifacts stay at their immutable public GitHub URLs. This prepares their
-import manifests; it does not compile or certify paper proofs.
+Large artifacts stay at immutable public GitHub URLs. One bounded workspace also
+gets smaller local module packs with independently pinned member receipts.
+This prepares delivery assets; it does not compile or certify paper proofs.
 """
 import argparse
 import gzip
@@ -192,6 +193,10 @@ def prepare(source, output, mathlib_archive):
         roots[root]=dict(leanCommit=LEAN,files=names,packs=[],loose=[])
     collection=Path(__file__).resolve().parents[1]
     seeds=mathlib_seeds(collection);seed_groups=mathlib_seed_groups(collection)
+    from lean_module_packs import WORKSPACE as MODULE_PILOT, read_receipt, build_module_pilot
+    pilot_receipt,_=read_receipt()
+    if seed_groups.get(MODULE_PILOT)!=pilot_receipt['seeds']:
+        raise ValueError('Module pilot import seeds changed; review the independent input receipt')
     members=mathlib_sources(mathlib_archive,MATHLIB_SOURCE_SHA256)
     closures=mathlib_closures(mathlib_archive,{'all':seeds,**seed_groups},members=members)
     selected=closures['all']
@@ -249,6 +254,7 @@ def prepare(source, output, mathlib_archive):
     missing={n for n in selected if n.startswith('Mathlib.')}-available
     if missing:raise ValueError('Mathlib artifacts not in upstream layer: '+', '.join(sorted(missing)))
     write_json(output/'lean-mathlib/real-analysis-layer.json',layer)
+    work_layers[MODULE_PILOT],pilot_stats=build_module_pilot(source,output,work_layers[MODULE_PILOT])
     workspace_modules={}
     for key,manifest in work_layers.items():
         workspace_modules[key]=sorted(p[:-6].replace('/','.') for p in manifest['files'] if p.endswith('.olean'))
@@ -261,6 +267,7 @@ def prepare(source, output, mathlib_archive):
                        mathlib_seeds=seeds,mathlib_modules=sorted(available),
                        core_modules=sorted(core_modules),mathlib_source_modules=library_sources,
                        workspace_modules=workspace_modules,
+                       module_pilots={MODULE_PILOT:pilot_stats},
                        inputs=inventory,files=files,remote_files=remote,
                        bytes=sum(p['size'] for p in files.values())+sum(p['size'] for p in remote.values()),
                        local_bytes=sum(p['size'] for p in files.values()),
