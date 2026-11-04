@@ -164,5 +164,7 @@ def verify(root, record):
     modules = sorted(p[:-6].replace('/', '.') for p in expected['files'] if p.endswith('.olean'))
     if any(record.get('workspace_modules', {}).get(key) != modules for key in WORKSPACES):
         raise ValueError('Proof Path workspace module set changed')
-    if derived != expected_remote or extensions[COHORT] != stats:
+    _, _, common_remote = base._delivery_records()
+    if (derived != expected_remote or extensions[COHORT] != stats
+            or any(remote.get(path) != row for path, row in common_remote.items())):
         raise ValueError('Proof Path pinned remote records or totals changed')

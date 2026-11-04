@@ -18,6 +18,8 @@ class ProofPathModulesTests(unittest.TestCase):
         self.common = copy.deepcopy(generated)
         self.common['files'] = [e['path'] for e in self.common['packs'][0]['entries']]
         self.common['packs'] = self.common['packs'][:1]
+        pack = self.common['packs'][0]; asset = 'lean-mathlib/' + pack['file']
+        self.common_remote = {asset: dict(size=pack['compressedBytes'], sha256=pack['sha256'], url=base.module_asset_url(asset))}
         self.manifest = copy.deepcopy(generated)
         self.manifest.pop('modulePilot')
         self.manifest.update(moduleExtension=extension.COHORT, version='komorebi-proof-path-modules-1')
@@ -33,7 +35,7 @@ class ProofPathModulesTests(unittest.TestCase):
         patches = [patch.object(extension, 'read_receipt', return_value=(self.ext_receipt, raw)),
                    patch.object(extension, 'read_delivery', side_effect=lambda: (self.delivery, encoded(self.delivery))),
                    patch.object(base, 'read_receipt', return_value=({'members': common_members}, b'')),
-                   patch.object(base, '_delivery_records', return_value=(self.common, {}, {}))]
+                   patch.object(base, '_delivery_records', return_value=(self.common, {}, self.common_remote))]
         for item in patches:
             item.start(); self.addCleanup(item.stop)
         self.public = Path(self.tmp.name) / 'public'; self.public.mkdir()
@@ -44,14 +46,14 @@ class ProofPathModulesTests(unittest.TestCase):
         path = self.public / extension.MANIFEST; path.parent.mkdir(parents=True, exist_ok=True); path.write_bytes(encoded(manifest))
         modules = sorted(p[:-6].replace('/', '.') for p in manifest['files'] if p.endswith('.olean'))
         return dict(files={extension.MANIFEST: {}}, module_extensions={extension.COHORT: stats},
-                    remote_files=remote, workspace_manifest_aliases=copy.deepcopy(extension.ALIASES),
+                    remote_files={**self.common_remote, **remote}, workspace_manifest_aliases=copy.deepcopy(extension.ALIASES),
                     workspace_modules={key: modules for key in extension.WORKSPACES})
 
     def test_two_workspaces_share_one_manifest_and_reuse_the_existing_pack(self):
         record = self.build()
         self.assertEqual(record['module_extensions'][extension.COHORT]['reused_modules'], 1)
         self.assertEqual(record['module_extensions'][extension.COHORT]['new_modules'], 1)
-        self.assertEqual(len(record['remote_files']), 3)
+        self.assertEqual(len(record['remote_files']), 4)
         self.assertFalse((self.public / extension.DIRECTORY).exists())
         extension.verify(self.public, record)
 
@@ -96,6 +98,10 @@ class ProofPathModulesTests(unittest.TestCase):
             else: forged['module_extensions'][extension.COHORT]['reused_modules'] += 1
             with self.subTest(change=change), self.assertRaisesRegex(ValueError, 'pinned remote records'):
                 extension.verify(self.public, forged)
+
+    def test_missing_reused_download_record_rejected_with_extension_intact(self):
+        record = self.build(); record['remote_files'].pop(next(iter(self.common_remote)))
+        with self.assertRaisesRegex(ValueError, 'pinned remote records'): extension.verify(self.public, record)
 
     def test_alias_tampering_and_duplicate_manifest_rejected(self):
         record = self.build()
