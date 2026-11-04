@@ -42,11 +42,14 @@ def collect(root,revision):
         for entry in receipt['files']:
             path=component['destination']+'/'+entry['path']
             owned[path]={**entry,'work':component['id'],'repository_path':path}
-        selected.extend(selected_paths(component,owned))
+    from reader_source_additions import extend_owned
+    additions=extend_owned(root,dict(components=[c for c in registry['components'] if c['id'] in BOOKS]),owned)
+    for component in registry['components']:
+        if component['id'] in BOOKS:selected.extend(selected_paths(component,owned))
     inputs={};projects={};sources=[]
     for path,entry in owned.items():
         parts=PurePosixPath(path).parts
-        if ((path.endswith('.lean') and not OMIT_PARTS.intersection(parts)) or re_license(PurePosixPath(path).name)):
+        if ((path.endswith('.lean') and not OMIT_PARTS.intersection(parts)) or path in additions or re_license(PurePosixPath(path).name)):
             inputs[path]=entry
     def add(path):
         if path not in owned:raise ValueError('Missing retained environment input: '+path)
@@ -182,6 +185,7 @@ def build(reader):
 <nav class="breadcrumbs" aria-label="Lean navigation"><a href="index.html">Inspect Lean</a><a href="playground.html">Interactive pilot</a></nav>
 <header class="lean-heading"><p class="eyebrow">The complete reading collection</p><h1>Run Lean with its dependencies</h1>
 <p class="lean-lede">Choose any of the {len(record['files']):,} displayed source files. Prepare its imports, use a pinned Lean environment, and keep the actual compiler output.</p></header>
+<p class="lean-library-note">This catalogue covers {len({s['work'] for s in record['files']})} reading editions: {record['modes'].get('retained-project',0):,} files use retained projects and {record['modes'].get('reconstructed-workspace',0):,} use reconstructed workspaces. {record['needs_setup']:,} need further setup. These are source selections, not theorem or successful-compilation counts.</p>
 <div class="lean-run-picker"><label for="lean-run-search">Find a source file</label><input id="lean-run-search" type="search" placeholder="Work, file name, or path" autocomplete="off">
 <label for="lean-run-file">Selected source</label><select id="lean-run-file">{options}</select><p role="status" data-lean-run-count></p></div>
 <section class="lean-run-selection" data-lean-run-selection hidden><p class="eyebrow" data-run-work></p><h2 data-run-name></h2><code class="lean-run-path" data-run-path></code>

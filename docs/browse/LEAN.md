@@ -230,11 +230,15 @@ Jump to a work:
 
 ### [Special Functions](../works/monographs-special-functions.md#lean)
 
-- [Current formal coverage and replay instructions](../../monographs/special-functions/LEAN_STATUS.md)
-- [Coupled recurrence formal companion and limitations](../../monographs/special-functions/formalization/Block01/REPORT.md)
+- [Block17 formal coverage and recorded replay](../../monographs/special-functions/formalization/Block17/REPORT.md)
+- [Historical Block01 formal status](../../monographs/special-functions/LEAN_STATUS.md)
+- [Block01 recurrence companion report](../../monographs/special-functions/formalization/Block01/REPORT.md)
 - [Finite core and coupled Lean sources (directory)](../../monographs/special-functions/lean/)
 - [Coupled recurrence, local convergence and recovery (Lean)](../../monographs/special-functions/lean/CoupledFormal.lean)
 - [Coupled formal claim map](../../monographs/special-functions/formalization/Block01/CLAIM_MAP.json)
+- [Block17 claim map](../../monographs/special-functions/formalization/Block17/CLAIM_MAP.json)
+- [Block17 recorded execution receipt](../../monographs/special-functions/formalization/Block17/evidence/receipt.json)
+- [Block17 source publication inventory](../../monographs/special-functions/formalization/Block17/SOURCE_MANIFEST.json)
 - Coverage: Selected results recorded
 - [Return to this work’s Lean section](../works/monographs-special-functions.md#lean)
 - [Work overview](../works/monographs-special-functions.md)
@@ -258,7 +262,11 @@ Jump to a work:
 
 ### [Realization Boundaries](../works/realization-boundaries.md#lean)
 
+- [Recorded formal verification and replay](../../monographs/realization-boundaries/LEAN_VERIFICATION_REPORT.md)
 - [Lean sources (file)](../../monographs/realization-boundaries/RealizationBoundaries.lean)
+- [Production proof modules (directory)](../../monographs/realization-boundaries/RealizationBoundaries/)
+- [Written-result correspondence and scope](../../monographs/realization-boundaries/docs/MONOGRAPH_COVERAGE.md)
+- [Machine-readable coverage register](../../monographs/realization-boundaries/docs/MONOGRAPH_COVERAGE.json)
 - Coverage: Declared contract recorded
 - [Return to this work’s Lean section](../works/realization-boundaries.md#lean)
 - [Work overview](../works/realization-boundaries.md)

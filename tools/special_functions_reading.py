@@ -57,7 +57,9 @@ SOURCE_TITLES = {
 CONFIG = dict(work=WORK, label='Special Functions', base=BASE, main=MAIN,
               index=INDEX,bib_page=INDEX.replace('index.html','references.html'), title='Special Functions: Function families and their structure',
               main_chapters=7, chapters=[dict(url=INDEX.replace('index.html', 'reading-map.html'))],
-              custom_reader=True)
+              custom_reader=True,
+              lean_reader_guide='collection/SPECIAL_FUNCTIONS_FORMAL_SOURCES.html',
+              lean_reader_note='The selected sources include the inherited finite core, coupled production modules through SF-LEAN-B17, audit files, and controls. The source guide distinguishes their roles and recorded coverage.')
 
 
 def mask(text):

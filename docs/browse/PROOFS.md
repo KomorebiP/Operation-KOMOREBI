@@ -260,6 +260,9 @@ Jump to a work:
 - [Manuscript text (TeX)](../../monographs/special-functions/monograph/main.tex)
 - [Proof map and appendices (TeX)](../../monographs/special-functions/monograph/sections/proof_map.tex)
 - [Coupled formal claim map](../../monographs/special-functions/formalization/Block01/CLAIM_MAP.json)
+- [Block17 claim map](../../monographs/special-functions/formalization/Block17/CLAIM_MAP.json)
+- [Block17 recorded execution receipt](../../monographs/special-functions/formalization/Block17/evidence/receipt.json)
+- [Block17 source publication inventory](../../monographs/special-functions/formalization/Block17/SOURCE_MANIFEST.json)
 - [Return to this work’s written proofs section](../works/monographs-special-functions.md#written-proofs)
 - [Work overview](../works/monographs-special-functions.md)
 - [Status and evidence](../STATUS_CATALOG.md#monographs-special-functions)
@@ -297,6 +300,8 @@ Jump to a work:
 
 - [Read PDF](../../monographs/realization-boundaries/publication/Realization_Boundaries_Monograph.pdf)
 - [Manuscript text (TeX)](../../monographs/realization-boundaries/publication/monograph_source/manuscript/monograph.tex)
+- [Written-result correspondence and scope](../../monographs/realization-boundaries/docs/MONOGRAPH_COVERAGE.md)
+- [Machine-readable coverage register](../../monographs/realization-boundaries/docs/MONOGRAPH_COVERAGE.json)
 - [Return to this work’s written proofs section](../works/realization-boundaries.md#written-proofs)
 - [Work overview](../works/realization-boundaries.md)
 - [Status and evidence](../STATUS_CATALOG.md#realization-boundaries)

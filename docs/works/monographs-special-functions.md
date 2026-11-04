@@ -57,6 +57,9 @@ Find the statement number or section in the [reading files](#read), then read it
 - [Manuscript text (TeX)](../../monographs/special-functions/monograph/main.tex)
 - [Proof map and appendices (TeX)](../../monographs/special-functions/monograph/sections/proof_map.tex)
 - [Coupled formal claim map](../../monographs/special-functions/formalization/Block01/CLAIM_MAP.json)
+- [Block17 claim map](../../monographs/special-functions/formalization/Block17/CLAIM_MAP.json)
+- [Block17 recorded execution receipt](../../monographs/special-functions/formalization/Block17/evidence/receipt.json)
+- [Block17 source publication inventory](../../monographs/special-functions/formalization/Block17/SOURCE_MANIFEST.json)
 
 [Find this work among other written proofs](../browse/PROOFS.md#monographs-special-functions)
 
@@ -67,11 +70,15 @@ Find the statement number or section in the [reading files](#read), then read it
 Start with the [edition guide](../../monographs/special-functions/README.md) and the build instructions below. Check the correspondence records to see which written claims the Lean declarations cover. Source links lead to `.lean` files. PDF guides explain the formalization.
 
 - [Current formalization checkpoint and continuation](../../monographs/special-functions/current/README.md)
-- [Current formal coverage and replay instructions](../../monographs/special-functions/LEAN_STATUS.md)
-- [Coupled recurrence formal companion and limitations](../../monographs/special-functions/formalization/Block01/REPORT.md)
+- [Block17 formal coverage and recorded replay](../../monographs/special-functions/formalization/Block17/REPORT.md)
+- [Historical Block01 formal status](../../monographs/special-functions/LEAN_STATUS.md)
+- [Block01 recurrence companion report](../../monographs/special-functions/formalization/Block01/REPORT.md)
 - [Finite core and coupled Lean sources (directory)](../../monographs/special-functions/lean/)
 - [Coupled recurrence, local convergence and recovery (Lean)](../../monographs/special-functions/lean/CoupledFormal.lean)
 - [Coupled formal claim map](../../monographs/special-functions/formalization/Block01/CLAIM_MAP.json)
+- [Block17 claim map](../../monographs/special-functions/formalization/Block17/CLAIM_MAP.json)
+- [Block17 recorded execution receipt](../../monographs/special-functions/formalization/Block17/evidence/receipt.json)
+- [Block17 source publication inventory](../../monographs/special-functions/formalization/Block17/SOURCE_MANIFEST.json)
 
 [Find this work among other Lean projects](../browse/LEAN.md#monographs-special-functions)
 

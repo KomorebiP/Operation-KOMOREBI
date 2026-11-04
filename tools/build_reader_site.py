@@ -156,6 +156,11 @@ def document_url(repo, path):
 def selected_files(root, component):
     receipt=json.loads((root/('manifests/source-imports/'+component['id']+'.json')).read_bytes())
     by={x['path']:x for x in receipt['files']}
+    from reader_source_additions import extend_owned
+    prefix=component['destination']+'/'
+    owned={prefix+p:{**entry, 'work':component['id']} for p,entry in by.items()}
+    additions=extend_owned(root,dict(components=[component]),owned)
+    for entry in additions.values():by.setdefault(entry['path'],entry)
     paths={r['path'] for r in component['resources'] if r['kind'] in READ_KINDS and r['path'] in by}
     paths |= {p for p,v in by.items() if PurePosixPath(p).name.lower().startswith(('license','copying','notice')) and v['size']<200000}
     result=[]

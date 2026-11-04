@@ -44,6 +44,8 @@ Use the links below to read this work and its supporting files. Ctrl+click (Comm
 Find the statement number or section in the [reading files](#read), then read its assumptions and argument. A claim map may cover only part of the written result.
 
 - [Manuscript text (TeX)](../../monographs/realization-boundaries/publication/monograph_source/manuscript/monograph.tex)
+- [Written-result correspondence and scope](../../monographs/realization-boundaries/docs/MONOGRAPH_COVERAGE.md)
+- [Machine-readable coverage register](../../monographs/realization-boundaries/docs/MONOGRAPH_COVERAGE.json)
 
 [Find this work among other written proofs](../browse/PROOFS.md#realization-boundaries)
 
@@ -53,7 +55,11 @@ Find the statement number or section in the [reading files](#read), then read it
 
 Start with the [edition guide](../../monographs/realization-boundaries/README.md) and the build instructions below. Check the correspondence records to see which written claims the Lean declarations cover. Source links lead to `.lean` files. PDF guides explain the formalization.
 
+- [Recorded formal verification and replay](../../monographs/realization-boundaries/LEAN_VERIFICATION_REPORT.md)
 - [Lean sources (file)](../../monographs/realization-boundaries/RealizationBoundaries.lean)
+- [Production proof modules (directory)](../../monographs/realization-boundaries/RealizationBoundaries/)
+- [Written-result correspondence and scope](../../monographs/realization-boundaries/docs/MONOGRAPH_COVERAGE.md)
+- [Machine-readable coverage register](../../monographs/realization-boundaries/docs/MONOGRAPH_COVERAGE.json)
 
 [Find this work among other Lean projects](../browse/LEAN.md#realization-boundaries)
 
