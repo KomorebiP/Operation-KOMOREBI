@@ -321,6 +321,12 @@ def validate_editorial_editions(root, data, current):
 
 
 def validate(root, data, git):
+    if 'visual_guide_provenance' in data:
+        from visual_guide_provenance import RECORD, check as check_visual_provenance
+        binding=data['visual_guide_provenance']
+        assert binding['path']==RECORD and RECORD in data['assessment_records']
+        assert hashlib.sha256((root/RECORD).read_bytes()).hexdigest()==binding['sha256']
+        check_visual_provenance(root)
     source = json.loads((root/'manifests/source-components.json').read_text(encoding='utf-8'))
     available = {r['id']: r for r in source['components']}
     records = data['components']

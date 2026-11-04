@@ -13,7 +13,7 @@ Recorded 2026-10-27. This queue tracks documentation, research, formalization, a
 | [F01](#f01) | done | Separate current and historical status |
 | [F02](#f02) | done | Make completion, Lean and confidence independently visible |
 | [F03](#f03) | open | Reconcile the expanded Machine-Native Reasoning book |
-| [F04](#f04) | open | Resolve Paper IV visual-guide source correspondence |
+| [F04](#f04) | done | Resolve Paper IV visual-guide source correspondence |
 | [F05](#f05) | open | Replay editions that currently rely on inherited formal evidence |
 | [F06](#f06) | open | Resolve uncompiled or unverified Lean source |
 | [F07](#f07) | open | Assess the two reader-only entries |
@@ -56,6 +56,22 @@ All primary components receive distinct stage, Lean, confidence, scope, evidence
 **Done when:** Every selected component is represented once. Supporting sources remain separately classified.
 
 Coverage: all primary entries in the [status guide](COMPLETION_STATUS.md).
+
+<a id="f04"></a>
+
+<a id="f04--resolve-paper-iv-visual-guide-source-correspondence"></a>
+
+### F04: Resolve Paper IV visual-guide source correspondence
+
+**Status: done**
+
+Resolved by the explicitly labeled 3 November 2026 reconstructed edition: a complete editable source package, successful build, matching text on all 27 content pages and visual review of all 28 PDF pages.
+
+**Done when:** An authenticated matching source or explicitly new reconstructed edition has a documented PDF/text comparison and page review.
+
+**Progress:** [Reconstruction, PDF and comparison record](PAPER_IV_VISUAL_RECONSTRUCTION.md). The HTML guide now uses the restored later wording. The original import remains historical.
+
+Related works and source records: [Paper IV: Cyclic Analytic Functions, Reciprocal Families, and Spectral Zero Data](works/paper-iv.md).
 
 <a id="f08"></a>
 
@@ -120,20 +136,6 @@ The selected core is complete. The exact expanded 1,155-page edition needs its o
 **Done when:** Identify the exact source/PDF hashes, reconcile core correspondence, rebuild the book, and complete its own publication review.
 
 Related works and source records: [Machine Native Reasoning: wider continuation](works/research-machine-native-reasoning-wider.md) · [Machine Native Reasoning](works/monographs-machine-native-reasoning.md).
-
-<a id="f04"></a>
-
-<a id="f04--resolve-paper-iv-visual-guide-source-correspondence"></a>
-
-### F04: Resolve Paper IV visual-guide source correspondence
-
-**Status: open**
-
-The latest visual PDF lacks a recovered exact matching editable source.
-
-**Done when:** An authenticated matching source or explicitly new reconstructed edition has a documented PDF/text comparison and page review.
-
-Related works and source records: [Paper IV: Cyclic Analytic Functions, Reciprocal Families, and Spectral Zero Data](works/paper-iv.md).
 
 <a id="f05"></a>
 
