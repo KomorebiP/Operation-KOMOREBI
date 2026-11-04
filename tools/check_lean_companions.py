@@ -8,7 +8,7 @@ from pathlib import Path
 
 from verify_lean_companion import ALLOWED_AXIOMS, sha256, source_inventory
 
-PROJECTS = ("formal/reader-examples", "formal/kcos-certification")
+PROJECTS = ("formal/reader-examples", "formal/kcos-certification", "formal/polynomial-transport")
 RECORD = "verification/2026-11-04/run.json"
 
 
