@@ -16,6 +16,10 @@ def load(root):
         for item in data[kind]:
             path=PREFIX+('figures/'+item['file'] if kind=='images' else item['path'])
             if sha((root/path).read_bytes())!=item['sha256']:raise ValueError('MNR retained asset changed: '+path)
+    body_started=False
+    for page in data['pages']:
+        if page['chapter']:body_started=True
+        elif body_started:page['part']='Glossary, appendices, and references'
     return data
 
 def configuration(data):
