@@ -40,6 +40,14 @@ This work remains in progress and has, in many respects, been rushed because of 
 
 The works are at different stages of development and review. The [finalization queue](FINALIZATION_QUEUE.md) records remaining editorial work, source checks, proof replays, software tests, and reviews. Completion and confidence labels reflect the evidence recorded for each work. All executable software remains **beta and a work in progress**.
 
+## Why unfinished work is included
+
+The collection is both a body of mathematical work and a record of how that work develops. Drafts, partial results, calculations, experiments, and open directions are included deliberately to make the intermediate steps toward completion visible. They help readers trace how questions, arguments, and constructions take shape, where gaps remain, and what still needs to be checked.
+
+Inclusion does not mean that an item is finished or that every claim has been verified. Each work should be read alongside its stated scope, completion status, assumptions, and recorded evidence.
+
+I will continue to audit, correct, and update the collection as time and resources permit. My main focus is the [core papers](../papers/README.md), [Komorebi Space](works/komorebi-space.md), and the more complete works. The broader collection preserves the surrounding research process as those priorities advance.
+
 ## How to evaluate the collection
 
 Each result should be read alongside its exact statement, hypotheses, argument, source revision, and supporting evidence. Written proofs, accepted Lean declarations, exact calculations, numerical experiments, and software tests establish different things. A formal proof also requires a faithful correspondence between the formal statement and the mathematical claim it is intended to support.
