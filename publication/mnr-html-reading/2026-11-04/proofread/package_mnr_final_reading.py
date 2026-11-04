@@ -36,6 +36,10 @@ def main():
         if p['file'] in corrections:
             before,after=corrections[p['file']];assert body.count(before)==1
             body=body.replace(before,after,1)
+        chapter_labels={'chapter-60.html':1,'chapter-63.html':2,'chapter-66.html':2}
+        if p['file'] in chapter_labels:
+            body,count=re.subn(r'\bPart(\s*<a href="chapter-\d{2}\.html#SII:part:[^"]+">)',r'Chapter\1',body)
+            assert count==chapter_labels[p['file']],('Unexpected chapter-reference label count',p['file'],count)
         previous=original[p['file']];spec=dict(previous['payload']);spec['path']=PREFIX+spec.pop('part');spec['figure_root']='mnr-figure/'
         old=decode(spec,ROOT/'site')
         pattern=r'<span\b[^>]*class="[^"]*arithmatex[^"]*"[^>]*>.*?</span>'
@@ -46,11 +50,11 @@ def main():
         if body!=old:changed.append(p['file'])
         raw=body.encode();compressed=gzip.compress(raw,compresslevel=9,mtime=0)
         if len(buffers[-1])+len(compressed)>512*1024:buffers.append(bytearray())
-        number=len(buffers)+6;offset=len(buffers[-1]);buffers[-1].extend(compressed)
+        number=len(buffers)+9;offset=len(buffers[-1]);buffers[-1].extend(compressed)
         preview=next((q for q in re.findall(r'<p>.*?</p>',body,re.S) if len(re.sub('<[^>]+>','',q))>35),'<p>'+html.escape(p['title'])+'</p>')
         pages.append(dict(**p,payload=dict(part=f'parts/{number:03}.bin',offset=offset,bytes=len(compressed),html_sha256=sha(raw),html_bytes=len(raw)),preview=preview,source=previous['source'],line=previous['line']))
     parts=[]
-    for i,buffer in enumerate(buffers,7):
+    for i,buffer in enumerate(buffers,10):
         path=f'parts/{i:03}.bin';target=OUT/path
         if target.exists() and target.read_bytes()!=buffer:raise ValueError('Refuse to replace a retained reading part: '+path)
         target.write_bytes(buffer);parts.append(dict(path=path,bytes=len(buffer),sha256=sha(buffer)))
@@ -60,12 +64,13 @@ def main():
     result.update(pages=pages,payload_parts=parts,images=base['images'],sources=base['sources'],prefix=base['prefix'],converter=base['converter'],mathjax_validation=base['mathjax_validation'])
     result['reading_edition']=dict(id='mnr-html-proofread-2026-11-04',kind='copyedited-web-edition',base_manifest=PREFIX+'READING.json',base_manifest_sha256=sha(base_raw),review=PREFIX+'proofread/FINAL_REVIEW.json')
     (OUT/'FINAL_READING.json').write_text(json.dumps(result,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8',newline='\n')
-    review=dict(scope='Manual proofreading of welcome/reader copy, all reading-page titles, all 126 figure captions, and flagged prose in context; automated transcription and structure checks across all 121 reading pages. This is not a line-by-line manual review of every paragraph.',
+    review=dict(scope='Manual proofreading of welcome/reader copy, all reading-page titles, chapter openings, all 126 figure captions, and flagged prose in context; automated transcription and structure checks across all 121 reading pages. This is not a line-by-line manual review of every paragraph.',
       routine_edits=['Restored literal filenames, module names and declaration names omitted by the original LaTeX path-command conversion.',
                      'Chapter 62: "64-case case" changed to "64-case example".',
                      'Chapter 88: "visible at at least" corrected to "visible at least".',
                      'The visual-atlas section menu now uses its actual heading level, exposing all 13 plates.',
-                     'The visual-atlas reading route now describes the 13 plates present in this edition instead of referring to absent plates 14–17.'],
+                     'The visual-atlas reading route now describes the 13 plates present in this edition instead of referring to absent plates 14–17.',
+                     'Five cross-references in Chapters 60, 63 and 66 now call the referenced chapters "Chapter" instead of retaining the component manuscript\'s "Part" label. Their reference destinations are unchanged.'],
       mathematical_token_changes=[],unresolved_editorial_issues=[],
       retained_wording=['Chapter 84: "that that gate" is a grammatical conjunction followed by a demonstrative.'],
       validation=dict(reading_pages=121,chapters=97,proofs=527,numbered_statements=803,images=141,tables=74,mathematical_expressions_identical=maths,inline_code_nodes_restored=code_added,literal_path_url_commands_checked=469,literal_path_url_commands_missing=0,all_anchor_sequences_identical=True,all_reference_destinations_identical=True),

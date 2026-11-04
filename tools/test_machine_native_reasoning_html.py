@@ -30,6 +30,9 @@ class HTMLMNRTests(unittest.TestCase):
         self.assertNotIn('visible at at least',texts['chapter-88.html'])
         self.assertIn('Plates 10–13 develop',texts['large-signal-model-visual-atlas.html'])
         self.assertNotIn('Plate 17 locates',texts['large-signal-model-visual-atlas.html'])
+        for chapter in ['chapter-60.html','chapter-63.html','chapter-66.html']:
+            self.assertNotRegex(texts[chapter],r'\bPart\s*<a href="chapter-\d{2}\.html#SII:part:')
+            self.assertRegex(texts[chapter],r'\bChapter\s*<a href="chapter-\d{2}\.html#SII:part:')
 
     def test_authenticated_article_inventory_and_corruption(self):
         data=load(ROOT);proofs=statements=0
