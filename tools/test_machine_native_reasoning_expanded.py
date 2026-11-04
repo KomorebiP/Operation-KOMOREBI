@@ -49,10 +49,18 @@ class ExpandedMNRTests(unittest.TestCase):
             markup=(Path(tmp)/PAGE).read_text(encoding='utf-8');page=Page(markup)
             self.assertEqual(len([x for x in page.ids if x.startswith('chapter-')]),97)
             self.assertEqual(len(set(page.ids)),len(page.ids))
-            urls=[unquote(x) for x in page.links if 'book.html' in x and not urlsplit(x).query]
+            urls=[unquote(x) for x in page.links if 'book.html' in x and 'download=' not in urlsplit(x).query]
             self.assertEqual(len(urls),98)
             for chapter in record['chapters']:
-                self.assertTrue(any(x.endswith('#page='+str(chapter['physical_page'])) for x in urls))
+                self.assertTrue(any(parse_qs(urlsplit(x).query).get('page')==[str(chapter['physical_page'])] for x in urls))
+            generated={p.relative_to(tmp).as_posix():Page(p.read_text(encoding='utf-8')) for p in Path(tmp).rglob('*.html')}
+            for name,content in generated.items():
+                for url in content.links:
+                    split=urlsplit(url)
+                    if split.scheme or split.netloc:continue
+                    target=posixpath.normpath(posixpath.join(posixpath.dirname(name),unquote(split.path))) if split.path else name
+                    if target in generated and split.fragment:
+                        self.assertIn(unquote(split.fragment),generated[target].ids,(name,url))
             self.assertEqual(len(site.search),98)
             self.assertTrue(all(x['work_ids']==['research-machine-native-reasoning-wider'] for x in site.search))
             self.assertFalse(record['new_lean_execution']);self.assertFalse(record['new_proof_review'])

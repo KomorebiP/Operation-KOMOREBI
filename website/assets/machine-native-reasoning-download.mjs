@@ -53,6 +53,11 @@ export async function assembleAsset(kind, asset, { revision, fetcher = fetch, si
   finally { signal?.removeEventListener('abort', abort); }
 }
 
+export function readerPage(search, hash) {
+  const page = new URLSearchParams(search).get('page') ?? (/^#page=(.*)$/.exec(hash)?.[1] ?? '1');
+  return /^[1-9]\d{0,2}$/.test(page) && Number(page) <= 977 ? Number(page) : 1;
+}
+
 async function startInterface(root) {
   const status = document.getElementById('mnr-status');
   const save = document.getElementById('mnr-save');
@@ -94,7 +99,7 @@ async function startInterface(root) {
         const viewer = new URL(root.dataset.viewer, location.href);
         if (viewer.origin !== location.origin) throw Error('Unexpected PDF reader');
         viewer.searchParams.set('file', url);
-        viewer.hash = /^#page=([1-9]\d{0,2})$/.test(location.hash) && Number(location.hash.slice(6)) <= 977 ? location.hash : '#page=1';
+        viewer.hash = 'page=' + readerPage(location.search, location.hash);
         const frame = document.createElement('iframe');
         frame.title = 'Machine-Native Reasoning — complete 977-page book';
         frame.className = 'pdf-reader'; frame.style.cssText = 'width:100%;height:85vh'; frame.src = viewer.href;

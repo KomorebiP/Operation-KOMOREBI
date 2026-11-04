@@ -112,7 +112,7 @@ def publish(site):
             number=part.split(' ',1)[0].lower()
             body+='<details id="part-'+number+'"'+(' open' if previous is None else '')+'><summary>'+e(part)+'</summary><ol start="'+str(chapter['number'])+'">'
             previous=part
-        target=site.rel(BOOK,PAGE)+'#page='+str(chapter['physical_page'])
+        target=site.rel(BOOK,PAGE)+'?page='+str(chapter['physical_page'])
         body+='<li id="chapter-'+str(chapter['number'])+'"><a href="'+e(target,quote=True)+'">'+e(chapter['title'])+'</a> <span class="muted">(printed page '+e(chapter['printed_page'])+')</span></li>'
         site.search.append(dict(title='Machine-Native Reasoning / Chapter '+str(chapter['number'])+'. '+chapter['title'],
           group='Collection',kind='Papers and source',work_ids=[WORK],url=PAGE+'#chapter-'+str(chapter['number']),

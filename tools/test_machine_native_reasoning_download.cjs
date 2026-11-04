@@ -45,3 +45,11 @@ test('cancel stops assembly and a subsequent retry succeeds',async()=>{
   const bytes=await assembleAsset('pdf',assets.pdf,{revision,fetcher:localFetch});
   assert.equal(bytes.length,assets.pdf.bytes);
 });
+
+test('HTML chapter routes select physical PDF pages without missing fragments',async()=>{
+  const {readerPage}=await modulePromise;
+  assert.equal(readerPage('?page=855',''),855);
+  assert.equal(readerPage('?page=977',''),977);
+  assert.equal(readerPage('','#page=855'),855);
+  for(const page of ['0','978','-1','bad','1%26file%3Dother']) assert.equal(readerPage('?page='+page,''),1);
+});
