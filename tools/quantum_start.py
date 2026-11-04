@@ -59,6 +59,7 @@ def publish(reader, book):
             body+='<p>For the other treatments, consult the '+link('symmetry-companion-theorem-and-evidence-status-ledger','symmetry evidence ledger')+' and '+link('catalytic-companion-conjecture-and-obligation-ledger','catalytic obligation ledger')+'.</p>'
         body+='<p><a href="#top">Choose another path ↑</a></p></section>'
     body+='<nav class="quantum-guide-return" aria-label="Volume resources"><a class="button" href="index.html">Full contents</a><a href="'+site.rel('collection/works/'+WORK+'.html',PAGE)+'">Work overview and sources</a></nav></div>'
+    if getattr(site,'guided_reading',False):body+='<p><a href="../start.html">More reading guides</a></p>'
     body=body.replace('<div class="quantum-start">','<div class="quantum-start" id="top">',1)
     site.page(PAGE,'Quantum and Circuits: Start here',body)
     site.search.append(dict(title='Quantum and Circuits / Start here',group='Collection',kind='Guides',work_ids=[WORK],url=PAGE,

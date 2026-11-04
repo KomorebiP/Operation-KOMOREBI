@@ -429,6 +429,27 @@ The visual tour, four-treatment study route, and formal companion link into the
 retained edition. Its contents, reading-library card, work overview, and search
 entry expose the guide without changing the chapter sequence.
 
+The filterable directory at `read/start.html` offers reading paths for substantial
+works with both a complete HTML manuscript and an HTML visual guide. The current
+selection is Papers I–XII, Quantum and Circuits, Large Signal Model, and K-COS:
+15 works and 45 paths. PDF-only works, partial HTML selections, software,
+experiments, and books without an HTML visual companion keep their existing
+reading routes.
+
+Each guide connects a visual introduction, a full reading sequence, and supporting
+evidence. The core papers reuse their work-specific questions, examples, setup
+passages, statements, and written-proof links. K-COS includes its worked enclosure,
+formal correspondence, and reproduction chapters. Quantum and Circuits and Large
+Signal Model retain their curated guides. The reading library, contents, work
+toolbars, catalogue, and search expose the selected guides.
+
+`tools/reading_paths.py` selects eligible editions from the reading configuration.
+`documents/reading-paths.json` records the selection, paths, and destinations.
+The final site check requires exactly the eligible works, three path anchors per
+guide, and valid destinations and entry links. Run
+`python -B -m unittest discover -s tools -p 'test_reading_paths.py' -v` for selection,
+source ownership, missing-resource, scope, curated-guide, and navigation checks.
+
 Footers keep previous/next links and a direct Full contents link, avoiding the
 quadratic storage cost of repeating a second full menu on every topic page.
 Atlas-specific menus retain their existing behavior. The site-size guard

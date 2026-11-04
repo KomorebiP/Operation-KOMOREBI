@@ -75,6 +75,8 @@ def facet_records(root, registry, assessments):
 
 def render_works_catalog(root, registry, components, assessments, status):
     """Render a compact catalogue with progressive filtering and pagination."""
+    from reading_paths import eligible_books, guide_url
+    guided=eligible_books()
     data, subjects = load_catalog(root, registry, assessments)
     labels = status['labels']
     indexed = [components[row['id']] for row in registry['components']]
@@ -191,6 +193,7 @@ def render_works_catalog(root, registry, components, assessments, status):
                 '<h3><a href="collection/works/' + e(identifier) + '.html">' +
                 e(component['title']) + '</a></h3><p class="catalog-summary">' + e(summary) + '</p>' +
                 '<p class="catalog-stage-label">' + e(stage) + '</p>' +
+                ('<p><a href="'+e(guide_url(identifier))+'">Start here: choose a reading path</a></p>' if identifier in guided else '') +
                 '<details class="catalog-proof"><summary>Proof and evidence</summary>' +
                 ('<p class="catalog-related">Related field: ' + e(related) + '</p>' if related else '') +
                 '<dl class="catalog-assessment"><div><dt>Completion</dt><dd>' +

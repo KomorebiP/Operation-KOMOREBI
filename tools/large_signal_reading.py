@@ -203,15 +203,15 @@ def publish_start(reader, book):
     body += '<p>An exact archive preserves an observation. A useful predictive state must also retain what the declared future questions need. Start with that distinction, then follow the construction and its evidence.</p>'
     body += '<p>'+link('Read the mathematical body',BOOK['index'])+' · '+link('Find a proposition or proof','read/'+WORK+'/statements.html')+'</p>'
     body += '<p>'+link('Explore the visual atlas',BOOK['atlas_index'])+' · 17 plates, original diagrams, and an exact closure explorer.</p>'
-    body += '<h2>A first reading path</h2><ol>'
+    body += '<h2 id="introduction">A first reading path</h2><ol>'
     for n,label in [(1,'Distinguish observations, archives, and predictive states'),
                     (5,'See when a summary supports a reduced transition'),
                     (13,'Follow the complete small signal example'),
                     (18,'Identify a recurrence from observed outputs')]:
         body += '<li>'+link(label,by_number[n]['url'])+'</li>'
-    body += '</ol><h2>Study the full construction</h2><p>Continue through learning and stability, controlled stochastic realization, certified probability domains, continuous observations, and robustness under data uncertainty. The contents group the 100 sections into eight parts.</p>'
+    body += '</ol><h2 id="study">Study the full construction</h2><p>Continue through learning and stability, controlled stochastic realization, certified probability domains, continuous observations, and robustness under data uncertainty. The contents group the 100 sections into eight parts.</p>'
     body += '<p>'+link('Open all chapters',BOOK['index'])+' · '+link('Try the Signal laboratory','signal-lab.html')+'</p>'
-    body += '<h2>Inspect the recorded formal scope</h2><p>The retained coverage map records complete mappings for 87 registered proposition cores under explicit assumptions. Each HTML proposition links to its written proof and its recorded scope. The publication conversion adds no compiler run or mathematical review.</p>'
+    body += '<h2 id="evidence">Inspect the recorded formal scope</h2><p>The retained coverage map records complete mappings for 87 registered proposition cores under explicit assumptions. Each HTML proposition links to its written proof and its recorded scope. The publication conversion adds no compiler run or mathematical review.</p>'
     body += '<p>'+link('Read the scope of each proposition',SCOPE_PAGE)+'</p><ul>'
     body += '<li>'+link('Inspect the mathematical Lean sources','lean/'+WORK+'/index.html')+'</li>'
     for path,title in RESOURCES[:3]:
@@ -223,6 +223,7 @@ def publish_start(reader, book):
     record=reader.records[RESOURCES[-1][0]]
     body += '<p>'+link('Run the retained reference examples',record['url'])+'</p>'
     body += '<h2>Original publication and atlas</h2><p>The 174-page PDF retains the full publication layout, additional glossary, and formal registers. The visual atlas is available in HTML alongside its original 19-page PDF.</p><p>'+link('Open the visual atlas',BOOK['atlas_index'])+' · '+link('Open publication and companion links','collection/works/'+WORK+'.html#read')+'</p>'
+    if getattr(site,'guided_reading',False):body+='<p><a href="../start.html">More reading guides</a></p>'
     site.page(page,'Start reading the Large Signal Model',body)
     site.search.append(dict(title='Large Signal Model / Start here',group='Collection',kind='Guides',
         work_ids=[WORK,'large-signal-model'],url=page,

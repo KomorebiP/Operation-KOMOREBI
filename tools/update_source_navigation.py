@@ -516,6 +516,10 @@ The [extended case-study index](DEMONSTRATIONS.md#extended-case-studies) include
 
 Start with the subject or kind of work that interests you. Each route leads to the relevant manuscripts, sources, and recorded evidence.
 
+For papers and books with a complete online manuscript and visual guide,
+[choose a guided reading path](https://KomorebiP.github.io/Operation-KOMOREBI/read/start.html):
+begin with the visual introduction, study the work, or inspect its supporting evidence.
+
 '''+table(['Goal','Begin with'],[
             ('Understand the common language',w('realization-calculus-book','Realization Calculus')+' and '+w('komorebi-space','Komorebi Space')),
             ('Study the individual developments','[Papers I–XII](../papers/README.md)'),

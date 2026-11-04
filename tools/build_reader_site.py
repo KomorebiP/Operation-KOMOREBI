@@ -281,6 +281,7 @@ class Site:
         self.documents={}
         self.search=[]
         self.asset_count=0
+        self.guided_reading=True
         self.bundle_records=[]
         self.editorial_editions={}
         self.claims=validate_claims(root,{c['destination']+'/'+f['path'] for c in self.components.values() for f in json.loads((root/c['receipt']).read_bytes())['files']})
@@ -678,6 +679,8 @@ class Site:
         publish_roots_newton_case(self)
         self.markdown_pages()
         self.reader.render()
+        from reading_paths import publish as publish_reading_paths
+        publish_reading_paths(self.reader)
         from lean_reader import build as build_lean
         lean = build_lean(self.reader)
         from browser_lean import build as build_lean_playground

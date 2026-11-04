@@ -2,6 +2,10 @@
 
 Start with the task you want to complete. These routes are editorial suggestions and do not change the recorded status of any work.
 
+[Choose a guided reading path](https://KomorebiP.github.io/Operation-KOMOREBI/read/start.html)
+for a paper or book with both a complete HTML manuscript and an HTML visual guide.
+Each guide offers a visual introduction, a study sequence, and supporting evidence.
+
 For the collection as a whole, read the [project overview](START_HERE.md) and [project map](PROJECT_MAP.md). For a complete calculation, start with [Euler numbers](demonstrations/EULER_PACKETS.md), then compare the signal and quantum routes in the [extended case-study index](DEMONSTRATIONS.md#extended-case-studies). The [three elementary demonstrations](DEMONSTRATIONS.md#three-elementary-demonstrations) offer shorter introductions.
 
 - [New to Komorebi](routes/NEW_READER.md)

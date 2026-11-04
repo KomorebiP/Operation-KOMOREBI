@@ -239,9 +239,9 @@ class ReadingDocuments:
     def work_intro(self, work, page, collection_links=''):
         """One work toolbar; keep specialist destinations in a native disclosure."""
         targets = self.work_route_targets(work)
-        primary = next((label for label in ('Revised edition', 'Read chapters', 'Read PDF')
+        primary = next((label for label in ('Start here', 'Revised edition', 'Read chapters', 'Read PDF')
                         if any(name == label for name, _ in targets)), None)
-        prominent = {primary, 'Read PDF', 'Visual guide', 'Inspect Lean'}
+        prominent = {primary, 'Read chapters', 'Revised edition', 'Read PDF', 'Visual guide', 'Inspect Lean'}
         hub = 'collection/works/'+work+'.html'
         def link(label, url, main=False):
             target = '#'+url.split('#',1)[1] if url.startswith(hub+'#') else self.site.rel(url,page)
@@ -279,6 +279,8 @@ class ReadingDocuments:
         hub = 'collection/works/'+work+'.html'
         pdf = self.primary_pdf(work)
         routes = [('Paper overview', hub)]
+        from reading_paths import guide_enabled, guide_url, eligible_books
+        if work in eligible_books() and guide_enabled(self.site,work):routes.append(('Start here',guide_url(work)))
         edition = getattr(self.site,'assessments',{}).get(work,{}).get('editorial_edition')
         if edition:
             manuscript = 'collection/'+edition['manuscript'].removeprefix('docs/').removesuffix('.md')+'.html'

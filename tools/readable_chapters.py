@@ -199,7 +199,10 @@ from kcos_reading import BOOK as KCOS_BOOK, CHAPTERS as KCOS_CHAPTERS
 BOOKS[KCOS_BOOK['work']] = KCOS_BOOK
 CHAPTERS += KCOS_CHAPTERS
 # One full chapter menu per page; footers keep direct reading routes.
-for _book in BOOKS.values():_book['footer_index_only']=True
+for _book in BOOKS.values():
+    _book['footer_index_only']=True
+    if _book.get('chapters') and not _book.get('partial') and (_book.get('atlas_index') or _book.get('visual_guide_index')):
+        _book.setdefault('reading_guide','read/'+_book['work']+'/start.html')
 BY_SOURCE = {c['source']:c for c in reversed(CHAPTERS)}
 NUMBERED = {'definition', 'theorem', 'proposition', 'lemma', 'corollary', 'remark', 'example', 'standardfact', 'certificate','boundary','roadmap','construction','classicalinput','classical','conjecture','problem','warning'}
 NUMBERED.update('hist'+kind for kind in ('theorem','proposition','lemma','corollary','definition','example','remark','standardfact'))
@@ -1132,14 +1135,16 @@ def render_reading_index(reader):
     site=reader.site
     page='read/index.html'
     from reading_navigation import entries
+    from reading_paths import guide_enabled
     body='<p class="eyebrow">HTML reading editions</p><h1>Reading library</h1><p>Read papers and books with chapter contents, selectable equations, and links to proofs and original sources. Begin with Paper I for the foundations, or choose a work below.</p><nav class="reading-library-groups" aria-label="Reading collections"><a href="#core-papers">Core papers</a><a href="visual-guides.html">Visual guides</a><a href="#books">Books and monographs</a></nav>'
+    if getattr(site,'guided_reading',False):body+='<p><a class="button" href="start.html">Choose a reading path</a> &middot; Visual introductions, full study, and supporting evidence.</p>'
     for group,identifier,core in [('Core papers','core-papers',True),('Books and monographs','books',False)]:
         body+='<section id="'+identifier+'"><h2>'+group+'</h2><div class="work-list">'
         for work,config in BOOKS.items():
             if bool(re.fullmatch(r'paper-[ivx]+',work))!=core:continue
             body+='<section class="work"><p class="eyebrow">'+config['label']+'</p><h3>'+html.escape(config['title'])+'</h3><p>'+str(len(entries(config)))+' reading pages'+(' · opening selection' if config.get('partial') else '')+'</p><nav aria-label="'+config['label']+' reading formats">'
             if config.get('partial'):body+='<p>Opening chapters are available in HTML; continue in the PDF or linked sources.</p>'
-            if config.get('reading_guide'):body+='<a class="button" href="'+site.rel(config['reading_guide'],page)+'">Start here</a>'
+            if config.get('reading_guide') and guide_enabled(site,work):body+='<a class="button" href="'+site.rel(config['reading_guide'],page)+'">Start here</a>'
             else:body+='<a class="button" href="'+site.rel(config['chapters'][0]['url'],page)+'">Start reading</a>'
             body+='<a href="'+site.rel(config['index'],page)+'">Contents</a>'
             visual=config.get('atlas_index') or config.get('visual_guide_index')
@@ -1483,6 +1488,7 @@ def render_book(reader,book):
 
 def render_book_index(reader,book,reports):
     from reading_navigation import contents_list
+    from reading_paths import guide_enabled
     site=reader.site
     config=book['config']
     page,work,label=config['index'],config['work'],config['label']
@@ -1492,8 +1498,8 @@ def render_book_index(reader,book,reports):
     if config.get('custom_reader')=='kcos':
         from kcos_routes import reading_paths
         body+=reading_paths(reader,book,page)
-    if config.get('reading_guide'):
-        body+='<p class="quantum-guide-entry"><a href="'+site.rel(config['reading_guide'],page)+'">Start here: choose a reading path</a> · '+html.escape(config.get('reading_guide_description','A visual introduction, full study, or formal companion.'))+'</p>'
+    if config.get('reading_guide') and guide_enabled(site,work):
+        body+='<p class="quantum-guide-entry"><a href="'+site.rel(config['reading_guide'],page)+'">Start here: choose a reading path</a> · '+html.escape(config.get('reading_guide_description','A visual introduction, full study, or evidence route.'))+'</p>'
     for anchor in config.get('contents_anchors',[]):body+='<span id="'+html.escape(anchor,quote=True)+'"></span>'
     body+='<nav class="chapter-contents reading-contents-index" aria-label="'+label+' chapters"><h2>Contents</h2>'
     body+=contents_list(config,page)+'</nav>'
