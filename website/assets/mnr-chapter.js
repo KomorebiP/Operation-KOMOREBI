@@ -1,6 +1,9 @@
 /* Authenticated, chapter-sized HTML loading; passage tools initialize afterward. */
 (() => {
   'use strict';
+  // The shared contents filter uses this edition's printed chapter numbers.
+  const chapterQuery=document.querySelector('.mnr-contents input[type="search"]');
+  if(chapterQuery)chapterQuery.placeholder='Title or chapter number';
   const spec=document.getElementById('mnr-payload');if(!spec)return;
   const record=JSON.parse(spec.textContent),article=document.getElementById('chapter-text'),status=document.getElementById('mnr-loading'),retry=document.getElementById('mnr-retry');
   const digest=async bytes=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)),x=>x.toString(16).padStart(2,'0')).join('');

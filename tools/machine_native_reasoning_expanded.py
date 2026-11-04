@@ -63,12 +63,12 @@ def artifact_bytes(root,asset):
     return raw
 
 def edition_link(site,page):
-    return '<a href="'+html.escape(site.rel(PAGE,page),quote=True)+'">Read the reconstructed 97-chapter book</a>'
+    return '<a href="'+html.escape(site.rel(PAGE,page),quote=True)+'">Read the complete 97-chapter book</a>'
 
 def teaser(site,page):
     return ('<aside class="reading-note" aria-label="Expanded Machine-Native Reasoning edition">'
       '<p><strong>The expanded book is available.</strong> '+edition_link(site,page)+
-      ': 977 pages, thirteen parts, and a complete editable TeX package. '
+      ' in the browser, with figures, references, and chapter navigation. '
       'Its component-specific assurance remains separate from the accepted 27-result core.</p></aside>')
 
 def publish(site):

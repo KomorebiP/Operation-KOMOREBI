@@ -31,6 +31,43 @@ def configuration(data):
     return dict(work=WORK,label='Machine-Native Reasoning',title='Machine-Native Reasoning',index=PAGE,chapters=chapters,
       contents_groups=groups,menu_current_group_only=True,menu_index_only=True,footer_index_only=True,compact_chrome=True)
 
+def decorate(site,path,chapter=False):
+    """Use the shared reader styles with a few scoped presentation adjustments."""
+    doc=(site.output/path).read_text(encoding='utf-8')
+    doc=doc.replace('<body class="','<body class="mnr-reading-page ',1)
+    if chapter:
+        # Passage tools must initialize after the complete article arrives.
+        doc=re.sub(r'<script defer src="([^"]*/(?:reader|reading-tools)\.js[^\"]*)"></script>',r'<script type="application/x-mnr-deferred" data-src="\1"></script>',doc)
+    extras='<link rel="stylesheet" href="'+site.rel(STYLE,path)+'?v='+sha((site.root/'website'/STYLE).read_bytes())[:12]+'"><script defer src="'+site.rel(SCRIPT,path)+'?v='+sha((site.root/'website'/SCRIPT).read_bytes())[:12]+'"></script>'
+    doc=doc.replace('</head>',extras+'</head>');site.write(path,doc)
+    return len(doc.encode())
+
+def welcome(data):
+    """Match the introductory routes and chapter list used by the other papers."""
+    e=html.escape
+    body='<p class="eyebrow">Read Machine-Native Reasoning</p><h1>Machine-Native Reasoning</h1>'
+    body+='<p>Follow how observations become reusable states, explanations, and methods that can be checked and revised. The book connects representation and memory with inference, learning, and shared reasoning.</p>'
+    body+='<nav class="work-overview-nav paper-routes" aria-label="Reading routes for this work"><a href="#reading-guide">Start here</a><a href="#chapters">Contents</a><a href="book.html">PDF and source</a><a href="../../collection/works/'+WORK+'.html">Work overview</a></nav>'
+    body+='<p class="reading-start"><a class="button" href="chapter-01.html">Start reading</a></p>'
+    body+='<section id="reading-guide"><h2>A first reading path</h2><p>The opening chapters follow one finite example: a sensor displays one bit under an unknown convention. Use it to see what the record determines, what a representation must preserve, and how later evidence can change a conclusion.</p><ol>'
+    for number,title in [(1,'Begin with evidence and a reusable state'),(2,'Check what a representation preserves'),(3,'Keep memory open to correction')]:
+        body+='<li><a href="chapter-'+str(number).zfill(2)+'.html">'+title+'</a></li>'
+    body+='</ol><p>Continue in order, or choose a topic below. The <a href="preface.html">preface</a> introduces the whole book.</p></section>'
+    body+='<nav id="chapters" class="chapter-contents reading-contents-index mnr-contents" aria-label="Machine-Native Reasoning chapters"><h2>Contents</h2><p>97 chapters in 13 parts, with introductory pages, glossary, appendices, and references.</p><div class="reading-contents-groups">'
+    previous=None
+    for p in data['pages']:
+        if p['part']!=previous:
+            if previous is not None:body+='</ol></details>'
+            opened=p['chapter']==1
+            body+='<details class="reading-contents-group"'+(' open' if opened else '')+'><summary>'+e(p['part'])+'</summary><ol>';previous=p['part']
+        number=str(p['chapter']) if p['chapter'] else ''
+        key=number or p['file'].removesuffix('.html')
+        body+='<li'+(' id="chapter-'+number+'"' if number else '')+'><a data-reading-entry="'+e(key,quote=True)+'" href="'+e(p['file'],quote=True)+'"><span class="reading-entry-number" aria-hidden="true">'+number+'</span><span>'+e(p['title'])+'</span></a></li>'
+    body+='</ol></details></div></nav>'
+    body+='<details id="edition" class="reading-resources"><summary>Edition and source notes</summary><div><p>This expanded reading edition contains 97 chapters in 13 parts. The accepted 27-result core retains its separate scope. Production and rendering checks are not an independent proof audit.</p>'
+    body+='<p><a href="book.html">Complete 977-page PDF and editable TeX</a> · <a href="../../'+RECORD+'">Publication record</a></p></div></details>'
+    return body
+
 def publish(site):
     from reading_navigation import navigation,outline,resources
     from build_reader_site import github,REPOSITORY
@@ -40,40 +77,30 @@ def publish(site):
     for asset in (SCRIPT,STYLE):
         target=site.output/asset;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes((site.root/'website'/asset).read_bytes())
     added=0
-    for p in data['pages']:
+    for i,p in enumerate(data['pages']):
         path='read/'+WORK+'/'+p['file'];payload=dict(p['payload']);payload['path']=PREFIX+payload.pop('part');payload['url']=base+payload['path'][len(PREFIX):];payload['figure_root']=base+'figures/'
         full=decode(payload,site.root)
         title=(str(p['chapter'])+'. ' if p['chapter'] else '')+p['title']
         contents='<ol>'+''.join('<li><a href="#'+e(h['id'],quote=True)+'">'+e(h['title'])+'</a></li>' for h in p['headings'] if h['level']==2)+'</ol>'
         source=github(REPOSITORY,site.revision,PREFIX+p['source'],p['line'])
         resource='<a href="book.html">PDF and editable source</a> · <a href="'+e(source,quote=True)+'">Chapter source</a> · <a href="reconstructed-edition.html#edition">About this edition</a>'
-        body='<h1 id="'+e(p['id'],quote=True)+'">'+e(title)+'</h1>'+navigation(config,path)
+        def chapter_navigation(placement='top'):
+            text=navigation(config,path,placement)
+            position=('Chapter '+str(p['chapter'])+' of 97') if p['chapter'] else ('Introduction' if i<3 else 'Supporting material')
+            return text.replace('<span>'+str(i+1)+' of 121</span>','<span>'+position+'</span>',1)
+        body='<h1 id="'+e(p['id'],quote=True)+'">'+e(title)+'</h1>'+chapter_navigation()
         if p['headings']:body+=outline(contents)
         body+='<div class="mnr-loading" id="mnr-loading" role="status" aria-live="polite"><span>Loading chapter…</span> <button type="button" id="mnr-retry" hidden>Retry</button></div>'
         body+=resources(resource)
         body+='<article id="chapter-text" class="readable-chapter mnr-chapter" data-reading-no-notation="true" aria-busy="true">'+p['preview']+'</article>'
-        body+='<noscript><p>Full chapters require JavaScript. <a href="book.html">Read or download the complete PDF</a>.</p></noscript>'+navigation(config,path,'bottom')
+        body+='<noscript><p>Full chapters require JavaScript. <a href="book.html">Read or download the complete PDF</a>.</p></noscript>'+chapter_navigation('bottom')
         body+='<script type="application/json" id="mnr-payload">'+json.dumps(payload,separators=(',',':'))+'</script>'
         site.page(path,title+' · Machine-Native Reasoning',body,source)
-        doc=(site.output/path).read_text(encoding='utf-8')
-        # Initialize passage tools only after the full article has arrived.
-        doc=re.sub(r'<script defer src="([^"]*/(?:reader|reading-tools)\.js[^\"]*)"></script>',r'<script type="application/x-mnr-deferred" data-src="\1"></script>',doc)
-        extras='<link rel="stylesheet" href="'+site.rel(STYLE,path)+'?v='+sha((site.root/'website'/STYLE).read_bytes())[:12]+'"><script defer src="'+site.rel(SCRIPT,path)+'?v='+sha((site.root/'website'/SCRIPT).read_bytes())[:12]+'"></script>'
-        doc=doc.replace('</head>',extras+'</head>');site.write(path,doc);added+=len(doc.encode())
+        added+=decorate(site,path,chapter=True)
         preview=re.sub('<[^>]+>',' ',p['preview'])
         site.search.append(dict(title='Machine-Native Reasoning / '+title,group='Collection',kind='Papers and source',work_ids=[WORK],url=path,text=html.unescape(preview)+' '+p['part']))
-    body='<h1>Machine-Native Reasoning</h1><p class="lead">A complete reading edition in 97 chapters, with figures, proofs, references, and chapter navigation.</p>'
-    body+='<p><a class="button" href="preface.html">Start reading</a> <a class="button" href="chapter-01.html">Chapter 1</a> <a href="book.html">PDF and editable source</a></p>'
-    previous=None
-    for p in data['pages']:
-        if p['part']!=previous:
-            if previous is not None:body+='</ol></details>'
-            body+='<details'+(' open' if previous is None else '')+'><summary>'+e(p['part'])+'</summary><ol>';previous=p['part']
-        title=(str(p['chapter'])+'. ' if p['chapter'] else '')+p['title']
-        body+='<li'+(' id="chapter-'+str(p['chapter'])+'"' if p['chapter'] else '')+'><a href="'+e(p['file'],quote=True)+'">'+e(title)+'</a></li>'
-    body+='</ol></details><h2 id="edition">About this edition</h2><p>This separately identified reconstruction brings together the expanded book in 13 parts. It preserves the source mathematics and adds a browser reading layout. The accepted 27-result core retains its separate scope. Production and rendering checks are not an independent proof audit.</p>'
-    body+='<p><a href="book.html">Complete 977-page PDF and editable TeX</a> · <a href="../../'+RECORD+'">Publication record</a> · <a href="../../collection/works/'+WORK+'.html">Work overview</a></p>'
-    site.page(PAGE,'Machine-Native Reasoning: complete reading edition',body,github(REPOSITORY,site.revision,MANIFEST))
+    site.page(PAGE,'Read Machine-Native Reasoning',welcome(data),github(REPOSITORY,site.revision,MANIFEST))
+    decorate(site,PAGE)
     # Replace the older PDF-only chapter search entries, keeping one index entry.
     site.search[:]=[r for r in site.search if not (r['url'].startswith(PAGE+'#chapter-'))]
     record=json.loads((site.output/RECORD).read_bytes());record['html_reading']=dict(index=PAGE,pages=len(data['pages']),chapters=97,manifest=MANIFEST,math_expressions=16476,new_proof_audit=False)
