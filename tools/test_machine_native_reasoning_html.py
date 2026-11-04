@@ -28,6 +28,8 @@ class HTMLMNRTests(unittest.TestCase):
         self.assertIn('in the 64-case example.',texts['chapter-62.html'])
         self.assertIn('visible at least two nodes',texts['chapter-88.html'])
         self.assertNotIn('visible at at least',texts['chapter-88.html'])
+        self.assertIn('Plates 10–13 develop',texts['large-signal-model-visual-atlas.html'])
+        self.assertNotIn('Plate 17 locates',texts['large-signal-model-visual-atlas.html'])
 
     def test_authenticated_article_inventory_and_corruption(self):
         data=load(ROOT);proofs=statements=0

@@ -17,6 +17,7 @@ def main():
     corrections={
       'chapter-62.html':('in the 64-case case.','in the 64-case example.'),
       'chapter-88.html':('visible at at least two nodes','visible at least two nodes'),
+      'large-signal-model-visual-atlas.html':('Plates 10–16 develop behavior spaces, positivity, curved geometry and statistical guarantees. Plate 17 locates the formal proofs.','Plates 10–13 develop behavior spaces, positivity, curved geometry and probability integration. Formal routes accompany the plates.'),
     }
     buffers=[bytearray()];pages=[];changed=[];maths=0;code_added=0
     for p in meta['pages']:
@@ -45,11 +46,11 @@ def main():
         if body!=old:changed.append(p['file'])
         raw=body.encode();compressed=gzip.compress(raw,compresslevel=9,mtime=0)
         if len(buffers[-1])+len(compressed)>512*1024:buffers.append(bytearray())
-        number=len(buffers)+3;offset=len(buffers[-1]);buffers[-1].extend(compressed)
+        number=len(buffers)+6;offset=len(buffers[-1]);buffers[-1].extend(compressed)
         preview=next((q for q in re.findall(r'<p>.*?</p>',body,re.S) if len(re.sub('<[^>]+>','',q))>35),'<p>'+html.escape(p['title'])+'</p>')
         pages.append(dict(**p,payload=dict(part=f'parts/{number:03}.bin',offset=offset,bytes=len(compressed),html_sha256=sha(raw),html_bytes=len(raw)),preview=preview,source=previous['source'],line=previous['line']))
     parts=[]
-    for i,buffer in enumerate(buffers,4):
+    for i,buffer in enumerate(buffers,7):
         path=f'parts/{i:03}.bin';target=OUT/path
         if target.exists() and target.read_bytes()!=buffer:raise ValueError('Refuse to replace a retained reading part: '+path)
         target.write_bytes(buffer);parts.append(dict(path=path,bytes=len(buffer),sha256=sha(buffer)))
@@ -63,7 +64,8 @@ def main():
       routine_edits=['Restored literal filenames, module names and declaration names omitted by the original LaTeX path-command conversion.',
                      'Chapter 62: "64-case case" changed to "64-case example".',
                      'Chapter 88: "visible at at least" corrected to "visible at least".',
-                     'The visual-atlas section menu now uses its actual heading level, exposing all 13 plates.'],
+                     'The visual-atlas section menu now uses its actual heading level, exposing all 13 plates.',
+                     'The visual-atlas reading route now describes the 13 plates present in this edition instead of referring to absent plates 14–17.'],
       mathematical_token_changes=[],unresolved_editorial_issues=[],
       retained_wording=['Chapter 84: "that that gate" is a grammatical conjunction followed by a demonstrative.'],
       validation=dict(reading_pages=121,chapters=97,proofs=527,numbered_statements=803,images=141,tables=74,mathematical_expressions_identical=maths,inline_code_nodes_restored=code_added,literal_path_url_commands_checked=469,literal_path_url_commands_missing=0,all_anchor_sequences_identical=True,all_reference_destinations_identical=True),

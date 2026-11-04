@@ -2,7 +2,7 @@
 
 This is the identified `mnr-html-proofread-2026-11-04` reading revision. `FINAL_READING.json` binds the new article parts and records the SHA-256 of the retained `READING.json`. The original three parts, TeX sources, PDF and source ZIP remain available.
 
-The final pass restores literal filenames and Lean names that Pandoc omitted when it interpreted the LaTeX `\path` command as a drawing instruction. The converter now uses its literal-text counterpart outside mathematics and verbatim code. It also changes “64-case case” to “64-case example” and removes the duplicated preposition in “visible at at least two nodes.” The visual atlas now has a populated section menu.
+The final pass restores literal filenames and Lean names that Pandoc omitted when it interpreted the LaTeX `\path` command as a drawing instruction. The converter now uses its literal-text counterpart outside mathematics and verbatim code. It also changes “64-case case” to “64-case example” and removes the duplicated preposition in “visible at at least two nodes.” The visual atlas now has a populated section menu and a reading route that accurately describes the 13 plates present in this edition.
 
 All 16,476 mathematical spans, every article anchor sequence and every reference destination compare identically with the retained reading edition. Restoring code identifiers adds 369 inline code nodes. All 469 literal path/URL commands in the contributing active TeX occur in the converted text. These are transcription and editorial checks; scientific assurance is unchanged. See `FINAL_REVIEW.json` for review coverage and limitations.
 
