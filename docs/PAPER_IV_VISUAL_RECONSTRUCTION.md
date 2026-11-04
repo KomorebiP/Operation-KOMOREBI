@@ -8,7 +8,7 @@ match the selected 16 October PDF after Unicode NFKC and whitespace normalizatio
 the cover identifies the new reconstruction. All 28 rendered pages were reviewed,
 with detailed inspection of the cover and physical pages 14 and 28.
 
-[Read the visual guide online](https://komorebip.github.io/Operation-KOMOREBI/read/paper-iv/atlas/)
+[Read the visual guide online](https://komorebip.github.io/Operation-KOMOREBI/read/paper-iv/atlas/index.html)
 · [Rebuilt PDF](../publication/paper-iv-visual-reconstruction/Paper_IV_Visual_Guide_Reconstructed.pdf)
 · [Editable source package and build instructions](../publication/paper-iv-visual-reconstruction/README.md)
 · [Build and page-comparison record](../publication/paper-iv-visual-reconstruction/BUILD_RECORD.json)
