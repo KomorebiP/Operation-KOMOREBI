@@ -8,7 +8,42 @@ from types import SimpleNamespace
 import unittest
 from notation_index import (passages, symbol_tokens, index_document, macro_definitions,
                             aliases, display_math, symbol_id, context_for,table_preview,reader_index,context_text,
-                            prepare_sources,extract_work,pack_work_data,unpack_work_data)
+                            prepare_sources,extract_work,pack_work_data,unpack_work_data,legacy_symbol_anchors)
+
+
+class NotationLegacyAnchorTests(unittest.TestCase):
+    def entry(self, tex):
+        return dict(id=symbol_id(tex),tex=tex,occurrences=[0])
+
+    def test_unambiguous_aliases_preserve_canonical_data(self):
+        for tex,previous in ((r'\mathbb R_n',r'\mathbbR_n'),
+                             ('\\widehat\n T',r'\widehatT')):
+            with self.subTest(tex=tex):
+                entries=[self.entry(tex),self.entry('x')]
+                original=deepcopy(entries)
+                self.assertEqual(legacy_symbol_anchors(entries),
+                                 {symbol_id(tex):[symbol_id(previous)]})
+                self.assertEqual(entries,original)
+
+    def test_authored_joined_command_keeps_its_canonical_anchor(self):
+        entries=[self.entry(r'\mathbb R'),self.entry(r'\mathbbR')]
+        self.assertEqual(legacy_symbol_anchors(entries),{})
+
+    def test_multiple_whitespace_spellings_do_not_choose_an_arbitrary_target(self):
+        entries=[self.entry(tex) for tex in (r'\mathbb R',r'\mathbb  R','\\mathbb\tR')]
+        self.assertEqual(legacy_symbol_anchors(entries),{})
+
+    def test_unchanged_braced_command_and_other_arguments_have_no_alias(self):
+        for tex in (r'\mathbb{R}',r'\mathbb {R}',r'\widehat\beta',r'\widehat \beta',
+                    r'\mathsf1',r'\mathsf 1',r'\mathbbR',r'\custom X',r'\sqrt x',
+                    r'x_{\mathbb R}',r'\mathbf{R_{\mathbb R}}'):
+            with self.subTest(tex=tex):
+                self.assertEqual(legacy_symbol_anchors([self.entry(tex)]),{})
+
+    def test_only_the_leading_separator_is_removed_from_legacy_spelling(self):
+        tex=r'\widehat X_{\mathbb R}'
+        self.assertEqual(legacy_symbol_anchors([self.entry(tex)]),
+                         {symbol_id(tex):[symbol_id(r'\widehatX_{\mathbb R}')]})
 
 
 class NotationDataEncodingTests(unittest.TestCase):
@@ -249,6 +284,32 @@ $x+\alpha$ % $WRONG$
         self.assertTrue({'P','P_{ij}','p','p_i',r'\mathcal{R}',r'\mathcal{R}_n',r'\alpha','i','j'}<=set(tokens))
         self.assertNotIn('o',tokens)
         self.assertNotEqual(symbol_id('P'),symbol_id('p'))
+
+    def test_unbraced_letter_arguments_keep_their_control_word_separator(self):
+        for tex in (r'\mathbb R', r'\mathcal D', r'\widehat T', r'\boldsymbol S',
+                    '\\mathsf\tT', '\\hat\n x'):
+            with self.subTest(tex=tex):
+                tokens=symbol_tokens(tex+'_{n}')
+                self.assertIn(tex,tokens)
+                self.assertIn(tex+'_{n}',tokens)
+                joined=''.join(tex.split())
+                self.assertNotIn(joined,tokens)
+                self.assertEqual(display_math(tex,{}),tex)
+        text=r'Let $\mathbb R^{n\times m}$ be the factor space.'
+        passage=index_document(text,'.tex')[0]
+        self.assertEqual(passage['expression'],r'\mathbb R^{n\times m}')
+        self.assertIn(r'\mathbb R^{n\times m}',passage['symbols'])
+
+    def test_braced_and_command_arguments_keep_their_existing_spellings(self):
+        for tex,expected in ((r'\mathcal{D}_n',r'\mathcal{D}_n'),
+                             (r'\mathcal {D}_n',r'\mathcal{D}_n'),
+                             (r'\widehat\beta_i',r'\widehat\beta_i'),
+                             (r'\widehat \beta_i',r'\widehat\beta_i'),
+                             (r'\mathsf 1',r'\mathsf1')):
+            with self.subTest(tex=tex):
+                self.assertIn(expected,symbol_tokens(tex))
+        self.assertEqual(symbol_tokens(r'\mathbbR'),[r'\mathbbR'],
+                         'Do not reinterpret an authored custom command')
 
     def test_only_literal_zero_argument_macros_are_displayed(self):
         macros=macro_definitions(r'\newcommand{\RR}{\mathbb{R}}\newcommand{\foo}[1]{#1}\DeclareMathOperator{\rank}{rank}')

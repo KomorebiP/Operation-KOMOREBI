@@ -94,7 +94,7 @@ BOOK = dict(
           for chapter in CHAPTERS if chapter['kind'] == 'part'],
         dict(start=INDEX.replace('index.html', 'a-atlas.html'), title='Appendices'),
     ],
-    number_floats=True, show_figure_numbers=True, numbered_bibliography=True,
+    number_floats=True, show_figure_numbers=True, show_table_numbers=True, numbered_bibliography=True,
     statement_navigation=True, required_macros={'E', 'Var', 'R', 'C', 'Pp', 'eps', 'ii', 'phit'},
     reading_introduction='Read the complete monograph, including its preface, four parts, twelve chapters, visual studies, formalization correspondence, reproducibility records, glossary, and references.',
     reading_note='The reading edition preserves the manuscript wording, mathematical expressions, all fifty original figures, and the stated limits of the numerical and formal results.',

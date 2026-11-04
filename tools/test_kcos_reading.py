@@ -1,5 +1,7 @@
 """Preserve the complete source-bound K-COS volume in its reading edition."""
 from collections import Counter
+import csv
+from decimal import Decimal
 import hashlib
 from html.parser import HTMLParser
 import json
@@ -14,6 +16,7 @@ import kcos_reading as kcos
 from readable_chapters import expand_math, original_math, render_book
 from reader_documents import ReadingDocuments
 from check_reader_site import Page
+from reader_proofreading import prepare as prepare_proofreading, publish as publish_proofreading
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -47,7 +50,7 @@ class KcosReadingTests(unittest.TestCase):
         cls.output = Path(cls.temporary.name)
         registry = json.loads((ROOT / 'manifests/browse-resources.json').read_bytes())
         registry['components'] = [c for c in registry['components'] if c['id'] == kcos.WORK]
-        site = SimpleNamespace(root=ROOT, output=cls.output, registry=registry,
+        site = SimpleNamespace(root=ROOT, output=cls.output, registry=registry, revision='kcos-proofread-test',
                                claims={'works': [], 'records': [], 'sources': []}, search=[])
         def write(path, text):
             target = cls.output / path
@@ -63,7 +66,10 @@ class KcosReadingTests(unittest.TestCase):
         site.page = lambda path, title, body: write(path, '<!doctype html><html lang="en"><title>' + title + '</title><main>' + body + '</main></html>')
         cls.reader = ReadingDocuments(site)
         cls.book = kcos.prepare_book(cls.reader, dict(kcos.BOOK))
+        cls.reader.readable_books = {kcos.WORK: cls.book}
+        prepare_proofreading(cls.reader)
         cls.reports = render_book(cls.reader, cls.book)
+        publish_proofreading(cls.reader)
 
     @classmethod
     def tearDownClass(cls):
@@ -163,6 +169,64 @@ class KcosReadingTests(unittest.TestCase):
                                  [spec['printed_chapter'] + '.' + str(i) for i in range(1, len(figures) + 1)])
         self.assertEqual(len(source_figures), 50)
         self.assertEqual(rendered_figures, source_figures)
+
+    def test_printed_table_numbers_appear_in_their_authored_captions(self):
+        # These seven numbers are printed in the retained monograph PDF.
+        expected = {'2': ['2.1'], '5': ['5.1'],
+                    '11': ['11.1', '11.2', '11.3', '11.4', '11.5']}
+        for spec, _, _ in self.book['chapters']:
+            markup = (self.output / spec['url']).read_text()
+            numbers = re.findall(r'<caption>Table ([0-9]+\.[0-9]+)\. ', markup)
+            self.assertEqual(numbers, expected.get(spec.get('printed_chapter'), []), spec['title'])
+            self.assertEqual(markup.count('<caption>'), len(numbers),
+                             'Uncaptioned source tables must remain unnumbered')
+
+    def test_reading_notes_are_bound_to_the_reviewed_sources_and_evidence(self):
+        from reader_guidance import reading_passage_url
+        record = json.loads((ROOT / 'manifests/reader-proofreading-kcos-2026-11-03.json').read_bytes())
+        self.assertEqual(len(record['notes']), 4)
+        self.assertEqual(record['mathematical_token_changes'], [])
+        for note in record['notes']:
+            markup = (self.output / note['page']).read_text()
+            self.assertEqual(markup.count('data-proofreading-note="' + note['id'] + '"'), 1)
+            self.assertIn('id="' + note['placement'] + '"', markup)
+            for reference in note['references']:
+                self.assertEqual(reading_passage_url(self.reader, reference['path'], reference['line']),
+                                 reference['target'])
+                target_page, anchor = reference['target'].split('#')
+                self.assertIn(anchor, Page((self.output / target_page).read_text()).ids)
+        for evidence in record['retained_evidence']:
+            raw = (ROOT / evidence['path']).read_bytes()
+            self.assertEqual(hashlib.sha256(raw).hexdigest(), evidence['sha256'])
+            lines = raw.decode().splitlines()
+            for row in evidence['lines']:
+                self.assertEqual(lines[row['line'] - 1], row['expected'])
+            full_range = [row for row in csv.DictReader(lines) if row['variant_basis_dim'] == '50']
+            self.assertEqual(len(full_range), 2)
+            for row in full_range:
+                self.assertLess(Decimal(row['lower_log10_p']), Decimal(row['upper_log10_p']))
+                self.assertEqual(format(Decimal(row['bracket_width_decades']), '.3g'), '9.50e-14')
+
+    def test_parent_and_included_source_lookups_do_not_share_line_numbers(self):
+        from reader_guidance import reading_passage_url
+        self.assertEqual(reading_passage_url(self.reader, kcos.BASE + 'chapters/C_reproduction.tex', 24),
+                         'read/monographs-cos-method/c-reproduction.html#L11')
+        checked = 0
+        for spec, _, chapter in self.book['chapters']:
+            for node in chapter.nodes:
+                for span in node['source_spans']:
+                    # A source line can sit on two adjacent passage boundaries.
+                    # Whichever passage wins must actually contain that file/line.
+                    for line in {span['line'], span['end_line']}:
+                        target = reading_passage_url(self.reader, span['source'], line)
+                        self.assertIsNotNone(target, (span, line))
+                        page, anchor = target.split('#')
+                        destination = next(n for s, _, c in self.book['chapters'] if s['url'] == page
+                                           for n in c.nodes if n['id'] == anchor)
+                        self.assertTrue(any(s['source'] == span['source'] and s['line'] <= line <= s['end_line']
+                                            for s in destination['source_spans']), (span, line, target))
+                        checked += 1
+        self.assertGreater(checked, 500)
 
     def test_included_data_formal_limits_and_literal_code_are_readable(self):
         by_number = {s.get('printed_chapter'): (s, c) for s, _, c in self.book['chapters'] if s.get('printed_chapter')}

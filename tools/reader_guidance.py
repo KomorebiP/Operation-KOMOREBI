@@ -44,10 +44,27 @@ def prepare_introductions(reader):
 def reading_passage_url(reader,path,line):
     """Map an interior source line to its containing rendered passage, if any."""
     for book in getattr(reader,'readable_books',{}).values():
+        # An included file may appear inside a chapter whose primary source is
+        # different. Follow the recorded inclusion chain without scanning every
+        # unrelated chapter's nodes for each notation lookup.
+        chapter_sources={path};pending=[path]
+        while pending:
+            included=pending.pop()
+            for row in book.get('included_sources',[]):
+                parent=row['input_source']
+                if row['source']==included and parent not in chapter_sources:
+                    chapter_sources.add(parent);pending.append(parent)
         for spec,raw,chapter in book.get('chapters',[]):
-            if spec['source']!=path:continue
-            node=next((node for node in reversed(chapter.nodes) if node['line']<=line<=node['end_line']),None)
-            if node:return spec['url']+'#'+node['id']
+            if spec['source'] not in chapter_sources:continue
+            for node in reversed(chapter.nodes):
+                spans=node.get('source_spans')
+                if spans:
+                    matches=any(span['source']==path and span['line']<=line<=span['end_line']
+                                for span in spans)
+                else:
+                    matches=(node.get('source',spec['source'])==path and
+                             node['line']<=line<=node['end_line'])
+                if matches:return spec['url']+'#'+node['id']
     return None
 
 
