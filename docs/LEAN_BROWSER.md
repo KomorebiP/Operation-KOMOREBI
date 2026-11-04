@@ -5,6 +5,10 @@ WebAssembly in a persistent Web Worker. It needs no reader account or compiler
 service. The page fetches static compiler artifacts; proof edits are never sent
 to a remote proof checker.
 
+The homepage opens this general workspace without selecting a paper or source
+file in the URL. The former `lean/playground.html` address redirects to the same
+workspace; the Lean source index and source actions use this local compiler.
+
 The picker offers 17 prepared workspaces across ten existing reading editions:
 Papers II, III, VII, IX, X, XI and XII, Proof Path Theory, Komorebi Space and
 Special Functions.
