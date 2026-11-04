@@ -48,6 +48,16 @@ def decorate(markup):
     starts = [ids.index(start) for _, start in PARTS]
     if starts[0] != 0 or starts != sorted(set(starts)):
         raise ValueError('Euler reading parts must follow the manuscript order')
+    # Editorial source credit leaves the computation-bound manuscript intact.
+    quartic = 'identify-the-quartic-reciprocal-family'
+    credit = ('<p class="source-attribution">The classical quartic sequence is '
+              '<a href="https://oeis.org/A211212">OEIS A211212</a>, an entry by Peter Luschny. '
+              'Its recurrence is credited to Ilya Gutkovskiy (27 January 2020), and its '
+              'cosine/cosh generating function to Michael Wallner (17 November 2020). '
+              'See <a href="../SOURCES_AND_CONTRIBUTIONS.html#euler-numbers-and-quartic-reciprocals">'
+              'sources and contributions</a> for the conventions and comparison pattern.</p>')
+    markup = re.sub(r'(<h2\s+id="'+quartic+r'"[^>]*>.*?</h2>)',
+                    lambda match: match[1]+credit, markup, count=1, flags=re.S)
     e = html.escape
     groups = []
     for index, ((title, start), first, last) in enumerate(zip(PARTS, starts, starts[1:]+[len(ids)])):

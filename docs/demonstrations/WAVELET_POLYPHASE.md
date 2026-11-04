@@ -6,6 +6,12 @@ Begin with sixteen specified sample values. Separate their even and odd addresse
 
 Nothing in the calculation requires interpolation or a continuous input. The filters and wavelets act on a finite vector, while the same linear-algebraic operations explain why the coordinate transfers work.
 
+The classical ingredients are Haar analysis, polyphase filter matrices, and
+lifting. This walkthrough contributes a complete finite example connecting
+them through exact transfer and residual calculations. The
+[source guide](../SOURCES_AND_CONTRIBUTIONS.md#haar-wavelets-lifting-and-polyphase-filters)
+identifies the external references and their normalization conventions.
+
 [Try the interactive four-level Haar lab](https://KomorebiP.github.io/Operation-KOMOREBI/interactive.html#haar) · [Read the exact program](https://KomorebiP.github.io/Operation-KOMOREBI/read/wavelet-polyphase.html) · [Download the input and exact output](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/wavelet-polyphase/phase-transfer.csv)
 
 ## The two destinations
@@ -95,6 +101,11 @@ In original-address projector notation, \(P_0=F_0+F_2\) and \(P_1=F_1+F_3\). No 
 
 ## 2. Turn phases into Haar averages and details
 
+For the classical discrete Haar transform, see Vetterli and Kovačević,
+[*Wavelets and Subband Coding*, §3.1.2, printed p. 104](https://waveletsandsubbandcoding.org/Repository/VetterliKovacevic95_Manuscript.pdf#page=121).
+Here we use averaging normalization; its inverse and weighted energy are
+written explicitly below.
+
 For one neighboring pair \((u,v)\), choose the **averaging normalization**
 
 \[
@@ -124,6 +135,10 @@ Indeed \(B^{-1}B=I\). This local inverse holds for every rational pair, not only
 The only nonzero finest-level detail is \(d_{1,5}=8\). Its pair is recovered by \(4+8=12\) and \(4-8=-4\). Keeping the average alone gives \((4,4)\) and loses the spike.
 
 ### Predict–update lifting: the same pair in another factorization
+
+This is a specialization of Sweldens's lifting construction; see
+[*The Lifting Scheme: A New Philosophy in Biorthogonal Wavelet Constructions*
+(1995), Figure 1 and inverse algorithm](https://cm-bell-labs.github.io/who/wim/papers/spie95.pdf#page=5).
 
 Paper V also records an exact *lifting* construction. First predict the odd coordinate from the even coordinate, then update the even coordinate using the residual:
 
@@ -309,6 +324,10 @@ For example, the samples at addresses 10 and 11 give
 The filtered signal has squared energy \(2288\). This filter is not energy-preserving. The weighted Haar energy formula applies to its transformed samples too, but does not assert that filtering preserves the original energy.
 
 ## 6. Transport the FIR through the polyphase coordinates
+
+The classical matrix representation is developed by Vetterli and Kovačević
+in [§3.2.1, equations 3.2.22–3.2.26, printed pp. 120–122](https://waveletsandsubbandcoding.org/Repository/VetterliKovacevic95_Manuscript.pdf#page=137).
+The following calculation fixes the phase order and circular boundary used here.
 
 Let the half-rate circular shift act on an eight-element phase row by
 
@@ -719,7 +738,11 @@ The first command runs exact assertions. The second generates **nine reproducibl
 
 [Transfer and boundary table (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/wavelet-polyphase/phase-transfer.csv) · [Haar coefficients (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/wavelet-polyphase/haar-coefficients.csv) · [Optimal detail budgets (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/wavelet-polyphase/weighted-budget.csv) · [Full four-level matrix (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/wavelet-polyphase/full-wavelet-transfer.csv) · [Scale energies (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/wavelet-polyphase/multiscale-energy.csv) · [Operation order (CSV)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/wavelet-polyphase/operation-order.csv) · [Exact certificate (JSON)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/wavelet-polyphase/results.json) · [Signal figure (SVG)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/wavelet-polyphase/signal-comparison.svg) · [Matrix heatmap (SVG)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/wavelet-polyphase/full-wavelet-transfer.svg) · [Complete source-and-results archive (ZIP)](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/wavelet-polyphase/source-and-results.zip)
 
-### Follow the original literature
+### Classical sources and project development
+
+The external references above identify the Haar, polyphase, and lifting
+ingredients. The [sources and contributions guide](../SOURCES_AND_CONTRIBUTIONS.md#haar-wavelets-lifting-and-polyphase-filters)
+keeps those ingredients alongside the scope of this finite walkthrough.
 
 This reader example is built from the established [four-level Haar laboratory](HAAR_LAB.md), the [Haar pair hand calculation](../examples/14_HAAR_PAIRS.md), and the [finite residue refinement example](REFINEMENT.md). The FIR transfer, lifting construction and finite selector discussion specialize the operator, filter-bank and adaptive-tree machinery in [Paper V: Multiresolution Signal Calculus](../works/paper-v.md), especially its **Exact FIR polyphase transfer law**, **Exact lifting reconstruction** and **Finite globally optimal stable selector**. Consult the [traditional manuscript](../../papers/paper-v/current/editable/traditional/Paper_V_Traditional_Final.tex), [recorded verification scope](../../papers/paper-v/current/README.md), and [Information Realization](../works/information-realization.md). The additional FIR stability, full-four-level matrix and commutator identities above are derived directly for this specified finite operator. Their statements do not inherit the wider hypotheses or formal verification status of Paper V. The longer manuscript's wavelet-packet tree theorems and separated-jump conditions remain separate from this fixed lowpass-branch example.
 

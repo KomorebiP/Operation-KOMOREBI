@@ -33,6 +33,10 @@ Publication, review, and verification vary by component. A citation does not tur
 
 ## Sources used by this project
 
+The [worked-example source guide](docs/SOURCES_AND_CONTRIBUTIONS.md) gives
+specific references, credited OEIS contributions, and contribution descriptions
+for the Euler, wavelet/polyphase, and seed-generation starting points.
+
 The project's own citation record is incomplete and is being reconstructed and corrected. The [citation and prior-work disclosure](docs/PROJECT_STATEMENT.md#citations-and-acknowledgment-of-prior-work) describes the extensive use of research papers and OEIS material, the estimated scale of that use, and the ongoing work to add specific source attribution. Reports of missing or inaccurate credit are welcome through the [issue chooser](https://github.com/KomorebiP/Operation-KOMOREBI/issues/new/choose).
 
 [Project statement](docs/PROJECT_STATEMENT.md) · [Publication status](docs/PUBLICATION_STATUS.md) · [Collection terms](LICENSE.md)
