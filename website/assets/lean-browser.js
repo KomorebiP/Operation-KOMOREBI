@@ -106,6 +106,7 @@ async function start() {
   const drafts=new Map();
   const editor=el('code'), picker=el('example'), filePicker=el('file');
   const frontend=el('frontend');
+  const defaultDownloadNote=el('download-note')?.textContent||'';
   let preferredFrontend=new URL(location.href).searchParams.get('frontend')==='1';
   const draftKey='komorebi-lean-browser-reload';
   const log=text=>{el('log').textContent=(el('log').textContent+'\n'+text).slice(-20000);};
@@ -113,10 +114,20 @@ async function start() {
     if(retiring)retiringClosed=Promise.all([retiringClosed,retiring.dispose()]).then(()=>{});
   }
   function dispose() {bootAbort?.abort();bootAbort=null;retireCompiler(compiler);compiler=null;compilerPlan=null;checkedDependencies=null;}
+  function downloadNotice() {
+    const note=el('download-note');if(!note)return;
+    const experimental=workspaceCheckMode(workspace,preferredFrontend).frontend;
+    const valid=plan=>Number.isSafeInteger(plan?.bytes)&&plan.bytes>0&&Number.isSafeInteger(plan.files)&&plan.files>0;
+    const proposed=experimental?data.expanded_download_plan:workspace?.download_plan;
+    const plan=valid(proposed)?proposed:data.expanded_download_plan;
+    if(!valid(plan)){note.textContent=defaultDownloadNote;return;}
+    note.textContent='First run'+(experimental?' with experimental syntax':' for this workspace')+': up to '+Math.ceil(plan.bytes/1048576)+' MiB in '+plan.files+' compiler/library files. Edited imports can need more.';
+  }
   function controls(value) {
     busy=value;editor.readOnly=value;picker.disabled=value;filePicker.disabled=value;
     const mode=workspaceCheckMode(workspace,preferredFrontend);
     frontend.checked=mode.frontend;frontend.disabled=value||mode.required;
+    downloadNotice();
     for(const name of ['run','run-selected','restore','break','save'])el(name).disabled=value;
     el('stop').disabled=!value;el('clear').disabled=value;
     el('catalog-open').disabled=value||!catalog||!el('catalog-choice').value;
@@ -210,6 +221,7 @@ async function start() {
   frontend.addEventListener('change',()=>{
     preferredFrontend=frontend.checked;
     dispose();
+    downloadNotice();
     const address=new URL(location.href);
     if(frontend.checked)address.searchParams.set('frontend','1');else address.searchParams.delete('frontend');
     history.replaceState(null,'',address);

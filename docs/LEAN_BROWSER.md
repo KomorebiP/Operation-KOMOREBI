@@ -104,6 +104,13 @@ checking to continue without persistent caching.
 Its cache contains compiler artifacts, not proof edits. Readers can clear it on
 the page. The worker is started only after pressing Run.
 
+The first-load notice counts unique compiler/library asset bodies for the
+selected workspace, including its manifests and download record. Shared paths
+are counted once, and all three standard-library roots are budgeted. Experimental
+syntax uses the broader library plan. These are conservative plans for the
+original imports; edited imports can load more. The notice updates without
+starting a compiler.
+
 ## Checks and failure states
 
 The adapter holds Emscripten's runtime alive between runs. Without this, idle
