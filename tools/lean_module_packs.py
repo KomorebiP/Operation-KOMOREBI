@@ -22,6 +22,10 @@ RECEIPT_ASSET = 'lean-mathlib/module-pilot-receipt.json'
 MANIFEST = 'lean-mathlib/workspaces/' + WORKSPACE + '.json'
 MODULE_DIRECTORY = 'lean-mathlib/modules'
 SUFFIXES = ('.ir.sig', '.olean', '.ir')
+ASSET_COMMIT = 'd309a96db5a7d17cdb8aa579da92fc5c9316d53a'
+ASSET_PREFIX = 'https://raw.githubusercontent.com/KomorebiP/Operation-KOMOREBI/' + ASSET_COMMIT + '/lean-module-pilot/'
+DELIVERY_SHA256 = 'b7c2bd1e0f918de65c465856e4a0ba2d0edad85ec6e638d0307194ab51257519'
+DELIVERY_ASSET = 'lean-mathlib/module-pilot-delivery.json'
 
 
 def sha(raw):
@@ -105,7 +109,7 @@ def _check_workspace(manifest, receipt):
         raise ValueError('Module pilot workspace members incomplete')
 
 
-def build_module_pilot(source, output, workspace_manifest):
+def generate_module_pilot(source, output, workspace_manifest):
     """Extract one original pack at a time, then compress one complete module.
 
     Temporary artifact files bound retained RAM to an input pack plus one module,
@@ -178,7 +182,7 @@ def build_module_pilot(source, output, workspace_manifest):
     return manifest, stats
 
 
-def verify_module_pilot(root, source_record):
+def verify_generated_module_pilot(root, source_record):
     """Check outputs against independent member hashes, including after rehashing.
 
     This needs no original large input packs in the final Pages artifact.
@@ -244,4 +248,108 @@ def verify_module_pilot(root, source_record):
                       modules=len(groups), files=len(expected), artifact_bytes=sum(member['bytes'] for member in expected.values()),
                       encoded_bytes=encoded_bytes, original_pack_bytes=sum(pack['bytes'] for pack in receipt['input_packs'].values()))
     if any(stats.get(key) != value for key, value in calculated.items()):
+        raise ValueError('Module pilot delivery totals changed')
+
+
+def read_delivery():
+    raw = (Path(__file__).resolve().parents[1] / 'manifests/lean-module-pilot-delivery.json').read_bytes().replace(b'\r\n', b'\n')
+    if sha(raw) != DELIVERY_SHA256:
+        raise ValueError('Module pilot delivery receipt changed')
+    delivery = json.loads(raw)
+    if delivery['schema'] != 1 or delivery['policy'] != 'pinned-module-pilot-delivery-v1':
+        raise ValueError('Unexpected module pilot delivery policy')
+    return delivery, raw
+
+
+def module_asset_url(path):
+    """Only these virtual assets may use the separately pinned asset commit."""
+    metadata = {RECEIPT_ASSET: 'input-receipt.json', DELIVERY_ASSET: 'delivery.json'}
+    if path in metadata:
+        return ASSET_PREFIX + metadata[path]
+    if re.fullmatch(r'lean-mathlib/modules/[0-9a-f]{64}\.pack', path):
+        return ASSET_PREFIX + path.removeprefix('lean-mathlib/')
+    return None
+
+
+def _delivery_records():
+    receipt, receipt_raw = read_receipt()
+    delivery, delivery_raw = read_delivery()
+    if delivery['receipt_sha256'] != sha(receipt_raw):
+        raise ValueError('Module pilot delivery input binding changed')
+    manifest = delivery['manifest']
+    build = receipt['build']
+    if (manifest.get('leanCommit'), manifest.get('mathlibCommit'), manifest.get('modulePilot'), manifest.get('version')) != (
+            build['lean_commit'], build['mathlib_commit'], WORKSPACE, 'komorebi-module-pilot-1'):
+        raise ValueError('Module pilot delivery build changed')
+    members = receipt['members']
+    groups = module_groups(members)
+    if manifest['files'] != sorted(members) or len(manifest['packs']) != len(groups):
+        raise ValueError('Module pilot delivery closure changed')
+    remote = {}
+    for paths, pack in zip(groups.values(), manifest['packs']):
+        asset = 'lean-mathlib/' + pack['file']
+        url = module_asset_url(asset)
+        offset = 0
+        entries = []
+        for path in paths:
+            entries.append(dict(path=path, offset=offset, bytes=members[path]['bytes']))
+            offset += members[path]['bytes']
+        if (url is None or asset in remote or pack['file'] != 'modules/' + pack['sha256'] + '.pack'
+                or pack['entries'] != entries or pack['bytes'] != offset
+                or type(pack['compressedBytes']) is not int or pack['compressedBytes'] < 1):
+            raise ValueError('Module pilot delivery pack changed')
+        remote[asset] = dict(size=pack['compressedBytes'], sha256=pack['sha256'], url=url)
+    for asset, raw in [(RECEIPT_ASSET, receipt_raw), (DELIVERY_ASSET, delivery_raw)]:
+        remote[asset] = dict(size=len(raw), sha256=sha(raw), url=module_asset_url(asset))
+    stats = dict(receipt=RECEIPT_ASSET, receipt_sha256=sha(receipt_raw), manifest=MANIFEST,
+                 delivery=DELIVERY_ASSET, delivery_sha256=sha(delivery_raw), asset_commit=ASSET_COMMIT,
+                 modules=len(groups), files=len(members), artifact_bytes=sum(member['bytes'] for member in members.values()),
+                 encoded_bytes=sum(pack['compressedBytes'] for pack in manifest['packs']),
+                 original_pack_bytes=sum(pack['bytes'] for pack in receipt['input_packs'].values()),
+                 compressor=delivery['compressor'])
+    return manifest, stats, remote
+
+
+def build_module_pilot(source, output, workspace_manifest):
+    """Qualify original inputs privately; publish only immutable delivery records.
+
+    gzip output can differ across Python/zlib versions. The separately pinned
+    delivery receipt freezes the already member-qualified publication bytes;
+    platform-specific recompressions never become their claimed checksums.
+    """
+    manifest, stats, remote = _delivery_records()
+    with tempfile.TemporaryDirectory(prefix='lean-module-qualification-') as tmp:
+        generated, _ = generate_module_pilot(source, Path(tmp), workspace_manifest)
+        if (generated['files'] != manifest['files'] or
+                [p['entries'] for p in generated['packs']] != [p['entries'] for p in manifest['packs']]):
+            raise ValueError('Module pilot qualified delivery members changed')
+    if (output / MODULE_DIRECTORY).exists() or any((output / path).exists() for path in (RECEIPT_ASSET, DELIVERY_ASSET)):
+        raise ValueError('Module pilot binaries must remain outside Pages')
+    return manifest, stats, remote
+
+
+def verify_module_pilot(root, source_record):
+    """Bind all remote records to independent input and frozen delivery receipts."""
+    pilots = source_record.get('module_pilots', {})
+    remote = source_record.get('remote_files', {})
+    derived = {path: record for path, record in remote.items()
+               if path.startswith(MODULE_DIRECTORY + '/') or path in (RECEIPT_ASSET, DELIVERY_ASSET)
+               or record.get('url', '').startswith(ASSET_PREFIX)}
+    local = (root / MODULE_DIRECTORY).exists() or any((root / path).exists() for path in (RECEIPT_ASSET, DELIVERY_ASSET))
+    manifest_path = root / MANIFEST
+    manifest = json.loads(manifest_path.read_bytes()) if manifest_path.exists() else {}
+    if not pilots:
+        if local or derived or manifest.get('modulePilot'):
+            raise ValueError('Unrecorded module pilot artifacts')
+        return
+    if set(pilots) != {WORKSPACE}:
+        raise ValueError('Unexpected module delivery pilot')
+    expected, stats, expected_remote = _delivery_records()
+    if local or set(source_record['files']) & set(expected_remote):
+        raise ValueError('Module pilot binaries must remain outside Pages')
+    if manifest != expected:
+        raise ValueError('Module pilot pinned delivery manifest changed')
+    if derived != expected_remote:
+        raise ValueError('Module pilot pinned remote assets changed')
+    if pilots[WORKSPACE] != stats:
         raise ValueError('Module pilot delivery totals changed')

@@ -89,9 +89,10 @@ The source archive is read in one sequential
 pass and its import parsing is shared across closures. The site stores compact
 manifests and source metadata. Most large binaries remain at immutable URLs in
 the pinned upstream public GitHub repository. A bounded Paper III pilot also
-publishes about 24.5 MiB of smaller compiled module packs on the existing Pages
-site, generated during its build. No binary corpus is added to the repository
-and no additional hosting account is used.
+serves about 24.5 MiB of smaller compiled module packs from a separate asset-only
+branch in this repository. The source pins immutable asset commit
+`d309a96db5a7d17cdb8aa579da92fc5c9316d53a`; this branch must not be merged into
+main. Pack binaries and provenance JSON stay outside the Pages artifact.
 SOURCE.json records every remote URL, size and SHA-256, plus local metadata and
 input identities. The final site checker verifies these records and enforces
 the 1 GiB Pages publication limit.
@@ -308,14 +309,19 @@ service-worker upstream requests may finish caching after a client is stopped.
    original shared packs. Each new pack is addressed by its compressed SHA-256.
    The independently pinned `manifests/lean-module-pilot.json` binds original
    compressed inputs, original member tables and every decoded artifact hash.
-   Build and site verification compare outputs to that receipt, including after
-   output hashes are recomputed. Extraction stages one original pack at a time
-   through temporary files and compresses one module at a time.
+   Original-input qualification stages one original pack at a time through
+   temporary files and compresses one module at a time. Generated-output checks
+   reject altered decoded bytes even after output hashes are recomputed.
+   The independently pinned `manifests/lean-module-pilot-delivery.json` freezes
+   the already qualified publication bytes, avoiding gzip differences across
+   Python/zlib versions. Build and site verification bind every remote URL,
+   size, checksum, member table and delivery total to these receipts. The browser
+   verifies the frozen compressed hashes before inflation and installation.
    Standard libraries retain their original delivery; experimental frontend mode
    and expanded edited imports can still use the broad original Mathlib layer.
    The reduction describes this layer's asset bodies, not the whole compiler
-   download, a proof-speed result or a Wasm-heap reduction. The single pilot adds
-   local assets to the publication, and the existing Pages size limit still applies.
+   download, a proof-speed result or a Wasm-heap reduction. The separate asset
+   branch keeps pilot binaries outside Pages; its existing size limit still applies.
    Paired browser controls with the original proof requested about 292.1 MiB
    versus 229.7 MiB of unique engine response bodies, including download records
    and manifests: about 21% less data. The number of unique responses rose from

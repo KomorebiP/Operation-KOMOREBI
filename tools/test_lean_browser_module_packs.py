@@ -1,4 +1,5 @@
 import gzip
+import copy
 import json
 from pathlib import Path
 import tempfile
@@ -56,7 +57,7 @@ class ModulePackTests(unittest.TestCase):
         self.patch.start(); self.addCleanup(self.patch.stop)
 
     def build(self):
-        manifest, stats = pilot.build_module_pilot(self.source, self.output, self.workspace)
+        manifest, stats = pilot.generate_module_pilot(self.source, self.output, self.workspace)
         path = self.output / pilot.MANIFEST; path.parent.mkdir(parents=True, exist_ok=True); path.write_bytes(encoded(manifest))
         data = dict(module_pilots={pilot.WORKSPACE: stats}, files={})
         for path in self.output.rglob('*'):
@@ -89,7 +90,7 @@ class ModulePackTests(unittest.TestCase):
             for entry in pack['entries']:
                 result[entry['path']] = raw[entry['offset']:entry['offset'] + entry['bytes']]
         self.assertEqual(result, self.members)
-        pilot.verify_module_pilot(self.output, data)
+        pilot.verify_generated_module_pilot(self.output, data)
 
     def test_original_pack_tampering_rejected(self):
         path = self.source / next(iter(self.receipt['input_packs']))
@@ -121,47 +122,136 @@ class ModulePackTests(unittest.TestCase):
         raw = bytearray(gzip.decompress((self.output / 'lean-mathlib' / manifest['packs'][0]['file']).read_bytes()))
         raw[0] ^= 1
         self.replace_pack(manifest, data, raw)
-        with self.assertRaisesRegex(ValueError, 'output member checksum'): pilot.verify_module_pilot(self.output, data)
+        with self.assertRaisesRegex(ValueError, 'output member checksum'): pilot.verify_generated_module_pilot(self.output, data)
 
     def test_rehashed_output_trailing_bytes_rejected(self):
         manifest, data = self.build()
         raw = gzip.decompress((self.output / 'lean-mathlib' / manifest['packs'][0]['file']).read_bytes())
         self.replace_pack(manifest, data, raw + b'extra')
-        with self.assertRaisesRegex(ValueError, 'length mismatch|trailing bytes'): pilot.verify_module_pilot(self.output, data)
+        with self.assertRaisesRegex(ValueError, 'length mismatch|trailing bytes'): pilot.verify_generated_module_pilot(self.output, data)
 
     def test_untrusted_decoded_size_is_rejected_before_decompression(self):
         manifest, data = self.build(); manifest['packs'][0]['bytes'] = 2 ** 40; self.save(manifest)
         with patch.object(pilot, '_decode_exact', side_effect=AssertionError('must not decompress')):
-            with self.assertRaisesRegex(ValueError, 'output pack length'): pilot.verify_module_pilot(self.output, data)
+            with self.assertRaisesRegex(ValueError, 'output pack length'): pilot.verify_generated_module_pilot(self.output, data)
 
     def test_missing_output_part_rejected(self):
         manifest, data = self.build(); manifest['packs'][0]['entries'].pop(); self.save(manifest)
-        with self.assertRaisesRegex(ValueError, 'output pack length'): pilot.verify_module_pilot(self.output, data)
+        with self.assertRaisesRegex(ValueError, 'output pack length'): pilot.verify_generated_module_pilot(self.output, data)
 
     def test_output_member_offset_tampering_rejected(self):
         manifest, data = self.build(); manifest['packs'][0]['entries'][0]['offset'] += 1; self.save(manifest)
-        with self.assertRaisesRegex(ValueError, 'output member table'): pilot.verify_module_pilot(self.output, data)
+        with self.assertRaisesRegex(ValueError, 'output member table'): pilot.verify_generated_module_pilot(self.output, data)
 
     def test_deleted_pilot_record_does_not_bypass_validation(self):
         _, data = self.build(); data.pop('module_pilots')
-        with self.assertRaisesRegex(ValueError, 'Unrecorded module pilot'): pilot.verify_module_pilot(self.output, data)
+        with self.assertRaisesRegex(ValueError, 'Unrecorded module pilot'): pilot.verify_generated_module_pilot(self.output, data)
 
     def test_rewritten_receipt_cannot_authorize_forged_outputs(self):
         _, data = self.build(); (self.output / pilot.RECEIPT_ASSET).write_bytes(self.receipt_raw + b' ')
-        with self.assertRaisesRegex(ValueError, 'independent receipt'): pilot.verify_module_pilot(self.output, data)
+        with self.assertRaisesRegex(ValueError, 'independent receipt'): pilot.verify_generated_module_pilot(self.output, data)
 
     def test_unlisted_or_extra_module_pack_rejected(self):
         manifest, data = self.build(); data['files'].pop('lean-mathlib/' + manifest['packs'][0]['file'])
-        with self.assertRaisesRegex(ValueError, 'Unrecorded or duplicate'): pilot.verify_module_pilot(self.output, data)
+        with self.assertRaisesRegex(ValueError, 'Unrecorded or duplicate'): pilot.verify_generated_module_pilot(self.output, data)
         _, data = self.build(); (self.output / pilot.MODULE_DIRECTORY / ('0' * 64 + '.pack')).write_bytes(b'extra')
-        with self.assertRaisesRegex(ValueError, 'coverage mismatch'): pilot.verify_module_pilot(self.output, data)
+        with self.assertRaisesRegex(ValueError, 'coverage mismatch'): pilot.verify_generated_module_pilot(self.output, data)
 
     def test_forged_delivery_totals_rejected(self):
         _, data = self.build(); data['module_pilots'][pilot.WORKSPACE]['encoded_bytes'] += 1
-        with self.assertRaisesRegex(ValueError, 'delivery totals'): pilot.verify_module_pilot(self.output, data)
+        with self.assertRaisesRegex(ValueError, 'delivery totals'): pilot.verify_generated_module_pilot(self.output, data)
+
+
+class RemoteModulePackTests(unittest.TestCase):
+    setUp = ModulePackTests.setUp
+
+    def build(self):
+        generated, data = ModulePackTests.build(self)
+        pilot.verify_generated_module_pilot(self.output, data)
+        delivery = dict(schema=1, policy='pinned-module-pilot-delivery-v1', receipt_sha256=pilot.sha(self.receipt_raw),
+                        compressor=data['module_pilots'][pilot.WORKSPACE]['compressor'], manifest=generated)
+        raw = encoded(delivery)
+        with patch.object(pilot, 'read_delivery', return_value=(delivery, raw)):
+            self.public = Path(self.tmp.name) / 'public'; self.public.mkdir(exist_ok=True)
+            manifest, stats, remote = pilot.build_module_pilot(self.source, self.public, self.workspace)
+        self.delivery_patch = patch.object(pilot, 'read_delivery', side_effect=lambda: (delivery, raw))
+        self.delivery_patch.start(); self.addCleanup(self.delivery_patch.stop)
+        path = self.public / pilot.MANIFEST; path.parent.mkdir(parents=True); path.write_bytes(encoded(manifest))
+        return manifest, dict(module_pilots={pilot.WORKSPACE: stats}, files={pilot.MANIFEST: {}}, remote_files=remote)
+
+    def test_remote_publication_preserves_members_without_local_binary_corpus(self):
+        manifest, data = self.build()
+        self.assertFalse((self.public / pilot.MODULE_DIRECTORY).exists())
+        self.assertFalse((self.public / pilot.RECEIPT_ASSET).exists())
+        self.assertFalse((self.public / pilot.DELIVERY_ASSET).exists())
+        self.assertEqual(manifest['files'], sorted(self.members))
+        self.assertEqual(len(data['remote_files']), 4)
+        pilot.verify_module_pilot(self.public, data)
+
+    def test_recompression_version_differences_do_not_replace_pinned_delivery_hashes(self):
+        manifest, data = self.build()
+        original = pilot.generate_module_pilot
+        def other_compressor(*args):
+            result, stats = original(*args)
+            for pack in result['packs']:
+                pack['sha256'] = '0' * 64; pack['compressedBytes'] += 1
+            return result, stats
+        with patch.object(pilot, 'generate_module_pilot', side_effect=other_compressor):
+            again, _, remote = pilot.build_module_pilot(self.source, self.public, self.workspace)
+        self.assertEqual(again, manifest)
+        self.assertEqual(remote, data['remote_files'])
+
+    def test_forged_remote_identity_cannot_be_authorized_by_rehashing_source_record(self):
+        _, data = self.build()
+        for key, value in [('sha256', '0' * 64), ('size', 1), ('url', pilot.ASSET_PREFIX.replace(pilot.ASSET_COMMIT, 'main') + 'modules/x.pack')]:
+            forged = copy.deepcopy(data); next(iter(forged['remote_files'].values()))[key] = value
+            with self.subTest(key=key), self.assertRaisesRegex(ValueError, 'pinned remote assets'):
+                pilot.verify_module_pilot(self.public, forged)
+
+    def test_missing_or_extra_remote_assets_rejected(self):
+        _, data = self.build()
+        for missing in [True, False]:
+            forged = copy.deepcopy(data)
+            if missing: forged['remote_files'].pop(next(iter(forged['remote_files'])))
+            else: forged['remote_files'][pilot.MODULE_DIRECTORY + '/' + '0' * 64 + '.pack'] = next(iter(forged['remote_files'].values()))
+            with self.subTest(missing=missing), self.assertRaisesRegex(ValueError, 'pinned remote assets'):
+                pilot.verify_module_pilot(self.public, forged)
+
+    def test_deleted_record_and_forged_totals_rejected(self):
+        _, data = self.build()
+        forged = copy.deepcopy(data); forged.pop('module_pilots')
+        with self.assertRaisesRegex(ValueError, 'Unrecorded module pilot'): pilot.verify_module_pilot(self.public, forged)
+        forged['remote_files'] = {}
+        with self.assertRaisesRegex(ValueError, 'Unrecorded module pilot'): pilot.verify_module_pilot(self.public, forged)
+        data['module_pilots'][pilot.WORKSPACE]['asset_commit'] = '0' * 40
+        with self.assertRaisesRegex(ValueError, 'delivery totals'): pilot.verify_module_pilot(self.public, data)
+
+    def test_local_binary_copy_rejected_by_publication_budget_policy(self):
+        _, data = self.build()
+        path = self.public / pilot.MODULE_DIRECTORY; path.mkdir()
+        (path / ('0' * 64 + '.pack')).write_bytes(b'leftover')
+        with self.assertRaisesRegex(ValueError, 'outside Pages'): pilot.verify_module_pilot(self.public, data)
+
+    def test_rehashed_workspace_manifest_cannot_change_pinned_pack_table(self):
+        manifest, data = self.build(); manifest = copy.deepcopy(manifest)
+        manifest['packs'][0]['entries'][0]['offset'] += 1
+        (self.public / pilot.MANIFEST).write_bytes(encoded(manifest))
+        with self.assertRaisesRegex(ValueError, 'pinned delivery manifest'): pilot.verify_module_pilot(self.public, data)
+
+    def test_asset_host_allowlist_does_not_cover_compiler_or_other_paths(self):
+        for path in ['lean-wasm/lean.js', 'lean-mathlib/modules/../compiler.pack', 'lean-mathlib/modules/x.pack']:
+            self.assertIsNone(pilot.module_asset_url(path))
 
 
 class ReceiptPinTests(unittest.TestCase):
+    def test_independent_delivery_receipt_tolerates_only_checkout_line_endings(self):
+        path = Path(__file__).resolve().parents[1] / 'manifests/lean-module-pilot-delivery.json'
+        original = path.read_bytes().replace(b'\r\n', b'\n')
+        with patch.object(Path, 'read_bytes', return_value=original.replace(b'\n', b'\r\n')):
+            _, raw = pilot.read_delivery(); self.assertEqual(raw, original)
+        with patch.object(Path, 'read_bytes', return_value=original + b' '):
+            with self.assertRaisesRegex(ValueError, 'delivery receipt changed'): pilot.read_delivery()
+
     def test_independent_receipt_tolerates_only_checkout_line_endings(self):
         path = Path(__file__).resolve().parents[1] / 'manifests/lean-module-pilot.json'
         original = path.read_bytes().replace(b'\r\n', b'\n')

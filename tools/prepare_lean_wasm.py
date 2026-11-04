@@ -254,7 +254,8 @@ def prepare(source, output, mathlib_archive):
     missing={n for n in selected if n.startswith('Mathlib.')}-available
     if missing:raise ValueError('Mathlib artifacts not in upstream layer: '+', '.join(sorted(missing)))
     write_json(output/'lean-mathlib/real-analysis-layer.json',layer)
-    work_layers[MODULE_PILOT],pilot_stats=build_module_pilot(source,output,work_layers[MODULE_PILOT])
+    work_layers[MODULE_PILOT],pilot_stats,pilot_remotes=build_module_pilot(source,output,work_layers[MODULE_PILOT])
+    remote.update(pilot_remotes)
     workspace_modules={}
     for key,manifest in work_layers.items():
         workspace_modules[key]=sorted(p[:-6].replace('/','.') for p in manifest['files'] if p.endswith('.olean'))

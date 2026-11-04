@@ -38,12 +38,14 @@ def verify_runtime(root):
         if len(raw)!=record['size'] or hashlib.sha256(raw).hexdigest()!=record['sha256']:
             raise ValueError('Browser compiler checksum mismatch: '+path)
     prefix='https://raw.githubusercontent.com/live-codes/browser-lean/'+UPSTREAM+'/public/'
+    from lean_module_packs import module_asset_url, verify_module_pilot
     for path,record in remotes.items():
         from lean_runner import safe_path
         safe_path(path)
-        if (not record['url'].startswith(prefix) or len(record['sha256'])!=64 or record['size']<1):
+        pilot_url=module_asset_url(path)
+        pinned=record['url']==pilot_url if pilot_url else record['url'].startswith(prefix)
+        if (not pinned or len(record['sha256'])!=64 or record['size']<1):
             raise ValueError('Unpinned remote compiler asset: '+path)
-    from lean_module_packs import verify_module_pilot
     verify_module_pilot(root,data)
     return data
 

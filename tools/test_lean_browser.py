@@ -37,7 +37,7 @@ class LeanBrowserTests(unittest.TestCase):
             files[name]=dict(size=len(raw),sha256=hashlib.sha256(raw).hexdigest())
         groups=mathlib_seed_groups(root)
         for key in groups:
-            name='lean-mathlib/workspaces/'+key+'.json';p=runtime/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(b'workspace fixture')
+            name='lean-mathlib/workspaces/'+key+'.json';p=runtime/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(b'{}')
             files[name]=dict(size=p.stat().st_size,sha256=hashlib.sha256(p.read_bytes()).hexdigest())
         (runtime/'SOURCE.json').write_text(json.dumps(dict(upstream=UPSTREAM,lean=LEAN,mathlib=MATHLIB,files=files,bytes=sum(f['size'] for f in files.values()),mathlib_modules=mathlib_seeds(root),workspace_modules=groups)))
         from lean_execution import identity
