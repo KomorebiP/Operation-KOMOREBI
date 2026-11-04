@@ -150,7 +150,7 @@
     const slice=matches.slice(shown,shown+60);
     for(const entry of slice)entry.hidden=false;
     shown+=slice.length;more.hidden=shown>=matches.length;
-    status.textContent=`${shown} of ${matches.length} matching entries. Open an entry for its source passage.`;
+    status.textContent=`${shown} of ${matches.length} matching ${matches.length===1?'entry':'entries'}. Open an entry for its source passage.`;
     return slice[0]?.querySelector('summary');
   }
   function filter() {
@@ -198,7 +198,7 @@
           return list.children[first]?.querySelector('a');
         }
         append();next.addEventListener('click',()=>append()?.focus());
-        button.textContent=record.occurrences.length+' source passages listed below';
+        button.textContent=record.occurrences.length+' source '+(record.occurrences.length===1?'passage':'passages')+' listed below';
         list.querySelector('a')?.focus();
       } catch(error) {button.disabled=false;button.textContent='Could not load passages. Try again';}
     });

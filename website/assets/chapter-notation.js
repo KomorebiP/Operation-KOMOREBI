@@ -94,7 +94,7 @@
         }
         results.append(row);
       }
-      status.textContent=groups.length ? (query ? 'Showing '+groups.length+' of '+found.groups.length+' matching passages.' : 'Browse this work’s notation, or search above.') : 'No matching passages. Try a symbol name or open the full notation index below.';
+      status.textContent=groups.length ? (query ? 'Showing '+groups.length+' of '+found.groups.length+' matching '+(found.groups.length===1?'passage':'passages')+'.' : 'Browse this work’s notation, or search above.') : 'No matching passages. Try a symbol name or open the full notation index below.';
     } catch (error) {
       if (current===generation && dialog.open) status.textContent='Notation could not load. Search again to retry, or open the full notation index below.';
     } finally { if (current===generation) results.removeAttribute('aria-busy'); }
