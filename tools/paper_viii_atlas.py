@@ -5,9 +5,16 @@ from worked_visual_atlas import WorkedAtlas
 from paper_viii_atlas_sources import SPEC
 from paper_viii_atlas_drawings import drawing_nodes
 from paper_viii_atlas_descriptions import FIGURES
+from visual_guide_provenance import VIII_CROSSWALK, register as register_visual_sources
 
 
 class PaperVIIIAtlas(WorkedAtlas):
+    def prepare(self,reader):
+        section=register_visual_sources(reader,'paper-viii')
+        if self.EXTRAS!={VIII_CROSSWALK:section['source']['sha256']}:
+            raise ValueError('Paper VIII crosswalk revision differs from its reviewed identity')
+        super().prepare(reader)
+
     def read_plates(self,read):
         selected=[]
         for source,start,count in zip(self.SOURCES,(1,29),(28,4)):
@@ -16,11 +23,8 @@ class PaperVIIIAtlas(WorkedAtlas):
         from reader_atlas import digest
         if crosswalk['status']!='PASS' or crosswalk['traditional_source_sha256']!=digest(read(self.BOOK['main'])):
             raise ValueError('Paper VIII crosswalk has a different manuscript source binding')
-        # The retained crosswalk's PDF checksum is stale. Its original bytes stay
-        # unchanged; the current PDF pages are independently checked by the crop
-        # recipe, and its stable labels are rechecked against the manuscript.
-        if crosswalk['visual_pdf_sha256']!='63d0a88a9f5e055c9ddb4e862cb8ee7549342c8bb890c2f15c1c035423097801':
-            raise ValueError('Review the inherited Paper VIII crosswalk PDF identity')
+        if crosswalk['visual_pdf_sha256']!=self.PDF_SHA256:
+            raise ValueError('Paper VIII crosswalk does not bind the selected PDF')
         if len(crosswalk['pages'])!=self.HTML_COUNT:raise ValueError('Paper VIII crosswalk inventory changed')
         for plate,row in zip(selected,crosswalk['pages']):
             if SPEC['pdf_page_checks'][plate['number']-1]!=dict(plate=plate['number'],pdf_page=plate['number']+2,title=plate['title'],locator=plate['locator']):
@@ -58,13 +62,14 @@ class PaperVIIIAtlas(WorkedAtlas):
 
     def edition_checks(self):
         return dict(inherited_crosswalk_pdf_sha256='63d0a88a9f5e055c9ddb4e862cb8ee7549342c8bb890c2f15c1c035423097801',
-            retained_pdf_sha256=self.PDF_SHA256,crosswalk_pdf_checksum_current=False,pdf_page_checks=SPEC['pdf_page_checks'],
+            retained_pdf_sha256=self.PDF_SHA256,crosswalk_pdf_checksum_current=True,
+            current_crosswalk_source=VIII_CROSSWALK,pdf_page_checks=SPEC['pdf_page_checks'],
             inherited_reference_kind_translation={'fact:cg':{'crosswalk':'Classical input','manuscript':'Standard fact'}},
             isolated_drawing_objects=self.ISOLATED_DRAWINGS,
             manuscript_targets='Stable labels, statement numbers, kinds and titles independently rechecked against the retained manuscript source')
 
     def edition_note(self):
-        return '<p>The inherited reference crosswalk records a different PDF checksum. This conversion uses the retained PDF identified below: all 32 plate titles, printed locators and page labels were independently checked. Manuscript links use stable source labels checked against the current manuscript. The guide’s “Classical input 7.5” resolves to the manuscript’s “Standard fact 7.5” at the same label. The imported crosswalk is preserved unchanged.</p>'
+        return '<p>The revised crosswalk binds all 32 plates to the retained PDF. Manuscript links use stable source labels checked against the manuscript. The guide’s “Classical input 7.5” resolves to the manuscript’s “Standard fact 7.5” at the same label.</p>'
 
 
 TABLE_AIDS={

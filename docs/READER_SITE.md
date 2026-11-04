@@ -280,18 +280,29 @@ Both standalone source inputs retain their own source-line links. Four literal
 TikZ loops in the extension drawings are expanded with their original node lines
 and explicit bindings; unreviewed values or loops stop conversion.
 
-The audit found that the inherited reference crosswalk records PDF checksum
-`63d0a88a9f5e055c9ddb4e862cb8ee7549342c8bb890c2f15c1c035423097801`, while both
-retained visual PDF copies have checksum
+Paper VIII's PDF identity is resolved by a new crosswalk revision at
+`publication/paper-viii-visual-crosswalk/VISUAL_TO_TRADITIONAL_CROSSWALK_v2.json`.
+It binds the retained PDF checksum
 `a78f1c18c7c36cecbaf9484bc6dc643300c3b5054df338f48be6390af5e520c7`.
-The selected PDF is retained. All 32 titles, printed locators and page labels
-were independently checked against its physical pages 3–34. The crosswalk's
-stable labels, statement numbers, kinds and titles are rechecked against the
-current manuscript source. The one declared kind translation is `fact:cg`:
-the guide's “Classical input 7.5” is the current manuscript's “Standard fact 7.5”.
-The original source, crosswalk and PDF bytes are unchanged. The conversion record
-and provenance details disclose the stale checksum rather than treating it as a
-current PDF identity certificate.
+All 32 original plate records and manuscript bindings are preserved. All titles,
+printed locators and page labels were rechecked against physical pages 3–34.
+The HTML converter also checks stable labels, statement numbers, kinds and titles.
+The declared `fact:cg` translation remains: the guide's “Classical input 7.5” is
+the manuscript's “Standard fact 7.5”. The inherited crosswalk remains unchanged
+as history. The current conversion reports a matching PDF checksum.
+
+Paper IV uses the explicitly labeled reconstructed visual source at
+`publication/paper-iv-visual-reconstruction/pages.tex`. Its complete source
+package builds a 28-page PDF: all 27 content pages match the selected 16 October
+PDF after Unicode NFKC and whitespace normalization, while the cover identifies
+the reconstruction. All pages have a recorded visual review. The online V12 and
+V26 now include the selected later PDF's branch clarification and evidence table.
+The atlas exposes the rebuilt PDF and a complete editable-source download.
+[The reconstruction report](PAPER_IV_VISUAL_RECONSTRUCTION.md) closes F04.
+
+`tools/visual_guide_provenance.py` validates the new source and crosswalk
+identities without changing either frozen import. Run it with `--pdf` to repeat
+the full PDF text and page checks with pypdfium2.
 
 `tools/paper_viii_atlas.py` uses the shared worked-atlas renderer and emits
 `documents/paper-viii-atlas.json`. `tools/paper_viii_atlas_sources.py` records the

@@ -14,9 +14,9 @@ Cyclic analytic families, reciprocal identities, and spectral information.
 
 **Suggested background:** Vectors, matrices, linear maps, kernels and images, and reading a statement with hypotheses. Consult the selected paper for any additional algebra or analysis it uses.
 
-**Recorded results and limits:** 68 scoped results have recorded formal acceptance. The exact editable source of the latest visual PDF is not recovered.
+**Recorded results and limits:** 68 scoped results have recorded formal acceptance. Visual source correspondence is resolved by the labeled 3 November 2026 reconstruction: all 27 content pages match the selected PDF and all 28 pages have a recorded visual review.
 
-**Remaining work:** Recover or reconstruct the matching visual-guide source and demonstrate a source-to-PDF comparison in a new edition.
+**Remaining work:** Maintain the reconstructed visual source and its PDF comparison record alongside the scoped formal evidence. See the visual reconstruction report.
 
 The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
 
@@ -34,9 +34,11 @@ Use the links below to read this work and its supporting files. Ctrl+click (Comm
 
 ## Read
 
+- [Reconstructed visual guide: PDF, editable sources and page comparison](../PAPER_IV_VISUAL_RECONSTRUCTION.md)
 - [Edition README](../../papers/paper-iv/current/README.md)
 - [Read PDF](../../papers/paper-iv/current/readers/Paper_IV_Traditional_Final.pdf)
 - [Visual guide (PDF)](../../papers/paper-iv/current/readers/Paper_IV_Visual_Guide_Final.pdf)
+- [Maintained edition guide](../PAPER_IV_VISUAL_RECONSTRUCTION.md)
 
 [Back to work navigation](#work-navigation) · [Worked examples](#worked-examples-for-this-work)
 
@@ -52,7 +54,7 @@ Find the statement number or section in the [reading files](#read), then read it
 
 ## Lean
 
-Start with the [edition guide](../../papers/paper-iv/current/README.md) and the build instructions below. Check the correspondence records to see which written claims the Lean declarations cover. Source links lead to `.lean` files. PDF guides explain the formalization.
+Start with the [maintained edition guide](../PAPER_IV_VISUAL_RECONSTRUCTION.md) and the build instructions below. Check the correspondence records to see which written claims the Lean declarations cover. Source links lead to `.lean` files. PDF guides explain the formalization.
 
 - [Lean guide (PDF)](../../papers/paper-iv/current/readers/Paper_IV_Lean_Guide_Final.pdf)
 - [Lean sources (directory)](../../papers/paper-iv/current/Paper_IV_Verification_Closeout_v1.1.0/formalization/lean/)
@@ -63,7 +65,7 @@ Start with the [edition guide](../../papers/paper-iv/current/README.md) and the 
 
 ## Code
 
-These links include code, examples, checks, or build tools. Read the [edition guide](../../papers/paper-iv/current/README.md) for setup instructions and what each command does. All software is beta and work in progress.
+These links include code, examples, checks, or build tools. Read the [maintained edition guide](../PAPER_IV_VISUAL_RECONSTRUCTION.md) for setup instructions and what each command does. All software is beta and work in progress.
 
 - [Code / scripts: scripts](../../papers/paper-iv/current/scripts/)
 
