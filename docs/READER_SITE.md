@@ -8,6 +8,39 @@ All twelve core papers have formatted HTML reading editions. Each retains its
 recorded mathematical scope; companion guides and atlas coverage are described
 on the individual reading pages.
 
+## Sharing and discovery
+
+`tools/site_metadata.py` adds a page-specific description, an absolute canonical
+URL, Open Graph fields and a large-image card declaration to each generated page.
+The home page and principal introductory routes have curated descriptions; other
+pages use their opening prose or a title-based fallback. Navigation, code and raw
+equations are excluded from automatic summaries. Metadata is present in the saved
+HTML, without JavaScript. Directory indexes share their trailing-slash canonical
+URL. Search, saved reading, the paired reader, the execution launcher and the 404
+page use `noindex,follow`; the 404 has no canonical link.
+
+The branded 1200-by-630 JPEG has a checksum and an accompanying SVG in
+`website/assets/brand/sharing-card.json`. To revise it, edit the SVG, rasterize the
+full source at exactly 1200 by 630 pixels, and update the image and source hashes
+in that record. A full-page browser screenshot of the standalone SVG preserves
+its dimensions. The image URL includes its content hash so a changed image has
+a new cache identity. The artwork is branding, separate from manuscript figures.
+
+`sitemap.xml` lists exactly the indexable generated HTML pages and is linked in
+the footer. It excludes query/fragment variants and copied runtime assets. No
+modification dates are invented from deployment time. CI verifies all metadata,
+canonical targets, image bytes and dimensions, sitemap coverage and site size.
+Run `python -B -m unittest discover -s tools -p 'test_site_metadata.py' -v`.
+
+This project is hosted below `/Operation-KOMOREBI/`. A project-level `robots.txt`
+does not control the host, so the build does not publish one. The sitemap can be
+submitted through a verified Search Console property; deployment does not claim
+that a search engine has indexed the pages or that a platform has refreshed its
+preview cache. See the [Open Graph protocol](https://ogp.me/),
+[Google canonical guidance](https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls),
+[sitemap guidance](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap)
+and [robots.txt location rules](https://developers.google.com/crawling/docs/robots-txt/robots-txt-spec).
+
 ## Search catalogue
 
 `tools/search_catalog.py` generates the compact catalogue at `search-index.json`.
