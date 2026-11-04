@@ -1,0 +1,60 @@
+CoupledNormalization.lean:26:2: error: mod_cast has type
+  ¬(2 * n + 1).factorial = 0
+but is expected to have type
+  ¬oddFactorial n = 0
+CoupledNormalization.lean:44:2: error: mod_cast has type
+  (2 * n + 2).choose (2 * i + 1) * (2 * i + 1).factorial * (2 * (n - i) + 1).factorial = (2 * n + 2).factorial
+but is expected to have type
+  ↑((2 * n + 2).choose (2 * i + 1)) * oddFactorial i * oddFactorial (n - i) = ↑(2 * n + 2).factorial
+CoupledNormalization.lean:66:24: error: omega could not prove the goal:
+a possible counterexample may satisfy the constraints
+  d ≥ 0
+  c ≥ 0
+  c - d ≥ 1
+where
+ c := ↑a✝¹
+ d := ↑n
+CoupledNormalization.lean:93:8: error: Tactic `apply` failed: could not unify the conclusion of `Finset.sum_congr rfl`
+  Finset.sum ?m.79 ?m.76 = Finset.sum ?m.79 ?m.77
+with the goal
+  (p.derivativeNext c n).1 = (p.derivativeNext d n).1
+
+Note: The full type of `Finset.sum_congr rfl` is
+  (∀ x ∈ ?m.79, ?m.76 x = ?m.77 x) → Finset.sum ?m.79 ?m.76 = Finset.sum ?m.79 ?m.77
+
+case h.succ.fst
+p : RationalScales
+c d : ℕ → ℚ × ℚ
+hc : p.IsDerivativeSolution c
+hd : p.IsDerivativeSolution d
+n : ℕ
+ih : ∀ m < n + 1, c m = d m
+⊢ (p.derivativeNext c n).1 = (p.derivativeNext d n).1
+CoupledNormalization.lean:93:8: error: Tactic `apply` failed: could not unify the conclusion of `Finset.sum_congr rfl`
+  Finset.sum ?m.79 ?m.76 = Finset.sum ?m.79 ?m.77
+with the goal
+  (p.derivativeNext c n).2 = (p.derivativeNext d n).2
+
+Note: The full type of `Finset.sum_congr rfl` is
+  (∀ x ∈ ?m.79, ?m.76 x = ?m.77 x) → Finset.sum ?m.79 ?m.76 = Finset.sum ?m.79 ?m.77
+
+case h.succ.snd
+p : RationalScales
+c d : ℕ → ℚ × ℚ
+hc : p.IsDerivativeSolution c
+hd : p.IsDerivativeSolution d
+n : ℕ
+ih : ∀ m < n + 1, c m = d m
+⊢ (p.derivativeNext c n).2 = (p.derivativeNext d n).2
+CoupledNormalization.lean:119:8: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  p.coefficients 0
+in the target expression
+  (fun n => (oddFactorial n * (p.coefficients n).1, oddFactorial n * (p.coefficients n).2)) 0 = (1, 1)
+
+case left
+p : RationalScales
+hz : p.coefficients 0 = (1, 1)
+⊢ (fun n => (oddFactorial n * (p.coefficients n).1, oddFactorial n * (p.coefficients n).2)) 0 = (1, 1)
+CoupledNormalization.lean:123:30: error(lean.invalidField): Invalid field `eq_def`: The environment does not contain `Function.eq_def`, so it is not possible to project the field `eq_def` from an expression
+  p.coefficients
+of type `ℕ → ℚ × ℚ`

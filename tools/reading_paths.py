@@ -1,4 +1,4 @@
-"""Resource-aware Start here guides for every work selected for the website."""
+"""Reading paths for complete HTML manuscripts with HTML visual companions."""
 import html
 import json
 import posixpath
@@ -6,8 +6,17 @@ import posixpath
 INDEX='read/start.html'
 REPORT='documents/reading-paths.json'
 QUANTUM='monographs-quantum-and-circuits'
-GROUPS={'papers':'Core papers','monographs':'Books and monographs','research':'Research works',
-        'packages':'Software','experiments':'Experiments'}
+LARGE_SIGNAL='monographs-large-signal-model'
+CURATED={QUANTUM:('visual','study','formal'),LARGE_SIGNAL:('introduction','study','evidence')}
+EXISTING_GUIDES={*CURATED,'monographs-machine-native-reasoning'}
+GROUPS={'papers':'Core papers','monographs':'Books and monographs'}
+
+
+def eligible_books():
+    """A PDF or source-text viewer alone does not qualify a work for a guide."""
+    from readable_chapters import BOOKS
+    return {work:book for work,book in BOOKS.items() if book.get('chapters') and
+            not book.get('partial') and (book.get('atlas_index') or book.get('visual_guide_index'))}
 
 
 def guide_url(work):
@@ -15,8 +24,8 @@ def guide_url(work):
 
 
 def guide_enabled(site,work):
-    """Quantum publishes its own guide; other guides require a selected site work."""
-    return work==QUANTUM or (getattr(site,'guided_reading',False) and
+    """Preserve standalone curated guides; enable new guides only on the site."""
+    return work in EXISTING_GUIDES or (work in eligible_books() and getattr(site,'guided_reading',False) and
         any(c['id']==work for c in getattr(site,'registry',{}).get('components',[])))
 
 
@@ -28,6 +37,7 @@ def guide_model(reader, component):
     from reader_experience import GUIDED_DEMONSTRATIONS
     from build_reader_site import document_url
     site=reader.site;work=component['id'];config=BOOKS.get(work)
+    if work not in eligible_books():raise ValueError('Reading guide requires a complete HTML manuscript and HTML visual guide: '+work)
     meta=site.components[work];assessment=site.assessments[work]
     overview='collection/works/'+work+'.html'
     intro=getattr(reader,'paper_introductions',{}).get(work)
@@ -60,9 +70,10 @@ def guide_model(reader, component):
         if work in works:
             first.append(step(title,document_url('collection',path),'Follow the worked calculation, its expected output, and its source links.'))
             break
-    has_visual=bool(config and config.get('atlas_index')) or bool(selected('visual'))
-    if config and config.get('atlas_index'):
-        first.append(step('Visual guide in HTML',config['atlas_index'],'Explore the drawings and their accompanying explanations.'))
+    visual=config.get('atlas_index') or config.get('visual_guide_index')
+    has_visual=bool(visual)
+    if visual:
+        first.append(step('Visual guide in HTML',visual,'Explore the drawings and their accompanying explanations.'))
     else:
         first.extend(step(label,url,'Read the retained visual companion and its stated scope.') for label,url in selected('visual')[:2])
     has_examples=bool(first)
@@ -72,6 +83,12 @@ def guide_model(reader, component):
     if maintained and ('collection',maintained) in getattr(site,'documents',{}):
         first.append(step('Maintained edition guide',document_url('collection',maintained),'Read the edition-specific orientation and qualifications.'))
     first.append(step('Question, background, and scope',overview,'Use the work overview to identify the problem and required background.'))
+    if work=='monographs-cos-method':
+        prefix='read/'+work+'/'
+        background='Useful background: multivariate Gaussian distributions, quadratic forms, eigenvalues, and numerical integration.'
+        first=[step('How to read this book',prefix+'how-to-read.html','Choose the probability, operator, or numerical route that matches your background.'),
+               step('Visual studies',visual,'Follow the Gaussian form, spectral packets, and probability enclosure through the visual examples.'),
+               step('A worked probability enclosure',prefix+'09-intervals.html','Follow the directed-enclosure calculation and its stated input and error requirements.')]
     first=unique(first)
     study=[]
     edition=assessment.get('editorial_edition')
@@ -105,6 +122,9 @@ def guide_model(reader, component):
         evidence.append(step('Find a statement and written proof',statement_directory_url(config),'Use the work’s statement directory to locate an argument.'))
     evidence.extend(step(label,url,'Read the correspondence map or formal guide before interpreting formal coverage.')
                     for kind in ('claims','formal_guide','lean_setup') for label,url in selected(kind)[:1])
+    if work=='monographs-cos-method':
+        evidence.extend([step('Formalization and theorem correspondence',prefix+'b-lean.html','Compare the written results with the finite formal companion and its assumptions.'),
+                         step('Computation and reproducibility',prefix+'c-reproduction.html','Inspect the retained commands, replay results, and their tested scope.')])
     if work in getattr(reader,'lean_works',{}):
         from lean_reader import directory
         evidence.append(step('Inspect retained Lean sources',directory(work),'Compare the full types with the written statements and recorded coverage.'))
@@ -147,7 +167,7 @@ def render_guide(site,model):
         body+='<ol>'
         for step in path['steps']:body+='<li>'+link(step['title'],step['url'])+'<p>'+e(step['description'])+'</p></li>'
         body+='</ol><p class="notice">Checkpoint: '+e(path['checkpoint'])+'</p><p><a href="#guide-top">Choose another path ↑</a></p></section>'
-    body+='<nav class="reading-guide-return" aria-label="Work resources">'+link('Work overview','collection/works/'+model['work']+'.html')+link('Guides for all works',INDEX)+'</nav></div>'
+    body+='<nav class="reading-guide-return" aria-label="Work resources">'+link('Work overview','collection/works/'+model['work']+'.html')+link('More reading guides',INDEX)+'</nav></div>'
     site.page(page,model['title']+': Start here',body)
     site.search.append(dict(title=model['title']+' / Start here',group='Collection',kind='Guides',work_ids=[model['work']],url=page,
         text='Guided reading prerequisites '+model['summary']+' '+ ' '.join(p['title'] for p in model['paths'])))
@@ -156,22 +176,23 @@ def render_guide(site,model):
 def publish(reader):
     site=reader.site;models=[];rows=[]
     for component in site.registry['components']:
+        if component['id'] not in eligible_books():continue
         model=guide_model(reader,component);models.append(model)
-        if model['work']!=QUANTUM:render_guide(site,model)
+        if model['work'] not in CURATED:render_guide(site,model)
         else:
-            if not (site.output/model['url']).is_file():raise ValueError('Missing retained Quantum reading guide')
-        rows.append(dict(work=model['work'],url=model['url'],paths=['visual','study','formal'] if model['work']==QUANTUM else [p['id'] for p in model['paths']],
-                         targets=[] if model['work']==QUANTUM else sorted({s['url'] for p in model['paths'] for s in p['steps']})))
+            if not (site.output/model['url']).is_file():raise ValueError('Missing curated reading guide: '+model['work'])
+        rows.append(dict(work=model['work'],url=model['url'],paths=list(CURATED.get(model['work'],[p['id'] for p in model['paths']])),
+                         targets=[] if model['work'] in CURATED else sorted({s['url'] for p in model['paths'] for s in p['steps']})))
     e=html.escape
-    body='<p class="eyebrow">Guided reading</p><h1>Start with a work</h1><p>Choose from '+str(len(models))+' works. Each guide offers an introduction, a reading sequence, and a route through its evidence, using the material available for that edition.</p><p><a href="index.html">HTML reading library</a> · <a href="../works.html">Browse works by subject</a></p>'
+    body='<p class="eyebrow">Guided reading</p><h1>Choose a reading path</h1><p>Begin with a visual introduction, study a complete manuscript, or follow its supporting evidence. These '+str(len(models))+' papers and books have both an HTML reading edition and an HTML visual guide.</p><p><a href="index.html">HTML reading library</a> · <a href="../works.html">Browse all works by subject</a></p>'
     body+='<form class="filters" role="search"><label for="work-query">Find a reading guide</label><input id="work-query" data-result-label="guides" type="search" name="q" autocomplete="off"><label for="work-group">Collection</label><select id="work-group"><option value="">All collections</option>'
     body+=''.join('<option value="'+key+'">'+label+'</option>' for key,label in GROUPS.items())+'</select><button type="reset">Clear filters</button></form><p id="work-count" role="status" aria-live="polite">'+str(len(models))+' guides</p><div class="work-list">'
     for model in models:
         searchable=' '.join((model['title'],model['summary'],model['work'],GROUPS[model['group']]))
         body+='<section class="work" data-search="'+e(searchable,quote=True)+'" data-group="'+model['group']+'"><p class="eyebrow">'+GROUPS[model['group']]+'</p><h2>'+e(model['title'])+'</h2><p>'+e(model['summary'])+'</p><a class="button" href="'+e(site.rel(model['url'],INDEX),quote=True)+'">Start here</a></section>'
     site.page(INDEX,'Start here: guided reading',body+'</div>')
-    site.search.append(dict(title='Start here / Guides for all works',group='Collection',kind='Guides',work_ids=[m['work'] for m in models],url=INDEX,text='Guided reading introduction full study proof evidence '+ ' '.join(m['title'] for m in models)))
-    site.write(REPORT,json.dumps(dict(source_revision=site.revision,guides=rows),ensure_ascii=False)+'\n')
+    site.search.append(dict(title='Choose a reading path',group='Collection',kind='Guides',work_ids=[m['work'] for m in models],url=INDEX,text='Guided reading visual introduction full study proof evidence '+ ' '.join(m['title'] for m in models)))
+    site.write(REPORT,json.dumps(dict(source_revision=site.revision,selection='Complete HTML manuscript and HTML visual guide',guides=rows),ensure_ascii=False)+'\n')
     return rows
 
 
@@ -180,9 +201,9 @@ def verify(root,documents,pages):
     from check_reader_site import check_search_targets
     registry=json.loads((Path(__file__).resolve().parents[1]/'manifests/browse-resources.json').read_bytes())
     report=json.loads((root/REPORT).read_bytes())
-    rows=report['guides'];expected=[c['id'] for c in registry['components']]
+    rows=report['guides'];expected=[c['id'] for c in registry['components'] if c['id'] in eligible_books()]
     assert report['source_revision']==documents['source_revision']
-    assert [r['work'] for r in rows]==expected,'Start here guides must cover every selected work once'
+    assert [r['work'] for r in rows]==expected,'Start here guides must cover every eligible work once'
     for row in rows:
         assert row['url']==guide_url(row['work'])
         assert len(row['paths'])==3 and len(set(row['paths']))==3

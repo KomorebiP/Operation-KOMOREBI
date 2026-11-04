@@ -21,6 +21,33 @@ def tactic_umbrella(available):
             ''.join('import '+name+'\n' for name in modules))
 
 
+def validate_order(entry):
+    """Every checked source appears once; the selected retained file stays last."""
+    files=entry['files'];library=entry['library'];order=entry['order']
+    if (not isinstance(files,list) or not files or not isinstance(library,list) or
+            any(not isinstance(module,str) for module in library) or
+            len(library)!=len(set(library)) or not isinstance(order,list)):
+        raise ValueError('Invalid browser source order')
+    file_done=set();library_done=set()
+    for step in order:
+        if not isinstance(step,dict) or len(step)!=1:
+            raise ValueError('Invalid browser source order step')
+        if 'file' in step:
+            index=step['file']
+            if type(index) is not int or not 0<=index<len(files) or index in file_done:
+                raise ValueError('Invalid or repeated browser source order file')
+            file_done.add(index)
+        elif 'library' in step:
+            module=step['library']
+            if not isinstance(module,str) or module not in library or module in library_done:
+                raise ValueError('Invalid or repeated browser source order library')
+            library_done.add(module)
+        else:raise ValueError('Invalid browser source order step')
+    if (len(file_done)!=len(files) or len(library_done)!=len(library) or
+            not order or order[-1]!={'file':len(files)-1}):
+        raise ValueError('Incomplete browser source order or selected file is not last')
+
+
 def plans(catalog,read,available,library_sources=None):
     library_sources=library_sources or {}
     validate_source_library(library_sources,available)
@@ -28,12 +55,12 @@ def plans(catalog,read,available,library_sources=None):
     entries=[];needed=set()
     for source in catalog['sources']:
         ordered=[];done={};active=set();modules={};issues=set();needs_tactics=False;needs_legacy=False
-        library=[];library_done=set()
+        library=[];library_done=set();order=[]
         def library_visit(module):
             if module in library_done:return
             for dependency in library_sources[module]['imports']:
                 if dependency in library_sources:library_visit(dependency)
-            library_done.add(module);library.append(module)
+            library_done.add(module);library.append(module);order.append(dict(library=module))
         def visit(path,module):
             nonlocal needs_tactics,needs_legacy
             if path in active:
@@ -62,13 +89,15 @@ def plans(catalog,read,available,library_sources=None):
                     modules[name]=dependency;visit(dependency,name)
                 except ValueError as error:issues.add(str(error))
             active.remove(path);done[path]=module;needed.add(path)
+            order.append(dict(file=len(ordered)))
             ordered.append(dict(module=module,path=path))
         # The selected file is checked as source; only dependencies need an export name.
         visit(source['path'],PurePosixPath(source['path']).stem)
-        entries.append(dict(id=source['id'],path=source['path'],work=source['work'],
+        entry=dict(id=source['id'],path=source['path'],work=source['work'],
                             label=source['label'],inspect=source['url'],files=ordered,
-                            library=library,
-                            tactics=needs_tactics,legacy=needs_legacy,issues=sorted(issues)))
+                            library=library,order=order,
+                            tactics=needs_tactics,legacy=needs_legacy,issues=sorted(issues))
+        validate_order(entry);entries.append(entry)
     return entries,{p:{k:catalog['inputs'][p][k] for k in ('sha256','size','work')} for p in sorted(needed)}
 
 
@@ -136,6 +165,10 @@ def verify(root,documents):
             original=next(s for s in source['sources'] if s['path']==entry['path'])
             assert entry['id']==original['id'] and entry['work']==original['work']
             assert entry['library']==expected[entry['path']]['library']
+            validate_order(entry)
+            assert entry['order']==expected[entry['path']]['order']
+            assert [(file['module'],data['inputs'][file['input']]['path']) for file in entry['files']]==[
+                (file['module'],file['path']) for file in expected[entry['path']]['files']]
             selected=data['inputs'][entry['files'][-1]['input']]
             assert selected['path']==entry['path'] and selected['sha256']==owned[entry['path']]['sha256']
             for file in entry['files']:

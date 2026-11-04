@@ -1,0 +1,32 @@
+import CoupledNormalization
+
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.oddFactorial_ne_zero
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.oddFactorial_zero
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.oddFactorial_succ
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.binomial_factorial_product
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.binomial_factorial_quotient
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.rational_derivatives_zero
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.rational_derivatives_succ
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.rational_derivatives_solution
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.derivative_solution_unique
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.derivativeRow_factorialScale
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.factorial_scaled_coefficients_solution
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.rational_derivatives_factorial
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.derivativeNext_congr
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.derivative_array_eq
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.derivative_array_length
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.derivative_array_entry
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.derivative_component_factorial
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.derivative_component_normalized
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.derivative_normalized_cast
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.ordinary_array_eq
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.ordinary_array_length
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.ordinary_array_entry
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.derivative_polynomial_eq
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.array_polynomial_eq
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.array_polynomial_cast
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.derivative_polynomial_cast
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.derivative_endpoint_enclosure
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.array_endpoint_enclosure
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.rational_derivatives_one
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.derivative_normalization_first

@@ -2,6 +2,7 @@
 import unittest
 import hashlib
 import json
+import re
 from pathlib import Path
 import tempfile
 from types import SimpleNamespace
@@ -40,6 +41,30 @@ def manuscript_table_fixtures(root,work):
 
 
 class ReaderSiteTests(unittest.TestCase):
+    def test_live_special_functions_guidance_uses_current_repository_links(self):
+        paths=['monographs/special-functions/current/README.md',
+               'monographs/special-functions/current/CONTINUE_HERE.md',
+               'monographs/special-functions/current/RELEASE_STATUS.md']
+        retained=['monographs/special-functions/CONTINUE_HERE.md',
+                  'monographs/special-functions/RELEASE_STATUS.md',
+                  'monographs/special-functions/LEAN_STATUS.md']
+        reader=object.__new__(ReadingDocuments)
+        reader.records={}
+        reader.owned={p:dict(mode='100644',size=10,work='monographs-special-functions',
+                             git_blob_sha1='b'*40,sha256='c'*64,repository_path=p)
+                      for p in paths+retained}
+        site=SimpleNamespace(repos={'collection':'KomorebiP/Operation-KOMOREBI'},
+            revisions={'collection':'a'*40},documents={},reader=reader,
+            roots={'collection':Path('.')})
+        for path in paths:
+            self.assertIsNone(reader.add(path))
+            self.assertIn(path,reader.owned)
+            self.assertNotIn(path,reader.records)
+            self.assertEqual(Site.resolve(site,'collection','docs/guide.md','collection/guide.html','../'+path),
+                'https://github.com/KomorebiP/Operation-KOMOREBI/blob/'+'a'*40+'/'+path)
+        for path in retained:
+            self.assertEqual(reader.add(path)['sha256'],'c'*64)
+
     def test_generated_json_is_compact_without_changing_source_strings_or_frozen_files(self):
         data={'F':r'\mathbb F','f':'  x\n y  ','labels':['α','1/5'],'nested':{'exact':True,'value':1.25}}
         pretty=json.dumps(data,ensure_ascii=False,indent=2)+'\n'
@@ -495,8 +520,131 @@ class ReaderSiteTests(unittest.TestCase):
         chapter=Chapter('',{})
         rendered=render_drawing(drawing,chapter,reader)
         self.assertEqual(chapter.math,[formula,'x'])
-        self.assertEqual(rendered.count('role="group" aria-label="Displayed equation. Scroll horizontally if needed."'),2)
-        self.assertEqual(rendered.count('tabindex="0"'),2)
+        self.assertEqual(rendered.count('role="group" aria-label="Displayed equation. Scroll horizontally if needed."'),1)
+        self.assertEqual(rendered.count('tabindex="0"'),1)
+        self.assertIn('<ul class="drawing-label-list">',rendered)
+        self.assertIn('<details class="drawing-transcript">',rendered)
+        self.assertNotIn('<details class="drawing-transcript" open',rendered)
+
+    def test_relative_matrix_cells_retain_rows_columns_and_every_label(self):
+        from reader_drawing_transcripts import drawing_nodes,matrix_label_blocks
+        from reader_atlas import transcript_order
+        source=''.join(r'\draw[draw=black!45] ('+str(x)+','+str(y)+r') rectangle ++(1,1);'
+                       r'\node at ('+str(x+.5)+','+str(y+.5)+') {$'+str(n)+'$};'
+                       for n,(x,y) in enumerate([(0,1),(1,1),(0,0),(1,0)]))
+        nodes=drawing_nodes(source);blocks=matrix_label_blocks(nodes,source)
+        self.assertEqual([b['kind'] for b in blocks],['table'])
+        self.assertEqual(blocks[0]['rows'],[['Row 1',0,1],['Row 2',2,3]])
+        self.assertEqual(transcript_order(dict(alt='Grid',description='A grid.',blocks=blocks),nodes),[0,1,2,3])
+
+    def test_gapped_grid_uses_unique_original_axis_labels_as_headers(self):
+        from reader_drawing_transcripts import drawing_nodes,matrix_label_blocks
+        from reader_atlas import transcript_order
+        source=r'\node at (.5,2) {$c_1$};\node at (1.8,2) {$c_2$};'
+        for row,y in enumerate([.95,.25],1):
+            source+=r'\node at (-.4,'+str(y+.25)+') {$r_'+str(row)+'$};'
+            for column,x in enumerate([0,1.3],1):
+                source+=r'\path[draw=black!25,fill=white] ('+str(x)+','+str(y)+') rectangle ('+str(x+1)+','+str(y+.5)+');'
+                source+=r'\node at ('+str(x+.5)+','+str(y+.25)+') {$a_{'+str(row)+str(column)+'}$};'
+        nodes=drawing_nodes(source);blocks=matrix_label_blocks(nodes,source)
+        self.assertEqual(blocks[0]['headers'],['Row / column',0,1])
+        self.assertEqual(blocks[0]['rows'],[[2,3,4],[5,6,7]])
+        self.assertEqual(transcript_order(dict(alt='Grid',description='A grid.',blocks=blocks),nodes),list(range(8)))
+
+    def test_grid_cells_are_not_replaced_by_bounding_boxes_or_outer_rules(self):
+        from reader_drawing_transcripts import drawing_nodes,matrix_label_blocks
+        source=r'\path[use as bounding box] (0,0) rectangle (3,3);\draw (0,0) rectangle (3,3);'
+        source+=''.join(r'\draw ('+str(x)+','+str(y)+r') rectangle ++(1,1);'
+                        r'\node at ('+str(x+.5)+','+str(y+.5)+') {$'+str(n)+'$};'
+                        for n,(x,y) in enumerate((x,y) for y in [2,1,0] for x in [0,1,2]))
+        blocks=matrix_label_blocks(drawing_nodes(source),source)
+        self.assertEqual(len(blocks),1)
+        self.assertEqual(blocks[0]['rows'],[['Row 1',0,1,2],['Row 2',3,4,5],['Row 3',6,7,8]])
+
+    def test_grid_markers_preserve_unretained_digits_separately_from_zero(self):
+        from reader_drawing_transcripts import drawing_nodes,matrix_label_blocks
+        from reader_atlas import render_drawing,transcript_order
+        source=''.join(r'\draw ('+str(x)+','+str(y)+r') rectangle ++(1,1);'
+                       r'\node at ('+str(x+.5)+','+str(y+.5)+') {'+value+'};'
+                       for (x,y),value in zip([(0,1),(1,1),(0,0),(1,0)],['$0$',r'\textemdash','$1$',r'\textemdash']))
+        nodes=drawing_nodes(source);blocks=matrix_label_blocks(nodes,source)
+        info=dict(alt='Digits',description='Dashes are unretained places.',blocks=blocks)
+        self.assertEqual(transcript_order(info,nodes),[0,1,2,3])
+        self.assertEqual(blocks[0]['rows'],[['Row 1',0,1],['Row 2',2,3]])
+        reader=SimpleNamespace(site=SimpleNamespace(rel=lambda path,page:path),resolve=lambda path,page:'source.html')
+        chapter=Chapter('',{});rendered=render_drawing(dict(description=info,nodes=nodes,
+            receipt=dict(image='image.png',source='figure.tex'),width=800,height=400),chapter,reader)
+        self.assertEqual(chapter.math,['0','1'])
+        self.assertEqual(rendered.count('—'),2)
+        self.assertEqual(rendered.count('id="drawing-label-'),4)
+
+    def test_packet_arrangements_retain_the_displayed_residue_order(self):
+        from worked_atlas_descriptions import FIGURES
+        from worked_atlas_drawings import drawing_nodes
+        from reader_atlas import transcript_order
+        root=Path(__file__).resolve().parents[1]
+        nodes=drawing_nodes((root/'papers/paper-ii/current/editable/traditional/visual_graphics/coefficient_tower.tex').read_text(encoding='utf-8-sig'))
+        info=FIGURES['paper-ii']['coefficient_tower']
+        tables=[b for b in info['blocks'] if b['kind']=='table']
+        self.assertEqual([len(b['rows'][0])-1 for b in tables],[8,4,2])
+        self.assertEqual([[nodes[row[0]]['text'] for row in b['rows']] for b in tables],
+            [['$r=0$','$r=1$'],['$r=0$','$r=2$','$r=1$','$r=3$'],
+             ['$r=0$','$r=4$','$r=2$','$r=6$','$r=1$','$r=5$','$r=3$','$r=7$']])
+        for table in tables:
+            self.assertEqual(sorted(int(nodes[index]['text'].strip('$')) for row in table['rows'] for index in row[1:]),list(range(16)))
+        self.assertEqual(sorted(transcript_order(info,nodes)),list(range(69)))
+
+    def test_signal_error_table_keeps_original_sample_addresses_and_signs(self):
+        from paper_v_atlas_descriptions import FIGURES
+        from worked_atlas_drawings import drawing_nodes
+        from reader_atlas import transcript_order
+        root=Path(__file__).resolve().parents[1]
+        nodes=drawing_nodes((root/'papers/paper-v/current/editable/traditional/visual_graphics/error_budget.tex').read_text(encoding='utf-8-sig'))
+        info=FIGURES['error_budget'];table=info['blocks'][1]
+        self.assertEqual([nodes[index]['text'] for index in table['headers'][1:]],[str(i) for i in range(4,15)])
+        values={nodes[header]['text']:nodes[index]['text'] for header,index in zip(table['headers'][1:],table['rows'][2][1:])}
+        self.assertEqual(values['6'],'$3$')
+        self.assertEqual(values['7'],r'$\frac{1}{2}$')
+        self.assertEqual(values['12'],r'$- \frac{5}{2}$')
+        self.assertEqual(sorted(transcript_order(info,nodes)),list(range(49)))
+
+    def test_weighted_word_table_keeps_words_signs_weights_and_cutoff_status(self):
+        from worked_atlas_descriptions import FIGURES
+        from worked_atlas_drawings import drawing_nodes
+        from reader_atlas import transcript_order
+        root=Path(__file__).resolve().parents[1]
+        nodes=drawing_nodes((root/'papers/paper-ii/current/editable/traditional/visual_graphics/weighted_word_cutoff.tex').read_text(encoding='utf-8-sig'))
+        info=FIGURES['paper-ii']['weighted_word_cutoff'];table=info['blocks'][1]
+        self.assertEqual([nodes[i]['text'] for i in table['headers'][:3]],['word','cumulative weight','signed contribution'])
+        self.assertEqual(len(table['rows']),7)
+        self.assertEqual([nodes[i]['text'] for i in table['rows'][3]],['$ab$','$3$','$+8E_{00}$','keep'])
+        self.assertEqual([nodes[i]['text'] for i in table['rows'][-1]],['$bab$','$5$','$-32E_{10}$','zero mod 32'])
+        self.assertEqual(nodes[info['blocks'][0]['nodes'][0]]['text'],'$L=5$')
+        self.assertEqual(sorted(transcript_order(info,nodes)),list(range(32)))
+
+    def test_incomplete_grids_and_bar_rows_keep_all_labels_without_guessing_cells(self):
+        from reader_drawing_transcripts import drawing_nodes,matrix_label_blocks
+        from reader_atlas import transcript_order
+        for positions in ([(0,0),(1,0),(0,1)],[(0,0),(1,0),(2,0)]):
+            source=''.join(r'\draw ('+str(x)+','+str(y)+r') rectangle ++(1,1);'
+                           r'\node at ('+str(x+.5)+','+str(y+.5)+') {$'+str(n)+'$};'
+                           for n,(x,y) in enumerate(positions))
+            nodes=drawing_nodes(source);blocks=matrix_label_blocks(nodes,source)
+            self.assertTrue(all(b['kind']=='text' for b in blocks))
+            self.assertEqual(transcript_order(dict(alt='Values',description='Three labels.',blocks=blocks),nodes),[0,1,2])
+
+    def test_short_numeric_labels_stay_inline_in_a_compact_transcript(self):
+        from reader_atlas import render_drawing
+        from paper_iv_atlas_descriptions import figure,text
+        drawing=dict(description=figure('Ticks','Description',text(0,1,2)),
+                     receipt=dict(image='image.png',source='figure.tex'),
+                     nodes=[dict(text='$0$'),dict(text='$1$'),dict(text='$2$')],width=1200,height=450)
+        reader=SimpleNamespace(site=SimpleNamespace(rel=lambda path,page:path),resolve=lambda path,page:'source.html')
+        chapter=Chapter('',{});rendered=render_drawing(drawing,chapter,reader)
+        self.assertEqual(chapter.math,['0','1','2'])
+        self.assertEqual(rendered.count('id="drawing-label-'),3)
+        self.assertEqual(rendered.count('<li>'),3)
+        self.assertNotIn('Displayed equation',rendered)
 
     def test_reading_tools_preserve_proof_links_and_no_script_access(self):
         from html.parser import HTMLParser
@@ -666,12 +814,16 @@ class ReaderSiteTests(unittest.TestCase):
         self.assertIn('PHYSICS_COLLECTION.html', [a['href'] for a in links])
         self.assertIn('../interactive.html', [a['href'] for a in links])
         self.assertIn('../signal-lab.html', [a['href'] for a in links])
+        self.assertIn('../recovery-lab.html', [a['href'] for a in links])
+        self.assertIn('../j-lab.html', [a['href'] for a in links])
         self.assertIn('../reading-list.html', [a['href'] for a in links])
         self.assertIn('../lean/index.html', [a['href'] for a in links])
         self.assertIn('../read/index.html', [a['href'] for a in links])
         self.assertIn('../read/visual-guides.html', [a['href'] for a in links])
-        self.assertEqual(len(links),22)
-        self.assertEqual(len({a['href'] for a in links}),22)
+        self.assertIn('DEMONSTRATIONS.html#extended-case-studies', [a['href'] for a in links])
+        self.assertIn('FUTURE_DEVELOPMENTS.html', [a['href'] for a in links])
+        self.assertEqual(len(links),26)
+        self.assertEqual(len({a['href'] for a in links}),26)
         self.assertIn('SPECIAL_FUNCTIONS.html', [a['href'] for a in links])
         special=Links(site_navigation('collection/SPECIAL_FUNCTIONS.html')).links
         self.assertEqual([a['href'] for a in special if a.get('aria-current')=='page'], ['SPECIAL_FUNCTIONS.html'])
@@ -873,7 +1025,7 @@ class ReaderSiteTests(unittest.TestCase):
         reader.records={'paper.pdf':dict(work='paper-vi',format='pdf',title='Read PDF',url='read/paper-vi/pdf.html')}
         reader.manuscript_roots={'paper-vi':'main.tex'}
         reader.learning={'learning_topics':[{'works':['paper-vi']}]}
-        markup=reader.work_routes('paper-vi','read/paper-vi/atlas/index.html')
+        markup=reader.work_routes('paper-vi','read/paper-vi/index.html')
         primary=markup.split('<details class="work-more">')[0]
         self.assertEqual(Page(primary).links,['collection/works/paper-vi.html','read/paper-vi/index.html',
                                              'read/paper-vi/atlas/index.html','read/paper-vi/pdf.html'])
@@ -884,9 +1036,12 @@ class ReaderSiteTests(unittest.TestCase):
         self.assertIn('Proofs and implementation',markup)
         self.assertIn('<summary>More resources</summary>',markup)
         plate=reader.work_routes('paper-vi','read/paper-vi/atlas/v29.html')
-        self.assertIn('href="read/paper-vi/atlas/index.html" aria-current="location"',plate)
+        self.assertIn('href="index.html" aria-current="location"',plate)
+        self.assertIn('Switch guide',plate)
+        self.assertIn('Read beside paper',plate)
+        self.assertIn('left=read%2Fpaper-vi%2Fatlas%2Fv29.html',plate)
         overview=reader.work_intro('paper-vi','collection/works/paper-vi.html')
-        self.assertIn('Visual atlas',overview.split('<details class="work-more">')[0])
+        self.assertIn('Visual guide',overview.split('<details class="work-more">')[0])
 
     def test_example_search_membership_follows_recorded_learning_routes(self):
         reader = ReadingDocuments.__new__(ReadingDocuments)
@@ -1055,8 +1210,8 @@ class ReaderSiteTests(unittest.TestCase):
             def __init__(self):super().__init__();self.rows=[];self.links=[];self.row=None;self.link=False
             def handle_starttag(self,tag,attrs):
                 attrs=dict(attrs)
-                if tag=='span' and attrs.get('class')=='source-line':self.row=dict(attrs,text='');self.rows.append(self.row)
-                if tag=='a' and attrs.get('class')=='line-number':self.links.append(attrs);self.link=True
+                if tag=='span' and re.fullmatch(r'L\d+',attrs.get('id','')):self.row=dict(attrs,text='');self.rows.append(self.row)
+                if tag=='a' and re.fullmatch(r'#L\d+',attrs.get('href','')):self.links.append(attrs);self.link=True
             def handle_endtag(self,tag):
                 if tag=='a':self.link=False
                 if tag=='span':self.row=None

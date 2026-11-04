@@ -52,9 +52,9 @@ Technical reading release is complete. The accepted 16-module core does not cove
 
 **Reading edition complete** · Lean: **Selected results recorded** · Confidence basis: **Recorded formal evidence**
 
-68 scoped results have recorded formal acceptance. The exact editable source of the latest visual PDF is not recovered.
+68 scoped results have recorded formal acceptance. Visual source correspondence is resolved by the labeled 3 November 2026 reconstruction: all 27 content pages match the selected PDF and all 28 pages have a recorded visual review.
 
-**Next step:** Recover or reconstruct the matching visual-guide source and demonstrate a source-to-PDF comparison in a new edition.
+**Next step:** Maintain the reconstructed visual source and its PDF comparison record alongside the scoped formal evidence. See the visual reconstruction report.
 
 [Return to this work: paper, proofs, Lean, and code](works/paper-iv.md)
 
@@ -234,13 +234,13 @@ Reviewed essay with written arguments and 40 finite exact-check groups. No new L
 
 **Reading edition complete** · Lean: **Selected results recorded** · Confidence basis: **Recorded formal evidence**
 
-Proofread reading volumes plus 299 named theorem declarations: 39 inherited finite-core names and 29, 21, 19, 16, 13, 19, 23, 22, 16, 34, 22, 26 in Blocks01 through 12. Registered canonical F.1-F.3 contracts, G.1 component-rescaling equivalence and guarded G.2 inverse are complete. F.3 gives positive ordered Perron type proportions, exact component ratios and equivalence of ordinary type-limit existence; convergence is not asserted unconditionally. Ancillary Appendix F identities, H.1 operator classification, I-J resolution/evaluator refinement and broad A-E analytic coverage remain open; no whole-book coverage percentage is established.
+Proofread reading volumes plus 465 named theorem declarations: 39 inherited finite-core names and 29, 21, 19, 16, 13, 19, 23, 22, 16, 34, 22, 26, 43, 27, 36, 30, 30 in Blocks01 through 17. Registered F.1-F.3, G.1, guarded G.2, named ancillary F, main H.1 and J mathematical evaluation/normalization/finite arrays are complete. J now also has an exact guarded-majorant algorithm specification with explicit resource failures and abstract validation order; successful returns certify actual bounds and endpoints. Full Python runtime/dictionary refinement remains open. Ordinary type convergence is conditional. Other J/F/H, I and A-E remain; no whole-book percentage is established.
 
-**Next step:** Prove ancillary Appendix F exact component equality/scalar reduction, symmetric sinh closed form and remaining parameter/example wrappers; retain H.1 operator classification, I-J certificates and broader analytic development in the source-bound remaining-work inventory.
+**Next step:** Compose typed certified-evaluation metadata, tail and endpoint fields from the proved arrays and guarded majorant, then establish actual Python source/runtime/dictionary refinement with explicit assumptions; retain other J/F/H, I and A-E.
 
 [Return to this work: paper, proofs, Lean, and code](works/monographs-special-functions.md)
 
-[Latest written review and its scope](SPECIAL_FUNCTIONS_TYPE_PROPORTIONS_BLOCK12.md)
+[Latest written review and its scope](SPECIAL_FUNCTIONS_GUARDED_MAJORANT_BLOCK17.md)
 
 [Source directory](../monographs/special-functions) · [LEAN_STATUS.md](../monographs/special-functions/LEAN_STATUS.md) · [README.md](../monographs/special-functions/README.md) · [lean/README.md](../monographs/special-functions/lean/README.md)
 

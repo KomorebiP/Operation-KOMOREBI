@@ -21,6 +21,8 @@ CODE_EXTENSIONS = ('.py', '.c', '.cpp', '.ipynb', '.rs', '.jl', '.h', '.hpp')
 CORRECTED_CODE = {'research-sric-external-admission': (
     'Corrected runtime 0.3.3 (source and setup)', 'packages/sric-admission-v0.3.3/',
     'docs/SRIC_REPAIR_2026-10-27.md')}
+# Current companion guidance is separate from the receipt-owned source edition.
+CURRENT_GUIDANCE = {'monographs-special-functions': 'current/README.md'}
 
 
 def page_for(group):
@@ -187,8 +189,20 @@ class Browser:
             if title=='Read' and edition:
                 text+=link('Revised reading edition',edition['manuscript'],page)+' · '+link('Monograph PDF',edition['pdf'],page)+'\n\n'
             links = self.resources(c,kinds,page)
+            if title=='Read' and c['id']=='experiments-jspace-causal-lab':
+                links.insert(0,'[Open the interactive J-Space laboratory](https://KomorebiP.github.io/Operation-KOMOREBI/j-lab.html)')
+            if title=='Lean' and c['id'] in CURRENT_GUIDANCE:
+                links.insert(0,link('Current formalization checkpoint and continuation',
+                    c['destination']+'/'+CURRENT_GUIDANCE[c['id']],page))
             if title=='Read' and c['id']=='monographs-special-functions':
                 links.insert(0,'[Read online: chapters, proof appendices, figures and glossary](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/index.html)')
+            if title=='Read' and c['id']=='monographs-large-signal-model':
+                links.insert(0,'[Read online: all 100 sections, 87 propositions and written proofs](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-large-signal-model/index.html)')
+                links.insert(1,'[Start here: mathematics, formal scope and software](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-large-signal-model/start.html)')
+                links.insert(2,'[Visual atlas: 17 plates, diagrams and an exact example](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-large-signal-model/atlas/index.html)')
+            if title=='Read' and c['id']=='monographs-machine-native-reasoning':
+                links.insert(0,'[Read online: reviewed core, nine chapters and written proofs](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-machine-native-reasoning/index.html)')
+                links.insert(1,'[Start here: reading paths, formal scope and editions](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-machine-native-reasoning/start.html)')
             if title=='Read' and c['id']=='monographs-quantum-and-circuits':
                 links.insert(0,'[Read online: complete volume, appendices, proofs and sources](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-quantum-and-circuits/index.html)')
             if title=='Read' and c['id'] in {'paper-v','paper-vi','paper-vii'}:
@@ -206,6 +220,9 @@ class Browser:
             if title=='Read' and c['id']=='paper-viii':
                 links.insert(0,'[Worked visual atlas: all 32 HTML plates](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-viii/atlas/index.html)')
                 links.insert(0,'[Read online: manuscript, six appendices and figures](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-viii/index.html)')
+            if title=='Read' and c['id']=='paper-iv':
+                links.insert(0,link('Reconstructed visual guide: PDF, editable sources and page comparison',
+                    'docs/PAPER_IV_VISUAL_RECONSTRUCTION.md',page))
             if title=='Read' and c['id']=='paper-ix':
                 links.insert(0,'[Visual guide: all 23 HTML sections and 20 figures](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-ix/atlas/index.html)')
             if title=='Read' and c['id']=='paper-x':

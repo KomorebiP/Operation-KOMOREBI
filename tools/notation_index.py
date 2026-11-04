@@ -15,6 +15,7 @@ import re
 import unicodedata
 
 VERSION = 1
+PACKED_DATA_VERSION = 2
 TEXT_SUFFIXES = {'.tex', '.md', '.txt'}
 GREEK = dict(zip(
     'alpha beta gamma delta epsilon varepsilon zeta eta theta vartheta iota kappa lambda mu nu xi pi varpi rho varrho sigma varsigma tau upsilon phi varphi chi psi omega Gamma Delta Theta Lambda Xi Pi Sigma Upsilon Phi Psi Omega'.split(),
@@ -139,9 +140,15 @@ def symbol_tokens(expression):
                     if body: pos = body[1]
                     continue
                 if command in FORMATS | ACCENTS:
+                    argument_start = pos
                     while pos < len(text) and text[pos].isspace(): pos += 1
                     body = atom(text, pos)
                     if body:
+                        # A control word followed by an unbraced letter needs
+                        # its source separator: \mathbb R is not \mathbbR.
+                        # Braced and command arguments keep their existing keys.
+                        if re.match(r'[A-Za-z]', body[0]):
+                            base += text[argument_start:pos]
                         base += body[0]; pos = body[1]
                     else: continue
                 elif command in STRUCTURAL or not command.isalpha():
@@ -308,15 +315,29 @@ def index_document(text, suffix):
 
 
 def prepare_sources(reader):
-    """Add declared manuscript entrypoints before following their includes."""
+    """Add manuscript roots and their explicitly scoped, receipt-bound macros."""
     config=json.loads((reader.site.root/'manifests/notation-sources.json').read_bytes())
     roots={c['id']:c['destination'] for c in reader.site.registry['components']}
     reader.notation_roots={}
+    reader.notation_macro_sources={}
     for work, paths in config['additional_entrypoints'].items():
         for path in paths:
             full=roots[work]+'/'+path
             if not reader.add(full): raise ValueError('Missing notation source: '+full)
             reader.notation_roots[full]=full
+    for work, manuscripts in config.get('additional_macro_sources',{}).items():
+        for manuscript, paths in manuscripts.items():
+            main=roots[work]+'/'+manuscript
+            if reader.notation_roots.get(main)!=main:
+                raise ValueError('Notation macro source needs a declared manuscript root: '+main)
+            sources=[]
+            for path in paths:
+                full=roots[work]+'/'+path
+                record=reader.add(full)
+                if not record or record['work']!=work:
+                    raise ValueError('Missing notation macro source for '+work+': '+full)
+                sources.append(full)
+            reader.notation_macro_sources[main]=sources
 
 
 KINDS = {'notation-table':'Notation table', 'definition-passage':'Definition passage',
@@ -353,8 +374,78 @@ def symbol_id(tex):
     return 'symbol-'+hashlib.sha256(tex.encode()).hexdigest()[:16]
 
 
+def legacy_symbol_anchors(entries):
+    """Preserve unambiguous links made before control-word separators were kept."""
+    canonical={entry['id'] for entry in entries}
+    candidates=collections.defaultdict(set)
+    commands=FORMATS | ACCENTS
+    for entry in entries:
+        leading=re.match(r'^(\\[A-Za-z]+)\s+(?=[A-Za-z])',entry['tex'])
+        if not leading or leading[1][1:] not in commands: continue
+        # Only this leading separator was lost. Nested/braced spelling stays exact.
+        previous=leading[1]+entry['tex'][leading.end():]
+        anchor=symbol_id(previous)
+        if anchor not in canonical: candidates[anchor].add(entry['id'])
+    result=collections.defaultdict(list)
+    for anchor,targets in candidates.items():
+        if len(targets)==1: result[next(iter(targets))].append(anchor)
+    return {target:sorted(anchors) for target,anchors in result.items()}
+
+
 def source_url(source, line):
     return source.get('source_url',source['url'])+'#L'+str(line)
+
+
+def unpack_work_data(data):
+    """Restore logical v1 passages from either supported per-work JSON format."""
+    if not isinstance(data,dict):
+        raise ValueError('Notation work data must be an object')
+    version=data.get('version')
+    if type(version) is not int or version not in {VERSION,PACKED_DATA_VERSION}:
+        raise ValueError('Unsupported notation work data version')
+    passages=data.get('passages')
+    if not isinstance(passages,list) or any(not isinstance(p,dict) for p in passages):
+        raise ValueError('Notation passages must be a list of objects')
+    if version==VERSION:
+        if 'contexts' in data:
+            raise ValueError('The contexts field is reserved for packed notation data')
+        if any(not isinstance(p.get('context'),str) for p in passages):
+            raise ValueError('Logical notation contexts must be strings')
+        return data
+    contexts=data.get('contexts')
+    if not isinstance(contexts,list) or any(not isinstance(c,str) for c in contexts):
+        raise ValueError('Packed notation contexts must be a list of strings')
+    restored=[]
+    for passage in passages:
+        index=passage.get('context')
+        if type(index) is not int or not 0<=index<len(contexts):
+            raise ValueError('Invalid packed notation context reference')
+        restored.append({**passage,'context':contexts[index]})
+    return {**{k:v for k,v in data.items() if k!='contexts'},
+            'version':VERSION,'passages':restored}
+
+
+def pack_work_data(data):
+    """Intern exact context strings only when the UTF-8 JSON becomes smaller.
+
+    Rendering and search continue to use the unchanged logical v1 object.
+    The v2 wire format changes only its version and passage context references,
+    and adds the context table; all other fields retain their values.
+    """
+    unpack_work_data(data)
+    if data['version']!=VERSION:
+        raise ValueError('Packing requires logical notation work data version 1')
+    contexts=[];indices={};passages=[]
+    for passage in data['passages']:
+        context=passage['context']
+        if context not in indices:
+            indices[context]=len(contexts)
+            contexts.append(context)
+        passages.append({**passage,'context':indices[context]})
+    packed={**data,'version':PACKED_DATA_VERSION,'contexts':contexts,'passages':passages}
+    def size(value):
+        return len(json.dumps(value,ensure_ascii=False,separators=(',',':')).encode('utf-8'))
+    return packed if size(packed)<size(data) else data
 
 
 def extract_work(site, work):
@@ -364,10 +455,24 @@ def extract_work(site, work):
     sources=[]; passages_all=[]; symbols=collections.defaultdict(list)
     spellings=collections.defaultdict(set); displays={}
     texts={r['repository_path']:site.read_source(r).decode('utf-8-sig') for r in records}
+    supplemental={}
+    for main, paths in getattr(reader,'notation_macro_sources',{}).items():
+        if main not in texts: continue
+        macros={}
+        for path in paths:
+            record=reader.records[path]
+            if record['work']!=work:
+                raise ValueError('Notation macro source belongs to another work: '+path)
+            macros.update(macro_definitions(site.read_source(record).decode('utf-8-sig')))
+        supplemental[main]=macros
     for number,record in enumerate(records):
         path=record['repository_path'];text=texts[path]
-        main=reader.notation_roots.get(path) or reader.manuscript_roots.get(work)
-        macros=macro_definitions(texts.get(main,''))
+        notation_main=reader.notation_roots.get(path)
+        main=notation_main or reader.manuscript_roots.get(work)
+        # Only the declared root and its includes inherit the supplemental
+        # definitions. Style/layout files never become mathematical passages.
+        macros=dict(supplemental.get(notation_main,{}))
+        macros.update(macro_definitions(texts.get(main,'')))
         macros.update(macro_definitions(text))
         found=index_document(text,PurePosixPath(path).suffix.lower())
         sources.append({k:record[k] for k in ('repository_path','file_url','url','sha256','git_blob_sha1','size')})
@@ -460,7 +565,7 @@ def build(site):
     for component in site.registry['components']:
         work=component['id'];data=extract_work(site,work)
         page='notation/'+work+'.html';data_url='notation/data/'+work+'.json'
-        site.write(data_url,json.dumps(data,ensure_ascii=False,separators=(',',':'))+'\n')
+        site.write(data_url,json.dumps(pack_work_data(data),ensure_ascii=False,separators=(',',':'))+'\n')
         count=len(data['entries']);npass=len(data['passages'])
         row=dict(id=work,title=data['title'],url=page,data_url=data_url,sources=len(data['sources']),
                  passages=npass,symbols=count,pdfs=len(data['pdfs']),
@@ -477,8 +582,11 @@ def build(site):
             body+='<form class="notation-filter" data-notation-work="'+e(work)+'" data-source="data/'+work+'.json"><label for="notation-query">Find a symbol, TeX spelling or word in a source excerpt</label><input id="notation-query" name="q" type="search" placeholder="For example: alpha, \\Phi, packet"><label for="notation-kind">Passage type</label><select id="notation-kind"><option value="">All passages</option>'+''.join('<option value="'+k+'">'+v+'</option>' for k,v in KINDS.items())+'</select><button type="submit">Find notation</button><button type="reset">Clear</button></form><p id="notation-status" role="status" aria-live="polite">All '+str(count)+' entries are available below.</p><div id="notation-entries">'
         introduction=body
         entry_blocks=[]
+        legacy_anchors=legacy_symbol_anchors(data['entries'])
         for entry in data['entries']:
             body=''
+            occurrence_count=len(entry['occurrences'])
+            passage_word='passage' if occurrence_count==1 else 'passages'
             sample=preview_occurrences(data,entry)
             excerpts=[context_text(data['passages'][i]['context'],data['sources'][data['passages'][i]['source']]['macros']) for i in sample]
             search=' '.join([entry['tex'],entry['aliases'],*excerpts])
@@ -500,7 +608,9 @@ def build(site):
                     table=table_preview(primary['context'],source['macros']) if primary['kind']=='notation-table' else None))
             search_entries.append({k:v for k,v in item.items() if k!='excerpt'} |
                                   dict(context=context_ids[key],names=symbol_names(entry['tex'],entry['display'])))
-            body+='<details class="notation-entry" id="'+entry['id']+'" data-kind="'+entry['kind']+'" data-search="'+e(search,quote=True)+'"><summary><code>'+e(entry['tex'])+'</code><span>'+KINDS[entry['kind']]+' · '+str(len(entry['occurrences']))+' passages</span></summary>'
+            body+='<details class="notation-entry" id="'+entry['id']+'" data-kind="'+entry['kind']+'" data-search="'+e(search,quote=True)+'"><summary><code>'
+            body+=''.join('<span id="'+e(anchor,quote=True)+'" class="notation-legacy-anchor" aria-hidden="true"></span>' for anchor in legacy_anchors.get(entry['id'],[]))
+            body+=e(entry['tex'])+'</code><span>'+KINDS[entry['kind']]+' · '+str(occurrence_count)+' '+passage_word+'</span></summary>'
             if entry['display']:
                 body+='<p class="notation-display" data-math="'+e(entry['display'],quote=True)+'"></p>'
             body+='<p class="notation-aliases">Search aliases: '+e(entry['aliases'])+'</p>'
@@ -511,14 +621,15 @@ def build(site):
                 name=context_text(p.get('definition_title',''),source['macros'])
                 name=': '+name if name and len(name)<=160 else ''
                 body+='<li><p><strong>'+KINDS[p['kind']]+e(name)+'</strong> · <a href="'+site.rel(source_url(source,p['line']),page)+'">'+e(PurePosixPath(source['repository_path']).name)+', line '+str(p['line'])+'</a></p><p class="notation-excerpt">'+e(excerpt[:500]+('…' if len(excerpt)>500 else ''))+'</p><details><summary>Exact mathematical passage</summary><pre><code>'+e(p['expression'])+'</code></pre></details></li>'
-            body+='</ul><button type="button" class="notation-occurrences" data-symbol="'+entry['id']+'" hidden>List all '+str(len(entry['occurrences']))+' source passages</button><div class="notation-all"></div></details>'
+            occurrence_label='List the source passage' if occurrence_count==1 else 'List all '+str(occurrence_count)+' source passages'
+            body+='</ul><button type="button" class="notation-occurrences" data-symbol="'+entry['id']+'" hidden>'+occurrence_label+'</button><div class="notation-all"></div></details>'
             entry_blocks.append(body)
         body=introduction+''.join(entry_blocks)
         if count:body+='</div><button id="notation-more" type="button" hidden>Show more entries</button><noscript><p>All entries are listed. Use your browser’s Find command to search. The JSON download contains every detected source occurrence.</p></noscript>'
         else:body+='<aside class="notice"><h2>No delimited mathematics found</h2><p>The selected text files did not yield mathematical notation. This does not mean that the work contains no symbols. Read the documents below, including any PDFs, for notation outside the text scan.</p></aside>'
         body+='<section id="coverage"><h2>Source coverage</h2><p>Automatic extraction covers TeX and Markdown math delimiters and common equation environments in these selected files. It does not interpret diagrams, images, PDF text, program identifiers, or historical archives. Occurrences are navigation aids, not a proof review.</p><p><a href="'+site.rel(data_url,page)+'" download>Download all entries, passages and source checksums (JSON)</a> · <a href="../notation.html#coverage">Collection coverage</a></p><ul>'
         for source in data['sources']:
-            body+='<li><a href="'+site.rel(source.get('source_url',source['url']),page)+'">'+e(source['repository_path'])+'</a> · '+str(source['passages'])+' mathematical passages</li>'
+            body+='<li><a href="'+site.rel(source.get('source_url',source['url']),page)+'">'+e(source['repository_path'])+'</a> · '+str(source['passages'])+' mathematical passage'+('' if source['passages']==1 else 's')+'</li>'
         body+='</ul>'
         if data['pdfs']:
             body+='<details><summary>PDF reading editions ('+str(len(data['pdfs']))+')</summary><p>The text index does not extract PDF glyphs. Check the reading edition for notation in figures, tables, and PDF-only material.</p><ul>'+''.join('<li><a href="'+site.rel(p['url'],page)+'">'+e(PurePosixPath(p['repository_path']).name)+'</a></li>' for p in data['pdfs'])+'</ul></details>'
@@ -557,7 +668,7 @@ def verify(root,documents,pages):
     for work in manifest['works']:
         raw=(root/work['data_url']).read_bytes()
         assert hashlib.sha256(raw).hexdigest()==work['data_sha256']
-        data=json.loads(raw)
+        data=unpack_work_data(json.loads(raw))
         assert data['source_revision']==manifest['source_revision']
         assert data['work']==work['id']
         expected_sources={p for p,r in records.items() if r['work']==work['id'] and PurePosixPath(p).suffix.lower() in TEXT_SUFFIXES}

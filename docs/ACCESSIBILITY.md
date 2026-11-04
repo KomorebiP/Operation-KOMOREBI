@@ -11,7 +11,7 @@ technology.
 <thead><tr><th scope="col">What you want to do</th><th scope="col">Where to begin</th></tr></thead>
 <tbody>
 <tr><th scope="row">Read a paper or book in HTML</th><td><a href="https://KomorebiP.github.io/Operation-KOMOREBI/read/index.html">Reading library</a></td></tr>
-<tr><th scope="row">Read diagrams and worked visual guides</th><td><a href="https://KomorebiP.github.io/Operation-KOMOREBI/read/visual-guides.html">Core visual guides</a></td></tr>
+<tr><th scope="row">Read diagrams and worked visual guides</th><td><a href="https://KomorebiP.github.io/Operation-KOMOREBI/read/visual-guides.html">Visual guides</a></td></tr>
 <tr><th scope="row">Keep two documents open together</th><td><a href="https://KomorebiP.github.io/Operation-KOMOREBI/side-by-side.html">Read side by side</a></td></tr>
 <tr><th scope="row">Find a passage or term</th><td><a href="https://KomorebiP.github.io/Operation-KOMOREBI/search.html">Site search</a> or the <a href="GLOSSARY.md">glossary</a></td></tr>
 <tr><th scope="row">Open or download an original PDF</th><td><a href="https://KomorebiP.github.io/Operation-KOMOREBI/documents.html">Papers and PDFs</a></td></tr>
@@ -212,15 +212,16 @@ The editions retain their manuscripts' assumptions, open questions, and
 evidence qualifications. Reviewed punctuation corrections in the HTML are
 listed in the [correction record](https://KomorebiP.github.io/Operation-KOMOREBI/documents/reader-copyediting.json).
 
-The [core visual-guide directory](https://KomorebiP.github.io/Operation-KOMOREBI/read/visual-guides.html)
-links every paper's visual material and original PDF. Current HTML coverage is:
+The [visual-guide directory](https://KomorebiP.github.io/Operation-KOMOREBI/read/visual-guides.html)
+links all twelve core guides, the Quantum and Circuits visual collection, and
+their original PDFs. Current HTML coverage is:
 
 <table>
-<caption>Core-paper visual-guide coverage</caption>
-<thead><tr><th scope="col">Core papers</th><th scope="col">Visual-guide reading options</th></tr></thead>
+<caption>Visual-guide coverage</caption>
+<thead><tr><th scope="col">Works</th><th scope="col">Visual-guide reading options</th></tr></thead>
 <tbody>
-<tr><th scope="row">I–IX</th><td>Complete HTML visual guides, alongside the original PDFs. The guides retain source prose, equations, and drawing labels, with text descriptions and structured tables where applicable.</td></tr>
-<tr><th scope="row">X–XII</th><td>Original visual-guide PDFs. Separate HTML visual guides remain to be added.</td></tr>
+<tr><th scope="row">I–XII</th><td>Complete HTML visual guides, alongside the original PDFs. The guides retain source prose, equations, and drawing labels, with text descriptions and structured tables where applicable.</td></tr>
+<tr><th scope="row">Quantum and Circuits</th><td><a href="https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-quantum-and-circuits/visual-guides.html">Two complete visual sequences</a>: 25 quantum-arithmetic pages and 25 circuit-obstruction pages, with original drawings, selectable equations, and links to the volume.</td></tr>
 </tbody>
 </table>
 
@@ -247,6 +248,29 @@ Reading-aid tables use row and column headers where supplied, so assistive
 table navigation can associate values with their labels. These aids and the
 glossary supplement the original definitions. They do not establish that
 every mathematical expression or diagram has an adequate spoken description.
+
+## Recovery Laboratory
+
+The [Recovery Laboratory](https://KomorebiP.github.io/Operation-KOMOREBI/recovery-lab.html)
+has a collapsible four-step guide, prediction explanations, a notation guide,
+and numerical examples for the current matrices. “Read the rows as equations”
+connects the editable coefficients to weighted sums.
+
+Use native buttons and fields with Tab, Enter, and Space. Sliders respond to
+arrow keys, Home, and End; the invisible-direction parameter also has decrease
+and increase buttons. Selecting a question retains focus on its button.
+“Next guided step” focuses the new explanation. Result announcements occur
+on committed edits and movement; graphs and full certificates remain
+available as ordinary reading content.
+
+The two-coordinate fiber picture and answer graph have visible descriptions
+and exact tables. Series use line styles and mark shapes alongside color.
+There is no automatic animation. Formulas wrap, wide tables scroll locally,
+and overflowing table regions can receive keyboard focus. Invalid matrix
+entries are marked and described while the last valid calculation remains
+visible. The [written recovery example](demonstrations/RECOVERY.md) also works
+without JavaScript. Keyboard and narrow-layout checks cover these controls;
+testing with a screen reader remains open.
 
 ## PDFs and downloads
 

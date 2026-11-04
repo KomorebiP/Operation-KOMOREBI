@@ -34,6 +34,7 @@ def build(site):
 <p>Rebuild an operation. Refine a signal. Find what a summary loses.<br class="lab-wide-break"> Go deeper with a four-level Haar signal experiment.</p>
 <span class="lab-local">Exact calculations · Instant results · No installation</span></header>
 <p class="lab-upgrade"><a href="signal-lab.html">Open Signal Laboratory <span aria-hidden="true">→</span></a> · Compare 16–256 samples, three representations, noise, and coefficient budgets.</p>
+<p class="lab-upgrade"><a href="j-lab.html">Open J-Space Laboratory <span aria-hidden="true">→</span></a> · Edit saved neural agents, trace their messages, and test what persists.</p>
 <nav class="lab-tabs" aria-label="Choose an experiment">
 <a id="tab-packets" href="#packets"><span>01</span> Reconstruct</a>
 <a id="tab-refinement" href="#refinement"><span>02</span> Refine</a>
@@ -101,6 +102,7 @@ SIGNAL_SOURCES</section>
 <h2 id="recovery-title">One summary. Two possible inputs.</h2>
 <p>The summary keeps only x₁ + x₂. Move along the line to see which questions still have a unique answer.</p></div>
 <button type="button" data-reset="recovery" disabled>Reset experiment</button></div>
+<p class="lab-upgrade"><a href="recovery-lab.html">Go deeper in Recovery Laboratory <span aria-hidden="true">→</span></a> · Edit multiple measurements and questions, inspect exact certificates, and repair missing information.</p>
 <div class="lab-workspace"><fieldset class="lab-controls" id="recovery-controls" disabled>
 <legend>Choose the question</legend><label class="lab-label" for="recovery-question">What should the summary recover?</label>
 <select id="recovery-question"><option value="first">The first coordinate · x₁</option><option value="sum">Twice the sum · 2x₁ + 2x₂</option><option value="difference">The difference · x₁ − x₂</option><option value="custom" disabled>Custom linear question</option></select>

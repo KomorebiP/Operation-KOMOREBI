@@ -9,7 +9,7 @@ from unittest.mock import patch
 from build_reader_site import Site
 from check_reader_site import Page
 from reader_documents import page_path
-from reading_paths import guide_model, guide_url, publish, render_guide, verify, INDEX, REPORT
+from reading_paths import guide_model, guide_url, guide_enabled, eligible_books, EXISTING_GUIDES, publish, render_guide, verify, INDEX, REPORT
 
 ROOT=Path(__file__).resolve().parents[1]
 
@@ -43,28 +43,33 @@ def fixture(output):
 
 
 class ReadingPathsTests(unittest.TestCase):
-    def test_all_selected_works_get_three_nonempty_paths_with_their_exact_scope(self):
+    def test_only_complete_html_manuscripts_with_html_visual_guides_get_paths(self):
         reader=fixture(Path('unused'))
-        models=[guide_model(reader,c) for c in reader.site.registry['components']]
-        self.assertEqual(len(models),90)
-        self.assertEqual(len({m['url'] for m in models}),90)
+        models=[guide_model(reader,c) for c in reader.site.registry['components'] if c['id'] in eligible_books()]
+        self.assertEqual(len(models),15)
+        self.assertEqual(set(eligible_books()),set(reader.paper_introductions)|{
+            'monographs-quantum-and-circuits','monographs-large-signal-model','monographs-cos-method'})
+        self.assertEqual(len({m['url'] for m in models}),15)
         for model in models:
             self.assertEqual(len(model['paths']),3)
             self.assertEqual(model['scope'],reader.site.assessments[model['work']]['scope'])
             self.assertTrue(all(p['steps'] for p in model['paths']))
             self.assertTrue(all(len({s['url'] for s in p['steps']})==len(p['steps']) for p in model['paths']))
 
-    def test_pdf_only_and_experimental_works_do_not_gain_a_formal_promise(self):
+    def test_pdf_only_experimental_and_manuscript_only_works_stay_out(self):
         reader=fixture(Path('unused'))
-        component=next(c for c in reader.site.registry['components'] if c['id']=='gaussian-elimination-guide')
-        model=guide_model(reader,component)
-        self.assertEqual([p['title'] for p in model['paths']],['Worked introduction','Read the work','Evidence and limits'])
-        self.assertIn('unassessed',model['scope'])
-        self.assertFalse(any('Lean' in s['title'] for p in model['paths'] for s in p['steps']))
         for component in reader.site.registry['components']:
-            if reader.site.assessments[component['id']]['lean']=='none':
-                model=guide_model(reader,component)
-                self.assertEqual(model['paths'][2]['title'],'Evidence and limits')
+            if component['id'] not in eligible_books():
+                self.assertEqual(guide_enabled(reader.site,component['id']),component['id'] in EXISTING_GUIDES)
+                with self.assertRaisesRegex(ValueError,'complete HTML manuscript and HTML visual guide'):
+                    guide_model(reader,component)
+        import readable_chapters as reading
+        configs={
+            'pdf-only':dict(chapters=[],atlas_index='read/visual.html'),
+            'manuscript-only':dict(chapters=[dict(url='read/one.html')]),
+            'partial':dict(chapters=[dict(url='read/one.html')],partial=True,atlas_index='read/visual.html'),
+            'complete':dict(chapters=[dict(url='read/one.html')],visual_guide_index='read/visual.html')}
+        with patch.object(reading,'BOOKS',configs):self.assertEqual(set(eligible_books()),{'complete'})
 
     def test_core_questions_setup_statements_and_proofs_remain_work_specific(self):
         reader=fixture(Path('unused'))
@@ -87,14 +92,19 @@ class ReadingPathsTests(unittest.TestCase):
         del reader.records[path]
         with self.assertRaisesRegex(ValueError,'Missing published'):guide_model(reader,component)
 
-    def test_publish_preserves_quantum_and_checker_rejects_missing_guide_or_broken_route(self):
+    def test_publish_preserves_curated_guides_and_checks_selected_routes(self):
         with tempfile.TemporaryDirectory() as folder:
             output=Path(folder);reader=fixture(output)
             from quantum_start import publish as publish_quantum
             publish_quantum(reader,None)
             quantum=(output/guide_url('monographs-quantum-and-circuits')).read_bytes()
+            lsm=guide_url('monographs-large-signal-model')
+            reader.site.page(lsm,'Retained LSM guide','<h1>Retained guide</h1><h2 id="introduction">First reading</h2><h2 id="study">Study</h2><h2 id="evidence">Evidence</h2>')
+            lsm_bytes=(output/lsm).read_bytes()
             rows=publish(reader)
             self.assertEqual((output/guide_url('monographs-quantum-and-circuits')).read_bytes(),quantum)
+            self.assertEqual((output/lsm).read_bytes(),lsm_bytes)
+            self.assertEqual({r['work'] for r in rows},set(eligible_books()))
             pages={p.relative_to(output).as_posix():Page(p.read_text(encoding='utf-8')) for p in output.rglob('*.html')}
             # Stand-in destination pages retain their actual source-linked anchors.
             for row in rows:
@@ -106,11 +116,11 @@ class ReadingPathsTests(unittest.TestCase):
                 pages.setdefault(overview,Page('<h1>Work overview</h1>'))
                 pages[overview].links.append(reader.site.rel(row['url'],overview))
             documents={'source_revision':reader.site.revision}
-            self.assertEqual(verify(output,documents,pages),{'works':90,'paths':270})
-            self.assertEqual(len([s for s in reader.site.search if s['url']!=INDEX]),90)
+            self.assertEqual(verify(output,documents,pages),{'works':15,'paths':45})
+            self.assertEqual(len([s for s in reader.site.search if s['url']!=INDEX]),14)
             record=json.loads((output/REPORT).read_bytes());record['guides'].pop()
             (output/REPORT).write_text(json.dumps(record),encoding='utf-8')
-            with self.assertRaisesRegex(AssertionError,'every selected'):verify(output,documents,pages)
+            with self.assertRaisesRegex(AssertionError,'every eligible'):verify(output,documents,pages)
             (output/REPORT).write_text(json.dumps(dict(source_revision=reader.site.revision,guides=rows)),encoding='utf-8')
             pages[rows[0]['url']].links.remove(reader.site.rel(rows[0]['targets'][0],rows[0]['url']))
             with self.assertRaises(AssertionError):verify(output,documents,pages)
@@ -124,7 +134,7 @@ class ReadingPathsTests(unittest.TestCase):
             self.assertIn('&lt;script&gt;unsafe&lt;/script&gt;',text)
             self.assertNotIn('<script>unsafe</script>',text)
 
-    def test_every_work_toolbar_prominently_links_its_own_guide(self):
+    def test_only_eligible_work_toolbars_gain_a_guide(self):
         from reader_documents import ReadingDocuments
         reader=fixture(Path('unused'));reader.primary_pdf=lambda work:None
         reader.manuscript_roots={}
@@ -133,6 +143,9 @@ class ReadingPathsTests(unittest.TestCase):
             work=component['id'];page='collection/works/'+work+'.html'
             body=ReadingDocuments.work_intro(reader,work,page)
             primary=body.split('<details class="work-more">')[0]
+            if work not in eligible_books():
+                self.assertNotIn(reader.site.rel(guide_url(work),page),Page(body).links)
+                continue
             self.assertIn('<a class="button" href="'+reader.site.rel(guide_url(work),page)+'">Start here</a>',primary)
             self.assertEqual(Page(body).links.count(reader.site.rel(guide_url(work),page)),1)
 
@@ -143,6 +156,7 @@ class ReadingPathsTests(unittest.TestCase):
             work='komorebi-methodology'
             config=dict(work=work,label='Standalone',title='A retained book',
                         index='read/'+work+'/index.html',reading_guide=guide_url(work),
+                        atlas_index='read/'+work+'/atlas/index.html',
                         chapters=[dict(url='read/'+work+'/one.html',title='Opening chapter')])
             reader.site.guided_reading=False
             with patch.object(reading,'BOOKS',{work:config}):reading.render_reading_index(reader)

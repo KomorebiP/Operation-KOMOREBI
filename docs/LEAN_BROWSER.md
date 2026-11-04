@@ -34,17 +34,30 @@ reader's device. A bounded allowlist is extracted from the checksum-verified
 Mathlib source archive at the compiler-matched revision. Each source retains its
 copyright header, exact bytes, upstream link, revision, size and SHA-256. The
 catalog lists these separately from the receipt-bound paper sources and orders
-their dependencies first. The browser checks their bytes and compiles each
+their dependencies first. Library sources and retained sources share a single
+import order: each library is compiled before the first file that imports it,
+after earlier independent project dependencies. This avoids an observed runtime
+trap when the positivity sources were loaded before the unrelated quantum
+arithmetic and Fourier modules. The order is recomputed from the original import
+graph during site verification; duplicate, missing and invalid steps are rejected.
+The browser checks their bytes and compiles each
 library module with the same syntax check and module-export wrapper used for
 local dependencies. A failed library check stops the workspace. Library source
 edits invalidate the worker's dependency cache just like paper dependency edits.
 The file picker labels these as library sources; they are not generated stubs or
 additions to the Mathlib.Tactic compatibility umbrella.
-The initial source allowlist is `Mathlib.Tactic.Ext` and
-`Mathlib.Util.AssertNoSorry`. Other candidates remain unavailable until their
-actual browser compilation succeeds. The current syntax probe can reject
-same-file namespace or notation changes, and the runtime still has private
-declaration and interpreter limits.
+The source allowlist is `Mathlib.Tactic.Ext`, `Mathlib.Util.AssertNoSorry`,
+`Mathlib.Tactic.Positivity.Finset` and `Mathlib.Tactic.Positivity`. The latter two
+provide the original finset positivity extensions and their small import
+umbrella. Routes that need Finset automatically enable experimental
+source-defined syntax checking for the whole workspace. The checkbox is checked
+and locked for that route, and the route notes explain why. Selecting a different
+workspace restores the reader's chosen mode. This requirement is recorded with
+the pinned library source; unknown checking modes are rejected. These routes
+start a fresh compiler on every run and reject background tasks. Other candidates
+remain unavailable until their actual browser compilation succeeds. The standard
+syntax probe can reject same-file namespace or notation changes, and the runtime
+still has private declaration and interpreter limits.
 
 ## Environment and static hosting
 
@@ -131,7 +144,7 @@ Long guard inputs are assembled from bounded Unicode string chunks, with bounded
 join nesting, before parsing the complete source. Export wrappers also supply the
 original dependency to this syntax check rather than checking only the wrapper.
 
-Workspace dependencies are checked first. A generated wrapper imports Lean,
+Workspace dependencies are checked before their importers. A generated wrapper imports Lean,
 names the module, opens a public section for exported-only WASM artifacts, and
 writes its checked environment to the compiler's temporary `/lib/lean` tree.
 The public section is marked `@[expose]` to preserve transparent definition
@@ -145,6 +158,13 @@ Cached dependency warnings remain warnings, and the result explicitly labels
 reused checks. Stop and runtime failures discard this cache. Single-file
 workspaces retain their warm compiler. Warnings remain visible;
 `sorry` is not a clean result. A clean check is not an axiom audit.
+Runtime failures identify the file being checked and retain earlier completed
+results, without giving the interrupted workspace a successful result.
+
+Drafts saved across the browser-isolation reload include module, path and source
+role identities. They are matched by identity if the checking order changes.
+An older or mismatched draft is kept in session storage and offered as a download,
+without applying its text to different files or automatically running it.
 
 Recovery also needs the newer name `dite_eq_left`, which this runtime lacks.
 Its workspace explicitly includes a visible, downloadable compatibility lemma
@@ -189,8 +209,23 @@ parser and elaboration messages are copied back with their source coordinates.
 The browser preloads available libraries and invokes the transport exactly
 once per source, with no retry after execution. A fresh random nonce identifies
 distinct started and completed messages. A result needs the exact completed
-message, successful runtime completion and no errors. Early terminal commands,
-pending command tasks and asynchronous elaboration are rejected. Both checking
+message, successful runtime completion and no errors. The frontend consumes
+already completed command snapshots, including all descendants and both reported
+and unreported diagnostics. It checks readiness before reading any task, rejects
+cancelled or fatal snapshots, and bounds both visits and the pending frontier to
+10,000 nodes per command. The checked kernel environment must also be ready with
+trust level zero; snapshot diagnostics remain necessary because kernel failures
+can retain the previous environment. Tasks are cleared only after these checks.
+Small nonce-named transport helpers keep the generated driver within the browser's
+elaboration stack limit and stay outside the source's exact import environment.
+
+Unfinished tasks, early terminal commands and active asynchronous scopes are
+rejected. Literal `set_option Elab.async true` forms in commands, terms and tactics
+are rejected before elaboration, including scoped forms that restore their options
+before the next command. Comments, strings and quoted syntax do not trigger this
+syntax check. Macro-generated options and arbitrary metaprogram option changes are
+not comprehensively observed by that check; task and diagnostic validation still
+applies to every executed command. Both checking
 paths require actual end of input, so `#exit` cannot leave an unchecked tail.
 Internal panic output fails checking even if captured as information or followed
 by a completion message.
@@ -200,11 +235,99 @@ Every experimental Run starts a fresh worker and disposes it on completion,
 failure or Stop. Imported environments use leaked compacted regions in this
 fork, so reusing these environments across repeated runs exhausted memory in
 testing. Large dependency chains can still exhaust memory within one run.
+The page owns the wrapper, Wasm and glue Blob URLs and revokes them when the
+runtime closes. Idle disposal asks the worker to terminate its pthread pool,
+with a 100 ms hard-termination fallback. Stop during startup or an active request
+terminates immediately; fatal and incomplete checks also force termination.
+`compiler.dispose()` returns `compiler.closed`, which resolves after termination
+was requested and the owned URLs were revoked. This does not certify immediate
+physical reclamation of every shared-memory mapping. The page waits for the prior
+compiler's closure before creating its replacement, including after Stop.
+Exhausted memory is reported separately from unavailable cross-origin isolation,
+without an automatic retry.
 This mode retains the fork's exported-only import and synchronous command
 semantics; it does not establish equivalence with every native project or
 whole-file linter. The private-theorem visibility issue is separate.
 
+Manual browser controls are saved in
+[`tools/fixtures/lean_frontend_tasks.json`](../tools/fixtures/lean_frontend_tasks.json).
+Copy one case's `source` into a single-file prepared workspace with experimental
+checking enabled and run it with a fresh compiler. Check both `expected_outcome`
+and the literal `expected_marker` in Lean's response. The corpus includes hidden
+reported errors, descendant warnings, unfinished/cancelled/fatal tasks, bounds,
+scoped options, import isolation and a filesystem counter that detects replay.
+These are browser fixtures, not a claim that the JavaScript unit suite executes Lean.
+
 ## Extending coverage
+
+### Selected checks and bounded loading
+
+The page offers **Check selected file** alongside the complete workspace check.
+It plans the selected file's transitive local imports from the current edited
+sources, checks each ancestor once in deterministic dependency order, and checks
+the selected file with its original target role. Unrelated files are omitted.
+The response identifies the target and how many workspace files were included;
+a successful selected check does not claim that the whole workspace passed.
+The whole-workspace action remains available.
+
+Selected planning accepts ordinary line-based import headers, including supported
+module markers and import visibility flags. Missing project imports, cycles,
+duplicate modules and ambiguous or unsupported headers fail before compilation.
+Quoted or multiline import forms and some custom command layouts may need an
+explicit whole-workspace check. Generated compatibility dependencies are included.
+The intended check scope survives the isolation setup reload. A target-role or
+dependency-source change retires the old compiler; standard checks can reuse
+unchanged checked dependency results and their warnings in the same worker.
+Recovery's inline version-compatibility lemma accompanies its final file only.
+Experimental checking still starts fresh and retains all existing completion guards.
+
+Library loading overlaps up to two encoded pack downloads. Each prefetchable pack
+is at most 8 MiB, so the worker retains at most 16 MiB of those encoded bodies,
+including completed lookahead. Unknown or larger sizes use an exclusive serial
+fallback. SHA verification, decompression and filesystem installation stay serial,
+in manifest order. A download or installation failure aborts and drains pending
+prefetch work. Stop still terminates the active compiler immediately. This budget
+does not include decoded libraries, the Wasm heap, or browser/network internals;
+service-worker upstream requests may finish caching after a client is stopped.
+
+### Route to broader browser support
+
+1. **Smaller verified library assets.** Publish immutable, compiler-matched module
+   packs with content hashes and source provenance, then select only the required
+   closure. A local pinned-input experiment for Paper III's 298 module triplets
+   (894 files) reduced its Mathlib-layer transport from about 110.9 MiB of shared
+   packs to 24.5 MiB of module packs, with identical selected artifact bytes.
+   That is a packaging measurement, not a published format or browser speed result.
+   Request overhead, global deduplication, hosting limits and cache migration still
+   need validation. HTTP byte ranges cannot directly select members of these gzip
+   containers because manifest offsets describe the uncompressed bytes.
+2. **Checked module artifacts before parallel compilers.** First qualify a tiny
+   complete export/import round trip in a fresh compiler, then exercise corrupted
+   parts, stale generations, edits, warnings, initializers and Stop. The current
+   heavy checkpoint experiment exported artifacts but did not establish successful
+   fresh-worker import. Cache authorization must come from successful checks,
+   not just matching byte hashes. Bind source, module role, ordered imports,
+   transitive dependency receipts, compiler/library versions and guard policy;
+   invalidate edited nodes and every dependent module.
+3. **Memory-budgeted independent branches.** Keep one heavy compiler active by
+   default. Only independent modules in the dependency graph are candidates for
+   separate workers, after artifact interchange and aggregate memory limits are
+   validated. The Quantum/Finite/Semantic chain is inherently dependent. Fresh
+   imports can repeat initialization effects and reset mutable state; arbitrary
+   command splitting does not preserve parser, namespace and environment state.
+4. **Compiler compatibility and larger individual modules.** Add missing
+   compiler-matched artifacts and qualify asynchronous elaboration separately,
+   preserving false-proof, kernel-error, cancellation and completion controls.
+   Scheduling cannot make a single module fit if its own environment exceeds the
+   browser runtime's memory capacity. A compatible larger-memory compiler build
+   is a separate investigation.
+
+Pinned source archives and upstream runtime inputs are also candidates for CI
+caching, with independently reviewed receipt checks on every cache hit. A cache's
+own checksum manifest is not sufficient provenance. This can shorten publishing
+without weakening source or runtime validation.
+
+### Adding a published workspace
 
 Add only receipt-owned sources from existing reading editions to `WORKSPACES`
 in `lean_workspaces.py`. List local modules in dependency order. Runtime

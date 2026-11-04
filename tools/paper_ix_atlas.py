@@ -13,7 +13,7 @@ from readable_chapters import (HEADINGS,PANELS,KIND_NAMES,clean_tex,group,origin
 from worked_visual_atlas import AtlasChapter
 from reader_atlas import digest
 from reader_documents import png_dimensions
-from reading_navigation import navigation,outline,resources
+from reading_navigation import atlas_config,navigation,outline,resources,visual_title,visual_backlink,visual_position, visual_search_terms, visual_search_preview
 from paper_ix_atlas_descriptions import DESCRIPTIONS,data_tables
 
 BASE='papers/paper-ix/current/'
@@ -107,9 +107,7 @@ def figure_math_labels(source,name):
 
 
 def reading_config(selected):
-    return dict(work='paper-ix',label='Paper IX visual guide',overview_label='Paper IX',index=INDEX,
-        chapters=[dict(url=r['url'],title=str(r['number'])+' · '+r['title']) for r in selected],
-        menu_title='Visual sections',index_title='All 23 visual sections',
+    return dict(atlas_config('paper-ix','Paper IX',INDEX,selected),
         contents_groups=[dict(start=section_url(1),title='Congruences and dyadic geometry'),dict(start=section_url(16),title='Worked arithmetic and lifting')])
 
 
@@ -166,7 +164,7 @@ def prepare(reader):
     for row in selected:
         for target in targets[row['number']]:
             page,anchor=target['url'].split('#')
-            by_url[page].related_readings.setdefault(anchor,[]).append(('Visual section '+str(row['number'])+': '+row['title'],row['url']))
+            by_url[page].related_readings.setdefault(anchor,[]).append((visual_backlink(row),row['url']))
     reader.paper_ix_atlas=dict(sections=selected,figures=figures,targets=targets,macros=book['macros'],
         inputs={'generated/worked_newton_values.tex':dict(source=INCLUSION,text=read(INCLUSION).decode('utf-8-sig'))})
 
@@ -233,8 +231,8 @@ def render(reader):
     pdf=reader.records[SPEC['pdf']];reports=[]
     for row in selected:
         number,page=row['number'],row['url'];chapter=chapter_for(row,atlas['macros'],atlas['inputs'])
-        title='Paper IX visual guide / '+str(number)+': '+row['title']
-        body='<p class="eyebrow">Paper IX visual guide · Section '+str(number)+' of 23</p><h1>'+html.escape(row['title'])+'</h1>'
+        title=visual_title('Paper IX',row)
+        body='<p class="eyebrow">'+visual_position('Paper IX',number,23)+'</p><h1>'+html.escape(row['title'])+'</h1>'
         body+=reader.work_routes('paper-ix',page)+navigation(config,page)
         body+='<nav class="document-routes" aria-label="Related manuscript passages">'+''.join('<a href="'+site.rel(t['url'],page)+'">'+html.escape(t['label'])+'</a>' for t in atlas['targets'][number])+'</nav>'
         tools='<p><a href="'+reader.viewer_url(pdf,page,'page='+str(number+2))+'">Original section in the visual-guide PDF</a> · <a href="'+reader.resolve(row['source'],page,'L'+str(row['start_line']))+'">Original visual source</a></p>'
@@ -249,13 +247,13 @@ def render(reader):
         expected=expected_math(row,atlas['figures'],atlas['inputs'])
         if chapter.math!=expected:raise ValueError('Paper IX visual mathematical sequence changed in section '+str(number))
         site.page(page,title,body)
-        site.search.append(dict(title=title,group='Collection',kind='Papers and source',work_ids=['paper-ix'],url=page,text=row['title']+' '+row['body']))
+        site.search.append(dict(title=title,group='Collection',kind='Papers and source',visual_guide=True,work_ids=['paper-ix'],url=page,text=visual_search_terms(row)+' '+row['title']+' '+row['body'],**visual_search_preview(chapter,atlas['figures'])))
         reports.append(dict(number=number,url=page,source=row['source'],start_line=row['start_line'],end_line=row['end_line'],math_expressions=len(expected),math_sequence_sha256=digest(json.dumps(expected,ensure_ascii=False).encode()),nodes=[{k:n[k] for k in ('kind','id','line','end_line')} for n in chapter.nodes]))
     record=dict(collection_revision=site.revision,source_inputs=SPEC['source_inputs'],source_pdf=SPEC['pdf'],source_pdf_sha256=SPEC['pdf_sha256'],
         index=INDEX,total_sections=23,html_sections=reports,figures=atlas['figures'],macros=atlas['macros'],manuscript_references=atlas['targets'],
         inherited_readme_inventory=dict(sections=15,figures=12,current=False),new_proof_review=False,new_lean_execution=False,new_mathematical_example_execution=False,new_tex_build=False)
     site.write(REPORT,json.dumps(record,ensure_ascii=False,indent=2)+'\n')
-    body='<p class="eyebrow">Paper IX · Euler Congruences</p><h1>Explore the 23 visual sections</h1><p>Read the complete guide to congruences and sharp dyadic geometry, followed by eight worked arithmetic and lifting examples. All 20 original figures have descriptions and selectable labels; recorded data are available in accessible tables.</p>'+reader.work_routes('paper-ix',INDEX)
+    body='<p class="eyebrow">Paper IX · Euler Congruences</p><h1>Explore the 23 visuals</h1><p>Read the complete guide to congruences and sharp dyadic geometry, followed by eight worked arithmetic and lifting examples. All 20 original figures have descriptions and selectable labels; recorded data are available in accessible tables.</p>'+reader.work_routes('paper-ix',INDEX)
     body+='<p>This guide explains the indexing, valuation gains, exact periods, and remaining boundaries through exact arithmetic and theorem-derived figures. The main paper supplies the proofs; the Lean companion supplies the formal source and evidence map.</p>'
     for first,last,heading in [(1,15,'Congruences and dyadic geometry'),(16,23,'Worked arithmetic and lifting')]:
         body+='<section><h2>'+heading+'</h2><ol start="'+str(first)+'">'
@@ -264,7 +262,7 @@ def render(reader):
         body+='</ol></section>'
     body+='<p><a href="'+reader.resolve(SOURCE,INDEX)+'">Original visual entrypoint</a> · <a href="'+site.rel(REPORT,INDEX)+'">Conversion record</a></p>'
     site.page(INDEX,'Paper IX visual guide',body)
-    site.search.append(dict(title='Paper IX / Visual guide: 23 sections',group='Collection',kind='Papers and source',work_ids=['paper-ix'],url=INDEX,text=' '.join(r['title'] for r in selected)))
+    site.search.append(dict(title='Paper IX / Visual guide: 23 sections',group='Collection',kind='Papers and source',visual_guide=True,work_ids=['paper-ix'],url=INDEX,text=' '.join(r['title'] for r in selected)))
 
 
 def verify(root,documents,pages):
@@ -322,7 +320,9 @@ def verify(root,documents,pages):
         for control in controls:
             assert control['attrs']['data-reading-position']==str(position+1)
             assert control['attrs']['data-reading-total']=='23'
-            assert [a['href'] for a in control['links'] if 'data-reading-entry' in a]==[rel(r['url'],row['url']) for r in selected]
+            footer=control['attrs']['data-reading-placement']=='bottom'
+            assert [a['href'] for a in control['links'] if 'data-reading-entry' in a]==([] if footer else [rel(r['url'],row['url']) for r in selected])
+            if footer:assert [a['href'] for a in control['links'] if 'reading-menu-link' in a.get('class','').split()]==[rel(INDEX,row['url'])]
             for direction,target in [('previous',previous),('next',following)]:
                 assert [a['href'] for a in control['links'] if 'reading-'+direction in a.get('class','').split()]==[rel(target['url'],row['url'])]
         count+=len(expected)

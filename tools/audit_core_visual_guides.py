@@ -28,6 +28,8 @@ SOURCES = {
 
 def audit(root,git='git'):
     from readable_chapters import BOOKS
+    from visual_guide_provenance import check as check_provenance
+    provenance=check_provenance(root)
     revision=subprocess.check_output([git,'rev-parse','HEAD'],cwd=root,text=True).strip()
     components=json.loads((root/'manifests/browse-resources.json').read_bytes())['components']
     rows=[]
@@ -92,16 +94,22 @@ def audit(root,git='git'):
                 source_sha256=retained[readme]['sha256'],sections=15,figures=12,current=False,
                 handling='Preserved unchanged; actual entrypoint and retained 25-page PDF have 23 sections and 20 figures')
         if work=='paper-viii':
-            crosswalk='editable/visual_guide/VISUAL_TO_TRADITIONAL_CROSSWALK.json'
-            crosswalk_path=component['destination']+'/'+crosswalk
-            crosswalk_raw=subprocess.check_output([git,'show',revision+':'+crosswalk_path],cwd=root)
+            current=provenance['works'][work]
+            crosswalk_path=current['source']['path']
+            crosswalk_raw=(root/crosswalk_path).read_bytes()
             crosswalk_sha=hashlib.sha256(crosswalk_raw).hexdigest()
-            if crosswalk_sha!=retained[crosswalk]['sha256']:raise ValueError('Changed visual crosswalk')
+            if crosswalk_sha!=current['source']['sha256']:raise ValueError('Changed visual crosswalk')
             declared=json.loads(crosswalk_raw)['visual_pdf_sha256']
             rows[-1]['reference_crosswalk']=dict(source=crosswalk_path,source_sha256=crosswalk_sha,
                 declared_visual_pdf_sha256=declared,retained_visual_pdf_sha256=retained[resource['path']]['sha256'],
                 pdf_checksum_current=declared==retained[resource['path']]['sha256'],
-                handling='Original crosswalk preserved; PDF plate titles, locators and page labels independently checked, and stable manuscript targets rederived by the HTML converter')
+                supersedes=current['original_crosswalk'],
+                handling='Resolved by a new checksum-bound crosswalk revision; original crosswalk preserved. All 32 PDF pages and stable manuscript targets rechecked.')
+        if work=='paper-iv':
+            current=provenance['works'][work]
+            rows[-1]['current_visual_edition']=dict(status=current['status'],source=current['source'],
+                pdf=current['pdf'],build_record=current['build_record'],original_pdf=current['original_pdf'],
+                handling='Resolved by the labeled reconstructed edition: all 27 content pages match; cover identifies the reconstruction; all 28 pages visually reviewed.')
     return dict(source_revision=revision,reading_configuration='working tree',
         scope='Visual reading coverage only; no mathematical audit, example execution or Lean replay.',
         core_papers=len(rows),complete_html_atlases=sum(bool(r['html_atlas']) for r in rows),guides=rows)

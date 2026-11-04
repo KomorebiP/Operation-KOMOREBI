@@ -2,13 +2,13 @@
 DESCRIPTIONS={
  'paper-ii':{
   'three_resolutions':('Address, weight and separation','Three panels distinguish regrouping unchanged coordinates, adding the weights of operator letters, and clearing a rational projector denominator. The panel dividers do not represent maps between these operations.'),
-  'coefficient_tower':('Sixteen addresses in three packet arrangements','Each row contains all sixteen addresses once. The heavier boundaries group the residues into packets; the coefficient values are unchanged.'),
+  'coefficient_tower':('Sixteen addresses in three packet arrangements','Each arrangement contains all sixteen addresses once. The heavier boundaries in the drawing group the residues into packets; the coefficient values are unchanged. The label tables list the residue groups in the displayed order.'),
   'regrouping_not_averaging':('Complete packet vectors and scalar summaries','The first two arrangements retain all four coordinate directions. The final matrix replaces the four coordinates with two scalar sums.'),
   'operator_naturality':('Three exact eight-by-eight operator matrices','Rows are outputs and columns are inputs. Heavy rules mark packet blocks. The middle permutation changes the coordinate order, and the last matrix is the same operator in the new coordinates.'),
   'division_free_masks':('Binary coefficients selected by even and odd masks','The first row is the input over the field with two elements. The next two rows retain disjoint address classes, and the last row reconstructs their sum without division.'),
   'finite_fourier_table':('A finite orthogonality table modulo seven','The entries are exact residues. The successful inverse normalization is compared with a failed certificate over a different ring; the lower failure is part of the example.'),
   'crt_address_grid':('One address indexed by two residue classes','The rectangular grid lists the twelve residue addresses once. Row and column selectors identify a common cell; shading selects its congruence class.'),
-  'weighted_word_cutoff':('Signed inverse terms below a precision cutoff','Rows give the retained operator words, their total weights and signed matrix contributions. The first discarded nonzero word reaches the cutoff. A short word can still vanish algebraically.'),
+  'weighted_word_cutoff':('Signed inverse terms below a precision cutoff','Rows give the displayed operator words, their total weights and signed matrix contributions. The first discarded nonzero word reaches the cutoff. A short word can still vanish algebraically.'),
   'modular_inverse':('An inverse checked on both sides modulo thirty-two','The matrices display the operator, its proposed inverse and both product orders. Entries are canonical residues; the identity products are exact modular statements.'),
   'inverse_residual_depth':('Exact residual valuations by truncation length','The plotted minimum entry valuations are compared with the horizontal requested precision. The points describe exact dyadic arithmetic rather than measured floating-point convergence.'),
   'weighted_multigraph':('A weighted multigraph and its edge words','Parallel edges remain separate choices. The word list reads traversals chronologically from left to right and permits repeated edges and vertices.'),
@@ -50,3 +50,24 @@ DESCRIPTIONS={
  },
 }
 FIGURES={work:{name:dict(alt=alt,description=description) for name,(alt,description) in figures.items()} for work,figures in DESCRIPTIONS.items()}
+
+# Original node indices, including the displayed residue order and each total.
+# These are three one-dimensional arrangements, not a single rectangular grid.
+FIGURES['paper-ii']['coefficient_tower']['blocks']=[
+    dict(kind='table',caption=0,headers=['Residue group']+['Address '+str(i) for i in range(1,9)],
+         rows=[[9,*range(1,9)],[18,*range(10,18)]]),
+    dict(kind='text',title='Total addresses',nodes=[19]),
+    dict(kind='table',caption=20,headers=['Residue group']+['Address '+str(i) for i in range(1,5)],
+         rows=[[25,*range(21,25)],[30,*range(26,30)],[35,*range(31,35)],[40,*range(36,40)]]),
+    dict(kind='text',title='Total addresses',nodes=[41]),
+    dict(kind='table',caption=42,headers=['Residue group','Address 1','Address 2'],
+         rows=[[45,43,44],[48,46,47],[51,49,50],[54,52,53],[57,55,56],[60,58,59],[63,61,62],[66,64,65]]),
+    dict(kind='text',title='Total addresses',nodes=[67]),
+    dict(kind='text',nodes=[68]),
+]
+
+FIGURES['paper-ii']['weighted_word_cutoff']['blocks']=[
+    dict(kind='text',nodes=[31]),
+    dict(kind='table',caption='Weighted words and signed contributions',
+         headers=[28,29,30,'Status'],rows=[list(range(i,i+4)) for i in range(0,28,4)]),
+]

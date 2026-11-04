@@ -105,7 +105,7 @@
     function htmlPosition(side) {
       const frame = getFrame(side), doc = frame.contentDocument, win = frame.contentWindow;
       let anchor = doc.elementFromPoint(Math.max(1, doc.documentElement.clientWidth / 2), Math.min(64, win.innerHeight / 4));
-      anchor = anchor?.closest(".reading-block[id],.source-line[id],.claim[id],h1[id],h2[id],h3[id],h4[id],h5[id],h6[id],section[id]");
+      anchor = anchor?.closest(".reading-block[id],.source-lines > code > span[id],.claim[id],h1[id],h2[id],h3[id],h4[id],h5[id],h6[id],section[id]");
       if (!anchor) {
         const headings = doc.querySelectorAll("main h1[id],main h2[id],main h3[id],main h4[id],main h5[id],main h6[id]");
         for (let n = headings.length - 1; n >= 0; n--) if (headings[n].getClientRects().length && headings[n].getBoundingClientRect().top <= 64) {anchor = headings[n]; break;}

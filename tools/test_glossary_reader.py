@@ -4,8 +4,8 @@ import json
 from pathlib import Path
 import unittest
 
-from glossary_reader import glossary_lookup, glossary_return_links
-from reader_experience import render_glossary
+from glossary_reader import glossary_lookup, glossary_return_links, glossary_search_text
+from reader_experience import load, render_glossary
 
 
 class LookupHTML(HTMLParser):
@@ -40,14 +40,45 @@ class GlossaryLookupTests(unittest.TestCase):
             self.assertIn(term['definition'], entry['data-search'])
             if term.get('note'):
                 self.assertIn(term['note'], entry['data-search'])
+            self.assertEqual(entry['data-aliases'].splitlines(), term.get('aliases', []))
+            for alias in term.get('aliases', []):
+                self.assertIn(alias, entry['data-search'])
+            if term.get('example_text'):
+                self.assertIn(term['example_text'], entry['data-search'])
+            self.assertEqual(entry['data-search'], glossary_search_text(term))
         reference = render_glossary(config)
         self.assertEqual((root/'docs/GLOSSARY.md').read_text(encoding='utf-8'), reference)
         for term in terms:
             self.assertIn('<a id="'+term['id']+'"></a>', reference)
             self.assertIn(term['definition'], reference)
+            if term.get('aliases'):
+                self.assertIn('**Also called:** '+', '.join(term['aliases']), reference)
+            if term.get('example_text'):
+                self.assertIn('**In the worked example:** '+term['example_text'], reference)
         self.assertIn('hidden', result.elements['glossary-form'])
         self.assertIn('hidden', result.elements['glossary-matches'])
         self.assertEqual(result.elements['glossary-status']['role'], 'status')
+
+    def test_reading_routes_and_letter_groups_link_to_existing_anchors(self):
+        import re
+        from navigation_links import anchors, inline_targets
+        root = Path(__file__).resolve().parents[1]
+        config = load(root)
+        reference = render_glossary(config)
+        identifiers = anchors(reference)
+        local = [target[1:] for target in inline_targets(reference) if target.startswith('#')]
+        self.assertTrue(set(local) <= identifiers)
+        for step in config['glossary_start']:
+            for key in step['terms']:
+                self.assertIn(key, identifiers)
+        for comparison in config['glossary_comparisons']:
+            self.assertEqual(len(comparison['terms']), 2)
+            self.assertTrue(set(comparison['terms']) <= identifiers)
+        index = reference.split('## Alphabetical index\n', 1)[1]
+        self.assertEqual(set(re.findall(r'\]\(#([^)]*)\)', index)) - identifiers, set())
+        for term in config['glossary']:
+            self.assertEqual(index.count('](#'+term['id']+')'), 1)
+            self.assertIn('id="index-'+term['term'][0].lower()+'"', index)
 
     def test_return_links_preserve_the_complete_rendered_reference(self):
         try:
@@ -72,12 +103,17 @@ class GlossaryLookupTests(unittest.TestCase):
     def test_untrusted_text_is_escaped_in_text_and_attributes(self):
         config = dict(glossary_sections=[dict(id='test',title='Test & examples')],
                       glossary=[dict(id='sample',term='A "term" <test>',section='test',
-                                     definition='x < y & y > z',note='Read "carefully".')])
+                                     definition='x < y & y > z',note='Read "carefully".',
+                                     aliases=['<alias> & "name"'],example_text='<example> & "value"')])
         markup = glossary_lookup(config)
         self.assertNotIn('<test>', markup)
+        self.assertNotIn('<alias>', markup)
+        self.assertNotIn('<example>', markup)
         parsed = LookupHTML(markup)
         self.assertEqual(parsed.entries[0]['data-term'], config['glossary'][0]['term'])
         self.assertIn('x < y & y > z', parsed.entries[0]['data-search'])
+        self.assertEqual(parsed.entries[0]['data-aliases'], '<alias> & "name"')
+        self.assertIn('<example> & "value"', parsed.entries[0]['data-search'])
         self.assertEqual(parsed.links, ['#sample'])
 
 

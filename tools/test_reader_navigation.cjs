@@ -4,11 +4,11 @@ const path = require('node:path');
 const vm = require('node:vm');
 const source = fs.readFileSync(path.join(__dirname, '../website/assets/reader.js'), 'utf8');
 
-function page(hash = '#L50', withSidebar = false, delayedLayout = false) {
+function page(hash = '#L50', withSidebar = false, delayedLayout = false, visualReader = false) {
   const events = {};
   const listeners = {};
   const tasks = [];
-  const body = {};
+  const body = {classList:{contains:name=>visualReader && name==='visual-reading'}};
   const elements = {};
   const document = {
     body, documentElement: {}, activeElement: body,
@@ -147,6 +147,11 @@ assert.equal(p.sidebar.links[1].attrs['aria-current'],'location','The current se
 p.sidebar.wide.matches=true;p.sidebar.change();p.flush();
 assert.equal(p.sidebar.styles['--reading-clearance'],undefined,'Desktop reading does not reserve a mobile control offset');
 assert.equal(p.sidebar.contents.open,true);
+
+p=page('',true,false,true);p.flush();
+assert.equal(p.sidebar.styles['--reading-clearance'],undefined,'Visual pages use a nonsticky contents control');
+p.sidebar.wide.matches=true;p.sidebar.change();p.flush();
+assert.equal(p.sidebar.contents.open,false,'Visual contents remain compact on desktop so drawings have room');
 
 async function delayedNavigation() {
   let p = page('#L50', false, true);

@@ -29,6 +29,7 @@ TACTICS = set(('simp simpa rw rfl exact apply intro intros constructor cases rca
               'subst revert generalize first all_goals any_goals repeat try done').split())
 WORD = re.compile(r'[\w][\w.\'!?]*')
 CHARACTER = re.compile(r"'(?:\\(?:u\{[0-9a-fA-F]+\}|.)|[^'\\])'")
+TOKEN_CLASSES = dict(keyword='lk', tactic='lt', comment='lc', string='ls', number='ln')
 
 
 def directory(work):
@@ -67,9 +68,14 @@ def source_heading(reader, record, page):
 def selected_paths(component, owned):
     """Expand only explicit Lean selections inside their receipt-owned component."""
     from build_reader_site import safe_path
+    from readable_chapters import BOOKS
     prefix = safe_path(component['destination'])+'/'
     selections = [safe_path(r['path'].rstrip('/'))+('/' if r['path'].endswith('/') else '')
                   for r in component['resources'] if r['kind'] == 'lean']
+    # A reading edition may narrow its inspector to the mathematical modules.
+    # This intersection never expands the receipt-owned resource selections.
+    subset = BOOKS.get(component['id'], {}).get('lean_reader_paths')
+    subset = None if subset is None else [safe_path(p.rstrip('/'))+('/' if p.endswith('/') else '') for p in subset]
     for path, record in sorted(owned.items()):
         if record['work'] != component['id'] or not path.startswith(prefix):
             continue
@@ -77,7 +83,8 @@ def selected_paths(component, owned):
         if (not relative.endswith('.lean') or PurePosixPath(relative).name == 'lakefile.lean'
                 or EXCLUDED.intersection(PurePosixPath(relative).parts)):
             continue
-        if any(relative == p or p.endswith('/') and relative.startswith(p) for p in selections):
+        if (any(relative == p or p.endswith('/') and relative.startswith(p) for p in selections)
+                and (subset is None or any(relative == p or p.endswith('/') and relative.startswith(p) for p in subset))):
             yield path
 
 
@@ -167,7 +174,7 @@ def highlight_lines(text):
             else:
                 index += 1
             escaped = html.escape(line[start:index])
-            pieces.append('<span class="lean-token-'+kind+'">'+escaped+'</span>' if kind else escaped)
+            pieces.append('<span class='+TOKEN_CLASSES[kind]+'>'+escaped+'</span>' if kind else escaped)
         result.append(''.join(pieces))
     return result
 
@@ -208,16 +215,24 @@ def assets(site, page):
 
 
 def scope(reader, work, page):
+    from readable_chapters import BOOKS
     assessment = reader.site.assessments[work]
     label, description = reader.site.status['labels']['lean'][assessment['lean']]
     e = html.escape
     coverage = reader.site.rel('collection/works/'+work+'.html', page)+'#lean'
     evidence = reader.site.rel('collection/works/'+work+'.html', page)+'#evidence'
+    runtime = ''
+    book = BOOKS[work]
+    if book.get('lean_runtime_note'):
+        runtime = '<p class="lean-runtime-note">'+e(book['lean_runtime_note'])
+        if book.get('lean_runtime_guide'):
+            runtime += ' <a href="'+e(reader.resolve(book['lean_runtime_guide'],page),quote=True)+'">Retained runtime and replay instructions</a>.'
+        runtime += '</p>'
     return ('<details class="lean-scope"><summary><span class="lean-badge">'+e(label)+
             '</span> <span class="lean-scope-label">Coverage and evidence</span></summary><div><p>'+e(description)+
             '</p><p>This viewer reads the retained source; it does not run Lean or assign new claim mappings.</p>'
             '<nav aria-label="Recorded Lean evidence"><a href="'+coverage+'">Coverage and setup</a>'
-            '<a href="'+evidence+'">Recorded evidence</a></nav></div></details>')
+            '<a href="'+evidence+'">Recorded evidence</a></nav></div></details>'+runtime)
 
 
 def source_controls(reader, record, text, page):
@@ -257,6 +272,8 @@ def build(reader):
         body += '<header class="lean-heading"><p class="eyebrow">'+e(book['label'])+' · Lean sources</p><h1>'+e(short_title(title))+'</h1></header>'
         body += '<nav class="lean-actions" aria-label="Lean reading routes"><a class="button" href="'+site.rel(book['index'],page)+'">Read the paper</a>'
         body += '<a href="'+site.rel('collection/works/'+work+'.html',page)+'">Work overview</a>'+paired_route(site,page)+'</nav>'+scope(reader,work,page)
+        if book.get('lean_reader_note'):
+            body += '<p class="lean-library-note">'+e(book['lean_reader_note'])+'</p>'
         from browser_lean import action
         body += action(site,page,work=work)
         from lean_browser import action as local_action
@@ -327,13 +344,16 @@ def verify(root, documents):
             self.source = False
             self.spans = []
             self.lines = []
+            self.line_ids = set()
         def handle_starttag(self, tag, attrs):
             attrs = dict(attrs)
             if tag == 'pre' and 'source-lines' in attrs.get('class','').split(): self.source = True
             if self.source and tag == 'span':
                 self.spans.append('source-claim-links' in attrs.get('class','').split())
-                if 'source-line' in attrs.get('class','').split(): self.lines.append('')
-            if self.source and tag == 'a': self.spans.append('line-number' in attrs.get('class','').split())
+                if re.fullmatch(r'L\d+', attrs.get('id','')):
+                    self.lines.append('')
+                    self.line_ids.add(attrs['id'])
+            if self.source and tag == 'a': self.spans.append(bool(re.fullmatch(r'#L\d+', attrs.get('href',''))))
         def handle_endtag(self, tag):
             if self.source and tag in {'span','a'} and self.spans: self.spans.pop()
             if tag == 'pre': self.source = False
@@ -360,7 +380,7 @@ def verify(root, documents):
             assert [line.removeprefix(' ').removesuffix('\n') for line in parser.lines] == text.splitlines(), entry['path']
             assert Site.rel(None,entry['url'],work['url']) in listing
             for d in entry['declarations']:
-                assert 'id="L'+str(d['line'])+'"' in markup
+                assert 'L'+str(d['line']) in parser.line_ids
             count += 1
     assert not catalog['new_lean_execution']
     return dict(works=len(catalog['works']),files=count,new_lean_execution=False)

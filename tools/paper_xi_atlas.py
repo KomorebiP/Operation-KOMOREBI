@@ -13,7 +13,7 @@ from readable_chapters import (HEADINGS,PANELS,KIND_NAMES,clean_tex,group,origin
 from worked_visual_atlas import AtlasChapter
 from reader_atlas import digest
 from reader_documents import png_dimensions
-from reading_navigation import navigation,outline,resources
+from reading_navigation import atlas_config,navigation,outline,resources,visual_title,visual_backlink,visual_position, visual_search_terms, visual_search_preview
 from paper_ix_atlas import render_figure
 from paper_xi_atlas_descriptions import DESCRIPTIONS,data_tables
 
@@ -93,9 +93,8 @@ def figure_math_labels(source,name):
 
 
 def reading_config(selected):
-    return dict(work='paper-xi',label='Paper XI visual guide',overview_label='Paper XI',index=INDEX,
-        chapters=[dict(url=r['url'],title=str(r['number'])+' · '+r['title']) for r in selected],
-        menu_title='Visual lessons',index_title='All 47 lessons and opening routes',contents_groups=[
+    return dict(atlas_config('paper-xi','Paper XI',INDEX,selected),
+        index_title='All 47 visuals and opening routes',contents_groups=[
             dict(start=section_url(n),title=t) for n,t in [(1,'Finite tame coordinates'),(12,'Finite wild comparison'),(24,'Actual arithmetic construction'),(40,'Realization and comparison'),(46,'Evidence and sources')]])
 
 
@@ -153,7 +152,7 @@ def prepare(reader):
     book=reader.readable_books['paper-xi'];targets=routes(book);by_url={c.url:c for _,_,c in book['chapters']}
     for row in selected:
         for target in targets[row['number']]:
-            page,anchor=target['url'].split('#');by_url[page].related_readings.setdefault(anchor,[]).append(('Visual lesson '+str(row['number'])+': '+row['title'],row['url']))
+            page,anchor=target['url'].split('#');by_url[page].related_readings.setdefault(anchor,[]).append((visual_backlink(row),row['url']))
     reader.paper_xi_atlas=dict(sections=selected,figures=figures,targets=targets,macros=visual_macros(read))
 
 
@@ -196,17 +195,17 @@ def render(reader):
     read=lambda path:site.read_source(reader.records[path]);pdf=reader.records[SPEC['pdf']]
     for row in selected:
         page=row['url'];chapter=chapter_for(row,row['body'],atlas['macros'],read,reader.resolve)
-        title='Paper XI visual guide / '+str(row['number'])+': '+row['title']
-        body='<p class="eyebrow">'+html.escape(row['category'])+' · Lesson '+str(row['number'])+' of 47</p><h1>'+html.escape(row['title'])+'</h1>'+reader.work_routes('paper-xi',page)+navigation(config,page)
+        title=visual_title('Paper XI',row)
+        body='<p class="eyebrow">'+visual_position('Paper XI',row['number'],47)+' · '+html.escape(row['category'])+'</p><h1>'+html.escape(row['title'])+'</h1>'+reader.work_routes('paper-xi',page)+navigation(config,page)
         body+='<nav class="document-routes" aria-label="Related manuscript passages">'+''.join('<a href="'+site.rel(t['url'],page)+'">'+html.escape(t['label']+': '+t['title'])+'</a>' for t in atlas['targets'][row['number']])+'</nav>'
         body+=resources('<p>Original source locator: '+chapter.inline(row['locator'])+'</p><p><a href="'+reader.viewer_url(pdf,page,'page='+str(row['number']+6))+'">This lesson in the original PDF</a></p>'+reading_options('Show passage permalinks and original source lines.'))
         body+='<article id="chapter-text" class="readable-chapter atlas-plate">'+content(row,chapter,atlas['figures'],reader.resolve,site.rel)+'</article>'+navigation(config,page,'bottom')
         expected=original_math(row['locator'])+expected_math(row['body'],atlas['figures'])
         if chapter.math!=expected:raise ValueError('Changed Paper XI lesson mathematics: '+str(row['number']))
         body+='<details class="document-provenance"><summary>Source and conversion record</summary><p>This edition preserves all 47 lessons, the opening orientation and both route sections. Figures are rendered from retained vector PDFs. Descriptions and recorded-data tables are reading aids. No mathematical generator, TeX build, proof audit or Lean replay was run for this conversion.</p><p><a href="'+site.rel(REPORT,page)+'">Source hashes and conversion checks</a></p></details>'
-        site.page(page,title,body);site.search.append(dict(title=title,group='Collection',kind='Papers and source',work_ids=['paper-xi'],url=page,text=row['title']+' '+row['body']))
+        site.page(page,title,body);site.search.append(dict(title=title,group='Collection',kind='Papers and source',visual_guide=True,work_ids=['paper-xi'],url=page,text=visual_search_terms(row)+' '+row['title']+' '+row['body'],**visual_search_preview(chapter,atlas['figures'])))
         reports.append(dict(number=row['number'],url=page,math=expected,source=row['source'],start_line=row['start_line'],end_line=row['end_line']))
-    body='<p class="eyebrow">Paper XI visual guide</p><h1>Explore all 47 visual lessons</h1><p>Follow finite tame coordinates and finite wild comparison into the restricted arithmetic constructions, then the realization and comparison boundary. All 23 original vector figures have descriptions and selectable labels.</p>'+reader.work_routes('paper-xi',INDEX)
+    body='<p class="eyebrow">Paper XI visual guide</p><h1>Explore all 47 visuals</h1><p>Follow finite tame coordinates and finite wild comparison into the restricted arithmetic constructions, then the realization and comparison boundary. All 23 original vector figures have descriptions and selectable labels.</p>'+reader.work_routes('paper-xi',INDEX)
     for first,last,title in [(1,11,'Finite tame coordinates'),(12,23,'Finite wild comparison'),(24,39,'Actual arithmetic construction'),(40,45,'Realization and comparison'),(46,47,'Evidence and source map')]:
         body+='<section><h2>'+title+'</h2><ol start="'+str(first)+'">'+''.join('<li id="l'+str(r['number']).zfill(2)+'"><a href="'+site.rel(r['url'],INDEX)+'">'+html.escape(r['title'])+'</a></li>' for r in selected[first-1:last])+'</ol></section>'
     opening_math=[]
@@ -219,7 +218,7 @@ def render(reader):
     body+='</article><p><a href="'+site.rel(REPORT,INDEX)+'">Conversion record</a></p>';site.page(INDEX,'Paper XI visual guide',body)
     record=dict(collection_revision=site.revision,source_inputs=SPEC['source_inputs'],source_pdf=SPEC['pdf'],source_pdf_sha256=SPEC['pdf_sha256'],index=INDEX,total_sections=47,html_sections=reports,opening_math=opening_math,figures=atlas['figures'],macros=atlas['macros'],manuscript_references=atlas['targets'],new_proof_review=False,new_lean_execution=False,new_mathematical_example_execution=False,new_tex_build=False)
     site.write(REPORT,json.dumps(record,ensure_ascii=False,indent=2)+'\n')
-    site.search.append(dict(title='Paper XI / Visual guide: 47 lessons and opening routes',group='Collection',kind='Papers and source',work_ids=['paper-xi'],url=INDEX,text=' '.join(r['title'] for r in selected)))
+    site.search.append(dict(title='Paper XI / Visual guide: 47 lessons and opening routes',group='Collection',kind='Papers and source',visual_guide=True,work_ids=['paper-xi'],url=INDEX,text=' '.join(r['title'] for r in selected)))
 
 
 def verify(root,documents,pages):
@@ -253,7 +252,9 @@ def verify(root,documents,pages):
         _,position,previous,following=neighbours(config,row['url'])
         for control in controls:
             assert control['attrs']['data-reading-total']=='47' and control['attrs']['data-reading-position']==str(position+1)
-            assert [a['href'] for a in control['links'] if 'data-reading-entry' in a]==[rel(r['url'],row['url']) for r in selected]
+            footer=control['attrs']['data-reading-placement']=='bottom'
+            assert [a['href'] for a in control['links'] if 'data-reading-entry' in a]==([] if footer else [rel(r['url'],row['url']) for r in selected])
+            if footer:assert [a['href'] for a in control['links'] if 'reading-menu-link' in a.get('class','').split()]==[rel(INDEX,row['url'])]
             for direction,target in [('previous',previous),('next',following)]:assert [a['href'] for a in control['links'] if 'reading-'+direction in a.get('class','').split()]==[rel(target['url'],row['url'])]
         count+=len(expected)
     opening_math=[];markup=(root/INDEX).read_text(encoding='utf-8')

@@ -2,6 +2,7 @@
 import hashlib
 import html
 import json
+import math
 from pathlib import Path
 import shutil
 from lean_workspaces import WORKSPACES, RESIDUAL, COMPRESSION, RECOVERY, COMPAT_SOURCE, mathlib_seeds, mathlib_seed_groups
@@ -89,20 +90,26 @@ def build(reader,runtime):
         return site.rel('assets/'+name,PAGE)+'?v='+digest
     groups={}
     for example in examples:groups.setdefault(example['title'].split(' · ')[0],[]).append(example)
+    reading_order=['paper-'+number for number in ('i','ii','iii','iv','v','vi','vii','viii','ix','x','xi','xii')]+[
+        'proof-path-theory','monographs-special-functions','komorebi-space']
+    work_order={work:i for i,work in enumerate(reading_order)}
+    # Keep the default example and each work's curated sequence independent of menu order.
+    ordered_groups=sorted(groups.items(),key=lambda group:work_order.get(group[1][0]['work'],len(work_order)))
     opts=''.join('<optgroup label="'+html.escape(label,quote=True)+'">'+''.join(
-        '<option value="'+e['id']+'">'+html.escape(e['title'])+'</option>' for e in entries)+'</optgroup>'
-        for label,entries in groups.items())
+        '<option value="'+e['id']+'"'+(' selected' if e['id']==examples[0]['id'] else '')+'>'+html.escape(e['title'])+'</option>' for e in entries)+'</optgroup>'
+        for label,entries in ordered_groups)
     body=f'''<link rel="stylesheet" href="{asset('lean-browser.css')}">
 <section class="lean-local" data-lean-local>
 <nav class="breadcrumbs" aria-label="Lean navigation"><a href="{site.rel('lean/index.html',PAGE)}">Inspect Lean</a></nav>
 <header class="lean-heading"><p class="eyebrow">The papers · A local proof workspace</p><h1>Edit a proof. Ask Lean.</h1>
 <p class="lean-lede">Explore a published proof, change a step, and check it on your own device. The compiler runs inside this browser.</p></header>
 <p class="lean-local-meta">{len(examples)} prepared workspaces across {len(groups)} reading editions.</p>
-<div class="lean-local-intro"><p><strong>Free, with no account.</strong> Proof text stays in this tab. The site downloads compiler files; it does not send your edits to a proof service.</p>
-<p class="lean-local-meta">First use downloads a substantial library. Loading can take a minute or more and needs a computer with enough memory. Later checks reuse the loaded compiler; downloaded files are cached when your browser allows it.</p></div>
+<div class="lean-local-intro"><p>First run: download the Lean compiler and libraries, up to {math.ceil(runtime_record['bytes']/1048576)} MiB. Smaller workspaces need less.</p>
+<p class="lean-local-meta">Allow a few minutes for the first load, plus time for proof checking. Downloaded files are reused when your browser can cache them.</p></div>
 <p data-local-direct hidden>This compiler needs its own browser page. <a data-local-direct-link target="_blank" rel="noopener">Open the workspace in a new tab</a>.</p>
 <details data-local-catalog><summary>Open another retained Lean file</summary>
 <p>Explore any of the {collection['sources']:,} files already included in the reading collection. The browser opens its retained local dependencies too. {collection['available_import_routes']:,} files have import routes using the available libraries. These routes still need an actual Lean check; version differences, missing tactics and runtime limits can cause errors.</p>
+<p class="lean-local-meta">Opening a retained file downloads a {(site.output/'downloads/komorebi-lean-runner.zip').stat().st_size/1048576:.0f} MiB source bundle.</p>
 <div class="lean-local-catalog-controls"><label for="local-catalog-search">Find a retained Lean file</label><input id="local-catalog-search" data-local-catalog-search type="search" placeholder="Paper, module or filename">
 <label for="local-catalog-ready" class="lean-local-catalog-filter"><input id="local-catalog-ready" type="checkbox" data-local-catalog-ready checked> Only show files with available imports</label>
 <label for="local-catalog-choice">Retained source file</label><select id="local-catalog-choice" data-local-catalog-choice disabled></select>
@@ -112,11 +119,13 @@ def build(reader,runtime):
 <nav class="lean-actions" aria-label="Original proof routes"><a data-local-inspect>Inspect original source</a><a data-local-download download>Download original</a></nav>
 <p class="lean-local-meta" data-local-source></p>
 <details data-local-route hidden><summary>Browser import route and compatibility</summary><p>These retained sources run in the pinned browser environment. An available import route does not establish that the proof passes here.</p><pre data-local-route-notes></pre></details>
-<details data-local-compat hidden><summary>Browser version compatibility lemma included</summary><p>Lean checks this extra lemma alongside the proof. It supplies a name used by the paper that the older browser compiler lacks. The original source below is unchanged.</p><pre data-local-compat-code></pre><p><a href="compatibility.lean" download>Download the compatibility lemma</a></p></details>
+<details data-local-compat hidden><summary>Browser version compatibility lemma included</summary><p>Lean checks this extra lemma alongside the workspace's final file. It supplies a name used by the paper that the older browser compiler lacks. Selected checks of earlier files do not add it. The original source below is unchanged.</p><pre data-local-compat-code></pre><p><a href="compatibility.lean" download>Download the compatibility lemma</a></p></details>
 <label class="lean-local-mode" for="local-frontend"><input id="local-frontend" type="checkbox" data-local-frontend aria-describedby="local-frontend-help"> Support syntax defined in this file (experimental)</label>
 <p id="local-frontend-help" class="lean-local-meta">Tracks new commands and scoped notation as Lean checks the file. Each run starts a fresh compiler and can use more memory. Asynchronous elaboration and early stopping commands are rejected.</p>
+<p class="lean-local-meta" data-local-draft-recovery hidden><a data-local-draft-download download="lean-saved-draft.json">Download saved draft</a> to recover edits that could not be matched to the current files.</p>
 <div class="lean-local-editor"><label for="local-lean-code">Lean source</label><textarea id="local-lean-code" data-local-code spellcheck="false" autocapitalize="off" autocomplete="off" wrap="off"></textarea></div>
-<div class="lean-local-toolbar"><button type="button" data-local-run disabled>Load Lean and run</button><button type="button" data-local-stop disabled>Stop</button><button type="button" data-local-restore disabled>Restore workspace</button><button type="button" data-local-break disabled>Try a false proof</button><button type="button" data-local-save disabled>Save edited file</button></div>
+<div class="lean-local-toolbar"><button type="button" data-local-run disabled>Load Lean and run</button><button type="button" data-local-run-selected disabled>Check selected file</button><button type="button" data-local-stop disabled>Stop</button><button type="button" data-local-restore disabled>Restore workspace</button><button type="button" data-local-break disabled>Try a false proof</button><button type="button" data-local-save disabled>Save edited file</button></div>
+<p class="lean-local-meta">Check selected file runs that file and its local dependencies. Run workspace checks every file in the workspace.</p>
 <p class="lean-local-status" data-local-status role="status" aria-live="polite">Loading the published workspace…</p>
 <section class="lean-local-results" aria-label="Lean results"><h2>Lean’s response</h2><pre data-local-output>No checks yet.</pre></section>
 <details><summary>Download and compiler activity</summary><pre data-local-log></pre></details>
@@ -125,7 +134,7 @@ def build(reader,runtime):
 <p>Choose from {len(examples)} prepared workspaces, or open another retained file above. Each prepared workspace starts with the Mathlib modules its sources need. Edited imports can load more available modules. You can edit any file in a workspace. Required project files are compiled first, then the dependent file. Imports outside the compiler-matched library set produce an error. Compiler crashes and interrupted checks produce no successful result.</p>
 <p>For sources importing <code>Mathlib.Tactic</code>, the browser first checks a clearly labelled compatibility module importing the available tactics. It adds no declarations or assumptions. It is a subset of the original umbrella; missing tactics remain errors. Original source downloads stay unchanged.</p>
 <p>For local imports, a generated wrapper names and exports the module into the compiler’s temporary filesystem. Original downloads remain byte for byte identical to the retained sources. A clean result means Lean completed checking these files with no reported warnings; it is not an audit of axioms or an entire paper.</p>
-<p>Compiler download cache: about {runtime_record['bytes']/1048576:.0f} MiB across all available libraries. Proofs using only Std need less. Large files come from pinned public GitHub assets and are checked against the download record. Edits live in this tab; save a copy before leaving.</p>
+<p>Compiler and library downloads: up to {math.ceil(runtime_record['bytes']/1048576)} MiB across all available libraries. Proofs using only Std need less. Large files come from pinned public GitHub assets and are checked against the download record. Proof text stays in this tab and is not sent to a proof service; save a copy before leaving.</p>
 <p><a href="examples.json">Source checksums</a> · <a href="engine/SOURCE.json">Compiler download record</a> · <a href="{site.rel('assets/lean-wasm/NOTICE.txt',PAGE)}">Open source credits</a></p>
 <button type="button" data-local-clear>Clear downloaded compiler cache</button></details>
 <noscript><p>JavaScript is needed to run Lean. Original sources remain available through <a href="{site.rel('lean/index.html',PAGE)}">Inspect Lean</a>.</p></noscript>
@@ -133,7 +142,7 @@ def build(reader,runtime):
     site.page(PAGE,'Edit and run Lean in your browser',body)
     site.search.append(dict(title='Edit and run Lean in your browser',group='Collection',kind='Lean',
                             work_ids=sorted({e['work'] for e in examples}),url=PAGE,
-                            text='Free local browser WebAssembly Lean compiler edit check proofs '+' '.join(e['title'] for e in examples)))
+                            text='Local browser WebAssembly Lean compiler edit check proofs '+' '.join(e['title'] for e in examples)))
     return dict(workspaces=len(examples),execution='local WebAssembly',compiler_bytes=runtime_record['bytes'],build_runs_lean=False)
 
 

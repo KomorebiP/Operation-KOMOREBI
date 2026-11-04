@@ -1,6 +1,7 @@
 """Source-bound HTML edition of Paper IV's 26 visual-atlas plates."""
 import hashlib
 import html
+from reading_navigation import visual_title, visual_backlink, visual_position, visual_contents, visual_search_terms, visual_search_preview
 import json
 import posixpath
 import re
@@ -11,8 +12,9 @@ from readable_chapters import (Chapter, FOURTH_BASE, HEADINGS, PANELS, MATH_PATT
                                passage_links, plain_math, reading_options, render_table)
 from paper_iv_atlas_descriptions import FIGURES
 from reader_documents import png_dimensions
+from visual_guide_provenance import IV_SOURCE, IV_PDF, register as register_visual_sources
 
-SOURCE=FOURTH_BASE+'atlas-pages.tex'
+SOURCE=IV_SOURCE
 DEFINITIONS=FOURTH_BASE+'atlas-definitions.tex'
 INDEX='read/paper-iv/atlas/index.html'
 RECEIPTS='assets/atlas/paper-iv/figures.json'
@@ -80,6 +82,7 @@ def transcript_order(description, nodes):
 
 def atlas_tex(text):
     # Presentation wrappers only; preserve line numbers and all original prose.
+    text=text.replace(r'\captiontext{',r'\platecaption{')
     for command,replacement,closing in (
         ('head',r'\section*{','}'),
         ('takeaway',r'\begin{readerroadmap}[title={Read this as}]',r'\end{readerroadmap}'),
@@ -94,7 +97,9 @@ def atlas_tex(text):
 
 
 def prepare(reader):
-    reader.add(SOURCE,'Paper IV visual atlas source')
+    register_visual_sources(reader,'paper-iv')
+    reader.add(IV_PDF,'Reconstructed visual guide (PDF)')
+    reader.add(SOURCE,'Paper IV visual guide source')
     reader.add(DEFINITIONS,'Paper IV atlas notation and layout definitions')
     raw=reader.site.read_source(reader.records[SOURCE])
     defs=reader.site.read_source(reader.records[DEFINITIONS])
@@ -128,7 +133,7 @@ def prepare(reader):
     for _,_,chapter in reader.readable_books['paper-iv']['chapters']:
         for node in chapter.nodes:
             linked=backlinks.get(chapter.url+'#'+node['id'],[])
-            chapter.related_readings[node['id']]=[('Atlas V'+str(p['number'])+': '+p['title'],p['url']) for p in linked]
+            chapter.related_readings[node['id']]=[(visual_backlink(p),p['url']) for p in linked]
     reader.atlas=dict(plates=selected,figures=figures,macros=macros,references=references,
                       backlinks=backlinks,
                       source_sha256=digest(raw),definitions_sha256=digest(defs))
@@ -175,24 +180,39 @@ def render_drawing(figure, chapter, reader):
         return '<span id="drawing-label-'+str(value)+'">'+chapter.inline(node['text'])+'</span>'
     def passage(index):
         value=nodes[index]['text']
-        sole=MATH_PATTERN.fullmatch(value.strip())
         def display(match):
             tex=next(part for part in match.groups() if part is not None)
-            return r'\['+tex+r'\]' if sole or len(tex)>40 else match[0]
+            return r'\['+tex+r'\]' if len(tex)>40 else match[0]
         # Long drawing labels get the manuscript's keyboard-scrollable display
         # treatment. The exact expression remains unchanged in the transcript.
         value=MATH_PATTERN.sub(display,value)
         return '<div id="drawing-label-'+str(index)+'">'+chapter.paragraphs(value)+'</div>'
     image=reader.site.rel(record['image'],chapter.url)
     size=' width="'+str(figure['width'])+'" height="'+str(figure['height'])+'"'
-    body='<figure class="atlas-drawing"><img src="'+image+'"'+size+' alt="'+e(info['alt'],quote=True)+'" loading="lazy"><figcaption>Original drawing. A text description and its labels follow.</figcaption></figure>'
+    caption='Original drawing. Read the description below; expand the labels and data for selectable text.' if nodes else 'Original drawing. A text description follows.'
+    body='<figure class="atlas-drawing"><img src="'+image+'"'+size+' alt="'+e(info['alt'],quote=True)+'" loading="lazy"><figcaption>'+caption+'</figcaption></figure>'
     body+='<section aria-labelledby="drawing-description"><h2 id="drawing-description">Reading the drawing</h2><p>'+e(info['description'])+'</p>'
+    if nodes:
+        body+='<details class="drawing-transcript"><summary>Drawing labels and data <span>'+str(len(nodes))+(' label' if len(nodes)==1 else ' labels')+'</span></summary><p class="drawing-transcript-help">Read the original labels as selectable text. Tables preserve grid relationships; other short labels are grouped compactly.</p>'
     for block_number,block in enumerate(info['blocks'],1):
         if block['kind']=='text':
             if block.get('title'): body+='<h3>'+e(block['title'])+'</h3>'
             if (block.get('title') or '').endswith('ticks'):
                 body+='<p>'+', '.join(cell(index) for index in block['nodes'])+'</p>'
-            else: body+=''.join(passage(index) for index in block['nodes'])
+            else:
+                compact=[]
+                def flush():
+                    nonlocal body
+                    if compact:
+                        body+='<ul class="drawing-label-list">'+''.join('<li>'+cell(index)+'</li>' for index in compact)+'</ul>'
+                        compact.clear()
+                for index in block['nodes']:
+                    value=nodes[index]['text']
+                    if len(value)<=48 and not any(command in value for command in (r'\newline',r'\begin',r'\[',r'\frac',r'\mat')):
+                        compact.append(index)
+                    else:
+                        flush();body+=passage(index)
+                flush()
         else:
             # A real caption and row/column headers preserve relationships at zoom
             # and in assistive reading, without using the image's coordinates.
@@ -203,6 +223,7 @@ def render_drawing(figure, chapter, reader):
             for row in block['rows']:
                 body+='<tr>'+''.join(('<th scope="row">' if i==0 else '<td>')+cell(c)+('</th>' if i==0 else '</td>') for i,c in enumerate(row))+'</tr>'
             body+='</tbody></table></div>'
+    if nodes:body+='</details>'
     body+='<p><a href="'+image+'">Open the full-size drawing</a></p>'
     body+=passage_links('<a href="'+reader.resolve(record['source'],chapter.url)+'">Drawing source with line numbers</a>')+'</section>'
     return body
@@ -222,19 +243,19 @@ def render(reader):
     from reading_navigation import outline, resources
     atlas=reader.atlas; site=reader.site; e=html.escape; reports=[]
     aided_tables=set()
-    pdf=next(r for r in reader.records.values() if r['work']=='paper-iv' and r.get('title')=='Visual guide (PDF)')
+    pdf=reader.records[IV_PDF]
     for plate in atlas['plates']:
-        page=plate['url']; title='Paper IV atlas / V'+str(plate['number'])+': '+plate['title']
+        page=plate['url']; title = visual_title('Paper IV',plate)
         chapter=Chapter(atlas_tex(plate['body']),atlas['macros'])
         chapter.url=page
-        chapter.command_links={'pagerefV':{str(p['number']):(p['url'],'V'+str(p['number'])) for p in atlas['plates']}}
-        body='<p class="eyebrow">Paper IV visual atlas · V'+str(plate['number'])+' · '+e(plate['category'])+'</p><h1>'+e(plate['title'])+'</h1>'
+        chapter.command_links={'pagerefV':{str(p['number']):(p['url'],'Visual '+str(p['number'])) for p in atlas['plates']}}
+        body='<p class="eyebrow">'+visual_position('Paper IV',plate['number'],len(atlas['plates']))+ ' · '+e(plate['category'])+'</p><h1>'+e(plate['title'])+'</h1>'
         body+='<p>'+source_references(plate['locator'],atlas['references'],chapter.relative)+'</p>'
         body+=reader.work_routes('paper-iv',page)+neighbours(reader,plate)
         tools='<p><a href="'+reader.viewer_url(pdf,page,'page='+str(plate['number']+2))+'">Original plate in the PDF</a></p>'
-        tools+='<p>Evidence notes retain the source edition’s scope. <a href="v26.html">Read the evidence guide (V26).</a></p>'+reading_options('Show each passage’s permalink and original source. Manuscript links and plate navigation are always available.')
+        tools+='<p>Evidence notes retain the source edition’s scope. <a href="v26.html">Read the evidence guide.</a></p>'+reading_options('Show each passage’s permalink and original source. Manuscript links and plate navigation are always available.')
         body+=resources(tools)+'<p class="reading-start"><a href="#chapter-text">Start reading</a></p>'
-        toc='<nav class="chapter-contents" aria-label="Plate contents"><h2 id="contents">On this plate</h2><ul>'
+        toc='<nav class="chapter-contents" aria-label="Visual contents"><h2 id="contents">On this visual</h2><ul>'
         for node in chapter.nodes:
             if node['kind'] in HEADINGS or node['kind']=='figure':
                 toc+='<li><a href="#'+node['id']+'">'+e(node['title'] if node['kind'] in HEADINGS else 'Drawing and text description')+'</a></li>'
@@ -257,13 +278,13 @@ def render(reader):
                 body+=chapter.paragraphs(node['body'])+passage_links(links)+'</section>'
             else: raise ValueError('Unsupported atlas node '+kind)
         body+='</article>'+neighbours(reader,plate,'bottom')
-        body+='<details class="document-provenance"><summary>Source and conversion record</summary><p>The retained atlas prose and all drawing labels are preserved. Text descriptions and table headings are added reading aids. Drawing labels are read directly from the original TikZ source. This conversion does not rerun the mathematical examples or Lean.</p><p><a href="'+reader.resolve(SOURCE,page,'L'+str(plate['line']))+'">Original atlas source</a> · <a href="'+site.rel(REPORT,page)+'">Conversion checks</a></p></details>'
+        body+='<details class="document-provenance"><summary>Source and conversion record</summary><p>This guide uses the reconstructed 3 November 2026 source. All 27 content pages match the selected 16 October PDF after Unicode and whitespace normalization; the cover identifies the reconstruction. Drawing labels retain their original sources. The evidence statements describe the retained dated checks. This reconstruction does not rerun mathematical examples or Lean.</p><p><a href="'+reader.resolve(SOURCE,page,'L'+str(plate['line']))+'">Reconstructed atlas source</a> · <a href="'+site.rel(REPORT,page)+'">Conversion checks</a></p></details>'
         expected=expected_math(plate,atlas['figures'])
         if chapter.math!=expected: raise ValueError('Atlas mathematical sequence differs on V'+str(plate['number']))
         site.page(page,title,body)
         plain=plain_math(plate['body'])[0]
         descriptions=' '.join(atlas['figures'][n]['description']['description']+' '+' '.join(v['text'] for v in atlas['figures'][n]['nodes']) for n in re.findall(r'\\vfig\{([^{}]+)\}',plate['body']))
-        site.search.append(dict(title=title,group='Collection',kind='Papers and source',work_ids=['paper-iv'],url=page,text=plain+' '+plain_math(descriptions)[0]))
+        site.search.append(dict(title=title,group='Collection',kind='Papers and source',visual_guide=True,work_ids=['paper-iv'],url=page,text=visual_search_terms(plate)+' '+plain+' '+plain_math(descriptions)[0],**visual_search_preview(chapter,atlas['figures'])))
         reports.append(dict(number=plate['number'],url=page,start_line=plate['line'],end_line=plate['end_line'],
                             source_math_expressions=len(original_math(plate['body'])),math_expressions=len(expected),
                             math_sequence_sha256=digest(json.dumps(expected,ensure_ascii=False).encode()),
@@ -274,13 +295,20 @@ def render(reader):
                 macros=atlas['macros'],plates=reports,manuscript_backlinks=atlas['backlinks'],figures={name:dict(**f['receipt'],node_order=f['order'],nodes=f['nodes']) for name,f in atlas['figures'].items()},
                 new_proof_review=False,new_lean_execution=False,new_mathematical_example_execution=False)
     site.write(REPORT,json.dumps(report,ensure_ascii=False,indent=2)+'\n')
-    body='<p class="eyebrow">Paper IV · Visual atlas</p><h1>Explore the 26 atlas plates</h1><p>Read the worked models with their original drawings, selectable equations, text descriptions, and tables. Each plate links to the manuscript statements it illustrates.</p>'
-    body+=reader.work_routes('paper-iv',INDEX)+'<p><a href="'+site.rel(pdf['url'],INDEX)+'">Visual guide PDF</a></p>'
-    body+='<p>For algebra, follow V3–V16. For zero geometry, follow V17–V24. V25 follows one coefficient through the whole calculation, and V26 explains the evidence.</p><nav class="chapter-contents" aria-label="Atlas plates"><h2>Choose a plate</h2><ol>'
-    body+=''.join('<li><a href="'+site.rel(p['url'],INDEX)+'">V'+str(p['number'])+' · '+e(p['title'])+'</a></li>' for p in atlas['plates'])
-    body+='</ol></nav><p>The source’s test and release statements describe the retained atlas edition. This HTML conversion adds reading aids and does not establish new mathematical or formal verification.</p>'
-    site.page(INDEX,'Paper IV visual atlas',body)
-    site.search.append(dict(title='Paper IV / Visual atlas: 26 HTML plates',group='Collection',kind='Papers and source',work_ids=['paper-iv'],url=INDEX,text='Accessible atlas diagrams descriptions equations tables '+' '.join(p['title'] for p in atlas['plates'])))
+    body='<p class="eyebrow">Paper IV · Visual guide</p><h1>Explore the 26 visuals</h1><p>Read the worked models with their original drawings, selectable equations, text descriptions, and tables. Each visual links to the manuscript statements it illustrates.</p>'
+    from visual_guide_provenance import IV_BASE, load as visual_provenance
+    import zipfile
+    archive='downloads/paper-iv-visual-reconstructed-sources.zip'
+    target=site.output/archive;target.parent.mkdir(parents=True,exist_ok=True)
+    with zipfile.ZipFile(target,'w',compression=zipfile.ZIP_DEFLATED) as bundle:
+        for item in visual_provenance(site.root)['works']['paper-iv']['published_files']:
+            bundle.writestr(item['path'][len(IV_BASE):],(site.root/item['path']).read_bytes())
+    body+=reader.work_routes('paper-iv',INDEX)+'<p><a href="'+site.rel(pdf['url'],INDEX)+'">Reconstructed visual guide PDF</a> · <a href="'+site.rel(archive,INDEX)+'">Download editable sources</a></p>'
+    body+='<p>Start with <a href="v03.html">the algebra of cyclic functions</a>, then explore <a href="v17.html">zero geometry</a>. <a href="v25.html">The coefficient walkthrough</a> follows one coefficient through the whole calculation; <a href="v26.html">the evidence guide</a> explains the recorded checks.</p>'
+    body+=visual_contents(atlas['plates'],INDEX,site.rel,lambda p:reader.viewer_url(pdf,INDEX,'page='+str(p['number']+2)))
+    body+='<p>The source’s test and release statements describe the retained atlas edition. This HTML conversion adds reading aids and does not establish new mathematical or formal verification.</p>'
+    site.page(INDEX,'Paper IV visual guide',body)
+    site.search.append(dict(title='Paper IV / Visual guide: 26 visuals',group='Collection',kind='Papers and source',visual_guide=True,work_ids=['paper-iv'],url=INDEX,text='Accessible atlas diagrams descriptions equations tables '+' '.join(p['title'] for p in atlas['plates'])))
 
 
 def verify(root, documents, pages):
@@ -338,7 +366,7 @@ def verify(root, documents, pages):
         assert [m[2:-2] for m in parsed.expressions]==[expand_math(m,macros) for m in expected],plate['url']
         chapter=Chapter(atlas_tex(plate['body']),macros)
         chapter.url=plate['url']
-        chapter.command_links={'pagerefV':{str(p['number']):(p['url'],'V'+str(p['number'])) for p in selected}}
+        chapter.command_links={'pagerefV':{str(p['number']):(p['url'],'Visual '+str(p['number'])) for p in selected}}
         for node in chapter.nodes:
             if node['kind'] in {'table','tabularx'}:
                 key=(plate['number'],node['id'])

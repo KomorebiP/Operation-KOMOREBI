@@ -7,7 +7,15 @@ import posixpath
 import re
 from urllib.parse import quote, unquote, urlsplit
 
-TEXT_SUFFIXES = {'.md', '.tex', '.txt', '.json', '.lean', '.py', '.bib', '.bbl', '.aux', '.c', '.h'}
+TEXT_SUFFIXES = {'.md', '.tex', '.sty', '.txt', '.json', '.lean', '.py', '.bib', '.bbl', '.aux', '.c', '.h'}
+
+# Maintained guidance resolves at the current repository revision. The parent
+# files retain their receipt-bound imported bytes and normal source inspection.
+CURRENT_REPOSITORY_GUIDANCE = {
+    'monographs/special-functions/current/README.md',
+    'monographs/special-functions/current/CONTINUE_HERE.md',
+    'monographs/special-functions/current/RELEASE_STATUS.md',
+}
 
 
 def png_dimensions(raw):
@@ -62,10 +70,10 @@ def source_lines(text, annotations=None, *, rendered_lines=None):
                        '<button type="submit">Go to line</button></div>'
                        '<p class="status">Jump directly to a line, then copy its address from your browser.</p></form>')
     navigation += '</div>'
-    # These unquoted attributes contain only generated safe ASCII tokens.
-    # Omitting optional quotes saves six bytes per line with the same DOM.
+    # Generated line IDs are safe unquoted ASCII tokens. The source container
+    # and L<n> IDs identify rows and number links without repeated classes.
     return navigation+'<pre class="source-lines" tabindex="0" aria-label="Source text with linked line numbers"><code>'+''.join(
-        '<span class=source-line id="L'+str(n)+'">'+annotations.get(n, '')+'<a class=line-number href=#L'+str(n)+' aria-label="Line '+str(n)+'">'+str(n)+'</a> '+rendered_lines[n-1]+'\n</span>'
+        '<span id=L'+str(n)+'>'+annotations.get(n, '')+'<a href=#L'+str(n)+' aria-label="Line '+str(n)+'">'+str(n)+'</a> '+rendered_lines[n-1]+'\n</span>'
         for n, line in enumerate(lines, 1))+'</code></pre><p id="source-end" tabindex="-1"><a href="#source-navigation">Back to source controls</a></p>'
 
 
@@ -104,6 +112,8 @@ class ReadingDocuments:
         prepare_lean(self)
 
     def add(self, path, label=None):
+        if path in CURRENT_REPOSITORY_GUIDANCE:
+            return None
         if path in self.records:
             return self.records[path]
         entry = self.owned.get(path)
@@ -182,6 +192,8 @@ class ReadingDocuments:
         prepare_paper_vi_atlas(self)
         from paper_vii_atlas import prepare as prepare_paper_vii_atlas
         prepare_paper_vii_atlas(self)
+        from large_signal_atlas import prepare as prepare_large_signal_atlas
+        prepare_large_signal_atlas(self)
 
     def primary_pdf(self, work):
         candidates = [r for r in self.records.values() if r['work'] == work and r['format'] == 'pdf']
@@ -229,7 +241,7 @@ class ReadingDocuments:
         targets = self.work_route_targets(work)
         primary = next((label for label in ('Start here', 'Revised edition', 'Read chapters', 'Read PDF')
                         if any(name == label for name, _ in targets)), None)
-        prominent = {primary, 'Read chapters', 'Revised edition', 'Read PDF', 'Visual atlas', 'Inspect Lean'}
+        prominent = {primary, 'Read chapters', 'Revised edition', 'Read PDF', 'Visual guide', 'Inspect Lean'}
         hub = 'collection/works/'+work+'.html'
         def link(label, url, main=False):
             target = '#'+url.split('#',1)[1] if url.startswith(hub+'#') else self.site.rel(url,page)
@@ -267,9 +279,8 @@ class ReadingDocuments:
         hub = 'collection/works/'+work+'.html'
         pdf = self.primary_pdf(work)
         routes = [('Paper overview', hub)]
-        if getattr(self.site,'guided_reading',False) and any(c['id']==work for c in getattr(self.site,'registry',{}).get('components',[])):
-            from reading_paths import guide_url
-            routes.append(('Start here',guide_url(work)))
+        from reading_paths import guide_enabled, guide_url, eligible_books
+        if work in eligible_books() and guide_enabled(self.site,work):routes.append(('Start here',guide_url(work)))
         edition = getattr(self.site,'assessments',{}).get(work,{}).get('editorial_edition')
         if edition:
             manuscript = 'collection/'+edition['manuscript'].removeprefix('docs/').removesuffix('.md')+'.html'
@@ -277,8 +288,9 @@ class ReadingDocuments:
         from readable_chapters import BOOKS
         if work in BOOKS:
             routes.append(('Read chapters', BOOKS[work]['index']))
-            if BOOKS[work].get('atlas_index'):
-                routes.append(('Visual atlas', BOOKS[work]['atlas_index']))
+            visual=BOOKS[work].get('atlas_index') or BOOKS[work].get('visual_guide_index')
+            if visual:
+                routes.append(('Visual guide',visual))
             if BOOKS[work].get('diagram_guide'):
                 routes.append(('Diagram descriptions', BOOKS[work]['diagram_guide']))
         if pdf: routes.append(('Original PDF' if edition else 'Read PDF', pdf['url']))
@@ -294,12 +306,21 @@ class ReadingDocuments:
 
     def work_routes(self, work, page):
         from reading_navigation import work_links
-        primary = {'Paper overview', 'Read chapters', 'Visual atlas', 'Read PDF', 'Revised edition'}
+        from core_visual_guides import is_visual_guide,guide_navigation
+        if is_visual_guide(work,page):
+            more='<details class="work-more"><summary>More resources</summary><div class="work-more-links reading-resource-menu">'
+            more+=work_links(self,work,page,exclude={'Read chapters','Visual guide'})
+            from readable_chapters import BOOKS
+            pair=self.site.rel('side-by-side.html',page)+'?left='+quote(page,safe='')+'&right='+quote(BOOKS[work]['index'],safe='')
+            more+='<a data-side-reader-link href="'+html.escape(pair,quote=True)+'">Read beside '+('paper' if work.startswith('paper-') else 'volume')+'</a>'
+            more+='<a href="'+html.escape(self.site.rel('read/index.html',page),quote=True)+'">Reading library</a></div></details>'
+            return guide_navigation(work,page,more)
+        primary = {'Paper overview', 'Read chapters', 'Visual guide', 'Read PDF', 'Revised edition'}
         body = '<nav class="work-overview-nav paper-routes" aria-label="Reading routes for this work">'
         for label, url in self.work_route_targets(work):
             if label not in primary: continue
             current = (' aria-current="page"' if url == page else
-                       ' aria-current="location"' if label == 'Visual atlas' and page.startswith(url.removesuffix('index.html')) else '')
+                       ' aria-current="location"' if label == 'Visual guide' and page.startswith(url.removesuffix('index.html')) else '')
             display={'Paper overview':'Work overview','Read chapters':'Contents'}.get(label,label)
             body += '<a href="'+html.escape(self.site.rel(url,page),quote=True)+'"'+current+'>'+html.escape(display)+'</a>'
         body += '<details class="work-more"><summary>More resources</summary><div class="work-more-links reading-resource-menu">'
@@ -484,6 +505,8 @@ class ReadingDocuments:
         render_paper_vi_atlas(self)
         from paper_vii_atlas import render as render_paper_vii_atlas
         render_paper_vii_atlas(self)
+        from large_signal_atlas import render as render_large_signal_atlas
+        render_large_signal_atlas(self)
         from core_visual_guides import render as render_core_visual_guides
         render_core_visual_guides(self)
         from reader_proofreading import publish as publish_proofreading

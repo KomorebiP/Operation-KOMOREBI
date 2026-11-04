@@ -31,4 +31,8 @@ Add the [repository URL](https://github.com/KomorebiP/Operation-KOMOREBI), the f
 
 Publication, review, and verification vary by component. A citation does not turn a conditional statement into an unconditional result or imply whole-collection verification. All executable software remains beta / work in progress.
 
+## Sources used by this project
+
+The project's own citation record is incomplete and is being reconstructed and corrected. The [citation and prior-work disclosure](docs/PROJECT_STATEMENT.md#citations-and-acknowledgment-of-prior-work) describes the extensive use of research papers and OEIS material, the estimated scale of that use, and the ongoing work to add specific source attribution. Reports of missing or inaccurate credit are welcome through the [issue chooser](https://github.com/KomorebiP/Operation-KOMOREBI/issues/new/choose).
+
 [Project statement](docs/PROJECT_STATEMENT.md) · [Publication status](docs/PUBLICATION_STATUS.md) · [Collection terms](LICENSE.md)

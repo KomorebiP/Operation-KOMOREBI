@@ -98,9 +98,53 @@ def navigation(config, page, placement='top'):
 
 
 def atlas_config(work, label, index, plates):
-    return dict(work=work,label=label+' atlas',overview_label=label,index=index,
-                chapters=[dict(url=p['url'],title='V'+str(p['number'])+' · '+p['title']) for p in plates],
-                menu_title='Atlas plates',index_title='All '+str(len(plates))+' atlas plates')
+    from readable_chapters import navigation_title
+    return dict(work=work,label=label+' visual guide',overview_label=label,index=index,
+                chapters=[dict(url=p['url'],title=navigation_title(p['title'])) for p in plates],
+                menu_title='Visuals',index_title='All '+str(len(plates))+' visuals',footer_index_only=True)
+
+
+def visual_title(label, entry):
+    from readable_chapters import navigation_title
+    return label+' visual guide / '+navigation_title(entry['title'])
+
+
+def visual_backlink(entry):
+    from readable_chapters import navigation_title
+    return 'Visual guide: '+navigation_title(entry['title'])
+
+
+def visual_position(label, number, total):
+    return label+' visual guide · Visual '+str(number)+' of '+str(total)
+
+
+def visual_search_terms(entry):
+    number=str(entry['number'])
+    prefix={'v':'V','s':'Section ','l':'Lesson '}.get(entry['url'].rsplit('/',1)[-1][0])
+    return 'Visual '+number+(' '+prefix+number if prefix else '')
+
+
+def visual_search_preview(chapter, figures):
+    """Show the drawing's reading description without exposing raw source TeX."""
+    for node in chapter.nodes:
+        if node['kind']=='figure':
+            info=figures[node['body']]['description']
+            description=info['description'] if isinstance(info,dict) else info
+            return dict(preview_parts=chapter.preview(description))
+    return {}
+
+
+def visual_contents(plates, index, relative, pdf_page, render_title=None):
+    """Title-first reading links, with the original PDF as a secondary route."""
+    from readable_chapters import navigation_title
+    render_title=render_title or (lambda title:html.escape(navigation_title(title)))
+    body='<nav class="chapter-contents visual-guide-contents" aria-label="Visual guide contents"><h2>Choose a visual</h2><ol class="visual-contents">'
+    for plate in plates:
+        number=str(plate['number'])
+        body+='<li id="v'+number.zfill(2)+'"><span class="reading-entry-number" aria-hidden="true">'+number+'</span>'
+        body+='<a href="'+html.escape(relative(plate['url'],index),quote=True)+'">'+render_title(plate['title'])+'</a>'
+        body+='<a class="visual-source-link" href="'+html.escape(pdf_page(plate),quote=True)+'" aria-label="Original PDF: '+html.escape(navigation_title(plate['title']),quote=True)+'">PDF</a></li>'
+    return body+'</ol></nav>'
 
 
 def outline(contents):
@@ -183,7 +227,7 @@ def resources(contents):
 def work_links(reader, work, page, exclude=('Read chapters',)):
     """Group secondary routes and omit the chapter link already in the reading bar."""
     targets=[(label,url) for label,url in reader.work_route_targets(work) if label not in exclude]
-    groups=[('Read and explore',{'Start here','Read chapters','Read PDF','Original PDF','Revised edition','Monograph PDF','Visual atlas','Diagram descriptions','Worked examples','Notation'}),
+    groups=[('Read and explore',{'Start here','Read chapters','Read PDF','Original PDF','Revised edition','Monograph PDF','Visual guide','Diagram descriptions','Worked examples','Notation'}),
             ('Proofs and implementation',{'Claims','Written proofs','Lean','Code'}),
             ('About this work',{'Paper overview','Evidence','Search this work'})]
     used=set();body='<div class="reading-resource-groups">'
@@ -229,7 +273,13 @@ def verify(root, pages, documents):
     count=0
     for work,original in BOOKS.items():
         config=dict(original)
-        if config.get('custom_reader') == 'methodology':
+        if config.get('custom_reader') == 'large_signal':
+            from large_signal_reading import source_specs as large_signal_specs
+            config['chapters']=large_signal_specs(load)
+        elif config.get('custom_reader') == 'machine_native_reasoning':
+            from machine_native_reasoning_reading import source_specs as machine_native_specs
+            config['chapters']=machine_native_specs(load)
+        elif config.get('custom_reader') == 'methodology':
             from methodology_reading import source_specs as methodology_specs
             config['chapters']=methodology_specs(load)
         elif config.get('custom_reader') == 'foundational':
@@ -238,6 +288,9 @@ def verify(root, pages, documents):
         elif config.get('custom_reader') == 'proof_path':
             from proof_path_reading import source_specs as proof_path_specs
             config['chapters']=proof_path_specs(load)
+        elif config.get('custom_reader') == 'kcos':
+            from kcos_reading import source_specs as kcos_specs
+            config['chapters']=kcos_specs(load)
         elif config.get('custom_reader') == 'quantum':
             from quantum_reading import source_specs as quantum_specs
             config['chapters']=quantum_specs(load)
@@ -256,7 +309,7 @@ def verify(root, pages, documents):
         elif config.get('custom_reader'):
             config['chapters']=source_specs(load)
         sequence=entries(config)
-        assert records[work]==dict(index=config['index'],label=config['label'],partial=bool(config.get('partial')),entries=sequence)
+        assert records[work]==dict(index=config['index'],label=config['label'],partial=bool(config.get('partial')),entries=sequence), ('Reading navigation differs from declared edition',work)
         for entry in sequence:
             page=entry['url'];_,position,previous,following=neighbours(config,page)
             assert page in pages, ('Missing reading page',page)

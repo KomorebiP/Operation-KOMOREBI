@@ -5,7 +5,7 @@ import {readFile} from 'node:fs/promises';
 import {webcrypto} from 'node:crypto';
 import {deflateRawSync} from 'node:zlib';
 globalThis.document={querySelector:()=>null};
-const {moduleSource,outcome,withCompatibility,mapDiagnostic,mapWorkspaceDiagnostic,withCompatibilityImport}=await import('../website/assets/lean-browser.js');
+const {moduleSource,outcome,withCompatibility,mapDiagnostic,mapWorkspaceDiagnostic,withCompatibilityImport,workspaceCheckMode,savedWorkspaceDraft,restoreWorkspaceDraft}=await import('../website/assets/lean-browser.js');
 const {createCompiler}=await import('../website/assets/lean-wasm/compiler.js');
 const {optionalLayers,importedRoots,importLines,sourceHeader}=await import('../website/assets/lean-wasm/roots.js');
 const {zipDirectory,readZipSource,sourceWorkspace,sha256}=await import('../website/assets/lean-source-bundle.js');
@@ -112,9 +112,71 @@ test('pinned library sources are checked separately and cannot replace receipt-b
   assert.equal(workspace.files[0].library,true);assert.equal(workspace.files[0].generated,undefined);
   assert.equal(workspace.files[0].text,source);assert.deepEqual(workspace.files[0].originalBytes,new Uint8Array(Buffer.from(source)));
   assert.equal(workspace.files[1].path,path);assert.equal(workspace.files[1].library,undefined);
+  record.syntaxCheck='frontend';
+  const required=await sourceWorkspace(catalog,entry,bundle);
+  assert.equal(required.files[0].syntaxCheck,'frontend');
+  assert.deepEqual(workspaceCheckMode(required),{required:true,frontend:true});
+  record.syntaxCheck='skip';await assert.rejects(sourceWorkspace(catalog,entry,bundle),/Unsupported library source syntax check/);delete record.syntaxCheck;
   record.source+='-- changed';await assert.rejects(sourceWorkspace(catalog,entry,bundle),/library source checksum/);record.source=source;
   record.revision='b'.repeat(40);await assert.rejects(sourceWorkspace(catalog,entry,bundle),/Invalid pinned/);record.revision=revision;
   entry.library=['Mathlib.Missing'];await assert.rejects(sourceWorkspace(catalog,entry,bundle),/Invalid pinned/);
+});
+
+test('workspace assembly follows the full import order with compatibility helpers first',async()=>{
+  const helperPath='paper/Helper.lean',path='paper/Main.lean',helperRaw=Buffer.from('\uFEFFimport Std\r\ndef value : Nat := 1\r\n');
+  const raw=Buffer.from('import Helper\nimport Mathlib.Tactic.Positivity\nexample : value = 1 := rfl\n');
+  const bytes=sourceZip([['inputs/'+helperPath,helperRaw],['inputs/'+path,raw]]),bundle={bytes,entries:zipDirectory(bytes)},revision='a'.repeat(40);
+  const finset='Mathlib.Tactic.Positivity.Finset',umbrella='Mathlib.Tactic.Positivity';
+  async function libraryRecord(module,source,syntaxCheck) {
+    const libraryPath=module.replaceAll('.','/')+'.lean';
+    return {module,path:libraryPath,source,size:Buffer.byteLength(source),sha256:await sha256(Buffer.from(source)),revision,url:'https://github.com/leanprover-community/mathlib4/blob/'+revision+'/'+libraryPath,...(syntaxCheck?{syntaxCheck}:{})};
+  }
+  const entry={id:'a',path,work:'paper',label:'Paper',files:[{module:'Helper',input:0},{module:'Main',input:1}],library:[finset,umbrella],order:[{file:0},{library:finset},{library:umbrella},{file:1}],issues:[],legacy:true,tactics:true};
+  const compatibility={module:'Mathlib.Tactic',source:'import Mathlib.Tactic.Ring\n',sha256:await sha256(Buffer.from('import Mathlib.Tactic.Ring\n'))};
+  const legacy={module:'Browser.Legacy',source:'import Std\n',sha256:await sha256(Buffer.from('import Std\n'))};
+  const catalog={entries:[entry],inputs:[{path:helperPath,work:'paper',size:helperRaw.length,sha256:await sha256(helperRaw)},{path,work:'paper',size:raw.length,sha256:await sha256(raw)}],mathlibRevision:revision,
+    librarySources:{[finset]:await libraryRecord(finset,'import Std\n','frontend'),[umbrella]:await libraryRecord(umbrella,'public import '+finset+'\n')},compatibility,legacy};
+  const workspace=await sourceWorkspace(catalog,entry,bundle);
+  assert.deepEqual(workspace.files.map(file=>file.module),['Browser.Legacy','Mathlib.Tactic','Helper',finset,umbrella,'Main']);
+  assert.equal(workspace.files[2].text,'import Std\ndef value : Nat := 1\n');
+  assert.deepEqual(workspace.files[2].originalBytes,new Uint8Array(helperRaw));
+  assert.equal(workspace.files[3].syntaxCheck,'frontend');assert.equal(workspace.files.at(-1).path,path);
+  assert.equal(workspaceCheckMode(workspace).frontend,true);
+  const invalid=[[],[{file:0},{file:1}],entry.order.concat({file:1}),
+    [{file:0},{library:finset},{library:umbrella},{file:2}],
+    [{file:false},{library:finset},{library:umbrella},{file:1}],
+    [{file:0},{library:finset},{library:'Mathlib.Missing'},{file:1}],
+    [{file:0},{library:finset},{file:1},{library:umbrella}],
+    [{file:0},{library:finset,file:1},{library:umbrella}],
+    [{file:0},{other:0},{library:finset},{library:umbrella},{file:1}]];
+  for(const order of invalid)await assert.rejects(sourceWorkspace(catalog,{...entry,order},bundle),/source order/);
+  await assert.rejects(sourceWorkspace(catalog,{...entry,path:'paper/Other.lean'},bundle),/Selected retained source identity/);
+  const oldEntry={...entry};delete oldEntry.order;
+  assert.deepEqual((await sourceWorkspace(catalog,oldEntry,bundle)).files.map(file=>file.module),['Browser.Legacy','Mathlib.Tactic',finset,umbrella,'Helper','Main']);
+});
+
+test('required library mode does not overwrite the reader preference for other workspaces',()=>{
+  assert.deepEqual(workspaceCheckMode(undefined),{required:false,frontend:false});
+  const standard={files:[{module:'Main'}]},required={files:[{module:'Library',library:true,syntaxCheck:'frontend'},{module:'Main'}]};
+  assert.deepEqual(workspaceCheckMode(required,false),{required:true,frontend:true});
+  assert.deepEqual(workspaceCheckMode(standard,false),{required:false,frontend:false});
+  assert.deepEqual(workspaceCheckMode(standard,true),{required:false,frontend:true});
+  assert.deepEqual(workspaceCheckMode(required,true),{required:true,frontend:true});
+});
+
+test('saved drafts follow source identities when dependencies change checking order',()=>{
+  const library={module:'Mathlib.Tactic.Pilot',path:'Mathlib/Tactic/Pilot.lean',library:true};
+  const dependency={module:'Helper',path:'paper/Helper.lean'},main={module:'Main',path:'paper/Main.lean'};
+  const old={id:'source-main',files:[library,dependency,main]};
+  const draft=savedWorkspaceDraft(old,['edited library','edited helper','edited main'],0);
+  const next={id:old.id,files:[dependency,library,main]};
+  assert.deepEqual(restoreWorkspaceDraft(next,draft),{files:['edited helper','edited library','edited main'],current:1});
+  assert.deepEqual(draft.files,['edited library','edited helper','edited main']);
+  for(const bad of [
+    {...draft,fileKeys:undefined}, {...draft,fileKeys:[draft.fileKeys[0],draft.fileKeys[0],draft.fileKeys[2]]},
+    {...draft,files:[1,'helper','main']}, {...draft,id:'another-source'},
+    {...draft,fileKeys:['unknown',...draft.fileKeys.slice(1)]}
+  ])assert.throws(()=>restoreWorkspaceDraft(next,bad),/saved draft could not be matched/);
 });
 
 test('compatibility is explicit and diagnostics point to the original proof',()=>{
@@ -273,6 +335,78 @@ test('Stop during each isolation setup wait cannot reload or resume the canceled
       assert.equal(elements.get('status').textContent,'Stopped. This run produced no result.',phase);
     }
   } finally {
+    for(const [name,descriptor] of saved){if(descriptor)Object.defineProperty(globalThis,name,descriptor);else delete globalThis[name];}
+  }
+});
+
+for(const cancelWaitingRun of [false,true])test(`new Run waits for idle compiler cleanup${cancelWaitingRun?' across repeated Stop and canceled waits':''}`,async()=>{
+  const names=['document','fetch','Worker','crypto','window','location','history','sessionStorage','crossOriginIsolated','setTimeout'];
+  const saved=new Map(names.map(name=>[name,Object.getOwnPropertyDescriptor(globalThis,name)]));
+  const install=(name,value)=>Object.defineProperty(globalThis,name,{value,writable:true,configurable:true});
+  const schedule=globalThis.setTimeout;
+  const elements=new Map(),workers=[],events=[];
+  function element(){return {value:'',textContent:'',dataset:{},listeners:{},children:[],
+    addEventListener(name,fn){this.listeners[name]=fn;},replaceChildren(){this.children=[];},append(child){this.children.push(child);}};}
+  const root={querySelector(selector){const name=selector.match(/data-local-(.*)\]/)[1];if(!elements.has(name))elements.set(name,element());return elements.get(name);}};
+  const mainWindow={};mainWindow.top=mainWindow;
+  class FakeWorker {
+    constructor(){this.index=workers.length;workers.push(this);events.push('create '+this.index);}
+    send(data){this.onmessage?.({data});}
+    postMessage(message){
+      if(message.type==='dispose'){this.disposal=message;return;}
+      queueMicrotask(()=>{
+        if(message.type==='start')this.send({type:'ready'});
+        if(message.type==='load_modules')this.send({type:'modules_loaded',id:message.id,results:message.roots.map(root=>({root,files:1}))});
+        if(message.type==='load_layer')this.send({type:'layer_loaded',id:message.id,label:message.label,ok:true,files:1});
+        if(message.type==='reset')this.send({type:'reset_done',id:message.id});
+        if(message.type==='compile'){
+          const nonce=message.code.match(/__KOMOREBI_FRONTEND_STARTED_([0-9a-f]{32})__/)[1];
+          for(const phase of ['STARTED','COMPLETED'])this.send({type:'stdout',data:JSON.stringify({severity:'information',data:`__KOMOREBI_FRONTEND_${phase}_${nonce}__`})});
+          this.send({type:'result',id:message.id,success:true});
+        }
+      });
+    }
+    terminate(){this.terminated=true;events.push('terminate '+this.index);}
+    acknowledge(){assert.ok(this.disposal);this.send({type:'disposed',id:this.disposal.id});}
+  }
+  try {
+    install('document',{querySelector:()=>root,createElement:element});
+    install('fetch',async input=>String(input).endsWith('examples.json')
+      ?Response.json({examples:[{id:'example',files:[{module:'Example',text:'example : True := by trivial',sha256:'0'.repeat(64),download:'source.lean'}]}]})
+      :new Response('',{status:404}));
+    install('Worker',FakeWorker);install('crypto',webcrypto);install('window',mainWindow);
+    // Hold the idle fallback deterministically; the runtime suite separately
+    // tests its 100 ms bound. This test releases the matching acknowledgement.
+    install('setTimeout',(fn,delay,...args)=>schedule(fn,delay===100?60000:delay,...args));
+    install('location',{href:'https://example.test/lean/browser/index.html?frontend=1'});
+    install('history',{replaceState(){}});
+    install('sessionStorage',{getItem:()=>null,removeItem(){}});install('crossOriginIsolated',true);
+    await import('../website/assets/lean-browser.js?retiring-compiler-'+cancelWaitingRun);
+    await new Promise(setImmediate);
+    const run=()=>elements.get('run').listeners.click();
+    await run();
+    assert.equal(elements.get('status').dataset.state,'passed');
+    assert.equal(workers.length,1);assert.ok(workers[0].disposal);
+    let waiting=run();
+    await new Promise(setImmediate);
+    assert.equal(workers.length,1,'idle cleanup must finish before a replacement worker is created');
+    if(cancelWaitingRun){
+      elements.get('stop').listeners.click();
+      const canceled=waiting;
+      waiting=run();
+      await new Promise(setImmediate);
+      assert.equal(workers.length,1,'repeated dispose with compiler=null must retain the pending closure');
+      workers[0].acknowledge();
+      await canceled;
+    }else workers[0].acknowledge();
+    await waiting;
+    assert.equal(workers.length,2,'a canceled generation must not create another compiler after its wait');
+    assert.ok(events.indexOf('terminate 0')<events.indexOf('create 1'));
+    assert.equal(elements.get('status').dataset.state,'passed');
+    workers[1].acknowledge();
+    await new Promise(setImmediate);
+  } finally {
+    for(const worker of workers)if(worker.disposal&&!worker.terminated)worker.acknowledge();
     for(const [name,descriptor] of saved){if(descriptor)Object.defineProperty(globalThis,name,descriptor);else delete globalThis[name];}
   }
 });

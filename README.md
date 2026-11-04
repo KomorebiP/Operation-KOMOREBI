@@ -8,6 +8,14 @@ Realization Calculus develops the mathematics of decomposition, transfer, refine
 
 [Open the reading website](https://KomorebiP.github.io/Operation-KOMOREBI/).
 
+## Future Developments
+
+My [future research plans](docs/FUTURE_DEVELOPMENTS.md) focus on Hilbert's 12th
+and 24th problems, the Strong Artin conjecture, and the Langlands program.
+Further work covers machine learning and reasoning, the existing mathematics,
+reading editions, Lean support, and interactive tools. Making the website and
+GitHub repositories easier to access and use is another priority.
+
 ## Start here
 
 | What would you like to do? | Begin here |
@@ -19,6 +27,18 @@ Realization Calculus develops the mathematics of decomposition, transfer, refine
 > **Author’s note:** This work remains in progress and has, in many respects, been rushed because of circumstances shaped by the AI industry. I am continuing to correct, verify, and organize it.
 
 The [public project and authorship statement](docs/PROJECT_STATEMENT.md) explains the pseudonym, AI assistance, and publication circumstances. Each work is at a different stage of completion and review. All executable software remains **beta and work in progress**.
+
+## Extended case studies
+
+Start with the Euler number study for a complete arithmetic calculation. Continue through signals and quantum measurement to compare how the same questions behave in different settings.
+
+| Route | Case study | What the calculation shows |
+|---|---|---|
+| Arithmetic and coordinates | [Euler numbers](docs/demonstrations/EULER_PACKETS.md) and [factorial lanes](docs/demonstrations/FACTORIAL_LANES.md) | Reciprocal packets, polynomial and hypergeometric coordinates, prime-adic bounds, refinement, and residual correction. |
+| Signals and operations | [Wavelets and polyphase transfer](docs/demonstrations/WAVELET_POLYPHASE.md) | One signal, four Haar levels, a transported FIR filter, sharp finite stability, and exact errors from omitted transfers. |
+| Quantum information | [Quantum phase and measurement](docs/demonstrations/QUANTUM_PHASE_MEASUREMENT.md) | Measurement settings, tomography, coherence loss, reversible records, and finite syndrome recovery. |
+
+Each study includes written derivations, explicit failure controls, and exact Python checks. The [complete case-study index](docs/DEMONSTRATIONS.md#extended-case-studies) also links the Stirling/Bell/Fubini and roots-of-unity studies. For function constructions and their analytic questions, explore [Special Functions](docs/SPECIAL_FUNCTIONS.md).
 
 ## Foundations
 

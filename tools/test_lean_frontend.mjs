@@ -49,15 +49,36 @@ test('original headers and large source text survive the fixed transport exactly
 });
 
 test('template-looking source and replacement tokens are never interpreted', () => {
-  const code = '#eval "$& $` $\' SOURCE_EXPRESSION_HERE MAIN_MODULE_HERE INPUT_FILE_NAME_HERE __STARTED_NONCE__ __COMPLETED_NONCE__"\n';
+  const code = '#eval "$& $` $\' FRONTEND_NAMESPACE_HERE SOURCE_EXPRESSION_HERE MAIN_MODULE_HERE INPUT_FILE_NAME_HERE __STARTED_NONCE__ __COMPLETED_NONCE__"\n';
   const decoded = embeddedSource(checkedFrontendSource(code, {nonce, mainModule: "Pilot.α'"}));
   assert.equal(decoded.source, code);
-  assert.ok(!/SOURCE_EXPRESSION_HERE|MAIN_MODULE_HERE|INPUT_FILE_NAME_HERE|__STARTED_NONCE__|__COMPLETED_NONCE__/.test(decoded.outside));
+  assert.ok(!/FRONTEND_NAMESPACE_HERE|SOURCE_EXPRESSION_HERE|MAIN_MODULE_HERE|INPUT_FILE_NAME_HERE|__STARTED_NONCE__|__COMPLETED_NONCE__/.test(decoded.outside));
   assert.ok(decoded.outside.includes("importedEnv.setMainModule `Pilot.α'"));
   const markers = frontendMarkers(nonce);
   assert.ok(decoded.outside.includes('Parser.mkInputContext src "' + markers.fileName + '"'));
   assert.equal(decoded.outside.split('logInfo "' + markers.started + '"').length, 2);
   assert.equal(decoded.outside.split('logInfo "' + markers.completed + '"').length, 2);
+});
+
+test('helper declarations and calls use one fresh namespace without rewriting source text', () => {
+  const secondNonce = 'f'.repeat(32);
+  const code = '-- FRONTEND_NAMESPACE_HERE KomorebiFrontend_' + nonce + '\nexample : True := by trivial\n';
+  const first = embeddedSource(checkedFrontendSource(code, {nonce}));
+  const second = embeddedSource(checkedFrontendSource(code, {nonce: secondNonce}));
+  assert.equal(first.source, code);
+  assert.equal(second.source, code);
+  const firstNamespace = 'KomorebiFrontend_' + nonce;
+  const secondNamespace = 'KomorebiFrontend_' + secondNonce;
+  for (const [decoded, expected, other] of [[first, firstNamespace, secondNamespace], [second, secondNamespace, firstNamespace]]) {
+    const declared = [...decoded.outside.matchAll(/^meta def ([\w]+)\./gm)].map(match => match[1]);
+    const referenced = [...decoded.outside.matchAll(/\b(KomorebiFrontend_[0-9a-f]{32})\./g)].map(match => match[1]);
+    assert.ok(declared.length > 0, 'transport declares executable helpers');
+    assert.deepEqual(new Set(declared), new Set([expected]));
+    assert.deepEqual(new Set(referenced), new Set([expected]));
+    assert.ok(!decoded.outside.includes(other));
+    assert.ok(!decoded.outside.includes('FRONTEND_NAMESPACE_HERE'));
+    assert.equal(decoded.outside.match(/^run_cmd do$/gm)?.length, 1);
+  }
 });
 
 test('unsupported original characters and non-string inputs are rejected before encoding', () => {

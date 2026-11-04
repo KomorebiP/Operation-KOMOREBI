@@ -14,9 +14,9 @@ Cyclic families, sequence constructions, reciprocal structure, and exact methods
 
 **Suggested background:** Begin with the introduction and glossary. Then use the volume's own definitions to identify the background needed for its subject.
 
-**Recorded results and limits:** Proofread reading volumes plus 299 named theorem declarations: 39 inherited finite-core names and 29, 21, 19, 16, 13, 19, 23, 22, 16, 34, 22, 26 in Blocks01 through 12. Registered canonical F.1-F.3 contracts, G.1 component-rescaling equivalence and guarded G.2 inverse are complete. F.3 gives positive ordered Perron type proportions, exact component ratios and equivalence of ordinary type-limit existence; convergence is not asserted unconditionally. Ancillary Appendix F identities, H.1 operator classification, I-J resolution/evaluator refinement and broad A-E analytic coverage remain open; no whole-book coverage percentage is established.
+**Recorded results and limits:** Proofread reading volumes plus 465 named theorem declarations: 39 inherited finite-core names and 29, 21, 19, 16, 13, 19, 23, 22, 16, 34, 22, 26, 43, 27, 36, 30, 30 in Blocks01 through 17. Registered F.1-F.3, G.1, guarded G.2, named ancillary F, main H.1 and J mathematical evaluation/normalization/finite arrays are complete. J now also has an exact guarded-majorant algorithm specification with explicit resource failures and abstract validation order; successful returns certify actual bounds and endpoints. Full Python runtime/dictionary refinement remains open. Ordinary type convergence is conditional. Other J/F/H, I and A-E remain; no whole-book percentage is established.
 
-**Remaining work:** Prove ancillary Appendix F exact component equality/scalar reduction, symmetric sinh closed form and remaining parameter/example wrappers; retain H.1 operator classification, I-J certificates and broader analytic development in the source-bound remaining-work inventory.
+**Remaining work:** Compose typed certified-evaluation metadata, tail and endpoint fields from the proved arrays and guarded majorant, then establish actual Python source/runtime/dictionary refinement with explicit assumptions; retain other J/F/H, I and A-E.
 
 The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
 
@@ -66,6 +66,7 @@ Find the statement number or section in the [reading files](#read), then read it
 
 Start with the [edition guide](../../monographs/special-functions/README.md) and the build instructions below. Check the correspondence records to see which written claims the Lean declarations cover. Source links lead to `.lean` files. PDF guides explain the formalization.
 
+- [Current formalization checkpoint and continuation](../../monographs/special-functions/current/README.md)
 - [Current formal coverage and replay instructions](../../monographs/special-functions/LEAN_STATUS.md)
 - [Coupled recurrence formal companion and limitations](../../monographs/special-functions/formalization/Block01/REPORT.md)
 - [Finite core and coupled Lean sources (directory)](../../monographs/special-functions/lean/)
@@ -90,7 +91,7 @@ These links include code, examples, checks, or build tools. Read the [edition gu
 ## Evidence
 
 - [Completion, Lean coverage, confidence, and cited evidence](../STATUS_CATALOG.md#monographs-special-functions)
-- [Latest recorded written review](../SPECIAL_FUNCTIONS_TYPE_PROPORTIONS_BLOCK12.md)
+- [Latest recorded written review](../SPECIAL_FUNCTIONS_GUARDED_MAJORANT_BLOCK17.md)
 - [Source-file receipt (identity and availability)](../../manifests/source-imports/monographs-special-functions.json)
 - [All files in this source edition](../../monographs/special-functions/)
 

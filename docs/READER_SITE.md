@@ -8,6 +8,180 @@ All twelve core papers have formatted HTML reading editions. Each retains its
 recorded mathematical scope; companion guides and atlas coverage are described
 on the individual reading pages.
 
+## Machine-Native Reasoning reading edition
+
+The Reviewed Mathematical Core is available at
+`read/monographs-machine-native-reasoning/`. Its start page follows the sensor
+example through evidence, correction, inquiry, and revision. Thirteen reading
+pages preserve the two opening sections, nine numbered chapters, and two source
+and review registers. The authored formal correspondence chapter is available
+in full from its original input location and the formal-scope page.
+
+The edition retains all 27 selected statements and written proofs, 12
+counterexamples, 618 mathematical expressions, six original figures, and ten
+source descriptions. The statement finder links to proofs and recorded formal
+scope. That scope connects all 174 mapped declaration endpoints to exact lines
+in the 79 registered production Lean files. The older map's printed page and
+line numbers remain linked to the original core source, separately from the
+refreshed reader's source lines.
+
+`tools/machine_native_reasoning_reading.py` checks the retained source digest,
+contiguous reading ranges, printed statement identities, mathematical sequence,
+and source lines. `tools/machine_native_reasoning_scope.py` binds the accepted
+release record to the result map and reader publication record. Figure receipts
+authenticate the retained PDFs and their browser images; regenerate the latter
+with `python -B tools/render_machine_native_reasoning_figures.py` (pypdfium2).
+Run `python -B -m unittest discover -s tools -p 'test_machine_native_reasoning*.py' -v`.
+
+The accepted 27/27 selected-core scope remains distinct from the 74-page older
+continuation and the separately unrecovered expanded 1,155-page monograph.
+This conversion adds no mathematical proof audit, Lean execution, or empirical
+validation. The mathematical proofreading self-review concerns presentation and
+navigation; there are no mathematical-token changes.
+
+## Large Signal Model reading edition
+
+The Large Signal Model is available at `read/monographs-large-signal-model/`.
+Its Lean inspector includes all 254 mathematical modules and their root import
+file. Auxiliary rejection controls and test sources remain in the full retained
+project downloads and on GitHub. The native runner still bundles the complete
+retained project and its configuration; inspector selection only narrows the
+displayed file routes.
+Its start page connects a first reading path, all 100 mathematical sections in
+eight parts, the statement finder, recorded Lean scope, the reference laboratory,
+and the separately assessed PR-LASM software work page.
+
+The 109 source-based reading pages preserve all 87 numbered propositions and
+their written proofs, 2,123 mathematical expressions, two original figures, and
+28 references. Every proposition links to its proof and its recorded coverage
+row. The editable `Monograph/source/FOUNDATIONS.md` is the source of this HTML
+edition. The original 174-page publication retains its additional glossary and
+formal registers in PDF. The theoretical atlas also has a complete HTML guide.
+
+`tools/large_signal_reading.py` translates the reviewed Markdown wrappers while
+preserving source lines and mathematical tokens. A pinned source digest and
+contiguous ranges in `tools/large_signal_sections.json` reject unreviewed body
+changes. Figure receipts bind the two browser images to their retained PDFs.
+Run `python -B -m unittest discover -s tools -p 'test_large_signal_reading.py' -v`.
+This conversion adds no mathematical proof audit, Lean replay, or empirical
+validation. Mathematical proofreading self-review covers only the presentation
+wrappers and navigation; there are no mathematical-token changes.
+
+The visual guide at `read/monographs-large-signal-model/atlas/` contains the
+orientation and all 17 plates, with 16 original diagrams and 194 selectable
+mathematical expressions. It adds searchable questions, three reading paths,
+diagram descriptions, and links to the mapped propositions, written proofs,
+recorded Lean scope and source modules. The main statements link back to their
+plates. The original 19-page atlas PDF remains available.
+
+`tools/large_signal_atlas.py` binds the HTML to the retained TeX, proof map and
+figure receipts. `tools/large_signal_atlas_sources.json` pins those inputs and
+source ranges. Regenerate only the browser images with
+`python -B tools/render_large_signal_atlas.py` (pypdfium2 required); normal builds
+check the source and image hashes without rebuilding the PDFs.
+
+Plate 3 adds a bounded, exact comparison for the atlas's fixed rational matrix.
+The browser uses BigInt fractions; an independent Python Fraction replay checks
+all 45 settings, 80 delay forecasts, and the retained 13-state trajectory with
+its finite delay and memory identities. The causal delay state is withheld
+until one observation step has elapsed. Run
+`python -B tools/check_large_signal_explorer.py --node PATH_TO_NODE` to replay
+the checks. The declared domain, execution inputs, limits and results are in
+`verification/large-signal-atlas/`. These finite checks illustrate the retained
+example; they add no universal theorem, empirical validation or Lean replay.
+
+Run `python -B -m unittest discover -s tools -p 'test_large_signal_atlas.py' -v`
+and `node --test tools/test_large_signal_atlas.cjs` for source coverage,
+mathematics, diagram identity, proof routes, navigation and explorer edge cases.
+
+## Interactive J-Space laboratory
+
+`j-lab.html` presents the saved neural-agent experiment with three choices:
+state edits, message tracing and persistence. It is linked from
+Browse → Use, interactive mathematics, site search, saved reading and the
+J-Space Causal Lab work page. The 4.4 MB self-contained instrument loads when
+requested; inference and JSON trace exports run locally. The full-tab route
+also works directly and provides the offline download.
+
+`tools/jspace_lab.py` authenticates the retained 1.4 HTML against its source
+receipt and copies its bytes to `assets/j-space/causal-lab.html`. It does not
+rebuild, rewrite or run the preserved source package. The source record and
+published asset have independent fixed identity checks. Only that exact,
+authenticated HTML asset is exempt from reader-site chrome checks; the entry
+page gets the ordinary structure, navigation, links and labeling checks.
+
+The experiment picker selects the instrument's existing tabs and examples.
+`jspace-workbench.js` adds the embedded presentation at runtime, using
+`jspace-workbench.css`: duplicate headers and navigation are omitted, optional
+controls use disclosures, and the iframe follows its content height so the
+page has one scroll area. Existing DOM controls and handlers are retained.
+The main outputs, failed references and factual audits remain available;
+the unadapted full lab and offline download remain direct links. Selecting
+the current experiment preserves edits; changing experiments or selecting
+Reset example reloads the instrument with a fresh example, so old measurements
+cannot be presented as results of the new setup. During message or persistence runs the
+picker and reset are disabled until the run completes or is cancelled.
+All inference, grading and JSON exports remain in the saved 1.4 instrument.
+The embedded presentation adds explanations beside target selection, edit
+amount, reference comparisons and recall. A sticky three-step bar moves focus
+and scrolls the parent page to the real controls, predictions or factual checks;
+it does not apply an edit or start a run. Message-branch and persistence-label
+keys explain the existing measured comparisons. The entry glossary distinguishes
+temporary working values, remembered facts, donor references and the candidate
+J-space. Labels remain presentation only; option values and numerical routines
+are retained. Mobile controls use readable text and 44-pixel touch targets.
+The message test's edit-settings button exposes a return path that keeps the
+current edit instead of choosing a fresh example. On return, a notice asks for
+a new measurement and identifies earlier results as recorded runs. Result
+captions use plain terms while retaining the underlying numeric values, failure
+conditions and exported trace objects.
+Run `python -B -m unittest discover -s tools -p 'test_jspace_lab.py' -v` and
+`node --test tools/test_jspace_lab.cjs` for publication and loading safeguards.
+This integration adds no new scientific evaluation or J-space certificate.
+
+The site uses MathJax's `tex-svg-full.js` entry bundle. Its build retains all
+extension, output, font and accessibility modules, while omitting eight complete
+alternative entry bundles to keep the site within its hosting size budget.
+The fetched package remains complete and verified. Published runtime files keep
+their original bytes and `SOURCE.json`; `assets/mathjax/PUBLISHED.json` records
+the distribution profile and omitted bundles. `tools/reader_runtime.py` packages
+this profile; `test_reader_runtime.py` checks retained modules and source records.
+
+## K-COS reading edition
+
+The complete K-COS monograph is available at
+`read/monographs-cos-method/index.html`. Its 24 reading pages retain the
+preface and reading guidance, four part introductions, twelve chapters,
+four appendices, and references. The opening guide links the full
+matrix-to-tail route, the supplied-spectrum route, the visual studies, and
+four stages of the running example.
+
+The reader preserves 61 numbered statements, 39 written proofs, 1,443
+mathematical expressions, all 50 original production figures, all seven
+printed table numbers with their captions, and seven
+references. The three included results files appear in their authored
+positions, with links to the actual included source lines. The theorem
+finder, notation lookup, chapter navigation, and site search use the same
+reading structure as the other monographs.
+Passage lookup matches both the source file and its retained line spans, so
+imported results cannot shadow equal line numbers in their parent chapter.
+
+`tools/kcos_reading.py` checks the source order, statement and figure
+inventories, mathematical expressions, and the style-file macros.
+`tools/kcos_routes.py` resolves introductory routes from manuscript labels.
+Run `python -B -m unittest discover -s tools -p 'test_kcos_reading.py' -v`.
+The published mathematical sources and their recorded scope remain unchanged.
+Appendix B retains the official finite Gram/enclosure companion; the reading
+guide links the separately maintained formal continuation.
+
+The [K-COS proofreading record](../manifests/reader-proofreading-kcos-2026-11-03.json)
+records the complete edition review. Four labelled reading notes clarify a
+stale chapter reference, the precision of a numerical reference, the Python
+failure flag, and a shared scientific-notation scale. Their text and links are
+bound to exact retained source lines. The numerical-reference note also records
+the original CSV hash and its two full-dimensional rows. These notes do not
+change an authored mathematical expression or assert a new proof review.
+
 ## Core visual-guide coverage
 
 The **Browse → Core visual guides** directory at `read/visual-guides.html`
@@ -16,10 +190,12 @@ HTML status follows the maintained reading configuration; PDF destinations
 and hashes come from the existing source receipts. Paper I's visual atlas is
 inside its main monograph. The other eleven have separate visual-guide PDFs.
 
-The [current inventory](../verification/reader-visual-guides/2026-11-02-final.json)
+The [current inventory](../verification/reader-visual-guides/2026-11-03-provenance.json)
 checks the committed visual sources against their receipts and identifies the
 complete ports. Counts below describe source units, which vary by guide;
 they are not counts of theorems or PDF pages. The
+[prior completed-port inventory](../verification/reader-visual-guides/2026-11-02-final.json)
+retains the earlier source-identity snapshot. The
 [initial inventory](../verification/reader-visual-guides/2026-11-02.json) retains
 the earlier four-atlas snapshot.
 
@@ -117,18 +293,29 @@ Both standalone source inputs retain their own source-line links. Four literal
 TikZ loops in the extension drawings are expanded with their original node lines
 and explicit bindings; unreviewed values or loops stop conversion.
 
-The audit found that the inherited reference crosswalk records PDF checksum
-`63d0a88a9f5e055c9ddb4e862cb8ee7549342c8bb890c2f15c1c035423097801`, while both
-retained visual PDF copies have checksum
+Paper VIII's PDF identity is resolved by a new crosswalk revision at
+`publication/paper-viii-visual-crosswalk/VISUAL_TO_TRADITIONAL_CROSSWALK_v2.json`.
+It binds the retained PDF checksum
 `a78f1c18c7c36cecbaf9484bc6dc643300c3b5054df338f48be6390af5e520c7`.
-The selected PDF is retained. All 32 titles, printed locators and page labels
-were independently checked against its physical pages 3–34. The crosswalk's
-stable labels, statement numbers, kinds and titles are rechecked against the
-current manuscript source. The one declared kind translation is `fact:cg`:
-the guide's “Classical input 7.5” is the current manuscript's “Standard fact 7.5”.
-The original source, crosswalk and PDF bytes are unchanged. The conversion record
-and provenance details disclose the stale checksum rather than treating it as a
-current PDF identity certificate.
+All 32 original plate records and manuscript bindings are preserved. All titles,
+printed locators and page labels were rechecked against physical pages 3–34.
+The HTML converter also checks stable labels, statement numbers, kinds and titles.
+The declared `fact:cg` translation remains: the guide's “Classical input 7.5” is
+the manuscript's “Standard fact 7.5”. The inherited crosswalk remains unchanged
+as history. The current conversion reports a matching PDF checksum.
+
+Paper IV uses the explicitly labeled reconstructed visual source at
+`publication/paper-iv-visual-reconstruction/pages.tex`. Its complete source
+package builds a 28-page PDF: all 27 content pages match the selected 16 October
+PDF after Unicode NFKC and whitespace normalization, while the cover identifies
+the reconstruction. All pages have a recorded visual review. The online V12 and
+V26 now include the selected later PDF's branch clarification and evidence table.
+The atlas exposes the rebuilt PDF and a complete editable-source download.
+[The reconstruction report](PAPER_IV_VISUAL_RECONSTRUCTION.md) closes F04.
+
+`tools/visual_guide_provenance.py` validates the new source and crosswalk
+identities without changing either frozen import. Run it with `--pdf` to repeat
+the full PDF text and page checks with pypdfium2.
 
 `tools/paper_viii_atlas.py` uses the shared worked-atlas renderer and emits
 `documents/paper-viii-atlas.json`. `tools/paper_viii_atlas_sources.py` records the
@@ -236,24 +423,37 @@ explicitly record their two appearances. Run
 complete edition, formula sequence, proof routes, tables and source anchors.
 
 Reading editions keep one complete, native chapter menu in the top navigation.
+Quantum and Circuits also provides `read/monographs-quantum-and-circuits/start.html`:
+three editorial reading paths with prerequisites, chapter links, and checkpoints.
+The visual tour, four-treatment study route, and formal companion link into the
+retained edition. Its contents, reading-library card, work overview, and search
+entry expose the guide without changing the chapter sequence.
+
+The filterable directory at `read/start.html` offers reading paths for substantial
+works with both a complete HTML manuscript and an HTML visual guide. The current
+selection is Papers I–XII, Quantum and Circuits, Large Signal Model, and K-COS:
+15 works and 45 paths. PDF-only works, partial HTML selections, software,
+experiments, and books without an HTML visual companion keep their existing
+reading routes.
+
+Each guide connects a visual introduction, a full reading sequence, and supporting
+evidence. The core papers reuse their work-specific questions, examples, setup
+passages, statements, and written-proof links. K-COS includes its worked enclosure,
+formal correspondence, and reproduction chapters. Quantum and Circuits and Large
+Signal Model retain their curated guides. The reading library, contents, work
+toolbars, catalogue, and search expose the selected guides.
+
+`tools/reading_paths.py` selects eligible editions from the reading configuration.
+`documents/reading-paths.json` records the selection, paths, and destinations.
+The final site check requires exactly the eligible works, three path anchors per
+guide, and valid destinations and entry links. Run
+`python -B -m unittest discover -s tools -p 'test_reading_paths.py' -v` for selection,
+source ownership, missing-resource, scope, curated-guide, and navigation checks.
+
 Footers keep previous/next links and a direct Full contents link, avoiding the
 quadratic storage cost of repeating a second full menu on every topic page.
 Atlas-specific menus retain their existing behavior. The site-size guard
 continues to enforce the 1 GiB GitHub Pages ceiling.
-
-All 90 selected works have `read/<work>/start.html` guides, listed in the
-filterable `read/start.html` directory. Three paths introduce the available
-examples or visual material, give a reading sequence, and connect statements
-with their recorded evidence. The twelve core papers reuse their specific
-questions, examples, setup passages, and written-proof links. Other guides use
-their selected reading resources and exact assessment scope; PDF-only and
-experimental works retain their availability and evidence qualifications.
-The curated Quantum and Circuits guide remains in place with its three paths.
-Contents pages, reading-library cards, work toolbars, catalog cards, and search
-expose the guides. `documents/reading-paths.json` records coverage and destinations;
-the site checker requires one guide per selected work and checks all path targets.
-Run `python -B -m unittest discover -s tools -p 'test_reading_paths.py' -v` for
-coverage, source ownership, missing-resource, scope, and route regressions.
 
 The twelve core editions share collection switching, chapter filtering,
 persistent text size and font choices, and sidebar chapter shortcuts. The
@@ -354,6 +554,12 @@ verifier extracts rendered code text and compares every line with the original
 download, independently of its token spans. Colors and declaration names are
 navigation aids, not a Lean compiler result.
 
+Source rows use their existing `L<number>` IDs inside the source container for
+styling, line controls and saved reading positions. Repeated per-line classes
+are omitted, and Lean token classes are compact. Accessible line labels, source
+text, direct links and original downloads are unchanged. This reduces the
+generated site's storage without removing reading or proof material.
+
 The inspector expands only receipt-owned `.lean` files within the existing
 Lean resource selections. It excludes package caches, build directories and
 `lakefile.lean`. Original source readers retain exact downloads, linked line
@@ -387,6 +593,18 @@ locations against `lean/index.json`.
 Reading routes, glossary, download guides and work introductions are generated
 with the collection's normal status command. Edit their source records or
 templates. Keep each claim's exact recorded scope when changing navigation.
+
+The glossary’s maintained records in `manifests/reader-experience.json` include
+alternate names and abbreviations, short excerpts from the worked examples,
+a first reading route, and comparisons of nearby concepts. Edit those records
+and regenerate `docs/GLOSSARY.md` with `tools/reader_experience.py` through the
+normal status command. The GitHub reference and website lookup share the same
+definitions, examples and original term anchors. Both glossary lookup and
+collection search include the alternate names and short examples. Exact term
+names rank first in glossary lookup, followed by exact alternate names, name
+prefixes and definition matches. Subject filters also apply to alternate names.
+Without JavaScript, the first reading route, comparisons, subject lists, letter
+groups and complete entries remain available.
 
 The homepage keeps its five research previews in one manually selected panel,
 with named topic tabs, previous/next buttons, touch swipes, and standard tab-list
@@ -605,6 +823,21 @@ Generated metadata JSON uses compact syntax to keep the reader within the
 1 GiB publication limit. Parsing preserves every data value and all whitespace
 inside source strings. Receipt-bound files under `documents/files/` and frozen
 asset receipts retain their exact bytes. The site-size guard remains active.
+
+Generated browser Lean layer and workspace manifests use the same compact JSON
+syntax. Their source record is computed after serialization, so its sizes and
+hashes bind the compact files. The copied upstream core manifest, compiler,
+binary packs, import selections, and source strings are unchanged.
+
+Per-work notation downloads may use version 2 to store repeated surrounding
+source text once in a `contexts` array. Each passage's `context` then identifies
+the corresponding array entry. The serialization is used only when it is smaller;
+version 1 remains valid for other files. The notation decoder restores the complete
+logical data before source verification, including all whitespace and TeX in the
+context strings. HTML excerpts, source occurrences, global notation search, and
+chapter notation search retain their existing data and behavior. This storage
+change keeps both K-COS and Machine Native Reasoning within the publication
+budget without removing reading material or weakening the size check.
 
 [Paper X](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-x/index.html)
 has 30 reading pages and a bibliography. It covers all 15 main sections,
@@ -1043,7 +1276,7 @@ and 4 MB in total. The run receives a snapshot in `uploaded_files`. A run report
 records the executed code, output, package and collection revisions, figures, and
 input-file checksums. It omits the uploaded file contents. Edited code, printed
 output and individual results have separate download controls. Draft saving is
-explicit and local to this browser. No account or server execution is involved.
+explicit and local to this browser. Code runs locally.
 
 The helper limits interactive figures to 50,000 samples, messages to 2 MB and
 combined figures and exports to 8 MB per run. Unsupported graphics or unavailable
@@ -1083,6 +1316,13 @@ records and proof assessments retain their previous scope.
 The [notation index](NOTATION_INDEX.md) provides symbol search and a source inventory for every work. Entries link to exact source lines and retain the paper’s own context. Its JSON downloads record every detected occurrence in the selected TeX, Markdown and text sources. PDF and image notation remain explicit coverage limits.
 
 `tools/notation_index.py` builds the reference. `manifests/notation-sources.json` declares additional manuscript entrypoints. The reader follows their literal includes and checks source receipts before indexing. Parser regression tests and the site checker validate extraction, source positions, counts and links.
+
+Unbraced letter arguments retain the separator after their TeX control word.
+For example, `\mathbb R` and `\widehat T` remain valid symbol spellings in the
+index. Braced arguments and arguments that are commands retain their existing
+entry keys. Complete source expressions and their positions remain unchanged.
+Unambiguous legacy fragment anchors remain available for previously joined
+spellings. They open the corrected entry without changing its canonical ID.
 
 Search excerpts omit recognized layout commands and source bookkeeping such as
 `Needspace` and `RecordID`. Balanced arguments keep nested metadata out of the
@@ -1184,6 +1424,84 @@ files. One bibliography typography correction is recommended for a later edition
 use “pp.” before the Mazur entry's page range. The record binds four source files
 and gives the exact source and reading passage. The retained text and mathematical
 tokens are unchanged; the same review exclusions apply.
+
+## Recovery Laboratory
+
+`recovery-lab.html` extends the introductory shared-summary diagram to exact
+linear measurements on 2–4 real input coordinates. Readers edit up to four
+measurement rows and three question rows, using integers from −99 to 99 or
+fractions whose numerator is in that range and whose denominator is 1–99.
+Checkboxes select the available measurement rows. Six starters distinguish
+recoverability, partial loss, redundancy, fractional rules, and full recovery.
+
+The four-step guided investigation introduces information loss, a recoverable
+combination, partial recovery, and minimal repair. Each step loads a tested
+starter, gives a prediction with explanatory feedback, and suggests a concrete
+experiment. A changed-workspace note distinguishes edited settings from the
+guide's starting example. The guide is optional and can be collapsed.
+
+`website/assets/recovery-lab-guidance.mjs` supplies these explanations and
+consumes the existing exact model. Worked substitutions use the actual enabled
+measurement values. Obstruction examples use a separating pair at t = 1 even
+when the exploration slider is zero. “Read the rows as equations” connects
+matrix coefficients to weighted sums and values at the current base input.
+
+For two-coordinate inputs, the fiber picture distinguishes a line, a point,
+and the whole plane according to nullity. For every supported dimension, the
+answer-versus-t graph compares the selected answer with its base value.
+All nine integer samples are recomputed by the exact model and available in a
+captioned table. The description explicitly distinguishes a single flat trace
+from the certificate's check of every invisible direction. Neither graph
+changes the audited core or the scope of the recovery claim.
+
+Graphs have visible descriptions, exact tables, and shape/line distinctions.
+Motion controls have keyboard instructions, value descriptions, and step
+buttons. Overflowing table regions are named and keyboard-focusable. Changes
+announce concise results on committed edits and slider changes; full
+certificates are outside live regions. Native controls, visible focus,
+forced-color styles, wrapping formulas, and layouts at 320 CSS pixels support
+access. These checks do not establish screen-reader compatibility or WCAG
+conformance. The descriptions and status behavior follow the approaches in
+[WAI's complex image guidance](https://www.w3.org/WAI/tutorials/images/complex/)
+and [status message guidance](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html).
+
+`tools/recovery_lab.py` publishes the page and search entry. Its model,
+`website/assets/recovery-lab-core.mjs`, uses reduced BigInt fractions throughout
+row reduction, kernel construction, recovery weights, and rank-based repair.
+The model and controller imports use content versions. A successful question
+shows weights giving its row exactly; an unsuccessful one shows a vector w
+with Rw = 0 and Fw ≠ 0. The input and summary plots approximate the exact values
+in the adjacent table. A zero motion parameter makes the displayed points
+coincide without changing the global obstruction certificate.
+
+The repair retains an independent subset of enabled measurement rows, removes
+redundant and disabled rows, and adds independent question rows until every
+question is recoverable. The additional row count is rank([R; F]) − rank(R).
+Undo restores the original settings. Versioned share links retain all matrices,
+selections, base inputs, and inspection settings; malformed links are rejected.
+JSON downloads contain settings and recomputed exact certificates. Invalid
+matrix edits keep the last valid result visible and disable sharing and repair
+until the entries are complete.
+
+Run `node --test tools/test_recovery_lab.cjs` and
+`python -B -m unittest discover -s tools -p 'test_recovery_lab.py' -v`.
+`tools/audit_recovery_lab.py` independently checks 1,604 cases with Python
+Fraction arithmetic and ranks from determinants of minors. These comprise
+1,354 exhaustive two-coordinate cases and 250 seeded rational cases, including
+coefficients at the supported bounds. The checks verify recovery products,
+kernel bases, obstruction witnesses, row-operation matrices, collisions, and
+minimal sufficient repairs. The page explains the general linear-algebra
+argument separately; finite software checks add no manuscript proof review or
+Lean coverage.
+The [bounded run manifest](../verification/recovery-lab/run-2026-11-03/manifest.json)
+binds the audited model and oracle bytes; its
+[result](../verification/recovery-lab/run-2026-11-03/result.json) records the
+tested case and certificate counts.
+Recovery-specific line-ending rules live in `tools/.gitattributes`,
+`website/assets/.gitattributes`, and `verification/recovery-lab/.gitattributes`.
+The root attributes file is retained byte for byte because the Euler
+publication record binds it. The recovery tests check both that binding and
+the scoped attributes.
 
 ## Signal Laboratory
 

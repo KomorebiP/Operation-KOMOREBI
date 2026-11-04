@@ -1,6 +1,31 @@
-# Three ways into Komorebi
+# Extended case studies and demonstrations
 
 [Project overview](START_HERE.md) · [Project map](PROJECT_MAP.md) · [All hand-worked examples](HAND_WORKED_EXAMPLES.md)
+
+## Extended case studies
+
+Follow one object through several representations, transport its operations,
+and calculate what is preserved or lost. Start with **Euler numbers** for a
+complete arithmetic calculation. Continue with **wavelets and polyphase
+transfer**, explore the companion **factorial lanes**, then compare
+**quantum phase and measurement**.
+These are suggested reading choices; each study can also be read on its own.
+
+| Case study | Starting problem | What the derivation delivers |
+|---|---|---|
+| [Euler numbers](demonstrations/EULER_PACKETS.md) | Reconstruct a reciprocal sequence through other coordinates. | Packet matrices, quartic reconstruction, polynomial identities, refinement, and exact residual repair. |
+| [Wavelets and polyphase transfer](demonstrations/WAVELET_POLYPHASE.md) | Filter a sixteen-sample signal across four Haar levels. | Exact operator transport, sharp finite stability, cross-scale interactions, and the errors caused by omitted transfers or a changed operation order. |
+| [Factorial lanes](demonstrations/FACTORIAL_LANES.md) | Follow one residue section of the exponential. | Reconstruction of 34!, hypergeometric coordinates, reciprocal inversion, a sharpened 5-adic displacement bound, and refinement. |
+| [Quantum phase and measurement](demonstrations/QUANTUM_PHASE_MEASUREMENT.md) | Determine which information a measurement retains. | Exact tomography, a coherence-loss obstruction, reversible records, amplitude damping, and finite syndrome recovery. |
+| [Stirling, Bell and Fubini numbers](demonstrations/STIRLING_BELL_FUBINI.md) | Transfer between counting families and coordinate profiles. | Inverse triangular kernels, generating functions, moment representations, residue transfer, and exact interpolation. |
+| [Roots of unity and falling factorials](demonstrations/ROOTS_UNITY_FALLING_FACTORIAL.md) | Move residue projectors into Newton coordinates. | Exact spectral projectors, refinement, translation transfer, and failures caused by filtering in the wrong basis. |
+
+Each study includes hand derivations, failure controls, source links, and exact
+Python checks. Its own scope section identifies the statements and tested
+ranges. For function constructions, local series, and analytic questions,
+continue to [Special Functions](SPECIAL_FUNCTIONS.md) and its coupled-function lab.
+
+## Three elementary demonstrations
 
 These three demonstrations connect a concrete question to a hand calculation,
 a short program and the relevant mathematical sources. Start with any one.
@@ -145,6 +170,15 @@ signal, and move inputs along a shared-summary line. The controls update the
 diagrams and exact whole-number results immediately, without writing code.
 Each experiment links back to its hand calculation and sources.
 
+The [Recovery Laboratory](https://KomorebiP.github.io/Operation-KOMOREBI/recovery-lab.html)
+extends the shared-summary example to 2–4 input coordinates, up to four
+measurements, and up to three linear questions. Edit integer or rational
+coefficients, disable measurements, and inspect either an exact recovery rule
+or a kernel direction that changes the requested answer. Move two inputs while
+their enabled measurements stay fixed. The repair action adds the minimum
+number of independent linear measurements needed for all the questions, with
+undo. Share the complete settings or download the exact calculation as JSON.
+
 Use **Copy experiment link** to save or share the selected experiment's exact
 inputs and packet or coefficient choices. A Haar link also restores the
 coefficient and sample address being inspected. Open the link to return to
@@ -161,7 +195,7 @@ records the default example and its expected results.
 [Open the Python playground](https://KomorebiP.github.io/Operation-KOMOREBI/playground.html).
 Choose a demonstration, press Run and compare its output with the hand calculation.
 You can edit the code, stop a calculation and reset the original example.
-Python loads on the first run. No account or local installation is needed.
+Python loads on the first run; allow extra time for the initial download.
 The playground also includes a tested introductory Komorebi Math example.
 
 For examples drawn directly from the sequence work, use

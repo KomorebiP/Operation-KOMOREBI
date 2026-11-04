@@ -110,7 +110,7 @@ def check_readable_chapter(root, documents, pages):
         if BOOKS[spec['work']].get('monolithic'):
             validate_monolithic(main,BOOKS[spec['work']])
             assert (report['start_line'],report['end_line'])==(spec['start_line'],spec['end_line'])
-        macro_source=main_path
+        macro_source=BOOKS[spec['work']].get('macro_source',main_path)
         if BOOKS[spec['work']].get('custom_reader')=='quantum':
             from quantum_symmetry import SOURCE,MACROS
             if source==SOURCE:macro_source=MACROS
@@ -127,7 +127,13 @@ def check_readable_chapter(root, documents, pages):
         if BOOKS[spec['work']].get('custom_reader')=='quantum':
             from quantum_reading import source_math
             expressions=source_math(raw.decode('utf-8-sig'),spec)
-        if BOOKS[spec['work']].get('custom_reader')=='methodology':
+        if BOOKS[spec['work']].get('custom_reader')=='large_signal':
+            from large_signal_reading import source_math
+            expressions=source_math(raw.decode('utf-8-sig'),spec)
+        elif BOOKS[spec['work']].get('custom_reader')=='machine_native_reasoning':
+            from machine_native_reasoning_reading import source_math
+            expressions=source_math(raw.decode('utf-8-sig'),spec)
+        elif BOOKS[spec['work']].get('custom_reader')=='methodology':
             from methodology_reading import source_math
             expressions=source_math(raw.decode('utf-8-sig'),spec)
         elif BOOKS[spec['work']].get('custom_reader')=='foundational':
@@ -136,6 +142,10 @@ def check_readable_chapter(root, documents, pages):
         elif BOOKS[spec['work']].get('custom_reader')=='proof_path':
             from proof_path_reading import source_math
             expressions=source_math(main,spec)
+        elif BOOKS[spec['work']].get('custom_reader')=='kcos':
+            from kcos_reading import source_math
+            expressions=source_math(raw.decode('utf-8-sig'),spec,
+                lambda path:(root/records[path]['file_url']).read_text(encoding='utf-8-sig'))
         elif BOOKS[spec['work']].get('custom_reader')=='paper_ix':
             from paper_ix_reading import source_math
             expressions=source_math(raw.decode('utf-8-sig'),spec)
@@ -162,12 +172,22 @@ def check_readable_chapter(root, documents, pages):
         elif BOOKS[spec['work']].get('custom_reader')=='quantum':
             from quantum_reading import source_macros
             expected_macros=source_macros(lambda path:(root/records[path]['file_url']).read_text(encoding='utf-8-sig'),spec)
+        elif BOOKS[spec['work']].get('custom_reader')=='kcos':
+            from kcos_reading import source_macros
+            expected_macros=source_macros((root/records[macro_source]['file_url']).read_text(encoding='utf-8-sig'))
         else:expected_macros=manuscript_macros(main,BOOKS[spec['work']].get('required_macros'))
         assert report['macros']==expected_macros
         assert not report['new_proof_review'] and not report['new_lean_execution']
         for node in report['nodes']+report.get('nested_tables',[]):
             assert node['id'] in pages[page].ids
-            assert 'L'+str(node['line']) in pages[records[source]['url']].ids
+            node_source=node.get('source',source)
+            source_page=records[node_source].get('source_url',records[node_source]['url'])
+            assert 'L'+str(node['line']) in pages[source_page].ids
+            for span in node.get('source_spans',[]):
+                span_record=records[span['source']]
+                span_page=span_record.get('source_url',span_record['url'])
+                assert 'L'+str(span['line']) in pages[span_page].ids
+                assert 'L'+str(span['end_line']) in pages[span_page].ids
         markup=(root/page).read_text(encoding='utf-8')
         aids={}
         config=BOOKS[spec['work']]
@@ -185,9 +205,13 @@ def check_readable_chapter(root, documents, pages):
 
 def inspect_site(root):
     files={p.relative_to(root).as_posix() for p in root.rglob('*') if p.is_file()}
+    from jspace_lab import APP_URL as JSPACE_APP_URL, verify as verify_jspace_lab
+    jspace_lab = verify_jspace_lab(root)
     # The pinned third-party viewer has its own interface and localization markup.
     # Verify its integrity separately, while checking every link into it below.
-    pages={p:Page((root/p).read_text(encoding='utf-8')) for p in files if p.endswith('.html') and not p.startswith('assets/pdfjs/')}
+    # Only the authenticated, unchanged lab asset keeps its original interface.
+    # Its reader-site entry still receives all ordinary accessibility/link checks.
+    pages={p:Page((root/p).read_text(encoding='utf-8')) for p in files if p.endswith('.html') and not p.startswith('assets/pdfjs/') and p != JSPACE_APP_URL}
     links=0;fragments=0
     for path,page in pages.items():
         assert page.language=='en',(path,'Language')
@@ -353,6 +377,8 @@ def inspect_site(root):
     paper_xi_atlas = verify_paper_xi_atlas(root,documents,pages)
     from paper_xii_atlas import verify as verify_paper_xii_atlas
     paper_xii_atlas = verify_paper_xii_atlas(root,documents,pages)
+    from large_signal_atlas import verify as verify_large_signal_atlas
+    large_signal_atlas = verify_large_signal_atlas(root,documents,pages)
     from paper_vi_atlas import verify as verify_paper_vi_atlas
     from paper_v_atlas import verify as verify_paper_v_atlas
     paper_v_atlas = verify_paper_v_atlas(root,documents,pages)
@@ -409,15 +435,15 @@ def inspect_site(root):
     lean_execution=verify_lean_execution(root,documents)
     from lean_browser import verify as verify_lean_browser
     verify_lean_browser(root,documents)
-    site_bytes=sum(p.stat().st_size for p in root.rglob('*') if p.is_file())
     from reading_paths import verify as verify_reading_paths
     reading_paths=verify_reading_paths(root,documents,pages)
+    site_bytes=sum(p.stat().st_size for p in root.rglob('*') if p.is_file())
     print('Published site bytes:',site_bytes,flush=True)
     assert site_bytes < 1024**3, 'Published reader site exceeds GitHub Pages size limit: '+str(site_bytes)
-    return dict(status='PASS',html_pages=len(pages),local_links=links,fragments=fragments,euler_worked_examples=euler_cases,factorial_worked_examples=factorial_cases,wavelet_worked_examples=wavelet_cases,stirling_worked_examples=stirling_cases,roots_newton_worked_examples=roots_newton_cases,
+    return dict(status='PASS',html_pages=len(pages),local_links=links,fragments=fragments,jspace_lab=jspace_lab,euler_worked_examples=euler_cases,factorial_worked_examples=factorial_cases,wavelet_worked_examples=wavelet_cases,stirling_worked_examples=stirling_cases,roots_newton_worked_examples=roots_newton_cases,
                 quantum_worked_examples=quantum_cases,search_pages=len(index),reading_bundles=len(bundles),checked_bundle_files=zipped_files,download_selection=download_selection,side_reader=side_reader,
                 reading_documents=len(documents['files']),pdfs=pdf_count,editorial_editions=len(editions),readable_math_expressions=readable_math,paper_vii=paper_vii,atlas=atlas,paper_i_atlas=paper_i_atlas,core_worked_atlases=core_worked_atlases,paper_viii_atlas=paper_viii_atlas,paper_ix_atlas=paper_ix_atlas,paper_x_atlas=paper_x_atlas,paper_xi_atlas=paper_xi_atlas,paper_xii_atlas=paper_xii_atlas,paper_v_atlas=paper_v_atlas,paper_vi_atlas=paper_vi_atlas,paper_vii_atlas=paper_vii_atlas,notation=notation,special_functions=special_functions,reading_navigation=reading_navigation,
-                proofreading=proofreading,copyediting=copyediting,reading_links=reading_links,statement_navigation=statement_navigation,reference_previews=reference_previews,reading_paths=reading_paths,lean_reader=lean_reader,lean_playground=lean_playground,lean_execution=lean_execution,scope='Static navigation, HTML structure and ZIP source identities. Not WCAG certification or mathematical review.')
+                proofreading=proofreading,copyediting=copyediting,reading_links=reading_links,statement_navigation=statement_navigation,reference_previews=reference_previews,reading_paths=reading_paths,lean_reader=lean_reader,lean_playground=lean_playground,lean_execution=lean_execution,large_signal_atlas=large_signal_atlas,scope='Static navigation, HTML structure and ZIP source identities. Not WCAG certification or mathematical review.')
 
 
 def main():

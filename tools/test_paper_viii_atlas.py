@@ -49,15 +49,16 @@ class PaperVIIIAtlasTests(unittest.TestCase):
         source=(ROOT/ATLAS.drawing_source('complex_core')).read_text(encoding='utf-8-sig')
         with self.assertRaisesRegex(ValueError,'inventory'):drawing_nodes(source.replace('6/0/2/0','6/0/2/1'),'complex_core')
 
-    def test_stale_pdf_checksum_and_printed_kind_are_explicit(self):
+    def test_current_pdf_checksum_and_printed_kind_are_explicit(self):
         checks=self.report['edition_checks']
-        self.assertFalse(checks['crosswalk_pdf_checksum_current'])
+        self.assertTrue(checks['crosswalk_pdf_checksum_current'])
         self.assertNotEqual(checks['inherited_crosswalk_pdf_sha256'],checks['retained_pdf_sha256'])
         self.assertEqual(len(checks['pdf_page_checks']),32)
         self.assertEqual(self.report['figures']['triangular']['isolated_drawing_objects']['objects'],48)
         body=(self.output/ATLAS.plate_url(18)).read_text(encoding='utf-8')
         self.assertIn('Classical input 7.5',body);self.assertIn('Standard fact 7.5',body)
-        self.assertIn('different PDF checksum',body)
+        self.assertIn('revised crosswalk binds all 32 plates',body)
+        self.assertNotIn('different PDF checksum',body)
 
     def test_changed_math_and_reachable_but_wrong_target_are_rejected(self):
         path=self.output/ATLAS.plate_url(29);original=path.read_bytes()
@@ -72,12 +73,12 @@ class PaperVIIIAtlasTests(unittest.TestCase):
             with self.assertRaises(AssertionError):ATLAS.verify(self.output,self.documents,self.pages)
         finally:path.write_bytes(original)
 
-    def test_missing_second_source_and_forged_current_checksum_are_rejected(self):
+    def test_missing_second_source_and_forged_checksum_status_are_rejected(self):
         path=self.output/ATLAS.REPORT;original=path.read_bytes()
         for change in ('source','checksum'):
             report=json.loads(original)
             if change=='source':report['source_inputs'].pop(ATLAS.SOURCES[1])
-            else:report['edition_checks']['crosswalk_pdf_checksum_current']=True
+            else:report['edition_checks']['crosswalk_pdf_checksum_current']=False
             path.write_text(json.dumps(report),encoding='utf-8')
             try:
                 with self.assertRaises(AssertionError):ATLAS.verify(self.output,self.documents,self.pages)

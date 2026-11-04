@@ -22,11 +22,31 @@ I am the named author and take responsibility for what I publish and for correct
 
 Review must be documented separately. Publication under my name does not imply that every proof has received my personal approval, independent human review, or external certification.
 
+## Citations and acknowledgment of prior work
+
+This project draws extensively on the work of other researchers and contributors. I estimate that thousands of research papers have been examined in detail and used throughout its development, alongside many thousands of instances of consulting and using material from the [On-Line Encyclopedia of Integer Sequences (OEIS)](https://oeis.org/). These are retrospective estimates of the scale of that work, rather than audited counts of distinct sources.
+
+Those contributions range from a passing comment or observation that suggested a direction to a closed-form expression, an argument, an example, or a program used in the work. I am grateful to the authors of those papers and to the contributors whose sequence entries, comments, formulas, references, and code make OEIS useful to this research.
+
+The citation record is incomplete. Until now, keeping track of every source and its role throughout the project has not been feasible. I am working to reconstruct that record, add missing citations, and correct attribution across the manuscripts, software, and website as the sources are identified and checked.
+
+Specific contributions need specific credit. This acknowledgment accompanies that continuing work and does not replace citations to the sources actually used. For OEIS material, the aim is to identify the sequence entry and the particular comment, formula, reference, or program used, together with its credited contributor or underlying source where available. An absent citation should not be read as a claim that the corresponding idea, formula, or code originated here.
+
+Readers who recognize a missing or inaccurate attribution are welcome to [report it through the repository's issue tracker](https://github.com/KomorebiP/Operation-KOMOREBI/issues/new/choose). Identifying the passage, formula, or program and the relevant source will help me make a precise correction.
+
 ## Current state and publication circumstances
 
 This work remains in progress and has, in many respects, been rushed because of circumstances shaped by the AI industry. I am continuing to correct, verify, and organize it.
 
 The works are at different stages of development and review. The [finalization queue](FINALIZATION_QUEUE.md) records remaining editorial work, source checks, proof replays, software tests, and reviews. Completion and confidence labels reflect the evidence recorded for each work. All executable software remains **beta and a work in progress**.
+
+## Why unfinished work is included
+
+The collection is both a body of mathematical work and a record of how that work develops. Drafts, partial results, calculations, experiments, and open directions are included deliberately to make the intermediate steps toward completion visible. They help readers trace how questions, arguments, and constructions take shape, where gaps remain, and what still needs to be checked.
+
+Inclusion does not mean that an item is finished or that every claim has been verified. Each work should be read alongside its stated scope, completion status, assumptions, and recorded evidence.
+
+I will continue to audit, correct, and update the collection as time and resources permit. My main focus is the [core papers](../papers/README.md), [Komorebi Space](works/komorebi-space.md), and the more complete works. The broader collection preserves the surrounding research process as those priorities advance.
 
 ## How to evaluate the collection
 

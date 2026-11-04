@@ -150,7 +150,7 @@ exact source bytes are copied into module paths. The overlay's pinned Lean and
 Mathlib environment comes from the retained Paper V setup. It is an experiment
 in that environment, not a claim to have recovered the original setup.
 
-The bundle includes the retained Lean sources for the 16 reading editions plus
+The bundle includes the retained Lean sources selected by the reading editions, plus
 source/configuration inputs for their Lake projects. Compiled objects, package
 caches, historical result logs and binary publication archives are omitted. Source/license paths and
 checksums are listed in CATALOG.json. Keep this bundle with a run's records.

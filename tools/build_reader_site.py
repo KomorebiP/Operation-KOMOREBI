@@ -55,8 +55,11 @@ def math_fences(rendered):
 
 def site_navigation(page):
     """Ordinary links with a progressively enhanced, nonmodal disclosure."""
+    from core_visual_guides import is_visual_guide
+    work=page.split('/')[1] if page.startswith('read/') and page.count('/')>1 else ''
+    visual_location=bool(work and is_visual_guide(work,page))
     def link(title, target):
-        current = ' aria-current="page"' if target == page else ''
+        current = ' aria-current="page"' if target == page else (' aria-current="location"' if target=='read/visual-guides.html' and visual_location else '')
         url = posixpath.relpath(target, posixpath.dirname(page) or '.')
         icon = ('<svg class="site-search-icon" viewBox="0 0 20 20" width="17" height="17" '
                 'aria-hidden="true" focusable="false"><circle cx="8.5" cy="8.5" r="5.5"/>'
@@ -64,27 +67,30 @@ def site_navigation(page):
         return '<a href="'+html.escape(url, quote=True)+'"'+current+'>'+icon+html.escape(title)+'</a>'
     groups = [
         ('Read', [('Reading routes', 'collection/READING_ROUTES.html'),
+                  ('Extended case studies', 'collection/DEMONSTRATIONS.html#extended-case-studies'),
                   ('Saved reading', 'reading-list.html'),
                   ('Physics collection', 'collection/PHYSICS_COLLECTION.html'),
                   ('Special Functions', 'collection/SPECIAL_FUNCTIONS.html'),
                   ('Papers and PDFs', 'documents.html'),
-                  ('Core visual guides', 'read/visual-guides.html'),
                   ('Read side by side', 'side-by-side.html'),
                   ('Worked examples', 'collection/HAND_WORKED_EXAMPLES.html')]),
         ('Look up', [('Claims', 'claims.html'),
                      ('Inspect Lean', 'lean/index.html'),
                      ('Notation', 'notation.html')]),
         ('Use', [('Signal laboratory', 'signal-lab.html'),
+                 ('Recovery laboratory', 'recovery-lab.html'),
+                 ('J-Space laboratory', 'j-lab.html'),
                  ('Interactive diagrams', 'interactive.html'),
                  ('Run Python', 'playground.html'), ('Software', 'software.html'),
                  ('Downloads', 'downloads.html'),
+                 ('Future Developments', 'collection/FUTURE_DEVELOPMENTS.html'),
                  ('Accessibility', 'collection/ACCESSIBILITY.html')]),
     ]
     panel = ''.join('<div><p class="site-nav-label">'+title+'</p><ul>'+''.join(
         '<li>'+link(label, target)+'</li>' for label, target in links)+'</ul></div>'
         for title, links in groups)
     return ('<nav class="site-navigation" aria-label="Main navigation">'
-            '<div class="site-navigation-bar"><div class="site-nav-links">'+link('Read', 'read/index.html')+link('Collection', 'works.html')+
+            '<div class="site-navigation-bar"><div class="site-nav-links">'+link('Read', 'read/index.html')+link('Visual guides', 'read/visual-guides.html')+link('Collection', 'works.html')+
             link('Glossary', 'collection/GLOSSARY.html')+link('About', 'collection/START_HERE.html')+
             '</div><div class="site-nav-tools">'+link('Search', 'search.html')+
             '<button id="site-menu-toggle" type="button" aria-expanded="true" '
@@ -329,7 +335,7 @@ class Site:
         article_start=body.find('<article id="chapter-text"')
         side_context=body[:article_start] if edition(path) and article_start>=0 else body
         has_side_action=('class="side-launch"' in side_context) if edition(path) else ('data-side-reader-link' in side_context)
-        if not work_page and not has_side_action and path not in {'side-by-side.html','index.html','404.html','interactive.html','signal-lab.html','works.html','reading-list.html','lean/playground.html','lean/run.html'}:
+        if not work_page and not has_side_action and path not in {'side-by-side.html','index.html','404.html','interactive.html','signal-lab.html','recovery-lab.html','j-lab.html','works.html','reading-list.html','lean/playground.html','lean/run.html','read/visual-guides.html'}:
             pair=self.rel('side-by-side.html',path)+'?left='+quote(path,safe='')
             launch='<p class="side-launch"><a data-side-reader-link href="'+esc(pair,quote=True)+'">Read side by side</a></p>'
             body=re.sub(r'(</h1>)',lambda match:match[1]+launch,body,count=1)
@@ -346,6 +352,9 @@ class Site:
         brand_assets={name:self.rel('assets/brand/'+name,path)+'?v='+hashlib.sha256(
             (self.root/'website/assets/brand'/name).read_bytes()).hexdigest()[:12]
             for name in ('komorebi-logo.svg','favicon.svg','favicon-32.png','apple-touch-icon.png')}
+        from core_visual_guides import is_visual_guide
+        visual_work=path.split('/')[1] if path.startswith('read/') and path.count('/')>1 else ''
+        visual_page=bool(visual_work and '<article id="chapter-text"' in body and is_visual_guide(visual_work,path))
         doc='''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Read Komorebi papers, follow recorded proofs, and run finite mathematical examples.">
@@ -357,7 +366,7 @@ class Site:
 <link rel="stylesheet" href="'''+self.rel('assets/open-research.css',path)+'?v='+hashlib.sha256((self.root/'website/assets/open-research.css').read_bytes()).hexdigest()[:12]+'''">
 <link rel="stylesheet" href="'''+self.rel('assets/side-reader.css',path)+'?v='+hashlib.sha256((self.root/'website/assets/side-reader.css').read_bytes()).hexdigest()[:12]+'''">
 <script defer src="'''+self.rel('assets/mathjax-config.js',path)+'''"></script><script defer src="'''+self.rel('assets/mathjax/tex-svg-full.js',path)+'''"></script>
-<script defer src="'''+self.rel('assets/reader.js',path)+'?v='+hashlib.sha256((self.root/'website/assets/reader.js').read_bytes()).hexdigest()[:12]+'''"></script>'''+glossary_script+chapter_help_script+home_assets+reading_list_assets+'''</head><body class="open-research'''+(' home-page' if path == 'index.html' else '')+(' reading-page' if reading_page else '')+(' work-page' if work_page else '')+'''">
+<script defer src="'''+self.rel('assets/reader.js',path)+'?v='+hashlib.sha256((self.root/'website/assets/reader.js').read_bytes()).hexdigest()[:12]+'''"></script>'''+glossary_script+chapter_help_script+home_assets+reading_list_assets+'''</head><body class="open-research'''+(' home-page' if path == 'index.html' else '')+(' reading-page' if reading_page else '')+(' work-page' if work_page else '')+(' visual-reading' if visual_page else '')+'''">
 <a class="skip-link" href="#main">Skip to main content</a><header class="site-header"><a class="brand" href="'''+root+'''" aria-label="Komorebi home"><span class="brand-wordmark"><img class="brand-logo" src="'''+brand_assets['komorebi-logo.svg']+'''" alt="Komorebi" width="1320" height="240"><span class="brand-fallback" aria-hidden="true">Komorebi</span><small>Mathematics · proofs · software</small></span></a>'''+nav_html+'''</header>
 <main id="main" tabindex="-1">'''+body+'''</main><footer><div class="footer-inner"><nav class="footer-links" aria-label="Project information">'''+source_html+'''<a href="'''+self.rel('collection/PROJECT_STATEMENT.html',path)+'''">Project and authorship statement</a><a href="'''+self.rel('collection/ACCESSIBILITY.html',path)+'''">Accessibility and reporting problems</a></nav><a class="footer-github" href="https://github.com/'''+REPOSITORY+'''">Return to GitHub <span aria-hidden="true">↗</span></a></div></footer></body></html>'''
         self.write(path,doc)
@@ -602,12 +611,13 @@ class Site:
             ''.join('<option value="'+e(code)+'">'+e(label)+'</option>'
                     for code,label in options)+'</select>'
             for key,title,default,options in facet_dimensions)
-        self.page('search.html','Search the collection','<h1>Search the collection</h1><p>Find a work, a claim, a written proof location, Lean guidance, code or a worked example. Choose one work to keep its related material together. Open a PDF and use its reader search to find words throughout that document. Discipline and evidence filters refer to associated works, not the proof status of each search hit. Unassociated pages are excluded when these filters are active.</p><form id="site-search" data-facets="work-facets.json?v='+e(self.revision)+'" data-index="search-index.json?v='+e(self.revision)+'"><label for="search-query">Word, symbol name or question</label><input id="search-query" type="search" name="q" autocomplete="off"><label for="search-group">Repository</label><select id="search-group"><option value="">All repositories</option><option>Collection</option><option>Komorebi Math</option><option>Polyphase Float</option></select><label for="search-work">Work</label><select id="search-work"><option value="">All works</option>'+work_options+'</select>'+search_facets+'<label for="search-kind">Result type</label><select id="search-kind"><option value="">All result types</option><option>Claims</option><option>Written proofs</option><option>Lean</option><option>Code</option><option>Glossary</option><option>Notation</option><option>Examples</option><option>Papers and source</option><option>Guides</option></select><label for="search-size">Results per page</label><select id="search-size" name="per_page"><option value="10">10</option><option value="20">20</option><option value="40" selected>40</option><option value="80">80</option></select><button type="submit">Search</button><button type="reset">Clear search</button></form><p id="search-status" role="status" aria-live="polite">Enter a search term.</p>'+page_navigation('search','top')+'<ol id="search-results"></ol>'+page_navigation('search','bottom')+'<noscript><p>Search needs JavaScript. You can still <a href="works.html">browse all works</a> and use the <a href="collection/GLOSSARY.html">glossary</a>.</p></noscript>')
+        self.page('search.html','Search the collection','<h1>Search the collection</h1><p>Search papers, visual guides, proofs, notation, code, and worked examples. Choose a work or result type to narrow the list. Use a PDF’s reader search for its full text.</p><form id="site-search" data-facets="work-facets.json?v='+e(self.revision)+'" data-index="search-index.json?v='+e(self.revision)+'"><label for="search-query">Word, symbol name or question</label><input id="search-query" type="search" name="q" autocomplete="off"><div class="search-primary-fields"><div><label for="search-work">Work</label><select id="search-work"><option value="">All works</option>'+work_options+'</select></div><div>'+'<label for="search-kind">Result type</label><select id="search-kind"><option value="">All result types</option><option>Claims</option><option>Written proofs</option><option>Lean</option><option>Code</option><option>Glossary</option><option>Notation</option><option>Examples</option><option>Papers and source</option><option>Guides</option><option>Visual guides</option></select></div></div><details id="search-extra-options" class="search-extra-options"><summary>More options</summary><label for="search-group">Repository</label><select id="search-group"><option value="">All repositories</option><option>Collection</option><option>Komorebi Math</option><option>Polyphase Float</option></select>'+search_facets+'<label for="search-size">Results per page</label><select id="search-size" name="per_page"><option value="10">10</option><option value="20">20</option><option value="40" selected>40</option><option value="80">80</option></select><p>Discipline, completion stage, Lean coverage, and evidence describe associated works. Filtering by these fields excludes entries without an associated work.</p></details><div class="search-actions"><button type="submit">Search</button><button type="reset">Clear search</button></div></form><p id="search-status" role="status" aria-live="polite">Enter a search term.</p>'+page_navigation('search','top')+'<ol id="search-results"></ol>'+page_navigation('search','bottom')+'<noscript><p>Search needs JavaScript. You can still <a href="works.html">browse all works</a> and use the <a href="collection/GLOSSARY.html">glossary</a>.</p></noscript>')
         self.claim_index()
         self.reader.search_routes()
         learning=json.loads((self.root/'manifests/reader-experience.json').read_bytes())
+        from glossary_reader import glossary_search_text
         for term in learning['glossary']:
-            self.search.append(dict(title=term['term'], group='Collection', kind='Glossary', url='collection/GLOSSARY.html#'+term['id'], text=term['term']+' '+term['definition']+' '+' '.join(term.get('related',[])),work_ids=sorted({w for t in learning.get('learning_topics',[]) if term['id'] in t['terms'] for w in t['works']})))
+            self.search.append(dict(title=term['term'], group='Collection', kind='Glossary', url='collection/GLOSSARY.html#'+term['id'], text=glossary_search_text(term)+' '+' '.join(term.get('related',[])),work_ids=sorted({w for t in learning.get('learning_topics',[]) if term['id'] in t['terms'] for w in t['works']})))
         for item in self.search:
             if 'kind' not in item:
                 url=item['url']
@@ -647,9 +657,8 @@ class Site:
         self.collect_documents()
         self.reader.prepare()
         shutil.copytree(self.root/'website/assets',self.output/'assets',dirs_exist_ok=True)
-        if not self.mathjax_root or not (self.mathjax_root/'a11y/explorer.js').is_file():
-            raise ValueError('The complete pinned MathJax runtime is required')
-        shutil.copytree(self.mathjax_root,self.output/'assets/mathjax')
+        from reader_runtime import publish_mathjax
+        publish_mathjax(self.mathjax_root,self.output/'assets/mathjax')
         from fetch_pdf_runtime import verify as verify_pdf_runtime
         if not self.pdfjs_root:
             raise ValueError('The pinned PDF.js runtime is required')
@@ -692,6 +701,10 @@ class Site:
         build_interactive_diagrams(self)
         from signal_lab import build as build_signal_lab
         build_signal_lab(self)
+        from recovery_lab import build as build_recovery_lab
+        build_recovery_lab(self)
+        from jspace_lab import build as build_jspace_lab
+        jspace_lab = build_jspace_lab(self)
         self.indexes()
         from reading_list import build as build_reading_list
         build_reading_list(self)
@@ -706,6 +719,7 @@ class Site:
         result['lean_execution'] = lean_execution
         result['lean_browser'] = lean_browser
         result['side_reader'] = side_reader
+        result['jspace_lab'] = jspace_lab
         self.write('build-info.json',json.dumps(result,indent=2)+'\n')
         print(json.dumps(result))
 

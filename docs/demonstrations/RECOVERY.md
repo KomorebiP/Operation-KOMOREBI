@@ -7,6 +7,17 @@
 [Explore the interactive diagram](https://KomorebiP.github.io/Operation-KOMOREBI/interactive.html#recovery)
 to move inputs with the same summary and change the question you want to recover.
 
+[Open the Recovery Laboratory](https://KomorebiP.github.io/Operation-KOMOREBI/recovery-lab.html)
+to change the measurement matrix itself, ask several questions, inspect exact
+recovery rules or collision witnesses, and repair an insufficient summary.
+Its four-step guided investigation starts with addition, then introduces
+recoverable combinations, separate questions, and minimal repair. Prediction
+prompts include explanations. Read the matrix rows as equations, follow a
+numerical substitution, and compare a fiber picture with the selected
+answer's graph. Each graph has a visible description and exact value table;
+the controls work with the keyboard. Open “Notation, everyday meanings, and
+access help” for the symbols and interaction instructions.
+
 **Question:** If a summary keeps only the sum of two coordinates, can it recover
 the first coordinate? This example needs only addition and the idea of a function.
 

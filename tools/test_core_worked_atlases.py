@@ -62,6 +62,17 @@ class CoreWorkedAtlasTests(unittest.TestCase):
                 labels,math,links={'paper-ii':(754,1043,40),'paper-iii':(488,747,44)}[work]
                 self.assertEqual((result['transcribed_labels'],result['math_expressions'],result['return_links']),(labels,math,links))
 
+    def test_subject_search_titles_retain_original_pdf_label_searches(self):
+        for work,atlas in ATLASES.items():
+            reader,_,_=self.fixtures[work]
+            entry=next(r for r in reader.site.search if r['url']==atlas.plate_url(3))
+            self.assertTrue(entry['title'].startswith(atlas.label+' visual guide / '))
+            self.assertNotIn('/ V3:',entry['title'])
+            self.assertIn('Visual 3 V3',entry['text'])
+            self.assertTrue(entry['visual_guide'])
+            self.assertTrue(entry['preview_parts'])
+            self.assertFalse(any(p['text'].startswith('Visual 3 V3') for p in entry['preview_parts']))
+
     def test_every_label_and_source_table_is_present(self):
         for work,atlas in ATLASES.items():
             report=json.loads((self.output/atlas.REPORT).read_bytes())

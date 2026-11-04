@@ -1,24 +1,49 @@
 # Glossary and notation
 
-This guide explains 183 terms used in the collection and its finite examples. Start with a subject below, use the [alphabetical index](#alphabetical-index), or look up [symbols](#symbols-in-the-introductory-example).
+This guide explains 183 terms used in the collection and its finite examples. Use the [first reading route](#a-first-reading), [compare nearby ideas](#compare-nearby-ideas), browse a subject, or open the [alphabetical index](#alphabetical-index).
 
-[Find a glossary term on the reading website](https://KomorebiP.github.io/Operation-KOMOREBI/collection/GLOSSARY.html#glossary-lookup): search terms and definitions, or choose a subject. Open the glossary beside a paper with **Read side by side**.
+[Find a glossary term on the reading website](https://KomorebiP.github.io/Operation-KOMOREBI/collection/GLOSSARY.html#glossary-lookup): search names, abbreviations, definitions and short examples, or choose a subject. Open the glossary beside a paper with **Read side by side**.
 
 A word can have a more specific meaning in another paper. The paper’s definitions and hypotheses take precedence. Examples and source links provide context without changing any recorded evidence status.
 
 [Look up notation across the collection](NOTATION_INDEX.md) · [Work through the calculations by hand](HAND_WORKED_EXAMPLES.md) · [Papers, proofs, Lean, and code by topic](LEARNING_MAP.md) · [First software runs](FIRST_RUN.md)
 
-- [Linear foundations](#linear-foundations)
-- [Operators, seeds, and packets](#operators-and-packets)
-- [Coordinates and transfer](#coordinates-and-transfer)
-- [Refinement and constraints](#refinement-and-constraints)
-- [Arithmetic and error](#arithmetic-and-error)
-- [Claims and evidence](#claims-and-evidence)
-- [Series and cyclic functions](#series-and-functions)
-- [Finite quantum systems](#finite-quantum)
-- [Arithmetic and modules](#arithmetic-and-modules)
-- [Dynamics, memory, and calibration](#dynamics-and-calibration)
-- [Inference and probability](#inference-and-probability)
+## A first reading
+
+Follow these terms for a short route through the finite examples. Each definition links to a worked calculation.
+
+1. [Realization](#realization) · [Seed](#seed) · [Seed rank](#seed-rank) — Identify the system, the allowed action and the data that generate it.
+2. [Projector](#projector) · [Packet](#packet) — See how an object splits into selected components.
+3. [Coordinates](#coordinates) · [Analysis and synthesis](#analysis-synthesis) — Follow a representation from the object to coordinates and back.
+4. [Transfer block](#transfer-block) · [Residual](#residual) — Track an operation between components and check a reconstruction.
+
+## Compare nearby ideas
+
+These distinctions use the glossary’s stated settings. Follow both entries for their definitions and examples.
+
+| Terms | Distinction to keep in view |
+|---|---|
+| [Seed rank](#seed-rank) / [Dimension](#dimension) | Seed rank counts generators under the declared operator action. Vector-space dimension counts basis vectors under scalar linear combinations. In the two-dimensional seed example, seed rank is one. |
+| [Projector](#projector) / [Orthogonal projector](#orthogonal-projector) | A projector satisfies P² = P. Orthogonality additionally depends on an inner product; algebraic packet reconstruction also permits oblique projectors. |
+| [Left inverse](#left-inverse) / [Inverse](#inverse) | SA = I recovers original objects after analysis. A two-sided inverse also satisfies AS = I on the coordinate space. Redundant coordinates can have the first identity without the second. |
+| [Kernel](#kernel) / [Fiber](#fiber) | For a linear map, the kernel is the fiber over zero. Every nonempty fiber is a translate of that kernel. Fibers of a general nonlinear map need not have this form. |
+| [Residual](#residual) / [Obstruction](#obstruction) | A residual records a discrepancy for the stated calculation. An obstruction rules out a proposed construction under specified assumptions. A nonzero residual alone need not rule out a different construction. |
+| [Precision](#precision) / [Precision matrix](#precision-matrix) | Arithmetic precision counts significant digits in a representation. A precision matrix is an inverse covariance. The shared word refers to different objects. |
+| [Finite check](#finite-check) / [Proof](#proof) | Exhaustive checking can prove a statement about its declared finite domain. Sampled cases in a larger domain require an additional argument to establish a universal statement. |
+
+## Browse by subject
+
+- [Linear foundations](#linear-foundations) — 26 terms
+- [Operators, seeds, and packets](#operators-and-packets) — 24 terms
+- [Coordinates and transfer](#coordinates-and-transfer) — 15 terms
+- [Refinement and constraints](#refinement-and-constraints) — 21 terms
+- [Arithmetic and error](#arithmetic-and-error) — 13 terms
+- [Claims and evidence](#claims-and-evidence) — 15 terms
+- [Series and cyclic functions](#series-and-functions) — 11 terms
+- [Finite quantum systems](#finite-quantum) — 13 terms
+- [Arithmetic and modules](#arithmetic-and-modules) — 23 terms
+- [Dynamics, memory, and calibration](#dynamics-and-calibration) — 13 terms
+- [Inference and probability](#inference-and-probability) — 9 terms
 
 <a id="linear-foundations"></a>
 
@@ -65,6 +90,8 @@ A collection of vectors closed under addition and scalar multiplication, with th
 ### Linear map
 
 A map T satisfying T(au + bv) = aT(u) + bT(v) for all vectors u, v and allowed scalars a, b. A linear map preserves linear combinations.
+
+**Also called:** Linear transformation.
 
 [Hand-worked example](examples/04_TRANSFER.md) · [Further reading](https://github.com/KomorebiP/komorebi-math/blob/main/docs/GENERAL_COORDINATE_ATLAS.md#coordinate-systems-and-atlases) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#transfer) · [Matrix](#matrix) · [Kernel](#kernel) · [Image](#image)
 
@@ -122,6 +149,10 @@ The number of vectors in a basis of a finite-dimensional vector space. In these 
 
 For a linear map T, the vectors sent to zero: ker T = {x : Tx = 0}. A nonzero kernel describes directions that this map cannot distinguish from zero.
 
+**Also called:** Nullspace, Null space.
+
+**In the worked example:** For the sum map R(a,b) = a+b over R, the vector (1,−1)ᵀ lies in the kernel: R(1,−1) = 0. Adding this vector does not change the observed sum.
+
 [Hand-worked example](examples/07_OBSTRUCTIONS.md) · [Further reading](https://github.com/KomorebiP/komorebi-math/blob/main/docs/CARRIER_CHANGE_OBSTRUCTIONS.md#factorization-criterion) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#obstructions) · [Image](#image) · [Fiber](#fiber) · [Factorization through a map](#factorization)
 
 <a id="image"></a>
@@ -129,6 +160,10 @@ For a linear map T, the vectors sent to zero: ker T = {x : Tx = 0}. A nonzero ke
 ### Image
 
 The outputs actually attained by a map. For a linear map T, im T = {Tx : x is an allowed input} is a subspace of the target. The declared target can be larger than the image.
+
+**Also called:** Range, Range of a linear map.
+
+**In the worked example:** For A(a,b) = (a,b,a+b), the image consists of triples whose third coordinate is the sum of the first two. The coordinate vector (0,0,1)ᵀ lies outside it.
 
 [Hand-worked example](examples/06_REDUNDANT_COORDINATES.md) · [Further reading](https://github.com/KomorebiP/komorebi-math/blob/main/docs/CARRIER_CHANGE_OBSTRUCTIONS.md#factorization-criterion) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#redundancy) · [Kernel](#kernel) · [Rank](#rank) · [Left inverse](#left-inverse)
 
@@ -188,6 +223,8 @@ For a linear map with finite-dimensional domain V, dim V = rank T + nullity T. T
 
 A map that sends distinct inputs to distinct outputs. A linear map is injective exactly when its kernel contains only zero.
 
+**Also called:** Injection, One-to-one map.
+
 [Hand-worked example](examples/10_KERNELS.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#kernels) · [Kernel](#kernel) · [Left inverse](#left-inverse)
 
 <a id="surjective"></a>
@@ -196,6 +233,8 @@ A map that sends distinct inputs to distinct outputs. A linear map is injective 
 
 A map whose image is its entire declared target. Surjectivity depends on which target is specified.
 
+**Also called:** Surjection, Onto map.
+
 [Hand-worked example](examples/10_KERNELS.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#kernels) · [Image](#image) · [Rank](#rank)
 
 <a id="isomorphism"></a>
@@ -203,6 +242,8 @@ A map whose image is its entire declared target. Surjectivity depends on which t
 ### Linear isomorphism
 
 A bijective linear map between vector spaces over the same field. Its inverse is linear. It preserves the vector-space structure, although lengths need not be preserved.
+
+**Also called:** Invertible linear map.
 
 [Hand-worked example](examples/03_COORDINATES.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#coordinates) · [Inverse](#inverse) · [Coordinate change](#coordinate-change)
 
@@ -260,6 +301,8 @@ A way to represent a declared system using concrete spaces and operations while 
 
 Initial generating data from which the allowed operator action produces further elements. Whether a seed is sufficient depends on both the object and the declared action.
 
+**In the worked example:** On R², let N(a,b) = (b,0) and v = (0,1). Then Nv = (1,0), so v and its image generate every vector by linear combinations.
+
 [Hand-worked example](examples/02_SEEDS.md) · [Further reading](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#1-seed) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#seeds) · [Span](#span) · [Seed rank](#seed-rank) · [Cyclic vector](#cyclic)
 
 <a id="address"></a>
@@ -276,6 +319,10 @@ A label for a legal operator path or a packet coordinate. Examples include signa
 
 A linear operator P satisfying P² = P. Applying it twice has the same effect as applying it once. This algebraic definition does not require orthogonality.
 
+**Also called:** Projection, Idempotent linear operator.
+
+**In the worked example:** On R², P₁(a,b) = (a,0). Applying P₁ again still gives (a,0), so P₁² = P₁.
+
 [Hand-worked example](examples/01_PACKETS.md) · [Further reading](https://github.com/KomorebiP/komorebi-math/blob/main/docs/ANALYSIS_SYNTHESIS_SYSTEMS.md#components-versus-projectors) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#packets) · [Orthogonal projector](#orthogonal-projector) · [Packet](#packet) · [Redundant coordinates](#redundancy)
 
 <a id="packet"></a>
@@ -283,6 +330,8 @@ A linear operator P satisfying P² = P. Applying it twice has the same effect as
 ### Packet
 
 In the finite projector example, a selected component Pᵢx or the subspace in which it lies, according to context. Signal, algebraic and arithmetic works may assign the word more specific meanings.
+
+**In the worked example:** For x = (2,3)ᵀ, the coordinate projectors give packets P₁x = (2,0)ᵀ and P₂x = (0,3)ᵀ. Their sum recovers x.
 
 [Hand-worked example](examples/01_PACKETS.md) · [Further reading](https://github.com/KomorebiP/komorebi-math/blob/main/docs/USER_GUIDE.md#first-program-packet-analysis-and-reconstruction) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#packets) · [Projector](#projector) · [Complete packet family](#complete-packet-family) · [Address](#address)
 
@@ -308,6 +357,8 @@ In the finite linear setting, a collection of linear operators closed under sums
 
 In the finite linear example, the least number of seeds whose operator-generated span is the whole space. More general definitions can involve modules, dense generation, and cardinalities. Read the definition in the chosen work.
 
+**In the worked example:** For N(a,b) = (b,0) on R², one seed v = (0,1) suffices. With only the zero operator and the identity, two seeds are needed on the same space.
+
 [Hand-worked example](examples/02_SEEDS.md) · [Further reading](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#1-seed) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#seeds) · [Seed](#seed) · [Span](#span) · [Rank](#rank)
 
 <a id="cyclic"></a>
@@ -315,6 +366,8 @@ In the finite linear example, the least number of seeds whose operator-generated
 ### Cyclic vector
 
 For a single linear operator T, a vector v is cyclic when v, Tv, T²v and further iterates span the space under consideration. One cyclic vector is enough to generate that operator module.
+
+**Also called:** Cyclic seed.
 
 [Hand-worked example](examples/02_SEEDS.md) · [Further reading](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#1-seed) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#seeds) · [Seed](#seed) · [Span](#span)
 
@@ -438,6 +491,8 @@ A required equality between legal operator expressions, such as T² = 0. In a ty
 
 An operator N for which Nᵏ = 0 for some positive integer k. It can be nonzero. The smallest such k on a nonzero space is its nilpotency index.
 
+**Also called:** Nilpotent linear map.
+
 [Hand-worked example](examples/20_SUPPORT_AND_MULTIPLICITY.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#support-multiplicity) · [Operator algebra](#operator-algebra) · [Minimal polynomial](#minimal-polynomial)
 
 <a id="coordinates-and-transfer"></a>
@@ -454,6 +509,8 @@ How descriptions change and operations move between components.
 
 Values describing an object relative to a chosen representation. Coordinates can be unique basis coefficients or redundant measurements, depending on the setup.
 
+**In the worked example:** The coordinate change C(a,b) = (a + b/2,b) sends x = (2,3)ᵀ to y = (7/2,3)ᵀ. These describe the same object in two coordinate systems.
+
 [Hand-worked example](examples/03_COORDINATES.md) · [Further reading](https://github.com/KomorebiP/komorebi-math/blob/main/docs/GENERAL_COORDINATE_ATLAS.md#coordinate-systems-and-atlases) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#coordinates) · [Basis](#basis) · [Coordinate change](#coordinate-change) · [Redundant coordinates](#redundancy)
 
 <a id="analysis-synthesis"></a>
@@ -461,6 +518,8 @@ Values describing an object relative to a chosen representation. Coordinates can
 ### Analysis and synthesis
 
 Analysis sends an object to coordinates. Synthesis returns an object from coordinates. In the finite model, A analyzes and S synthesizes, and exact reconstruction is the identity SA = I.
+
+**In the worked example:** The analysis A(a,b) = (a,b,a+b) sends (2,3)ᵀ to (2,3,5)ᵀ. The example’s synthesis S returns (2,3)ᵀ, with SA = I₂.
 
 [Hand-worked example](examples/06_REDUNDANT_COORDINATES.md) · [Further reading](https://github.com/KomorebiP/komorebi-math/blob/main/docs/ANALYSIS_SYNTHESIS_SYSTEMS.md#definition) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#redundancy) · [Left inverse](#left-inverse) · [Coordinates](#coordinates) · [Reconstruction](#reconstruction)
 
@@ -470,6 +529,8 @@ Analysis sends an object to coordinates. Synthesis returns an object from coordi
 
 The part of an operation connecting a source component to a target component. With source projector Pᵢ, target projector Qⱼ and operator T, the block is QⱼTPᵢ. Complete source and target families allow the blocks to reconstruct T.
 
+**In the worked example:** For T = [[1,2],[3,4]], the coordinate block P₁TP₂ sends (2,3)ᵀ to (6,0)ᵀ. It carries source coordinate 2 into target coordinate 1.
+
 [Hand-worked example](examples/04_TRANSFER.md) · [Further reading](https://github.com/KomorebiP/komorebi-math/blob/main/docs/GENERAL_COORDINATE_ATLAS.md#tensor-and-operator-transport) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#transfer) · [Projector](#projector) · [Composition](#composition) · [Reconstruction](#reconstruction)
 
 <a id="coordinate-change"></a>
@@ -477,6 +538,8 @@ The part of an operation connecting a source component to a target component. Wi
 ### Coordinate change
 
 A transformation between descriptions of the same object. In the invertible linear example the convention is y = Cx, so x = C⁻¹y. Keeping track of the direction prevents inverse formulas from being swapped.
+
+**Also called:** Change of coordinates.
 
 [Hand-worked example](examples/03_COORDINATES.md) · [Further reading](https://github.com/KomorebiP/komorebi-math/blob/main/docs/GENERAL_COORDINATE_ATLAS.md#tensor-and-operator-transport) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#coordinates) · [Coordinates](#coordinates) · [Inverse](#inverse) · [Operator conjugation](#conjugation)
 
@@ -494,6 +557,8 @@ A map that undoes another map in both directions. For a square invertible matrix
 
 For A mapping an input space to a coordinate space, S is a left inverse when SA = I on the input space. This gives exact reconstruction of analyzed inputs. It does not imply AS = I on the entire coordinate space.
 
+**In the worked example:** The redundant-coordinate example has SA = I₂ but AS ≠ I₃. S recovers every original vector even though it does not invert every three-coordinate input.
+
 [Hand-worked example](examples/06_REDUNDANT_COORDINATES.md) · [Further reading](https://github.com/KomorebiP/komorebi-math/blob/main/docs/ANALYSIS_SYNTHESIS_SYSTEMS.md#definition) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#redundancy) · [Inverse](#inverse) · [Analysis and synthesis](#analysis-synthesis) · [Image](#image)
 
 <a id="redundancy"></a>
@@ -501,6 +566,8 @@ For A mapping an input space to a coordinate space, S is a left inverse when SA 
 ### Redundant coordinates
 
 A representation containing more coordinate entries than are needed for a basis description. Valid coordinate lists can satisfy relations, such as a third measurement being the sum of the first two.
+
+**Also called:** Redundant representation.
 
 **Keep in mind:** The reconstruction components SEᵢA can sum to the identity without being projectors.
 
@@ -519,6 +586,8 @@ Applying one map after another. In a matrix product UT, T acts first and U acts 
 ### Operator conjugation
 
 The change in an operator matrix under an invertible coordinate change. With y = Cx and original operator T, the new matrix is CTC⁻¹. This usage is distinct from complex conjugation.
+
+**Also called:** Similarity transformation.
 
 [Hand-worked example](examples/03_COORDINATES.md) · [Further reading](https://github.com/KomorebiP/komorebi-math/blob/main/docs/GENERAL_COORDINATE_ATLAS.md#tensor-and-operator-transport) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#coordinates) · [Coordinate change](#coordinate-change) · [Intertwiner](#intertwiner)
 
@@ -584,6 +653,8 @@ How descriptions become finer, discard information or meet a compatibility condi
 
 A compatible move from a coarser description to a finer one. In finite packet refinement, each fine packet has a coarse parent and each coarse projector is the sum of its children.
 
+**In the worked example:** The zero-based even indices split into residue classes 0 and 2 modulo 4. Their selectors satisfy P₀ = F₀ + F₂.
+
 [Hand-worked example](examples/05_REFINEMENT.md) · [Further reading](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#6-refine) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#refinement) · [Coarsening](#coarsening) · [Compatibility](#compatibility) · [Residue class](#residue-class)
 
 <a id="obstruction"></a>
@@ -591,6 +662,8 @@ A compatible move from a coarser description to a finer one. In finite packet re
 ### Obstruction
 
 An identified reason a requested construction cannot meet its stated conditions. In the recovery example, two inputs have the same coarse value but require different answers, so no recovery function from that value alone exists.
+
+**In the worked example:** The inputs (1,0) and (0,1) have the same sum but different first coordinates. No function of their sum alone can return the first coordinate for every real input.
 
 **Keep in mind:** A nonzero numerical residual is not automatically a proof that every possible construction fails.
 
@@ -609,6 +682,8 @@ Passing to a description that groups or forgets distinctions. Combining fine pac
 ### Polyphase decomposition
 
 For a sequence x and a positive integer m, the phase r collects samples x_(mk+r), with 0 ≤ r < m. Interleaving all phases reconstructs the indexed sequence. Filtering requires additional boundary and convention choices.
+
+**Also called:** Polyphase splitting.
 
 [Hand-worked example](examples/05_REFINEMENT.md) · [Further reading](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#signal-realization) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#refinement) · [Address](#address) · [Residue class](#residue-class) · [Reconstruction](#reconstruction)
 
@@ -649,6 +724,10 @@ Recovering an object from its representation under the stated identities. Exact 
 ### Fiber
 
 For a map R and an output s, the set of all inputs with R(x) = s. A proposed observation can be recovered from R(x) alone only if it is constant on each fiber.
+
+**Also called:** Fibre, Preimage of a point.
+
+**In the worked example:** For R(a,b) = a+b on R², the fiber over 1 consists of all (t,1−t) with real t. It contains both (1,0) and (0,1).
 
 [Hand-worked example](examples/07_OBSTRUCTIONS.md) · [Further reading](https://github.com/KomorebiP/komorebi-math/blob/main/docs/CARRIER_CHANGE_OBSTRUCTIONS.md#factorization-criterion) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#obstructions) · [Kernel](#kernel) · [Factorization through a map](#factorization)
 
@@ -764,6 +843,8 @@ How exact values, stored approximations, and error measures differ.
 
 A discrepancy computed for a specified identity or reconstruction. In Example 5 it is r = x − x̂. Other operations may use a different sign or norm, so the definition belongs with the reported number.
 
+**In the worked example:** Dropping residue class 2 modulo 4 from (1,2,3,4,5,6,7,8) gives r = (0,0,3,0,0,0,7,0). Its squared Euclidean norm is 58.
+
 [Hand-worked example](examples/05_REFINEMENT.md) · [Further reading](https://github.com/KomorebiP/komorebi-math/blob/main/docs/USER_GUIDE.md#certificates-and-saved-evidence) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#refinement) · [Norm](#norm) · [Tolerance](#tolerance) · [Obstruction](#obstruction)
 
 <a id="exact"></a>
@@ -796,6 +877,8 @@ The capacity of a numerical representation. For the binary model here it is the 
 
 A rational number expressible as an integer divided by a power of two. These are precisely the rational numbers with a finite binary expansion, apart from representation range limits.
 
+**Also called:** Binary rational.
+
 [Hand-worked example](examples/09_BINARY_ROUNDING.md) · [Further reading](https://github.com/KomorebiP/polyphase-float/blob/main/docs/manual/glossary.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#rounding) · [Exact](#exact) · [Rounding](#rounding)
 
 <a id="rounding"></a>
@@ -811,6 +894,8 @@ Choosing a representable stored value for an exact value according to a specifie
 ### ULP
 
 A unit in the last retained place at a specified precision and exponent. In the three-bit example the spacing in [1, 2) is 1/4, while the spacing in [2, 4) is 1/2. It is not one fixed absolute distance.
+
+**Also called:** Unit in the last place.
 
 [Hand-worked example](examples/09_BINARY_ROUNDING.md) · [Further reading](https://github.com/KomorebiP/polyphase-float/blob/main/docs/manual/glossary.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#rounding) · [Precision](#precision) · [Rounding](#rounding)
 
@@ -844,6 +929,8 @@ The relation a ≡ b modulo m means m divides a − b, with m a positive integer
 
 Integers with greatest common divisor one. Pairwise coprime moduli give independent residue coordinates in the ordinary Chinese remainder theorem.
 
+**Also called:** Relatively prime integers.
+
 [Hand-worked example](examples/13_MODULAR_RECONSTRUCTION.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#modular) · [Chinese remainder theorem](#chinese-remainder) · [Integer congruence](#congruence)
 
 <a id="modular-inverse"></a>
@@ -859,6 +946,8 @@ An integer b with ab ≡ 1 modulo m. For m greater than one, it exists exactly w
 ### Chinese remainder theorem
 
 For pairwise coprime positive moduli, a tuple of residues specifies exactly one residue class modulo their product. Selecting an integer representative requires an additional convention.
+
+**Also called:** CRT.
 
 [Hand-worked example](examples/13_MODULAR_RECONSTRUCTION.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#modular) · [Residue class](#residue-class) · [Coprime integers](#coprime) · [Reconstruction](#reconstruction)
 
@@ -1028,6 +1117,8 @@ Keeping only specified degrees or levels. Equality modulo zᴺ means the coeffic
 
 For a power series over a field with nonzero constant coefficient, the unique series whose product with it is one. Its coefficients are determined recursively. A finite truncation only verifies the corresponding finite set of coefficient identities.
 
+**Also called:** Multiplicative inverse of a formal series.
+
 [Hand-worked example](examples/16_CYCLIC_RECIPROCALS.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#cyclic-reciprocals) · [Power series](#power-series) · [Coefficient convolution](#convolution) · [Field](#field)
 
 <a id="convolution"></a>
@@ -1084,6 +1175,8 @@ Evaluation at qz with 0<q<1 in the feedback example. A term cₙzⁿ becomes c�
 
 A rule determining successive series coefficients from earlier ones. It gives exact finite calculations at each degree. Analytic convergence and bounds for a discarded tail require additional arguments.
 
+**Also called:** Recurrence for coefficients.
+
 [Hand-worked example](examples/24_CONTRACTED_FEEDBACK.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#contracted-feedback) · [Coefficient](#coefficient) · [Truncation](#truncation) · [Coefficient convolution](#convolution)
 
 <a id="finite-quantum"></a>
@@ -1107,6 +1200,8 @@ For real a and b, the conjugate of a+bi is a−bi. The squared modulus is (a+bi)
 ### Adjoint matrix
 
 For a complex matrix in orthonormal bases, the adjoint A* is its conjugate transpose. In real orthonormal bases this is the ordinary transpose.
+
+**Also called:** Conjugate transpose, Hermitian transpose.
 
 [Hand-worked example](examples/17_QUANTUM_MEASUREMENT.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#quantum-measurement) · [Complex conjugate](#complex-conjugate) · [Inner product](#inner-product)
 
@@ -1172,6 +1267,8 @@ For a specified complete orthogonal family Pᵢ, the channel ρ ↦ sum PᵢρP�
 
 Matrices Kᵢ describing a finite quantum channel by Φ(ρ) = sum KᵢρKᵢ*. The condition sum Kᵢ*Kᵢ = I makes this map trace preserving.
 
+**Also called:** Kraus representation.
+
 [Hand-worked example](examples/17_QUANTUM_MEASUREMENT.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#quantum-measurement) · [Adjoint matrix](#adjoint) · [Density matrix](#density-matrix) · [Matrix trace](#trace)
 
 <a id="hermitian"></a>
@@ -1180,6 +1277,8 @@ Matrices Kᵢ describing a finite quantum channel by Φ(ρ) = sum KᵢρKᵢ*. T
 
 A complex square matrix A with A* = A. Its diagonal entries are real and opposite off-diagonal entries are complex conjugates. This condition alone does not imply positivity.
 
+**Also called:** Self-adjoint matrix.
+
 [Hand-worked example](examples/17_QUANTUM_MEASUREMENT.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#quantum-measurement) · [Adjoint matrix](#adjoint) · [Positive semidefinite matrix](#positive-semidefinite)
 
 <a id="positive-semidefinite"></a>
@@ -1187,6 +1286,8 @@ A complex square matrix A with A* = A. Its diagonal entries are real and opposit
 ### Positive semidefinite matrix
 
 A Hermitian matrix A for which v*Av is nonnegative for every vector v. Zero eigenvalues are allowed.
+
+**Also called:** PSD, PSD matrix.
 
 [Hand-worked example](examples/17_QUANTUM_MEASUREMENT.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#quantum-measurement) · [Hermitian matrix](#hermitian) · [Eigenvalue](#eigenvalue) · [Density matrix](#density-matrix)
 
@@ -1524,6 +1625,8 @@ A model with a Gaussian state and specified linear observations with Gaussian no
 
 The state distribution specified before conditioning on the observation under the declared model. A Gaussian prior is described by its mean and covariance.
 
+**Also called:** Prior.
+
 [Hand-worked example](examples/26_GAUSSIAN_UPDATE.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#gaussian-update) · [Finite-dimensional Gaussian model](#gaussian-model) · [Posterior distribution](#posterior) · [Covariance matrix](#covariance)
 
 <a id="likelihood"></a>
@@ -1539,6 +1642,8 @@ For a fixed observed value, the observation density viewed as a function of the 
 ### Posterior distribution
 
 The state distribution conditional on the observed data under the supplied prior and observation model. The tutorial computes the usual explicit Gaussian conditional density by completing the square.
+
+**Also called:** Posterior.
 
 [Hand-worked example](examples/26_GAUSSIAN_UPDATE.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#gaussian-update) · [Prior distribution](#prior) · [Likelihood](#likelihood) · [Exact Gaussian gain](#gaussian-gain)
 
@@ -1556,6 +1661,8 @@ For a random vector X with mean m and finite second moments, the matrix E[(X−m
 
 The inverse covariance when the covariance is invertible. In a nonsingular Gaussian density it appears in the quadratic exponent. This use of precision is distinct from the number of bits in stored arithmetic.
 
+**Also called:** Inverse covariance matrix.
+
 [Hand-worked example](examples/26_GAUSSIAN_UPDATE.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#gaussian-update) · [Covariance matrix](#covariance) · [Inverse](#inverse) · [Precision](#precision)
 
 <a id="innovation"></a>
@@ -1563,6 +1670,8 @@ The inverse covariance when the covariance is invertible. In a nonsingular Gauss
 ### Observation innovation
 
 The difference d=y−Hm between an observation and its predicted mean in the linear model. Its covariance is S=HPHᵀ+R when the state covariance is P and the independent noise covariance is R.
+
+**Also called:** Observation residual.
 
 [Hand-worked example](examples/26_GAUSSIAN_UPDATE.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#gaussian-update) · [Finite-dimensional Gaussian model](#gaussian-model) · [Covariance matrix](#covariance) · [Exact Gaussian gain](#gaussian-gain)
 
@@ -1610,6 +1719,138 @@ Symbols are local to their definitions. In another paper, the same letter can de
 
 ## Alphabetical index
 
-[Address](#address) · [Adjoint matrix](#adjoint) · [Admissible leaf](#admissible-leaf) · [Analysis and synthesis](#analysis-synthesis) · [Autonomous dynamics of a summary](#autonomous-dynamics) · [Basis](#basis) · [Block matrix](#block-matrix) · [Born probability](#born-probability) · [Calibration span](#calibration-span) · [Certificate](#certificate) · [Chinese remainder theorem](#chinese-remainder) · [Coarsening](#coarsening) · [Coefficient](#coefficient) · [Coefficient convolution](#convolution) · [Coefficient recurrence](#coefficient-recurrence) · [Coherence in a chosen basis](#coherence) · [Cokernel](#cokernel) · [Commutative ring with identity](#ring) · [Commutator](#commutator) · [Commuting diagram](#commuting-diagram) · [Compatibility](#compatibility) · [Compatible model](#compatible-model) · [Compatible tower](#compatible-tower) · [Complete packet family](#complete-packet-family) · [Completion](#completion) · [Complex conjugate](#complex-conjugate) · [Composition](#composition) · [Conditional](#conditional) · [Contracted argument](#contracted-argument) · [Coordinate change](#coordinate-change) · [Coordinates](#coordinates) · [Coprime integers](#coprime) · [Covariance matrix](#covariance) · [Cyclic vector](#cyclic) · [Density matrix](#density-matrix) · [Dephasing](#dephasing) · [Derivative in the series example](#derivative) · [Detail coefficient](#detail-coefficient) · [Determinant](#determinant) · [Diagonalizable operator](#diagonalizable) · [Differential equation](#differential-equation) · [Dimension](#dimension) · [Direct sum](#direct-sum) · [Discrete memory maps](#memory-kernel) · [Domain and codomain](#domain-codomain) · [Dyadic rational](#dyadic-rational) · [Eigenspace](#eigenspace) · [Eigenvalue](#eigenvalue) · [Eigenvector](#eigenvector) · [Elimination](#elimination) · [Exact](#exact) · [Exact Gaussian gain](#gaussian-gain) · [Exact operator calibration](#calibration) · [Extension field](#extension-field) · [Factorization through a map](#factorization) · [Feasibility](#feasibility) · [Fiber](#fiber) · [Field](#field) · [Field norm](#field-norm) · [Field trace](#field-trace) · [Finite check](#finite-check) · [Finite conditional expectation](#conditional-expectation) · [Finite proof field](#proof-field) · [Finite repair menu](#repair-menu) · [Finite-dimensional Gaussian model](#gaussian-model) · [Finite-field Frobenius](#frobenius) · [Formal reciprocal](#formal-reciprocal) · [Free linear repair](#free-repair) · [Haar pair](#haar-pair) · [Hermitian matrix](#hermitian) · [Heuristic](#heuristic) · [Hidden state](#hidden-state) · [Hypothesis](#hypothesis) · [Ideal](#ideal) · [Identifiability relative to a model class](#identifiability) · [Identity operator](#identity) · [Image](#image) · [Inclusion-minimal certificate](#inclusion-minimal) · [Initial condition](#initial-condition) · [Injective map](#injective) · [Inner product](#inner-product) · [Integer congruence](#congruence) · [Intertwiner](#intertwiner) · [Invariant subspace](#invariant-subspace) · [Inverse](#inverse) · [Irreducible polynomial](#irreducible-polynomial) · [Joseph covariance](#joseph-covariance) · [Kernel](#kernel) · [Kraus operators](#kraus-operator) · [Lean correspondence](#lean-correspondence) · [Least certificate](#least-certificate) · [Left inverse](#left-inverse) · [Lift](#lift) · [Lift branch](#lift-branch) · [Likelihood](#likelihood) · [Linear extension](#linear-extension) · [Linear independence](#linear-independence) · [Linear isomorphism](#isomorphism) · [Linear map](#linear-map) · [Linear obstruction witness](#dual-witness) · [Localization at a prime](#localization) · [Matrix](#matrix) · [Matrix trace](#trace) · [Minimal polynomial](#minimal-polynomial) · [Minimum-cost certificate](#minimum-cost-certificate) · [Modular inverse](#modular-inverse) · [Modular reduction](#modular-reduction) · [Module](#module) · [Module annihilator](#annihilator) · [Module presentation](#module-presentation) · [Module support](#module-support) · [Multiplicity in the module example](#multiplicity) · [Mutual annihilation](#mutual-annihilation) · [Nilpotent operator](#nilpotent) · [Norm](#norm) · [Normalization](#normalization) · [Nullity](#nullity) · [Numerical](#numerical) · [Numerical ternary](#ternary) · [Observation innovation](#innovation) · [Obstruction](#obstruction) · [Operator algebra](#operator-algebra) · [Operator conjugation](#conjugation) · [Operator relation](#relation) · [Orthogonal matrix](#orthogonal-matrix) · [Orthogonal projector](#orthogonal-projector) · [p-adic integer](#padic-integer) · [Packet](#packet) · [Polynomial in an operator](#polynomial-in-operator) · [Polyphase decomposition](#polyphase) · [Positive semidefinite matrix](#positive-semidefinite) · [Posterior distribution](#posterior) · [Power series](#power-series) · [Precision](#precision) · [Precision matrix](#precision-matrix) · [Prepared hidden initialization](#prepared-state) · [Prime field](#prime-field) · [Prime ideal](#prime-ideal) · [Prime power](#prime-power) · [Prior distribution](#prior) · [Projector](#projector) · [Proof](#proof) · [Purity of a density matrix](#purity) · [Quantum amplitude](#amplitude) · [Quotient space](#quotient-space) · [Rank](#rank) · [Rank–nullity identity](#rank-nullity) · [Realization](#realization) · [Reconstruction](#reconstruction) · [Recorded inference rule](#inference-rule) · [Redundant coordinates](#redundancy) · [Refinement](#refinement) · [Repair direction](#repair-direction) · [Repair selection cost](#repair-cost) · [Residual](#residual) · [Residue class](#residue-class) · [Reusable calibrated core](#reusable-core) · [Root of unity](#root-of-unity) · [Rounding](#rounding) · [Scalar](#scalar) · [Schur complement](#schur-complement) · [Seed](#seed) · [Seed rank](#seed-rank) · [Semigroup law for evolution maps](#semigroup-law) · [Span](#span) · [Spectral projector](#spectral-projector) · [State augmentation](#state-augmentation) · [Subspace](#subspace) · [Surjective map](#surjective) · [Survival to a finite level](#surviving-branch) · [Theorem](#theorem) · [Tolerance](#tolerance) · [Transfer block](#transfer-block) · [Truncation](#truncation) · [Typed path](#typed-path) · [Typed system](#typed-system) · [ULP](#ulp) · [Unitary matrix](#unitary) · [Vector](#vector) · [Vector space](#vector-space) · [Verification closure](#verification-closure) · [Visible state](#visible-state) · [Zeroth Fitting ideal](#fitting-ideal)
+[A](#index-a) · [B](#index-b) · [C](#index-c) · [D](#index-d) · [E](#index-e) · [F](#index-f) · [H](#index-h) · [I](#index-i) · [J](#index-j) · [K](#index-k) · [L](#index-l) · [M](#index-m) · [N](#index-n) · [O](#index-o) · [P](#index-p) · [Q](#index-q) · [R](#index-r) · [S](#index-s) · [T](#index-t) · [U](#index-u) · [V](#index-v) · [Z](#index-z)
+
+<a id="index-a"></a>
+
+### A
+
+[Address](#address) · [Adjoint matrix](#adjoint) · [Admissible leaf](#admissible-leaf) · [Analysis and synthesis](#analysis-synthesis) · [Autonomous dynamics of a summary](#autonomous-dynamics)
+
+<a id="index-b"></a>
+
+### B
+
+[Basis](#basis) · [Block matrix](#block-matrix) · [Born probability](#born-probability)
+
+<a id="index-c"></a>
+
+### C
+
+[Calibration span](#calibration-span) · [Certificate](#certificate) · [Chinese remainder theorem](#chinese-remainder) · [Coarsening](#coarsening) · [Coefficient](#coefficient) · [Coefficient convolution](#convolution) · [Coefficient recurrence](#coefficient-recurrence) · [Coherence in a chosen basis](#coherence) · [Cokernel](#cokernel) · [Commutative ring with identity](#ring) · [Commutator](#commutator) · [Commuting diagram](#commuting-diagram) · [Compatibility](#compatibility) · [Compatible model](#compatible-model) · [Compatible tower](#compatible-tower) · [Complete packet family](#complete-packet-family) · [Completion](#completion) · [Complex conjugate](#complex-conjugate) · [Composition](#composition) · [Conditional](#conditional) · [Contracted argument](#contracted-argument) · [Coordinate change](#coordinate-change) · [Coordinates](#coordinates) · [Coprime integers](#coprime) · [Covariance matrix](#covariance) · [Cyclic vector](#cyclic)
+
+<a id="index-d"></a>
+
+### D
+
+[Density matrix](#density-matrix) · [Dephasing](#dephasing) · [Derivative in the series example](#derivative) · [Detail coefficient](#detail-coefficient) · [Determinant](#determinant) · [Diagonalizable operator](#diagonalizable) · [Differential equation](#differential-equation) · [Dimension](#dimension) · [Direct sum](#direct-sum) · [Discrete memory maps](#memory-kernel) · [Domain and codomain](#domain-codomain) · [Dyadic rational](#dyadic-rational)
+
+<a id="index-e"></a>
+
+### E
+
+[Eigenspace](#eigenspace) · [Eigenvalue](#eigenvalue) · [Eigenvector](#eigenvector) · [Elimination](#elimination) · [Exact](#exact) · [Exact Gaussian gain](#gaussian-gain) · [Exact operator calibration](#calibration) · [Extension field](#extension-field)
+
+<a id="index-f"></a>
+
+### F
+
+[Factorization through a map](#factorization) · [Feasibility](#feasibility) · [Fiber](#fiber) · [Field](#field) · [Field norm](#field-norm) · [Field trace](#field-trace) · [Finite check](#finite-check) · [Finite conditional expectation](#conditional-expectation) · [Finite proof field](#proof-field) · [Finite repair menu](#repair-menu) · [Finite-dimensional Gaussian model](#gaussian-model) · [Finite-field Frobenius](#frobenius) · [Formal reciprocal](#formal-reciprocal) · [Free linear repair](#free-repair)
+
+<a id="index-h"></a>
+
+### H
+
+[Haar pair](#haar-pair) · [Hermitian matrix](#hermitian) · [Heuristic](#heuristic) · [Hidden state](#hidden-state) · [Hypothesis](#hypothesis)
+
+<a id="index-i"></a>
+
+### I
+
+[Ideal](#ideal) · [Identifiability relative to a model class](#identifiability) · [Identity operator](#identity) · [Image](#image) · [Inclusion-minimal certificate](#inclusion-minimal) · [Initial condition](#initial-condition) · [Injective map](#injective) · [Inner product](#inner-product) · [Integer congruence](#congruence) · [Intertwiner](#intertwiner) · [Invariant subspace](#invariant-subspace) · [Inverse](#inverse) · [Irreducible polynomial](#irreducible-polynomial)
+
+<a id="index-j"></a>
+
+### J
+
+[Joseph covariance](#joseph-covariance)
+
+<a id="index-k"></a>
+
+### K
+
+[Kernel](#kernel) · [Kraus operators](#kraus-operator)
+
+<a id="index-l"></a>
+
+### L
+
+[Lean correspondence](#lean-correspondence) · [Least certificate](#least-certificate) · [Left inverse](#left-inverse) · [Lift](#lift) · [Lift branch](#lift-branch) · [Likelihood](#likelihood) · [Linear extension](#linear-extension) · [Linear independence](#linear-independence) · [Linear isomorphism](#isomorphism) · [Linear map](#linear-map) · [Linear obstruction witness](#dual-witness) · [Localization at a prime](#localization)
+
+<a id="index-m"></a>
+
+### M
+
+[Matrix](#matrix) · [Matrix trace](#trace) · [Minimal polynomial](#minimal-polynomial) · [Minimum-cost certificate](#minimum-cost-certificate) · [Modular inverse](#modular-inverse) · [Modular reduction](#modular-reduction) · [Module](#module) · [Module annihilator](#annihilator) · [Module presentation](#module-presentation) · [Module support](#module-support) · [Multiplicity in the module example](#multiplicity) · [Mutual annihilation](#mutual-annihilation)
+
+<a id="index-n"></a>
+
+### N
+
+[Nilpotent operator](#nilpotent) · [Norm](#norm) · [Normalization](#normalization) · [Nullity](#nullity) · [Numerical](#numerical) · [Numerical ternary](#ternary)
+
+<a id="index-o"></a>
+
+### O
+
+[Observation innovation](#innovation) · [Obstruction](#obstruction) · [Operator algebra](#operator-algebra) · [Operator conjugation](#conjugation) · [Operator relation](#relation) · [Orthogonal matrix](#orthogonal-matrix) · [Orthogonal projector](#orthogonal-projector)
+
+<a id="index-p"></a>
+
+### P
+
+[p-adic integer](#padic-integer) · [Packet](#packet) · [Polynomial in an operator](#polynomial-in-operator) · [Polyphase decomposition](#polyphase) · [Positive semidefinite matrix](#positive-semidefinite) · [Posterior distribution](#posterior) · [Power series](#power-series) · [Precision](#precision) · [Precision matrix](#precision-matrix) · [Prepared hidden initialization](#prepared-state) · [Prime field](#prime-field) · [Prime ideal](#prime-ideal) · [Prime power](#prime-power) · [Prior distribution](#prior) · [Projector](#projector) · [Proof](#proof) · [Purity of a density matrix](#purity)
+
+<a id="index-q"></a>
+
+### Q
+
+[Quantum amplitude](#amplitude) · [Quotient space](#quotient-space)
+
+<a id="index-r"></a>
+
+### R
+
+[Rank](#rank) · [Rank–nullity identity](#rank-nullity) · [Realization](#realization) · [Reconstruction](#reconstruction) · [Recorded inference rule](#inference-rule) · [Redundant coordinates](#redundancy) · [Refinement](#refinement) · [Repair direction](#repair-direction) · [Repair selection cost](#repair-cost) · [Residual](#residual) · [Residue class](#residue-class) · [Reusable calibrated core](#reusable-core) · [Root of unity](#root-of-unity) · [Rounding](#rounding)
+
+<a id="index-s"></a>
+
+### S
+
+[Scalar](#scalar) · [Schur complement](#schur-complement) · [Seed](#seed) · [Seed rank](#seed-rank) · [Semigroup law for evolution maps](#semigroup-law) · [Span](#span) · [Spectral projector](#spectral-projector) · [State augmentation](#state-augmentation) · [Subspace](#subspace) · [Surjective map](#surjective) · [Survival to a finite level](#surviving-branch)
+
+<a id="index-t"></a>
+
+### T
+
+[Theorem](#theorem) · [Tolerance](#tolerance) · [Transfer block](#transfer-block) · [Truncation](#truncation) · [Typed path](#typed-path) · [Typed system](#typed-system)
+
+<a id="index-u"></a>
+
+### U
+
+[ULP](#ulp) · [Unitary matrix](#unitary)
+
+<a id="index-v"></a>
+
+### V
+
+[Vector](#vector) · [Vector space](#vector-space) · [Verification closure](#verification-closure) · [Visible state](#visible-state)
+
+<a id="index-z"></a>
+
+### Z
+
+[Zeroth Fitting ideal](#fitting-ideal)
 
 [Reading routes](READING_ROUTES.md) · [Hand-worked examples](HAND_WORKED_EXAMPLES.md) · [First runs](FIRST_RUN.md) · [Browse works](BROWSE.md)

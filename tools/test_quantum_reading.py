@@ -142,6 +142,21 @@ class QuantumReadingTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             output=Path(folder);reader=publish_fixture(output)
             pages={p.relative_to(output).as_posix():Page(p.read_text(encoding='utf-8')) for p in output.rglob('*.html')}
+            from quantum_visual_guides import PAGE as VISUAL_INDEX,sequences,verify as verify_visual_guides
+            self.assertEqual(verify_visual_guides(pages),50)
+            visual_pages={p['url'] for sequence in sequences() for p in sequence['pages']}
+            hits=[item for item in reader.site.search if item['url'].partition('#')[0] in visual_pages]
+            self.assertEqual({item['url'].partition('#')[0] for item in hits},visual_pages)
+            self.assertTrue(all(item.get('visual_guide') for item in hits))
+            proof_hits=[item for item in reader.site.search if item['kind']=='Written proofs']
+            self.assertTrue(proof_hits)
+            self.assertTrue(all(not item.get('visual_guide') for item in proof_hits
+                                if item['url'].partition('#')[0] not in visual_pages))
+            for sequence in sequences():
+                for visual in sequence['pages']:
+                    self.assertIn('visual-guides.html',pages[visual['url']].links)
+                    self.assertIn('../visual-guides.html',pages[visual['url']].links)
+                    self.assertIn('../paper-xii/atlas/index.html',pages[visual['url']].links)
             from quantum_start import PAGE,PATHS
             guide=pages[PAGE]
             self.assertEqual(guide.h1,1)
@@ -308,7 +323,7 @@ class QuantumReadingTests(unittest.TestCase):
             citation_page=next(s['url'] for s,_,_ in circuits if s['title']=='What the comparison does and does not require')
             evidence_spec=next(s for s in CHAPTERS if s['source']==COVERAGE and s['start_line']<=85<=s['end_line'])
             self.assertIn(evidence_spec['url'].split('/')[-1]+'#L85',(output/citation_page).read_text(encoding='utf-8'))
-            self.assertIn('id="L85"',(output/appendix['url']).read_text(encoding='utf-8'))
+            self.assertIn('L85',Page((output/appendix['url']).read_text(encoding='utf-8')).ids)
             self.assertIn('[54] c:beckli',references)
             self.assertIn('<code>docs/FOUNDATIONS.md</code>',references)
             # All literal source extracts and 115 elaborated declaration
