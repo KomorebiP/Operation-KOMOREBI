@@ -1,2 +1,0 @@
-import Mathlib.Probability.Distributions.Gaussian.Real
-#check gaussianReal_of_var_ne_zero

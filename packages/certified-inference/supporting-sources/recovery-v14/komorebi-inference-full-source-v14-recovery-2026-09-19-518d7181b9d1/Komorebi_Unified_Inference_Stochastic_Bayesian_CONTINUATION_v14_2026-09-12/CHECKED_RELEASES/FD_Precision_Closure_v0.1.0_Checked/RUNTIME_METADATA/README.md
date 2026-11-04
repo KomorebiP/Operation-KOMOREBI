@@ -1,1 +1,0 @@
-Runtime restored from the five preserved compact parts. Their combined archive SHA-256 is recorded in parts.json and restore.log. The entire runtime is not duplicated in this focused source release. Lean/mathlib pins and actual proof commands are in FINAL_VERIFICATION_RECEIPT.json.

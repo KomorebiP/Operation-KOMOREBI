@@ -1,4 +1,0 @@
-import PaperICompletion4.ResidueQuotient
-import PaperICompletion4.IntrinsicPrimary
-import PaperICompletion4.GroupedPrimary
-import PaperICompletion4.OperatorIntrinsicFormula

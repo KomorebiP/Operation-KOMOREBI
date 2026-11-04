@@ -1,4 +1,0 @@
-import MachineTheory.LegalQuotient
-#print axioms Komorebi.MachineTheory.LegalQuotient.finite_source_legal_quotient
-#print axioms Komorebi.MachineTheory.LegalQuotient.quotient_unique
-#check Komorebi.MachineTheory.LegalQuotient.finite_source_legal_quotient

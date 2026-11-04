@@ -1,6 +1,0 @@
-module
-public import RatioSeriesSupport
-#print axioms KomorebiPaperIX.ThetaWeighted.B_mem
-#print axioms KomorebiPaperIX.WeightedDworkTransfer.singular_ratio_flat
-#print axioms KomorebiPaperIX.RatioSeriesSupport.singular_ratio_precision
-#print axioms KomorebiPaperIX.RatioSeriesSupport.singular_ratio_integral

@@ -1,1 +1,0 @@
-Current monograph layout evidence is in monograph/. Other retained flat assets describe the historical pre-monograph rendering and are not current page counts or checks. The corresponding original metadata is archived under provenance/pre_monograph_metadata/editable/traditional/qa/.

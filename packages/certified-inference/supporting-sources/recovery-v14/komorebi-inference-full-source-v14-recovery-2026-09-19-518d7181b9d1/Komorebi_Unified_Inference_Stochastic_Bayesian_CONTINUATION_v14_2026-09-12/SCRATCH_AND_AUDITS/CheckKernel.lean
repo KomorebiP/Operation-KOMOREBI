@@ -1,7 +1,0 @@
-import Mathlib.Probability.Kernel.Posterior
-#check ProbabilityTheory.Kernel.ext
-#check ProbabilityTheory.Kernel.ext_iff
-#check ProbabilityTheory.isSFiniteKernel_withDensity_of_bounded
-#check ProbabilityTheory.Kernel.isSFiniteKernel_withDensity_of_bounded
-#check ProbabilityTheory.Kernel.withDensity_isSFinite
-#check ProbabilityTheory.IsMarkovKernel.toIsFiniteKernel

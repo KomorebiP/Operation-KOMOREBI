@@ -1,3 +1,0 @@
-module
-import NormalizedComputed16
-#print axioms Komorebi.NormalizedRegression.NormalizedComputed16.c202_code
