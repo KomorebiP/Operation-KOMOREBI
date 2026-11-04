@@ -179,10 +179,12 @@ HTML status follows the maintained reading configuration; PDF destinations
 and hashes come from the existing source receipts. Paper I's visual atlas is
 inside its main monograph. The other eleven have separate visual-guide PDFs.
 
-The [current inventory](../verification/reader-visual-guides/2026-11-02-final.json)
+The [current inventory](../verification/reader-visual-guides/2026-11-03-provenance.json)
 checks the committed visual sources against their receipts and identifies the
 complete ports. Counts below describe source units, which vary by guide;
 they are not counts of theorems or PDF pages. The
+[prior completed-port inventory](../verification/reader-visual-guides/2026-11-02-final.json)
+retains the earlier source-identity snapshot. The
 [initial inventory](../verification/reader-visual-guides/2026-11-02.json) retains
 the earlier four-atlas snapshot.
 
