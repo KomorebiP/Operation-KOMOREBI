@@ -82,7 +82,20 @@ with `python -B tools/render_machine_native_reasoning_figures.py` (pypdfium2).
 Run `python -B -m unittest discover -s tools -p 'test_machine_native_reasoning*.py' -v`.
 
 The accepted 27/27 selected-core scope remains distinct from the 74-page older
-continuation and the separately unrecovered expanded 1,155-page monograph.
+continuation and the expanded book. The complete reconstructed editorial edition
+is available at `read/research-machine-native-reasoning-wider/reconstructed-edition.html`:
+97 chapters in thirteen parts, 977 pages, with the standard PDF reader, chapter
+links, and a single-file editable TeX ZIP. It is a new typeset edition derived
+from the retained component manuscripts and recovered 1,155-page reading PDF.
+The historical full TeX archive is not a build prerequisite.
+
+`tools/machine_native_reasoning_expanded.py` authenticates every bounded source
+part, rejoins the exact verified PDF and ZIP, checks the ZIP inventory and every
+payload hash, and publishes a separate identity record. Its manifest is
+`publication/machine-native-reasoning-reconstructed/2026-11-04/PUBLICATION.json`.
+The site checker verifies both complete downloads and all 97 chapter entries.
+Search associates the expanded edition with the wider continuation, preserving
+the accepted core's assurance scope.
 This conversion adds no mathematical proof audit, Lean execution, or empirical
 validation. The mathematical proofreading self-review concerns presentation and
 navigation; there are no mathematical-token changes.

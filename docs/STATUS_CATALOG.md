@@ -410,9 +410,9 @@ Complete publication of v0.16.0 contracts with 93 formal source modules. The pub
 
 **Scoped release** · Lean: **Declared contract recorded** · Confidence basis: **Recorded formal evidence**
 
-Accepted v1.0.0 admission covers 27/27 selected Reviewed Core results. It does not certify the expanded 1,155-page monograph.
+Accepted v1.0.0 admission covers 27/27 selected Reviewed Core results. The separately published reconstructed 97-chapter, 977-page edition retains component-specific assurance; this admission does not certify the whole expanded book.
 
-**Next step:** Maintain the completed core. Recover the exact expanded source and PDF before claiming that separate book is finalized.
+**Next step:** Maintain the completed core and reconcile statement-level correspondence with the published expanded reconstruction under F03.
 
 [Return to this work: paper, proofs, Lean, and code](works/monographs-machine-native-reasoning.md)
 
@@ -818,9 +818,9 @@ Current counterpart: [Machine Native Reasoning](#monographs-machine-native-reaso
 
 **Active development** · Lean: **Inherited / related evidence** · Confidence basis: **Historical formal evidence**
 
-Recovered 74-page working continuation retains an older 23/27 core map. Neither it nor the completed selected core is the expanded 1,155-page edition.
+The older 74-page continuation retains its historical 23/27 core map. A separate reconstructed editorial edition now supplies all 97 chapters in thirteen parts, 977 pages, and verified editable TeX. The accepted selected-core contract does not certify the expanded book.
 
-**Next step:** Recover the exact expanded monograph, reconcile its own statements with the accepted 27/27 core, and rebuild/review that edition.
+**Next step:** Use the published reconstruction and its immutable PDF/source identities to reconcile expanded statements with the accepted 27/27 core and assess remaining claims (F03). Historical TeX recovery is not required to build this edition.
 
 [Return to this work: paper, proofs, Lean, and code](works/research-machine-native-reasoning-wider.md)
 

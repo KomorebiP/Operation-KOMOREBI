@@ -14,9 +14,9 @@ The broader continuation accompanying the reviewed core volume.
 
 **Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
 
-**Recorded results and limits:** Recovered 74-page working continuation retains an older 23/27 core map. Neither it nor the completed selected core is the expanded 1,155-page edition.
+**Recorded results and limits:** The older 74-page continuation retains its historical 23/27 core map. A separate reconstructed editorial edition now supplies all 97 chapters in thirteen parts, 977 pages, and verified editable TeX. The accepted selected-core contract does not certify the expanded book.
 
-**Remaining work:** Recover the exact expanded monograph, reconcile its own statements with the accepted 27/27 core, and rebuild/review that edition.
+**Remaining work:** Use the published reconstruction and its immutable PDF/source identities to reconcile expanded statements with the accepted 27/27 core and assess remaining claims (F03). Historical TeX recovery is not required to build this edition.
 
 The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
 
@@ -26,6 +26,7 @@ Use the links below to read this work and its supporting files. Ctrl+click (Comm
 
 ## Read
 
+- [Reconstructed edition: complete 97-chapter book and editable source](https://KomorebiP.github.io/Operation-KOMOREBI/read/research-machine-native-reasoning-wider/reconstructed-edition.html)
 - [Edition README](../../research/machine-native-reasoning-wider/README.md)
 - [Read PDF](../../research/machine-native-reasoning-wider/Machine_Native_Reasoning_Reviewed_Continuation.pdf)
 

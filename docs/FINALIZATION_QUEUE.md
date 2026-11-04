@@ -131,9 +131,11 @@ Related works and source records: [SRIC: external semantic admission](works/rese
 
 **Status: open**
 
-The selected core is complete. The exact expanded 1,155-page edition needs its own source and reader reconciliation.
+The expanded reconstructed edition is published with editable TeX and reproduction checks. Statement-level correspondence with the accepted selected core and assurance for the wider claims remain separate obligations.
 
-**Done when:** Identify the exact source/PDF hashes, reconcile core correspondence, rebuild the book, and complete its own publication review.
+**Done when:** Reconcile the published 97-chapter edition with the accepted core result map and complete a scoped mathematical review of remaining expanded claims, retaining the exact artifact identities.
+
+**Progress:** 4 November 2026: reconstructed 97 chapters in thirteen parts as a new 977-page edition; authenticated PDF and editable-source ZIP, clean build reproduction, page boundaries and internal links. No new Lean run or whole-book proof audit. The missing historical TeX archive is no longer a build prerequisite.
 
 Related works and source records: [Machine Native Reasoning: wider continuation](works/research-machine-native-reasoning-wider.md) · [Machine Native Reasoning](works/monographs-machine-native-reasoning.md).
 

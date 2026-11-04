@@ -206,6 +206,9 @@ class Browser:
             if title=='Read' and c['id']=='monographs-machine-native-reasoning':
                 links.insert(0,'[Read online: reviewed core, nine chapters and written proofs](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-machine-native-reasoning/index.html)')
                 links.insert(1,'[Start here: reading paths, formal scope and editions](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-machine-native-reasoning/start.html)')
+                links.insert(2,'[Expanded book: 97 chapters, PDF reader and editable TeX](https://KomorebiP.github.io/Operation-KOMOREBI/read/research-machine-native-reasoning-wider/reconstructed-edition.html)')
+            if title=='Read' and c['id']=='research-machine-native-reasoning-wider':
+                links.insert(0,'[Reconstructed edition: complete 97-chapter book and editable source](https://KomorebiP.github.io/Operation-KOMOREBI/read/research-machine-native-reasoning-wider/reconstructed-edition.html)')
             if title=='Read' and c['id']=='monographs-quantum-and-circuits':
                 links.insert(0,'[Read online: complete volume, appendices, proofs and sources](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-quantum-and-circuits/index.html)')
             if title=='Read' and c['id'] in {'paper-v','paper-vi','paper-vii'}:

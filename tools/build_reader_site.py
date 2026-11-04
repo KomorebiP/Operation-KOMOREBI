@@ -477,6 +477,9 @@ class Site:
             elif repo=='collection' and path.startswith('docs/works/'):
                 identifier=PurePosixPath(path).stem
                 content=self.reader.work_overview(identifier,page,content)
+                if identifier in {'monographs-machine-native-reasoning','research-machine-native-reasoning-wider'}:
+                    from machine_native_reasoning_expanded import teaser
+                    content=re.sub(r'(</h1>)',lambda m:m[1]+teaser(self,page),content,count=1)
                 pdf=self.reader.primary_pdf(identifier)
                 if pdf and not self.assessments[identifier].get('editorial_edition'):
                     link='<p><a href="'+self.rel(pdf['url'],page)+'">Read the written arguments in the PDF</a>. The manuscript source remains available below.</p>'
@@ -676,6 +679,8 @@ class Site:
         verify_pdf_runtime(self.pdfjs_root)
         shutil.copytree(self.pdfjs_root,self.output/'assets/pdfjs')
         self.publish_editorial_editions()
+        from machine_native_reasoning_expanded import publish as publish_expanded_mnr
+        publish_expanded_mnr(self)
         from euler_case import publish as publish_euler_case
         publish_euler_case(self)
         from factorial_case import publish as publish_factorial_case

@@ -14,9 +14,9 @@ Mathematical interfaces, computational representations, and reasoning constructi
 
 **Suggested background:** Begin with the introduction and glossary. Then use the volume's own definitions to identify the background needed for its subject.
 
-**Recorded results and limits:** Accepted v1.0.0 admission covers 27/27 selected Reviewed Core results. It does not certify the expanded 1,155-page monograph.
+**Recorded results and limits:** Accepted v1.0.0 admission covers 27/27 selected Reviewed Core results. The separately published reconstructed 97-chapter, 977-page edition retains component-specific assurance; this admission does not certify the whole expanded book.
 
-**Remaining work:** Maintain the completed core. Recover the exact expanded source and PDF before claiming that separate book is finalized.
+**Remaining work:** Maintain the completed core and reconcile statement-level correspondence with the published expanded reconstruction under F03.
 
 The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
 
@@ -28,6 +28,7 @@ Use the links below to read this work and its supporting files. Ctrl+click (Comm
 
 - [Read online: reviewed core, nine chapters and written proofs](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-machine-native-reasoning/index.html)
 - [Start here: reading paths, formal scope and editions](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-machine-native-reasoning/start.html)
+- [Expanded book: 97 chapters, PDF reader and editable TeX](https://KomorebiP.github.io/Operation-KOMOREBI/read/research-machine-native-reasoning-wider/reconstructed-edition.html)
 - [Edition README](../../monographs/machine-native-reasoning/README.md)
 - [Read PDF](../../monographs/machine-native-reasoning/reader/Machine_Native_Reasoning_Reviewed_Core.pdf)
 

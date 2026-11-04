@@ -335,6 +335,8 @@ def inspect_site(root):
     for name, entry in python['examples'].items():
         assert editors['code-'+name] == (root/entry['url']).read_text(encoding='utf-8')
     documents=json.loads((root/'documents/index.json').read_bytes())
+    from machine_native_reasoning_expanded import verify as verify_expanded_mnr
+    verify_expanded_mnr(root)
     editions=json.loads((root/'editorial-editions.json').read_bytes()) if (root/'editorial-editions.json').is_file() else []
     assert len(editions)==len({item['work'] for item in editions}), 'Duplicate editorial reading edition'
     for edition in editions:

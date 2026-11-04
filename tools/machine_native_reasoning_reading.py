@@ -253,6 +253,8 @@ def publish_start(reader,book):
     body += '<h1>From an observation to accountable revision</h1>'
     body += '<p>A sensor displays one bit under an unknown convention. Follow that small example through what a record determines, what a representation preserves, what correction requires, and which decisions and revisions the retained evidence supports.</p>'
     body += '<p>'+link('Read the reviewed core',INDEX)+' · '+link('Find a statement or written proof','read/'+WORK+'/statements.html')+'</p>'
+    from machine_native_reasoning_expanded import teaser
+    body += teaser(site,page)
     body += '<h2>A first reading path</h2><ol>'
     for index,label in [(2,'Begin with accessible evidence and a reusable state'),
                         (4,'See what memory must keep for later correction'),
