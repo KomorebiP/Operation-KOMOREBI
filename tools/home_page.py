@@ -102,11 +102,11 @@ def entry_slides():
 
 def home_page():
     features = [
-        ('Recovery laboratory', 'Find what a linear measurement loses and the extra information needed to recover an answer.', 'recovery-lab.html', 'Experiment'),
-        ('Read side by side', 'Keep a statement beside its proof, or compare two reading pages.', 'side-by-side.html', 'Compare'),
-        ('Saved reading', 'Collect useful works and passages in this browser, then return to them.', 'reading-list.html', 'Save'),
-        ('Python playground', 'Choose a worked example, edit the code, and inspect the results.', 'playground.html', 'Calculate'),
-        ('Lean workspace', 'Choose a published workspace, edit a proof, and check it with our browser compiler.', 'lean/browser/index.html', 'Check'),
+        ('Recovery laboratory', 'Choose what you can measure and what you want to recover. Change the measurements, inspect exact calculations and graphs, and see either a recovery rule or two inputs that the summary cannot distinguish. Then add the information that is missing.', 'recovery-lab.html', 'Experiment'),
+        ('Read side by side', 'Keep a statement beside its proof, or compare papers, chapters, worked examples, and formal sources. Follow references in the other pane, adjust the layout, and save a paired reading session so you can return to the same passages.', 'side-by-side.html', 'Compare'),
+        ('Saved reading', 'Save a paper or bookmark a useful section as you explore the collection. Keep the works and passages you want to revisit together in one reading list, stored in this browser, and return to them when you are ready.', 'reading-list.html', 'Save'),
+        ('Python playground', 'Choose a worked example from sequences, special functions, signals, or quantum models, then edit the code and run it in your browser. Inspect the output and graphs, follow links to the mathematics, and save or download your experiments.', 'playground.html', 'Calculate'),
+        ('Lean workspace', 'Open a published proof workspace, inspect the original sources, and change a proof step to see how Lean responds. The compiler runs in your browser, letting you check selected files and their dependencies, explore errors, and save your edited work.', 'lean/browser/index.html', 'Check'),
     ]
     cards = ''.join(
         '<a class="home-route" href="'+html.escape(target, quote=True)+'">'
