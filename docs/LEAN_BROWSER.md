@@ -439,7 +439,9 @@ binds this observation to its generated graph and source inputs.
 Export authorization requires a final clean synchronous frontend result, including
 its completion marker; warnings cannot mint a receipt. A private in-memory issuance
 seal binds the exact five parts to one originating run. Recomputed public hashes
-cannot authorize a replacement. Installation clones inputs before awaiting hashes,
+cannot authorize a replacement. The producer and receiver use the same run abort
+signal; an independent receiver signal is rejected before loading its libraries,
+and cancellation is rechecked after loading. Installation clones inputs before awaiting hashes,
 consumes its seal once, checks source/build/session bindings and limits before
 writing, and runs with an exclusive worker phase. Any stage or rename failure
 invalidates the receiver, including a partially committed filesystem. All five

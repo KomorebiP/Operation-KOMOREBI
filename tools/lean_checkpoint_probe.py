@@ -248,10 +248,10 @@ def build(runtime, output, node='node'):
               const capsule=structuredClone(capsuleInput),session=structuredClone(sessionInput);""")
     compiler = once(compiler, '            await ensureRoots(CHECKPOINT.requiredRoots, state, frontendLayers);', """            await validateCapsule(capsule,session);
                 const key=sessionKey(session),seal=await capsuleSeal(capsule),entry=issued.get(key);
-                if (!entry || entry.seal!==seal || entry.signal?.aborted || options.signal?.aborted) throw Error('Probe lacks live privately issued artifact provenance.');
+                if (!entry || entry.seal!==seal || entry.signal!==options.signal || entry.signal?.aborted || options.signal?.aborted) throw Error('Probe lacks live privately issued artifact provenance.');
                 issued.delete(key);
                 await ensureRoots(CHECKPOINT.requiredRoots, state, frontendLayers);
-                if (options.signal?.aborted) throw Error('Probe session was stopped.');""")
+                if (entry.signal?.aborted || options.signal?.aborted) throw Error('Probe session was stopped.');""")
     compiler_path.write_bytes(compiler.encode())
 
     shutil.copyfile(support/'control.js',assets/'checkpoint-control.js')

@@ -54,7 +54,7 @@ lengths[4].size=1;assert.throws(()=>assertLengths(lengths),/total byte budget/);
 
 // Protocol tests only: the fake worker never executes Lean. Actual proof and
 // five-part filesystem import acceptance remain required in the browser.
-let behavior='complete';const workers=[];
+let behavior='complete',onLoadLayer=null;const workers=[];
 class FakeWorker{
   constructor(){this.messages=[];workers.push(this);}
   send(data){this.onmessage?.({data});}
@@ -63,7 +63,10 @@ class FakeWorker{
     if(message.type==='dispose')this.send({type:'disposed',id:message.id,cleanup:{threadShutdownRequested:true}});
     if(message.type==='reset')this.send({type:'reset_done',id:message.id});
     if(message.type==='load_modules')this.send({type:'modules_loaded',id:message.id,results:message.roots.map(root=>({root,files:1}))});
-    if(message.type==='load_layer')this.send({type:'layer_loaded',id:message.id,label:message.label,ok:true,files:1});
+    if(message.type==='load_layer'){
+      onLoadLayer?.();
+      this.send({type:'layer_loaded',id:message.id,label:message.label,ok:true,files:1});
+    }
     if(message.type==='compile'){
       const nonce=message.code.match(/__KOMOREBI_FRONTEND_STARTED_([0-9a-f]{32})__/)[1];
       for(const phase of behavior==='missing-completion'?['STARTED']:['STARTED','COMPLETED']){
@@ -142,6 +145,23 @@ for(const syntaxCheck of ['auto','full','off']) {
 }
 assert.equal(workers.at(-1).messages.filter(m=>m.type==='compile').length,0);checks++;
 await beforeCompile.dispose();
+// Independent receiver cancellation must not replace the originating run signal.
+const separateAbort=new AbortController(),separateSession={...session,run:'3'.repeat(32)};
+const separateProducer=await compiler(separateAbort.signal);await run(separateProducer);
+const separateCapsule=await separateProducer.exportCheckpoint(separateSession);await separateProducer.dispose();
+const separateReceiver=await compiler(new AbortController().signal),separateWorker=workers.at(-1);
+await assert.rejects(separateReceiver.installCheckpoint(separateCapsule,separateSession),/privately issued/);checks++;
+assert.equal(separateWorker.messages.filter(m=>m.type==='checkpoint_install'||m.type==='load_layer').length,0);checks++;
+await separateReceiver.closed;
+const loadAbort=new AbortController(),loadSession={...session,run:'4'.repeat(32)};
+const loadProducer=await compiler(loadAbort.signal);await run(loadProducer);
+const loadingCapsule=await loadProducer.exportCheckpoint(loadSession);await loadProducer.dispose();
+const loadingReceiver=await compiler(loadAbort.signal),loadingWorker=workers.at(-1);
+onLoadLayer=()=>loadAbort.abort();
+await assert.rejects(loadingReceiver.installCheckpoint(loadingCapsule,loadSession),/disposed|stopped/);checks++;
+onLoadLayer=null;
+assert.equal(loadingWorker.messages.filter(m=>m.type==='checkpoint_install'||m.type==='compile').length,0);checks++;
+await loadingReceiver.closed;
 for(let i=0;i<5;i++)await rejects(c=>{c.parts.splice(i,1);},/exactly five/);
 
 // Exercise the generated real worker's checkpoint RPC and filesystem transaction.
