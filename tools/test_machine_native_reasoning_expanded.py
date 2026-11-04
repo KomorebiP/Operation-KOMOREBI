@@ -6,14 +6,14 @@ from types import SimpleNamespace
 from unittest.mock import patch
 from urllib.parse import unquote,urlsplit,parse_qs
 from machine_native_reasoning_expanded import (PAGE,MANIFEST,RECORD,PDF_SHA256,SOURCE_SHA256,
-    load_manifest,artifact_bytes,publish,verify,teaser)
+    load_manifest,artifact_bytes,publish,verify,teaser,BOOK,SCRIPT)
 from reader_documents import ReadingDocuments
 from check_reader_site import Page
 ROOT=Path(__file__).resolve().parents[1]
 
 def fixture(output,full_chrome=False):
     from build_reader_site import Site
-    site=SimpleNamespace(root=ROOT,output=Path(output),revision='expanded-mnr-preview',search=[],
+    site=SimpleNamespace(root=ROOT,output=Path(output),revision='65e73adf1f0c9f79325ea5d893c3cd77c9ff9183',search=[],
       registry={'components':[]},assessments={},components={},documents={},reader=None)
     site.rel=lambda target,page:posixpath.relpath(target,posixpath.dirname(page) or '.')
     site.write=lambda path,text:((site.output/path).parent.mkdir(parents=True,exist_ok=True),(site.output/path).write_text(text,encoding='utf-8'))
@@ -49,7 +49,7 @@ class ExpandedMNRTests(unittest.TestCase):
             markup=(Path(tmp)/PAGE).read_text(encoding='utf-8');page=Page(markup)
             self.assertEqual(len([x for x in page.ids if x.startswith('chapter-')]),97)
             self.assertEqual(len(set(page.ids)),len(page.ids))
-            urls=[unquote(x) for x in page.links if 'viewer.html' in x]
+            urls=[unquote(x) for x in page.links if 'book.html' in x and not urlsplit(x).query]
             self.assertEqual(len(urls),98)
             for chapter in record['chapters']:
                 self.assertTrue(any(x.endswith('#page='+str(chapter['physical_page'])) for x in urls))
@@ -57,7 +57,11 @@ class ExpandedMNRTests(unittest.TestCase):
             self.assertTrue(all(x['work_ids']==['research-machine-native-reasoning-wider'] for x in site.search))
             self.assertFalse(record['new_lean_execution']);self.assertFalse(record['new_proof_review'])
             self.assertIn('not an independent proof audit',markup)
-            self.assertEqual(hashlib.sha256((Path(tmp)/record['source_archive']).read_bytes()).hexdigest(),SOURCE_SHA256)
+            self.assertTrue((Path(tmp)/BOOK).is_file())
+            self.assertTrue((Path(tmp)/SCRIPT).is_file())
+            self.assertLess(sum(p.stat().st_size for p in Path(tmp).rglob('*') if p.is_file()),200000)
+            self.assertEqual(record['delivery'],'verified-browser-download-from-pinned-github-parts')
+            self.assertEqual(hashlib.sha256(artifact_bytes(ROOT,record['assets']['source'])).hexdigest(),SOURCE_SHA256)
 
     def test_core_link_remains_separate(self):
         with tempfile.TemporaryDirectory() as tmp:

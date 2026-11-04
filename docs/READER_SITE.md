@@ -91,9 +91,13 @@ The historical full TeX archive is not a build prerequisite.
 
 `tools/machine_native_reasoning_expanded.py` authenticates every bounded source
 part, rejoins the exact verified PDF and ZIP, checks the ZIP inventory and every
-payload hash, and publishes a separate identity record. Its manifest is
+payload hash, and publishes a separate identity record. To stay within the
+Pages storage budget, the browser retrieves immutable parts from GitHub,
+authenticates every part and the whole file, then opens the ordinary PDF reader
+or saves the single-file ZIP. Loading has progress, cancellation and retry. Its manifest is
 `publication/machine-native-reasoning-reconstructed/2026-11-04/PUBLICATION.json`.
-The site checker verifies both complete downloads and all 97 chapter entries.
+The site checker verifies the delivery record, verification script, and all
+97 chapter entries; browser delivery tests authenticate the complete artifacts.
 Search associates the expanded edition with the wider continuation, preserving
 the accepted core's assurance scope.
 This conversion adds no mathematical proof audit, Lean execution, or empirical
