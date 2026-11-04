@@ -585,6 +585,8 @@ def build(site):
         legacy_anchors=legacy_symbol_anchors(data['entries'])
         for entry in data['entries']:
             body=''
+            occurrence_count=len(entry['occurrences'])
+            passage_word='passage' if occurrence_count==1 else 'passages'
             sample=preview_occurrences(data,entry)
             excerpts=[context_text(data['passages'][i]['context'],data['sources'][data['passages'][i]['source']]['macros']) for i in sample]
             search=' '.join([entry['tex'],entry['aliases'],*excerpts])
@@ -608,7 +610,7 @@ def build(site):
                                   dict(context=context_ids[key],names=symbol_names(entry['tex'],entry['display'])))
             body+='<details class="notation-entry" id="'+entry['id']+'" data-kind="'+entry['kind']+'" data-search="'+e(search,quote=True)+'"><summary><code>'
             body+=''.join('<span id="'+e(anchor,quote=True)+'" class="notation-legacy-anchor" aria-hidden="true"></span>' for anchor in legacy_anchors.get(entry['id'],[]))
-            body+=e(entry['tex'])+'</code><span>'+KINDS[entry['kind']]+' · '+str(len(entry['occurrences']))+' passages</span></summary>'
+            body+=e(entry['tex'])+'</code><span>'+KINDS[entry['kind']]+' · '+str(occurrence_count)+' '+passage_word+'</span></summary>'
             if entry['display']:
                 body+='<p class="notation-display" data-math="'+e(entry['display'],quote=True)+'"></p>'
             body+='<p class="notation-aliases">Search aliases: '+e(entry['aliases'])+'</p>'
@@ -619,14 +621,15 @@ def build(site):
                 name=context_text(p.get('definition_title',''),source['macros'])
                 name=': '+name if name and len(name)<=160 else ''
                 body+='<li><p><strong>'+KINDS[p['kind']]+e(name)+'</strong> · <a href="'+site.rel(source_url(source,p['line']),page)+'">'+e(PurePosixPath(source['repository_path']).name)+', line '+str(p['line'])+'</a></p><p class="notation-excerpt">'+e(excerpt[:500]+('…' if len(excerpt)>500 else ''))+'</p><details><summary>Exact mathematical passage</summary><pre><code>'+e(p['expression'])+'</code></pre></details></li>'
-            body+='</ul><button type="button" class="notation-occurrences" data-symbol="'+entry['id']+'" hidden>List all '+str(len(entry['occurrences']))+' source passages</button><div class="notation-all"></div></details>'
+            occurrence_label='List the source passage' if occurrence_count==1 else 'List all '+str(occurrence_count)+' source passages'
+            body+='</ul><button type="button" class="notation-occurrences" data-symbol="'+entry['id']+'" hidden>'+occurrence_label+'</button><div class="notation-all"></div></details>'
             entry_blocks.append(body)
         body=introduction+''.join(entry_blocks)
         if count:body+='</div><button id="notation-more" type="button" hidden>Show more entries</button><noscript><p>All entries are listed. Use your browser’s Find command to search. The JSON download contains every detected source occurrence.</p></noscript>'
         else:body+='<aside class="notice"><h2>No delimited mathematics found</h2><p>The selected text files did not yield mathematical notation. This does not mean that the work contains no symbols. Read the documents below, including any PDFs, for notation outside the text scan.</p></aside>'
         body+='<section id="coverage"><h2>Source coverage</h2><p>Automatic extraction covers TeX and Markdown math delimiters and common equation environments in these selected files. It does not interpret diagrams, images, PDF text, program identifiers, or historical archives. Occurrences are navigation aids, not a proof review.</p><p><a href="'+site.rel(data_url,page)+'" download>Download all entries, passages and source checksums (JSON)</a> · <a href="../notation.html#coverage">Collection coverage</a></p><ul>'
         for source in data['sources']:
-            body+='<li><a href="'+site.rel(source.get('source_url',source['url']),page)+'">'+e(source['repository_path'])+'</a> · '+str(source['passages'])+' mathematical passages</li>'
+            body+='<li><a href="'+site.rel(source.get('source_url',source['url']),page)+'">'+e(source['repository_path'])+'</a> · '+str(source['passages'])+' mathematical passage'+('' if source['passages']==1 else 's')+'</li>'
         body+='</ul>'
         if data['pdfs']:
             body+='<details><summary>PDF reading editions ('+str(len(data['pdfs']))+')</summary><p>The text index does not extract PDF glyphs. Check the reading edition for notation in figures, tables, and PDF-only material.</p><ul>'+''.join('<li><a href="'+site.rel(p['url'],page)+'">'+e(PurePosixPath(p['repository_path']).name)+'</a></li>' for p in data['pdfs'])+'</ul></details>'
