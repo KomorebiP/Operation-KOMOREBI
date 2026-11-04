@@ -350,6 +350,7 @@ class Site:
         source_html=('<a href="'+esc(source,quote=True)+'">Source on GitHub</a>') if source else ''
         glossary_script=('<script defer src="'+self.rel('assets/glossary.js',path)+'?v='+hashlib.sha256((self.root/'website/assets/glossary.js').read_bytes()).hexdigest()[:12]+'"></script>') if path=='collection/GLOSSARY.html' else ''
         home_assets=''
+        search_script=('<script defer src="'+self.rel('assets/search-engine.js',path)+'?v='+hashlib.sha256((self.root/'website/assets/search-engine.js').read_bytes()).hexdigest()[:12]+'"></script>') if path=='search.html' else ''
         if path=='index.html':
             for name in ('home.css','home-slides.js'):
                 url=self.rel('assets/'+name,path)+'?v='+hashlib.sha256((self.root/'website/assets'/name).read_bytes()).hexdigest()[:12]
@@ -371,7 +372,7 @@ class Site:
 <link rel="stylesheet" href="'''+self.rel('assets/open-research.css',path)+'?v='+hashlib.sha256((self.root/'website/assets/open-research.css').read_bytes()).hexdigest()[:12]+'''">
 <link rel="stylesheet" href="'''+self.rel('assets/side-reader.css',path)+'?v='+hashlib.sha256((self.root/'website/assets/side-reader.css').read_bytes()).hexdigest()[:12]+'''">
 <script defer src="'''+self.rel('assets/mathjax-config.js',path)+'''"></script><script defer src="'''+self.rel('assets/mathjax/tex-svg-full.js',path)+'''"></script>
-<script defer src="'''+self.rel('assets/reader.js',path)+'?v='+hashlib.sha256((self.root/'website/assets/reader.js').read_bytes()).hexdigest()[:12]+'''"></script>'''+glossary_script+chapter_help_script+home_assets+reading_list_assets+'''</head><body class="open-research'''+(' home-page' if path == 'index.html' else '')+(' reading-page' if reading_page else '')+(' work-page' if work_page else '')+(' visual-reading' if visual_page else '')+'''">
+'''+search_script+'''<script defer src="'''+self.rel('assets/reader.js',path)+'?v='+hashlib.sha256((self.root/'website/assets/reader.js').read_bytes()).hexdigest()[:12]+'''"></script>'''+glossary_script+chapter_help_script+home_assets+reading_list_assets+'''</head><body class="open-research'''+(' home-page' if path == 'index.html' else '')+(' reading-page' if reading_page else '')+(' work-page' if work_page else '')+(' visual-reading' if visual_page else '')+'''">
 <a class="skip-link" href="#main">Skip to main content</a><header class="site-header"><a class="brand" href="'''+root+'''" aria-label="Komorebi home"><span class="brand-wordmark"><img class="brand-logo" src="'''+brand_assets['komorebi-logo.svg']+'''" alt="Komorebi" width="1320" height="240"><span class="brand-fallback" aria-hidden="true">Komorebi</span><small>Mathematics · proofs · software</small></span></a>'''+nav_html+'''</header>
 <main id="main" tabindex="-1">'''+body+'''</main><footer><div class="footer-inner"><nav class="footer-links" aria-label="Project information">'''+source_html+'''<a href="'''+self.rel('collection/PROJECT_STATEMENT.html',path)+'''">Project and authorship statement</a><a href="'''+self.rel('collection/ACCESSIBILITY.html',path)+'''">Accessibility and reporting problems</a></nav><a class="footer-github" href="https://github.com/'''+REPOSITORY+'''">Return to GitHub <span aria-hidden="true">↗</span></a></div></footer></body></html>'''
         self.write(path,doc)
@@ -627,7 +628,8 @@ class Site:
             if 'kind' not in item:
                 url=item['url']
                 item['kind']=('Glossary' if '/GLOSSARY.' in url else 'Examples' if '/examples/' in url or '/demonstrations/' in url or '/HAND_WORKED_EXAMPLES.' in url or '/DEMONSTRATIONS.' in url else 'Papers and source' if url.startswith('read/') else 'Guides')
-        self.write('search-index.json',json.dumps(self.search,ensure_ascii=False)+'\n')
+        from search_catalog import publish as publish_search
+        self.search_summary=publish_search(self)
         from download_selector import build as build_selector, interface as selector_interface
         build_selector(self)
         body='<link rel="stylesheet" href="assets/download-selector.css?v='+self.revision+'"><h1>Choose your downloads</h1><p>Build one ZIP from the files you want, or download a ready-made reading selection.</p><p><a href="#build-a-zip">Build your own ZIP</a> · <a href="#ready-made">Ready-made reading ZIPs</a> · <a href="collection/DOWNLOADS.html#obtain-a-full-component">Complete source downloads</a></p>'+selector_interface(self)
@@ -725,6 +727,7 @@ class Site:
         result['lean_browser'] = lean_browser
         result['side_reader'] = side_reader
         result['jspace_lab'] = jspace_lab
+        result['search'] = self.search_summary
         self.write('build-info.json',json.dumps(result,indent=2)+'\n')
         print(json.dumps(result))
 

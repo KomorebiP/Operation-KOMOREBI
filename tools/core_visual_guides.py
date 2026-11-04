@@ -141,7 +141,8 @@ def verify(root,documents,pages):
     assert record==dict(source_revision=documents['source_revision'],guides=rows)
     all_rows=all_inventory(repository,documents['files'])
     search_path=root/'search-index.json'
-    visual_search={entry['url'].partition('#')[0] for entry in json.loads(search_path.read_bytes())
+    from search_catalog import metadata_rows
+    visual_search={entry['url'].partition('#')[0] for entry in metadata_rows(root)
                    if entry.get('visual_guide')} if search_path.is_file() else None
     if visual_search is not None:assert INDEX in visual_search,('Missing visual search entry',INDEX)
     assert json.loads((root/ALL_REPORT).read_bytes())==dict(source_revision=documents['source_revision'],guides=all_rows)
