@@ -1,0 +1,71 @@
+name: K-COS certification audit
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'verification/kcos-certification-audit/**'
+      - 'monographs/cos-method/engine/**'
+      - 'docs/KCOS_NUMERICAL_CERTIFICATION_AUDIT.md'
+      - '.github/workflows/kcos-certification-audit.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'verification/kcos-certification-audit/**'
+      - 'monographs/cos-method/engine/**'
+      - 'docs/KCOS_NUMERICAL_CERTIFICATION_AUDIT.md'
+      - '.github/workflows/kcos-certification-audit.yml'
+permissions:
+  contents: read
+concurrency:
+  group: kcos-certification-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  numerical-audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      PYTHONDONTWRITEBYTECODE: '1'
+      MPLBACKEND: Agg
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.13'
+      - name: Install pinned audit dependencies
+        run: python -m pip install -r verification/kcos-certification-audit/requirements.txt
+      - name: Replay the existing executable regression suite
+        working-directory: monographs/cos-method/engine
+        run: >-
+          python -m pytest -q test_accuracy_driven.py test_approximate_lightcone.py
+          test_budget_scheduler.py test_directed_contract.py test_interval_kcos.py
+          test_noncentral_engine.py test_realistic_skat.py test_residual_completion.py
+          test_residual_trace_cap.py test_signed_engine.py test_spectral_tail_bridge.py
+          test_streaming_skat.py test_verified_spectrum.py
+      - name: Run independent references, complete example, and failure controls
+        run: python verification/kcos-certification-audit/run_audit.py all
+      - name: Check the independent reference and separate repair candidate
+        run: python -m pytest -q verification/kcos-certification-audit/test_audit.py
+      - name: Compare the pinned Davies core and independent Imhof implementations
+        run: |
+          if ! command -v g++ >/dev/null; then
+            sudo apt-get update
+            sudo apt-get install -y g++
+          fi
+          python verification/kcos-certification-audit/compare_davies.py --prepare
+      - name: Verify the audit outcomes and retain a summary
+        run: python verification/kcos-certification-audit/check_results.py
+      - name: Render figures from the generated results
+        run: python verification/kcos-certification-audit/plot_results.py
+      - name: Retain full endpoints, inputs, diagnostics, and figures
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: kcos-certification-${{ github.sha }}
+          if-no-files-found: warn
+          retention-days: 90
+          path: |
+            verification/kcos-certification-audit/results/
+            verification/kcos-certification-audit/figures/
+            verification/kcos-certification-audit/controller_caps.patch
+            verification/kcos-certification-audit/candidate/
