@@ -173,7 +173,7 @@ def highlight_lines(text):
                         'number' if re.fullmatch(r'\d+(?:\.\d+)?',word) else None)
             else:
                 index += 1
-            escaped = html.escape(line[start:index])
+            escaped = html.escape(line[start:index], quote=False)
             pieces.append('<span class='+TOKEN_CLASSES[kind]+'>'+escaped+'</span>' if kind else escaped)
         result.append(''.join(pieces))
     return result

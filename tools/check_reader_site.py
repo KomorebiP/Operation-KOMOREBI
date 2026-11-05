@@ -218,7 +218,7 @@ def check_readable_chapter(root, documents, pages):
     return count
 
 
-def inspect_site(root):
+def inspect_site(root, *, compact_html=False):
     files={p.relative_to(root).as_posix() for p in root.rglob('*') if p.is_file()}
     from jspace_lab import APP_URL as JSPACE_APP_URL, verify as verify_jspace_lab
     jspace_lab = verify_jspace_lab(root)
@@ -462,6 +462,9 @@ def inspect_site(root):
     verify_lean_browser(root,documents)
     from reading_paths import verify as verify_reading_paths
     reading_paths=verify_reading_paths(root,documents,pages)
+    if compact_html:
+        from compact_reader_html import compact_tree
+        print('HTML packaging: '+json.dumps(compact_tree(root)),flush=True)
     site_bytes=sum(p.stat().st_size for p in root.rglob('*') if p.is_file())
     print('Published site bytes:',site_bytes,flush=True)
     assert site_bytes < 1024**3, 'Published reader site exceeds GitHub Pages size limit: '+str(site_bytes)
@@ -474,8 +477,9 @@ def inspect_site(root):
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--site',type=Path,required=True)
+    p.add_argument('--compact-html',action='store_true',help='After verification, compact generated HTML attributes and verify parsed contents are unchanged')
     args=p.parse_args()
-    result=inspect_site(args.site)
+    result=inspect_site(args.site,compact_html=args.compact_html)
     (args.site/'verification.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
     print(json.dumps(result))
 

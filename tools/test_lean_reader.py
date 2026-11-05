@@ -129,6 +129,8 @@ class LeanReaderTests(unittest.TestCase):
             parser=Text();parser.feed(markup);self.assertEqual(''.join(parser.parts),original)
         self.assertIn('class=lc',highlighted[1])
         self.assertIn('class=ls',highlighted[2]);self.assertIn('class=ls',highlighted[3])
+        self.assertNotIn('&quot;',''.join(highlighted))
+        self.assertNotIn('&#x27;',''.join(highlighted))
         self.assertIn('class=lk',highlighted[4]);self.assertIn('class=lt',highlighted[5])
         self.assertNotIn('class=lc',highlighted[6])
         self.assertNotIn('<script>', ''.join(highlighted))

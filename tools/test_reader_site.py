@@ -1218,11 +1218,15 @@ class ReaderSiteTests(unittest.TestCase):
                 if tag=='span':self.row=None
             def handle_data(self,value):
                 if self.row is not None and not self.link:self.row['text']+=value
-        text='  α < β\n\tA&B "x"\n\nlast'
-        parsed=Source();parsed.feed(source_lines(text))
+        text='  α < β\n\tA&B "x" \'y\'\n\nlast'
+        markup=source_lines(text)
+        parsed=Source();parsed.feed(markup)
         self.assertEqual([r['text'] for r in parsed.rows],[' '+line+'\n' for line in text.splitlines()])
         self.assertEqual([r['id'] for r in parsed.rows],['L1','L2','L3','L4'])
         self.assertEqual([(a['href'],a['aria-label']) for a in parsed.links],[('#L'+str(n),'Line '+str(n)) for n in range(1,5)])
+        self.assertIn('A&amp;B "x" \'y\'',markup)
+        self.assertNotIn('&quot;',markup)
+        self.assertNotIn('&#x27;',markup)
 
     def test_source_navigation_bounds_match_real_lines_and_links_have_targets(self):
         for text in ('', 'one\n', 'one\n\nthree'):

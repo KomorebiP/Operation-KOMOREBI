@@ -59,7 +59,8 @@ def tex_includes(text, path, owned, main_path=None):
 def source_lines(text, annotations=None, *, rendered_lines=None):
     annotations = annotations or {}
     lines = text.splitlines()
-    rendered_lines = [html.escape(line) for line in lines] if rendered_lines is None else rendered_lines
+    # Quotes are literal text here; escaping &, < and > is sufficient inside code.
+    rendered_lines = [html.escape(line, quote=False) for line in lines] if rendered_lines is None else rendered_lines
     if len(rendered_lines) != len(lines):
         raise ValueError('Rendered source lines must match the original line count')
     navigation = '<div id="source-navigation" class="source-navigation"><p><a href="#source-end">Skip source text</a></p>'
