@@ -14,7 +14,7 @@
 
 **Suggested background:** Begin with the introduction and glossary. Then use the volume's own definitions to identify the background needed for its subject.
 
-**Recorded results and limits:** 118-page reading edition. Bound self-review records cover 38 of 62 statement/proof pairs: 36 recorded as proved as written, two qualifications (memory domain and computability class), and 24 unreviewed. Coverage is not whole-book certification.
+**Recorded results and limits:** The reading edition has 118 pages. Self-review records bound to the source cover 38 of 62 statement/proof pairs. Of those reviewed, 36 are recorded as proved as written and two carry qualifications concerning the memory domain and computability class. The remaining 24 pairs are unreviewed. This coverage does not certify the whole book.
 
 **Remaining work:** Review the remaining 24 pairs in bounded batches. In a revised source edition, state the positive finite-index condition for the memory bit bound and the event-emitting compilation premise for the computability theorem and its certificate consequence. Keep empirical and independent review separate.
 

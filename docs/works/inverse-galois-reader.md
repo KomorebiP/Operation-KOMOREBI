@@ -14,7 +14,7 @@ Finite examples and selected realization obligations.
 
 **Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
 
-**Recorded results and limits:** Finished reader with reviewed elementary realizations and regular-projector statements. Universal realization over Q remains open and no Lean certificate is claimed.
+**Recorded results and limits:** Finished reader with reviewed elementary realizations and regular-projector statements. Universal realization over the rationals remains open, and no Lean certificate is claimed.
 
 **Remaining work:** Supply the arithmetic existence input for the specified conditional route. Keep finite examples distinct from all finite groups.
 

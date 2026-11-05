@@ -14,7 +14,7 @@ Typed systems, finite realization, seed rank, and packet coordinates.
 
 **Suggested background:** Vectors, matrices, linear maps, kernels and images, and reading a statement with hypotheses. Consult the selected paper for any additional algebra or analysis it uses.
 
-**Recorded results and limits:** 69 accepted proof-level correspondences in the stated manuscript scope. 108 correspondence records are not 108 theorems.
+**Recorded results and limits:** The stated manuscript scope has 69 accepted proof-level correspondences. Its 108 correspondence records are not a count of 108 theorems.
 
 **Remaining work:** Maintain the exact statement map and reproduce the pinned formal contract before a changed release.
 

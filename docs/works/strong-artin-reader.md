@@ -14,7 +14,7 @@ General Strong Artin remains open. Historical checkpoints are separate formal pr
 
 **Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
 
-**Recorded results and limits:** Finished evidence reader with retained scoped formal results. The publication records zero fresh Lean invocations and global automorphic attachment remains open.
+**Recorded results and limits:** Finished evidence reader with retained scoped formal results. The publication records no new Lean runs, and global automorphic attachment remains open.
 
 **Remaining work:** Restore the exact runtime and replay the current source, then keep the global carrier-existence input as a separate research obligation.
 

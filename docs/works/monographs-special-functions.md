@@ -14,9 +14,9 @@ Cyclic families, sequence constructions, reciprocal structure, and exact methods
 
 **Suggested background:** Begin with the introduction and glossary. Then use the volume's own definitions to identify the background needed for its subject.
 
-**Recorded results and limits:** Proofread reading volumes plus 536 registered theorem names: 39 inherited finite-core names and 497 coupled-companion names. Blocks18-20 prove typed evaluation results, a source-bound imperative model equivalent to the specification, and selected arithmetic lowering against a typed expression interpreter. Actual Python correctness remains conditional on AST parsing/extraction, the fixed statement/control template and standard primitive semantics. No verified general Python compiler or whole-book percentage is claimed. Other J/F/H, I and A-E remain; ordinary type convergence stays conditional.
+**Recorded results and limits:** The proofread reading volumes are accompanied by 536 registered theorem names: 39 inherited finite-core names and 497 coupled-companion names. Blocks 18 to 20 prove typed evaluation results, a source-bound imperative model equivalent to the specification, and selected arithmetic lowering against a typed expression interpreter. Correctness of the Python implementation remains conditional on AST parsing and extraction, the fixed statement and control-flow template, and the semantics of the standard primitives. No verified general Python compiler or whole-book percentage is claimed. The remaining obligations in groups J, F, H, I, and A through E remain open. Ordinary type convergence remains conditional.
 
-**Remaining work:** Formalize the remaining statement/control fragment or verify the AST extraction boundary. Retain explicit parser, Python/Fraction/library assumptions and the other J/F/H, I and A-E obligations.
+**Remaining work:** Formalize the remaining statement and control-flow fragment or verify the AST extraction boundary. Retain explicit assumptions about the parser, Python, Fraction, and the libraries, along with the remaining obligations in groups J, F, H, I, and A through E.
 
 The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
 

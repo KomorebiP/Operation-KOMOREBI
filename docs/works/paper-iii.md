@@ -14,7 +14,7 @@ Nonlinear constructions, compatibility, and explicit obstructions.
 
 **Suggested background:** Vectors, matrices, linear maps, kernels and images, and reading a statement with hypotheses. Consult the selected paper for any additional algebra or analysis it uses.
 
-**Recorded results and limits:** Technical reading release is complete. The accepted 16-module core does not cover the expanded monograph. The historical full-coverage count is uncertified.
+**Recorded results and limits:** The technical reading edition is complete. The accepted 16-module core does not cover the expanded monograph. The historical full-coverage count remains uncertified.
 
 **Remaining work:** Map the expanded packet-Taylor, Stirling/Touchard and later corollaries to explicit missing formal obligations.
 

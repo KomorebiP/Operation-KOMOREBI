@@ -14,7 +14,7 @@ Patching, Hecke packets, and conditional automorphic constructions.
 
 **Suggested background:** Vectors, matrices, linear maps, kernels and images, and reading a statement with hypotheses. Consult the selected paper for any additional algebra or analysis it uses.
 
-**Recorded results and limits:** 49 revised claims map to 291 production targets in historical evidence. Original wording remains 41 complete, seven partial, one unchecked. Arithmetic and automorphic inputs remain explicit.
+**Recorded results and limits:** Historical evidence maps 49 revised claims to 291 production targets. Under the original wording, 41 claims are complete, seven are partial, and one is unchecked. Arithmetic and automorphic inputs remain explicit.
 
 **Remaining work:** Replay the pinned amended contract and preserve the original-versus-amended concordance. Do not promote missing arithmetic premises.
 

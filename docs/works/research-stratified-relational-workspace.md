@@ -14,7 +14,7 @@ Stratified relational workspaces and their mathematical interfaces.
 
 **Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
 
-**Recorded results and limits:** Complete preprint monograph with finite regression checks. External mathematical and empirical review remains pending.
+**Recorded results and limits:** Complete preprint monograph with finite regression checks. External mathematical and empirical reviews remain pending.
 
 **Remaining work:** Obtain external review and evaluate empirical claims separately from finite mathematical regression tests.
 

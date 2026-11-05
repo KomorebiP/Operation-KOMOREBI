@@ -14,7 +14,7 @@ Finite quantum constructions and seed representations.
 
 **Suggested background:** Vectors, matrices, linear maps, kernels and images, and reading a statement with hypotheses. Consult the selected paper for any additional algebra or analysis it uses.
 
-**Recorded results and limits:** Prose/proofreading release is complete. 19 inherited finite formal items are separate from the book. All five physical continuum targets remain open.
+**Recorded results and limits:** The reading edition has completed its editorial review. The 19 inherited finite formal items are separate from the book. All five physical continuum targets remain open.
 
 **Remaining work:** Separate the finite formal correspondence from the five continuum research obligations in any next release.
 

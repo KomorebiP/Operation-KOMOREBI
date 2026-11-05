@@ -16,7 +16,7 @@ The AVOC publication and formal source collection.
 
 **Recorded results and limits:** Complete reading set based on archived formal v0.41.0. Publication checks did not execute Lean or the actual Lean endpoint.
 
-**Remaining work:** Restore the exact runtime and replay the archived source and endpoint before labeling the publication as freshly formal-verified.
+**Remaining work:** Restore the exact runtime and replay the archived source and endpoint before describing the publication as newly verified in Lean.
 
 The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
 

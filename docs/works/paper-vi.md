@@ -14,7 +14,7 @@ Semigroup constructions and probabilistic and analytic applications.
 
 **Suggested background:** Vectors, matrices, linear maps, kernels and images, and reading a statement with hypotheses. Consult the selected paper for any additional algebra or analysis it uses.
 
-**Recorded results and limits:** Publication closeout is complete. The inherited 33-result finite formal contract does not cover all 142 theorem-like statements or the broader analytic program.
+**Recorded results and limits:** The publication is complete within its stated scope. The inherited 33-result finite formal contract does not cover all 142 theorem-like statements or the broader analytic program.
 
 **Remaining work:** Build a claim-by-claim expansion plan for the ordinary-proof material. Preserve finite-state and common-gap hypotheses.
 
