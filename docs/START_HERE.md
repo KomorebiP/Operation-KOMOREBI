@@ -61,6 +61,12 @@ The [finalization queue](FINALIZATION_QUEUE.md) lists the remaining work. Select
 3. **How does the operation transfer?** Determine the blocks or compatibility laws relating representations.
 4. **What is reconstructed?** State the recovered object and any residual or obstruction.
 
+The [operator audit](OPERATOR_AUDIT.md) turns these questions into a reusable
+investigation. Follow a matrix operation through its packet blocks and a
+coordinate change, account for omitted interactions, then test what a summary
+can recover. It includes a checklist, interactive experiments, and a worksheet
+for your own calculation.
+
 <a id="start-with-a-complete-demonstration"></a>
 
 ## Worked calculations

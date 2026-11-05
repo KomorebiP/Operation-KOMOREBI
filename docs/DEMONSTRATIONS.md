@@ -2,6 +2,11 @@
 
 [Project overview](START_HERE.md) · [Project map](PROJECT_MAP.md) · [All hand-worked examples](HAND_WORKED_EXAMPLES.md)
 
+For a method you can carry between examples, begin with the
+[operator audit](OPERATOR_AUDIT.md). It follows a complete matrix calculation,
+checks a coordinate change, identifies omitted transfers, and tests recovery
+from a summary. Use its checklist alongside any of the studies below.
+
 ## Extended case studies
 
 Follow one object through several representations, transport its operations,
