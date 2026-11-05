@@ -48,7 +48,7 @@ def artifact_bytes(root,asset):
     root=Path(root).resolve();parts=[];seen=set()
     for entry in asset['parts']:
         path=safe_path(entry['path'])
-        if not path.startswith((str(Path(MANIFEST).parent.as_posix())+'/','publication/mnr-synchronized/v1.0.0/parts/')) or path in seen:
+        if not path.startswith((str(Path(MANIFEST).parent.as_posix())+'/','publication/mnr-synchronized/v1.0.0/parts/','publication/mnr-synchronized/v1.0.1/parts/')) or path in seen:
             raise ValueError('Unexpected or duplicate MNR artifact part')
         seen.add(path);target=root/path
         if target.is_symlink() or not target.resolve().is_relative_to(root):
@@ -143,7 +143,7 @@ def publish(site):
 
 def verify(root):
     root=Path(root);record=json.loads((root/RECORD).read_bytes())
-    if record.get('edition')=='mnr-synchronized-v1.0.0':
+    if record.get('edition') in ('mnr-synchronized-v1.0.0','mnr-synchronized-v1.0.1'):
         from machine_native_reasoning_release import verify as verify_release
         return verify_release(root)
     if record['pdf_sha256']!=PDF_SHA256 or record['assets']['pdf']['sha256']!=PDF_SHA256:

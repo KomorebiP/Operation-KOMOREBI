@@ -1,0 +1,1 @@
+Machine-Native Reasoning v1.0.1: synchronized reference cleanup. Earlier editions are retained. REFERENCE_CLEANUP.json records the exact scope and changes. The seven-interface bridge self-review is inherited from v1.0.0; its source is unchanged.

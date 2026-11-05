@@ -3,14 +3,14 @@ import html,json,posixpath,re
 from pathlib import Path
 from reading_payload import PREFIX,decode,sha
 from machine_native_reasoning_expanded import PAGE,WORK,BOOK,RECORD
-MANIFEST=PREFIX+'SYNCHRONIZED_READING.json'
+MANIFEST=PREFIX+'REFERENCE_READING.json'
 SCRIPT='assets/mnr-chapter.js'
 STYLE='assets/mnr-reading.css'
 
 def load(root):
     data=json.loads((root/MANIFEST).read_bytes())
     edition=data.get('reading_edition',{})
-    if edition.get('id')!='mnr-synchronized-v1.0.0' or edition.get('base_manifest')!=PREFIX+'FINAL_READING.json':raise ValueError('Unknown MNR synchronized revision')
+    if edition.get('id')!='mnr-synchronized-v1.0.1' or edition.get('base_manifest')!=PREFIX+'SYNCHRONIZED_READING.json':raise ValueError('Unknown MNR synchronized revision')
     if sha((root/edition['base_manifest']).read_bytes())!=edition['base_manifest_sha256']:raise ValueError('MNR base reading record changed')
     if len(data['pages'])!=121 or [p['chapter'] for p in data['pages'] if p['chapter']]!=list(range(1,98)):raise ValueError('Incomplete MNR HTML edition')
     if data['proofs']!=527 or data['statement_count']!=803 or data['mathjax_validation']['errors']:raise ValueError('MNR conversion checks changed')
@@ -68,7 +68,7 @@ def welcome(data):
         body+='<li'+(' id="chapter-'+number+'"' if number else '')+'><a data-reading-entry="'+e(key,quote=True)+'" href="'+e(p['file'],quote=True)+'"><span class="reading-entry-number" aria-hidden="true">'+number+'</span><span>'+e(p['title'])+'</span></a></li>'
     body+='</ol></details></div></nav>'
     body+='<details id="edition" class="reading-resources"><summary>Edition and source notes</summary><div><p>This expanded reading edition contains 97 chapters in 13 parts. The accepted 27-result core retains its separate scope. Production and rendering checks are not an independent proof audit.</p>'
-    body+='<p><a href="book.html">Complete 977-page PDF and editable TeX</a> · <a href="../../'+RECORD+'">Publication record</a>'
+    body+='<p><a href="book.html">Complete '+str(data['pdf_pages'])+'-page PDF and editable TeX</a> · <a href="../../'+RECORD+'">Publication record</a>'
     if data['reading_edition'].get('version'):body+=' · <span>Version '+e(data['reading_edition']['version'])+'</span>'
     if data.get('proofreading_url'):body+=' · <a href="'+e(data['proofreading_url'],quote=True)+'">Proofreading record</a>'
     body+='</p></div></details>'

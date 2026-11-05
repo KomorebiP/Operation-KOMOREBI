@@ -1,11 +1,14 @@
 // Keep the immutable book downloads off the Pages storage budget. Authenticate
 // every bounded part and the complete file before opening or saving it.
-const EDITIONS = [{prefix: 'publication/machine-native-reasoning-reconstructed/2026-11-04/', hashes: {
+const EDITIONS = [{pages: 977, prefix: 'publication/machine-native-reasoning-reconstructed/2026-11-04/', hashes: {
   pdf: '65a0a736e3422102f83bfc96883dcb81d2a7dacc42663c78e002718ebb7278db',
   source: '14e635a4e910ab3062e5618b084841eff2e0504f048130cfd336985a7c94ef25'
-}}, {prefix: 'publication/mnr-synchronized/v1.0.0/parts/', hashes: {
+}}, {pages: 977, prefix: 'publication/mnr-synchronized/v1.0.0/parts/', hashes: {
   pdf: '92f4a6aa03d0c9e5ef6bc5e9c24026090f3b3d9280576cf5d87c4f906ecc5e14',
   source: '0a6b6120f3fd4900529ef696c49030fe621532695edfc68de6d83e16d5169c09'
+}}, {pages: 976, prefix: 'publication/mnr-synchronized/v1.0.1/parts/', hashes: {
+  pdf: '40e4059ce27cf99dcb0001b568734019166d2de2f1990e7eaa1aa1c2490a55f2',
+  source: 'a5e3e33b02f75004ec59fee3460b7b302778522a059c9f2c3bc8621951b5a63c'
 }}];
 export async function sha256(bytes) {
   return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes)), b => b.toString(16).padStart(2, '0')).join('');
@@ -57,9 +60,9 @@ export async function assembleAsset(kind, asset, { revision, fetcher = fetch, si
   finally { signal?.removeEventListener('abort', abort); }
 }
 
-export function readerPage(search, hash) {
+export function readerPage(search, hash, pages = 977) {
   const page = new URLSearchParams(search).get('page') ?? (/^#page=(.*)$/.exec(hash)?.[1] ?? '1');
-  return /^[1-9]\d{0,2}$/.test(page) && Number(page) <= 977 ? Number(page) : 1;
+  return /^[1-9]\d{0,2}$/.test(page) && Number(page) <= pages ? Number(page) : 1;
 }
 
 async function startInterface(root) {
@@ -90,6 +93,8 @@ async function startInterface(root) {
     status.textContent = label + '…';
     try {
       const info = await loadRecord(), asset = info.assets[kind];
+      const pages = EDITIONS.find(item => item.hashes.pdf === info.assets.pdf.sha256)?.pages;
+      if (info.pages !== pages) throw Error('Changed edition page count');
       let bytes = cache.get(kind);
       if (!bytes) {
         bytes = await assembleAsset(kind, asset, { revision: info.revision, signal: controller.signal,
@@ -103,12 +108,12 @@ async function startInterface(root) {
         const viewer = new URL(root.dataset.viewer, location.href);
         if (viewer.origin !== location.origin) throw Error('Unexpected PDF reader');
         viewer.searchParams.set('file', url);
-        viewer.hash = 'page=' + readerPage(location.search, location.hash);
+        viewer.hash = 'page=' + readerPage(location.search, location.hash, pages);
         const frame = document.createElement('iframe');
-        frame.title = 'Machine-Native Reasoning — complete 977-page book';
+        frame.title = 'Machine-Native Reasoning — complete ' + pages + '-page book';
         frame.className = 'pdf-reader'; frame.style.cssText = 'width:100%;height:85vh'; frame.src = viewer.href;
         holder.replaceChildren(frame);
-        status.textContent = 'Book verified. All 977 pages are available in the reader below.';
+        status.textContent = 'Book verified. All ' + pages + ' pages are available in the reader below.';
       } else {
         save.href = url; save.download = asset.filename; save.textContent = 'Save ' + (kind === 'pdf' ? 'PDF' : 'editable TeX ZIP'); save.hidden = false;
         status.textContent = 'Download verified. Save the complete ' + (kind === 'pdf' ? 'PDF.' : 'editable TeX ZIP.');

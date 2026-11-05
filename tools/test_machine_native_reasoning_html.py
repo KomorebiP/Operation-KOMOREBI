@@ -5,6 +5,7 @@ from pathlib import Path
 from urllib.parse import urlsplit,unquote
 from reading_payload import decode,PREFIX
 from machine_native_reasoning_html import load,publish,verify
+REMOVED={'bib-'+k for k in ['MU:societies','SII:neuralese','SII:osl','CR:branchrelease','CR:menurelease','CR:bridge','CR:formal','CR:audit','CR:pythonio','CR:paperxi']}
 from test_machine_native_reasoning_expanded import fixture
 from check_reader_site import Page
 ROOT=Path(__file__).resolve().parents[1]
@@ -21,8 +22,11 @@ class HTMLMNRTests(unittest.TestCase):
             self.assertEqual(old['file'],new['file'])
             before,after=article(old),article(new);texts[new['file']]=after
             self.assertEqual(re.findall(math,before,re.S),re.findall(math,after,re.S),new['file'])
-            self.assertEqual(Page(before).ids,Page(after).ids,new['file'])
-            self.assertEqual(Page(before).links,Page(after).links,new['file'])
+            self.assertEqual([x for x in Page(before).ids if x not in REMOVED],Page(after).ids,new['file'])
+            self.assertEqual([x for x in Page(before).links if x.rsplit('#',1)[-1] not in REMOVED and x!='https://docs.python.org/3.13/library/io.html#text-encoding'],Page(after).links,new['file'])
+        for text in texts.values():
+            self.assertNotIn('bib-SII:neuralese',text);self.assertNotIn('bib-SII:osl',text)
+        self.assertIn('Source inspection.',texts['lsm-references.html'])
         self.assertIn('<code>alternative_proofs.json</code>',texts['chapter-50.html'])
         self.assertIn('<code>ViewSections</code>',texts['ks-additional-mathematical-material.html'])
         self.assertIn('in the 64-case example.',texts['chapter-62.html'])

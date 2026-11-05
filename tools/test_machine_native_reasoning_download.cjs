@@ -26,7 +26,8 @@ test('browser transport reproduces both complete admitted artifacts',async()=>{
 });
 test('synchronized downloads reproduce the numbered release and reject mixed editions',async()=>{
   const {assembleAsset,sha256,validateAsset}=await modulePromise;
-  const data=JSON.parse(await readFile(join(root,'publication/mnr-synchronized/v1.0.0/RELEASE.json'),'utf8'));
+  for (const version of ['1.0.0','1.0.1']) {
+  const data=JSON.parse(await readFile(join(root,'publication/mnr-synchronized/v'+version+'/RELEASE.json'),'utf8'));
   for(const kind of ['pdf','source']) {
     const raw=await assembleAsset(kind,data.assets[kind],{revision,fetcher:localFetch});
     assert.equal(await sha256(raw),data.assets[kind].sha256);
@@ -34,6 +35,7 @@ test('synchronized downloads reproduce the numbered release and reject mixed edi
   const mixed=structuredClone(data.assets.pdf);
   mixed.parts[0].path=(await manifestPromise).assets.pdf.parts[0].path;
   assert.throws(()=>validateAsset('pdf',mixed,revision),/Invalid file part/);
+  }
 });
 test('corrupted bytes, altered aggregate identity, unsafe paths and failed HTTP are rejected',async()=>{
   const {assembleAsset,validateAsset}=await modulePromise, data=await manifestPromise;
@@ -61,6 +63,8 @@ test('HTML chapter routes select physical PDF pages without missing fragments',a
   const {readerPage}=await modulePromise;
   assert.equal(readerPage('?page=855',''),855);
   assert.equal(readerPage('?page=977',''),977);
+  assert.equal(readerPage('?page=976','',976),976);
+  assert.equal(readerPage('?page=977','',976),1);
   assert.equal(readerPage('','#page=855'),855);
   for(const page of ['0','978','-1','bad','1%26file%3Dother']) assert.equal(readerPage('?page='+page,''),1);
 });

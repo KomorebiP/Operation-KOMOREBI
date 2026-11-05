@@ -15,7 +15,7 @@ class SynchronizedMNRTests(unittest.TestCase):
         with zipfile.ZipFile(BytesIO(raw)) as z:
             edition=json.loads(z.read('EDITION.json'));rebuild=json.loads(z.read('provenance/CLEAN_REBUILD.json'))
             self.assertEqual(edition['pdf_sha256'],PDF_SHA256)
-            self.assertEqual(edition['version'],'1.0.0')
+            self.assertEqual(edition['version'],'1.0.1')
             web=json.loads((ROOT/data['html_manifest']).read_bytes())
             self.assertEqual(len(web['sources']),13)
             for source in web['sources']:
@@ -31,7 +31,7 @@ class SynchronizedMNRTests(unittest.TestCase):
             site=fixture(tmp,True);publish(site);result=verify(tmp)
             self.assertTrue(result['historical_edition_preserved'])
             record=json.loads((Path(tmp)/RECORD).read_bytes());old=json.loads((Path(tmp)/HISTORICAL_RECORD).read_bytes())
-            self.assertEqual(record['version'],'1.0.0');self.assertNotEqual(old['pdf_sha256'],record['pdf_sha256'])
+            self.assertEqual(record['version'],'1.0.1');self.assertNotEqual(old['pdf_sha256'],record['pdf_sha256'])
             for path in [BOOK,HISTORICAL_BOOK]:
                 markup=(Path(tmp)/path).read_text(encoding='utf-8');parsed=Page(markup)
                 self.assertEqual(parsed.h1,1);self.assertEqual(parsed.main,1)
