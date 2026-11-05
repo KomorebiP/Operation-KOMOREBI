@@ -32,7 +32,7 @@ individual scopes; they do not measure whole-book formalization.
 | 14 | [CoupledOperator.lean](../monographs/special-functions/lean/CoupledOperator.lean) | 27 | [Names and source lines](../monographs/special-functions/formalization/Block14/declarations.json) |
 | 15 | [CoupledEvaluation.lean](../monographs/special-functions/lean/CoupledEvaluation.lean) | 36 | [Names and source lines](../monographs/special-functions/formalization/Block15/declarations.json) |
 | 16 | [CoupledNormalization.lean](../monographs/special-functions/lean/CoupledNormalization.lean) | 30 | [Names and source lines](../monographs/special-functions/formalization/Block16/declarations.json) |
-| 17 | [CoupledGuardedMajorant.lean](../monographs/special-functions/lean/CoupledGuardedMajorant.lean) | 30 | [Names and source lines](../monographs/special-functions/formalization/Block20/declarations.json) |
+| 17 | [CoupledGuardedMajorant.lean](../monographs/special-functions/lean/CoupledGuardedMajorant.lean) | 30 | [Names and source lines](../monographs/special-functions/formalization/Block17/declarations.json) |
 
 | 18 | [CoupledEvaluationResult.lean](../monographs/special-functions/lean/CoupledEvaluationResult.lean) | 17 | [Names and source lines](../monographs/special-functions/formalization/Block18/declarations.json) |
 | 19 | [Source model](../monographs/special-functions/lean/CoupledPythonSource.lean) and [imperative refinement](../monographs/special-functions/lean/CoupledPythonRefinement.lean) | 35 | [Names and source lines](../monographs/special-functions/formalization/Block19/declarations.json) |
