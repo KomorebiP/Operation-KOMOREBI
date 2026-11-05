@@ -69,7 +69,8 @@ class ExpandedMNRTests(unittest.TestCase):
             self.assertTrue((Path(tmp)/SCRIPT).is_file())
             self.assertLess(sum(p.stat().st_size for p in Path(tmp).rglob('*') if p.is_file()),1800000)
             self.assertEqual(record['delivery'],'verified-browser-download-from-pinned-github-parts')
-            self.assertEqual(hashlib.sha256(artifact_bytes(ROOT,record['assets']['source'])).hexdigest(),SOURCE_SHA256)
+            from machine_native_reasoning_release import SOURCE_SHA256 as SYNC_SOURCE_SHA
+            self.assertEqual(hashlib.sha256(artifact_bytes(ROOT,record['assets']['source'])).hexdigest(),SYNC_SOURCE_SHA)
 
     def test_core_link_remains_separate(self):
         with tempfile.TemporaryDirectory() as tmp:

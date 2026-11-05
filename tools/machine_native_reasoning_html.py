@@ -3,21 +3,21 @@ import html,json,posixpath,re
 from pathlib import Path
 from reading_payload import PREFIX,decode,sha
 from machine_native_reasoning_expanded import PAGE,WORK,BOOK,RECORD
-MANIFEST=PREFIX+'FINAL_READING.json'
+MANIFEST=PREFIX+'SYNCHRONIZED_READING.json'
 SCRIPT='assets/mnr-chapter.js'
 STYLE='assets/mnr-reading.css'
 
 def load(root):
     data=json.loads((root/MANIFEST).read_bytes())
     edition=data.get('reading_edition',{})
-    if edition.get('id')!='mnr-html-proofread-2026-11-04' or edition.get('base_manifest')!=PREFIX+'READING.json':raise ValueError('Unknown MNR proofreading revision')
+    if edition.get('id')!='mnr-synchronized-v1.0.0' or edition.get('base_manifest')!=PREFIX+'FINAL_READING.json':raise ValueError('Unknown MNR synchronized revision')
     if sha((root/edition['base_manifest']).read_bytes())!=edition['base_manifest_sha256']:raise ValueError('MNR base reading record changed')
     if len(data['pages'])!=121 or [p['chapter'] for p in data['pages'] if p['chapter']]!=list(range(1,98)):raise ValueError('Incomplete MNR HTML edition')
     if data['proofs']!=527 or data['statement_count']!=803 or data['mathjax_validation']['errors']:raise ValueError('MNR conversion checks changed')
     if len(data['images'])!=141:raise ValueError('MNR figures incomplete')
     for kind in ('sources','images'):
         for item in data[kind]:
-            path=PREFIX+('figures/'+item['file'] if kind=='images' else item['path'])
+            path=item.get('repository_path') or PREFIX+('figures/'+item['file'] if kind=='images' else item['path'])
             if sha((root/path).read_bytes())!=item['sha256']:raise ValueError('MNR retained asset changed: '+path)
     body_started=False
     for page in data['pages']:
@@ -69,6 +69,7 @@ def welcome(data):
     body+='</ol></details></div></nav>'
     body+='<details id="edition" class="reading-resources"><summary>Edition and source notes</summary><div><p>This expanded reading edition contains 97 chapters in 13 parts. The accepted 27-result core retains its separate scope. Production and rendering checks are not an independent proof audit.</p>'
     body+='<p><a href="book.html">Complete 977-page PDF and editable TeX</a> · <a href="../../'+RECORD+'">Publication record</a>'
+    if data['reading_edition'].get('version'):body+=' · <span>Version '+e(data['reading_edition']['version'])+'</span>'
     if data.get('proofreading_url'):body+=' · <a href="'+e(data['proofreading_url'],quote=True)+'">Proofreading record</a>'
     body+='</p></div></details>'
     return body
@@ -89,7 +90,8 @@ def publish(site):
         title=(str(p['chapter'])+'. ' if p['chapter'] else '')+p['title']
         outline_level=min((h['level'] for h in p['headings']),default=2)
         contents='<nav class="chapter-contents" aria-label="Sections in this chapter"><ol>'+''.join('<li><a href="#'+e(h['id'],quote=True)+'">'+e(h['title'])+'</a></li>' for h in p['headings'] if h['level']==outline_level)+'</ol></nav>'
-        source=github(REPOSITORY,site.revision,PREFIX+p['source'],p['line'])
+        source_path=next((s.get('repository_path') for s in data['sources'] if s['path']==p['source']),None) or PREFIX+p['source']
+        source=github(REPOSITORY,site.revision,source_path,p['line'])
         resource='<a href="book.html">PDF and editable source</a> · <a href="'+e(source,quote=True)+'">Chapter source</a> · <a href="reconstructed-edition.html#edition">About this edition</a>'
         def chapter_navigation(placement='top'):
             text=navigation(config,path,placement)
