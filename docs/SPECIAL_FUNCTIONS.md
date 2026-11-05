@@ -4,7 +4,7 @@
 
 Explore five families built from contraction, arithmetic, prime-sieve measures and rotation orbits. Start with a worked calculation, open the current books in the site reader, or follow a result into its written proof and formal companion.
 
-[Read the monograph online](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/index.html) Â· [Run the coupled-function lab](https://KomorebiP.github.io/Operation-KOMOREBI/playground.html#special-functions-coupled) Â· [Work and evidence](works/monographs-special-functions.md) Â· [Read by topic](#five-families) Â· [Choose a book](#reading-volumes)
+[Read the monograph online](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/index.html) · [Run the coupled-function lab](https://KomorebiP.github.io/Operation-KOMOREBI/playground.html#special-functions-coupled) · [Work and evidence](works/monographs-special-functions.md) · [Read by topic](#five-families) · [Choose a book](#reading-volumes)
 
 ## A pair of functions with a shared beginning
 
@@ -47,7 +47,7 @@ For a shorter first calculation, work through [the scalar contracted-feedback re
 
 | Volume | What it offers | Read here |
 |---|---|---|
-| Special Functions | The current 134-page monograph: five families, seven chapters and ten proof appendices | [Read online](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/index.html) Â· [Open PDF](../monographs/special-functions/books/Special_Functions.pdf) |
+| Special Functions | The current 134-page monograph: five families, seven chapters and ten proof appendices | [Read online](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/index.html) · [Open PDF](../monographs/special-functions/books/Special_Functions.pdf) |
 | Expanded Visual Guide | The current 180-page visual volume, with 171 worked lessons and associated plates across the eight-paper series | [Open visual guide](../monographs/special-functions/books/Expanded_Visual_Guide.pdf) |
 | Resolution and Coupled Atlas | Nineteen pages and fourteen computed plates on coupled functions, growth, recovery and finite resolution | [Open coupled atlas](../monographs/special-functions/books/Resolution_and_Coupled_Atlas.pdf) |
 | Packet Realization Core | The preserved 38-page consolidated core and correction register for the original series | [Open core and corrections](../monographs/special-functions/series/Komorebi_Special_Functions_Consolidated_Manuscript_v0.1.pdf) |
@@ -75,9 +75,9 @@ Use the [written proof map](../monographs/special-functions/monograph/sections/p
 
 Use the [maintained continuation checkpoint](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/monographs/special-functions/current/README.md) for current restart instructions. The parent continuation and release files preserve the imported edition; dated evidence retains its original source links.
 
-The coupled formalization covers the canonical entire solution, uniqueness, exact growth order, type bounds/proportions, rescaling, guarded recovery, scalar identities, local remainders, operator classification and mathematical evaluation/normalization contracts. Blocks18-20 add typed evaluation results, a source-bound imperative model equivalent to the specification, and a typed expression interpreter that checks the selected arithmetic lowering. Successful modeled returns preserve the exact dictionary fields and actual-function bounds.
+The coupled formalization covers the canonical entire solution, uniqueness, exact growth order, type bounds/proportions, rescaling, guarded recovery, scalar identities, local remainders, operator classification and mathematical evaluation/normalization contracts. Blocks 18 to 20 add typed evaluation results, a source-bound imperative model equivalent to the specification, and a typed expression interpreter that checks the selected arithmetic lowering. Successful modeled returns preserve the exact dictionary fields and actual-function bounds.
 
-The [Block20 report](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/monographs/special-functions/formalization/Block20/REPORT.md), [claim map](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/monographs/special-functions/formalization/Block20/CLAIM_MAP.json), [lowering proof](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/monographs/special-functions/lean/CoupledExpressionRefinement.lean) and [replay receipt](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/monographs/special-functions/formalization/Block20/evidence/receipt.json) bind the extension. Actual Python correctness remains conditional on AST extraction, the fixed statement/control template and standard Python/Fraction/library primitives. The full translator and CPython are not verified. Other J/F/H, I and A-E remain; ordinary type convergence is conditional. The full monograph has not been formalized.
+The [Block20 report](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/monographs/special-functions/formalization/Block20/REPORT.md), [claim map](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/monographs/special-functions/formalization/Block20/CLAIM_MAP.json), [lowering proof](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/monographs/special-functions/lean/CoupledExpressionRefinement.lean) and [replay receipt](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/monographs/special-functions/formalization/Block20/evidence/receipt.json) bind the extension. Actual Python correctness remains conditional on AST extraction, the fixed statement/control template and standard Python/Fraction/library primitives. The full translator and CPython are not verified. Obligations in groups J, F, H, I and A through E remain open. Ordinary type convergence is conditional. The full monograph has not been formalized.
 
 The [edition guide](../monographs/special-functions/README.md) supplies build and replay commands. The [exact coupled-function checker](../monographs/special-functions/tools/check_coupled_exact.py) is a separate computational entry point. The [work page](works/monographs-special-functions.md#evidence) keeps these routes beside the recorded completion and confidence labels.
 
@@ -85,4 +85,4 @@ The [edition guide](../monographs/special-functions/README.md) supplies build an
 
 [Download the reading selection](DOWNLOADS.md#monographs-special-functions), or use [Build your own ZIP](https://KomorebiP.github.io/Operation-KOMOREBI/downloads.html#build-a-zip) to choose individual books and supporting files. The source edition's [rights and reuse notice](../monographs/special-functions/RIGHTS_AND_REUSE.md) states the available terms.
 
-[Physics collection](PHYSICS_COLLECTION.md#special-functions) Â· [All reading routes](READING_ROUTES.md) Â· [Browse the books](browse/MONOGRAPHS.md) Â· [Glossary](GLOSSARY.md)
+[Physics collection](PHYSICS_COLLECTION.md#special-functions) · [All reading routes](READING_ROUTES.md) · [Browse the books](browse/MONOGRAPHS.md) · [Glossary](GLOSSARY.md)

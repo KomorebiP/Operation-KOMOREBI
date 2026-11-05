@@ -62,7 +62,7 @@ availability and successful compilation remain separate questions.
 
 ## Remaining scope
 
-Blocks18-20 prove typed results, source-bound operational refinement including
+Blocks 18 to 20 prove typed results, source-bound operational refinement including
 exact dictionaries and modeled errors, and selected arithmetic lowering against
 a typed interpreter. Actual Python correctness remains conditional on AST
 extraction, the statement/control template and standard primitive semantics.
@@ -72,4 +72,4 @@ conditions. Consult the [remaining-work inventory](../monographs/special-functio
 and [current continuation guidance](../monographs/special-functions/current/README.md)
 for subsequent work.
 
-[Current assessment](works/monographs-special-functions.md) Â· [Reading volumes](SPECIAL_FUNCTIONS.md)
+[Current assessment](works/monographs-special-functions.md) · [Reading volumes](SPECIAL_FUNCTIONS.md)

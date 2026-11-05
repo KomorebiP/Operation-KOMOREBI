@@ -229,7 +229,7 @@ def prepare_book(reader, config):
 def render_book(reader, book):
     from reading_navigation import navigation, outline, resources, work_links,contents_list
     from readable_chapters import (HEADINGS, chapter_text, original_math, render_table,
-                                   group, passage_links, reading_options, typography, plain_math)
+                                   group, passage_links, reading_options, navigation_title, plain_math)
     site, reports = reader.site, []
     chapters = book['chapters']
     for index, (spec, raw, chapter) in enumerate(chapters):
@@ -237,7 +237,7 @@ def render_book(reader, book):
         body = '<p class="eyebrow">Special Functions · Reading edition</p><h1>'+html.escape(spec['title'])+'</h1>'+navigation(book['config'],page)
         body += '<p class="reading-start"><a href="#chapter-text">Start reading</a></p>'
         headings = [n for n in chapter.nodes if n['kind'] in HEADINGS]
-        body += outline('<nav class="chapter-contents" aria-label="On this page"><h2>On this page</h2><ol>'+''.join('<li><a href="#'+n['id']+'">'+html.escape(typography(n['title']))+'</a></li>' for n in headings)+'</ol></nav>')
+        body += outline('<nav class="chapter-contents" aria-label="On this page"><h2>On this page</h2><ol>'+''.join('<li><a href="#'+n['id']+'">'+html.escape(navigation_title(n['title']))+'</a></li>' for n in headings)+'</ol></nav>')
         body += resources(work_links(reader,WORK,page)+'<p><a href="'+reader.resolve(spec['source'],page)+'">Original TeX with line links</a></p>'+reading_options())
         body += '<article id="chapter-text" class="readable-chapter'+(' reading-bibliography' if page==book['config']['bib_page'] else '')+'">'
         proof_targets = proof_links(headings)
