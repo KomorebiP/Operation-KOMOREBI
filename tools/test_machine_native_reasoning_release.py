@@ -1,6 +1,6 @@
 """A synchronized release must bind its PDF, source, web text and old edition."""
 from io import BytesIO
-import hashlib,json,tempfile,unittest,zipfile
+import hashlib,json,shutil,tempfile,unittest,zipfile
 from pathlib import Path
 from machine_native_reasoning_release import load,verify,MANIFEST,PDF_SHA256,SOURCE_SHA256,HISTORICAL_BOOK,HISTORICAL_RECORD
 from machine_native_reasoning_expanded import artifact_bytes,publish,RECORD,BOOK
@@ -37,5 +37,12 @@ class SynchronizedMNRTests(unittest.TestCase):
                 self.assertEqual(parsed.h1,1);self.assertEqual(parsed.main,1)
                 self.assertTrue(any(url.endswith('/'+path) for url in parsed.canonicals),path)
             self.assertIn('mnr-reconstructed-2026-11-04.json',(Path(tmp)/HISTORICAL_BOOK).read_text(encoding='utf-8'))
+            html_pages={p.relative_to(tmp).as_posix():Page(p.read_text(encoding='utf-8')) for p in Path(tmp).rglob('*.html')}
+            self.assertEqual(set(site.discovery_pages),set(html_pages))
+            self.assertIn(HISTORICAL_BOOK,site.discovery_pages)
+            shutil.copytree(ROOT/'website/assets/brand',Path(tmp)/'assets/brand')
+            from site_metadata import publish as sitemap,verify as metadata
+            report=sitemap(site)
+            self.assertEqual(metadata(Path(tmp),html_pages),report)
 
 if __name__=='__main__':unittest.main()

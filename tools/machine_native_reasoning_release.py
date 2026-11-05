@@ -34,7 +34,7 @@ def load(root):
                     if source.get('repository_path')!=PREFIX+source['path'] or sha(raw)!=source['sha256'] or (root/source['repository_path']).read_bytes()!=raw:raise ValueError('Online chapter source differs from synchronized ZIP')
     return data
 
-def publish(site,previous):
+def publish(site,previous,reader_body):
     from machine_native_reasoning_expanded import BOOK,RECORD,SCRIPT
     from build_reader_site import github,REPOSITORY
     data=load(site.root)
@@ -42,11 +42,10 @@ def publish(site,previous):
     historical.pop('chapters',None)
     historical.update(source_archive=HISTORICAL_BOOK+'?download=source',chapter_map_manifest=previous['publication_manifest'])
     site.write(HISTORICAL_RECORD,json.dumps(historical,separators=(',',':')))
-    old=(site.output/BOOK).read_text(encoding='utf-8')
+    old=reader_body
     old=old.replace(site.rel(RECORD,BOOK),site.rel(HISTORICAL_RECORD,HISTORICAL_BOOK))
     old=old.replace('<h1>Machine-Native Reasoning</h1>','<h1>Machine-Native Reasoning</h1><p>Historical reconstructed edition · 4 November 2026. <a href="book.html">Open the synchronized v1.0.0 edition</a>.</p>',1)
-    old=old.replace(BOOK,HISTORICAL_BOOK)
-    site.write(HISTORICAL_BOOK,old)
+    site.page(HISTORICAL_BOOK,'Machine-Native Reasoning: historical reconstructed PDF and source',old,github(REPOSITORY,site.revision,previous['publication_manifest']))
     record=dict(previous,edition=data['edition'],version=data['version'],tag=data['tag'],pdf_sha256=PDF_SHA256,source_archive_sha256=SOURCE_SHA256,pages=data['pages'],chapters=data['chapters'],assets=data['assets'],publication_manifest=MANIFEST,publication_manifest_sha256=sha((site.root/MANIFEST).read_bytes()),historical_record=HISTORICAL_RECORD,historical_pdf_reader=HISTORICAL_BOOK,release_url='https://github.com/'+REPOSITORY+'/releases/tag/'+data['tag'],bridge_self_review=github(REPOSITORY,site.revision,data['focused_bridge_self_review']),bridge_review_kind='focused self-review; seven integration interfaces; not an independent whole-book audit',new_lean_execution=False,new_proof_review=False)
     site.write(RECORD,json.dumps(record,separators=(',',':')))
     e=html.escape
