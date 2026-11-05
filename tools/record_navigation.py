@@ -62,6 +62,7 @@ Use these guides to find works, software, and project records. Each dated review
 | Future research priorities and site improvements | [Future Developments](FUTURE_DEVELOPMENTS.md) |
 | How the papers and books connect | [Project map and documented dependencies](PROJECT_MAP.md) |
 | A complete path from calculation to code and evidence | [Three demonstrations](DEMONSTRATIONS.md) |
+| A checklist for transfer, information loss, and recovery | [Operator audit](OPERATOR_AUDIT.md) |
 | Introductory terminology and notation | [Glossary](GLOSSARY.md) |
 | Calculations with every step shown | [Hand-worked examples](HAND_WORKED_EXAMPLES.md) |
 | Examples connected to papers, proofs, Lean, and code | [Topic map](LEARNING_MAP.md) |

@@ -61,12 +61,10 @@ def site_navigation(page):
     def link(title, target):
         current = ' aria-current="page"' if target == page else (' aria-current="location"' if target=='read/visual-guides.html' and visual_location else '')
         url = posixpath.relpath(target, posixpath.dirname(page) or '.')
-        icon = ('<svg class="site-search-icon" viewBox="0 0 20 20" width="17" height="17" '
-                'aria-hidden="true" focusable="false"><circle cx="8.5" cy="8.5" r="5.5"/>'
-                '<path d="m12.5 12.5 4 4"/></svg>') if target == 'search.html' else ''
-        return '<a href="'+html.escape(url, quote=True)+'"'+current+'>'+icon+html.escape(title)+'</a>'
+        return '<a href="'+html.escape(url, quote=True)+'"'+current+'>'+html.escape(title)+'</a>'
     groups = [
         ('Read', [('Reading routes', 'collection/READING_ROUTES.html'),
+                  ('Operator audit', 'collection/OPERATOR_AUDIT.html'),
                   ('Extended case studies', 'collection/DEMONSTRATIONS.html#extended-case-studies'),
                   ('Saved reading', 'reading-list.html'),
                   ('Physics collection', 'collection/PHYSICS_COLLECTION.html'),
@@ -94,9 +92,7 @@ def site_navigation(page):
             link('Glossary', 'collection/GLOSSARY.html')+link('About', 'collection/START_HERE.html')+
             '</div><div class="site-nav-tools">'+link('Search', 'search.html')+
             '<button id="site-menu-toggle" type="button" aria-expanded="true" '
-            'aria-controls="site-menu-panel" hidden><svg class="site-browse-icon" viewBox="0 0 20 20" '
-            'width="16" height="16" aria-hidden="true" focusable="false"><path '
-            'd="M3 3h5v5H3zm9 0h5v5h-5zM3 12h5v5H3zm9 0h5v5h-5z"/></svg>'
+            'aria-controls="site-menu-panel" hidden>'
             'Browse <span aria-hidden="true">▾</span></button></div></div>'
             '<div id="site-menu-panel" class="site-menu-panel">'+panel+'</div></nav>')
 
