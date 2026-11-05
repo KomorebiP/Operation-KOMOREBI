@@ -5,6 +5,8 @@ import posixpath
 import re
 from urllib.parse import parse_qs, quote, unquote, urlencode, urlsplit
 
+NON_DOCUMENT_PAGES = {'side-by-side.html', '404.html', 'sitemap.html'}
+
 
 def pair_link(left, right, page, label='Read statement and proof side by side'):
     """Both targets are site-root paths, including their recorded passage anchors."""
@@ -39,7 +41,7 @@ def check_pair_links(pages):
                 destination = urlsplit(params[side][0])
                 path = unquote(destination.path)
                 assert not destination.scheme and not destination.netloc, ('External pane target', page, target)
-                assert path in pages and path not in {'side-by-side.html','404.html'}, ('Missing pane page', page, target)
+                assert path in pages and path not in NON_DOCUMENT_PAGES, ('Missing pane page', page, target)
                 if destination.fragment:
                     assert unquote(destination.fragment) in pages[path].ids, ('Missing pane passage', page, target)
                 links += 1
@@ -69,7 +71,7 @@ def catalogue(site):
     pages = {}
     for file in sorted(site.output.rglob('*.html')):
         path = file.relative_to(site.output).as_posix()
-        if path.startswith('assets/') or path in {'side-by-side.html', '404.html'}:
+        if path.startswith('assets/') or path in NON_DOCUMENT_PAGES:
             continue
         text = file.read_text(encoding='utf-8')
         title = re.search(r'<title>(.*?)</title>', text, re.S)
@@ -204,7 +206,7 @@ def check(root, pages):
     assert data['revision'] == build['collection_revision']
     assert data['schema'] == 1 and len(data['works']) == build['works']
     assert 'side-by-side.html' not in data['pages']
-    assert set(data['pages']) == set(pages)-{'side-by-side.html', '404.html'}
+    assert set(data['pages']) == set(pages)-NON_DOCUMENT_PAGES
     check_search_targets(data['entries'], pages)
     for work in data['works']:
         check_search_targets([{'url':work['left']}, {'url':work['right']}], pages)

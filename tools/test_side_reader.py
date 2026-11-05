@@ -31,17 +31,18 @@ class SideReaderTests(unittest.TestCase):
             with self.subTest(bad=bad),self.assertRaises(ValueError):pair_link(bad,'read/ok.html','claims.html')
 
     def test_link_checker_detects_missing_passages_hidden_inside_query_strings(self):
-        pages={'read/one.html':Page('<p id="L1"></p>'),'side-by-side.html':Page('<h1>Reader</h1>')}
-        for target in ['read/one.html#missing','read/missing.html#L1','side-by-side.html','https://example.test/one.html']:
+        pages={'read/one.html':Page('<p id="L1"></p>'),'side-by-side.html':Page('<h1>Reader</h1>'),
+               'sitemap.html':Page('<h1>Sitemap</h1>')}
+        for target in ['read/one.html#missing','read/missing.html#L1','side-by-side.html','sitemap.html','https://example.test/one.html']:
             from urllib.parse import urlencode
             href='side-by-side.html?'+urlencode({'left':'read/one.html#L1','right':target})
             pages['claims.html']=Page('<a href="'+href.replace('&','&amp;')+'">Pair</a>')
             with self.subTest(target=target),self.assertRaises(AssertionError):check_pair_links(pages)
 
-    def test_catalogue_excludes_the_workspace_and_vendor_viewer(self):
+    def test_catalogue_excludes_navigation_pages_and_vendor_viewer(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            for name in ['read/work/main.html','collection/works/work.html','assets/pdfjs/web/viewer.html','side-by-side.html','404.html']:
+            for name in ['read/work/main.html','collection/works/work.html','assets/pdfjs/web/viewer.html','side-by-side.html','404.html','sitemap.html']:
                 target=root/name
                 target.parent.mkdir(parents=True,exist_ok=True)
                 target.write_text('<title>A &amp; B · Komorebi</title>',encoding='utf-8')
