@@ -16,7 +16,7 @@ MAX_DESCRIPTION = 165
 DESCRIPTIONS = {
     'index.html': 'Explore mathematical papers, visual guides, recorded proofs, and executable examples in the Komorebi collection.',
     'collection/START_HERE.html': 'Start with a worked calculation, choose a reading route, and learn how to interpret the collection’s claims and evidence.',
-    'collection/OPERATOR_AUDIT.html': 'Audit an operation through packets, coordinate changes, and summaries, with exact matrix examples, failure witnesses, and interactive experiments.',
+    'collection/OPERATOR_AUDIT.html': 'Explore operator concepts through concise definitions, worked matrix examples, coordinate changes, and recovery tests, with a practical checklist.',
     'read/index.html': 'Read the Komorebi papers and books online, with formatted mathematics, chapter navigation, visual guides, and links to source files.',
     'read/start.html': 'Choose a visual introduction, a full study route, or a path through the proof and evidence for papers and books with complete online editions.',
     'read/visual-guides.html': 'Explore the collection’s visual guides, with worked diagrams and links to the corresponding mathematical manuscripts.',

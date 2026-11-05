@@ -1,24 +1,46 @@
-# Operator audit
+<a id="operator-audit"></a>
 
-An operator audit follows an operation through a change of description. It asks
-whether the new calculation performs the same task, which interactions it
-retains, and what evidence explains any difference. Use it when splitting an
-object into packets, changing coordinates, filtering a signal, or working from
-a summary.
+# Operator guide
+
+Explore the concepts used to describe operations, split objects into parts,
+change coordinates, and recover information from summaries. Use the concept
+list as a reference, then follow the worked examples to see how the ideas
+fit together in a calculation.
 
 Here, an operator is a specified rule taking inputs to outputs. A packet is
 one selected part of a representation; a transfer block records how an input
-part contributes to an output part. The audit makes those choices explicit
+part contributes to an output part. The examples make those choices explicit
 before comparing calculations.
 
-[Start here](START_HERE.md) · [Worked demonstrations](DEMONSTRATIONS.md) · [Glossary](GLOSSARY.md)
+[Start here](START_HERE.md) · [Worked demonstrations](DEMONSTRATIONS.md) · [Collection glossary](GLOSSARY.md)
 
 Start with the matrix example below if this language is new. You can
 [change its inputs and switch blocks on and off](https://komorebip.github.io/Operation-KOMOREBI/interactive.html#packets)
 in the interactive diagram, or
 [run and edit the packet program](https://komorebip.github.io/Operation-KOMOREBI/playground.html#packets).
 
+## Operator concepts at a glance
+
+| Concept | Meaning | See it in use |
+|---|---|---|
+| Operator | A specified rule taking admissible inputs to outputs. | [A two-coordinate operation](#a-complete-audit-of-a-two-coordinate-operation). |
+| Domain and codomain | The allowed input space and the declared output space. | [Operations with matching types](examples/15_TYPED_PATHS.md). |
+| Composition | Applying operations in sequence. In a product $AB$, apply $B$ first and then $A$. | [Order of operations](#check-the-order-of-operations). |
+| Projector | A linear map $P$ satisfying $P^2=P$: applying it again leaves its output unchanged. | [Coordinate projectors](#specify-the-operation-and-the-packets). |
+| Packet | A selected part of a representation, with the stated decomposition and reconstruction rules. | [Splitting the input](#specify-the-operation-and-the-packets). |
+| Transfer block | The part of an operation carrying one input packet to one output packet. | [All four transfers](#account-for-all-four-transfers). |
+| Coordinate transport | Describing the same operation in a different coordinate system. | [The transported matrix](#carry-the-operator-through-a-coordinate-change). |
+| Residual | The difference between the desired operation or output and the retained approximation. | [Omitted interactions](#delete-interactions-and-identify-the-residual). |
+| Commutator | For linear operators $A$ and $B$ on one space, the difference $AB-BA$, which tests whether their orders agree. | [A noncommutation witness](#check-the-order-of-operations). |
+| Fiber | All admissible inputs that share one summary value. | [The general recovery test](#a-general-recovery-test). |
+| Recovery | Obtaining a requested answer from the information retained in a summary. | [Sufficient and insufficient summaries](#ask-whether-the-retained-information-is-sufficient). |
+| Stability | Control of how perturbations affect an answer, under specified norms or an error model. | [Exactness, stability, and evidence](#keep-exactness-stability-and-evidence-separate). |
+
 ## The audit in six questions
+
+An operator audit is a practical way to use these concepts. It follows an
+operation through a change of description, checking which interactions are
+retained and what explains any difference in the result.
 
 | Question | What to write down | What can go wrong |
 |---|---|---|
