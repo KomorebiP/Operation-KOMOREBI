@@ -81,8 +81,14 @@ in that record. A full-page browser screenshot of the standalone SVG preserves
 its dimensions. The image URL includes its content hash so a changed image has
 a new cache identity. The artwork is branding, separate from manuscript figures.
 
-`sitemap.xml` lists exactly the indexable generated HTML pages and is linked in
-the footer. It excludes query/fragment variants and copied runtime assets. No
+The footer links to `sitemap.html`, a readable directory grouped by section and
+reading edition. It uses generated page titles and ordinary links, with chapter
+groups that expand without JavaScript. The directory includes reader tools and
+links separately to the XML sitemap for search engines. Both sitemaps are built
+from the generated page registry, so new pages are included automatically.
+
+`sitemap.xml` lists exactly the indexable generated HTML pages, including the
+readable sitemap. It excludes query/fragment variants and copied runtime assets. No
 modification dates are invented from deployment time. CI verifies all metadata,
 canonical targets, image bytes and dimensions, sitemap coverage and site size.
 Run `python -B -m unittest discover -s tools -p 'test_site_metadata.py' -v`.

@@ -1,4 +1,4 @@
-"""Static link previews, canonical URLs and a sitemap for the reader site."""
+"""Static link previews, canonical URLs and reader/crawler sitemaps."""
 from functools import lru_cache
 import hashlib
 import html
@@ -15,6 +15,7 @@ NOINDEX = {'404.html', 'search.html', 'side-by-side.html', 'reading-list.html', 
 MAX_DESCRIPTION = 165
 DESCRIPTIONS = {
     'index.html': 'Explore mathematical papers, visual guides, recorded proofs, and executable examples in the Komorebi collection.',
+    'sitemap.html': 'Browse every Komorebi reader page by section, including papers, books, visual guides, collection records, Lean proofs and software documentation.',
     'collection/START_HERE.html': 'Start with a worked calculation, choose a reading route, and learn how to interpret the collection’s claims and evidence.',
     'collection/OPERATOR_AUDIT.html': 'A worked operator reference covering maps, algebra, packets, transfer, recovery, and stability, with definitions, examples, exercises, and a practical checklist.',
     'read/index.html': 'Read the Komorebi papers and books online, with formatted mathematics, chapter navigation, visual guides, and links to source files.',
@@ -167,6 +168,48 @@ def verify_card(root):
     assert len(raw) < 250_000
     assert record['alt'] and len(record['alt']) <= 420
     return record
+
+
+def publish_navigation(site):
+    """Build the reader's directory from the same pages used for discovery."""
+    groups = {key: {} for key in ('start', 'read', 'collection', 'works', 'lean', 'math', 'polyphase', 'other')}
+    labels = dict(start='Start here and tools', read='Papers, books and visual guides',
+                  collection='Collection guides and records', works='Works and evidence',
+                  lean='Lean proofs and browser tools', math='Komorebi Math documentation',
+                  polyphase='Polyphase Float documentation', other='Other reader pages')
+    titles = site.discovery_titles
+    for path in sorted(site.discovery_pages - {'404.html', 'sitemap.html'}):
+        parts = path.split('/')
+        group = ('start' if len(parts) == 1 else 'works' if path.startswith('collection/works/')
+                 else parts[0] if parts[0] in groups else 'other')
+        folder = '/'.join(parts[:-1]) if group in {'read', 'collection'} and len(parts) > 2 else ''
+        groups[group].setdefault(folder, []).append(path)
+    e = html.escape
+    def links(paths):
+        ordered = sorted(paths, key=lambda path: (path.split('/')[-1] != 'index.html', titles[path].casefold(), path))
+        return '<ol>'+''.join('<li><a data-reading-entry data-sitemap-entry href="'+
+            e(quote(path, safe='/'), quote=True)+'">'+e(titles[path])+'</a></li>' for path in ordered)+'</ol>'
+    body = ('<div class="reading-contents-index"><h1>Sitemap</h1>'
+            '<p class="lede">Find your way around the Komorebi collection.</p>'
+            '<p>Browse pages by section. Open a paper or book to see its chapters, visual guides and source readers.</p>')
+    if 'search.html' in site.discovery_pages:
+        body += '<p>Looking for a particular term? <a href="search.html">Search the collection</a>.</p>'
+    body += '<nav class="document-routes" aria-label="Sitemap sections">'+''.join(
+        '<a href="#sitemap-'+key+'">'+e(labels[key])+'</a>' for key, folders in groups.items() if folders)+'</nav>'
+    for key, folders in groups.items():
+        if not folders:continue
+        body += '<section id="sitemap-'+key+'"><h2>'+e(labels[key])+'</h2>'
+        for folder, paths in sorted(folders.items(), key=lambda item: (
+                titles.get(item[0]+'/index.html', item[0]).casefold(), item[0])):
+            if not folder:
+                body += links(paths)
+                continue
+            label = titles.get(folder+'/index.html', folder.split('/')[-1].replace('-', ' ').replace('_', ' ').title())
+            body += ('<details class="reading-contents-group"><summary>'+e(label)+' <span>('+str(len(paths))+
+                     ' pages)</span></summary>'+links(paths)+'</details>')
+        body += '</section>'
+    body += '<p><a href="sitemap.xml">XML sitemap for search engines</a></p></div>'
+    site.page('sitemap.html', 'Sitemap', body)
 
 
 def publish(site):

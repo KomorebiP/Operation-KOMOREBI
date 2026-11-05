@@ -4,11 +4,12 @@ from pathlib import Path
 import shutil
 import tempfile
 import unittest
+from urllib.parse import unquote
 
 from build_reader_site import Site
 from check_reader_site import Page
 from site_metadata import (BASE_URL, DESCRIPTIONS, MAX_DESCRIPTION, canonical_url,
-                           description, head_metadata, publish, verify, verify_card)
+                           description, head_metadata, publish, publish_navigation, verify, verify_card)
 
 
 class MetadataTests(unittest.TestCase):
@@ -53,6 +54,8 @@ class MetadataTests(unittest.TestCase):
                'search.html','side-by-side.html','reading-list.html','lean/run.html','404.html']
         for path in paths:site.page(path,'Page '+path,'<h1>Example</h1><p>A complete mathematical reading page with its source links and recorded assumptions available for inspection.</p>')
         (root/'assets/viewer.html').write_text('<html>Unchanged third-party asset</html>',encoding='utf8')
+        publish_navigation(site)
+        paths.append('sitemap.html')
         report=publish(site)
         pages={p:Page((root/p).read_text(encoding='utf8')) for p in paths}
         return site,pages,report
@@ -61,12 +64,47 @@ class MetadataTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             root=Path(folder);site,pages,report=self.fixture(root)
             self.assertEqual(verify(root,pages),report)
-            self.assertEqual(report['pages'],8)
-            self.assertEqual(report['sitemap_urls'],3)
+            self.assertEqual(report['pages'],9)
+            self.assertEqual(report['sitemap_urls'],4)
             xml=(root/'sitemap.xml').read_text(encoding='utf8')
             for excluded in ['search.html','reading-list.html','404.html','viewer.html','lastmod','changefreq','priority']:
                 self.assertNotIn(excluded,xml)
-            self.assertIn('Sitemap',(root/'index.html').read_text(encoding='utf8'))
+            for path in ('index.html','read/paper-v/chapter.html'):
+                markup=(root/path).read_text(encoding='utf8')
+                self.assertIn('href="'+site.rel('sitemap.html',path)+'">Sitemap</a>',markup)
+                self.assertNotIn('href="'+site.rel('sitemap.xml',path)+'">Sitemap</a>',markup)
+
+    def test_reader_directory_has_exact_page_coverage_and_safe_readable_labels(self):
+        from html.parser import HTMLParser
+        class Entries(HTMLParser):
+            def __init__(self,markup):
+                super().__init__();self.targets=[];self.feed(markup)
+            def handle_starttag(self,tag,attrs):
+                attrs=dict(attrs)
+                if tag=='a' and 'data-sitemap-entry' in attrs:self.targets.append(unquote(attrs['href']))
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder);site,_,_=self.fixture(root)
+            title='α < β & "A comparison"'
+            for path in ['read/paper-v/α & beta.html','collection/works/paper-v.html',
+                         'math/index.html','polyphase/index.html','lean/index.html']:
+                site.page(path,title,'<h1>Example</h1>')
+            publish_navigation(site)
+            markup=(root/'sitemap.html').read_text(encoding='utf8')
+            targets=Entries(markup).targets
+            self.assertEqual(set(targets),site.discovery_pages-{'404.html','sitemap.html'})
+            self.assertEqual(len(targets),len(set(targets)))
+            self.assertIn('α &lt; β &amp; &quot;A comparison&quot;',markup)
+            self.assertIn('read/paper-v/%CE%B1%20%26%20beta.html',markup)
+            self.assertIn('<details class="reading-contents-group"><summary>Page read/paper-v/index.html',markup)
+            self.assertIn('XML sitemap for search engines</a>',markup)
+            self.assertNotIn('Read side by side',markup.split('<main id="main" tabindex="-1">',1)[1].split('</main>',1)[0])
+            self.assertNotIn('viewer.html',markup)
+            self.assertEqual(Page(markup).h1,1)
+            publish_navigation(site)
+            self.assertEqual((root/'sitemap.html').read_text(encoding='utf8'),markup)
+            site.page('math/index.html','Updated software guide','<h1>Updated</h1>')
+            publish_navigation(site)
+            self.assertIn('Updated software guide',(root/'sitemap.html').read_text(encoding='utf8'))
 
     def test_stale_or_corrupt_sharing_art_cannot_pass(self):
         for key in ['image','source']:
