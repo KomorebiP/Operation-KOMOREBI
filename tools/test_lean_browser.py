@@ -62,9 +62,22 @@ class LeanBrowserTests(unittest.TestCase):
             out=Path(tmp);reader,records,runtime=self.fixture(out)
             self.assertEqual(build(reader,runtime)['workspaces'],len(WORKSPACES))
             from check_reader_site import Page
-            page=Page((out/PAGE).read_text(encoding='utf-8'))
+            class WorkspacePage(Page):
+                def __init__(self,text):
+                    self.controls={};super().__init__(text)
+                def handle_starttag(self,tag,attrs):
+                    super().handle_starttag(tag,attrs)
+                    values=dict(attrs)
+                    for name in values:
+                        if name.startswith('data-local-'):self.controls[name]=values
+            page=WorkspacePage((out/PAGE).read_text(encoding='utf-8'))
             for control in page.inputs:
                 self.assertTrue(control.get('id') in page.labels or control.get('aria-label'))
+            self.assertTrue({'data-local-draft-status','data-local-result-note','data-local-diagnostics'}<=page.controls.keys())
+            editor=page.controls['data-local-code']
+            self.assertIn('readonly',editor)
+            self.assertIn(editor['aria-describedby'],page.ids)
+            self.assertEqual(page.controls['data-local-diagnostics']['aria-label'],'Go to a diagnostic in the source')
             self.assertEqual(verify(out,dict(files=records))['source_identity'],'PASS')
             data=json.loads((out/BASE/'examples.json').read_bytes())
             self.assertEqual(len(next(e for e in data['examples'] if e['id']=='proof-path-recovery')['files']),2)

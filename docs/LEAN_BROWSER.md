@@ -39,6 +39,19 @@ environment, not replays of every retained Lake environment or the full reading
 collection. Original source bytes, receipts and verification labels
 are unchanged. Unsupported imports fail.
 
+Edited workspace drafts are saved in the tab's session storage, when available,
+and recovered after a refresh. This never starts a proof check or restores a
+successful result. Drafts follow file identities when dependency order changes
+and must match the original source hashes; incompatible saved drafts remain
+available to download rather than replacing current sources. Storage failures
+are shown beside the editor. Download edited files before closing the tab.
+Results from before a source edit, workspace restore or checking-mode change are
+marked stale, and their source navigation is disabled. Reported errors and
+warnings with known original-source coordinates have buttons that select the
+corresponding file and line. Generated guard/setup locations are not treated as
+proof locations. Ctrl+Enter (Command+Enter on Mac) checks the selected file and its
+dependencies; adding Shift checks the whole workspace.
+
 “Open another retained Lean file” browses the full reading collection, using the
 existing portable source bundle. Its import planner resolves local dependencies
 inside the same reading edition and orders them before the selected file. The
