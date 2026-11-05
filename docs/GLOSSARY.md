@@ -1,4 +1,4 @@
-# Glossary and notation
+# Glossary
 
 This guide explains 252 terms used across the collection, its operator guide and worked examples. Use the [first reading route](#a-first-reading), [compare nearby ideas](#compare-nearby-ideas), [browse by subject](#browse-by-subject), or open the [alphabetical index](#alphabetical-index).
 

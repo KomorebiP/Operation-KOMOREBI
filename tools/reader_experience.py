@@ -194,7 +194,7 @@ def render_reader_pages(root, components, assessments):
 
 def render_glossary(config):
     terms={x['id']:x for x in config['glossary']}
-    text='# Glossary and notation\n\n'
+    text='# Glossary\n\n'
     text+='This guide explains '+str(len(terms))+' terms used across the collection, its operator guide and worked examples. '
     text+='Use the [first reading route](#a-first-reading), [compare nearby ideas](#compare-nearby-ideas), [browse by subject](#browse-by-subject), or open the [alphabetical index](#alphabetical-index).\n\n'
     text+='[Find a glossary term on the reading website]('+SITE+'collection/GLOSSARY.html#glossary-lookup): search names, abbreviations, definitions and short examples, or choose a subject. Open the glossary beside a paper with **Read side by side**.\n\n'
