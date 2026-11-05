@@ -68,6 +68,7 @@ function setup(query='',options={}){
   return {elements,form,requests,rows,location,events,pagers,pushes,summary,
     status:()=>elements['#search-status'].textContent,
     titles:()=>elements['#search-results'].children.map(li=>li.children[0].textContent),
+    urls:()=>elements['#search-results'].children.map(li=>li.children[0].children[0].href),
     submit(value){elements['#search-query'].value=value;return form.events.submit({preventDefault(){}});},
     change(name,value){const e=elements['#search-'+name];e.value=value;return e.events.change();},
     next(){return pagers[0].selectors['[data-search-page="next"]'].events.click();},
@@ -87,6 +88,62 @@ test('empty page is idle; ranking, literal previews, and pagination remain usabl
   assert.match(p.status(),/Showing 41–80/);assert.equal(p.requests.details[1].length,40);
   assert.equal(new URL(p.location).searchParams.get('page'),'2');
   assert.equal(p.pushes.length,1);
+});
+
+test('exact catalog identifiers lead substring collisions and retain filters',async()=>{
+  const relation='collection/operators/catalog/RELATIONS.html#rel-10';
+  const rows=[
+    {id:0,title:'Paper III: Relative obstruction / line 1040',url:'read/paper-iii.html#line-1040',
+      kind:'Claims',text:'relative obstruction 1040 REL10',work_ids:['a']},
+    {id:1,title:'Relative maps 10',url:'collection/GLOSSARY.html#relative',
+      kind:'Glossary',text:'relative maps 10 REL10',work_ids:['a']},
+    {id:2,title:'REL-10 · Coarse defect composition',url:relation,
+      kind:'Guides',text:'REL-10 REL10 coarse defect composition',work_ids:[]},
+    {id:3,title:'REL-10',url:'read/other.html#rel-10',
+      kind:'Claims',text:'REL10 mentioned in another source',work_ids:['a']}
+  ].map(row=>({...row,group:'Collection',preview:row.text}));
+  const p=setup('?q=REL-10',{rows});await flush();
+  assert.equal(p.urls()[0],relation,'A direct query URL must lead to the exact catalog law');
+  assert.equal(p.urls().length,4,'Ordinary substring matches remain available');
+  for(const query of ['REL-10','rel-10','REL10','rel10','rel 10']){
+    await p.submit(query);
+    assert.equal(p.urls()[0],relation,query);
+    assert.equal(new URL(p.location).searchParams.get('q'),query);
+  }
+  await p.change('kind','Claims');
+  assert.deepEqual(p.urls(),['read/other.html#rel-10','read/paper-iii.html#line-1040']);
+  await p.change('kind','');await p.change('work','a');
+  assert.equal(p.urls().includes(relation),false,'Identifier priority must respect the work filter');
+  assert.equal(p.urls().length,3);
+});
+
+test('catalog identifier priority preserves numeric boundaries and missing-ID fallback',async()=>{
+  const packet='collection/operators/catalog/A_STRUCTURAL.html#op-010';
+  const realization='collection/operators/catalog/E_SIGNAL.html#op-100';
+  const rows=[
+    {id:0,title:'OP-100 · Truncated-power packet realization',url:realization,
+      kind:'Guides',text:'OP-100 OP100'},
+    {id:1,title:'OP-010 · Packet block',url:packet,
+      kind:'Guides',text:'OP-010 OP010 OP10'},
+    {id:2,title:'A relative 999 example',url:'relative-example.html',
+      kind:'Guides',text:'REL999 relative 999'},
+    {id:3,title:'Z relative 999 claim',url:'relative-claim.html',
+      kind:'Claims',text:'REL999 relative 999'}
+  ].map(row=>({...row,group:'Collection',work_ids:[],preview:row.text}));
+  const p=setup('',{rows});
+  for(const query of ['OP-010','op010','op 010','OP10','op 10']){
+    await p.submit(query);assert.equal(p.urls()[0],packet,query);
+  }
+  await p.submit('OP10');assert.equal(p.urls().includes(realization),true,'Substring matches remain searchable');
+  for(const query of ['OP-100','op100','op 100']){
+    await p.submit(query);assert.equal(p.urls()[0],realization,query);
+  }
+  for(const query of ['REL-999','rel999','rel 999']){
+    await p.submit(query);
+    assert.deepEqual(p.urls(),['relative-claim.html','relative-example.html'],query);
+  }
+  await p.submit('relative 999');
+  assert.deepEqual(p.urls(),['relative-claim.html','relative-example.html'],'Ordinary ranking is unchanged');
 });
 
 test('work, repository, kind, visual-guide and combined work facets keep their meaning',async()=>{
