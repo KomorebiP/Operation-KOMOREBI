@@ -20,6 +20,72 @@ INDEX_PATH = 'docs/operators/catalog/README.md'
 CHECKS_PATH = 'docs/operators/catalog/CHECKS.md'
 RELATIONS_PATH = 'docs/operators/catalog/RELATIONS.md'
 SOURCES_PATH = 'docs/operators/catalog/SOURCES.md'
+COMPOSITION_PATH = 'docs/operators/COMPOSITION.md'
+
+# These are reading routes, not additions to the imported source/check registry.
+# A route names the exact relations illustrated by its worked calculation.
+WORKED_ROUTES = (
+    dict(title='Compose through a middle presentation',
+         path=COMPOSITION_PATH + '#middle-chart-bridge', relation_ids=('REL-02', 'REL-03')),
+    dict(title='Test coarse descent and compose its defects',
+         path=COMPOSITION_PATH + '#coarse-defect', relation_ids=('REL-09', 'REL-10')),
+    dict(title='Pull back a metric defect',
+         path=COMPOSITION_PATH + '#metric-defect', relation_ids=('REL-14',)),
+    dict(title='Change coordinates for a moment covector',
+         path=COMPOSITION_PATH + '#moment-covector', relation_ids=('REL-08',)),
+    dict(title='Push forward a finite measure and form a product measure',
+         path=COMPOSITION_PATH + '#finite-pushforward', relation_ids=('REL-23', 'REL-27')),
+    dict(title='Continue a recursive filter across chunks',
+         path=COMPOSITION_PATH + '#filter-state', relation_ids=('REL-28',)),
+    dict(title='Move a difference through polynomial packets',
+         path='docs/operators/POLYNOMIAL.md#7-translation-carries-information-between-packets',
+         relation_ids=('REL-05',)),
+    dict(title='Use the transported polynomial product',
+         path='docs/operators/POLYNOMIAL.md#6-transported-multiplication-and-its-product-rule',
+         relation_ids=('REL-06',)),
+    dict(title='Combine raising, lowering, and degree',
+         path='docs/operators/POLYNOMIAL.md#3-raising-and-degree-operators',
+         relation_ids=('REL-17', 'REL-18')),
+)
+
+
+def validate_worked_routes(data: dict, root: Path = ROOT) -> None:
+    """Reject stale relation bindings and missing worked-calculation destinations."""
+    from navigation_links import anchors
+
+    relation_ids = {row['id'] for row in data['relations']}
+    seen = set()
+    destinations = {}
+    for route in WORKED_ROUTES:
+        target = route['path']
+        path, marker, fragment = target.partition('#')
+        if (not route['title'].strip() or not route['relation_ids'] or
+                len(route['relation_ids']) != len(set(route['relation_ids'])) or
+                not set(route['relation_ids']) <= relation_ids):
+            raise ValueError('Invalid worked-calculation relation binding: ' + target)
+        if (target in seen or not path.startswith('docs/operators/') or
+                '..' in Path(path).parts or not path.endswith('.md') or
+                not marker or not fragment):
+            raise ValueError('Invalid or duplicate worked-calculation route: ' + target)
+        seen.add(target)
+        if path not in destinations:
+            source = root / path
+            if not source.is_file():
+                raise ValueError('Missing worked-calculation page: ' + path)
+            destinations[path] = anchors(source.read_text(encoding='utf-8'))
+        if fragment not in destinations[path]:
+            raise ValueError('Missing worked-calculation anchor: ' + target)
+
+
+def worked_calculation_links(relation_ids: list[str], page: str) -> str:
+    """Link only calculations explicitly associated with one of these relations."""
+    identifiers = set(relation_ids)
+    routes = [route for route in WORKED_ROUTES if identifiers.intersection(route['relation_ids'])]
+    if not routes:
+        return ''
+    label = 'Worked calculation' if len(routes) == 1 else 'Worked calculations'
+    return ('**' + label + ':** ' +
+            ' · '.join(link(route['title'], route['path'], page) for route in routes) + '.\n\n')
 
 
 def load_catalog(root: Path | str | None = None) -> dict:
@@ -78,6 +144,7 @@ def intro(page: str) -> str:
     return (link('Operator guide', 'docs/OPERATOR_AUDIT.md', page) + ' · ' +
             link('Catalog', INDEX_PATH, page) + ' · ' +
             link('Composition laws', RELATIONS_PATH, page) + ' · ' +
+            link('Worked calculations', COMPOSITION_PATH, page) + ' · ' +
             link('Finite checks', CHECKS_PATH, page) + '\n\n')
 
 
@@ -104,6 +171,9 @@ def catalog_index(data: dict) -> str:
     text += ('\n## Read a calculation first\n\n'
              '- For the basic vocabulary, begin with ' + link('operator basics','docs/operators/BASICS.md',page) +
              ' and ' + link('packets and projectors','docs/operators/PACKETS.md',page) + '.\n'
+             '- To use composition laws with explicit inputs and intermediate results, follow the six ' +
+             link('worked compositions',COMPOSITION_PATH,page) +
+             ': coordinate bridges, coarse and metric defects, moment covectors, finite measures, and filter state.\n'
              '- For an operation carried across coordinates, read ' + link('transfer and compression','docs/operators/TRANSFER.md',page) +
              ' and ' + link('polynomial coordinates','docs/operators/POLYNOMIAL.md',page) +
              ', then compare ' + operator_links(['OP-041','OP-173','OP-174','OP-175','OP-176'],page,data) + '.\n'
@@ -162,6 +232,7 @@ def family_document(family: dict, data: dict) -> str:
         rels=[r for r in data['relations'] if row['id'] in r['operator_ids']]
         if rels:
             text += '**Composition laws:** ' + ' · '.join(link(r['name'],RELATIONS_PATH+'#'+r['id'].lower(),page) for r in rels) + '.\n\n'
+            text += worked_calculation_links([r['id'] for r in rels], page)
     text += link('All operator families',INDEX_PATH,page) + ' · ' + link('Operator guide','docs/OPERATOR_AUDIT.md',page) + '\n'
     return text
 
@@ -173,6 +244,9 @@ def relations_document(data: dict) -> str:
            'Their assumptions are part of each statement. A linked fixture checks the named '
            'finite example, not every admissible instance. The relations include classical '
            'identities and explicit consequences of the source constructions.\n\n')
+    text += ('For explicit inputs, intermediate results, and failure controls, open the ' +
+             link('worked compositions', COMPOSITION_PATH, page) +
+             '. Covered laws below link directly to their calculations.\n\n')
     for row in data['relations']:
         text+='- ['+row['id']+' · '+row['name']+'](#'+row['id'].lower()+')\n'
     for row in data['relations']:
@@ -180,7 +254,8 @@ def relations_document(data: dict) -> str:
         text+=formula('$'+row['law_tex']+'$')+'\n'
         text+='**Assumptions.** '+row['assumptions']+'\n\n'
         text+='**Operators:** '+operator_links(row['operator_ids'],page,data,True)+'.\n\n'
-        text+='**Finite checks linked:** '+', '.join(check_link(c,page) for c in row['check_ids'])+'.\n'
+        text+='**Finite checks linked:** '+', '.join(check_link(c,page) for c in row['check_ids'])+'.\n\n'
+        text+=worked_calculation_links([row['id']], page)
     return text
 
 
@@ -257,7 +332,9 @@ def sources_document(data: dict) -> str:
     text+=('## Maintain the reference\n\n'
            'The '+link('structured registry',CATALOG_PATH,page)+' is the canonical catalog. '
            'The family pages, this register, and the check and relation pages are generated '
-           'from it. After an intentional edit, regenerate them with:\n\n'
+           'from it. Worked-calculation routes are maintained and validated in the ' +
+           link('catalog generator','tools/operator_catalog.py',page) +
+           '. After an intentional edit, regenerate them with:\n\n'
            '```text\npython -B tools/operator_catalog.py\npython -B tools/operator_catalog.py --check\n'
            'python -B -m unittest discover -s tools -p test_operator_catalog.py\n```\n\n'
            'Keep a source revision, a precise input domain, and any hypothesis needed by '
@@ -278,7 +355,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument('--root',type=Path,default=ROOT)
     parser.add_argument('--check',action='store_true',help='Fail if generated Markdown differs from the registry')
     args=parser.parse_args(argv)
-    documents=build_documents(load_catalog(args.root))
+    data=load_catalog(args.root)
+    validate_worked_routes(data, args.root)
+    documents=build_documents(data)
     mismatches=[]
     for path,text in documents.items():
         target=args.root/path

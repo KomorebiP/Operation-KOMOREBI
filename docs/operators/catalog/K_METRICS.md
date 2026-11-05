@@ -1,6 +1,6 @@
 # Metric transport and compatibility
 
-[Operator guide](../../OPERATOR_AUDIT.md) · [Catalog](README.md) · [Composition laws](RELATIONS.md) · [Finite checks](CHECKS.md)
+[Operator guide](../../OPERATOR_AUDIT.md) · [Catalog](README.md) · [Composition laws](RELATIONS.md) · [Worked calculations](../COMPOSITION.md) · [Finite checks](CHECKS.md)
 
 Carry the metric with the coordinates and compare adjoints, distortion, propagation, and defects.
 
@@ -139,6 +139,8 @@ T\longmapsto\widehat T=|\det T|^{-1/n}T
 
 **Composition laws:** [Quadratic metric defect](RELATIONS.md#rel-14).
 
+**Worked calculation:** [Pull back a metric defect](../COMPOSITION.md#metric-defect).
+
 
 <a id="op-190"></a>
 
@@ -213,5 +215,7 @@ Q_Y=T^{-*}Q_XT^{-1}
 **Related entries:** [OP-024](A_STRUCTURAL.md#op-024) · [OP-171](A_STRUCTURAL.md#op-171) · [OP-187](K_METRICS.md#op-187) · [OP-189](K_METRICS.md#op-189) · [OP-191](K_METRICS.md#op-191).
 
 **Composition laws:** [Quadratic metric defect](RELATIONS.md#rel-14).
+
+**Worked calculation:** [Pull back a metric defect](../COMPOSITION.md#metric-defect).
 
 [All operator families](README.md) · [Operator guide](../../OPERATOR_AUDIT.md)

@@ -1,6 +1,6 @@
 # Signal, wavelet, and polyphase operators
 
-[Operator guide](../../OPERATOR_AUDIT.md) · [Catalog](README.md) · [Composition laws](RELATIONS.md) · [Finite checks](CHECKS.md)
+[Operator guide](../../OPERATOR_AUDIT.md) · [Catalog](README.md) · [Composition laws](RELATIONS.md) · [Worked calculations](../COMPOSITION.md) · [Finite checks](CHECKS.md)
 
 Analyze and synthesize signals, route filter phases, preserve continuation state, and recover finite features.
 
@@ -515,5 +515,7 @@ y_n=\frac{\sum_{k=0}^{M}b_kx_{n-k}-\sum_{k=1}^{L}a_ky_{n-k}}{a_0}
 **Related entries:** [OP-063](C_COORDINATES.md#op-063) · [OP-081](E_SIGNAL.md#op-081) · [OP-096](E_SIGNAL.md#op-096) · [OP-133](G_DYNAMICS.md#op-133) · [OP-178](C_COORDINATES.md#op-178).
 
 **Composition laws:** [Recursive filter continuation](RELATIONS.md#rel-28).
+
+**Worked calculation:** [Continue a recursive filter across chunks](../COMPOSITION.md#filter-state).
 
 [All operator families](README.md) · [Operator guide](../../OPERATOR_AUDIT.md)

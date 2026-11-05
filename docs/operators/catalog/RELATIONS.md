@@ -1,8 +1,10 @@
 # Composition and compatibility laws
 
-[Operator guide](../../OPERATOR_AUDIT.md) · [Catalog](README.md) · [Composition laws](RELATIONS.md) · [Finite checks](CHECKS.md)
+[Operator guide](../../OPERATOR_AUDIT.md) · [Catalog](README.md) · [Composition laws](RELATIONS.md) · [Worked calculations](../COMPOSITION.md) · [Finite checks](CHECKS.md)
 
 These 28 relations connect entries in the catalog. Their assumptions are part of each statement. A linked fixture checks the named finite example, not every admissible instance. The relations include classical identities and explicit consequences of the source constructions.
+
+For explicit inputs, intermediate results, and failure controls, open the [worked compositions](../COMPOSITION.md). Covered laws below link directly to their calculations.
 
 - [REL-01 · Typed packet composition](#rel-01)
 - [REL-02 · Presentation bridge](#rel-02)
@@ -47,6 +49,7 @@ These 28 relations connect entries in the catalog. Their assumptions are part of
 
 **Finite checks linked:** [L04](CHECKS.md#l04).
 
+
 <a id="rel-02"></a>
 
 ## REL-02. Presentation bridge
@@ -60,6 +63,9 @@ These 28 relations connect entries in the catalog. Their assumptions are part of
 **Operators:** [OP-019 Canonical coefficient lift](A_STRUCTURAL.md#op-019) · [OP-020 Presentation bridge](A_STRUCTURAL.md#op-020).
 
 **Finite checks linked:** [L08](CHECKS.md#l08).
+
+**Worked calculation:** [Compose through a middle presentation](../COMPOSITION.md#middle-chart-bridge).
+
 
 <a id="rel-03"></a>
 
@@ -75,6 +81,9 @@ These 28 relations connect entries in the catalog. Their assumptions are part of
 
 **Finite checks linked:** [R03](CHECKS.md#r03), [R04](CHECKS.md#r04).
 
+**Worked calculation:** [Compose through a middle presentation](../COMPOSITION.md#middle-chart-bridge).
+
+
 <a id="rel-04"></a>
 
 ## REL-04. Integration constant
@@ -88,6 +97,7 @@ J_aD=I-\mathbf 1 e_a
 **Operators:** [OP-053 Formal derivative](C_COORDINATES.md#op-053) · [OP-054 Basepoint antiderivative](C_COORDINATES.md#op-054) · [OP-057 Integration-constant defect projector](C_COORDINATES.md#op-057).
 
 **Finite checks linked:** [L10](CHECKS.md#l10), [L11](CHECKS.md#l11).
+
 
 <a id="rel-05"></a>
 
@@ -103,6 +113,9 @@ J_aD=I-\mathbf 1 e_a
 
 **Finite checks linked:** [R10](CHECKS.md#r10).
 
+**Worked calculation:** [Move a difference through polynomial packets](../POLYNOMIAL.md#7-translation-carries-information-between-packets).
+
+
 <a id="rel-06"></a>
 
 ## REL-06. Transported product
@@ -116,6 +129,9 @@ J_aD=I-\mathbf 1 e_a
 **Operators:** [OP-041 Monomial to falling-factorial transport](C_COORDINATES.md#op-041) · [OP-047 Forward finite difference](C_COORDINATES.md#op-047) · [OP-174 Transported polynomial product](C_COORDINATES.md#op-174).
 
 **Finite checks linked:** [R11](CHECKS.md#r11), [R12](CHECKS.md#r12), [R13](CHECKS.md#r13).
+
+**Worked calculation:** [Use the transported polynomial product](../POLYNOMIAL.md#6-transported-multiplication-and-its-product-rule).
+
 
 <a id="rel-07"></a>
 
@@ -131,6 +147,7 @@ G=I-AS,\quad G^2=G,\quad SG=0
 
 **Finite checks linked:** [R01](CHECKS.md#r01), [R02](CHECKS.md#r02).
 
+
 <a id="rel-08"></a>
 
 ## REL-08. Covector pullback
@@ -144,6 +161,9 @@ G=I-AS,\quad G^2=G,\quad SG=0
 **Operators:** [OP-172 Covector pullback](C_COORDINATES.md#op-172) · [OP-055 Point evaluation](C_COORDINATES.md#op-055) · [OP-194 Moment integration covector](L_INTEGRATION.md#op-194).
 
 **Finite checks linked:** [R05](CHECKS.md#r05), [R06](CHECKS.md#r06), [R57](CHECKS.md#r57).
+
+**Worked calculation:** [Change coordinates for a moment covector](../COMPOSITION.md#moment-covector).
+
 
 <a id="rel-09"></a>
 
@@ -159,6 +179,9 @@ G=I-AS,\quad G^2=G,\quad SG=0
 
 **Finite checks linked:** [R37](CHECKS.md#r37), [R38](CHECKS.md#r38).
 
+**Worked calculation:** [Test coarse descent and compose its defects](../COMPOSITION.md#coarse-defect).
+
+
 <a id="rel-10"></a>
 
 ## REL-10. Coarse defect composition
@@ -172,6 +195,9 @@ E_{UT}=(E_U)T+\overline U E_T
 **Operators:** [OP-121 Semigroup refinement defect](G_DYNAMICS.md#op-121) · [OP-184 Descended coarse operator](I_COMPUTATIONAL.md#op-184).
 
 **Finite checks linked:** [R83](CHECKS.md#r83), [R84](CHECKS.md#r84).
+
+**Worked calculation:** [Test coarse descent and compose its defects](../COMPOSITION.md#coarse-defect).
+
 
 <a id="rel-11"></a>
 
@@ -187,6 +213,7 @@ E_{UT}=(E_U)T+\overline U E_T
 
 **Finite checks linked:** [R39](CHECKS.md#r39), [R40](CHECKS.md#r40), [R41](CHECKS.md#r41).
 
+
 <a id="rel-12"></a>
 
 ## REL-12. Metric whitening
@@ -200,6 +227,7 @@ B_Q(UT)=B_Q(U)B_Q(T)
 **Operators:** [OP-171 Two-endpoint coordinate transport](A_STRUCTURAL.md#op-171) · [OP-186 Metric-whitened representation](K_METRICS.md#op-186).
 
 **Finite checks linked:** [R42](CHECKS.md#r42), [R43](CHECKS.md#r43).
+
 
 <a id="rel-13"></a>
 
@@ -215,6 +243,7 @@ D_Q(UT)\le D_Q(U)D_Q(T)
 
 **Finite checks linked:** [R44](CHECKS.md#r44), [R45](CHECKS.md#r45), [R46](CHECKS.md#r46).
 
+
 <a id="rel-14"></a>
 
 ## REL-14. Quadratic metric defect
@@ -228,6 +257,9 @@ D_Q(UT)\le D_Q(U)D_Q(T)
 **Operators:** [OP-189 Conformal metric residual](K_METRICS.md#op-189) · [OP-192 Quadratic metric-defect composition](K_METRICS.md#op-192).
 
 **Finite checks linked:** [R53](CHECKS.md#r53), [R54](CHECKS.md#r54).
+
+**Worked calculation:** [Pull back a metric defect](../COMPOSITION.md#metric-defect).
+
 
 <a id="rel-15"></a>
 
@@ -243,6 +275,7 @@ Q_Z=(UT)^{-*}Q_X(UT)^{-1}
 
 **Finite checks linked:** [R48](CHECKS.md#r48), [R49](CHECKS.md#r49).
 
+
 <a id="rel-16"></a>
 
 ## REL-16. Holonomy covariance
@@ -256,6 +289,7 @@ Q_Z=(UT)^{-*}Q_X(UT)^{-1}
 **Operators:** [OP-024 Transported bilinear form](A_STRUCTURAL.md#op-024) · [OP-190 Metric holonomy residual](K_METRICS.md#op-190).
 
 **Finite checks linked:** [R50](CHECKS.md#r50), [R51](CHECKS.md#r51).
+
 
 <a id="rel-17"></a>
 
@@ -271,6 +305,9 @@ Q_Z=(UT)^{-*}Q_X(UT)^{-1}
 
 **Finite checks linked:** [R14](CHECKS.md#r14), [R15](CHECKS.md#r15), [R16](CHECKS.md#r16).
 
+**Worked calculation:** [Combine raising, lowering, and degree](../POLYNOMIAL.md#3-raising-and-degree-operators).
+
+
 <a id="rel-18"></a>
 
 ## REL-18. Degree realization
@@ -284,6 +321,9 @@ Q_Z=(UT)^{-*}Q_X(UT)^{-1}
 **Operators:** [OP-173 Falling-factorial residue projector](C_COORDINATES.md#op-173) · [OP-176 Falling-factorial degree operator](C_COORDINATES.md#op-176).
 
 **Finite checks linked:** [R17](CHECKS.md#r17), [R18](CHECKS.md#r18).
+
+**Worked calculation:** [Combine raising, lowering, and degree](../POLYNOMIAL.md#3-raising-and-degree-operators).
+
 
 <a id="rel-19"></a>
 
@@ -299,6 +339,7 @@ Q_Z=(UT)^{-*}Q_X(UT)^{-1}
 
 **Finite checks linked:** [R19](CHECKS.md#r19), [R20](CHECKS.md#r20).
 
+
 <a id="rel-20"></a>
 
 ## REL-20. Exponential and logarithm
@@ -312,6 +353,7 @@ Q_Z=(UT)^{-*}Q_X(UT)^{-1}
 **Operators:** [OP-066 Formal logarithm operator](C_COORDINATES.md#op-066) · [OP-203 Formal exponential](C_COORDINATES.md#op-203).
 
 **Finite checks linked:** [R21](CHECKS.md#r21), [R22](CHECKS.md#r22), [R23](CHECKS.md#r23).
+
 
 <a id="rel-21"></a>
 
@@ -327,6 +369,7 @@ Q_Z=(UT)^{-*}Q_X(UT)^{-1}
 
 **Finite checks linked:** [R26](CHECKS.md#r26), [R27](CHECKS.md#r27).
 
+
 <a id="rel-22"></a>
 
 ## REL-22. Finite trace recovery
@@ -340,6 +383,7 @@ R_AAm=m
 **Operators:** [OP-181 Finite trace observation](J_REPRESENTATIONS.md#op-181) · [OP-182 Trace-table reconstruction](J_REPRESENTATIONS.md#op-182).
 
 **Finite checks linked:** [R32](CHECKS.md#r32), [R33](CHECKS.md#r33), [R34](CHECKS.md#r34), [R35](CHECKS.md#r35).
+
 
 <a id="rel-23"></a>
 
@@ -355,6 +399,9 @@ I_{\phi_*\mu}f=I_\mu(f\circ\phi)
 
 **Finite checks linked:** [R58](CHECKS.md#r58), [R59](CHECKS.md#r59), [R69](CHECKS.md#r69), [R70](CHECKS.md#r70).
 
+**Worked calculation:** [Push forward a finite measure and form a product measure](../COMPOSITION.md#finite-pushforward).
+
+
 <a id="rel-24"></a>
 
 ## REL-24. Moment exactness
@@ -368,6 +415,7 @@ I_{\phi_*\mu}f=I_\mu(f\circ\phi)
 **Operators:** [OP-194 Moment integration covector](L_INTEGRATION.md#op-194) · [OP-197 Signed quadrature functional](L_INTEGRATION.md#op-197) · [OP-198 Moment discrepancy functional](L_INTEGRATION.md#op-198).
 
 **Finite checks linked:** [R62](CHECKS.md#r62), [R63](CHECKS.md#r63), [R65](CHECKS.md#r65).
+
 
 <a id="rel-25"></a>
 
@@ -383,6 +431,7 @@ D^r\sum_jw_jF_j=\sum_jw_jD^rF_j
 
 **Finite checks linked:** [R66](CHECKS.md#r66), [R67](CHECKS.md#r67).
 
+
 <a id="rel-26"></a>
 
 ## REL-26. Integration by parts
@@ -396,6 +445,7 @@ I(fg')+I(f'g)=\rho[fg]_a^b
 **Operators:** [OP-053 Formal derivative](C_COORDINATES.md#op-053) · [OP-056 Interval integration functional](C_COORDINATES.md#op-056) · [OP-200 Integration-by-parts boundary functional](L_INTEGRATION.md#op-200).
 
 **Finite checks linked:** [R68](CHECKS.md#r68).
+
 
 <a id="rel-27"></a>
 
@@ -411,6 +461,9 @@ I_\mu^{(x)}I_\nu^{(y)}p=I_{\mu\otimes\nu}p
 
 **Finite checks linked:** [R60](CHECKS.md#r60), [R61](CHECKS.md#r61).
 
+**Worked calculation:** [Push forward a finite measure and form a product measure](../COMPOSITION.md#finite-pushforward).
+
+
 <a id="rel-28"></a>
 
 ## REL-28. Recursive filter continuation
@@ -424,3 +477,5 @@ I_\mu^{(x)}I_\nu^{(y)}p=I_{\mu\otimes\nu}p
 **Operators:** [OP-063 Recurrence companion transfer](C_COORDINATES.md#op-063) · [OP-205 Causal recursive filter](E_SIGNAL.md#op-205).
 
 **Finite checks linked:** [R73](CHECKS.md#r73), [R74](CHECKS.md#r74), [R75](CHECKS.md#r75), [R76](CHECKS.md#r76), [R77](CHECKS.md#r77), [R85](CHECKS.md#r85).
+
+**Worked calculation:** [Continue a recursive filter across chunks](../COMPOSITION.md#filter-state).

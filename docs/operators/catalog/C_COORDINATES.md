@@ -1,6 +1,6 @@
 # Coordinate, polynomial, and sequence transforms
 
-[Operator guide](../../OPERATOR_AUDIT.md) · [Catalog](README.md) · [Composition laws](RELATIONS.md) · [Finite checks](CHECKS.md)
+[Operator guide](../../OPERATOR_AUDIT.md) · [Catalog](README.md) · [Composition laws](RELATIONS.md) · [Worked calculations](../COMPOSITION.md) · [Finite checks](CHECKS.md)
 
 Move between polynomial bases, sequence coordinates, differences, recurrences, and formal operations.
 
@@ -68,6 +68,8 @@ C_{S\to T}=B_T^{-1}B_S
 
 **Composition laws:** [Coordinate transport](RELATIONS.md#rel-03).
 
+**Worked calculation:** [Compose through a middle presentation](../COMPOSITION.md#middle-chart-bridge).
+
 
 <a id="op-041"></a>
 
@@ -90,6 +92,8 @@ C_{S\to T}=B_T^{-1}B_S
 **Related entries:** [OP-040](C_COORDINATES.md#op-040) · [OP-042](C_COORDINATES.md#op-042) · [OP-046](C_COORDINATES.md#op-046) · [OP-048](C_COORDINATES.md#op-048) · [OP-173](C_COORDINATES.md#op-173) · [OP-174](C_COORDINATES.md#op-174) · [OP-175](C_COORDINATES.md#op-175) · [OP-176](C_COORDINATES.md#op-176).
 
 **Composition laws:** [Transported differentiation](RELATIONS.md#rel-05) · [Transported product](RELATIONS.md#rel-06).
+
+**Worked calculations:** [Move a difference through polynomial packets](../POLYNOMIAL.md#7-translation-carries-information-between-packets) · [Use the transported polynomial product](../POLYNOMIAL.md#6-transported-multiplication-and-its-product-rule).
 
 
 <a id="op-042"></a>
@@ -212,6 +216,8 @@ x^{\overline n}=\sum_{k=0}^{n}L(n,k)x^{\underline k},\qquad b_k=\sum_{n=k}^{d}L(
 **Related entries:** [OP-048](C_COORDINATES.md#op-048) · [OP-173](C_COORDINATES.md#op-173) · [OP-174](C_COORDINATES.md#op-174) · [OP-175](C_COORDINATES.md#op-175) · [OP-176](C_COORDINATES.md#op-176).
 
 **Composition laws:** [Transported differentiation](RELATIONS.md#rel-05) · [Transported product](RELATIONS.md#rel-06) · [Raising and lowering](RELATIONS.md#rel-17).
+
+**Worked calculations:** [Move a difference through polynomial packets](../POLYNOMIAL.md#7-translation-carries-information-between-packets) · [Use the transported polynomial product](../POLYNOMIAL.md#6-transported-multiplication-and-its-product-rule) · [Combine raising, lowering, and degree](../POLYNOMIAL.md#3-raising-and-degree-operators).
 
 
 <a id="op-048"></a>
@@ -376,6 +382,8 @@ e_a:f\mapsto f(a)
 **Related entries:** [OP-057](C_COORDINATES.md#op-057) · [OP-172](C_COORDINATES.md#op-172) · [OP-193](L_INTEGRATION.md#op-193) · [OP-200](L_INTEGRATION.md#op-200).
 
 **Composition laws:** [Covector pullback](RELATIONS.md#rel-08).
+
+**Worked calculation:** [Change coordinates for a moment covector](../COMPOSITION.md#moment-covector).
 
 
 <a id="op-056"></a>
@@ -549,6 +557,8 @@ s_{n+1}=Cs_n+u_n
 
 **Composition laws:** [Recurrence coordinates](RELATIONS.md#rel-21) · [Recursive filter continuation](RELATIONS.md#rel-28).
 
+**Worked calculation:** [Continue a recursive filter across chunks](../COMPOSITION.md#filter-state).
+
 
 <a id="op-064"></a>
 
@@ -658,6 +668,8 @@ s_{n+1}=Cs_n+u_n
 
 **Composition laws:** [Covector pullback](RELATIONS.md#rel-08) · [Pushforward duality](RELATIONS.md#rel-23).
 
+**Worked calculations:** [Change coordinates for a moment covector](../COMPOSITION.md#moment-covector) · [Push forward a finite measure and form a product measure](../COMPOSITION.md#finite-pushforward).
+
 
 <a id="op-173"></a>
 
@@ -682,6 +694,8 @@ Q_r^{(m)}=\Phi P_r^{(m)}\Phi^{-1}
 **Related entries:** [OP-025](B_CYCLIC.md#op-025) · [OP-026](B_CYCLIC.md#op-026) · [OP-033](B_CYCLIC.md#op-033) · [OP-041](C_COORDINATES.md#op-041) · [OP-042](C_COORDINATES.md#op-042) · [OP-047](C_COORDINATES.md#op-047) · [OP-048](C_COORDINATES.md#op-048) · [OP-174](C_COORDINATES.md#op-174) · [OP-176](C_COORDINATES.md#op-176).
 
 **Composition laws:** [Transported differentiation](RELATIONS.md#rel-05) · [Degree realization](RELATIONS.md#rel-18).
+
+**Worked calculations:** [Move a difference through polynomial packets](../POLYNOMIAL.md#7-translation-carries-information-between-packets) · [Combine raising, lowering, and degree](../POLYNOMIAL.md#3-raising-and-degree-operators).
 
 
 <a id="op-174"></a>
@@ -708,6 +722,8 @@ f\star g=\Phi\bigl((\Phi^{-1}f)(\Phi^{-1}g)\bigr)
 
 **Composition laws:** [Transported product](RELATIONS.md#rel-06).
 
+**Worked calculation:** [Use the transported polynomial product](../POLYNOMIAL.md#6-transported-multiplication-and-its-product-rule).
+
 
 <a id="op-175"></a>
 
@@ -733,6 +749,8 @@ f\star g=\Phi\bigl((\Phi^{-1}f)(\Phi^{-1}g)\bigr)
 
 **Composition laws:** [Raising and lowering](RELATIONS.md#rel-17).
 
+**Worked calculation:** [Combine raising, lowering, and degree](../POLYNOMIAL.md#3-raising-and-degree-operators).
+
 
 <a id="op-176"></a>
 
@@ -757,6 +775,8 @@ f\star g=\Phi\bigl((\Phi^{-1}f)(\Phi^{-1}g)\bigr)
 **Related entries:** [OP-029](B_CYCLIC.md#op-029) · [OP-041](C_COORDINATES.md#op-041) · [OP-047](C_COORDINATES.md#op-047) · [OP-173](C_COORDINATES.md#op-173) · [OP-175](C_COORDINATES.md#op-175).
 
 **Composition laws:** [Degree realization](RELATIONS.md#rel-18).
+
+**Worked calculation:** [Combine raising, lowering, and degree](../POLYNOMIAL.md#3-raising-and-degree-operators).
 
 
 <a id="op-177"></a>

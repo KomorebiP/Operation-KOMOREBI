@@ -1,6 +1,6 @@
 # Finite integration and observation
 
-[Operator guide](../../OPERATOR_AUDIT.md) · [Catalog](README.md) · [Composition laws](RELATIONS.md) · [Finite checks](CHECKS.md)
+[Operator guide](../../OPERATOR_AUDIT.md) · [Catalog](README.md) · [Composition laws](RELATIONS.md) · [Worked calculations](../COMPOSITION.md) · [Finite checks](CHECKS.md)
 
 Separate exact weighted sums, moment identities, pushforwards, quadrature errors, and boundary terms.
 
@@ -42,6 +42,8 @@ I_\mu f=\sum_{j=1}^{m}w_j f(x_j)
 
 **Composition laws:** [Pushforward duality](RELATIONS.md#rel-23).
 
+**Worked calculation:** [Push forward a finite measure and form a product measure](../COMPOSITION.md#finite-pushforward).
+
 
 <a id="op-194"></a>
 
@@ -66,6 +68,8 @@ I_\mu p=\sum_\alpha c_\alpha m_\alpha,\qquad m_\alpha=\int x^\alpha\,d\mu
 **Related entries:** [OP-040](C_COORDINATES.md#op-040) · [OP-056](C_COORDINATES.md#op-056) · [OP-172](C_COORDINATES.md#op-172) · [OP-193](L_INTEGRATION.md#op-193) · [OP-196](L_INTEGRATION.md#op-196) · [OP-197](L_INTEGRATION.md#op-197) · [OP-198](L_INTEGRATION.md#op-198).
 
 **Composition laws:** [Covector pullback](RELATIONS.md#rel-08) · [Moment exactness](RELATIONS.md#rel-24) · [Finite Fubini](RELATIONS.md#rel-27).
+
+**Worked calculations:** [Change coordinates for a moment covector](../COMPOSITION.md#moment-covector) · [Push forward a finite measure and form a product measure](../COMPOSITION.md#finite-pushforward).
 
 
 <a id="op-195"></a>
@@ -92,6 +96,8 @@ I_\mu p=\sum_\alpha c_\alpha m_\alpha,\qquad m_\alpha=\int x^\alpha\,d\mu
 
 **Composition laws:** [Pushforward duality](RELATIONS.md#rel-23).
 
+**Worked calculation:** [Push forward a finite measure and form a product measure](../COMPOSITION.md#finite-pushforward).
+
 
 <a id="op-196"></a>
 
@@ -116,6 +122,8 @@ I_\mu p=\sum_\alpha c_\alpha m_\alpha,\qquad m_\alpha=\int x^\alpha\,d\mu
 **Related entries:** [OP-006](A_STRUCTURAL.md#op-006) · [OP-056](C_COORDINATES.md#op-056) · [OP-193](L_INTEGRATION.md#op-193) · [OP-194](L_INTEGRATION.md#op-194).
 
 **Composition laws:** [Finite Fubini](RELATIONS.md#rel-27).
+
+**Worked calculation:** [Push forward a finite measure and form a product measure](../COMPOSITION.md#finite-pushforward).
 
 
 <a id="op-197"></a>

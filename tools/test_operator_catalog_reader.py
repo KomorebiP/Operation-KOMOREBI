@@ -6,7 +6,7 @@ import posixpath
 from types import SimpleNamespace
 import unittest
 
-from operator_catalog import INDEX_PATH, entry_path, load_catalog
+from operator_catalog import INDEX_PATH, RELATIONS_PATH, entry_path, load_catalog
 from operator_catalog_reader import (
     inline_html, lookup_html, page_url, script_tag, search_entries, search_text, source_work_ids,
 )
@@ -82,7 +82,7 @@ class OperatorCatalogReaderTests(unittest.TestCase):
 
     def test_search_links_have_the_recorded_scope_and_formula(self):
         records = search_entries(minimal_site(), self.catalog)
-        self.assertEqual(len(records), len(self.catalog['operators']))
+        self.assertEqual(len(records), len(self.catalog['operators']) + len(self.catalog['relations']))
         self.assertEqual(len({row['url'] for row in records}), len(records))
         for record, entry in zip(records, self.catalog['operators']):
             self.assertEqual(record['url'], page_url(entry_path(entry, self.catalog)))
@@ -92,6 +92,29 @@ class OperatorCatalogReaderTests(unittest.TestCase):
             self.assertNotIn('Lean', record['kind'])
             for source in entry['source_codes']:
                 self.assertIn(self.catalog['sources'][source]['title'], record['text'])
+
+    def test_relation_search_reaches_each_law_without_inferred_work_attribution(self):
+        from navigation_links import anchors
+        records = [row for row in search_entries(minimal_site(), self.catalog)
+                   if row['url'].startswith(page_url(RELATIONS_PATH) + '#')]
+        self.assertEqual(len(records), len(self.catalog['relations']))
+        destinations = anchors((ROOT / RELATIONS_PATH).read_text(encoding='utf-8'))
+        for record, relation in zip(records, self.catalog['relations']):
+            with self.subTest(relation=relation['id']):
+                self.assertEqual(record['url'], page_url(RELATIONS_PATH + '#' + relation['id'].lower()))
+                self.assertIn(relation['id'].lower(), destinations)
+                self.assertEqual(record['title'], relation['id'] + ' · ' + relation['name'])
+                self.assertEqual(record['math_preview'], relation['law_tex'])
+                self.assertIn(relation['assumptions'], record['preview'])
+                preview = ''.join('$' + part['text'] + '$' if part['type'] == 'math' else part['text']
+                                  for part in record['preview_parts'])
+                self.assertEqual(preview, record['preview'])
+                self.assertEqual((record['group'], record['kind'], record['work_ids']),
+                                 ('Collection', 'Guides', []))
+                self.assertIn(relation['id'].replace('-', ''), record['text'])
+                self.assertIn('REL' + str(int(relation['id'].split('-')[1])), record['text'])
+                for identifier in relation['operator_ids'] + relation['check_ids']:
+                    self.assertIn(identifier, record['text'])
 
     def test_work_filters_follow_sources_without_guessing_from_family_names(self):
         site = minimal_site()
@@ -141,8 +164,9 @@ class OperatorCatalogReaderTests(unittest.TestCase):
         self.assertIn('browse-by-family', parsed.elements)
         self.assertIn('alphabetical-entry-index', parsed.elements)
         self.assertEqual(len(parsed.entries), len(self.catalog['operators']))
-        self.assertEqual(len(site.search), len(self.catalog['operators']) + 1)
+        self.assertEqual(len(site.search), len(self.catalog['operators']) + len(self.catalog['relations']) + 1)
         self.assertEqual(sum('#op-' in row['url'] for row in site.search), len(self.catalog['operators']))
+        self.assertEqual(sum('#rel-' in row['url'] for row in site.search), len(self.catalog['relations']))
 
     def test_enhancement_script_is_only_loaded_on_the_index(self):
         site = minimal_site()

@@ -1,6 +1,6 @@
 # Computational and finite model operators
 
-[Operator guide](../../OPERATOR_AUDIT.md) · [Catalog](README.md) · [Composition laws](RELATIONS.md) · [Finite checks](CHECKS.md)
+[Operator guide](../../OPERATOR_AUDIT.md) · [Catalog](README.md) · [Composition laws](RELATIONS.md) · [Worked calculations](../COMPOSITION.md) · [Finite checks](CHECKS.md)
 
 Describe structured matrix actions, finite rewrites, summary maps, and computational realizations.
 
@@ -306,6 +306,8 @@ e\rightsquigarrow e'\text{ with exact normal form equality}
 
 **Composition laws:** [Coarse descent](RELATIONS.md#rel-09).
 
+**Worked calculation:** [Test coarse descent and compose its defects](../COMPOSITION.md#coarse-defect).
+
 
 <a id="op-163"></a>
 
@@ -433,5 +435,7 @@ J(x)=(s(x),t(x)),\qquad\ker J=\ker s\cap\ker t
 **Related entries:** [OP-015](A_STRUCTURAL.md#op-015) · [OP-121](G_DYNAMICS.md#op-121) · [OP-124](G_DYNAMICS.md#op-124) · [OP-162](I_COMPUTATIONAL.md#op-162) · [OP-183](I_COMPUTATIONAL.md#op-183).
 
 **Composition laws:** [Coarse descent](RELATIONS.md#rel-09) · [Coarse defect composition](RELATIONS.md#rel-10).
+
+**Worked calculation:** [Test coarse descent and compose its defects](../COMPOSITION.md#coarse-defect).
 
 [All operator families](README.md) · [Operator guide](../../OPERATOR_AUDIT.md)

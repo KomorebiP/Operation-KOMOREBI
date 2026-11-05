@@ -1,6 +1,6 @@
 # Dynamics, inference, and elimination
 
-[Operator guide](../../OPERATOR_AUDIT.md) · [Catalog](README.md) · [Composition laws](RELATIONS.md) · [Finite checks](CHECKS.md)
+[Operator guide](../../OPERATOR_AUDIT.md) · [Catalog](README.md) · [Composition laws](RELATIONS.md) · [Worked calculations](../COMPOSITION.md) · [Finite checks](CHECKS.md)
 
 Track finite evolution, probabilistic observations, coarse dynamics, and the memory left by elimination.
 
@@ -88,6 +88,8 @@ T_t=e^{tL},\ T_{s+t}=T_sT_t
 **Related entries:** [OP-119](G_DYNAMICS.md#op-119) · [OP-124](G_DYNAMICS.md#op-124) · [OP-184](I_COMPUTATIONAL.md#op-184).
 
 **Composition laws:** [Coarse defect composition](RELATIONS.md#rel-10).
+
+**Worked calculation:** [Test coarse descent and compose its defects](../COMPOSITION.md#coarse-defect).
 
 
 <a id="op-122"></a>

@@ -8,7 +8,7 @@ import posixpath
 import re
 from urllib.parse import unquote, urlsplit
 
-from operator_catalog import INDEX_PATH, entry_path
+from operator_catalog import INDEX_PATH, RELATIONS_PATH, entry_path
 
 
 def page_url(path: str) -> str:
@@ -123,7 +123,7 @@ def source_work_ids(site, entry: dict, catalog: dict) -> list[str]:
 
 
 def search_entries(site, catalog: dict) -> list[dict]:
-    """Give each operator its own result in the existing collection search."""
+    """Give each operator and relation an anchored collection-search result."""
     records = []
     for entry in catalog['operators']:
         checks = len(entry['check_ids'])
@@ -135,6 +135,22 @@ def search_entries(site, catalog: dict) -> list[dict]:
             url=page_url(entry_path(entry, catalog)), work_ids=source_work_ids(site, entry, catalog),
             text=search_text(entry, catalog), preview=preview, preview_parts=inline_parts(preview),
             math_preview=entry['formula'][1:-1]))
+    operators = {entry['id']: entry for entry in catalog['operators']}
+    for relation in catalog['relations']:
+        identifier = relation['id']
+        number = int(identifier.split('-')[1])
+        preview = (relation['assumptions'] + ' Finite checks linked: ' +
+                   ', '.join(relation['check_ids']) + '.')
+        text = ' '.join([
+            identifier, identifier.replace('-', ''), 'REL' + str(number), relation['name'],
+            'Composition and compatibility law', relation['law_tex'], relation['assumptions'],
+            *relation['operator_ids'], *[operators[key]['name'] for key in relation['operator_ids']],
+            *relation['check_ids']])
+        records.append(dict(
+            title=identifier + ' · ' + relation['name'], group='Collection', kind='Guides',
+            url=page_url(RELATIONS_PATH + '#' + identifier.lower()), work_ids=[],
+            text=text, preview=preview, preview_parts=inline_parts(preview),
+            math_preview=relation['law_tex']))
     return records
 
 
