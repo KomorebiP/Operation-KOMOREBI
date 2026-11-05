@@ -401,6 +401,8 @@ async function start() {
       }
       let warnings=reuse?checkedDependencies.warnings:false;
       const results=reuse?checkedDependencies.results.map(r=>'Reused unchanged checked dependency.\n'+r):[];
+      const dependencyDiagnostics=reuse?[...(checkedDependencies.diagnostics||[])]:[];
+      for(const cached of dependencyDiagnostics)diagnosticLinks(cached.diagnostics,cached.mapped,cached.index,cached.source);
       if(reuse)log('Reusing unchanged checked dependencies in this compiler environment.');
       for(const i of indices.slice(reuse?-1:0)) {
         setStatus('Checking '+workspace.files[i].module+'…','running');
@@ -416,11 +418,12 @@ async function start() {
         const state=outcome(result);warnings ||= state==='warning';
         const mapped=result.diagnostics.map(diagnostic=>mapWorkspaceDiagnostic(diagnostic,proof,dependency,compatibility,versioned?files[i]:null));
         diagnosticLinks(result.diagnostics,mapped,i,files[i]);
+        if(dependency)dependencyDiagnostics.push({diagnostics:result.diagnostics,mapped,index:i,source:files[i]});
         results.push(workspace.files[i].module+'\n'+(mapped.join('\n')||'No diagnostics.')+(result.output?'\n'+result.output:'')+'\nChecked in '+(result.compileMs/1000).toFixed(2)+' s.');
         hasResults=true;
         el('output').textContent=render(results);
         if(state==='failed'){setStatus(selectedOnly?'Lean reported errors. The selected-file check did not pass.':'Lean reported errors. The workspace did not pass.','failed');return;}
-        if(!freshFrontend&&dependency&&i===dependencies.at(-1))checkedDependencies={source:dependencySource,results:[...results],warnings};
+        if(!freshFrontend&&dependency&&i===dependencies.at(-1))checkedDependencies={source:dependencySource,results:[...results],warnings,diagnostics:dependencyDiagnostics};
       }
       setStatus(warnings?(selectedOnly?'Selected-file check completed with warnings. Review Lean’s response; a sorry warning means an unfinished proof.':'Checking completed with warnings. Review Lean’s response; a sorry warning means an unfinished proof.'):selectedOnly?'Selected file and its dependencies checked with no diagnostics.':workspace.compatibility?'Checking completed with no diagnostics. Browser compatibility lemma included.':'Checking completed with no diagnostics.',warnings?'warning':'passed');
     } catch(error) {

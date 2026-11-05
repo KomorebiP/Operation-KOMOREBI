@@ -36,7 +36,7 @@ test('source navigation selects whole Unicode lines and never turns guard locati
 });
 
 let fixtureId=0;
-async function fixture({storage=new Map(),sources=workspaces(),storageError=false}={}) {
+async function fixture({storage=new Map(),sources=workspaces(),storageError=false,frontend=true,warningDependency=false}={}) {
   const names=['document','fetch','window','location','history','sessionStorage','crossOriginIsolated','Worker','crypto','getComputedStyle'];
   const saved=new Map(names.map(name=>[name,Object.getOwnPropertyDescriptor(globalThis,name)]));
   const install=(name,value)=>Object.defineProperty(globalThis,name,{value,writable:true,configurable:true});
@@ -58,10 +58,13 @@ async function fixture({storage=new Map(),sources=workspaces(),storageError=fals
       if(message.type==='reset')send({type:'reset_done',id:message.id});
       if(message.type==='compile'){
         compiled++;
-        const nonce=message.code.match(/__KOMOREBI_FRONTEND_STARTED_([0-9a-f]{32})__/)[1];
-        send({type:'stdout',data:JSON.stringify({severity:'information',data:`__KOMOREBI_FRONTEND_STARTED_${nonce}__`})});
-        if(severity&&message.code.includes('example :'))send({type:'stdout',data:JSON.stringify({severity,data:severity==='warning'?'declaration uses sorry':'unknown identifier',fileName:`<komorebi-frontend-${nonce}>`,pos:{line:2,column:0}})});
-        send({type:'stdout',data:JSON.stringify({severity:'information',data:`__KOMOREBI_FRONTEND_COMPLETED_${nonce}__`})});
+        const nonce=message.code.match(/__KOMOREBI_FRONTEND_STARTED_([0-9a-f]{32})__/)?.[1];
+        if(nonce){
+          send({type:'stdout',data:JSON.stringify({severity:'information',data:`__KOMOREBI_FRONTEND_STARTED_${nonce}__`})});
+          if(severity&&message.code.includes('example :'))send({type:'stdout',data:JSON.stringify({severity,data:severity==='warning'?'declaration uses sorry':'unknown identifier',fileName:`<komorebi-frontend-${nonce}>`,pos:{line:2,column:0}})});
+          send({type:'stdout',data:JSON.stringify({severity:'information',data:`__KOMOREBI_FRONTEND_COMPLETED_${nonce}__`})});
+        }else if(message.code.includes('__KOMOREBI_PARSE_COMPLETE__'))send({type:'stdout',data:JSON.stringify({severity:'information',data:'__KOMOREBI_PARSE_COMPLETE__'})});
+        else if(warningDependency&&message.code.includes('def value : Nat'))send({type:'stdout',data:JSON.stringify({severity:'warning',data:'declaration uses sorry',pos:{line:4,column:0}})});
         send({type:'result',id:message.id,success:true});
       }
     });}
@@ -69,7 +72,7 @@ async function fixture({storage=new Map(),sources=workspaces(),storageError=fals
   }
   install('document',{querySelector:()=>root,createElement:element});
   install('fetch',async input=>String(input).endsWith('examples.json')?Response.json({examples:sources}):new Response('',{status:404}));
-  install('window',mainWindow);install('location',{href:'https://example.test/lean/browser/index.html?frontend=1'});
+  install('window',mainWindow);install('location',{href:'https://example.test/lean/browser/index.html'+(frontend?'?frontend=1':'')});
   install('history',{replaceState(){}});install('crossOriginIsolated',true);install('Worker',FakeWorker);install('crypto',webcrypto);
   install('getComputedStyle',()=>({lineHeight:'23px'}));
   install('sessionStorage',{
@@ -167,5 +170,23 @@ test('editor shortcuts keep selected/workspace scope and ignore composition, Alt
     await f.until(()=>f.elements.get('status').dataset.state==='passed');
     assert.equal(f.compiled,3);assert.doesNotMatch(f.elements.get('output').textContent,/1 of 2 workspace files/);
     assert.equal(prevented,3);
+  }finally{await f.close();}
+});
+
+test('reused dependency warnings retain source navigation without recompiling the dependency',async()=>{
+  const f=await fixture({frontend:false,warningDependency:true});
+  try {
+    await f.elements.get('run-selected').listeners.click();
+    assert.equal(f.elements.get('status').dataset.state,'warning');assert.equal(f.compiled,4);
+    assert.equal(f.elements.get('diagnostics').children[0].textContent,'Helper · line 1');
+    await f.elements.get('run-selected').listeners.click();
+    assert.equal(f.compiled,6,'second check runs only the target and its syntax probe');
+    assert.equal(f.workers.length,1);assert.equal(f.elements.get('status').dataset.state,'warning');
+    assert.match(f.elements.get('output').textContent,/Reused unchanged checked dependency/);
+    const buttons=f.elements.get('diagnostics').children;
+    assert.equal(buttons.length,1);assert.equal(buttons[0].textContent,'Helper · line 1');
+    buttons[0].listeners.click();assert.equal(f.elements.get('file').value,'0');
+    const code=f.elements.get('code');assert.equal(code.value.slice(code.selectionStart,code.selectionEnd),'def value : Nat := 1');
+    f.edit(code.value+'-- dependency edited\n');assert.equal(buttons[0].disabled,true);
   }finally{await f.close();}
 });
