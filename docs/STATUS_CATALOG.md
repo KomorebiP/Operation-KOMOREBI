@@ -234,13 +234,13 @@ Reviewed essay with written arguments and 40 finite exact-check groups. No new L
 
 **Reading edition complete** · Lean: **Selected results recorded** · Confidence basis: **Recorded formal evidence**
 
-Proofread reading volumes plus 465 named theorem declarations: 39 inherited finite-core names and 29, 21, 19, 16, 13, 19, 23, 22, 16, 34, 22, 26, 43, 27, 36, 30, 30 in Blocks01 through 17. Registered F.1-F.3, G.1, guarded G.2, named ancillary F, main H.1 and J mathematical evaluation/normalization/finite arrays are complete. J now also has an exact guarded-majorant algorithm specification with explicit resource failures and abstract validation order; successful returns certify actual bounds and endpoints. Full Python runtime/dictionary refinement remains open. Ordinary type convergence is conditional. Other J/F/H, I and A-E remain; no whole-book percentage is established.
+Proofread reading volumes plus 536 registered theorem names: 39 inherited finite-core names and 497 coupled-companion names. Blocks18-20 prove typed evaluation results, a source-bound imperative model equivalent to the specification, and selected arithmetic lowering against a typed expression interpreter. Actual Python correctness remains conditional on AST parsing/extraction, the fixed statement/control template and standard primitive semantics. No verified general Python compiler or whole-book percentage is claimed. Other J/F/H, I and A-E remain; ordinary type convergence stays conditional.
 
-**Next step:** Compose typed certified-evaluation metadata, tail and endpoint fields from the proved arrays and guarded majorant, then establish actual Python source/runtime/dictionary refinement with explicit assumptions; retain other J/F/H, I and A-E.
+**Next step:** Formalize the remaining statement/control fragment or verify the AST extraction boundary. Retain explicit parser, Python/Fraction/library assumptions and the other J/F/H, I and A-E obligations.
 
 [Return to this work: paper, proofs, Lean, and code](works/monographs-special-functions.md)
 
-[Latest written review and its scope](SPECIAL_FUNCTIONS_GUARDED_MAJORANT_BLOCK17.md)
+[Latest written review and its scope](SPECIAL_FUNCTIONS_SOURCE_EXPRESSIONS_BLOCK20.md)
 
 [Source directory](../monographs/special-functions) · [LEAN_STATUS.md](../monographs/special-functions/LEAN_STATUS.md) · [README.md](../monographs/special-functions/README.md) · [lean/README.md](../monographs/special-functions/lean/README.md)
 

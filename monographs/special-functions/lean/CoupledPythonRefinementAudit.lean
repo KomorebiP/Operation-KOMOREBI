@@ -1,0 +1,37 @@
+import CoupledPythonRefinement
+
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.weighted_products
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.append_rows_correct
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.derivative_for_correct
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.source_array_bounds
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.ordinary_rows_correct
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.partial_rows_correct
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.ladder_run_correct
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.ladder_empty_correct
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.seed_correct
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.update_correct
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.fold_for_append
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.fold_for_reverse
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.finish_majorant_correct
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.majorant_run_correct
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.dictionary_correct
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.evaluation_run_correct
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.source_return_refines
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.source_return_encloses
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.source_return_disk_error
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.source_dictionary_keys
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.source_default_parameters
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.source_integer_index_safe
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.source_factorial_nonzero
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.source_seed_safe
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.source_ladder_total
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.source_majorant_total
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.source_evaluation_total
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.source_evaluation_deterministic
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.source_evaluation_iff
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.source_index_classification
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.source_invalid_index_before_conversion
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.raw_source_return_encloses
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.raw_source_total
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.raw_source_return_disk_error
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.dictionary_representation_injective

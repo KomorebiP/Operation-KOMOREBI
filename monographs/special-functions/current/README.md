@@ -15,13 +15,12 @@ Their bytes are bound by the original source receipt and must remain unchanged.
 Dated reports retain their recorded links and hashes; use this directory for
 current continuation instructions.
 
-Latest checkpoint: **SF-LEAN-B17**, with 465 registered declarations. The
-[guarded-majorant report](../formalization/Block17/REPORT.md),
-[exact I/O inventory](../formalization/Block17/IO_MANIFEST.json) and
-[remaining-work inventory](../formalization/Block17/REMAINING_WORK.md) bind
-the exact guarded-algorithm specification. The next task is typed evaluation
-results and actual Python source/runtime correspondence. Dated reports retain
-their source links; this directory is the maintained restart point.
+Latest checkpoint: **SF-LEAN-B20**, with 536 registered names.
+Read the [expression-semantics report](../formalization/Block20/REPORT.md),
+[self-review](../formalization/Block20/SELF_REVIEW.md) and
+[continuation](../formalization/Block20/REMAINING_WORK.md). Blocks18-20 connect
+typed results, imperative source refinement and checked arithmetic lowering.
+Parser/extraction, statement templates and standard primitives remain trusted.
 
 [Work, current scope and evidence](../../../docs/works/monographs-special-functions.md)
-· [Original source receipt](../../../manifests/source-imports/monographs-special-functions.json)
+Â· [Original source receipt](../../../manifests/source-imports/monographs-special-functions.json)

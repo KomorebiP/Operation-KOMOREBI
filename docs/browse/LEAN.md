@@ -230,7 +230,7 @@ Jump to a work:
 
 ### [Special Functions](../works/monographs-special-functions.md#lean)
 
-- [Block17 formal coverage and recorded replay](../../monographs/special-functions/formalization/Block17/REPORT.md)
+- [Block20 source-expression scope and recorded replay](../../monographs/special-functions/formalization/Block20/REPORT.md)
 - [Historical Block01 formal status](../../monographs/special-functions/LEAN_STATUS.md)
 - [Block01 recurrence companion report](../../monographs/special-functions/formalization/Block01/REPORT.md)
 - [Finite core and coupled Lean sources (directory)](../../monographs/special-functions/lean/)
@@ -239,6 +239,15 @@ Jump to a work:
 - [Block17 claim map](../../monographs/special-functions/formalization/Block17/CLAIM_MAP.json)
 - [Block17 recorded execution receipt](../../monographs/special-functions/formalization/Block17/evidence/receipt.json)
 - [Block17 source publication inventory](../../monographs/special-functions/formalization/Block17/SOURCE_MANIFEST.json)
+- [Typed evaluation result (Lean)](../../monographs/special-functions/lean/CoupledEvaluationResult.lean)
+- [Source-bound imperative model (Lean)](../../monographs/special-functions/lean/CoupledPythonSource.lean)
+- [Imperative refinement (Lean)](../../monographs/special-functions/lean/CoupledPythonRefinement.lean)
+- [Typed expression interpreter (Lean)](../../monographs/special-functions/lean/CoupledExpressionSemantics.lean)
+- [Source-derived expression data (Lean)](../../monographs/special-functions/lean/CoupledSourceExpressions.lean)
+- [Expression lowering and enclosure composition (Lean)](../../monographs/special-functions/lean/CoupledExpressionRefinement.lean)
+- [Block20 claim map](../../monographs/special-functions/formalization/Block20/CLAIM_MAP.json)
+- [Block20 recorded replay](../../monographs/special-functions/formalization/Block20/evidence/receipt.json)
+- [Blocks18-20 reader publication inventory](../../monographs/special-functions/formalization/Block20/PUBLICATION_MANIFEST.json)
 - Coverage: Selected results recorded
 - [Return to this work’s Lean section](../works/monographs-special-functions.md#lean)
 - [Work overview](../works/monographs-special-functions.md)

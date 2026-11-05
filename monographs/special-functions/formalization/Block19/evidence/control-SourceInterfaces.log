@@ -1,0 +1,17 @@
+Komorebi.SpecialFunctions.Coupled.Scales.Python.source_evaluation_iff (p : RationalScales) (x : ℚ) (last : Option ℕ)
+  (outer : Option ℚ) (out : Except EvaluationError Dictionary) :
+  EvaluationRun p x last outer out ↔ out = encodeOutcome (certifiedEvaluationSpec p x last outer)
+Komorebi.SpecialFunctions.Coupled.Scales.Python.raw_source_return_encloses {α ε : Type} (convert : α → Except ε ℚ)
+  (input : IndexValue) (q r a b x : α) (outer : Option α) (d : Dictionary)
+  (h : RawEvaluationRun convert input q r a b x outer (Except.ok d)) :
+  ∃ s v,
+    prepare convert input q r a b x outer = Except.ok s ∧
+      d = encode v ∧
+        v.x = s.x ∧
+          (↑v.U.1 ≤ s.p.toReal.realComponent 0 ↑s.x ∧ s.p.toReal.realComponent 0 ↑s.x ≤ ↑v.U.2) ∧
+            ↑v.V.1 ≤ s.p.toReal.realComponent 1 ↑s.x ∧ s.p.toReal.realComponent 1 ↑s.x ≤ ↑v.V.2
+Komorebi.SpecialFunctions.Coupled.Scales.Python.source_array_bounds (p : RationalScales) (n : ℕ) (i : Fin (n + 1)) :
+  ↑i < (derivativeFor p n).1.length ∧ n + 1 - 1 - ↑i < (derivativeFor p n).2.length
+Komorebi.SpecialFunctions.Coupled.Scales.Python.source_seed_safe (p : RationalScales) (R : ℚ) (steps : ℕ) (xs : List ℚ)
+  (t : ℚ) (hp : p.strictRational) (hR : 0 < R) (h : LadderRun p.maxScale steps [] R (Except.ok (xs, t))) :
+  0 < t ∧ 0 < 1 - t * t

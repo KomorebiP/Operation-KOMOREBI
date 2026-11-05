@@ -1,3 +1,29 @@
+**2026-11-04 expression-semantics and GitHub/reader publication:** SF-LEAN-B20
+adds 19 supporting theorems (536 registered names total). Selected source
+arithmetic is interpreted in Lean and checked against the refined operations.
+All 29 stages pass. Blocks18-20 and evidence accompany this publication;
+historical local-status notes below retain their original dates and scopes.
+The parser/extractor, statement template and standard primitives remain trusted.
+See formalization/Block20/REPORT.md and the maintained continuation guide.
+
+**2026-11-04 local Python source-model checkpoint:** SF-LEAN-B19 adds 35
+theorems (517 registered names total), proving universal operational equivalence
+with the typed evaluator, dictionary recovery, modeled errors, raw preparation
+and real/complex enclosure composition. Both new modules pass compilation,
+axiom audit and same-kernel replay; all 24 stages pass. Source binding rejects
+24 adversarial mutations. The parser/binder and standard primitives remain
+an explicit trusted boundary. See formalization/Block19/REPORT.md. This is local
+and unpublished; the calculator is unchanged. Earlier dated scopes remain below.
+
+**2026-11-04 local typed evaluation-result checkpoint:** SF-LEAN-B18 adds
+17 checked declarations (482 registered names total), proving successful
+typed-result metadata, both real enclosures and complex disk error. The new
+module passes compilation, exact axiom audit and same-kernel replay against
+17 hash-verified inherited coupled modules. Five rejection controls and one
+positive fixture pass. Actual Python passes 507 finite checks; its universal
+source/runtime refinement remains open. See formalization/Block18/REPORT.md.
+This checkpoint has not been published. Earlier dated scopes remain below.
+
 # Technical publication package with checked coupled-functions block
 
 **2026-11-03 Guarded-majorant companion:** SF-LEAN-B17 adds 30 checked

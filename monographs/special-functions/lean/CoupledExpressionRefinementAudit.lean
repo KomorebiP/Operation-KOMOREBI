@@ -1,0 +1,21 @@
+import CoupledExpressionRefinement
+
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.Expressions.product_expression_lowering
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.Expressions.weight_expression_lowering
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.Expressions.expression_append_lowering
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.Expressions.expression_for_lowering
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.Expressions.expression_arrays_correct
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.Expressions.ordinary_expression_lowering
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.Expressions.partial_expression_lowering
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.Expressions.seed_expression_lowering
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.Expressions.update_expression_lowering
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.Expressions.outer_expression_lowering
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.Expressions.tail_expression_lowering
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.Expressions.resource_expression_defaults
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.Expressions.dictionary_expression_lowering
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.Expressions.expression_result_correct
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.Expressions.expression_result_success
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.Expressions.source_return_interpreted
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.Expressions.interpreted_result_encloses
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.Expressions.expression_first_omitted_degree
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.Python.Expressions.expression_dictionary_keys

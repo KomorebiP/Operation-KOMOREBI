@@ -1,6 +1,6 @@
 # Special Functions: formal sources and recorded coverage
 
-**Recorded checkpoint: SF-LEAN-B17, 3 November 2026.**
+**Recorded checkpoint: SF-LEAN-B20, 4 November 2026.**
 
 [Inspect the Lean sources](https://KomorebiP.github.io/Operation-KOMOREBI/lean/monographs-special-functions/index.html) or [run a selected file with dependencies](https://KomorebiP.github.io/Operation-KOMOREBI/lean/run.html).
 The inspector includes the coupled production modules, their axiom-audit files,
@@ -9,9 +9,9 @@ status file remains available as a historical checkpoint.
 
 ## Choose a production module
 
-The existing declaration registers record 426 theorem names across the seventeen
+The existing declaration registers record 497 theorem names across the coupled
 coupled modules below. The separate inherited finite core records 39 names,
-for 465 registered names at this checkpoint. These are registered names with
+for 536 registered names at this checkpoint. These are registered names with
 individual scopes; they do not measure whole-book formalization.
 
 | Block | Production source | Registered theorem names | Declaration register |
@@ -32,16 +32,20 @@ individual scopes; they do not measure whole-book formalization.
 | 14 | [CoupledOperator.lean](../monographs/special-functions/lean/CoupledOperator.lean) | 27 | [Names and source lines](../monographs/special-functions/formalization/Block14/declarations.json) |
 | 15 | [CoupledEvaluation.lean](../monographs/special-functions/lean/CoupledEvaluation.lean) | 36 | [Names and source lines](../monographs/special-functions/formalization/Block15/declarations.json) |
 | 16 | [CoupledNormalization.lean](../monographs/special-functions/lean/CoupledNormalization.lean) | 30 | [Names and source lines](../monographs/special-functions/formalization/Block16/declarations.json) |
-| 17 | [CoupledGuardedMajorant.lean](../monographs/special-functions/lean/CoupledGuardedMajorant.lean) | 30 | [Names and source lines](../monographs/special-functions/formalization/Block17/declarations.json) |
+| 17 | [CoupledGuardedMajorant.lean](../monographs/special-functions/lean/CoupledGuardedMajorant.lean) | 30 | [Names and source lines](../monographs/special-functions/formalization/Block20/declarations.json) |
+
+| 18 | [CoupledEvaluationResult.lean](../monographs/special-functions/lean/CoupledEvaluationResult.lean) | 17 | [Names and source lines](../monographs/special-functions/formalization/Block18/declarations.json) |
+| 19 | [Source model](../monographs/special-functions/lean/CoupledPythonSource.lean) and [imperative refinement](../monographs/special-functions/lean/CoupledPythonRefinement.lean) | 35 | [Names and source lines](../monographs/special-functions/formalization/Block19/declarations.json) |
+| 20 | [Interpreter](../monographs/special-functions/lean/CoupledExpressionSemantics.lean), [source expressions](../monographs/special-functions/lean/CoupledSourceExpressions.lean) and [lowering proof](../monographs/special-functions/lean/CoupledExpressionRefinement.lean) | 19 | [Names and source lines](../monographs/special-functions/formalization/Block20/declarations.json) |
 
 ## Read the evidence with the source
 
-The [Block17 report](../monographs/special-functions/formalization/Block17/REPORT.md),
-[claim map](../monographs/special-functions/formalization/Block17/CLAIM_MAP.json),
-[recorded execution receipt](../monographs/special-functions/formalization/Block17/evidence/receipt.json),
-and [source inventory](../monographs/special-functions/formalization/Block17/SOURCE_MANIFEST.json)
+The [Block20 report](../monographs/special-functions/formalization/Block20/REPORT.md),
+[claim map](../monographs/special-functions/formalization/Block20/CLAIM_MAP.json),
+[recorded execution receipt](../monographs/special-functions/formalization/Block20/evidence/receipt.json),
+and [source inventory](../monographs/special-functions/formalization/Block20/SOURCE_MANIFEST.json)
 identify the checkpoint's statements, assumptions, inputs, and recorded checks.
-The [formal I/O inventory](../monographs/special-functions/formalization/Block17/IO_MANIFEST.json)
+The [formal I/O inventory](../monographs/special-functions/formalization/Block20/IO_MANIFEST.json)
 and [dependency pins](../monographs/special-functions/lean/dependency_pins.json)
 provide the reproduction context.
 
@@ -52,18 +56,21 @@ make them additional production theorems. Local import links open an explicitly
 selected module in the same work.
 
 The original import receipt is preserved. Later files are separately bound to
-the dated Block17 publication inventory and their committed source bytes.
+the dated Block20 reader publication inventory and their committed source bytes.
 Adding these reading routes performs no new Lean execution or proof review.
 The native runner prepares the selected source's dependencies; browser import
 availability and successful compilation remain separate questions.
 
 ## Remaining scope
 
-The recorded Block17 development proves an exact guarded-majorant algorithm
-model. Full Python runtime and dictionary correspondence remains open.
+Blocks18-20 prove typed results, source-bound operational refinement including
+exact dictionaries and modeled errors, and selected arithmetic lowering against
+a typed interpreter. Actual Python correctness remains conditional on AST
+extraction, the statement/control template and standard primitive semantics.
+This is not a verified general Python compiler or CPython implementation.
 Other analytic regions and ordinary type convergence retain their recorded
-conditions. Consult the [remaining-work inventory](../monographs/special-functions/formalization/Block17/REMAINING_WORK.md)
+conditions. Consult the [remaining-work inventory](../monographs/special-functions/formalization/Block20/REMAINING_WORK.md)
 and [current continuation guidance](../monographs/special-functions/current/README.md)
 for subsequent work.
 
-[Current assessment](works/monographs-special-functions.md) · [Reading volumes](SPECIAL_FUNCTIONS.md)
+[Current assessment](works/monographs-special-functions.md) Â· [Reading volumes](SPECIAL_FUNCTIONS.md)

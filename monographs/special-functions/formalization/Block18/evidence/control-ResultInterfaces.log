@@ -1,0 +1,19 @@
+Komorebi.SpecialFunctions.Coupled.Scales.evaluation_success_metadata (p : RationalScales) (x : ℚ) (last : Option ℕ)
+  (outer : Option ℚ) (v : EvaluationResult) (h : certifiedEvaluationSpec p x last outer = Except.ok v) :
+  v.x = x ∧
+    last = some v.last_index ∧
+      v.outer_radius = evaluationOuter x outer ∧
+        v.tail_bound = v.majorant * (x / v.outer_radius) ^ (2 * v.last_index + 3) ∧
+          (p.ordinaryArray 0 v.last_index).length = v.last_index + 1 ∧
+            (p.ordinaryArray 1 v.last_index).length = v.last_index + 1
+Komorebi.SpecialFunctions.Coupled.Scales.evaluation_success_encloses (p : RationalScales) (x : ℚ) (last : Option ℕ)
+  (outer : Option ℚ) (v : EvaluationResult) (h : certifiedEvaluationSpec p x last outer = Except.ok v) :
+  (↑v.U.1 ≤ p.toReal.realComponent 0 ↑x ∧ p.toReal.realComponent 0 ↑x ≤ ↑v.U.2) ∧
+    ↑v.V.1 ≤ p.toReal.realComponent 1 ↑x ∧ p.toReal.realComponent 1 ↑x ≤ ↑v.V.2
+Komorebi.SpecialFunctions.Coupled.Scales.evaluation_success_disk_error (p : RationalScales) (x : ℚ) (last : Option ℕ)
+  (outer : Option ℚ) (v : EvaluationResult) (h : certifiedEvaluationSpec p x last outer = Except.ok v) (i : Fin 2)
+  (z : ℂ) (hz : ‖z‖ ≤ ↑x) : ‖p.toReal.complexComponent i z - p.toReal.oddPolynomial i v.last_index z‖ ≤ ↑v.tail_bound
+Komorebi.SpecialFunctions.Coupled.Scales.evaluation_majorant_error (p : RationalScales) (x : ℚ) (N : ℕ)
+  (outer : Option ℚ) (e : CheckedMajorantError) (hp : p.strictRational) (hx : 0 ≤ x) (hS : x < evaluationOuter x outer)
+  (hB : checkedMajorant p (evaluationOuter x outer) (some 20) (some 2000000) = Except.error e) :
+  certifiedEvaluationSpec p x (some N) outer = Except.error (EvaluationError.majorant e)

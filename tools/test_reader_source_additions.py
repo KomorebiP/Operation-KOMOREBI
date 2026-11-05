@@ -60,16 +60,16 @@ class ReaderSourceAdditionsTests(unittest.TestCase):
             receipt=json.loads((ROOT/('manifests/source-imports/'+c['id']+'.json')).read_bytes())
             owned.update({c['destination']+'/'+f['path']:{**f,'work':c['id']} for f in receipt['files']})
         extend_owned(ROOT,registry,owned)
-        for work,count in [('monographs-special-functions',47),('realization-boundaries',67)]:
+        for work,count in [('monographs-special-functions',77),('realization-boundaries',67)]:
             component=next(c for c in registry['components'] if c['id']==work)
             self.assertEqual(len(list(selected_paths(component,owned))),count)
         total=0
-        for n in range(1,18):
+        for n in range(1,21):
             base='monographs/special-functions/';path=base+f'formalization/Block{n:02d}/declarations.json'
             record=json.loads((ROOT/path).read_bytes());total+=record['count']
             self.assertIn(base+record['source'],owned)
             self.assertEqual(owned[base+record['source']]['sha256'],record['sha256'])
-        self.assertEqual(total,426)
+        self.assertEqual(total,497)
 
     def test_local_import_links_are_exact_and_malformed_inputs_stay_inspectable(self):
         rows=[dict(work='work',repository_path='book/Root.lean',url='read/root.html'),
