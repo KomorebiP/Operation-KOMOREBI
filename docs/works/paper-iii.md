@@ -56,6 +56,7 @@ Find the statement number or section in the [reading files](#read), then read it
 
 Start with the [edition guide](../../papers/paper-iii/current/README.md) and the build instructions below. Check the correspondence records to see which written claims the Lean declarations cover. Source links lead to `.lean` files. PDF guides explain the formalization.
 
+- [Stirling/Touchard counting companion: Proposition 17.6, scope and replay](../PAPER_III_STIRLING_BLOCK01.md)
 - [Lean guide (PDF)](../../papers/paper-iii/current/publication/Paper_III_Lean_Guide_v1.0.0.pdf)
 - [Lean sources (directory)](../../papers/paper-iii/current/formal/)
 

@@ -197,6 +197,9 @@ class Browser:
             if title=='Lean' and c['id'] in CURRENT_GUIDANCE:
                 links.insert(0,link('Current formalization checkpoint and continuation',
                     c['destination']+'/'+CURRENT_GUIDANCE[c['id']],page))
+            if title=='Lean' and c['id']=='paper-iii':
+                links.insert(0,link('Stirling/Touchard counting companion: Proposition 17.6, scope and replay',
+                    'docs/PAPER_III_STIRLING_BLOCK01.md',page))
             if title=='Read' and c['id']=='monographs-special-functions':
                 links.insert(0,'[Read online: chapters, proof appendices, figures and glossary](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/index.html)')
             if title=='Read' and c['id']=='monographs-large-signal-model':
