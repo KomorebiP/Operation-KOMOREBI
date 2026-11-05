@@ -102,7 +102,7 @@ def entry_slides():
 
 def home_page():
     features = [
-        ('Operator guide', 'Look up operators, projectors, packets, transfer blocks, and recovery concepts, then follow their worked examples. See how coordinate changes and omitted interactions affect a calculation, and use a practical checklist to test an operation of your own.', 'collection/OPERATOR_AUDIT.html', 'Understand'),
+        ('Operator guide', 'Explore operator concepts across six chapters, from linear maps and packet projectors to transfer, recovery, and stability. Find definitions, exact worked calculations, common mistakes, and exercises with answers, then use the practical checklist to examine an operation of your own.', 'collection/OPERATOR_AUDIT.html', 'Understand'),
         ('Recovery laboratory', 'Choose what you can measure and what you want to recover. Change the measurements, inspect exact calculations and graphs, and see either a recovery rule or two inputs that the summary cannot distinguish. Then add the information that is missing.', 'recovery-lab.html', 'Experiment'),
         ('Read side by side', 'Keep a statement beside its proof, or compare papers, chapters, worked examples, and formal sources. Follow references in the other pane, adjust the layout, and save a paired reading session so you can return to the same passages.', 'side-by-side.html', 'Compare'),
         ('Saved reading', 'Save a paper or bookmark a useful section as you explore the collection. Keep the works and passages you want to revisit together in one reading list, stored in this browser, and return to them when you are ready.', 'reading-list.html', 'Save'),

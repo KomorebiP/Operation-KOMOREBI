@@ -5,7 +5,8 @@
 Explore the concepts used to describe operations, split objects into parts,
 change coordinates, and recover information from summaries. Use the concept
 list as a reference, then follow the worked examples to see how the ideas
-fit together in a calculation.
+fit together in a calculation. Six reference chapters provide 46 worked
+entries, followed here by a complete introductory audit and a reusable worksheet.
 
 Here, an operator is a specified rule taking inputs to outputs. A packet is
 one selected part of a representation; a transfer block records how an input
@@ -18,6 +19,33 @@ Start with the matrix example below if this language is new. You can
 [change its inputs and switch blocks on and off](https://komorebip.github.io/Operation-KOMOREBI/interactive.html#packets)
 in the interactive diagram, or
 [run and edit the packet program](https://komorebip.github.io/Operation-KOMOREBI/playground.html#packets).
+
+## Reference chapters
+
+Each chapter combines definitions, hypotheses, exact examples, common mistakes,
+and an exercise with its answer. Read them in sequence or jump to one topic.
+
+| Chapter | What it covers | Entries |
+|---|---|---|
+| [Operator basics](operators/BASICS.md) | Types, linearity, identity and zero maps, kernels, inverses, eigenvectors, and adjoints. | 8 |
+| [Operator algebra](operators/ALGEBRA.md) | Composition, polynomials, commutators, intertwiners, similarity, seeds, tensor products, and block elimination. | 8 |
+| [Packets and projectors](operators/PACKETS.md) | Complete families, orthogonal and oblique projectors, analysis/synthesis, redundancy, refinement, and spectral packets. | 8 |
+| [Transfer and compression](operators/TRANSFER.md) | Source-to-target blocks, composition, coordinate transport, reduced dynamics, leakage, and nonlinear defects. | 7 |
+| [Recovery and repair](operators/RECOVERY.md) | Fibers, factorization, row spaces, collision witnesses, minimal added measurements, estimation, and memory. | 7 |
+| [Stability and numerical meaning](operators/STABILITY.md) | Norms, error bounds, conditioning, nonnormal growth, infinite convergence, and numerical residuals. | 8 |
+
+**First reading:** Begin with [basics](operators/BASICS.md), continue to
+[packets](operators/PACKETS.md), then work through the
+[two-coordinate audit](#a-complete-audit-of-a-two-coordinate-operation) below.
+For a measurement or machine-state question, begin with
+[recovery and repair](operators/RECOVERY.md). For a filter or approximation,
+combine [transfer](operators/TRANSFER.md) with [stability](operators/STABILITY.md).
+
+The [exact check program](../examples/operator_guide.py) runs the finite
+examples using Python's standard library. From a repository checkout, run
+`python -B examples/operator_guide.py`. The program checks finite identities
+and failure witnesses; the general arguments and infinite-dimensional
+statements retain the explanations and assumptions given in the text.
 
 ## Operator concepts at a glance
 
@@ -35,6 +63,13 @@ in the interactive diagram, or
 | Fiber | All admissible inputs that share one summary value. | [The general recovery test](#a-general-recovery-test). |
 | Recovery | Obtaining a requested answer from the information retained in a summary. | [Sufficient and insufficient summaries](#ask-whether-the-retained-information-is-sufficient). |
 | Stability | Control of how perturbations affect an answer, under specified norms or an error model. | [Exactness, stability, and evidence](#keep-exactness-stability-and-evidence-separate). |
+
+## Find a concept
+
+- **A–C:** [Adjoint](operators/BASICS.md#8-adjoint-and-self-adjoint-operators) · [Affine map](operators/BASICS.md#2-linear-affine-and-nonlinear-rules) · [Analysis and synthesis](operators/PACKETS.md#4-analysis-and-synthesis) · [Block composition](operators/TRANSFER.md#3-compose-blocks-through-intermediate-packets) · [Block reconstruction](operators/TRANSFER.md#2-reconstruction-from-all-blocks) · [Bounded operator](operators/STABILITY.md#2-sums-and-compositions-of-bounded-operators) · [Codomain](operators/BASICS.md#1-typed-operators-domains-and-codomains) · [Commutator](operators/ALGEBRA.md#3-commutators) · [Composition](operators/ALGEBRA.md#1-composition-and-order) · [Compression](operators/TRANSFER.md#5-compression-and-exact-reduced-dynamics) · [Condition number](operators/STABILITY.md#4-coordinate-conditioning) · [Conditional expectation](operators/RECOVERY.md#6-conditional-expectation-and-estimation) · [Conjugation](operators/ALGEBRA.md#5-similarity-and-conjugation) · [Cyclic vector](operators/ALGEBRA.md#6-operator-algebras-seeds-and-cyclic-vectors).
+- **D–I:** [Direct sum](operators/PACKETS.md#2-complete-packet-families-and-direct-sums) · [Domain](operators/BASICS.md#1-typed-operators-domains-and-codomains) · [Eigenvalue](operators/BASICS.md#7-eigenvectors-and-invariant-subspaces) · [Exact recovery](operators/RECOVERY.md#2-exact-recovery-and-factorization) · [Fiber](operators/RECOVERY.md#1-summaries-and-fibers) · [Idempotence](operators/PACKETS.md#1-projectors-and-idempotence) · [Identity](operators/BASICS.md#3-identity-and-zero-maps) · [Image](operators/BASICS.md#4-kernel-image-rank-and-nullity) · [Intertwiner](operators/ALGEBRA.md#4-intertwiners) · [Invariant subspace](operators/BASICS.md#7-eigenvectors-and-invariant-subspaces) · [Inverse](operators/BASICS.md#5-injectivity-surjectivity-and-an-inverse).
+- **K–P:** [Kernel](operators/BASICS.md#4-kernel-image-rank-and-nullity) · [Leakage](operators/TRANSFER.md#6-leakage-from-a-retained-packet) · [Left inverse](operators/BASICS.md#6-left-and-right-inverses) · [Linear map](operators/BASICS.md#2-linear-affine-and-nonlinear-rules) · [Minimal repair](operators/RECOVERY.md#5-repair-with-additional-measurements) · [Nilpotent operator](operators/ALGEBRA.md#2-powers-and-polynomials-in-an-operator) · [Nonnormality](operators/STABILITY.md#6-spectrum-and-nonnormal-growth) · [Numerical residual](operators/STABILITY.md#8-numerical-residuals-and-certified-statements) · [Oblique projector](operators/PACKETS.md#3-orthogonal-and-oblique-projectors) · [Operator algebra](operators/ALGEBRA.md#6-operator-algebras-seeds-and-cyclic-vectors) · [Operator norm](operators/STABILITY.md#1-vector-norms-and-induced-operator-norms) · [Orthogonal projector](operators/PACKETS.md#3-orthogonal-and-oblique-projectors) · [Packet](operators/PACKETS.md#2-complete-packet-families-and-direct-sums) · [Polynomial](operators/ALGEBRA.md#2-powers-and-polynomials-in-an-operator) · [Projector](operators/PACKETS.md#1-projectors-and-idempotence).
+- **R–Z:** [Rank](operators/BASICS.md#4-kernel-image-rank-and-nullity) · [Redundancy](operators/PACKETS.md#5-redundant-components-versus-projectors) · [Refinement](operators/PACKETS.md#6-refinement-and-coarsening) · [Residual](operators/STABILITY.md#3-operator-residuals-and-input-errors) · [Right inverse](operators/BASICS.md#6-left-and-right-inverses) · [Row space](operators/RECOVERY.md#3-linear-recovery-row-spaces-and-kernels) · [Schur complement](operators/ALGEBRA.md#8-block-elimination-and-the-schur-complement) · [Seed](operators/ALGEBRA.md#6-operator-algebras-seeds-and-cyclic-vectors) · [Similarity](operators/ALGEBRA.md#5-similarity-and-conjugation) · [Spectral projector](operators/PACKETS.md#8-spectral-projectors-and-diagonalizability) · [Stability](operators/STABILITY.md#1-vector-norms-and-induced-operator-norms) · [Strong convergence](operators/STABILITY.md#7-finite-truncation-and-infinite-convergence) · [Summary](operators/RECOVERY.md#1-summaries-and-fibers) · [Tensor product](operators/ALGEBRA.md#7-tensor-products-and-kronecker-matrices) · [Truncation](operators/STABILITY.md#7-finite-truncation-and-infinite-convergence) · [Zero map](operators/BASICS.md#3-identity-and-zero-maps).
 
 ## The audit in six questions
 
