@@ -10,7 +10,7 @@ status file remains available as a historical checkpoint.
 ## Choose a production module
 
 The existing declaration registers record 497 theorem names across the coupled
-coupled modules below. The separate inherited finite core records 39 names,
+modules below. The separate inherited finite core records 39 names,
 for 536 registered names at this checkpoint. These are registered names with
 individual scopes; they do not measure whole-book formalization.
 
@@ -33,7 +33,6 @@ individual scopes; they do not measure whole-book formalization.
 | 15 | [CoupledEvaluation.lean](../monographs/special-functions/lean/CoupledEvaluation.lean) | 36 | [Names and source lines](../monographs/special-functions/formalization/Block15/declarations.json) |
 | 16 | [CoupledNormalization.lean](../monographs/special-functions/lean/CoupledNormalization.lean) | 30 | [Names and source lines](../monographs/special-functions/formalization/Block16/declarations.json) |
 | 17 | [CoupledGuardedMajorant.lean](../monographs/special-functions/lean/CoupledGuardedMajorant.lean) | 30 | [Names and source lines](../monographs/special-functions/formalization/Block17/declarations.json) |
-
 | 18 | [CoupledEvaluationResult.lean](../monographs/special-functions/lean/CoupledEvaluationResult.lean) | 17 | [Names and source lines](../monographs/special-functions/formalization/Block18/declarations.json) |
 | 19 | [Source model](../monographs/special-functions/lean/CoupledPythonSource.lean) and [imperative refinement](../monographs/special-functions/lean/CoupledPythonRefinement.lean) | 35 | [Names and source lines](../monographs/special-functions/formalization/Block19/declarations.json) |
 | 20 | [Interpreter](../monographs/special-functions/lean/CoupledExpressionSemantics.lean), [source expressions](../monographs/special-functions/lean/CoupledSourceExpressions.lean) and [lowering proof](../monographs/special-functions/lean/CoupledExpressionRefinement.lean) | 19 | [Names and source lines](../monographs/special-functions/formalization/Block20/declarations.json) |
