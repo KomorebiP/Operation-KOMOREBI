@@ -128,6 +128,21 @@ test('incompatible drafts remain recoverable and unavailable storage does not br
   }finally{await f.close();}
 });
 
+test('setup-reload recovery remains downloadable while editing and switching workspaces',async()=>{
+  const [workspace]=workspaces(),draft=storedWorkspaceDraft(workspace,['old helper','old proof'],1);
+  const key='komorebi-lean-browser-reload',raw=JSON.stringify({...draft,fileKeys:['missing source',draft.fileKeys[1]],run:true});
+  const storage=new Map([[key,raw]]),f=await fixture({storage});
+  try {
+    const link=f.elements.get('draft-download').href;assert.match(link,/^blob:/);
+    assert.equal(f.elements.get('draft-recovery').hidden,false);assert.equal(f.compiled,0);
+    f.edit('new edits');f.windowEvents.pagehide();
+    assert.equal(f.elements.get('draft-recovery').hidden,false);assert.equal(f.elements.get('draft-download').href,link);
+    f.elements.get('example').value='second';f.elements.get('example').listeners.change();
+    assert.equal(f.elements.get('draft-recovery').hidden,false);assert.equal(f.elements.get('draft-download').href,link);
+    assert.equal(storage.get(key),raw);assert.equal(f.compiled,0);
+  }finally{await f.close();}
+});
+
 test('old results are marked stale after edits, restores and mode changes; diagnostics select the original file and line',async()=>{
   const f=await fixture();
   try {

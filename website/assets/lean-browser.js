@@ -135,7 +135,7 @@ async function start() {
   let checkedDependencies=null,compilerPlan=null;
   const drafts=new Map();
   const recoveryDrafts=new Map();
-  let draftTimer=null,draftState='',hasResults=false;
+  let draftTimer=null,draftState='',hasResults=false,reloadRecovery=null;
   const editor=el('code'), picker=el('example'), filePicker=el('file');
   const frontend=el('frontend');
   const defaultDownloadNote=el('download-note')?.textContent||'';
@@ -146,7 +146,7 @@ async function start() {
   function draftNotice() {
     const count=files.filter((source,i)=>source!==workspace.files[i].text).length;
     el('draft-status').textContent=count?count+(count===1?' edited file. ':' edited files. ')+draftState:'Published sources. Edits are kept in this tab across refreshes when browser storage is available.';
-    const recovery=recoveryDrafts.get(workspace.id);
+    const recovery=recoveryDrafts.get(workspace.id)||reloadRecovery;
     el('draft-recovery').hidden=!recovery;
     if(recovery)el('draft-download').href=recovery.url;
     const file=workspace.files[current],edited=files[current]!==file.text;
@@ -450,8 +450,8 @@ async function start() {
       if(draft.run!==undefined&&typeof draft.run!=='boolean')throw new Error('Your saved check request is unsupported. Download the draft to recover your edits.');
       sessionStorage.removeItem(draftKey);if(draft.run===true)await run(draft.runScope==='selected');
     }catch(error){
-      const recovery=el('draft-recovery');recovery.hidden=false;
-      el('draft-download').href=URL.createObjectURL(new Blob([saved],{type:'application/json;charset=utf-8'}));
+      reloadRecovery={url:URL.createObjectURL(new Blob([saved],{type:'application/json;charset=utf-8'}))};
+      draftNotice();
       setStatus(error.message||'Your saved draft could not be restored. Download it to recover your edits.','failed');
     }
   }
