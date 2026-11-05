@@ -26,6 +26,9 @@ operator and each of the 28 composition laws. The unmodified family table and
 alphabetical index remain usable without JavaScript. Operator work associations
 are derived from recorded sources. Relation results remain collection guides
 and retain their exact assumptions, formulas, and `rel-NN` destinations.
+Global search ranks the matching catalog destination first for a complete
+`OP` or `REL` identifier query. Substring matches remain available, and the
+active work and result-type filters still apply.
 `website/assets/operator-catalog.js` retains lookup state in URL parameters
 and announces matching-entry counts without moving focus during typing.
 

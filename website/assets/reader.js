@@ -266,6 +266,14 @@ function normalized(value) {
     .replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 }
 function wordsFor(value) { return normalized(value).split(/\s+/).filter(Boolean); }
+function catalogSearchIdentifier(value) {
+  const match = value.trim().match(/^(op|rel)\s*(?:-\s*)?([0-9]+)$/i);
+  return match ? match[1].toLowerCase() + "-" + (match[2].replace(/^0+/, "") || "0") : "";
+}
+function catalogDestinationIdentifier(url) {
+  const match = url.match(/^collection\/operators\/catalog\/(?:RELATIONS\.html#(rel-[0-9]{2})|[A-L]_[A-Z_]+\.html#(op-[0-9]{3}))$/);
+  return match ? catalogSearchIdentifier(match[1] || match[2]) : "";
+}
 function highlightedText(element, value, words) {
   // Text nodes keep source snippets inert. Highlight whole matching words,
   // including accents and symbol names handled by the search normalizer.
@@ -502,6 +510,7 @@ if (form) {
       extraOptions.querySelector("summary").textContent = "More options" + (active ? ` · ${active} active` : "") + (pageSize !== 40 ? ` · ${pageSize} per page` : "");
     }
     const words = wordsFor(query);
+    const catalogIdentifier = catalogSearchIdentifier(query);
     saveParams({q: query, repository, type, work: workId, ...selectedFacets,
       page: page > 1 ? String(page) : "", per_page: pageSize !== 40 ? String(pageSize) : ""});
     if (window.MathJax && window.MathJax.typesetClear) window.MathJax.typesetClear([results]);
@@ -517,7 +526,8 @@ if (form) {
     try {
       if (!engine) throw new Error("Search could not be initialized");
       if (!indexPromise) indexPromise = engine.load().then(rows => rows.map(item => ({...item,
-        normalizedTitle: normalized(item.title)}))).catch(error => { indexPromise = null; throw error; });
+        normalizedTitle: normalized(item.title), catalogIdentifier: catalogDestinationIdentifier(item.url)})))
+        .catch(error => { indexPromise = null; throw error; });
       if (hasWorkFacets && !facetPromise) {
         facetPromise = fetch(form.dataset.facets).then(response => {
           if (!response.ok) throw new Error("Work facets could not be loaded");
@@ -539,7 +549,9 @@ if (form) {
       const score = item => (normalized(query) === item.normalizedTitle ? 100 : 0) +
         words.filter(word => item.normalizedTitle.includes(word)).length * 10 +
         (item.kind === "Claims" || item.kind === "Glossary" ? 1 : 0);
-      found.sort((a, b) => score(b) - score(a) || a.title.localeCompare(b.title));
+      // Stable catalog destinations take priority for a complete OP/REL query.
+      const catalogRank = item => Number(Boolean(catalogIdentifier && item.catalogIdentifier === catalogIdentifier));
+      found.sort((a, b) => catalogRank(b) - catalogRank(a) || score(b) - score(a) || a.title.localeCompare(b.title));
       queryWords = words;
       await renderPage();
     } catch (error) {
