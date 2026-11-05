@@ -29,6 +29,36 @@ export function restoreWorkspaceDraft(workspace, draft) {
   return {files:keys.map(key=>source.get(key)),current:keys.indexOf(draft.fileKeys[oldIndex])};
 }
 
+export function storedWorkspaceDraft(workspace, files, current) {
+  return {schema:1,...savedWorkspaceDraft(workspace,files,current),baseHashes:workspace.files.map(file=>file.sha256)};
+}
+
+export function restoreStoredWorkspaceDraft(workspace, draft) {
+  const restored=restoreWorkspaceDraft(workspace,draft);
+  if(draft.schema!==1||!Array.isArray(draft.baseHashes)||draft.baseHashes.length!==draft.fileKeys.length||
+      workspace.files.some(file=>draft.baseHashes[draft.fileKeys.indexOf(fileIdentity(file))]!==file.sha256)) {
+    throw new Error('The published sources changed. Download your earlier draft to recover your edits.');
+  }
+  return restored;
+}
+
+export function sourceLineRange(source, line) {
+  if(!Number.isSafeInteger(line)||line<1)return null;
+  let start=0;
+  for(let n=1;n<line;n++){const end=source.indexOf('\n',start);if(end<0)return null;start=end+1;}
+  const end=source.indexOf('\n',start);
+  return {start,end:end<0?source.length:end};
+}
+
+export function diagnosticSourceLine(diagnostic, mapped, source) {
+  if(!['compiled-source','syntax-input'].includes(diagnostic.origin))return null;
+  const match=diagnostic.origin==='syntax-input'?mapped.match(/syntax error at line (\d+), column \d+/):
+    mapped.match(/^(?:error|warning) \(line (\d+), col \d+\)/)||
+    (/^(?:error|warning):/.test(mapped)?mapped.match(/\(line (\d+), col \d+\)$/):null);
+  const line=match?Number(match[1]):null;
+  return sourceLineRange(source,line)?line:null;
+}
+
 export function moduleSource(source, name) {
   if (!/^[\p{ID_Start}_][\p{ID_Continue}']*(\.[\p{ID_Start}_][\p{ID_Continue}']*)*$/u.test(name)) throw new Error('Invalid project module name.');
   // Prepared sources use ordinary import headers. This wrapper changes module
@@ -104,12 +134,72 @@ async function start() {
   let catalog=null,catalogPending=null,openedGroup=null;
   let checkedDependencies=null,compilerPlan=null;
   const drafts=new Map();
+  const recoveryDrafts=new Map();
+  let draftTimer=null,draftState='',hasResults=false;
   const editor=el('code'), picker=el('example'), filePicker=el('file');
   const frontend=el('frontend');
   const defaultDownloadNote=el('download-note')?.textContent||'';
   let preferredFrontend=new URL(location.href).searchParams.get('frontend')==='1';
   const draftKey='komorebi-lean-browser-reload';
+  const storedDraftKey=id=>'komorebi-lean-browser-draft-v1:'+id;
   const log=text=>{el('log').textContent=(el('log').textContent+'\n'+text).slice(-20000);};
+  function draftNotice() {
+    const count=files.filter((source,i)=>source!==workspace.files[i].text).length;
+    el('draft-status').textContent=count?count+(count===1?' edited file. ':' edited files. ')+draftState:'Published sources. Edits are kept in this tab across refreshes when browser storage is available.';
+    const recovery=recoveryDrafts.get(workspace.id);
+    el('draft-recovery').hidden=!recovery;
+    if(recovery)el('draft-download').href=recovery.url;
+    const file=workspace.files[current],edited=files[current]!==file.text;
+    el('source').textContent=file.module+' · '+(edited?'Edited copy · original':file.library?'Pinned Mathlib '+file.revision.slice(0,8):file.generated?'Browser compatibility':'Original')+' SHA-256 '+file.sha256.slice(0,16)+'…';
+  }
+  function preserveDraft() {
+    clearTimeout(draftTimer);draftTimer=null;
+    if(!workspace)return;
+    files[current]=editor.value;
+    drafts.set(workspace.id,{files:[...files],current});
+    if(recoveryDrafts.has(workspace.id))draftState='An earlier draft needs recovery. Download it and save new edits before leaving.';
+    else try {
+      if(files.some((source,i)=>source!==workspace.files[i].text))sessionStorage.setItem(storedDraftKey(workspace.id),JSON.stringify(storedWorkspaceDraft(workspace,files,current)));
+      else sessionStorage.removeItem(storedDraftKey(workspace.id));
+      draftState='Draft saved in this tab across refreshes. Download a copy to keep it after closing the tab.';
+    } catch {draftState='Browser storage is unavailable or full. Download your edits before leaving.';}
+    draftNotice();
+  }
+  function edited(message) {
+    files[current]=editor.value;invalidateResults();
+    draftState='Saving draft in this tab…';draftNotice();
+    clearTimeout(draftTimer);draftTimer=setTimeout(preserveDraft,250);
+    setStatus(message);
+  }
+  function resetResults() {
+    hasResults=false;el('result-note').hidden=true;el('diagnostics').replaceChildren();
+  }
+  function invalidateResults() {
+    if(!hasResults)return;
+    el('result-note').hidden=false;
+    el('result-note').textContent='These results are from before your latest changes. Run Lean again to check the current workspace.';
+    for(const button of el('diagnostics').children)button.disabled=true;
+  }
+  function diagnosticLinks(diagnostics, mapped, index, checkedSource) {
+    const module=workspace.files[index].module,workspaceId=workspace.id,seen=new Set();
+    diagnostics.forEach((diagnostic,n)=>{
+      const line=diagnosticSourceLine(diagnostic,mapped[n],checkedSource);
+      if(line===null||seen.has(line)||el('diagnostics').children.length>=50)return;
+      seen.add(line);
+      const button=document.createElement('button');button.type='button';button.disabled=busy;
+      button.textContent=module+' · line '+line;
+      button.addEventListener('click',()=>{
+        if(busy||workspace.id!==workspaceId||files[index]!==checkedSource||!el('result-note').hidden)return;
+        preserveDraft();current=index;filePicker.value=String(index);showFile();preserveDraft();
+        const range=sourceLineRange(editor.value,line);if(!range)return;
+        editor.focus();editor.setSelectionRange(range.start,range.end);
+        const height=parseFloat(getComputedStyle(editor).lineHeight);
+        if(Number.isFinite(height))editor.scrollTop=Math.max(0,(line-3)*height);
+        editor.scrollIntoView({block:'center',behavior:'auto'});
+      });
+      el('diagnostics').append(button);
+    });
+  }
   function retireCompiler(retiring) {
     if(retiring)retiringClosed=Promise.all([retiringClosed,retiring.dispose()]).then(()=>{});
   }
@@ -133,6 +223,7 @@ async function start() {
     el('catalog-open').disabled=value||!catalog||!el('catalog-choice').value;
     el('catalog-choice').disabled=value||!catalog;
     el('catalog-search').disabled=value;el('catalog-ready').disabled=value;
+    for(const button of el('diagnostics').children)button.disabled=value||!el('result-note').hidden;
   }
   function showFile() {
     const file=workspace.files[current];editor.value=files[current];
@@ -140,14 +231,21 @@ async function start() {
     el('download').href=file.download;
     el('inspect').textContent=file.library?'Inspect pinned Mathlib source':file.generated?'Inspect browser compatibility source':'Inspect original source';
     el('download').textContent=file.library?'Download library source':file.generated?'Download compatibility source':'Download original';
-    el('source').textContent=file.module+' · '+(file.library?'Pinned Mathlib '+file.revision.slice(0,8):file.generated?'Browser compatibility':'Original')+' SHA-256 '+file.sha256.slice(0,16)+'…';
+    draftNotice();
   }
   function choose(id) {
-    if(workspace){files[current]=editor.value;drafts.set(workspace.id,{files:[...files],current});}
+    if(workspace)preserveDraft();
     dispose();workspace=data.examples.find(e=>e.id===id)||data.examples[0];picker.value=workspace.id;
-    const draft=drafts.get(workspace.id);files=draft?[...draft.files]:workspace.files.map(f=>f.text);current=draft?.current??files.length-1;filePicker.replaceChildren();
+    let draft=drafts.get(workspace.id);draftState='';
+    if(!draft)try {
+      const saved=sessionStorage.getItem(storedDraftKey(workspace.id));
+      if(saved)try {draft=restoreStoredWorkspaceDraft(workspace,JSON.parse(saved));draftState='Draft recovered from this tab. Run Lean to check it.';}
+      catch {recoveryDrafts.set(workspace.id,{url:URL.createObjectURL(new Blob([saved],{type:'application/json;charset=utf-8'}))});}
+    } catch {draftState='Browser storage is unavailable. Download your edits before leaving.';}
+    if(draft&&!draftState)draftState='Draft kept in this tab. Run Lean to check it.';
+    files=draft?[...draft.files]:workspace.files.map(f=>f.text);current=draft?.current??files.length-1;filePicker.replaceChildren();
     workspace.files.forEach((f,i)=>{const option=document.createElement('option');option.value=String(i);option.textContent=f.module+(f.library?' · library source':f.generated?' · browser compatibility':'');filePicker.append(option);});
-    filePicker.value=String(current);showFile();controls(false);el('output').textContent='No checks yet.';
+    filePicker.value=String(current);resetResults();showFile();controls(false);el('output').textContent='No checks yet.';
     el('compat').hidden=!workspace.compatibility;
     el('compat-code').textContent=workspace.compatibility?.source||'';
     el('profile-note').hidden=!workspace.import_profile;
@@ -223,6 +321,7 @@ async function start() {
   frontend.addEventListener('change',()=>{
     preferredFrontend=frontend.checked;
     dispose();
+    invalidateResults();
     downloadNotice();
     const address=new URL(location.href);
     if(frontend.checked)address.searchParams.set('frontend','1');else address.searchParams.delete('frontend');
@@ -230,15 +329,21 @@ async function start() {
     setStatus(frontend.checked?'Experimental source-defined syntax enabled. Each run starts a fresh compiler.':'Standard checking enabled. Run the workspace to check it.');
   });
   picker.addEventListener('change',()=>choose(picker.value));
-  filePicker.addEventListener('change',()=>{files[current]=editor.value;current=Number(filePicker.value);showFile();});
-  editor.addEventListener('input',()=>{files[current]=editor.value;setStatus('Edited. Run the workspace to check these changes.');});
-  el('restore').addEventListener('click',()=>{files=workspace.files.map(f=>f.text);showFile();setStatus('Original workspace restored. Run it to check.');});
-  el('break').addEventListener('click',()=>{files[current]=editor.value+'\nexample : (1 : Nat) = 2 := by rfl\n';showFile();setStatus('Added a false equality. Run Lean to see why it fails.');});
+  filePicker.addEventListener('change',()=>{preserveDraft();current=Number(filePicker.value);showFile();preserveDraft();});
+  editor.addEventListener('input',()=>edited('Edited. Run Lean to check these changes.'));
+  editor.addEventListener('keydown',event=>{
+    if(event.key!=='Enter'||!(event.ctrlKey||event.metaKey)||event.altKey||event.isComposing)return;
+    event.preventDefault();if(!busy&&!event.repeat)run(!event.shiftKey);
+  });
+  window.addEventListener?.('pagehide',preserveDraft);
+  window.addEventListener?.('beforeunload',preserveDraft);
+  el('restore').addEventListener('click',()=>{files=workspace.files.map(f=>f.text);showFile();invalidateResults();preserveDraft();setStatus('Published workspace restored. Run it to check.');});
+  el('break').addEventListener('click',()=>{files[current]=editor.value+'\nexample : (1 : Nat) = 2 := by rfl\n';showFile();edited('Added a false equality. Run Lean to see why it fails.');});
   el('save').addEventListener('click',()=>{
     const url=URL.createObjectURL(new Blob([editor.value],{type:'text/plain;charset=utf-8'}));
     const link=document.createElement('a');link.href=url;link.download=workspace.files[current].module.split('.').pop()+'-edited.lean';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
   });
-  el('stop').addEventListener('click',()=>{generation++;dispose();controls(false);el('output').textContent='Stopped. No result for this run.';setStatus('Stopped. This run produced no result.');el('run').textContent='Restart Lean and run';});
+  el('stop').addEventListener('click',()=>{generation++;dispose();resetResults();controls(false);el('output').textContent='Stopped. No result for this run.';setStatus('Stopped. This run produced no result.');el('run').textContent='Restart Lean and run';});
   el('clear').addEventListener('click',async()=>{
     dispose();for(const name of await caches.keys())if(name.startsWith('komorebi-lean-'))await caches.delete(name);
     el('run').textContent='Load Lean and run';setStatus('Downloaded compiler cache cleared. Your edits are still in this tab.');
@@ -266,7 +371,7 @@ async function start() {
     return true;
   }
   async function run(selectedOnly=false) {
-    if (busy)return;files[current]=editor.value;controls(true);const ticket=++generation;
+    if (busy)return;preserveDraft();resetResults();controls(true);const ticket=++generation;
     const freshFrontend=workspaceCheckMode(workspace,preferredFrontend).frontend;
     let failureContext='';
     el('output').textContent='Checking has not completed.';setStatus('Starting Lean on this device…','running');
@@ -309,7 +414,10 @@ async function start() {
         const result=await compiler.run(source,undefined,dependency?{syntaxSource:proof,...(freshFrontend?{mainModule:workspace.files[i].module}:{})}:{});
         if (ticket!==generation)return;
         const state=outcome(result);warnings ||= state==='warning';
-        results.push(workspace.files[i].module+'\n'+(result.diagnostics.map(diagnostic=>mapWorkspaceDiagnostic(diagnostic,proof,dependency,compatibility,versioned?files[i]:null)).join('\n')||'No diagnostics.')+(result.output?'\n'+result.output:'')+'\nChecked in '+(result.compileMs/1000).toFixed(2)+' s.');
+        const mapped=result.diagnostics.map(diagnostic=>mapWorkspaceDiagnostic(diagnostic,proof,dependency,compatibility,versioned?files[i]:null));
+        diagnosticLinks(result.diagnostics,mapped,i,files[i]);
+        results.push(workspace.files[i].module+'\n'+(mapped.join('\n')||'No diagnostics.')+(result.output?'\n'+result.output:'')+'\nChecked in '+(result.compileMs/1000).toFixed(2)+' s.');
+        hasResults=true;
         el('output').textContent=render(results);
         if(state==='failed'){setStatus(selectedOnly?'Lean reported errors. The selected-file check did not pass.':'Lean reported errors. The workspace did not pass.','failed');return;}
         if(!freshFrontend&&dependency&&i===dependencies.at(-1))checkedDependencies={source:dependencySource,results:[...results],warnings};
@@ -317,6 +425,7 @@ async function start() {
       setStatus(warnings?(selectedOnly?'Selected-file check completed with warnings. Review Lean’s response; a sorry warning means an unfinished proof.':'Checking completed with warnings. Review Lean’s response; a sorry warning means an unfinished proof.'):selectedOnly?'Selected file and its dependencies checked with no diagnostics.':workspace.compatibility?'Checking completed with no diagnostics. Browser compatibility lemma included.':'Checking completed with no diagnostics.',warnings?'warning':'passed');
     } catch(error) {
       if(ticket!==generation)return;
+      hasResults=true;
       el('output').textContent=(failureContext?failureContext+'\n':'')+String(error.message||error);setStatus('Checking could not complete. No successful result.','failed');dispose();
     } finally {
       if(ticket===generation){if(freshFrontend)dispose();controls(false);el('run').textContent=freshFrontend||compiler?'Run workspace':'Restart Lean and run';}
@@ -326,7 +435,8 @@ async function start() {
   el('run-selected').addEventListener('click',()=>run(true));
   const requested=new URL(location.href);
   await chooseId(requested.searchParams.has('file')?'source-'+requested.searchParams.get('file'):requested.searchParams.get('example'));
-  const saved=sessionStorage.getItem(draftKey);
+  let saved=null;
+  try {saved=sessionStorage.getItem(draftKey);} catch {}
   if(saved){
     try{
       const draft=JSON.parse(saved);await chooseId(draft.id);
@@ -342,5 +452,5 @@ async function start() {
       setStatus(error.message||'Your saved draft could not be restored. Download it to recover your edits.','failed');
     }
   }
-  if(crossOriginIsolated)sessionStorage.removeItem(draftKey+'-attempt');
+  if(crossOriginIsolated)try {sessionStorage.removeItem(draftKey+'-attempt');} catch {}
 }
