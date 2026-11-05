@@ -193,4 +193,4 @@ vector attains its Euclidean operator norm? What happens to the other one?
 norm. $Ee_2=(2,0)^{\mathsf T}$ has length two. A bound can be sharp
 without being attained on every test input.
 
-[Previous: Recovery and repair](RECOVERY.md) · [Return to the worked operator guide](../OPERATOR_AUDIT.md) · [All chapters](../OPERATOR_AUDIT.md#reference-chapters)
+[Previous: Recovery and repair](RECOVERY.md) · [Next: Polynomial and difference operators](POLYNOMIAL.md) · [All chapters](../OPERATOR_AUDIT.md#reference-chapters)

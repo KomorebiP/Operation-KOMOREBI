@@ -25,6 +25,7 @@ class OperatorGuideTests(unittest.TestCase):
     def test_transfer_examples(self): self.check_chapter('TRANSFER')
     def test_recovery_examples(self): self.check_chapter('RECOVERY')
     def test_stability_examples(self): self.check_chapter('STABILITY')
+    def test_polynomial_examples(self): self.check_chapter('POLYNOMIAL')
 
 
 if __name__ == '__main__':

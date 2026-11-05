@@ -5,8 +5,11 @@
 Explore the concepts used to describe operations, split objects into parts,
 change coordinates, and recover information from summaries. Use the concept
 list as a reference, then follow the worked examples to see how the ideas
-fit together in a calculation. Six reference chapters provide 46 worked
-entries, followed here by a complete introductory audit and a reusable worksheet.
+fit together in a calculation. Seven reference chapters provide 54 worked
+entries. The [operator catalog](operators/catalog/README.md) adds a searchable
+reference to 205 entries in twelve families, with formulas, assumptions,
+source links, and named finite checks. A complete introductory audit and a
+reusable worksheet follow below.
 
 Here, an operator is a specified rule taking inputs to outputs. A packet is
 one selected part of a representation; a transfer block records how an input
@@ -33,6 +36,7 @@ and an exercise with its answer. Read them in sequence or jump to one topic.
 | [Transfer and compression](operators/TRANSFER.md) | Source-to-target blocks, composition, coordinate transport, reduced dynamics, leakage, and nonlinear defects. | 7 |
 | [Recovery and repair](operators/RECOVERY.md) | Fibers, factorization, row spaces, collision witnesses, minimal added measurements, estimation, and memory. | 7 |
 | [Stability and numerical meaning](operators/STABILITY.md) | Norms, error bounds, conditioning, nonnormal growth, infinite convergence, and numerical residuals. | 8 |
+| [Polynomial and difference operators](operators/POLYNOMIAL.md) | Falling-factorial coordinates, transported differentiation, raising and degree, residue projectors, multiplication, shifts, and Newton recovery. | 8 |
 
 **First reading:** Begin with [basics](operators/BASICS.md), continue to
 [packets](operators/PACKETS.md), then work through the
@@ -40,12 +44,45 @@ and an exercise with its answer. Read them in sequence or jump to one topic.
 For a measurement or machine-state question, begin with
 [recovery and repair](operators/RECOVERY.md). For a filter or approximation,
 combine [transfer](operators/TRANSFER.md) with [stability](operators/STABILITY.md).
+For an exact calculation across polynomial bases, continue with
+[polynomial and difference operators](operators/POLYNOMIAL.md).
 
 The [exact check program](../examples/operator_guide.py) runs the finite
 examples using Python's standard library. From a repository checkout, run
 `python -B examples/operator_guide.py`. The program checks finite identities
 and failure witnesses; the general arguments and infinite-dimensional
 statements retain the explanations and assumptions given in the text.
+
+## Look up an operator or a composition law
+
+The [operator catalog](operators/catalog/README.md) organizes 205 entries
+from the existing compendium into twelve families. Search by name or stable
+identifier, then open the entry for its formula, domain, assumptions, related
+operations, and pinned sources. On the reading site, you can also filter by
+family and whether an entry has a linked finite check.
+
+The catalog covers structural and spectral projectors, coordinate transforms,
+prime-power and digit operations, signals, nonlinear correction, dynamics,
+quantum operations, finite models, metric transport, and integration.
+Its [composition laws](operators/catalog/RELATIONS.md) connect operations
+that can be used together under stated hypotheses.
+
+The worked chapters explain selected operations in depth. The catalog is the
+broader lookup reference, and the two overlap. Catalog entries include
+classical operators, source constructions, derived combinations, and
+implementation interfaces. A linked finite check describes a specific
+calculation or failure control, not a certification of every assertion about
+the operation. For polynomial coordinate transport, the
+[Lean companion guide](LEAN_POLYNOMIAL_TRANSPORT.md) identifies the existing
+formal statements and their precise scope.
+
+| Your task | A useful route |
+|---|---|
+| Select coefficients after changing polynomial coordinates | [Polynomial packets](operators/POLYNOMIAL.md#5-transported-projectors-and-a-complete-packet-calculation), then the [coordinate](operators/catalog/C_COORDINATES.md) and [spectral](operators/catalog/B_CYCLIC.md) families. |
+| Compose a filter or carry it across scales | [Transfer blocks](operators/TRANSFER.md#3-compose-blocks-through-intermediate-packets), then the [signal and polyphase family](operators/catalog/E_SIGNAL.md). |
+| Decide whether a compressed state supports the next update | [Exact reduced dynamics](operators/TRANSFER.md#5-compression-and-exact-reduced-dynamics), then [recovery](operators/RECOVERY.md). |
+| Compare an operation in different metrics | [Adjoints](operators/BASICS.md#8-adjoint-and-self-adjoint-operators) and [conditioning](operators/STABILITY.md#4-coordinate-conditioning), then the [metric transport family](operators/catalog/K_METRICS.md). |
+| Turn an integral or moment question into a finite functional | [Operator types](operators/BASICS.md#1-typed-operators-domains-and-codomains), then the [finite integration and observation family](operators/catalog/L_INTEGRATION.md). |
 
 ## Operator concepts at a glance
 
@@ -70,6 +107,7 @@ statements retain the explanations and assumptions given in the text.
 - **D–I:** [Direct sum](operators/PACKETS.md#2-complete-packet-families-and-direct-sums) · [Domain](operators/BASICS.md#1-typed-operators-domains-and-codomains) · [Eigenvalue](operators/BASICS.md#7-eigenvectors-and-invariant-subspaces) · [Exact recovery](operators/RECOVERY.md#2-exact-recovery-and-factorization) · [Fiber](operators/RECOVERY.md#1-summaries-and-fibers) · [Idempotence](operators/PACKETS.md#1-projectors-and-idempotence) · [Identity](operators/BASICS.md#3-identity-and-zero-maps) · [Image](operators/BASICS.md#4-kernel-image-rank-and-nullity) · [Intertwiner](operators/ALGEBRA.md#4-intertwiners) · [Invariant subspace](operators/BASICS.md#7-eigenvectors-and-invariant-subspaces) · [Inverse](operators/BASICS.md#5-injectivity-surjectivity-and-an-inverse).
 - **K–P:** [Kernel](operators/BASICS.md#4-kernel-image-rank-and-nullity) · [Leakage](operators/TRANSFER.md#6-leakage-from-a-retained-packet) · [Left inverse](operators/BASICS.md#6-left-and-right-inverses) · [Linear map](operators/BASICS.md#2-linear-affine-and-nonlinear-rules) · [Minimal repair](operators/RECOVERY.md#5-repair-with-additional-measurements) · [Nilpotent operator](operators/ALGEBRA.md#2-powers-and-polynomials-in-an-operator) · [Nonnormality](operators/STABILITY.md#6-spectrum-and-nonnormal-growth) · [Numerical residual](operators/STABILITY.md#8-numerical-residuals-and-certified-statements) · [Oblique projector](operators/PACKETS.md#3-orthogonal-and-oblique-projectors) · [Operator algebra](operators/ALGEBRA.md#6-operator-algebras-seeds-and-cyclic-vectors) · [Operator norm](operators/STABILITY.md#1-vector-norms-and-induced-operator-norms) · [Orthogonal projector](operators/PACKETS.md#3-orthogonal-and-oblique-projectors) · [Packet](operators/PACKETS.md#2-complete-packet-families-and-direct-sums) · [Polynomial](operators/ALGEBRA.md#2-powers-and-polynomials-in-an-operator) · [Projector](operators/PACKETS.md#1-projectors-and-idempotence).
 - **R–Z:** [Rank](operators/BASICS.md#4-kernel-image-rank-and-nullity) · [Redundancy](operators/PACKETS.md#5-redundant-components-versus-projectors) · [Refinement](operators/PACKETS.md#6-refinement-and-coarsening) · [Residual](operators/STABILITY.md#3-operator-residuals-and-input-errors) · [Right inverse](operators/BASICS.md#6-left-and-right-inverses) · [Row space](operators/RECOVERY.md#3-linear-recovery-row-spaces-and-kernels) · [Schur complement](operators/ALGEBRA.md#8-block-elimination-and-the-schur-complement) · [Seed](operators/ALGEBRA.md#6-operator-algebras-seeds-and-cyclic-vectors) · [Similarity](operators/ALGEBRA.md#5-similarity-and-conjugation) · [Spectral projector](operators/PACKETS.md#8-spectral-projectors-and-diagonalizability) · [Stability](operators/STABILITY.md#1-vector-norms-and-induced-operator-norms) · [Strong convergence](operators/STABILITY.md#7-finite-truncation-and-infinite-convergence) · [Summary](operators/RECOVERY.md#1-summaries-and-fibers) · [Tensor product](operators/ALGEBRA.md#7-tensor-products-and-kronecker-matrices) · [Truncation](operators/STABILITY.md#7-finite-truncation-and-infinite-convergence) · [Zero map](operators/BASICS.md#3-identity-and-zero-maps).
+- **Polynomial route:** [Falling-factorial coordinates](operators/POLYNOMIAL.md#1-falling-factorial-coordinates) · [Forward difference](operators/POLYNOMIAL.md#2-forward-difference-as-a-transported-derivative) · [Raising and degree](operators/POLYNOMIAL.md#3-raising-and-degree-operators) · [Roots-of-unity projector](operators/POLYNOMIAL.md#4-coefficient-selectors-and-roots-of-unity-averaging) · [Transported packets](operators/POLYNOMIAL.md#5-transported-projectors-and-a-complete-packet-calculation) · [Transported product](operators/POLYNOMIAL.md#6-transported-multiplication-and-its-product-rule) · [Translation](operators/POLYNOMIAL.md#7-translation-carries-information-between-packets) · [Newton recovery](operators/POLYNOMIAL.md#8-recover-coordinates-and-check-the-coefficient-ring).
 
 ## The audit in six questions
 

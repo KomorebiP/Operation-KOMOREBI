@@ -345,6 +345,8 @@ class Site:
         nav_html=site_navigation(path)
         source_html=('<a href="'+esc(source,quote=True)+'">Source on GitHub</a>') if source else ''
         glossary_script=('<script defer src="'+self.rel('assets/glossary.js',path)+'?v='+hashlib.sha256((self.root/'website/assets/glossary.js').read_bytes()).hexdigest()[:12]+'"></script>') if path=='collection/GLOSSARY.html' else ''
+        from operator_catalog_reader import script_tag as operator_catalog_script
+        operator_script=operator_catalog_script(self,path)
         home_assets=''
         search_script=('<script defer src="'+self.rel('assets/search-engine.js',path)+'?v='+hashlib.sha256((self.root/'website/assets/search-engine.js').read_bytes()).hexdigest()[:12]+'"></script>') if path=='search.html' else ''
         if path=='index.html':
@@ -372,7 +374,7 @@ class Site:
 <link rel="stylesheet" href="'''+self.rel('assets/open-research.css',path)+'?v='+hashlib.sha256((self.root/'website/assets/open-research.css').read_bytes()).hexdigest()[:12]+'''">
 <link rel="stylesheet" href="'''+self.rel('assets/side-reader.css',path)+'?v='+hashlib.sha256((self.root/'website/assets/side-reader.css').read_bytes()).hexdigest()[:12]+'''">
 <script defer src="'''+self.rel('assets/mathjax-config.js',path)+'''"></script><script defer src="'''+self.rel('assets/mathjax/tex-svg-full.js',path)+'''"></script>
-'''+search_script+'''<script defer src="'''+self.rel('assets/reader.js',path)+'?v='+hashlib.sha256((self.root/'website/assets/reader.js').read_bytes()).hexdigest()[:12]+'''"></script>'''+glossary_script+chapter_help_script+home_assets+reading_list_assets+'''</head><body class="open-research'''+(' home-page' if path == 'index.html' else '')+(' reading-page' if reading_page else '')+(' work-page' if work_page else '')+(' visual-reading' if visual_page else '')+'''">
+'''+search_script+'''<script defer src="'''+self.rel('assets/reader.js',path)+'?v='+hashlib.sha256((self.root/'website/assets/reader.js').read_bytes()).hexdigest()[:12]+'''"></script>'''+glossary_script+operator_script+chapter_help_script+home_assets+reading_list_assets+'''</head><body class="open-research'''+(' home-page' if path == 'index.html' else '')+(' reading-page' if reading_page else '')+(' work-page' if work_page else '')+(' visual-reading' if visual_page else '')+'''">
 <a class="skip-link" href="#main">Skip to main content</a><header class="site-header"><a class="brand" href="'''+root+'''" aria-label="Komorebi home"><span class="brand-wordmark"><img class="brand-logo" src="'''+brand_assets['komorebi-logo.svg']+'''" alt="Komorebi" width="1320" height="240"><span class="brand-fallback" aria-hidden="true">Komorebi</span><small>Mathematics · proofs · software</small></span></a>'''+nav_html+'''</header>
 <main id="main" tabindex="-1">'''+body+'''</main><footer><div class="footer-inner"><nav class="footer-links" aria-label="Project information">'''+source_html+'''<a href="'''+self.rel('collection/PROJECT_STATEMENT.html',path)+'''">Project and authorship statement</a><a href="'''+self.rel('collection/ACCESSIBILITY.html',path)+'''">Accessibility and reporting problems</a><a href="'''+self.rel('sitemap.xml',path)+'''">Sitemap</a></nav><a class="footer-github" href="https://github.com/'''+REPOSITORY+'''">Return to GitHub <span aria-hidden="true">↗</span></a></div></footer></body></html>'''
         self.write(path,doc)
@@ -466,6 +468,12 @@ class Site:
                 content=glossary_return_links(content,glossary_config)
                 lookup=glossary_lookup(glossary_config)
                 content=re.sub(r'(</h1>)',lambda m:m[1]+lookup,content,count=1)
+            if repo=='collection' and path=='docs/operators/catalog/README.md':
+                from operator_catalog import load_catalog
+                from operator_catalog_reader import lookup_html, search_entries
+                operator_catalog=load_catalog(self.root)
+                content=re.sub(r'(</h1>)',lambda m:m[1]+lookup_html(operator_catalog,page),content,count=1)
+                self.search.extend(search_entries(self,operator_catalog))
             is_euler = repo=='collection' and path=='docs/demonstrations/EULER_PACKETS.md'
             if is_euler:
                 from euler_navigation import decorate
