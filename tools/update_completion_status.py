@@ -39,6 +39,72 @@ def status_cells(record, labels):
     return tuple(labels[key][record[key]][0] for key in ('stage', 'lean', 'confidence'))
 
 
+def evidence_links(record, page):
+    """Give familiar records readable labels without guessing unfamiliar roles."""
+    names = {
+        'README.md': 'Readme', 'README.txt': 'Readme', 'READ_ME.txt': 'Readme',
+        'RELEASE_STATUS.json': 'Release status', 'SERIES_STATUS.json': 'Series status',
+        'RELEASE_SCOPE.md': 'Release scope', 'FIRST_EDITION_SCOPE.md': 'First edition scope',
+        'STATUS.md': 'Status', 'BUILD_STATUS.md': 'Build status',
+        'LEAN_STATUS.md': 'Lean status', 'LEAN_GUIDE.md': 'Lean guide',
+        'FORMALIZATION_COVERAGE.md': 'Formalization coverage',
+        'MANUSCRIPT_STATUS.md': 'Manuscript status',
+        'CURRENT_STATUS.md': 'Current status', 'FINAL_STATUS.json': 'Final status',
+        'FORMAL_STATUS.md': 'Formal status',
+        'CURRENT_REPLAY_STATUS.json': 'Current replay status',
+        'CURRENT_READING_EDITION.txt': 'Current reading edition',
+        'AUDIT_REPORT.md': 'Audit report', 'RELEASE_AUDIT.md': 'Release audit',
+        'RELEASE_REPORT.txt': 'Release report', 'REPORT.md': 'Report',
+        'VALIDATION_REPORT.md': 'Validation report', 'VERIFICATION.md': 'Verification record',
+        'REVIEW_NOTES.md': 'Review notes', 'READING_NOTES.md': 'Reading notes',
+        'PROOF_BOUNDARY.md': 'Proof boundary', 'THEOREM_INDEX.md': 'Theorem index',
+        'CLAIM_MAP.json': 'Claim map', 'COVERAGE.json': 'Coverage map',
+        'MONOGRAPH_COVERAGE.md': 'Monograph coverage', 'SOURCE_MAP.md': 'Source map',
+        'EXPERIMENT_DESIGN.md': 'Experiment design', 'REPRODUCE.md': 'Reproduction instructions',
+        'RESEARCH_NOTE.md': 'Research note', 'RESEARCH_LOG.md': 'Research log',
+        'CHANGELOG.md': 'Change log', 'CONTINUE_HERE.md': 'Continuation guide',
+        'PROTOCOL.md': 'Protocol', 'WORKSPACE_PROTOCOL.md': 'Workspace protocol',
+        'RESULTS.md': 'Results', 'results.json': 'Results', 'exact_results.json': 'Exact results',
+        'requirements.txt': 'Software requirements',
+        'requirements-recorded.txt': 'Recorded software requirements',
+    }
+    roles = {
+        'lean': 'Lean', 'formal': 'Formal', 'formalization': 'Formalization',
+        'core': 'Core', 'monograph': 'Monograph', 'publication': 'Publication',
+        'evidence': 'Evidence', 'tools': 'Tools', 'release_tools': 'Release tools',
+        'verification': 'Verification', 'audits': 'Audits', 'examples': 'Examples',
+        'runs': 'Run records', 'interface': 'Interface', 'vendor': 'Vendor',
+        'visual': 'Visual guide', 'visual-guide': 'Visual guide',
+        'lean_guide': 'Lean guide', 'volume': 'Volume',
+        'python_baseline': 'Python baseline', 'rtl_skeleton': 'RTL skeleton',
+        'runtime_metadata': 'Runtime metadata',
+    }
+    entries = []
+    prefix = record['destination'] + '/'
+    for evidence in record['evidence']:
+        path = evidence['path']
+        if not path.startswith(prefix):
+            entries.append(('File receipt (availability only)', path, path))
+            continue
+        relative = path[len(prefix):]
+        parent, filename = posixpath.split(relative)
+        label = names.get(filename, relative)
+        if label == 'Readme' and parent:
+            role = roles.get(posixpath.basename(parent).lower())
+            label = role + ' readme' if role else relative
+        entries.append((label, path, relative))
+    counts = collections.Counter(label for label, _, _ in entries)
+    links = []
+    for label, path, relative in entries:
+        if counts[label] > 1:
+            if label == 'Readme' and '/' not in relative:
+                label += ' (Markdown)' if relative.endswith('.md') else ' (text)'
+            else:
+                label = relative
+        links.append(link(label, path, page))
+    return ' · '.join(links)
+
+
 def render(data):
     rows = data['components']
     primary = [r for r in rows if r['import_role'] == 'primary']
@@ -118,9 +184,11 @@ To strengthen a formal status, supply the exact claim map, pinned source and env
     page = 'docs/STATUS_CATALOG.md'
     catalogue = f'''# Project status and evidence catalogue
 
-[Browse the collection](BROWSE.md) · [Status guide](COMPLETION_STATUS.md) · [Finalization queue](FINALIZATION_QUEUE.md)
+[Filter works](https://KomorebiP.github.io/Operation-KOMOREBI/works.html) · [Browse the collection](BROWSE.md) · [Status guide](COMPLETION_STATUS.md) · [Finalization queue](FINALIZATION_QUEUE.md)
 
-Base assessment recorded {data['as_of']}. Each entry summarizes dated evidence for a particular source edition, with later companion checks linked separately. Rendering this catalogue does not run Lean or review proofs. The [status guide](COMPLETION_STATUS.md) defines the labels. Each primary entry links back to the work's paper, proofs, Lean, and code. Supporting collections link to their source files and import receipts. File hashes and the assessed Git revision are recorded in [project-status.json](../manifests/project-status.json).
+Status, scope, and evidence for **{len(primary)} primary works** and **[{len(supporting)} supporting collections](#supporting-and-historical-collections)**. Completion, Lean coverage, and evidence basis describe separate aspects of each work. The [status guide](COMPLETION_STATUS.md) defines the labels.
+
+**Base assessment: {data['as_of']}.** Later companion checks retain their own dates and scope in the linked records. This catalogue summarizes those records and does not represent a new Lean run or proof review. The [assessment record](../manifests/project-status.json) includes the source revision and file hashes.
 
 '''
     for row in primary:
@@ -129,14 +197,17 @@ Base assessment recorded {data['as_of']}. Each entry summarizes dated evidence f
 
 ## {row['title']}
 
-**{stage}** · Lean: **{lean}** · Confidence basis: **{confidence}**
+**Completion:** {stage}<br>
+**Lean coverage:** {lean}<br>
+**Evidence basis:** {confidence}
 
 {row['scope']}
 
 **Next step:** {row['next_step']}
 
 '''
-        catalogue += link('Return to this work: paper, proofs, Lean, and code', 'docs/works/'+row['id']+'.md', page)+'\n\n'
+        catalogue += link('Paper, proofs, Lean, and code', 'docs/works/'+row['id']+'.md', page) + ' · '
+        catalogue += link('Source directory', row['destination']+'/', page) + '\n\n'
         if 'reader_listing' in row:
             entry = row['reader_listing']
             catalogue += '**Reader listing: incubator.** ' + entry['reason'] + '\n\n'
@@ -153,15 +224,14 @@ Base assessment recorded {data['as_of']}. Each entry summarizes dated evidence f
             catalogue += link('Software check and tested scope', row['software_verification']['path'], page) + ' (separate from Lean evidence)\n\n'
         if 'formal_verification' in row:
             catalogue += link('Separate Lean companion replay and exact scope', row['formal_verification']['path'], page) + '\n\n'
-        evidence = ' · '.join(link(e['path'][len(row['destination'])+1:] if e['path'].startswith(row['destination']+'/') else 'import receipt (availability only)', e['path'], page) for e in row['evidence'])
-        catalogue += link('Source directory', row['destination']+'/', page) + ' · ' + evidence + '\n\n'
+        catalogue += '**Evidence records:** ' + evidence_links(row, page) + '\n\n'
     catalogue += '''## Supporting and historical collections
 
-Every entry below is **Supporting / historical**, with **Lean: Not assessed** and **Confidence: Unassessed** in this catalogue. Its original records may contain accepted results within a narrower scope. An import receipt identifies files and does not establish mathematical correctness. Consult the edition's own statements and run records before reusing its results.
+Every entry below is **Supporting / historical**, with **Lean coverage: Not assessed** and **Evidence basis: Unassessed** in this catalogue. Its original records may contain accepted results within a narrower scope. A file receipt identifies available files and does not establish mathematical correctness. Consult the edition's own statements and run records before reusing its results.
 
 '''
     catalogue += table(['Collection', 'Availability record'],
-                       [(f'<a id="{r["id"]}"></a>'+link(r['title'], r['destination']+'/', page), link('file receipt', r['evidence'][0]['path'], page)) for r in supporting])
+                       [(f'<a id="{r["id"]}"></a>'+link(r['title'], r['destination']+'/', page), link('File receipt', r['evidence'][0]['path'], page)) for r in supporting])
     catalogue += '\n[Browse the collection](BROWSE.md) · [Status guide](COMPLETION_STATUS.md) · [Records guide](RECORDS.md)\n'
 
     queue = f'''# Cleanup and finalization queue

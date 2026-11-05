@@ -233,7 +233,7 @@ Thirteen additional collections were imported before the availability and assess
 
 **Progress:** All current component receipts now reconcile with the committed paths, blob identities, modes, and aggregate record digests. The 13 new records remain scientifically unassessed.
 
-Related works and source records: [Recovery v14](STATUS_CATALOG.md#certified-inference-recovery-v14-supporting-sources) · [Large Signal Model software](works/large-signal-model.md) · [Supporting sources](STATUS_CATALOG.md#large-signal-model-ancestry-supporting-sources) · [Machine Theory Compendium](works/machine-theory-compendium.md) · [Physics: curvature states](works/physics-curvature-states.md) · [Physics: energy and backreaction](works/physics-energy-backreaction.md) · [Physics: origin locking](works/physics-origin-locking.md) · [Realization Calculus: twin edition](works/realization-calculus-twin-edition.md).
+Related works and source records: [Certified Inference: recovery v14](STATUS_CATALOG.md#certified-inference-recovery-v14-supporting-sources) · [Large Signal Model software](works/large-signal-model.md) · [Large Signal Model software: supporting sources](STATUS_CATALOG.md#large-signal-model-ancestry-supporting-sources) · [Machine Theory Compendium](works/machine-theory-compendium.md) · [Physics: curvature states](works/physics-curvature-states.md) · [Physics: energy and backreaction](works/physics-energy-backreaction.md) · [Physics: origin locking](works/physics-origin-locking.md) · [Realization Calculus: twin edition](works/realization-calculus-twin-edition.md).
 
 ## Formal, mathematical, and empirical development
 
