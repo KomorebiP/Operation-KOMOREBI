@@ -6,11 +6,16 @@ retains, and what evidence explains any difference. Use it when splitting an
 object into packets, changing coordinates, filtering a signal, or working from
 a summary.
 
+Here, an operator is a specified rule taking inputs to outputs. A packet is
+one selected part of a representation; a transfer block records how an input
+part contributes to an output part. The audit makes those choices explicit
+before comparing calculations.
+
 [Start here](START_HERE.md) · [Worked demonstrations](DEMONSTRATIONS.md) · [Glossary](GLOSSARY.md)
 
 Start with the matrix example below if this language is new. You can
 [change its inputs and switch blocks on and off](https://komorebip.github.io/Operation-KOMOREBI/interactive.html#packets)
-in the existing interactive diagram, or
+in the interactive diagram, or
 [run and edit the packet program](https://komorebip.github.io/Operation-KOMOREBI/playground.html#packets).
 
 ## The audit in six questions
@@ -66,7 +71,9 @@ works for every vector, beyond this particular input, is the operator identity
 The [packet demonstration](demonstrations/PACKETS.md) gives the complete
 program, expected output, written-proof route, and recorded formal coverage.
 
-### Delete an interaction and identify the residual
+<a id="delete-an-interaction-and-identify-the-residual"></a>
+
+### Delete interactions and identify the residual
 
 Keep only the diagonal blocks. The resulting operation is
 
@@ -90,10 +97,34 @@ exactly; deleting their interactions changes the operation. In the
 switch off the two off-diagonal blocks to reproduce this control. Switch them
 back on to restore the complete calculation.
 
+## Check an identity beyond one successful input
+
+Agreement on one vector can conceal a missing block. For example, omit only
+$P_2TP_2$ and call the resulting operator $T_{\mathrm{trial}}$:
+
+```math
+T_{\mathrm{trial}}=\begin{pmatrix}1&2\\3&0\end{pmatrix},\qquad
+z=\begin{pmatrix}2\\0\end{pmatrix},\qquad
+T_{\mathrm{trial}}z=Tz=\begin{pmatrix}2\\6\end{pmatrix}.
+```
+
+This input has no second-coordinate contribution, so it does not expose the
+omitted block. On the original input $x=(2,3)^{\mathsf T}$, however,
+$T_{\mathrm{trial}}x=(8,6)^{\mathsf T}$ while $Tx=(8,18)^{\mathsf T}$.
+
+For linear maps with the same finite-dimensional domain and the same codomain,
+exact agreement on every vector of a basis proves agreement everywhere:
+linearity extends the equality to each linear combination. Checking both
+coordinate basis vectors in this example would detect the omission.
+For nonlinear maps, basis values alone
+do not determine the operation. With floating-point calculations, also state
+the precision, tolerance, and justification for any broader error claim.
+
 ## Carry the operator through a coordinate change
 
 If $y=Cx$ with an invertible coordinate map $C$, the same operation in the
-new coordinates has matrix $T_y=CTC^{-1}$. The audit compares two routes:
+new coordinates has matrix $T_y=CTC^{-1}$. The audit compares two routes for
+every input $x$:
 
 ```math
 T_y(Cx)=C(Tx),\qquad\text{equivalently}\qquad T_yC=CT.
@@ -120,6 +151,25 @@ output coordinate maps. Check that every composition has matching types.
 The [typed-path example](examples/15_TYPED_PATHS.md) explains why a
 one-sided inverse does not make both round trips identities.
 
+## Check the order of operations
+
+Even when two compositions have matching types, their order can change the
+answer. Let $P=P_1$ be the first-coordinate projector above. Compare applying
+$T$ and then projecting with projecting first:
+
+```math
+PTx=\begin{pmatrix}8\\0\end{pmatrix},\qquad
+TPx=\begin{pmatrix}2\\6\end{pmatrix}.
+```
+
+The second expression projects the input first and then applies $T$.
+Their difference, $PTx-TPx=(6,-6)^{\mathsf T}$, is a witness that these
+operations do not commute. Reading products from right to left keeps the
+two tasks distinct. The [typed-path example](examples/15_TYPED_PATHS.md#compare-orders-only-on-one-space)
+develops this test through the commutator $PT-TP$; the
+[wavelet study](demonstrations/WAVELET_POLYPHASE.md) applies the same question
+to filtering and coarsening.
+
 ## Ask whether the retained information is sufficient
 
 Suppose the available summary is $R(x_1,x_2)=x_1+x_2$, while the requested
@@ -135,8 +185,30 @@ Sufficiency depends on the question. Adding the measurement $x_1-x_2$
 also repairs the original task: if $s=x_1+x_2$ and $d=x_1-x_2$, then
 $x_1=(s+d)/2$.
 
+### A general recovery test
+
+A fiber of a summary is the set of inputs with one shared summary value.
+For maps of sets $R:X\to S$ and $F:X\to Z$, a recovery rule
+$G:R(X)\to Z$ with $F=G\circ R$ exists exactly when $F$ is constant on
+every fiber:
+
+```math
+R(u)=R(v)\ \Longrightarrow\ F(u)=F(v)
+\qquad\text{for all }u,v\in X.
+```
+
+Here, regard $R$ as a map $X\to R(X)$ when composing it with $G$.
+
+Necessity follows because both inputs would receive the same value from $G$.
+Conversely, when the condition holds, define $G(r)$ as the common value of
+$F$ on the fiber over $r$. Each $r\in R(X)$ has such a fiber, and the
+condition makes its answer unambiguous. This defines a recovery function;
+it gives no automatic continuity, stability, or efficient evaluation guarantee.
+The admissible input set matters: a restriction on $X$ can change its fibers
+and the resulting recovery question.
+
 [Open the Recovery Laboratory](https://komorebip.github.io/Operation-KOMOREBI/recovery-lab.html)
-to change the measurement and the requested answer, inspect recovery rules
+to try finite linear measurements, change the requested answer, inspect recovery rules
 or collision witnesses, and add missing information. The
 [recovery demonstration](demonstrations/RECOVERY.md) supplies the elementary
 argument and its exact program.
@@ -144,7 +216,8 @@ argument and its exact program.
 ## Keep exactness, stability, and evidence separate
 
 The block identity above is a finite linear-algebra calculation. More
-generally, let $T:X\to Y$ be linear, with finite packet families
+generally, let $X$ and $Y$ be vector spaces over the same field and
+$T:X\to Y$ be linear, with finite packet families of linear maps
 $P_i:X\to X$ and $Q_j:Y\to Y$ whose sums are $I_X$ and $I_Y$.
 Then $\sum_{j,i}Q_jTP_i=T$. The reconstruction follows by expanding
 $(\sum_jQ_j)T(\sum_iP_i)$.
@@ -189,9 +262,16 @@ Representation and reconstruction maps:
 Identity needed for the two routes to agree:
 Retained blocks or measurements:
 Residual, recovery rule, or failure witness:
+Control input or altered operation expected to expose a failure:
 Norms, approximation, and convergence assumptions, if used:
 Argument, program, source revision, and tested scope:
 Conclusion and remaining obligations:
 ```
+
+Make the conclusion specific to the task. For this example, the complete
+block calculation reconstructs $T$ on every vector; the diagonal truncation
+has residual $E$; and the sum alone cannot recover the first coordinate on
+all of $\mathbb R^2$. Record an unresolved assumption beside the conclusion
+that depends on it.
 
 [Project map](PROJECT_MAP.md) · [All demonstrations](DEMONSTRATIONS.md) · [How to interpret verification](VERIFICATION.md)
