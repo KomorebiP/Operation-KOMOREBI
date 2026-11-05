@@ -64,7 +64,7 @@ def site_navigation(page):
         return '<a href="'+html.escape(url, quote=True)+'"'+current+'>'+html.escape(title)+'</a>'
     groups = [
         ('Read', [('Reading routes', 'collection/READING_ROUTES.html'),
-                  ('Operator audit', 'collection/OPERATOR_AUDIT.html'),
+                  ('Operator guide', 'collection/OPERATOR_AUDIT.html'),
                   ('Extended case studies', 'collection/DEMONSTRATIONS.html#extended-case-studies'),
                   ('Saved reading', 'reading-list.html'),
                   ('Physics collection', 'collection/PHYSICS_COLLECTION.html'),
