@@ -1,15 +1,19 @@
 // Keep the immutable book downloads off the Pages storage budget. Authenticate
 // every bounded part and the complete file before opening or saving it.
-const PREFIX = 'publication/machine-native-reasoning-reconstructed/2026-11-04/';
-const HASHES = {
+const EDITIONS = [{prefix: 'publication/machine-native-reasoning-reconstructed/2026-11-04/', hashes: {
   pdf: '65a0a736e3422102f83bfc96883dcb81d2a7dacc42663c78e002718ebb7278db',
   source: '14e635a4e910ab3062e5618b084841eff2e0504f048130cfd336985a7c94ef25'
-};
+}}, {prefix: 'publication/mnr-synchronized/v1.0.0/parts/', hashes: {
+  pdf: '92f4a6aa03d0c9e5ef6bc5e9c24026090f3b3d9280576cf5d87c4f906ecc5e14',
+  source: '0a6b6120f3fd4900529ef696c49030fe621532695edfc68de6d83e16d5169c09'
+}}];
 export async function sha256(bytes) {
   return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes)), b => b.toString(16).padStart(2, '0')).join('');
 }
 export function validateAsset(kind, asset, revision) {
-  if (!/^[0-9a-f]{40}$/.test(revision) || asset?.sha256 !== HASHES[kind]) throw Error('Unknown book edition');
+  const edition = EDITIONS.find(item => item.hashes[kind] === asset?.sha256);
+  if (!/^[0-9a-f]{40}$/.test(revision) || !edition) throw Error('Unknown book edition');
+  const PREFIX = edition.prefix;
   if (!Number.isSafeInteger(asset.bytes) || asset.bytes < 1 || asset.bytes > 32 * 1024 * 1024) throw Error('Invalid file size');
   if (!Array.isArray(asset.parts) || !asset.parts.length || asset.parts.length > 128) throw Error('Invalid file inventory');
   const seen = new Set();

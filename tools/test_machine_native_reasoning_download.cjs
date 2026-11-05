@@ -24,6 +24,17 @@ test('browser transport reproduces both complete admitted artifacts',async()=>{
     assert.equal(await sha256(raw),data.assets[kind].sha256);
   }
 });
+test('synchronized downloads reproduce the numbered release and reject mixed editions',async()=>{
+  const {assembleAsset,sha256,validateAsset}=await modulePromise;
+  const data=JSON.parse(await readFile(join(root,'publication/mnr-synchronized/v1.0.0/RELEASE.json'),'utf8'));
+  for(const kind of ['pdf','source']) {
+    const raw=await assembleAsset(kind,data.assets[kind],{revision,fetcher:localFetch});
+    assert.equal(await sha256(raw),data.assets[kind].sha256);
+  }
+  const mixed=structuredClone(data.assets.pdf);
+  mixed.parts[0].path=(await manifestPromise).assets.pdf.parts[0].path;
+  assert.throws(()=>validateAsset('pdf',mixed,revision),/Invalid file part/);
+});
 test('corrupted bytes, altered aggregate identity, unsafe paths and failed HTTP are rejected',async()=>{
   const {assembleAsset,validateAsset}=await modulePromise, data=await manifestPromise;
   const asset=data.assets.pdf;

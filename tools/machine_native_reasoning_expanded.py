@@ -48,7 +48,7 @@ def artifact_bytes(root,asset):
     root=Path(root).resolve();parts=[];seen=set()
     for entry in asset['parts']:
         path=safe_path(entry['path'])
-        if not path.startswith(str(Path(MANIFEST).parent.as_posix())+'/') or path in seen:
+        if not path.startswith((str(Path(MANIFEST).parent.as_posix())+'/','publication/mnr-synchronized/v1.0.0/parts/')) or path in seen:
             raise ValueError('Unexpected or duplicate MNR artifact part')
         seen.add(path);target=root/path
         if target.is_symlink() or not target.resolve().is_relative_to(root):
@@ -135,12 +135,17 @@ def publish(site):
     reader_body+='<noscript><p>The PDF reader and verified downloads require JavaScript. '+link('Return to the contents and artifact records',PAGE)+'</p></noscript></section>'
     reader_body+='<script type="module" src="'+e(site.rel(SCRIPT,BOOK),quote=True)+'?v='+record['delivery_script_sha256'][:12]+'"></script>'
     site.page(BOOK,'Machine-Native Reasoning: PDF reader and downloads',reader_body,github(REPOSITORY,site.revision,MANIFEST))
+    from machine_native_reasoning_release import publish as publish_release
+    record=publish_release(site,record,reader_body)
     from machine_native_reasoning_html import publish as publish_html
     publish_html(site)
     return record
 
 def verify(root):
     root=Path(root);record=json.loads((root/RECORD).read_bytes())
+    if record.get('edition')=='mnr-synchronized-v1.0.0':
+        from machine_native_reasoning_release import verify as verify_release
+        return verify_release(root)
     if record['pdf_sha256']!=PDF_SHA256 or record['assets']['pdf']['sha256']!=PDF_SHA256:
         raise ValueError('Published MNR PDF changed')
     if record['source_archive_sha256']!=SOURCE_SHA256 or record['assets']['source']['sha256']!=SOURCE_SHA256:
