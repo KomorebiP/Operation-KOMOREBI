@@ -169,6 +169,11 @@ jobs:
         run: |
           python -B tools/check_hand_examples.py
           python -B -m unittest discover -s tools -p 'test_operator_guide.py' -v
+      - name: Check operator catalog sources, examples, and lookup
+        run: |
+          python -B tools/operator_catalog.py --check
+          python -B -m unittest discover -s tools -p 'test_operator_catalog*.py' -v
+          node tools/test_operator_catalog_lookup.cjs
       - name: Check the complete demonstrations and expected output
         run: python -B tools/check_demonstrations.py
       - name: Check the extended Euler derivation and exact library agreement

@@ -64,8 +64,10 @@ The [finalization queue](FINALIZATION_QUEUE.md) lists the remaining work. Select
 The [operator guide](OPERATOR_AUDIT.md) turns these questions into a reusable
 investigation. Follow a matrix operation through its packet blocks and a
 coordinate change, account for omitted interactions, then test what a summary
-can recover. It includes a checklist, interactive experiments, and a worksheet
-for your own calculation.
+can recover. Seven worked chapters include polynomial and difference operators.
+The [operator catalog](operators/catalog/README.md) supplies formulas,
+assumptions, and source links for 205 entries. The guide also includes
+interactive experiments and a worksheet for your own calculation.
 
 <a id="start-with-a-complete-demonstration"></a>
 

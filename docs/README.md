@@ -10,6 +10,7 @@ Use these guides to find works, software, and project records. Each dated review
 | How the papers and books connect | [Project map and documented dependencies](PROJECT_MAP.md) |
 | A complete path from calculation to code and evidence | [Three demonstrations](DEMONSTRATIONS.md) |
 | Operator concepts, worked examples, and a practical checklist | [Operator guide](OPERATOR_AUDIT.md) |
+| Operator formulas, assumptions, source links, and composition laws | [Operator catalog](operators/catalog/README.md) |
 | Introductory terminology and notation | [Glossary](GLOSSARY.md) |
 | Calculations with every step shown | [Hand-worked examples](HAND_WORKED_EXAMPLES.md) |
 | Examples connected to papers, proofs, Lean, and code | [Topic map](LEARNING_MAP.md) |

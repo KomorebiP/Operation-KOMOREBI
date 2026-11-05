@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Exact finite examples for the six Operator guide reference chapters.
+"""Exact finite examples for the Operator guide reference chapters.
 
 Uses only Python's standard library. These checks cover specified rational
 matrices and finite witnesses. They do not certify general theorems,
@@ -280,8 +280,97 @@ def stability():
             'oblique projector norm', 'nonnormal powers', 'finite truncation witnesses', 'residual and forward error')
 
 
+def polynomial():
+    """Check the chapter's displayed values using the existing exact polynomial model."""
+    import importlib.util
+    from math import factorial
+    from pathlib import Path
+
+    path = Path(__file__).with_name('roots_unity_falling_factorial.py')
+    spec = importlib.util.spec_from_file_location('operator_guide_polynomials', path)
+    p = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(p)
+    f, x = p.power(3), p.power(1)
+
+    assert p.from_newton(p.power(3)) == (0, 2, -3, 1)
+    assert p.to_newton(f) == (0, 1, 3, 1)
+    assert p.from_newton((0, 1, 3, 1)) == f
+    assert p.delta(f) == (1, 3, 3)
+    assert p.from_newton((1, 6, 3)) == p.delta(f)
+
+    raising = lambda a: p.multiply(x, p.translate(a, -1))
+    for k in range(7):
+        b = p.falling(k)
+        assert raising(b) == p.falling(k + 1)
+        assert p.newton_degree_operator(b) == p.scale(b, k)
+        assert p.add(p.delta(raising(b)), p.scale(raising(p.delta(b)), -1)) == b
+
+    g = p.to_newton(f)
+    # Substitution z -> -z is independent of the coefficient selector.
+    reflected = tuple((-1) ** k * c for k, c in enumerate(g))
+    even_source = p.scale(p.add(g, reflected), F(1, 2))
+    odd_source = p.scale(p.add(g, p.scale(reflected, -1)), F(1, 2))
+    assert even_source == (0, 0, 3) and odd_source == (0, 1, 0, 1)
+    packets = [p.project_newton(f, 2, r) for r in range(2)]
+    assert packets == [(0, -3, 3), (0, 3, -3, 1)]
+    assert [p.evaluate(a, 4) for a in packets] == [36, 28]
+    assert p.add(*packets) == f
+    assert p.naive_power_project(f, 2, 0) == (0,)
+    assert p.add(p.project_newton(f, 4, 0), p.project_newton(f, 4, 2)) == packets[0]
+
+    assert p.star(x, x) == p.falling(2)
+    assert p.delta(p.star(x, x)) == (0, 2)
+    assert p.delta(p.multiply(x, x)) == (1, 2)
+    # Test the full product and packet law on nontrivial rational polynomials.
+    a, b = (F(1, 2), F(-2), F(3)), (F(2), F(1, 3))
+    product = p.star(a, b)
+    assert p.delta(product) == p.add(p.star(p.delta(a), b), p.star(a, p.delta(b)))
+    for r in range(3):
+        routed = (F(0),)
+        for i in range(3):
+            for j in range(3):
+                if (i + j) % 3 == r:
+                    routed = p.add(routed, p.star(p.project_newton(a, 3, i),
+                                                 p.project_newton(b, 3, j)))
+        assert routed == p.project_newton(product, 3, r)
+
+    assert [p.evaluate(p.delta(a), 4) for a in packets] == [24, 37]
+    shifted_first = [p.project_newton(p.shift(f), 2, r) for r in range(2)]
+    projected_first = [p.shift(a) for a in packets]
+    assert [p.evaluate(a, 4) for a in shifted_first] == [73, 52]
+    assert [p.evaluate(a, 4) for a in projected_first] == [60, 65]
+    for r in range(2):
+        assert shifted_first[r] == p.add(packets[r], p.delta(packets[(r + 1) % 2]))
+    for h in (F(-2), F(1, 2), F(0), F(1), F(2)):
+        assert p.translate(f, h) == p.translate_via_newton(f, h)
+    exercise = p.power(2)
+    assert p.evaluate(p.project_newton(p.shift(exercise), 2, 0), 3) == 7
+    assert p.evaluate(p.shift(p.project_newton(exercise, 2, 0)), 3) == 12
+
+    row = [p.evaluate(f, j) for j in range(4)]
+    difference_rows, coordinates = [], []
+    for k in range(4):
+        difference_rows.append(row)
+        coordinates.append(row[0] / factorial(k))
+        row = [row[j + 1] - row[j] for j in range(len(row) - 1)]
+    assert difference_rows == [[0, 1, 8, 27], [1, 7, 19], [6, 12], [6]]
+    assert coordinates == [0, 1, 3, 1]
+    assert p.mod_polynomial(p.falling(3), 3) == (0, 2, 0, 1)
+    assert all(p.evaluate(p.falling(3), j) == 0 for j in range(3))
+    for degree in range(9):
+        assert p.mod_polynomial(p.delta(p.delta(p.delta(p.power(degree)))), 3) == (0,)
+    for degree in (0, 3):
+        assert p.mod_polynomial(p.newton_degree_operator(p.falling(degree)), 3) == (0,)
+    assert p.project_newton(p.falling(0), 2, 0) == (1,)
+    assert p.project_newton(p.falling(3), 2, 0) == (0,)
+    return ('falling coordinates', 'transported derivative', 'raising and degree',
+            'parity averaging', 'transported packets', 'transported product',
+            'translation order', 'Newton and characteristic-three controls')
+
+
 CHECKS = {'BASICS': basics, 'ALGEBRA': algebra, 'PACKETS': packets,
-          'TRANSFER': transfer, 'RECOVERY': recovery, 'STABILITY': stability}
+          'TRANSFER': transfer, 'RECOVERY': recovery, 'STABILITY': stability,
+          'POLYNOMIAL': polynomial}
 
 SOURCE_BINDINGS = {
     'BASICS': r'T^*=\begin{pmatrix}0&3\\1/3&0\end{pmatrix}',
@@ -290,6 +379,7 @@ SOURCE_BINDINGS = {
     'TRANSFER': r"T'=[2\ \ 0]",
     'RECOVERY': r'F=\begin{pmatrix}1&2&1\end{pmatrix}',
     'STABILITY': r'A=\operatorname{diag}(1,1/1000)',
+    'POLYNOMIAL': r'\Phi^{-1}(x^3)=z+3z^2+z^3',
 }
 
 
