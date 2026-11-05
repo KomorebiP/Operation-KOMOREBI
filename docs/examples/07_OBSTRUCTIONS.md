@@ -80,7 +80,7 @@ products are one and zero.
 
 ## Papers, proofs, Lean, and code
 
-**Terms in this example:** [Obstruction](../GLOSSARY.md#obstruction) · [Fiber](../GLOSSARY.md#fiber) · [Factorization through a map](../GLOSSARY.md#factorization) · [Kernel](../GLOSSARY.md#kernel) · [Quotient space](../GLOSSARY.md#quotient-space)
+**Terms in this example:** [Obstruction](../GLOSSARY.md#obstruction) · [Fiber](../GLOSSARY.md#fiber) · [Factorization through a map](../GLOSSARY.md#factorization) · [Kernel](../GLOSSARY.md#kernel) · [Quotient space](../GLOSSARY.md#quotient-space) · [Exact recovery from a summary](../GLOSSARY.md#exact-recovery) · [Collision witness](../GLOSSARY.md#collision-witness) · [Covector](../GLOSSARY.md#covector) · [Covector pullback](../GLOSSARY.md#covector-pullback)
 
 The finite recovery obstruction is an entry point to the works on compatibility and realization boundaries.
 

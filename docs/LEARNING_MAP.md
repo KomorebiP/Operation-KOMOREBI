@@ -198,7 +198,7 @@ The Lean links open each work’s recorded coverage and sources. They do not cer
 
 [Work through the example](examples/06_REDUNDANT_COORDINATES.md)
 
-**Terms:** [Analysis and synthesis](GLOSSARY.md#analysis-synthesis) · [Left inverse](GLOSSARY.md#left-inverse) · [Redundant coordinates](GLOSSARY.md#redundancy) · [Reconstruction](GLOSSARY.md#reconstruction)
+**Terms:** [Analysis and synthesis](GLOSSARY.md#analysis-synthesis) · [Left inverse](GLOSSARY.md#left-inverse) · [Redundant coordinates](GLOSSARY.md#redundancy) · [Reconstruction](GLOSSARY.md#reconstruction) · [Finite frame](GLOSSARY.md#finite-frame) · [Frame bounds](GLOSSARY.md#frame-bounds) · [Classical frame operator](GLOSSARY.md#classical-frame-operator) · [Canonical dual synthesis](GLOSSARY.md#canonical-dual) · [Moore–Penrose inverse](GLOSSARY.md#pseudoinverse) · [Coefficient projection](GLOSSARY.md#coefficient-projection) · [Reconstruction component](GLOSSARY.md#reconstruction-component) · [Coefficient gauge](GLOSSARY.md#coefficient-gauge) · [Coefficient metric](GLOSSARY.md#coefficient-metric) · [Metric adjoint](GLOSSARY.md#metric-adjoint) · [Positive definite matrix](GLOSSARY.md#positive-definite) · [Seminorm](GLOSSARY.md#seminorm)
 
 Compare the exact packet setting of Paper I with the broader analysis and synthesis construction in the library guide.
 
@@ -221,7 +221,7 @@ The Lean links open each work’s recorded coverage and sources. They do not cer
 
 [Work through the example](examples/07_OBSTRUCTIONS.md)
 
-**Terms:** [Obstruction](GLOSSARY.md#obstruction) · [Fiber](GLOSSARY.md#fiber) · [Factorization through a map](GLOSSARY.md#factorization) · [Kernel](GLOSSARY.md#kernel) · [Quotient space](GLOSSARY.md#quotient-space)
+**Terms:** [Obstruction](GLOSSARY.md#obstruction) · [Fiber](GLOSSARY.md#fiber) · [Factorization through a map](GLOSSARY.md#factorization) · [Kernel](GLOSSARY.md#kernel) · [Quotient space](GLOSSARY.md#quotient-space) · [Exact recovery from a summary](GLOSSARY.md#exact-recovery) · [Collision witness](GLOSSARY.md#collision-witness) · [Covector](GLOSSARY.md#covector) · [Covector pullback](GLOSSARY.md#covector-pullback)
 
 The finite recovery obstruction is an entry point to the works on compatibility and realization boundaries.
 
@@ -452,7 +452,7 @@ The Lean links open each work’s recorded coverage and sources. They do not cer
 
 [Work through the example](examples/16_CYCLIC_RECIPROCALS.md)
 
-**Terms:** [Coefficient](GLOSSARY.md#coefficient) · [Power series](GLOSSARY.md#power-series) · [Truncation](GLOSSARY.md#truncation) · [Formal reciprocal](GLOSSARY.md#formal-reciprocal) · [Coefficient convolution](GLOSSARY.md#convolution) · [Root of unity](GLOSSARY.md#root-of-unity)
+**Terms:** [Coefficient](GLOSSARY.md#coefficient) · [Power series](GLOSSARY.md#power-series) · [Truncation](GLOSSARY.md#truncation) · [Formal reciprocal](GLOSSARY.md#formal-reciprocal) · [Coefficient convolution](GLOSSARY.md#convolution) · [Root of unity](GLOSSARY.md#root-of-unity) · [Ordinary generating function](GLOSSARY.md#ordinary-generating-function)
 
 This coefficient model introduces cyclic projection and reciprocal recursion in Paper IV. Its finite product check does not address the paper’s analytic growth or spectral-zero results.
 

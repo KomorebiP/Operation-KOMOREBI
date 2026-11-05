@@ -195,13 +195,13 @@ def render_reader_pages(root, components, assessments):
 def render_glossary(config):
     terms={x['id']:x for x in config['glossary']}
     text='# Glossary and notation\n\n'
-    text+='This guide explains '+str(len(terms))+' terms used in the collection and its finite examples. '
-    text+='Use the [first reading route](#a-first-reading), [compare nearby ideas](#compare-nearby-ideas), browse a subject, or open the [alphabetical index](#alphabetical-index).\n\n'
+    text+='This guide explains '+str(len(terms))+' terms used across the collection, its operator guide and worked examples. '
+    text+='Use the [first reading route](#a-first-reading), [compare nearby ideas](#compare-nearby-ideas), [browse by subject](#browse-by-subject), or open the [alphabetical index](#alphabetical-index).\n\n'
     text+='[Find a glossary term on the reading website]('+SITE+'collection/GLOSSARY.html#glossary-lookup): search names, abbreviations, definitions and short examples, or choose a subject. Open the glossary beside a paper with **Read side by side**.\n\n'
     text+='A word can have a more specific meaning in another paper. The paper’s definitions and hypotheses take precedence. Examples and source links provide context without changing any recorded evidence status.\n\n'
-    text+='[Look up notation across the collection](NOTATION_INDEX.md) · [Work through the calculations by hand](HAND_WORKED_EXAMPLES.md) · [Papers, proofs, Lean, and code by topic](LEARNING_MAP.md) · [First software runs](FIRST_RUN.md)\n\n'
+    text+='[Operator guide](OPERATOR_AUDIT.md) · [Look up notation across the collection](NOTATION_INDEX.md) · [Work through the calculations by hand](HAND_WORKED_EXAMPLES.md) · [Papers, proofs, Lean, and code by topic](LEARNING_MAP.md) · [First software runs](FIRST_RUN.md)\n\n'
     if config.get('glossary_start'):
-        text+='## A first reading\n\nFollow these terms for a short route through the finite examples. Each definition links to a worked calculation.\n\n'
+        text+='## A first reading\n\nFollow these terms for a short route through the main ideas. Use their examples and source links to go deeper.\n\n'
         for index, step in enumerate(config['glossary_start'], 1):
             text+=str(index)+'. '+' · '.join('['+terms[key]['term']+'](#'+key+')' for key in step['terms'])+' — '+step['description']+'\n'
         text+='\n'

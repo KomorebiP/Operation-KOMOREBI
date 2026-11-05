@@ -97,7 +97,7 @@ They sum to the original vector.
 
 ## Papers, proofs, Lean, and code
 
-**Terms in this example:** [Analysis and synthesis](../GLOSSARY.md#analysis-synthesis) · [Left inverse](../GLOSSARY.md#left-inverse) · [Redundant coordinates](../GLOSSARY.md#redundancy) · [Reconstruction](../GLOSSARY.md#reconstruction)
+**Terms in this example:** [Analysis and synthesis](../GLOSSARY.md#analysis-synthesis) · [Left inverse](../GLOSSARY.md#left-inverse) · [Redundant coordinates](../GLOSSARY.md#redundancy) · [Reconstruction](../GLOSSARY.md#reconstruction) · [Finite frame](../GLOSSARY.md#finite-frame) · [Frame bounds](../GLOSSARY.md#frame-bounds) · [Classical frame operator](../GLOSSARY.md#classical-frame-operator) · [Canonical dual synthesis](../GLOSSARY.md#canonical-dual) · [Moore–Penrose inverse](../GLOSSARY.md#pseudoinverse) · [Coefficient projection](../GLOSSARY.md#coefficient-projection) · [Reconstruction component](../GLOSSARY.md#reconstruction-component) · [Coefficient gauge](../GLOSSARY.md#coefficient-gauge) · [Coefficient metric](../GLOSSARY.md#coefficient-metric) · [Metric adjoint](../GLOSSARY.md#metric-adjoint) · [Positive definite matrix](../GLOSSARY.md#positive-definite) · [Seminorm](../GLOSSARY.md#seminorm)
 
 Compare the exact packet setting of Paper I with the broader analysis and synthesis construction in the library guide.
 

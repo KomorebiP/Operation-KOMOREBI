@@ -80,7 +80,7 @@ $A(z)B_{<9}(z)=1-z^9$. The coefficient pattern repeats in blocks of three.
 
 ## Papers, proofs, Lean, and code
 
-**Terms in this example:** [Coefficient](../GLOSSARY.md#coefficient) · [Power series](../GLOSSARY.md#power-series) · [Truncation](../GLOSSARY.md#truncation) · [Formal reciprocal](../GLOSSARY.md#formal-reciprocal) · [Coefficient convolution](../GLOSSARY.md#convolution) · [Root of unity](../GLOSSARY.md#root-of-unity)
+**Terms in this example:** [Coefficient](../GLOSSARY.md#coefficient) · [Power series](../GLOSSARY.md#power-series) · [Truncation](../GLOSSARY.md#truncation) · [Formal reciprocal](../GLOSSARY.md#formal-reciprocal) · [Coefficient convolution](../GLOSSARY.md#convolution) · [Root of unity](../GLOSSARY.md#root-of-unity) · [Ordinary generating function](../GLOSSARY.md#ordinary-generating-function)
 
 This coefficient model introduces cyclic projection and reciprocal recursion in Paper IV. Its finite product check does not address the paper’s analytic growth or spectral-zero results.
 
