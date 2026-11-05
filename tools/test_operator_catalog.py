@@ -114,6 +114,46 @@ class OperatorCatalogTests(unittest.TestCase):
             self.assertIn(anchor, anchors[path])
             self.assertEqual(path, catalog.family_path(row['section'], self.data))
 
+    def test_worked_routes_reach_real_calculations_from_their_relations_and_entries(self):
+        catalog.validate_worked_routes(self.data, ROOT)
+        documents = catalog.build_documents(self.data)
+        relations = {row['id']: row for row in self.data['relations']}
+
+        def section(text, identifier):
+            start = text.index('<a id="' + identifier.lower() + '"></a>')
+            end = text.find('\n<a id="', start + 1)
+            return text[start:] if end < 0 else text[start:end]
+
+        for route in catalog.WORKED_ROUTES:
+            relation_link = catalog.link(route['title'], route['path'], catalog.RELATIONS_PATH)
+            for identifier in route['relation_ids']:
+                with self.subTest(route=route['path'], relation=identifier):
+                    text = section(documents[catalog.RELATIONS_PATH], identifier)
+                    self.assertEqual(text.count(relation_link), 1)
+            associated = {identifier for relation in route['relation_ids']
+                          for identifier in relations[relation]['operator_ids']}
+            for entry in self.data['operators']:
+                page = catalog.family_path(entry['section'], self.data)
+                entry_link = catalog.link(route['title'], route['path'], page)
+                text = section(documents[page], entry['id'])
+                with self.subTest(route=route['path'], operator=entry['id']):
+                    self.assertEqual(text.count(entry_link), int(entry['id'] in associated))
+        self.assertIn(catalog.link('worked compositions', catalog.COMPOSITION_PATH, catalog.INDEX_PATH),
+                      documents[catalog.INDEX_PATH])
+
+    def test_worked_routes_reject_unknown_relations_and_stale_destinations(self):
+        route = catalog.WORKED_ROUTES[0]
+        cases = [
+            ([dict(route, relation_ids=('REL-99',))], 'relation binding'),
+            ([dict(route, path='docs/operators/MISSING_CALCULATION.md#missing')], 'Missing worked-calculation page'),
+            ([dict(route, path=route['path'] + '-missing')], 'Missing worked-calculation anchor'),
+            ([route, route], 'duplicate worked-calculation route'),
+        ]
+        for routes, message in cases:
+            with self.subTest(message=message), patch.object(catalog, 'WORKED_ROUTES', routes):
+                with self.assertRaisesRegex(ValueError, message):
+                    catalog.validate_worked_routes(self.data, ROOT)
+
     def test_fresh_fixture_replay_matches_catalog(self):
         for name, digest in self.data['provenance']['fixture_replay']['input_sha256'].items():
             self.assertEqual(hashlib.sha256((FIXTURES / name).read_bytes()).hexdigest(), digest)

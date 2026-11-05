@@ -284,6 +284,11 @@ The incoming difference for the even output comes from the odd input packet.
 
 ## Sources and checks
 
+For a scalar question about the same polynomial, continue with the
+[worked integration covector](COMPOSITION.md#moment-covector). It carries
+the integral of $x^3$ into falling-factorial coordinates and identifies the
+error from pairing those coefficients with an unchanged monomial moment row.
+
 The [full worked study](../demonstrations/ROOTS_UNITY_FALLING_FACTORIAL.md)
 provides the longer derivations, exact transfer tables, refinement examples,
 and characteristic-three obstruction. Run

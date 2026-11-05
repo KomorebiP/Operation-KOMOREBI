@@ -38,6 +38,12 @@ and an exercise with its answer. Read them in sequence or jump to one topic.
 | [Stability and numerical meaning](operators/STABILITY.md) | Norms, error bounds, conditioning, nonnormal growth, infinite convergence, and numerical residuals. | 8 |
 | [Polynomial and difference operators](operators/POLYNOMIAL.md) | Falling-factorial coordinates, transported differentiation, raising and degree, residue projectors, multiplication, shifts, and Newton recovery. | 8 |
 
+**Use several operators together:** The [worked composition guide](operators/COMPOSITION.md)
+adds six complete calculations. Follow an intermediate coordinate bridge,
+compose coarse and metric defects, integrate from a changed polynomial basis,
+retain a finite measure's correlations, and continue a recursive filter across
+a chunk boundary. Each calculation includes an exact result and a failure control.
+
 **First reading:** Begin with [basics](operators/BASICS.md), continue to
 [packets](operators/PACKETS.md), then work through the
 [two-coordinate audit](#a-complete-audit-of-a-two-coordinate-operation) below.
@@ -65,7 +71,9 @@ The catalog covers structural and spectral projectors, coordinate transforms,
 prime-power and digit operations, signals, nonlinear correction, dynamics,
 quantum operations, finite models, metric transport, and integration.
 Its [composition laws](operators/catalog/RELATIONS.md) connect operations
-that can be used together under stated hypotheses.
+that can be used together under stated hypotheses. Covered laws link directly
+to [worked calculations](operators/COMPOSITION.md), and the site's global search
+can find individual laws by their `REL` identifiers.
 
 The worked chapters explain selected operations in depth. The catalog is the
 broader lookup reference, and the two overlap. Catalog entries include

@@ -1,6 +1,6 @@
 # Structural operators, projectors, and transfer
 
-[Operator guide](../../OPERATOR_AUDIT.md) · [Catalog](README.md) · [Composition laws](RELATIONS.md) · [Finite checks](CHECKS.md)
+[Operator guide](../../OPERATOR_AUDIT.md) · [Catalog](README.md) · [Composition laws](RELATIONS.md) · [Worked calculations](../COMPOSITION.md) · [Finite checks](CHECKS.md)
 
 Specify an operation, split its inputs, reconstruct its output, and compare coordinate descriptions.
 
@@ -190,6 +190,8 @@ T\mapsto CTC^{-1}
 **Related entries:** [OP-171](A_STRUCTURAL.md#op-171).
 
 **Composition laws:** [Coordinate transport](RELATIONS.md#rel-03).
+
+**Worked calculation:** [Compose through a middle presentation](../COMPOSITION.md#middle-chart-bridge).
 
 
 <a id="op-009"></a>
@@ -422,6 +424,8 @@ P_X=A_XS_X,\quad P_X^2=P_X,\quad \ker P_X=\ker S_X
 
 **Composition laws:** [Presentation bridge](RELATIONS.md#rel-02).
 
+**Worked calculation:** [Compose through a middle presentation](../COMPOSITION.md#middle-chart-bridge).
+
 
 <a id="op-020"></a>
 
@@ -442,6 +446,8 @@ R=A_{Y,\mathrm{in}}S_{Y,\mathrm{out}}
 **Related entries:** [OP-018](A_STRUCTURAL.md#op-018) · [OP-023](A_STRUCTURAL.md#op-023) · [OP-170](A_STRUCTURAL.md#op-170).
 
 **Composition laws:** [Presentation bridge](RELATIONS.md#rel-02).
+
+**Worked calculation:** [Compose through a middle presentation](../COMPOSITION.md#middle-chart-bridge).
 
 
 <a id="op-021"></a>
@@ -572,6 +578,8 @@ T\longmapsto C_YTC_X^{-1}
 **Related entries:** [OP-008](A_STRUCTURAL.md#op-008) · [OP-024](A_STRUCTURAL.md#op-024) · [OP-040](C_COORDINATES.md#op-040) · [OP-172](C_COORDINATES.md#op-172) · [OP-186](K_METRICS.md#op-186) · [OP-192](K_METRICS.md#op-192).
 
 **Composition laws:** [Coordinate transport](RELATIONS.md#rel-03) · [Metric whitening](RELATIONS.md#rel-12).
+
+**Worked calculation:** [Compose through a middle presentation](../COMPOSITION.md#middle-chart-bridge).
 
 
 <a id="op-202"></a>

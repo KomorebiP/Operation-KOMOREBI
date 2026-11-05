@@ -1,6 +1,6 @@
 # Prime-power and digit operators
 
-[Operator guide](../../OPERATOR_AUDIT.md) · [Catalog](README.md) · [Composition laws](RELATIONS.md) · [Finite checks](CHECKS.md)
+[Operator guide](../../OPERATOR_AUDIT.md) · [Catalog](README.md) · [Composition laws](RELATIONS.md) · [Worked calculations](../COMPOSITION.md) · [Finite checks](CHECKS.md)
 
 Follow finite prime-power data, digit carries, local masks, and lift corrections.
 

@@ -1,6 +1,6 @@
 # Operator catalog
 
-[Operator guide](../../OPERATOR_AUDIT.md) · [Catalog](README.md) · [Composition laws](RELATIONS.md) · [Finite checks](CHECKS.md)
+[Operator guide](../../OPERATOR_AUDIT.md) · [Catalog](README.md) · [Composition laws](RELATIONS.md) · [Worked calculations](../COMPOSITION.md) · [Finite checks](CHECKS.md)
 
 Find a named operation, inspect its formula and assumptions, then follow its source or a finite example. This catalog connects the worked chapters to **205 entries in twelve families**.
 
@@ -28,6 +28,7 @@ Each **OP identifier** is stable. The family pages retain the formula, scope, so
 ## Read a calculation first
 
 - For the basic vocabulary, begin with [operator basics](../BASICS.md) and [packets and projectors](../PACKETS.md).
+- To use composition laws with explicit inputs and intermediate results, follow the six [worked compositions](../COMPOSITION.md): coordinate bridges, coarse and metric defects, moment covectors, finite measures, and filter state.
 - For an operation carried across coordinates, read [transfer and compression](../TRANSFER.md) and [polynomial coordinates](../POLYNOMIAL.md), then compare [OP-041](C_COORDINATES.md#op-041) · [OP-173](C_COORDINATES.md#op-173) · [OP-174](C_COORDINATES.md#op-174) · [OP-175](C_COORDINATES.md#op-175) · [OP-176](C_COORDINATES.md#op-176).
 - For measurements that may lose information, use [recovery and repair](../RECOVERY.md), then [OP-179](G_DYNAMICS.md#op-179) · [OP-181](J_REPRESENTATIONS.md#op-181) · [OP-182](J_REPRESENTATIONS.md#op-182) · [OP-184](I_COMPUTATIONAL.md#op-184).
 - For a change in coordinates and metric, compare [OP-023](A_STRUCTURAL.md#op-023) · [OP-185](K_METRICS.md#op-185) · [OP-191](K_METRICS.md#op-191) · [OP-192](K_METRICS.md#op-192) with [stability and numerical meaning](../STABILITY.md).

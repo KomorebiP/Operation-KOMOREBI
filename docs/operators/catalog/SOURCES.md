@@ -1,6 +1,6 @@
 # Sources and scope
 
-[Operator guide](../../OPERATOR_AUDIT.md) · [Catalog](README.md) · [Composition laws](RELATIONS.md) · [Finite checks](CHECKS.md)
+[Operator guide](../../OPERATOR_AUDIT.md) · [Catalog](README.md) · [Composition laws](RELATIONS.md) · [Worked calculations](../COMPOSITION.md) · [Finite checks](CHECKS.md)
 
 This catalog imports the refined operator compendium dated **4 November 2026**, by **Komorebi P.** It preserves 205 stable OP identifiers, their formulas and guards, 28 composition relations, and the associated finite fixtures.
 
@@ -340,7 +340,7 @@ The imported reference has the following targeted corrections and scope clarific
 
 ## Maintain the reference
 
-The [structured registry](registry.json) is the canonical catalog. The family pages, this register, and the check and relation pages are generated from it. After an intentional edit, regenerate them with:
+The [structured registry](registry.json) is the canonical catalog. The family pages, this register, and the check and relation pages are generated from it. Worked-calculation routes are maintained and validated in the [catalog generator](../../../tools/operator_catalog.py). After an intentional edit, regenerate them with:
 
 ```text
 python -B tools/operator_catalog.py

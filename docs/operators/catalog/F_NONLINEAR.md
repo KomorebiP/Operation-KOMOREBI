@@ -1,6 +1,6 @@
 # Nonlinear, obstruction, and deformation operators
 
-[Operator guide](../../OPERATOR_AUDIT.md) · [Catalog](README.md) · [Composition laws](RELATIONS.md) · [Finite checks](CHECKS.md)
+[Operator guide](../../OPERATOR_AUDIT.md) · [Catalog](README.md) · [Composition laws](RELATIONS.md) · [Worked calculations](../COMPOSITION.md) · [Finite checks](CHECKS.md)
 
 Retain mixed terms, identify obstruction spaces, and state the hypotheses for a correction or reduction.
 

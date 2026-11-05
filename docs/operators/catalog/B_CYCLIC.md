@@ -1,6 +1,6 @@
 # Cyclic, spectral, and arithmetic projectors
 
-[Operator guide](../../OPERATOR_AUDIT.md) · [Catalog](README.md) · [Composition laws](RELATIONS.md) · [Finite checks](CHECKS.md)
+[Operator guide](../../OPERATOR_AUDIT.md) · [Catalog](README.md) · [Composition laws](RELATIONS.md) · [Worked calculations](../COMPOSITION.md) · [Finite checks](CHECKS.md)
 
 Select residues, characters, eigenspaces, or arithmetic components under their stated scalar assumptions.
 

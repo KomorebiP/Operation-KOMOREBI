@@ -1,6 +1,6 @@
 # Named finite checks
 
-[Operator guide](../../OPERATOR_AUDIT.md) · [Catalog](README.md) · [Composition laws](RELATIONS.md) · [Finite checks](CHECKS.md)
+[Operator guide](../../OPERATOR_AUDIT.md) · [Catalog](README.md) · [Composition laws](RELATIONS.md) · [Worked calculations](../COMPOSITION.md) · [Finite checks](CHECKS.md)
 
 The catalog links to **164 named fixtures**: 93 identity checks, 59 counterexample checks, and 12 input-rejection controls. The programs use integers and `fractions.Fraction`. They require only Python’s standard library and use no network access.
 
