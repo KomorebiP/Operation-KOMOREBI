@@ -1,0 +1,10 @@
+import KomorebiPaperIIIJetNorm
+#print axioms Komorebi.PaperIII.JetNorm.continuousPacketJet_norm_le_prod
+#print axioms Komorebi.PaperIII.JetNorm.iteratedPacketJet_norm_le_prod
+#print axioms Komorebi.PaperIII.JetNorm.continuousPacketJet_norm_le_of_contractive
+#print axioms Komorebi.PaperIII.JetNorm.iteratedPacketJet_norm_le_of_contractive
+#print axioms Komorebi.PaperIII.JetNorm.continuousPacketJet_eq_zero_of_output_zero
+#print axioms Komorebi.PaperIII.JetNorm.continuousPacketJet_eq_zero_of_input_zero
+#print axioms Komorebi.PaperIII.JetNorm.continuousPacketJet_norm_le_orthogonal
+#print axioms Komorebi.PaperIII.JetNorm.iteratedPacketJet_norm_le_orthogonal
+#print axioms Komorebi.PaperIII.JetNorm.continuousProjector_norm_eq_one_of_orthogonal
