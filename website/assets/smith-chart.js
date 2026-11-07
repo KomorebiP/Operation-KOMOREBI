@@ -142,15 +142,28 @@ function renderAdaptiveMetrics(samples){
   $('ref-mass-error').textContent=Math.max(0,...mass).toExponential(2);
   $('sample-radius-out').textContent=states.rho.toFixed(2);
 }
+function referenceGammaAt(z0){
+  if(!referencePin)return null;
+  if(referencePin.special==='open')return C(1,0);
+  // Normalize physical A using CURRENT Z0; avoid overflow from R/Z0 near extremes.
+  const m=Math.max(referencePin.r,Math.abs(referencePin.x),z0);
+  return div(C((referencePin.r-z0)/m,referencePin.x/m),C((referencePin.r+z0)/m,referencePin.x/m));
+}
 function drawOverlay(){const layer=$('chart-overlay');layer.replaceChildren();$('legend-weight').hidden=!$('show-weight').checked;const g=loadGamma(),gin=rotationGamma(),grot=cyclicGamma();const mag=abs(g);if(mag>1e-8){circle(CX,CY,R*mag,'#8eb5ab','none',1.5,layer).setAttribute('stroke-dasharray','7 6')}
 if($('show-rays').checked){for(let k=0;k<states.N;k++){const g1=scale(expi(2*Math.PI*k/states.N),.99),p=coord(g1);line(CX,CY,p.x,p.y,'#b9a9d1',.85,'4 8',layer)}}
 if($('show-orbit').checked){for(let k=0;k<states.N;k++){const p=coord(mul(gin,expi(2*Math.PI*k/states.N)));circle(p.x,p.y,k===states.k?5.1:3.3,k===states.k?'#9d6510':'#c3a063',k===states.k?'#ddad52':'#e5d6ac',.9,layer)}}
 const adaptive=adaptivePoints();renderAdaptiveMetrics(adaptive);
 if($('show-weight').checked){for(const pt of adaptive){const p=coord(pt.g);circle(p.x,p.y,2.2,'none','#bd776e',0,layer)}}
 if(states.length>.0001&&mag>1e-7){const samples=[];const count=Math.max(15,Math.ceil(states.length*420));for(let i=0;i<=count;i++){samples.push(mul(g,expi(-4*Math.PI*states.length*i/count)))}makePath(samples,'#356bb0',2.9,layer)}
+const referenceGamma=referenceGammaAt(states.z0);
+if(referenceGamma&&abs(sub(referenceGamma,g))>1e-7){
+  const a=coord(referenceGamma),b=coord(g);
+  line(a.x,a.y,b.x,b.y,'#956628',2.1,'6 5',layer).setAttribute('class','comparison-link');
+}
 const markers=$('chart-markers');markers.replaceChildren();const gp=coord(g);circle(gp.x,gp.y,10,'#fff','#087663',3,markers);circle(gp.x,gp.y,3,'none','#fff',0,markers);if(abs(sub(gin,g))>1e-5){const p=coord(gin);circle(p.x,p.y,8,'#fff','#356bb0',2.5,markers)}if(abs(sub(grot,gin))>1e-5){const p=coord(grot);circle(p.x,p.y,10,'#b27d24','none',3,markers);circle(p.x,p.y,4,'none','#b27d24',0,markers)}
-if(referencePin){const p=coord(referencePin.gamma);circle(p.x,p.y,12,'#ac7e38','none',2.5,markers);
-textAt('A',p.x+14,p.y-13,'marker-label',markers);}
+if(referenceGamma){const p=coord(referenceGamma);circle(p.x,p.y,12,'#ac7e38','none',2.5,markers);
+if(abs(sub(referenceGamma,g))<.025){textAt('A = B',p.x+14,p.y-13,'marker-label',markers)}
+else{textAt('A',p.x+14,p.y-13,'marker-label',markers);textAt('B',gp.x+14,gp.y-13,'marker-label marker-label-b',markers)}}
 $('legend-ref').hidden=!referencePin;
 // Keep the boundary circle visually on top of clipped interior geometry.
 circle(CX,CY,R,'#466c62','none',2.5,markers);
@@ -262,7 +275,7 @@ $('grid-mode').addEventListener('change',()=>{render();updateInspection(hoveredG
 $('sample-radius').addEventListener('input',()=>{states.rho=Number($('sample-radius').value);render()});
 $('sample-count').addEventListener('change',()=>{states.sampleCount=Number($('sample-count').value);render()});
 function syncPacketControls(){const select=$('packet');select.replaceChildren();for(let j=0;j<states.N;j++){const o=document.createElement('option');o.value=String(j);o.textContent=`j = ${j}`;select.appendChild(o)}select.value=String(states.j);$('phase').max=String(states.N-1);$('phase').value=String(states.k)}
-$('reset').addEventListener('click',()=>{setChartFocus(false);updateInspection(null);$('copy-status').textContent='';referencePin=null;$('grid-mode').value='z';$('clear-reference').disabled=true;Object.assign(states,{r:25,x:25,z0:50,special:null,length:0,N:8,k:0,j:0,rho:.94,sampleCount:96});$('sample-radius').value='.94';$('sample-count').value='96';$('preset').value='inductive';$('order').value='8';for(const id of ['show-r','show-x'])$(id).checked=true;for(const id of ['show-rays','show-orbit'])$(id).checked=false;$('show-weight').checked=false;syncSamplingButton();syncPacketControls();presetToInputs();$('input-warning').textContent='';discardGammaDraft();render()});
+$('reset').addEventListener('click',()=>{setChartFocus(false);updateInspection(null);$('copy-status').textContent='';referencePin=null;$('grid-mode').value='z';$('clear-reference').disabled=true;$('swap-reference').disabled=true;Object.assign(states,{r:25,x:25,z0:50,special:null,length:0,N:8,k:0,j:0,rho:.94,sampleCount:96});$('sample-radius').value='.94';$('sample-count').value='96';$('preset').value='inductive';$('order').value='8';for(const id of ['show-r','show-x'])$(id).checked=true;for(const id of ['show-rays','show-orbit'])$(id).checked=false;$('show-weight').checked=false;syncSamplingButton();syncPacketControls();presetToInputs();$('input-warning').textContent='';discardGammaDraft();render()});
 function pointerToGamma(e){const svg=$('smith-chart'),point=svg.createSVGPoint();point.x=e.clientX;point.y=e.clientY;const inv=svg.getScreenCTM()?.inverse();if(!inv)return null;const p=point.matrixTransform(inv);const g=C((p.x-CX)/R,-(p.y-CY)/R);return abs(g)<=1.014?g:null}
 // Inspection is read-only. Moving the cursor never changes the selected load.
 let hoverFrame=0,hoveredGamma=null;
@@ -598,15 +611,27 @@ $('show-sampling').addEventListener('click',()=>{ $('show-weight').checked=!$('s
 function currentLoadSnapshot(){return {gamma:loadGamma(),r:states.r,x:states.x,z0:states.z0,special:states.special}}
 function renderPinnedComparison(current){
   $('clear-reference').disabled=!referencePin;
+  $('swap-reference').disabled=!referencePin;
+  $('comparison-note').hidden=!referencePin;
   $('pin-value').textContent=referencePin?(referencePin.special==='open'?'Ideal open':
     complexString(C(referencePin.r,referencePin.x),2)+' Ω'):'No reference pinned';
-  $('pin-delta').textContent=referencePin?fmt(abs(sub(current,referencePin.gamma)),6):'—';
+  const commonReference=referenceGammaAt(states.z0);
+  $('pin-delta').textContent=referencePin?fmt(abs(sub(current,commonReference)),6):'—';
   $('pin-z-delta').textContent=!referencePin?'—':
+    (referencePin.special==='open'&&states.special==='open'?'0 Ω':
     (referencePin.special==='open'||states.special==='open'?'unbounded':
-    fmt(abs(sub(C(states.r,states.x),C(referencePin.r,referencePin.x))),4)+' Ω');
+    fmt(abs(sub(C(states.r,states.x),C(referencePin.r,referencePin.x))),4)+' Ω'));
 }
 $('pin-reference').addEventListener('click',()=>{referencePin=currentLoadSnapshot();render()});
 $('clear-reference').addEventListener('click',()=>{referencePin=null;render()});
+$('swap-reference').addEventListener('click',()=>{
+  if(!referencePin)return;
+  const priorA=referencePin,priorB=currentLoadSnapshot();
+  referencePin=priorB;
+  states.r=priorA.r;states.x=priorA.x;states.special=priorA.special;
+  $('preset').value=states.special==='open'?'open':'custom';
+  presetToInputs();$('input-warning').textContent='';discardGammaDraft();render();
+});
 for(const b of $('smith-studio').querySelectorAll('[data-preset]'))b.addEventListener('click',()=>{
   $('preset').value=b.dataset.preset;$('preset').dispatchEvent(new Event('change',{bubbles:true}));
 });
@@ -653,7 +678,7 @@ function restoreSession(data){
   $('grid-mode').value=view.grid;
   for(const [id,key] of [['show-r','r'],['show-x','x'],['show-rays','rays'],['show-orbit','orbit'],['show-weight','weight']])$(id).checked=view[key];
   $('sample-radius').value=String(states.rho);$('sample-count').value=String(states.sampleCount);
-  referencePin=pin?{...pin,gamma:pin.special==='open'?C(1):gammaFromZ(C(pin.r/pin.z0,pin.x/pin.z0))}:null;
+  referencePin=pin?{...pin}:null;
   presetToInputs();$('phase').value=String(states.k);$('input-warning').textContent='';discardGammaDraft();
   syncSamplingButton();switchView(view.tab);render();
 }

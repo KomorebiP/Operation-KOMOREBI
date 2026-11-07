@@ -94,6 +94,34 @@ class SmithChartSiteTest(unittest.TestCase):
         self.assertIn(".packet-bars .packet-bar:focus-visible", css)
         self.assertIn('.gamma-editor summary{min-height:44px', css)
 
+    def test_comparison_uses_one_reference_impedance(self):
+        body = (ROOT/'website/smith-chart-body.html').read_text(encoding='utf-8')
+        js = (ROOT/'website/assets/smith-chart.js').read_text(encoding='utf-8')
+        self.assertIn('id="swap-reference"', body)
+        self.assertIn('id="comparison-note"', body)
+        self.assertIn('function referenceGammaAt(z0)', js)
+        self.assertIn('const commonReference=referenceGammaAt(states.z0)', js)
+        self.assertIn("referencePin=pin?{...pin}:null;", js)
+        self.assertNotIn('referencePin.gamma', js)
+        self.assertIn("setAttribute('class','comparison-link')", js)
+        self.assertIn("referencePin.special==='open'&&states.special==='open'?'0 Ω'", js)
+
+        # Exact Cartesian form of (Z-Z0)/(Z+Z0), for real positive Z0.
+        def gamma(r, x, z0):
+            denominator = (r+z0)**2 + x**2
+            return ((Fraction(r*r-z0*z0+x*x, denominator)),
+                    Fraction(2*z0*x, denominator))
+
+        a_at_50 = gamma(25, 25, 50)
+        a_at_75 = gamma(25, 25, 75)
+        b_at_75 = gamma(50, 0, 75)
+        self.assertEqual(a_at_50, (Fraction(-1, 5), Fraction(2, 5)))
+        self.assertEqual(a_at_75, (Fraction(-7, 17), Fraction(6, 17)))
+        self.assertEqual(b_at_75, (Fraction(-1, 5), Fraction(0)))
+        self.assertNotEqual(a_at_50, a_at_75)
+        # Renormalization changes each Γ but preserves the physical A and B loads.
+        self.assertNotEqual(a_at_75, b_at_75)
+
     def test_projector_impedance_identity_exactly(self):
         for t in (Fraction(0), Fraction(1,10), Fraction(-2,5), Fraction(3,4)):
             z = (1+t)/(1-t)

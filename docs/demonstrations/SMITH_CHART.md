@@ -57,6 +57,21 @@ p_\rho(\theta)=\frac{1-\rho^4}{2\pi(1-2\rho^2\cos(2\theta)+\rho^4)}.
 
 The interactive laboratory demonstrates this nonuniform sampling as a **coordinate-specific proposal**, not an optimal general-purpose interpolation method. For other analytic responses, uniform sampling can perform better. The page does not claim superiority over vector fitting, rational reconstruction, measured RF data, or noisy S-parameter recovery.
 
+## Physical load comparisons
+
+The interactive comparison retains two physical loads, A and B. Changing the positive reference impedance \(Z_0\) changes their reflection coefficients even when their impedances stay fixed. It is therefore incorrect to compare a pinned \(\Gamma_A\) normalized with one \(Z_0\) to a current \(\Gamma_B\) normalized with another.
+
+The chart computes both coefficients in the **current shared reference frame**:
+
+\[
+\Gamma_A(Z_0)=\frac{Z_A-Z_0}{Z_A+Z_0},\qquad
+\Gamma_B(Z_0)=\frac{Z_B-Z_0}{Z_B+Z_0}.
+\]
+
+The dashed A–B segment in the reflection disk represents the absolute complex difference \(|\Gamma_B-\Gamma_A|\). It is **not** a physical transmission-line path. The separate \(|Z_B-Z_A|\) readout stays in physical ohms, and the Swap control exchanges the physical loads without changing the shared \(Z_0\). An ideal open paired with an ideal open has zero physical difference; an ideal open paired with a finite load has an unbounded impedance separation.
+
+This is a corrected consistency rule and interaction aid, not a new RF theorem. Session import/export retains the physical reference load and re-normalizes it using the restored current \(Z_0\).
+
 ## Verification and source
 
 Run the numerical suite in the **Verification** tab to inspect its deterministic test fixtures and reported residuals. These are finite double-precision tests, not formal proofs or hardware validation. Additional Python regression tests use exact rational arithmetic for the packet-reconstruction and admittance identities.
