@@ -5,6 +5,9 @@ const R=316,CX=450,CY=399;
 const svgNS='http://www.w3.org/2000/svg';
 const states={r:25,x:25,z0:50,special:null,length:0,N:8,k:0,j:0,rho:.94,sampleCount:96};
 let referencePin=null;
+const loadUndoStack=[],loadRedoStack=[];
+const MAX_LOAD_HISTORY=60;
+let activeFieldOrigin=null,dragOrigin=null;
 const coefficients=Array.from({length:32},(_,i)=>1/(i+1));
 let drag=false,lastTestResults=[];
 let gammaDraftDirty=false;
@@ -232,6 +235,7 @@ function readInputs(){
   if(!error){$('preset').value='custom';discardGammaDraft();render()}
 }
 $('preset').addEventListener('change',e=>{
+  const before=loadHistorySnapshot();
   const q=e.target.value;
   const values={inductive:[25,25],capacitive:[25,-25],high:[100,50],short:[0,0]};
   if(q==='open'){states.special='open'}
@@ -239,7 +243,7 @@ $('preset').addEventListener('change',e=>{
   else if(q==='matched'){states.special=null;states.r=states.z0;states.x=0}
   else if(values[q]){states.special=null;[states.r,states.x]=values[q]}
   else return;
-  presetToInputs();$('input-warning').textContent='';discardGammaDraft();render();
+  presetToInputs();$('input-warning').textContent='';discardGammaDraft();render();recordLoadHistory(before);
 });
 $('z0').addEventListener('input',()=>{const error=validInputs();$('input-warning').textContent=error?error+' Previous valid load is still shown.':'';if(!error){if(states.special!=='open')$('preset').value='custom';discardGammaDraft();render()}});
 for(const name of ['resistance','reactance'])$(''+name).addEventListener('input',readInputs);
@@ -254,6 +258,7 @@ for(const id of ['gamma-re','gamma-im']){
 }
 $('gamma-from-load').addEventListener('click',()=>{discardGammaDraft();syncGammaEditor(true);$('gamma-warning').textContent='Current load coordinates restored.'});
 $('gamma-apply').addEventListener('click',()=>{
+  const before=loadHistorySnapshot();
   const reText=$('gamma-re').value.trim(),imText=$('gamma-im').value.trim();
   const re=Number(reText),im=Number(imText);
   if(!reText||!imText||!Number.isFinite(re)||!Number.isFinite(im)){
@@ -268,14 +273,14 @@ $('gamma-apply').addEventListener('click',()=>{
       $('gamma-warning').textContent='Converted load exceeds the supported numerical range.';return;
     }
   }
-  setFromGamma(g,false);
+  setFromGamma(g,false);recordLoadHistory(before);
   $('gamma-warning').textContent='Passive Γ applied to the load.';
 });
 $('grid-mode').addEventListener('change',()=>{render();updateInspection(hoveredGamma)});
 $('sample-radius').addEventListener('input',()=>{states.rho=Number($('sample-radius').value);render()});
 $('sample-count').addEventListener('change',()=>{states.sampleCount=Number($('sample-count').value);render()});
 function syncPacketControls(){const select=$('packet');select.replaceChildren();for(let j=0;j<states.N;j++){const o=document.createElement('option');o.value=String(j);o.textContent=`j = ${j}`;select.appendChild(o)}select.value=String(states.j);$('phase').max=String(states.N-1);$('phase').value=String(states.k)}
-$('reset').addEventListener('click',()=>{setChartFocus(false);updateInspection(null);$('copy-status').textContent='';referencePin=null;$('grid-mode').value='z';$('clear-reference').disabled=true;$('swap-reference').disabled=true;Object.assign(states,{r:25,x:25,z0:50,special:null,length:0,N:8,k:0,j:0,rho:.94,sampleCount:96});$('sample-radius').value='.94';$('sample-count').value='96';$('preset').value='inductive';$('order').value='8';for(const id of ['show-r','show-x'])$(id).checked=true;for(const id of ['show-rays','show-orbit'])$(id).checked=false;$('show-weight').checked=false;syncSamplingButton();syncPacketControls();presetToInputs();$('input-warning').textContent='';discardGammaDraft();render()});
+$('reset').addEventListener('click',()=>{setChartFocus(false);updateInspection(null);$('copy-status').textContent='';referencePin=null;$('grid-mode').value='z';$('clear-reference').disabled=true;$('swap-reference').disabled=true;Object.assign(states,{r:25,x:25,z0:50,special:null,length:0,N:8,k:0,j:0,rho:.94,sampleCount:96});$('sample-radius').value='.94';$('sample-count').value='96';$('preset').value='inductive';$('order').value='8';for(const id of ['show-r','show-x'])$(id).checked=true;for(const id of ['show-rays','show-orbit'])$(id).checked=false;$('show-weight').checked=false;syncSamplingButton();syncPacketControls();presetToInputs();$('input-warning').textContent='';discardGammaDraft();render();clearLoadHistory()});
 function pointerToGamma(e){const svg=$('smith-chart'),point=svg.createSVGPoint();point.x=e.clientX;point.y=e.clientY;const inv=svg.getScreenCTM()?.inverse();if(!inv)return null;const p=point.matrixTransform(inv);const g=C((p.x-CX)/R,-(p.y-CY)/R);return abs(g)<=1.014?g:null}
 // Inspection is read-only. Moving the cursor never changes the selected load.
 let hoverFrame=0,hoveredGamma=null;
@@ -324,14 +329,16 @@ $('copy-current').addEventListener('click',async()=>{
   try{await copyText(result);$('copy-status').textContent='Copied.'}
   catch(error){$('copy-status').textContent='Copy unavailable; use Save settings.'}
 });
-$('smith-chart').addEventListener('pointerdown',e=>{const g=pointerToGamma(e);if(!g)return;drag=true;$('smith-chart').setPointerCapture(e.pointerId);setFromGamma(g)});
+$('smith-chart').addEventListener('pointerdown',e=>{const g=pointerToGamma(e);if(!g)return;dragOrigin=loadHistorySnapshot();drag=true;$('smith-chart').setPointerCapture(e.pointerId);setFromGamma(g)});
 $('smith-chart').addEventListener('pointermove',e=>{if(!drag)return;const g=pointerToGamma(e);if(g)setFromGamma(g)});
-function endDrag(){drag=false}$('smith-chart').addEventListener('pointerup',endDrag);$('smith-chart').addEventListener('pointercancel',endDrag);
+function endDrag(){if(!drag)return;drag=false;recordLoadHistory(dragOrigin);dragOrigin=null}
+function cancelDrag(){if(!drag)return;drag=false;if(dragOrigin)applyLoadHistory(dragOrigin);dragOrigin=null}
+$('smith-chart').addEventListener('pointerup',endDrag);$('smith-chart').addEventListener('pointercancel',cancelDrag);
 $('smith-chart').addEventListener('keydown',e=>{
   const step=e.shiftKey?.05:.015;let dx=0,dy=0;
   switch(e.key){case'ArrowLeft':dx=-step;break;case'ArrowRight':dx=step;break;case'ArrowUp':dy=step;break;case'ArrowDown':dy=-step;break;default:return}
-  e.preventDefault();const g=loadGamma(),q=C(g.re+dx,g.im+dy),n=abs(q);
-  setFromGamma(n>1?scale(q,1/n):q);updateInspection(loadGamma());
+  e.preventDefault();const before=loadHistorySnapshot(),g=loadGamma(),q=C(g.re+dx,g.im+dy),n=abs(q);
+  setFromGamma(n>1?scale(q,1/n):q);if(!e.repeat)recordLoadHistory(before);updateInspection(loadGamma());
 });
 $('export').addEventListener('click',()=>{const svg=$('smith-chart').cloneNode(true);svg.setAttribute('xmlns',svgNS);const embeddedStyle=svgEl('style');embeddedStyle.textContent='svg text{font-family:system-ui,sans-serif}svg .math-label{font-family:Georgia,serif;font-style:italic}svg .grid-label{font-weight:500;font-size:13px;fill:#6e847e}svg .corner-label{fill:#4c6862;font-size:16px}svg .endpoint-label{fill:#384b46;font-size:14px}';svg.prepend(embeddedStyle);const xml=new XMLSerializer().serializeToString(svg);const blob=new Blob([xml],{type:'image/svg+xml;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='komorebi-polyphase-smith-chart.svg';document.body.appendChild(a);a.click();a.remove();window.setTimeout(()=>URL.revokeObjectURL(url),1000)});
 function evaluatePolynomial(a,g){
@@ -608,6 +615,63 @@ function syncSamplingButton(){
 }
 $('show-sampling').addEventListener('click',()=>{ $('show-weight').checked=!$('show-weight').checked;syncSamplingButton();render(); });
 // Reference A is an immutable physical load snapshot. B is the current selection.
+function loadHistorySnapshot(){
+  const pin=referencePin?{r:referencePin.r,x:referencePin.x,z0:referencePin.z0,special:referencePin.special}:null;
+  return {r:states.r,x:states.x,z0:states.z0,special:states.special,pin};
+}
+function loadHistoryEqual(a,b){return JSON.stringify(a)===JSON.stringify(b)}
+function syncLoadHistory(){
+  $('undo-load').disabled=loadUndoStack.length===0;
+  $('redo-load').disabled=loadRedoStack.length===0;
+}
+function recordLoadHistory(before){
+  if(!before||loadHistoryEqual(before,loadHistorySnapshot()))return;
+  loadUndoStack.push(before);
+  if(loadUndoStack.length>MAX_LOAD_HISTORY)loadUndoStack.shift();
+  loadRedoStack.length=0;
+  syncLoadHistory();
+  $('history-status').textContent='Load history available. Line and projector settings are unchanged by undo.';
+}
+function applyLoadHistory(snapshot){
+  states.r=snapshot.r;states.x=snapshot.x;states.z0=snapshot.z0;states.special=snapshot.special;
+  referencePin=snapshot.pin?{...snapshot.pin}:null;
+  $('preset').value=states.special==='open'?'open':'custom';
+  presetToInputs();discardGammaDraft();$('input-warning').textContent='';
+  activeFieldOrigin=null;dragOrigin=null;drag=false;
+  render();syncLoadHistory();
+}
+function undoLoad(){
+  if(!loadUndoStack.length)return;
+  const previous=loadUndoStack.pop();loadRedoStack.push(loadHistorySnapshot());
+  applyLoadHistory(previous);$('history-status').textContent='Load or pinned reference restored.';
+}
+function redoLoad(){
+  if(!loadRedoStack.length)return;
+  const next=loadRedoStack.pop();loadUndoStack.push(loadHistorySnapshot());
+  applyLoadHistory(next);$('history-status').textContent='Load or pinned reference reapplied.';
+}
+function clearLoadHistory(){
+  loadUndoStack.length=0;loadRedoStack.length=0;activeFieldOrigin=null;dragOrigin=null;
+  syncLoadHistory();$('history-status').textContent='History cleared. The current load is the new starting point.';
+}
+$('undo-load').addEventListener('click',undoLoad);
+$('redo-load').addEventListener('click',redoLoad);
+// Native text editing keeps Ctrl/Cmd+Z inside input fields.
+document.addEventListener('keydown',event=>{
+  if(!(event.ctrlKey||event.metaKey)||event.altKey)return;
+  if(event.target.closest?.('input,textarea,select,[contenteditable="true"]'))return;
+  const key=event.key.toLowerCase();
+  if(key==='z'){
+    if(event.shiftKey){if(loadRedoStack.length){event.preventDefault();redoLoad()}}
+    else if(loadUndoStack.length){event.preventDefault();undoLoad()}
+  }else if(key==='y'&&loadRedoStack.length){event.preventDefault();redoLoad()}
+});
+// Commit one history entry per completed physical-input edit, not per keystroke.
+for(const id of ['z0','resistance','reactance']){
+  const input=$(id);
+  input.addEventListener('focus',()=>{activeFieldOrigin=loadHistorySnapshot()});
+  input.addEventListener('change',()=>{recordLoadHistory(activeFieldOrigin);activeFieldOrigin=null});
+}
 function currentLoadSnapshot(){return {gamma:loadGamma(),r:states.r,x:states.x,z0:states.z0,special:states.special}}
 function renderPinnedComparison(current){
   $('clear-reference').disabled=!referencePin;
@@ -622,15 +686,16 @@ function renderPinnedComparison(current){
     (referencePin.special==='open'||states.special==='open'?'unbounded':
     fmt(abs(sub(C(states.r,states.x),C(referencePin.r,referencePin.x))),4)+' Ω'));
 }
-$('pin-reference').addEventListener('click',()=>{referencePin=currentLoadSnapshot();render()});
-$('clear-reference').addEventListener('click',()=>{referencePin=null;render()});
+$('pin-reference').addEventListener('click',()=>{const before=loadHistorySnapshot();referencePin=currentLoadSnapshot();render();recordLoadHistory(before)});
+$('clear-reference').addEventListener('click',()=>{const before=loadHistorySnapshot();referencePin=null;render();recordLoadHistory(before)});
 $('swap-reference').addEventListener('click',()=>{
   if(!referencePin)return;
+  const before=loadHistorySnapshot();
   const priorA=referencePin,priorB=currentLoadSnapshot();
   referencePin=priorB;
   states.r=priorA.r;states.x=priorA.x;states.special=priorA.special;
   $('preset').value=states.special==='open'?'open':'custom';
-  presetToInputs();$('input-warning').textContent='';discardGammaDraft();render();
+  presetToInputs();$('input-warning').textContent='';discardGammaDraft();render();recordLoadHistory(before);
 });
 for(const b of $('smith-studio').querySelectorAll('[data-preset]'))b.addEventListener('click',()=>{
   $('preset').value=b.dataset.preset;$('preset').dispatchEvent(new Event('change',{bubbles:true}));
@@ -680,7 +745,7 @@ function restoreSession(data){
   $('sample-radius').value=String(states.rho);$('sample-count').value=String(states.sampleCount);
   referencePin=pin?{...pin}:null;
   presetToInputs();$('phase').value=String(states.k);$('input-warning').textContent='';discardGammaDraft();
-  syncSamplingButton();switchView(view.tab);render();
+  syncSamplingButton();switchView(view.tab);render();clearLoadHistory();
 }
 function downloadLocalFile(name,data,type){
   const b=new Blob([data],{type}),url=URL.createObjectURL(b),a=document.createElement('a');
@@ -720,5 +785,5 @@ function restoreFromQuery(){
 }
 $('results-detail').open=false;
 $('smith-studio').classList.add('js-ready');switchView('exact');
-buildBase();syncPacketControls();syncSamplingButton();restoreFromQuery();render();runChecks();
+buildBase();syncPacketControls();syncSamplingButton();restoreFromQuery();render();syncLoadHistory();runChecks();
 })();

@@ -122,6 +122,25 @@ class SmithChartSiteTest(unittest.TestCase):
         # Renormalization changes each Γ but preserves the physical A and B loads.
         self.assertNotEqual(a_at_75, b_at_75)
 
+    def test_reversible_load_history_source_and_scope(self):
+        body = (ROOT/'website/smith-chart-body.html').read_text(encoding='utf-8')
+        css = (ROOT/'website/assets/smith-chart.css').read_text(encoding='utf-8')
+        js = (ROOT/'website/assets/smith-chart.js').read_text(encoding='utf-8')
+        for control in ('undo-load', 'redo-load'):
+            self.assertIn('id="'+control+'"', body)
+        self.assertIn('class="load-history"', body)
+        self.assertIn('id="history-status"', body)
+        self.assertIn('function loadHistorySnapshot()', js)
+        self.assertIn('function recordLoadHistory(before)', js)
+        self.assertIn('function undoLoad()', js)
+        self.assertIn('function redoLoad()', js)
+        self.assertIn('function cancelDrag()', js)
+        self.assertIn('pointercancel', js)
+        self.assertIn("event.target.closest?.('input,textarea,select", js)
+        self.assertIn("clearLoadHistory();", js)
+        self.assertIn('.smith-lab .load-history', css)
+        self.assertIn('.smith-lab .history-status:empty', css)
+
     def test_projector_impedance_identity_exactly(self):
         for t in (Fraction(0), Fraction(1,10), Fraction(-2,5), Fraction(3,4)):
             z = (1+t)/(1-t)

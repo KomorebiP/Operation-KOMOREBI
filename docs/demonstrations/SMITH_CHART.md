@@ -72,6 +72,12 @@ The dashed A–B segment in the reflection disk represents the absolute complex 
 
 This is a corrected consistency rule and interaction aid, not a new RF theorem. Session import/export retains the physical reference load and re-normalizes it using the restored current \(Z_0\).
 
+## Reversible load editing
+
+**Undo load** and **Redo load** track physical load coordinates R, X, and Z₀, the ideal-open state, and the pinned A reference. One completed mouse or touch drag creates one history step; canceling a drag restores its starting point. Ctrl/Cmd+Z undoes an edit, Ctrl/Cmd+Shift+Z or Ctrl+Y redoes it. Standard text-field undo remains native to the browser.
+
+History is intentionally separate from the lossless-line length, cyclic projector order, research view, and sampling options. Reset and JSON session import establish a new load-history starting point. These controls are reversible interface operations, not additional RF transformations.
+
 ## Verification and source
 
 Run the numerical suite in the **Verification** tab to inspect its deterministic test fixtures and reported residuals. These are finite double-precision tests, not formal proofs or hardware validation. Additional Python regression tests use exact rational arithmetic for the packet-reconstruction and admittance identities.
@@ -83,8 +89,8 @@ The implementation is maintained as [HTML source](../../website/smith-chart-body
 
 ## Direct load entry and packet selection
 
-The workbench accepts physical impedance values and, under **Enter Γ directly**, an alternative pair of dimensionless load-reflection coordinates \\(\\Re\\Gamma_L,\\Im\\Gamma_L\\). The second input uses the same reference resistance \\(Z_0\\). Applying a new reflection point converts it through the inverse Cayley map and updates the physical load. A passive load must satisfy \\(|\\Gamma_L|\\le 1\\). Inputs outside the disk or too close to the open-circuit pole for stable double-precision conversion are rejected without changing the previous selected load. Unlike chart-pointer snapping near the endpoints, typed values inside the supported domain are not snapped to the ideal open or short.
+The workbench accepts physical impedance values and, under **Enter Γ directly**, an alternative pair of dimensionless load-reflection coordinates \(\Re\Gamma_L,\Im\Gamma_L\). The second input uses the same reference resistance \(Z_0\). Applying a new reflection point converts it through the inverse Cayley map and updates the physical load. A passive load must satisfy \(|\Gamma_L|\le 1\). Inputs outside the disk or too close to the open-circuit pole for stable double-precision conversion are rejected without changing the previous selected load. Unlike chart-pointer snapping near the endpoints, typed values inside the supported domain are not snapped to the ideal open or short.
 
-The **Finite polynomial** view now exposes each packet-magnitude bar as a keyboard-accessible selection control. Choosing a bar changes packet index \\(j\\) and updates the algebraic diagnostics without changing the physical load. The bars illustrate projected values of a fixed polynomial, not angular sectors of the reflection disk.
+The **Finite polynomial** view now exposes each packet-magnitude bar as a keyboard-accessible selection control. Choosing a bar changes packet index \(j\) and updates the algebraic diagnostics without changing the physical load. The bars illustrate projected values of a fixed polynomial, not angular sectors of the reflection disk.
 
 The numerical interface checks are finite fixtures. They do not assert arbitrary-precision inversion or new RF performance results.
