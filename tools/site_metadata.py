@@ -23,6 +23,7 @@ DESCRIPTIONS = {
     'read/visual-guides.html': 'Explore the collection’s visual guides, with worked diagrams and links to the corresponding mathematical manuscripts.',
     'works.html': 'Browse the Komorebi collection by work, subject, completion stage, and recorded evidence, then follow the reading and source links.',
     'playground.html': 'Run and edit mathematical Python examples in your browser. Inspect the output and follow links to the written calculations and recorded scope.',
+    'smith-chart.html': 'Explore passive RF impedance, reflection coefficients, exact cyclic projector packets, dyadic refinement, and phase sampling in an interactive Smith chart.',
     'collection/demonstrations/EULER_PACKETS.html': 'Follow Euler numbers through reciprocal series, polynomial coordinates, prime-adic bounds, and residual repair, with exact checks and source links.',
     'collection/demonstrations/WAVELET_POLYPHASE.html': 'Follow a signal through Haar decomposition, polyphase filter transport, reconstruction, and omitted-interaction errors, with exact worked checks.',
     'collection/examples/02_SEEDS.html': 'Work through finite seed-generation examples, compare operator actions, and follow the links to the mathematical sources and recorded evidence.',

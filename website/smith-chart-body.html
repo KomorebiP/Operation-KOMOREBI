@@ -1,0 +1,132 @@
+<div id="smith-studio" class="smith-lab">
+<div class="page">
+<section aria-labelledby="page-title" class="hero">
+<div><p class="kicker">Interactive mathematics · Smith chart</p><h1 id="page-title">Smith chart<span> &amp; projector laboratory</span></h1><p>Explore passive RF loads and lossless-line rotation, then inspect exact cyclic projector identities in the same reflection disk. All calculations run locally in your browser.</p></div>
+<div class="hero-aside">Research demonstration · Komorebi P.<br/>Classical RF geometry alongside explicitly labelled algebraic extensions.</div>
+</section>
+<div class="orientation"><span>01  Choose a load</span><span aria-hidden="true">→</span><span>02  Inspect reflection &amp; line</span><span aria-hidden="true">→</span><span>03  Explore projector identities</span></div>
+<div class="workspace">
+<section aria-labelledby="chart-title" class="panel chart-panel">
+<div class="panel-heading"><p class="eyebrow">01 · Reflection disk</p><h2 id="chart-title">Impedance geometry</h2><p class="subtle">Choose a passive load by clicking or dragging the reflection disk. The chart shows a load, line input, and an independent cyclic action.</p></div><div class="chart-toolbar"><label class="field grid-select"><span>Chart coordinate grid</span><select aria-label="Chart coordinate grid" id="grid-mode"><option value="z">Impedance · r and x</option><option value="y">Admittance · g and b</option><option value="both">Both coordinate grids</option></select></label><p class="chart-tip">Click / drag to edit · arrow keys to nudge · Shift for larger steps</p></div><p class="grid-explain" id="grid-explain">Impedance circles show constant normalized resistance and reactance.</p>
+<p class="chart-live-announce" id="chart-help">Press an arrow key to move the selected load; hold Shift for a larger step. Current load coordinates are listed in section four.</p>
+<div class="chart-wrap"><svg aria-describedby="chart-help" aria-label="Interactive Smith chart. Click or drag to choose a load. Use arrow keys to move the load in the reflection disk; hold Shift for larger steps." id="smith-chart" role="img" tabindex="0" viewbox="0 0 900 810">
+<title>Interactive projector-resolved Smith chart</title><desc>The radius-one reflection disk shows complex normalized impedance and phase transformations. Click or drag to change the load.</desc>
+<defs><clippath id="disk-clip"><circle cx="450" cy="399" r="316"></circle></clippath></defs>
+<g id="chart-base"></g><g clip-path="url(#disk-clip)" id="chart-grid"></g><g clip-path="url(#disk-clip)" id="chart-overlay"></g><g id="chart-markers"></g><g id="chart-labels"></g>
+</svg></div>
+<div class="chart-caption"><div class="legend"><span><i class="point"></i> Load</span><span><i class="line"></i> Line input</span><span><i class="cyclic"></i> Cyclic action</span><span><i class="grid"></i> Impedance grid</span><span hidden="" id="legend-weight"><i class="weighted"></i> Weighted samples</span><span hidden="" id="legend-ref">Γ uses the load impedance reference Z₀ · passive region |Γ| ≤ 1</span></div><span>Passive: |Γ| ≤ 1 · r, x normalized by Z₀</span></div>
+</section>
+<aside aria-label="Interactive controls and readouts" class="side">
+<div class="panel form-panel">
+<section aria-labelledby="load-title"><p class="eyebrow">02 · RF coordinates</p><h2 id="load-title">Load and transmission line</h2><p class="section-sub">Physical load values are in ohms. The chart uses normalized impedance z = r + ix = Z/Z₀, where Z₀ is real and positive.</p>
+<label class="field"><span>Example load</span><select id="preset"><option value="inductive">25 + j25 Ω · inductive</option><option value="matched">Matched · R = Z₀, X = 0</option><option value="capacitive">25 − j25 Ω · capacitive</option><option value="high">100 + j50 Ω · high impedance</option><option value="short">0 Ω · short</option><option value="open">∞ Ω · ideal open</option><option value="custom">Custom</option></select></label><div aria-label="Load examples" class="preset-row" role="group"><span>Quick loads</span><button class="mini-preset" data-preset="matched" type="button">Matched</button><button class="mini-preset" data-preset="short" type="button">Short</button><button class="mini-preset" data-preset="open" type="button">Open</button><button class="mini-preset" data-preset="inductive" type="button">25 + j25</button></div>
+<div class="field-row three"><label class="field"><span>Z₀ (Ω)</span><input id="z0" min="0" step="any" type="number" value="50"/></label><label class="field"><span>R (Ω)</span><input id="resistance" min="0" step="any" type="number" value="25"/></label><label class="field"><span>X (Ω)</span><input id="reactance" step="any" type="number" value="25"/></label></div>
+<p aria-live="polite" class="inline-warning" id="input-warning" role="status"></p>
+<label class="field slider-field"><span class="slider-head"><span>Lossless line distance toward source</span><output id="length-out">0.000 λ</output></span><input id="length" max="0.5" min="0" step="0.0025" type="range" value="0"/></label><div aria-label="Line distance adjustments" class="line-shortcuts" role="group"><button data-length="-0.0625" type="button">− λ/16</button><button data-length="0" type="button">0 λ</button><button data-length="0.0625" type="button">+ λ/16</button><span>Periodic over λ/2</span></div>
+<p class="section-sub" style="margin-top:9px;margin-bottom:0">At a distance ℓ, Γ<sub>in</sub> = Γ<sub>L</sub> exp(−4πiℓ/λ). Clockwise motion represents travel toward the source along an ideal lossless line. The gold cyclic rotation is an independent algebraic operation, not an additional line segment.</p>
+</section>
+<section aria-labelledby="phase-title"><p class="eyebrow">03 · Cyclic refinement</p><h2 id="phase-title">Polyphase controls</h2><p class="section-sub">k rotates the plotted point; j selects a coefficient residue class. Changing either does not modify the physical load.</p>
+<div class="field-row"><label class="field"><span>Cycle order N</span><select id="order"><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option selected="">8</option><option>9</option><option>12</option><option>16</option></select></label><label class="field"><span>Projector packet j</span><select id="packet"></select></label></div>
+<label class="field slider-field"><span class="slider-head"><span>Rotation index k</span><output id="phase-out">0 / 8</output></span><input id="phase" max="7" min="0" step="1" type="range" value="0"/></label>
+<div class="checks"><label class="check"><input checked="" id="show-r" type="checkbox"/> Resistance circles</label><label class="check"><input checked="" id="show-x" type="checkbox"/> Reactance arcs</label><label class="check"><input checked="" id="show-rays" type="checkbox"/> Phase rays</label><label class="check"><input checked="" id="show-orbit" type="checkbox"/> Seed orbit</label><label class="check"><input id="show-weight" type="checkbox"/> Boundary refinement</label></div>
+
+<p class="side-note">Sampling density is configured in the Sampling research view below.</p></section>
+</div>
+<div aria-labelledby="readout-title" class="panel form-panel"><p class="eyebrow">04 · Live measurements</p><h2 id="readout-title">Current coordinates</h2><p class="section-sub">Readouts use the selected load and its line-transformed reflection coefficient.</p>
+<div class="values">
+<div class="metric"><small>Load Z<sub>L</sub></small><strong id="v-load">—</strong></div>
+<div class="metric"><small>Γ<sub>L</sub></small><strong class="mono" id="v-gamma">—</strong></div>
+<div class="metric"><small>Γ<sub>in</sub> after line</small><strong class="mono" id="v-in">—</strong></div>
+<div class="metric"><small>Z<sub>in</sub></small><strong class="mono" id="v-zin">—</strong></div>
+<div class="metric"><small>|Γ| and phase at load</small><strong id="v-mag">—</strong></div>
+<div class="metric"><small>VSWR / return loss</small><strong id="v-swr">—</strong></div>
+<div class="metric"><small>ω<sub>N</sub><sup>k</sup>Γ<sub>in</sub></small><strong class="mono" id="v-rot">—</strong></div>
+<div class="metric"><small>Normalized z under cyclic action</small><strong class="mono" id="v-mobius">—</strong></div>
+<div class="metric"><small>Normalized z<sub>in</sub></small><strong class="mono" id="v-znorm">—</strong></div><div class="metric"><small>Normalized y<sub>in</sub> = 1/z<sub>in</sub></small><strong class="mono" id="v-yin">—</strong></div></div>
+<div aria-labelledby="compare-title" class="reference-panel"><div class="reference-heading"><strong id="compare-title">Compare two loads</strong><span>Pin A, then select B on the chart</span></div><div class="action-bar"><button id="pin-reference" type="button">Pin current load as A</button><button disabled="" id="clear-reference" type="button">Clear A</button></div><div class="comparison-values"><div><small>Pinned reference A</small><strong id="pin-value">No reference pinned</strong></div><div><small>|Γ<sub>B</sub> − Γ<sub>A</sub>|</small><strong id="pin-delta">—</strong></div><div><small>Physical |Z<sub>B</sub> − Z<sub>A</sub>|</small><strong id="pin-z-delta">—</strong></div></div></div><div class="action-bar"><button id="reset">Reset workspace</button><button id="export">Export SVG</button></div><details class="session-box"><summary>Save or restore this experiment</summary><p>Portable settings contain only numbers and visualization choices; no network requests are made.</p><div class="action-bar"><button id="download-session" type="button">Download settings JSON</button><button id="copy-session-link" type="button">Copy settings link</button></div><label class="field"><span>Restore from settings JSON</span><input accept=".json,application/json" id="import-session" type="file"/></label><p aria-live="polite" class="session-status" id="session-status" role="status"></p></details>
+</div>
+</aside>
+</div>
+
+
+<section aria-labelledby="research-hub-title" class="research-hub"><div class="research-heading"><div><p class="eyebrow">Research workbench</p><h2 id="research-hub-title">Explore the calculations</h2><p class="subtle">Switch views without losing the selected load or projector settings.</p></div></div><div aria-label="Research demonstrations" class="research-tabs" role="tablist"><button aria-controls="panel-exact" aria-selected="true" class="research-tab" data-view="exact" id="tab-exact" role="tab">Exact packets</button><button aria-controls="panel-finite" aria-selected="false" class="research-tab" data-view="finite" id="tab-finite" role="tab" tabindex="-1">Finite polynomial</button><button aria-controls="panel-structure" aria-selected="false" class="research-tab" data-view="structure" id="tab-structure" role="tab" tabindex="-1">Nonlinear &amp; CRT</button><button aria-controls="panel-sampling" aria-selected="false" class="research-tab" data-view="sampling" id="tab-sampling" role="tab" tabindex="-1">Sampling</button><button aria-controls="panel-verify" aria-selected="false" class="research-tab" data-view="verify" id="tab-verify" role="tab" tabindex="-1">Verification</button></div><div class="research-body"><section aria-labelledby="tab-exact" class="panel exact-panel analysis-panel" id="panel-exact" role="tabpanel" tabindex="0">
+<div class="exact-heading"><p class="eyebrow">Analytic coordinates</p><h2 id="exact-title">Impedance and admittance, resolved by residue</h2>
+<p class="subtle">The principal example is now the actual normalized impedance function, not a synthetic polynomial. Packet formulas are analytic identities in the <strong>open</strong> reflection disk |Γ| &lt; 1. The selected packet is j and the order N comes from the controls above.</p></div>
+<div class="exact-grid">
+<div>
+<div class="formula"><span class="math-small">z(t) = (1+t)/(1−t),   y(t) = z(−t) = 1/z(t)</span></div>
+<div class="formula"><span class="math-small">P<sub>N,0</sub>z = (1+t<sup>N</sup>)/(1−t<sup>N</sup>)<br/>P<sub>N,j</sub>z = 2t<sup>j</sup>/(1−t<sup>N</sup>), 1 ≤ j &lt; N</span></div>
+<p class="callout">The packets sum exactly to the normalized impedance. For even N, the corresponding admittance packet equals (−1)<sup>j</sup> times the impedance packet. For odd N, the dyadic refinement to 2N separates the parity contributions.</p>
+<div class="packet-values"><div><small>Selected exact impedance packet P<sub>N,j</sub>z</small><strong id="exact-z">—</strong></div><div><small>Selected exact admittance packet P<sub>N,j</sub>y</small><strong id="exact-y">—</strong></div>
+<div><small>All packets − z(t)</small><strong id="exact-reconstruction">—</strong></div><div><small>Duality / refined parity residual</small><strong id="exact-duality">—</strong></div>
+<div><small>Finite phase-orbit Parseval residual</small><strong id="exact-parseval">—</strong></div><div><small>Selected packet angular H² energy (radius |t|)</small><strong id="exact-energy">—</strong></div></div>
+<p class="witness-status" id="exact-disk-note" role="status">—</p>
+</div>
+<div>
+<h3>What the decomposition does not preserve</h3>
+<p class="callout"><strong>Passivity:</strong> P<sub>N,0</sub>z(t) maps the open disk into the positive-real half-plane. A nonzero j packet generally does not. These packets are analytic algebraic terms, not independent passive RF loads.</p>
+<p class="callout"><strong>Pole cancellation:</strong> the individual packets have denominators 1−t<sup>N</sup> and poles at roots of unity, even though their complete sum only has the original pole at t=1. Dropping packets can create apparent boundary singularities.</p>
+
+
+
+
+
+
+</div>
+</div>
+</section><section aria-labelledby="tab-finite" class="panel analysis-panel" id="panel-finite" role="tabpanel" tabindex="0"><p class="eyebrow">Finite polynomial fixture</p><h2 id="algebra-title">What the projector adds</h2><p class="subtle">The reflection map is classical. The phase-projector structure is the Komorebi construction being demonstrated.</p>
+<div class="formula">Γ = (z − 1)/(z + 1) <span style="color:#708b82">,</span>   z = (1 + Γ)/(1 − Γ)</div>
+<div class="formula">T<sub>N,k</sub>(z) = C<sup>−1</sup>(ω<sub>N</sub><sup>k</sup>C(z)),   ω<sub>N</sub> = e<sup>2πi/N</sup></div>
+<div class="formula"><span class="math-small">P<sub>N,j</sub>F(Γ) = ∑<sub>m ≡ j (mod N)</sub> a<sub>m</sub>Γ<sup>m</sup></span></div>
+<p class="callout">As a separate finite-algebra stress test, this section retains <strong>F(t) = ∑<sub>m=0</sub><sup>31</sup> t<sup>m</sup>/(m+1)</strong> evaluated at <strong>t = Γ<sub>in</sub></strong>. Projectors are implemented independently by coefficient selection and roots-of-unity averaging. Coefficient identities are exact; displayed complex values are floating-point approximations.</p>
+<div class="packet-values"><div><small>Selected coarse packet P<sub>N,j</sub>F</small><strong id="p-coarse">—</strong></div><div><small>First fine descendant P<sub>2N,j</sub>F</small><strong id="p-fine-a">—</strong></div><div><small>Second descendant P<sub>2N,j+N</sub>F</small><strong id="p-fine-b">—</strong></div><div><small>Coarse − sum of descendants</small><strong id="p-error">—</strong></div><div><small>Root-of-unity averaging residual</small><strong id="p-roots">—</strong></div><div><small>All N packets reconstruct F</small><strong id="p-reconstruct">—</strong></div></div>
+<div aria-labelledby="packet-spectrum-title" class="packet-spectrum">
+<h3 id="packet-spectrum-title">Packet magnitudes at Γ<sub>in</sub></h3>
+<p class="callout">Each bar shows |P<sub>N,j</sub>F(Γ<sub>in</sub>)|. The selected packet is emphasized. Bars represent polynomial values, not angular sectors in the Smith disk.</p>
+<div aria-label="Packet magnitudes by residue class" class="packet-bars" id="packet-bars" role="group"></div>
+</div>
+</section><div aria-labelledby="tab-structure" class="structure-grid" id="panel-structure" role="tabpanel" tabindex="0"><section aria-labelledby="nonlinear-title" class="panel analysis-panel">
+<p class="eyebrow">Residue interactions</p><h2 id="nonlinear-title">Nonlinear phase selection</h2>
+<div class="nonlinear">
+<div class="formula"><span class="math-small">P<sub>N,c</sub>(F<sub>a</sub>F<sub>b</sub>) = 0 when c ≢ a + b (mod N)</span></div>
+<p class="callout">For the selected a = j, choose b = j + 1 modulo N. Their polynomial product has support only in c = a + b modulo N. This is a coefficient-support rule, not a claim that the product value vanishes at nonzero input.</p>
+<div class="packet-values nonlinear-values"><div><small>Input residue indices (a, b)</small><strong id="nl-pair">—</strong></div><div><small>Product residue c</small><strong id="nl-target">—</strong></div><div><small>Product − direct coefficient evaluation</small><strong id="nl-error">—</strong></div><div><small>Largest off-target coefficient</small><strong id="nl-leak">—</strong></div></div>
+<div class="formula"><span class="math-small">P<sub>N,0</sub>(F²) = ∑<sub>a+b ≡ 0 (mod N)</sub> (P<sub>N,a</sub>F)(P<sub>N,b</sub>F)</span></div>
+<p class="callout">A fixed diagnostic input <strong>t = 0.62 + 0.18i</strong> supplies a failure witness for ignoring off-diagonal packet interactions. It does not depend on the selected load, so it remains meaningful at a matched load.</p>
+<div class="packet-values nonlinear-values"><div><small>Full projected square − channel sum</small><strong id="nl-channel-error">—</strong></div><div><small>Naive P<sub>N,0</sub>F × P<sub>N,0</sub>F error</small><strong id="nl-naive-error">—</strong></div></div>
+<p class="witness-status" id="nl-witness-description">—</p>
+</div>
+</section><section aria-labelledby="crt-title" class="panel analysis-panel">
+<p class="eyebrow">Coprime projector structure</p><h2 id="crt-title">Dyadic–odd projector factorization</h2>
+<section class="crt-block">
+<p class="callout">For N = d × o with d a power of two and o odd, gcd(d,o) = 1. The direct packet is the intersection of its two residue conditions. When o = 1, the odd projector is the identity.</p>
+<div class="formula"><span class="math-small">P<sub>N,j</sub> = P<sub>d,j mod d</sub> P<sub>o,j mod o</sub>,   N = d · o</span></div>
+<div class="crt-metrics"><div><small>Current factorization</small><strong id="crt-factor">—</strong></div>
+<div><small>Residues in the factors</small><strong id="crt-index">—</strong></div>
+<div><small>Surviving polynomial degrees, 0…31</small><strong id="crt-degrees">—</strong></div>
+<div><small>Independent coefficient mismatches</small><strong id="crt-mismatch">—</strong></div>
+<div><small>Direct packet − staged projector evaluation</small><strong id="crt-error">—</strong></div>
+<div><small>Current case</small><strong id="crt-note">—</strong></div></div>
+</section>
+<div class="mini-grid"><div class="mini-step"><b>N = 2</b><span>A half-turn sends normalized z ↦ 1/z, swapping impedance and normalized admittance.</span></div><div class="mini-step"><b>N divides 2N</b><span>Each coefficient packet splits into two exact descendants.</span></div><div class="mini-step"><b>Dyadic × odd</b><span>Coprime factors give commuting coefficient projectors.</span></div></div>
+</section></div><section aria-labelledby="tab-sampling" class="panel analysis-panel sampling-panel" id="panel-sampling" role="tabpanel" tabindex="0"><p class="eyebrow">Sampling study</p><h2 id="sampling-heading">Boundary-adapted sampling</h2><p class="subtle">A defined numerical construction, not a general claim of optimal reconstruction. Toggle the overlay and adjust its radius or sample count in the controls above.</p><details class="refinement-control" open=""><summary>Sampling radius and number of points</summary>
+<div class="field-row"><label class="field"><span>Reflection radius ρ</span><input id="sample-radius" max="0.97" min="0.70" step="0.01" type="range" value="0.94"/><output id="sample-radius-out">0.94</output></label>
+<label class="field"><span>Number of samples</span><select id="sample-count"><option>32</option><option>64</option><option selected="">96</option><option>128</option></select></label></div>
+<p class="section-sub">The weighted angular samples are a numerical illustration, not a physical network transformation or a proven optimal grid.</p>
+</details><div class="sampling-columns"><div id="sampling-theory"><h3>Poisson geometry of the sensitivity weight</h3><div class="formula"><span class="math-small">w(ρe<sup>iθ</sup>) = 2 P<sub>ρ²</sub>(2θ)/(1−ρ²)</span></div><div class="formula"><span class="math-small">p<sub>ρ</sub>(θ) = (1−ρ⁴) / [2π(1−2ρ² cos(2θ)+ρ⁴)]</span></div><div class="formula"><span class="math-small">|dz/dθ| + |dy/dθ| = 2ρ w(ρe<sup>iθ</sup>)</span></div><p class="callout">The phase-sampling overlay uses <strong>closed-form inverse Poisson quantiles</strong>, not quadrature. Its equal-mass intervals minimize the largest integrated sum-of-coordinate-speeds bound; this is <strong>not</strong> a universal reconstruction optimum.</p><div class="benchmark"><strong>Fixed line-orbit interpolation experiment</strong><span>|Γ| = 0.90 · 32 unique points · complex phase-linear interpolation</span>
+<table><thead><tr><th>Phase nodes</th><th>Maximum |Δz|</th></tr></thead><tbody><tr><td>Uniform</td><td>5.999</td></tr><tr><td>Poisson equal mass</td><td>0.784</td></tr></tbody></table>
+<p>7.65× lower worst-case error for this noiseless test. In contrast, for h(t) = t itself, uniform angular sampling is better (0.00433 vs 0.12927). Exact rational evaluation needs no interpolation.</p></div></div><div id="sampling-data"><section aria-labelledby="refinement-title" class="refinement-diagnostics"><h3 id="refinement-title">Boundary sampling diagnostics</h3>
+<p class="callout">The optional overlay distributes points around |Γ| = ρ in proportion to the symmetric sensitivity weight w(Γ) = |1 − Γ|<sup>−2</sup> + |1 + Γ|<sup>−2</sup>. This weight is half the sum of the absolute complex derivative magnitudes of normalized impedance and admittance. On a fixed-radius phase orbit it is proportional to the total absolute angular speed |dz/dθ|+|dy/dθ|. It is <strong>not</strong> a dimensionless relative condition number.</p>
+<div class="packet-values"><div><small>Current radius ρ and points</small><strong id="ref-summary">—</strong></div>
+<div><small>Weight ratio w(ρ) / w(iρ)</small><strong id="ref-ratio">—</strong></div>
+<div><small>Smallest angular step</small><strong id="ref-min-step">—</strong></div>
+<div><small>Largest angular step</small><strong id="ref-max-step">—</strong></div><div><small>Maximum integrated-mass imbalance</small><strong id="ref-mass-error">—</strong></div></div>
+<p class="witness-status">The angular positions now use an exact closed-form inverse-CDF formula (up to floating-point roundoff). They evenly partition an integrated coordinate-speed bound. A reconstruction-error guarantee for arbitrary RF responses is not claimed.</p>
+</section></div></div><button class="primary" id="show-sampling" type="button">Show weighted samples on chart</button></section><section aria-labelledby="tab-verify" class="panel analysis-panel" id="panel-verify" role="tabpanel" tabindex="0"><p class="eyebrow">Finite verification</p><h2 id="tests-title">Numerical identity laboratory</h2><p class="subtle">Repeatable browser checks on fixed, disclosed fixtures. Residuals and tolerances are shown for inspection. A passing numerical test is not a formal proof.</p>
+<div class="action-bar"><button class="primary" id="run-tests">Run all numerical checks</button><button id="copy-results">Copy test report</button><button id="download-results">Download JSON report</button></div>
+<p aria-live="polite" class="test-status" id="test-status" role="status">Tests have not been executed.</p><p class="tester-note">Source: exact impedance and admittance functions plus a separate degree-31 polynomial fixture. Sample points and cycle orders are fixed in the verification code. Interactive readouts respond to current controls.</p>
+<details class="test-results-details" id="results-detail"><summary id="test-detail-summary">View individual numerical checks</summary><div class="test-grid" id="test-results"></div></details>
+
+</section></div></section>
+</div>
+</div>

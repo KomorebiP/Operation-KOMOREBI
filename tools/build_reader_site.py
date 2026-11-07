@@ -76,6 +76,7 @@ def site_navigation(page):
                      ('Inspect Lean', 'lean/index.html'),
                      ('Notation', 'notation.html')]),
         ('Use', [('Signal laboratory', 'signal-lab.html'),
+                 ('Smith chart laboratory', 'smith-chart.html'),
                  ('Recovery laboratory', 'recovery-lab.html'),
                  ('J-Space laboratory', 'j-lab.html'),
                  ('Interactive diagrams', 'interactive.html'),
@@ -336,7 +337,7 @@ class Site:
         article_start=body.find('<article id="chapter-text"')
         side_context=body[:article_start] if edition(path) and article_start>=0 else body
         has_side_action=('class="side-launch"' in side_context) if edition(path) else ('data-side-reader-link' in side_context)
-        if not work_page and not has_side_action and path not in {'side-by-side.html','index.html','404.html','sitemap.html','interactive.html','signal-lab.html','recovery-lab.html','j-lab.html','works.html','reading-list.html','lean/playground.html','lean/run.html','read/visual-guides.html'}:
+        if not work_page and not has_side_action and path not in {'side-by-side.html','index.html','404.html','sitemap.html','interactive.html','signal-lab.html','smith-chart.html','recovery-lab.html','j-lab.html','works.html','reading-list.html','lean/playground.html','lean/run.html','read/visual-guides.html'}:
             pair=self.rel('side-by-side.html',path)+'?left='+quote(path,safe='')
             launch='<p class="side-launch"><a data-side-reader-link href="'+esc(pair,quote=True)+'">Read side by side</a></p>'
             body=re.sub(r'(</h1>)',lambda match:match[1]+launch,body,count=1)
@@ -376,7 +377,7 @@ class Site:
 <link rel="stylesheet" href="'''+self.rel('assets/open-research.css',path)+'?v='+hashlib.sha256((self.root/'website/assets/open-research.css').read_bytes()).hexdigest()[:12]+'''">
 <link rel="stylesheet" href="'''+self.rel('assets/side-reader.css',path)+'?v='+hashlib.sha256((self.root/'website/assets/side-reader.css').read_bytes()).hexdigest()[:12]+'''">
 <script defer src="'''+self.rel('assets/mathjax-config.js',path)+'''"></script><script defer src="'''+self.rel('assets/mathjax/tex-svg-full.js',path)+'''"></script>
-'''+search_script+'''<script defer src="'''+self.rel('assets/reader.js',path)+'?v='+hashlib.sha256((self.root/'website/assets/reader.js').read_bytes()).hexdigest()[:12]+'''"></script>'''+glossary_script+operator_script+chapter_help_script+home_assets+reading_list_assets+'''</head><body class="open-research'''+(' home-page' if path == 'index.html' else '')+(' reading-page' if reading_page else '')+(' work-page' if work_page else '')+(' visual-reading' if visual_page else '')+'''">
+'''+search_script+'''<script defer src="'''+self.rel('assets/reader.js',path)+'?v='+hashlib.sha256((self.root/'website/assets/reader.js').read_bytes()).hexdigest()[:12]+'''"></script>'''+glossary_script+operator_script+chapter_help_script+home_assets+reading_list_assets+'''</head><body class="open-research'''+(' smith-chart-page' if path=='smith-chart.html' else '')+(' home-page' if path == 'index.html' else '')+(' reading-page' if reading_page else '')+(' work-page' if work_page else '')+(' visual-reading' if visual_page else '')+'''">
 <a class="skip-link" href="#main">Skip to main content</a><header class="site-header"><a class="brand" href="'''+root+'''" aria-label="Komorebi home"><span class="brand-wordmark"><img class="brand-logo" src="'''+brand_assets['komorebi-logo.svg']+'''" alt="Komorebi" width="1320" height="240"><span class="brand-fallback" aria-hidden="true">Komorebi</span><small>Mathematics · proofs · software</small></span></a>'''+nav_html+'''</header>
 <main id="main" tabindex="-1">'''+body+'''</main><footer><div class="footer-inner"><nav class="footer-links" aria-label="Project information">'''+source_html+'''<a href="'''+self.rel('collection/PROJECT_STATEMENT.html',path)+'''">Project and authorship statement</a><a href="'''+self.rel('collection/ACCESSIBILITY.html',path)+'''">Accessibility and reporting problems</a><a href="'''+self.rel('sitemap.html',path)+'''">Sitemap</a></nav><a class="footer-github" href="https://github.com/'''+REPOSITORY+'''">Return to GitHub <span aria-hidden="true">↗</span></a></div></footer></body></html>'''
         self.write(path,doc)
@@ -653,6 +654,22 @@ class Site:
         self.page('404.html','Page not found','<h1>This page could not be found</h1><p>Use the <a href="'+BASE_URL+'">Komorebi starting page</a>, <a href="'+BASE_URL+'search.html">search</a> or <a href="'+BASE_URL+'works.html">work index</a> to find the current page.</p>')
     def claim_index(self):
         render_claim_index(self)
+    def smith_chart_lab(self):
+        """Publish the projector-resolved Smith chart as an ordinary reader page."""
+        source='website/smith-chart-body.html'
+        css='assets/smith-chart.css'
+        script='assets/smith-chart.js'
+        css_hash=digest((self.root/'website'/css).read_bytes())[:12]
+        script_hash=digest((self.root/'website'/script).read_bytes())[:12]
+        body='<link rel="stylesheet" href="'+css+'?v='+css_hash+'">'
+        body+=(self.root/source).read_text(encoding='utf-8')
+        body+='<p class="smith-sources"><a href="collection/demonstrations/SMITH_CHART.html">Derivation, verification scope, and limitations</a></p>'
+        body+='<script defer src="'+script+'?v='+script_hash+'"></script>'
+        self.page('smith-chart.html','Smith chart and projector laboratory',body,
+                  github(REPOSITORY,self.revision,source))
+        self.search.append(dict(title='Smith chart and projector laboratory',
+            group='Collection',kind='Examples',url='smith-chart.html',work_ids=[],
+            text='RF impedance admittance reflection coefficients Cayley map roots of unity cyclic projectors exact packets Smith chart transmission line Poisson sampling numerical tests'))
     def demonstration_program(self):
         """Publish the teaching program as readable source and an exact download."""
         from reader_documents import source_lines
@@ -699,6 +716,7 @@ class Site:
         publish_stirling_case(self)
         from roots_newton_case import publish as publish_roots_newton_case
         publish_roots_newton_case(self)
+        self.smith_chart_lab()
         self.markdown_pages()
         self.reader.render()
         from reading_paths import publish as publish_reading_paths
