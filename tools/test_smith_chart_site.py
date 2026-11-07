@@ -164,6 +164,10 @@ class SmithChartSiteTest(unittest.TestCase):
         end = js.index('function validateSession(', start)
         self.assertNotIn('zoomIndex', js[start:end])
         self.assertNotIn('zoomCenter', js[start:end])
+        self.assertIn("--smith-label-scale", js)
+        self.assertIn("vector-effect:non-scaling-stroke", css)
+        self.assertIn("calc(13px * var(--smith-label-scale,1))", css)
+        self.assertIn("calc(13px * var(--smith-label-scale,1))", js)
 
     def test_projector_impedance_identity_exactly(self):
         for t in (Fraction(0), Fraction(1,10), Fraction(-2,5), Fraction(3,4)):

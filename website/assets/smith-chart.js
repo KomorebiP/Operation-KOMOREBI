@@ -62,6 +62,7 @@ function updateChartView(){
   const x=zoomIndex===0?VIEW_ORIGINAL.x:zoomCenter.x-w/2;
   const y=zoomIndex===0?VIEW_ORIGINAL.y:zoomCenter.y-h/2;
   $('smith-chart').setAttribute('viewBox',`${x} ${y} ${w} ${h}`);
+  $('smith-chart').style.setProperty('--smith-label-scale',String(1/factor));
   $('chart-zoom-level').textContent=`${factor}×`;
   $('chart-zoom-out').disabled=zoomIndex===0;
   $('chart-zoom-in').disabled=zoomIndex===ZOOM_FACTORS.length-1;
@@ -372,7 +373,7 @@ $('smith-chart').addEventListener('keydown',e=>{
   e.preventDefault();const before=loadHistorySnapshot(),g=loadGamma(),q=C(g.re+dx,g.im+dy),n=abs(q);
   setFromGamma(n>1?scale(q,1/n):q);if(!e.repeat)recordLoadHistory(before);updateInspection(loadGamma());
 });
-$('export').addEventListener('click',()=>{const svg=$('smith-chart').cloneNode(true);svg.setAttribute('xmlns',svgNS);const embeddedStyle=svgEl('style');embeddedStyle.textContent='svg text{font-family:system-ui,sans-serif}svg .math-label{font-family:Georgia,serif;font-style:italic}svg .grid-label{font-weight:500;font-size:13px;fill:#6e847e}svg .corner-label{fill:#4c6862;font-size:16px}svg .endpoint-label{fill:#384b46;font-size:14px}';svg.prepend(embeddedStyle);const xml=new XMLSerializer().serializeToString(svg);const blob=new Blob([xml],{type:'image/svg+xml;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='komorebi-polyphase-smith-chart.svg';document.body.appendChild(a);a.click();a.remove();window.setTimeout(()=>URL.revokeObjectURL(url),1000)});
+$('export').addEventListener('click',()=>{const svg=$('smith-chart').cloneNode(true);svg.setAttribute('xmlns',svgNS);const embeddedStyle=svgEl('style');embeddedStyle.textContent='svg text{font-family:system-ui,sans-serif}svg .math-label{font-family:Georgia,serif;font-style:italic}svg circle,svg path,svg line{vector-effect:non-scaling-stroke}svg .grid-label{font-weight:500;font-size:calc(13px * var(--smith-label-scale,1));fill:#6e847e}svg .corner-label{fill:#4c6862;font-size:calc(16px * var(--smith-label-scale,1))}svg .endpoint-label{fill:#384b46;font-size:calc(14px * var(--smith-label-scale,1))}svg .marker-label{font-size:calc(16px * var(--smith-label-scale,1));stroke-width:calc(4px * var(--smith-label-scale,1))}';svg.prepend(embeddedStyle);const xml=new XMLSerializer().serializeToString(svg);const blob=new Blob([xml],{type:'image/svg+xml;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='komorebi-polyphase-smith-chart.svg';document.body.appendChild(a);a.click();a.remove();window.setTimeout(()=>URL.revokeObjectURL(url),1000)});
 function evaluatePolynomial(a,g){
   let value=C(0);
   for(let m=a.length-1;m>=0;m--)value=add(mul(value,g),C(a[m]));

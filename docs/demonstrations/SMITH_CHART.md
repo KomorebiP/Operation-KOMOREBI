@@ -99,6 +99,8 @@ The numerical interface checks are finite fixtures. They do not assert arbitrary
 
 The chart provides **Zoom in**, **Zoom out**, **Center**, and **Fit** controls. Zoom magnifies the displayed SVG coordinate view, centering initially on the selected load. **Center** recenters on the currently selected load and **Fit** restores the entire reflection disk. Magnification does not change the physical impedance, reflection coefficient, lossless-line phase, cyclic projector state, or pinned reference. Chart selection continues to use the inverse SVG screen transform under zoom, so an enlarged view is not a different RF coordinate system.
 
+At higher magnifications, the chart retains readable axis and grid labels and uses non-scaling stroke widths so the boundary is not artificially thickened. Exported SVG charts retain those view settings.
+
 The zoom view is not included in portable session files: importing settings or resetting the workbench restores a predictable full-disk chart. **Escape** cancels an unfinished chart drag, as does loss of browser focus; a canceled edit does not create a history entry. Reset and session restoration also cancel any ongoing drag before applying their new state. The zoom controls remain hidden without JavaScript, leaving the readable mathematics and chart unchanged.
 
 Browser regression checks were exercised at 320, 390, 768, 1024, and 1440 pixel widths. They cover view-only magnification, precision of coordinate selection after zoom, export of the visible viewport, and interrupted-drag recovery. These are interface checks, not new impedance theorems.
