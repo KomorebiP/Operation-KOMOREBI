@@ -50,7 +50,7 @@ class SmithChartSiteTest(unittest.TestCase):
         self.assertEqual(body.count('<h1'), 1)
         nav = body.split('<nav class="smith-section-nav"', 1)[1].split('</nav>', 1)[0]
         targets = re.findall(r'href="#([^"]+)"', nav)
-        ids = set(re.findall(r'\\bid="([^"]+)"', body))
+        ids = set(re.findall(r'\bid="([^"]+)"', body))
         self.assertEqual(len(targets), 4)
         self.assertTrue(set(targets).issubset(ids))
         self.assertIn('<details class="overlay-options">', body)
