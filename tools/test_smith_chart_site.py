@@ -37,6 +37,13 @@ class SmithChartSiteTest(unittest.TestCase):
         self.assertEqual(len(re.findall(r'<h1\b', body)), 1)
         self.assertNotRegex(body, r'<main\b|<script\b')
 
+    def test_each_input_has_an_accessible_name(self):
+        body = (ROOT/'website/smith-chart-body.html').read_text(encoding='utf-8')
+        controls = re.findall(r'<(?:input|select|textarea)\\b[^>]*>', body)
+        self.assertGreaterEqual(len(controls), 16)
+        for control in controls:
+            self.assertRegex(control, r'aria-label="[^"]+"')
+
     def test_projector_impedance_identity_exactly(self):
         for t in (Fraction(0), Fraction(1,10), Fraction(-2,5), Fraction(3,4)):
             z = (1+t)/(1-t)
