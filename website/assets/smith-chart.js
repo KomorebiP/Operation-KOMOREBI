@@ -52,6 +52,32 @@ function appliedFilter(a,n,j){return a.map((v,m)=>m%n===((j%n)+n)%n?v:0)}
 const fmt=(x,d=4)=>{if(!Number.isFinite(x))return x>0?'∞':x<0?'−∞':'—';let v=Math.abs(x)<0.5*Math.pow(10,-d)?0:x;return v.toFixed(d)};
 const complexString=(z,d=4)=>!z?'∞':(!Number.isFinite(z.re)||!Number.isFinite(z.im)?'undefined':`${fmt(z.re,d)} ${z.im<0?'−':'+'} j${fmt(Math.abs(z.im),d)}`);
 const coord=g=>({x:CX+R*g.re,y:CY-R*g.im});
+// Magnification is strictly a view transform. It does not touch load, line,
+// projectors, pinned reference, undo history, or the exact Gamma geometry.
+const VIEW_ORIGINAL={x:70,y:37,w:760,h:730};
+const ZOOM_FACTORS=[1,1.5,2,3,4];
+let zoomIndex=0,zoomCenter={x:CX,y:CY};
+function updateChartView(){
+  const factor=ZOOM_FACTORS[zoomIndex],w=VIEW_ORIGINAL.w/factor,h=VIEW_ORIGINAL.h/factor;
+  const x=zoomIndex===0?VIEW_ORIGINAL.x:zoomCenter.x-w/2;
+  const y=zoomIndex===0?VIEW_ORIGINAL.y:zoomCenter.y-h/2;
+  $('smith-chart').setAttribute('viewBox',`${x} ${y} ${w} ${h}`);
+  $('chart-zoom-level').textContent=`${factor}×`;
+  $('chart-zoom-out').disabled=zoomIndex===0;
+  $('chart-zoom-in').disabled=zoomIndex===ZOOM_FACTORS.length-1;
+  $('chart-view-fit').disabled=zoomIndex===0;
+  $('chart-view-center').disabled=zoomIndex===0;
+}
+function changeChartZoom(step){
+  const next=Math.min(ZOOM_FACTORS.length-1,Math.max(0,zoomIndex+step));
+  if(next===zoomIndex)return;
+  if(zoomIndex===0)zoomCenter=coord(loadGamma());
+  zoomIndex=next;
+  updateChartView();updateInspection(null);
+}
+function resetChartView(){zoomIndex=0;zoomCenter={x:CX,y:CY};updateChartView();updateInspection(null)}
+function centerChartView(){if(zoomIndex===0)return;zoomCenter=coord(loadGamma());updateChartView();updateInspection(null)}
+
 function svgEl(name,attributes={},parent){const el=document.createElementNS(svgNS,name);Object.entries(attributes).forEach(([k,v])=>el.setAttribute(k,String(v)));if(parent)parent.appendChild(el);return el}
 function line(x1,y1,x2,y2,stroke,width=1,dash='',parent){return svgEl('line',{x1,y1,x2,y2,stroke,'stroke-width':width,...(dash?{'stroke-dasharray':dash}:{})},parent)}
 function circle(x,y,rad,stroke,fill='none',width=1,parent){return svgEl('circle',{cx:x,cy:y,r:rad,stroke,fill,'stroke-width':width},parent)}
@@ -276,11 +302,15 @@ $('gamma-apply').addEventListener('click',()=>{
   setFromGamma(g,false);recordLoadHistory(before);
   $('gamma-warning').textContent='Passive Γ applied to the load.';
 });
+$('chart-zoom-in').addEventListener('click',()=>changeChartZoom(1));
+$('chart-zoom-out').addEventListener('click',()=>changeChartZoom(-1));
+$('chart-view-fit').addEventListener('click',resetChartView);
+$('chart-view-center').addEventListener('click',centerChartView);
 $('grid-mode').addEventListener('change',()=>{render();updateInspection(hoveredGamma)});
 $('sample-radius').addEventListener('input',()=>{states.rho=Number($('sample-radius').value);render()});
 $('sample-count').addEventListener('change',()=>{states.sampleCount=Number($('sample-count').value);render()});
 function syncPacketControls(){const select=$('packet');select.replaceChildren();for(let j=0;j<states.N;j++){const o=document.createElement('option');o.value=String(j);o.textContent=`j = ${j}`;select.appendChild(o)}select.value=String(states.j);$('phase').max=String(states.N-1);$('phase').value=String(states.k)}
-$('reset').addEventListener('click',()=>{setChartFocus(false);updateInspection(null);$('copy-status').textContent='';referencePin=null;$('grid-mode').value='z';$('clear-reference').disabled=true;$('swap-reference').disabled=true;Object.assign(states,{r:25,x:25,z0:50,special:null,length:0,N:8,k:0,j:0,rho:.94,sampleCount:96});$('sample-radius').value='.94';$('sample-count').value='96';$('preset').value='inductive';$('order').value='8';for(const id of ['show-r','show-x'])$(id).checked=true;for(const id of ['show-rays','show-orbit'])$(id).checked=false;$('show-weight').checked=false;syncSamplingButton();syncPacketControls();presetToInputs();$('input-warning').textContent='';discardGammaDraft();render();clearLoadHistory()});
+$('reset').addEventListener('click',()=>{cancelDrag();resetChartView();setChartFocus(false);updateInspection(null);$('copy-status').textContent='';referencePin=null;$('grid-mode').value='z';$('clear-reference').disabled=true;$('swap-reference').disabled=true;Object.assign(states,{r:25,x:25,z0:50,special:null,length:0,N:8,k:0,j:0,rho:.94,sampleCount:96});$('sample-radius').value='.94';$('sample-count').value='96';$('preset').value='inductive';$('order').value='8';for(const id of ['show-r','show-x'])$(id).checked=true;for(const id of ['show-rays','show-orbit'])$(id).checked=false;$('show-weight').checked=false;syncSamplingButton();syncPacketControls();presetToInputs();$('input-warning').textContent='';discardGammaDraft();render();clearLoadHistory()});
 function pointerToGamma(e){const svg=$('smith-chart'),point=svg.createSVGPoint();point.x=e.clientX;point.y=e.clientY;const inv=svg.getScreenCTM()?.inverse();if(!inv)return null;const p=point.matrixTransform(inv);const g=C((p.x-CX)/R,-(p.y-CY)/R);return abs(g)<=1.014?g:null}
 // Inspection is read-only. Moving the cursor never changes the selected load.
 let hoverFrame=0,hoveredGamma=null;
@@ -314,6 +344,7 @@ $('focus-chart').addEventListener('click',()=>{
   if(enable){$('chart-title').scrollIntoView({block:'start'});$('smith-chart').focus({preventScroll:true})}
 });
 document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&drag)cancelDrag();
   if(e.key==='Escape'&&$('smith-studio').classList.contains('focus-chart')){
     setChartFocus(false);$('focus-chart').focus();
   }
@@ -334,6 +365,7 @@ $('smith-chart').addEventListener('pointermove',e=>{if(!drag)return;const g=poin
 function endDrag(){if(!drag)return;drag=false;recordLoadHistory(dragOrigin);dragOrigin=null}
 function cancelDrag(){if(!drag)return;drag=false;if(dragOrigin)applyLoadHistory(dragOrigin);dragOrigin=null}
 $('smith-chart').addEventListener('pointerup',endDrag);$('smith-chart').addEventListener('pointercancel',cancelDrag);
+window.addEventListener('blur',cancelDrag);
 $('smith-chart').addEventListener('keydown',e=>{
   const step=e.shiftKey?.05:.015;let dx=0,dy=0;
   switch(e.key){case'ArrowLeft':dx=-step;break;case'ArrowRight':dx=step;break;case'ArrowUp':dy=step;break;case'ArrowDown':dy=-step;break;default:return}
@@ -736,7 +768,7 @@ function validateSession(raw){
 }
 function restoreSession(data){
   const {candidate,view,pin}=validateSession(data);
-  setChartFocus(false);updateInspection(null);$('copy-status').textContent='';
+  cancelDrag();resetChartView();setChartFocus(false);updateInspection(null);$('copy-status').textContent='';
   Object.assign(states,candidate);
   $('preset').value=states.special==='open'?'open':'custom';
   $('order').value=String(states.N);syncPacketControls();$('packet').value=String(states.j);
@@ -785,5 +817,5 @@ function restoreFromQuery(){
 }
 $('results-detail').open=false;
 $('smith-studio').classList.add('js-ready');switchView('exact');
-buildBase();syncPacketControls();syncSamplingButton();restoreFromQuery();render();syncLoadHistory();runChecks();
+buildBase();updateChartView();syncPacketControls();syncSamplingButton();restoreFromQuery();render();syncLoadHistory();runChecks();
 })();

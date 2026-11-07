@@ -141,6 +141,30 @@ class SmithChartSiteTest(unittest.TestCase):
         self.assertIn('.smith-lab .load-history', css)
         self.assertIn('.smith-lab .history-status:empty', css)
 
+    def test_chart_zoom_is_view_only_with_safe_drag_cancel(self):
+        body = (ROOT/'website/smith-chart-body.html').read_text(encoding='utf-8')
+        css = (ROOT/'website/assets/smith-chart.css').read_text(encoding='utf-8')
+        js = (ROOT/'website/assets/smith-chart.js').read_text(encoding='utf-8')
+        for id_ in ('chart-zoom-in', 'chart-zoom-out', 'chart-zoom-level',
+                    'chart-view-center', 'chart-view-fit'):
+            self.assertIn('id="'+id_+'"', body)
+        self.assertIn('aria-label="Current chart magnification"', body)
+        self.assertIn('const ZOOM_FACTORS=[1,1.5,2,3,4]', js)
+        self.assertIn('function updateChartView()', js)
+        self.assertIn('function resetChartView()', js)
+        self.assertIn('function centerChartView()', js)
+        self.assertIn("setAttribute('viewBox'", js)
+        self.assertIn("if(e.key==='Escape'&&drag)cancelDrag();", js)
+        self.assertIn("window.addEventListener('blur',cancelDrag);", js)
+        self.assertEqual(js.count('cancelDrag();resetChartView();'), 2)
+        self.assertIn('.smith-lab .chart-zoom-controls{display:none;', css)
+        self.assertIn('.smith-lab.js-ready .chart-zoom-controls{display:flex}', css)
+        # View magnification is intentionally excluded from portable RF settings.
+        start = js.index('function serializeSession()')
+        end = js.index('function validateSession(', start)
+        self.assertNotIn('zoomIndex', js[start:end])
+        self.assertNotIn('zoomCenter', js[start:end])
+
     def test_projector_impedance_identity_exactly(self):
         for t in (Fraction(0), Fraction(1,10), Fraction(-2,5), Fraction(3,4)):
             z = (1+t)/(1-t)
