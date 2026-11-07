@@ -225,12 +225,59 @@ $('order').addEventListener('change',()=>{states.N=Number($('order').value);stat
 $('phase').addEventListener('input',()=>{states.k=Number($('phase').value);render()});
 $('packet').addEventListener('change',()=>{states.j=Number($('packet').value);render()});
 for(const name of ['show-r','show-x','show-rays','show-orbit','show-weight'])$(name).addEventListener('change',()=>{syncSamplingButton();render()});
-$('grid-mode').addEventListener('change',render);
+$('grid-mode').addEventListener('change',()=>{render();updateInspection(hoveredGamma)});
 $('sample-radius').addEventListener('input',()=>{states.rho=Number($('sample-radius').value);render()});
 $('sample-count').addEventListener('change',()=>{states.sampleCount=Number($('sample-count').value);render()});
 function syncPacketControls(){const select=$('packet');select.replaceChildren();for(let j=0;j<states.N;j++){const o=document.createElement('option');o.value=String(j);o.textContent=`j = ${j}`;select.appendChild(o)}select.value=String(states.j);$('phase').max=String(states.N-1);$('phase').value=String(states.k)}
-$('reset').addEventListener('click',()=>{referencePin=null;$('grid-mode').value='z';$('clear-reference').disabled=true;Object.assign(states,{r:25,x:25,z0:50,special:null,length:0,N:8,k:0,j:0,rho:.94,sampleCount:96});$('sample-radius').value='.94';$('sample-count').value='96';$('preset').value='inductive';$('order').value='8';for(const id of ['show-r','show-x'])$(id).checked=true;for(const id of ['show-rays','show-orbit'])$(id).checked=false;$('show-weight').checked=false;syncSamplingButton();syncPacketControls();presetToInputs();$('input-warning').textContent='';render()});
+$('reset').addEventListener('click',()=>{setChartFocus(false);updateInspection(null);$('copy-status').textContent='';referencePin=null;$('grid-mode').value='z';$('clear-reference').disabled=true;Object.assign(states,{r:25,x:25,z0:50,special:null,length:0,N:8,k:0,j:0,rho:.94,sampleCount:96});$('sample-radius').value='.94';$('sample-count').value='96';$('preset').value='inductive';$('order').value='8';for(const id of ['show-r','show-x'])$(id).checked=true;for(const id of ['show-rays','show-orbit'])$(id).checked=false;$('show-weight').checked=false;syncSamplingButton();syncPacketControls();presetToInputs();$('input-warning').textContent='';render()});
 function pointerToGamma(e){const svg=$('smith-chart'),point=svg.createSVGPoint();point.x=e.clientX;point.y=e.clientY;const inv=svg.getScreenCTM()?.inverse();if(!inv)return null;const p=point.matrixTransform(inv);const g=C((p.x-CX)/R,-(p.y-CY)/R);return abs(g)<=1.014?g:null}
+// Inspection is read-only. Moving the cursor never changes the selected load.
+let hoverFrame=0,hoveredGamma=null;
+const defaultInspect='Hover or tap inside the disk to inspect Γ, z, or y.';
+function updateInspection(g){
+  hoveredGamma=g;
+  if(!g){$('chart-inspect').textContent=defaultInspect;return}
+  const mode=$('grid-mode').value;
+  const components=[`Γ = ${complexString(g,3)}`];
+  if(mode!=='y')components.push(`z = ${complexString(safeToZ(g),3)}`);
+  if(mode!=='z')components.push(`y = ${complexString(safeToZ(scale(g,-1)),3)}`);
+  $('chart-inspect').textContent=components.join('  ·  ');
+}
+$('smith-chart').addEventListener('pointermove',e=>{
+  const g=pointerToGamma(e);
+  if(hoverFrame)cancelAnimationFrame(hoverFrame);
+  hoverFrame=requestAnimationFrame(()=>{hoverFrame=0;updateInspection(g)});
+});
+$('smith-chart').addEventListener('pointerleave',()=>{
+  if(hoverFrame)cancelAnimationFrame(hoverFrame);
+  hoverFrame=0;updateInspection(null);
+});
+function setChartFocus(enabled){
+  $('smith-studio').classList.toggle('focus-chart',enabled);
+  $('focus-chart').setAttribute('aria-pressed',String(enabled));
+  $('focus-chart').textContent=enabled?'Return to workbench':'Expand chart';
+}
+$('focus-chart').addEventListener('click',()=>{
+  const enable=!$('smith-studio').classList.contains('focus-chart');
+  setChartFocus(enable);
+  if(enable)$('chart-title').scrollIntoView({block:'start'});
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&$('smith-studio').classList.contains('focus-chart')){
+    setChartFocus(false);$('focus-chart').focus();
+  }
+});
+$('copy-current').addEventListener('click',async()=>{
+  const load=loadGamma(),line=rotationGamma(),zin=safeToZ(line);
+  const result=['Smith chart · Komorebi',
+    `Z0 = ${fmt(states.z0,2)} Ω`,
+    `ZL = ${states.special==='open'?'ideal open':complexString(C(states.r,states.x),3)+' Ω'}`,
+    `ΓL = ${complexString(load,6)}`,
+    `Γin = ${complexString(line,6)}`,
+    `Zin = ${zin?complexString(scale(zin,states.z0),3)+' Ω':'ideal open'}`].join('\n');
+  try{await copyText(result);$('copy-status').textContent='Copied.'}
+  catch(error){$('copy-status').textContent='Copy unavailable; use Save settings.'}
+});
 $('smith-chart').addEventListener('pointerdown',e=>{const g=pointerToGamma(e);if(!g)return;drag=true;$('smith-chart').setPointerCapture(e.pointerId);setFromGamma(g)});
 $('smith-chart').addEventListener('pointermove',e=>{if(!drag)return;const g=pointerToGamma(e);if(g)setFromGamma(g)});
 function endDrag(){drag=false}$('smith-chart').addEventListener('pointerup',endDrag);$('smith-chart').addEventListener('pointercancel',endDrag);
@@ -238,7 +285,7 @@ $('smith-chart').addEventListener('keydown',e=>{
   const step=e.shiftKey?.05:.015;let dx=0,dy=0;
   switch(e.key){case'ArrowLeft':dx=-step;break;case'ArrowRight':dx=step;break;case'ArrowUp':dy=step;break;case'ArrowDown':dy=-step;break;default:return}
   e.preventDefault();const g=loadGamma(),q=C(g.re+dx,g.im+dy),n=abs(q);
-  setFromGamma(n>1?scale(q,1/n):q);
+  setFromGamma(n>1?scale(q,1/n):q);updateInspection(loadGamma());
 });
 $('export').addEventListener('click',()=>{const svg=$('smith-chart').cloneNode(true);svg.setAttribute('xmlns',svgNS);const embeddedStyle=svgEl('style');embeddedStyle.textContent='svg text{font-family:system-ui,sans-serif}svg .math-label{font-family:Georgia,serif;font-style:italic}svg .grid-label{font-weight:500;font-size:13px;fill:#6e847e}svg .corner-label{fill:#4c6862;font-size:16px}svg .endpoint-label{fill:#384b46;font-size:14px}';svg.prepend(embeddedStyle);const xml=new XMLSerializer().serializeToString(svg);const blob=new Blob([xml],{type:'image/svg+xml;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='komorebi-polyphase-smith-chart.svg';document.body.appendChild(a);a.click();a.remove();window.setTimeout(()=>URL.revokeObjectURL(url),1000)});
 function evaluatePolynomial(a,g){
@@ -566,6 +613,7 @@ function validateSession(raw){
 }
 function restoreSession(data){
   const {candidate,view,pin}=validateSession(data);
+  setChartFocus(false);updateInspection(null);$('copy-status').textContent='';
   Object.assign(states,candidate);
   $('preset').value=states.special==='open'?'open':'custom';
   $('order').value=String(states.N);syncPacketControls();$('packet').value=String(states.j);

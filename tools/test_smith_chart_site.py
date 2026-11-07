@@ -61,6 +61,22 @@ class SmithChartSiteTest(unittest.TestCase):
             self.assertNotIn('checked', tag.group(0))
         self.assertIn("for(const id of ['show-rays','show-orbit'])$(id).checked=false;", js)
 
+    def test_chart_inspector_focus_and_mobile_navigation(self):
+        body = (ROOT/'website/smith-chart-body.html').read_text(encoding='utf-8')
+        css = (ROOT/'website/assets/smith-chart.css').read_text(encoding='utf-8')
+        js = (ROOT/'website/assets/smith-chart.js').read_text(encoding='utf-8')
+        self.assertIn('viewbox="70 37 760 730"', body)
+        self.assertIn('id="focus-chart" aria-pressed="false"', body)
+        self.assertIn('id="chart-inspect"', body)
+        self.assertIn('id="copy-current"', body)
+        self.assertIn('function setChartFocus(enabled)', js)
+        self.assertIn('function updateInspection(g)', js)
+        self.assertIn("if(mode!=='y')", js)
+        self.assertIn("if(mode!=='z')", js)
+        self.assertIn("e.key==='Escape'", js)
+        self.assertIn(':scope.focus-chart .side', css)
+        self.assertIn('.smith-section-nav{display:grid;grid-template-columns:repeat(2', css)
+
     def test_projector_impedance_identity_exactly(self):
         for t in (Fraction(0), Fraction(1,10), Fraction(-2,5), Fraction(3,4)):
             z = (1+t)/(1-t)
