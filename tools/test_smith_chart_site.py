@@ -39,7 +39,7 @@ class SmithChartSiteTest(unittest.TestCase):
 
     def test_each_input_has_an_accessible_name(self):
         body = (ROOT/'website/smith-chart-body.html').read_text(encoding='utf-8')
-        controls = re.findall(r'<(?:input|select|textarea)\\b[^>]*>', body)
+        controls = re.findall(r'<(?:input|select|textarea)[ >][^>]*>', body)
         self.assertGreaterEqual(len(controls), 16)
         for control in controls:
             self.assertRegex(control, r'aria-label="[^"]+"')
