@@ -7,6 +7,7 @@ const states={r:25,x:25,z0:50,special:null,length:0,N:8,k:0,j:0,rho:.94,sampleCo
 let referencePin=null;
 const coefficients=Array.from({length:32},(_,i)=>1/(i+1));
 let drag=false,lastTestResults=[];
+let gammaDraftDirty=false;
 let lastGridKey='';
 const adaptiveCache=new Map();
 const C=(re=0,im=0)=>({re,im});
@@ -59,10 +60,19 @@ function rotationGamma(){const base=loadGamma();return mul(base,expi(-4*Math.PI*
 function cyclicGamma(){return mul(rotationGamma(),expi(2*Math.PI*states.k/states.N))}
 function safeToZ(g){return abs(sub(C(1),g))<1e-12?null:zFromGamma(g)}
 function presetToInputs(){const open=states.special==='open';$('resistance').disabled=open;$('reactance').disabled=open;$('resistance').value=open?'':String(states.r);$('reactance').value=open?'':String(states.x);$('z0').value=String(states.z0);$('length').value=String(states.length)}
-function setFromGamma(g){
+function syncGammaEditor(force=false){
+  if(gammaDraftDirty&&!force)return;
+  const g=loadGamma();
+  $('gamma-re').value=String(Number(g.re.toPrecision(11)));
+  $('gamma-im').value=String(Number(g.im.toPrecision(11)));
+  gammaDraftDirty=false;
+}
+function discardGammaDraft(){gammaDraftDirty=false;$('gamma-warning').textContent=''}
+function setFromGamma(g,snapEndpoints=true){
   const m=abs(g);
   if(m>1)g=scale(g,1/m);
-  const open=abs(sub(g,C(1)))<.006,short=abs(add(g,C(1)))<.006;
+  const open=(g.re===1&&g.im===0)||(snapEndpoints&&abs(sub(g,C(1)))<.006);
+  const short=(g.re===-1&&g.im===0)||(snapEndpoints&&abs(add(g,C(1)))<.006);
   if(open){states.special='open';$('preset').value='open'}
   else if(short){states.r=0;states.x=0;states.special=null;$('preset').value='short'}
   else{
@@ -71,7 +81,7 @@ function setFromGamma(g){
     states.r=Math.max(0,z.re*states.z0);states.x=z.im*states.z0;
     states.special=null;$('preset').value='custom';
   }
-  presetToInputs();$('input-warning').textContent='';render();
+  presetToInputs();$('input-warning').textContent='';discardGammaDraft();render();
 }
 function buildBase(){const base=$('chart-base');base.replaceChildren();circle(CX,CY,R,'#466c62','#fafdf9',2,base);line(CX-R-17,CY,CX+R+17,CY,'#859f95',1.4,'',base);line(CX,CY-R-16,CX,CY+R+16,'#c9dad0',1,'4 6',base);circle(CX,CY,3.5,'none','#688e7d',0,base);textAt('Im Γ',CX+10,CY-R-23,'corner-label',base);textAt('Re Γ',CX+R+14,CY+5,'corner-label',base);textAt('short',CX-R-9,CY+22,'endpoint-label',base,{'text-anchor':'start'});textAt('open',CX+R-9,CY+22,'endpoint-label',base,{'text-anchor':'end'});textAt('matched',CX+7,CY+22,'endpoint-label',base)}
 function drawCoordinateGrid(mode, grid, labels, showLabels){
@@ -191,7 +201,7 @@ function renderExactPackets(){
 function render(){
   const key=$('grid-mode').value+':'+String(Number($('show-r').checked)) + ':' + String(Number($('show-x').checked));
   if(key!==lastGridKey){drawGrid();lastGridKey=key}
-  drawOverlay();renderValues();renderExactPackets();
+  drawOverlay();renderValues();renderExactPackets();syncGammaEditor();
 }
 function validInputs(){
   const z=Number($('z0').value),r=Number($('resistance').value),x=Number($('reactance').value);
@@ -206,7 +216,7 @@ function validInputs(){
 function readInputs(){
   if(states.special==='open')return;
   const error=validInputs();$('input-warning').textContent=error?error+' Previous valid load is still shown.':'';
-  if(!error){$('preset').value='custom';render()}
+  if(!error){$('preset').value='custom';discardGammaDraft();render()}
 }
 $('preset').addEventListener('change',e=>{
   const q=e.target.value;
@@ -216,20 +226,43 @@ $('preset').addEventListener('change',e=>{
   else if(q==='matched'){states.special=null;states.r=states.z0;states.x=0}
   else if(values[q]){states.special=null;[states.r,states.x]=values[q]}
   else return;
-  presetToInputs();$('input-warning').textContent='';render();
+  presetToInputs();$('input-warning').textContent='';discardGammaDraft();render();
 });
-$('z0').addEventListener('input',()=>{const error=validInputs();$('input-warning').textContent=error?error+' Previous valid load is still shown.':'';if(!error){if(states.special!=='open')$('preset').value='custom';render()}});
+$('z0').addEventListener('input',()=>{const error=validInputs();$('input-warning').textContent=error?error+' Previous valid load is still shown.':'';if(!error){if(states.special!=='open')$('preset').value='custom';discardGammaDraft();render()}});
 for(const name of ['resistance','reactance'])$(''+name).addEventListener('input',readInputs);
 $('length').addEventListener('input',()=>{states.length=Number($('length').value);render()});
 $('order').addEventListener('change',()=>{states.N=Number($('order').value);states.k=Math.min(states.k,states.N-1);states.j=Math.min(states.j,states.N-1);syncPacketControls();render()});
 $('phase').addEventListener('input',()=>{states.k=Number($('phase').value);render()});
 $('packet').addEventListener('change',()=>{states.j=Number($('packet').value);render()});
 for(const name of ['show-r','show-x','show-rays','show-orbit','show-weight'])$(name).addEventListener('change',()=>{syncSamplingButton();render()});
+for(const id of ['gamma-re','gamma-im']){
+  $(id).addEventListener('input',()=>{gammaDraftDirty=true;$('gamma-warning').textContent=''});
+  $(id).addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();$('gamma-apply').click()}});
+}
+$('gamma-from-load').addEventListener('click',()=>{discardGammaDraft();syncGammaEditor(true);$('gamma-warning').textContent='Current load coordinates restored.'});
+$('gamma-apply').addEventListener('click',()=>{
+  const reText=$('gamma-re').value.trim(),imText=$('gamma-im').value.trim();
+  const re=Number(reText),im=Number(imText);
+  if(!reText||!imText||!Number.isFinite(re)||!Number.isFinite(im)){
+    $('gamma-warning').textContent='Enter finite real and imaginary components of Γ.';return;
+  }
+  const g=C(re,im),m=abs(g);
+  if(m>1){$('gamma-warning').textContent='Outside the passive Smith disk: |Γ| must not exceed 1.';return;}
+  const distance=abs(sub(C(1),g));
+  if(distance>0&&distance<1e-10){$('gamma-warning').textContent='Too close to Γ = 1 for stable impedance conversion. Select the Open preset for the ideal boundary.';return;}
+  if(distance>0){const z=zFromGamma(g),scaled=states.z0*Math.max(Math.abs(z.re),Math.abs(z.im));
+    if(!Number.isFinite(scaled)||Math.max(Math.abs(z.re),Math.abs(z.im))>1e12||!Number.isFinite(z.re)||!Number.isFinite(z.im)){
+      $('gamma-warning').textContent='Converted load exceeds the supported numerical range.';return;
+    }
+  }
+  setFromGamma(g,false);
+  $('gamma-warning').textContent='Passive Γ applied to the load.';
+});
 $('grid-mode').addEventListener('change',()=>{render();updateInspection(hoveredGamma)});
 $('sample-radius').addEventListener('input',()=>{states.rho=Number($('sample-radius').value);render()});
 $('sample-count').addEventListener('change',()=>{states.sampleCount=Number($('sample-count').value);render()});
 function syncPacketControls(){const select=$('packet');select.replaceChildren();for(let j=0;j<states.N;j++){const o=document.createElement('option');o.value=String(j);o.textContent=`j = ${j}`;select.appendChild(o)}select.value=String(states.j);$('phase').max=String(states.N-1);$('phase').value=String(states.k)}
-$('reset').addEventListener('click',()=>{setChartFocus(false);updateInspection(null);$('copy-status').textContent='';referencePin=null;$('grid-mode').value='z';$('clear-reference').disabled=true;Object.assign(states,{r:25,x:25,z0:50,special:null,length:0,N:8,k:0,j:0,rho:.94,sampleCount:96});$('sample-radius').value='.94';$('sample-count').value='96';$('preset').value='inductive';$('order').value='8';for(const id of ['show-r','show-x'])$(id).checked=true;for(const id of ['show-rays','show-orbit'])$(id).checked=false;$('show-weight').checked=false;syncSamplingButton();syncPacketControls();presetToInputs();$('input-warning').textContent='';render()});
+$('reset').addEventListener('click',()=>{setChartFocus(false);updateInspection(null);$('copy-status').textContent='';referencePin=null;$('grid-mode').value='z';$('clear-reference').disabled=true;Object.assign(states,{r:25,x:25,z0:50,special:null,length:0,N:8,k:0,j:0,rho:.94,sampleCount:96});$('sample-radius').value='.94';$('sample-count').value='96';$('preset').value='inductive';$('order').value='8';for(const id of ['show-r','show-x'])$(id).checked=true;for(const id of ['show-rays','show-orbit'])$(id).checked=false;$('show-weight').checked=false;syncSamplingButton();syncPacketControls();presetToInputs();$('input-warning').textContent='';discardGammaDraft();render()});
 function pointerToGamma(e){const svg=$('smith-chart'),point=svg.createSVGPoint();point.x=e.clientX;point.y=e.clientY;const inv=svg.getScreenCTM()?.inverse();if(!inv)return null;const p=point.matrixTransform(inv);const g=C((p.x-CX)/R,-(p.y-CY)/R);return abs(g)<=1.014?g:null}
 // Inspection is read-only. Moving the cursor never changes the selected load.
 let hoverFrame=0,hoveredGamma=null;
@@ -260,7 +293,7 @@ function setChartFocus(enabled){
 $('focus-chart').addEventListener('click',()=>{
   const enable=!$('smith-studio').classList.contains('focus-chart');
   setChartFocus(enable);
-  if(enable)$('chart-title').scrollIntoView({block:'start'});
+  if(enable){$('chart-title').scrollIntoView({block:'start'});$('smith-chart').focus({preventScroll:true})}
 });
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&$('smith-studio').classList.contains('focus-chart')){
@@ -308,7 +341,7 @@ function renderPackets(t){
   const mags=values.map(abs),maximum=Math.max(...mags,Number.EPSILON);
   const target=$('packet-bars');target.replaceChildren();
   for(let j=0;j<n;j++){
-    const bar=document.createElement('div');bar.className='packet-bar'+(j===states.j?' is-active':'');
+    const bar=document.createElement('button');bar.type='button';bar.className='packet-bar'+(j===states.j?' is-active':'');bar.setAttribute('aria-pressed',String(j===states.j));
     bar.setAttribute('aria-label',`Residue class ${j}: magnitude ${mags[j].toPrecision(6)}${j===states.j?', selected':''}`);
     const head=document.createElement('div');head.className='packet-bar-head';
     const label=document.createElement('b');label.textContent='j = '+j;
@@ -319,7 +352,7 @@ function renderPackets(t){
     fill.style.height=(mags[j]/maximum*38).toFixed(2)+'px';track.appendChild(fill);
     const amount=document.createElement('span');amount.className='packet-value';
     amount.textContent=mags[j].toPrecision(4);
-    bar.append(head,track,amount);target.appendChild(bar);
+    bar.append(head,track,amount);bar.addEventListener('click',()=>{states.j=j;syncPacketControls();render();target.querySelectorAll('.packet-bar')[j]?.focus()});target.appendChild(bar);
   }
   const a=states.j,b=(a+1)%n,c=(a+b)%n;
   const left=selectedCoefficients(n,a),right=selectedCoefficients(n,b);
@@ -621,7 +654,7 @@ function restoreSession(data){
   for(const [id,key] of [['show-r','r'],['show-x','x'],['show-rays','rays'],['show-orbit','orbit'],['show-weight','weight']])$(id).checked=view[key];
   $('sample-radius').value=String(states.rho);$('sample-count').value=String(states.sampleCount);
   referencePin=pin?{...pin,gamma:pin.special==='open'?C(1):gammaFromZ(C(pin.r/pin.z0,pin.x/pin.z0))}:null;
-  presetToInputs();$('phase').value=String(states.k);$('input-warning').textContent='';
+  presetToInputs();$('phase').value=String(states.k);$('input-warning').textContent='';discardGammaDraft();
   syncSamplingButton();switchView(view.tab);render();
 }
 function downloadLocalFile(name,data,type){

@@ -65,3 +65,11 @@ The implementation is maintained as [HTML source](../../website/smith-chart-body
 
 **What is established:** exact formulas and tested implementation behavior under stated assumptions.  
 **What remains open:** novelty relative to all prior Smith-chart and polyphase literature, and measurable benefit in realistic RF measurement or model-fitting tasks.
+
+## Direct load entry and packet selection
+
+The workbench accepts physical impedance values and, under **Enter Γ directly**, an alternative pair of dimensionless load-reflection coordinates \\(\\Re\\Gamma_L,\\Im\\Gamma_L\\). The second input uses the same reference resistance \\(Z_0\\). Applying a new reflection point converts it through the inverse Cayley map and updates the physical load. A passive load must satisfy \\(|\\Gamma_L|\\le 1\\). Inputs outside the disk or too close to the open-circuit pole for stable double-precision conversion are rejected without changing the previous selected load. Unlike chart-pointer snapping near the endpoints, typed values inside the supported domain are not snapped to the ideal open or short.
+
+The **Finite polynomial** view now exposes each packet-magnitude bar as a keyboard-accessible selection control. Choosing a bar changes packet index \\(j\\) and updates the algebraic diagnostics without changing the physical load. The bars illustrate projected values of a fixed polynomial, not angular sectors of the reflection disk.
+
+The numerical interface checks are finite fixtures. They do not assert arbitrary-precision inversion or new RF performance results.

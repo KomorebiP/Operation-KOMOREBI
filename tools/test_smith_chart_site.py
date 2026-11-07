@@ -77,6 +77,23 @@ class SmithChartSiteTest(unittest.TestCase):
         self.assertIn(':scope.focus-chart .side', css)
         self.assertIn('.smith-section-nav{display:grid;grid-template-columns:repeat(2', css)
 
+    def test_direct_gamma_editor_and_clickable_packets(self):
+        body = (ROOT/'website/smith-chart-body.html').read_text(encoding='utf-8')
+        css = (ROOT/'website/assets/smith-chart.css').read_text(encoding='utf-8')
+        js = (ROOT/'website/assets/smith-chart.js').read_text(encoding='utf-8')
+        for id_ in ('gamma-editor','gamma-re','gamma-im','gamma-apply','gamma-from-load','gamma-warning'):
+            self.assertIn('id="'+id_+'"', body)
+        self.assertIn('Enter Γ directly', body)
+        self.assertIn('aria-describedby="gamma-help gamma-warning"', body)
+        self.assertIn('Select a bar to change j', body)
+        self.assertIn('function syncGammaEditor(force=false)', js)
+        self.assertIn('setFromGamma(g,false)', js)
+        self.assertIn('Outside the passive Smith disk', js)
+        self.assertIn("const bar=document.createElement('button')", js)
+        self.assertIn("bar.setAttribute('aria-pressed'", js)
+        self.assertIn(".packet-bars .packet-bar:focus-visible", css)
+        self.assertIn('.gamma-editor summary{min-height:44px', css)
+
     def test_projector_impedance_identity_exactly(self):
         for t in (Fraction(0), Fraction(1,10), Fraction(-2,5), Fraction(3,4)):
             z = (1+t)/(1-t)
