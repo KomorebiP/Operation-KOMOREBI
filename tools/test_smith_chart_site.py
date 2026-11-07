@@ -44,6 +44,23 @@ class SmithChartSiteTest(unittest.TestCase):
         for control in controls:
             self.assertRegex(control, r'aria-label="[^"]+"')
 
+    def test_cleanup_navigation_and_optional_controls(self):
+        body = (ROOT/'website/smith-chart-body.html').read_text(encoding='utf-8')
+        js = (ROOT/'website/assets/smith-chart.js').read_text(encoding='utf-8')
+        self.assertEqual(body.count('<h1'), 1)
+        nav = body.split('<nav class="smith-section-nav"', 1)[1].split('</nav>', 1)[0]
+        targets = re.findall(r'href="#([^"]+)"', nav)
+        ids = set(re.findall(r'\\bid="([^"]+)"', body))
+        self.assertEqual(len(targets), 4)
+        self.assertTrue(set(targets).issubset(ids))
+        self.assertIn('<details class="overlay-options">', body)
+        self.assertIn('<details class="advanced-values">', body)
+        for key in ('show-rays', 'show-orbit'):
+            tag = re.search(r'<input[^>]*id="'+key+r'"[^>]*>', body)
+            self.assertIsNotNone(tag)
+            self.assertNotIn('checked', tag.group(0))
+        self.assertIn("for(const id of ['show-rays','show-orbit'])$(id).checked=false;", js)
+
     def test_projector_impedance_identity_exactly(self):
         for t in (Fraction(0), Fraction(1,10), Fraction(-2,5), Fraction(3,4)):
             z = (1+t)/(1-t)
