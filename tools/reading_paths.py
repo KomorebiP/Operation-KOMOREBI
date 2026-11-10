@@ -93,6 +93,15 @@ def guide_model(reader, component):
         first=[step('How to read this book',prefix+'how-to-read.html','Choose the probability, operator, or numerical route that matches your background.'),
                step('Visual studies',visual,'Follow the Gaussian form, spectral packets, and probability enclosure through the visual examples.'),
                step('A worked probability enclosure',targets['sec:worked-enclosure'],'Follow the directed-enclosure calculation and its stated input and error requirements.')]
+    if work=='monographs-special-functions':
+        from special_functions_reading import source_url
+        prefix='read/'+work+'/'
+        background='Useful background: power series, derivatives, rational arithmetic, and the idea of a contraction.'
+        first=[step('Calculate contracted feedback coefficients','collection/examples/24_CONTRACTED_FEEDBACK.html','Work out the scalar recurrence before introducing two interacting functions.'),
+               step('Coupled growth and inverse geometry',source_url('sections_v11/coupled_visual.tex'),'Follow the original coupled-family figures, recurrence, and parameter questions.'),
+               step('Explore the coupled-function laboratory','special-functions-lab.html','Change rational scales, inspect the terms of the recurrence, and compare approximations with an explicit local truncation bound.'),
+               step('Expanded visual lessons',visual,'Explore all 171 lessons from the original eight-paper series, with its own source scope and links to related monograph chapters.'),
+               step('Limits of finite observation',prefix+'finite-observation.html','Distinguish the information supplied by finitely many observations from a full function or parameter recovery result.')]
     first=unique(first)
     study=[]
     edition=assessment.get('editorial_edition')
@@ -112,6 +121,13 @@ def guide_model(reader, component):
         if not study:
             study.extend(step(label,url,'Follow the supplied setup and usage sequence.') for label,url in selected('guide')[:2])
     study.append(step('All reading files',overview+'#read','Return to the edition’s full reading-file list.'))
+    if work=='monographs-special-functions':
+        study=[step('Choose a function family','collection/SPECIAL_FUNCTIONS.html#five-families','Use the five-family map to choose a subject and its prerequisites.'),
+               step('Contracted nonlinear feedback',prefix+'contracted-feedback.html','Read the defining equation and its analytic development.'),
+               step('Coupled contractions',prefix+'coupled-contractions.html','Follow the two-component extension, then continue to the growth and inverse figures.'),
+               step('Resolution and finite observation',source_url('sections_v11/resolution_visual.tex'),'Read the finite-resolution examples with their stated observation models.'),
+               step('Full monograph contents',config['index'],'Continue through all seven main chapters, ten proof appendices, notation, and source notes.'),
+               step('All reading files',overview+'#read','Choose the current books or the preserved original series.')]
     evidence=[]
     if intro:
         setup=intro['setup'];claim=next(c for c in site.claims['records'] if c['id']==intro['claim'])
@@ -129,6 +145,11 @@ def guide_model(reader, component):
     if work=='monographs-cos-method':
         evidence.extend([step('Formalization and theorem correspondence',prefix+'b-lean.html','Compare the written results with the finite formal companion and its assumptions.'),
                          step('Computation and reproducibility',prefix+'c-reproduction.html','Inspect the retained commands, replay results, and their tested scope.')])
+    if work=='monographs-special-functions':
+        evidence.extend([step('Coupled entire growth and type',source_url('sections_v11/coupled_growth_full.tex'),'Read Appendix F with the hypotheses of each analytic statement.'),
+                         step('Exact inverse and its conditions',source_url('sections_v11/coupled_inverse_full.tex'),'Read Appendix G before interpreting recovery from a finite coefficient list.'),
+                         step('Exact laboratory and certificates',source_url('sections_v11/coupled_lab_full.tex'),'Compare the retained laboratory specification with the browser’s explicitly bounded local-series experiment.'),
+                         step('Current formal correspondence','collection/SPECIAL_FUNCTIONS_SOURCE_EXPRESSIONS_BLOCK20.html','Inspect the selected Lean statements and the remaining assumptions at the Python implementation boundary.')])
     if work in getattr(reader,'lean_works',{}):
         from lean_reader import directory
         evidence.append(step('Inspect retained Lean sources',directory(work),'Compare the full types with the written statements and recorded coverage.'))

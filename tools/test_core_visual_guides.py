@@ -19,7 +19,7 @@ class CoreVisualGuidesTests(unittest.TestCase):
         cls.files=[]
         registry=json.loads((ROOT/'manifests/browse-resources.json').read_bytes())
         for component in registry['components']:
-            if not component['id'].startswith('paper-') and component['id'] not in (QUANTUM,'monographs-large-signal-model'):continue
+            if not component['id'].startswith('paper-') and component['id'] not in (QUANTUM,'monographs-large-signal-model','monographs-special-functions'):continue
             receipt=json.loads((ROOT/('manifests/source-imports/'+component['id']+'.json')).read_bytes())
             owned={r['path']:r for r in receipt['files']}
             for resource in component['resources']:
@@ -48,8 +48,8 @@ class CoreVisualGuidesTests(unittest.TestCase):
             write=lambda path,body:writes.__setitem__(path,body))
         reader=SimpleNamespace(site=site,records={str(i):r for i,r in enumerate(self.files)})
         render(reader)
-        self.assertEqual(pages[INDEX].count('Open visual guide'),14)
-        self.assertEqual(pages[INDEX].count('class="visual-guide-preview"'),14)
+        self.assertEqual(pages[INDEX].count('Open visual guide'),15)
+        self.assertEqual(pages[INDEX].count('class="visual-guide-preview"'),15)
         self.assertIn('Search all visual pages',pages[INDEX])
         self.assertIn('../search.html?type=Visual+guides',pages[INDEX])
         self.assertIn('Atlas in monograph PDF',pages[INDEX])
@@ -107,7 +107,7 @@ class CoreVisualGuidesTests(unittest.TestCase):
                 if tag=='a':self.links.append(dict(attrs))
         page='read/paper-xii/atlas/v07.html';markup=guide_navigation('paper-xii',page);links=Switch(markup).links
         self.assertIn('../../visual-guides.html',[a['href'] for a in links])
-        self.assertEqual(sum('/atlas/index.html' in a['href'] or a['href']=='index.html' for a in links),14)
+        self.assertEqual(sum('/atlas/index.html' in a['href'] or a['href']=='index.html' for a in links),15)
         self.assertIn('Switch guide',markup)
         self.assertIn('Search this guide',markup)
         self.assertIn('../../../search.html?type=Visual+guides&amp;work=paper-xii',markup)
@@ -140,7 +140,7 @@ class CoreVisualGuidesTests(unittest.TestCase):
         self.assertTrue(all(is_visual_guide(QUANTUM,page) for page in [QUANTUM_INDEX,*selected]))
         self.assertFalse(is_visual_guide(QUANTUM,BOOK['index']))
         self.assertFalse(is_visual_guide(QUANTUM,CHAPTERS[0]['url']))
-        self.assertEqual(len(guide_choices()),14)
+        self.assertEqual(len(guide_choices()),15)
         markup=guide_navigation(QUANTUM,selected[0])
         self.assertIn('href="visual-guides.html"',markup)
         self.assertIn('Read volume',markup)

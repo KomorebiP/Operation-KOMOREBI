@@ -33,15 +33,16 @@ def is_page(page):
 
 
 def inventory(root,files):
-    from reader_documents import png_dimensions
+    from pathlib import PurePosixPath
+    from reader_figure_assets import dimensions
     from quantum_reading import BOOK
     records={r['repository_path']:r for r in files}
     if PDF not in records:raise ValueError('Missing Quantum visual reading resource: '+PDF)
     receipt=json.loads((root/'website/assets/figures/quantum-arithmetic/figures.json').read_bytes())
-    figure=next(f for f in receipt['figures'] if f['image'].endswith('/q_01_primitive_roots.png'))
+    figure=next(f for f in receipt['figures'] if PurePosixPath(f['image']).stem=='q_01_primitive_roots')
     raw=(root/'website'/figure['image']).read_bytes()
     if hashlib.sha256(raw).hexdigest()!=figure['image_sha256']:raise ValueError('Changed Quantum visual preview')
-    width,height=png_dimensions(raw);record=records[PDF]
+    width,height=dimensions(raw,figure['image']);record=records[PDF]
     return dict(work=WORK,label='Quantum and Circuits',title=BOOK['title'],number=None,
         short_title='Quantum arithmetic and circuit diagrams',
         summary='Two complete visual sequences: 25 pages of quantum arithmetic and 25 pages of circuit obstructions.',

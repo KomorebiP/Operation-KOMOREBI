@@ -1749,6 +1749,30 @@ specified configurations and 54,108 budget cases using NumPy FFT/IFFT and
 explicit Haar support vectors. Its report records the tested range and
 numerical errors; it does not change manuscript or proof status.
 
+## Special Functions reading and experiments
+
+The Special Functions guided start links the scalar worked example, the coupled
+visual chapters, the expanded visual lessons, and the relevant evidence appendices.
+The expanded atlas at `read/monographs-special-functions/atlas/index.html` renders
+the retained eight-paper guide, with 171 lessons and three introductory pages.
+Its source identities, equations, figure pixels, and reading sequence are checked by
+`test_special_functions_atlas.py`. The newer coupled family has its own monograph
+visual chapters; the atlas does not imply a correspondence with the later Lean blocks.
+
+The dedicated `special-functions-lab.html` calculates both coupled coefficient
+sequences with exact rational arithmetic. It includes comparison runs, individual
+recurrence contributions, a uniform omitted-series bound, share links, and CSV
+export. Decimal plotting has additional roundoff. The independent 85-case audit,
+contract, and computation manifest live in `verification/special-functions-lab/`;
+`test_special_functions_lab.py` replays the Python/JavaScript cross-check.
+
+Selected figure previews use lossless WebP to keep publication within the existing
+size gate. Their original PNGs remain in `verification/reader-figure-encoding/`.
+`test_reader_figure_encoding.py` checks both hashes and exact decoded RGBA pixels;
+the shared figure loader repeats those checks while building. Source PDFs remain
+unchanged. See that verification directory for the conversion and reproduction
+commands.
+
 ## Interactive Lean workspace
 
 The collection-wide native runner at `lean/run.html` extends execution beyond

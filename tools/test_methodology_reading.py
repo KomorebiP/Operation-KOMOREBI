@@ -10,6 +10,8 @@ import unittest
 from unittest.mock import patch
 from urllib.parse import unquote, urlsplit
 
+from PIL import Image
+
 import readable_chapters as reading
 from methodology_reading import WORK, BASE, MAIN, ESSAY, SOURCES, DATA, BOOK, CHAPTERS, source_specs, source_math, normalize
 from build_reader_site import Site
@@ -119,9 +121,13 @@ class MethodologyReadingTests(unittest.TestCase):
                         self.assertIn(target, targets, (name, link))
                     if target in pages and parts.fragment and not parts.query:
                         self.assertIn(unquote(parts.fragment), pages[target].ids, (name, link))
+            figures={row['source']:row for row in json.loads((ROOT/'website'/BOOK['figure_receipts']).read_bytes())['figures']}
             for record in reader.images.values():
                 source = ROOT / record['source'].replace('.pdf', '.png')
-                self.assertEqual(hashlib.sha256(source.read_bytes()).hexdigest(), record['sha256'])
+                self.assertEqual(hashlib.sha256(source.read_bytes()).hexdigest(), figures[record['source']]['original_png_sha256'])
+                with Image.open(source) as original, Image.open(output/record['file_url']) as encoded:
+                    self.assertEqual(original.size,encoded.size)
+                    self.assertEqual(original.convert('RGBA').tobytes(),encoded.convert('RGBA').tobytes())
 
 
 if __name__ == '__main__':

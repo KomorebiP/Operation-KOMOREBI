@@ -817,6 +817,7 @@ class ReaderSiteTests(unittest.TestCase):
         self.assertIn('../smith-chart.html', [a['href'] for a in links])
         self.assertIn('../recovery-lab.html', [a['href'] for a in links])
         self.assertIn('../j-lab.html', [a['href'] for a in links])
+        self.assertIn('../special-functions-lab.html', [a['href'] for a in links])
         self.assertIn('../reading-list.html', [a['href'] for a in links])
         self.assertIn('../lean/index.html', [a['href'] for a in links])
         self.assertIn('../read/index.html', [a['href'] for a in links])
@@ -824,11 +825,13 @@ class ReaderSiteTests(unittest.TestCase):
         self.assertIn('DEMONSTRATIONS.html#extended-case-studies', [a['href'] for a in links])
         self.assertIn('OPERATOR_AUDIT.html', [a['href'] for a in links])
         self.assertIn('FUTURE_DEVELOPMENTS.html', [a['href'] for a in links])
-        self.assertEqual(len(links),28)
-        self.assertEqual(len({a['href'] for a in links}),28)
+        self.assertEqual(len(links),29)
+        self.assertEqual(len({a['href'] for a in links}),29)
         self.assertIn('SPECIAL_FUNCTIONS.html', [a['href'] for a in links])
         special=Links(site_navigation('collection/SPECIAL_FUNCTIONS.html')).links
         self.assertEqual([a['href'] for a in special if a.get('aria-current')=='page'], ['SPECIAL_FUNCTIONS.html'])
+        laboratory=Links(site_navigation('special-functions-lab.html')).links
+        self.assertEqual([a['href'] for a in laboratory if a.get('aria-current')=='page'], ['special-functions-lab.html'])
         physics=Links(site_navigation('collection/PHYSICS_COLLECTION.html')).links
         self.assertEqual([a['href'] for a in physics if a.get('aria-current')=='page'], ['PHYSICS_COLLECTION.html'])
         search=Links(site_navigation('search.html')).links

@@ -201,6 +201,8 @@ class ReadingDocuments:
         prepare_paper_vii_atlas(self)
         from large_signal_atlas import prepare as prepare_large_signal_atlas
         prepare_large_signal_atlas(self)
+        from special_functions_atlas import prepare as prepare_special_functions_atlas
+        prepare_special_functions_atlas(self)
 
     def primary_pdf(self, work):
         candidates = [r for r in self.records.values() if r['work'] == work and r['format'] == 'pdf']
@@ -518,6 +520,8 @@ class ReadingDocuments:
         render_paper_vii_atlas(self)
         from large_signal_atlas import render as render_large_signal_atlas
         render_large_signal_atlas(self)
+        from special_functions_atlas import render as render_special_functions_atlas
+        render_special_functions_atlas(self)
         from core_visual_guides import render as render_core_visual_guides
         render_core_visual_guides(self)
         from reader_proofreading import publish as publish_proofreading

@@ -155,8 +155,17 @@ class BrowseNavigationTests(unittest.TestCase):
             contents=json.loads(receipt.read_bytes());contents['component']='monographs-special-functions'
             receipt.write_text(json.dumps(contents),encoding='utf-8')
             (root/REGISTRY).write_text(json.dumps(registry),encoding='utf-8')
-            text=Browser(root,state,status,tracked).render()['docs/works/monographs-special-functions.md']
+            (root/'manifests/reader-experience.json').write_text(json.dumps({
+                'schema':1,'glossary':[],'background':{'research':'Read the definitions.'}}),encoding='utf-8')
+            for component in status['components']:
+                component.update(scope='Selected statements only.',next_step='Continue the open obligations.')
+            text=Browser(root,state,status,tracked).work_page(state['components'][0])
             self.assertIn('[Read online: chapters, proof appendices, figures and glossary](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/index.html)',text)
+            for label,target in [
+                ('Guided reading','read/monographs-special-functions/start.html'),
+                ('Expanded visual lessons','read/monographs-special-functions/atlas/index.html'),
+                ('Interactive coupled-function laboratory','special-functions-lab.html')]:
+                self.assertIn('['+label+'](https://KomorebiP.github.io/Operation-KOMOREBI/'+target+')',text)
             lean=text.split('## Lean\n')[1].split('## Code\n')[0]
             self.assertIn('[Current formalization checkpoint and continuation](../../research/open-work/current/README.md)',lean)
             self.assertIn('(../../research/open-work/formal/)',lean)
