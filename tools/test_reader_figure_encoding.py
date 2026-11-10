@@ -17,8 +17,8 @@ class ReaderFigureEncodingTests(unittest.TestCase):
     def test_all_selected_originals_and_browser_images_have_identical_pixels(self):
         results=check(ROOT)
         self.assertEqual([r['group'] for r in results],list(GROUPS))
-        self.assertEqual(sum(r['figures'] for r in results),143)
-        self.assertGreater(sum(r['saved_bytes'] for r in results),7*1024*1024)
+        self.assertEqual(sum(r['figures'] for r in results),233)
+        self.assertGreater(sum(r['saved_bytes'] for r in results),10*1024*1024)
         for name in GROUPS:
             receipt=json.loads((ROOT/'website/assets/figures'/name/'figures.json').read_bytes())
             for row in receipt['figures']:

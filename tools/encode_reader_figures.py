@@ -15,7 +15,9 @@ from PIL import Image, __version__ as pillow_version
 from reader_figure_assets import digest, validate_encoding
 
 ROOT=Path(__file__).resolve().parents[1]
-GROUPS=('paper-v','komorebi-space','quantum-catalytic','quantum-arithmetic','quantum-symmetry')
+GROUPS=('paper-v','komorebi-space','quantum-catalytic','quantum-arithmetic','quantum-symmetry',
+        'paper-viii','paper-xi','paper-xii','quantum-circuits','realization-boundaries',
+        'machine-native-reasoning','komorebi-methodology','large-signal-model')
 
 
 def apply(root=ROOT):
@@ -51,6 +53,9 @@ def apply(root=ROOT):
                 row.update(original_png='verification/reader-figure-encoding/original/'+name+'/'+stem+'.png',
                     original_png_sha256=digest(original),source_rgba_sha256=digest(rgba.tobytes()),
                     image=target_image,image_sha256=digest(encoded),width=rgba.width,height=rgba.height)
+                if row.get('method') and row.get('render_image'):
+                    row['original_render_method']=row['method']
+                    row['method']='Lossless WebP of the retained source-package PNG; decoded RGBA pixels unchanged.'
             archived=(root/row['original_png']).resolve()
             if not archived.is_relative_to((root/'verification/reader-figure-encoding/original').resolve()):
                 raise ValueError('Original PNG archive outside intended directory')
