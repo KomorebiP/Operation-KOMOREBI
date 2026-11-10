@@ -255,7 +255,8 @@ def _lesson_body(spec, reader):
     target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(raw)
     reader.images[record['source']]=dict(repository_path='website/'+record['image'],
         file_url=record['image'],width=record['width'],height=record['height'],
-        size=len(raw),sha256=record['image_sha256'],source=record['source'],source_sha256=record['source_sha256'],
+        size=len(raw),sha256=record['image_sha256'],source=PDF,source_sha256=reader.records[PDF]['sha256'],
+        original_image_source=record['source'],original_image_source_sha256=record['source_sha256'],
         git_blob_sha1=hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest())
     image=reader.site.rel(record['image'],page)
     body = '<figure id="figure"><img src="'+image+'" width="'+str(record['width'])+'" height="'+str(record['height'])+'" alt="'+html.escape(spec['title'],quote=True)+'" aria-describedby="read-figure" loading="lazy"><figcaption>Original lesson figure. The source description follows below.</figcaption></figure>'
@@ -374,6 +375,11 @@ def verify(root, documents, pages=None):
     receipts=json.loads((Path(__file__).resolve().parents[1]/'website'/RECEIPTS).read_bytes())
     assert report['figures']==receipts['figures']
     figures={r['name']:r for r in receipts['figures']}
+    for figure in figures.values():
+        image=records['website/'+figure['image']]
+        assert image['source']==PDF and image['source_sha256']==records[PDF]['sha256']
+        assert image['original_image_source']==figure['source']
+        assert image['original_image_source_sha256']==figure['source_sha256']
     for spec,row in zip(selected,report['pages']):
         markup=(root/spec['url']).read_text(encoding='utf-8')
         actual=[v[2:-2] for v in MathText(markup).values]

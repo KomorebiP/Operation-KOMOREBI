@@ -11,7 +11,7 @@ import unittest
 from PIL import Image
 from check_reader_site import Page
 from reader_documents import ReadingDocuments, source_lines
-from special_functions_atlas import (BASE, MAIN, WORK, INDEX, REPORT, RECEIPTS,
+from special_functions_atlas import (BASE, MAIN, PDF, WORK, INDEX, REPORT, RECEIPTS,
     COUNT, metadata, source_specs, expected_math, normalize_notes, prepare, render,
     verify, related_routes, inventory, sequence)
 from readable_chapters import Chapter, original_math
@@ -102,6 +102,21 @@ class SpecialFunctionsAtlasTests(unittest.TestCase):
             from core_visual_guides import guide_choices
             for target in ['read/visual-guides.html','read/'+WORK+'/index.html',*[r[3] for r in guide_choices()]]:
                 self.assertIn(posixpath.relpath(target,posixpath.dirname(spec['url'])),self.pages[spec['url']].links)
+
+    def test_every_image_binds_a_published_source_and_original_receipt(self):
+        files={row['repository_path']:row for row in self.documents['files']}
+        receipt=json.loads((ROOT/'website'/RECEIPTS).read_bytes())
+        figures={'website/'+row['image']:row for row in receipt['figures']}
+        for image in self.documents['images']:
+            self.assertIn(image['source'],files)
+            self.assertEqual(image['source'],PDF)
+            self.assertEqual(image['source_sha256'],files[image['source']]['sha256'])
+            figure=figures[image['repository_path']]
+            self.assertEqual(image['original_image_source'],figure['source'])
+            self.assertEqual(image['original_image_source_sha256'],figure['source_sha256'])
+            self.assertEqual(hashlib.sha256((ROOT/image['original_image_source']).read_bytes()).hexdigest(),
+                             image['original_image_source_sha256'])
+            self.assertNotIn(image['original_image_source'],files)
 
     def test_note_body_rejects_new_unsupported_markup(self):
         with self.assertRaisesRegex(ValueError,'Unsupported prose command'):
