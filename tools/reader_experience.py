@@ -80,6 +80,10 @@ def introduction(root, component, assessment, page):
             text+='**Complete demonstration with runnable code:** '+' · '.join(demonstrations)+'.\n\n'
     if component['id']=='monographs-special-functions':
         text+='### Explore Special Functions\n\n'+link('Books, five families, and the coupled-function lab','docs/SPECIAL_FUNCTIONS.md',page)+'\n\n'
+        text+=' · '.join('['+label+']('+SITE+target+')' for label,target in [
+            ('Guided reading','read/monographs-special-functions/start.html'),
+            ('Expanded visual lessons','read/monographs-special-functions/atlas/index.html'),
+            ('Interactive coupled-function laboratory','special-functions-lab.html')])+'\n\n'
     return text
 
 
