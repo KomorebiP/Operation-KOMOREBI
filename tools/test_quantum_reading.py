@@ -385,7 +385,7 @@ class QuantumReadingTests(unittest.TestCase):
                 self.assertIn('Switch work',markup)
                 self.assertIn('Original TeX with line links',markup)
             for record in reader.images.values():
-                self.assertIn(record['file_url'],{p.relative_to(output).as_posix() for p in output.rglob('*.png')})
+                self.assertIn(record['file_url'],{p.relative_to(output).as_posix() for p in output.rglob('*') if p.suffix in {'.png','.webp'}})
 
 
 if __name__=='__main__':unittest.main()

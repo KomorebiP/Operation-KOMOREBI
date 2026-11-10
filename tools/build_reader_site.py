@@ -77,6 +77,7 @@ def site_navigation(page):
                      ('Notation', 'notation.html')]),
         ('Use', [('Signal laboratory', 'signal-lab.html'),
                  ('Smith chart laboratory', 'smith-chart.html'),
+                 ('Special Functions laboratory', 'special-functions-lab.html'),
                  ('Recovery laboratory', 'recovery-lab.html'),
                  ('J-Space laboratory', 'j-lab.html'),
                  ('Interactive diagrams', 'interactive.html'),
@@ -337,7 +338,7 @@ class Site:
         article_start=body.find('<article id="chapter-text"')
         side_context=body[:article_start] if edition(path) and article_start>=0 else body
         has_side_action=('class="side-launch"' in side_context) if edition(path) else ('data-side-reader-link' in side_context)
-        if not work_page and not has_side_action and path not in {'side-by-side.html','index.html','404.html','sitemap.html','interactive.html','signal-lab.html','smith-chart.html','recovery-lab.html','j-lab.html','works.html','reading-list.html','lean/playground.html','lean/run.html','read/visual-guides.html'}:
+        if not work_page and not has_side_action and path not in {'side-by-side.html','index.html','404.html','sitemap.html','interactive.html','signal-lab.html','smith-chart.html','special-functions-lab.html','recovery-lab.html','j-lab.html','works.html','reading-list.html','lean/playground.html','lean/run.html','read/visual-guides.html'}:
             pair=self.rel('side-by-side.html',path)+'?left='+quote(path,safe='')
             launch='<p class="side-launch"><a data-side-reader-link href="'+esc(pair,quote=True)+'">Read side by side</a></p>'
             body=re.sub(r'(</h1>)',lambda match:match[1]+launch,body,count=1)
@@ -717,6 +718,8 @@ class Site:
         from roots_newton_case import publish as publish_roots_newton_case
         publish_roots_newton_case(self)
         self.smith_chart_lab()
+        from special_functions_lab import build as build_special_functions_lab
+        build_special_functions_lab(self)
         self.markdown_pages()
         self.reader.render()
         from reading_paths import publish as publish_reading_paths

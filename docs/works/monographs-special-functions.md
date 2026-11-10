@@ -34,6 +34,8 @@ These introductory calculations lead into this work’s subject. The source and 
 
 [Books, five families, and the coupled-function lab](../SPECIAL_FUNCTIONS.md)
 
+[Guided reading](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/start.html) · [Expanded visual lessons](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/atlas/index.html) · [Interactive coupled-function laboratory](https://KomorebiP.github.io/Operation-KOMOREBI/special-functions-lab.html)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

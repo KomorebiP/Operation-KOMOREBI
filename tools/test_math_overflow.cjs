@@ -55,6 +55,11 @@ overhang.querySelector = () => ({getBoundingClientRect: () => ({width: 98})});
 p.events.resize(); p.flush();
 assert.equal(overhang.attrs.tabindex, undefined, 'Short SVG glyph overhang does not become a scrolling equation');
 assert.equal(overhang.classes.has('math-fits'), true);
+const assistiveMatrix = p.formula(92, 154);
+assistiveMatrix.querySelector = () => ({getBoundingClientRect: () => ({width: 91})});
+p.events.resize(); p.flush();
+assert.equal(assistiveMatrix.attrs.tabindex, undefined, 'A larger hidden MathML matrix does not add a Tab stop to a fitting visible equation');
+assert.equal(assistiveMatrix.classes.has('math-fits'), true);
 
 wide.clientWidth = 400; p.resize(); p.flush();
 assert.deepEqual(wide.attrs, {}, 'Growing the column removes only the temporary scroll controls');

@@ -22,6 +22,7 @@ class SpecialFunctionsReadingTests(unittest.TestCase):
         specs=source_specs(lambda p:(ROOT/p).read_text(encoding='utf-8-sig'))
         sections={spec['url'] for spec in specs}
         sections.add(INDEX)
+        sections.update({'read/'+WORK+'/start.html',CONFIG['atlas_index']})
         hub=(ROOT/'docs/SPECIAL_FUNCTIONS.md').read_text(encoding='utf-8')
         links=[urlsplit(target) for target in inline_targets(hub)]
         reading_links={link.path.removeprefix('/Operation-KOMOREBI/') for link in links

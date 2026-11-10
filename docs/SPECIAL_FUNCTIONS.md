@@ -4,7 +4,7 @@
 
 Explore five families built from contraction, arithmetic, prime-sieve measures and rotation orbits. Start with a worked calculation, open the current books in the site reader, or follow a result into its written proof and formal companion.
 
-[Read the monograph online](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/index.html) · [Run the coupled-function lab](https://KomorebiP.github.io/Operation-KOMOREBI/playground.html#special-functions-coupled) · [Work and evidence](works/monographs-special-functions.md) · [Read by topic](#five-families) · [Choose a book](#reading-volumes)
+[Choose a guided reading path](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/start.html) · [Read the monograph online](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/index.html) · [Explore the visual lessons](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/atlas/index.html) · [Run the coupled-function lab](https://KomorebiP.github.io/Operation-KOMOREBI/special-functions-lab.html) · [Work and evidence](works/monographs-special-functions.md)
 
 ## A pair of functions with a shared beginning
 
@@ -26,7 +26,9 @@ Both functions start with slope one. Their later coefficients distinguish the fo
 
 ## Run the coupled-function lab
 
-[Open the interactive lab](https://KomorebiP.github.io/Operation-KOMOREBI/playground.html#special-functions-coupled). It computes twelve exact rational coefficients for each component, plots the Taylor polynomials through degree 23 on $[-1,1]$, and exports both coefficient lists as CSV. Change the four rational contractions or the coefficient count in the editor and run again.
+[Open the interactive lab](https://KomorebiP.github.io/Operation-KOMOREBI/special-functions-lab.html). Set the four rational contractions, choose how many coefficients to retain, and inspect the individual products that produce a coefficient. Compare two parameter sets, change the plotting radius, export the exact coefficients as CSV, or copy a link to the experiment. The default retains twelve coefficients per component and plots the degree-23 Taylor polynomials on $[-1,1]$.
+
+The controls accept strict contractions with denominators at most 100, between one and sixteen retained coefficients, and a rational radius from zero to $4/3$. The displayed tail envelope updates with the radius and retained count. Decimal plots have additional floating-point roundoff. The [editable Python example](https://KomorebiP.github.io/Operation-KOMOREBI/playground.html#special-functions-coupled) remains available for following the computation in code.
 
 Writing $U(z)=\sum_{n\ge0}u_nz^{2n+1}$ and $V(z)=\sum_{n\ge0}v_nz^{2n+1}$, the first coefficients in this example are $u_0=v_0=1$, $u_1=2/27$ and $v_1=1/8$.
 
@@ -48,12 +50,14 @@ For a shorter first calculation, work through [the scalar contracted-feedback re
 | Volume | What it offers | Read here |
 |---|---|---|
 | Special Functions | The current 134-page monograph: five families, seven chapters and ten proof appendices | [Read online](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/index.html) · [Open PDF](../monographs/special-functions/books/Special_Functions.pdf) |
-| Expanded Visual Guide | The current 180-page visual volume, with 171 worked lessons and associated plates across the eight-paper series | [Open visual guide](../monographs/special-functions/books/Expanded_Visual_Guide.pdf) |
+| Expanded Visual Guide | The current 180-page visual volume, with 171 worked lessons and associated plates across the eight-paper series | [Read visual lessons online](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/atlas/index.html) · [Open PDF](../monographs/special-functions/books/Expanded_Visual_Guide.pdf) |
 | Resolution and Coupled Atlas | Nineteen pages and fourteen computed plates on coupled functions, growth, recovery and finite resolution | [Open coupled atlas](../monographs/special-functions/books/Resolution_and_Coupled_Atlas.pdf) |
 | Packet Realization Core | The preserved 38-page consolidated core and correction register for the original series | [Open core and corrections](../monographs/special-functions/series/Komorebi_Special_Functions_Consolidated_Manuscript_v0.1.pdf) |
 | Original Series Collected Reader | The core followed by all eight original papers, assembled into 469 pages | [Open collected reader](../monographs/special-functions/series/Komorebi_Special_Functions_Complete_Reader_v0.1.pdf) |
 
 The last two entries are reference editions. The collected reader already includes the 38-page core. Read the original papers together with that correction register; the first three volumes provide the current reading route.
+
+The expanded visual lessons preserve the original eight-paper series. For the newer coupled family, follow [coupled growth and inverse geometry](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/coupled-coupled-visual.html) and [the resolution atlas](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/coupled-resolution-visual.html) within the monograph. The [guided reading paths](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/start.html) connect these introductions to the laboratory, written arguments, and recorded formal evidence.
 
 <a id="five-families"></a>
 
