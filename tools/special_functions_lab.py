@@ -45,7 +45,7 @@ def build(site):
 <details class="sf-detail"><summary>Read five graph samples as exact fractions</summary><div class="sf-table-scroll" tabindex="0" role="region" aria-label="Exact graph sample table"><table><caption>Truncated polynomials at rational addresses</caption><thead><tr><th scope="col">x</th><th scope="col">Current U</th><th scope="col">Current V</th><th scope="col" class="sf-comparison-column">Comparison U</th><th scope="col" class="sf-comparison-column">Comparison V</th></tr></thead><tbody id="sf-samples"></tbody></table></div></details>
 <p id="sf-difference" class="sf-note" hidden></p></section></div>
 <section class="sf-panel sf-inspector" id="sf-recurrence" aria-labelledby="sf-recurrence-title"><p class="sf-kicker">Inspect the construction</p><h2 id="sf-recurrence-title">Where does this coefficient come from?</h2>
-<p>At each odd degree, the two equations use the same earlier products uᵢvⱼ. Their scale weights differ. Choose a coefficient from the current pair and inspect every contribution.</p>
+<p>For indices n ≥ 1, the two equations use the same earlier products uᵢvⱼ. Their scale weights differ. Index zero is supplied by the initial slopes u₀ = v₀ = 1. Choose a coefficient from the current pair and inspect every contribution.</p>
 <label class="sf-term-label" for="sf-term">Coefficient to inspect<select id="sf-term" disabled><option value="2">Index 2 · degree 5</option></select></label>
 <div class="sf-equations arithmatex">\[u_n=\frac{1}{2n+1}\sum_{i+j=n-1}q^{2i+1}r^{2j+1}u_i v_j,\qquad v_n=\frac{1}{2n+1}\sum_{i+j=n-1}a^{2i+1}b^{2j+1}u_i v_j.\]</div>
 <p id="sf-term-description"></p>
