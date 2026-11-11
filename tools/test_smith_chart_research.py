@@ -1,8 +1,12 @@
 """Source fidelity and failure checks for the archived Smith chart reading."""
 from pathlib import Path
 from html.parser import HTMLParser
+import hashlib
+import json
 import re
 import shutil
+import subprocess
+import sys
 import tempfile
 import unittest
 
@@ -61,6 +65,9 @@ class ResearchReadingTest(unittest.TestCase):
         self.assertIn('seven-reactive-exact', ids)
         self.assertIn('arbitrary-order-separation', ids)
         self.assertIn('verification-register-and-reproducible-records', ids)
+        self.assertIn('class="research-contents-jump" href="#contents"', self.rendered)
+        self.assertIn('aria-label="Expanded figure; scroll to explore at full resolution"', self.rendered)
+        self.assertIn('SMITH_FIRST_ORDER_RL.html', self.rendered)
 
     def test_source_links_are_revision_bound_and_claim_scope_is_visible(self):
         links = re.findall(r'(?:src|href)="(https://raw\.githubusercontent\.com/[^"]+)"', self.rendered)
@@ -86,6 +93,54 @@ class ResearchReadingTest(unittest.TestCase):
             archive.write_bytes(archive.read_bytes()+b'tampered')
             with self.assertRaisesRegex(ValueError, 'archive checksum mismatch'):
                 research.archive_contents(root)
+
+    def test_formal_receipt_matches_the_recorded_inputs_and_logs(self):
+        base = ROOT/'research/smith-chart/formal'
+        evidence = base/'verification/run03'
+        receipt = json.loads((evidence/'receipt.json').read_bytes())
+        self.assertEqual(receipt['status'], 'PASS')
+        self.assertEqual(receipt['source_binding']['archive_sha256'], research.ARCHIVE_SHA256)
+        for name in ('SmithFirstOrderRL.lean', 'AxiomAudit.lean', 'replay.py'):
+            self.assertEqual(hashlib.sha256((base/name).read_bytes()).hexdigest(), receipt['input_sha256'][name])
+        lock = ROOT/'formal/smith-chart-v0.1.0/dependency-lock.json'
+        self.assertEqual(hashlib.sha256(lock.read_bytes()).hexdigest(), receipt['input_sha256']['dependency-lock.json'])
+        self.assertEqual(len(receipt['audited_axioms']), 9)
+        for axioms in receipt['audited_axioms'].values():
+            self.assertLessEqual(set(axioms), {'propext', 'Classical.choice', 'Quot.sound'})
+        self.assertEqual([step['exit_code'] for step in receipt['steps']], [0, 0, 1, 1])
+        for step in receipt['steps']:
+            for stream in ('stdout', 'stderr'):
+                data = (evidence/(step['name']+'.'+stream+'.txt')).read_bytes()
+                self.assertEqual(hashlib.sha256(data).hexdigest(), step[stream+'_sha256'])
+        exact = json.loads((base/'verification/rational-check.json').read_bytes())
+        self.assertEqual(exact['status'], 'PASS')
+        self.assertEqual(exact['operating_points'], 3924)
+        self.assertEqual(exact['script_sha256'], hashlib.sha256((base/'check_exact.py').read_bytes()).hexdigest())
+
+    def test_earlier_formal_receipt_still_matches_its_proof_files(self):
+        base = ROOT/'formal/smith-chart-v0.1.0'
+        receipt = json.loads((base/'verification/run15/receipt.json').read_bytes())
+        for name, expected in receipt['input_sha256_before'].items():
+            if name.endswith('.lean') or name in {'replay.py', 'dependency-lock.json', 'source-bindings.json', 'lean-toolchain'}:
+                self.assertEqual(hashlib.sha256((base/name).read_bytes()).hexdigest(), expected, name)
+
+    def test_finite_topology_and_exact_candidate_checks(self):
+        base = ROOT/'research/smith-chart/computations'
+        for script, check, receipt_name in [('check_five_node_orbits.py', 'orbit_classes', 'five-node-002.json'),
+                                             ('check_saved_candidate.py', 'results', 'candidate-142-exact-001.json')]:
+            result = subprocess.run([sys.executable, '-B', str(base/script)], capture_output=True, check=True)
+            record = json.loads(result.stdout)
+            receipt = json.loads((base/'verification'/receipt_name).read_bytes())
+            self.assertEqual(record['status'], 'PASS')
+            self.assertEqual(record['script_sha256'], hashlib.sha256((base/script).read_bytes()).hexdigest())
+            self.assertEqual(record['script_sha256'], receipt['script_sha256'])
+            self.assertEqual(record[check] if check == 'orbit_classes' else len(record[check]), 168 if check == 'orbit_classes' else 3)
+            if check == 'orbit_classes':
+                self.assertEqual(record['orbit_size_histogram'], receipt['orbit_size_histogram'])
+                self.assertEqual(record['classes_without_terminal_exchange'], 336)
+            else:
+                self.assertEqual([(x['s'], x['difference_numerator'], x['difference_denominator']) for x in record['results']],
+                                 [(x['s'], x['difference_numerator'], x['difference_denominator']) for x in receipt['results']])
 
 
 if __name__ == '__main__':

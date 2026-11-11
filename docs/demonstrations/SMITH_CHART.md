@@ -5,6 +5,8 @@
 The [complete Smith chart research reading](https://komorebip.github.io/Operation-KOMOREBI/read/smith-chart/research.html)
 also includes the longer circuit-synthesis draft, its figures, examples, and
 realization boundaries, together with the original research archive.
+The [one-inductor limit](SMITH_FIRST_ORDER_RL.md) has an explicit circuit
+calculation and a separate Lean-checked algebraic companion.
 
 **Author:** Komorebi P.  
 **Status:** Interactive research demonstration with finite numerical checks. The classical Smith chart and roots-of-unity identities are not claimed as new discoveries.

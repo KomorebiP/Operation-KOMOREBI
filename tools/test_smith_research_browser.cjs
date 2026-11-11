@@ -1,0 +1,106 @@
+/* Optional end-to-end check against a built or deployed reading. Requires Playwright. */
+const { chromium } = require('playwright');
+
+const url = process.argv[2];
+if (!url) throw new Error('Provide the URL of read/smith-chart/research.html');
+
+async function run() {
+  const launch = { headless: true };
+  if (process.env.SMITH_CHROME) launch.executablePath = process.env.SMITH_CHROME;
+  const browser = await chromium.launch(launch);
+  try {
+    for (const [name, viewport] of [
+      ['desktop', { width: 1440, height: 900 }],
+      ['phone', { width: 390, height: 844 }],
+      ['narrow', { width: 320, height: 800 }],
+    ]) {
+      const page = await browser.newPage({ viewport });
+      const errors = [];
+      page.on('pageerror', error => errors.push(String(error)));
+      try {
+        const response = await page.goto(url, { waitUntil: 'load', timeout: 120000 });
+        if (!response || response.status() !== 200) throw new Error('Reading did not load');
+        await page.waitForFunction(() => document.documentElement.dataset.mathReady, null, { timeout: 180000 });
+        await page.evaluate(() => document.fonts.ready);
+        await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+        const layout = await page.evaluate(() => ({
+          width: document.documentElement.scrollWidth,
+          viewport: innerWidth,
+          figures: [...document.querySelectorAll('.research-figure img')].filter(img => img.complete && img.naturalWidth > 0).length,
+          mathReady: document.documentElement.dataset.mathReady,
+          mathErrors: document.querySelectorAll('mjx-merror').length,
+          touchHeight: Math.min(...[...document.querySelectorAll('.research-actions a, .research-actions button, .figure-open')]
+            .map(element => element.getBoundingClientRect().height).filter(height => height > 0)),
+        }));
+        if (layout.width > layout.viewport || layout.figures !== 42 || layout.mathReady !== 'true' || layout.mathErrors || layout.touchHeight < 44) {
+          throw new Error('Reading layout, images, mathematics, or touch controls failed: ' + JSON.stringify(layout));
+        }
+        const figure = page.locator('#figure-2 .figure-open');
+        const description = await figure.getAttribute('aria-describedby');
+        if (!description || await page.locator('#' + description).count() !== 1) throw new Error('Figure description is not associated');
+        await figure.focus();
+        await page.keyboard.press('Enter');
+        await page.waitForFunction(() => !!document.querySelector('#dialog-caption mjx-container'), null, { timeout: 30000 });
+        await page.locator('#figure-fit').click();
+        await page.locator('#dialog-image-wrap').focus();
+        const dialog = await page.evaluate(() => ({
+          open: document.querySelector('#figure-dialog').open,
+          pressed: document.querySelector('#figure-fit').getAttribute('aria-pressed'),
+          scrollable: document.querySelector('#dialog-image-wrap').scrollWidth > document.querySelector('#dialog-image-wrap').clientWidth,
+          focus: document.activeElement.id,
+          mathErrors: document.querySelectorAll('#dialog-caption mjx-merror').length,
+        }));
+        if (!dialog.open || dialog.pressed !== 'true' || dialog.focus !== 'dialog-image-wrap' || dialog.mathErrors ||
+            (name !== 'desktop' && !dialog.scrollable)) throw new Error('Expanded figure check failed: ' + JSON.stringify(dialog));
+        await page.keyboard.press('Escape');
+        await page.locator('.research-contents-jump').focus();
+        await page.keyboard.press('Enter');
+        if (!await page.locator('#contents').evaluate(element => element.open)) throw new Error('Contents control did not open');
+        await page.evaluate(() => { document.documentElement.style.fontSize = '125%'; });
+        const enlarged = await page.evaluate(() => ({ width: document.documentElement.scrollWidth, viewport: innerWidth }));
+        if (enlarged.width > enlarged.viewport || errors.length) throw new Error('Enlarged layout or JavaScript failed: ' + JSON.stringify({ enlarged, errors }));
+        console.log(JSON.stringify({ name, layout, dialog, enlarged }));
+      } finally {
+        await page.close();
+      }
+    }
+    const noScript = await browser.newContext({ viewport: { width: 320, height: 800 }, javaScriptEnabled: false });
+    try {
+      const page = await noScript.newPage();
+      await page.goto(url, { waitUntil: 'load', timeout: 120000 });
+      const result = await page.evaluate(() => ({
+        width: document.documentElement.scrollWidth, viewport: innerWidth,
+        figures: [...document.querySelectorAll('.research-figure img')].filter(img => img.complete && img.naturalWidth > 0).length,
+        contents: getComputedStyle(document.querySelector('.research-contents-jump')).visibility,
+        figureControls: getComputedStyle(document.querySelector('.figure-actions')).display,
+      }));
+      if (result.width > result.viewport || result.figures !== 42 || result.contents !== 'visible' || result.figureControls !== 'none') {
+        throw new Error('No-JavaScript reading failed: ' + JSON.stringify(result));
+      }
+      console.log(JSON.stringify({ name: 'no-javascript', ...result }));
+    } finally {
+      await noScript.close();
+    }
+    const supplement = await browser.newPage({ viewport: { width: 320, height: 800 } });
+    try {
+      const target = new URL('../../collection/demonstrations/SMITH_FIRST_ORDER_RL.html', url).href;
+      const response = await supplement.goto(target, { waitUntil: 'load', timeout: 120000 });
+      if (!response || response.status() !== 200) throw new Error('Circuit supplement did not load');
+      await supplement.waitForFunction(() => window.MathJax?.startup?.promise, null, { timeout: 60000 });
+      await supplement.evaluate(() => MathJax.startup.promise);
+      const result = await supplement.evaluate(() => ({
+        width: document.documentElement.scrollWidth, viewport: innerWidth,
+        diagram: document.querySelector('article img')?.naturalWidth || 0,
+        mathErrors: document.querySelectorAll('article mjx-merror').length,
+      }));
+      if (result.width > result.viewport || !result.diagram || result.mathErrors) throw new Error('Circuit supplement failed: ' + JSON.stringify(result));
+      console.log(JSON.stringify({ name: 'supplement', ...result }));
+    } finally {
+      await supplement.close();
+    }
+  } finally {
+    await browser.close();
+  }
+}
+
+run().catch(error => { console.error(error); process.exitCode = 1; });

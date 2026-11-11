@@ -23,10 +23,17 @@
     if (media.matches) contents.open = false;
   }));
   const progress = document.getElementById('reading-progress');
+  const research = document.getElementById('smith-research');
+  const contentsJump = document.querySelector('.research-contents-jump');
+  contentsJump.addEventListener('click', () => {
+    contents.open = true;
+    if (media.matches) requestAnimationFrame(() => contents.querySelector('summary').focus({preventScroll:true}));
+  });
   let scheduled = false;
   const updateProgress = () => {
     const total = document.documentElement.scrollHeight - innerHeight;
     progress.value = total > 0 ? Math.min(100, Math.max(0, 100*scrollY/total)) : 0;
+    research.classList.toggle('has-scrolled', scrollY > innerHeight);
     scheduled = false;
   };
   addEventListener('scroll', () => { if (!scheduled) { scheduled=true; requestAnimationFrame(updateProgress); } }, {passive:true});
@@ -36,24 +43,49 @@
   const figureCaption = document.getElementById('dialog-caption');
   const imageWrap = document.getElementById('dialog-image-wrap');
   const fitButton = document.getElementById('figure-fit');
-  document.querySelectorAll('.figure-open').forEach(button => button.addEventListener('click', () => {
+  let captionTicket = 0;
+  document.querySelectorAll('.figure-open').forEach((button, index) => {
     const figure = button.closest('figure');
-    const img = figure.querySelector('img');
-    figureImage.src = img.src;
-    figureImage.alt = img.alt;
-    figureCaption.textContent = figure.querySelector('figcaption')?.textContent || img.alt;
-    imageWrap.classList.add('dialog-fit');
-    fitButton.textContent = 'View at full resolution';
-    fitButton.setAttribute('aria-pressed', 'false');
-    dialog.showModal();
-  }));
+    const caption = figure.querySelector('figcaption');
+    // Preserve untypeset caption markup so the dialog can render its mathematics too.
+    const captionTemplate = caption && !caption.querySelector('mjx-container') ? caption.cloneNode(true) : null;
+    if (caption) {
+      caption.id ||= 'research-figure-caption-' + (index + 1);
+      button.setAttribute('aria-label', 'Open figure at full size');
+      button.setAttribute('aria-describedby', caption.id);
+    }
+    button.addEventListener('click', () => {
+      const img = figure.querySelector('img');
+      figureImage.src = img.src;
+      figureImage.alt = img.alt;
+      const ticket = ++captionTicket;
+      if (window.MathJax?.typesetClear) MathJax.typesetClear([figureCaption]);
+      if (captionTemplate) {
+        figureCaption.replaceChildren(...[...captionTemplate.childNodes].map(node => node.cloneNode(true)));
+      } else {
+        figureCaption.textContent = caption?.textContent || img.alt;
+      }
+      imageWrap.classList.add('dialog-fit');
+      fitButton.textContent = 'View at full resolution';
+      fitButton.setAttribute('aria-pressed', 'false');
+      dialog.showModal();
+      if (captionTemplate && window.MathJax?.typesetPromise) {
+        Promise.resolve(MathJax.startup?.promise).then(() => {
+          if (ticket === captionTicket && dialog.open) return MathJax.typesetPromise([figureCaption]);
+        }).catch(() => {
+          if (ticket === captionTicket) figureCaption.textContent = caption?.textContent || img.alt;
+        });
+      }
+    });
+  });
+  dialog.addEventListener('close', () => { captionTicket++; });
   document.getElementById('figure-close').addEventListener('click', () => dialog.close());
   fitButton.addEventListener('click', () => {
     const fit = imageWrap.classList.toggle('dialog-fit');
     fitButton.textContent = fit ? 'View at full resolution' : 'Fit to window';
     fitButton.setAttribute('aria-pressed', String(!fit));
   });
-  document.getElementById('smith-research').classList.add('research-js');
+  research.classList.add('research-js');
   const ready = () => {
     document.documentElement.dataset.mathReady = 'true';
     updateProgress();

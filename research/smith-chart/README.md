@@ -17,6 +17,22 @@ source archive remains available for a self-contained offline edition. The
 build checks the archive and every retained public figure and download against
 the source before it publishes the page.
 
+The [five-node census recount](computations/README.md) independently checks
+the finite reactive-placement catalogue and records its limits.
+The [continuation checkpoint](CONTINUATION.md) separates that finite evidence
+and the new first-order RL formalization from the open six-element question.
+
+For a built or deployed site, the optional Playwright check covers desktop and
+phone widths, enlarged text, figure captions and zoom, the contents control,
+the supplement, and no-JavaScript reading:
+
+```text
+node tools/test_smith_research_browser.cjs <reading-url>
+```
+
+Install Playwright and a browser in the test environment; set `SMITH_CHROME`
+to an existing Chromium executable if needed.
+
 ## Independent replay of the included scripts
 
 On 11 November 2026, a fresh isolated copy of `reproduction/exact_seven` was
@@ -57,4 +73,7 @@ in the ZIP. This replay is not an independent audit of every mathematical proof
 in the draft or a hardware validation. For the degree-six target, whether a
 transformer-free RLC-only realization exists with six reactive elements remains
 open. Historical novelty has not been established. The existing Lean companion proves
-selected results and does not formalize this entire archive.
+selected results and does not formalize this entire archive. A separate
+[first-order RL companion](formal/README.md) checks the affine limit's circuit
+identity and positive component values, without claiming the rest of the
+arbitrary-order theorem.

@@ -1,0 +1,10 @@
+import SmithFirstOrderRL
+#print axioms SmithFirstOrderRL.rational_identity
+#print axioms SmithFirstOrderRL.coefficients_positive
+#print axioms SmithFirstOrderRL.exact_realization
+#print axioms SmithFirstOrderRL.complex_realization
+#print axioms SmithFirstOrderRL.mask_parameters_admissible
+#print axioms SmithFirstOrderRL.mask_components_positive
+#print axioms SmithFirstOrderRL.mask_limit_realization
+#print axioms SmithFirstOrderRL.mask_complex_realization
+#print axioms SmithFirstOrderRL.normalized_example

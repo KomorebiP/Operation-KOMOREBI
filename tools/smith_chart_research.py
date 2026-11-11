@@ -108,29 +108,42 @@ def reading_body(root, revision):
         raise ValueError('Unexpected mathematics inventory')
     main = main.replace('class="math inline"', 'class="math inline arithmatex"')
     main = main.replace('class="math display"', 'class="math display arithmatex"')
+    old_image_wrap = '<div id="dialog-image-wrap" class="dialog-image-wrap dialog-fit">'
+    if dialog.count(old_image_wrap) != 1:
+        raise ValueError('Unexpected figure dialog structure')
+    dialog = dialog.replace(old_image_wrap,
+        '<div id="dialog-image-wrap" class="dialog-image-wrap dialog-fit" tabindex="0" '
+        'role="region" aria-label="Expanded figure; scroll to explore at full resolution">')
+    dialog = dialog.replace('aria-label="Expanded mathematical figure"',
+                            'aria-label="Expanded mathematical figure" aria-describedby="dialog-caption"', 1)
     zip_url = html.escape(raw_url(revision, ARCHIVE), quote=True)
     replay_url = 'https://github.com/KomorebiP/Operation-KOMOREBI/blob/' + revision + '/research/smith-chart/README.md'
+    census_url = 'https://github.com/KomorebiP/Operation-KOMOREBI/blob/' + revision + '/research/smith-chart/computations/README.md'
     note = ('<aside class="research-notice" aria-label="Source and research status">'
-            '<p><strong>Research draft, 11 November 2026.</strong> This reading preserves the archived manuscript. '
-            'Its circuit claims, finite diagnostics, and open questions have different scopes. '
+            '<div class="research-notice-copy"><p class="research-notice-label">Research draft · 11 November 2026</p>'
+            '<p>This reading preserves the archived manuscript. '
             'For the degree-six target, the draft describes a six-reactive realization using an ideal transformer. '
             'A transformer-free RLC-only realization with six reactive elements remains open. '
             'Historical novelty has not been established. '
             'The existing Lean companion covers selected results, not this entire draft.</p>'
-            '<p>Figures load from the source repository. The complete archive includes a self-contained offline reading, '
-            'all source files, and the original checksums.</p>'
-            '<p><a href="' + zip_url + '">Download the complete research ZIP</a> · '
-            '<a href="' + replay_url + '">Replay and source record</a> · '
-            '<a href="../../smith-chart.html">Open the Smith chart laboratory</a> · '
-            '<a href="../../collection/demonstrations/SMITH_CHART.html">Read the shorter companion guide</a>'
-            '<span class="research-print"> · <button type="button" id="print-reading">Print reading</button></span></p>'
-            '<details><summary>Archive checksum</summary><p>SHA-256: <code>' + ARCHIVE_SHA256 + '</code></p></details></aside>')
+            '<p>Figures load from the source repository. The archive includes the self-contained offline reading and all source files.</p>'
+            '<details><summary>Archive checksum</summary><p>SHA-256: <code>' + ARCHIVE_SHA256 + '</code></p></details></div>'
+            '<nav class="research-actions" aria-label="Research reading resources">'
+            '<a class="research-download" href="' + zip_url + '">Download full archive<span>172 files · offline reading</span></a>'
+            '<a href="' + replay_url + '">Replay and source record</a>'
+            '<a href="../../collection/demonstrations/SMITH_FIRST_ORDER_RL.html">One-inductor circuit proof</a>'
+            '<a href="' + census_url + '">Five-node census check</a>'
+            '<a href="../../smith-chart.html">Smith chart laboratory</a>'
+            '<a href="../../collection/demonstrations/SMITH_CHART.html">Companion guide</a>'
+            '<span class="research-print"><button type="button" id="print-reading">Print reading</button></span>'
+            '</nav></aside>')
     cover_end = main.find('</section>')
     if cover_end < 0:
         raise ValueError('Missing source cover')
     cover_end += len('</section>')
     main = main[:cover_end] + note + main[cover_end:]
-    return '<div id="smith-research"><div class="page">' + main + '</div>' + dialog + '</div>'
+    return ('<div id="smith-research"><div class="page">' + main + '</div>' + dialog +
+            '<a class="research-contents-jump" href="#contents">↑ Contents</a></div>')
 
 
 def publish(site):
@@ -144,3 +157,13 @@ def publish(site):
               'https://github.com/KomorebiP/Operation-KOMOREBI/blob/' + revision + '/' + ARCHIVE)
     site.search.append(dict(title='Smith chart: complete research reading', group='Collection', kind='Examples',
                             url=PAGE, work_ids=[], text='Smith chart cyclic packets passive completion exact seven reactive circuit rational certificate six element open order separation infeasibility boundaries examples'))
+
+
+def decorate_supplement(site, page, body):
+    """Use the same readable article and touch-sized heading controls as the draft."""
+    if body.count('<article>') != 1:
+        raise ValueError('Unexpected first-order supplement structure')
+    body = body.replace('<article>', '<article class="manuscript">', 1)
+    css = 'assets/smith-research.css'
+    value = site.rel(css, page) + '?v=' + sha256((site.root / 'website' / css).read_bytes())[:12]
+    return '<link rel="stylesheet" href="' + value + '"><div id="smith-research" class="smith-supplement">' + body + '</div>'
