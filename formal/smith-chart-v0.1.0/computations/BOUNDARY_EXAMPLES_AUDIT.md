@@ -1,8 +1,9 @@
 # Smith chart boundary examples: self-review
 
 This reviews the written arguments and finite witnesses added to the Smith
-chart guide. It is not an independent review or a new Lean replay. The
-[bounded computation record](boundary-examples-003/manifest.json) hashes the
+chart guide. It is not an independent review. The later Lean continuation
+is reviewed separately in [BOUNDARY_FORMAL_AUDIT.md](../BOUNDARY_FORMAL_AUDIT.md). The
+[bounded computation record](boundary-examples-004/manifest.json) hashes the
 guide, workbench markup, checker, and contract as they stood during the run.
 Its repository field records the base commit and a dirty working tree.
 
@@ -18,7 +19,7 @@ exactly the \(N\) canonical phases. The zero case is immediate. The guide's
 positive-real impedance action starts inside the disk, so its inverse Cayley
 denominator is nonzero. The exact-order root used in the existing companion
 is separately covered by SmithCanonicalRoot.lean; the reachability
-equivalence itself is not claimed as a Lean theorem here.
+equivalence and zero case are now proved in SmithBoundaries.lean.
 
 For a uniform lossless line with characteristic impedance equal to the fixed
 real reference, the phase factor has modulus one. Thus a nonzero reflection
@@ -40,17 +41,18 @@ open unit disk, each \(|t-t_m|<2\), so the perturbation has modulus below
 Repeated sample points do not change the argument.
 
 This concerns analytic functions of the reflection coordinate. It does not
-assert realizability as a passive circuit over frequency, nonidentifiability
-within a specified finite-dimensional model, or a new Lean theorem. The
-checker evaluates the guide's two-point rational witness; the general
-statement rests on the written argument above.
+assert realizability as a passive circuit over frequency or nonidentifiability
+within a specified finite-dimensional model. The checker and
+SmithBoundaries.lean verify the indicated parts of the two-point witness;
+the arbitrary-finite-sample statement rests on the written argument above.
 
 ## Other boundaries and computation
 
 - SmithExamples.lean checks the totalized pole, an order-one character used
   at order two, and failure of the odd-order admittance shortcut.
   SmithResults.lean checks the negative-real nonzero packet witness.
-- The noncoprime 2/4 projector example and cancellation at \(-99/100\)
+- The noncoprime 2/4 coefficient-level projector example is also a Lean
+  counterexample. Its numerical value and cancellation at \(-99/100\)
   are exact rational checks in the companion script.
 - The interpolation comparison uses 32 specified nodes and 65,536 test
   angles. Its maxima are finite binary64 scan results, not continuous-domain

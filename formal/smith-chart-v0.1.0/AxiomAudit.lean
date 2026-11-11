@@ -9,6 +9,7 @@ import SmithEnergy
 import SmithEnergyIntegral
 import SmithResults
 import SmithExamples
+import SmithBoundaries
 
 #print axioms SmithChart.residue_hasSum
 #print axioms SmithChart.packet_reconstruction
@@ -69,3 +70,13 @@ import SmithExamples
 #print axioms SmithExamples.odd_order_is_not_even_duality
 #print axioms SmithExamples.order_one_root_does_not_filter_mod_two
 #print axioms SmithExamples.off_diagonal_terms_are_necessary
+
+#print axioms SmithBoundaries.cyclic_reachable_necessary
+#print axioms SmithBoundaries.cyclic_reachable_iff
+#print axioms SmithBoundaries.zero_start_reachable_iff
+#print axioms SmithBoundaries.quarter_turn_phase_test
+#print axioms SmithBoundaries.quarter_turn_infeasible_order_two
+#print axioms SmithBoundaries.quarter_turn_feasible_order_four
+#print axioms SmithBoundaries.noncoprime_projector_counterexample
+#print axioms SmithBoundaries.two_sample_equal_but_not_identical
+#print axioms SmithBoundaries.second_sample_positive_real
