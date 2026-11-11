@@ -159,6 +159,8 @@ jobs:
           python -B -m unittest discover -s tools -p 'test_recovery_lab.py' -v
           node --test tools/test_signal_lab.cjs
           python -B -m unittest discover -s tools -p 'test_smith_chart_site.py' -v
+          python -B -m unittest discover -s tools -p 'test_smith_chart_research.py' -v
+          node --check website/assets/smith-research.js
           python -B tools/smith_chart_boundary_examples.py
           node --check website/assets/smith-chart.js
           node --test tools/test_smith_chart_phase.cjs
@@ -222,8 +224,10 @@ jobs:
           PY
       - name: Build and run the introductory C example
         run: |
-          sudo apt-get update
-          sudo apt-get install -y cmake libgmp-dev
+          if ! command -v cmake >/dev/null || ! dpkg-query -W -f='${Status}' libgmp-dev 2>/dev/null | grep -qx 'install ok installed'; then
+            sudo apt-get update
+            sudo apt-get install -y cmake libgmp-dev
+          fi
           cmake -S .reader-libraries/polyphase -B .reader-build/polyphase -DCMAKE_BUILD_TYPE=Release -DPPF_OPENMP=OFF -DPPF_MPFR_SUPPORT=OFF -DPPF_BUILD_EXAMPLES=ON -DBUILD_TESTING=OFF
           cmake --build .reader-build/polyphase --parallel --target example_basic
           python - <<'PY'

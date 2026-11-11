@@ -24,6 +24,7 @@ DESCRIPTIONS = {
     'works.html': 'Browse the Komorebi collection by work, subject, completion stage, and recorded evidence, then follow the reading and source links.',
     'playground.html': 'Run and edit mathematical Python examples in your browser. Inspect the output and follow links to the written calculations and recorded scope.',
     'smith-chart.html': 'Explore passive RF impedance, reflection coefficients, exact cyclic projector packets, dyadic refinement, and phase sampling in an interactive Smith chart.',
+    'read/smith-chart/research.html': 'Read the Smith chart research draft: worked examples, passive completion, exact circuit synthesis, and open realization boundaries.',
     'special-functions-lab.html': 'Explore coupled contraction functions with exact rational coefficients, recurrence terms, parameter comparisons, and explicit local truncation bounds.',
     'collection/demonstrations/EULER_PACKETS.html': 'Follow Euler numbers through reciprocal series, polynomial coordinates, prime-adic bounds, and residual repair, with exact checks and source links.',
     'collection/demonstrations/WAVELET_POLYPHASE.html': 'Follow a signal through Haar decomposition, polyphase filter transport, reconstruction, and omitted-interaction errors, with exact worked checks.',
