@@ -39,9 +39,10 @@ function exactAdmittancePacket(t,n,j){
 }
 function poissonKernel(q,theta){return (1-q*q)/(1-2*q*Math.cos(theta)+q*q)}
 function phaseLift(q,phi,inverse=false){
-  const turns=Math.floor(phi/(2*Math.PI)+1e-12),reduced=phi-2*Math.PI*turns,w=expi(reduced);
+  const turns=Math.floor(phi/(2*Math.PI)),reduced=phi-2*Math.PI*turns,w=expi(reduced);
   const value=inverse?div(add(w,C(q)),add(C(1),scale(w,q))):div(sub(w,C(q)),sub(C(1),scale(w,q)));
-  const arg=Math.abs(reduced)<1e-11?0:(Math.atan2(value.im,value.re)+2*Math.PI)%(2*Math.PI);
+  let arg=Math.atan2(value.im,value.re);
+  if(arg<0)arg+=2*Math.PI;
   return turns*2*Math.PI+arg;
 }
 function smithQuantile(rho,mass){return phaseLift(rho*rho,4*Math.PI*mass,true)/2}
@@ -217,15 +218,16 @@ $('p-error').textContent=abs(sub(p,add(a,b))).toExponential(2);$('p-roots').text
 function renderExactPackets(){
   const t=rotationGamma(),n=states.N,j=states.j;
   const note=$('exact-disk-note');
-  if(abs(t)>=1-1e-11){
+  const radius=abs(t);
+  if(radius>=1-1e-11){
     for(const id of ['exact-z','exact-y','exact-reconstruction','exact-duality','exact-parseval','exact-energy'])$(id).textContent='interior only';
-    note.textContent='|Γ| = 1 lies outside the convergent power-series domain. Individual packets can have artificial boundary poles even where the recombined impedance is finite. Choose a load with R > 0.';
+    note.textContent=radius<1?'This point is inside the disk but within 10⁻¹¹ of its boundary; packet readouts are withheld to avoid unstable finite-precision values. Choose a point farther inside.':'|Γ| = 1 lies outside the convergent power-series domain. Individual packets can have artificial boundary poles even where the recombined impedance is finite. Choose a point inside the disk.';
     return;
   }
   const z=exactImpedancePacket(t,n,j),y=exactAdmittancePacket(t,n,j);
   $('exact-z').textContent=complexString(z,6);$('exact-y').textContent=complexString(y,6);
   let zsum=C(0),ysum=C(0),energy=0,pnorm=0,orbitnorm=0;
-  const rho=abs(t),tn=rho*rho;
+  const rho=radius,tn=rho*rho;
   for(let k=0;k<n;k++){
     const zp=exactImpedancePacket(t,n,k);
     zsum=add(zsum,zp);ysum=add(ysum,exactAdmittancePacket(t,n,k));
@@ -239,7 +241,7 @@ function renderExactPackets(){
   $('exact-parseval').textContent=Math.abs(orbitnorm-pnorm).toExponential(2);
   energy=j===0?1+4*rho**(2*n)/(1-rho**(2*n)):4*rho**(2*j)/(1-rho**(2*n));
   $('exact-energy').textContent=energy.toPrecision(6);
-  note.textContent=`${n%2?'Odd N: duality requires the 2N parity refinement.':'Even N: duality acts by the scalar sign (−1)^j.'} All displayed identities are subject to finite-precision evaluation; H² energy is a circle-integrated quantity, not the modulus of the packet at this point.`;
+  note.textContent=`${n%2?'Odd N: duality requires the 2N parity refinement.':'Even N: duality acts by the scalar sign (−1)^j.'} All displayed identities are subject to finite-precision evaluation. The angular mean-square is computed on this radius; it is not a finite boundary H² norm.`;
 }
 function render(){
   const key=$('grid-mode').value+':'+String(Number($('show-r').checked)) + ':' + String(Number($('show-x').checked));
@@ -560,7 +562,7 @@ function runChecks(){
     const right=Array.from({length:n},(_,j)=>abs(exactImpedancePacket(t,n,j))**2).reduce((a,b)=>a+b,0);
     return Math.abs(left-right);
   })),1e-11);
-  addCheck('Angular H² packet energies sum to exact total',maxResidual([.2,.5,.9].flatMap(rho=>orders.map(n=>{
+  addCheck('Angular mean-square packet energies sum to exact total',maxResidual([.2,.5,.9].flatMap(rho=>orders.map(n=>{
     const sum=1+4*rho**(2*n)/(1-rho**(2*n))+Array.from({length:n-1},(_,k)=>4*rho**(2*(k+1))/(1-rho**(2*n))).reduce((a,b)=>a+b,0);
     return Math.abs(sum-(1+4*rho**2/(1-rho**2)));
   }))),1e-11);
