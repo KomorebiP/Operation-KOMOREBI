@@ -67,7 +67,8 @@ class ResearchReadingTest(unittest.TestCase):
         self.assertEqual(len(links), 45)  # 42 figures and three downloads
         self.assertTrue(all('/'+REVISION+'/' in link for link in links))
         self.assertIn(research.ARCHIVE_SHA256, self.rendered)
-        self.assertIn('six-reactive-element feasibility and historical novelty remain open', self.rendered)
+        self.assertIn('six-reactive realization using an ideal transformer', self.rendered)
+        self.assertIn('transformer-free RLC-only realization with six reactive elements remains open', self.rendered)
         self.assertIn('not this entire draft', self.rendered)
         with self.assertRaises(ValueError):
             research.reading_body(ROOT, 'main')

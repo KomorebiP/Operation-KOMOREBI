@@ -54,6 +54,7 @@ runpy.run_path(script.as_posix(), run_name="__main__")
 Run the wrapper with one of the paths above after copying the reproduction
 directory to a new writable location. The exact source and its manifest remain
 in the ZIP. This replay is not an independent audit of every mathematical proof
-in the draft or a hardware validation. The six-reactive realization question
-and historical novelty remain open. The existing Lean companion proves
+in the draft or a hardware validation. For the degree-six target, whether a
+transformer-free RLC-only realization exists with six reactive elements remains
+open. Historical novelty has not been established. The existing Lean companion proves
 selected results and does not formalize this entire archive.
