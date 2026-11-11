@@ -32,16 +32,19 @@
   self-reviewed prose in [SAMPLING_DERIVATION.md](SAMPLING_DERIVATION.md).
   The finite-radius angular identities are proved by a Poisson-kernel route;
   the alternative derivation is in [ENERGY_DERIVATION.md](ENERGY_DERIVATION.md).
-- **Source gap:** the thread “Continue Smith Chart Work” is visible in the
-  ChatGPT thread list, but its assistant responses arrived as inaccessible
-  reference placeholders. A direct browser navigation timed out. Its later
-  claims and artifacts have not been inspected; avoid describing this
-  checkpoint as the latest overall state.
+- **Recovered source:** the later 172-file archive is now available in
+  [the research source record](../../research/smith-chart/README.md). It was
+  unavailable when run15 was recorded, so that receipt has the earlier
+  documentation hashes. The proof modules from run15 remain unchanged.
+  The new [first-order RL companion](../../research/smith-chart/formal/README.md)
+  covers one selected algebraic realization and positivity result; it does
+  not formalize the full archive or settle the six-reactive RLC-only case.
 - **Published implementation correction:** PR 176 published the chart's
   half-turn quantile and near-boundary fixes. The numerically checked math
   prefix is in [computations/inputs/smith-chart-final-lf.js](computations/inputs/smith-chart-final-lf.js);
   the published script additionally improves coordinate display precision.
 - **Next route:** compare the proved real inverse to the JavaScript's complex
   branch lift and floating-point behavior. Preserve the caveat that
-  coordinate-speed minimax is not a reconstruction guarantee. Reconcile any
-  recovered newer work before claiming overall completion.
+  coordinate-speed minimax is not a reconstruction guarantee. The recovered
+  circuit research requires its own source-to-formal mapping before any broader
+  coverage claim.

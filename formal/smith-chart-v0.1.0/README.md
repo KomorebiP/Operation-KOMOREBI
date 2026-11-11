@@ -5,9 +5,13 @@ chart laboratory, bound to Operation-KOMOREBI revision
 `ae02554bc86f30626fd9fad8d64b60854e307a80`. The proofs are a separate artifact;
 the accompanying browser update is tested separately and is not certified by
 the Lean results.
-The later ChatGPT conversation “Continue Smith Chart Work” was located, but
-its assistant messages were unavailable to this session; its contents have
-therefore not been reconciled with this companion.
+The later 172-file research archive was recovered on 11 November 2026; see the
+[complete reading](https://komorebip.github.io/Operation-KOMOREBI/read/smith-chart/research.html)
+and [source record](../../research/smith-chart/README.md). Its later circuit
+claims are not generally covered by this companion. A separate
+[first-order RL formalization](../../research/smith-chart/formal/README.md)
+checks the limiting one-inductor realization. The historical run15 receipt
+predates these documentation updates; it records the earlier input hashes.
 
 ## Mathematical contract
 
@@ -128,4 +132,4 @@ branch-lift and floating-point operations is not formalized here. The equal-mass
 partition concerns integrated sampling density; the minimax bound
 concerns interval mass, not universal interpolation error. Novelty and an advantage on measured or
 noisy RF data remain separate research questions. No completion claim is made
-about the unavailable later ChatGPT continuation.
+about the full later research archive or its circuit-synthesis claims.

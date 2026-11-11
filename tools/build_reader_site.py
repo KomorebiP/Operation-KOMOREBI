@@ -498,6 +498,9 @@ class Site:
                 content=re.sub(r'(</h1>)',lambda m:m[1]+contents,content,count=1)
             article_class=' class="euler-example"' if is_euler else ''
             body='<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="'+self.rel('index.html',page)+'">Home</a> / <a href="'+self.rel(repo+'/index.html',page)+'">'+section+'</a></nav><article'+article_class+'>'+content+'</article>'
+            if repo == 'collection' and path == 'docs/demonstrations/SMITH_FIRST_ORDER_RL.md':
+                from smith_chart_research import decorate_supplement
+                body = decorate_supplement(self, page, body)
             self.page(page,title,body,github(self.repos[repo],self.revisions[repo],path))
             plain=re.sub(r'<[^>]+>',' ',rendered)
             plain=html.unescape(re.sub(r'\s+',' ',plain))
