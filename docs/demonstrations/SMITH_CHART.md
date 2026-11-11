@@ -250,7 +250,7 @@ only powers congruent to \(b\pmod N\), their product has powers only in
 the class \(a+b\pmod N\). This is a statement about coefficient support.
 It does not say that the product's value is zero at a nonzero input.
 
-For a small counterexample to multiplying only matching packets, let
+For a small counterexample to squaring only the zero packet, let
 \(f(t)=1+t\) and \(N=2\). Then
 
 \[
@@ -367,8 +367,9 @@ the half-angle identity gives
 \end{aligned}
 \]
 
-The branches of \(Q_\rho\) differ by multiples of \(\pi\), so their doubled
-angles have the same complex phase. At the two excluded quarter turns,
+Each branch shifts \(\xi\) by a multiple of \(\pi\) inside the tangent
+and adds a multiple of \(\pi\) to the inverse angle. These shifts leave
+the doubled complex phase unchanged. At the two excluded quarter turns,
 \(\zeta=-1\) and the map also gives \(-1\). The inverse is strictly increasing,
 with \(Q_\rho(0)=0\), \(Q_\rho(1/2)=\pi\), and \(Q_\rho(1)=2\pi\); the
 phase map's turn count therefore selects the same angle on each half of the
