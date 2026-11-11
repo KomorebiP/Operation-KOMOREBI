@@ -58,16 +58,15 @@ p_\rho(\theta)=\frac{1-\rho^4}{2\pi(1-2\rho^2\cos(2\theta)+\rho^4)}.
 For \(0\leq\rho<1\), let \(F_\rho(\theta)=\int_0^\theta p_\rho(s)\,ds\),
 \(q=\rho^2\), and \(\beta=(1-q)/(1+q)\). Define
 \(A(v)=\arctan\!\bigl(\beta\tan(2\pi v)\bigr)\) for \(-1/4<v<1/4\).
-The branch-aware inverse on \(0\leq u\leq1\) is
+The branch-aware inverse \(Q_\rho(u)\) on \(0\leq u\leq1\) is
 
 \[
-Q_\rho(u)=
 \begin{cases}
-A(u),&0\leq u<1/4,\\
-\pi/2,&u=1/4,\\
-\pi+A(u-1/2),&1/4<u<3/4,\\
-3\pi/2,&u=3/4,\\
-2\pi+A(u-1),&3/4<u\leq1.
+A(u),&u<\tfrac14,\\
+\pi/2,&u=\tfrac14,\\
+\pi+A(u-\tfrac12),&\tfrac14<u<\tfrac34,\\
+3\pi/2,&u=\tfrac34,\\
+2\pi+A(u-1),&u>\tfrac34.
 \end{cases}
 \]
 
@@ -80,9 +79,11 @@ arithmetic, put \(x=2\pi u\) and \(w=e^{2ix}\). When \(\cos x\ne0\),
 the half-angle identity gives
 
 \[
+\begin{aligned}
 \frac{w+q}{1+qw}
-=\frac{1+i\beta\tan x}{1-i\beta\tan x}
-=e^{2i\arctan(\beta\tan x)}.
+&=\frac{1+i\beta\tan x}{1-i\beta\tan x}\\
+&=e^{2i\arctan(\beta\tan x)}.
+\end{aligned}
 \]
 
 The branches of \(Q_\rho\) differ by multiples of \(\pi\), so their doubled
