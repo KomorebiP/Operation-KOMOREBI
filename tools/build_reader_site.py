@@ -358,6 +358,7 @@ class Site:
         brand_assets={name:self.rel('assets/brand/'+name,path)+'?v='+hashlib.sha256(
             (self.root/'website/assets/brand'/name).read_bytes()).hexdigest()[:12]
             for name in ('komorebi-logo.svg','favicon.svg','favicon-32.png','apple-touch-icon.png')}
+        mathjax_extra = ('<script defer src="'+self.rel('assets/smith-research-mathjax.js',path)+'"></script>') if path == 'read/smith-chart/research.html' else ''
         from core_visual_guides import is_visual_guide
         visual_work=path.split('/')[1] if path.startswith('read/') and path.count('/')>1 else ''
         visual_page=bool(visual_work and '<article id="chapter-text"' in body and is_visual_guide(visual_work,path))
@@ -377,7 +378,7 @@ class Site:
 <title>'''+esc(title)+''' · Komorebi</title><link rel="stylesheet" href="'''+self.rel('assets/reader.css',path)+'?v='+hashlib.sha256((self.root/'website/assets/reader.css').read_bytes()).hexdigest()[:12]+'''">
 <link rel="stylesheet" href="'''+self.rel('assets/open-research.css',path)+'?v='+hashlib.sha256((self.root/'website/assets/open-research.css').read_bytes()).hexdigest()[:12]+'''">
 <link rel="stylesheet" href="'''+self.rel('assets/side-reader.css',path)+'?v='+hashlib.sha256((self.root/'website/assets/side-reader.css').read_bytes()).hexdigest()[:12]+'''">
-<script defer src="'''+self.rel('assets/mathjax-config.js',path)+'''"></script><script defer src="'''+self.rel('assets/mathjax/tex-svg-full.js',path)+'''"></script>
+<script defer src="'''+self.rel('assets/mathjax-config.js',path)+'''"></script>'''+mathjax_extra+'''<script defer src="'''+self.rel('assets/mathjax/tex-svg-full.js',path)+'''"></script>
 '''+search_script+'''<script defer src="'''+self.rel('assets/reader.js',path)+'?v='+hashlib.sha256((self.root/'website/assets/reader.js').read_bytes()).hexdigest()[:12]+'''"></script>'''+glossary_script+operator_script+chapter_help_script+home_assets+reading_list_assets+'''</head><body class="open-research'''+(' smith-chart-page' if path=='smith-chart.html' else '')+(' home-page' if path == 'index.html' else '')+(' reading-page' if reading_page else '')+(' work-page' if work_page else '')+(' visual-reading' if visual_page else '')+'''">
 <a class="skip-link" href="#main">Skip to main content</a><header class="site-header"><a class="brand" href="'''+root+'''" aria-label="Komorebi home"><span class="brand-wordmark"><img class="brand-logo" src="'''+brand_assets['komorebi-logo.svg']+'''" alt="Komorebi" width="1320" height="240"><span class="brand-fallback" aria-hidden="true">Komorebi</span><small>Mathematics · proofs · software</small></span></a>'''+nav_html+'''</header>
 <main id="main" tabindex="-1">'''+body+'''</main><footer><div class="footer-inner"><nav class="footer-links" aria-label="Project information">'''+source_html+'''<a href="'''+self.rel('collection/PROJECT_STATEMENT.html',path)+'''">Project and authorship statement</a><a href="'''+self.rel('collection/ACCESSIBILITY.html',path)+'''">Accessibility and reporting problems</a><a href="'''+self.rel('sitemap.html',path)+'''">Sitemap</a></nav><a class="footer-github" href="https://github.com/'''+REPOSITORY+'''">Return to GitHub <span aria-hidden="true">↗</span></a></div></footer></body></html>'''
@@ -718,6 +719,8 @@ class Site:
         from roots_newton_case import publish as publish_roots_newton_case
         publish_roots_newton_case(self)
         self.smith_chart_lab()
+        from smith_chart_research import publish as publish_smith_chart_research
+        publish_smith_chart_research(self)
         from special_functions_lab import build as build_special_functions_lab
         build_special_functions_lab(self)
         self.markdown_pages()
