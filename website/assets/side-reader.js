@@ -8,7 +8,7 @@
   const $ = id => document.getElementById(id);
   let data;
   try {
-    const response = await fetch(root.dataset.index);
+    const response = await (globalThis.KomorebiReaderData?.fetch || fetch)(root.dataset.index);
     if (!response.ok) throw new Error("Catalogue unavailable");
     data = await response.json();
     if (data.schema !== 1 || !data.works.length || !data.entries.length || !data.pages) throw new Error("Invalid catalogue");
