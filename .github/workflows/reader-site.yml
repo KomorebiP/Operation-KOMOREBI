@@ -224,8 +224,10 @@ jobs:
           PY
       - name: Build and run the introductory C example
         run: |
-          sudo apt-get update
-          sudo apt-get install -y cmake libgmp-dev
+          if ! command -v cmake >/dev/null || ! dpkg-query -W -f='${Status}' libgmp-dev 2>/dev/null | grep -qx 'install ok installed'; then
+            sudo apt-get update
+            sudo apt-get install -y cmake libgmp-dev
+          fi
           cmake -S .reader-libraries/polyphase -B .reader-build/polyphase -DCMAKE_BUILD_TYPE=Release -DPPF_OPENMP=OFF -DPPF_MPFR_SUPPORT=OFF -DPPF_BUILD_EXAMPLES=ON -DBUILD_TESTING=OFF
           cmake --build .reader-build/polyphase --parallel --target example_basic
           python - <<'PY'
