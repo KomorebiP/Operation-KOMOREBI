@@ -52,11 +52,11 @@ substituting `-t`, giving one sign per lane only when `N` is even. For odd
   boundary H² norm. The finite-radius angular integrals are proved separately
   from finite phase-orbit Parseval; their scope and self-review are in
   [ENERGY_INTEGRAL_AUDIT.md](ENERGY_INTEGRAL_AUDIT.md).
-- A Lean proof that the explicit branch-aware inverse-CDF formula or the
-  browser implementation equals the integral-defined CDF. A self-reviewed
-  derivation is in [SAMPLING_DERIVATION.md](SAMPLING_DERIVATION.md). The
-  density normalization and equal-mass existence are formalized and reviewed
-  separately in [SAMPLING_INTEGRAL_AUDIT.md](SAMPLING_INTEGRAL_AUDIT.md).
+- A Lean proof that the browser's complex branch-lift and floating-point
+  implementation agree with the proved real inverse. The complex-lift
+  derivation is self-reviewed in [SAMPLING_DERIVATION.md](SAMPLING_DERIVATION.md).
+  The real piecewise inverse is proved and self-reviewed separately in
+  [EXPLICIT_INVERSE_AUDIT.md](EXPLICIT_INVERSE_AUDIT.md).
 - Correspondence between the Lean model and the JavaScript, including
   finite precision, UI state, coordinate entry, or exported sessions.
 - Hardware validation, a measured-data comparison, or a novelty assessment.

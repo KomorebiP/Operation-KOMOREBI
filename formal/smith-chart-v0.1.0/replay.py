@@ -20,7 +20,7 @@ import time
 ROOT = Path(__file__).resolve().parent
 MODULES = [
     "SmithPackets", "SmithGeometry", "SmithFourier", "SmithAlgebra",
-    "SmithSampling", "SmithSamplingIntegral", "SmithSamplingInverse", "SmithEnergy", "SmithEnergyIntegral", "SmithResults", "SmithExamples", "SmithAnalyticFourier",
+    "SmithSampling", "SmithSamplingIntegral", "SmithSamplingInverse", "SmithExplicitInverse", "SmithEnergy", "SmithEnergyIntegral", "SmithResults", "SmithExamples", "SmithAnalyticFourier",
     "SmithParseval", "SmithCanonicalRoot",
 ]
 AUDIT = "AxiomAudit.lean"
@@ -70,7 +70,7 @@ def main() -> int:
     try:
         inputs = [f"{m}.lean" for m in MODULES] + [AUDIT, "replay.py", "dependency-lock.json",
                   "source-bindings.json", "lean-toolchain", "README.md", "AUDIT.md", "STATUS.md",
-                  "SAMPLING_DERIVATION.md", "SAMPLING_INTEGRAL_AUDIT.md", "ENERGY_DERIVATION.md",
+                  "SAMPLING_DERIVATION.md", "SAMPLING_INTEGRAL_AUDIT.md", "EXPLICIT_INVERSE_AUDIT.md", "ENERGY_DERIVATION.md",
                   "ENERGY_INTEGRAL_AUDIT.md"]
         before = {name: hash_file(ROOT / name) for name in inputs}
         receipt["input_sha256_before"] = before

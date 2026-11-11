@@ -12,17 +12,17 @@
   phase-average identity, reconstruction, refinement, admittance parity,
   finite passive-domain geometry, coefficient projector algebra, finite
   phase-orbit Parseval, sampling-density normalization, an integral-defined
-  CDF and its noncomputable inverse, equal-mass partition existence,
-  squared-coefficient energies, and finite-radius angular means of the actual
-  packets have Lean counterparts.
+  CDF, its noncomputable inverse and a real piecewise explicit inverse,
+  equal-mass partition existence, squared-coefficient energies, and finite-radius
+  angular means of the actual packets have Lean counterparts.
 - **Evidence:** the fresh replay receipt is at
-  [verification/run10/receipt.json](verification/run10/receipt.json); inspect
+  [verification/run11/receipt.json](verification/run11/receipt.json); inspect
   its status and recorded hashes before relying on it. The replay and audit
   use pinned compiled Mathlib caches and self-review, as described in
   [AUDIT.md](AUDIT.md).
-- **Smallest remaining formal gaps:** formalize the sampling CDF's explicit
-  branch-aware inverse and prove its correspondence to the JavaScript if
-  implementation certification is intended. The inverse argument is
+- **Smallest remaining formal gap:** connect the proved real piecewise inverse
+  to the JavaScript's complex branch-lift and floating-point operations if
+  implementation certification is intended. The complex-lift presentation is
   self-reviewed prose in [SAMPLING_DERIVATION.md](SAMPLING_DERIVATION.md).
   The finite-radius angular identities are proved by a Poisson-kernel route;
   the alternative derivation is in [ENERGY_DERIVATION.md](ENERGY_DERIVATION.md).
@@ -35,7 +35,7 @@
   half-turn quantile and near-boundary fixes. The numerically checked math
   prefix is in [computations/inputs/smith-chart-final-lf.js](computations/inputs/smith-chart-final-lf.js);
   the published script additionally improves coordinate display precision.
-- **Next route:** formalize the explicit Poisson inverse and compare it to the
-  JavaScript, including branch handling. Preserve the caveat that
+- **Next route:** compare the proved real inverse to the JavaScript's complex
+  branch lift and floating-point behavior. Preserve the caveat that
   coordinate-speed minimax is not a reconstruction guarantee. Reconcile any
   recovered newer work before claiming overall completion.
