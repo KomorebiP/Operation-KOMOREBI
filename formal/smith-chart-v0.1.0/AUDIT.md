@@ -43,17 +43,20 @@ substituting `-t`, giving one sign per lane only when `N` is even. For odd
 | Character order | An order-one root used at nominal order two fails to separate residues. The general filter therefore requires exact order, and the canonical root is separately proved to meet it. |
 | Nonlinear products | For `F=1+t`, the degree-two coefficient of the even lane of `F²` is one, whereas squaring only the even lane gives zero. The Lean fixture proves the off-diagonal contribution is necessary. |
 | Coprime factorization | `crt_projector` uses coprimality explicitly; it does not assert the formula for arbitrary noncoprime factors. |
-| Sampling optimality | The formal lower bound concerns the largest interval mass. It assumes an equal-mass candidate and gives no general interpolation or estimation optimum. |
+| Sampling optimality | The formal lower bound concerns the largest interval mass. An equal-density-mass partition is now proved to exist; neither result establishes a general interpolation or estimation optimum. |
+| Angular energy | The angular-integral theorems apply for `0 ≤ ρ < 1` and distinguish the zero and nonzero lanes. They do not establish a finite boundary H² norm. |
 
 ## Not covered
 
-- A Lean proof of the angular H²/Parseval interpretation of the squared
-  coefficient sums. A self-reviewed written proof is in
-  [ENERGY_DERIVATION.md](ENERGY_DERIVATION.md). Finite phase-orbit Parseval
-  is a separate Lean result.
-- A Lean proof of the Poisson density's normalization, the inverse CDF, or
-  existence of equal-mass partitions. A separate self-reviewed mathematical
-  derivation is in [SAMPLING_DERIVATION.md](SAMPLING_DERIVATION.md).
+- A Lean proof of divergence as the radius tends to one or of any finite
+  boundary H² norm. The finite-radius angular integrals are proved separately
+  from finite phase-orbit Parseval; their scope and self-review are in
+  [ENERGY_INTEGRAL_AUDIT.md](ENERGY_INTEGRAL_AUDIT.md).
+- A Lean proof that the explicit branch-aware inverse-CDF formula or the
+  browser implementation equals the integral-defined CDF. A self-reviewed
+  derivation is in [SAMPLING_DERIVATION.md](SAMPLING_DERIVATION.md). The
+  density normalization and equal-mass existence are formalized and reviewed
+  separately in [SAMPLING_INTEGRAL_AUDIT.md](SAMPLING_INTEGRAL_AUDIT.md).
 - Correspondence between the Lean model and the JavaScript, including
   finite precision, UI state, coordinate entry, or exported sessions.
 - Hardware validation, a measured-data comparison, or a novelty assessment.

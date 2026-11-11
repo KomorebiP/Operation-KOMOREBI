@@ -1,9 +1,9 @@
 # Angular packet energy
 
 This is a self-reviewed mathematical derivation for the angular energy shown
-in the Smith chart. The squared-coefficient sums and finite phase-orbit
-Parseval identity have Lean counterparts; the passage to the angular integral
-below has not been formalized here.
+in the Smith chart. Separate Lean proofs establish the squared-coefficient
+sums, finite phase-orbit Parseval identity, and finite-radius angular means.
+The written derivation below uses a different route.
 
 Fix `N ≥ 1` and `0 ≤ r < 1`. For `1 ≤ j < N`, the impedance packet on the
 radius-`r` circle is
@@ -41,6 +41,8 @@ nonzero-lane mean diverge as `r` approaches one from below. The chart's
 finite-radius readout must not be confused with a finite boundary H² norm.
 
 `SmithEnergy.lean` proves the convergent real coefficient sums, while
-`SmithParseval.lean` proves the separate finite phase-orbit identity. The
-uniform-convergence and integration argument above remains a written proof
-awaiting Lean formalization.
+`SmithParseval.lean` proves the separate finite phase-orbit identity.
+`SmithEnergyIntegral.lean` proves the finite-radius angular identities by
+using the Poisson kernel and connects them to the actual packet series and
+coefficient sums. The uniform-convergence argument above remains self-reviewed
+prose; it is not the route used in the Lean proof.

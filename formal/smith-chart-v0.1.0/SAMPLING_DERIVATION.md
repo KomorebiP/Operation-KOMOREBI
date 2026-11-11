@@ -1,8 +1,8 @@
 # Sensitivity sampling: derivation and scope
 
 This is a mathematical self-review of the sampling construction stated in
-the bound Smith chart source. It is not a Lean proof of the integrals or of
-the browser's floating-point implementation.
+the bound Smith chart source. Separate Lean results prove normalization and
+partition existence; the browser's floating-point implementation is not proved.
 
 Let `0 ≤ ρ < 1`, put `q = ρ²`, and write `t = ρ exp(iθ)`. Define
 
@@ -19,8 +19,11 @@ w(ρ exp(iθ)) = 2(1+ρ²)/(1-2ρ² cos(2θ)+ρ⁴)
 ```
 
 The rational-algebra and trigonometric steps have Lean counterparts in
-`SmithSampling.symmetric_weight_algebra` and `SmithSampling.angular_weight`;
-the integral and inverse-lift steps below have not been formalized here.
+`SmithSampling.symmetric_weight_algebra` and `SmithSampling.angular_weight`.
+`SmithSamplingIntegral.lean` proves normalization, positivity, CDF monotonicity,
+and the existence of equal-mass partitions. `SmithSamplingInverse.lean` proves
+that the integral CDF has a unique noncomputable inverse. The explicit
+inverse-lift steps below remain a self-reviewed written derivation.
 
 ## Cumulative distribution and inverse
 
@@ -68,8 +71,9 @@ gives equal integrals of the combined coordinate speed. For any `N` intervals
 with combined-speed masses `A₁,…,A_N`, their sum is fixed, so
 `max A_j ≥ (Σ A_j)/N`; an equal-mass partition attains that bound. This
 elementary minimax step is formalized in `SmithSampling.equal_mass_minimax`.
-When `ρ=0`, both coordinate speeds vanish and every partition attains the
-zero bound; the normalized sensitivity density itself is uniform.
+`SmithPoisson.chart_equal_mass_partition` proves that equal-density-mass
+partitions exist for every positive `N`. When `ρ=0`, both coordinate speeds
+vanish and every partition attains the zero bound; the normalized sensitivity density itself is uniform.
 
 For linear interpolation on an interval `[a,b]`, the triangle inequality
 bound for each coordinate's interpolation error is at most the integral of
