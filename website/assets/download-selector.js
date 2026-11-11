@@ -121,7 +121,7 @@
   }
   try {
     if (!api || !window.Worker || !window.crypto?.subtle) throw new Error("The custom selector is unavailable in this browser. Use the ready-made ZIPs below.");
-    const response = await fetch(form.dataset.index);
+    const response = await (globalThis.KomorebiReaderData?.fetch || fetch)(form.dataset.index);
     if (!response.ok) throw new Error("The file list could not load. Reload this page or use the ready-made ZIPs below.");
     catalog = api.validate(await response.json());
     if (catalog.source_revision !== form.dataset.revision) throw new Error("The site was updated. Reload this page for the current file list.");

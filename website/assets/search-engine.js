@@ -35,7 +35,7 @@
   class Client {
     constructor(indexUrl, options = {}) {
       this.indexUrl = new URL(indexUrl, options.baseUrl || (typeof location === 'undefined' ? undefined : location.href));
-      this.fetch = options.fetch || fetch.bind(globalThis);
+      this.fetch = options.fetch || globalThis.KomorebiReaderData?.fetch || fetch.bind(globalThis);
       this.assets = new Map();
       this.previews = new Map();
       this.total = null;

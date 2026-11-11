@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     permissions:
-      contents: read
+      contents: write
       pages: read
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -74,6 +74,8 @@ jobs:
           python -B -m unittest discover -s tools -p 'test_*python.py' -v
       - name: Test reader rendering safeguards
         run: |
+          python -B -m unittest discover -s tools -p 'test_reader_delivery.py' -v
+          node --test tools/test_reader_data.cjs
           python -B -m unittest discover -s tools -p 'test_site_metadata.py' -v
           python -B -m unittest discover -s tools -p 'test_search_catalog.py' -v
           node --test tools/test_search_engine.cjs tools/test_search_interface.cjs
@@ -246,7 +248,12 @@ jobs:
       - name: Build the reader site and reading ZIPs
         run: python -B tools/build_reader_site.py --math-root .reader-libraries/math --polyphase-root .reader-libraries/polyphase --mathjax-root .reader-build/mathjax --pdfjs-root .reader-build/pdfjs --python-root .reader-build/python --lean-wasm-root .reader-build/lean-wasm --revision '${{ github.sha }}' --output reader-site
       - name: Check HTML links, access features and all reading ZIPs
-        run: python -B tools/check_reader_site.py --site reader-site --compact-html
+        run: python -B tools/check_reader_site.py --site reader-site --compact-html --delivery-artifacts .reader-build/reader-downloads
+      - name: Publish and verify revision-bound reader downloads
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python -B tools/publish_reader_downloads.py --site reader-site --artifacts .reader-build/reader-downloads
       - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
       - uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b

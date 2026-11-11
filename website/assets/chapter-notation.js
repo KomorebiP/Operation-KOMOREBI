@@ -35,7 +35,7 @@
     }).catch(()=>{}); // Exact TeX remains available if typesetting fails.
   }
   async function data() {
-    if (!dataPromise) dataPromise=fetch(dialog.dataset.source).then(response=>{
+    if (!dataPromise) dataPromise=(globalThis.KomorebiReaderData?.fetch || fetch)(dialog.dataset.source).then(response=>{
       if (!response.ok) throw new Error('Notation unavailable');
       return response.json();
     }).then(index=>{

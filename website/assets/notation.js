@@ -16,7 +16,7 @@
     return el;
   };
   async function getJSON(url) {
-    const response = await fetch(url);
+    const response = await (globalThis.KomorebiReaderData?.fetch || fetch)(url);
     if (!response.ok) throw new Error('Could not load the notation data');
     return response.json();
   }
