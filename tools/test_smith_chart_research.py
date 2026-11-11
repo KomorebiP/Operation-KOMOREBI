@@ -102,8 +102,8 @@ class ResearchReadingTest(unittest.TestCase):
                 research.archive_contents(root)
 
     def test_vector_and_editorial_bindings_fail_closed(self):
-        self.assertEqual(len(self.prose['edits']),46)
-        self.assertEqual(sum(c['expected_count'] for c in self.prose['edits']),84)
+        self.assertEqual(len(self.prose['edits']),54)
+        self.assertEqual(sum(c['expected_count'] for c in self.prose['edits']),92)
         with self.assertRaisesRegex(ValueError,'Editorial fragment changed'):
             edition.edit_prose('unrelated source',self.prose)
         with tempfile.TemporaryDirectory() as directory:
@@ -115,6 +115,11 @@ class ResearchReadingTest(unittest.TestCase):
             target=next((root/'research/smith-chart/edition/figures').glob('*.svg'))
             target.write_bytes(target.read_bytes()+b'tampered')
             with self.assertRaisesRegex(ValueError,'Vector edition source or output checksum mismatch'):
+                edition.load(root,self.files,research.HTML_NAME)
+            shutil.copyfile(ROOT/'research/smith-chart/edition/figures'/target.name,target)
+            helper=root/'research/smith-chart/edition/diagram_redesign.py'
+            helper.write_bytes(helper.read_bytes()+b'\n# changed renderer\n')
+            with self.assertRaisesRegex(ValueError,'Diagram generator differs'):
                 edition.load(root,self.files,research.HTML_NAME)
 
     def test_new_completion_formal_receipt(self):
@@ -135,7 +140,7 @@ class ResearchReadingTest(unittest.TestCase):
 
     def test_new_exact_computation_manifests(self):
         base=ROOT/'research/smith-chart/computations/verification'
-        for name in ('completion-boundary-003','candidate-142-system-001'):
+        for name in ('completion-boundary-003','candidate-142-system-001','diagram-labels-002'):
             record=json.loads((base/name/'manifest.json').read_bytes())
             self.assertEqual(record['run']['status'],'completed')
             for item in record['input_artifacts']:

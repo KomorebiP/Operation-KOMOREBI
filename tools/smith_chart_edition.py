@@ -17,6 +17,8 @@ def load(root, files, html_name):
     prose=json.loads((base/'edition/prose.json').read_bytes())
     if figures['generator_sha256']!=digest((base/'edition/generate_figures.py').read_bytes()):
         raise ValueError('Figure generator differs from its recorded revision')
+    if figures['diagram_generator_sha256']!=digest((base/'edition/diagram_redesign.py').read_bytes()):
+        raise ValueError('Diagram generator differs from its recorded revision')
     if prose['source_html_sha256']!=digest(files[html_name]):
         raise ValueError('Editorial source binding differs from the archived reading')
     if len(figures['figures'])!=42:

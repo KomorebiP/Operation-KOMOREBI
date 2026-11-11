@@ -20,6 +20,8 @@ import sys
 import tempfile
 import zipfile
 
+from diagram_redesign import drawings
+
 HERE = Path(__file__).resolve().parent
 BASE = HERE.parent
 ARCHIVE_SHA = '39fd0d659ef6c006eebb129e08a9b2ced72ce5b857ba846d6481711c951c371e'
@@ -370,6 +372,12 @@ def main():
         '21_kron_node_elimination':mobile_panels(kron(),'Exact Kron reduction','15 170 440 270','515 170 440 270',('Before: resistor-only node 3','After: node 3 is eliminated')),
         '25_five_node_exact_topology_pruning':mobile_census(),
     }
+    redesigned = drawings()
+    for stem, (draw, source) in redesigned.items():
+        (out/(stem+'.svg')).write_text(draw(),encoding='utf-8',newline='\n')
+        generated[stem]=stem+'.svg'
+        sources[stem]=source
+        mobile[stem]=draw(mobile=True)
     for stem,drawing in mobile.items():(out/(stem+'.mobile.svg')).write_text(drawing,encoding='utf-8',newline='\n')
     # A clean analytic error chart, with exact Fraction values from (A5).
     matplotlib.rcParams.update({'font.family':'DejaVu Sans','font.size':12,'svg.fonttype':'none','svg.hashsalt':'smith-reading-edition-2026-11'})
@@ -405,13 +413,16 @@ def main():
         item={'original':name,'original_sha256':digest(p.read_bytes()),
                         'edition':'edition/figures/'+target.name,'edition_sha256':digest(target.read_bytes()),
                         'source':src,'source_sha256':digest(original_files[src]),
-                        'method':'component-list redraw' if p.stem in {'17_six_state_ideal_combiner','21_kron_node_elimination','25_five_node_exact_topology_pruning','39_seven_reactive_graphs','41_storage_and_observable_order'} else 'archived-equation rendering or geometry-preserving restyle'}
+                        'method':('structural redraw from archived circuit or certificate' if p.stem in redesigned else
+                                  'component-list redraw' if p.stem in {'17_six_state_ideal_combiner','21_kron_node_elimination','25_five_node_exact_topology_pruning','39_seven_reactive_graphs','41_storage_and_observable_order'} else
+                                  'archived-equation rendering or geometry-preserving restyle')}
         if p.stem in mobile:
             mob=out/(p.stem+'.mobile.svg')
             item.update(mobile_edition='edition/figures/'+mob.name,mobile_sha256=digest(mob.read_bytes()))
         records.append(item)
     if len(records)!=42:raise AssertionError('Expected exactly 42 source figure identities')
     manifest={'archive_sha256':ARCHIVE_SHA,'generator_sha256':digest(Path(__file__).read_bytes()),
+              'diagram_generator_sha256':digest((HERE/'diagram_redesign.py').read_bytes()),
               'matplotlib':matplotlib.__version__,'numpy':np.__version__,
               'scope':'Vector presentation edition. Plots illustrate the archived mathematics; they are not new proof certificates.',
               'additional_figures':[{'repository_path':'docs/demonstrations/figures/smith-two-packet-feasibility.svg','sha256':digest(supplement.read_bytes())}],

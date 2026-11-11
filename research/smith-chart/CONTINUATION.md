@@ -87,3 +87,13 @@ certificate for the explicit class-142 equations, or a different topology with
 a changed structural premise. The global six-reactive transformer-free
 question still requires all admissible classes and node counts. Another
 unchanged finite-grid fit would not close that question.
+
+## Structural diagram redesign, base b1a3dc4d
+
+The next presentation pass starts from `b1a3dc4d25820c028d37257a00963fe4988d1f93`.
+Eight schematic figures (8, 11, 18, 26, 27, 30, 31 and 37) receive new geometry,
+readable labels and phone layouts. The page now has twelve mobile variants;
+the expanded view uses the same selected source. Circuit connections, original
+artwork, all mathematical expressions and existing proof receipts are retained.
+The figure-8 label check is a completed exact finite computation for the
+all-positive coupling branch, not a new interpolation or synthesis theorem.

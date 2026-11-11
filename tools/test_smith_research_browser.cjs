@@ -35,7 +35,7 @@ async function run() {
           touchHeight: Math.min(...[...document.querySelectorAll('.research-actions a, .research-actions button, .figure-open')]
             .map(element => element.getBoundingClientRect().height).filter(height => height > 0)),
         }));
-        if (layout.width > layout.viewport || layout.figures !== 42 || layout.vectorFigures !== 42 || layout.originalLinks !== 42 || layout.mobileFigures !== (name === 'desktop' ? 0 : 4) || layout.mathReady !== 'true' || layout.mathErrors || layout.touchHeight < 44) {
+        if (layout.width > layout.viewport || layout.figures !== 42 || layout.vectorFigures !== 42 || layout.originalLinks !== 42 || layout.mobileFigures !== (name === 'desktop' ? 0 : 12) || layout.mathReady !== 'true' || layout.mathErrors || layout.touchHeight < 44) {
           throw new Error('Reading layout, images, mathematics, or touch controls failed: ' + JSON.stringify(layout));
         }
         const figure = page.locator('#figure-2 .figure-open');
@@ -55,6 +55,13 @@ async function run() {
         }));
         if (!dialog.open || dialog.pressed !== 'true' || dialog.focus !== 'dialog-image-wrap' || dialog.mathErrors ||
             (name !== 'desktop' && !dialog.scrollable)) throw new Error('Expanded figure check failed: ' + JSON.stringify(dialog));
+        await page.keyboard.press('Escape');
+        const certificate = page.locator('figure').filter({ has: page.locator('img[data-figure-number="08"]') });
+        const certificateSource = await certificate.locator('img').evaluate(img => img.currentSrc);
+        await certificate.locator('.figure-open').click();
+        if (await page.locator('#dialog-image').getAttribute('src') !== certificateSource) {
+          throw new Error('Expanded figure did not preserve the displayed responsive diagram');
+        }
         await page.keyboard.press('Escape');
         await page.locator('.research-contents-jump').focus();
         await page.keyboard.press('Enter');

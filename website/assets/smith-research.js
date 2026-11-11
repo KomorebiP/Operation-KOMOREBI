@@ -56,7 +56,7 @@
     }
     button.addEventListener('click', () => {
       const img = figure.querySelector('img');
-      figureImage.src = img.src;
+      figureImage.src = img.currentSrc || img.src;
       figureImage.alt = img.alt;
       const ticket = ++captionTicket;
       if (window.MathJax?.typesetClear) MathJax.typesetClear([figureCaption]);
