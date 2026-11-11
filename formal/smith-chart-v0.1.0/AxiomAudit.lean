@@ -10,6 +10,7 @@ import SmithEnergyIntegral
 import SmithResults
 import SmithExamples
 import SmithBoundaries
+import SmithFiniteSamples
 
 #print axioms SmithChart.residue_hasSum
 #print axioms SmithChart.packet_reconstruction
@@ -80,3 +81,9 @@ import SmithBoundaries
 #print axioms SmithBoundaries.noncoprime_projector_counterexample
 #print axioms SmithBoundaries.two_sample_equal_but_not_identical
 #print axioms SmithBoundaries.second_sample_positive_real
+
+#print axioms SmithFiniteSamples.witness_agrees
+#print axioms SmithFiniteSamples.witness_positive
+#print axioms SmithFiniteSamples.witness_distinct_inside
+#print axioms SmithFiniteSamples.witness_analytic
+#print axioms SmithFiniteSamples.finite_sample_nonuniqueness

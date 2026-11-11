@@ -21,7 +21,7 @@ ROOT = Path(__file__).resolve().parent
 MODULES = [
     "SmithPackets", "SmithGeometry", "SmithFourier", "SmithAlgebra",
     "SmithSampling", "SmithSamplingIntegral", "SmithSamplingInverse", "SmithExplicitInverse", "SmithEnergy", "SmithEnergyIntegral", "SmithResults", "SmithExamples", "SmithAnalyticFourier",
-    "SmithParseval", "SmithCanonicalRoot", "SmithBoundaries",
+    "SmithParseval", "SmithCanonicalRoot", "SmithBoundaries", "SmithFiniteSamples",
 ]
 AUDIT = "AxiomAudit.lean"
 ALLOWED_AXIOMS = {"propext", "Classical.choice", "Quot.sound"}

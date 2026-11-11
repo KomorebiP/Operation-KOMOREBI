@@ -1,8 +1,9 @@
 # Formal boundary continuation: self-review
 
 This is a review by the author of the continuation, not an independent
-review. The exact Lean declarations are in [SmithBoundaries.lean](SmithBoundaries.lean);
-[run14](verification/run14/receipt.json) records the compiler, inputs,
+review. The exact declarations are in [SmithBoundaries.lean](SmithBoundaries.lean)
+and [SmithFiniteSamples.lean](SmithFiniteSamples.lean).
+[run15](verification/run15/receipt.json) records the compiler, inputs,
 direct cached imports, axiom inventory, and replay outcome.
 
 ## Claim card: discrete cyclic reachability
@@ -30,7 +31,30 @@ and finite-impedance hypotheses from `SmithGeometry.lean`.
 | Concrete quarter turn | Passed | Lean proves infeasibility for order 2 and existence for order 4 from start `1/2` to target `I/2`. The guide's identification of the order-4 index as `1` is an elementary written calculation. |
 | Physical realization | Out of scope | No frequency-domain circuit, physical transmission line, floating-point code, or arbitrary network is modeled by the orbit theorem. |
 
-## Other formal witnesses
+## Claim card: finite-sample nonuniqueness
+
+For any finite set `s` of complex samples with `norm x < 1` for each
+`x` in `s`, `finite_sample_nonuniqueness` constructs two functions that are
+analytic at every complex point, have strictly positive real part throughout
+the open unit disk, agree at every sample, and differ at some point in the
+open unit disk. The set can be empty; repeated entries in a finite list
+correspond to the same set.
+
+The formal witness is `1 + (1 / 2^(s.card+1)) * product (z-x)` over
+`x` in `s`; the other function is `1`. Its product vanishes at every
+sample. The norm of each factor in the disk is at most `2`, so Lean bounds
+the perturbation by `1/2` and proves positive real part. The open disk is
+infinite, so a point outside the finite set exists inside the disk; there
+every product factor is nonzero. Lean proves analyticity and assembles these
+facts in the quantified theorem. The guide's finite-list construction uses
+its list length, which can differ from the set cardinality when entries are
+repeated; both choices establish the written claim.
+
+This is a theorem about functions of the reflection coordinate. It does not
+establish physical circuit realizability over frequency, nonuniqueness in a
+restricted finite-dimensional class, or an error bound for noisy data.
+
+## Other formal witnesses and verification limits
 
 `noncoprime_projector_counterexample` compares the coefficient of degree 4:
 the nested residue-zero projectors for orders 2 and 4 keep it, whereas the
@@ -42,10 +66,6 @@ evaluation theorem here.
 polynomials agree at `-1/2` and `1/2` and differ at zero.
 `second_sample_positive_real` proves its real part exceeds `11/16` for every
 complex `t` with `norm t < 1`; the constant function has real part one.
-Polynomial analyticity is used in the written explanation. The theorem for
-an arbitrary finite list of sample points is not formalized by these results,
-and positive real part as a function of the reflection coordinate is not a
-physical circuit-realizability theorem.
 
 The proofs use the pinned Mathlib and its precompiled caches, which are not
 all rebuilt or exhaustively hashed by replay. Source-to-formal mapping,

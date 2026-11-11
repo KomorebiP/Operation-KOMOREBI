@@ -3,7 +3,7 @@
 This reviews the written arguments and finite witnesses added to the Smith
 chart guide. It is not an independent review. The later Lean continuation
 is reviewed separately in [BOUNDARY_FORMAL_AUDIT.md](../BOUNDARY_FORMAL_AUDIT.md). The
-[bounded computation record](boundary-examples-004/manifest.json) hashes the
+[bounded computation record](boundary-examples-005/manifest.json) hashes the
 guide, workbench markup, checker, and contract as they stood during the run.
 Its repository field records the base commit and a dirty working tree.
 
@@ -43,8 +43,9 @@ Repeated sample points do not change the argument.
 This concerns analytic functions of the reflection coordinate. It does not
 assert realizability as a passive circuit over frequency or nonidentifiability
 within a specified finite-dimensional model. The checker and
-SmithBoundaries.lean verify the indicated parts of the two-point witness;
-the arbitrary-finite-sample statement rests on the written argument above.
+SmithBoundaries.lean verify the indicated parts of the two-point witness.
+SmithFiniteSamples.lean also proves the general result for any finite set
+of points in the disk, with a point of disagreement inside the disk.
 
 ## Other boundaries and computation
 

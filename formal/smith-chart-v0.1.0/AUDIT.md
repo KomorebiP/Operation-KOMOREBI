@@ -54,8 +54,9 @@ start separately, and checks the quarter-turn and noncoprime-projector
 examples. It also checks agreement at the two selected samples, inequality
 at zero, and the positive-real lower bound for the second sample function.
 [BOUNDARY_FORMAL_AUDIT.md](BOUNDARY_FORMAL_AUDIT.md) records the mapping and
-limits. The construction for an arbitrary finite sample list remains a
-written argument rather than a Lean theorem.
+limits. [SmithFiniteSamples.lean](SmithFiniteSamples.lean) proves the
+finite-sample construction for any finite set of disk points, including
+a distinct point in the disk where its two functions differ.
 
 ## Not covered
 

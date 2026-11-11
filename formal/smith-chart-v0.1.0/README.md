@@ -33,8 +33,10 @@ For a nonzero starting reflection coefficient, a target belongs to the
 finite canonical phase orbit exactly when their ratio has Nth power one.
 The zero-start case, an order-two versus order-four quarter-turn example,
 a noncoprime projector counterexample, and the equalities and positive-real
-bound for a two-sample witness are also proved. The general finite-sample
-nonidentifiability argument remains a written self-review.
+bound for a two-sample witness are also proved. For any finite set of
+samples inside the disk, Lean also constructs two entire functions with
+positive real part on the disk that agree at the samples and differ at
+another point in the disk.
 
 The finite phase-orbit Parseval identity is proved for arbitrary complex
 samples and for these impedance packets: the sum of squared packet magnitudes
@@ -70,6 +72,7 @@ finite phase-orbit Parseval identity and does not assert a finite boundary norm.
 | [SmithParseval.lean](SmithParseval.lean) | Finite phase-orbit Parseval, including the impedance specialization |
 | [SmithCanonicalRoot.lean](SmithCanonicalRoot.lean) | Exact order of `exp(2πi/N)` and specialization to it |
 | [SmithBoundaries.lean](SmithBoundaries.lean) | Discrete orbit reachability, boundary examples, and a positive-real two-sample witness |
+| [SmithFiniteSamples.lean](SmithFiniteSamples.lean) | Finite-sample nonuniqueness for positive-real analytic coordinate functions |
 | [SmithGeometry.lean](SmithGeometry.lean) | Cayley inverses and open/closed passive domains |
 | [SmithAlgebra.lean](SmithAlgebra.lean) | Projector, coprime, and finite convolution support identities |
 | [SmithSampling.lean](SmithSampling.lean) | Angular sensitivity formula and the abstract equal-mass bound |

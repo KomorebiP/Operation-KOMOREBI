@@ -586,7 +586,7 @@ every angle. The chart overlay uses the mass **midpoints**
 used in this comparison. A
 [standalone checker](../../tools/smith_chart_boundary_examples.py)
 reproduces these rounded values using Python's standard library; its
-[bounded computation record](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/formal/smith-chart-v0.1.0/computations/boundary-examples-004/manifest.json)
+[bounded computation record](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/formal/smith-chart-v0.1.0/computations/boundary-examples-005/manifest.json)
 records the inputs and scope. The comparison is not a general theorem
 about noisy measurements, arbitrary functions, or the best fitting method.
 In particular, it does not claim superiority over vector fitting, rational
@@ -631,8 +631,10 @@ Positive real part here is a property of functions of the reflection
 coordinate; the construction does not by itself establish realizability
 as a passive circuit over frequency. The [Lean boundary companion](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/formal/smith-chart-v0.1.0/SmithBoundaries.lean)
 checks the two-sample equalities, their difference at zero, and the stated
-positive-real bound. The construction for an arbitrary finite sample list
-remains a written argument, not a theorem in the current Lean companion.
+positive-real bound. [SmithFiniteSamples.lean](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/formal/smith-chart-v0.1.0/SmithFiniteSamples.lean)
+also proves the general result for any finite set of sample points in the
+open disk, with the two functions differing at a point inside that disk.
+Repeated points in a finite list give the same finite set.
 
 ## Physical load comparisons
 
@@ -749,12 +751,12 @@ mean-square formulas. A piecewise real inverse-CDF formula is also proved,
 including its branch points. The recorded replay uses cached Mathlib
 dependencies and its mathematical review is self-review.
 
-The exact-arithmetic phase-map derivation and the arbitrary-finite-sample
-impossibility argument are written self-reviews. The cyclic reachability
-criterion is proved in Lean for \(N>0\), with the zero-start case handled
-separately. Lean also checks the two-sample witness as described above.
-The standalone checker verifies selected rational examples and a finite scan,
-not the universal finite-sample statement. Correspondence to the browser's complex branch lift and
+The exact-arithmetic phase-map derivation is a written self-review. Lean
+proves the cyclic reachability criterion for \(N>0\), with the zero-start
+case handled separately. It also proves the finite-sample nonuniqueness
+statement in the specified analytic function class and checks the two-sample
+witness as described above. The standalone checker verifies selected
+rational examples and a finite scan; it is separate from these proofs. Correspondence to the browser's complex branch lift and
 floating-point implementation is not formally verified. The finite-radius
 angular mean-square is not a finite boundary \(H^2\) norm.
 
