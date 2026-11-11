@@ -46,8 +46,9 @@ lanes `r` and `s` has no coefficients outside lane `r+s`. The sampling module
 proves the angular rational formula for the symmetric sensitivity weight and the
 abstract average lower bound that equal interval masses attain. A further Lean
 module proves that the chart's sampling density is normalized, its CDF is
-continuous and strictly increasing, with a unique noncomputable inverse. An
-ordered equal-mass partition exists for every `N > 0` and `0 ≤ ρ < 1`. The
+continuous and strictly increasing, with a unique noncomputable inverse. A
+piecewise real arctangent formula is proved to equal that inverse on `[0,1]`,
+including its branch points. An ordered equal-mass partition exists for every `N > 0` and `0 ≤ ρ < 1`. The
 energy modules prove the infinite squared-coefficient sums and identify them
 with the actual packets' angular mean-square integrals for `0 ≤ ρ < 1`. This is separate from the
 finite phase-orbit Parseval identity and does not assert a finite boundary norm.
@@ -66,6 +67,7 @@ finite phase-orbit Parseval identity and does not assert a finite boundary norm.
 | [SmithSampling.lean](SmithSampling.lean) | Angular sensitivity formula and the abstract equal-mass bound |
 | [SmithSamplingIntegral.lean](SmithSamplingIntegral.lean) | Density normalization, CDF, and existence of equal-mass partitions |
 | [SmithSamplingInverse.lean](SmithSamplingInverse.lean) | Unique noncomputable inverse CDF and its monotonicity |
+| [SmithExplicitInverse.lean](SmithExplicitInverse.lean) | Piecewise real inverse on all of `[0,1]`, including branch points |
 | [SmithEnergy.lean](SmithEnergy.lean) | Convergent squared-coefficient energy formulas |
 | [SmithEnergyIntegral.lean](SmithEnergyIntegral.lean) | Finite-radius angular means of actual packets equal their coefficient energies |
 | [SmithResults.lean](SmithResults.lean) and [SmithExamples.lean](SmithExamples.lean) | Positive-real zero lane and explicit boundary/counterexample fixtures |
@@ -73,8 +75,9 @@ finite phase-orbit Parseval identity and does not assert a finite boundary norm.
 
 The exact mappings, exclusions, and self-review are in [AUDIT.md](AUDIT.md).
 The mathematical sampling argument is in [SAMPLING_DERIVATION.md](SAMPLING_DERIVATION.md);
-its explicit inverse-CDF step remains self-reviewed prose, while normalization
-and partition existence are proved in [SmithSamplingIntegral.lean](SmithSamplingIntegral.lean).
+its complex-lift presentation remains self-reviewed prose. Normalization and
+partition existence are proved in [SmithSamplingIntegral.lean](SmithSamplingIntegral.lean);
+a separate real inverse formula is proved in [SmithExplicitInverse.lean](SmithExplicitInverse.lean).
 The corresponding angular-energy argument is in [ENERGY_DERIVATION.md](ENERGY_DERIVATION.md).
 The current continuation point is [STATUS.md](STATUS.md).
 
@@ -109,8 +112,9 @@ values near the half-turn, is in [computations/quadrature-001/manifest.json](com
 The local chart correction is tested separately in
 [computations/runtime-003/manifest.json](computations/runtime-003/manifest.json)
 and [computations/quadrature-004/manifest.json](computations/quadrature-004/manifest.json).
-The explicit branch-aware inverse-CDF formula is not formalized here. The
-equal-mass partition concerns integrated sampling density; the minimax bound
+The correspondence between the proved real inverse and the browser's complex
+branch-lift and floating-point operations is not formalized here. The equal-mass
+partition concerns integrated sampling density; the minimax bound
 concerns interval mass, not universal interpolation error. Novelty and an advantage on measured or
 noisy RF data remain separate research questions. No completion claim is made
 about the unavailable later ChatGPT continuation.

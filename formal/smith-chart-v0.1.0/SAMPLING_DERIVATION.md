@@ -22,8 +22,10 @@ The rational-algebra and trigonometric steps have Lean counterparts in
 `SmithSampling.symmetric_weight_algebra` and `SmithSampling.angular_weight`.
 `SmithSamplingIntegral.lean` proves normalization, positivity, CDF monotonicity,
 and the existence of equal-mass partitions. `SmithSamplingInverse.lean` proves
-that the integral CDF has a unique noncomputable inverse. The explicit
-inverse-lift steps below remain a self-reviewed written derivation.
+that the integral CDF has a unique noncomputable inverse.
+`SmithExplicitInverse.lean` proves a real piecewise arctangent formula for
+that inverse, including both branch points. The complex inverse-lift
+presentation below remains a self-reviewed written derivation.
 
 ## Cumulative distribution and inverse
 

@@ -4,6 +4,7 @@ import SmithAlgebra
 import SmithSampling
 import SmithSamplingIntegral
 import SmithSamplingInverse
+import SmithExplicitInverse
 import SmithEnergy
 import SmithEnergyIntegral
 import SmithResults
@@ -46,6 +47,13 @@ import SmithExamples
 #print axioms SmithSamplingInverse.chart_quantile_strictMono
 #print axioms SmithSamplingInverse.chart_cdf_mem_unit
 #print axioms SmithSamplingInverse.chart_quantile_left_inverse
+#print axioms SmithExplicitInverse.principalCdf_hasDerivAt
+#print axioms SmithExplicitInverse.principalCdf_eq_chartCdf
+#print axioms SmithExplicitInverse.chart_cdf_add_pi
+#print axioms SmithExplicitInverse.chart_cdf_half_pi
+#print axioms SmithExplicitInverse.explicit_quantile_spec
+#print axioms SmithExplicitInverse.explicit_quantile_eq_abstract
+#print axioms SmithExplicitInverse.explicit_quantile_zero_radius
 #print axioms SmithEnergy.lane_hasSum
 #print axioms SmithEnergy.coefficient_energy_zero
 #print axioms SmithEnergy.coefficient_energy_nonzero
