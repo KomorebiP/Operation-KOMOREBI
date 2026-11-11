@@ -21,7 +21,7 @@ ROOT = Path(__file__).resolve().parent
 MODULES = [
     "SmithPackets", "SmithGeometry", "SmithFourier", "SmithAlgebra",
     "SmithSampling", "SmithSamplingIntegral", "SmithSamplingInverse", "SmithExplicitInverse", "SmithEnergy", "SmithEnergyIntegral", "SmithResults", "SmithExamples", "SmithAnalyticFourier",
-    "SmithParseval", "SmithCanonicalRoot",
+    "SmithParseval", "SmithCanonicalRoot", "SmithBoundaries", "SmithFiniteSamples",
 ]
 AUDIT = "AxiomAudit.lean"
 ALLOWED_AXIOMS = {"propext", "Classical.choice", "Quot.sound"}
@@ -71,7 +71,7 @@ def main() -> int:
         inputs = [f"{m}.lean" for m in MODULES] + [AUDIT, "replay.py", "dependency-lock.json",
                   "source-bindings.json", "lean-toolchain", "README.md", "AUDIT.md", "STATUS.md",
                   "SAMPLING_DERIVATION.md", "SAMPLING_INTEGRAL_AUDIT.md", "EXPLICIT_INVERSE_AUDIT.md", "ENERGY_DERIVATION.md",
-                  "ENERGY_INTEGRAL_AUDIT.md"]
+                  "ENERGY_INTEGRAL_AUDIT.md", "BOUNDARY_FORMAL_AUDIT.md"]
         before = {name: hash_file(ROOT / name) for name in inputs}
         receipt["input_sha256_before"] = before
         lock = json.loads((ROOT / "dependency-lock.json").read_text(encoding="utf-8"))

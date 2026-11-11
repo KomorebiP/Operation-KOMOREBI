@@ -46,6 +46,18 @@ substituting `-t`, giving one sign per lane only when `N` is even. For odd
 | Sampling optimality | The formal lower bound concerns the largest interval mass. An equal-density-mass partition is now proved to exist; neither result establishes a general interpolation or estimation optimum. |
 | Angular energy | The angular-integral theorems apply for `0 ≤ ρ < 1` and distinguish the zero and nonzero lanes. They do not establish a finite boundary H² norm. |
 
+## Boundary continuation
+
+[SmithBoundaries.lean](SmithBoundaries.lean) proves the finite cyclic
+reachability criterion with the nonzero-start hypothesis, handles a zero
+start separately, and checks the quarter-turn and noncoprime-projector
+examples. It also checks agreement at the two selected samples, inequality
+at zero, and the positive-real lower bound for the second sample function.
+[BOUNDARY_FORMAL_AUDIT.md](BOUNDARY_FORMAL_AUDIT.md) records the mapping and
+limits. [SmithFiniteSamples.lean](SmithFiniteSamples.lean) proves the
+finite-sample construction for any finite set of disk points, including
+a distinct point in the disk where its two functions differ.
+
 ## Not covered
 
 - A Lean proof of divergence as the radius tends to one or of any finite

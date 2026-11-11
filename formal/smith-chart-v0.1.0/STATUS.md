@@ -14,12 +14,18 @@
   phase-orbit Parseval, sampling-density normalization, an integral-defined
   CDF, its noncomputable inverse and a real piecewise explicit inverse,
   equal-mass partition existence, squared-coefficient energies, and finite-radius
-  angular means of the actual packets have Lean counterparts.
+  angular means of the actual packets have Lean counterparts. The cyclic
+  reachability criterion and several explicit boundary witnesses are now
+  formalized in [SmithBoundaries.lean](SmithBoundaries.lean).
 - **Evidence:** the fresh replay receipt is at
-  [verification/run11/receipt.json](verification/run11/receipt.json); inspect
+  [verification/run15/receipt.json](verification/run15/receipt.json); inspect
   its status and recorded hashes before relying on it. The replay and audit
   use pinned compiled Mathlib caches and self-review, as described in
   [AUDIT.md](AUDIT.md).
+- **Finite-sample scope:** Lean proves nonuniqueness for every finite set of
+  samples in the open disk, with the constructed functions differing at a
+  point in that disk. This is a statement about analytic reflection-coordinate
+  functions, not a physical circuit-realizability theorem.
 - **Smallest remaining formal gap:** connect the proved real piecewise inverse
   to the JavaScript's complex branch-lift and floating-point operations if
   implementation certification is intended. The complex-lift presentation is
