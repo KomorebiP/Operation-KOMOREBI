@@ -18,6 +18,8 @@ you can follow them without running Lean or using RF hardware.
    the worked packet examples, refinement, and energy.
 3. For the sampling proposal, read **Angular sampling and limitations** and
    its worked example. Finish with the exercises and the verification scope.
+4. For feasibility and failure cases, follow **Cyclic reachability**, **Boundary
+   witnesses**, and **What finite samples cannot determine**.
 
 The reader's **On this page** control links to the sections. Equations state
 their domains; the displayed browser numbers are rounded approximations.
@@ -134,6 +136,56 @@ the reflection coefficient returns to its load value.
 Compare **Load Z**, **Γ at the load**, and **Z in**. The separate cyclic
 rotation index \(k\) acts on the phase orbit used for the algebraic
 demonstration; it is not another physical length of transmission line.
+
+## Cyclic reachability and a line-only limit
+
+Paper V develops the chart rotation as a cyclic action in impedance
+coordinates. For an integer \(N\geq1\) and \(k\in\mathbb Z\), put
+\(\omega_N=e^{2\pi i/N}\) and \(a=\omega_N^k\). Conjugating
+reflection-disk rotation by the Cayley map gives, for \(\Re z>0\),
+
+\[
+T_{N,k}(z)
+=\frac{(1+a)z+1-a}{(1-a)z+1+a}.
+\]
+
+The action preserves the positive-real half-plane and composes by adding
+indices modulo \(N\). In particular, \(T_{N,0}(z)=z\) and
+\(T_{2,1}(z)=1/z\). These are algebraic phase actions; the line-length
+control remains a separate physical model. See the
+[Paper V Smith-coordinate chapter](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-v/smith-coordinates.html)
+for the source presentation.
+
+There is a precise feasibility test for a target reflection point.
+Suppose \(\Gamma_0\ne0\). A target \(\Gamma_*\) is reached by one of the
+\(N\) cyclic rotations if and only if
+
+\[
+\left(\frac{\Gamma_*}{\Gamma_0}\right)^N=1.
+\]
+
+If the target is reached, raising the phase ratio to the \(N\)th power
+gives \(1\). Conversely, every complex \(N\)th root of unity is one of
+\(\omega_N^0,\ldots,\omega_N^{N-1}\).
+Equal radius is necessary, but for a fixed finite \(N\) it is not
+sufficient: the phase must be one of the allowed multiples of \(2\pi/N\).
+If \(\Gamma_0=0\), the only reachable point is \(0\), regardless of \(N\).
+
+**Example:** take \(\Gamma_0=1/2\) and \(\Gamma_*=i/2\). Their
+magnitudes agree, but their ratio is \(i\). Since \(i^2=-1\), the target
+is infeasible for \(N=2\); since \(i^4=1\), it is reached at \(N=4\),
+\(k=1\). This is a boundary for the specified discrete orbit, not a
+claim that an arbitrary line length cannot rotate through \(90^\circ\).
+
+A uniform lossless line whose characteristic impedance equals the fixed
+real reference \(Z_0\) has a different but related restriction:
+\(|\Gamma_{\rm in}|=|\Gamma_{\rm L}|\) for every length, because the
+propagation factor has unit magnitude. It reaches the
+matched center only if the load was already matched. For example,
+\(Z_{\rm L}=100\,\Omega\) with \(Z_0=50\,\Omega\) has
+\(|\Gamma|=1/3\) and VSWR \(2\) at every line length. This is a
+line-only statement; adding suitable matching elements or changing the
+network model is a different problem.
 
 ## Exact impedance packets
 
@@ -307,6 +359,77 @@ Both identities are exact, but they average over different sets of points.
 These finite-radius means diverge as \(\rho\) approaches \(1\); they do
 not establish a finite boundary \(H^2\) norm.
 
+## Boundary witnesses and invalid shortcuts
+
+These examples say which hypothesis fails and what conclusion remains.
+The zero-division convention, wrong-order character sum, and odd-order
+counterexample are recorded in
+[SmithExamples.lean](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/formal/smith-chart-v0.1.0/SmithExamples.lean).
+The negative-real packet witness is in
+[SmithResults.lean](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/formal/smith-chart-v0.1.0/SmithResults.lean).
+The other calculations below are exact written arguments, not separate
+claims of Lean coverage.
+
+### Outside the passive disk and at a pole
+
+With positive real \(Z_0\), a finite passive impedance has
+\(\Re z\geq0\) and \(|\Gamma|\leq1\). For a concrete point outside that
+domain, \(z=-1/3\) gives \(\Gamma=-2\). It cannot be the normalized
+impedance of a passive load under these assumptions; an active
+negative-resistance device is a different case.
+
+The transform \((z-1)/(z+1)\) is undefined at \(z=-1\). The denominator
+condition cannot be dropped when using the converse from the disk to
+passivity. In the Lean model, division by zero is totalized: its formal
+reflection expression evaluates to zero at \(z=-1\), even though
+\(\Re z<0\). That is a feature of the formal arithmetic convention, not a
+physical matched load. Similarly, \(\Gamma=1\) is the ideal-open limit;
+there is no finite \(z\) solving the ordinary Cayley equation there.
+
+### Cancellation can hide individual packet poles
+
+The earlier \(N=2\) example already shows that a nonzero packet can have
+negative real part. There is also a boundary obstruction: at \(t=-1\),
+both displayed \(N=2\) packet formulas have a zero denominator, although
+their recombined impedance has the finite limit \(z(-1)=0\).
+
+Approach that point from inside the disk at \(t=-99/100\):
+
+\[
+\begin{aligned}
+\mathcal P_{2,0}z&=\frac{19801}{199},\\
+\mathcal P_{2,1}z&=-\frac{19800}{199},\\
+z&=\frac1{199}.
+\end{aligned}
+\]
+
+The large terms cancel exactly. Evaluating or discarding them separately
+near the boundary can therefore be misleading, even though the sum is
+small. At the opposite end, \(t=1-\delta\) with \(0<\delta<1\) gives
+\(z=(2-\delta)/\delta\), which grows without bound as \(\delta\) tends
+to zero. Interior points remain mathematically valid; the workbench's
+near-boundary readout and near-open entry guards are finite-precision
+policies, not proofs that those interior impedances are impossible.
+
+### Exact root order and coprimality matter
+
+The phase filter needs a root of **exact** order \(N\). If the order-one
+root \(\omega=1\) is used as if it had order \(2\), the putative even
+average of \(f(t)=1+t\) is \(1+t\), not \(1\). At \(t=1/2\), that is
+\(3/2\) instead of the true even packet \(1\).
+
+Likewise, the product-order projector rule needs coprime factors. Let
+\(f(t)=1+t^4\). Projecting first to residue \(0\) modulo \(4\) and then
+to residue \(0\) modulo \(2\) keeps all of \(f\). Projecting to residue
+\(0\) modulo \(8\) keeps only \(1\). At \(t=1/2\), the results are
+\(17/16\) and \(1\). The intersection here is the residue \(0\) modulo
+\(4\), not modulo \(8\).
+
+The even-order admittance shortcut also cannot be extended unchanged to
+odd order: the worked \(N=3\), \(j=1\), \(t=1/2\) example has
+admittance packet \(-8/9\), whereas the even-order sign shortcut would
+give \(-8/7\). Refining to \(2N\) separates the alternating parities.
+
 ## Angular sampling and limitations
 
 The symmetric open/short sensitivity weight is
@@ -441,13 +564,69 @@ Apply this separately to \(z(\rho e^{i\theta})\) and
 interpolation in the angle between endpoints; it does not describe every
 possible reconstruction method.
 
-An upper bound is not the actual interpolation error. The workbench's
-fixed, noiseless interpolation comparison illustrates one case where these
-nodes help the impedance coordinate and another where uniform nodes are
-better for a different response. It is not a general theorem about noisy
-measurements, arbitrary functions, or the best fitting method. In
-particular, the page does not claim superiority over vector fitting,
-rational reconstruction, measured RF data, or noisy S-parameter recovery.
+An upper bound is not the actual interpolation error. One reproducible
+version of the workbench's fixed comparison uses \(\rho=0.9\), 32 nodes,
+and complex linear interpolation in angle. It scans 65,536 equally spaced
+test angles. Uniform nodes are \(2\pi k/32\); the equal-mass nodes are
+the boundaries \(Q_\rho(k/32)\), for \(0\leq k<32\).
+
+* For the impedance coordinate \(z(t)\), the sampled largest errors are
+  approximately \(5.999\) for uniform nodes and \(0.784\) for equal-mass
+  boundaries.
+* For the different response \(h(t)=t\), they are approximately
+  \(0.00433\) and \(0.12927\), respectively: the ordering reverses.
+
+These are maxima over the stated finite scan, not certified maxima over
+every angle. The chart overlay uses the mass **midpoints**
+\(Q_\rho((k+1/2)/32)\), so its plotted nodes are not the boundary nodes
+used in this comparison. A
+[standalone checker](../../tools/smith_chart_boundary_examples.py)
+reproduces these rounded values using Python's standard library; its
+[bounded computation record](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/formal/smith-chart-v0.1.0/computations/boundary-examples-003/manifest.json)
+records the inputs and scope. The comparison is not a general theorem
+about noisy measurements, arbitrary functions, or the best fitting method.
+In particular, it does not claim superiority over vector fitting, rational
+reconstruction, measured RF data, or noisy S-parameter recovery.
+
+## What finite samples cannot determine
+
+Finite samples alone cannot identify every analytic response, even if we
+require positive real part on the reflection disk. Here is an explicit
+two-sample witness:
+
+\[
+g_0(t)=1,\qquad
+g_1(t)=\frac{15}{16}+\frac{t^2}{4}.
+\]
+
+At both \(t=-1/2\) and \(t=1/2\), the functions give the same value,
+\(1\). At \(t=0\), they give \(1\) and \(15/16\), respectively.
+Both are analytic on the disk, and for \(|t|<1\),
+\(\Re(t^2)\geq-|t|^2>-1\), giving \(\Re g_1(t)>11/16\). Thus even
+these two positive-real-valued coordinate functions cannot be
+distinguished by those two samples.
+
+The obstruction extends to any fixed finite set
+\(t_1,\ldots,t_M\) in the open disk. Take \(M\geq1\),
+\(\varepsilon=2^{-(M+1)}\), and set
+
+\[
+g(t)=1+\varepsilon\prod_{m=1}^{M}(t-t_m).
+\]
+
+This nonconstant polynomial and the constant function \(1\) agree at all
+the chosen samples. For any \(|t|<1\), each \(|t-t_m|<2\), so the
+perturbation has magnitude less than \(1/2\) and \(\Re g(t)>1/2\).
+They are distinct analytic functions satisfying the same finite data.
+This is an exact mathematical witness, not a floating-point experiment.
+
+The boundary depends on the model class. It does not prevent recovery
+under additional valid structural assumptions, and it does not apply as an
+ignorance claim to the already specified formula \(z(t)=(1+t)/(1-t)\).
+Positive real part here is a property of functions of the reflection
+coordinate; the construction does not by itself establish realizability
+as a passive circuit over frequency. This witness is a written argument,
+not a theorem in the current Lean companion.
 
 ## Physical load comparisons
 
@@ -514,6 +693,14 @@ The answers follow immediately below.
    the \(j=1\) impedance packet.
 6. Does equal-density sampling prove that an arbitrary measured response
    has smaller interpolation error than with uniform samples? Why?
+7. Starting at \(\Gamma_0=1/2\), can the discrete \(N=2\) orbit reach
+   \(i/2\)? What changes for \(N=4\)?
+8. For \(f(t)=1+t^4\), compare the residue-zero projectors at orders
+   \(2\), \(4\), and \(8\) at \(t=1/2\).
+9. Can the samples at \(t=\pm1/2\) distinguish the two functions in
+   **What finite samples cannot determine**? Compare them at \(t=0\).
+10. Can a uniform lossless \(50\,\Omega\) line alone perfectly match a
+    \(100\,\Omega\) load to a \(50\,\Omega\) reference?
 
 ### Answers
 
@@ -529,6 +716,14 @@ The answers follow immediately below.
    \(4(1/2)^2/[1-(1/2)^6]=64/63\).
 6. No. Equal mass minimizes the stated integrated coordinate-speed
    bound, not the actual error for every response or a noisy-data fit.
+7. No for \(N=2\): the allowed points are \(\pm1/2\). Yes for \(N=4\):
+   one quarter-turn gives \(i/2\).
+8. The order-2 and order-4 zero packets each give \(17/16\); the
+   order-8 zero packet gives \(1\). The two factors are not coprime.
+9. No. Both samples are \(1\), but at \(0\) the functions are \(1\)
+   and \(15/16\).
+10. No. The reflection magnitude remains \(1/3\) at every line length.
+    A different matching network is outside this line-only statement.
 
 ## Verification and further reading
 
@@ -549,7 +744,10 @@ including its branch points. The recorded replay uses cached Mathlib
 dependencies and its mathematical review is self-review.
 
 The exact-arithmetic phase-map derivation in this guide is a written
-self-review. Correspondence to the browser's complex branch lift and
+self-review, as are the finite-sample impossibility argument and the
+cyclic reachability criterion above. The standalone checker verifies
+selected rational examples and a finite scan, not those universal
+statements. Correspondence to the browser's complex branch lift and
 floating-point implementation is not formally verified. The finite-radius
 angular mean-square is not a finite boundary \(H^2\) norm.
 
@@ -568,3 +766,8 @@ which introduces reflection, transmission, the Smith chart, and network
 measurements. The packet decomposition and its verification scope are
 described by this guide and the linked companion; the engineering reference
 is not cited as a source for those project-specific claims.
+
+For a different kind of feasibility boundary, Paper II studies integral
+congruence obstructions using
+[Smith normal form](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-ii/integral-separation.html).
+That algebraic use of “Smith” is distinct from the RF Smith chart here.
