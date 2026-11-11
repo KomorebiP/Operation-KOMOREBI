@@ -2,7 +2,10 @@ import SmithCanonicalRoot
 import SmithGeometry
 import SmithAlgebra
 import SmithSampling
+import SmithSamplingIntegral
+import SmithSamplingInverse
 import SmithEnergy
+import SmithEnergyIntegral
 import SmithResults
 import SmithExamples
 
@@ -30,9 +33,27 @@ import SmithExamples
 #print axioms SmithSampling.symmetric_weight_algebra
 #print axioms SmithSampling.angular_weight
 #print axioms SmithSampling.equal_mass_minimax
+#print axioms SmithSamplingExistence.equal_mass_partition
+#print axioms SmithPoisson.poisson_trig_integral
+#print axioms SmithPoisson.chart_density_integral
+#print axioms SmithPoisson.chart_cdf_hasDerivAt
+#print axioms SmithPoisson.chart_cdf_strictMono
+#print axioms SmithPoisson.chart_equal_mass_partition
+#print axioms SmithPoisson.chart_density_zero_radius
+#print axioms SmithPoisson.chart_cdf_zero_radius
+#print axioms SmithSamplingInverse.chart_cdf_exists_unique
+#print axioms SmithSamplingInverse.chart_quantile_spec
+#print axioms SmithSamplingInverse.chart_quantile_strictMono
+#print axioms SmithSamplingInverse.chart_cdf_mem_unit
+#print axioms SmithSamplingInverse.chart_quantile_left_inverse
 #print axioms SmithEnergy.lane_hasSum
 #print axioms SmithEnergy.coefficient_energy_zero
 #print axioms SmithEnergy.coefficient_energy_nonzero
+#print axioms SmithEnergyIntegral.reciprocal_kernel_mean
+#print axioms SmithEnergyIntegral.impedance_nonzero_angular_energy
+#print axioms SmithEnergyIntegral.impedance_zero_angular_energy
+#print axioms SmithEnergyIntegral.nonzero_angular_eq_coefficient_energy
+#print axioms SmithEnergyIntegral.zero_angular_eq_coefficient_energy
 #print axioms SmithChart.zero_packet_positive_real
 #print axioms SmithChart.nonzero_packet_not_always_passive
 #print axioms SmithExamples.pole_is_totalized_in_lean
