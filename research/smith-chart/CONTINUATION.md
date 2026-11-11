@@ -55,3 +55,35 @@ impossibility proof must also justify the graph reductions and cover the
 remaining admissible node counts. Separately, the archive's full
 arbitrary-order and degree claims require their own proof/source audit and
 formal mapping; the first-order RL lemmas do not supply those results.
+
+## Presentation and completion continuation, base f8dbf83b
+
+The next continuation starts from
+`f8dbf83bb2a67139be7800768ce9a8be2109b28a`. The
+[edition record](edition/README.md) preserves its graphics, language,
+proof-review, and computation evidence.
+
+- **Singular prediction and a real-packet boundary, completed in scope.** The
+  [new note](../../docs/demonstrations/SMITH_SINGULAR_COMPLETION.md) proves the
+  nullspace/range test, an exact missing complex value, and the full feasible
+  region for two real scalar packets at radius one half. Six selected real
+  algebraic declarations pass the pinned Lean replay, axiom audit, and two
+  rejected negative controls. The general Hermitian and interpolation arguments
+  remain written proofs with a checked classical source and symbolic examples.
+- **Class 142 exact encoding, completed; construction remains open.** A
+  [symbolic derivation](computations/derive_candidate_142.py) gives the seven
+  numerator and denominator coefficients and thirteen cross-product equations
+  of degree at most four. Its spanning-tree/forest calculation agrees with a
+  direct determinant expansion. Nonnegative conductances and strictly positive
+  reactive parameters remain constraints. No positive solution or exclusion
+  has been certified.
+- **Arbitrary-order route, reviewed.** The displayed geometric series, equality
+  point for both signs of the parameter, strict boundary average, distinct-pole
+  degree argument, and normalized uniform bounds survived self-review. No
+  general-order Lean theorem was added.
+
+The next useful synthesis step is an exact positive-root or exclusion
+certificate for the explicit class-142 equations, or a different topology with
+a changed structural premise. The global six-reactive transformer-free
+question still requires all admissible classes and node counts. Another
+unchanged finite-grid fit would not close that question.

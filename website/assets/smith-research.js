@@ -66,7 +66,7 @@
         figureCaption.textContent = caption?.textContent || img.alt;
       }
       imageWrap.classList.add('dialog-fit');
-      fitButton.textContent = 'View at full resolution';
+      fitButton.textContent = 'View at original size';
       fitButton.setAttribute('aria-pressed', 'false');
       dialog.showModal();
       if (captionTemplate && window.MathJax?.typesetPromise) {
@@ -82,7 +82,7 @@
   document.getElementById('figure-close').addEventListener('click', () => dialog.close());
   fitButton.addEventListener('click', () => {
     const fit = imageWrap.classList.toggle('dialog-fit');
-    fitButton.textContent = fit ? 'View at full resolution' : 'Fit to window';
+    fitButton.textContent = fit ? 'View at original size' : 'Fit to window';
     fitButton.setAttribute('aria-pressed', String(!fit));
   });
   research.classList.add('research-js');

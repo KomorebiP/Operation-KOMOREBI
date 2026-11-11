@@ -343,6 +343,9 @@ class Site:
             launch='<p class="side-launch"><a data-side-reader-link href="'+esc(pair,quote=True)+'">Read side by side</a></p>'
             body=re.sub(r'(</h1>)',lambda match:match[1]+launch,body,count=1)
         body=standardize(body,path)
+        if path == 'read/smith-chart/research.html':
+            from smith_chart_research import reading_chrome
+            body=reading_chrome(body)
         root=self.rel('index.html',path)
         nav_html=site_navigation(path)
         source_html=('<a href="'+esc(source,quote=True)+'">Source on GitHub</a>') if source else ''
@@ -498,7 +501,7 @@ class Site:
                 content=re.sub(r'(</h1>)',lambda m:m[1]+contents,content,count=1)
             article_class=' class="euler-example"' if is_euler else ''
             body='<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="'+self.rel('index.html',page)+'">Home</a> / <a href="'+self.rel(repo+'/index.html',page)+'">'+section+'</a></nav><article'+article_class+'>'+content+'</article>'
-            if repo == 'collection' and path == 'docs/demonstrations/SMITH_FIRST_ORDER_RL.md':
+            if repo == 'collection' and path in {'docs/demonstrations/SMITH_FIRST_ORDER_RL.md', 'docs/demonstrations/SMITH_SINGULAR_COMPLETION.md'}:
                 from smith_chart_research import decorate_supplement
                 body = decorate_supplement(self, page, body)
             self.page(page,title,body,github(self.repos[repo],self.revisions[repo],path))

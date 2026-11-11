@@ -71,7 +71,9 @@ def archive_contents(root):
 
 def reading_body(root, revision):
     files = archive_contents(root)
-    source = files[HTML_NAME].decode('utf-8')
+    from smith_chart_edition import load, edit_prose
+    figure_edition, prose = load(root, files, HTML_NAME)
+    source = edit_prose(files[HTML_NAME].decode('utf-8'), prose)
     if any(source.count(s) != 1 for s in ('<main class="page">', '</main>', '<dialog id="figure-dialog"', '</dialog>')):
         raise ValueError('Unexpected source document structure')
     main = source.split('<main class="page">', 1)[1].split('</main>', 1)[0]
@@ -99,9 +101,30 @@ def reading_body(root, revision):
             replacements['certificate'] += 1
         else:
             raise ValueError('Unexpected embedded source or download')
-        return attr + '="' + raw_url(revision, 'research/smith-chart/' + name) + '"'
+        original = raw_url(revision, 'research/smith-chart/' + name)
+        if attr == 'src':
+            item = figure_edition[name]
+            mobile = (' data-mobile-figure="' + raw_url(revision, 'research/smith-chart/' + item['mobile']) + '"') if 'mobile' in item else ''
+            return ('src="' + raw_url(revision, 'research/smith-chart/' + item['desktop']) +
+                    '" data-source-figure="' + original + '" data-figure-number="' + name[8:10] + '"' + mobile)
+        return attr + '="' + original + '"'
 
     main = re.sub(r'(src|href)="data:([^;,]+);base64,([A-Za-z0-9+/=]+)"', replace_data, main)
+    def responsive_figure(match):
+        image = match[0]
+        mobile = re.search(r'data-mobile-figure="([^"]+)"', image)
+        return ('<picture><source media="(max-width: 600px)" srcset="' + mobile[1] + '">' + image + '</picture>') if mobile else image
+    main = re.sub(r'<img\b[^>]*>', responsive_figure, main)
+    def figure_header(match):
+        figure = match.group(0)
+        original = re.search(r'data-source-figure="([^"]+)"', figure)
+        number = re.search(r'data-figure-number="([^"]+)"', figure)
+        if not original or not number:
+            raise ValueError('Missing vector figure source identity')
+        header = ('<div class="figure-heading"><span>Figure ' + str(int(number[1])) + '</span>'
+                  '<a href="' + original[1] + '">Original figure</a></div>')
+        return figure.replace('>', '>' + header, 1)
+    main = re.sub(r'<figure\b[^>]*>.*?</figure>', figure_header, main, flags=re.S)
     if replacements != {'figures': 42, 'manuscript': 1, 'certificate': 1} or '="data:' in main:
         raise ValueError('Unexpected embedded asset inventory')
     if main.count('class="math inline"') != 1328 or main.count('class="math display"') != 340:
@@ -120,18 +143,20 @@ def reading_body(root, revision):
     replay_url = 'https://github.com/KomorebiP/Operation-KOMOREBI/blob/' + revision + '/research/smith-chart/README.md'
     census_url = 'https://github.com/KomorebiP/Operation-KOMOREBI/blob/' + revision + '/research/smith-chart/computations/README.md'
     note = ('<aside class="research-notice" aria-label="Source and research status">'
-            '<div class="research-notice-copy"><p class="research-notice-label">Research draft · 11 November 2026</p>'
-            '<p>This reading preserves the archived manuscript. '
-            'For the degree-six target, the draft describes a six-reactive realization using an ideal transformer. '
-            'A transformer-free RLC-only realization with six reactive elements remains open. '
-            'Historical novelty has not been established. '
-            'The existing Lean companion covers selected results, not this entire draft.</p>'
-            '<p>Figures load from the source repository. The archive includes the self-contained offline reading and all source files.</p>'
-            '<details><summary>Archive checksum</summary><p>SHA-256: <code>' + ARCHIVE_SHA256 + '</code></p></details></div>'
+            '<div class="research-notice-copy"><p class="research-notice-label">Edited research reading · 11 November 2026</p>'
+            '<p>Revised prose and vector diagrams accompany the complete research draft. '
+            'New supplements complete selected circuit and singular-interpolation arguments.</p>'
+            '<p><strong>The synthesis question:</strong> the degree-six target has a certified transformer-free circuit '
+            'with seven reactive elements. A transformer-free RLC-only realization with six reactive elements remains open.</p>'
+            '<details><summary>Source and review scope</summary><p>The archive retains the original text and artwork. '
+            'The draft also describes a six-reactive realization using an ideal transformer. '
+            'The Lean companions cover selected statements, not this entire draft. Historical novelty has not been established.</p>'
+            '<p>SHA-256: <code>' + ARCHIVE_SHA256 + '</code></p></details></div>'
             '<nav class="research-actions" aria-label="Research reading resources">'
             '<a class="research-download" href="' + zip_url + '">Download full archive<span>172 files · offline reading</span></a>'
             '<a href="' + replay_url + '">Replay and source record</a>'
             '<a href="../../collection/demonstrations/SMITH_FIRST_ORDER_RL.html">One-inductor circuit proof</a>'
+            '<a href="../../collection/demonstrations/SMITH_SINGULAR_COMPLETION.html">Singular-data completion proof</a>'
             '<a href="' + census_url + '">Five-node census check</a>'
             '<a href="../../smith-chart.html">Smith chart laboratory</a>'
             '<a href="../../collection/demonstrations/SMITH_CHART.html">Companion guide</a>'
@@ -142,6 +167,14 @@ def reading_body(root, revision):
         raise ValueError('Missing source cover')
     cover_end += len('</section>')
     main = main[:cover_end] + note + main[cover_end:]
+    marker = '<h3 id="numerical-conditioning-is-part-of-the-proof-obligation">'
+    if main.count(marker) != 1:
+        raise ValueError('Missing singular-completion insertion point')
+    addition = ('<aside class="research-update" data-edition-addition="singular-completion">'
+                '<p><strong>Completed in the supplement.</strong> A nullspace condition handles singular Pick matrices, '
+                'and an exact curved boundary describes all feasible pairs of real packets at the two-node orbit. '
+                '<a href="../../collection/demonstrations/SMITH_SINGULAR_COMPLETION.html">Read the proof and worked examples.</a></p></aside>')
+    main = main.replace(marker, addition + marker, 1)
     return ('<div id="smith-research"><div class="page">' + main + '</div>' + dialog +
             '<a class="research-contents-jump" href="#contents">↑ Contents</a></div>')
 
@@ -167,3 +200,21 @@ def decorate_supplement(site, page, body):
     css = 'assets/smith-research.css'
     value = site.rel(css, page) + '?v=' + sha256((site.root / 'website' / css).read_bytes())[:12]
     return '<link rel="stylesheet" href="' + value + '"><div id="smith-research" class="smith-supplement">' + body + '</div>'
+
+
+def reading_chrome(body):
+    """Keep shared reading actions together below the article's author line."""
+    def arrange(match):
+        cover=match[0]
+        side=re.findall(r'<p class="side-launch">.*?</p>',cover,re.S)
+        save=re.findall(r'<div class="reading-save"[^>]*>.*?</div>',cover,re.S)
+        if len(side)!=1 or len(save)!=1:
+            raise ValueError('Unexpected shared actions in Smith reading cover')
+        cover=cover.replace(side[0],'',1).replace(save[0],'',1)
+        controls='<div class="edition-reading-controls">'+save[0]+side[0]+'</div>'
+        cover,count=re.subn(r'(<p class="author-line">.*?</p>)',lambda m:m[0]+controls,cover,count=1,flags=re.S)
+        if count!=1:raise ValueError('Missing Smith reading author line')
+        return cover
+    result,count=re.subn(r'<section class="cover">.*?</section>',arrange,body,count=1,flags=re.S)
+    if count!=1:raise ValueError('Missing Smith reading cover')
+    return result

@@ -9,18 +9,22 @@ original archive contains the self-contained HTML reading and the complete
 research, figures, and reproduction sources. The copy here is byte-identical
 to the supplied ZIP.
 
-The website renders the article from that retained HTML, preserving its text,
-mathematics, captions, section identifiers, and 42 figures. It replaces the
-embedded figure and download data with revision-pinned links to byte-identical
-copies in this directory, and uses the reader's MathJax installation. The
-source archive remains available for a self-contained offline edition. The
-build checks the archive and every retained public figure and download against
-the source before it publishes the page.
+The website renders an edited reading from that retained HTML. The
+[presentation record](edition/README.md) identifies the revised prose and
+captions, the 42 vector figures, four additional mobile layouts, and one
+topology-artwork correction. Every archived mathematical expression and stable
+section identifier is preserved. Each figure links to its original artwork;
+the complete original text and offline reading remain in the archive.
+The build checks the archive, retained public sources, and edition manifests
+before publishing. The reader uses the site's MathJax installation.
 
 The [five-node census recount](computations/README.md) independently checks
 the finite reactive-placement catalogue and records its limits.
 The [continuation checkpoint](CONTINUATION.md) separates that finite evidence
 and the new first-order RL formalization from the open six-element question.
+The [singular-completion supplement](../../docs/demonstrations/SMITH_SINGULAR_COMPLETION.md)
+completes selected rank-deficient prediction and real two-packet feasibility
+arguments, with a separate selected Lean companion.
 
 For a built or deployed site, the optional Playwright check covers desktop and
 phone widths, enlarged text, figure captions and zoom, the contents control,
