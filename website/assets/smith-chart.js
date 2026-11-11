@@ -94,8 +94,10 @@ function presetToInputs(){const open=states.special==='open';$('resistance').dis
 function syncGammaEditor(force=false){
   if(gammaDraftDirty&&!force)return;
   const g=loadGamma();
-  $('gamma-re').value=String(Number(g.re.toPrecision(11)));
-  $('gamma-im').value=String(Number(g.im.toPrecision(11)));
+  // Keep a near-boundary interior load distinct from the boundary in the editor.
+  const digits=abs(g)>=1-1e-10?17:11;
+  $('gamma-re').value=String(Number(g.re.toPrecision(digits)));
+  $('gamma-im').value=String(Number(g.im.toPrecision(digits)));
   gammaDraftDirty=false;
 }
 function discardGammaDraft(){gammaDraftDirty=false;$('gamma-warning').textContent=''}

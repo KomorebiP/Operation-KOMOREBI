@@ -74,3 +74,32 @@ test('packet note distinguishes the boundary from a near-boundary interior load'
   renderExactPackets();
   assert.match(elements.get('exact-disk-note').textContent, /angular mean-square/);
 });
+
+
+test('the audited pure-math prefix remains unchanged', () => {
+  const audited = fs.readFileSync(path.join(__dirname, '../formal/smith-chart-v0.1.0/computations/inputs/smith-chart-final-lf.js'), 'utf8');
+  const auditedCut = audited.indexOf(marker);
+  assert.ok(auditedCut >= 0);
+  assert.equal(source.slice(0, cut), audited.slice(0, auditedCut));
+});
+
+test('the coordinate editor preserves near-boundary interior loads', () => {
+  const renderCut = source.indexOf('function render(){');
+  const elements = new Map();
+  const context = {document: {getElementById(id) {
+    if (!elements.has(id)) elements.set(id, {value: '', textContent: ''});
+    return elements.get(id);
+  }}};
+  vm.runInNewContext(source.slice(0, renderCut) +
+    '\nglobalThis.probe={states,syncGammaEditor};})();', context, {timeout: 5000});
+  const {states, syncGammaEditor} = context.probe;
+  states.special = null; states.r = 1e-10; states.x = 0; states.z0 = 50;
+  syncGammaEditor(true);
+  const re = Number(elements.get('gamma-re').value);
+  assert.ok(re > -1 && re < 0, `interior coefficient must not display as ${re}`);
+  assert.equal(Number(elements.get('gamma-im').value), 0);
+  states.r = 25; states.x = 25;
+  syncGammaEditor(true);
+  assert.equal(Number(elements.get('gamma-re').value), -0.2);
+  assert.equal(Number(elements.get('gamma-im').value), 0.4);
+});
