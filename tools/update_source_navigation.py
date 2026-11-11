@@ -473,6 +473,11 @@ The [twelve core papers](../papers/README.md) link their current paper projects.
 
 [Research Preview 1](research-preview-1/README.md) develops prime-power Cartier systems. Its [claim map](research-preview-1/CLAIMS.md), [mathematical note](research-preview-1/THEOREM_NOTE.md), and [reproduction instructions](research-preview-1/REPRODUCE.md) describe the exact finite-precision contract.
 
+The [Smith chart companion](smith-chart-v0.1.0/README.md) proves the impedance
+packet formulas, their canonical phase averages and finite Parseval identity,
+and the finite passive-domain geometry. Its status and audit distinguish
+these results from the remaining integral, implementation, and empirical work.
+
 ## Interpret a formal claim
 
 Inspect the formal statement and its hypotheses, imported facts, coefficient system, and admissible inputs. Identify which declarations were compiled in the recorded environment. A source-only or explicitly uncompiled development retains that status. Wider analytic, physical, arithmetic, or empirical claims require their own arguments and evidence.

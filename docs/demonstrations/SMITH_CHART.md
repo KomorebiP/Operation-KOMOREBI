@@ -87,6 +87,8 @@ The implementation is maintained as [HTML source](../../website/smith-chart-body
 **What is established:** exact formulas and tested implementation behavior under stated assumptions.  
 **What remains open:** novelty relative to all prior Smith-chart and polyphase literature, and measurable benefit in realistic RF measurement or model-fitting tasks.
 
+The [Lean companion](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/formal/smith-chart-v0.1.0) formalizes the actual impedance packet series, canonical phase averages, finite-orbit Parseval identity, and finite passive-domain geometry. It also proves projector and sensitivity identities. Written derivations of the angular mean-square and sampling formulas are self-reviewed; their integral arguments and the browser implementation are not yet formalized. The finite-radius angular mean-square should not be read as a finite boundary \(H^2\) norm: it diverges as the radius approaches one.
+
 ## Direct load entry and packet selection
 
 The workbench accepts physical impedance values and, under **Enter Γ directly**, an alternative pair of dimensionless load-reflection coordinates \(\Re\Gamma_L,\Im\Gamma_L\). The second input uses the same reference resistance \(Z_0\). Applying a new reflection point converts it through the inverse Cayley map and updates the physical load. A passive load must satisfy \(|\Gamma_L|\le 1\). Inputs outside the disk or too close to the open-circuit pole for stable double-precision conversion are rejected without changing the previous selected load. Unlike chart-pointer snapping near the endpoints, typed values inside the supported domain are not snapped to the ideal open or short.
