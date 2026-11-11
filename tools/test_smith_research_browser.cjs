@@ -27,12 +27,15 @@ async function run() {
           width: document.documentElement.scrollWidth,
           viewport: innerWidth,
           figures: [...document.querySelectorAll('.research-figure img')].filter(img => img.complete && img.naturalWidth > 0).length,
+          vectorFigures: [...document.querySelectorAll('.research-figure img')].filter(img => new URL(img.src).pathname.endsWith('.svg')).length,
+          originalLinks: document.querySelectorAll('.figure-heading a').length,
+          mobileFigures: [...document.querySelectorAll('.research-figure img')].filter(img => img.currentSrc.includes('.mobile.svg')).length,
           mathReady: document.documentElement.dataset.mathReady,
           mathErrors: document.querySelectorAll('mjx-merror').length,
           touchHeight: Math.min(...[...document.querySelectorAll('.research-actions a, .research-actions button, .figure-open')]
             .map(element => element.getBoundingClientRect().height).filter(height => height > 0)),
         }));
-        if (layout.width > layout.viewport || layout.figures !== 42 || layout.mathReady !== 'true' || layout.mathErrors || layout.touchHeight < 44) {
+        if (layout.width > layout.viewport || layout.figures !== 42 || layout.vectorFigures !== 42 || layout.originalLinks !== 42 || layout.mobileFigures !== (name === 'desktop' ? 0 : 4) || layout.mathReady !== 'true' || layout.mathErrors || layout.touchHeight < 44) {
           throw new Error('Reading layout, images, mathematics, or touch controls failed: ' + JSON.stringify(layout));
         }
         const figure = page.locator('#figure-2 .figure-open');
@@ -57,6 +60,8 @@ async function run() {
         await page.keyboard.press('Enter');
         if (!await page.locator('#contents').evaluate(element => element.open)) throw new Error('Contents control did not open');
         await page.evaluate(() => { document.documentElement.style.fontSize = '125%'; });
+        await page.evaluate(() => document.fonts.ready);
+        await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
         const enlarged = await page.evaluate(() => ({ width: document.documentElement.scrollWidth, viewport: innerWidth }));
         if (enlarged.width > enlarged.viewport || errors.length) throw new Error('Enlarged layout or JavaScript failed: ' + JSON.stringify({ enlarged, errors }));
         console.log(JSON.stringify({ name, layout, dialog, enlarged }));
@@ -81,9 +86,10 @@ async function run() {
     } finally {
       await noScript.close();
     }
+    for (const name of ['SMITH_FIRST_ORDER_RL', 'SMITH_SINGULAR_COMPLETION']) {
     const supplement = await browser.newPage({ viewport: { width: 320, height: 800 } });
     try {
-      const target = new URL('../../collection/demonstrations/SMITH_FIRST_ORDER_RL.html', url).href;
+      const target = new URL('../../collection/demonstrations/' + name + '.html', url).href;
       const response = await supplement.goto(target, { waitUntil: 'load', timeout: 120000 });
       if (!response || response.status() !== 200) throw new Error('Circuit supplement did not load');
       await supplement.waitForFunction(() => window.MathJax?.startup?.promise, null, { timeout: 60000 });
@@ -94,9 +100,10 @@ async function run() {
         mathErrors: document.querySelectorAll('article mjx-merror').length,
       }));
       if (result.width > result.viewport || !result.diagram || result.mathErrors) throw new Error('Circuit supplement failed: ' + JSON.stringify(result));
-      console.log(JSON.stringify({ name: 'supplement', ...result }));
+      console.log(JSON.stringify({ name, ...result }));
     } finally {
       await supplement.close();
+    }
     }
   } finally {
     await browser.close();

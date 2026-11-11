@@ -63,3 +63,35 @@ python research/smith-chart/computations/probe_five_node_fit.py --starts 50 --ma
 
 The script verifies its archived input hashes before running and never
 overwrites an existing receipt.
+## Exact continuation
+
+`derive_candidate_142.py` now gives an exact formulation for the archived
+five-node reactive placement 142. The
+[system record](verification/candidate-142-system-001/system.json) contains
+seven ascending numerator coefficients, seven denominator coefficients, and
+all thirteen coefficient equations against the degree-six target. The 125
+spanning trees and 50 separating two-forests agree **symbolically** with direct
+nodal determinant expansions. All equations have total degree at most four.
+This completes the encoding step; positivity feasibility remains unresolved.
+
+`check_completion_boundary.py` supports the separate
+[singular-completion note](../../../docs/demonstrations/SMITH_SINGULAR_COMPLETION.md).
+It checks exact determinant and nullspace identities and five rational
+examples. These are symbolic checks for a written proof, with six selected
+statements also checked in Lean.
+
+The new run directories include version-2 manifests with observed input
+hashes before and after execution, software versions, logs, result hashes,
+and limits:
+
+- `verification/candidate-142-system-001/`
+- `verification/completion-boundary-003/`
+
+The run status is `completed` in both. Their mathematical interpretation is
+recorded in `../edition/review.md`. The exact checks can be reproduced in new
+output paths with:
+
+```text
+python -B research/smith-chart/computations/derive_candidate_142.py --output <new-system-json>
+python -B research/smith-chart/computations/check_completion_boundary.py --output <new-check-json>
+```

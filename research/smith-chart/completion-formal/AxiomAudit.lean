@@ -1,0 +1,7 @@
+import SmithCompletion
+#print axioms SmithCompletion.zero_corner
+#print axioms SmithCompletion.determinant_factorization
+#print axioms SmithCompletion.saturated_determinant
+#print axioms SmithCompletion.saturated_iff
+#print axioms SmithCompletion.incorrect_packet_rejected
+#print axioms SmithCompletion.inward_packet_feasible

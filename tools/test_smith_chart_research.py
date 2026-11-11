@@ -11,6 +11,7 @@ import tempfile
 import unittest
 
 import smith_chart_research as research
+import smith_chart_edition as edition
 
 ROOT = Path(__file__).resolve().parents[1]
 REVISION = 'a' * 40
@@ -41,16 +42,20 @@ class ResearchReadingTest(unittest.TestCase):
     def setUpClass(cls):
         cls.files = research.archive_contents(ROOT)
         cls.original = cls.files[research.HTML_NAME].decode('utf-8').split('<main class="page">', 1)[1].split('</main>', 1)[0]
+        _, cls.prose = edition.load(ROOT, cls.files, research.HTML_NAME)
+        cls.edited = edition.edit_prose(cls.files[research.HTML_NAME].decode('utf-8'), cls.prose).split('<main class="page">', 1)[1].split('</main>', 1)[0]
         cls.rendered = research.reading_body(ROOT, REVISION)
 
     def test_mathematical_text_figures_and_tables_survive(self):
-        self.assertEqual(manuscript_text(self.original), manuscript_text(self.rendered))
+        plain = re.sub(r'<div class="figure-heading">.*?</div>', '', self.rendered, flags=re.S)
+        plain = re.sub(r'<aside class="research-update".*?</aside>', '', plain, flags=re.S)
+        self.assertEqual(manuscript_text(self.edited), manuscript_text(plain))
         original_math = re.findall(r'<span class="math (?:inline|display)">.*?</span>', self.original, re.S)
         rendered_math = re.findall(r'<span class="math (?:inline|display) arithmatex">.*?</span>', self.rendered, re.S)
         self.assertEqual(len(original_math), 1668)
         self.assertEqual(original_math, [item.replace(' arithmatex"', '"', 1) for item in rendered_math])
         for tag in ('h1', 'h2', 'h3', 'figcaption', 'table'):
-            original = re.findall(r'<'+tag+r'\b[^>]*>.*?</'+tag+r'>', self.original, re.S)
+            original = re.findall(r'<'+tag+r'\b[^>]*>.*?</'+tag+r'>', self.edited, re.S)
             rendered = re.findall(r'<'+tag+r'\b[^>]*>.*?</'+tag+r'>', self.rendered, re.S)
             # Tables and captions include math spans, whose only change is their renderer class.
             self.assertEqual(original, [x.replace(' arithmatex"', '"') for x in rendered], tag)
@@ -71,12 +76,14 @@ class ResearchReadingTest(unittest.TestCase):
 
     def test_source_links_are_revision_bound_and_claim_scope_is_visible(self):
         links = re.findall(r'(?:src|href)="(https://raw\.githubusercontent\.com/[^"]+)"', self.rendered)
-        self.assertEqual(len(links), 45)  # 42 figures and three downloads
+        self.assertEqual(len(links), 87)  # 42 vector figures, 42 original figures, three downloads
         self.assertTrue(all('/'+REVISION+'/' in link for link in links))
         self.assertIn(research.ARCHIVE_SHA256, self.rendered)
         self.assertIn('six-reactive realization using an ideal transformer', self.rendered)
         self.assertIn('transformer-free RLC-only realization with six reactive elements remains open', self.rendered)
         self.assertIn('not this entire draft', self.rendered)
+        self.assertEqual(self.rendered.count('class="figure-heading"'),42)
+        self.assertEqual(len(re.findall(r'src="[^"]+/edition/figures/[^"]+\.svg"',self.rendered)),42)
         with self.assertRaises(ValueError):
             research.reading_body(ROOT, 'main')
 
@@ -93,6 +100,50 @@ class ResearchReadingTest(unittest.TestCase):
             archive.write_bytes(archive.read_bytes()+b'tampered')
             with self.assertRaisesRegex(ValueError, 'archive checksum mismatch'):
                 research.archive_contents(root)
+
+    def test_vector_and_editorial_bindings_fail_closed(self):
+        self.assertEqual(len(self.prose['edits']),46)
+        self.assertEqual(sum(c['expected_count'] for c in self.prose['edits']),84)
+        with self.assertRaisesRegex(ValueError,'Editorial fragment changed'):
+            edition.edit_prose('unrelated source',self.prose)
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory)
+            shutil.copytree(ROOT/'research/smith-chart',root/'research/smith-chart')
+            extra=root/'docs/demonstrations/figures/smith-two-packet-feasibility.svg'
+            extra.parent.mkdir(parents=True)
+            shutil.copyfile(ROOT/'docs/demonstrations/figures/smith-two-packet-feasibility.svg',extra)
+            target=next((root/'research/smith-chart/edition/figures').glob('*.svg'))
+            target.write_bytes(target.read_bytes()+b'tampered')
+            with self.assertRaisesRegex(ValueError,'Vector edition source or output checksum mismatch'):
+                edition.load(root,self.files,research.HTML_NAME)
+
+    def test_new_completion_formal_receipt(self):
+        base=ROOT/'research/smith-chart/completion-formal'
+        evidence=base/'verification/run04'
+        receipt=json.loads((evidence/'receipt.json').read_bytes())
+        self.assertEqual(receipt['status'],'PASS')
+        for name in ('SmithCompletion.lean','AxiomAudit.lean','replay.py'):
+            self.assertEqual(hashlib.sha256((base/name).read_bytes()).hexdigest(),receipt['input_sha256'][name])
+        self.assertEqual(hashlib.sha256((ROOT/'docs/demonstrations/SMITH_SINGULAR_COMPLETION.md').read_bytes()).hexdigest(),receipt['input_sha256']['SMITH_SINGULAR_COMPLETION.md'])
+        self.assertEqual(len(receipt['audited_axioms']),6)
+        self.assertEqual([s['exit_code'] for s in receipt['steps']],[0,0,1,1])
+        for values in receipt['audited_axioms'].values():
+            self.assertLessEqual(set(values),{'propext','Classical.choice','Quot.sound'})
+        for step in receipt['steps']:
+            for stream in ('stdout','stderr'):
+                self.assertEqual(hashlib.sha256((evidence/(step['name']+'.'+stream+'.txt')).read_bytes()).hexdigest(),step[stream+'_sha256'])
+
+    def test_new_exact_computation_manifests(self):
+        base=ROOT/'research/smith-chart/computations/verification'
+        for name in ('completion-boundary-003','candidate-142-system-001'):
+            record=json.loads((base/name/'manifest.json').read_bytes())
+            self.assertEqual(record['run']['status'],'completed')
+            for item in record['input_artifacts']:
+                actual=hashlib.sha256((ROOT/item['path']).read_bytes()).hexdigest()
+                self.assertEqual(actual,item['sha256'])
+                self.assertEqual(actual,item['sha256_after'])
+            for item in record['outputs']:
+                self.assertEqual(hashlib.sha256((ROOT/item['path']).read_bytes()).hexdigest(),item['sha256'])
 
     def test_formal_receipt_matches_the_recorded_inputs_and_logs(self):
         base = ROOT/'research/smith-chart/formal'
