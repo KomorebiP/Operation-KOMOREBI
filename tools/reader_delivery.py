@@ -86,6 +86,52 @@ def rewrite_links(text, page, records):
     return text
 
 
+class ContentProof(HTMLParser):
+    """Hash parsed contents, allowing only known export links and the loader."""
+    def __init__(self, text, page, records):
+        super().__init__(convert_charrefs=False)
+        self.digest = hashlib.sha256()
+        self.page, self.records, self.loader = page, records, False
+        self.feed(text)
+        self.close()
+
+    def event(self, *parts):
+        if not self.loader:
+            self.digest.update((json.dumps(parts, ensure_ascii=False, separators=(',', ':'))+'\n').encode())
+
+    def handle_starttag(self, tag, attrs):
+        if tag == 'script' and 'data-reader-delivery' in dict(attrs):
+            self.loader = True
+            return
+        if tag == 'a':
+            attrs = [(key, self.records[local_target(value, self.page)]['export_url']
+                      if key == 'href' and value and local_target(value, self.page) in self.records else value)
+                     for key, value in attrs]
+        self.event('start', tag, attrs)
+
+    def handle_startendtag(self, tag, attrs):
+        self.handle_starttag(tag, attrs)
+        self.handle_endtag(tag)
+
+    def handle_endtag(self, tag):
+        if self.loader and tag == 'script':
+            self.loader = False
+            return
+        self.event('end', tag)
+
+    def handle_data(self, value): self.event('text', value)
+    def handle_entityref(self, value): self.event('entity', value)
+    def handle_charref(self, value): self.event('character', value)
+    def handle_comment(self, value): self.event('comment', value)
+    def handle_decl(self, value): self.event('declaration', value)
+    def handle_pi(self, value): self.event('instruction', value)
+
+
+def prove_page_contents(original, packaged, page, records):
+    if ContentProof(original, page, records).digest.digest() != ContentProof(packaged, page, records).digest.digest():
+        raise ValueError('Delivery changed page contents: '+page)
+
+
 def package(root, artifacts):
     root, artifacts = root.resolve(), artifacts.resolve()
     if artifacts == root or artifacts.is_relative_to(root) or root.is_relative_to(artifacts):
@@ -153,6 +199,7 @@ def package(root, artifacts):
             raise ValueError('Missing page head: '+page)
         # Synchronous small loader is installed before any deferred consumers.
         text = text.replace('</head>', marker+'</head>', 1)
+        prove_page_contents(original, text, page, records)
         if page == '404.html':
             links = ''.join('<li><a href="'+record['export_url']+'">'+html.escape(path)+'</a></li>'
                             for path, record in records.items())
@@ -166,7 +213,7 @@ def package(root, artifacts):
     report = dict(schema=1, revision=revision, files=len(records), reading_zips=len(bundles),
                   compressed_indexes=sum('gzip' in record for record in records.values()),
                   html_pages=pages, before_bytes=before, published_bytes=after, saved_bytes=before-after,
-                  byte_identity_verified=True)
+                  byte_identity_verified=True, parsed_page_contents_preserved=True)
     (root/'delivery-report.json').write_text(json.dumps(report, indent=2)+'\n', encoding='utf-8')
     (artifacts/'delivery-manifest.json').write_text(json.dumps(manifest, indent=2)+'\n', encoding='utf-8')
     (artifacts/'SHA256SUMS.txt').write_text(''.join(record['sha256']+'  '+record['asset']+'\n' for record in records.values()), encoding='utf-8')

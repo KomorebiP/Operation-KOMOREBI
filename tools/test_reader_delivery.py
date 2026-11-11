@@ -7,7 +7,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from reader_delivery import asset_name, package, rewrite_links, verify
+from reader_delivery import asset_name, package, prove_page_contents, rewrite_links, verify
 from publish_reader_downloads import confirm_asset, publish
 
 
@@ -70,6 +70,9 @@ class DeliveryTests(unittest.TestCase):
         self.assertIn('href="'+record['export_url']+'"', result)
         self.assertIn('https://other.test/notation/data/book.json', result)
         self.assertIn('data-source="data/book.json"', result)
+        prove_page_contents(text, result, 'notation/book.html', records)
+        with self.assertRaisesRegex(ValueError, 'changed page contents'):
+            prove_page_contents(text, result.replace('>Other<', '>Changed<'), 'notation/book.html', records)
 
     def test_corrupted_compressed_index_is_rejected(self):
         with tempfile.TemporaryDirectory() as directory:
