@@ -55,6 +55,44 @@ At \(t=\rho e^{i\theta}\), it is a scalar multiple of the Poisson kernel at angl
 p_\rho(\theta)=\frac{1-\rho^4}{2\pi(1-2\rho^2\cos(2\theta)+\rho^4)}.
 \]
 
+For \(0\leq\rho<1\), let \(F_\rho(\theta)=\int_0^\theta p_\rho(s)\,ds\),
+\(q=\rho^2\), and \(\beta=(1-q)/(1+q)\). Define
+\(A(v)=\arctan\!\bigl(\beta\tan(2\pi v)\bigr)\) for \(-1/4<v<1/4\).
+The branch-aware inverse on \(0\leq u\leq1\) is
+
+\[
+Q_\rho(u)=
+\begin{cases}
+A(u),&0\leq u<1/4,\\
+\pi/2,&u=1/4,\\
+\pi+A(u-1/2),&1/4<u<3/4,\\
+3\pi/2,&u=3/4,\\
+2\pi+A(u-1),&3/4<u\leq1.
+\end{cases}
+\]
+
+It satisfies \(F_\rho(Q_\rho(u))=u\). Thus the boundaries
+\(Q_\rho(k/N)\) divide the circle into \(N\) equal-mass intervals, and the
+workbench places its samples at the corresponding mass midpoints.
+
+The browser uses a complex phase map to evaluate this inverse. In exact real
+arithmetic, put \(x=2\pi u\) and \(w=e^{2ix}\). When \(\cos x\ne0\),
+the half-angle identity gives
+
+\[
+\frac{w+q}{1+qw}
+=\frac{1+i\beta\tan x}{1-i\beta\tan x}
+=e^{2i\arctan(\beta\tan x)}.
+\]
+
+The branches of \(Q_\rho\) differ by multiples of \(\pi\), so their doubled
+angles have the same complex phase. At the two excluded quarter turns,
+\(w=-1\) and the map also gives \(-1\). The inverse is strictly increasing,
+with \(Q_\rho(0)=0\), \(Q_\rho(1/2)=\pi\), and \(Q_\rho(1)=2\pi\); the
+phase map's turn count therefore selects the same angle on each half of the
+interval. This argument identifies the ideal formulas. It does not prove the
+behavior of the floating-point browser implementation.
+
 The interactive laboratory demonstrates this nonuniform sampling as a **coordinate-specific proposal**, not an optimal general-purpose interpolation method. For other analytic responses, uniform sampling can perform better. The page does not claim superiority over vector fitting, rational reconstruction, measured RF data, or noisy S-parameter recovery.
 
 ## Physical load comparisons
