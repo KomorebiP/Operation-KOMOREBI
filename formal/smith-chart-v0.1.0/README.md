@@ -2,8 +2,9 @@
 
 This companion formalizes selected mathematical claims in the public Smith
 chart laboratory, bound to Operation-KOMOREBI revision
-`ae02554bc86f30626fd9fad8d64b60854e307a80`. It is a separate proof artifact:
-the source manuscripts and browser implementation have not been changed.
+`ae02554bc86f30626fd9fad8d64b60854e307a80`. The proofs are a separate artifact;
+the accompanying browser update is tested separately and is not certified by
+the Lean results.
 The later ChatGPT conversation “Continue Smith Chart Work” was located, but
 its assistant messages were unavailable to this session; its contents have
 therefore not been reconciled with this companion.

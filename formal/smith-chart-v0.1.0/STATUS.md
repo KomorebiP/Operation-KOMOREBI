@@ -12,7 +12,7 @@
   phase-orbit Parseval, selected sampling claims, and squared-coefficient
   energies have Lean counterparts.
 - **Evidence:** the fresh replay receipt is at
-  [verification/run5/receipt.json](verification/run5/receipt.json); inspect
+  [verification/run6/receipt.json](verification/run6/receipt.json); inspect
   its status and recorded hashes before relying on it. The replay and audit
   use pinned compiled Mathlib caches and self-review, as described in
   [AUDIT.md](AUDIT.md).
