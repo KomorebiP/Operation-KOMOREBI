@@ -95,3 +95,18 @@ output paths with:
 python -B research/smith-chart/computations/derive_candidate_142.py --output <new-system-json>
 python -B research/smith-chart/computations/check_completion_boundary.py --output <new-check-json>
 ```
+
+## Exact labels in the redesigned frequency diagram
+
+`check_diagram_labels.py` checks figure 8 from the archived rational kernel at
+frequencies `(1,2,3)` and positive couplings `(1/20,1/6,1/20)`. The three
+two-node principal minors are positive; the full determinant is
+`-3981887/82944000000`. Exact fraction arithmetic and two determinant formulas
+agree. The completed [record](verification/diagram-labels-002/manifest.json)
+binds the archive, checker and drawing generator with before/after hashes.
+This verifies the displayed fixed-branch values, without adding an
+interpolation theorem, enumerating other sign choices or solving a circuit.
+
+```text
+python -B research/smith-chart/computations/check_diagram_labels.py --output <new-check-json>
+```

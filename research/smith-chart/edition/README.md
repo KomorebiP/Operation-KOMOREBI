@@ -9,8 +9,22 @@ its manuscript, figures, and earlier proof receipts remain retained sources.
 `figures.json` binds 42 vector edition figures to their source identities and
 plotting programs. Most plots are regenerated from the archived equations
 with one type system and palette. The combiner, circuit graph, storage map,
-Kron reduction, and census receive new layouts. Four dense diagrams also have
-stacked mobile versions. Every online figure links to its original.
+Kron reduction, and census receive new layouts. Twelve schematic figures have
+dedicated mobile versions. Every online figure links to its original.
+
+The subsequent structural redesign in `diagram_redesign.py` rebuilds figures
+8, 11, 18, 26, 27, 30, 31 and 37. Figure 8 now has three distinct triangle
+edges, exact pairwise minors and a separate joint-test result. Circuit
+diagrams use explicit component symbols, separated parallel branches and
+readable parameter lists. Each of these eight figures has a dedicated phone
+layout, bringing the total to twelve. The expanded view preserves the layout
+the reader opened. Both generators are checksum-bound in `figures.json`.
+
+The exact labels for figure 8 are checked independently from its rendering by
+`../computations/check_diagram_labels.py`. That check concerns the displayed
+all-positive coupling branch; it adds no interpolation theorem or synthesis
+result. All source mathematics, archived artwork and proof receipts remain
+unchanged.
 
 One illustration required a component correction: the original figure 39
 draws a faint resistor on section A's `(1,3)` branch, although the exact nodal
@@ -19,10 +33,12 @@ on `(0,2)`, `(0,3)`, `(1,2)`, `(2,3)`; inductors on `(0,3)`, `(1,2)`; and a
 capacitor on `(1,3)`. The certified circuit and its component count are
 unchanged. Symbol crossings in the redrawn graph do not add junctions.
 
-`prose.json` records 45 wording rules affecting 66 occurrences, plus one
+`prose.json` records 53 wording rules affecting 74 occurrences, plus one
 accessibility rule exposing 18 captions. Coverage includes the opening,
 reading map, selected transitions, research headings, provenance language,
-and ten figure descriptions and their alternative text. Mathematical
+and ten figure descriptions and their alternative text. Eight further
+alternative-text replacements describe the structurally redesigned diagrams.
+Mathematical
 expressions, labels, hypotheses, and stable section identifiers are preserved
 by build checks. No mathematical-token edit is made to the archived text.
 

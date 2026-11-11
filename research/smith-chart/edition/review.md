@@ -69,3 +69,13 @@ The vector drawings are illustrations; no plot establishes passivity,
 minimality, exact cancellation, or infeasibility on its own. Figure 39's
 resistor correction follows the exact nodal generator, and the mobile
 versions rearrange the same component information.
+
+The subsequent schematic redesign preserves the electrical connections in
+figures 11, 18, 26, 27, 30 and 37. The cubic graph uses a planar embedding of
+the same four-node, seven-component network. Figures 8 and 31 receive clearer
+certificate and status layouts. Figure 8's original three collinear vertices
+overlap the 1–3 edge with the 1–2 and 2–3 edges; the new triangle gives each
+pair its own edge. Its three minors and full determinant are checked from the
+archived rational kernel, using exact fractions and two determinant formulas.
+This finite check covers the all-positive coupling branch only. No new
+mathematical claim is inferred from the drawings.
