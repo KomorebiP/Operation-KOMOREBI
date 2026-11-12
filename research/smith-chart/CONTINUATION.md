@@ -1,5 +1,9 @@
 # Smith chart continuation checkpoint
 
+The maintained continuation and gap-closure record is now
+[unified/README.md](unified/README.md), with one canonical research reader and a
+single current source/check download. This file preserves the earlier checkpoints.
+
 **Superseded target status, 12 November 2026.** The new supplied
 [exact-six checkpoint](continuation/README.md) gives a positive transformer-free
 witness and matching degree lower bound for the original target. The remaining

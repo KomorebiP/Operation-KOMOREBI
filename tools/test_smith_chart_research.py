@@ -44,7 +44,7 @@ class ResearchReadingTest(unittest.TestCase):
         cls.original = cls.files[research.HTML_NAME].decode('utf-8').split('<main class="page">', 1)[1].split('</main>', 1)[0]
         _, cls.prose = edition.load(ROOT, cls.files, research.HTML_NAME)
         cls.edited = edition.edit_prose(cls.files[research.HTML_NAME].decode('utf-8'), cls.prose).split('<main class="page">', 1)[1].split('</main>', 1)[0]
-        cls.rendered = research.reading_body(ROOT, REVISION)
+        cls.rendered = research.historical_body(ROOT, REVISION)
 
     def test_mathematical_text_figures_and_tables_survive(self):
         plain = re.sub(r'<div class="figure-heading">.*?</div>', '', self.rendered, flags=re.S)
@@ -87,7 +87,7 @@ class ResearchReadingTest(unittest.TestCase):
         self.assertEqual(self.rendered.count('class="figure-heading"'),42)
         self.assertEqual(len(re.findall(r'src="[^"]+/edition/figures/[^"]+\.svg"',self.rendered)),42)
         with self.assertRaises(ValueError):
-            research.reading_body(ROOT, 'main')
+            research.historical_body(ROOT, 'main')
 
     def test_tampered_figure_and_archive_fail_closed(self):
         with tempfile.TemporaryDirectory() as directory:

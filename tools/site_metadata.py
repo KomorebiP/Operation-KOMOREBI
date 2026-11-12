@@ -10,6 +10,7 @@ from urllib.parse import quote
 import xml.etree.ElementTree as ET
 
 BASE_URL = 'https://komorebip.github.io/Operation-KOMOREBI/'
+from smith_chart_unified import ALIASES as SMITH_ALIASES, PAGE as SMITH_BOOK
 CARD_RECORD = 'assets/brand/sharing-card.json'
 NOINDEX = {'404.html', 'search.html', 'side-by-side.html', 'reading-list.html', 'lean/run.html'}
 MAX_DESCRIPTION = 165
@@ -24,7 +25,7 @@ DESCRIPTIONS = {
     'works.html': 'Browse the Komorebi collection by work, subject, completion stage, and recorded evidence, then follow the reading and source links.',
     'playground.html': 'Run and edit mathematical Python examples in your browser. Inspect the output and follow links to the written calculations and recorded scope.',
     'smith-chart.html': 'Explore passive RF impedance, reflection coefficients, exact cyclic projector packets, dyadic refinement, and phase sampling in an interactive Smith chart.',
-    'read/smith-chart/research.html': 'Read the Smith chart research draft: worked examples, passive completion, exact circuit synthesis, and open realization boundaries.',
+    'read/smith-chart/research.html': 'Read the unified Smith chart and RLC work: exact-six closure, deterministic certified families, passive completion, proof audits and research history.',
     'read/smith-chart/continuation.html': 'Read the exact six-reactive closure, certified RLC composition, degree-matching families and the current Hughes-margin audit obligations.',
     'collection/demonstrations/SMITH_FIRST_ORDER_RL.html': 'Derive a positive one-inductor circuit for the Smith chart draft’s affine limit, with explicit component values and Lean-checked algebra.',
     'collection/demonstrations/SMITH_SINGULAR_COMPLETION.html': 'Use nullspace constraints to predict from singular Pick data and derive the exact feasibility boundary for two real cyclic packets.',
@@ -41,12 +42,14 @@ def canonical_url(path):
     if (not path or path.startswith('/') or '\\' in path or any(c in path for c in '?#:\0')
             or any(p in {'', '.', '..'} for p in path.split('/')) or not path.endswith('.html')):
         raise ValueError('Invalid reader page: '+path)
+    if path in SMITH_ALIASES:
+        path = SMITH_BOOK
     target = path[:-len('index.html')] if path.split('/')[-1] == 'index.html' else path
     return BASE_URL + quote(target, safe='/')
 
 
 def indexable(path):
-    return path not in NOINDEX
+    return path not in NOINDEX and path not in SMITH_ALIASES
 
 
 def compact(text):
@@ -184,7 +187,7 @@ def publish_navigation(site):
                   lean='Lean proofs and browser tools', math='Komorebi Math documentation',
                   polyphase='Polyphase Float documentation', other='Other reader pages')
     titles = site.discovery_titles
-    for path in sorted(site.discovery_pages - {'404.html', 'sitemap.html'}):
+    for path in sorted(site.discovery_pages - {'404.html', 'sitemap.html'} - set(SMITH_ALIASES)):
         parts = path.split('/')
         group = ('start' if len(parts) == 1 else 'works' if path.startswith('collection/works/')
                  else parts[0] if parts[0] in groups else 'other')

@@ -6,10 +6,19 @@ import re
 from urllib.parse import parse_qs, quote, unquote, urlencode, urlsplit
 
 NON_DOCUMENT_PAGES = {'side-by-side.html', '404.html', 'sitemap.html'}
+from smith_chart_unified import ALIASES as SMITH_ALIASES, PAGE as SMITH_BOOK
+NON_DOCUMENT_PAGES |= set(SMITH_ALIASES)
 
 
 def pair_link(left, right, page, label='Read statement and proof side by side'):
     """Both targets are site-root paths, including their recorded passage anchors."""
+    def consolidated(target):
+        parts = urlsplit(target)
+        if parts.scheme or parts.netloc or parts.query or parts.path not in SMITH_ALIASES:
+            return target
+        anchor = SMITH_ALIASES[parts.path]
+        return SMITH_BOOK+'#'+anchor+('--'+parts.fragment if parts.fragment and anchor!='current-results' else '')
+    left,right = consolidated(left),consolidated(right)
     for target in (left, right):
         parts = urlsplit(target)
         path = unquote(parts.path)
