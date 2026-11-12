@@ -25,6 +25,7 @@ DESCRIPTIONS = {
     'playground.html': 'Run and edit mathematical Python examples in your browser. Inspect the output and follow links to the written calculations and recorded scope.',
     'smith-chart.html': 'Explore passive RF impedance, reflection coefficients, exact cyclic projector packets, dyadic refinement, and phase sampling in an interactive Smith chart.',
     'read/smith-chart/research.html': 'Read the Smith chart research draft: worked examples, passive completion, exact circuit synthesis, and open realization boundaries.',
+    'read/smith-chart/continuation.html': 'Read the exact six-reactive closure, certified RLC composition, degree-matching families and the current Hughes-margin audit obligations.',
     'collection/demonstrations/SMITH_FIRST_ORDER_RL.html': 'Derive a positive one-inductor circuit for the Smith chart draft’s affine limit, with explicit component values and Lean-checked algebra.',
     'collection/demonstrations/SMITH_SINGULAR_COMPLETION.html': 'Use nullspace constraints to predict from singular Pick data and derive the exact feasibility boundary for two real cyclic packets.',
     'special-functions-lab.html': 'Explore coupled contraction functions with exact rational coefficients, recurrence terms, parameter comparisons, and explicit local truncation bounds.',

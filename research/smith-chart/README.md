@@ -1,5 +1,11 @@
 # Smith chart research archive and reading
 
+**Current status, 12 November 2026:** the supplied continuation closes the
+original target with an exact six-reactive transformer-free witness and matching
+degree lower bound. Read the [current source record](continuation/README.md) and
+[online continuation](https://komorebip.github.io/Operation-KOMOREBI/read/smith-chart/continuation.html).
+Open-status statements in this earlier record and the retained archive are historical.
+
 The retained `SmithChart_Complete.zip` is the 172-file research package supplied
 for this reading, dated 11 November 2026. Its SHA-256 is
 `39fd0d659ef6c006eebb129e08a9b2ced72ce5b857ba846d6481711c951c371e`.
@@ -80,9 +86,8 @@ runpy.run_path(script.as_posix(), run_name="__main__")
 Run the wrapper with one of the paths above after copying the reproduction
 directory to a new writable location. The exact source and its manifest remain
 in the ZIP. This replay is not an independent audit of every mathematical proof
-in the draft or a hardware validation. For the degree-six target, whether a
-transformer-free RLC-only realization exists with six reactive elements remains
-open. Historical novelty has not been established. The existing Lean companion proves
+in the draft or a hardware validation. That replay predates the exact-six closure
+linked above. Historical novelty has not been established. The existing Lean companion proves
 selected results and does not formalize this entire archive. A separate
 [first-order RL companion](formal/README.md) checks the affine limit's circuit
 identity and positive component values, without claiming the rest of the

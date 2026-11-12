@@ -470,6 +470,11 @@ class Site:
             title=title_match[1] if title_match else Path(path).stem
             section={'collection':'Collection','math':'Komorebi Math','polyphase':'Polyphase Float'}[repo]
             content=''.join(rewrite.out)
+            if repo == 'collection' and path == 'docs/demonstrations/SMITH_CHART.md':
+                continuation = ('<aside class="research-update" aria-label="RLC continuation">'
+                    '<p><a href="../../read/smith-chart/continuation.html">12 November continuation: '
+                    'exact six-reactive closure, certified RLC composition and the current Hughes-margin audit obligations.</a></p></aside>')
+                content = re.sub(r'(</h1>)', lambda m: m[1] + continuation, content, count=1)
             if repo=='collection' and path=='docs/GLOSSARY.md':
                 from glossary_reader import glossary_lookup, glossary_return_links
                 glossary_config=json.loads((self.root/'manifests/reader-experience.json').read_bytes())
@@ -727,6 +732,8 @@ class Site:
         self.smith_chart_lab()
         from smith_chart_research import publish as publish_smith_chart_research
         publish_smith_chart_research(self)
+        from smith_chart_continuation import publish as publish_smith_chart_continuation
+        publish_smith_chart_continuation(self)
         from special_functions_lab import build as build_special_functions_lab
         build_special_functions_lab(self)
         self.markdown_pages()

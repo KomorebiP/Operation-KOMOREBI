@@ -143,11 +143,14 @@ def reading_body(root, revision):
     replay_url = 'https://github.com/KomorebiP/Operation-KOMOREBI/blob/' + revision + '/research/smith-chart/README.md'
     census_url = 'https://github.com/KomorebiP/Operation-KOMOREBI/blob/' + revision + '/research/smith-chart/computations/README.md'
     note = ('<aside class="research-notice" aria-label="Source and research status">'
-            '<div class="research-notice-copy"><p class="research-notice-label">Edited research reading · 11 November 2026</p>'
+            '<div class="research-notice-copy"><p class="research-notice-label">Historical research reading · updated 12 November 2026</p>'
             '<p>Revised prose and vector diagrams accompany the complete research draft. '
             'New supplements complete selected circuit and singular-interpolation arguments.</p>'
-            '<p><strong>The synthesis question:</strong> the degree-six target has a certified transformer-free circuit '
-            'with seven reactive elements. A transformer-free RLC-only realization with six reactive elements remains open.</p>'
+            '<p><strong>The six-reactive gap is closed.</strong> The newer checkpoint gives the degree-six target '
+            'an exact transformer-free circuit with three inductors, three capacitors and seven positive resistors. '
+            'The degree lower bound establishes a reactive minimum of six. '
+            '<a href="continuation.html">Read the closure and the current RLC continuation.</a> '
+            'Earlier open-status statements below are retained as history.</p>'
             '<details><summary>Source and review scope</summary><p>The archive retains the original text and artwork. '
             'The draft also describes a six-reactive realization using an ideal transformer. '
             'The Lean companions cover selected statements, not this entire draft. Historical novelty has not been established.</p>'
@@ -155,6 +158,7 @@ def reading_body(root, revision):
             '<nav class="research-actions" aria-label="Research reading resources">'
             '<a class="research-download" href="' + zip_url + '">Download full archive<span>172 files · offline reading</span></a>'
             '<a href="' + replay_url + '">Replay and source record</a>'
+            '<a href="continuation.html">Current RLC results and exact-six closure</a>'
             '<a href="../../collection/demonstrations/SMITH_FIRST_ORDER_RL.html">One-inductor circuit proof</a>'
             '<a href="../../collection/demonstrations/SMITH_SINGULAR_COMPLETION.html">Singular-data completion proof</a>'
             '<a href="' + census_url + '">Five-node census check</a>'
@@ -175,6 +179,17 @@ def reading_body(root, revision):
                 'and an exact curved boundary describes all feasible pairs of real packets at the two-node orbit. '
                 '<a href="../../collection/demonstrations/SMITH_SINGULAR_COMPLETION.html">Read the proof and worked examples.</a></p></aside>')
     main = main.replace(marker, addition + marker, 1)
+    update = ('<aside class="research-update" data-edition-addition="exact-six-closure">'
+              '<p><strong>Later result: the reactive minimum is six.</strong> '
+              'This section records the earlier state. The '
+              '<a href="exact-six.html">positive eight-node circuit and exact root certificate</a> '
+              'close the original target with three inductors and three capacitors.</p></aside>')
+    for anchor in ('six-state-invariants', 'certified-cubic-extraction', 'seven-reactive-exact',
+                   'what-has-been-settled-and-what-remains-open', 'suggested-reading-routes'):
+        heading = re.search(r'<h2 id="' + anchor + r'">.*?</h2>', main)
+        if not heading:
+            raise ValueError('Missing historical-status insertion point: ' + anchor)
+        main = main.replace(heading[0], heading[0] + update, 1)
     return ('<div id="smith-research"><div class="page">' + main + '</div>' + dialog +
             '<a class="research-contents-jump" href="#contents">↑ Contents</a></div>')
 
@@ -189,7 +204,7 @@ def publish(site):
     site.page(PAGE, 'Smith chart: complete research reading', body,
               'https://github.com/KomorebiP/Operation-KOMOREBI/blob/' + revision + '/' + ARCHIVE)
     site.search.append(dict(title='Smith chart: complete research reading', group='Collection', kind='Examples',
-                            url=PAGE, work_ids=[], text='Smith chart cyclic packets passive completion exact seven reactive circuit rational certificate six element open order separation infeasibility boundaries examples'))
+                            url=PAGE, work_ids=[], text='Smith chart cyclic packets passive completion historical seven reactive circuit exact six reactive closure minimum RLC synthesis continuation order separation infeasibility boundaries examples'))
 
 
 def decorate_supplement(site, page, body):
