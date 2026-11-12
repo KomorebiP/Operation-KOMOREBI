@@ -280,6 +280,9 @@ def verify(root, pages, documents):
         elif config.get('custom_reader') == 'machine_native_reasoning':
             from machine_native_reasoning_reading import source_specs as machine_native_specs
             config['chapters']=machine_native_specs(load)
+        elif config.get('custom_reader') == 'physics':
+            from physics_reading import source_specs as physics_specs
+            config['chapters']=physics_specs(load)
         elif config.get('custom_reader') == 'methodology':
             from methodology_reading import source_specs as methodology_specs
             config['chapters']=methodology_specs(load)
