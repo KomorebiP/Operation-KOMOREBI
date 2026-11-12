@@ -480,11 +480,6 @@ class Site:
             title=title_match[1] if title_match else Path(path).stem
             section={'collection':'Collection','math':'Komorebi Math','polyphase':'Polyphase Float'}[repo]
             content=''.join(rewrite.out)
-            if repo == 'collection' and path == 'docs/demonstrations/SMITH_CHART.md':
-                continuation = ('<aside class="research-update" aria-label="RLC continuation">'
-                    '<p><a href="../../read/smith-chart/continuation.html">12 November continuation: '
-                    'exact six-reactive closure, certified RLC composition and the current Hughes-margin audit obligations.</a></p></aside>')
-                content = re.sub(r'(</h1>)', lambda m: m[1] + continuation, content, count=1)
             if repo=='collection' and path=='docs/GLOSSARY.md':
                 from glossary_reader import glossary_lookup, glossary_return_links
                 glossary_config=json.loads((self.root/'manifests/reader-experience.json').read_bytes())
@@ -516,9 +511,6 @@ class Site:
                 content=re.sub(r'(</h1>)',lambda m:m[1]+contents,content,count=1)
             article_class=' class="euler-example"' if is_euler else ''
             body='<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="'+self.rel('index.html',page)+'">Home</a> / <a href="'+self.rel(repo+'/index.html',page)+'">'+section+'</a></nav><article'+article_class+'>'+content+'</article>'
-            if repo == 'collection' and path in {'docs/demonstrations/SMITH_FIRST_ORDER_RL.md', 'docs/demonstrations/SMITH_SINGULAR_COMPLETION.md'}:
-                from smith_chart_research import decorate_supplement
-                body = decorate_supplement(self, page, body)
             self.page(page,title,body,github(self.repos[repo],self.revisions[repo],path))
             plain=re.sub(r'<[^>]+>',' ',rendered)
             plain=html.unescape(re.sub(r'\s+',' ',plain))
@@ -686,7 +678,7 @@ class Site:
         script_hash=digest((self.root/'website'/script).read_bytes())[:12]
         body='<link rel="stylesheet" href="'+css+'?v='+css_hash+'">'
         body+=(self.root/source).read_text(encoding='utf-8')
-        body+='<p class="smith-sources"><a href="collection/demonstrations/SMITH_CHART.html">Derivation, verification scope, and limitations</a></p>'
+        body+='<p class="smith-sources"><a href="read/smith-chart/research.html#companion-guide">Derivation, verification scope, and limitations</a></p>'
         body+='<script defer src="'+script+'?v='+script_hash+'"></script>'
         self.page('smith-chart.html','Smith chart and projector laboratory',body,
                   github(REPOSITORY,self.revision,source))
