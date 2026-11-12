@@ -1,4 +1,4 @@
-"""Render retained Physics PDFs with source and image identity receipts."""
+"""Publish retained Physics PNGs or render PDFs with identity receipts."""
 import argparse
 import hashlib
 import json
@@ -14,8 +14,35 @@ def main():
     import pypdfium2 as pdfium
     from readable_chapters import group
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--treatment', choices=('foundations', 'dirac'), default='foundations')
+    parser.add_argument('--treatment', choices=('foundations', 'dirac', 'generator'), default='foundations')
     treatment = parser.parse_args().treatment
+    if treatment == 'generator':
+        from PIL import Image
+        import io
+        source_base = 'monographs/physics/source/generator/'
+        text = (ROOT/source_base/'Block50_Spectral_Generator_Bridge.tex').read_text(encoding='utf-8')
+        output = 'assets/figures/physics-generator/'
+        records = []
+        for match in re.finditer(r'\\includegraphics\[width=\\linewidth\]\{(figures/[^{}]+\.png)\}', text):
+            caption_at = text.index(r'\caption{', match.end())
+            caption, _ = group(text, caption_at+len(r'\caption'))
+            source = source_base+match[1]
+            raw = (ROOT/source).read_bytes()
+            with Image.open(io.BytesIO(raw)) as image:
+                if image.format != 'PNG':
+                    raise ValueError('Expected retained Physics PNG')
+                width, height = image.size
+            target = ROOT/'website'/output/Path(source).name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(raw)
+            records.append(dict(source=source, source_sha256=hashlib.sha256(raw).hexdigest(),
+                image=output+target.name, image_sha256=hashlib.sha256(raw).hexdigest(),
+                width=width, height=height, caption=caption))
+        if len(records) != 2 or len({r['source'] for r in records}) != 2:
+            raise ValueError('Review Physics generator figure inventory')
+        (ROOT/'website'/output/'figures.json').write_text(json.dumps(dict(figures=records), ensure_ascii=False, indent=2)+'\n', encoding='utf-8', newline='\n')
+        print('Published 2 byte-identical retained Physics generator figures.')
+        return
     inputs = (['foundations/'+name+'.tex' for name in ('orientation', 'core', 'refinement', 'extensions', 'conclusion', 'references')]
               if treatment=='foundations' else ['chapters/finite_core.tex', 'chapters/continuum.tex'])
     command = 'foundationfigure' if treatment=='foundations' else 'atlasfigure'

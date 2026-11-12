@@ -9,6 +9,7 @@ import unittest
 from PIL import Image
 from encode_reader_figures import GROUPS, check
 from reader_figure_assets import digest, dimensions, validate_encoding, prepare, image
+from check_reader_site import check_image_sources
 
 ROOT=Path(__file__).resolve().parents[1]
 
@@ -81,6 +82,37 @@ class ReaderFigureEncodingTests(unittest.TestCase):
             self.assertEqual(sha,record['source_sha256'])
             self.assertEqual((output/target).read_bytes(),(root/'website'/record['image']).read_bytes())
             record['source_sha256']='0'*64;receipt.write_text(json.dumps(dict(figures=[record])))
+            with self.assertRaisesRegex(ValueError,'source differs'):
+                prepare(reader,config,chapters)
+
+    def test_shared_reader_authenticates_retained_png_and_rejects_drift(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary);_,png,_=self.fixture(root)
+            record=dict(source='book/figures/original.png',source_sha256=digest(png),
+                image='assets/figures/example/original.png',image_sha256=digest(png),width=4,height=3)
+            (root/'website'/record['image']).write_bytes(png)
+            config=dict(base='book/',figure_receipts='assets/figures/example/figures.json')
+            (root/'website'/config['figure_receipts']).write_text(json.dumps(dict(figures=[record])))
+            retained=dict(mode='100644')
+            site=SimpleNamespace(root=root,output=root/'output',read_source=lambda _:png,rel=lambda target,page:target)
+            reader=SimpleNamespace(site=site,add=lambda path:None,owned={record['source']:retained},images={})
+            chapters=[({},b'',SimpleNamespace(nodes=[dict(kind='figure',body=r'\includegraphics[width=\linewidth]{original.png}')]))]
+            assets=prepare(reader,config,chapters)
+            _,target,_=image(reader,config,{},assets,'original.png','read/test.html')
+            self.assertEqual((site.output/target).read_bytes(),png)
+            documents=dict(files=[],images=list(reader.images.values()))
+            check_image_sources(documents)
+            with self.assertRaisesRegex(AssertionError,'Missing retained figure source'):
+                check_image_sources(dict(files=[],images=[r for r in documents['images'] if r.get('source')]))
+            original=next(r for r in documents['images'] if not r.get('source'))
+            original['sha256']='0'*64
+            with self.assertRaises(AssertionError):
+                check_image_sources(documents)
+            site.read_source=lambda _:png+b'drift'
+            with self.assertRaisesRegex(ValueError,'source differs'):
+                prepare(reader,config,chapters)
+            site.read_source=lambda _:png
+            retained['mode']='120000'
             with self.assertRaisesRegex(ValueError,'source differs'):
                 prepare(reader,config,chapters)
 

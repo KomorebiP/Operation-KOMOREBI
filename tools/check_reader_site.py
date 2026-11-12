@@ -131,6 +131,9 @@ def check_readable_chapter(root, documents, pages):
             validate_monolithic(main,BOOKS[spec['work']])
             assert (report['start_line'],report['end_line'])==(spec['start_line'],spec['end_line'])
         macro_source=BOOKS[spec['work']].get('macro_source',main_path)
+        if BOOKS[spec['work']].get('custom_reader')=='physics':
+            from physics_reading import macro_source as physics_macro_source
+            macro_source=physics_macro_source(spec)
         if BOOKS[spec['work']].get('custom_reader')=='quantum':
             from quantum_symmetry import SOURCE,MACROS
             if source==SOURCE:macro_source=MACROS
@@ -197,7 +200,7 @@ def check_readable_chapter(root, documents, pages):
             expected_macros=source_macros(lambda path:(root/records[path]['file_url']).read_text(encoding='utf-8-sig'),spec)
         elif BOOKS[spec['work']].get('custom_reader')=='physics':
             from physics_reading import source_macros
-            expected_macros=source_macros(lambda path:(root/records[path]['file_url']).read_text(encoding='utf-8-sig'))
+            expected_macros=source_macros(lambda path:(root/records[path]['file_url']).read_text(encoding='utf-8-sig'),spec)
         elif BOOKS[spec['work']].get('custom_reader')=='kcos':
             from kcos_reading import source_macros
             expected_macros=source_macros((root/records[macro_source]['file_url']).read_text(encoding='utf-8-sig'))
@@ -227,6 +230,16 @@ def check_readable_chapter(root, documents, pages):
         assert [x[2:-2] for x in rendered.expressions]==[expand_math(x,report['macros']) for x in expressions], ('HTML mathematical sequence differs from source',source)
         count+=len(expressions)
     return count
+
+
+def check_image_sources(documents):
+    """Bind figure publications to retained document or original image records."""
+    sources={r['repository_path']:r for r in documents['files']}
+    sources.update({r['repository_path']:r for r in documents.get('images',[]) if not r.get('source')})
+    for record in documents.get('images',[]):
+        if record.get('source'):
+            assert record['source'] in sources, ('Missing retained figure source',record['source'])
+            assert sources[record['source']]['sha256']==record['source_sha256'],record['source']
 
 
 def inspect_site(root, *, compact_html=False, delivery_artifacts=None):
@@ -383,9 +396,7 @@ def inspect_site(root, *, compact_html=False, delivery_artifacts=None):
         raw=(root/record['file_url']).read_bytes()
         assert len(raw)==record['size'] and hashlib.sha256(raw).hexdigest()==record['sha256'],record['repository_path']
         assert hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest()==record['git_blob_sha1']
-        if record.get('source'):
-            sources={r['repository_path']:r for r in documents['files']}
-            assert sources[record['source']]['sha256']==record['source_sha256']
+    check_image_sources(documents)
     readable_math = check_readable_chapter(root,documents,pages)
     from paper_ix_reading import verify_bibliography as verify_paper_ix_bibliography
     verify_paper_ix_bibliography(root,documents,pages)
