@@ -55,6 +55,20 @@ def publish_fixture(output):
 
 
 class PhysicsReadingTests(unittest.TestCase):
+    def test_lean_inspector_uses_the_complete_continuum_project(self):
+        from lean_execution import collect
+        # Paper V supplies the shared runner's explicitly labelled fallback.
+        books = {WORK: BOOK, 'paper-v': reading.BOOKS['paper-v']}
+        with patch.object(reading, 'BOOKS', books):
+            _, catalog = collect(ROOT, 'physics-conversion-test')
+        project = SOURCE_ROOT+'formal/continuum'
+        sources = [row for row in catalog['sources'] if row['work'] == WORK]
+        self.assertTrue(sources)
+        self.assertTrue(all(row['path'].startswith(project+'/KomorebiPhysics/') for row in sources))
+        self.assertEqual({row['project'] for row in sources}, {project})
+        for name in ('lean-toolchain', 'lake-manifest.json'):
+            self.assertIn(project+'/'+name, catalog['projects'][project]['files'])
+
     def test_sources_are_complete_in_order_and_fail_closed(self):
         load = lambda path: (ROOT/path).read_text(encoding='utf-8-sig')
         self.assertEqual(source_specs(load), CHAPTERS)

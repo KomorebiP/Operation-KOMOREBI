@@ -24,6 +24,7 @@ BOOK = dict(work=WORK, label='Physics', title='Physics: Projectors, Packets, and
     index=PREFIX+'index.html', bib_page=CHAPTERS[-1]['url'], chapters=CHAPTERS,
     custom_reader='physics', partial=True, main_chapters=16,
     bibliography_in_chapters=True, required_macros=[], statement_navigation=True,
+    lean_reader_paths=['formal/continuum/KomorebiPhysics/'],
     reader_controls=True, number_floats=True, show_figure_numbers=True,
     contents_groups=DATA['groups'],
     figure_receipts='assets/figures/physics-foundations/figures.json',
