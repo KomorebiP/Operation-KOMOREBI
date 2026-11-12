@@ -48,7 +48,7 @@ async function run() {
           touchHeight: Math.min(...[...document.querySelectorAll('.research-actions a, .research-actions button, .figure-open')]
             .map(element => element.getBoundingClientRect().height).filter(height => height > 0)),
         }));
-        if (layout.width > layout.viewport || layout.figures !== 45 || layout.vectorFigures !== 45 || layout.originalLinks !== 45 || layout.mobileFigures !== (name === 'desktop' ? 0 : 12) || layout.mathReady !== 'true' || layout.mathErrors || layout.unrendered || layout.rawTex.length || layout.equations !== 2528 || layout.headings !== 1 || layout.articles !== 1 || layout.touchHeight < 44) {
+        if (layout.width > layout.viewport || layout.figures !== 45 || layout.vectorFigures !== 45 || layout.originalLinks !== 45 || layout.mobileFigures !== (name === 'desktop' ? 0 : 12) || layout.mathReady !== 'true' || layout.mathErrors || layout.unrendered || layout.rawTex.length || layout.equations !== 2642 || layout.headings !== 1 || layout.articles !== 1 || layout.touchHeight < 44) {
           throw new Error('Reading layout, images, mathematics, or touch controls failed: ' + JSON.stringify(layout));
         }
         const figure = page.locator('#figure-2 .figure-open');
@@ -79,7 +79,7 @@ async function run() {
         await page.locator('.research-contents-jump').focus();
         await page.keyboard.press('Enter');
         if (!await page.locator('#contents').evaluate(element => element.open)) throw new Error('Contents control did not open');
-        for (const anchor of ['six-state-invariants', 'companion-guide']) {
+        for (const anchor of ['six-state-invariants', 'companion-guide', 'low-order-synthesis', 'formal-graph-core', 'typed-margins', 'component-tolerances']) {
           await page.locator('.research-contents-jump').focus();
           await page.keyboard.press('Enter');
           const link = page.locator('#contents a[href="#' + anchor + '"]').first();

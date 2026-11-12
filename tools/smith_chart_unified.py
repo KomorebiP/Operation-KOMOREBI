@@ -21,7 +21,8 @@ ALIASES = {'read/smith-chart/continuation.html': 'current-results',
 NEW_CHAPTERS = {'deterministic-family':'DETERMINISTIC_FAMILY.md', 'compact-model-audit':'COMPACT_MODEL_AUDIT.md'}
 TAG_PREFIXES = {'exact-six':'S','composition':'C','families':'F','obstruction':'O',
     'quantitative-transfer':'Q','effective-margin':'M','deterministic-family':'D',
-    'compact-model-audit':'A','one-inductor':'R','singular-completion':'P','companion-guide':'G'}
+    'compact-model-audit':'A','one-inductor':'R','singular-completion':'P','companion-guide':'G',
+    'low-order-synthesis':'L','formal-graph-core':'V','typed-margins':'T','component-tolerances':'E'}
 
 
 def sha(raw):
@@ -163,12 +164,17 @@ def build(site):
         if identifier=='passive-completion-from-incomplete-packets':
             assembled.append(source_markdown(site,'docs/demonstrations/SMITH_SINGULAR_COMPLETION.md','singular-completion'))
         if identifier=='exact-order-proliferation-under-cyclic-filtering':
-            for slug in ('exact-six','composition','families'):
+            for slug in ('exact-six','composition'):
                 assembled.append(chapter(site,manifest,files,next(c for c in manifest['chapters'] if c['slug']==slug)))
+            assembled.append(source_markdown(site,BASE+'/LOW_ORDER_SYNTHESIS.md','low-order-synthesis'))
+            assembled.append(chapter(site,manifest,files,next(c for c in manifest['chapters'] if c['slug']=='families')))
             assembled.append(source_markdown(site,BASE+'/DETERMINISTIC_FAMILY.md','deterministic-family'))
             for slug in ('obstruction','quantitative-transfer','effective-margin'):
                 assembled.append(chapter(site,manifest,files,next(c for c in manifest['chapters'] if c['slug']==slug)))
             assembled.append(source_markdown(site,BASE+'/COMPACT_MODEL_AUDIT.md','compact-model-audit'))
+            assembled.append(source_markdown(site,BASE+'/FORMAL_CORE.md','formal-graph-core'))
+            assembled.append(source_markdown(site,BASE+'/TYPED_MARGINS.md','typed-margins'))
+            assembled.append(source_markdown(site,BASE+'/TOLERANCE.md','component-tolerances'))
         if identifier=='arbitrary-order-separation':
             assembled.append(source_markdown(site,'docs/demonstrations/SMITH_FIRST_ORDER_RL.md','one-inductor'))
     reference = source_markdown(site,'docs/demonstrations/SMITH_CHART.md','companion-guide')
@@ -183,9 +189,10 @@ def build(site):
         'questions and earlier status tables describe that stage of the work. The current exact minimum '
         'for the original target is six, proved by the later eight-node witness above.</p>'+old+'</details>')
     assembled.append('<h2 id="source-ledger">Sources, checks and remaining work</h2>'
-        '<p>The current construction and audit are project self-review. Independent peer review, a formal '
-        'proof of the universal reduction, a useful optimized Hughes margin, minimum resistor counts '
-        'and arbitrary-target minimum synthesis remain separate open work.</p>'
+        '<p>The current written arguments have project self-review, and seventeen selected finite-graph and '
+        'shape statements have kernel replay. Complete formal compactification and transfer, independent peer review, '
+        'a useful margin for the remaining mixed RLC models, arbitrary-target practical minimum synthesis, '
+        'higher-target resistor minima, mixed-network robustness and physical measurements remain open.</p>'
         '<p><a href="../../downloads/smith-rlc-current-source.zip">Download the complete current source and checks</a> · '
         '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/tree/'+site.revision+'/'+BASE+'">'
         'Proof, computation and source-binding records</a>. The original checkpoint ZIPs and earlier Lean receipts '
@@ -199,14 +206,14 @@ def build(site):
         '<p class="subtitle">Exact packets, passive completion, physical circuits and their verification.</p>'
         '<p class="author-line">Komorebi P. · Updated 12 November 2026</p>'
         '<nav class="quick-nav" aria-label="Start reading"><a href="#current-results">Current results</a>'
-        '<a href="#exact-six">Exact-six circuit</a><a href="#deterministic-family">Deterministic construction</a>'
-        '<a href="#compact-model-audit">Proof audit</a></nav></section>')
+        '<a href="#exact-six">Exact-six circuit</a><a href="#low-order-synthesis">Certified synthesis</a>'
+        '<a href="#formal-graph-core">Formal assurance</a></nav></section>')
     body = re.sub(r'<section class="cover">.*?</section>',lambda m:cover,body,count=1,flags=re.S)
     body = re.sub(r'<aside class="research-notice".*?</aside>',
         '<aside class="research-notice"><p><strong>Exact circuits and explicit limits.</strong> '
-        'The original degree-six target has reactive minimum six. Exact family recognition now constructs '
-        'certified circuits without numerical rediscovery. The universal-margin argument has a written '
-        'project audit; independent and formal verification remain distinct.</p>'
+        'The original degree-six target has reactive minimum six. Exact construction now covers first-order '
+        'targets, the RC/RL classes and specified higher-degree families. Selected graph and margin lemmas '
+        'have Lean proofs; the complete universal proof chain and general mixed-RLC solver remain open.</p>'
         '<nav class="research-actions" aria-label="Reading resources"><a class="research-download" '
         'href="../../downloads/smith-rlc-current-source.zip">Download current source<span>Proofs, certificates and checks</span></a>'
         '<a href="../../smith-chart.html">Open the laboratory</a>'
@@ -224,7 +231,8 @@ def build(site):
     body = body[:start]+toc+body[end:]
     body = re.sub(r'<footer class="end-note">.*?</footer>',
         '<footer class="end-note">Komorebi P. · Current proofs and historical sources are distinguished '
-        'in the reading. Exact ideal-circuit results do not supply hardware tolerances or historical priority.</footer>',body,flags=re.S)
+        'in the reading. Analytic tolerance bounds concern the stated ideal models; physical validation '
+        'and historical priority remain separate.</footer>',body,flags=re.S)
     return body
 
 
