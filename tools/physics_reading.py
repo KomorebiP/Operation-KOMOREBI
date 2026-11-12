@@ -1,6 +1,6 @@
-"""Source-bound Physics foundations and continuum Dirac treatments.
+"""Source-bound Physics foundations, Dirac, and spectral generator treatments.
 
-The full foundations and Dirac treatments are included. Later treatments remain in the
+The full foundations, Dirac, and generator treatments are included. Later treatments remain in the
 complete PDF. Publication adds no proof review, experiment, or Lean execution.
 """
 import hashlib
@@ -15,16 +15,18 @@ BASE = ROOT + 'source/monographs/'
 MAIN = BASE + 'Physics_Foundations_Monograph.tex'
 DIRAC_MAIN = BASE + 'Physics_Dirac_Monograph.tex'
 DIRAC_FINITE = BASE + 'chapters/finite_core.tex'
+GENERATOR_BASE = ROOT + 'source/generator/'
+GENERATOR_MAIN = GENERATOR_BASE + 'Block50_Spectral_Generator_Bridge.tex'
 MACROS = BASE + 'preamble.tex'
 PAGE_MAP = ROOT + 'book/book_manifest.json'
 ASSEMBLY = ROOT + 'book/assembly_validation.json'
 PREFIX = 'read/' + WORK + '/'
 DATA = json.loads(Path(__file__).with_name('physics_sections.json').read_text(encoding='utf-8'))
 CHAPTERS = DATA['chapters']
-BOOK = dict(work=WORK, label='Physics', title='Physics: Resolution, dynamics, and the continuum Dirac operator',
+BOOK = dict(work=WORK, label='Physics', title='Physics: Resolution, the Dirac operator, and its dynamics',
     base=BASE, main=MAIN, macro_source=MACROS, bib=BASE+'references.tex',
-    index=PREFIX+'index.html', bib_page=CHAPTERS[-1]['url'], chapters=CHAPTERS,
-    custom_reader='physics', partial=True, main_chapters=41,
+    index=PREFIX+'index.html', bib_page=PREFIX+'dirac-sources-and-further-reading.html', chapters=CHAPTERS,
+    custom_reader='physics', partial=True, main_chapters=48,
     bibliography_in_chapters=True, numbered_bibliography=True, required_macros=[], statement_navigation=True,
     lean_reader_paths=['formal/continuum/KomorebiPhysics/'],
     reader_controls=True, number_floats=True, show_figure_numbers=True,
@@ -39,14 +41,17 @@ BOOK = dict(work=WORK, label='Physics', title='Physics: Resolution, dynamics, an
         ('chapters/finite_core.tex', 'L838'): dict(caption='Exact three-mode shell energies',
             headers=['Mode', r'\(E_n\)', r'\(E_{h,n}\)'], row_header_column=0),
         ('chapters/boundary.tex', 'L8'): dict(caption='The completed operator construction',
-            headers=['Construction', 'Mathematical role'], row_header_column=0)},
+            headers=['Construction', 'Mathematical role'], row_header_column=0),
+        (GENERATOR_MAIN, 'L268'): dict(caption='Generator, resolvent, and evolution limits',
+            headers=[r'\textbf{Statement}', r'\textbf{Input}', r'\textbf{Conclusion}'], row_header_column=0)},
     require_table_reading_aids=True,
-    reading_introduction='Read the complete foundations and continuum Dirac treatments. '
+    reading_introduction='Read the complete foundations, continuum Dirac and spectral generator treatments. '
         'Begin with packets, currents, open dynamics, refinement and operator domains; '
         'continue through PH01–PH12, the exact three-mode example, Fourier completion '
-        'and the self-adjoint Hamiltonian on the three-torus. Sixteen original figures accompany the text.',
+        'and the self-adjoint Hamiltonian on the three-torus, then its strong generator, resolvent limits '
+        'and quantitative evolution estimates. Eighteen original figures accompany the text.',
     reading_note='These opening HTML installments belong to the 572-page Physics book. '
-        'The foundations and continuum Dirac treatments are complete here; the generator, gauge, gravity, '
+        'The foundations, continuum Dirac and spectral generator treatments are complete here; the gauge, gravity, '
         'adic, matter and cosmology treatments, visual atlases and formal companions '
         'remain in the full PDF. Authored wording, equations and numbered statements '
         'are preserved. This reading edition adds no proof audit, scientific run or Lean execution.')
@@ -88,6 +93,8 @@ def normalize(raw):
     from foundational_reading import rewrite
     text = clean_tex(raw)
     lines = text.count('\n')
+    text = rewrite(text, 'PhysicsOpening', 3, lambda kicker, title, subtitle:
+        r'\section*{'+title+r'}\textit{'+subtitle+r'}\par '+kicker+r'\par ')
     text = rewrite(text, 'hypertarget', 2, lambda target, body: body)
     text = finite_statements(text)
     text = re.sub(r'\\foundationfigure\[[^\]]+\]', r'\\foundationfigure', text)
@@ -120,10 +127,21 @@ def normalize(raw):
     return text
 
 
-def source_macros(load):
+def macro_source(spec):
+    return GENERATOR_MAIN if spec['source'] == GENERATOR_MAIN else MACROS
+
+
+def source_macros(load, spec=None):
     from readable_chapters import manuscript_macros, group
-    text = load(MACROS)
+    text = load(macro_source(spec) if spec else MACROS)
     macros = manuscript_macros(text, [])
+    if spec and spec['source'] == GENERATOR_MAIN:
+        match = re.search(r'\\newcommand\{\\pp\}\[1\]', text)
+        if not match:
+            raise ValueError('Missing Physics generator norm macro')
+        body, _ = group(text, match.end())
+        macros['pp'] = dict(arguments=1, body=body, token_arguments=True)
+        return macros
     match = re.search(r'\\providecommand\{\\inner\}\[2\]', text)
     if not match:
         raise ValueError('Missing Physics inner-product macro')
@@ -139,11 +157,12 @@ def source_specs(load):
     expected_sources = []
     for treatment in DATA['treatments']:
         inputs = re.findall(r'\\input\{([^{}]+)\}', load(treatment['main']))
-        if inputs != ['preamble.tex', *treatment['inputs']]:
+        if inputs != [*treatment.get('layout_inputs', ['preamble.tex']), *treatment['inputs']]:
             raise ValueError('Review Physics treatment input order')
-        expected_sources.extend(BASE+name for name in treatment['inputs'])
+        sources = [treatment['main']] if treatment.get('standalone') else [BASE+name for name in treatment['inputs']]
+        expected_sources.extend(sources)
         if any(spec['treatment'] != treatment['id'] for spec in CHAPTERS
-               if spec['source'] in {BASE+name for name in treatment['inputs']}):
+               if spec['source'] in sources):
             raise ValueError('Physics source belongs to the wrong treatment')
     actual_sources = [spec['source'] for i, spec in enumerate(CHAPTERS)
                       if i == 0 or spec['source'] != CHAPTERS[i-1]['source']]
@@ -151,7 +170,12 @@ def source_specs(load):
         raise ValueError('Physics reading order differs from the retained treatments')
     for source in expected_sources:
         specs = [spec for spec in CHAPTERS if spec['source'] == source]
-        if specs[0]['start_line'] != 1 or specs[-1]['end_line'] != len(load(source).splitlines()):
+        raw = load(source)
+        start, end = 1, len(raw.splitlines())
+        if source == GENERATOR_MAIN:
+            start = raw.count('\n', 0, raw.index(r'\begin{document}'))+2
+            end = raw.count('\n', 0, raw.index(r'\end{document}'))
+        if specs[0]['start_line'] != start or specs[-1]['end_line'] != end:
             raise ValueError('Physics selection omits source boundaries')
         for left, right in zip(specs, specs[1:]):
             if left['end_line'] + 1 != right['start_line']:
@@ -193,10 +217,11 @@ def prepare_book(reader, config):
             state, equation_counter = {'number_floats': True}, 0
         raw = reader.site.read_source(reader.add(spec['source']))
         selected = reading.chapter_text(raw.decode('utf-8-sig'), spec)
-        chapter = reading.Chapter(normalize(selected), macros, state=state, check_refs=False)
+        chapter_macros = source_macros(load, spec)
+        chapter = reading.Chapter(normalize(selected), chapter_macros, state=state, check_refs=False)
         chapter.url, chapter.base, chapter.source = spec['url'], BASE, spec['source']
         chapter.bibliography_url = config['bib_page']
-        chapter.macro_source = MACROS
+        chapter.macro_source = macro_source(spec)
         chapter.table_config = config
         chapter.table_aids_used, chapter.nested_tables, chapter.proof_pairs = set(), [], {}
         if spec['source'] == DIRAC_FINITE:
@@ -243,6 +268,9 @@ def prepare_book(reader, config):
     figures = prepare(reader, config, [row for row in chapters if row[0]['treatment']=='foundations'])
     figures.update(prepare(reader, dict(config, figure_receipts='assets/figures/physics-dirac/figures.json'),
                            [row for row in chapters if row[0]['treatment']=='dirac']))
+    figures.update(prepare(reader, dict(config, figure_source_root=GENERATOR_BASE,
+        figure_receipts='assets/figures/physics-generator/figures.json'),
+        [row for row in chapters if row[0]['treatment']=='generator']))
     return dict(config=config, chapters=chapters, references=references, macros=macros, main=main,
                 full_book=manifest, figure_assets=figures)
 
@@ -256,8 +284,8 @@ def full_book_routes(reader, book, page):
         raise ValueError('Physics page map is bound to a different PDF')
     body = ('<section aria-labelledby="source-continuations"><h2 id="source-continuations">Continue in the full Physics book</h2>'
         '<p>The complete 572-page PDF contains all six parts below. Each PDF link opens at '
-        'the beginning of that treatment. The HTML installments above cover the complete foundations '
-        'and continuum Dirac treatments.</p>')
+        'the beginning of that treatment. The HTML installments above cover the complete foundations, '
+        'continuum Dirac and spectral generator treatments.</p>')
     part = None
     for row in book['full_book']:
         if part != row['part']:

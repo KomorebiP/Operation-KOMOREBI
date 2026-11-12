@@ -131,6 +131,9 @@ def check_readable_chapter(root, documents, pages):
             validate_monolithic(main,BOOKS[spec['work']])
             assert (report['start_line'],report['end_line'])==(spec['start_line'],spec['end_line'])
         macro_source=BOOKS[spec['work']].get('macro_source',main_path)
+        if BOOKS[spec['work']].get('custom_reader')=='physics':
+            from physics_reading import macro_source as physics_macro_source
+            macro_source=physics_macro_source(spec)
         if BOOKS[spec['work']].get('custom_reader')=='quantum':
             from quantum_symmetry import SOURCE,MACROS
             if source==SOURCE:macro_source=MACROS
@@ -197,7 +200,7 @@ def check_readable_chapter(root, documents, pages):
             expected_macros=source_macros(lambda path:(root/records[path]['file_url']).read_text(encoding='utf-8-sig'),spec)
         elif BOOKS[spec['work']].get('custom_reader')=='physics':
             from physics_reading import source_macros
-            expected_macros=source_macros(lambda path:(root/records[path]['file_url']).read_text(encoding='utf-8-sig'))
+            expected_macros=source_macros(lambda path:(root/records[path]['file_url']).read_text(encoding='utf-8-sig'),spec)
         elif BOOKS[spec['work']].get('custom_reader')=='kcos':
             from kcos_reading import source_macros
             expected_macros=source_macros((root/records[macro_source]['file_url']).read_text(encoding='utf-8-sig'))

@@ -84,5 +84,28 @@ class ReaderFigureEncodingTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'source differs'):
                 prepare(reader,config,chapters)
 
+    def test_shared_reader_authenticates_retained_png_and_rejects_drift(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary);_,png,_=self.fixture(root)
+            record=dict(source='book/figures/original.png',source_sha256=digest(png),
+                image='assets/figures/example/original.png',image_sha256=digest(png),width=4,height=3)
+            (root/'website'/record['image']).write_bytes(png)
+            config=dict(base='book/',figure_receipts='assets/figures/example/figures.json')
+            (root/'website'/config['figure_receipts']).write_text(json.dumps(dict(figures=[record])))
+            retained=dict(mode='100644')
+            site=SimpleNamespace(root=root,output=root/'output',read_source=lambda _:png,rel=lambda target,page:target)
+            reader=SimpleNamespace(site=site,add=lambda path:None,owned={record['source']:retained},images={})
+            chapters=[({},b'',SimpleNamespace(nodes=[dict(kind='figure',body=r'\includegraphics[width=\linewidth]{original.png}')]))]
+            assets=prepare(reader,config,chapters)
+            _,target,_=image(reader,config,{},assets,'original.png','read/test.html')
+            self.assertEqual((site.output/target).read_bytes(),png)
+            site.read_source=lambda _:png+b'drift'
+            with self.assertRaisesRegex(ValueError,'source differs'):
+                prepare(reader,config,chapters)
+            site.read_source=lambda _:png
+            retained['mode']='120000'
+            with self.assertRaisesRegex(ValueError,'source differs'):
+                prepare(reader,config,chapters)
+
 
 if __name__=='__main__':unittest.main()

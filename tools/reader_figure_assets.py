@@ -1,4 +1,4 @@
-"""Verify and publish browser images rendered from retained single-page PDFs."""
+"""Verify and publish browser figures bound to retained PDFs or original PNGs."""
 import hashlib
 import io
 import json
@@ -75,6 +75,10 @@ def prepare(reader,config,chapters):
             raise ValueError('Unexpected rendered figure path')
         if source in assets: raise ValueError('Duplicate rendered figure source')
         source_record=reader.add(source)
+        if source_record is None and PurePosixPath(source).suffix.lower()=='.png':
+            source_record=reader.owned.get(source)
+            if source_record and source_record['mode'] not in {'100644','100755'}:
+                source_record=None
         if not source_record or digest(reader.site.read_source(source_record))!=record['source_sha256']:
             raise ValueError('Rendered figure source differs: '+source)
         source_record['figure_source']=True
