@@ -1,6 +1,6 @@
-"""Source-bound Physics foundations, Dirac, generator, and gauge treatments.
+"""Source-bound Physics foundations, Dirac, generator, gauge, and gravity treatments.
 
-The full foundations, Dirac, generator, and gauge treatments are included. Later treatments remain in the
+The full foundations, Dirac, generator, gauge, and gravity treatments are included. Later treatments remain in the
 complete PDF. Publication adds no proof review, experiment, or Lean execution.
 """
 import hashlib
@@ -23,10 +23,10 @@ ASSEMBLY = ROOT + 'book/assembly_validation.json'
 PREFIX = 'read/' + WORK + '/'
 DATA = json.loads(Path(__file__).with_name('physics_sections.json').read_text(encoding='utf-8'))
 CHAPTERS = DATA['chapters']
-BOOK = dict(work=WORK, label='Physics', title='Physics: Resolution, Dirac dynamics, and gauge transport',
+BOOK = dict(work=WORK, label='Physics', title='Physics: Resolution, dynamics, and constrained geometry',
     base=BASE, main=MAIN, macro_source=MACROS, bib=BASE+'references.tex',
     index=PREFIX+'index.html', bib_page=PREFIX+'dirac-sources-and-further-reading.html', chapters=CHAPTERS,
-    custom_reader='physics', partial=True, main_chapters=66,
+    custom_reader='physics', partial=True, main_chapters=87,
     bibliography_in_chapters=True, numbered_bibliography=True, required_macros=[], statement_navigation=True,
     lean_reader_paths=['formal/continuum/KomorebiPhysics/'],
     reader_controls=True, number_floats=True, show_figure_numbers=True,
@@ -45,17 +45,27 @@ BOOK = dict(work=WORK, label='Physics', title='Physics: Resolution, Dirac dynami
         (GENERATOR_MAIN, 'L268'): dict(caption='Generator, resolvent, and evolution limits',
             headers=[r'\textbf{Statement}', r'\textbf{Input}', r'\textbf{Conclusion}'], row_header_column=0),
         ('gauge/orientation.tex', 'L21'): dict(caption='Gauge transport conventions',
-            headers=['Convention', 'Meaning'], row_header_column=0)},
+            headers=['Convention', 'Meaning'], row_header_column=0),
+        ('gravity/orientation.tex', 'L21'): dict(caption='Gravity conventions and evidence',
+            headers=['Convention', 'Meaning'], row_header_column=0),
+        ('gravity/strong_fields.tex', 'L317'): dict(caption='Recorded electrovac state errors',
+            headers=[r'$N$',r'$\norm{\delta R}_\infty$',r'$\norm{\delta\Lambda}_\infty$',
+                r'$\norm{\delta P_\Lambda}_\infty$',r'$\norm{\delta P_R}_\infty$'],row_header_column=0),
+        ('gravity/strong_fields.tex', 'L514'): dict(caption='Archived scalar marginal-sphere events',
+            headers=[r'$N_r$',r'$h$',r'$t_H$',r'$r_H$',r'$\Delta M/M_0$'],row_header_column=0),
+        ('gravity/strong_fields.tex', 'L557'): dict(caption='Recorded scalar constraint and flux residuals',
+            headers=['Diagnostic','Relative residual'],row_header_column=0)},
     require_table_reading_aids=True,
-    reading_introduction='Read the complete foundations, continuum Dirac, spectral generator and gauge treatments. '
+    reading_introduction='Read the complete foundations, continuum Dirac, spectral generator, gauge and gravity treatments. '
         'Begin with packets, currents, open dynamics, refinement and operator domains; '
         'continue through PH01–PH12, the exact three-mode example, Fourier completion '
         'and the self-adjoint Hamiltonian on the three-torus, then its strong generator, resolvent limits '
         'and quantitative evolution estimates. Continue to endpoint covariance, finite matter–field dynamics, '
-        'ordered holonomy and geometric refinement. Thirty original figures accompany the text.',
+        'ordered holonomy and geometric refinement, then constrained geometry, regular canonical reduction '
+        'and spherical strong-field models. Thirty-eight original figures accompany the text.',
     reading_note='These opening HTML installments belong to the 572-page Physics book. '
-        'The foundations, continuum Dirac, spectral generator and gauge treatments are complete here; the gravity, '
-        'adic, matter and cosmology treatments, visual atlases and formal companions '
+        'The foundations, continuum Dirac, spectral generator, gauge and gravity treatments are complete here; '
+        'the adic, matter and cosmology treatments, visual atlases and formal companions '
         'remain in the full PDF. Authored wording, equations and numbered statements '
         'are preserved. This reading edition adds no proof audit, scientific run or Lean execution.')
 
@@ -108,6 +118,12 @@ def normalize(raw):
     text = rewrite(text, 'gaugefigure', 2, lambda name, caption:
         r'\begin{figure}\centering\includegraphics[width=.96\linewidth]{gauge_figures/'
         + name + r'.pdf}\caption{' + caption + r'}\end{figure}')
+    text = re.sub(r'\\gravityfigure\[[^\]]+\]', r'\\gravityfigure', text)
+    text = rewrite(text, 'gravityfigure', 2, lambda name, caption:
+        r'\begin{figure}\centering\includegraphics[width=.96\linewidth]{gravity_figures/'
+        + name + r'.pdf}\caption{' + caption + r'}\end{figure}')
+    text = re.sub(r'\\setlength\{\\cftbefore(?:sec|part)skip\}\{[^{}]*\}',
+                  lambda match: mask(match[0]), text)
     text = rewrite(text, 'atlasfigure', 2, lambda name, caption:
         r'\begin{figure}\centering\includegraphics[width=.96\linewidth]{figures/'
         + name + r'.pdf}\caption{' + caption + r'}\end{figure}')
@@ -280,6 +296,8 @@ def prepare_book(reader, config):
         [row for row in chapters if row[0]['treatment']=='generator']))
     figures.update(prepare(reader, dict(config, figure_receipts='assets/figures/physics-gauge/figures.json'),
         [row for row in chapters if row[0]['treatment']=='gauge']))
+    figures.update(prepare(reader, dict(config, figure_receipts='assets/figures/physics-gravity/figures.json'),
+        [row for row in chapters if row[0]['treatment']=='gravity']))
     return dict(config=config, chapters=chapters, references=references, macros=macros, main=main,
                 full_book=manifest, figure_assets=figures)
 
@@ -294,7 +312,7 @@ def full_book_routes(reader, book, page):
     body = ('<section aria-labelledby="source-continuations"><h2 id="source-continuations">Continue in the full Physics book</h2>'
         '<p>The complete 572-page PDF contains all six parts below. Each PDF link opens at '
         'the beginning of that treatment. The HTML installments above cover the complete foundations, '
-        'continuum Dirac, spectral generator and gauge treatments.</p>')
+        'continuum Dirac, spectral generator, gauge and gravity treatments.</p>')
     part = None
     for row in book['full_book']:
         if part != row['part']:

@@ -72,10 +72,11 @@ class PhysicsReadingTests(unittest.TestCase):
     def test_sources_are_complete_in_order_and_fail_closed(self):
         load = lambda path: (ROOT/path).read_text(encoding='utf-8-sig')
         self.assertEqual(source_specs(load), CHAPTERS)
-        self.assertEqual(len(CHAPTERS), 76)
+        self.assertEqual(len(CHAPTERS), 100)
         self.assertEqual(sum(spec['treatment']=='dirac' for spec in CHAPTERS), 28)
         self.assertEqual(sum(spec['treatment']=='generator' for spec in CHAPTERS), 8)
         self.assertEqual(sum(spec['treatment']=='gauge' for spec in CHAPTERS), 21)
+        self.assertEqual(sum(spec['treatment']=='gravity' for spec in CHAPTERS), 24)
         for path in DATA['source_sha256']:
             with self.assertRaisesRegex(ValueError, 'changed Physics source'):
                 source_specs(lambda p: load(p)+('changed' if p == path else ''))
@@ -105,12 +106,13 @@ class PhysicsReadingTests(unittest.TestCase):
             check_image_sources(documents)
             with patch.object(reading, 'BOOKS', {WORK: BOOK}), patch.object(reading, 'CHAPTERS', CHAPTERS):
                 count = check_readable_chapter(output, documents, pages)
-            self.assertEqual(count, 1977)
+            self.assertEqual(count, 3002)
             book = reader.readable_books[WORK]
             nodes = [node for _, _, chapter in book['chapters'] for node in chapter.nodes]
             for treatment, sections, proofs, figure_numbers in [('foundations', 16, 15, list(map(str, range(1, 11)))),
                     ('dirac', 25, 18, ['']*6), ('generator', 7, 10, ['1','2']),
-                    ('gauge', 18, 13, list(map(str, range(1, 13))))]:
+                    ('gauge', 18, 13, list(map(str, range(1, 13)))),
+                    ('gravity', 21, 20, list(map(str, range(1, 9))))]:
                 selected = [n for s, _, c in book['chapters'] if s['treatment']==treatment for n in c.nodes]
                 self.assertEqual([n['number'] for n in selected if n['kind']=='section' and n['number']], list(map(str, range(1, sections+1))))
                 self.assertEqual(sum(n['kind']=='proof' for n in selected), proofs)
@@ -121,11 +123,11 @@ class PhysicsReadingTests(unittest.TestCase):
                                   ('Physical torus Hamiltonian', '21.1')]:
                 self.assertEqual(next(n['number'] for n in nodes if n['title']==title), number)
             proofs = sum(n['kind']=='proof' for n in nodes)
-            self.assertEqual(proofs, 56)
+            self.assertEqual(proofs, 76)
             self.assertEqual(proofs, sum(len(c.proof_pairs) for _, _, c in book['chapters']))
             self.assertEqual(book['chapters'][0][2].equation_numbers['f:atlas-relations'], '1')
             self.assertEqual(book['chapters'][0][2].labels['f:parseval']['number'], '1.2')
-            self.assertEqual(sum(bool(r.get('source')) for r in reader.images.values()), 30)
+            self.assertEqual(sum(bool(r.get('source')) for r in reader.images.values()), 38)
             self.assertEqual(len(book['references']), 6)
             generator = [c for s, _, c in book['chapters'] if s['treatment']=='generator']
             self.assertEqual(generator[0].labels['thm:generator']['number'], '2.3')
@@ -140,19 +142,30 @@ class PhysicsReadingTests(unittest.TestCase):
                 self.assertEqual(gauge[0].labels[key]['number'], number)
             self.assertEqual(gauge[0].equation_numbers['g:regular-bound'], '67')
             self.assertEqual(gauge[0].equation_numbers['g:dyadic-tail'], '68')
+            gravity = [c for s, _, c in book['chapters'] if s['treatment']=='gravity']
+            for title, number in [('Exact finite linearized closure','5.2'),
+                    ('Transfer of a differential','7.2'),('Conditional boundary BFV construction','10.1'),
+                    ('Charged mass coordinate','14.1'),('Exact triangular mass identity','14.2')]:
+                self.assertEqual(next(n['number'] for c in gravity for n in c.nodes if n['title']==title),number)
+            self.assertEqual(gravity[0].equation_numbers['c:strong:mass-identity'], '149')
+            self.assertEqual(gravity[0].equation_numbers['c:strong:expansions'], '206')
             for spec in CHAPTERS:
                 page = pages[spec['url']]
                 self.assertEqual((page.h1, page.main, page.images_without_alt), (1, 1, 0))
                 self.assertEqual(len(page.ids), len(set(page.ids)))
                 markup = (output/spec['url']).read_text(encoding='utf-8')
                 self.assertIn('reading-text-size', markup)
-                self.assertNotRegex(markup, r'\\(?:foundationfigure|atlasfigure|gaugefigure|sourcepointer|endhead|addcontentsline|needspace|hypertarget)')
+                self.assertNotRegex(markup, r'\\(?:foundationfigure|atlasfigure|gaugefigure|gravityfigure|sourcepointer|endhead|addcontentsline|needspace|hypertarget|cftbefore)')
             refs = (output/CHAPTERS[18]['url']).read_text(encoding='utf-8')
             for label in ['P1', 'P4', 'C1', 'C3']:
                 self.assertIn('['+label+']', refs)
-            gauge_refs = (output/CHAPTERS[-1]['url']).read_text(encoding='utf-8')
+            gauge_refs = (output/next(s['url'] for s in CHAPTERS if s['source'].endswith('/gauge/references.tex'))).read_text(encoding='utf-8')
             for label in ['P1', 'P3', 'C1', 'C5']:
                 self.assertIn('['+label+']', gauge_refs)
+            gravity_refs = (output/CHAPTERS[-1]['url']).read_text(encoding='utf-8')
+            for label in ['P1','P3','C1','C8']:
+                self.assertIn('['+label+']',gravity_refs)
+            self.assertIn('Painlevé',gravity_refs)
             dirac_refs = (output/BOOK['bib_page']).read_text(encoding='utf-8')
             self.assertIn('Seydaoğlu', dirac_refs)
             self.assertIn('Schrödinger', dirac_refs)
