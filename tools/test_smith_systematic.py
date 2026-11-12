@@ -88,4 +88,33 @@ class SystematicSmithTests(unittest.TestCase):
         self.assertEqual(sum(probe['counts'].values()),62)
         self.assertTrue(any('UNKNOWN' in s for s in probe['non_claims']))
 
+    def test_shunt_class_extension_and_formal_receipt(self):
+        run=subprocess.run([sys.executable,'-B','-S',str(AREA/'solver/check_shunt_extension.py')],capture_output=True,text=True,check=True,timeout=60)
+        report=json.loads(run.stdout)
+        self.assertEqual((report['total_mixed_representatives_excluded'],report['remaining_mixed_representatives']),(60,2070))
+        self.assertEqual(report['independent_physical_shapes'],36)
+        d=AREA/'verification/current-exact-003'
+        manifest=json.loads((d/'manifest.json').read_bytes())
+        for row in manifest['input_artifacts']:
+            self.assertEqual(digest(ROOT/row['path']),row['sha256'])
+            self.assertEqual(row['sha256'],row['sha256_after'])
+        for row in manifest['outputs']:self.assertEqual(digest(ROOT/row['path']),row['sha256'])
+        self.assertEqual(json.loads((d/'stdout.txt').read_bytes())['checks'][1]['report'],report)
+        d=AREA/'verification/phase2-shunt-formal-001'
+        r=json.loads((d/'receipt.json').read_bytes())
+        self.assertEqual((r['status'],r['total_selected_with_core']),('PASS',21))
+        self.assertEqual(digest(AREA/'verification/phase2-formal-001/receipt.json'),r['core_receipt_sha256'])
+        self.assertEqual(r['input_sha256_before'],r['input_sha256_after'])
+        for name,h in r['input_sha256_before'].items():self.assertEqual(digest(AREA/'formal'/name),h)
+        for step in r['steps']:
+            self.assertEqual(step['exit_code']==0,step['expected_success'])
+            for stream in ('stdout','stderr'):
+                self.assertEqual(digest(d/(step['name']+'.'+stream+'.txt')),step[stream+'_sha256'])
+        axioms=(d/'compile-shunt.stdout.txt').read_text(encoding='utf-8')
+        self.assertEqual(axioms.count('depends on axioms:'),4)
+        self.assertNotIn('sorryAx',axioms)
+        for line in axioms.splitlines():
+            self.assertLessEqual(set(re.search(r'\[([^]]*)\]',line)[1].split(', ')),{'propext','Classical.choice','Quot.sound'})
+        self.assertIn('unsolved goals',(d/'wrong-shunt.stdout.txt').read_text(encoding='utf-8'))
+
 if __name__=='__main__':unittest.main()

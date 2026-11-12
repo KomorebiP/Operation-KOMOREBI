@@ -14,8 +14,8 @@ are part of this reading, together with the constructive and lower-bound work.
 | [Deterministic construction](#deterministic-family) | Exact recognition and replayable certificates for rational members; the implementation covers degrees three through sixteen within its stated resource limits. |
 | [Hughes margin and transferred families](#effective-margin) | The written explicit margin $2^{-2^{803}}$ and the degree-$4k$, reactive-$7k$ deductions. |
 | [Audit of the universal argument](#compact-model-audit) | The resistor reduction, physical boundaries, sample identity and external theorem hypotheses have received a fresh project self-review. Independent or formal verification remains separate. |
-| [Selected formal graph core](#formal-graph-core) | Seventeen Lean theorem audits for conservation, contraction, port power, Stieltjes shape and exact margin implications; whole-chain formalization remains open. |
-| [Usable typed margins and mixed reduction](#typed-margins) | Explicit bounds for all RC-only and RL-only networks; one mixed representative has an exact rational refutation at margin $1/1000$. The remaining mixed exclusion problem has 2,129 representatives. |
+| [Selected formal graph core](#formal-graph-core) | Twenty-one selected Lean theorem audits for conservation, contraction, port power, Stieltjes shape and exact margin implications; whole-chain formalization remains open. |
+| [Usable typed margins and mixed reduction](#typed-margins) | Explicit bounds for all RC-only and RL-only networks; the direct-terminal-inductor/arbitrary-RC class has an exact rational refutation at margin $1/1000$, covering sixty canonical mixed representatives. There are 2,070 remaining. |
 | [Component-tolerance theorem](#component-tolerances) | In ideal fixed RC/RL networks, one-percent component tolerances change reflection by at most $1/99$ at every positive real frequency. A mixed-LC counterexample explains the required restriction. |
 
 Read the foundations first if cyclic packets and reflection coordinates are new

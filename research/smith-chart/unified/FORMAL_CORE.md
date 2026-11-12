@@ -44,6 +44,13 @@ receipt binds source bytes, compiler and dependency identities, commands and
 raw outputs. This is kernel verification of the statements enumerated in that
 receipt, not whole-book or whole-universal-margin formalization.
 
+The follow-up `ShuntMargin.lean` adds four kernel and finite-sum theorems for
+the direct-terminal-inductor/arbitrary-RC margin class. Its replay first
+repeats and byte-matches the original seventeen-theorem receipt, then compiles
+the extension and checks a false-shape control and a positive fixture.
+There are twenty-one selected theorem axiom audits in total. The extension's
+receipt is separate so the earlier proof and receipt bytes remain unchanged.
+
 Still required for complete formal closure are the arbitrary-resistor Schur
 reduction, bounded-current/max-principle existence, analytic boundary-limit
 argument, rational-degree/sample-identity bridge, external effective-minimum

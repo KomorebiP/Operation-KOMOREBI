@@ -158,10 +158,53 @@ Cayley intervals and margin before replaying it. This is an all-parameter
 exclusion for this specific mixed representative, independent of the optional
 SMT backend. Its maximum sample error is strictly greater than $1/1000$.
 
-There remain 2,129 mixed representatives for the small-margin search. A
-bounded optional exact-NRA probe processed all 26 budget-two representatives
+## Extending the certificate to arbitrary RC material
+
+The same obstruction covers a much larger class: one inductor connected
+directly across the port, in parallel with an arbitrary finite RC network.
+There is no series-parallel assumption on that RC material and no bound on
+its resistor or capacitor count. The RC impedance is Stieltjes. Its reciprocal
+admittance has negative residues at its negative real poles: between the
+Stieltjes poles its derivative is strictly negative, so each reciprocal
+residue is negative. Its polynomial part is affine. Consequently the total
+admittance has the form
+
+$$Y(s)=h/s+a+bs-\sum_j\frac{c_j}{s+p_j},\qquad c_j,p_j\ge0.$$
+
+The empty sum includes constant and direct-capacitor cases. The weights above
+annihilate $1,s,1/s$. Their exact kernel identity is
+
+$$\sum_i\frac{w_i}{s_i+p}
+ =\frac{3p/32}{(p+1/2)(p+3/4)(p+1)(p+5/4)}\ge0,\qquad p\ge0.$$
+
+It follows that $E=\sum_iw_iY(s_i)\le0$ throughout this mixed class. Lean
+checks this kernel identity and passage to arbitrary finite positive sums.
+The classical physical RC characterization and reciprocal translation remain
+explicit source and written-proof leaves.
+
+To replay the interval contradiction, replace $E=0$ by $E'=E+u^2=0$.
+The refutation identity simply gains the additional positive square $u^2/\beta$:
+
+$$-1=\sum_i\frac{|w_i|}{\beta}t_i^2+\frac{u^2}{\beta}
+ +\sum_i\frac{|w_i|}{\beta}E_i-\frac{E'}{\beta}.$$
+
+The unchanged rational consumer accepts this five-square certificate.
+The verifier rebuilds the target, margin, intervals and declared physical shape
+before checking the identity. Infinite admittance again gives the excluded
+short response; zero coefficients and open faces are retained.
+
+Among the 2,130 irreducible mixed representatives, this class covers four at
+budget two, thirteen at budget three and forty-three at budget four: sixty in
+total, including the original direct-L/C case. This is fifty-nine additional
+whole-parameter exclusions. The remaining small-margin task has 2,070 mixed
+representatives. The theorem itself permits arbitrarily large RC subnetworks;
+these counts describe only its intersection with the four-reactive search.
+
+A bounded optional exact-NRA probe processed all 26 budget-two representatives
 and one representative of each higher-budget size/type-count bucket: 62
 models in total. It reported one UNSAT and 61 UNKNOWN at the stated resource
 limit. The UNSAT case is the shunt case independently refuted above. The
-UNKNOWN cases remain unresolved; neither their count nor the topology reduction
-is a global exclusion certificate. The universal mixed-RLC bound is unchanged.
+UNKNOWN verdicts supply no conclusion. Some of those cases are now covered by
+the separate analytic certificate above; other cases still require a new
+argument. Neither solver outcomes nor the topology reduction is a global
+exclusion certificate. The universal mixed-RLC bound is unchanged.
