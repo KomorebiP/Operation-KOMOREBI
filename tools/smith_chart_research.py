@@ -213,7 +213,7 @@ def publish(site):
               'https://github.com/KomorebiP/Operation-KOMOREBI/tree/' + revision + '/research/smith-chart/unified')
     site.search.append(dict(title=TITLE, group='Collection', kind='Examples', url=PAGE, work_ids=[],
         text='Smith chart exact six reactive closure deterministic certified family synthesis compact physical boundaries Hughes margin packet transfer'))
-    for slug in ('exact-six','composition','families','deterministic-family','obstruction','quantitative-transfer','effective-margin','compact-model-audit','singular-completion','one-inductor','companion-guide'):
+    for slug in ('exact-six','composition','low-order-synthesis','families','deterministic-family','obstruction','quantitative-transfer','effective-margin','compact-model-audit','formal-graph-core','typed-margins','component-tolerances','singular-completion','one-inductor','companion-guide'):
         marker = re.search(r'<h2 id="'+slug+r'">(.*?)</h2>',body,re.S)
         if marker:
             end = re.search(r'<h2\b',body[marker.end():])

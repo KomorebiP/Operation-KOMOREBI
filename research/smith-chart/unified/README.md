@@ -12,6 +12,15 @@ Search, sitemap and the two-pane catalogue present the canonical reading.
 
 ## Mathematical progress
 
+The systematic phase now adds complete first-order synthesis, global
+first-order resistor minima and the Hughes base's two-resistor minimum;
+positive rational RC/RL Cauer construction through degree fifteen; seventeen
+selected kernel-checked graph/shape statements; usable pure-type margins and
+one exact mixed-model refutation; and a uniform ideal RC/RL component-tolerance
+theorem. See `LOW_ORDER_SYNTHESIS.md`, `FORMAL_CORE.md`, `TYPED_MARGINS.md` and
+`TOLERANCE.md`. `PROGRAM.md` fixes the six remaining contracts and `STATE.json`
+is their single current status view. Classical overlap is recorded explicitly.
+
 `DETERMINISTIC_FAMILY.md` proves and implements exact recognition of the specified
 uniformly certified cubic family and its endpoint lifts. This removes numerical
 rediscovery from that known constructive route. Every accepted rational target
@@ -43,8 +52,9 @@ python -B replay.py
 ```
 
 This authenticates six retained authored checkpoints, replays the eleven
-portable predecessor commands in isolated copies, and runs both new exact
-suites. It writes a fresh result directory without changing retained archives.
+portable predecessor commands in isolated copies, and runs the current exact
+family, boundary, synthesis/tolerance and topology checks. It writes a fresh
+result directory without changing retained archives.
 No network, numerical solver or optional package is needed. Python 3.11+ is the
 intended baseline; the current replay uses Python 3.12.14 on Windows.
 
@@ -59,6 +69,23 @@ For an individual exact target:
 ```text
 python -B research/smith-chart/unified/solver/deterministic_family.py target.json --output result.json
 ```
+
+Use `solver/first_order.py target.json` for the complete first-order class, or
+`solver/cauer.py target.json --kind RC` (or `RL`) for the corresponding Cauer
+class, with the same repository-relative prefix shown above.
+
+The optional mixed-NRA probe uses the separately pinned `z3-solver` backend.
+It is excluded from the standard-library replay. Its UNKNOWN results are
+resource-inconclusive and its UNSAT reports are not independent refutation
+certificates. The shunt-RLC rational refutation has a separate unchanged-kernel
+replay in the standard-library checks. No solver runtime or third-party PDF is
+included in the source archive.
+
+For actual formal replay, run `formal/replay_shunt_formal.py` (which also replays the core) and `formal/replay_cap_shunt_formal.py` with explicit `--lean`,
+`--mathlib`, `--git` and a fresh `--output` directory for each command. The dependency lock and
+compiler hash are the same pinned environment as the earlier Smith companions.
+The portable Python command checks its own declared computations; it does not
+pretend to execute Lean when that toolchain is absent.
 
 Targets use exact integers or rational strings in ascending powers of $s$.
 Floating-point input is rejected. The certificate's center is not an exact
@@ -86,5 +113,6 @@ numbering remain in the package. The three additional diagrams use the same
 full-size dialog as the 42 retained figure-edition drawings.
 
 The code and proof review are project self-review. Source tests and computation
-replay do not establish whole-book formal coverage, historical priority, minimum
-resistor count or hardware tolerance.
+replay do not establish whole-book formal coverage, historical priority or
+physical hardware performance. The written subclass proofs and explicitly
+scoped formal lemmas support the new resistor and ideal-model tolerance results.
