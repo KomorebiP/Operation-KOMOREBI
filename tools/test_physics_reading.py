@@ -72,11 +72,12 @@ class PhysicsReadingTests(unittest.TestCase):
     def test_sources_are_complete_in_order_and_fail_closed(self):
         load = lambda path: (ROOT/path).read_text(encoding='utf-8-sig')
         self.assertEqual(source_specs(load), CHAPTERS)
-        self.assertEqual(len(CHAPTERS), 100)
+        self.assertEqual(len(CHAPTERS), 122)
         self.assertEqual(sum(spec['treatment']=='dirac' for spec in CHAPTERS), 28)
         self.assertEqual(sum(spec['treatment']=='generator' for spec in CHAPTERS), 8)
         self.assertEqual(sum(spec['treatment']=='gauge' for spec in CHAPTERS), 21)
         self.assertEqual(sum(spec['treatment']=='gravity' for spec in CHAPTERS), 24)
+        self.assertEqual(sum(spec['treatment']=='adic' for spec in CHAPTERS), 22)
         for path in DATA['source_sha256']:
             with self.assertRaisesRegex(ValueError, 'changed Physics source'):
                 source_specs(lambda p: load(p)+('changed' if p == path else ''))
@@ -96,6 +97,18 @@ class PhysicsReadingTests(unittest.TestCase):
         reordered = CHAPTERS[19:] + CHAPTERS[:19]
         with patch('physics_reading.CHAPTERS', reordered), self.assertRaisesRegex(ValueError, 'reading order'):
             source_specs(load)
+        # The Adic context member is a retained inclusion at the end of its
+        # references file, not a free-standing addition to the reading order.
+        treatments = [dict(t) for t in DATA['treatments']]
+        next(t for t in treatments if t['id']=='adic')['nested_inputs'] = {}
+        with patch.dict(DATA, treatments=treatments), self.assertRaisesRegex(ValueError, 'nested input order'):
+            source_specs(load)
+        path = SOURCE_ROOT+'source/monographs/adic/references.tex'
+        inclusion = r'\input{adic/primary_context.tex}'
+        moved = inclusion+'\n'+load(path).replace(inclusion, '')
+        hashes = dict(DATA['source_sha256'], **{path: hashlib.sha256(moved.encode()).hexdigest()})
+        with patch.dict(DATA, source_sha256=hashes), self.assertRaisesRegex(ValueError, 'nested input position'):
+            source_specs(lambda p: moved if p == path else load(p))
 
     def test_publication_equations_numbering_figures_proofs_and_routes(self):
         with tempfile.TemporaryDirectory() as folder:
@@ -106,13 +119,14 @@ class PhysicsReadingTests(unittest.TestCase):
             check_image_sources(documents)
             with patch.object(reading, 'BOOKS', {WORK: BOOK}), patch.object(reading, 'CHAPTERS', CHAPTERS):
                 count = check_readable_chapter(output, documents, pages)
-            self.assertEqual(count, 3002)
+            self.assertEqual(count, 4357)
             book = reader.readable_books[WORK]
             nodes = [node for _, _, chapter in book['chapters'] for node in chapter.nodes]
             for treatment, sections, proofs, figure_numbers in [('foundations', 16, 15, list(map(str, range(1, 11)))),
                     ('dirac', 25, 18, ['']*6), ('generator', 7, 10, ['1','2']),
                     ('gauge', 18, 13, list(map(str, range(1, 13)))),
-                    ('gravity', 21, 20, list(map(str, range(1, 9))))]:
+                    ('gravity', 21, 20, list(map(str, range(1, 9)))),
+                    ('adic', 18, 24, list(map(str, range(1, 8))))]:
                 selected = [n for s, _, c in book['chapters'] if s['treatment']==treatment for n in c.nodes]
                 self.assertEqual([n['number'] for n in selected if n['kind']=='section' and n['number']], list(map(str, range(1, sections+1))))
                 self.assertEqual(sum(n['kind']=='proof' for n in selected), proofs)
@@ -123,11 +137,11 @@ class PhysicsReadingTests(unittest.TestCase):
                                   ('Physical torus Hamiltonian', '21.1')]:
                 self.assertEqual(next(n['number'] for n in nodes if n['title']==title), number)
             proofs = sum(n['kind']=='proof' for n in nodes)
-            self.assertEqual(proofs, 76)
+            self.assertEqual(proofs, 100)
             self.assertEqual(proofs, sum(len(c.proof_pairs) for _, _, c in book['chapters']))
             self.assertEqual(book['chapters'][0][2].equation_numbers['f:atlas-relations'], '1')
             self.assertEqual(book['chapters'][0][2].labels['f:parseval']['number'], '1.2')
-            self.assertEqual(sum(bool(r.get('source')) for r in reader.images.values()), 38)
+            self.assertEqual(sum(bool(r.get('source')) for r in reader.images.values()), 45)
             self.assertEqual(len(book['references']), 6)
             generator = [c for s, _, c in book['chapters'] if s['treatment']=='generator']
             self.assertEqual(generator[0].labels['thm:generator']['number'], '2.3')
@@ -149,23 +163,39 @@ class PhysicsReadingTests(unittest.TestCase):
                 self.assertEqual(next(n['number'] for c in gravity for n in c.nodes if n['title']==title),number)
             self.assertEqual(gravity[0].equation_numbers['c:strong:mass-identity'], '149')
             self.assertEqual(gravity[0].equation_numbers['c:strong:expansions'], '206')
+            adic = [c for s, _, c in book['chapters'] if s['treatment']=='adic']
+            for key, number in [('a-finite-unit-coordinates','1.1'),
+                    ('a-finite-hamiltonian-classification','3.1'),('a-spectral-chebyshev-schur','8.2'),
+                    ('a-limit-selfadjoint','13.1'),('a-limit-block-hamiltonian','14.1')]:
+                self.assertEqual(adic[0].labels[key]['number'],number)
+            for key, number in [('a-finite-hamiltonian-intertwine','25'),
+                    ('a-spectral-companion-system','81'),('a-limit-block-domain','125')]:
+                self.assertEqual(adic[0].equation_numbers[key],number)
             for spec in CHAPTERS:
                 page = pages[spec['url']]
                 self.assertEqual((page.h1, page.main, page.images_without_alt), (1, 1, 0))
                 self.assertEqual(len(page.ids), len(set(page.ids)))
                 markup = (output/spec['url']).read_text(encoding='utf-8')
                 self.assertIn('reading-text-size', markup)
-                self.assertNotRegex(markup, r'\\(?:foundationfigure|atlasfigure|gaugefigure|gravityfigure|sourcepointer|endhead|addcontentsline|needspace|hypertarget|cftbefore)')
+                self.assertNotRegex(markup, r'\\(?:foundationfigure|atlasfigure|gaugefigure|gravityfigure|adicfigure|sourcepointer|endhead|addcontentsline|needspace|hypertarget|cftbefore)')
             refs = (output/CHAPTERS[18]['url']).read_text(encoding='utf-8')
             for label in ['P1', 'P4', 'C1', 'C3']:
                 self.assertIn('['+label+']', refs)
             gauge_refs = (output/next(s['url'] for s in CHAPTERS if s['source'].endswith('/gauge/references.tex'))).read_text(encoding='utf-8')
             for label in ['P1', 'P3', 'C1', 'C5']:
                 self.assertIn('['+label+']', gauge_refs)
-            gravity_refs = (output/CHAPTERS[-1]['url']).read_text(encoding='utf-8')
+            gravity_refs = (output/next(s['url'] for s in CHAPTERS if s['source'].endswith('/gravity/references.tex'))).read_text(encoding='utf-8')
             for label in ['P1','P3','C1','C8']:
                 self.assertIn('['+label+']',gravity_refs)
             self.assertIn('Painlevé',gravity_refs)
+            adic_refs = (output/next(s['url'] for s in CHAPTERS if s['source'].endswith('/adic/references.tex'))).read_text(encoding='utf-8')
+            adic_context = (output/next(s['url'] for s in CHAPTERS if s['source'].endswith('/adic/primary_context.tex'))).read_text(encoding='utf-8')
+            for label in ['S1','S4']:
+                self.assertIn('['+label+']',adic_refs)
+            for label in ['C1','C5']:
+                self.assertIn('['+label+']',adic_context)
+            self.assertIn('adic-primary-context-and-scope-of-the-literature-check.html',adic_refs)
+            self.assertIn('full PDF retrieval failed',adic_context)
             dirac_refs = (output/BOOK['bib_page']).read_text(encoding='utf-8')
             self.assertIn('Seydaoğlu', dirac_refs)
             self.assertIn('Schrödinger', dirac_refs)
