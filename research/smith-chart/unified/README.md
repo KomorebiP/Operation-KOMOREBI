@@ -81,8 +81,8 @@ certificates. The shunt-RLC rational refutation has a separate unchanged-kernel
 replay in the standard-library checks. No solver runtime or third-party PDF is
 included in the source archive.
 
-For actual formal replay, run `formal/replay_shunt_formal.py` (which also replays the core) with explicit `--lean`,
-`--mathlib`, `--git` and a fresh `--output` directory. The dependency lock and
+For actual formal replay, run `formal/replay_shunt_formal.py` (which also replays the core) and `formal/replay_cap_shunt_formal.py` with explicit `--lean`,
+`--mathlib`, `--git` and a fresh `--output` directory for each command. The dependency lock and
 compiler hash are the same pinned environment as the earlier Smith companions.
 The portable Python command checks its own declared computations; it does not
 pretend to execute Lean when that toolchain is absent.

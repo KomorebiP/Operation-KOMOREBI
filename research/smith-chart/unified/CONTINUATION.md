@@ -2,8 +2,9 @@
 
 Checkpoint: `systematic-closure-001-extended`. The initial main revision is
 `353d1e19dd7f8bfac8322f8f229e5ca558b1c510`; the first phase commit is
-`d2fb0184b1b0749f95e18363dcb74949e156584e`. The extension's exact saved inputs
-are pinned in `verification/current-exact-003/manifest.json` and its selected
+`d2fb0184b1b0749f95e18363dcb74949e156584e`; the inductor-class extension is
+`411b5a2e0a80a8214e178b6c8f5020fbb1d35f2f`. The final saved inputs
+are pinned in `verification/current-exact-004/manifest.json` and its selected
 formal receipt. `STATE.json` is the single live dashboard. This handoff is a
 phase record, not a declaration that the six-contract program is complete.
 
@@ -16,16 +17,18 @@ or physical measurements have been performed.
 ## Current decision and open routes
 
 The active mathematical bottleneck is a useful checked margin for the mixed
-models outside the shunt-inductor/RC class. The initial single shunt certificate
-extended to arbitrary RC material and covers sixty of the 2,130 canonical
-irreducible mixed placements. The other 2,070 have not been excluded by these
-certificates. They split by budgets two, three and four as 22, 233 and 1,815.
+models outside the two terminal-shunt classes. The initial single shunt
+certificate extended to arbitrary RC material; a sixth-difference argument
+then covered a terminal capacitor with arbitrary RL material. Their union
+covers 119 of the 2,130 canonical irreducible mixed placements. The other 2,011
+have not been excluded by these certificates. They split by budgets two,
+three and four as 19, 220 and 1,772.
 The older universal written bound remains available at its original scale.
 
 | Route | Resolved obligation | Exact remaining implication and next action |
 |---|---|---|
-| Useful mixed margin | Pure RC/RL bounds and the entire direct-terminal-L/arbitrary-RC class | Generate the complement using `reactive_skeletons.generate(4)` and `shunt_rc_refutation.covered`. Start with the 22 budget-two cases. Derive a necessary physical response inequality before asking the backend to solve another full KCL system. |
-| Universal formal assurance | Twenty-one selected finite graph, power, Stieltjes and sample-shape statements | Formalize the nonnegative resistor Schur reduction or the bounded-flow existence lemma, then connect it to the analytic boundary argument. Do not count scalar arithmetic or compilation as the missing bridge. |
+| Useful mixed margin | Pure RC/RL bounds and both terminal-shunt classes | Generate the complement using `reactive_skeletons.generate(4)` and the two `covered` predicates. Start with the nineteen budget-two cases. Derive a necessary physical response inequality before asking the backend to solve another full KCL system. |
+| Universal formal assurance | Twenty-five selected finite graph, power, Stieltjes and sample-shape statements | Formalize the nonnegative resistor Schur reduction or the bounded-flow existence lemma, then connect it to the analytic boundary argument. Do not count scalar arithmetic or compilation as the missing bridge. |
 | Practical general synthesis | Complete first-order constructors and degree-capped rational RC/RL Cauer construction, plus the earlier specified lifted family | Implement another complete mixed subclass with physical certificates and a global reactive lower bound. Theoretical arbitrary-target decidability was already proved in the retained source; practical elimination is still missing. |
 | Resistor optimality | Global first-order minima and two for the Hughes base, allowing extra storage | Prove a lower bound beyond the endpoint obstruction for the original degree-six and higher-family targets. The known seven-resistor witness is an upper bound, not a resistor-minimality result. |
 | Mixed robustness | Uniform ideal RC/RL theorem; unrestricted mixed extension refuted | Specify a damped, frequency-bounded mixed model and derive a resolvent/sensitivity bound that survives the selected perturbations. Added parasitics and measurements need actual part/model data and laboratory evidence. |
@@ -42,7 +45,7 @@ were used in this phase.
 The optional direct compact-KCL NRA probe processed 62 selected models with a
 one-second per-model solver limit. Its one UNSAT backend report has a separate
 rational refutation; its 61 UNKNOWNs do not imply infeasibility. Some UNKNOWN
-models are now covered by the shunt-class theorem. The observed source and
+models are now covered by the shunt-class theorems. The observed source and
 optional backend identities are pinned in `verification/mixed-probe-003`.
 The earlier interrupted run and manual run are retained only as exploratory
 history. Repeating the same model and resource limit is not a new discriminator.
@@ -53,9 +56,11 @@ samples, the target's normalized admittance stencil is positive. A fresh bounded
 record for all thirty-five subsets is in `verification/complementary-stencils-001`;
 it establishes only this finite route discriminator. A
 physical capacitor shunting a series unit resistor/inductor also has a positive
-stencil, as the portable extension control checks. A continuation needs another
-inequality or another structural reduction; changing the required sign would
-be invalid.
+stencil, as the portable extension control checks. This failed four-sample
+mechanism led to the successful seven-sample sixth difference. Its proof and
+actual formal/refutation checks are now in the cap-shunt source and receipts.
+Changing the four-sample sign would still be invalid. The remaining nonterminal
+placements require another inequality or structural reduction.
 
 For new proofs, preserve ordinary finite positive uncoupled transformer-free
 components, explicit open/short boundaries and the distinction between positive

@@ -189,7 +189,7 @@ def build(site):
         'questions and earlier status tables describe that stage of the work. The current exact minimum '
         'for the original target is six, proved by the later eight-node witness above.</p>'+old+'</details>')
     assembled.append('<h2 id="source-ledger">Sources, checks and remaining work</h2>'
-        '<p>The current written arguments have project self-review, and twenty-one selected finite-graph and '
+        '<p>The current written arguments have project self-review, and twenty-five selected finite-graph and '
         'shape statements have kernel replay. Complete formal compactification and transfer, independent peer review, '
         'a useful margin for the remaining mixed RLC models, arbitrary-target practical minimum synthesis, '
         'higher-target resistor minima, mixed-network robustness and physical measurements remain open.</p>'

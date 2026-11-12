@@ -48,7 +48,7 @@ async function run() {
           touchHeight: Math.min(...[...document.querySelectorAll('.research-actions a, .research-actions button, .figure-open')]
             .map(element => element.getBoundingClientRect().height).filter(height => height > 0)),
         }));
-        if (layout.width > layout.viewport || layout.figures !== 45 || layout.vectorFigures !== 45 || layout.originalLinks !== 45 || layout.mobileFigures !== (name === 'desktop' ? 0 : 12) || layout.mathReady !== 'true' || layout.mathErrors || layout.unrendered || layout.rawTex.length || layout.equations !== 2650 || layout.headings !== 1 || layout.articles !== 1 || layout.touchHeight < 44) {
+        if (layout.width > layout.viewport || layout.figures !== 45 || layout.vectorFigures !== 45 || layout.originalLinks !== 45 || layout.mobileFigures !== (name === 'desktop' ? 0 : 12) || layout.mathReady !== 'true' || layout.mathErrors || layout.unrendered || layout.rawTex.length || layout.equations !== 2666 || layout.headings !== 1 || layout.articles !== 1 || layout.touchHeight < 44) {
           throw new Error('Reading layout, images, mathematics, or touch controls failed: ' + JSON.stringify(layout));
         }
         const figure = page.locator('#figure-2 .figure-open');

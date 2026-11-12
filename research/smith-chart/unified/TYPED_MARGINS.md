@@ -196,9 +196,57 @@ short response; zero coefficients and open faces are retained.
 Among the 2,130 irreducible mixed representatives, this class covers four at
 budget two, thirteen at budget three and forty-three at budget four: sixty in
 total, including the original direct-L/C case. This is fifty-nine additional
-whole-parameter exclusions. The remaining small-margin task has 2,070 mixed
+whole-parameter exclusions. After this class there are 2,070 mixed
 representatives. The theorem itself permits arbitrarily large RC subnetworks;
 these counts describe only its intersection with the four-reactive search.
+
+## A complementary capacitor class from a sixth difference
+
+For a capacitor directly across the terminals in parallel with arbitrary RL
+material, the earlier four-sample inequality has the other sign and does not
+separate the target. A higher-order shape succeeds. The RL impedance has the
+classical increasing Foster form. Its reciprocal has positive residues at its
+simple nonpositive poles, because the derivative of the RL impedance is
+positive at each zero. Its constant at infinity is nonnegative. Including the
+direct capacitor, the total admittance is therefore
+
+$$Y(s)=a+bs+\sum_j\frac{c_j}{s+p_j},\qquad c_j,p_j\ge0.$$
+
+Pure inductors give the allowed zero pole, and constant and open responses
+give empty sums. A shorted port again violates the required reflection box.
+The characterization includes RL bridge networks and any finite branch count.
+
+On all seven samples use $v=(1,-6,15,-20,15,-6,1)$. Constants and linear
+functions vanish under this sixth difference. For $p\ge0$,
+
+$$\sum_{i=0}^{6}\frac{v_i}{s_i+p}
+ =\frac{45/256}{\prod_{i=0}^{6}(s_i+p)}>0.$$
+
+Hence $E=\sum_i v_iY(s_i)\ge0$ throughout this class. The target admittance
+instead gives $E_H=-18225/9325316$. At $\delta=1/100000$, the exact Cayley
+intervals satisfy
+
+$$\sum_{v_i>0}v_i u_i+\sum_{v_i<0}v_i\ell_i=-\eta<0.$$
+
+Set $B_i=u_i-Y_i-t_i^2$ when $v_i>0$ and
+$B_i=Y_i-\ell_i-t_i^2$ when $v_i<0$. The physical shape gives
+$F=E-u^2=0$. The exact contradiction is
+
+$$-1=\sum_i\frac{|v_i|}{\eta}t_i^2+\frac{u^2}{\eta}
+ +\sum_i\frac{|v_i|}{\eta}B_i+\frac{F}{\eta}.$$
+
+The unchanged polynomial consumer accepts all eight positive squares and
+eight equation multipliers. Lean checks the sixth-difference kernel and its
+positive finite-sum consequence. Physical characterization, reciprocal and
+Cayley translations are explicitly separate written/source obligations.
+
+This capacitor class covers sixty canonical mixed placements too. Its only
+overlap with the inductor class is the direct-terminal L/C case at budget two.
+Together the two classes exclude 119 placements: seven at budget two,
+twenty-six at budget three and eighty-six at budget four. For a proposed global
+sample margin at most $1/100000$, the remaining task is 2,011 mixed
+representatives, split as 19, 220 and 1,772. This is still a partial exclusion,
+with no change to the earlier universal mixed-RLC margin.
 
 A bounded optional exact-NRA probe processed all 26 budget-two representatives
 and one representative of each higher-budget size/type-count bucket: 62

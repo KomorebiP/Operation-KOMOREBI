@@ -87,7 +87,7 @@ class UnifiedSmithTests(unittest.TestCase):
         missing=Counter(old.math)-Counter(self.parsed.math)
         self.assertFalse(missing,dict(missing))
         self.assertEqual(len(old.math),1668)
-        self.assertEqual(len(self.parsed.math),2650)
+        self.assertEqual(len(self.parsed.math),2666)
     def test_imported_statement_math_survives_label_namespacing(self):
         manifest,files=continuation.load(ROOT)
         actual=Counter(self.parsed.math)

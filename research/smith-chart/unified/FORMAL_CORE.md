@@ -48,8 +48,16 @@ The follow-up `ShuntMargin.lean` adds four kernel and finite-sum theorems for
 the direct-terminal-inductor/arbitrary-RC margin class. Its replay first
 repeats and byte-matches the original seventeen-theorem receipt, then compiles
 the extension and checks a false-shape control and a positive fixture.
-There are twenty-one selected theorem axiom audits in total. The extension's
+There are twenty-one selected theorem axiom audits after that step. The extension's
 receipt is separate so the earlier proof and receipt bytes remain unchanged.
+
+`CapShuntMargin.lean` supplies four further sixth-difference kernel and
+positive-sum statements for the complementary capacitor/RL class. Its replay
+checks the same pinned environment and the unchanged earlier source/receipt
+bindings, then compiles the new file with a false-shape control and a positive
+fixture. There are twenty-five selected theorem axiom audits across the three
+receipts. The physical characterizations and analytic bridges remain outside
+this count.
 
 Still required for complete formal closure are the arbitrary-resistor Schur
 reduction, bounded-current/max-principle existence, analytic boundary-limit
