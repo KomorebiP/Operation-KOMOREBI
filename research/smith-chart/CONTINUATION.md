@@ -1,5 +1,11 @@
 # Smith chart continuation checkpoint
 
+**Superseded target status, 12 November 2026.** The new supplied
+[exact-six checkpoint](continuation/README.md) gives a positive transformer-free
+witness and matching degree lower bound for the original target. The remaining
+open-status statements here describe earlier work. The class-142 search remains
+unresolved in its own topology, but is unnecessary for the achieved global minimum.
+
 **Base:** repository revision `b1546c80c88640f7dad5fe4300c1739523fa1b4b`,
 with the 172-file archive SHA-256
 `39fd0d659ef6c006eebb129e08a9b2ced72ce5b857ba846d6481711c951c371e`.
