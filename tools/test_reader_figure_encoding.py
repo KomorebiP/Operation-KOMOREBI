@@ -9,6 +9,7 @@ import unittest
 from PIL import Image
 from encode_reader_figures import GROUPS, check
 from reader_figure_assets import digest, dimensions, validate_encoding, prepare, image
+from check_reader_site import check_image_sources
 
 ROOT=Path(__file__).resolve().parents[1]
 
@@ -99,6 +100,14 @@ class ReaderFigureEncodingTests(unittest.TestCase):
             assets=prepare(reader,config,chapters)
             _,target,_=image(reader,config,{},assets,'original.png','read/test.html')
             self.assertEqual((site.output/target).read_bytes(),png)
+            documents=dict(files=[],images=list(reader.images.values()))
+            check_image_sources(documents)
+            with self.assertRaisesRegex(AssertionError,'Missing retained figure source'):
+                check_image_sources(dict(files=[],images=[r for r in documents['images'] if r.get('source')]))
+            original=next(r for r in documents['images'] if not r.get('source'))
+            original['sha256']='0'*64
+            with self.assertRaises(AssertionError):
+                check_image_sources(documents)
             site.read_source=lambda _:png+b'drift'
             with self.assertRaisesRegex(ValueError,'source differs'):
                 prepare(reader,config,chapters)

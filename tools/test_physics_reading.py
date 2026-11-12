@@ -14,7 +14,7 @@ import readable_chapters as reading
 from physics_reading import WORK, ROOT as SOURCE_ROOT, MAIN, MACROS, BOOK, DATA, CHAPTERS, source_specs, source_math, normalize
 from build_reader_site import Site
 from reader_documents import ReadingDocuments, source_lines
-from check_reader_site import Page, check_readable_chapter
+from check_reader_site import Page, check_readable_chapter, check_image_sources
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -101,6 +101,7 @@ class PhysicsReadingTests(unittest.TestCase):
             reader = publish_fixture(output)
             pages = {path.relative_to(output).as_posix(): Page(path.read_text(encoding='utf-8')) for path in output.rglob('*.html')}
             documents = dict(files=list(reader.records.values()), images=list(reader.images.values()))
+            check_image_sources(documents)
             with patch.object(reading, 'BOOKS', {WORK: BOOK}), patch.object(reading, 'CHAPTERS', CHAPTERS):
                 count = check_readable_chapter(output, documents, pages)
             self.assertEqual(count, 1429)
@@ -122,7 +123,7 @@ class PhysicsReadingTests(unittest.TestCase):
             self.assertEqual(proofs, sum(len(c.proof_pairs) for _, _, c in book['chapters']))
             self.assertEqual(book['chapters'][0][2].equation_numbers['f:atlas-relations'], '1')
             self.assertEqual(book['chapters'][0][2].labels['f:parseval']['number'], '1.2')
-            self.assertEqual(len(reader.images), 18)
+            self.assertEqual(sum(bool(r.get('source')) for r in reader.images.values()), 18)
             self.assertEqual(len(book['references']), 6)
             generator = [c for s, _, c in book['chapters'] if s['treatment']=='generator']
             self.assertEqual(generator[0].labels['thm:generator']['number'], '2.3')
@@ -170,6 +171,8 @@ class PhysicsReadingTests(unittest.TestCase):
                     if target in pages and parts.fragment and not parts.query:
                         self.assertIn(unquote(parts.fragment), pages[target].ids, (name, link))
             for record in reader.images.values():
+                if not record.get('source'):
+                    continue
                 self.assertEqual(record['source_sha256'], hashlib.sha256((ROOT/record['source']).read_bytes()).hexdigest())
                 if '/generator/' in record['source']:
                     self.assertEqual((output/record['file_url']).read_bytes(), (ROOT/record['source']).read_bytes())

@@ -94,6 +94,8 @@ def prepare(reader,config,chapters):
         raw=(reader.site.root/'website'/safe_path(record['image'])).read_bytes()
         if digest(raw)!=record['image_sha256']:
             raise ValueError('Rendered figure image differs: '+source)
+        if PurePosixPath(source).suffix.lower()=='.png' and record['image_sha256']!=record['source_sha256']:
+            raise ValueError('Retained PNG publication must be byte-identical: '+source)
         validate_encoding(reader.site.root,record,directory)
         assets[source]=record
     used=[]
@@ -120,8 +122,18 @@ def image(reader,config,spec,assets,name,page):
     target.parent.mkdir(parents=True,exist_ok=True)
     target.write_bytes(raw)
     width,height=dimensions(raw,record['image'])
-    reader.images[source]=dict(width=width,height=height,repository_path='website/'+record['image'],
+    publication=dict(width=width,height=height,repository_path='website/'+record['image'],
         file_url=record['image'],size=len(raw),sha256=digest(raw),
         git_blob_sha1=hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest(),
         source=source,source_sha256=record['source_sha256'])
+    if PurePosixPath(source).suffix.lower()=='.png':
+        # The unchanged PNG is both the retained original and its browser asset.
+        # Record both identities so the final audit can bind the publication to
+        # an independently declared retained image, as it does for source PDFs.
+        original={**reader.owned[source],**{k:v for k,v in publication.items() if k not in {'source','source_sha256'}}}
+        original['repository_path']=source
+        reader.images[source]=original
+        reader.images[record['image']]=publication
+    else:
+        reader.images[source]=publication
     return source,reader.site.rel(record['image'],page),record['source_sha256']

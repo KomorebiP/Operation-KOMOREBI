@@ -232,6 +232,16 @@ def check_readable_chapter(root, documents, pages):
     return count
 
 
+def check_image_sources(documents):
+    """Bind figure publications to retained document or original image records."""
+    sources={r['repository_path']:r for r in documents['files']}
+    sources.update({r['repository_path']:r for r in documents.get('images',[]) if not r.get('source')})
+    for record in documents.get('images',[]):
+        if record.get('source'):
+            assert record['source'] in sources, ('Missing retained figure source',record['source'])
+            assert sources[record['source']]['sha256']==record['source_sha256'],record['source']
+
+
 def inspect_site(root, *, compact_html=False, delivery_artifacts=None):
     files={p.relative_to(root).as_posix() for p in root.rglob('*') if p.is_file()}
     from jspace_lab import APP_URL as JSPACE_APP_URL, verify as verify_jspace_lab
@@ -386,9 +396,7 @@ def inspect_site(root, *, compact_html=False, delivery_artifacts=None):
         raw=(root/record['file_url']).read_bytes()
         assert len(raw)==record['size'] and hashlib.sha256(raw).hexdigest()==record['sha256'],record['repository_path']
         assert hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest()==record['git_blob_sha1']
-        if record.get('source'):
-            sources={r['repository_path']:r for r in documents['files']}
-            assert sources[record['source']]['sha256']==record['source_sha256']
+    check_image_sources(documents)
     readable_math = check_readable_chapter(root,documents,pages)
     from paper_ix_reading import verify_bibliography as verify_paper_ix_bibliography
     verify_paper_ix_bibliography(root,documents,pages)
