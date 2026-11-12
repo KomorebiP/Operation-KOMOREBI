@@ -303,6 +303,7 @@ class Site:
         return posixpath.relpath(target,posixpath.dirname(page) or '.')
     def page(self,path,title,body,source=None):
         esc=html.escape
+        from smith_chart_unified import ALIASES as smith_aliases
         from reading_list import enhance, saveable
         body=enhance(self,path,title,body)
         reading_list_assets=''
@@ -338,7 +339,7 @@ class Site:
         article_start=body.find('<article id="chapter-text"')
         side_context=body[:article_start] if edition(path) and article_start>=0 else body
         has_side_action=('class="side-launch"' in side_context) if edition(path) else ('data-side-reader-link' in side_context)
-        if not work_page and not has_side_action and path not in {'side-by-side.html','index.html','404.html','sitemap.html','interactive.html','signal-lab.html','smith-chart.html','special-functions-lab.html','recovery-lab.html','j-lab.html','works.html','reading-list.html','lean/playground.html','lean/run.html','read/visual-guides.html'}:
+        if not work_page and not has_side_action and path not in smith_aliases and path not in {'side-by-side.html','index.html','404.html','sitemap.html','interactive.html','signal-lab.html','smith-chart.html','special-functions-lab.html','recovery-lab.html','j-lab.html','works.html','reading-list.html','lean/playground.html','lean/run.html','read/visual-guides.html'}:
             pair=self.rel('side-by-side.html',path)+'?left='+quote(path,safe='')
             launch='<p class="side-launch"><a data-side-reader-link href="'+esc(pair,quote=True)+'">Read side by side</a></p>'
             body=re.sub(r'(</h1>)',lambda match:match[1]+launch,body,count=1)
@@ -403,6 +404,10 @@ class Site:
             for p in ('README.md','LICENSE.md','CONTRIBUTING.md','SUPPORT.md'):
                 if (root/p).is_file():self.documents[(key,p)]=(root/p).read_text(encoding='utf-8')
     def resolve(self,repo,path,page,target,is_image=False):
+        from smith_chart_unified import canonical_target as smith_target
+        def reader_target(destination,fragment=''):
+            destination,fragment=smith_target(destination,fragment)
+            return self.rel(destination,page)+('#'+fragment if fragment else '')
         parts=urlsplit(html.unescape(target))
         if parts.scheme or parts.netloc:
             # Keep cross-repository documentation within the public reading site.
@@ -412,19 +417,20 @@ class Site:
                     if target.startswith(prefix):
                         relative=unquote(parts.path.split('/blob/'+revision+'/',1)[1])
                         if (key,relative) in self.documents:
-                            return self.rel(document_url(key,relative),page)+('#'+parts.fragment if parts.fragment else '')
+                            return reader_target(document_url(key,relative),parts.fragment)
                         if key=='collection' and not is_image:
                             local=self.reader.resolve(relative,page,parts.fragment)
                             if local:return local
             base=urlsplit(BASE_URL)
             if parts.scheme in {'http','https'} and parts.netloc.lower()==base.netloc.lower() and parts.path.startswith(base.path):
-                return self.rel(parts.path[len(base.path):] or 'index.html',page)+('?'+parts.query if parts.query else '')+('#'+parts.fragment if parts.fragment else '')
+                destination,fragment=smith_target(parts.path[len(base.path):] or 'index.html',parts.fragment)
+                return self.rel(destination,page)+('?'+parts.query if parts.query else '')+('#'+fragment if fragment else '')
             return target
         resolved=posixpath.normpath(posixpath.join(posixpath.dirname(path),unquote(parts.path))) if parts.path else path
         if resolved.startswith('../') or resolved.startswith('/'):
             return github(self.repos[repo],self.revisions[repo],resolved.lstrip('/'))
         if (repo,resolved) in self.documents:
-            return self.rel(document_url(repo,resolved),page)+('#'+parts.fragment if parts.fragment else '')
+            return reader_target(document_url(repo,resolved),parts.fragment)
         if repo == 'collection':
             for edition in getattr(self,'editorial_editions',{}).values():
                 if resolved == edition['pdf_source']:
@@ -462,6 +468,10 @@ class Site:
         import markdown
         for (repo,path),text in self.documents.items():
             page=document_url(repo,path)
+            from smith_chart_unified import ALIASES as smith_aliases, publish_redirect as smith_redirect
+            if repo == 'collection' and page in smith_aliases:
+                smith_redirect(self,page,smith_aliases[page])
+                continue
             rendered=markdown.markdown(text,extensions=['tables','fenced_code','toc','pymdownx.arithmatex'],extension_configs={'toc':{'slugify':slugify},'pymdownx.arithmatex':{'generic':True}})
             rendered=math_fences(rendered)
             rewrite=Rewriter(lambda target,image:self.resolve(repo,path,page,target,image))

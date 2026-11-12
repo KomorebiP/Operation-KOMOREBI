@@ -32,10 +32,23 @@ async function run() {
           mobileFigures: [...document.querySelectorAll('.research-figure img')].filter(img => img.currentSrc.includes('.mobile.svg')).length,
           mathReady: document.documentElement.dataset.mathReady,
           mathErrors: document.querySelectorAll('mjx-merror').length,
+          unrendered: [...document.querySelectorAll('.arithmatex')].filter(el => !el.querySelector('mjx-container')).length,
+          equations: document.querySelectorAll('.arithmatex').length,
+          headings: document.querySelectorAll('h1').length,
+          articles: document.querySelectorAll('article').length,
+          rawTex: (() => {
+            const walker = document.createTreeWalker(document.querySelector('article'), NodeFilter.SHOW_TEXT);
+            const raw = [];
+            while (walker.nextNode()) {
+              const node = walker.currentNode;
+              if (!node.parentElement.closest('mjx-container,.arithmatex,code,pre') && /\\[([]|\\(?:frac|boxed|mathbb)\b/.test(node.textContent)) raw.push(node.textContent.slice(0,100));
+            }
+            return raw;
+          })(),
           touchHeight: Math.min(...[...document.querySelectorAll('.research-actions a, .research-actions button, .figure-open')]
             .map(element => element.getBoundingClientRect().height).filter(height => height > 0)),
         }));
-        if (layout.width > layout.viewport || layout.figures !== 42 || layout.vectorFigures !== 42 || layout.originalLinks !== 42 || layout.mobileFigures !== (name === 'desktop' ? 0 : 12) || layout.mathReady !== 'true' || layout.mathErrors || layout.touchHeight < 44) {
+        if (layout.width > layout.viewport || layout.figures !== 45 || layout.vectorFigures !== 45 || layout.originalLinks !== 45 || layout.mobileFigures !== (name === 'desktop' ? 0 : 12) || layout.mathReady !== 'true' || layout.mathErrors || layout.unrendered || layout.rawTex.length || layout.equations !== 2528 || layout.headings !== 1 || layout.articles !== 1 || layout.touchHeight < 44) {
           throw new Error('Reading layout, images, mathematics, or touch controls failed: ' + JSON.stringify(layout));
         }
         const figure = page.locator('#figure-2 .figure-open');
@@ -66,6 +79,23 @@ async function run() {
         await page.locator('.research-contents-jump').focus();
         await page.keyboard.press('Enter');
         if (!await page.locator('#contents').evaluate(element => element.open)) throw new Error('Contents control did not open');
+        for (const anchor of ['six-state-invariants', 'companion-guide']) {
+          await page.locator('.research-contents-jump').focus();
+          await page.keyboard.press('Enter');
+          const link = page.locator('#contents a[href="#' + anchor + '"]').first();
+          await link.focus();
+          await page.keyboard.press('Enter');
+          if (!await page.locator('#' + anchor).evaluate(el => {
+            for (let parent = el.parentElement; parent; parent = parent.parentElement) {
+              if (parent.tagName === 'DETAILS' && !parent.open) return false;
+            }
+            return true;
+          })) throw new Error('Contents did not reveal retained source section: ' + anchor);
+        }
+        if (process.env.SMITH_QA_DIR) {
+          await page.evaluate(() => scrollTo(0, 0));
+          await page.screenshot({path: process.env.SMITH_QA_DIR + '/' + name + '.png'});
+        }
         await page.evaluate(() => { document.documentElement.style.fontSize = '125%'; });
         await page.evaluate(() => document.fonts.ready);
         await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
@@ -86,27 +116,29 @@ async function run() {
         contents: getComputedStyle(document.querySelector('.research-contents-jump')).visibility,
         figureControls: getComputedStyle(document.querySelector('.figure-actions')).display,
       }));
-      if (result.width > result.viewport || result.figures !== 42 || result.contents !== 'visible' || result.figureControls !== 'none') {
+      if (result.width > result.viewport || result.figures !== 45 || result.contents !== 'visible' || result.figureControls !== 'none') {
         throw new Error('No-JavaScript reading failed: ' + JSON.stringify(result));
       }
       console.log(JSON.stringify({ name: 'no-javascript', ...result }));
     } finally {
       await noScript.close();
     }
-    for (const name of ['SMITH_FIRST_ORDER_RL', 'SMITH_SINGULAR_COMPLETION']) {
+    for (const [name, anchor] of [['SMITH_FIRST_ORDER_RL','one-inductor'], ['SMITH_SINGULAR_COMPLETION','singular-completion']]) {
     const supplement = await browser.newPage({ viewport: { width: 320, height: 800 } });
     try {
       const target = new URL('../../collection/demonstrations/' + name + '.html', url).href;
       const response = await supplement.goto(target, { waitUntil: 'load', timeout: 120000 });
       if (!response || response.status() !== 200) throw new Error('Circuit supplement did not load');
+      await supplement.waitForURL('**/research.html#' + anchor, {timeout: 120000});
       await supplement.waitForFunction(() => window.MathJax?.startup?.promise, null, { timeout: 60000 });
       await supplement.evaluate(() => MathJax.startup.promise);
       const result = await supplement.evaluate(() => ({
         width: document.documentElement.scrollWidth, viewport: innerWidth,
         diagram: document.querySelector('article img')?.naturalWidth || 0,
         mathErrors: document.querySelectorAll('article mjx-merror').length,
+        anchor: !!document.getElementById(location.hash.slice(1)),
       }));
-      if (result.width > result.viewport || !result.diagram || result.mathErrors) throw new Error('Circuit supplement failed: ' + JSON.stringify(result));
+      if (result.width > result.viewport || !result.diagram || !result.anchor || result.mathErrors) throw new Error('Circuit supplement failed: ' + JSON.stringify(result));
       console.log(JSON.stringify({ name, ...result }));
     } finally {
       await supplement.close();

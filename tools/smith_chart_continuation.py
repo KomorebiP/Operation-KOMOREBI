@@ -85,7 +85,7 @@ def chapter_body(site, manifest, files, chapter):
     rewrite.feed(rendered)
     content = ''.join(rewrite.out)
     table_class = 'table-wrap numeric-table' if chapter['slug'] == 'exact-six' else 'table-wrap'
-    content = re.sub(r'<table>.*?</table>', lambda m: '<div class="' + table_class + '" tabindex="0" role="region" aria-label="Scrollable data table">' + m[0] + '</div>', content, flags=re.S)
+    content = content.replace('class="table-scroll"','class="'+table_class+'"')
     if chapter['slug'] == 'exact-six':
         diagram = site.rel(directory + '/figures/topology.svg', page)
         content = re.sub(r'(<img\b[^>]+>)', lambda m: m[1] +
@@ -121,17 +121,7 @@ def publish(site):
             target = directory / member
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(raw)
-    hub = render((site.root / BASE / 'READING.md').read_text(encoding='utf-8'))
-    hub = re.sub(r'<table>.*?</table>', lambda m: '<div class="table-wrap" tabindex="0" role="region" aria-label="Scrollable evidence table">' + m[0] + '</div>', hub, flags=re.S)
-    hub = re.sub(r'(</h1>)', lambda m: m[1] + page_contents(hub), hub, count=1)
-    body = decorate_supplement(site, PAGE, '<article>' + hub + '</article>')
-    source = 'https://github.com/KomorebiP/Operation-KOMOREBI/blob/' + site.revision + '/' + BASE
-    site.page(PAGE, 'Smith chart: RLC continuation and exact six-reactive closure', body, source)
-    site.search.append(dict(title='Smith chart: RLC continuation and exact six-reactive closure', group='Collection', kind='Examples',
-        url=PAGE, work_ids=[], text=html.unescape(re.sub('<[^>]*>', ' ', hub))))
-    for chapter in manifest['chapters']:
-        page = 'read/smith-chart/' + chapter['slug'] + '.html'
-        body = chapter_body(site, manifest, files, chapter)
-        site.page(page, chapter['title'], body, raw_url(site.revision, BASE + '/archives/' + chapter['archive']))
-        site.search.append(dict(title=chapter['title'], group='Collection', kind='Examples', url=page, work_ids=[],
-            text=html.unescape(re.sub('<[^>]*>', ' ', body))[:50000]))
+    from smith_chart_unified import ALIASES, publish_redirect, publish_sources
+    for page, anchor in ALIASES.items():
+        publish_redirect(site,page,anchor)
+    publish_sources(site)

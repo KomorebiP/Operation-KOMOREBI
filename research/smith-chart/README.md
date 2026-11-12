@@ -1,10 +1,11 @@
 # Smith chart research archive and reading
 
-**Current status, 12 November 2026:** the supplied continuation closes the
-original target with an exact six-reactive transformer-free witness and matching
-degree lower bound. Read the [current source record](continuation/README.md) and
-[online continuation](https://komorebip.github.io/Operation-KOMOREBI/read/smith-chart/continuation.html).
-Open-status statements in this earlier record and the retained archive are historical.
+**Current edition, 12 November 2026:** the [unified research reading](https://komorebip.github.io/Operation-KOMOREBI/read/smith-chart/research.html)
+contains the exact-six closure, current construction and lower-bound chapters,
+deterministic family synthesis, selected Lean supplements and research history.
+Read the [current source and replay record](unified/README.md). Former continuation
+and supplement URLs now lead into this one article. Open-status statements in
+the earlier records and retained archive are historical.
 
 The retained `SmithChart_Complete.zip` is the 172-file research package supplied
 for this reading, dated 11 November 2026. Its SHA-256 is

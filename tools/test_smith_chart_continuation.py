@@ -27,11 +27,16 @@ class TestSite:
     def rel(self, target, page):
         return posixpath.relpath(target, posixpath.dirname(page))
 
-    def page(self, page, title, body, source):
+    def page(self, page, title, body, source=None):
         self.pages[page] = body
         target = self.output / page
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(body, encoding='utf-8')
+
+    def write(self, page, text):
+        target = self.output/page
+        target.parent.mkdir(parents=True,exist_ok=True)
+        target.write_text(text,encoding='utf-8')
 
 
 class SmithContinuationTests(unittest.TestCase):
@@ -85,13 +90,14 @@ class SmithContinuationTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             site = TestSite(directory)
             continuation.publish(site)
-            self.assertEqual(len(site.pages), 7)
-            self.assertEqual(len(site.search), 7)
+            self.assertEqual(len(site.pages), 10)
+            self.assertEqual(len(site.search), 0)
+            self.assertTrue(all('data-book-target' in body for body in site.pages.values()))
             for archive, members in self.files.items():
                 prefix = site.output / continuation.source_directory(self.manifest, archive)
                 for member, raw in members.items():
                     self.assertEqual((prefix / member).read_bytes(), raw)
-            shared = {'read/smith-chart/research.html', 'smith-chart.html', 'collection/demonstrations/SMITH_CHART.html', 'assets/smith-research.css'}
+            shared = {'read/smith-chart/research.html', 'smith-chart.html', 'collection/demonstrations/SMITH_CHART.html', 'assets/smith-research.css', 'assets/smith-book-redirect.js'}
             for page, body in site.pages.items():
                 ids = re.findall(r'\bid="([^"]+)"', body)
                 self.assertEqual(len(ids), len(set(ids)), page)

@@ -1,6 +1,17 @@
 /* Author: Komorebi P. Local reading controls. */
 (() => {
   const contents = document.getElementById('contents');
+  const revealTarget = hash => {
+    let id;
+    try { id = decodeURIComponent(hash.replace(/^#/, '')); } catch { return null; }
+    const target = document.getElementById(id);
+    for (let parent = target?.parentElement; parent; parent = parent.parentElement) {
+      if (parent.tagName === 'DETAILS') parent.open = true;
+    }
+    return target;
+  };
+  document.querySelectorAll('a[href^="#"]').forEach(link => link.addEventListener('click', () => revealTarget(link.hash)));
+  addEventListener('hashchange', () => revealTarget(location.hash));
   const media = matchMedia('(max-width: 820px)');
   const setContents = () => { contents.open = !media.matches; };
   setContents();
@@ -89,7 +100,7 @@
   const ready = () => {
     document.documentElement.dataset.mathReady = 'true';
     updateProgress();
-    if (location.hash) document.getElementById(decodeURIComponent(location.hash.slice(1)))?.scrollIntoView();
+    if (location.hash) revealTarget(location.hash)?.scrollIntoView();
   };
   if (window.MathJax?.startup?.promise) MathJax.startup.promise.then(ready).catch(() => {
     document.documentElement.dataset.mathReady = 'error';

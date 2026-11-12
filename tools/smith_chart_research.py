@@ -69,7 +69,7 @@ def archive_contents(root):
     return files
 
 
-def reading_body(root, revision):
+def historical_body(root, revision):
     files = archive_contents(root)
     from smith_chart_edition import load, edit_prose
     figure_edition, prose = load(root, files, HTML_NAME)
@@ -194,17 +194,32 @@ def reading_body(root, revision):
             '<a class="research-contents-jump" href="#contents">↑ Contents</a></div>')
 
 
+def reading_body(root, revision, site=None):
+    from smith_chart_unified import build
+    if site is None:
+        raise ValueError('The consolidated reading requires the site source resolver')
+    return build(site)
+
+
 def publish(site):
     revision = site.revision
-    body = reading_body(site.root, revision)
-    for name in ('smith-research.css', 'smith-research.js'):
+    from smith_chart_unified import TITLE
+    body = reading_body(site.root, revision, site)
+    for name in ('smith-research.css', 'smith-book.css', 'smith-research.js'):
         path = 'assets/' + name
         value = site.rel(path, PAGE) + '?v=' + sha256((site.root / 'website' / path).read_bytes())[:12]
         body = ('<link rel="stylesheet" href="' + value + '">' + body) if name.endswith('.css') else (body + '<script defer src="' + value + '"></script>')
-    site.page(PAGE, 'Smith chart: complete research reading', body,
-              'https://github.com/KomorebiP/Operation-KOMOREBI/blob/' + revision + '/' + ARCHIVE)
-    site.search.append(dict(title='Smith chart: complete research reading', group='Collection', kind='Examples',
-                            url=PAGE, work_ids=[], text='Smith chart cyclic packets passive completion historical seven reactive circuit exact six reactive closure minimum RLC synthesis continuation order separation infeasibility boundaries examples'))
+    site.page(PAGE, TITLE, body,
+              'https://github.com/KomorebiP/Operation-KOMOREBI/tree/' + revision + '/research/smith-chart/unified')
+    site.search.append(dict(title=TITLE, group='Collection', kind='Examples', url=PAGE, work_ids=[],
+        text='Smith chart exact six reactive closure deterministic certified family synthesis compact physical boundaries Hughes margin packet transfer'))
+    for slug in ('exact-six','composition','families','deterministic-family','obstruction','quantitative-transfer','effective-margin','compact-model-audit','singular-completion','one-inductor','companion-guide'):
+        marker = re.search(r'<h2 id="'+slug+r'">(.*?)</h2>',body,re.S)
+        if marker:
+            end = re.search(r'<h2\b',body[marker.end():])
+            content = body[marker.end():marker.end()+end.start()] if end else body[marker.end():]
+            site.search.append(dict(title=re.sub('<[^>]+>','',marker[1]), group='Collection', kind='Examples',
+                url=PAGE+'#'+slug,work_ids=[],text=html.unescape(re.sub('<[^>]+>',' ',content))[:50000]))
 
 
 def decorate_supplement(site, page, body):
