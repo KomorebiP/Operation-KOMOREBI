@@ -153,6 +153,9 @@ def check_readable_chapter(root, documents, pages):
         elif BOOKS[spec['work']].get('custom_reader')=='machine_native_reasoning':
             from machine_native_reasoning_reading import source_math
             expressions=source_math(raw.decode('utf-8-sig'),spec)
+        elif BOOKS[spec['work']].get('custom_reader')=='physics':
+            from physics_reading import source_math
+            expressions=source_math(raw.decode('utf-8-sig'),spec)
         elif BOOKS[spec['work']].get('custom_reader')=='methodology':
             from methodology_reading import source_math
             expressions=source_math(raw.decode('utf-8-sig'),spec)
@@ -192,6 +195,9 @@ def check_readable_chapter(root, documents, pages):
         elif BOOKS[spec['work']].get('custom_reader')=='quantum':
             from quantum_reading import source_macros
             expected_macros=source_macros(lambda path:(root/records[path]['file_url']).read_text(encoding='utf-8-sig'),spec)
+        elif BOOKS[spec['work']].get('custom_reader')=='physics':
+            from physics_reading import source_macros
+            expected_macros=source_macros(lambda path:(root/records[path]['file_url']).read_text(encoding='utf-8-sig'))
         elif BOOKS[spec['work']].get('custom_reader')=='kcos':
             from kcos_reading import source_macros
             expected_macros=source_macros((root/records[macro_source]['file_url']).read_text(encoding='utf-8-sig'))

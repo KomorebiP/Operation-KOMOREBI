@@ -198,6 +198,9 @@ CHAPTERS += MACHINE_NATIVE_CHAPTERS
 from kcos_reading import BOOK as KCOS_BOOK, CHAPTERS as KCOS_CHAPTERS
 BOOKS[KCOS_BOOK['work']] = KCOS_BOOK
 CHAPTERS += KCOS_CHAPTERS
+from physics_reading import BOOK as PHYSICS_BOOK, CHAPTERS as PHYSICS_CHAPTERS
+BOOKS[PHYSICS_BOOK['work']] = PHYSICS_BOOK
+CHAPTERS += PHYSICS_CHAPTERS
 # One full chapter menu per page; footers keep direct reading routes.
 for _book in BOOKS.values():
     _book['footer_index_only']=True
@@ -890,6 +893,8 @@ def prepare(reader):
                 from large_signal_reading import prepare_book
             elif config['custom_reader'] == 'machine_native_reasoning':
                 from machine_native_reasoning_reading import prepare_book
+            elif config['custom_reader'] == 'physics':
+                from physics_reading import prepare_book
             elif config['custom_reader'] == 'methodology':
                 from methodology_reading import prepare_book
             elif config['custom_reader'] == 'foundational':
@@ -1443,6 +1448,9 @@ def render_book(reader,book):
         elif config.get('custom_reader')=='machine_native_reasoning':
             from machine_native_reasoning_reading import source_math
             expressions=source_math(raw.decode('utf-8-sig'),spec)
+        elif config.get('custom_reader')=='physics':
+            from physics_reading import source_math
+            expressions=source_math(raw.decode('utf-8-sig'),spec)
         elif config.get('custom_reader')=='methodology':
             from methodology_reading import source_math
             expressions=source_math(raw.decode('utf-8-sig'),spec)
@@ -1510,6 +1518,9 @@ def render_book_index(reader,book,reports):
     for anchor in config.get('contents_anchors',[]):body+='<span id="'+html.escape(anchor,quote=True)+'"></span>'
     body+='<nav class="chapter-contents reading-contents-index" aria-label="'+label+' chapters"><h2>Contents</h2>'
     body+=contents_list(config,page)+'</nav>'
+    if config.get('custom_reader')=='physics':
+        from physics_reading import full_book_routes
+        body+=full_book_routes(reader,book,page)
     for collected in config.get('collected_parts',[]):
         body+='<p><a href="'+site.rel(collected['url'],page)+'">'+html.escape(collected['title'])+'</a></p>'
     if config.get('continuation_sources'):
