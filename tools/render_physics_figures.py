@@ -14,7 +14,7 @@ def main():
     import pypdfium2 as pdfium
     from readable_chapters import group
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--treatment', choices=('foundations', 'dirac', 'generator', 'gauge'), default='foundations')
+    parser.add_argument('--treatment', choices=('foundations', 'dirac', 'generator', 'gauge', 'gravity'), default='foundations')
     treatment = parser.parse_args().treatment
     if treatment == 'generator':
         from PIL import Image
@@ -52,6 +52,9 @@ def main():
     if treatment == 'gauge':
         inputs = ['gauge/core.tex', 'gauge/refinement.tex']
         command, directory, output, expected = 'gaugefigure', 'gauge_figures', 'assets/figures/physics-gauge/', 12
+    if treatment == 'gravity':
+        inputs = ['gravity/core.tex', 'gravity/constraints.tex', 'gravity/strong_fields.tex']
+        command, directory, output, expected = 'gravityfigure', 'gravity_figures', 'assets/figures/physics-gravity/', 8
     records = []
     for name in inputs:
         text = (ROOT/BASE/name).read_text(encoding='utf-8')
