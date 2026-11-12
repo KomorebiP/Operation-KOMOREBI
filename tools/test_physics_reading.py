@@ -72,7 +72,8 @@ class PhysicsReadingTests(unittest.TestCase):
     def test_sources_are_complete_in_order_and_fail_closed(self):
         load = lambda path: (ROOT/path).read_text(encoding='utf-8-sig')
         self.assertEqual(source_specs(load), CHAPTERS)
-        self.assertEqual(len(CHAPTERS), 19)
+        self.assertEqual(len(CHAPTERS), 47)
+        self.assertEqual(sum(spec['treatment']=='dirac' for spec in CHAPTERS), 28)
         for path in DATA['source_sha256']:
             with self.assertRaisesRegex(ValueError, 'changed Physics source'):
                 source_specs(lambda p: load(p)+('changed' if p == path else ''))
@@ -89,6 +90,9 @@ class PhysicsReadingTests(unittest.TestCase):
         altered[1]['start_line'] += 1
         with patch('physics_reading.CHAPTERS', altered), self.assertRaisesRegex(ValueError, 'gap or overlap'):
             source_specs(load)
+        reordered = CHAPTERS[19:] + CHAPTERS[:19]
+        with patch('physics_reading.CHAPTERS', reordered), self.assertRaisesRegex(ValueError, 'reading order'):
+            source_specs(load)
 
     def test_publication_equations_numbering_figures_proofs_and_routes(self):
         with tempfile.TemporaryDirectory() as folder:
@@ -98,29 +102,43 @@ class PhysicsReadingTests(unittest.TestCase):
             documents = dict(files=list(reader.records.values()), images=list(reader.images.values()))
             with patch.object(reading, 'BOOKS', {WORK: BOOK}), patch.object(reading, 'CHAPTERS', CHAPTERS):
                 count = check_readable_chapter(output, documents, pages)
-            self.assertEqual(count, 638)
+            self.assertEqual(count, 1247)
             book = reader.readable_books[WORK]
             nodes = [node for _, _, chapter in book['chapters'] for node in chapter.nodes]
-            self.assertEqual([n['number'] for n in nodes if n['kind']=='section' and n['number']], list(map(str, range(1, 17))))
-            self.assertEqual([n['number'] for n in nodes if n['kind']=='figure'], list(map(str, range(1, 11))))
+            for treatment, sections in [('foundations', 16), ('dirac', 25)]:
+                selected = [n for s, _, c in book['chapters'] if s['treatment']==treatment for n in c.nodes]
+                self.assertEqual([n['number'] for n in selected if n['kind']=='section' and n['number']], list(map(str, range(1, sections+1))))
+                self.assertEqual(sum(n['kind']=='proof' for n in selected), 15 if treatment=='foundations' else 18)
+                self.assertEqual([n['number'] for n in selected if n['kind']=='figure'], list(map(str, range(1, 11))) if treatment=='foundations' else ['']*6)
+            self.assertEqual([n['number'] for n in nodes if n['number'].startswith('PH')], ['PH'+str(i).zfill(2) for i in range(1, 13)])
+            for title, number in [('Self-adjoint maximal multiplier', '17.1'),
+                                  ('Weighted domain and mass independence', '19.1'),
+                                  ('Physical torus Hamiltonian', '21.1')]:
+                self.assertEqual(next(n['number'] for n in nodes if n['title']==title), number)
             proofs = sum(n['kind']=='proof' for n in nodes)
-            self.assertEqual(proofs, 15)
+            self.assertEqual(proofs, 33)
             self.assertEqual(proofs, sum(len(c.proof_pairs) for _, _, c in book['chapters']))
             self.assertEqual(book['chapters'][0][2].equation_numbers['f:atlas-relations'], '1')
             self.assertEqual(book['chapters'][0][2].labels['f:parseval']['number'], '1.2')
-            self.assertEqual(len(reader.images), 10)
+            self.assertEqual(len(reader.images), 16)
+            self.assertEqual(len(book['references']), 6)
             for spec in CHAPTERS:
                 page = pages[spec['url']]
                 self.assertEqual((page.h1, page.main, page.images_without_alt), (1, 1, 0))
                 self.assertEqual(len(page.ids), len(set(page.ids)))
                 markup = (output/spec['url']).read_text(encoding='utf-8')
                 self.assertIn('reading-text-size', markup)
-                self.assertNotRegex(markup, r'\\(?:foundationfigure|sourcepointer|endhead|addcontentsline)')
-            refs = (output/BOOK['bib_page']).read_text(encoding='utf-8')
+                self.assertNotRegex(markup, r'\\(?:foundationfigure|atlasfigure|sourcepointer|endhead|addcontentsline|needspace|hypertarget)')
+            refs = (output/CHAPTERS[18]['url']).read_text(encoding='utf-8')
             for label in ['P1', 'P4', 'C1', 'C3']:
                 self.assertIn('['+label+']', refs)
+            dirac_refs = (output/BOOK['bib_page']).read_text(encoding='utf-8')
+            self.assertIn('Seydaoğlu', dirac_refs)
+            self.assertIn('Schrödinger', dirac_refs)
+            for entry in book['references']:
+                self.assertIn('ref-'+entry['key'], pages[BOOK['bib_page']].ids)
             index = (output/BOOK['index']).read_text(encoding='utf-8')
-            self.assertIn('opening HTML installment', index)
+            self.assertIn('opening HTML installments', index)
             self.assertIn('572-page', index)
             self.assertIn('adds no proof audit', index)
             destinations = [int(urlsplit(link).fragment.removeprefix('page=')) for link in pages[BOOK['index']].links

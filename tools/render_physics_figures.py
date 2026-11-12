@@ -1,4 +1,5 @@
-"""Render the retained foundations PDFs with source and image identity receipts."""
+"""Render retained Physics PDFs with source and image identity receipts."""
+import argparse
 import hashlib
 import json
 from pathlib import Path
@@ -12,12 +13,21 @@ OUTPUT = 'assets/figures/physics-foundations/'
 def main():
     import pypdfium2 as pdfium
     from readable_chapters import group
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--treatment', choices=('foundations', 'dirac'), default='foundations')
+    treatment = parser.parse_args().treatment
+    inputs = (['foundations/'+name+'.tex' for name in ('orientation', 'core', 'refinement', 'extensions', 'conclusion', 'references')]
+              if treatment=='foundations' else ['chapters/finite_core.tex', 'chapters/continuum.tex'])
+    command = 'foundationfigure' if treatment=='foundations' else 'atlasfigure'
+    directory = 'foundation_figures' if treatment=='foundations' else 'figures'
+    output = OUTPUT if treatment=='foundations' else 'assets/figures/physics-dirac/'
+    expected = 10 if treatment=='foundations' else 6
     records = []
-    for name in ('orientation', 'core', 'refinement', 'extensions', 'conclusion', 'references'):
-        text = (ROOT/BASE/'foundations'/f'{name}.tex').read_text(encoding='utf-8')
-        for match in re.finditer(r'\\foundationfigure(?:\[[^\]]+\])?\{([^{}]+)\}', text):
+    for name in inputs:
+        text = (ROOT/BASE/name).read_text(encoding='utf-8')
+        for match in re.finditer(r'\\'+command+r'(?:\[[^\]]+\])?\{([^{}]+)\}', text):
             caption, _ = group(text, match.end())
-            source = BASE+'foundation_figures/'+match[1]+'.pdf'
+            source = BASE+directory+'/'+match[1]+'.pdf'
             raw = (ROOT/source).read_bytes()
             document = pdfium.PdfDocument(raw)
             if len(document) != 1:
@@ -25,17 +35,17 @@ def main():
             page = document[0]
             bitmap = page.render(scale=2.5)
             image = bitmap.to_pil()
-            target = ROOT/'website'/OUTPUT/(match[1]+'.png')
+            target = ROOT/'website'/output/(match[1]+'.png')
             target.parent.mkdir(parents=True, exist_ok=True)
             image.save(target)
             records.append(dict(source=source,source_sha256=hashlib.sha256(raw).hexdigest(),
-                image=OUTPUT+target.name,image_sha256=hashlib.sha256(target.read_bytes()).hexdigest(),
+                image=output+target.name,image_sha256=hashlib.sha256(target.read_bytes()).hexdigest(),
                 width=image.width,height=image.height,scale=2.5,caption=caption))
             image.close(); bitmap.close(); page.close(); document.close()
-    if len(records) != 10 or len({r['source'] for r in records}) != 10:
-        raise ValueError('Review Physics foundations figure inventory')
-    (ROOT/'website'/OUTPUT/'figures.json').write_text(json.dumps(dict(figures=records),ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
-    print('Rendered ten original Physics foundations figures.')
+    if len(records) != expected or len({r['source'] for r in records}) != expected:
+        raise ValueError('Review Physics figure inventory: '+treatment)
+    (ROOT/'website'/output/'figures.json').write_text(json.dumps(dict(figures=records),ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
+    print('Rendered '+str(expected)+' original Physics '+treatment+' figures.')
 
 
 if __name__ == '__main__':
