@@ -14,9 +14,9 @@ are part of this reading, together with the constructive and lower-bound work.
 | [Deterministic construction](#deterministic-family) | Exact recognition and replayable certificates for rational members; the implementation covers degrees three through sixteen within its stated resource limits. |
 | [Hughes margin and transferred families](#effective-margin) | The written explicit margin $2^{-2^{803}}$ and the degree-$4k$, reactive-$7k$ deductions. |
 | [Audit of the universal argument](#compact-model-audit) | The resistor reduction, physical boundaries, sample identity and external theorem hypotheses have received a fresh project self-review. Independent or formal verification remains separate. |
-| [Selected formal graph core](#formal-graph-core) | Twenty-five selected Lean theorem audits for conservation, contraction, port power, Stieltjes shape and exact margin implications; whole-chain formalization remains open. |
-| [Usable typed margins and mixed reduction](#typed-margins) | Explicit bounds for all RC-only and RL-only networks; direct-terminal-L/arbitrary-RC and direct-terminal-C/arbitrary-RL classes have exact rational refutations at margins $1/1000$ and $1/100000$. Their union covers 119 canonical mixed representatives; 2,011 remain. |
-| [Component-tolerance theorem](#component-tolerances) | In ideal fixed RC/RL networks, one-percent component tolerances change reflection by at most $1/99$ at every positive real frequency. A mixed-LC counterexample explains the required restriction. |
+| [Selected formal graph core](#formal-graph-core) | Forty-one selected Lean theorem audits, including actual resistor-node elimination and mixed-loss contraction from KCL; whole-chain formalization remains open. |
+| [Usable typed margins and mixed reduction](#typed-margins) | Explicit bounds for all RC-only and RL-only networks; direct-terminal-L/arbitrary-RC and direct-terminal-C/arbitrary-RL classes have exact rational refutations at margins $1/1000$ and $1/100000$. A coefficient-box separator now covers every two-reactive network at margin $10^{-6}$. With the two shunt classes, 138 canonical mixed representatives are covered; 1,992 remain. |
+| [Component-tolerance theorem](#component-tolerances) | In ideal fixed RC/RL networks, one-percent component tolerances change reflection by at most $1/99$ at every positive real frequency. For mixed networks with dedicated positive series losses, an exact uncertainty disk now covers independent component errors over a specified band; a matched port with band ratio at most ten and one-percent errors reflects less than $1/385$ of incident power. |
 
 Read the foundations first if cyclic packets and reflection coordinates are new
 to you. The current synthesis arguments then lead from the exact-six circuit to
@@ -27,7 +27,7 @@ history section, rather than presented as competing current results.
 
 The model throughout the current RLC results is finite positive ordinary,
 uncoupled and transformer-free. Resistor minima for the original degree-six and
-higher-degree targets, mixed-RLC robustness and physical measurements,
+higher-degree targets, broader parasitic models and physical measurements,
 historical priority and a practical arbitrary-target minimum solver remain open.
 The older ideal-transformer construction has a different allowed component class.
 

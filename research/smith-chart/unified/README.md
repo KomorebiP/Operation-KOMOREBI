@@ -12,14 +12,20 @@ Search, sitemap and the two-pane catalogue present the canonical reading.
 
 ## Mathematical progress
 
-The systematic phase now adds complete first-order synthesis, global
-first-order resistor minima and the Hughes base's two-resistor minimum;
-positive rational RC/RL Cauer construction through degree fifteen; seventeen
-selected kernel-checked graph/shape statements; usable pure-type margins and
-one exact mixed-model refutation; and a uniform ideal RC/RL component-tolerance
-theorem. See `LOW_ORDER_SYNTHESIS.md`, `FORMAL_CORE.md`, `TYPED_MARGINS.md` and
-`TOLERANCE.md`. `PROGRAM.md` fixes the six remaining contracts and `STATE.json`
-is their single current status view. Classical overlap is recorded explicitly.
+The current phase adds a usable all-two-reactive separator at margin
+`1/1000000`, a dedicated-series-loss mixed-RLC uncertainty disk and an exact
+component-box consumer, and sixteen more selected formal statements. The total
+is forty-one selected theorem axiom audits. The two-reactive result closes the
+nineteen remaining budget-two representatives; 1,992 mixed budget-three/four
+representatives remain. These improvements supplement the complete first-order
+and capped RC/RL constructors and the earlier exact-six and family work.
+
+Read `TWO_REACTIVE_MARGIN.md`, `MIXED_LOSS_TOLERANCE.md` and
+`FORMAL_PROGRESS.md` for the new statements and their limits.
+`PHASE3_REVIEW.json` separates written proofs, classical source leaves, exact
+controls and selected Lean coverage. `PROGRAM.md` retains the six completion
+contracts; `STATE.json` is the single live status view. Established overlap is
+recorded explicitly in `SOURCE_AUDIT.json`.
 
 `DETERMINISTIC_FAMILY.md` proves and implements exact recognition of the specified
 uniformly certified cubic family and its endpoint lifts. This removes numerical
@@ -53,7 +59,7 @@ python -B replay.py
 
 This authenticates six retained authored checkpoints, replays the eleven
 portable predecessor commands in isolated copies, and runs the current exact
-family, boundary, synthesis/tolerance and topology checks. It writes a fresh
+family, boundary, synthesis/tolerance, topology, mixed-loss and coefficient-box checks. It writes a fresh
 result directory without changing retained archives.
 No network, numerical solver or optional package is needed. Python 3.11+ is the
 intended baseline; the current replay uses Python 3.12.14 on Windows.
@@ -81,7 +87,16 @@ certificates. The shunt-RLC rational refutation has a separate unchanged-kernel
 replay in the standard-library checks. No solver runtime or third-party PDF is
 included in the source archive.
 
-For actual formal replay, run `formal/replay_shunt_formal.py` (which also replays the core) and `formal/replay_cap_shunt_formal.py` with explicit `--lean`,
+For the mixed-loss example, use the same prefix as above:
+
+```text
+python -B research/smith-chart/unified/solver/loss_certificate.py research/smith-chart/unified/solver/loss_example.json --output loss-result.json
+python -B research/smith-chart/unified/solver/loss_certificate.py loss-result.json --verify
+```
+
+For actual formal replay, also run `formal/replay_loss_reduction.py`, which
+repeats and authenticates the original core before its new sixteen statements.
+For the earlier extensions, run `formal/replay_shunt_formal.py` (which also replays the core) and `formal/replay_cap_shunt_formal.py` with explicit `--lean`,
 `--mathlib`, `--git` and a fresh `--output` directory for each command. The dependency lock and
 compiler hash are the same pinned environment as the earlier Smith companions.
 The portable Python command checks its own declared computations; it does not

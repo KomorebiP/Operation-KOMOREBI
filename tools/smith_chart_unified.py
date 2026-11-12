@@ -59,10 +59,13 @@ def namespace(content, slug):
     return content
 
 
-def source_markdown(site, path, slug):
+def source_markdown(site, path, slug, append_paths=()):
     from build_reader_site import Rewriter
     from smith_chart_continuation import render
     text = (site.root/path).read_text(encoding='utf-8')
+    for extra in append_paths:
+        addition = (site.root/extra).read_text(encoding='utf-8')
+        text += '\n\n' + re.sub(r'^# ', '## ', addition, count=1)
     rewrite = Rewriter(lambda target,image:site.resolve('collection',path,PAGE,target,image))
     rewrite.feed(render(text))
     content = re.sub(r'<p>(?:<strong>)?Author:.*?</p>','', ''.join(rewrite.out),count=1,flags=re.S)
@@ -172,9 +175,12 @@ def build(site):
             for slug in ('obstruction','quantitative-transfer','effective-margin'):
                 assembled.append(chapter(site,manifest,files,next(c for c in manifest['chapters'] if c['slug']==slug)))
             assembled.append(source_markdown(site,BASE+'/COMPACT_MODEL_AUDIT.md','compact-model-audit'))
-            assembled.append(source_markdown(site,BASE+'/FORMAL_CORE.md','formal-graph-core'))
-            assembled.append(source_markdown(site,BASE+'/TYPED_MARGINS.md','typed-margins'))
-            assembled.append(source_markdown(site,BASE+'/TOLERANCE.md','component-tolerances'))
+            assembled.append(source_markdown(site,BASE+'/FORMAL_CORE.md','formal-graph-core',
+                (BASE+'/FORMAL_PROGRESS.md',)))
+            assembled.append(source_markdown(site,BASE+'/TYPED_MARGINS.md','typed-margins',
+                (BASE+'/TWO_REACTIVE_MARGIN.md',)))
+            assembled.append(source_markdown(site,BASE+'/TOLERANCE.md','component-tolerances',
+                (BASE+'/MIXED_LOSS_TOLERANCE.md',)))
         if identifier=='arbitrary-order-separation':
             assembled.append(source_markdown(site,'docs/demonstrations/SMITH_FIRST_ORDER_RL.md','one-inductor'))
     reference = source_markdown(site,'docs/demonstrations/SMITH_CHART.md','companion-guide')
@@ -189,10 +195,11 @@ def build(site):
         'questions and earlier status tables describe that stage of the work. The current exact minimum '
         'for the original target is six, proved by the later eight-node witness above.</p>'+old+'</details>')
     assembled.append('<h2 id="source-ledger">Sources, checks and remaining work</h2>'
-        '<p>The current written arguments have project self-review, and twenty-five selected finite-graph and '
-        'shape statements have kernel replay. Complete formal compactification and transfer, independent peer review, '
+        '<p>The current written arguments have project self-review, and forty-one selected finite-graph, '
+        'elimination, loss and shape statements have kernel replay. Complete formal compactification and transfer, independent peer review, '
         'a useful margin for the remaining mixed RLC models, arbitrary-target practical minimum synthesis, '
-        'higher-target resistor minima, mixed-network robustness and physical measurements remain open.</p>'
+        'higher-target resistor minima, broader parasitic models and physical measurements remain open. '
+        'The new two-reactive separator and dedicated-series-loss tolerance theorem close explicit subclasses.</p>'
         '<p><a href="../../downloads/smith-rlc-current-source.zip">Download the complete current source and checks</a> · '
         '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/tree/'+site.revision+'/'+BASE+'">'
         'Proof, computation and source-binding records</a>. The original checkpoint ZIPs and earlier Lean receipts '
