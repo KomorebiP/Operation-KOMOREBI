@@ -481,11 +481,9 @@ class Site:
             section={'collection':'Collection','math':'Komorebi Math','polyphase':'Polyphase Float'}[repo]
             content=''.join(rewrite.out)
             if repo=='collection' and path=='docs/GLOSSARY.md':
-                from glossary_reader import glossary_lookup, glossary_return_links
+                from glossary_reader import glossary_reader_page
                 glossary_config=json.loads((self.root/'manifests/reader-experience.json').read_bytes())
-                content=glossary_return_links(content,glossary_config)
-                lookup=glossary_lookup(glossary_config)
-                content=re.sub(r'(</h1>)',lambda m:m[1]+lookup,content,count=1)
+                content=glossary_reader_page(content,glossary_config)
             if repo=='collection' and path=='docs/operators/catalog/README.md':
                 from operator_catalog import load_catalog
                 from operator_catalog_reader import lookup_html, search_entries
@@ -506,10 +504,10 @@ class Site:
                 if pdf and not self.assessments[identifier].get('editorial_edition'):
                     link='<p><a href="'+self.rel(pdf['url'],page)+'">Read the written arguments in the PDF</a>. The manuscript source remains available below.</p>'
                     content=content.replace('<h2 id="written-proofs">Written proofs</h2>','<h2 id="written-proofs">Written proofs</h2>'+link)
-            else:
+            elif not (repo=='collection' and path=='docs/GLOSSARY.md'):
                 contents=page_contents(content)
                 content=re.sub(r'(</h1>)',lambda m:m[1]+contents,content,count=1)
-            article_class=' class="euler-example"' if is_euler else ''
+            article_class=' class="euler-example"' if is_euler else ' class="glossary-page"' if repo=='collection' and path=='docs/GLOSSARY.md' else ''
             body='<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="'+self.rel('index.html',page)+'">Home</a> / <a href="'+self.rel(repo+'/index.html',page)+'">'+section+'</a></nav><article'+article_class+'>'+content+'</article>'
             self.page(page,title,body,github(self.repos[repo],self.revisions[repo],path))
             plain=re.sub(r'<[^>]+>',' ',rendered)

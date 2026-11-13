@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 import unittest
 
-from glossary_reader import glossary_lookup, glossary_return_links, glossary_search_text
+from glossary_reader import glossary_lookup, glossary_return_links, glossary_search_text, glossary_reader_page
 from reader_experience import glossary_prose, load, render_glossary
 
 
@@ -32,11 +32,54 @@ class LookupHTML(HTMLParser):
             self.elements[attrs['id']] = attrs
         if 'data-glossary-entry' in attrs:
             self.entries.append(attrs)
-        if tag == 'a':
+        if tag == 'a' and 'href' in attrs:
             self.links.append(attrs['href'])
 
 
 class GlossaryLookupTests(unittest.TestCase):
+    def test_section_reader_retains_every_complete_entry_once(self):
+        import markdown
+        from collections import Counter
+        from build_reader_site import Rewriter, slugify
+        root = Path(__file__).resolve().parents[1]
+        config = load(root)
+        rendered = markdown.markdown(render_glossary(config), extensions=['tables', 'toc'],
+            extension_configs={'toc': {'slugify': slugify}})
+        rewrite = Rewriter(lambda target, image: target)
+        rewrite.feed(rendered)
+        original = ''.join(rewrite.out)
+        enhanced = glossary_reader_page(original, config)
+        class ReaderHTML(LookupHTML):
+            def __init__(self, source):
+                self.ids, self.panels, self.terms = [], [], []
+                super().__init__(source)
+            def handle_starttag(self, tag, attrs):
+                super().handle_starttag(tag, attrs)
+                attrs = dict(attrs)
+                if 'id' in attrs: self.ids.append(attrs['id'])
+                if 'data-glossary-panel' in attrs:
+                    self.panels.append(attrs)
+                if 'data-glossary-term' in attrs:
+                    self.terms.append(attrs)
+        parsed = ReaderHTML(enhanced)
+        self.assertTrue(all(count == 1 for count in Counter(parsed.ids).values()))
+        self.assertEqual([p['data-glossary-panel'] for p in parsed.panels], [s['id'] for s in config['glossary_sections']])
+        self.assertEqual({t['data-glossary-term'] for t in parsed.terms}, {t['id'] for t in config['glossary']})
+        self.assertEqual(len(parsed.terms), len(config['glossary']))
+        self.assertTrue(all('hidden' not in item for item in parsed.panels + parsed.terms), 'No-JavaScript and print reading retain the full reference')
+        for term in config['glossary']:
+            marker = '<p><a id="'+term['id']+'"></a></p>'
+            entry = original.split(marker, 1)[1]
+            import re
+            entry = re.split(r'<p><a id=|<h2\b', entry, maxsplit=1)[0]
+            # Wrapping and navigation do not rewrite any entry HTML.
+            self.assertIn(marker + entry, enhanced)
+        for key in ('glossary-controls', 'glossary-reading-controls'):
+            self.assertIn('hidden', parsed.elements[key])
+        self.assertIn('glossary-guide', parsed.elements)
+        self.assertIn('glossary-view-long', parsed.elements)
+        self.assertIn('glossary-view-slides', parsed.elements)
+
     def test_every_maintained_definition_has_its_original_anchor(self):
         root = Path(__file__).resolve().parents[1]
         config = json.loads((root/'manifests/reader-experience.json').read_bytes())

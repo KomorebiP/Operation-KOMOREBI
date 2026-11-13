@@ -67,3 +67,81 @@ def glossary_search_text(term):
     return ' '.join([term['term'], *term.get('aliases', []), term['definition'],
                      *term.get('explanation', []),
                      term.get('example_text', ''), term.get('quick_example', ''), term.get('note', '')])
+
+
+def glossary_reader_page(content, config):
+    """Arrange the unchanged reference into subjects and complete term slides.
+
+    All content remains readable without JavaScript. Enhancement selects among
+    these original nodes, so a term has one canonical anchor in either view.
+    """
+    e = html.escape
+    content = glossary_return_links(content, config)
+    heading = re.search(r'<h1\b[^>]*>.*?</h1>', content, re.S)
+    if not heading:
+        raise ValueError('Glossary heading missing')
+    sections = config['glossary_sections']
+    def marker(key):
+        return '<p><a id="'+e(key, quote=True)+'"></a></p>'
+    starts = [content.index(marker(section['id'])) for section in sections]
+    last_term = [term for term in config['glossary'] if term['section'] == sections[-1]['id']][-1]
+    last_start = content.index(marker(last_term['id'])) + len(marker(last_term['id']))
+    tail = re.search(r'<h2\b', content[last_start:])
+    if not tail:
+        raise ValueError('Glossary reference index missing')
+    end = last_start + tail.start()
+    preface = content[heading.end():starts[0]]
+    guide = preface + content[end:]
+    body = (content[:heading.end()] +
+        '<p class="glossary-intro">Choose a section, then read it continuously in <strong>Long</strong> view '
+        'or explore one complete term at a time in <strong>Slides</strong>.</p>' +
+        '<details id="glossary-search" class="glossary-search"><summary>Find a term</summary>' +
+        glossary_lookup(config) + '</details>' +
+        '<div id="glossary-browser" class="glossary-browser">'
+        '<div id="glossary-controls" class="glossary-controls" hidden>'
+        '<div class="glossary-section-picker"><label for="glossary-section">Section</label>'
+        '<select id="glossary-section"><option value="">All sections</option>')
+    for section in sections:
+        body += '<option value="'+e(section['id'], quote=True)+'">'+e(section['title'])+'</option>'
+    body += ('</select></div><fieldset class="glossary-view"><legend>Reading view</legend>'
+        '<button type="button" id="glossary-view-long" aria-pressed="true">Long</button>'
+        '<button type="button" id="glossary-view-slides" aria-pressed="false">Slides</button>'
+        '</fieldset></div>'
+        '<div id="glossary-overview"><h2 id="glossary-sections-title">Choose a section</h2>'
+        '<nav id="glossary-sections" class="glossary-section-grid" aria-labelledby="glossary-sections-title" tabindex="-1">')
+    for number, section in enumerate(sections, 1):
+        count = sum(term['section'] == section['id'] for term in config['glossary'])
+        body += ('<a class="glossary-section-card" href="#'+e(section['id'], quote=True)+'">'
+            '<span class="glossary-section-number">'+str(number).zfill(2)+' · '+str(count)+' terms</span>'
+            '<strong>'+e(section['title'])+'</strong><span>'+e(section['description'])+'</span></a>')
+    body += ('</nav></div><div id="glossary-reading-controls" class="glossary-reading-controls" hidden>'
+        '<a href="#glossary-sections">All sections</a>'
+        '<div class="glossary-term-picker"><label for="glossary-term">Jump to a term</label>'
+        '<select id="glossary-term"></select></div>'
+        '<p id="glossary-position" role="status" aria-atomic="true"></p></div>')
+    def navigation():
+        return ('<nav class="glossary-step-controls" aria-label="Glossary reading navigation" hidden>'
+            '<button type="button" data-glossary-previous>Previous</button>'
+            '<button type="button" data-glossary-next>Next</button></nav>')
+    body += navigation() + '<div id="glossary-panels" class="glossary-panels">'
+    for index, section in enumerate(sections):
+        group = [term for term in config['glossary'] if term['section'] == section['id']]
+        chunk = content[starts[index]:starts[index+1] if index+1 < len(starts) else end]
+        first = chunk.index(marker(group[0]['id']))
+        intro = chunk[:first]
+        # Keep the original term links in an optional section index.
+        nav_start = intro.rfind('<p>')
+        if nav_start >= 0:
+            intro = intro[:nav_start] + '<details class="glossary-term-index"><summary>Terms in this section</summary>' + intro[nav_start:] + '</details>'
+        body += ('<section class="glossary-panel" data-glossary-panel="'+e(section['id'], quote=True)+'" '
+            'data-title="'+e(section['title'], quote=True)+'" aria-label="'+e(section['title'], quote=True)+'">'+intro)
+        for term_index, term in enumerate(group):
+            start = chunk.index(marker(term['id']))
+            finish = chunk.index(marker(group[term_index+1]['id'])) if term_index+1 < len(group) else len(chunk)
+            body += ('<section class="glossary-term" data-glossary-term="'+e(term['id'], quote=True)+'" '
+                'data-title="'+e(term['term'], quote=True)+'" aria-label="'+e(term['term'], quote=True)+'">'+
+                chunk[start:finish]+'</section>')
+        body += '</section>'
+    body += ('</div>'+navigation()+'</div><details id="glossary-guide" class="glossary-guide">'
+        '<summary>Reading routes, comparisons and A–Z index</summary>'+guide+'</details>')
+    return body
