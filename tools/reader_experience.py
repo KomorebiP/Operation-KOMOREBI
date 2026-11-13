@@ -40,6 +40,9 @@ def load(root):
             assert term.get('example'), 'A short example needs a worked-example link'
         if 'quick_example' in term:
             assert isinstance(term['quick_example'], str) and term['quick_example'].strip()
+        if 'explanation' in term:
+            assert isinstance(term['explanation'], list) and term['explanation']
+            assert all(isinstance(p, str) and p.strip() for p in term['explanation'])
     for step in data.get('glossary_start', []):
         assert step['terms'] and set(step['terms']) <= identifiers
     for comparison in data.get('glossary_comparisons', []):
@@ -247,6 +250,8 @@ def render_glossary(config):
         text+=' · '.join('['+x['term']+'](#'+x['id']+')' for x in group)+'\n\n'
         for term in group:
             text+='<a id="'+term['id']+'"></a>\n\n### '+term['term']+'\n\n'+glossary_prose(term['definition'])+'\n\n'
+            for paragraph in term.get('explanation', []):
+                text+=glossary_prose(paragraph)+'\n\n'
             if term.get('aliases'):text+='**Also called:** '+', '.join(term['aliases'])+'.\n\n'
             if term.get('quick_example'):text+='**Quick example:** '+glossary_prose(term['quick_example'])+'\n\n'
             if term.get('example_text'):text+='**In the worked example:** '+glossary_prose(term['example_text'])+'\n\n'

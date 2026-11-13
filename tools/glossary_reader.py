@@ -26,7 +26,7 @@ def glossary_lookup(config):
     body = ('<section id="glossary-lookup" class="glossary-lookup" aria-labelledby="glossary-lookup-title">'
             '<h2 id="glossary-lookup-title">Find a glossary term</h2>'
             '<p id="glossary-help">Search a name, abbreviation or words in a definition or example. Try “nullspace”, “projection” or “CRT”. Matches link to the full entry, '
-            'with examples and related terms. You can also browse the subjects and alphabetical index below.</p>'
+            'with fuller explanations, examples and related terms. Select a term name to read its complete entry. You can also browse the subjects and alphabetical index below.</p>'
             '<noscript><p>Quick lookup needs JavaScript. Use the subject links and alphabetical index below, or your browser’s Find command.</p></noscript>'
             '<form id="glossary-form" role="search" aria-label="Glossary" aria-describedby="glossary-help" hidden>'
             '<label for="glossary-query">Term, abbreviation or words to find</label>'
@@ -48,6 +48,8 @@ def glossary_lookup(config):
                  'data-term="'+e(term['term'], quote=True)+'" data-search="'+e(search, quote=True)+'">'
                  '<h4><a href="#'+e(term['id'], quote=True)+'">'+e(term['term'])+'</a></h4>'
                  '<p class="glossary-subject">'+e(subject)+'</p><p>'+e(term['definition'])+'</p>')
+        if term.get('explanation'):
+            body += '<p>'+e(term['explanation'][0])+'</p>'
         if aliases:
             body += '<p class="glossary-aliases"><strong>Also called:</strong> '+e(', '.join(aliases))+'.</p>'
         if term.get('quick_example'):
@@ -63,4 +65,5 @@ def glossary_lookup(config):
 def glossary_search_text(term):
     """Use the same vocabulary in local lookup and the collection search."""
     return ' '.join([term['term'], *term.get('aliases', []), term['definition'],
+                     *term.get('explanation', []),
                      term.get('example_text', ''), term.get('quick_example', ''), term.get('note', '')])

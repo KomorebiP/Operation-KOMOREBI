@@ -57,12 +57,17 @@ class GlossaryLookupTests(unittest.TestCase):
                 self.assertIn(term['example_text'], entry['data-search'])
             if term.get('quick_example'):
                 self.assertIn(term['quick_example'], entry['data-search'])
+            self.assertGreaterEqual(len(term['explanation']), 2, term['id'])
+            for paragraph in term['explanation']:
+                self.assertIn(paragraph, entry['data-search'])
             self.assertEqual(entry['data-search'], glossary_search_text(term))
         reference = render_glossary(config)
         self.assertEqual((root/'docs/GLOSSARY.md').read_text(encoding='utf-8'), reference)
         for term in terms:
             self.assertIn('<a id="'+term['id']+'"></a>', reference)
             self.assertIn(glossary_prose(term['definition']), reference)
+            for paragraph in term['explanation']:
+                self.assertIn(glossary_prose(paragraph), reference)
             if term.get('aliases'):
                 self.assertIn('**Also called:** '+', '.join(term['aliases']), reference)
             if term.get('example_text'):
@@ -118,6 +123,8 @@ class GlossaryLookupTests(unittest.TestCase):
             entry = original.split(marker, 1)[1]
             entry = re.split(r'<p><a id=|<h2\b', entry, maxsplit=1)[0]
             plain = ''.join(PlainText(entry).parts)
+            for paragraph in term['explanation']:
+                self.assertIn(paragraph, plain, (term['id'], 'Explanation changed in rendering'))
             for key in ('definition', 'quick_example', 'example_text', 'note'):
                 if term.get(key):
                     self.assertIn(term[key], plain, (term['id'], key, 'Markdown changed the maintained text'))
@@ -134,17 +141,21 @@ class GlossaryLookupTests(unittest.TestCase):
                                      definition='x < y & y > z',note='Read "carefully".',
                                      aliases=['<alias> & "name"'],example_text='<example> & "value"',
                                      quick_example='<quick> & "illustration"')])
+        config['glossary'][0]['explanation'] = ['An <explanation> with A*A and [brackets].', 'Second paragraph.']
         markup = glossary_lookup(config)
         self.assertNotIn('<test>', markup)
         self.assertNotIn('<alias>', markup)
         self.assertNotIn('<example>', markup)
         self.assertNotIn('<quick>', markup)
+        self.assertNotIn('<explanation>', markup)
         parsed = LookupHTML(markup)
         self.assertEqual(parsed.entries[0]['data-term'], config['glossary'][0]['term'])
         self.assertIn('x < y & y > z', parsed.entries[0]['data-search'])
         self.assertEqual(parsed.entries[0]['data-aliases'], '<alias> & "name"')
         self.assertIn('<example> & "value"', parsed.entries[0]['data-search'])
         self.assertIn('<quick> & "illustration"', parsed.entries[0]['data-search'])
+        for paragraph in config['glossary'][0]['explanation']:
+            self.assertIn(paragraph, parsed.entries[0]['data-search'])
         self.assertEqual(parsed.links, ['#sample'])
 
 
