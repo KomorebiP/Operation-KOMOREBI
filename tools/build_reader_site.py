@@ -734,6 +734,8 @@ class Site:
         publish_smith_chart_research(self)
         from smith_chart_continuation import publish as publish_smith_chart_continuation
         publish_smith_chart_continuation(self)
+        from computational_chemistry import publish as publish_computational_chemistry
+        publish_computational_chemistry(self)
         from special_functions_lab import build as build_special_functions_lab
         build_special_functions_lab(self)
         self.markdown_pages()

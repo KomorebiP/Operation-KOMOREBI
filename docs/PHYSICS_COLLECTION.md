@@ -23,6 +23,7 @@ The complete reading volume is available as **305 HTML reading pages**: 160 trea
 | A discrete symbol approaching a continuum one | [Run the centered-symbol comparison](https://KomorebiP.github.io/Operation-KOMOREBI/playground.html#physics-centered) | [The formal continuum extension](#continuum-limit) |
 | Functions, recurrences and recovery | [Explore the existing sequence plots](https://KomorebiP.github.io/Operation-KOMOREBI/playground.html#sequence-growth) | [Special Functions](#special-functions) |
 | Energy exchange and backreaction | [Read the finite model](works/physics-energy-backreaction.md) | [Conservation and physical acceptance](#energy-exchange) |
+| Molecular Hamiltonian recovery | [Read the three-query chemistry checkpoint](COMPUTATIONAL_CHEMISTRY.md) | Exact recovery, numerical error certificates and physical limits |
 | Origin locking and curved backgrounds | [Read the research sequence](#origin-and-curvature) | [Origin locking](works/physics-origin-locking.md) and [curvature states](works/physics-curvature-states.md) |
 
 The browser examples run when you press **Run**. They use the Python standard library; the playground supplies plotting and downloads. Their code is editable and downloadable. The calculations below also work as a reading route without running software.
