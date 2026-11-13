@@ -145,7 +145,7 @@ def diagrams(content, site):
     return re.sub(r'<p>\s*<img([^>]+)>\s*</p>',figure,content)
 
 
-def build(site):
+def build_source_body(site):
     from smith_chart_research import historical_body
     from smith_chart_continuation import load, render
     manifest,files = load(site.root)
@@ -267,6 +267,11 @@ def build(site):
     return body
 
 
+def build(site):
+    from smith_chart_reading import finalize
+    return finalize(site.root,build_source_body(site),site)
+
+
 def publish_redirect(site, page, anchor):
     target = site.rel(PAGE,page)+'#'+anchor
     script = site.rel('assets/smith-book-redirect.js',page)
@@ -291,7 +296,7 @@ def publish_sources(site):
     source_files += [site.root/'research/smith-chart/SmithChart_Complete.zip']
     source_files += [site.root/'docs/demonstrations'/ (name+'.md') for name in ('SMITH_CHART','SMITH_FIRST_ORDER_RL','SMITH_SINGULAR_COMPLETION')]
     source_files += [site.root/'docs/demonstrations/figures'/name for name in ('smith-first-order-rl.svg','smith-two-packet-feasibility.svg')]
-    source_files += [site.root/'tools'/name for name in ('smith_chart_unified.py','smith_chart_continuation.py','smith_chart_research.py')]
+    source_files += [site.root/'tools'/name for name in ('smith_chart_unified.py','smith_chart_continuation.py','smith_chart_research.py','smith_chart_reading.py')]
     target = site.output/'downloads/smith-rlc-current-source.zip'
     target.parent.mkdir(parents=True,exist_ok=True)
     hashes = {}

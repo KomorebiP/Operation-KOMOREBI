@@ -25,7 +25,7 @@ DESCRIPTIONS = {
     'works.html': 'Browse the Komorebi collection by work, subject, completion stage, and recorded evidence, then follow the reading and source links.',
     'playground.html': 'Run and edit mathematical Python examples in your browser. Inspect the output and follow links to the written calculations and recorded scope.',
     'smith-chart.html': 'Explore passive RF impedance, reflection coefficients, exact cyclic projector packets, dyadic refinement, and phase sampling in an interactive Smith chart.',
-    'read/smith-chart/research.html': 'Read the unified Smith chart and RLC work: exact-six closure, deterministic certified families, passive completion, proof audits and research history.',
+    'read/smith-chart/research.html': 'Reflection geometry, exact packet calculus, passive completion, minimum-reactive RLC circuits, and explicit separation and tolerance bounds.',
     'read/smith-chart/continuation.html': 'Read the exact six-reactive closure, certified RLC composition, degree-matching families and the current Hughes-margin audit obligations.',
     'collection/demonstrations/SMITH_FIRST_ORDER_RL.html': 'Derive a positive one-inductor circuit for the Smith chart draft’s affine limit, with explicit component values and Lean-checked algebra.',
     'collection/demonstrations/SMITH_SINGULAR_COMPLETION.html': 'Use nullspace constraints to predict from singular Pick data and derive the exact feasibility boundary for two real cyclic packets.',
