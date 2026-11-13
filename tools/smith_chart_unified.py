@@ -134,8 +134,9 @@ def diagrams(content, site):
             src = src[:-4]+'.svg'
             attrs = re.sub(r'src="[^"]+"','src="'+src+'"',attrs)
         picture = '<img'+attrs+'>'
-        if src.endswith('/figures/stable-energy.svg'):
-            mobile = site.resolve('collection',BASE+'/STABLE_ENERGY.md',PAGE,'figures/stable-energy.mobile.svg',True)
+        responsive = next((name for name in ('stable-energy','balanced-resonance') if src.endswith('/figures/'+name+'.svg')),None)
+        if responsive:
+            mobile = site.resolve('collection',BASE+'/README.md',PAGE,'figures/'+responsive+'.mobile.svg',True)
             picture = '<picture><source media="(max-width: 600px)" srcset="'+mobile+'">'+picture+'</picture>'
         return ('<figure class="research-figure book-figure"><div class="figure-heading"><span>'+label+'</span>'
             '<a href="'+src+'">Source diagram</a></div>'+picture+'<div class="figure-actions">'
@@ -181,8 +182,8 @@ def build(site):
             assembled.append(source_markdown(site,BASE+'/COMPACT_MODEL_AUDIT.md','compact-model-audit'))
             assembled.append(source_markdown(site,BASE+'/FORMAL_CORE.md','formal-graph-core',
                 (BASE+'/FORMAL_PROGRESS.md',)))
-            typed = source_markdown(site,BASE+'/GLOBAL_TYPED_MARGINS.md','typed-margins',
-                (BASE+'/STABLE_ENERGY.md',BASE+'/TYPED_MARGINS.md',BASE+'/TWO_REACTIVE_MARGIN.md',BASE+'/COEFFICIENT_ROUTES.md'))
+            typed = source_markdown(site,BASE+'/BALANCED_RESONANCE.md','typed-margins',
+                (BASE+'/GLOBAL_TYPED_MARGINS.md',BASE+'/STABLE_ENERGY.md',BASE+'/TYPED_MARGINS.md',BASE+'/TWO_REACTIVE_MARGIN.md',BASE+'/COEFFICIENT_ROUTES.md'))
             marker = '<h3 id="typed-margins--usable-pure-type-margins-and-a-smaller-mixed-search">'
             if typed.count(marker)!=1:
                 raise ValueError('Missing retained typed-margin checkpoint anchor')
@@ -212,7 +213,9 @@ def build(site):
         'The two-reactive separator, two series margins and dedicated-series-loss tolerance theorem close explicit subclasses. '
         'Physical graph and endpoint arguments now exclude every three-reactive mixed class and the '
         'four-reactive one-L/one-C classes with explicit tiny margins. Coverage is 1,334 of 2,130; '
-        'the 796 balanced two-L/two-C placements remain. These are structural bounds, not practical hardware tolerances.</p>'
+        'the 796 balanced two-L/two-C placements remain. The exact internal-mode stratum and a certified '
+        'detuning/opening-budget neighborhood are now separated too; a uniform near-mode transfer and '
+        'regular balanced separator remain. All new comparisons use positive-real Laplace samples.</p>'
         '<p><a href="../../downloads/smith-rlc-current-source.zip">Download the complete current source and checks</a> · '
         '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/tree/'+site.revision+'/'+BASE+'">'
         'Proof, computation and source-binding records</a>. The original checkpoint ZIPs and earlier Lean receipts '

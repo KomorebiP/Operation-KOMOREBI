@@ -1,7 +1,8 @@
 # Smith chart and RLC synthesis: current source
 
 Author: Komorebi P.  
-Base: `3e4090141cc88dac723d87c7c504a9b1076a2caf`.
+Original consolidation base: `3e4090141cc88dac723d87c7c504a9b1076a2caf`.
+Current research base: `1036900233681e40743c077110076dd77099dfb7` (PR200).
 
 The maintained reading is now one canonical article at
 `read/smith-chart/research.html`. Its single contents structure includes the
@@ -12,7 +13,24 @@ Search, sitemap and the two-pane catalogue present the canonical reading.
 
 ## Mathematical progress
 
-The current whole one-kind theorem closes all 246 mixed budget-three classes
+The current balanced-resonance phase separates the exact internal-mode face:
+with at most two L and two C, a port-zero mode forces a response realizable
+with at most three reactives or frequency-inversion symmetry. Natural
+P(i)=Q(i)=0 therefore gives sample error >1e-13. A positive-real comparison
+also certifies error >3/40 for an inversion-symmetric mode face with at most
+one-percent reactive detuning and opened-resistor conductance sum <=1/100.
+Allowed resistors have arbitrary count and values. The supplied portable
+producer/consumer checks the actual graph and rational slack.
+
+Read `BALANCED_RESONANCE.md`, `PHASE6_REVIEW.json` and
+`verification/current-exact-009`. The comparison domain is positive-real
+Laplace samples. No imaginary-frequency/hardware tolerance or new Lean,
+independent-review or priority claim is made. Three balanced shortcut
+counterexamples are now maintained and replayed. Whole coverage stays
+1,334 of2,130; all796 whole balanced placements remain. The missing uniform
+near-mode transfer and regular-region separator are explicit in `STATE.json`.
+
+The preceding whole one-kind theorem closes all 246 mixed budget-three classes
 and the 1,062 one-L/one-C budget-four classes, with arbitrary resistor count,
 placement and positive finite values. Together with the 26 budget-two classes,
 coverage is 1,334 of 2,130. Only the 796 balanced two-L/two-C placements remain.
@@ -67,7 +85,8 @@ This authenticates six retained authored checkpoints, replays the eleven
 portable predecessor commands in isolated copies, and runs the current exact
 family, boundary, synthesis/tolerance, topology, mixed-loss, coefficient-box,
 coefficient-fiber, series-margin, physical transfer-barrier, stable-fiber,
-energy/trade-off, branch-rounding, root-count, endpoint and whole one-kind checks. It writes a fresh
+energy/trade-off, branch-rounding, root-count, endpoint, whole one-kind,
++internal-mode, inversion, positive-real comparison and near-mode certificate checks. It writes a fresh
 result directory without changing retained archives.
 No network, numerical solver or optional package is needed. Python 3.11+ is the
 intended baseline; the current replay uses Python 3.12.14 on Windows.

@@ -1,73 +1,83 @@
-# Continuation after whole one-kind margins
+# Continuation after the balanced internal-mode face
 
-Checkpoint: `whole-one-kind-margins-001`. Base main:
-`99f2b08425aa895e5242b2f853b4b3ddabbd7b98` (Smith PR 199).
-`STATE.json` is current status; `PROGRAM.md` owns six contracts. Continue
-research and live publication in the same canonical book. Preserve all
-byte-bound predecessor solver/proof files, six authored archives and selected
-Lean receipts. No agents or independent reviewers were used.
+Checkpoint balanced-resonance-face-001, base main
+1036900233681e40743c077110076dd77099dfb7 (published PR200/current008).
+`STATE.json` is current; `PROGRAM.md` owns six contracts. Keep the same
+canonical book. Preserve every predecessor proof, solver and evidence hash.
+No agents, independent reviewers or external mathematical jobs were used.
 
-## Accepted written results
+## Accepted scope of this phase
 
-Read `GLOBAL_TYPED_MARGINS.md`, `STABLE_ENERGY.md`, `PHASE5_CONTRACT.md` and
-`PHASE5_REVIEW.json`. Whole one-L margins at budgets three/four are 1e-11/1e-30;
-whole one-C margins are 1e-13/1e-37. Quantifiers: finite positive ordinary RLC,
-arbitrary R count/placement/values, unit reference, same seven positive-real
-Laplace samples. Pure classes and smaller budgets inherit stronger margins.
-There is no DC, resonant-denominator or resistor-value guard. These constants
-are structural impossibility bounds, too tiny for practical measurement/tolerance.
+Read `BALANCED_RESONANCE.md`, `PHASE6_CONTRACT.md`, `PHASE6_REVIEW.json` and
+`verification/current-exact-009`. With <=2L/2C and arbitrary positive R, a
+nonzero source-free real mode at i with both ports zero forces a <=3-reactive
+response or inversion symmetry. Natural P(i)=Q(i)=0 supplies such a mode.
+Thus the exact physical singular face has sample error >1e-13. The proof
+classifies eight active-support types via KCL, mode-level resistor components,
+one-terminal deletion and a tuned four-cycle bridge formula. It includes
+singular compatible phasors without assuming their matrices invertible.
 
-The proof combines: natural graph stability and stable fiber triangle;
-one-L energy/DC trade-off; positive-real finite/open/short branch rounding;
-a spectral theorem that one-L/one-C natural quartics retain at least two real
-roots; automatic P(i)/Q(i) denominator bounds; positive-coefficient prefix/suffix
-bounds; and a separate one-C endpoint inequality. At zero loss the latter
-forces Z(infinity)>=4Z(0), contrary to the target ratio. Limits, disconnected
-R cores and endpoint exceptions are handled explicitly. Full proofs have
-project self-review; no independent/formal extension or novelty claim.
+For all ordinary RLC graphs, simultaneous relative physical-value error
+epsilon changes reflection on the positive-real Laplace axis by at most
+epsilon/(2(1-epsilon)), with no branch-count factor. This is an elementary
+energy/Rayleigh comparison. Opening specified R edges costs at most2*sum(1/R).
+An inversion-symmetric mode face with <=1% reactive detuning and total opened
+conductance <=1/100 therefore gives E_S>3/40. These are supplied conditions,
+not an automatic certificate for all balanced circuits. All retained R count
+and values are arbitrary. The imaginary-axis extension is explicitly false.
 
-Coverage is 1334 of 2130: budget two 26/26, three 246/246, four 1062/1858.
-Newly covered: 1196. Remaining: exactly the 796 balanced 2L2C placements.
-Selected Lean statements remain 41. The physical balanced counterexample
-has a quartic numerator with no real roots, so the new root lemma cannot
-be silently extended to close these last classes.
+The new modules are resonant_mode_face.py, positive_real_comparison.py,
+balanced_obstructions.py, check_balanced_resonance.py and outer wrapper
+check_current_resonance.py. The example near_mode_example.json has a full
+CLI producer/consumer roundtrip. Assertions must remain enabled; source replay
+uses Python standard library only. Do not edit009 inputs: add modules and a
+fresh outer record if research changes them.
 
-## Evidence and replay
+## Evidence and interpretation
 
-`verification/current-exact-007` binds the stability/energy/rounding precursor.
-Do not edit its solver closure. `verification/current-exact-008` adds new
-modules and wraps the unchanged predecessor with `solver/check_current_global.py`.
-Use `python -B replay.py` from the complete current-source download; it checks
-the six original archives, eleven predecessor commands and the current suite.
-The new graph controls include 128 one-kind graphs, 112 quartic root counts,
-128 reciprocal-polynomial comparisons, 98 finite-positive endpoint controls,
-56 sign/endpoint checks, floating and reversed cases, and 392 trial comparisons.
-Exact rational intervals are separate from finite graph controls. Before/after
-input hashes bind the fresh run. Different units are not summed as proof coverage.
+009 preserves/replays008 and every predecessor. New exact controls: eight
+abstract active types/37 labeled supports;88 physical mode graphs,96 basis
+modes,616 independent positive-real phasor comparisons; nine bridge polynomial
+identities,63 positive-real comparisons and nine finite real port values at i;
+16 detuning corners,280 relative comparisons,12 resistor factor controls;
+three balanced shortcut counterexamples and a portable certificate roundtrip.
+These are different units, not whole-topology coverage. Written proof and
+finite computation have project self-review only; selected Lean count stays41.
 
-## Next decisive obligation
+Three routes that must not be resumed unchanged: extending the one-C endpoint
+inequality to balanced graphs; forcing a real root from zero driven loss and
+target endpoints; adding only Zprime(i)=5 to those invariants. Maintained
+balanced_obstructions.py reproduces the private post008 controls. The last
+has exact cross polynomial(69/263)*s*(s^2+1)^2 and error5175/65083, so it is
+not a target fit. A source-free internal mode is not a driven zero-loss state.
 
-Attack the balanced 2L2C four-reactive class. The stable coefficient triangle
-and physical resistor faces remain; the real-root invariant is unavailable.
-Potential routes: a rank-two matrix energy/endpoint inequality with a tested
-Gram determinant; a topology-uniform separator in the bounded reactive regime;
-or a rigorously certified balanced-template polynomial elimination. First
-discriminator must distinguish physical 2L2C from the known higher-reactive
-passive endpoint/resonance counterexamples. Degree/passivity alone is inadequate.
+## Exact remaining implication
 
-For error below 1e-37, rounding one extreme reactive branch would yield an
-already excluded budget-three class, so all four reactive values can now be
-bounded using eta<1e-13/4. Resistor values/faces remain unbounded and need a
-proved comparison; positive-real rounding is not imaginary-axis continuity.
-The new tiny constants close structural subclasses, not the program's useful
-all-topology margin contract. Do not overstate practical significance.
+Whole coverage remains1334/2130. Exactly796 balanced2L2C placements remain.
+The exact physical singular face and the supplied near-mode budget are closed
+sub-obligations. Small normalized P(i),Q(i) still need a uniform bridge to
+physical detuning/opening certificates, through resistor open/wire faces.
+A limiting coefficient pair can retain nonphysical factors after contraction
+or deletion; do not treat it automatically as the limit graph's natural pair.
+The regular balanced region also needs a uniform separator.
 
-Other open contracts: full compactification/transfer formal assurance and
-independent review; practical arbitrary mixed minimum synthesis; resistor
-minima for original degree-six/higher families; broader physical models/data;
-priority. The old 62-model one-second compact-NRA probe is resource-inconclusive
-except one backend UNSAT. Do not rerun unchanged or count it as a certificate.
+Next discriminators: a controlled approximate internal-mode decomposition
+from the two-L/two-C nodal pencil, including the effective R response; a
+matrix/cut bound that forces the required resistor opening budget; or a
+balanced-template elimination certificate. The new exact support classification
+identifies the possible target mode graphs for such an approximation. Mere
+endpoint, passivity, natural degree, real-root or first-jet data are insufficient.
+The earlier higher-reactive passive transfer barriers remain relevant.
 
-No external mathematical jobs remain. Delivery has its own CI/live receipt.
-User authorization covers continued research, source consolidation and live
-publication without a new planning or approval round.
+For proposed error below1e-37, inherited rounding bounds all four reactive
+values using eta<1e-13/4. Resistor faces still need control. Do not infer
+imaginary-axis continuity from the new positive-real comparison. A second jet
+plus both target endpoints would force rational identity at degree<=4, but
+a uniform transfer near a resonant common factor remains unproved.
+
+Other contracts remain: complete compactification/transfer formal assurance
+and independent review, arbitrary mixed minimum synthesis, higher resistor
+minima, broader physical models/data and priority. The old compact-NRA probe
+remains resource-inconclusive except its backend UNSAT; do not rerun unchanged.
+Authorized scope includes continued research, source consolidation and live
+publication without a new planning/approval round. Delivery has its own receipt.
