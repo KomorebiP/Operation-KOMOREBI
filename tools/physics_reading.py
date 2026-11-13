@@ -27,6 +27,7 @@ BOOK = dict(work=WORK, label='Physics', title='Physics: Resolution, dynamics, an
     base=BASE, main=MAIN, macro_source=MACROS, bib=BASE+'references.tex',
     index=PREFIX+'index.html', bib_page=PREFIX+'dirac-sources-and-further-reading.html', chapters=CHAPTERS,
     custom_reader='physics', partial=True, main_chapters=133,
+    atlas_index=PREFIX+'atlas/index.html',
     bibliography_in_chapters=True, numbered_bibliography=True, required_macros=[], statement_navigation=True,
     lean_reader_paths=['formal/continuum/KomorebiPhysics/'],
     reader_controls=True, number_floats=True, show_figure_numbers=True,
@@ -74,7 +75,7 @@ BOOK = dict(work=WORK, label='Physics', title='Physics: Resolution, dynamics, an
         'response and linked rejection tests. One hundred four original figures accompany the text.',
     reading_note='These opening HTML installments belong to the 572-page Physics book. '
         'The foundations, continuum Dirac, spectral generator, gauge, gravity, adic, covariant fiber and cosmology treatments are complete here; '
-        'the visual atlases and formal companions '
+        'all five visual atlases are also available in HTML. The formal companions '
         'remain in the full PDF. Authored wording, equations and numbered statements '
         'are preserved. This reading edition adds no proof audit, scientific run or Lean execution.')
 BOOK['table_reading_aids'].update({(row['source'],row['id']):
@@ -403,8 +404,11 @@ def prepare_book(reader, config):
     figures.update(prepare(reader, dict(config, figure_source_root=COSMOLOGY_BASE,
         figure_receipts='assets/figures/physics-cosmology/figures.json'),
         [row for row in chapters if row[0]['treatment']=='cosmology']))
-    return dict(config=config, chapters=chapters, references=references, macros=macros, main=main,
+    book=dict(config=config, chapters=chapters, references=references, macros=macros, main=main,
                 full_book=manifest, figure_assets=figures)
+    from physics_visual import prepare as prepare_visual
+    prepare_visual(reader,book)
+    return book
 
 
 def full_book_routes(reader, book, page):
@@ -432,5 +436,12 @@ def full_book_routes(reader, book, page):
         if selected:
             start = selected.get('part_entries', {}).get(row['part']) or next(spec['url'] for spec in CHAPTERS if spec['treatment']==selected['id'])
             body += ' · <a href="'+html.escape(reader.site.rel(start, page),quote=True)+'">Read in HTML</a>'
+        else:
+            from physics_visual import metadata as visual_metadata
+            visual=visual_metadata()
+            match=next((a for a in visual['atlases'] if a['main'].endswith('/'+row['stem']+'.tex')),None)
+            if match:
+                start=next(s['url'] for s in visual['pages'] if s['atlas']==match['id'])
+                body+=' · <a href="'+html.escape(reader.site.rel(start,page),quote=True)+'">Read visual atlas in HTML</a>'
         body += '</li>'
     return body+'</ul></section>'

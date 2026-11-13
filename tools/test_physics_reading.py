@@ -165,7 +165,7 @@ class PhysicsReadingTests(unittest.TestCase):
             self.assertEqual(proofs, sum(len(c.proof_pairs) for _, _, c in book['chapters']))
             self.assertEqual(book['chapters'][0][2].equation_numbers['f:atlas-relations'], '1')
             self.assertEqual(book['chapters'][0][2].labels['f:parseval']['number'], '1.2')
-            self.assertEqual(sum(bool(r.get('source')) for r in reader.images.values()), 104)
+            self.assertEqual(sum(bool(r.get('source')) for r in reader.images.values()), 121)
             self.assertEqual(len(book['references']), 6)
             generator = [c for s, _, c in book['chapters'] if s['treatment']=='generator']
             self.assertEqual(generator[0].labels['thm:generator']['number'], '2.3')
