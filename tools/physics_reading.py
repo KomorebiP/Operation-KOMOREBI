@@ -1,6 +1,6 @@
-"""Source-bound Physics foundations, Dirac, generator, gauge, and gravity treatments.
+"""Source-bound Physics foundations, Dirac, generator, gauge, gravity, and adic treatments.
 
-The full foundations, Dirac, generator, gauge, and gravity treatments are included. Later treatments remain in the
+The full foundations, Dirac, generator, gauge, gravity, and adic treatments are included. Later treatments remain in the
 complete PDF. Publication adds no proof review, experiment, or Lean execution.
 """
 import hashlib
@@ -26,7 +26,7 @@ CHAPTERS = DATA['chapters']
 BOOK = dict(work=WORK, label='Physics', title='Physics: Resolution, dynamics, and constrained geometry',
     base=BASE, main=MAIN, macro_source=MACROS, bib=BASE+'references.tex',
     index=PREFIX+'index.html', bib_page=PREFIX+'dirac-sources-and-further-reading.html', chapters=CHAPTERS,
-    custom_reader='physics', partial=True, main_chapters=87,
+    custom_reader='physics', partial=True, main_chapters=105,
     bibliography_in_chapters=True, numbered_bibliography=True, required_macros=[], statement_navigation=True,
     lean_reader_paths=['formal/continuum/KomorebiPhysics/'],
     reader_controls=True, number_floats=True, show_figure_numbers=True,
@@ -54,18 +54,23 @@ BOOK = dict(work=WORK, label='Physics', title='Physics: Resolution, dynamics, an
         ('gravity/strong_fields.tex', 'L514'): dict(caption='Archived scalar marginal-sphere events',
             headers=[r'$N_r$',r'$h$',r'$t_H$',r'$r_H$',r'$\Delta M/M_0$'],row_header_column=0),
         ('gravity/strong_fields.tex', 'L557'): dict(caption='Recorded scalar constraint and flux residuals',
-            headers=['Diagnostic','Relative residual'],row_header_column=0)},
+            headers=['Diagnostic','Relative residual'],row_header_column=0),
+        ('adic/orientation.tex', 'L20'): dict(caption='Adic refinement conventions',
+            headers=['Convention','Meaning'],row_header_column=0),
+        ('adic/finite.tex', 'L835'): dict(caption='Per-leaf and collective coupling choices',
+            headers=['Per-leaf choice',r'$\alpha$',r'$|G_{p,w}|$',r'$|G_{p,w}|^2$'],row_header_column=0)},
     require_table_reading_aids=True,
-    reading_introduction='Read the complete foundations, continuum Dirac, spectral generator, gauge and gravity treatments. '
+    reading_introduction='Read the complete foundations, continuum Dirac, spectral generator, gauge, gravity and adic treatments. '
         'Begin with packets, currents, open dynamics, refinement and operator domains; '
         'continue through PH01–PH12, the exact three-mode example, Fourier completion '
         'and the self-adjoint Hamiltonian on the three-torus, then its strong generator, resolvent limits '
         'and quantitative evolution estimates. Continue to endpoint covariance, finite matter–field dynamics, '
         'ordered holonomy and geometric refinement, then constrained geometry, regular canonical reduction '
-        'and spherical strong-field models. Thirty-eight original figures accompany the text.',
+        'and spherical strong-field models. Arithmetic refinement follows through normalized Haar packets, '
+        'spectral elimination and compatible Hilbert-space limits. Forty-five original figures accompany the text.',
     reading_note='These opening HTML installments belong to the 572-page Physics book. '
-        'The foundations, continuum Dirac, spectral generator, gauge and gravity treatments are complete here; '
-        'the adic, matter and cosmology treatments, visual atlases and formal companions '
+        'The foundations, continuum Dirac, spectral generator, gauge, gravity and adic treatments are complete here; '
+        'the matter and cosmology treatments, visual atlases and formal companions '
         'remain in the full PDF. Authored wording, equations and numbered statements '
         'are preserved. This reading edition adds no proof audit, scientific run or Lean execution.')
 
@@ -122,6 +127,10 @@ def normalize(raw):
     text = rewrite(text, 'gravityfigure', 2, lambda name, caption:
         r'\begin{figure}\centering\includegraphics[width=.96\linewidth]{gravity_figures/'
         + name + r'.pdf}\caption{' + caption + r'}\end{figure}')
+    text = re.sub(r'\\adicfigure\[[^\]]+\]', r'\\adicfigure', text)
+    text = rewrite(text, 'adicfigure', 2, lambda name, caption:
+        r'\begin{figure}\centering\includegraphics[width=.96\linewidth]{adic_figures/'
+        + name + r'.pdf}\caption{' + caption + r'}\end{figure}')
     text = re.sub(r'\\setlength\{\\cftbefore(?:sec|part)skip\}\{[^{}]*\}',
                   lambda match: mask(match[0]), text)
     text = rewrite(text, 'atlasfigure', 2, lambda name, caption:
@@ -134,8 +143,8 @@ def normalize(raw):
                   r'\\renewcommand\{\\refname\}\{[^{}]*\}', lambda match: mask(match[0]), text)
     text = text.replace(r'\begin{equation}', r'\[').replace(r'\end{equation}', r'\]')
     text = text.replace(r'\begin{align}', r'\begin{align*}').replace(r'\end{align}', r'\end{align*}')
-    # Keep the source's P1-P4 and C1-C3 bibliography labels visible.
-    for prefix in ('P', 'C'):
+    # Keep the source's explicit project and context bibliography labels visible.
+    for prefix in ('P', 'C', 'S'):
         pattern = r'\\begin\{enumerate\}\[label=\{\['+prefix+r'\\arabic\*\]\},leftmargin=2\.5em\](.*?)\\end\{enumerate\}'
         def references(match, prefix=prefix):
             count = 0
@@ -182,7 +191,29 @@ def source_specs(load):
         inputs = re.findall(r'\\input\{([^{}]+)\}', load(treatment['main']))
         if inputs != [*treatment.get('layout_inputs', ['preamble.tex']), *treatment['inputs']]:
             raise ValueError('Review Physics treatment input order')
-        sources = [treatment['main']] if treatment.get('standalone') else [BASE+name for name in treatment['inputs']]
+        sources = []
+        def include(name, ancestors=()):
+            if name in ancestors:
+                raise ValueError('Repeated Physics nested input')
+            source = BASE+name
+            sources.append(source)
+            raw = load(source)
+            declared = re.findall(r'\\input\{([^{}]+)\}', raw)
+            if declared != treatment.get('nested_inputs', {}).get(name, []):
+                raise ValueError('Review Physics nested input order')
+            if declared:
+                # Separate reading pages can preserve inclusion order only when
+                # the included member follows the parent's last prose passage.
+                from readable_chapters import clean_tex
+                if clean_tex(raw[raw.index(r'\input{'):]).strip() != ''.join(r'\input{'+p+'}' for p in declared):
+                    raise ValueError('Review Physics nested input position')
+            for child in declared:
+                include(child, (*ancestors, name))
+        if treatment.get('standalone'):
+            sources = [treatment['main']]
+        else:
+            for name in treatment['inputs']:
+                include(name)
         expected_sources.extend(sources)
         if any(spec['treatment'] != treatment['id'] for spec in CHAPTERS
                if spec['source'] in sources):
@@ -298,6 +329,8 @@ def prepare_book(reader, config):
         [row for row in chapters if row[0]['treatment']=='gauge']))
     figures.update(prepare(reader, dict(config, figure_receipts='assets/figures/physics-gravity/figures.json'),
         [row for row in chapters if row[0]['treatment']=='gravity']))
+    figures.update(prepare(reader, dict(config, figure_receipts='assets/figures/physics-adic/figures.json'),
+        [row for row in chapters if row[0]['treatment']=='adic']))
     return dict(config=config, chapters=chapters, references=references, macros=macros, main=main,
                 full_book=manifest, figure_assets=figures)
 
@@ -312,7 +345,7 @@ def full_book_routes(reader, book, page):
     body = ('<section aria-labelledby="source-continuations"><h2 id="source-continuations">Continue in the full Physics book</h2>'
         '<p>The complete 572-page PDF contains all six parts below. Each PDF link opens at '
         'the beginning of that treatment. The HTML installments above cover the complete foundations, '
-        'continuum Dirac, spectral generator, gauge and gravity treatments.</p>')
+        'continuum Dirac, spectral generator, gauge, gravity and adic treatments.</p>')
     part = None
     for row in book['full_book']:
         if part != row['part']:
