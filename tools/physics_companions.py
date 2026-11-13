@@ -76,9 +76,9 @@ def scope_pages(raw,data):
     if len(pdf.pages)!=3:raise ValueError('Review Physics scope page count')
     for source,page in zip(pdf.pages,data['scope_pages'],strict=True):
         extracted=compact(source.extract_text()).removeprefix('VERIFICATION AND SOURCES ')
-        # pypdf cannot recover this PDF's multiplication glyph or superscript
-        # position. The reading form was checked against all three rendered pages.
-        extracted=extracted.replace('2.63 \ufffd 1020','2.63 × 10²⁰')
+        # PDF text extraction flattens this printed superscript. Its position
+        # was checked against the rendered original before transcription.
+        extracted=extracted.replace('2.63 × 1020','2.63 × 10²⁰')
         expected=compact(page['title']+' '+' '.join(s['title']+' '+s['text'] for s in page['sections']))
         if extracted!=expected:raise ValueError('Review Physics scope transcription: page '+str(page['pdf_page']))
     return data['scope_pages']
@@ -121,7 +121,9 @@ def article(reader,data,spec,chapter):
     for node in chapter.nodes:
         kind=node['kind'];ident=node['id']
         links='<a href="#'+ident+'">Permalink</a> · <a href="'+reader.resolve(spec['source'],spec['url'],'L'+str(node['line']))+'">Source line '+str(node['line'])+'</a>'
-        if kind in HEADINGS:body+='<h2 id="'+ident+'">'+chapter.inline(node['title'])+'</h2>'+passage_links(links)
+        if kind in HEADINGS:
+            level=str(HEADINGS[kind])
+            body+='<h'+level+' id="'+ident+'">'+chapter.inline(node['title'])+'</h'+level+'>'+passage_links(links)
         elif kind in {'longtable','tabular','table','tabularx'}:
             aid=next(a for a in data['table_aids'] if a['source']==spec['source'] and a['id']==ident)
             body+='<section id="'+ident+'">'+render_table(node,chapter,aid)+passage_links(links)+'</section>'
@@ -178,7 +180,7 @@ def render(reader):
         page=spec['url'];body='<p class="eyebrow">Physics · Verification and sources</p><h1>'+e(spec['title'])+'</h1>'+reader.work_routes(WORK,page)+navigation(config(),page)
         target=reader.viewer_url(reader.records[SCOPE],page,'page='+str(spec['pdf_page']))
         body+='<p class="reading-note">Reading transcription of the retained scope document. Phrases such as “current run” refer to its recorded publication checkpoint. <a href="'+e(target,quote=True)+'">Read the original PDF page</a>.</p>'
-        content='<article id="chapter-text" class="readable-chapter" aria-label="Original verification scope text">'+''.join('<section id="scope-'+str(i)+'"><h2>'+e(s['title'])+'</h2><p>'+e(s['text'])+'</p></section>' for i,s in enumerate(spec['sections'],1))+'</article>'
+        content='<article id="chapter-text" class="readable-chapter" aria-label="Original verification scope text">'+''.join('<section id="scope-'+str(i)+'"><h2>'+e(s['title'])+'</h2><p>'+e(s['text']).replace('10²⁰','10<sup>20</sup>')+'</p></section>' for i,s in enumerate(spec['sections'],1))+'</article>'
         site.page(page,'Physics verification / '+spec['title'],body+content+navigation(config(),page,'bottom'))
         site.search.append(dict(title='Physics verification / '+spec['title'],group='Collection',kind='Papers and source',work_ids=[WORK],url=page,text=' '.join(s['title']+' '+s['text'] for s in spec['sections'])))
         scope_reports.append(dict(url=page,source=SCOPE,source_sha256=data['scope_sha256'],pdf_page=spec['pdf_page'],article_sha256=article_identity(content)))

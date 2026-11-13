@@ -36,6 +36,7 @@ class PhysicsCompanionTests(unittest.TestCase):
     def test_pdf_transcription_and_reading_controls(self):
         data=metadata();raw=(ROOT/SCOPE).read_bytes()
         self.assertEqual(len(scope_pages(raw,data)),3)
+        self.assertIn('2.63 × 10²⁰',data['scope_pages'][2]['sections'][0]['text'])
         altered=copy.deepcopy(data);altered['scope_pages'][2]['sections'][0]['text']=altered['scope_pages'][2]['sections'][0]['text'].replace('2.63','2.64')
         with self.assertRaisesRegex(ValueError,'scope transcription'):scope_pages(raw,altered)
         with self.assertRaisesRegex(ValueError,'scope PDF'):scope_pages(raw+b'changed',data)
@@ -76,6 +77,10 @@ class PhysicsCompanionTests(unittest.TestCase):
             self.assertEqual(contents.count('Read verification material in HTML'),6)
             self.assertIn('verification/index.html',contents)
             self.assertEqual(len(json.loads((output/'documents/readable-chapters.json').read_bytes())),160)
+            scope=(output/metadata()['scope_pages'][2]['url']).read_text(encoding='utf-8')
+            self.assertIn('10<sup>20</sup>',scope)
+            subheading=(output/'read/monographs-physics/verification/foundations-01.html').read_text(encoding='utf-8')
+            self.assertRegex(subheading,r'<h3 id="L[0-9]+">Three kinds of statement</h3>')
 
 
 if __name__=='__main__':unittest.main()
