@@ -70,6 +70,9 @@ def introduction(root, component, assessment, page):
         background = ('Complex vectors and matrices, orthogonal projectors, and finite Fourier transforms for the arithmetic and symmetry parts; '
                       'linear algebra and explicit gate costs for the catalytic part; Boolean functions and polynomials over the binary field for the circuit part. '
                       'The introductory measurement example below offers a shorter starting point.')
+    if component['id']=='monographs-physics':
+        background=('Begin with linear algebra, complex inner products and finite sums. Fourier series and operator domains enter the continuum treatment; '
+                    'later parts state their geometric and physical assumptions.')
     text = ('## Before you start\n\n**Suggested background:** '+background+'\n\n'
             '**Recorded results and limits:** '+assessment['scope']+'\n\n'
             '**Remaining work:** '+assessment['next_step']+'\n\n'
@@ -79,6 +82,12 @@ def introduction(root, component, assessment, page):
             ('Download this work','docs/DOWNLOADS.md#'+component['id'])])+'\n\n')
     if component['id']=='monographs-quantum-and-circuits':
         text+=quantum_reading_guide(page)
+    if component['id']=='monographs-physics':
+        from physics_discovery import reading_summary
+        text+='### Read Physics online\n\n'+reading_summary()+'. The HTML sequences retain the source wording, equations and evidence limits.\n\n'
+        text+=' · '.join('['+label+']('+SITE+target+')' for label,target in [
+            ('Start here','read/monographs-physics/start.html'),('Treatments','read/monographs-physics/index.html'),
+            ('Visual atlases','read/monographs-physics/atlas/index.html'),('Verification companions','read/monographs-physics/verification/index.html')])+'\n\n'
     topics=[t for t in data.get('learning_topics',[]) if component['id'] in t['works']]
     if topics:
         text+='### Worked examples for this work\n\n'

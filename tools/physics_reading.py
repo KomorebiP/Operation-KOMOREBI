@@ -1,7 +1,7 @@
 """Source-bound Physics foundations, Dirac, generator, gauge, gravity, adic, fiber, and cosmology treatments.
 
-The full foundations, Dirac, generator, gauge, gravity, adic, fiber, and cosmology treatments are included. Later treatments remain in the
-complete PDF. Publication adds no proof review, experiment, or Lean execution.
+The treatments, visual atlases, verification scope and companions have separate
+HTML sequences. Publication adds no proof review, experiment, or Lean execution.
 """
 import hashlib
 import html
@@ -26,8 +26,12 @@ CHAPTERS = DATA['chapters']
 BOOK = dict(work=WORK, label='Physics', title='Physics: Resolution, dynamics, and constrained geometry',
     base=BASE, main=MAIN, macro_source=MACROS, bib=BASE+'references.tex',
     index=PREFIX+'index.html', bib_page=PREFIX+'dirac-sources-and-further-reading.html', chapters=CHAPTERS,
-    custom_reader='physics', partial=True, main_chapters=133,
+    custom_reader='physics', partial=False, main_chapters=len(CHAPTERS),
     atlas_index=PREFIX+'atlas/index.html',
+    verification_index=PREFIX+'verification/index.html',
+    atlas_link_text='Explore 60 original plates across 72 atlas pages',
+    atlas_note='Five complete visual atlases, with authored explanations and source links.',
+    statement_scope='in the Physics treatments',
     bibliography_in_chapters=True, numbered_bibliography=True, required_macros=[], statement_navigation=True,
     lean_reader_paths=['formal/continuum/KomorebiPhysics/'],
     reader_controls=True, number_floats=True, show_figure_numbers=True,
@@ -73,7 +77,7 @@ BOOK = dict(work=WORK, label='Physics', title='Physics: Resolution, dynamics, an
         'energy test and the computational evidence appendix. Cosmology continues from a prescribed distribution '
         'through background and perturbation geometry, kinetic transport, CMB, nonlinear structure, baryonic '
         'response and linked rejection tests. One hundred four original figures accompany the text.',
-    reading_note='These opening HTML installments belong to the 572-page Physics book. '
+    reading_note='These HTML reading sequences accompany the 572-page Physics book. '
         'The foundations, continuum Dirac, spectral generator, gauge, gravity, adic, covariant fiber and cosmology treatments are complete here; '
         'all five visual atlases, the verification scope and five formalization and verification companions '
         'are also available in HTML. Authored wording, equations and numbered statements '
@@ -81,6 +85,8 @@ BOOK = dict(work=WORK, label='Physics', title='Physics: Resolution, dynamics, an
 BOOK['table_reading_aids'].update({(row['source'],row['id']):
     {key:value for key,value in row.items() if key not in {'source','id'}}
     for row in DATA['fiber_table_aids']+DATA['cosmology_table_aids']})
+from physics_discovery import reading_summary
+BOOK['reading_page_summary']=reading_summary()
 
 
 def mask(text):
@@ -294,6 +300,8 @@ def prepare_book(reader, config):
         raise ValueError('Review Physics full-book navigation')
     if any(not 0 <= row['index_start'] < 572 for row in manifest):
         raise ValueError('Physics PDF destination outside full book')
+    from physics_discovery import destination
+    for row in manifest:destination(row)
     main = load(MAIN)
     macros = source_macros(load)
     references = reading.manuscript_bibliography(load(config['bib']))
@@ -435,24 +443,8 @@ def full_book_routes(reader, book, page):
             body += '<h3>Part '+part+': '+html.escape(row['part_title'])+'</h3><ul>'
         link = reader.viewer_url(pdf, page, 'page='+str(row['index_start']+1))
         body += '<li><a href="'+html.escape(link,quote=True)+'">'+html.escape(row['title'])+' (PDF)</a> — '+html.escape(row['deck'])
-        selected = next((t for t in DATA['treatments'] if t['main'].endswith('/'+row['stem']+'.tex')), None)
-        if selected:
-            start = selected.get('part_entries', {}).get(row['part']) or next(spec['url'] for spec in CHAPTERS if spec['treatment']==selected['id'])
-            body += ' · <a href="'+html.escape(reader.site.rel(start, page),quote=True)+'">Read in HTML</a>'
-        else:
-            from physics_visual import metadata as visual_metadata
-            visual=visual_metadata()
-            match=next((a for a in visual['atlases'] if a['main'].endswith('/'+row['stem']+'.tex')),None)
-            if match:
-                start=next(s['url'] for s in visual['pages'] if s['atlas']==match['id'])
-                body+=' · <a href="'+html.escape(reader.site.rel(start,page),quote=True)+'">Read visual atlas in HTML</a>'
-            else:
-                from physics_companions import metadata as companion_metadata
-                companions=companion_metadata()
-                match=next((c for c in companions['companions'] if c['main'].endswith('/'+row['stem']+'.tex')),None)
-                start=(next(p['url'] for p in companions['pages'] if p['companion']==match['id']) if match else
-                    companions['scope_pages'][0]['url'] if row['stem']=='verification_scope' else None)
-                if start:
-                    body+=' · <a href="'+html.escape(reader.site.rel(start,page),quote=True)+'">Read verification material in HTML</a>'
+        from physics_discovery import destination
+        target=destination(row)
+        body+=' · <a href="'+html.escape(reader.site.rel(target['url'],page),quote=True)+'">'+target['label']+'</a>'
         body += '</li>'
     return body+'</ul></section>'

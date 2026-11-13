@@ -1136,6 +1136,8 @@ def render(reader):
     render_physics_visual(reader)
     from physics_companions import render as render_physics_companions
     render_physics_companions(reader)
+    from physics_discovery import publish as publish_physics_discovery
+    publish_physics_discovery(reader)
     render_reading_index(reader)
     from reading_navigation import publish_record
     publish_record(reader.site,BOOKS)
@@ -1154,13 +1156,15 @@ def render_reading_index(reader):
         body+='<section id="'+identifier+'"><h2>'+group+'</h2><div class="work-list">'
         for work,config in BOOKS.items():
             if bool(re.fullmatch(r'paper-[ivx]+',work))!=core:continue
-            body+='<section class="work"><p class="eyebrow">'+config['label']+'</p><h3>'+html.escape(config['title'])+'</h3><p>'+str(len(entries(config)))+' reading pages'+(' · opening selection' if config.get('partial') else '')+'</p><nav aria-label="'+config['label']+' reading formats">'
+            summary=config.get('reading_page_summary') or str(len(entries(config)))+' reading pages'+(' · opening selection' if config.get('partial') else '')
+            body+='<section class="work"><p class="eyebrow">'+config['label']+'</p><h3>'+html.escape(config['title'])+'</h3><p>'+html.escape(summary)+'</p><nav aria-label="'+config['label']+' reading formats">'
             if config.get('partial'):body+='<p>Opening chapters are available in HTML; continue in the PDF or linked sources.</p>'
             if config.get('reading_guide') and guide_enabled(site,work):body+='<a class="button" href="'+site.rel(config['reading_guide'],page)+'">Start here</a>'
             else:body+='<a class="button" href="'+site.rel(config['chapters'][0]['url'],page)+'">Start reading</a>'
             body+='<a href="'+site.rel(config['index'],page)+'">Contents</a>'
             visual=config.get('atlas_index') or config.get('visual_guide_index')
             if visual:body+='<a href="'+site.rel(visual,page)+'">Visual guide</a>'
+            if config.get('verification_index'):body+='<a href="'+site.rel(config['verification_index'],page)+'">Verification and sources</a>'
             pdf=reader.primary_pdf(work)
             if pdf:body+='<a href="'+site.rel(pdf['url'],page)+'">Read PDF</a>'
             body+='</nav></section>'
@@ -1250,7 +1254,7 @@ def render_statement_directory(reader,book):
     if not has_statement_finder(config):return
     site=reader.site;page=statement_directory_url(config);e=html.escape
     body='<p class="eyebrow">Find in '+e(config['label'])+'</p><h1>'+e(config['label'])+': Statements and proofs</h1>'
-    scope='in this HTML selection' if config.get('partial') else 'anywhere in this work'
+    scope=config.get('statement_scope') or ('in this HTML selection' if config.get('partial') else 'anywhere in this work')
     body+='<p>Find a statement '+scope+' by title, printed number, type or source label. Entries follow the chapter order. Each proof link opens the written proof passage.</p>'
     body+='<div class="reading-statement-directory"><h2>Statements by chapter</h2>'
     for spec,_,chapter in book['chapters']:

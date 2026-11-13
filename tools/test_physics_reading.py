@@ -292,7 +292,9 @@ class PhysicsReadingTests(unittest.TestCase):
             for entry in book['references']:
                 self.assertIn('ref-'+entry['key'], pages[BOOK['bib_page']].ids)
             index = (output/BOOK['index']).read_text(encoding='utf-8')
-            self.assertIn('opening HTML installments', index)
+            self.assertIn('HTML reading sequences', index)
+            self.assertIn('60 original plates across 72 atlas pages',index)
+            self.assertNotIn('26 atlas plates',index)
             self.assertIn('572-page', index)
             self.assertIn('adds no proof audit', index)
             destinations = [int(urlsplit(link).fragment.removeprefix('page=')) for link in pages[BOOK['index']].links

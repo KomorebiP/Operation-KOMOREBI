@@ -387,6 +387,8 @@ class ReadingDocuments:
 
     def document_works(self, repo, path):
         if repo != 'collection': return []
+        if path=='docs/PHYSICS_COLLECTION.md':
+            return ['monographs-physics','physics-curvature-states','physics-energy-backreaction','physics-origin-locking']
         from readable_chapters import BOOKS
         from build_reader_site import document_url
         formal_guides=[work for work,book in BOOKS.items() if book.get('lean_reader_guide')==document_url(repo,path)]
