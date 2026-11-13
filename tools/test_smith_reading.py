@@ -83,5 +83,6 @@ class ReadingTests(unittest.TestCase):
     def test_visible_reading_contains_no_development_version_log(self):
         text=e.prose(self.final)
         self.assertNotRegex(text,re.compile(r'\bdraft\b|superseded|predecessor|checkpoint|outstanding|remains? open|remaining work|we have not proved',re.I))
+        self.assertNotRegex(text,re.compile(r'\b(?:terminal|vertices|totals|below|minus|value|radius|baseline|all|step)\d',re.I))
 
 if __name__=='__main__':unittest.main()
