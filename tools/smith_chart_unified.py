@@ -178,7 +178,7 @@ def build(site):
             assembled.append(source_markdown(site,BASE+'/FORMAL_CORE.md','formal-graph-core',
                 (BASE+'/FORMAL_PROGRESS.md',)))
             assembled.append(source_markdown(site,BASE+'/TYPED_MARGINS.md','typed-margins',
-                (BASE+'/TWO_REACTIVE_MARGIN.md',)))
+                (BASE+'/TWO_REACTIVE_MARGIN.md',BASE+'/COEFFICIENT_ROUTES.md')))
             assembled.append(source_markdown(site,BASE+'/TOLERANCE.md','component-tolerances',
                 (BASE+'/MIXED_LOSS_TOLERANCE.md',)))
         if identifier=='arbitrary-order-separation':
@@ -199,7 +199,9 @@ def build(site):
         'elimination, loss and shape statements have kernel replay. Complete formal compactification and transfer, independent peer review, '
         'a useful margin for the remaining mixed RLC models, arbitrary-target practical minimum synthesis, '
         'higher-target resistor minima, broader parasitic models and physical measurements remain open. '
-        'The new two-reactive separator and dedicated-series-loss tolerance theorem close explicit subclasses.</p>'
+        'The two-reactive separator, two series margins and dedicated-series-loss tolerance theorem close explicit subclasses. '
+        'The new coefficient line/polygon and five common templates expose the remaining physical separator; '
+        'they do not reduce the 1,992 unresolved whole-skeleton placements.</p>'
         '<p><a href="../../downloads/smith-rlc-current-source.zip">Download the complete current source and checks</a> · '
         '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/tree/'+site.revision+'/'+BASE+'">'
         'Proof, computation and source-binding records</a>. The original checkpoint ZIPs and earlier Lean receipts '

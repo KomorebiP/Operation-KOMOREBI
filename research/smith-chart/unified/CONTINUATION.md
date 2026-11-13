@@ -1,78 +1,104 @@
-# Continuation after mixed-loss and two-reactive closure
+# Continuation after coefficient-fiber and series-margin work
 
-Checkpoint: `loss-and-two-reactive-coefficient-001`. Base main revision:
-`1df0ff340b886699400475f4d379d0d41e712ba2`, including prior Smith publication
-`248346361c93e7edb345c1a128ef1d63862fc4fd`. `STATE.json` is the single current
-dashboard; `PROGRAM.md` retains the six completion contracts.
+Checkpoint: `coefficient-fiber-and-series-001`. Base main revision:
+`b6aceb2b74a62429806e9dc1d6ffcf1660204530`, containing prior Smith merge
+`0ff147ae87ff6afca72b0be4f565b0629cb2f50b`. `STATE.json` remains the single
+current dashboard; `PROGRAM.md` retains the six completion contracts.
 
 Continue research and publication in the same canonical Smith/RLC book at
-`read/smith-chart/research.html`. Preserve original checkpoint ZIPs and
-byte-bound predecessor sources and receipts. The user wants a coherent site,
-not separate competing current pages. New extensions receive fresh records.
+`read/smith-chart/research.html`. Preserve the six authored checkpoint ZIPs,
+byte-bound predecessor code and reviews, and the forty-one selected Lean
+statements. No subagents or independent reviewers were used. No external
+mathematical jobs remain active; CI/deployment is recorded separately.
 
-## What this phase settled
+## Strongest additions in this phase
 
-1. `TWO_REACTIVE_MARGIN.md` proves a margin `1/1000000` for every ordinary
-   network with at most two reactive branches and arbitrary resistor count.
-   The five positive-real samples, rational inverse and coefficient-box signs
-   replay exactly. Classical regularity/Reichert classification remains an
-   explicit external theorem leaf; this is not its complete Lean verification.
-   A nonregular exceptional physical bridge is an essential control.
-2. `MIXED_LOSS_TOLERANCE.md` proves a finite branch-to-port mismatch bound and
-   exact uncertainty disk. `solver/loss_certificate.py` handles independent
-   R/L/C errors in an explicit dedicated-series-loss model over a positive
-   frequency band. At band ratio at most ten and one-percent errors, a
-   nominally matched port reflects less than `1/385` of incident power.
-   This does not supply ESR measurements, stray coupling or a general high-Q
-   guarantee. The general contraction principle is classical overlap.
-3. `FORMAL_PROGRESS.md` records sixteen added selected theorem audits:
-   one real-potential resistor-node elimination, zero degree and retained
-   currents; complex KCL-to-power and mixed-loss contraction; and the exact
-   polynomial disk. There are forty-one selected statements across four
-   receipts. The complete universal chain and independent human review remain open.
+1. **Two actual series classes:** L + arbitrary RC has margin `1/2000`;
+   C + arbitrary RL has margin `1/500000` on the seven positive-real samples.
+   The body has arbitrary resistor and same-kind storage count. An actual
+   series support condition is essential; arbitrary complete-core resistors
+   can bypass it. These do not add entire skeletons to the covered count.
+2. **Exact type obstruction:** with exactly one L, finite positive endpoint
+   impedances and a finite nonzero loss-free phasor solution, the minimum
+   impedance is `-i*omega*L`. Frequency inversion gives the one-C counterpart.
+   The explicit capacitor-component pairing proof has project self-review,
+   with 24 physical controls. It is not a quantitative sample separator or
+   an independent/formal proof; historical priority is not asserted.
+3. **Quantitative coefficient fiber:** normalized nonnegative degree-three/
+   four pairs reduce to the target times a linear/quadratic multiplier.
+   The inverse bounds are `40341527/4160` and `2009196425/10368`.
+   An interior mixing construction repairs possible negative coefficients
+   of the affine projection. Degree four permits negative multiplier middle
+   coefficients and the resonant cancellation `m=s^2+1`.
+4. **Five common templates:** split every reactive endpoint, then reconstruct
+   every original placement with resistor wire/open faces. The exact map
+   was checked on all 2,130 retained mixed representatives. The positive-real
+   energy-minimization proof gives continuity of finite-resistor approximants.
+   Uniformity over those boundary faces remains part of every separator.
+5. **False shortcut refuted physically:** six-reactive degree-three circuits
+   lose endpoint control; a seven-reactive degree-four circuit approaches all
+   positive-real samples but has order-one resonant reflection disagreement.
+   Thus passivity plus degree and coefficient proximity cannot replace the
+   physical reactive-count restrictions.
 
-The nineteen remaining budget-two mixed representatives are now covered.
-The union with the two terminal-shunt classes covers 138 of 2,130. Exactly
-1,992 remain: 220 at budget three and 1,772 at budget four.
+Read `COEFFICIENT_ROUTES.md`, `PHASE4_CONTRACT.md`, `PHASE4_REVIEW.json` and
+`verification/current-exact-006`. New arithmetic sources are
+`solver/coefficient_fiber.py`, `series_type_margins.py`,
+`universal_reactive_template.py`, `single_kind_minimum.py`,
+`transfer_barriers.py` and `check_coefficient_routes.py`.
+`solver/check_current_routes.py` replays these and the unchanged predecessor
+wrapper. There are 164 projection controls, 91 fiber controls, 24 series
+graphs, 24 minimum-sign graphs, 2,130 exact lifts, 105 finite-approximant
+sample comparisons and nine passive transfer examples. These are different
+units and are not a new global topology-exclusion count.
 
-Current controls are in `verification/current-exact-005`, the new formal replay
-in `verification/phase3-loss-reduction-formal-001`, and the claim-by-claim
-self-review in `PHASE3_REVIEW.json`. The mixed-loss controls check 1,110
-physical corners and 4,686 local mismatch inequalities on nine fixed graph
-families. Finite counts are not global graph counts or a substitute for proof.
+## Exact missing implication
 
-## The next breakthrough targets, in order
+Whole-skeleton coverage remains 138 of 2,130; 1,992 remain, split as 220 at
+budget three and 1,772 at budget four. The five common mixed distributions are
+`(nL,nC)=(1,2),(2,1),(1,3),(2,2),(3,1)`.
 
-| Gap | Concrete route and next discriminator | Evidence needed to close it |
-|---|---|---|
-| Useful three/four-reactive margin | Work in normalized coefficient space before unrestricted KCL. A degree-q response agreeing with the degree-two target is the target pair multiplied by a degree-(q-2) polynomial. At q=3/4 this suggests an affine line/plane after normalization. Derive a quantitative distance-to-fiber bound from all seven samples, then a physically necessary condition excluding the entire allowed fiber. | An exact rational certificate including arbitrary resistor count, all remaining topologies and boundary limits. The coefficient observation alone excludes no graph. |
-| Complete formal assurance | Iterate the checked star-mesh step, retaining every KCL equation, positivity and zero-degree removal. Connect it to bounded-flow existence and analytic boundary limits. | Kernel-checked iteration and the analytic/rational/packet-transfer bridges, with an axiom audit. More arithmetic does not replace them. |
-| Practical arbitrary mixed synthesis | Add a complete mixed subclass using authenticated bridge formulas or checked composition; bind target identity and positive physical values before optimization. | Physical exact certificates and a global reactive lower bound for every admitted target. Numerical proposals alone are insufficient. |
-| Higher resistor minima | Seek an obstruction beyond the two endpoint values, while allowing arbitrary extra reactive branches. | A necessary invariant applying to the original degree-six and lifted targets. Seven resistors in the witness remain only an upper bound. |
-| Broader engineering robustness | Extend local mismatch to justified frequency-dependent part models or validated passive multiports; attach actual ESR/tolerance/parasitic data. | Verified envelopes on the full band and calibrated measurements. The disk controls reflection, not internal dissipation. |
-| Priority and independent review | Compare exact specialization statements against primary sources; seek human checking of the written chain when available. | Source-accurate overlap records and actual independent reports. Finite searches cannot establish global novelty. |
+Find a physically necessary inequality that excludes a neighborhood of the
+entire allowed coefficient segment/polygon for these templates, uniformly
+through every wire/open resistor face. It must handle `m(0)=0`, a degree drop
+at infinity and `m(i)=0`. Merely fitting exact minimum-function classification
+to a nearby response is invalid: the nearby response need not itself be a
+minimum function. Positive semidefiniteness of an unconstrained port matrix
+also loses the ordinary resistor realization restrictions.
 
-## Mechanisms to avoid repeating unchanged
+The cheapest next discriminator is to derive a quantitative counterpart of
+the one-L component-pairing obstruction, first on a coefficient region where
+the endpoint and resonant denominators have explicit lower bounds. Then
+handle each excluded cancellation face by a separately justified physical
+reduction or a different inequality. A conditional region certificate must
+state its denominator hypotheses and does not close a whole template.
 
-The old compact-KCL NRA probe processed 62 selected models with one second per
-model: one backend UNSAT and 61 UNKNOWN. UNKNOWN is resource-inconclusive.
-Some models now have separate analytic certificates; backend output itself
-is not a proof. Repeating the same formulation and timeout is not a new route.
+Test any proposed rule against the nonregular bridge, both minimum-sign
+controls and the finite approximants to template boundary faces. Numerical
+proposals require fresh exact physical replay. Backend UNSAT without a
+refutation certificate is backend evidence; UNKNOWN is inconclusive.
 
-The complementary capacitor/RL class could not be excluded by changing the sign
-of a four-sample stencil. The seven-sample sixth difference succeeded; retain
-the earlier thirty-five-subset discriminator in
-`verification/complementary-stencils-001`.
+## Preserved routes and untried continuations
 
-The unrestricted mixed-RLC tolerance extension is false. Preserve its exact
-near-resonant counterexample. A remote shared resistor cannot qualify as the
-dedicated positive series loss required by the new consumer.
+- The old 62-model compact KCL probe had one backend UNSAT and 61 UNKNOWN
+  with one second per model. Repeating it unchanged is not a new route.
+- Sixth differences succeeded for the series-C/RL class; all third-through-
+  fifth difference subset tests of `s*Z_H` have the admissible sign and cannot
+  supply its separator. The exact sixth-difference witness is retained.
+- The physical one-L nonregular bridge refutes unrestricted convexity of Z.
+  Do not infer an actual series connection from the number of inductors.
+- The new graph splitting is a consolidation of placement cases, not an
+  automatic decrease in continuous solver complexity. A finite resistor-port
+  representation that omits infinite wire limits misses minimum functions.
+- Iterating the checked star-mesh step in Lean remains a separate assurance
+  route. The new written graph lift and type theorem are not added to the
+  forty-one-statement formal count.
+- Complete mixed synthesis, higher-degree resistor minima, broader physical
+  parasitic/loss data and measurements, and broad priority remain open under
+  their original contracts. The preceding dedicated-series-loss theorem and
+  all-two-reactive margin remain available unchanged.
 
-The source's Figure A.11 caption incorrectly calls the exceptional bridge
-always regular. Theorem A.9, formula A.252 and the nonregular physical control
-are the actual dependencies. The original Reichert proof was not independently
-regenerated; the retained dissertation's explicit Theorem 3.1 is the external leaf.
-
-No external mathematical jobs remain active at this checkpoint. CI and live
-publication have a separate delivery receipt. No parallel reviewers, physical
-measurements or global novelty claims were used.
+The accepted scope authorizes continued research, exact checks, consolidation
+and publication on the existing reader. Use fresh provenance directories for
+new runs and preserve predecessor hashes. Future review should state whether
+it is an author self-review, an actually independent report or Lean replay.

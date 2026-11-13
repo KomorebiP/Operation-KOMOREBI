@@ -12,13 +12,22 @@ Search, sitemap and the two-pane catalogue present the canonical reading.
 
 ## Mathematical progress
 
-The current phase adds a usable all-two-reactive separator at margin
+The preceding phase added a usable all-two-reactive separator at margin
 `1/1000000`, a dedicated-series-loss mixed-RLC uncertainty disk and an exact
 component-box consumer, and sixteen more selected formal statements. The total
 is forty-one selected theorem axiom audits. The two-reactive result closes the
 nineteen remaining budget-two representatives; 1,992 mixed budget-three/four
 representatives remain. These improvements supplement the complete first-order
 and capped RC/RL constructors and the earlier exact-six and family work.
+
+The current phase adds series-L/RC and series-C/RL margins `1/2000` and
+`1/500000`, a written minimum-sign theorem with exactly one inductor or
+capacitor, exact distance bounds to the degree-three/four coefficient fiber,
+and five common graph templates with explicit open/wire faces. Passive
+six/seven-reactive controls refute endpoint/resonance transfer from degree
+and real-sample proximity alone. Whole-skeleton coverage and the selected
+Lean count remain unchanged. See `COEFFICIENT_ROUTES.md` and
+`PHASE4_REVIEW.json`; the new exact run is `verification/current-exact-006`.
 
 Read `TWO_REACTIVE_MARGIN.md`, `MIXED_LOSS_TOLERANCE.md` and
 `FORMAL_PROGRESS.md` for the new statements and their limits.
@@ -59,7 +68,8 @@ python -B replay.py
 
 This authenticates six retained authored checkpoints, replays the eleven
 portable predecessor commands in isolated copies, and runs the current exact
-family, boundary, synthesis/tolerance, topology, mixed-loss and coefficient-box checks. It writes a fresh
+family, boundary, synthesis/tolerance, topology, mixed-loss, coefficient-box,
+coefficient-fiber, series-margin and physical transfer-barrier checks. It writes a fresh
 result directory without changing retained archives.
 No network, numerical solver or optional package is needed. Python 3.11+ is the
 intended baseline; the current replay uses Python 3.12.14 on Windows.
