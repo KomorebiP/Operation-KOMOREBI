@@ -45,6 +45,8 @@ class GlossaryLookupTests(unittest.TestCase):
                 self.assertIn(alias, entry['data-search'])
             if term.get('example_text'):
                 self.assertIn(term['example_text'], entry['data-search'])
+            if term.get('quick_example'):
+                self.assertIn(term['quick_example'], entry['data-search'])
             self.assertEqual(entry['data-search'], glossary_search_text(term))
         reference = render_glossary(config)
         self.assertEqual((root/'docs/GLOSSARY.md').read_text(encoding='utf-8'), reference)
@@ -55,6 +57,8 @@ class GlossaryLookupTests(unittest.TestCase):
                 self.assertIn('**Also called:** '+', '.join(term['aliases']), reference)
             if term.get('example_text'):
                 self.assertIn('**In the worked example:** '+term['example_text'], reference)
+            if term.get('quick_example'):
+                self.assertIn('**Quick example:** '+term['quick_example'], reference)
         self.assertIn('hidden', result.elements['glossary-form'])
         self.assertIn('hidden', result.elements['glossary-matches'])
         self.assertEqual(result.elements['glossary-status']['role'], 'status')
@@ -74,6 +78,11 @@ class GlossaryLookupTests(unittest.TestCase):
         for comparison in config['glossary_comparisons']:
             self.assertEqual(len(comparison['terms']), 2)
             self.assertTrue(set(comparison['terms']) <= identifiers)
+        for route in config['glossary_routes']:
+            self.assertIn('route-'+route['id'], identifiers)
+            self.assertTrue(set(route['terms']) <= identifiers)
+            self.assertIn(']('+route['reading']+')', reference)
+            self.assertTrue((root/'docs'/route['reading']).is_file())
         index = reference.split('## Alphabetical index\n', 1)[1]
         self.assertEqual(set(re.findall(r'\]\(#([^)]*)\)', index)) - identifiers, set())
         for term in config['glossary']:
@@ -104,16 +113,19 @@ class GlossaryLookupTests(unittest.TestCase):
         config = dict(glossary_sections=[dict(id='test',title='Test & examples')],
                       glossary=[dict(id='sample',term='A "term" <test>',section='test',
                                      definition='x < y & y > z',note='Read "carefully".',
-                                     aliases=['<alias> & "name"'],example_text='<example> & "value"')])
+                                     aliases=['<alias> & "name"'],example_text='<example> & "value"',
+                                     quick_example='<quick> & "illustration"')])
         markup = glossary_lookup(config)
         self.assertNotIn('<test>', markup)
         self.assertNotIn('<alias>', markup)
         self.assertNotIn('<example>', markup)
+        self.assertNotIn('<quick>', markup)
         parsed = LookupHTML(markup)
         self.assertEqual(parsed.entries[0]['data-term'], config['glossary'][0]['term'])
         self.assertIn('x < y & y > z', parsed.entries[0]['data-search'])
         self.assertEqual(parsed.entries[0]['data-aliases'], '<alias> & "name"')
         self.assertIn('<example> & "value"', parsed.entries[0]['data-search'])
+        self.assertIn('<quick> & "illustration"', parsed.entries[0]['data-search'])
         self.assertEqual(parsed.links, ['#sample'])
 
 

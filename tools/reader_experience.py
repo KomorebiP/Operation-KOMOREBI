@@ -37,10 +37,17 @@ def load(root):
         if 'example_text' in term:
             assert isinstance(term['example_text'], str) and term['example_text'].strip()
             assert term.get('example'), 'A short example needs a worked-example link'
+        if 'quick_example' in term:
+            assert isinstance(term['quick_example'], str) and term['quick_example'].strip()
     for step in data.get('glossary_start', []):
         assert step['terms'] and set(step['terms']) <= identifiers
     for comparison in data.get('glossary_comparisons', []):
         assert len(comparison['terms']) == 2 and set(comparison['terms']) <= identifiers
+    routes = data.get('glossary_routes', [])
+    assert len({route['id'] for route in routes}) == len(routes)
+    for route in routes:
+        assert route['terms'] and set(route['terms']) <= identifiers
+        assert route['title'] and route['question'] and route['reading'] and route['reading_label']
     topics=data.get('learning_topics',[])
     assert len({x['id'] for x in topics})==len(topics)
     assert len({x['example'] for x in topics})==len(topics)
@@ -200,7 +207,9 @@ def render_glossary(config):
     terms={x['id']:x for x in config['glossary']}
     text='# Glossary\n\n'
     text+='This guide explains '+str(len(terms))+' terms used across the collection, its operator guide and worked examples. '
-    text+='Use the [first reading route](#a-first-reading), [compare nearby ideas](#compare-nearby-ideas), [browse by subject](#browse-by-subject), or open the [alphabetical index](#alphabetical-index).\n\n'
+    text+='Use the [first reading route](#a-first-reading), '
+    if config.get('glossary_routes'):text+='[follow a subject route](#subject-reading-routes), '
+    text+='[compare nearby ideas](#compare-nearby-ideas), [browse by subject](#browse-by-subject), or open the [alphabetical index](#alphabetical-index).\n\n'
     text+='[Find a glossary term on the reading website]('+SITE+'collection/GLOSSARY.html#glossary-lookup): search names, abbreviations, definitions and short examples, or choose a subject. Open the glossary beside a paper with **Read side by side**.\n\n'
     text+='A word can have a more specific meaning in another paper. The paper’s definitions and hypotheses take precedence. Examples and source links provide context without changing any recorded evidence status.\n\n'
     text+='[Operator guide](OPERATOR_AUDIT.md) · [Look up notation across the collection](NOTATION_INDEX.md) · [Work through the calculations by hand](HAND_WORKED_EXAMPLES.md) · [Papers, proofs, Lean, and code by topic](LEARNING_MAP.md) · [First software runs](FIRST_RUN.md)\n\n'
@@ -209,6 +218,12 @@ def render_glossary(config):
         for index, step in enumerate(config['glossary_start'], 1):
             text+=str(index)+'. '+' · '.join('['+terms[key]['term']+'](#'+key+')' for key in step['terms'])+' — '+step['description']+'\n'
         text+='\n'
+    if config.get('glossary_routes'):
+        text+='## Subject reading routes\n\nChoose a question, follow its terms in order, then work through the linked reading. Quick examples are small illustrations; the linked works state their full assumptions and evidence.\n\n'
+        for route in config['glossary_routes']:
+            text+='<a id="route-'+route['id']+'"></a>\n\n### '+route['title']+'\n\n'+route['question']+'\n\n'
+            text+=' → '.join('['+terms[key]['term']+'](#'+key+')' for key in route['terms'])+'\n\n'
+            text+='[Continue with '+route['reading_label']+']('+route['reading']+').\n\n'
     if config.get('glossary_comparisons'):
         text+='## Compare nearby ideas\n\nThese distinctions use the glossary’s stated settings. Follow both entries for their definitions and examples.\n\n'
         text+='| Terms | Distinction to keep in view |\n|---|---|\n'
@@ -227,6 +242,7 @@ def render_glossary(config):
         for term in group:
             text+='<a id="'+term['id']+'"></a>\n\n### '+term['term']+'\n\n'+term['definition']+'\n\n'
             if term.get('aliases'):text+='**Also called:** '+', '.join(term['aliases'])+'.\n\n'
+            if term.get('quick_example'):text+='**Quick example:** '+term['quick_example']+'\n\n'
             if term.get('example_text'):text+='**In the worked example:** '+term['example_text']+'\n\n'
             if term.get('note'):text+='**Keep in mind:** '+term['note']+'\n\n'
             links=[]

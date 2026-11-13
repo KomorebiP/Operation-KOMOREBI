@@ -50,6 +50,8 @@ def glossary_lookup(config):
                  '<p class="glossary-subject">'+e(subject)+'</p><p>'+e(term['definition'])+'</p>')
         if aliases:
             body += '<p class="glossary-aliases"><strong>Also called:</strong> '+e(', '.join(aliases))+'.</p>'
+        if term.get('quick_example'):
+            body += '<p class="glossary-example"><strong>Quick example:</strong> '+e(term['quick_example'])+'</p>'
         if term.get('example_text'):
             body += '<p class="glossary-example"><strong>In the worked example:</strong> '+e(term['example_text'])+'</p>'
         if term.get('note'):
@@ -61,4 +63,4 @@ def glossary_lookup(config):
 def glossary_search_text(term):
     """Use the same vocabulary in local lookup and the collection search."""
     return ' '.join([term['term'], *term.get('aliases', []), term['definition'],
-                     term.get('example_text', ''), term.get('note', '')])
+                     term.get('example_text', ''), term.get('quick_example', ''), term.get('note', '')])
