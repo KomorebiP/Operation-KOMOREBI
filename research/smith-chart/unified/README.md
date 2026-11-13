@@ -2,7 +2,7 @@
 
 Author: Komorebi P.  
 Original consolidation base: `3e4090141cc88dac723d87c7c504a9b1076a2caf`.
-Current research base: `1036900233681e40743c077110076dd77099dfb7` (PR200).
+Current research base: `90490f3affda0ed641fd00d828e392a6ea7c44ee` (after PR202).
 
 The maintained reading is now one canonical article at
 `read/smith-chart/research.html`. Its single contents structure includes the
@@ -13,22 +13,28 @@ Search, sitemap and the two-pane catalogue present the canonical reading.
 
 ## Mathematical progress
 
-The current balanced-resonance phase separates the exact internal-mode face:
-with at most two L and two C, a port-zero mode forces a response realizable
-with at most three reactives or frequency-inversion symmetry. Natural
-P(i)=Q(i)=0 therefore gives sample error >1e-13. A positive-real comparison
-also certifies error >3/40 for an inversion-symmetric mode face with at most
-one-percent reactive detuning and opened-resistor conductance sum <=1/100.
-Allowed resistors have arbitrary count and values. The supplied portable
-producer/consumer checks the actual graph and rational slack.
+The current regular-balanced phase classifies the entire exact-data stratum:
+with at most two L and two C, arbitrary positive R, natural Q(i)!=0,
+Z0=4/9, Zinf=1, Zi=i and Zprime(i)=5, the response is one of two explicit
+quartics. The proof reduces every resistor subnetwork to two links and
+includes inactive LC, parallel branches and disconnected active circulations.
+The two exact sample errors are5175/65083 and25/2769.
 
-Read `BALANCED_RESONANCE.md`, `PHASE6_REVIEW.json` and
-`verification/current-exact-009`. The comparison domain is positive-real
-Laplace samples. No imaginary-frequency/hardware tolerance or new Lean,
-independent-review or priority claim is made. Three balanced shortcut
-counterexamples are now maintained and replayed. Whole coverage stays
-1,334 of2,130; all796 whole balanced placements remain. The missing uniform
-near-mode transfer and regular-region separator are explicit in `STATE.json`.
+A supplied neighborhood around either nominal response has strict error
+greater than1/300 when all retained component errors are at most1% and
+sum opened1/R plus sum contractedR is at most1/10000. The portable consumer
+checks the actual graph surgery, nominal rational response and requested
+strict slack. Read `REGULAR_BALANCED.md`, `PHASE7_REVIEW.json` and
+`verification/current-exact-010`. These are positive-real Laplace bounds.
+The theorem allows arbitrary finite R count; the rational consumer has
+documented resource caps. There is no new independent/formal or hardware claim.
+
+The preceding mode phase remains unchanged: natural P(i)=Q(i)=0 gives
+error>1e-13 through the internal-mode dichotomy; its inversion-symmetric
+detuning/opening-budget region gives error>3/40. See `BALANCED_RESONANCE.md`
+and preserved009. Explicit whole-margin coverage stays1,334/2,130; all796
+whole balanced placements still need a useful uniform sample-to-physical
+transfer or another separator. Selected Lean coverage remains41 statements.
 
 The preceding whole one-kind theorem closes all 246 mixed budget-three classes
 and the 1,062 one-L/one-C budget-four classes, with arbitrary resistor count,
