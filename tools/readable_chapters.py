@@ -212,10 +212,12 @@ NUMBERED.update('hist'+kind for kind in ('theorem','proposition','lemma','coroll
 NUMBERED.add('numericalcertificate')
 NUMBERED.update({'principle','question'})
 NUMBERED.update({'algorithm','protocol','counterexample'})
+NUMBERED.add('diagnostic')
 KIND_NAMES = {'classical':'Classical input','statement':'Supplementary statement','standardfact':'Standard fact','certificate':'Numerical certificate','text':'Passage','roadmap':'Formalization target','classicalinput':'Classical input'}
 KIND_NAMES.update({'hist'+kind:'Historical '+('standard fact' if kind=='standardfact' else kind)
                   for kind in ('theorem','proposition','lemma','corollary','definition','example','remark','standardfact')})
 KIND_NAMES['numericalcertificate']='Numerical certificate'
+KIND_NAMES['diagnostic']='Controlled diagnostic'
 HEADINGS = {'part':2,'section':2,'subsection':3,'subsubsection':4,'paragraph':5}
 MATH_PATTERN = re.compile(r'(?<!\\)\$(.*?)(?<!\\)\$|(?<!\\)\\\[(.*?)\\\]|(\\begin\{align\*\}.*?\\end\{align\*\})|(?<!\\)\\\((.*?)\\\)',re.S)
 PANELS = {'keyidea': 'The central idea', 'interpretation': 'How to read the result',
@@ -610,6 +612,7 @@ class Chapter:
                     numbers=list(dict.fromkeys(getattr(self,'equation_numbers',{}).get(key)
                         for key in re.findall(r'\\label\{([^{}]+)\}',tex)))
                     numbers=[n for n in numbers if n]
+                    numbers=getattr(self,'display_equation_numbers',{}).get(len(self.math)-1,numbers)
                     if numbers:out.append('<span class="equation-number">'+html.escape(', '.join('('+n+')' for n in numbers))+'</span>')
                 pos = math.end()
             elif text[pos]=='$':
@@ -1480,6 +1483,8 @@ def render_book(reader,book):
             raise ValueError('Reading math differs at '+source+' expression '+str(difference)+' rendered '+str(chapter.math[difference:difference+1])+' original '+str(expressions[difference:difference+1]))
         report=dict(source=source,source_sha256=hashlib.sha256(raw).hexdigest(),url=page,math_expressions=len(expressions),math_sequence_sha256=hashlib.sha256(json.dumps(expressions,ensure_ascii=False).encode()).hexdigest(),references=len(chapter.references),labels=sum(len(n['labels']) for n in chapter.nodes),nodes=[{k:n[k] for k in ('kind','id','line','end_line','labels','number','source','source_spans') if k in n} for n in chapter.nodes],macro_source=getattr(chapter,'macro_source',config.get('macro_source',config['main'])),macros=chapter.macros,new_proof_review=False,new_lean_execution=False)
         if getattr(chapter,'nested_tables',None):report['nested_tables']=chapter.nested_tables
+        if hasattr(chapter,'display_equation_numbers'):
+            report['display_equation_numbers']={str(k):v for k,v in chapter.display_equation_numbers.items()}
         aided_tables.update(getattr(chapter,'table_aids_used',set()))
         reports.append(report)
         if 'start_line' in spec: report.update(start_line=spec['start_line'],end_line=spec['end_line'])

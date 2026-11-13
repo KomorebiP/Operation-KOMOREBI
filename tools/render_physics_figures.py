@@ -14,7 +14,7 @@ def main():
     import pypdfium2 as pdfium
     from readable_chapters import group
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--treatment', choices=('foundations', 'dirac', 'generator', 'gauge', 'gravity', 'adic'), default='foundations')
+    parser.add_argument('--treatment', choices=('foundations', 'dirac', 'generator', 'gauge', 'gravity', 'adic', 'fiber'), default='foundations')
     treatment = parser.parse_args().treatment
     if treatment == 'generator':
         from PIL import Image
@@ -58,12 +58,19 @@ def main():
     if treatment == 'adic':
         inputs = ['adic/finite.tex', 'adic/spectral.tex', 'adic/limit.tex']
         command, directory, output, expected = 'adicfigure', 'adic_figures', 'assets/figures/physics-adic/', 7
+    source_base = BASE
+    if treatment == 'fiber':
+        from physics_fiber import BASE as source_base
+        inputs = ['source/'+name+'.tex' for name in ('03_canonical_closure','04_universality','05_backreaction','06_radiative','appendix_reproducibility')]
+        command, directory, output, expected = 'includegraphics', 'figures', 'assets/figures/physics-fiber/', 5
     records = []
     for name in inputs:
-        text = (ROOT/BASE/name).read_text(encoding='utf-8')
+        text = (ROOT/source_base/name).read_text(encoding='utf-8')
         for match in re.finditer(r'\\'+command+r'(?:\[[^\]]+\])?\{([^{}]+)\}', text):
-            caption, _ = group(text, match.end())
-            source = BASE+directory+'/'+match[1]+'.pdf'
+            caption_at = text.index(r'\caption{', match.end())+len(r'\caption') if treatment=='fiber' else match.end()
+            caption, _ = group(text, caption_at)
+            stem = Path(match[1]).stem if treatment=='fiber' else match[1]
+            source = source_base+directory+'/'+stem+'.pdf'
             raw = (ROOT/source).read_bytes()
             document = pdfium.PdfDocument(raw)
             if len(document) != 1:
@@ -71,13 +78,25 @@ def main():
             page = document[0]
             bitmap = page.render(scale=2.5)
             image = bitmap.to_pil()
-            target = ROOT/'website'/output/(match[1]+'.png')
+            target = ROOT/'website'/output/(stem+'.png')
             target.parent.mkdir(parents=True, exist_ok=True)
             image.save(target)
             records.append(dict(source=source,source_sha256=hashlib.sha256(raw).hexdigest(),
                 image=output+target.name,image_sha256=hashlib.sha256(target.read_bytes()).hexdigest(),
                 width=image.width,height=image.height,scale=2.5,caption=caption))
             image.close(); bitmap.close(); page.close(); document.close()
+    if treatment == 'fiber':
+        if len(records)!=6:
+            raise ValueError('Review Physics fiber figure placements')
+        unique = {}
+        for record in records:
+            if record['source'] in unique:
+                if unique[record['source']]['image_sha256']!=record['image_sha256']:
+                    raise ValueError('Repeated Physics figure render differs')
+                unique[record['source']]['uses'] = unique[record['source']].get('uses',1)+1
+            else:
+                unique[record['source']] = record
+        records = list(unique.values())
     if len(records) != expected or len({r['source'] for r in records}) != expected:
         raise ValueError('Review Physics figure inventory: '+treatment)
     (ROOT/'website'/output/'figures.json').write_text(json.dumps(dict(figures=records),ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
