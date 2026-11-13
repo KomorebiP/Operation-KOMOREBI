@@ -56,6 +56,9 @@ class ChemistryCheckpointTests(unittest.TestCase):
             site=fixture_site(Path(directory));report=chemistry.publish(site);site.markdown_pages()
             self.assertEqual(report['reading_pages'],7);self.assertFalse(report['new_scientific_execution'])
             self.assertEqual(len(site.search),9)
+            self.assertTrue(all(row['group']=='Collection' for row in site.search))
+            proof_rows=[row for row in site.search if row.get('kind')=='Written proofs']
+            self.assertEqual({Path(row['url']).name for row in proof_rows},{'normal-form.html','three-queries.html','spin-comparison.html'})
             overview=(site.output/chemistry.OVERVIEW).read_text(encoding='utf-8')
             self.assertIn('<title>Computational chemistry:',overview)
             self.assertIn('21 independent parameters',overview)

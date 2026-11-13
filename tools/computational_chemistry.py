@@ -97,5 +97,6 @@ def publish(site):
         provenance='<details><summary>Source identity and download</summary><p>This reading renders the retained export member <code>'+html.escape(source)+'</code>. The replay export retains the declared distinction between the original fixture container and its selected-array view.</p><p><a href="'+site.rel(ASSETS+source,path)+'">Read this member as source</a> · <a href="'+site.rel(ASSETS+'Stage14_Fixed_Spin_Recovery.zip',path)+'">Download the replay bundle</a></p><pre tabindex="0" role="group" aria-label="Source SHA256; scroll horizontally if needed"><code>'+record['files'][source]['sha256']+'</code></pre></details>'
         site.page(path,title,nav+'<article>'+body+provenance+'</article>','https://github.com/KomorebiP/Operation-KOMOREBI/blob/'+site.revision+'/'+record['archive'])
         plain=html.unescape(re.sub(r'<[^>]+>',' ',rendered))
-        site.search.append(dict(title=title,group='Physics and chemistry',kind='Research checkpoint',url=path,work_ids=[],text=re.sub(r'\s+',' ',plain)[:50000]))
+        kind='Written proofs' if name in {'normal-form.html','three-queries.html','spin-comparison.html'} else 'Guides'
+        site.search.append(dict(title=title,group='Collection',kind=kind,url=path,work_ids=[],text=re.sub(r'\s+',' ',plain)[:50000]))
     return {'archive_sha256':record['sha256'],'export_files':len(files),'reading_pages':len(PAGES),'new_scientific_execution':False}
