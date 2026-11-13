@@ -31,11 +31,19 @@ class SmithCoefficientRouteTests(unittest.TestCase):
 
     def test_replay_reaches_new_checks_and_scope_stays_explicit(self):
         replay=(AREA/'replay_current.py').read_text(encoding='utf-8')
-        self.assertIn('solver/check_current_routes.py',replay)
+        self.assertIn('current-exact-suites',replay)
         state=json.loads((AREA/'STATE.json').read_bytes())
-        self.assertEqual(state['current_phase'],'coefficient-fiber-and-series-001')
+        latest=AREA/Path(state['current_evidence']['portable_exact_suite']).parent/'stdout.txt'
+        def scripts(value):
+            if isinstance(value,dict):
+                if 'script' in value:yield value['script']
+                for x in value.values():yield from scripts(x)
+            elif isinstance(value,list):
+                for x in value:yield from scripts(x)
+        self.assertIn('check_coefficient_routes.py',set(scripts(json.loads(latest.read_bytes()))))
+        self.assertIn('coefficient-fiber-and-template-reduction',{r['id'] for r in state['routes']})
         self.assertEqual(state['formal_scope']['theorems'],41)
-        self.assertEqual(state['mixed_representatives']['remaining'],1992)
+        self.assertEqual(state['mixed_representatives']['remaining'],796)
         self.assertFalse(state['new_lean_claim'])
         self.assertEqual(len(state['remaining_work']),6)
         self.assertIn('COEFFICIENT_ROUTES.md',(ROOT/'tools/smith_chart_unified.py').read_text(encoding='utf-8'))

@@ -219,7 +219,7 @@ def publish(site):
             end = re.search(r'<h2\b',body[marker.end():])
             content = body[marker.end():marker.end()+end.start()] if end else body[marker.end():]
             site.search.append(dict(title=re.sub('<[^>]+>','',marker[1]), group='Collection', kind='Examples',
-                url=PAGE+'#'+slug,work_ids=[],text=html.unescape(re.sub('<[^>]+>',' ',content))[:50000]))
+                url=PAGE+'#'+slug,work_ids=[],text=html.unescape(re.sub('<[^>]+>',' ',content))[:(100000 if slug=='typed-margins' else 50000)]))
 
 
 def decorate_supplement(site, page, body):
