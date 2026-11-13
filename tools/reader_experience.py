@@ -1,6 +1,7 @@
 """Reading routes and introductions derived from the collection's recorded scope."""
 import json
 import ast
+import html
 import posixpath
 import re
 from urllib.parse import quote
@@ -203,6 +204,11 @@ def render_reader_pages(root, components, assessments):
     return {p:s.rstrip()+'\n' for p,s in out.items()}
 
 
+def glossary_prose(value):
+    """Glossary fields are literal text; adjoint stars must not become emphasis."""
+    return ''.join('\\'+char if char in '\\`*_[]#' else char for char in html.escape(value, quote=False))
+
+
 def render_glossary(config):
     terms={x['id']:x for x in config['glossary']}
     text='# Glossary\n\n'
@@ -240,11 +246,11 @@ def render_glossary(config):
         text+='<a id="'+section['id']+'"></a>\n\n## '+section['title']+'\n\n'+section['description']+'\n\n'
         text+=' · '.join('['+x['term']+'](#'+x['id']+')' for x in group)+'\n\n'
         for term in group:
-            text+='<a id="'+term['id']+'"></a>\n\n### '+term['term']+'\n\n'+term['definition']+'\n\n'
+            text+='<a id="'+term['id']+'"></a>\n\n### '+term['term']+'\n\n'+glossary_prose(term['definition'])+'\n\n'
             if term.get('aliases'):text+='**Also called:** '+', '.join(term['aliases'])+'.\n\n'
-            if term.get('quick_example'):text+='**Quick example:** '+term['quick_example']+'\n\n'
-            if term.get('example_text'):text+='**In the worked example:** '+term['example_text']+'\n\n'
-            if term.get('note'):text+='**Keep in mind:** '+term['note']+'\n\n'
+            if term.get('quick_example'):text+='**Quick example:** '+glossary_prose(term['quick_example'])+'\n\n'
+            if term.get('example_text'):text+='**In the worked example:** '+glossary_prose(term['example_text'])+'\n\n'
+            if term.get('note'):text+='**Keep in mind:** '+glossary_prose(term['note'])+'\n\n'
             links=[]
             if term.get('example'):links.append('[Hand-worked example]('+term['example']+')')
             if term.get('source')!=term.get('example'):

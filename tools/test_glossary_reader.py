@@ -5,7 +5,17 @@ from pathlib import Path
 import unittest
 
 from glossary_reader import glossary_lookup, glossary_return_links, glossary_search_text
-from reader_experience import load, render_glossary
+from reader_experience import glossary_prose, load, render_glossary
+
+
+class PlainText(HTMLParser):
+    def __init__(self, source):
+        super().__init__()
+        self.parts = []
+        self.feed(source)
+
+    def handle_data(self, text):
+        self.parts.append(text)
 
 
 class LookupHTML(HTMLParser):
@@ -52,13 +62,13 @@ class GlossaryLookupTests(unittest.TestCase):
         self.assertEqual((root/'docs/GLOSSARY.md').read_text(encoding='utf-8'), reference)
         for term in terms:
             self.assertIn('<a id="'+term['id']+'"></a>', reference)
-            self.assertIn(term['definition'], reference)
+            self.assertIn(glossary_prose(term['definition']), reference)
             if term.get('aliases'):
                 self.assertIn('**Also called:** '+', '.join(term['aliases']), reference)
             if term.get('example_text'):
-                self.assertIn('**In the worked example:** '+term['example_text'], reference)
+                self.assertIn('**In the worked example:** '+glossary_prose(term['example_text']), reference)
             if term.get('quick_example'):
-                self.assertIn('**Quick example:** '+term['quick_example'], reference)
+                self.assertIn('**Quick example:** '+glossary_prose(term['quick_example']), reference)
         self.assertIn('hidden', result.elements['glossary-form'])
         self.assertIn('hidden', result.elements['glossary-matches'])
         self.assertEqual(result.elements['glossary-status']['role'], 'status')
@@ -102,6 +112,15 @@ class GlossaryLookupTests(unittest.TestCase):
         rewrite = Rewriter(lambda target, image: target)
         rewrite.feed(rendered)
         original = ''.join(rewrite.out)
+        import re
+        for term in config['glossary']:
+            marker = '<p><a id="'+term['id']+'"></a></p>'
+            entry = original.split(marker, 1)[1]
+            entry = re.split(r'<p><a id=|<h2\b', entry, maxsplit=1)[0]
+            plain = ''.join(PlainText(entry).parts)
+            for key in ('definition', 'quick_example', 'example_text', 'note'):
+                if term.get(key):
+                    self.assertIn(term[key], plain, (term['id'], key, 'Markdown changed the maintained text'))
         enhanced = glossary_return_links(original, config)
         return_link = '<p class="glossary-return"><a href="#glossary-lookup">Back to glossary lookup</a></p>'
         self.assertEqual(enhanced.count(return_link), len(config['glossary']))

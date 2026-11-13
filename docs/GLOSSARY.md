@@ -268,7 +268,7 @@ A map T satisfying T(au + bv) = aT(u) + bT(v) for all vectors u, v and allowed s
 
 A rectangular array representing a linear map after bases have been chosen. An m by n matrix takes n coordinates to m coordinates. Each output coordinate is a row multiplied by the input column.
 
-**Quick example:** The matrix [[1,2],[3,4]] sends (2,3) to (8,18).
+**Quick example:** The matrix \[\[1,2\],\[3,4\]\] sends (2,3) to (8,18).
 
 [Hand-worked example](examples/03_COORDINATES.md) · [Further reading](https://github.com/KomorebiP/komorebi-math/blob/main/docs/GENERAL_COORDINATE_ATLAS.md#coordinate-systems-and-atlases) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#coordinates) · [Linear map](#linear-map) · [Basis](#basis) · [Composition](#composition)
 
@@ -360,7 +360,7 @@ The outputs actually attained by a map. For a linear map T, im T = {Tx : x is an
 
 For a finite linear map, the dimension of its image. A matrix has full column rank when its columns are linearly independent, so it has no nonzero input in its kernel.
 
-**Quick example:** The matrix [[1,1],[2,2]] has rank one because its second row and column add no independent direction.
+**Quick example:** The matrix \[\[1,1\],\[2,2\]\] has rank one because its second row and column add no independent direction.
 
 **Keep in mind:** Matrix rank and seed rank answer different questions.
 
@@ -370,7 +370,7 @@ For a finite linear map, the dimension of its image. A matrix has full column ra
 
 ### Inner product
 
-For real vector spaces, a symmetric bilinear pairing with ⟨v,v⟩ > 0 for every nonzero v. It defines lengths and angles. Positive weights give the pairing sum_i w_i u_i v_i. Complex inner products use conjugate symmetry and conjugate linearity in one argument.
+For real vector spaces, a symmetric bilinear pairing with ⟨v,v⟩ &gt; 0 for every nonzero v. It defines lengths and angles. Positive weights give the pairing sum\_i w\_i u\_i v\_i. Complex inner products use conjugate symmetry and conjugate linearity in one argument.
 
 **Quick example:** For u = (1,2), the weighted inner product with weights (1,3) gives ⟨u,u⟩ = 1+12 = 13.
 
@@ -480,9 +480,9 @@ The vector space V/W obtained by identifying vectors whose difference lies in a 
 
 ### Determinant
 
-A scalar attached to a square matrix. For [[a,b],[c,d]] it is ad − bc. Over a field, a square matrix is invertible exactly when its determinant is nonzero.
+A scalar attached to a square matrix. For \[\[a,b\],\[c,d\]\] it is ad − bc. Over a field, a square matrix is invertible exactly when its determinant is nonzero.
 
-**Quick example:** The matrix [[1,2],[3,4]] has determinant 4−6 = −2 and is invertible over the real numbers.
+**Quick example:** The matrix \[\[1,2\],\[3,4\]\] has determinant 4−6 = −2 and is invertible over the real numbers.
 
 [Hand-worked example](examples/12_BLOCK_ELIMINATION.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#elimination) · [Inverse](#inverse) · [Field](#field)
 
@@ -518,7 +518,7 @@ The span of a matrix’s row vectors over its declared coefficient field. When r
 
 **Also called:** Row span.
 
-**Quick example:** The rows (1,1) and (2,2) span the one-dimensional row space of [[1,1],[2,2]].
+**Quick example:** The rows (1,1) and (2,2) span the one-dimensional row space of \[\[1,1\],\[2,2\]\].
 
 **In the worked example:** The rows (1,1,0) and (0,1,1) span the target row (1,2,1), obtained by adding them. Thus adding the corresponding two measurements recovers that target exactly.
 
@@ -540,13 +540,13 @@ A linear functional from a vector space to its coefficient field. With column-ve
 
 ### Positive definite matrix
 
-A real symmetric or complex Hermitian matrix Q for which x*Qx > 0 for every nonzero vector x. It defines an inner product and is invertible. Positive semidefiniteness only requires x*Qx ≥ 0 and can allow nonzero vectors of zero length.
+A real symmetric or complex Hermitian matrix Q for which x\*Qx &gt; 0 for every nonzero vector x. It defines an inner product and is invertible. Positive semidefiniteness only requires x\*Qx ≥ 0 and can allow nonzero vectors of zero length.
 
 **Also called:** Positive-definite matrix, SPD matrix, HPD matrix.
 
-**Quick example:** diag(1,3) is positive definite because x²+3y² > 0 for every nonzero pair.
+**Quick example:** diag(1,3) is positive definite because x²+3y² &gt; 0 for every nonzero pair.
 
-**In the worked example:** For the example's analysis matrix, Q = A*A = [[2,1],[1,2]]. Its quadratic form is a²+b²+(a+b)², which is positive whenever (a,b) ≠ (0,0).
+**In the worked example:** For the example's analysis matrix, Q = A\*A = \[\[2,1\],\[1,2\]\]. Its quadratic form is a²+b²+(a+b)², which is positive whenever (a,b) ≠ (0,0).
 
 [Hand-worked example](examples/06_REDUNDANT_COORDINATES.md) · [Further reading](operators/catalog/K_METRICS.md#op-185) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#redundancy) · [Positive semidefinite matrix](#positive-semidefinite) · [Inner product](#inner-product) · [Classical frame operator](#classical-frame-operator) · [Metric adjoint](#metric-adjoint)
 
@@ -568,7 +568,7 @@ A nonnegative function satisfying absolute homogeneity and the triangle inequali
 
 ### Dual space
 
-For a vector space V over a field, the vector space V* of linear scalar-valued functions on V. Its elements are covectors or linear functionals. In finite coordinates a row vector acts on a column vector, but identifying covectors with vectors requires additional choices.
+For a vector space V over a field, the vector space V\* of linear scalar-valued functions on V. Its elements are covectors or linear functionals. In finite coordinates a row vector acts on a column vector, but identifying covectors with vectors requires additional choices.
 
 **Quick example:** On pairs, ℓ(x,y) = 2x−y is a covector. It sends (3,4) to 2.
 
@@ -592,7 +592,7 @@ For a subspace W of an inner-product space, W⊥ consists of all vectors perpend
 
 ### Orthonormal basis
 
-A basis whose vectors have norm one and are pairwise perpendicular in the chosen inner product. In finite real or complex coordinates, the matrix Q with these basis columns satisfies Q*Q = I.
+A basis whose vectors have norm one and are pairwise perpendicular in the chosen inner product. In finite real or complex coordinates, the matrix Q with these basis columns satisfies Q\*Q = I.
 
 **Quick example:** The Haar vectors (1,1)/√2 and (1,−1)/√2 form an orthonormal basis of Euclidean R².
 
@@ -602,9 +602,9 @@ A basis whose vectors have norm one and are pairwise perpendicular in the chosen
 
 ### Singular value
 
-A nonnegative square root of an eigenvalue of A*A for a real or complex matrix A, with zero-padding conventions stated when needed. The largest singular value is the induced Euclidean operator norm. Singular values describe gain and rank without requiring A to be square.
+A nonnegative square root of an eigenvalue of A\*A for a real or complex matrix A, with zero-padding conventions stated when needed. The largest singular value is the induced Euclidean operator norm. Singular values describe gain and rank without requiring A to be square.
 
-**Quick example:** For A = [[0,2],[3,0]], A*A = diag(9,4), so its singular values are 3 and 2.
+**Quick example:** For A = \[\[0,2\],\[3,0\]\], A\*A = diag(9,4), so its singular values are 3 and 2.
 
 **Keep in mind:** A small computed singular value needs a tolerance or enclosure before it is treated as exactly zero.
 
@@ -614,7 +614,7 @@ A nonnegative square root of an eigenvalue of A*A for a real or complex matrix A
 
 ### Singular value decomposition
 
-A factorization A = UΣV* of a finite real or complex matrix, where U and V are orthogonal or unitary and Σ is rectangular diagonal with nonnegative entries. These entries are the singular values. It separates input directions, gains and output directions.
+A factorization A = UΣV\* of a finite real or complex matrix, where U and V are orthogonal or unitary and Σ is rectangular diagonal with nonnegative entries. These entries are the singular values. It separates input directions, gains and output directions.
 
 **Also called:** SVD.
 
@@ -640,9 +640,9 @@ A scalar-valued function B(u,v) linear separately in u and v. Over the real numb
 
 ### Quadratic form
 
-In the real finite-dimensional setting, a scalar expression q(x) = xᵀMx, usually written with M symmetric. In complex Hermitian geometry the corresponding real-valued expression is x*Mx with M Hermitian. Positivity asks whether this value is nonnegative for every input.
+In the real finite-dimensional setting, a scalar expression q(x) = xᵀMx, usually written with M symmetric. In complex Hermitian geometry the corresponding real-valued expression is x\*Mx with M Hermitian. Positivity asks whether this value is nonnegative for every input.
 
-**Quick example:** With M = [[1,1],[1,1]], q(x,y) = (x+y)². It is nonnegative and vanishes on the nonzero direction (1,−1).
+**Quick example:** With M = \[\[1,1\],\[1,1\]\], q(x,y) = (x+y)². It is nonnegative and vanishes on the nonzero direction (1,−1).
 
 [Further reading](demonstrations/SMITH_SINGULAR_COMPLETION.md) · [Bilinear form](#bilinear-form) · [Positive semidefinite matrix](#positive-semidefinite) · [Gaussian quadratic form](#gaussian-quadratic-form)
 
@@ -652,7 +652,7 @@ In the real finite-dimensional setting, a scalar expression q(x) = xᵀMx, usual
 
 A square matrix with every entry on one side of its diagonal zero. A unitriangular matrix also has all diagonal entries equal to one, so it is invertible over any field. Triangular coordinate maps let successive coefficients be recovered in order.
 
-**Quick example:** The lower-triangular matrix [[1,0],[3,1]] sends (a,b) to (a,3a+b); recover b by subtracting 3a.
+**Quick example:** The lower-triangular matrix \[\[1,0\],\[3,1\]\] sends (a,b) to (a,3a+b); recover b by subtracting 3a.
 
 [Further reading](operators/POLYNOMIAL.md) · [Matrix](#matrix) · [Inverse](#inverse) · [Stirling transform](#stirling-transform)
 
@@ -766,7 +766,7 @@ A projector onto a subspace whose residual x − Px is perpendicular to that sub
 
 ### Complete packet family
 
-In these finite examples, projectors Pᵢ with PᵢPⱼ = 0 for distinct indices and sum_i Pᵢ = I. These identities decompose every vector as x = sum_i Pᵢx.
+In these finite examples, projectors Pᵢ with PᵢPⱼ = 0 for distinct indices and sum\_i Pᵢ = I. These identities decompose every vector as x = sum\_i Pᵢx.
 
 [Hand-worked example](examples/01_PACKETS.md) · [Further reading](https://github.com/KomorebiP/komorebi-math/blob/main/docs/USER_GUIDE.md#first-program-packet-analysis-and-reconstruction) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#packets) · [Projector](#projector) · [Mutual annihilation](#mutual-annihilation) · [Reconstruction](#reconstruction)
 
@@ -858,9 +858,9 @@ In the diagonalizable finite example, the projector onto one eigenspace along th
 
 ### Commutator
 
-For operators on the same space, [A,B] = AB − BA. A zero commutator means the two orders of composition agree.
+For operators on the same space, \[A,B\] = AB − BA. A zero commutator means the two orders of composition agree.
 
-**Quick example:** For P = diag(1,0) and T swapping coordinates, PT−TP = [[0,1],[−1,0]].
+**Quick example:** For P = diag(1,0) and T swapping coordinates, PT−TP = \[\[0,1\],\[−1,0\]\].
 
 [Hand-worked example](examples/15_TYPED_PATHS.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#typed-paths) · [Composition](#composition) · [Operator algebra](#operator-algebra)
 
@@ -888,7 +888,7 @@ An operator N for which Nᵏ = 0 for some positive integer k. It can be nonzero.
 
 **Also called:** Nilpotent linear map, Nilpotent endomorphism.
 
-**Quick example:** N = [[0,1],[0,0]] is nonzero, but N² = 0.
+**Quick example:** N = \[\[0,1\],\[0,0\]\] is nonzero, but N² = 0.
 
 [Hand-worked example](examples/20_SUPPORT_AND_MULTIPLICITY.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#support-multiplicity) · [Operator algebra](#operator-algebra) · [Minimal polynomial](#minimal-polynomial)
 
@@ -944,7 +944,7 @@ A linear projector whose range and kernel are complementary but not perpendicula
 
 For an n by n complex matrix with n ≥ 1, the largest absolute value of its eigenvalues. For a real matrix, use its complex eigenvalues. This scalar need not equal the largest one-step amplification measured by an induced norm.
 
-**In the worked example:** N=[[0,M],[0,0]] with M>0 has spectral radius zero and Euclidean operator norm M. Since N²=0, this large one-step gain disappears at the second power.
+**In the worked example:** N=\[\[0,M\],\[0,0\]\] with M&gt;0 has spectral radius zero and Euclidean operator norm M. Since N²=0, this large one-step gain disappears at the second power.
 
 [Hand-worked example](operators/STABILITY.md#6-spectrum-and-nonnormal-growth) · [Eigenvalue](#eigenvalue) · [Induced operator norm](#operator-norm) · [Nilpotent operator](#nilpotent)
 
@@ -980,9 +980,9 @@ On rational polynomials, N=AΔ with A the falling-factorial raising operator. Ex
 
 ### Normal matrix
 
-A complex square matrix T satisfying T*T = TT*. In finite complex dimensions, normal matrices admit an orthonormal eigenbasis. Hermitian and unitary matrices are normal; an arbitrary diagonalizable matrix need not be normal.
+A complex square matrix T satisfying T\*T = TT\*. In finite complex dimensions, normal matrices admit an orthonormal eigenbasis. Hermitian and unitary matrices are normal; an arbitrary diagonalizable matrix need not be normal.
 
-**Quick example:** The nonzero nilpotent matrix [[0,1],[0,0]] is not normal: T*T = diag(0,1), while TT* = diag(1,0).
+**Quick example:** The nonzero nilpotent matrix \[\[0,1\],\[0,0\]\] is not normal: T\*T = diag(0,1), while TT\* = diag(1,0).
 
 [Further reading](operators/STABILITY.md) · [Adjoint matrix](#adjoint) · [Hermitian matrix](#hermitian) · [Unitary matrix](#unitary) · [Diagonalizable operator](#diagonalizable)
 
@@ -1042,7 +1042,7 @@ Analysis sends an object to coordinates. Synthesis returns an object from coordi
 
 The part of an operation connecting a source component to a target component. With source projector Pᵢ, target projector Qⱼ and operator T, the block is QⱼTPᵢ. Complete source and target families allow the blocks to reconstruct T.
 
-**In the worked example:** For T = [[1,2],[3,4]], the coordinate block P₁TP₂ sends (2,3)ᵀ to (6,0)ᵀ. It carries source coordinate 2 into target coordinate 1.
+**In the worked example:** For T = \[\[1,2\],\[3,4\]\], the coordinate block P₁TP₂ sends (2,3)ᵀ to (6,0)ᵀ. It carries source coordinate 2 into target coordinate 1.
 
 [Hand-worked example](examples/04_TRANSFER.md) · [Further reading](https://github.com/KomorebiP/komorebi-math/blob/main/docs/GENERAL_COORDINATE_ATLAS.md#tensor-and-operator-transport) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#transfer) · [Projector](#projector) · [Composition](#composition) · [Reconstruction](#reconstruction)
 
@@ -1126,9 +1126,9 @@ A matrix grouped into rectangular submatrices according to decompositions of its
 
 ### Schur complement
 
-For the block matrix [[A,B],[C,D]] with invertible A, the Schur complement of A is D − CA⁻¹B. It is the remaining operator after eliminating the first block of unknowns.
+For the block matrix \[\[A,B\],\[C,D\]\] with invertible A, the Schur complement of A is D − CA⁻¹B. It is the remaining operator after eliminating the first block of unknowns.
 
-**Quick example:** In [[2,1],[1,3]], eliminating the invertible upper-left entry gives the scalar complement 3−1/2 = 5/2.
+**Quick example:** In \[\[2,1\],\[1,3\]\], eliminating the invertible upper-left entry gives the scalar complement 3−1/2 = 5/2.
 
 [Hand-worked example](examples/12_BLOCK_ELIMINATION.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#elimination) · [Block matrix](#block-matrix) · [Elimination](#elimination) · [Inverse](#inverse)
 
@@ -1190,7 +1190,7 @@ For a projector P and a linear operator T, the map (I−P)TP records output leav
 
 **Also called:** Packet leakage, Off-packet leakage.
 
-**In the worked example:** With P=diag(1,0), T=[[1,2],[3,4]], and x=(2,0)ᵀ, the full output is (2,6)ᵀ and the retained output is (2,0)ᵀ. The leakage is (0,6)ᵀ.
+**In the worked example:** With P=diag(1,0), T=\[\[1,2\],\[3,4\]\], and x=(2,0)ᵀ, the full output is (2,6)ᵀ and the retained output is (2,0)ᵀ. The leakage is (0,6)ᵀ.
 
 **Keep in mind:** For an arbitrary input, T−PTP also includes transfers starting in the discarded input range. The single leakage term is not the whole residual in that setting.
 
@@ -1200,11 +1200,11 @@ For a projector P and a linear operator T, the map (I−P)TP records output leav
 
 ### Pointwise transfer defect
 
-Given representation maps R_X,R_Y, an operation f, and a proposed transferred rule f̄, the discrepancy Δ_f(x)=R_Y(f(x))−f̄(R_X(x)). The subtraction requires a common vector-space output. The defect depends on the proposed rule and the input.
+Given representation maps R\_X,R\_Y, an operation f, and a proposed transferred rule f̄, the discrepancy Δ\_f(x)=R\_Y(f(x))−f̄(R\_X(x)). The subtraction requires a common vector-space output. The defect depends on the proposed rule and the input.
 
 **Also called:** Transfer defect, Nonlinear transfer defect.
 
-**In the worked example:** For f(x₁,x₂)=x₁x₂, R_X(x)=x₁+x₂, R_Y=I, and f̄(s)=s²/4, the defect at (2,3) is 6−25/4=−1/4. The candidate is exact on inputs (t,t).
+**In the worked example:** For f(x₁,x₂)=x₁x₂, R\_X(x)=x₁+x₂, R\_Y=I, and f̄(s)=s²/4, the defect at (2,3) is 6−25/4=−1/4. The candidate is exact on inputs (t,t).
 
 **Keep in mind:** A pointwise defect can be nonlinear. Failure of one proposed rule is not by itself an obstruction to every possible rule.
 
@@ -1238,11 +1238,11 @@ Positive constants α and β such that α‖x‖² ≤ ‖Ax‖² ≤ β‖x‖�
 
 ### Classical frame operator
 
-For a finite frame analysis map A with fixed inner products, the operator G = A* A on the original vector space. In orthonormal stored coordinates, * is conjugate transpose. G is positive definite and invertible when A has full column rank. Its inverse gives canonical dual synthesis G⁻¹A*.
+For a finite frame analysis map A with fixed inner products, the operator G = A\* A on the original vector space. In orthonormal stored coordinates, \* is conjugate transpose. G is positive definite and invertible when A has full column rank. Its inverse gives canonical dual synthesis G⁻¹A\*.
 
 **Also called:** Frame operator, Analysis Gram operator.
 
-**In the worked example:** The example's analysis matrix gives G = [[2,1],[1,2]], with eigenvalues 1 and 3. This is different from the reconstruction SA = I₂ and the coefficient projection AS.
+**In the worked example:** The example's analysis matrix gives G = \[\[2,1\],\[1,2\]\], with eigenvalues 1 and 3. This is different from the reconstruction SA = I₂ and the coefficient projection AS.
 
 [Hand-worked example](examples/06_REDUNDANT_COORDINATES.md) · [Further reading](operators/catalog/A_STRUCTURAL.md#op-202) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#redundancy) · [Finite frame](#finite-frame) · [Positive definite matrix](#positive-definite) · [Canonical dual synthesis](#canonical-dual) · [Coefficient projection](#coefficient-projection)
 
@@ -1250,11 +1250,11 @@ For a finite frame analysis map A with fixed inner products, the operator G = A*
 
 ### Canonical dual synthesis
 
-For a finite full-column-rank analysis matrix A in orthonormal coordinates, the synthesis S = (A* A)⁻¹A*. It satisfies SA = I, while AS is the orthogonal projector onto the image of A. For fixed A, applying S is linear. Constructing S as A varies requires the rank condition.
+For a finite full-column-rank analysis matrix A in orthonormal coordinates, the synthesis S = (A\* A)⁻¹A\*. It satisfies SA = I, while AS is the orthogonal projector onto the image of A. For fixed A, applying S is linear. Constructing S as A varies requires the rank condition.
 
 **Also called:** Canonical dual frame synthesis, Canonical left inverse.
 
-**In the worked example:** For A(a,b) = (a,b,a+b), canonical dual synthesis is S = (1/3)[[2,−1,1],[−1,2,1]]. It sends (2,3,5) back to (2,3).
+**In the worked example:** For A(a,b) = (a,b,a+b), canonical dual synthesis is S = (1/3)\[\[2,−1,1\],\[−1,2,1\]\]. It sends (2,3,5) back to (2,3).
 
 [Hand-worked example](examples/06_REDUNDANT_COORDINATES.md) · [Further reading](operators/catalog/A_STRUCTURAL.md#op-202) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#redundancy) · [Finite frame](#finite-frame) · [Classical frame operator](#classical-frame-operator) · [Moore–Penrose inverse](#pseudoinverse) · [Left inverse](#left-inverse)
 
@@ -1262,7 +1262,7 @@ For a finite full-column-rank analysis matrix A in orthonormal coordinates, the 
 
 ### Moore–Penrose inverse
 
-For a real or complex matrix A in Euclidean coordinates, the unique matrix A⁺ satisfying AA⁺A = A, A⁺AA⁺ = A⁺, (AA⁺)* = AA⁺ and (A⁺A)* = A⁺A. It is defined even for rectangular or rank-deficient matrices. AA⁺ and A⁺A are orthogonal projectors on the respective coordinate spaces.
+For a real or complex matrix A in Euclidean coordinates, the unique matrix A⁺ satisfying AA⁺A = A, A⁺AA⁺ = A⁺, (AA⁺)\* = AA⁺ and (A⁺A)\* = A⁺A. It is defined even for rectangular or rank-deficient matrices. AA⁺ and A⁺A are orthogonal projectors on the respective coordinate spaces.
 
 **Also called:** Pseudoinverse, Moore-Penrose pseudoinverse, Moore Penrose inverse.
 
@@ -1294,7 +1294,7 @@ For linear maps A and S with SA = I and a coefficient selector Eᵢ, the map C�
 
 **Also called:** Physical frame component, Analysis-synthesis component.
 
-**In the worked example:** The first component is C₁ = (1/3)[[2,0],[−1,0]]. It satisfies C₁² = (2/3)C₁ ≠ C₁, even though C₁+C₂+C₃ = I₂.
+**In the worked example:** The first component is C₁ = (1/3)\[\[2,0\],\[−1,0\]\]. It satisfies C₁² = (2/3)C₁ ≠ C₁, even though C₁+C₂+C₃ = I₂.
 
 [Hand-worked example](examples/06_REDUNDANT_COORDINATES.md) · [Further reading](operators/catalog/A_STRUCTURAL.md#op-021) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#redundancy) · [Projector](#projector) · [Finite frame](#finite-frame) · [Coefficient projection](#coefficient-projection) · [Reconstruction](#reconstruction)
 
@@ -1314,13 +1314,13 @@ The kernel of a linear synthesis map S in a redundant linear presentation. Addin
 
 ### Coefficient metric
 
-In a finite linear presentation with Euclidean inner products on the stored spaces, H = S* S pulls the underlying vector geometry back to coefficient space: c*Hd = (Sc)*(Sd). H is positive semidefinite and its kernel is ker S. It gives a genuine inner product after quotienting out those gauge directions.
+In a finite linear presentation with Euclidean inner products on the stored spaces, H = S\* S pulls the underlying vector geometry back to coefficient space: c\*Hd = (Sc)\*(Sd). H is positive semidefinite and its kernel is ker S. It gives a genuine inner product after quotienting out those gauge directions.
 
 **Also called:** Synthesis pullback metric, Coefficient seminorm metric.
 
-**In the worked example:** With the example's synthesis S and g = (−1,−1,1), g*Hg = ‖Sg‖² = 0 although g is nonzero. This coefficient metric is singular.
+**In the worked example:** With the example's synthesis S and g = (−1,−1,1), g\*Hg = ‖Sg‖² = 0 although g is nonzero. This coefficient metric is singular.
 
-**Keep in mind:** For an underlying metric Q rather than the identity, the pulled-back coefficient metric is S*QS.
+**Keep in mind:** For an underlying metric Q rather than the identity, the pulled-back coefficient metric is S\*QS.
 
 [Hand-worked example](examples/06_REDUNDANT_COORDINATES.md) · [Further reading](https://github.com/KomorebiP/komorebi-math/blob/a3aa04ac18a523f30c50c7f5dba709f88e904eff/docs/METRIC_PACKETS.md#1-redundant-analysis--synthesis-presentations) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#redundancy) · [Coefficient gauge](#coefficient-gauge) · [Seminorm](#seminorm) · [Positive semidefinite matrix](#positive-semidefinite) · [Metric adjoint](#metric-adjoint)
 
@@ -1328,11 +1328,11 @@ In a finite linear presentation with Euclidean inner products on the stored spac
 
 ### Metric adjoint
 
-The adjoint of a linear map T:X→Y for declared positive-definite Hermitian metric matrices Q_X and Q_Y. In stored coordinates it is T♯ = Q_X⁻¹T*Q_Y, where * is raw conjugate transpose. It satisfies ⟨Tx,y⟩_Y = ⟨x,T♯y⟩_X. The formula requires Q_X to be invertible.
+The adjoint of a linear map T:X→Y for declared positive-definite Hermitian metric matrices Q\_X and Q\_Y. In stored coordinates it is T♯ = Q\_X⁻¹T\*Q\_Y, where \* is raw conjugate transpose. It satisfies ⟨Tx,y⟩\_Y = ⟨x,T♯y⟩\_X. The formula requires Q\_X to be invertible.
 
 **Also called:** Weighted adjoint, Adjoint relative to a metric.
 
-**In the worked example:** Using the example's analysis A with source metric Q_X = A*A and target metric Q_Y = I₃ makes A♯ = (A*A)⁻¹A*, the displayed canonical synthesis S.
+**In the worked example:** Using the example's analysis A with source metric Q\_X = A\*A and target metric Q\_Y = I₃ makes A♯ = (A\*A)⁻¹A\*, the displayed canonical synthesis S.
 
 **Keep in mind:** A singular coefficient metric cannot be inverted by this formula. Its gauge directions require a quotient or a separately justified generalized inverse.
 
@@ -1356,7 +1356,7 @@ For a linear map A:X→Y and a covector ℓ on Y, the covector ℓA on X, define
 
 A retained description of an operation. For a projector P and operator T, PTP acts on the retained range. For a summary R and a chosen lift S, RTS is a candidate reduced operation. Exact agreement with all original inputs requires an additional compatibility condition.
 
-**Quick example:** For T = [[1,2],[3,4]] and P = diag(1,0), PTP retains only the upper-left entry 1.
+**Quick example:** For T = \[\[1,2\],\[3,4\]\] and P = diag(1,0), PTP retains only the upper-left entry 1.
 
 **Keep in mind:** A compression can be useful even when the retained state does not determine its own exact future.
 
@@ -1366,7 +1366,7 @@ A retained description of an operation. For a projector P and operator T, PTP ac
 
 ### Linear isometry
 
-A linear map preserving the specified norm of every input. Between finite inner-product spaces, preserving inner products is equivalent. In orthonormal coordinates an isometric embedding Q satisfies Q*Q = I; it need not be onto its codomain.
+A linear map preserving the specified norm of every input. Between finite inner-product spaces, preserving inner products is equivalent. In orthonormal coordinates an isometric embedding Q satisfies Q\*Q = I; it need not be onto its codomain.
 
 **Quick example:** The map x ↦ (x,0) preserves Euclidean length. Its matrix is rectangular, so it is not a unitary automorphism of R².
 
@@ -1424,7 +1424,7 @@ Passing to a description that groups or forgets distinctions. Combining fine pac
 
 ### Polyphase decomposition
 
-For a sequence x and a positive integer m, the phase r collects samples x_(mk+r), with 0 ≤ r < m. Interleaving all phases reconstructs the indexed sequence. Filtering requires additional boundary and convention choices.
+For a sequence x and a positive integer m, the phase r collects samples x\_(mk+r), with 0 ≤ r &lt; m. Interleaving all phases reconstructs the indexed sequence. Filtering requires additional boundary and convention choices.
 
 **Also called:** Polyphase splitting.
 
@@ -1450,7 +1450,7 @@ Agreement between specified maps, operations or levels of a construction. The re
 
 ### Commuting diagram
 
-A diagram in which the declared routes between the same starting and ending objects give the same map. In Example 3 the equality is D_y C = C D.
+A diagram in which the declared routes between the same starting and ending objects give the same map. In Example 3 the equality is D\_y C = C D.
 
 [Hand-worked example](examples/03_COORDINATES.md) · [Further reading](https://github.com/KomorebiP/komorebi-math/blob/main/docs/GENERAL_COORDINATE_ATLAS.md#tensor-and-operator-transport) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#coordinates) · [Composition](#composition) · [Compatibility](#compatibility) · [Intertwiner](#intertwiner)
 
@@ -1706,7 +1706,7 @@ Choosing a representable stored value for an exact value according to a specifie
 
 ### ULP
 
-A unit in the last retained place at a specified precision and exponent. In the three-bit example the spacing in [1, 2) is 1/4, while the spacing in [2, 4) is 1/2. It is not one fixed absolute distance.
+A unit in the last retained place at a specified precision and exponent. In the three-bit example the spacing in \[1, 2) is 1/4, while the spacing in \[2, 4) is 1/2. It is not one fixed absolute distance.
 
 **Also called:** Unit in the last place.
 
@@ -1784,7 +1784,7 @@ For a linear map between specified normed spaces with a nonzero domain, the supr
 
 **Also called:** Operator norm, Induced matrix norm.
 
-**In the worked example:** For E=[[0,2],[3,0]], the Euclidean induced norm is 3 because EᵀE=diag(9,4). Thus ‖Ex‖₂≤3‖x‖₂ for every input.
+**In the worked example:** For E=\[\[0,2\],\[3,0\]\], the Euclidean induced norm is 3 because EᵀE=diag(9,4). Thus ‖Ex‖₂≤3‖x‖₂ for every input.
 
 **Keep in mind:** For the zero input space, the operator norm is defined to be zero.
 
@@ -1800,7 +1800,7 @@ For an invertible linear coordinate map C on a nonzero finite-dimensional normed
 
 **Quick example:** For C = diag(1,100), κ₂(C) = 100. The map stretches one coordinate one hundred times more than the other.
 
-**In the worked example:** C=[[1,10],[0,1]] and C⁻¹ both have infinity norm 11, so κ∞(C)=121. Conjugating diag(1,2) by C keeps its eigenvalues but changes its infinity norm from 2 to 11.
+**In the worked example:** C=\[\[1,10\],\[0,1\]\] and C⁻¹ both have infinity norm 11, so κ∞(C)=121. Conjugating diag(1,2) by C keeps its eigenvalues but changes its infinity norm from 2 to 11.
 
 [Hand-worked example](operators/STABILITY.md#4-coordinate-conditioning) · [Coordinate change](#coordinate-change) · [Induced operator norm](#operator-norm) · [Operator conjugation](#conjugation)
 
@@ -1834,7 +1834,7 @@ Convergence ‖Tₘ−T‖→0 for bounded linear maps between fixed normed spac
 
 ### Hilbert–Schmidt norm
 
-For a finite real or complex matrix A, the norm defined by ‖A‖HS² = tr(A*A), equal to the sum of the squared absolute values of its entries. It measures matrix size in the specified orthonormal coordinates and differs from the largest-singular-value operator norm.
+For a finite real or complex matrix A, the norm defined by ‖A‖HS² = tr(A\*A), equal to the sum of the squared absolute values of its entries. It measures matrix size in the specified orthonormal coordinates and differs from the largest-singular-value operator norm.
 
 **Also called:** Frobenius norm, HS norm.
 
@@ -1892,7 +1892,7 @@ Arithmetic on sets represented by intervals, with operations producing intervals
 
 **Also called:** Interval enclosure arithmetic.
 
-**Quick example:** For x in [1,2], direct interval subtraction gives x−x in [−1,1], although the expression is identically zero when both occurrences denote the same x.
+**Quick example:** For x in \[1,2\], direct interval subtraction gives x−x in \[−1,1\], although the expression is identically zero when both occurrences denote the same x.
 
 [Further reading](KCOS_NUMERICAL_CERTIFICATION_AUDIT.md) · [Directed enclosure](#directed-enclosure) · [Rounding](#rounding) · [Certificate](#certificate)
 
@@ -2222,7 +2222,7 @@ A specified value, or collection of derivative values, used with a differential 
 
 ### Contracted argument
 
-Evaluation at qz with 0<q<1 in the feedback example. A term cₙzⁿ becomes cₙqⁿzⁿ after this substitution. The scaling is inside the defining equation.
+Evaluation at qz with 0&lt;q&lt;1 in the feedback example. A term cₙzⁿ becomes cₙqⁿzⁿ after this substitution. The scaling is inside the defining equation.
 
 [Hand-worked example](examples/24_CONTRACTED_FEEDBACK.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#contracted-feedback) · [Coefficient](#coefficient) · [Differential equation](#differential-equation)
 
@@ -2252,7 +2252,7 @@ The polynomial b₀(x)=1 and bₖ(x)=x(x−1)⋯(x−k+1) for k≥1. These monic
 
 ### Forward difference
 
-The operator Δf(x)=f(x+1)−f(x). On rational polynomials, Δbₖ=k bₖ₋₁ for the falling-factorial basis and Δb₀=0. Under Φ(zᵏ)=bₖ, this is the transported source derivative: Δ=ΦD_zΦ⁻¹.
+The operator Δf(x)=f(x+1)−f(x). On rational polynomials, Δbₖ=k bₖ₋₁ for the falling-factorial basis and Δb₀=0. Under Φ(zᵏ)=bₖ, this is the transported source derivative: Δ=ΦD\_zΦ⁻¹.
 
 **Also called:** Unit forward difference, Delta operator in the polynomial example.
 
@@ -2264,7 +2264,7 @@ The operator Δf(x)=f(x+1)−f(x). On rational polynomials, Δbₖ=k bₖ₋₁ 
 
 ### Residue coefficient selector
 
-For an integer m≥2 and 0≤r<m, the projector Pᵣ retaining exactly the coefficients whose basis degree k satisfies k≡r modulo m. The basis is part of the definition. In falling-factorial coordinates the corresponding projector is Qᵣ=ΦPᵣΦ⁻¹.
+For an integer m≥2 and 0≤r&lt;m, the projector Pᵣ retaining exactly the coefficients whose basis degree k satisfies k≡r modulo m. The basis is part of the definition. In falling-factorial coordinates the corresponding projector is Qᵣ=ΦPᵣΦ⁻¹.
 
 **Also called:** Coefficient selector, Residue projector.
 
@@ -2278,7 +2278,7 @@ For an integer m≥2 and 0≤r<m, the projector Pᵣ retaining exactly the coeff
 
 ### Polynomial translation operator
 
-For a specified scalar shift h, the operator T_h f(x)=f(x+h). Over rational polynomials it is linear, with T₀=I and T_hT_k=T_{h+k}. In falling-factorial coordinates, a unit shift satisfies T₁=I+Δ.
+For a specified scalar shift h, the operator T\_h f(x)=f(x+h). Over rational polynomials it is linear, with T₀=I and T\_hT\_k=T\_{h+k}. In falling-factorial coordinates, a unit shift satisfies T₁=I+Δ.
 
 **Also called:** Translation operator, Polynomial shift operator.
 
@@ -2426,7 +2426,7 @@ The polynomial Tₙ(z) = Σₖ₌₀ⁿ S(n,k)zᵏ retaining the complete partit
 
 ### Roots-of-unity filter
 
-For m ≥ 2 and 0 ≤ r < m, work over a field containing a primitive mth root ζ and in which m is invertible. The operator Pᵣf(z) = (1/m)Σₗ₌₀ᵐ⁻¹ ζ⁻ʳˡf(ζˡz) selects precisely the monomials whose degrees are congruent to r modulo m. The polynomial identity also applies coefficientwise to formal series.
+For m ≥ 2 and 0 ≤ r &lt; m, work over a field containing a primitive mth root ζ and in which m is invertible. The operator Pᵣf(z) = (1/m)Σₗ₌₀ᵐ⁻¹ ζ⁻ʳˡf(ζˡz) selects precisely the monomials whose degrees are congruent to r modulo m. The polynomial identity also applies coefficientwise to formal series.
 
 **Also called:** Character filter, Residue-degree projector.
 
@@ -2454,7 +2454,7 @@ For integers N ≥ 1 and n ≥ 0, a product of n factors in one arithmetic progr
 
 ### Generalized hypergeometric series
 
-The coefficient-defined series ₚF_q(a₁,…,aₚ; b₁,…,b_q; z) = Σₙ≥₀ [(a₁)ₙ⋯(aₚ)ₙ/((b₁)ₙ⋯(b_q)ₙ)]zⁿ/n!, where (a)ₙ = a(a+1)⋯(a+n−1). The denominator factors must be defined and nonzero for the terms being used.
+The coefficient-defined series ₚF\_q(a₁,…,aₚ; b₁,…,b\_q; z) = Σₙ≥₀ \[(a₁)ₙ⋯(aₚ)ₙ/((b₁)ₙ⋯(b\_q)ₙ)\]zⁿ/n!, where (a)ₙ = a(a+1)⋯(a+n−1). The denominator factors must be defined and nonzero for the terms being used.
 
 **Also called:** Hypergeometric series.
 
@@ -2578,7 +2578,7 @@ An infinite coefficient list written as Σₙ≥₀ aₙzⁿ and manipulated coe
 
 ### Radius of convergence
 
-For a complex power series centered at zero, the radius R such that the series converges absolutely for |z| < R and diverges for |z| > R. The endpoints R = 0 and R = ∞ are allowed. Boundary convergence must be checked separately.
+For a complex power series centered at zero, the radius R such that the series converges absolutely for |z| &lt; R and diverges for |z| &gt; R. The endpoints R = 0 and R = ∞ are allowed. Boundary convergence must be checked separately.
 
 **Quick example:** The geometric series Σₙ≥₀ zⁿ has radius 1. At z = 1 its terms do not tend to zero.
 
@@ -2634,7 +2634,7 @@ The extra shift in a phase coordinate required when an index crosses a residue b
 
 **Also called:** Lane-boundary carry, Phase carry.
 
-**In the worked example:** For even and odd rows E and O, one backward circular shift sends the even output to ZO and the odd output to E. Its two-phase matrix is [[0,Z],[I,0]], with Z the half-rate delay.
+**In the worked example:** For even and odd rows E and O, one backward circular shift sends the even output to ZO and the odd output to E. Its two-phase matrix is \[\[0,Z\],\[I,0\]\], with Z the half-rate delay.
 
 **Keep in mind:** Forward shifts place the carry in a different block from backward shifts. Its position follows from the index convention.
 
@@ -2656,7 +2656,7 @@ For a complex vector x of length N ≥ 1, the convention used here is x̂ₖ = �
 
 ### Discrete cosine transform
 
-A coordinate transform of a real vector of length N ≥ 1 using cosine samples. The catalog fixes orthonormal DCT-II: yₖ = αₖΣₙ₌₀ᴺ⁻¹xₙ cos(π(n+1/2)k/N), where α₀ = 1/√N and αₖ = √(2/N) for k > 0.
+A coordinate transform of a real vector of length N ≥ 1 using cosine samples. The catalog fixes orthonormal DCT-II: yₖ = αₖΣₙ₌₀ᴺ⁻¹xₙ cos(π(n+1/2)k/N), where α₀ = 1/√N and αₖ = √(2/N) for k &gt; 0.
 
 **Also called:** DCT, DCT-II.
 
@@ -2672,7 +2672,7 @@ For a real matrix A, either K = AAᵀ on its output space or H = AᵀA on its in
 
 **Also called:** Gram matrix, Sample Gram, Feature Gram.
 
-**Keep in mind:** For a column partition A = [A₁ … A_B], the exact identity AAᵀ = Σ_b A_bA_bᵀ retains every column. Dropping a block changes the operator.
+**Keep in mind:** For a column partition A = \[A₁ … A\_B\], the exact identity AAᵀ = Σ\_b A\_bA\_bᵀ retains every column. Dropping a block changes the operator.
 
 [Further reading](https://github.com/KomorebiP/Operation-KOMOREBI/blob/da8e6d29558688c3580a5258bf11773449428452/monographs/cos-method/book/chapters/01_gaussian.tex#L39) · [Positive semidefinite matrix](#positive-semidefinite) · [Eigenvalue](#eigenvalue) · [Range core](#range-core) · [Gaussian quadratic form](#gaussian-quadratic-form) · [Classical frame operator](#classical-frame-operator)
 
@@ -2692,7 +2692,7 @@ A representation of a real factor A in coordinates on a chosen subspace. If Q ha
 
 ### Characteristic function
 
-For a real random variable Q, φ(t) = E[exp(itQ)] at real frequency t. It encodes the probability law in Fourier coordinates. Unlike a real moment-generating function, it is defined for every real t because the integrand has modulus one.
+For a real random variable Q, φ(t) = E\[exp(itQ)\] at real frequency t. It encodes the probability law in Fourier coordinates. Unlike a real moment-generating function, it is defined for every real t because the integrand has modulus one.
 
 **Also called:** Probability characteristic function, CF.
 
@@ -2708,7 +2708,7 @@ A random variable Q = XᵀMX with real Gaussian vector X and symmetric matrix M.
 
 **Also called:** Quadratic form of a Gaussian vector.
 
-**Keep in mind:** The zero-mean assumption gives the central reduction. Positive semidefiniteness makes the eigenvalues nonnegative and the law supported on [0,∞), as required by the positive-tail formula. A central indefinite form has the same reduction with signed eigenvalues. Noncentral forms require their additional parameters. With no nonzero eigenvalues, Q is identically zero.
+**Keep in mind:** The zero-mean assumption gives the central reduction. Positive semidefiniteness makes the eigenvalues nonnegative and the law supported on \[0,∞), as required by the positive-tail formula. A central indefinite form has the same reduction with signed eigenvalues. Noncentral forms require their additional parameters. With no nonzero eigenvalues, Q is identically zero.
 
 [Further reading](https://github.com/KomorebiP/Operation-KOMOREBI/blob/da8e6d29558688c3580a5258bf11773449428452/monographs/cos-method/book/chapters/01_gaussian.tex#L9) · [Finite-dimensional Gaussian model](#gaussian-model) · [Covariance matrix](#covariance) · [Eigenvalue](#eigenvalue) · [Characteristic function](#characteristic-function)
 
@@ -2720,7 +2720,7 @@ A Fourier-cosine method for evaluating distributional quantities from characteri
 
 **Also called:** Fourier-cosine method.
 
-**Keep in mind:** The positive-tail formula uses frequencies kπ/b on [0,b] and half weight on the zero mode. A finite sum is an approximation until the applicable remainders and numerical arithmetic have been controlled.
+**Keep in mind:** The positive-tail formula uses frequencies kπ/b on \[0,b\] and half weight on the zero mode. A finite sum is an approximation until the applicable remainders and numerical arithmetic have been controlled.
 
 [Further reading](https://github.com/KomorebiP/Operation-KOMOREBI/blob/da8e6d29558688c3580a5258bf11773449428452/monographs/cos-method/book/chapters/07_inversion.tex#L1) · [Characteristic function](#characteristic-function) · [Gaussian quadratic form](#gaussian-quadratic-form) · [Centered spectral packet](#centered-spectral-packet) · [Analytic error budget](#analytic-error-budget)
 
@@ -2732,7 +2732,7 @@ In K-COS, a nonempty group P of eigenvalues represented by its count n, mean μ 
 
 **Also called:** Spectral packet, Centered packet.
 
-**Keep in mind:** The expansion needs |2s/(1−2sμ)|·maxⱼ|λⱼ−μ| < 1 on the frequencies and tilt being used. Nearby eigenvalues alone do not establish that condition for every query.
+**Keep in mind:** The expansion needs |2s/(1−2sμ)|·maxⱼ|λⱼ−μ| &lt; 1 on the frequencies and tilt being used. Nearby eigenvalues alone do not establish that condition for every query.
 
 [Further reading](https://github.com/KomorebiP/Operation-KOMOREBI/blob/da8e6d29558688c3580a5258bf11773449428452/monographs/cos-method/book/chapters/06_packets.tex#L94) · [Packet](#packet) · [Eigenvalue](#eigenvalue) · [COS method](#cos-method) · [Analytic error budget](#analytic-error-budget)
 
@@ -2744,7 +2744,7 @@ An interval guaranteed to contain the specified exact quantity. Its finite arith
 
 **Also called:** Outward-rounded enclosure, Probability enclosure.
 
-**Keep in mind:** For a probability interval [p₋,p₊], the stated relative acceptance test requires p₋ > 0 and p₊/p₋−1 ≤ ε. A narrow interval is insufficient if a required source of error was omitted.
+**Keep in mind:** For a probability interval \[p₋,p₊\], the stated relative acceptance test requires p₋ &gt; 0 and p₊/p₋−1 ≤ ε. A narrow interval is insufficient if a required source of error was omitted.
 
 [Further reading](https://github.com/KomorebiP/Operation-KOMOREBI/blob/da8e6d29558688c3580a5258bf11773449428452/monographs/cos-method/book/chapters/09_intervals.tex#L1) · [Certificate](#certificate) · [Rounding](#rounding) · [Analytic error budget](#analytic-error-budget) · [Tolerance](#tolerance)
 
@@ -2914,7 +2914,7 @@ A load with impedance equal to the chosen reference resistance in this real-refe
 
 ### Voltage standing-wave ratio
 
-For reflection magnitude r with 0 ≤ r < 1, VSWR = (1+r)/(1−r). The matched case gives one; as r approaches one the ratio diverges. The ideal passive boundary is assigned infinite VSWR.
+For reflection magnitude r with 0 ≤ r &lt; 1, VSWR = (1+r)/(1−r). The matched case gives one; as r approaches one the ratio diverges. The ideal passive boundary is assigned infinite VSWR.
 
 **Also called:** VSWR, Standing-wave ratio, SWR.
 
@@ -2926,7 +2926,7 @@ For reflection magnitude r with 0 ≤ r < 1, VSWR = (1+r)/(1−r). The matched c
 
 ### Return loss
 
-For 0 < |Γ| ≤ 1, the quantity −20 log₁₀|Γ| in decibels. Smaller reflected magnitude gives larger return loss. The matched limit |Γ| = 0 has ideal infinite return loss; the passive boundary |Γ| = 1 gives zero decibels.
+For 0 &lt; |Γ| ≤ 1, the quantity −20 log₁₀|Γ| in decibels. Smaller reflected magnitude gives larger return loss. The matched limit |Γ| = 0 has ideal infinite return loss; the passive boundary |Γ| = 1 gives zero decibels.
 
 **Also called:** RL.
 
@@ -2950,7 +2950,7 @@ In the guide’s propagation convention, a line of length ℓ gives Γin = ΓL e
 
 ### Cyclic reachability
 
-Reachability by a fixed finite set of phase rotations Γ ↦ ωᴷΓ, where ω = exp(2πi/N), N > 0 and K is an integer. For Γ₀ ≠ 0, a target Γ* is reachable exactly when (Γ*/Γ₀)ᴺ = 1. The zero start reaches only zero.
+Reachability by a fixed finite set of phase rotations Γ ↦ ωᴷΓ, where ω = exp(2πi/N), N &gt; 0 and K is an integer. For Γ₀ ≠ 0, a target Γ\* is reachable exactly when (Γ\*/Γ₀)ᴺ = 1. The zero start reaches only zero.
 
 **Quick example:** For N = 4, the orbit of Γ₀ = 1/2 is {1/2,i/2,−1/2,−i/2}. A point at angle π/4 with radius 1/2 is outside this orbit.
 
@@ -2980,11 +2980,11 @@ A quotient of polynomials over a declared field, understood with common factors 
 
 ### Positive-real impedance function
 
-In the real-rational scalar circuit setting, a rational function Z(s) analytic for Re s > 0 and satisfying Re Z(s) ≥ 0 there. Real coefficients give the usual conjugation symmetry. Boundary poles and realization restrictions require their stated additional conditions.
+In the real-rational scalar circuit setting, a rational function Z(s) analytic for Re s &gt; 0 and satisfying Re Z(s) ≥ 0 there. Real coefficients give the usual conjugation symmetry. Boundary poles and realization restrictions require their stated additional conditions.
 
 **Also called:** Positive-real function, PR function.
 
-**Quick example:** For positive R and L, the series RL function Z(s) = R+sL has positive real part throughout Re s > 0.
+**Quick example:** For positive R and L, the series RL function Z(s) = R+sL has positive real part throughout Re s &gt; 0.
 
 **Keep in mind:** Checking finitely many frequency samples is insufficient to establish positivity on the whole half-plane.
 
@@ -3016,7 +3016,7 @@ Finding a function in a declared class that takes prescribed values at prescribe
 
 For distinct disk nodes tₖ and proposed scalar values vₖ, the Hermitian matrix Pₖₗ = (1−vₖ conjugate(vₗ))/(1−tₖ conjugate(tₗ)). Its positive semidefiniteness is the classical scalar Schur interpolation criterion used in the linked reading.
 
-**Quick example:** The nodes 1/2 and −1/2 with equal respective values give P = [[1,1],[1,1]], a rank-one singular matrix.
+**Quick example:** The nodes 1/2 and −1/2 with equal respective values give P = \[\[1,1\],\[1,1\]\], a rank-one singular matrix.
 
 **Keep in mind:** The nodes are distinct and strictly inside the disk. This criterion is not a component-count theorem for a restricted circuit topology.
 
@@ -3026,7 +3026,7 @@ For distinct disk nodes tₖ and proposed scalar values vₖ, the Hermitian matr
 
 ### Singular block range condition
 
-For Hermitian P ≥ 0, the block matrix [[P,b],[b*,d]] is positive semidefinite exactly when b is perpendicular to ker P and d ≥ b*P†b. Here P† is the Moore–Penrose inverse. The range condition remains essential when P is singular.
+For Hermitian P ≥ 0, the block matrix \[\[P,b\],\[b\*,d\]\] is positive semidefinite exactly when b is perpendicular to ker P and d ≥ b\*P†b. Here P† is the Moore–Penrose inverse. The range condition remains essential when P is singular.
 
 **Quick example:** If P = 0, its range is {0}. Positivity of the augmented block forces b = 0 as well as d ≥ 0.
 
@@ -3078,11 +3078,11 @@ For real a and b, the conjugate of a+bi is a−bi. The squared modulus is (a+bi)
 
 ### Adjoint matrix
 
-For a complex matrix in orthonormal bases, the adjoint A* is its conjugate transpose. In real orthonormal bases this is the ordinary transpose.
+For a complex matrix in orthonormal bases, the adjoint A\* is its conjugate transpose. In real orthonormal bases this is the ordinary transpose.
 
 **Also called:** Conjugate transpose, Hermitian transpose.
 
-**Quick example:** The adjoint of [[1,i],[0,2]] is [[1,0],[−i,2]]. Both transposition and conjugation are required.
+**Quick example:** The adjoint of \[\[1,i\],\[0,2\]\] is \[\[1,0\],\[−i,2\]\]. Both transposition and conjugation are required.
 
 [Hand-worked example](examples/17_QUANTUM_MEASUREMENT.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#quantum-measurement) · [Complex conjugate](#complex-conjugate) · [Inner product](#inner-product) · [Metric adjoint](#metric-adjoint)
 
@@ -3090,7 +3090,7 @@ For a complex matrix in orthonormal bases, the adjoint A* is its conjugate trans
 
 ### Unitary matrix
 
-A complex square matrix U with U*U = UU* = I. It preserves the complex inner product and therefore vector norms.
+A complex square matrix U with U\*U = UU\* = I. It preserves the complex inner product and therefore vector norms.
 
 **Quick example:** diag(1,i) is unitary because its adjoint diag(1,−i) is its inverse.
 
@@ -3108,11 +3108,11 @@ A complex coordinate of a normalized state vector in a chosen orthonormal basis.
 
 ### Density matrix
 
-A positive semidefinite Hermitian matrix with trace one. A normalized vector ψ gives the pure-state matrix ρ = ψψ*. Different vectors that differ only by an overall complex phase give the same density matrix.
+A positive semidefinite Hermitian matrix with trace one. A normalized vector ψ gives the pure-state matrix ρ = ψψ\*. Different vectors that differ only by an overall complex phase give the same density matrix.
 
 **Also called:** Density operator.
 
-**In the worked example:** The normalized vector ψ = (3/5,4i/5)ᵀ gives ρ = ψψ*. Its diagonal entries are 9/25 and 16/25, its upper-right entry is −12i/25, and its lower-left entry is 12i/25. Its trace is one.
+**In the worked example:** The normalized vector ψ = (3/5,4i/5)ᵀ gives ρ = ψψ\*. Its diagonal entries are 9/25 and 16/25, its upper-right entry is −12i/25, and its lower-left entry is 12i/25. Its trace is one.
 
 [Hand-worked example](examples/17_QUANTUM_MEASUREMENT.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#quantum-measurement) · [Adjoint matrix](#adjoint) · [Matrix trace](#trace) · [Purity of a density matrix](#purity)
 
@@ -3122,7 +3122,7 @@ A positive semidefinite Hermitian matrix with trace one. A normalized vector ψ 
 
 The sum of diagonal entries of a square matrix. It is unchanged by an invertible change of basis. Field trace is a related arithmetic construction with its own definition.
 
-**Quick example:** The trace of [[1,2],[3,4]] is 1+4 = 5.
+**Quick example:** The trace of \[\[1,2\],\[3,4\]\] is 1+4 = 5.
 
 [Hand-worked example](examples/17_QUANTUM_MEASUREMENT.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#quantum-measurement) · [Matrix](#matrix) · [Field trace](#field-trace)
 
@@ -3132,7 +3132,7 @@ The sum of diagonal entries of a square matrix. It is unchanged by an invertible
 
 For a density matrix ρ and an orthogonal measurement projector P, the outcome probability is tr(Pρ). A complete orthogonal projector family gives probabilities summing to one.
 
-**In the worked example:** For ψ = (3/5,4i/5)ᵀ and ρ = ψψ*, the coordinate projectors P₀ = diag(1,0) and P₁ = diag(0,1) give tr(P₀ρ) = 9/25 and tr(P₁ρ) = 16/25. These probabilities sum to one.
+**In the worked example:** For ψ = (3/5,4i/5)ᵀ and ρ = ψψ\*, the coordinate projectors P₀ = diag(1,0) and P₁ = diag(0,1) give tr(P₀ρ) = 9/25 and tr(P₁ρ) = 16/25. These probabilities sum to one.
 
 [Hand-worked example](examples/17_QUANTUM_MEASUREMENT.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#quantum-measurement) · [Density matrix](#density-matrix) · [Matrix trace](#trace) · [Orthogonal projector](#orthogonal-projector)
 
@@ -3142,7 +3142,7 @@ For a density matrix ρ and an orthogonal measurement projector P, the outcome p
 
 The number tr(ρ²). For a finite density matrix it equals one exactly for a pure state and is smaller for a mixed state.
 
-**In the worked example:** For ρ = ψψ* with ψ = (3/5,4i/5)ᵀ, tr(ρ²) = 1. After coordinate dephasing, the purity is (9/25)² + (16/25)² = 337/625, which is less than one.
+**In the worked example:** For ρ = ψψ\* with ψ = (3/5,4i/5)ᵀ, tr(ρ²) = 1. After coordinate dephasing, the purity is (9/25)² + (16/25)² = 337/625, which is less than one.
 
 [Hand-worked example](examples/17_QUANTUM_MEASUREMENT.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#quantum-measurement) · [Density matrix](#density-matrix) · [Matrix trace](#trace) · [Pure quantum state](#pure-state) · [Mixed quantum state](#mixed-state)
 
@@ -3160,7 +3160,7 @@ For a specified complete orthogonal family Pᵢ, the channel ρ ↦ sum PᵢρP�
 
 ### Kraus operators
 
-Matrices Kᵢ describing a finite quantum channel by Φ(ρ) = sum KᵢρKᵢ*. The condition sum Kᵢ*Kᵢ = I makes this map trace preserving.
+Matrices Kᵢ describing a finite quantum channel by Φ(ρ) = sum KᵢρKᵢ\*. The condition sum Kᵢ\*Kᵢ = I makes this map trace preserving.
 
 **Also called:** Kraus representation.
 
@@ -3170,11 +3170,11 @@ Matrices Kᵢ describing a finite quantum channel by Φ(ρ) = sum KᵢρKᵢ*. T
 
 ### Hermitian matrix
 
-A complex square matrix A with A* = A. Its diagonal entries are real and opposite off-diagonal entries are complex conjugates. This condition alone does not imply positivity.
+A complex square matrix A with A\* = A. Its diagonal entries are real and opposite off-diagonal entries are complex conjugates. This condition alone does not imply positivity.
 
 **Also called:** Self-adjoint matrix.
 
-**Quick example:** The matrix [[1,i],[−i,2]] is Hermitian because conjugating and transposing returns it.
+**Quick example:** The matrix \[\[1,i\],\[−i,2\]\] is Hermitian because conjugating and transposing returns it.
 
 [Hand-worked example](examples/17_QUANTUM_MEASUREMENT.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#quantum-measurement) · [Adjoint matrix](#adjoint) · [Positive semidefinite matrix](#positive-semidefinite)
 
@@ -3182,11 +3182,11 @@ A complex square matrix A with A* = A. Its diagonal entries are real and opposit
 
 ### Positive semidefinite matrix
 
-A Hermitian matrix A for which v*Av is nonnegative for every vector v. Zero eigenvalues are allowed.
+A Hermitian matrix A for which v\*Av is nonnegative for every vector v. Zero eigenvalues are allowed.
 
 **Also called:** PSD, PSD matrix.
 
-**Quick example:** [[1,1],[1,1]] is positive semidefinite because its quadratic form is |x+y|², and it has a nonzero kernel.
+**Quick example:** \[\[1,1\],\[1,1\]\] is positive semidefinite because its quadratic form is |x+y|², and it has a nonzero kernel.
 
 [Hand-worked example](examples/17_QUANTUM_MEASUREMENT.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#quantum-measurement) · [Hermitian matrix](#hermitian) · [Eigenvalue](#eigenvalue) · [Density matrix](#density-matrix) · [Positive definite matrix](#positive-definite) · [Gram operator](#gram-operator) · [Pick matrix](#pick-matrix) · [Quadratic form](#quadratic-form)
 
@@ -3236,7 +3236,7 @@ A density matrix of the form ρ = |ψ⟩⟨ψ| for a unit vector ψ. In finite d
 
 **Also called:** Pure state.
 
-**Quick example:** For ψ = (3/5,4/5), ρ = [[9,12],[12,16]]/25 is pure.
+**Quick example:** For ψ = (3/5,4/5), ρ = \[\[9,12\],\[12,16\]\]/25 is pure.
 
 [Further reading](demonstrations/QUANTUM_PHASE_MEASUREMENT.md) · [Density matrix](#density-matrix) · [Purity of a density matrix](#purity) · [Projector](#projector) · [Mixed quantum state](#mixed-state)
 
@@ -3278,7 +3278,7 @@ In the finite setting, a Hermitian operator whose real eigenvalues label possibl
 
 ### Quantum channel
 
-A linear completely positive, trace-preserving map on density matrices. A finite Kraus representation is Φ(ρ) = ΣⱼKⱼρKⱼ* with ΣⱼKⱼ*Kⱼ = I. Complete positivity requires positivity to survive extension by an arbitrary auxiliary quantum system.
+A linear completely positive, trace-preserving map on density matrices. A finite Kraus representation is Φ(ρ) = ΣⱼKⱼρKⱼ\* with ΣⱼKⱼ\*Kⱼ = I. Complete positivity requires positivity to survive extension by an arbitrary auxiliary quantum system.
 
 **Also called:** CPTP map, Completely positive trace-preserving map.
 
@@ -3304,7 +3304,7 @@ Reconstructing a state from probabilities for a sufficiently informative collect
 
 ### Selective projective measurement
 
-A projective measurement with its outcome retained. Outcome j has probability pⱼ = tr(Pⱼρ); if pⱼ > 0, the conditional output state is PⱼρPⱼ/pⱼ. Discarding the outcome instead gives the sum ΣⱼPⱼρPⱼ.
+A projective measurement with its outcome retained. Outcome j has probability pⱼ = tr(Pⱼρ); if pⱼ &gt; 0, the conditional output state is PⱼρPⱼ/pⱼ. Discarding the outcome instead gives the sum ΣⱼPⱼρPⱼ.
 
 **Quick example:** In the demonstration, retaining coordinate outcome zero gives the state |0⟩⟨0| with probability 9/25.
 
@@ -3392,13 +3392,13 @@ A field containing a specified smaller field. The extension degree is its vector
 
 ### Finite-field Frobenius
 
-In a finite field of characteristic p, the map x ↦ xᵖ is an automorphism. Over F_q, the relative Frobenius is x ↦ x^q. The example uses q = p = 5.
+In a finite field of characteristic p, the map x ↦ xᵖ is an automorphism. Over F\_q, the relative Frobenius is x ↦ x^q. The example uses q = p = 5.
 
 **Also called:** Frobenius automorphism.
 
 **Quick example:** In characteristic p, (a+b)ᵖ = aᵖ+bᵖ. On Fₚ itself the Frobenius fixes every element.
 
-**In the worked example:** In F₂₅ = F₅[α] with α² = 3, one has α⁵ = −α. Thus Frobenius sends 1+α to 1−α, and applying it twice returns 1+α.
+**In the worked example:** In F₂₅ = F₅\[α\] with α² = 3, one has α⁵ = −α. Thus Frobenius sends 1+α to 1−α, and applying it twice returns 1+α.
 
 [Hand-worked example](examples/19_FINITE_FROBENIUS.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#finite-frobenius) · [Extension field](#extension-field) · [Linear isomorphism](#isomorphism)
 
@@ -3416,7 +3416,7 @@ For a finite field extension L/K, the trace of the K-linear map that multiplies 
 
 For a finite field extension L/K, the determinant of multiplication by an element a as a K-linear map. In F₂₅/F₅ it is a·a⁵. This norm is algebraic and is not a vector length.
 
-**In the worked example:** For β = 1+α in F₂₅ = F₅[α] with α² = 3, the norm to F₅ is ββ⁵ = (1+α)(1−α) = 1−3 = 3 in F₅.
+**In the worked example:** For β = 1+α in F₂₅ = F₅\[α\] with α² = 3, the norm to F₅ is ββ⁵ = (1+α)(1−α) = 1−3 = 3 in F₅.
 
 [Hand-worked example](examples/19_FINITE_FROBENIUS.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#finite-frobenius) · [Determinant](#determinant) · [Extension field](#extension-field) · [Norm](#norm)
 
@@ -3442,7 +3442,7 @@ A system with addition, subtraction and commutative multiplication satisfying th
 
 ### Module
 
-An abelian additive group with a scalar action by a ring satisfying the usual distributive, associative, and identity laws. For a module over Q[t], multiplication by t can be specified by a Q-linear operator.
+An abelian additive group with a scalar action by a ring satisfying the usual distributive, associative, and identity laws. For a module over Q\[t\], multiplication by t can be specified by a Q-linear operator.
 
 **Quick example:** An abelian group is a module over Z, where multiplying by an integer means repeated addition and its inverse.
 
@@ -3470,7 +3470,7 @@ For a linear map or module map A: U → V, the quotient V/im A. It records targe
 
 ### Module annihilator
 
-The ideal of ring elements that act as zero on every element of a module. For Q[t]/(tᵏ), the annihilator is the ideal (tᵏ).
+The ideal of ring elements that act as zero on every element of a module. For Q\[t\]/(tᵏ), the annihilator is the ideal (tᵏ).
 
 **Quick example:** In the Z-module Z/6Z, every multiple of 6 acts as zero, so its annihilator is the ideal (6).
 
@@ -3480,9 +3480,9 @@ The ideal of ring elements that act as zero on every element of a module. For Q[
 
 ### Module support
 
-The prime ideals at which a module’s localization is nonzero. In the example Q[t]/(tᵏ), the support is the single prime ideal (t). The underlying support set does not determine k or the module.
+The prime ideals at which a module’s localization is nonzero. In the example Q\[t\]/(tᵏ), the support is the single prime ideal (t). The underlying support set does not determine k or the module.
 
-**In the worked example:** Over R = Q[t], the modules R/(t) and R/(t²) both have support {(t)}. Their rational dimensions are one and two, so equal support does not identify the modules.
+**In the worked example:** Over R = Q\[t\], the modules R/(t) and R/(t²) both have support {(t)}. Their rational dimensions are one and two, so equal support does not identify the modules.
 
 [Hand-worked example](examples/20_SUPPORT_AND_MULTIPLICITY.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#support-multiplicity) · [Module](#module) · [Module annihilator](#annihilator) · [Multiplicity in the module example](#multiplicity)
 
@@ -3498,9 +3498,9 @@ For a finite presentation Rᵐ → Rⁿ → M → 0 over a commutative ring, the
 
 ### Multiplicity in the module example
 
-For Q[t]/(tᵏ) supported at t=0, the integer k records the module’s length and its Q-vector-space dimension. This is additional data beyond the one-point support set. Other works use multiplicity with their own specified objects.
+For Q\[t\]/(tᵏ) supported at t=0, the integer k records the module’s length and its Q-vector-space dimension. This is additional data beyond the one-point support set. Other works use multiplicity with their own specified objects.
 
-**In the worked example:** The module Q[t]/(t²) has basis (1,t) over Q and multiplicity two in this example. Its fiber at t = 0 still has dimension one. That special-fiber dimension does not recover the full module’s rational dimension.
+**In the worked example:** The module Q\[t\]/(t²) has basis (1,t) over Q and multiplicity two in this example. Its fiber at t = 0 still has dimension one. That special-fiber dimension does not recover the full module’s rational dimension.
 
 [Hand-worked example](examples/20_SUPPORT_AND_MULTIPLICITY.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#support-multiplicity) · [Dimension](#dimension) · [Module support](#module-support) · [Nilpotent operator](#nilpotent)
 
@@ -3518,7 +3518,7 @@ An additive subgroup of a commutative ring closed under multiplication by every 
 
 ### Prime ideal
 
-A proper ideal P such that ab in P implies a in P or b in P. The ideal (t) in Q[t] is prime because the quotient is the field Q.
+A proper ideal P such that ab in P implies a in P or b in P. The ideal (t) in Q\[t\] is prime because the quotient is the field Q.
 
 [Hand-worked example](examples/20_SUPPORT_AND_MULTIPLICITY.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#support-multiplicity) · [Ideal](#ideal) · [Commutative ring with identity](#ring) · [Field](#field)
 
@@ -3700,7 +3700,7 @@ A requested quantity is identifiable from the supplied data when every compatibl
 
 A description of a discrete linear system by xₙ₊₁ = Axₙ+Buₙ and yₙ = Cxₙ+Duₙ. It declares the retained state x, input u and observation y. Different coordinate systems can describe the same input-output behavior.
 
-**Quick example:** The hidden-memory example has full state (y,z) and autonomous update matrix [[1,1],[1,0]]. Its visible observation selects y.
+**Quick example:** The hidden-memory example has full state (y,z) and autonomous update matrix \[\[1,1\],\[1,0\]\]. Its visible observation selects y.
 
 [Further reading](examples/22_HIDDEN_MEMORY.md) · [Visible state](#visible-state) · [Hidden state](#hidden-state) · [Realization](#realization) · [Scalar McMillan degree](#mcmillan-degree)
 
@@ -3776,7 +3776,7 @@ The state distribution conditional on the observed data under the supplied prior
 
 ### Covariance matrix
 
-For a random vector X with mean m and finite second moments, the matrix E[(X−m)(X−m)ᵀ]. Its diagonal entries are variances. For a unit direction u, uᵀCu is the variance in that direction.
+For a random vector X with mean m and finite second moments, the matrix E\[(X−m)(X−m)ᵀ\]. Its diagonal entries are variances. For a unit direction u, uᵀCu is the variance in that direction.
 
 **Quick example:** Independent coordinates with variances 1 and 4 have covariance matrix diag(1,4).
 
