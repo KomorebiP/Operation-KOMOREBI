@@ -1,6 +1,6 @@
 """Exact source coverage, visual math, preserved main reader and directory routes."""
 from pathlib import Path
-import copy,hashlib,json,tempfile,unittest
+import copy,hashlib,json,re,tempfile,unittest
 from unittest.mock import patch
 from physics_visual import metadata,source_specs,verify,REPORT,INDEX,BASE
 from test_physics_reading import publish_fixture,ROOT
@@ -48,7 +48,9 @@ class PhysicsVisualTests(unittest.TestCase):
             with self.assertRaisesRegex(AssertionError,'Changed Physics visual math'):verify(output,documents,pages)
             page.write_text(raw,encoding='utf-8')
             illustrated=output/report['html_pages'][1]['url'];original=illustrated.read_text(encoding='utf-8')
-            illustrated.write_text(original.replace('01_packets.','02_corners.',1),encoding='utf-8')
+            changed=re.sub(r'(<img src="[^"]*)01_packets\.',lambda m:m[1]+'02_corners.',original,count=1)
+            self.assertNotEqual(changed,original)
+            illustrated.write_text(changed,encoding='utf-8')
             with self.assertRaisesRegex(AssertionError,'Changed Physics visual figure'):verify(output,documents,pages)
             illustrated.write_text(original,encoding='utf-8')
             for title in ['Foundations','Dirac','Gauge','Gravity','Adic']:
