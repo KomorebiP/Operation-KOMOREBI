@@ -82,15 +82,19 @@ class UnifiedSmithTests(unittest.TestCase):
             if link.startswith('#'):
                 from urllib.parse import unquote
                 self.assertIn(unquote(link[1:]),self.parsed.ids,link)
-    def test_all_archived_math_survives_even_when_reordered(self):
+    def test_all_archived_math_survives_in_bound_source_body(self):
         old=Data();old.feed(research.historical_body(ROOT,'a'*40))
-        missing=Counter(old.math)-Counter(self.parsed.math)
+        source=Data();source.feed(book.build_source_body(self.site))
+        missing=Counter(old.math)-Counter(source.math)
         self.assertFalse(missing,dict(missing))
         self.assertEqual(len(old.math),1668)
-        self.assertEqual(len(self.parsed.math),3594)
+        self.assertEqual(len(source.math),3594)
+        review=json.loads((ROOT/book.BASE/'READING_REVIEW.json').read_bytes())
+        self.assertEqual(len(self.parsed.math),review['mathematics']['output_expressions'])
     def test_imported_statement_math_survives_label_namespacing(self):
         manifest,files=continuation.load(ROOT)
-        actual=Counter(self.parsed.math)
+        bound_source=Data();bound_source.feed(book.build_source_body(self.site))
+        actual=Counter(bound_source.math)
         for chapter in manifest['chapters']:
             source=Data();source.feed(continuation.render(files[chapter['archive']][chapter['member']].decode('utf-8')))
             expected=[re.sub(r'\\tag\{([^}]+)\}',lambda m:r'\tag{'+book.TAG_PREFIXES[chapter['slug']]+'.'+m[1]+'}',m) for m in source.math]
@@ -122,6 +126,9 @@ class UnifiedSmithTests(unittest.TestCase):
             self.assertIn('research/smith-chart/unified/replay_current.py',hashes)
             self.assertIn('research/smith-chart/formal/SmithFirstOrderRL.lean',hashes)
             self.assertIn('replay.py',hashes)
+            self.assertIn('tools/smith_chart_reading.py',hashes)
+            self.assertIn('research/smith-chart/unified/reading-edition.json',hashes)
+            self.assertIn('research/smith-chart/unified/READING_REVIEW.json',hashes)
             self.assertFalse(any(name.lower().endswith('.pdf') for name in hashes))
         book.publish_sources(self.site)
         self.assertEqual(first,hashlib.sha256(archive.read_bytes()).hexdigest())
