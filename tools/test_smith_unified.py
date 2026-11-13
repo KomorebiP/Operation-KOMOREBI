@@ -71,6 +71,10 @@ class UnifiedSmithTests(unittest.TestCase):
         self.assertEqual(len(re.findall(r'<article\b',self.body)),1)
         self.assertEqual(len(re.findall(r'<h1\b',self.body)),1)
         self.assertEqual(self.parsed.ids.count('contents'),1)
+        descriptions=re.findall(r'<meta\b[^>]*(?:name="description"|property="og:description")[^>]*>',self.body)
+        self.assertEqual(len(descriptions),2)
+        for description in descriptions:
+            self.assertNotRegex(description,re.compile(r'draft|research history|superseded|checkpoint',re.I))
         self.assertEqual(len(self.parsed.ids),len(set(self.parsed.ids)))
         for anchor in ('current-results','exact-six','composition','families','deterministic-family','obstruction',
                        'quantitative-transfer','effective-margin','compact-model-audit','singular-completion',
