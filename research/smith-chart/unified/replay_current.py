@@ -61,7 +61,7 @@ def main():
     env.update(TEMP=str(local_temp),TMP=str(local_temp),PYTHONDONTWRITEBYTECODE='1',PYTHONHASHSEED='0',
         OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1',MKL_NUM_THREADS='1',KOMOREBI_CHECK_ONLY='1')
     rows = []
-    for task in tasks+[{'id':'current-exact-suites','arguments':['solver/check_breakthrough.py'],'archive':None}]:
+    for task in tasks+[{'id':'current-exact-suites','arguments':['solver/check_current_routes.py'],'archive':None}]:
         if task['archive'] is None:
             work = ROOT
         else:
