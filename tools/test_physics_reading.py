@@ -72,12 +72,13 @@ class PhysicsReadingTests(unittest.TestCase):
     def test_sources_are_complete_in_order_and_fail_closed(self):
         load = lambda path: (ROOT/path).read_text(encoding='utf-8-sig')
         self.assertEqual(source_specs(load), CHAPTERS)
-        self.assertEqual(len(CHAPTERS), 122)
+        self.assertEqual(len(CHAPTERS), 133)
         self.assertEqual(sum(spec['treatment']=='dirac' for spec in CHAPTERS), 28)
         self.assertEqual(sum(spec['treatment']=='generator' for spec in CHAPTERS), 8)
         self.assertEqual(sum(spec['treatment']=='gauge' for spec in CHAPTERS), 21)
         self.assertEqual(sum(spec['treatment']=='gravity' for spec in CHAPTERS), 24)
         self.assertEqual(sum(spec['treatment']=='adic' for spec in CHAPTERS), 22)
+        self.assertEqual(sum(spec['treatment']=='fiber' for spec in CHAPTERS), 11)
         for path in DATA['source_sha256']:
             with self.assertRaisesRegex(ValueError, 'changed Physics source'):
                 source_specs(lambda p: load(p)+('changed' if p == path else ''))
@@ -109,6 +110,14 @@ class PhysicsReadingTests(unittest.TestCase):
         hashes = dict(DATA['source_sha256'], **{path: hashlib.sha256(moved.encode()).hexdigest()})
         with patch.dict(DATA, source_sha256=hashes), self.assertRaisesRegex(ValueError, 'nested input position'):
             source_specs(lambda p: moved if p == path else load(p))
+        from physics_fiber import MAIN as FIBER_MAIN, source_blocks
+        fiber = next(t for t in DATA['treatments'] if t['id']=='fiber')
+        omitted = load(FIBER_MAIN).replace(r'\input{source/02_covariant_eft}',
+            'An additional passage must not be omitted.\n'+r'\input{source/02_covariant_eft}')
+        with self.assertRaisesRegex(ValueError, 'main-file passage coverage'):
+            source_blocks(lambda p: omitted if p==FIBER_MAIN else load(p),fiber)
+        with self.assertRaisesRegex(ValueError, 'main-file passage coverage'):
+            source_blocks(lambda p: load(p).replace(r'\appendix','') if p==FIBER_MAIN else load(p),fiber)
 
     def test_publication_equations_numbering_figures_proofs_and_routes(self):
         with tempfile.TemporaryDirectory() as folder:
@@ -119,7 +128,7 @@ class PhysicsReadingTests(unittest.TestCase):
             check_image_sources(documents)
             with patch.object(reading, 'BOOKS', {WORK: BOOK}), patch.object(reading, 'CHAPTERS', CHAPTERS):
                 count = check_readable_chapter(output, documents, pages)
-            self.assertEqual(count, 4357)
+            self.assertEqual(count, 4754)
             book = reader.readable_books[WORK]
             nodes = [node for _, _, chapter in book['chapters'] for node in chapter.nodes]
             for treatment, sections, proofs, figure_numbers in [('foundations', 16, 15, list(map(str, range(1, 11)))),
@@ -137,11 +146,11 @@ class PhysicsReadingTests(unittest.TestCase):
                                   ('Physical torus Hamiltonian', '21.1')]:
                 self.assertEqual(next(n['number'] for n in nodes if n['title']==title), number)
             proofs = sum(n['kind']=='proof' for n in nodes)
-            self.assertEqual(proofs, 100)
+            self.assertEqual(proofs, 114)
             self.assertEqual(proofs, sum(len(c.proof_pairs) for _, _, c in book['chapters']))
             self.assertEqual(book['chapters'][0][2].equation_numbers['f:atlas-relations'], '1')
             self.assertEqual(book['chapters'][0][2].labels['f:parseval']['number'], '1.2')
-            self.assertEqual(sum(bool(r.get('source')) for r in reader.images.values()), 45)
+            self.assertEqual(sum(bool(r.get('source')) for r in reader.images.values()), 50)
             self.assertEqual(len(book['references']), 6)
             generator = [c for s, _, c in book['chapters'] if s['treatment']=='generator']
             self.assertEqual(generator[0].labels['thm:generator']['number'], '2.3')
@@ -171,6 +180,36 @@ class PhysicsReadingTests(unittest.TestCase):
             for key, number in [('a-finite-hamiltonian-intertwine','25'),
                     ('a-spectral-companion-system','81'),('a-limit-block-domain','125')]:
                 self.assertEqual(adic[0].equation_numbers[key],number)
+            fiber = [c for s, _, c in book['chapters'] if s['treatment']=='fiber']
+            fiber_nodes = [n for c in fiber for n in c.nodes]
+            self.assertEqual([n['number'] for n in fiber_nodes if n['kind']=='section' and n['number']],
+                ['1','2','3','4','5','6','7','A','B'])
+            self.assertEqual([n['number'] for n in fiber_nodes if n['kind']=='figure'],['3.1','4.1','4.2','5.1','6.1','A.1'])
+            self.assertEqual(sum(n['kind']=='proof' for n in fiber_nodes),14)
+            self.assertEqual(next(n['number'] for n in fiber_nodes if n['kind']=='diagnostic'),'5.2')
+            self.assertEqual(next(n['number'] for n in fiber_nodes if n['title']=='Failure of negligible backreaction'),'5.1')
+            self.assertEqual(fiber[0].equation_numbers['eq:back-overdraw'],'5.6')
+            self.assertEqual(fiber[0].labels['ch:canonical']['reference_label'],'Chapter 3')
+            self.assertEqual(fiber[0].macros['BridgeOverdraw'],r'2.6272875374\times 10^{20}')
+            self.assertEqual(fiber[0].macros['PB'],dict(arguments=2,body=r'\left\{#1,#2\right\}'))
+            from physics_fiber import MAIN as FIBER_MAIN, BASE as FIBER_BASE, VALUES
+            self.assertIn(VALUES,reader.records)
+            expected_displays = {'1':4,'2':32,'3':16,'4':27,'5':30,'6':14}
+            for spec,_,chapter in book['chapters']:
+                if spec['treatment']!='fiber':continue
+                native = [chapter.section_number()+'.'+str(i) for i in range(1,expected_displays.get(chapter.section_number(),0)+1)]
+                self.assertEqual([v for values in chapter.display_equation_numbers.values() for v in values],native)
+                markup = (output/spec['url']).read_text(encoding='utf-8')
+                printed = re.findall(r'<span class="equation-number">(.*?)</span>',markup,re.S)
+                self.assertEqual([n for span in printed for n in re.findall(r'\(([0-9AB]+\.[0-9]+)\)',span)],native)
+            repeated = next(r for r in book['figure_assets'].values() if r['source']==FIBER_BASE+'figures/constraint_negative_controls.pdf')
+            self.assertEqual(repeated['uses'],2)
+            opening = (output/next(s['url'] for s in CHAPTERS if s['source']==FIBER_MAIN)).read_text(encoding='utf-8')
+            self.assertIn('The controlling physical boundary',opening)
+            self.assertIn('does not solve the coupled background and mode equations',opening)
+            self.assertIn('conditional on the prescribed normalized distribution',opening)
+            closing = (output/next(s['url'] for s in CHAPTERS if s['source']==FIBER_MAIN and s['title']=='Bibliographic scope')).read_text(encoding='utf-8')
+            self.assertIn('No literature-priority or empirical-preference claim',closing)
             for spec in CHAPTERS:
                 page = pages[spec['url']]
                 self.assertEqual((page.h1, page.main, page.images_without_alt), (1, 1, 0))
@@ -209,6 +248,7 @@ class PhysicsReadingTests(unittest.TestCase):
                             if urlsplit(link).fragment.startswith('page=')]
             self.assertEqual(destinations, [row['index_start']+1 for row in book['full_book']])
             self.assertEqual(len(destinations), 21)
+            self.assertIn('fiber-computational-evidence-and-reproducibility.html',index)
             from statement_navigation import check_directory
             directory = reading.statement_directory_url(BOOK)
             result = check_directory((output/directory).read_text(encoding='utf-8'),

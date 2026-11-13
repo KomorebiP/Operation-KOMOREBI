@@ -1,6 +1,6 @@
-"""Source-bound Physics foundations, Dirac, generator, gauge, gravity, and adic treatments.
+"""Source-bound Physics foundations, Dirac, generator, gauge, gravity, adic, and fiber treatments.
 
-The full foundations, Dirac, generator, gauge, gravity, and adic treatments are included. Later treatments remain in the
+The full foundations, Dirac, generator, gauge, gravity, adic, and fiber treatments are included. Later treatments remain in the
 complete PDF. Publication adds no proof review, experiment, or Lean execution.
 """
 import hashlib
@@ -26,7 +26,7 @@ CHAPTERS = DATA['chapters']
 BOOK = dict(work=WORK, label='Physics', title='Physics: Resolution, dynamics, and constrained geometry',
     base=BASE, main=MAIN, macro_source=MACROS, bib=BASE+'references.tex',
     index=PREFIX+'index.html', bib_page=PREFIX+'dirac-sources-and-further-reading.html', chapters=CHAPTERS,
-    custom_reader='physics', partial=True, main_chapters=105,
+    custom_reader='physics', partial=True, main_chapters=112,
     bibliography_in_chapters=True, numbered_bibliography=True, required_macros=[], statement_navigation=True,
     lean_reader_paths=['formal/continuum/KomorebiPhysics/'],
     reader_controls=True, number_floats=True, show_figure_numbers=True,
@@ -60,19 +60,24 @@ BOOK = dict(work=WORK, label='Physics', title='Physics: Resolution, dynamics, an
         ('adic/finite.tex', 'L835'): dict(caption='Per-leaf and collective coupling choices',
             headers=['Per-leaf choice',r'$\alpha$',r'$|G_{p,w}|$',r'$|G_{p,w}|^2$'],row_header_column=0)},
     require_table_reading_aids=True,
-    reading_introduction='Read the complete foundations, continuum Dirac, spectral generator, gauge, gravity and adic treatments. '
+    reading_introduction='Read the complete foundations, continuum Dirac, spectral generator, gauge, gravity, adic and covariant fiber treatments. '
         'Begin with packets, currents, open dynamics, refinement and operator domains; '
         'continue through PH01–PH12, the exact three-mode example, Fourier completion '
         'and the self-adjoint Hamiltonian on the three-torus, then its strong generator, resolvent limits '
         'and quantitative evolution estimates. Continue to endpoint covariance, finite matter–field dynamics, '
         'ordered holonomy and geometric refinement, then constrained geometry, regular canonical reduction '
         'and spherical strong-field models. Arithmetic refinement follows through normalized Haar packets, '
-        'spectral elimination and compatible Hilbert-space limits. Forty-five original figures accompany the text.',
+        'spectral elimination and compatible Hilbert-space limits. The covariant fiber model follows through '
+        'stress exchange, canonical closure, production and ultraviolet bounds, including its failed benchmark '
+        'energy test and the computational evidence appendix. Fifty original figures accompany the text.',
     reading_note='These opening HTML installments belong to the 572-page Physics book. '
-        'The foundations, continuum Dirac, spectral generator, gauge, gravity and adic treatments are complete here; '
-        'the matter and cosmology treatments, visual atlases and formal companions '
+        'The foundations, continuum Dirac, spectral generator, gauge, gravity, adic and covariant fiber treatments are complete here; '
+        'the cosmology treatment, visual atlases and formal companions '
         'remain in the full PDF. Authored wording, equations and numbered statements '
         'are preserved. This reading edition adds no proof audit, scientific run or Lean execution.')
+BOOK['table_reading_aids'].update({(row['source'],row['id']):
+    {key:value for key,value in row.items() if key not in {'source','id'}}
+    for row in DATA['fiber_table_aids']})
 
 
 def mask(text):
@@ -111,6 +116,9 @@ def normalize(raw):
     from foundational_reading import rewrite
     text = clean_tex(raw)
     lines = text.count('\n')
+    if r'\chapter{' in text or r'\PhysicsOpening{07 / Matter' in text or r'\section*{Bibliographic scope}' in text:
+        from physics_fiber import normalize as fiber_normalize
+        text = fiber_normalize(text)
     text = rewrite(text, 'PhysicsOpening', 3, lambda kicker, title, subtitle:
         r'\section*{'+title+r'}\textit{'+subtitle+r'}\par '+kicker+r'\par ')
     text = rewrite(text, 'hypertarget', 2, lambda target, body: body)
@@ -160,10 +168,16 @@ def normalize(raw):
 
 
 def macro_source(spec):
+    if spec.get('treatment') == 'fiber':
+        from physics_fiber import MAIN as FIBER_MAIN
+        return FIBER_MAIN
     return GENERATOR_MAIN if spec['source'] == GENERATOR_MAIN else MACROS
 
 
 def source_macros(load, spec=None):
+    if spec and spec.get('treatment') == 'fiber':
+        from physics_fiber import macros
+        return macros(load)
     from readable_chapters import manuscript_macros, group
     text = load(macro_source(spec) if spec else MACROS)
     macros = manuscript_macros(text, [])
@@ -186,7 +200,7 @@ def source_specs(load):
     for path, expected in DATA['source_sha256'].items():
         if hashlib.sha256(load(path).encode()).hexdigest() != expected:
             raise ValueError('Review changed Physics source: ' + path)
-    expected_sources = []
+    expected_blocks = []
     for treatment in DATA['treatments']:
         inputs = re.findall(r'\\input\{([^{}]+)\}', load(treatment['main']))
         if inputs != [*treatment.get('layout_inputs', ['preamble.tex']), *treatment['inputs']]:
@@ -209,26 +223,35 @@ def source_specs(load):
                     raise ValueError('Review Physics nested input position')
             for child in declared:
                 include(child, (*ancestors, name))
-        if treatment.get('standalone'):
+        if treatment.get('book_body'):
+            from physics_fiber import source_blocks
+            blocks = source_blocks(load, treatment)
+            sources = [block[0] for block in blocks]
+        elif treatment.get('standalone'):
             sources = [treatment['main']]
         else:
             for name in treatment['inputs']:
                 include(name)
-        expected_sources.extend(sources)
+        if not treatment.get('book_body'):
+            blocks = []
+            for source in sources:
+                raw = load(source)
+                start, end = 1, len(raw.splitlines())
+                if source == GENERATOR_MAIN:
+                    start = raw.count('\n', 0, raw.index(r'\begin{document}'))+2
+                    end = raw.count('\n', 0, raw.index(r'\end{document}'))
+                blocks.append((source, start, end))
+        expected_blocks.extend(blocks)
         if any(spec['treatment'] != treatment['id'] for spec in CHAPTERS
                if spec['source'] in sources):
             raise ValueError('Physics source belongs to the wrong treatment')
     actual_sources = [spec['source'] for i, spec in enumerate(CHAPTERS)
                       if i == 0 or spec['source'] != CHAPTERS[i-1]['source']]
-    if actual_sources != expected_sources:
+    if actual_sources != [block[0] for block in expected_blocks]:
         raise ValueError('Physics reading order differs from the retained treatments')
-    for source in expected_sources:
-        specs = [spec for spec in CHAPTERS if spec['source'] == source]
-        raw = load(source)
-        start, end = 1, len(raw.splitlines())
-        if source == GENERATOR_MAIN:
-            start = raw.count('\n', 0, raw.index(r'\begin{document}'))+2
-            end = raw.count('\n', 0, raw.index(r'\end{document}'))
+    from itertools import groupby
+    groups = [list(specs) for _, specs in groupby(CHAPTERS, key=lambda s:s['source'])]
+    for (source, start, end), specs in zip(expected_blocks, groups):
         if specs[0]['start_line'] != start or specs[-1]['end_line'] != end:
             raise ValueError('Physics selection omits source boundaries')
         for left, right in zip(specs, specs[1:]):
@@ -269,6 +292,11 @@ def prepare_book(reader, config):
         if spec['treatment'] != treatment:
             treatment = spec['treatment']
             state, equation_counter = {'number_floats': True}, 0
+        if spec.get('book_chapter'):
+            if spec.get('book_appendix') and not state.get('appendix'):
+                state.update(appendix=True, section=0)
+            state.update(figure=0, table=0)
+            equation_counter = 0
         raw = reader.site.read_source(reader.add(spec['source']))
         selected = reading.chapter_text(raw.decode('utf-8-sig'), spec)
         chapter_macros = source_macros(load, spec)
@@ -278,6 +306,12 @@ def prepare_book(reader, config):
         chapter.macro_source = macro_source(spec)
         chapter.table_config = config
         chapter.table_aids_used, chapter.nested_tables, chapter.proof_pairs = set(), [], {}
+        if treatment == 'fiber':
+            from physics_fiber import display_equation_numbers
+            chapter.display_equation_numbers = display_equation_numbers(selected,chapter.section_number())
+            for node in chapter.nodes:
+                if node['kind'] in {'figure','longtable','table'} and node['number']:
+                    node['number'] = chapter.section_number()+'.'+node['number']
         if spec['source'] == DIRAC_FINITE:
             records = {row['line']: row for row in DATA['dirac_statements']}
             for node in chapter.nodes:
@@ -299,6 +333,9 @@ def prepare_book(reader, config):
                 raise ValueError('Repeated Physics label: ' + key)
             node['url'] = chapter.url
             labels[key] = dict(node, reference_label=node['number'] or node['title'])
+            if treatment == 'fiber':
+                kind = {'section':'Appendix' if chapter.appendix else 'Chapter','subsection':'Section','subsubsection':'Subsection'}.get(node['kind'],reading.KIND_NAMES.get(node['kind'],node['kind'].capitalize()))
+                labels[key].update(reference_label=kind+' '+node['number'],plain_reference_label=node['number'],treatment='fiber')
         for match in re.finditer(r'\\begin\{(equation|align)\}(.*?)\\end\{\1\}', selected, re.S):
             rows = [match[2]] if match[1] == 'equation' else [row for row in reading.split_cells(match[2], r'\\') if row.strip()]
             for row in rows:
@@ -306,13 +343,15 @@ def prepare_book(reader, config):
                     continue
                 equation_counter += 1
                 for key in re.findall(r'\\label\{([^{}]+)\}', row):
-                    equations[key] = str(equation_counter)
+                    equations[key] = (chapter.section_number()+'.' if treatment=='fiber' else '')+str(equation_counter)
         state = {key: getattr(chapter, key) for key in (
             'section', 'appendix', 'part', 'subsection', 'subsubsection', 'counter',
             'section_prefix', 'figure', 'table', 'number_floats')}
         chapters.append((spec, raw, chapter))
     for key, number in equations.items():
         labels[key].update(reference_label=number, equation_number=number)
+        if labels[key].get('treatment')=='fiber':
+            labels[key].update(reference_label='Equation ('+number+')',plain_reference_label=number)
     for _, _, chapter in chapters:
         chapter.labels, chapter.equation_numbers = labels, equations
         chapter.citations = {row['key']: (str(i), chapter.relative(config['bib_page'])+'#ref-'+row['key'])
@@ -331,6 +370,10 @@ def prepare_book(reader, config):
         [row for row in chapters if row[0]['treatment']=='gravity']))
     figures.update(prepare(reader, dict(config, figure_receipts='assets/figures/physics-adic/figures.json'),
         [row for row in chapters if row[0]['treatment']=='adic']))
+    from physics_fiber import BASE as FIBER_BASE
+    figures.update(prepare(reader, dict(config, figure_source_root=FIBER_BASE,
+        figure_receipts='assets/figures/physics-fiber/figures.json'),
+        [row for row in chapters if row[0]['treatment']=='fiber']))
     return dict(config=config, chapters=chapters, references=references, macros=macros, main=main,
                 full_book=manifest, figure_assets=figures)
 
@@ -345,7 +388,8 @@ def full_book_routes(reader, book, page):
     body = ('<section aria-labelledby="source-continuations"><h2 id="source-continuations">Continue in the full Physics book</h2>'
         '<p>The complete 572-page PDF contains all six parts below. Each PDF link opens at '
         'the beginning of that treatment. The HTML installments above cover the complete foundations, '
-        'continuum Dirac, spectral generator, gauge, gravity and adic treatments.</p>')
+        'continuum Dirac, spectral generator, gauge, gravity, adic and covariant fiber treatments, '
+        'including the fiber computational evidence appendix.</p>')
     part = None
     for row in book['full_book']:
         if part != row['part']:
@@ -357,7 +401,7 @@ def full_book_routes(reader, book, page):
         body += '<li><a href="'+html.escape(link,quote=True)+'">'+html.escape(row['title'])+' (PDF)</a> — '+html.escape(row['deck'])
         selected = next((t for t in DATA['treatments'] if t['main'].endswith('/'+row['stem']+'.tex')), None)
         if selected:
-            start = next(spec['url'] for spec in CHAPTERS if spec['treatment']==selected['id'])
+            start = selected.get('part_entries', {}).get(row['part']) or next(spec['url'] for spec in CHAPTERS if spec['treatment']==selected['id'])
             body += ' · <a href="'+html.escape(reader.site.rel(start, page),quote=True)+'">Read in HTML</a>'
         body += '</li>'
     return body+'</ul></section>'
