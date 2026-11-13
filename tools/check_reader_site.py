@@ -467,6 +467,8 @@ def inspect_site(root, *, compact_html=False, delivery_artifacts=None):
     special_functions=verify_special_functions(root,documents,pages)
     from special_functions_atlas import verify as verify_special_functions_atlas
     special_functions_atlas=verify_special_functions_atlas(root,documents,pages)
+    from physics_visual import verify as verify_physics_visual
+    physics_visual=verify_physics_visual(root,documents,pages)
     from reading_navigation import verify as verify_reading_navigation
     reading_navigation=verify_reading_navigation(root,pages,documents)
     from reader_proofreading import verify as verify_proofreading
@@ -503,7 +505,7 @@ def inspect_site(root, *, compact_html=False, delivery_artifacts=None):
     return dict(status='PASS',delivery=delivery,html_pages=len(pages),local_links=links,fragments=fragments,discovery=discovery,jspace_lab=jspace_lab,euler_worked_examples=euler_cases,factorial_worked_examples=factorial_cases,wavelet_worked_examples=wavelet_cases,stirling_worked_examples=stirling_cases,roots_newton_worked_examples=roots_newton_cases,
                 quantum_worked_examples=quantum_cases,search_pages=len(index),search_catalog=search_catalog,reading_bundles=len(bundles),checked_bundle_files=zipped_files,download_selection=download_selection,side_reader=side_reader,
                 reading_documents=len(documents['files']),pdfs=pdf_count,editorial_editions=len(editions),readable_math_expressions=readable_math,paper_vii=paper_vii,atlas=atlas,paper_i_atlas=paper_i_atlas,core_worked_atlases=core_worked_atlases,paper_viii_atlas=paper_viii_atlas,paper_ix_atlas=paper_ix_atlas,paper_x_atlas=paper_x_atlas,paper_xi_atlas=paper_xi_atlas,paper_xii_atlas=paper_xii_atlas,paper_v_atlas=paper_v_atlas,paper_vi_atlas=paper_vi_atlas,paper_vii_atlas=paper_vii_atlas,notation=notation,special_functions=special_functions,reading_navigation=reading_navigation,
-                proofreading=proofreading,copyediting=copyediting,reading_links=reading_links,statement_navigation=statement_navigation,reference_previews=reference_previews,reading_paths=reading_paths,lean_reader=lean_reader,lean_playground=lean_playground,lean_execution=lean_execution,large_signal_atlas=large_signal_atlas,special_functions_atlas=special_functions_atlas,scope='Static navigation, HTML structure and ZIP source identities. Not WCAG certification or mathematical review.')
+                proofreading=proofreading,copyediting=copyediting,reading_links=reading_links,statement_navigation=statement_navigation,reference_previews=reference_previews,reading_paths=reading_paths,lean_reader=lean_reader,lean_playground=lean_playground,lean_execution=lean_execution,large_signal_atlas=large_signal_atlas,special_functions_atlas=special_functions_atlas,physics_visual=physics_visual,scope='Static navigation, HTML structure and ZIP source identities. Not WCAG certification or mathematical review.')
 
 
 def main():

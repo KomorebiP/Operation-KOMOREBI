@@ -42,7 +42,9 @@ def guide_choices():
             ('monographs-large-signal-model','Large Signal Model','Predictive state, memory, and probability',
              'read/monographs-large-signal-model/atlas/index.html'),
             ('monographs-special-functions','Special Functions','Function families, packets, and finite resolution',
-             'read/monographs-special-functions/atlas/index.html')]
+             'read/monographs-special-functions/atlas/index.html'),
+            ('monographs-physics','Physics','Packets, free fields, gauge, gravity and refinement',
+             'read/monographs-physics/atlas/index.html')]
 
 
 def guide_navigation(work,page,more=''):
@@ -102,7 +104,8 @@ def all_inventory(root,files):
     from quantum_visual_guides import inventory as quantum_inventory
     from large_signal_atlas import inventory as large_signal_inventory
     from special_functions_atlas import inventory as special_functions_inventory
-    return inventory(root,files)+[quantum_inventory(root,files),large_signal_inventory(root,files),special_functions_inventory(root,files)]
+    from physics_visual import inventory as physics_inventory
+    return inventory(root,files)+[quantum_inventory(root,files),large_signal_inventory(root,files),special_functions_inventory(root,files),physics_inventory(root,files)]
 
 
 def render(reader):
@@ -110,7 +113,7 @@ def render(reader):
     rows=all_inventory(site.root,reader.records.values())
     count=sum(bool(row['html_atlas']) for row in rows)
     body='<div class="visual-directory"><p class="eyebrow">Core papers and books</p><h1>Visual guides</h1>'
-    body+='<p class="visual-directory-intro">Explore all twelve core papers, Quantum and Circuits, the Large Signal Model, and Special Functions. Choose a subject or work for original diagrams, selectable mathematics, and links to the text. <a href="'+site.rel('search.html',INDEX)+'?type=Visual+guides">Search all visual pages</a>.</p>'
+    body+='<p class="visual-directory-intro">Explore all twelve core papers, Quantum and Circuits, the Large Signal Model, Special Functions, and Physics. Choose a subject or work for original diagrams, selectable mathematics, and links to the text. <a href="'+site.rel('search.html',INDEX)+'?type=Visual+guides">Search all visual pages</a>.</p>'
     body+='<form id="visual-guide-filter" class="visual-guide-filter" role="search" hidden><label for="visual-guide-query">Find a visual guide</label><div><input id="visual-guide-query" type="search" name="q" placeholder="Paper number, title, or topic" aria-controls="visual-guide-list" aria-describedby="visual-guide-count"><button type="reset">Clear</button></div></form>'
     body+='<div class="visual-directory-tools"><nav class="visual-guide-jump" aria-label="Jump to a paper or book">'+''.join('<a href="#'+r['work']+'" aria-label="'+r['label']+'">'+r['label'].removeprefix('Paper ')+'</a>' for r in rows)+'</nav><p id="visual-guide-count" role="status" aria-live="polite">'+str(count)+' guides</p></div>'
     body+='<p id="visual-guide-empty" hidden>No guides match. Try another subject or clear the search.</p><ol id="visual-guide-list" class="visual-guide-grid">'
