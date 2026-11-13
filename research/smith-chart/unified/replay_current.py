@@ -61,7 +61,7 @@ def main():
     env.update(TEMP=str(local_temp),TMP=str(local_temp),PYTHONDONTWRITEBYTECODE='1',PYTHONHASHSEED='0',
         OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1',MKL_NUM_THREADS='1',KOMOREBI_CHECK_ONLY='1')
     rows = []
-    for task in tasks+[{'id':'current-exact-suites','arguments':['solver/check_current_global.py'],'archive':None}]:
+    for task in tasks+[{'id':'current-exact-suites','arguments':['solver/check_current_resonance.py'],'archive':None}]:
         if task['archive'] is None:
             work = ROOT
         else:
@@ -70,7 +70,9 @@ def main():
         cmd = [sys.executable,'-B','-S']+task['arguments']
         print('RUN '+task['id'],flush=True)
         start = time.monotonic()
-        result = subprocess.run(cmd,cwd=work,env=env,capture_output=True,timeout=240)
+        # The current entry includes two bounded suites; predecessor budgets stay fixed.
+        timeout = 660 if task['archive'] is None else 240
+        result = subprocess.run(cmd,cwd=work,env=env,capture_output=True,timeout=timeout)
         for stream,raw in (('stdout',result.stdout),('stderr',result.stderr)):
             (out/(task['id']+'.'+stream+'.txt')).write_bytes(raw)
         status = 'PASS' if result.returncode==0 else 'FAIL'
