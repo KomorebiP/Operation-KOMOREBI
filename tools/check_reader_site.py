@@ -95,7 +95,10 @@ def check_table_reading_aids(markup,aids):
         assert caption and caption[1].strip(),('Missing table caption',identifier)
         if 'caption' in aid:
             assert caption[1]==Chapter('',{}).inline(aid['caption']),('Table caption differs',identifier)
-        assert table[1].count('scope="col"')==len(aid.get('subheaders',aid['headers'])),('Missing column headers',identifier)
+        column_headers = len(aid.get('subheaders',aid['headers']))
+        if 'subheaders' in aid:
+            column_headers += sum(bool(cell.strip()) and r'\multicolumn' not in cell for cell in aid['headers'])
+        assert table[1].count('scope="col"')==column_headers,('Missing column headers',identifier)
         if 'subheaders' in aid:
             assert table[1].count('scope="colgroup"')==sum(r'\multicolumn' in cell for cell in aid['headers']),('Missing column groups',identifier)
         body=re.search(r'<tbody>(.*?)</tbody>',table[1],re.S)

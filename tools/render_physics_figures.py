@@ -14,8 +14,41 @@ def main():
     import pypdfium2 as pdfium
     from readable_chapters import group
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--treatment', choices=('foundations', 'dirac', 'generator', 'gauge', 'gravity', 'adic', 'fiber'), default='foundations')
+    parser.add_argument('--treatment', choices=('foundations', 'dirac', 'generator', 'gauge', 'gravity', 'adic', 'fiber', 'cosmology'), default='foundations')
     treatment = parser.parse_args().treatment
+    if treatment == 'cosmology':
+        from physics_cosmology import BASE as source_base
+        from PIL import Image
+        import io
+        records = []
+        for path in sorted((ROOT/source_base/'chapters').glob('*.tex')):
+            text = path.read_text(encoding='utf-8')
+            for match in re.finditer(r'\\includegraphics\[[^\]]+\]\{([^{}]+)\}',text):
+                caption,_ = group(text,text.index(r'\caption{',match.end())+len(r'\caption'))
+                source = source_base+match[1]
+                raw = (ROOT/source).read_bytes()
+                target = ROOT/'website/assets/figures/physics-cosmology'/(Path(source).stem+'.png')
+                target.parent.mkdir(parents=True,exist_ok=True)
+                if source.endswith('.png'):
+                    target.write_bytes(raw)
+                    with Image.open(io.BytesIO(raw)) as image:width,height=image.size
+                    scale = {}
+                else:
+                    document=pdfium.PdfDocument(raw)
+                    if len(document)!=1:raise ValueError('Expected one-page cosmology figure')
+                    page=document[0];bitmap=page.render(scale=2.5);image=bitmap.to_pil()
+                    image.save(target);width,height=image.size
+                    image.close();bitmap.close();page.close();document.close()
+                    scale = dict(scale=2.5)
+                records.append(dict(source=source,source_sha256=hashlib.sha256(raw).hexdigest(),
+                    image='assets/figures/physics-cosmology/'+target.name,
+                    image_sha256=hashlib.sha256(target.read_bytes()).hexdigest(),
+                    width=width,height=height,caption=caption,**scale))
+        if len(records)!=len({r['image'] for r in records}) or len(records)!=len({r['source'] for r in records}):
+            raise ValueError('Repeated cosmology figure identity')
+        (target.parent/'figures.json').write_text(json.dumps(dict(figures=records),ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
+        print('Published '+str(len(records))+' original cosmology figures.')
+        return
     if treatment == 'generator':
         from PIL import Image
         import io

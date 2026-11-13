@@ -72,19 +72,20 @@ class PhysicsReadingTests(unittest.TestCase):
     def test_sources_are_complete_in_order_and_fail_closed(self):
         load = lambda path: (ROOT/path).read_text(encoding='utf-8-sig')
         self.assertEqual(source_specs(load), CHAPTERS)
-        self.assertEqual(len(CHAPTERS), 133)
+        self.assertEqual(len(CHAPTERS), 160)
         self.assertEqual(sum(spec['treatment']=='dirac' for spec in CHAPTERS), 28)
         self.assertEqual(sum(spec['treatment']=='generator' for spec in CHAPTERS), 8)
         self.assertEqual(sum(spec['treatment']=='gauge' for spec in CHAPTERS), 21)
         self.assertEqual(sum(spec['treatment']=='gravity' for spec in CHAPTERS), 24)
         self.assertEqual(sum(spec['treatment']=='adic' for spec in CHAPTERS), 22)
         self.assertEqual(sum(spec['treatment']=='fiber' for spec in CHAPTERS), 11)
+        self.assertEqual(sum(spec['treatment']=='cosmology' for spec in CHAPTERS),27)
         for path in DATA['source_sha256']:
             with self.assertRaisesRegex(ValueError, 'changed Physics source'):
                 source_specs(lambda p: load(p)+('changed' if p == path else ''))
         for spec in CHAPTERS:
             selected = reading.chapter_text(load(spec['source']), spec)
-            self.assertEqual(normalize(selected).count('\n'), selected.count('\n'))
+            self.assertEqual(normalize(selected,spec['treatment'],load).count('\n'), selected.count('\n'))
             # Independently mask only numbered display wrappers. No prose or
             # figure translation is used in this mathematical-token comparison.
             math_only = selected.replace(r'\begin{equation}', r'\[').replace(r'\end{equation}', r'\]')
@@ -118,6 +119,20 @@ class PhysicsReadingTests(unittest.TestCase):
             source_blocks(lambda p: omitted if p==FIBER_MAIN else load(p),fiber)
         with self.assertRaisesRegex(ValueError, 'main-file passage coverage'):
             source_blocks(lambda p: load(p).replace(r'\appendix','') if p==FIBER_MAIN else load(p),fiber)
+        from physics_cosmology import MAIN as COSMO_MAIN, BASE as COSMO_BASE, source_blocks, context
+        cosmos = next(t for t in DATA['treatments'] if t['id']=='cosmology')
+        for old,new,error in [(r'\input{chapters/02_scalar_perturbations}',
+                'Unselected prose.\n'+r'\input{chapters/02_scalar_perturbations}','main-file passage coverage'),
+                (r'\appendix','','appendix switch')]:
+            with self.assertRaisesRegex(ValueError,error):
+                source_blocks(lambda p:load(p).replace(old,new) if p==COSMO_MAIN else load(p),cosmos)
+        nested = COSMO_BASE+'chapters/01_general_flrw_background.tex'
+        with self.assertRaisesRegex(ValueError,'nested input order'):
+            source_blocks(lambda p:load(p).replace('part_intros/part1','part_intros/part2') if p==nested else load(p),cosmos)
+        with self.assertRaisesRegex(ValueError,'context inclusion'):
+            context(load(COSMO_BASE+'part_intros/part1.tex')+'Additional prose.')
+        with self.assertRaisesRegex(ValueError,'context inclusion'):
+            context(r'\PhysicsContext{Title}{Unselected $x$.}')
 
     def test_publication_equations_numbering_figures_proofs_and_routes(self):
         with tempfile.TemporaryDirectory() as folder:
@@ -128,7 +143,7 @@ class PhysicsReadingTests(unittest.TestCase):
             check_image_sources(documents)
             with patch.object(reading, 'BOOKS', {WORK: BOOK}), patch.object(reading, 'CHAPTERS', CHAPTERS):
                 count = check_readable_chapter(output, documents, pages)
-            self.assertEqual(count, 4754)
+            self.assertEqual(count, 6320)
             book = reader.readable_books[WORK]
             nodes = [node for _, _, chapter in book['chapters'] for node in chapter.nodes]
             for treatment, sections, proofs, figure_numbers in [('foundations', 16, 15, list(map(str, range(1, 11)))),
@@ -146,11 +161,11 @@ class PhysicsReadingTests(unittest.TestCase):
                                   ('Physical torus Hamiltonian', '21.1')]:
                 self.assertEqual(next(n['number'] for n in nodes if n['title']==title), number)
             proofs = sum(n['kind']=='proof' for n in nodes)
-            self.assertEqual(proofs, 114)
+            self.assertEqual(proofs, 119)
             self.assertEqual(proofs, sum(len(c.proof_pairs) for _, _, c in book['chapters']))
             self.assertEqual(book['chapters'][0][2].equation_numbers['f:atlas-relations'], '1')
             self.assertEqual(book['chapters'][0][2].labels['f:parseval']['number'], '1.2')
-            self.assertEqual(sum(bool(r.get('source')) for r in reader.images.values()), 50)
+            self.assertEqual(sum(bool(r.get('source')) for r in reader.images.values()), 104)
             self.assertEqual(len(book['references']), 6)
             generator = [c for s, _, c in book['chapters'] if s['treatment']=='generator']
             self.assertEqual(generator[0].labels['thm:generator']['number'], '2.3')
@@ -210,6 +225,42 @@ class PhysicsReadingTests(unittest.TestCase):
             self.assertIn('conditional on the prescribed normalized distribution',opening)
             closing = (output/next(s['url'] for s in CHAPTERS if s['source']==FIBER_MAIN and s['title']=='Bibliographic scope')).read_text(encoding='utf-8')
             self.assertIn('No literature-priority or empirical-preference claim',closing)
+            cosmos = [(s,c) for s,_,c in book['chapters'] if s['treatment']=='cosmology']
+            self.assertEqual([n['number'] for _,c in cosmos for n in c.nodes if n['kind']=='section' and n['number']],
+                [str(i) for i in range(1,22)]+['A','B','C'])
+            self.assertEqual(sum(n['kind']=='proof' for _,c in cosmos for n in c.nodes),5)
+            self.assertEqual(sum(n['kind']=='figure' for _,c in cosmos for n in c.nodes),54)
+            self.assertEqual(len(DATA['cosmology_table_aids']),33)
+            displays=[64,57,49,45,51,56,43,8,85,57,88,63,35,42,42,23,16,45,41,2,0]
+            for spec,chapter in cosmos:
+                number=chapter.section_number()
+                native=[number+'.'+str(i) for i in range(1,displays[int(number)-1]+1)] if number.isdigit() and spec.get('book_chapter') else []
+                self.assertEqual([v for values in chapter.display_equation_numbers.values() for v in values],native)
+                markup=(output/spec['url']).read_text(encoding='utf-8')
+                printed=re.findall(r'<span class="equation-number">(.*?)</span>',markup,re.S)
+                self.assertEqual([v for span in printed for v in re.findall(r'\(([0-9ABC]+\.[0-9]+)\)',span)],native)
+                for node in chapter.nodes:
+                    for span in node.get('source_spans',[]):
+                        from physics_cosmology import context
+                        title,prose=context((ROOT/span['source']).read_text(encoding='utf-8'))
+                        self.assertIn(chapter.inline(prose),markup)
+                        self.assertIn('part'+span['source'].split('part')[-1]+', line 1',markup)
+            labels=cosmos[0][1].labels
+            for key,number in [('ch:hidden-detail-sector','8'),('ch:collisionless-boltzmann-observables','10'),
+                    ('ch:subhalo-core-tidal-audit','19'),('thm:microcell-fof','16.2')]:
+                self.assertEqual(labels[key]['number'],number)
+            opening=(output/cosmos[0][0]['url']).read_text(encoding='utf-8')
+            self.assertIn('The distribution is an input',opening)
+            self.assertIn('not predictions of a demonstrated microscopic production process',opening)
+            subhalo=next((output/s['url']).read_text(encoding='utf-8') for s,c in cosmos if s['source'].endswith('19_subhalo_core_tidal_audit.tex'))
+            self.assertIn('0.943218',subhalo)
+            self.assertEqual(cosmos[-1][1].macros['SCTBoundRatio'],'0.958333')
+            self.assertNotIn(r'\SCTBoundMassZoom',subhalo)
+            from check_reader_site import check_table_reading_aids
+            units=next(a for a in DATA['cosmology_table_aids'] if a['source'].endswith('13_cmb_lensing_bmodes.tex') and a['id']=='L226')
+            unit_page=next((output/s['url']).read_text(encoding='utf-8') for s,c in cosmos if s['source']==units['source'])
+            with self.assertRaisesRegex(AssertionError,'Missing column headers'):
+                check_table_reading_aids(unit_page.replace('scope="col"','',1),{units['id']:units})
             for spec in CHAPTERS:
                 page = pages[spec['url']]
                 self.assertEqual((page.h1, page.main, page.images_without_alt), (1, 1, 0))
@@ -269,7 +320,7 @@ class PhysicsReadingTests(unittest.TestCase):
                 if not record.get('source'):
                     continue
                 self.assertEqual(record['source_sha256'], hashlib.sha256((ROOT/record['source']).read_bytes()).hexdigest())
-                if '/generator/' in record['source']:
+                if record['source'].endswith('.png'):
                     self.assertEqual((output/record['file_url']).read_bytes(), (ROOT/record['source']).read_bytes())
 
 
