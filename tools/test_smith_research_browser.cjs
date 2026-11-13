@@ -48,7 +48,7 @@ async function run() {
           touchHeight: Math.min(...[...document.querySelectorAll('.research-actions a, .research-actions button, .figure-open')]
             .map(element => element.getBoundingClientRect().height).filter(height => height > 0)),
         }));
-        if (layout.width > layout.viewport || layout.figures !== 49 || layout.vectorFigures !== 49 || layout.originalLinks !== 49 || layout.mobileFigures !== (name === 'desktop' ? 0 : 14) || layout.mathReady !== 'true' || layout.mathErrors || layout.unrendered || layout.rawTex.length || layout.equations !== 3389 || layout.headings !== 1 || layout.articles !== 1 || layout.touchHeight < 44) {
+        if (layout.width > layout.viewport || layout.figures !== 50 || layout.vectorFigures !== 50 || layout.originalLinks !== 50 || layout.mobileFigures !== (name === 'desktop' ? 0 : 15) || layout.mathReady !== 'true' || layout.mathErrors || layout.unrendered || layout.rawTex.length || layout.equations !== 3480 || layout.headings !== 1 || layout.articles !== 1 || layout.touchHeight < 44) {
           throw new Error('Reading layout, images, mathematics, or touch controls failed: ' + JSON.stringify(layout));
         }
         const figure = page.locator('#figure-2 .figure-open');
@@ -87,6 +87,12 @@ async function run() {
         if (balancedSource.endsWith('.mobile.svg') !== (name !== 'desktop')) throw new Error('Balanced figure chose the wrong responsive source');
         await balanced.locator('.figure-open').click();
         if (await page.locator('#dialog-image').getAttribute('src') !== balancedSource) throw new Error('Balanced dialog changed the displayed responsive source');
+        await page.keyboard.press('Escape');
+        const regular = page.locator('figure').filter({ has: page.locator('img[src$="/regular-balanced.svg"]') });
+        const regularSource = await regular.locator('img').evaluate(img => img.currentSrc);
+        if (regularSource.endsWith('.mobile.svg') !== (name !== 'desktop')) throw new Error('Regular-core figure chose the wrong responsive source');
+        await regular.locator('.figure-open').click();
+        if (await page.locator('#dialog-image').getAttribute('src') !== regularSource) throw new Error('Regular-core dialog changed the displayed responsive source');
         await page.keyboard.press('Escape');
         await page.locator('.research-contents-jump').focus();
         await page.keyboard.press('Enter');
@@ -128,7 +134,7 @@ async function run() {
         contents: getComputedStyle(document.querySelector('.research-contents-jump')).visibility,
         figureControls: getComputedStyle(document.querySelector('.figure-actions')).display,
       }));
-      if (result.width > result.viewport || result.figures !== 49 || result.contents !== 'visible' || result.figureControls !== 'none') {
+      if (result.width > result.viewport || result.figures !== 50 || result.contents !== 'visible' || result.figureControls !== 'none') {
         throw new Error('No-JavaScript reading failed: ' + JSON.stringify(result));
       }
       console.log(JSON.stringify({ name: 'no-javascript', ...result }));

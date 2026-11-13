@@ -134,7 +134,7 @@ def diagrams(content, site):
             src = src[:-4]+'.svg'
             attrs = re.sub(r'src="[^"]+"','src="'+src+'"',attrs)
         picture = '<img'+attrs+'>'
-        responsive = next((name for name in ('stable-energy','balanced-resonance') if src.endswith('/figures/'+name+'.svg')),None)
+        responsive = next((name for name in ('stable-energy','balanced-resonance','regular-balanced') if src.endswith('/figures/'+name+'.svg')),None)
         if responsive:
             mobile = site.resolve('collection',BASE+'/README.md',PAGE,'figures/'+responsive+'.mobile.svg',True)
             picture = '<picture><source media="(max-width: 600px)" srcset="'+mobile+'">'+picture+'</picture>'
@@ -182,8 +182,8 @@ def build(site):
             assembled.append(source_markdown(site,BASE+'/COMPACT_MODEL_AUDIT.md','compact-model-audit'))
             assembled.append(source_markdown(site,BASE+'/FORMAL_CORE.md','formal-graph-core',
                 (BASE+'/FORMAL_PROGRESS.md',)))
-            typed = source_markdown(site,BASE+'/BALANCED_RESONANCE.md','typed-margins',
-                (BASE+'/GLOBAL_TYPED_MARGINS.md',BASE+'/STABLE_ENERGY.md',BASE+'/TYPED_MARGINS.md',BASE+'/TWO_REACTIVE_MARGIN.md',BASE+'/COEFFICIENT_ROUTES.md'))
+            typed = source_markdown(site,BASE+'/REGULAR_BALANCED.md','typed-margins',
+                (BASE+'/BALANCED_RESONANCE.md',BASE+'/GLOBAL_TYPED_MARGINS.md',BASE+'/STABLE_ENERGY.md',BASE+'/TYPED_MARGINS.md',BASE+'/TWO_REACTIVE_MARGIN.md',BASE+'/COEFFICIENT_ROUTES.md'))
             marker = '<h3 id="typed-margins--usable-pure-type-margins-and-a-smaller-mixed-search">'
             if typed.count(marker)!=1:
                 raise ValueError('Missing retained typed-margin checkpoint anchor')
@@ -214,8 +214,9 @@ def build(site):
         'Physical graph and endpoint arguments now exclude every three-reactive mixed class and the '
         'four-reactive one-L/one-C classes with explicit tiny margins. Coverage is 1,334 of 2,130; '
         'the 796 balanced two-L/two-C placements remain. The exact internal-mode stratum and a certified '
-        'detuning/opening-budget neighborhood are now separated too; a uniform near-mode transfer and '
-        'regular balanced separator remain. All new comparisons use positive-real Laplace samples.</p>'
+        'detuning/opening-budget neighborhood are now separated too. The complete regular exact-data '
+        'stratum has two responses and margin25/2769, with a supplied open/short neighborhood margin1/300. '
+        'A useful uniform sample-to-physical transfer still remains. All new comparisons use positive-real Laplace samples.</p>'
         '<p><a href="../../downloads/smith-rlc-current-source.zip">Download the complete current source and checks</a> · '
         '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/tree/'+site.revision+'/'+BASE+'">'
         'Proof, computation and source-binding records</a>. The original checkpoint ZIPs and earlier Lean receipts '
@@ -227,7 +228,7 @@ def build(site):
     cover = ('<section class="cover"><p class="kicker">Komorebi P. · Research reading</p>'
         '<h1 id="smith-chart-through-exact-packets-passivity-and-reconstruction">'+TITLE+'</h1>'
         '<p class="subtitle">Exact packets, passive completion, physical circuits and their verification.</p>'
-        '<p class="author-line">Komorebi P. · Updated 12 November 2026</p>'
+        '<p class="author-line">Komorebi P. · Updated 13 November 2026</p>'
         '<nav class="quick-nav" aria-label="Start reading"><a href="#current-results">Current results</a>'
         '<a href="#exact-six">Exact-six circuit</a><a href="#low-order-synthesis">Certified synthesis</a>'
         '<a href="#formal-graph-core">Formal assurance</a></nav></section>')
