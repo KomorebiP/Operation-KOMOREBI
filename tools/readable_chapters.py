@@ -1134,6 +1134,8 @@ def render(reader):
     reader.site.write('documents/readable-chapters.json',json.dumps(reports,ensure_ascii=False,separators=(',',':'))+'\n')
     from physics_visual import render as render_physics_visual
     render_physics_visual(reader)
+    from physics_companions import render as render_physics_companions
+    render_physics_companions(reader)
     render_reading_index(reader)
     from reading_navigation import publish_record
     publish_record(reader.site,BOOKS)

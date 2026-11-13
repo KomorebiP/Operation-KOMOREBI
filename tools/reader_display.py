@@ -47,6 +47,10 @@ EXTRA_EDITIONS={}
 
 def edition(path):
     from readable_chapters import BOOKS,statement_directory_url
+    if 'monographs-physics' in BOOKS and path.startswith('read/monographs-physics/verification/'):
+        from physics_companions import config
+        companion=config()
+        if path in {companion['index'],*[p['url'] for p in companion['chapters']]}:return companion
     if 'monographs-physics' in BOOKS and path.startswith('read/monographs-physics/atlas/'):
         from physics_visual import config
         visual=dict(config(),title='Physics visual atlases',compact_chrome=True)

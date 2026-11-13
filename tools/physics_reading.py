@@ -75,8 +75,8 @@ BOOK = dict(work=WORK, label='Physics', title='Physics: Resolution, dynamics, an
         'response and linked rejection tests. One hundred four original figures accompany the text.',
     reading_note='These opening HTML installments belong to the 572-page Physics book. '
         'The foundations, continuum Dirac, spectral generator, gauge, gravity, adic, covariant fiber and cosmology treatments are complete here; '
-        'all five visual atlases are also available in HTML. The formal companions '
-        'remain in the full PDF. Authored wording, equations and numbered statements '
+        'all five visual atlases, the verification scope and five formalization and verification companions '
+        'are also available in HTML. Authored wording, equations and numbered statements '
         'are preserved. This reading edition adds no proof audit, scientific run or Lean execution.')
 BOOK['table_reading_aids'].update({(row['source'],row['id']):
     {key:value for key,value in row.items() if key not in {'source','id'}}
@@ -408,6 +408,8 @@ def prepare_book(reader, config):
                 full_book=manifest, figure_assets=figures)
     from physics_visual import prepare as prepare_visual
     prepare_visual(reader,book)
+    from physics_companions import prepare as prepare_companions
+    prepare_companions(reader,book)
     return book
 
 
@@ -422,7 +424,8 @@ def full_book_routes(reader, book, page):
         '<p>The complete 572-page PDF contains all six parts below. Each PDF link opens at '
         'the beginning of that treatment. The HTML installments above cover the complete foundations, '
         'continuum Dirac, spectral generator, gauge, gravity, adic, covariant fiber and cosmology treatments, '
-        'including the fiber computational evidence appendix and the cosmology reproduction limits.</p>')
+        'including the fiber computational evidence appendix and the cosmology reproduction limits.</p>'
+        '<p><a href="'+html.escape(reader.site.rel('read/monographs-physics/verification/index.html',page),quote=True)+'">Read the verification scope and formalization companions</a>.</p>')
     part = None
     for row in book['full_book']:
         if part != row['part']:
@@ -443,5 +446,13 @@ def full_book_routes(reader, book, page):
             if match:
                 start=next(s['url'] for s in visual['pages'] if s['atlas']==match['id'])
                 body+=' · <a href="'+html.escape(reader.site.rel(start,page),quote=True)+'">Read visual atlas in HTML</a>'
+            else:
+                from physics_companions import metadata as companion_metadata
+                companions=companion_metadata()
+                match=next((c for c in companions['companions'] if c['main'].endswith('/'+row['stem']+'.tex')),None)
+                start=(next(p['url'] for p in companions['pages'] if p['companion']==match['id']) if match else
+                    companions['scope_pages'][0]['url'] if row['stem']=='verification_scope' else None)
+                if start:
+                    body+=' · <a href="'+html.escape(reader.site.rel(start,page),quote=True)+'">Read verification material in HTML</a>'
         body += '</li>'
     return body+'</ul></section>'
