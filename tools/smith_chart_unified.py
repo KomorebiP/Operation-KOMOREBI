@@ -22,7 +22,7 @@ NEW_CHAPTERS = {'deterministic-family':'DETERMINISTIC_FAMILY.md', 'compact-model
 TAG_PREFIXES = {'exact-six':'S','composition':'C','families':'F','obstruction':'O',
     'quantitative-transfer':'Q','effective-margin':'M','deterministic-family':'D',
     'compact-model-audit':'A','one-inductor':'R','singular-completion':'P','companion-guide':'G',
-    'low-order-synthesis':'L','formal-graph-core':'V','typed-margins':'T','component-tolerances':'E'}
+    'low-order-synthesis':'L','formal-graph-core':'V','typed-margins':'T','component-tolerances':'E','global-transfer':'B'}
 
 
 def sha(raw):
@@ -134,7 +134,7 @@ def diagrams(content, site):
             src = src[:-4]+'.svg'
             attrs = re.sub(r'src="[^"]+"','src="'+src+'"',attrs)
         picture = '<img'+attrs+'>'
-        responsive = next((name for name in ('stable-energy','balanced-resonance','regular-balanced') if src.endswith('/figures/'+name+'.svg')),None)
+        responsive = next((name for name in ('stable-energy','balanced-resonance','regular-balanced','global-transfer') if src.endswith('/figures/'+name+'.svg')),None)
         if responsive:
             mobile = site.resolve('collection',BASE+'/README.md',PAGE,'figures/'+responsive+'.mobile.svg',True)
             picture = '<picture><source media="(max-width: 600px)" srcset="'+mobile+'">'+picture+'</picture>'
@@ -176,19 +176,22 @@ def build(site):
                 assembled.append(chapter(site,manifest,files,next(c for c in manifest['chapters'] if c['slug']==slug)))
             assembled.append(source_markdown(site,BASE+'/LOW_ORDER_SYNTHESIS.md','low-order-synthesis'))
             assembled.append(chapter(site,manifest,files,next(c for c in manifest['chapters'] if c['slug']=='families')))
-            assembled.append(source_markdown(site,BASE+'/DETERMINISTIC_FAMILY.md','deterministic-family'))
+            assembled.append(source_markdown(site,BASE+'/DETERMINISTIC_FAMILY.md','deterministic-family',
+                (BASE+'/GENERIC_JOINT_OPTIMALITY.md',)))
             for slug in ('obstruction','quantitative-transfer','effective-margin'):
                 assembled.append(chapter(site,manifest,files,next(c for c in manifest['chapters'] if c['slug']==slug)))
             assembled.append(source_markdown(site,BASE+'/COMPACT_MODEL_AUDIT.md','compact-model-audit'))
             assembled.append(source_markdown(site,BASE+'/FORMAL_CORE.md','formal-graph-core',
                 (BASE+'/FORMAL_PROGRESS.md',)))
+            assembled.append(source_markdown(site,BASE+'/GLOBAL_BALANCED_TRANSFER.md','global-transfer',
+                (BASE+'/LOW_RESISTOR_MARGINS.md',)))
             typed = source_markdown(site,BASE+'/REGULAR_BALANCED.md','typed-margins',
                 (BASE+'/BALANCED_RESONANCE.md',BASE+'/GLOBAL_TYPED_MARGINS.md',BASE+'/STABLE_ENERGY.md',BASE+'/TYPED_MARGINS.md',BASE+'/TWO_REACTIVE_MARGIN.md',BASE+'/COEFFICIENT_ROUTES.md'))
             marker = '<h3 id="typed-margins--usable-pure-type-margins-and-a-smaller-mixed-search">'
             if typed.count(marker)!=1:
                 raise ValueError('Missing retained typed-margin checkpoint anchor')
             split = typed.index(marker)
-            typed = typed[:split]+'<details class="book-history"><summary>Earlier margin checkpoints and derivations</summary><p>The following status counts describe their original checkpoints. The current whole one-kind margins and 796 remaining balanced placements are stated above.</p>'+typed[split:]+'</details>'
+            typed = typed[:split]+'<details class="book-history"><summary>Earlier margin checkpoints and derivations</summary><p>The following counts describe the stronger typed-certificate checkpoints. The separate uniform structural transfer bound is stated in the preceding chapter; a practical global margin for the 796 balanced placements remains open.</p>'+typed[split:]+'</details>'
             assembled.append(typed)
             assembled.append(source_markdown(site,BASE+'/TOLERANCE.md','component-tolerances',
                 (BASE+'/MIXED_LOSS_TOLERANCE.md',)))
@@ -213,10 +216,14 @@ def build(site):
         'The two-reactive separator, two series margins and dedicated-series-loss tolerance theorem close explicit subclasses. '
         'Physical graph and endpoint arguments now exclude every three-reactive mixed class and the '
         'four-reactive one-L/one-C classes with explicit tiny margins. Coverage is 1,334 of 2,130; '
-        'the 796 balanced two-L/two-C placements remain. The exact internal-mode stratum and a certified '
+        'the 796 balanced two-L/two-C placements remain for a stronger practical-sized bound. The exact internal-mode stratum and a certified '
         'detuning/opening-budget neighborhood are now separated too. The complete regular exact-data '
         'stratum has two responses and margin25/2769, with a supplied open/short neighborhood margin1/300. '
-        'A useful uniform sample-to-physical transfer still remains. All new comparisons use positive-real Laplace samples.</p>'
+        'The new nine-edge-backbone and original-node flow argument closes structural uniform transfer '
+        'with bound10^(-10^45), still extremely small. The zero-loss feature chart gives1/300 without '
+        'a supplied physical box, and the worked state certificate gives1/400. Generic total size2n+1 '
+        'is proved for almost every real open-family target; no individual rational R minimum follows. '
+        'A practical global margin remains open. All new comparisons use positive-real Laplace samples.</p>'
         '<p><a href="../../downloads/smith-rlc-current-source.zip">Download the complete current source and checks</a> · '
         '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/tree/'+site.revision+'/'+BASE+'">'
         'Proof, computation and source-binding records</a>. The original checkpoint ZIPs and earlier Lean receipts '
@@ -231,7 +238,7 @@ def build(site):
         '<p class="author-line">Komorebi P. · Updated 13 November 2026</p>'
         '<nav class="quick-nav" aria-label="Start reading"><a href="#current-results">Current results</a>'
         '<a href="#exact-six">Exact-six circuit</a><a href="#low-order-synthesis">Certified synthesis</a>'
-        '<a href="#formal-graph-core">Formal assurance</a></nav></section>')
+        '<a href="#global-transfer">Uniform transfer</a><a href="#formal-graph-core">Formal assurance</a></nav></section>')
     body = re.sub(r'<section class="cover">.*?</section>',lambda m:cover,body,count=1,flags=re.S)
     body = re.sub(r'<aside class="research-notice".*?</aside>',
         '<aside class="research-notice"><p><strong>Exact circuits and explicit limits.</strong> '

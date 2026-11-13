@@ -2,7 +2,7 @@
 
 Author: Komorebi P.  
 Original consolidation base: `3e4090141cc88dac723d87c7c504a9b1076a2caf`.
-Current research base: `90490f3affda0ed641fd00d828e392a6ea7c44ee` (after PR202).
+Current research base: `f88939b267fe6e03af555727a1e770985395bba5` (after PR203).
 
 The maintained reading is now one canonical article at
 `read/smith-chart/research.html`. Its single contents structure includes the
@@ -11,73 +11,43 @@ the companion reference and expandable research history. The old continuation
 and supplement URLs preserve section bookmarks and lead into this article.
 Search, sitemap and the two-pane catalogue present the canonical reading.
 
-## Mathematical progress
+## Current mathematical results
 
-The current regular-balanced phase classifies the entire exact-data stratum:
-with at most two L and two C, arbitrary positive R, natural Q(i)!=0,
-Z0=4/9, Zinf=1, Zi=i and Zprime(i)=5, the response is one of two explicit
-quartics. The proof reduces every resistor subnetwork to two links and
-includes inactive LC, parallel branches and disconnected active circulations.
-The two exact sample errors are5175/65083 and25/2769.
+The structural sample-to-physical transfer now has a complete written argument:
+every ordinary graph with at most four reactive branches has positive-real
+seven-sample error greater than `10^(-10^45)`, for arbitrary finite positive
+resistors. A maximum-conductance R spanning forest has at most nine edges after
+R-only reduction. Its scale gap, a backbone coefficient floor and exact LC flow
+repair handle physical resistor faces and nearly cancelled natural factors.
+This is much larger than the retained older bound, but still extremely small.
+It does not close the practical-sized global margin. Read
+`GLOBAL_BALANCED_TRANSFER.md`, `PHASE8_REVIEW.json` and `current-exact-011`.
 
-A supplied neighborhood around either nominal response has strict error
-greater than1/300 when all retained component errors are at most1% and
-sum opened1/R plus sum contractedR is at most1/10000. The portable consumer
-checks the actual graph surgery, nominal rational response and requested
-strict slack. Read `REGULAR_BALANCED.md`, `PHASE7_REVIEW.json` and
-`verification/current-exact-010`. These are positive-real Laplace bounds.
-The theorem allows arbitrary finite R count; the rational consumer has
-documented resource caps. There is no new independent/formal or hardware claim.
+The same proof gives a global zero-loss feature chart: endpoint/resonance/jet
+data within1/1000 of the target give error>1/300 without assuming a physical
+core box. `solver/backbone_transfer.py` independently validates a supplied
+physical state, every original node's KCL, LC changes and R opening/shorting
+budgets. The worked `physical_transfer_example.json` certifies strict1/400.
+Its resource limits are10 labels,49 branches/45 R/two L/two C,256-bit actual
+values,8192-bit witness rationals and512KiB JSON; these are execution caps.
 
-The preceding mode phase remains unchanged: natural P(i)=Q(i)=0 gives
-error>1e-13 through the internal-mode dichotomy; its inversion-symmetric
-detuning/opening-budget region gives error>3/40. See `BALANCED_RESONANCE.md`
-and preserved009. Explicit whole-margin coverage stays1,334/2,130; all796
-whole balanced placements still need a useful uniform sample-to-physical
-transfer or another separator. Selected Lean coverage remains41 statements.
+`LOW_RESISTOR_MARGINS.md` proves lossless margin1/100000 and whole one-R
+margin1e-150 at reactive budget four, including common powers of s. The
+earlier exact regular classification, supplied1% regions, internal-mode
+theorem, whole one-kind margins and all prior code/evidence stay unchanged.
+The retained stronger typed-certificate program still lists1334/2130 and796
+balanced placements; the separate uniform structural bound applies to all.
 
-The preceding whole one-kind theorem closes all 246 mixed budget-three classes
-and the 1,062 one-L/one-C budget-four classes, with arbitrary resistor count,
-placement and positive finite values. Together with the 26 budget-two classes,
-coverage is 1,334 of 2,130. Only the 796 balanced two-L/two-C placements remain.
-The margins are one L: `1e-11`/`1e-30`; one C: `1e-13`/`1e-37`, at budgets
-three/four. They establish strict structural separation, not useful hardware
-tolerances. No DC, resonant-denominator or resistor-value guard remains.
+`GENERIC_JOINT_OPTIMALITY.md` proves that almost every real degree-n member
+of the open F_n families needs2n+1 total components. The existing n-reactive,
+n+1-resistor construction attains that total and the reactive minimum. This
+does not certify the resistor count of an individual rational target or rule
+out more LC with fewer R. The first-order/Cauer and exact-six results remain.
 
-Read `GLOBAL_TYPED_MARGINS.md` for the spectral root, endpoint and rounding
-argument, and `STABLE_ENERGY.md` for its stability and energy lemmas.
-`PHASE5_REVIEW.json` records project self-review; `verification/current-exact-008`
-contains the fresh exact run. The regional precursor `current-exact-007` and
-all earlier byte-bound sources remain unchanged. Selected Lean coverage stays
-at 41 statements; the new universal arguments have written self-review only.
-
-The earlier all-two-reactive, pure/shunt/series, complete first-order and capped
-RC/RL constructions and dedicated-series-loss tolerance results are retained.
-`PROGRAM.md` owns the six completion contracts and `STATE.json` is the single
-live status. `SOURCE_AUDIT.json` and the earlier phase reviews identify the
-inherited classical leaves and their exact scope.
-
-`DETERMINISTIC_FAMILY.md` proves and implements exact recognition of the specified
-uniformly certified cubic family and its endpoint lifts. This removes numerical
-rediscovery from that known constructive route. Every accepted rational target
-receives a target-bound physical composition certificate replayed by unchanged
-acceptance kernels. The implementation covers degrees 3–16 within its declared
-arithmetic and consumer caps. Nonmembership and resource limits are distinct
-from global RLC nonrealizability.
-
-`COMPACT_MODEL_AUDIT.md` records a fresh adversarial project self-review of
-unbounded resistor elimination, physical boundaries, current elimination,
-seven-sample identity, effective-minimum hypotheses and the finite packet-family
-chain. `SOURCE_AUDIT.json` identifies exact primary versions and inspected pages.
-This is self-review, not independent peer review or Lean verification. The
-effective margin remains impractical; general minimum synthesis remains open.
-
-The new known-family regression has 38 exact members through degree 16 and
-fifteen additional controls. The separate boundary experiment performs 1,458
-exact comparisons on all 243 open/finite/short assignments of one specified
-five-edge graph. These are different experimental units and must not be added
-as a theorem or global topology count. See the single current verification
-record for commands, hashes, versions, raw logs and declared scopes.
+All new proofs have project self-review. Selected Lean scope stays41, with
+no new independent review, complete formal, physical measurement or priority
+claim. PROGRAM.md retains the six parent contracts; STATE.json is the one
+current status. All predecessor source hashes and evidence are preserved.
 
 ## Reproduce from the single current-source download
 
@@ -97,10 +67,18 @@ result directory without changing retained archives.
 No network, numerical solver or optional package is needed. Python 3.11+ is the
 intended baseline; the current replay uses Python 3.12.14 on Windows.
 
-For just the new checks:
+For the cumulative current checks:
 
 ```text
 python -B replay.py --current-only
+```
+
+For the new physical-state example (the verifier reconstructs the state and
+budgets, rather than trusting a solver success flag):
+
+```text
+python -B research/smith-chart/unified/solver/backbone_transfer.py research/smith-chart/unified/solver/physical_transfer_example.json --output state-result.json
+python -B research/smith-chart/unified/solver/backbone_transfer.py state-result.json --verify
 ```
 
 For an individual exact target:

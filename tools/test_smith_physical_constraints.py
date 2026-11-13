@@ -31,10 +31,10 @@ class SmithPhysicalConstraintTests(unittest.TestCase):
 
     def test_current_source_reaches_global_and_unchanged_predecessor(self):
         state=json.loads((AREA/'STATE.json').read_bytes())
-        self.assertEqual(state['current_phase'],'regular-balanced-response-001')
-        self.assertIn('010',state['current_evidence']['portable_exact_suite'])
+        self.assertEqual(state['current_phase'],'global-transfer-and-joint-minima-001')
+        self.assertIn('011',state['current_evidence']['portable_exact_suite'])
         self.assertEqual(state['formal_scope']['theorems'],41)
-        self.assertIn('solver/check_current_regular.py',(AREA/'replay_current.py').read_text())
+        self.assertIn('solver/check_current_transfer.py',(AREA/'replay_current.py').read_text())
         wrapper=(AREA/'solver/check_current_global.py').read_text()
         self.assertIn('check_stable_energy.py',wrapper)
         self.assertIn('check_global_typed.py',wrapper)

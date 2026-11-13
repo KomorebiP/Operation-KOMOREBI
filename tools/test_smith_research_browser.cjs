@@ -48,7 +48,7 @@ async function run() {
           touchHeight: Math.min(...[...document.querySelectorAll('.research-actions a, .research-actions button, .figure-open')]
             .map(element => element.getBoundingClientRect().height).filter(height => height > 0)),
         }));
-        if (layout.width > layout.viewport || layout.figures !== 50 || layout.vectorFigures !== 50 || layout.originalLinks !== 50 || layout.mobileFigures !== (name === 'desktop' ? 0 : 15) || layout.mathReady !== 'true' || layout.mathErrors || layout.unrendered || layout.rawTex.length || layout.equations !== 3480 || layout.headings !== 1 || layout.articles !== 1 || layout.touchHeight < 44) {
+        if (layout.width > layout.viewport || layout.figures !== 51 || layout.vectorFigures !== 51 || layout.originalLinks !== 51 || layout.mobileFigures !== (name === 'desktop' ? 0 : 16) || layout.mathReady !== 'true' || layout.mathErrors || layout.unrendered || layout.rawTex.length || layout.equations !== 3594 || layout.headings !== 1 || layout.articles !== 1 || layout.touchHeight < 44) {
           throw new Error('Reading layout, images, mathematics, or touch controls failed: ' + JSON.stringify(layout));
         }
         const figure = page.locator('#figure-2 .figure-open');
@@ -94,10 +94,16 @@ async function run() {
         await regular.locator('.figure-open').click();
         if (await page.locator('#dialog-image').getAttribute('src') !== regularSource) throw new Error('Regular-core dialog changed the displayed responsive source');
         await page.keyboard.press('Escape');
+        const transfer = page.locator('figure').filter({ has: page.locator('img[src$="/global-transfer.svg"]') });
+        const transferSource = await transfer.locator('img').evaluate(img => img.currentSrc);
+        if (transferSource.endsWith('.mobile.svg') !== (name !== 'desktop')) throw new Error('Transfer figure chose the wrong responsive source');
+        await transfer.locator('.figure-open').click();
+        if (await page.locator('#dialog-image').getAttribute('src') !== transferSource) throw new Error('Transfer dialog changed the displayed source');
+        await page.keyboard.press('Escape');
         await page.locator('.research-contents-jump').focus();
         await page.keyboard.press('Enter');
         if (!await page.locator('#contents').evaluate(element => element.open)) throw new Error('Contents control did not open');
-        for (const anchor of ['six-state-invariants', 'companion-guide', 'low-order-synthesis', 'formal-graph-core', 'typed-margins', 'component-tolerances']) {
+        for (const anchor of ['six-state-invariants', 'companion-guide', 'low-order-synthesis', 'formal-graph-core', 'global-transfer', 'typed-margins', 'component-tolerances']) {
           await page.locator('.research-contents-jump').focus();
           await page.keyboard.press('Enter');
           const link = page.locator('#contents a[href="#' + anchor + '"]').first();
@@ -134,7 +140,7 @@ async function run() {
         contents: getComputedStyle(document.querySelector('.research-contents-jump')).visibility,
         figureControls: getComputedStyle(document.querySelector('.figure-actions')).display,
       }));
-      if (result.width > result.viewport || result.figures !== 50 || result.contents !== 'visible' || result.figureControls !== 'none') {
+      if (result.width > result.viewport || result.figures !== 51 || result.contents !== 'visible' || result.figureControls !== 'none') {
         throw new Error('No-JavaScript reading failed: ' + JSON.stringify(result));
       }
       console.log(JSON.stringify({ name: 'no-javascript', ...result }));

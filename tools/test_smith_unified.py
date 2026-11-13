@@ -75,9 +75,9 @@ class UnifiedSmithTests(unittest.TestCase):
         for anchor in ('current-results','exact-six','composition','families','deterministic-family','obstruction',
                        'quantitative-transfer','effective-margin','compact-model-audit','singular-completion',
                        'one-inductor','companion-guide','historical-synthesis','source-ledger',
-                       'low-order-synthesis','formal-graph-core','typed-margins','component-tolerances'):
+                       'low-order-synthesis','formal-graph-core','global-transfer','typed-margins','component-tolerances'):
             self.assertIn(anchor,self.parsed.ids)
-        self.assertEqual(self.body.count('class="research-figure'),50)
+        self.assertEqual(self.body.count('class="research-figure'),51)
         for link in self.parsed.links:
             if link.startswith('#'):
                 from urllib.parse import unquote
@@ -87,7 +87,7 @@ class UnifiedSmithTests(unittest.TestCase):
         missing=Counter(old.math)-Counter(self.parsed.math)
         self.assertFalse(missing,dict(missing))
         self.assertEqual(len(old.math),1668)
-        self.assertEqual(len(self.parsed.math),3480)
+        self.assertEqual(len(self.parsed.math),3594)
     def test_imported_statement_math_survives_label_namespacing(self):
         manifest,files=continuation.load(ROOT)
         actual=Counter(self.parsed.math)

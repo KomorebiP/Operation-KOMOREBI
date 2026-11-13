@@ -30,13 +30,13 @@ class SmithBalancedResonanceTests(unittest.TestCase):
 
     def test_status_and_portable_entry_keep_the_open_global_obligation(self):
         state=json.loads((AREA/'STATE.json').read_bytes())
-        self.assertEqual(state['current_phase'],'regular-balanced-response-001')
+        self.assertEqual(state['current_phase'],'global-transfer-and-joint-minima-001')
         self.assertEqual(state['mixed_representatives']['remaining'],796)
         self.assertEqual(state['formal_scope']['theorems'],41)
         self.assertTrue(state['new_analytic_robustness_claim'])
         self.assertFalse(state['new_lean_claim']);self.assertFalse(state['new_hardware_claim'])
-        self.assertIn('010',state['current_evidence']['portable_exact_suite'])
-        self.assertIn('solver/check_current_regular.py',(AREA/'replay_current.py').read_text())
+        self.assertIn('011',state['current_evidence']['portable_exact_suite'])
+        self.assertIn('solver/check_current_transfer.py',(AREA/'replay_current.py').read_text())
         wrapper=(AREA/'solver/check_current_resonance.py').read_text()
         self.assertIn('check_current_global.py',wrapper)
         self.assertIn('check_balanced_resonance.py',wrapper)
