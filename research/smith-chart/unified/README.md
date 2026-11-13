@@ -12,29 +12,26 @@ Search, sitemap and the two-pane catalogue present the canonical reading.
 
 ## Mathematical progress
 
-The preceding phase added a usable all-two-reactive separator at margin
-`1/1000000`, a dedicated-series-loss mixed-RLC uncertainty disk and an exact
-component-box consumer, and sixteen more selected formal statements. The total
-is forty-one selected theorem axiom audits. The two-reactive result closes the
-nineteen remaining budget-two representatives; 1,992 mixed budget-three/four
-representatives remain. These improvements supplement the complete first-order
-and capped RC/RL constructors and the earlier exact-six and family work.
+The current whole one-kind theorem closes all 246 mixed budget-three classes
+and the 1,062 one-L/one-C budget-four classes, with arbitrary resistor count,
+placement and positive finite values. Together with the 26 budget-two classes,
+coverage is 1,334 of 2,130. Only the 796 balanced two-L/two-C placements remain.
+The margins are one L: `1e-11`/`1e-30`; one C: `1e-13`/`1e-37`, at budgets
+three/four. They establish strict structural separation, not useful hardware
+tolerances. No DC, resonant-denominator or resistor-value guard remains.
 
-The current phase adds series-L/RC and series-C/RL margins `1/2000` and
-`1/500000`, a written minimum-sign theorem with exactly one inductor or
-capacitor, exact distance bounds to the degree-three/four coefficient fiber,
-and five common graph templates with explicit open/wire faces. Passive
-six/seven-reactive controls refute endpoint/resonance transfer from degree
-and real-sample proximity alone. Whole-skeleton coverage and the selected
-Lean count remain unchanged. See `COEFFICIENT_ROUTES.md` and
-`PHASE4_REVIEW.json`; the new exact run is `verification/current-exact-006`.
+Read `GLOBAL_TYPED_MARGINS.md` for the spectral root, endpoint and rounding
+argument, and `STABLE_ENERGY.md` for its stability and energy lemmas.
+`PHASE5_REVIEW.json` records project self-review; `verification/current-exact-008`
+contains the fresh exact run. The regional precursor `current-exact-007` and
+all earlier byte-bound sources remain unchanged. Selected Lean coverage stays
+at 41 statements; the new universal arguments have written self-review only.
 
-Read `TWO_REACTIVE_MARGIN.md`, `MIXED_LOSS_TOLERANCE.md` and
-`FORMAL_PROGRESS.md` for the new statements and their limits.
-`PHASE3_REVIEW.json` separates written proofs, classical source leaves, exact
-controls and selected Lean coverage. `PROGRAM.md` retains the six completion
-contracts; `STATE.json` is the single live status view. Established overlap is
-recorded explicitly in `SOURCE_AUDIT.json`.
+The earlier all-two-reactive, pure/shunt/series, complete first-order and capped
+RC/RL constructions and dedicated-series-loss tolerance results are retained.
+`PROGRAM.md` owns the six completion contracts and `STATE.json` is the single
+live status. `SOURCE_AUDIT.json` and the earlier phase reviews identify the
+inherited classical leaves and their exact scope.
 
 `DETERMINISTIC_FAMILY.md` proves and implements exact recognition of the specified
 uniformly certified cubic family and its endpoint lifts. This removes numerical
@@ -69,7 +66,8 @@ python -B replay.py
 This authenticates six retained authored checkpoints, replays the eleven
 portable predecessor commands in isolated copies, and runs the current exact
 family, boundary, synthesis/tolerance, topology, mixed-loss, coefficient-box,
-coefficient-fiber, series-margin and physical transfer-barrier checks. It writes a fresh
+coefficient-fiber, series-margin, physical transfer-barrier, stable-fiber,
+energy/trade-off, branch-rounding, root-count, endpoint and whole one-kind checks. It writes a fresh
 result directory without changing retained archives.
 No network, numerical solver or optional package is needed. Python 3.11+ is the
 intended baseline; the current replay uses Python 3.12.14 on Windows.
@@ -134,7 +132,7 @@ superseded sections into history, reconciles obsolete checkpoint-status prose,
 namespaces section anchors and gives formerly separate explicit equation tags
 short chapter prefixes. The retained mathematical expressions are preserved
 apart from this equation-label presentation. Source Markdown and original
-numbering remain in the package. The three additional diagrams use the same
+numbering remain in the package. The additional diagrams use the same
 full-size dialog as the 42 retained figure-edition drawings.
 
 The code and proof review are project self-review. Source tests and computation

@@ -122,7 +122,7 @@ def local_routes(content):
     return re.sub(r'href="([^"]+)"',link,content)
 
 
-def diagrams(content):
+def diagrams(content, site):
     def figure(match):
         attrs = match[1]
         src = re.search(r'src="([^"]+)"',attrs)[1]
@@ -133,8 +133,12 @@ def diagrams(content):
         if src.endswith('/figures/topology.png'):
             src = src[:-4]+'.svg'
             attrs = re.sub(r'src="[^"]+"','src="'+src+'"',attrs)
+        picture = '<img'+attrs+'>'
+        if src.endswith('/figures/stable-energy.svg'):
+            mobile = site.resolve('collection',BASE+'/STABLE_ENERGY.md',PAGE,'figures/stable-energy.mobile.svg',True)
+            picture = '<picture><source media="(max-width: 600px)" srcset="'+mobile+'">'+picture+'</picture>'
         return ('<figure class="research-figure book-figure"><div class="figure-heading"><span>'+label+'</span>'
-            '<a href="'+src+'">Source diagram</a></div><img'+attrs+'><div class="figure-actions">'
+            '<a href="'+src+'">Source diagram</a></div>'+picture+'<div class="figure-actions">'
             '<button class="figure-open" type="button">Open diagram</button></div>'
             '<figcaption>'+ (alt[1] if alt else label)+'</figcaption></figure>')
     return re.sub(r'<p>\s*<img([^>]+)>\s*</p>',figure,content)
@@ -177,8 +181,14 @@ def build(site):
             assembled.append(source_markdown(site,BASE+'/COMPACT_MODEL_AUDIT.md','compact-model-audit'))
             assembled.append(source_markdown(site,BASE+'/FORMAL_CORE.md','formal-graph-core',
                 (BASE+'/FORMAL_PROGRESS.md',)))
-            assembled.append(source_markdown(site,BASE+'/TYPED_MARGINS.md','typed-margins',
-                (BASE+'/TWO_REACTIVE_MARGIN.md',BASE+'/COEFFICIENT_ROUTES.md')))
+            typed = source_markdown(site,BASE+'/GLOBAL_TYPED_MARGINS.md','typed-margins',
+                (BASE+'/STABLE_ENERGY.md',BASE+'/TYPED_MARGINS.md',BASE+'/TWO_REACTIVE_MARGIN.md',BASE+'/COEFFICIENT_ROUTES.md'))
+            marker = '<h3 id="typed-margins--usable-pure-type-margins-and-a-smaller-mixed-search">'
+            if typed.count(marker)!=1:
+                raise ValueError('Missing retained typed-margin checkpoint anchor')
+            split = typed.index(marker)
+            typed = typed[:split]+'<details class="book-history"><summary>Earlier margin checkpoints and derivations</summary><p>The following status counts describe their original checkpoints. The current whole one-kind margins and 796 remaining balanced placements are stated above.</p>'+typed[split:]+'</details>'
+            assembled.append(typed)
             assembled.append(source_markdown(site,BASE+'/TOLERANCE.md','component-tolerances',
                 (BASE+'/MIXED_LOSS_TOLERANCE.md',)))
         if identifier=='arbitrary-order-separation':
@@ -200,13 +210,14 @@ def build(site):
         'a useful margin for the remaining mixed RLC models, arbitrary-target practical minimum synthesis, '
         'higher-target resistor minima, broader parasitic models and physical measurements remain open. '
         'The two-reactive separator, two series margins and dedicated-series-loss tolerance theorem close explicit subclasses. '
-        'The new coefficient line/polygon and five common templates expose the remaining physical separator; '
-        'they do not reduce the 1,992 unresolved whole-skeleton placements.</p>'
+        'Physical graph and endpoint arguments now exclude every three-reactive mixed class and the '
+        'four-reactive one-L/one-C classes with explicit tiny margins. Coverage is 1,334 of 2,130; '
+        'the 796 balanced two-L/two-C placements remain. These are structural bounds, not practical hardware tolerances.</p>'
         '<p><a href="../../downloads/smith-rlc-current-source.zip">Download the complete current source and checks</a> · '
         '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/tree/'+site.revision+'/'+BASE+'">'
         'Proof, computation and source-binding records</a>. The original checkpoint ZIPs and earlier Lean receipts '
         'are retained unchanged in that source package.</p>')
-    article = local_routes(diagrams(''.join(assembled)))
+    article = local_routes(diagrams(''.join(assembled),site))
     article = article.replace('This note does not resolve the transformer-free six-reactive-element question.',
         'This auxiliary circuit is separate from the exact six-reactive closure in this reading.')
     body = body[:match.start(2)]+article+body[match.end(2):]

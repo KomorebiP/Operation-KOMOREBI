@@ -51,8 +51,8 @@ class SmithBreakthroughTests(unittest.TestCase):
     def test_single_live_status_agrees_with_scoped_progress(self):
         state=json.loads((AREA/'STATE.json').read_bytes())
         self.assertEqual(state['formal_scope']['theorems'],41)
-        self.assertEqual(state['mixed_representatives'],{'population':2130,'excluded_union':138,
-          'remaining':1992,'remaining_by_reactive_budget':{'2':0,'3':220,'4':1772}})
+        self.assertEqual(state['mixed_representatives'],{'population':2130,'excluded_union':1334,
+          'remaining':796,'remaining_by_reactive_budget':{'2':0,'3':0,'4':796}})
         self.assertEqual(len(state['remaining_work']),6)
         self.assertFalse(state['new_hardware_claim'])
         self.assertFalse(state['new_novelty_claim'])
