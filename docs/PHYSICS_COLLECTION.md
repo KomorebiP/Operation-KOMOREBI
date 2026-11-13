@@ -6,6 +6,14 @@ How does a state exchange probability between its parts? What changes when we al
 
 Begin with a calculation you can inspect. Each selection connects to its written mathematics, available code and recorded evidence. The [Physics book](works/monographs-physics.md) provides the main reading volume.
 
+## Read the book online
+
+The complete reading volume is available as **305 HTML reading pages**: 160 treatment pages, 72 visual studies and 73 verification pages. Use [Start here](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-physics/start.html) to choose an introduction, a full study route or a proof-and-evidence route.
+
+- [Read the treatments](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-physics/index.html): foundations, free fields, gauge, gravity, arithmetic refinement, covariant fiber dynamics and cosmology.
+- [Explore the visual atlases](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-physics/atlas/index.html): 60 original plates with their explanations and selectable equations.
+- [Read the verification scope and companions](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-physics/verification/index.html): source correspondence, recorded checks, assumptions and remaining obligations.
+
 ## Choose a starting point
 
 | Explore | Start here | Continue to |

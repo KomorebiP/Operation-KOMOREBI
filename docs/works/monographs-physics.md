@@ -12,7 +12,7 @@ Discrete and continuous model structures and local constructions.
 
 ## Before you start
 
-**Suggested background:** Begin with the introduction and glossary. Then use the volume's own definitions to identify the background needed for its subject.
+**Suggested background:** Begin with linear algebra, complex inner products and finite sums. Fourier series and operator domains enter the continuum treatment; later parts state their geometric and physical assumptions.
 
 **Recorded results and limits:** Complete 572-page book with an accepted scoped centered free-field extension. Fixed infinite Fourier-space results do not close sampled-grid, interacting-field or cosmological targets.
 
@@ -21,6 +21,12 @@ Discrete and continuous model structures and local constructions.
 The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
 
 [Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#monographs-physics) · [Download this work](../DOWNLOADS.md#monographs-physics)
+
+### Read Physics online
+
+305 reading pages: 160 treatments, 72 visual studies and 73 verification pages. The HTML sequences retain the source wording, equations and evidence limits.
+
+[Start here](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-physics/start.html) · [Treatments](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-physics/index.html) · [Visual atlases](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-physics/atlas/index.html) · [Verification companions](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-physics/verification/index.html)
 
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 

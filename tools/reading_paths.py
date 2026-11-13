@@ -158,8 +158,15 @@ def guide_model(reader, component):
     if any(r['kind']=='code' for r in component['resources']):
         evidence.append(step('Code and reproduction files',overview+'#code','Read the input limits, expected results, and reproduction instructions.'))
     evidence.append(step('Evidence and recorded limits',overview+'#evidence','Check the edition and evidence behind the work’s status.'))
+    summary=intro['contribution'] if intro else assessment.get('reader_summary',meta['summary'])
+    if work=='monographs-physics':
+        from physics_discovery import guide_paths,reading_summary
+        first,study,evidence=guide_paths()
+        evidence.append(step('Evidence and recorded limits',overview+'#evidence','Keep the recorded formal scope and remaining physical obligations with each result.'))
+        summary=reading_summary()+'. Read the treatments, visual atlases and verification companions together.'
+        background='Begin with linear algebra, complex inner products and finite sums. Fourier series and operator domains enter the continuum treatment; later parts state their geometric and physical assumptions.'
     return dict(work=work,url=guide_url(work),title=meta['title'],group=meta['group'],
-        summary=intro['contribution'] if intro else assessment.get('reader_summary',meta['summary']),
+        summary=summary,
         question=intro['question'] if intro else None,limits=intro['limits'] if intro else meta['boundary'],
         scope=assessment['scope'],next_step=assessment['next_step'],
         lean=site.status['labels']['lean'][assessment['lean']][0],

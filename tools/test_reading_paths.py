@@ -76,10 +76,10 @@ class ReadingPathsTests(unittest.TestCase):
     def test_only_complete_html_manuscripts_with_html_visual_guides_get_paths(self):
         reader=fixture(Path('unused'))
         models=[guide_model(reader,c) for c in reader.site.registry['components'] if c['id'] in eligible_books()]
-        self.assertEqual(len(models),16)
+        self.assertEqual(len(models),17)
         self.assertEqual(set(eligible_books()),set(reader.paper_introductions)|{
-            'monographs-quantum-and-circuits','monographs-large-signal-model','monographs-cos-method','monographs-special-functions'})
-        self.assertEqual(len({m['url'] for m in models}),16)
+            'monographs-quantum-and-circuits','monographs-large-signal-model','monographs-cos-method','monographs-special-functions','monographs-physics'})
+        self.assertEqual(len({m['url'] for m in models}),17)
         for model in models:
             self.assertEqual(len(model['paths']),3)
             self.assertEqual(model['scope'],reader.site.assessments[model['work']]['scope'])
@@ -146,8 +146,8 @@ class ReadingPathsTests(unittest.TestCase):
                 pages.setdefault(overview,Page('<h1>Work overview</h1>'))
                 pages[overview].links.append(reader.site.rel(row['url'],overview))
             documents={'source_revision':reader.site.revision}
-            self.assertEqual(verify(output,documents,pages),{'works':16,'paths':48})
-            self.assertEqual(len([s for s in reader.site.search if s['url']!=INDEX]),15)
+            self.assertEqual(verify(output,documents,pages),{'works':17,'paths':51})
+            self.assertEqual(len([s for s in reader.site.search if s['url']!=INDEX]),16)
             record=json.loads((output/REPORT).read_bytes());record['guides'].pop()
             (output/REPORT).write_text(json.dumps(record),encoding='utf-8')
             with self.assertRaisesRegex(AssertionError,'every eligible'):verify(output,documents,pages)
