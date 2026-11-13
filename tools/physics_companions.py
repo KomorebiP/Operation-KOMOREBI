@@ -21,6 +21,19 @@ def metadata():return json.loads(SPEC_FILE.read_bytes())
 def compact(text):return ' '.join(text.split())
 
 
+def presentation_table(node):
+    """Remove print row spacing while retaining every mathematical token."""
+    from readable_chapters import MATH_PATTERN,original_math
+    raw=node['body'];parts=[];position=0
+    strip=lambda text:re.sub(r'(?<=\\\\)\[[0-9.]+(?:pt|em|ex)\]','',text)
+    for match in MATH_PATTERN.finditer(raw):
+        parts.extend([strip(raw[position:match.start()]),match[0]])
+        position=match.end()
+    parts.append(strip(raw[position:]));body=''.join(parts)
+    assert original_math(body)==original_math(raw),'Table presentation changed mathematics'
+    return dict(node,body=body)
+
+
 def normalize(raw):
     from physics_reading import mask,normalize as common
     from foundational_reading import rewrite
@@ -126,7 +139,7 @@ def article(reader,data,spec,chapter):
             body+='<h'+level+' id="'+ident+'">'+chapter.inline(node['title'])+'</h'+level+'>'+passage_links(links)
         elif kind in {'longtable','tabular','table','tabularx'}:
             aid=next(a for a in data['table_aids'] if a['source']==spec['source'] and a['id']==ident)
-            body+='<section id="'+ident+'">'+render_table(node,chapter,aid)+passage_links(links)+'</section>'
+            body+='<section id="'+ident+'">'+render_table(presentation_table(node),chapter,aid)+passage_links(links)+'</section>'
         elif kind in {'lstlisting','verbatim'}:
             content=re.sub(r'^\[[^\]]+\]','',node['body']).strip('\n')
             body+='<section id="'+ident+'"><pre tabindex="0" aria-label="Original inspection and reproduction commands"><code>'+html.escape(content)+'</code></pre>'+passage_links(links)+'</section>'

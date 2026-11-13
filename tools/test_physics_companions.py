@@ -14,6 +14,14 @@ from test_physics_reading import ROOT,publish_fixture
 
 
 class PhysicsCompanionTests(unittest.TestCase):
+    def test_table_spacing_preserves_mathematical_arrays(self):
+        from physics_companions import presentation_table
+        raw=r'A & value\\[3pt] B & \(M=\begin{pmatrix}1&0\\[3pt]0&1\end{pmatrix}\)'
+        rendered=presentation_table(dict(body=raw))['body']
+        self.assertEqual(rendered.count('[3pt]'),1)
+        self.assertIn(r'1&0\\[3pt]0&1',rendered)
+        self.assertIn(r'A & value\\ B',rendered)
+
     def test_complete_inclusion_order_and_rejected_source_changes(self):
         data=metadata();load=lambda p:(ROOT/p).read_text(encoding='utf-8-sig')
         self.assertEqual(source_specs(load),data)
@@ -57,6 +65,8 @@ class PhysicsCompanionTests(unittest.TestCase):
             for row in report['html_pages']:
                 markup=(output/row['url']).read_text(encoding='utf-8')
                 self.assertNotIn('\\mbox',markup)
+                self.assertNotIn('[3pt]',markup)
+                self.assertNotIn('[2pt]',markup)
                 self.assertIn('reading-text-size',markup)
             first=output/report['html_pages'][0]['url'];original=first.read_text(encoding='utf-8')
             changed=original.replace('not a fresh kernel run','a fresh kernel run',1)
