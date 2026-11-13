@@ -1,0 +1,105 @@
+{
+  "status": "PASS",
+  "schema": "komorebi-smith-loss-reduction-formal-v1",
+  "lean": {
+    "version": "Lean (version 4.34.0-rc2, x86_64-w64-windows-gnu, commit 6a10ac8c22beadecabdbb0919c2b50214762f91d, Release)",
+    "sha256": "37dfe799f69b990251f3b6bcff8a1c10c1afe2adcdecc5c580cc6726ffb63433"
+  },
+  "core_receipt": "../phase2-formal-001/receipt.json",
+  "core_receipt_sha256": "16456ce033d1f240f0a5e2c3e4b6a9bb980e4675bfb2d682daca2e4c3c5a60b8",
+  "input_sha256_before": {
+    "StarMesh.lean": "dfe66f934cfc85847e9b6dc0d68166541f3069893b7d70de05b5ac4c78547952",
+    "LossContraction.lean": "afb9cfab23e343bd5c00226c78c7c8ad5a19dc4822d3c16d2bc41fbf4ab49fcf",
+    "LossReductionAudit.lean": "6af2772079325851e9a6725792f3f7220a1bca674a2fab79ee54a91abc8b8bf5",
+    "replay_loss_reduction.py": "7a4a94ca91e6aabde9f5858d6d4c855c9cb43ddb87acbf3de5d7cf051ef944b1"
+  },
+  "input_sha256_after": {
+    "StarMesh.lean": "dfe66f934cfc85847e9b6dc0d68166541f3069893b7d70de05b5ac4c78547952",
+    "LossContraction.lean": "afb9cfab23e343bd5c00226c78c7c8ad5a19dc4822d3c16d2bc41fbf4ab49fcf",
+    "LossReductionAudit.lean": "6af2772079325851e9a6725792f3f7220a1bca674a2fab79ee54a91abc8b8bf5",
+    "replay_loss_reduction.py": "7a4a94ca91e6aabde9f5858d6d4c855c9cb43ddb87acbf3de5d7cf051ef944b1"
+  },
+  "steps": [
+    {
+      "name": "compile-star-mesh",
+      "arguments": [
+        "-o",
+        "StarMesh.olean",
+        "StarMesh.lean"
+      ],
+      "expected_success": true,
+      "exit_code": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "compile-loss-contraction",
+      "arguments": [
+        "-o",
+        "LossContraction.olean",
+        "LossContraction.lean"
+      ],
+      "expected_success": true,
+      "exit_code": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "axioms-loss-reduction",
+      "arguments": [
+        "LossReductionAudit.lean"
+      ],
+      "expected_success": true,
+      "exit_code": 0,
+      "stdout_sha256": "ec12f2612bcf921ada0a1974d7dc43c9691cd0f8cd9177fd568e98d985d1cf8b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "wrong-mesh",
+      "arguments": [
+        "WrongMesh.lean"
+      ],
+      "expected_success": false,
+      "exit_code": 1,
+      "stdout_sha256": "b509cea7aba0c6d69e07c369780b6f80aebda07b07260e392534c77588b45ca4",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "wrong-disk",
+      "arguments": [
+        "WrongDisk.lean"
+      ],
+      "expected_success": false,
+      "exit_code": 1,
+      "stdout_sha256": "d3830f6a40792255d633bb9f2294801f85ff5fe6308c09a4f7b60e1de81378d9",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "positive-fixtures",
+      "arguments": [
+        "PositiveFixtures.lean"
+      ],
+      "expected_success": true,
+      "exit_code": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "direct_mathlib_objects": {
+    "Mathlib.Analysis.Complex.Basic": "920cbe866cff460a27b9091fc050c40024de1900c0ed7dceb47968b3ec1cc754",
+    "Mathlib.Algebra.BigOperators.Group.Finset.Basic": "46b93b78fbd3d3c0fef4664d9129d2f25002c858c399c62c9eb5e8d4ee845a23",
+    "Mathlib.Algebra.Order.BigOperators.Group.Finset": "6b5f66a2550f3b46851544fb4541f217c80382185adc568d4122e5579ac35260",
+    "Mathlib.Tactic.FieldSimp": "d489727a95456298f22c4f6b1256954828cdd196d6ec06fc82c007f13cb57e05",
+    "Mathlib.Tactic.Linarith": "ab8dd820c9d2501158830a6ccfbf83fa82430768ad37232d57205d20efcde9ea",
+    "Mathlib.Tactic.Positivity": "e33b8346d83ab868495b022015d06b83093911aa87828a07e974be291e824c73",
+    "Mathlib.Tactic.Ring": "b0106b5b7da97713e33bd0b4981f45745edf65f766c1b5690c7e1a474ed1eeca",
+    "Mathlib.Algebra.Order.BigOperators.Ring.Finset": "479e183299f8fa8f898f91fc16397f9df185db0f2131a7429cd7e2c621424202",
+    "Mathlib.Tactic.NormNum": "a63e6b05d99d509528c75e4c4f9b7b9accc6b2ad0c8fda72b6ff57613b25156e"
+  },
+  "new_theorem_axiom_audits": 16,
+  "total_selected_with_three_prior_receipts": 41,
+  "new_negative_controls": 2,
+  "new_positive_fixture_statements": 2,
+  "scope": "One finite resistor-node elimination, zero-degree case and retained-current preservation; finite mixed-loss contraction from actual KCL and branch laws; exact polynomial disk. Iterated reduction, existence and analytic limits, component-box interpretation, full universal margin and transfer remain separate.",
+  "review_provenance": "Author-produced actual kernel replay; no independent human review"
+}

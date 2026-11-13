@@ -1,0 +1,111 @@
+{
+  "schema": "komorebi-smith-proof-self-review-v1",
+  "author": "Komorebi P.",
+  "base_revision": "1df0ff340b886699400475f4d379d0d41e712ba2",
+  "review_provenance": "Project self-review and actual Lean kernel replay. No independent agent or human review.",
+  "overall_verdict": "incomplete, with the smallest missing implication",
+  "overall_gap": "Useful all-topology separation still needs the 220 three-reactive and 1772 four-reactive representatives. Full formal boundary/transfer, arbitrary mixed synthesis, higher resistor minima, physical model/measurement and priority contracts remain open.",
+  "source_sha256": {
+    "MIXED_LOSS_TOLERANCE.md": "585c9ac955b303f9036d2101fa5895252cbfaf14466384e4557d13deef3ad904",
+    "TWO_REACTIVE_MARGIN.md": "603a4a13c054805b1ec1a7326a26e1329093bd940995e1a18c8acefa123bc184",
+    "FORMAL_PROGRESS.md": "cd9cad62566644da9bc54d2ef736a284006a3e76c31a7e7cc23b70fbb6648693",
+    "PHASE3_CONTRACT.md": "d671ca37375f90f31822794e8dc15c2ed0aeb1799b8023a50fad28063b8fdb11",
+    "SOURCE_AUDIT.json": "695de176fd6874afd65286d9445b498d73aa1560375db072838bf6556f3fc69b",
+    "solver/loss_certificate.py": "df557ccba0990b27d9ba7f5374b092016a675c345d26d39503bf592b7eb1764c",
+    "solver/check_loss_tolerance.py": "5af14124a4caac93fc562066a9030b8e1c32796b4636bfcf73059bae997fc854",
+    "solver/loss_example.json": "402f814d82ab541fe3a54de44ef15cad7c900cd90042abdf1ad2795a9b5b2b06",
+    "solver/two_reactive_margin.py": "0ba63d39e05a42a1568bc64ccd2f9ba65f706c22c4d23cf5ce27303764296b9b",
+    "solver/check_two_reactive_margin.py": "72b6a8dd79b9621b5607eb1284725c92bf8268d95e4f091824d7f6b2fef07d97",
+    "solver/check_breakthrough.py": "5f26bae48109ab4a66b833a1bafcb1d70475c47a8f160a6b98fa4ed6717f530e",
+    "formal/StarMesh.lean": "dfe66f934cfc85847e9b6dc0d68166541f3069893b7d70de05b5ac4c78547952",
+    "formal/LossContraction.lean": "afb9cfab23e343bd5c00226c78c7c8ad5a19dc4822d3c16d2bc41fbf4ab49fcf",
+    "formal/LossReductionAudit.lean": "6af2772079325851e9a6725792f3f7220a1bca674a2fab79ee54a91abc8b8bf5",
+    "formal/replay_loss_reduction.py": "7a4a94ca91e6aabde9f5858d6d4c855c9cb43ddb87acbf3de5d7cf051ef944b1",
+    "figures/generate_loss_disk.py": "b5ab624a79669c8245828ea72fac93b30ca411ccba485034bbc625ca2ccb7fc7",
+    "figures/mixed-loss-disks.svg": "05297cc7c49016f8bdd8a92f4b7171c31896f464b5f34696e2836a5e920c511c",
+    "verification/current-exact-005/manifest.json": "2038b6424bb1de3d8b37134b7d152a440fd76d5df1387b69e1e35dc49b61e79c",
+    "verification/phase3-loss-reduction-formal-001/receipt.json": "e7c66b46ff8506fde1a8d729ea0c7e2d267d8583f9a8d96524cfc078c9cf1992"
+  },
+  "claims": [
+    {
+      "id": "all-two-reactive-coefficient-separation",
+      "verdict": "proved as written, using stated classical source leaves",
+      "claim": "Every ordinary positive uncoupled transformer-free network with at most two reactive branches and arbitrary resistor count has maximum error greater than 1/1000000 on five stated positive-real samples.",
+      "proof_obligations": {
+        "nonnegative_degree_two_polynomials": "Grounded spanning-tree and diagonal-cofactor rooted-forest sums; clear s^nL. Arbitrary resistor count changes coefficients, not the degree cap.",
+        "open_short_floating_cases": "Open and short constant reflections are separated directly; floating components are discarded.",
+        "normalization_and_sample_domain": "Coefficient sum one; positive-real s only; P+Q at most max(1,s^2).",
+        "inverse_and_box": "Both inverse products and target null equations replayed exactly; weighted inverse bound 439774/507 sends delta=1e-6 strictly inside radius 1e-3.",
+        "cancellation": "Strict positive resultant throughout the box forces reduced degree two.",
+        "classical_coverage": "Morelli 2019 Theorem 3.1, regularity conditions, Table 5.10 and Theorem A.9. Source theorem leaves remain external to the arithmetic kernel.",
+        "exceptional_bridge": "Correctly retained; nonregular physical control has (t,K,lambda1,lambda2,mu1)=(8,64,-32,-8,64). Erroneous caption is not used.",
+        "boundaries": "Normalized coefficient subsequences and closed weak-sign relaxations; strict separating box excludes all such limits."
+      },
+      "finite_controls": {
+        "box_corners": 64,
+        "interval_comparisons": 320,
+        "physical_bridge_comparisons": 8,
+        "corruptions_rejected": 4
+      },
+      "formal_scope": "Not a complete Lean proof of this universal separator or the classical classification.",
+      "coverage_effect": {
+        "additional_previously_uncovered_mixed_representatives": 19,
+        "total_excluded_union": 138,
+        "remaining": 1992
+      }
+    },
+    {
+      "id": "finite-mixed-loss-contraction",
+      "verdict": "proved as written; actual finite KCL-to-port implication kernel-checked",
+      "proof_obligations": {
+        "physical_existence": "Strictly positive real compound branch impedances give accretive grounded nodal systems; floating/open cases treated separately. Written proof; Lean theorem assumes solutions.",
+        "factor_and_conjugation": "Complex Green identity with conjugated currents gives power; bilinear nonconjugated identity gives finite change. Lean port_power and graph_to_port check the factor 4 and conjugation.",
+        "simultaneous_changes": "Finite weighted Cauchy-Schwarz uses one common maximum branch budget; no sum of independent per-branch budgets or branch-count factor.",
+        "disk": "Exact polynomial completion checked in Lean; A>=1 follows from passivity and B>=0.",
+        "zero_loss": "Changed ideal reactive edges violate local hypothesis; the previous counterexample is preserved."
+      },
+      "non_claims": [
+        "No novel general contraction principle",
+        "No complete universal analytic or hardware proof"
+      ]
+    },
+    {
+      "id": "paired-loss-component-box",
+      "verdict": "proved as written for the explicit model; finite implementation replay passed",
+      "proof_obligations": {
+        "dedicated_loss": "Each L/C pair has its own positive R and an unbranched internal series node; a remote shared R cannot qualify.",
+        "continuous_box": "a>=1-delta, abs(a-1)<=delta, abs(b-1)<=delta/(1-delta); local finite bound follows for every component value in the box.",
+        "band": "Nominal kappa is the maximum of omega_max L/R and 1/(omega_min C R); this bounds the entire positive band, not just displayed samples.",
+        "reference": "Fixed positive real reference; normalization preserves local ratios.",
+        "sharpness_and_use": "Capacitive local corner attains B. At kappa=10, delta=1/100 and nominal Gamma=0, reflected power <=1009801/389129401<1/385."
+      },
+      "finite_controls": {
+        "graphs": 9,
+        "physical_corners": 1110,
+        "local_mismatch_checks": 4686,
+        "bilinear_checks": 1110,
+        "nominal_power_checks": 27,
+        "corrupt_or_malformed_controls": 10
+      },
+      "implementation_independence": "Compound and expanded physical graph assembly are separately compared; exact complex arithmetic and Gaussian solver are shared. This is not a wholly independent second numerical solver.",
+      "remaining": "Parasitic branches, nonlinear/frequency-dependent part models, justified ESR data, internal dissipation and measurements remain outside the specified guarantee."
+    },
+    {
+      "id": "finite-resistor-node-elimination",
+      "verdict": "selected one-step finite algebraic obligation proved in Lean",
+      "proof_obligations": {
+        "scope": "Any finite retained-node type; real potentials; parallel conductances already summed; arbitrary existing conductances.",
+        "nonzero_degree": "KCL uniquely fixes the weighted-average potential; symmetric nonnegative star-mesh update preserves every retained current.",
+        "zero_degree": "Nonnegative conductances summing to zero are all zero.",
+        "not_closed": "Arbitrary iteration with full open/short boundary semantics and analytic compact-model limits still require their own formal chain."
+      }
+    }
+  ],
+  "proofreading": {
+    "mode": "self-review",
+    "scope": "Only new proof files and changed overview/continuation prose; prior byte-bound proof texts unchanged.",
+    "routine_edits": "Inline mathematics, notation, paragraph integration, explicit sample/model domains and source locators checked.",
+    "mathematical_token_changes": "No typographical mathematical-token corrections after the audited derivations were fixed.",
+    "validation": "Math rendering, raw TeX, equation overflow and source-package checks are recorded separately in the publication receipt."
+  }
+}
