@@ -102,6 +102,9 @@ by dropping the highest raised degree has an additional boundary effect.
 The raising map sends degree at most $d$ into degree at most $d+1$;
 retain that extra degree before checking the commutator.
 
+The [three-coordinate boundary calculation](ALGEBRA.md#test-a-claimed-identity-on-its-actual-space)
+shows the exact extra diagonal term when raising is truncated at degree two.
+
 ## 4. Coefficient selectors and roots-of-unity averaging
 
 For an integer $m\ge2$ and $0\le r<m$, define
@@ -281,6 +284,26 @@ $Q_0T_1f(3)$ and $T_1Q_0f(3)$.
 Their differences have values $6$ and $1$. Therefore
 $Q_0T_1f(3)=6+1=7$, while $T_1Q_0f(3)=6+6=12$.
 The incoming difference for the even output comes from the odd input packet.
+
+## Choose the direction of conversion
+
+Use the polynomial itself to keep the coordinate directions straight:
+
+| Starting information | Requested result | Operation |
+|---|---|---|
+| Source coefficients of $g(z)$ | Target polynomial $f(x)$ | Apply $\Phi$; replace each $z^k$ by $b_k(x)$. |
+| Ordinary target polynomial $f(x)$ | Its falling-factorial coefficients | Apply $\Phi^{-1}$, using the Stirling expansion or the Newton difference table under its stated assumptions. |
+| A source operator $L$ | Its action on target polynomials | Use $\Phi L\Phi^{-1}$. |
+| A target scalar observation $\ell$ | The same observation on source coefficients | Use $\ell\Phi$. |
+
+For example, evaluating $f=x^3$ at $4$ gives $64$. Its source coordinates
+are $(0,1,3,1)$, so the same observation uses the falling-basis value row
+$(b_0(4),b_1(4),b_2(4),b_3(4))=(1,4,12,24)$. Pairing gives
+$0+4+36+24=64$. Pairing those same coefficients with the ordinary-power
+row $(1,4,16,64)$ instead gives $116$.
+
+An observation is a map too: transport it together with the vector it acts
+on. The same principle governs the integration example below.
 
 ## Sources and checks
 

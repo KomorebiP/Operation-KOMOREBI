@@ -83,6 +83,29 @@ maps other coordinate triples into that valid subspace.
 
 [All matrix products in the redundancy example](../examples/06_REDUNDANT_COORDINATES.md).
 
+### Recognize a valid redundant coordinate vector
+
+For this analysis map, valid triples satisfy $z_3=z_1+z_2$. A stored or
+perturbed triple need not satisfy that relation. For example, synthesize
+$z=(0,0,1)^{\mathsf T}$ and analyze the result again:
+
+```math
+Sz=(1/3,1/3)^{\mathsf T},\qquad
+ASz=(1/3,1/3,2/3)^{\mathsf T},\qquad
+z-ASz=(-1/3,-1/3,1/3)^{\mathsf T}.
+```
+
+The corrected triple is valid. The residual is killed by synthesis because
+$S(z-ASz)=0$. In fact, $AS$ is symmetric as well as idempotent for these
+particular matrices, so it is the Euclidean orthogonal projection onto the
+valid coordinate plane. Other exact synthesis choices can give an oblique
+projection instead.
+
+This distinguishes two questions in a redundant representation: whether
+$SA$ reconstructs every original object, and how $S$ treats a coordinate
+vector outside the analyzed range. Exact reconstruction settles the first;
+the chosen synthesis and error model settle the second.
+
 ## 5. Redundant components versus projectors
 
 Let $E_i$ select coordinate $i$ in the three-coordinate space above.

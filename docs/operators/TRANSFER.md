@@ -132,6 +132,39 @@ State the admissible input set before simplifying a residual. The
 [wavelet study](../demonstrations/WAVELET_POLYPHASE.md) follows omitted
 interactions across several scales.
 
+### Two updates can leave and return
+
+When a retained operation will be repeated, test the intermediate paths.
+For any projector $P$ and linear endomorphism $T$, insert $I=P+(I-P)$
+between the two updates to obtain
+
+```math
+PT^2P=(PTP)^2+PT(I-P)TP.
+```
+
+The second term starts in the retained range, leaves it during the first
+update, and returns during the second. With this chapter's matrix $T$ and
+$P=\operatorname{diag}(1,0)$,
+
+```math
+\begin{aligned}
+PT^2P&=\begin{pmatrix}7&0\\0&0\end{pmatrix},\\
+(PTP)^2&=\begin{pmatrix}1&0\\0&0\end{pmatrix},\\
+PT(I-P)TP&=\begin{pmatrix}6&0\\0&0\end{pmatrix}.
+\end{aligned}
+```
+
+On $e_1$, both first retained outputs are $e_1$. After two updates they
+are $7e_1$ and $e_1$. The first-step agreement did not test the return path.
+For bounded operators with compatible norms, its size is at most
+$\|PT(I-P)\|\,\|(I-P)TP\|$, using $(I-P)^2=I-P$.
+
+If $(I-P)TP=0$, the retained range is invariant and these excursions are
+absent at every step for inputs in that range. The two-step return term
+can also vanish for other reasons, so its vanishing alone does not establish
+invariance. For a general summary rather than a projector, use the kernel
+criterion in entry 5 to decide whether an autonomous update exists.
+
 ## 7. Nonlinear transfer defects
 
 For a nonlinear map, input packets need not yield an additive output
