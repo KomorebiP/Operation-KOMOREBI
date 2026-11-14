@@ -62,7 +62,7 @@
     const captionTemplate = caption && !caption.querySelector('mjx-container') ? caption.cloneNode(true) : null;
     if (caption) {
       caption.id ||= 'research-figure-caption-' + (index + 1);
-      button.setAttribute('aria-label', 'Open figure at full size');
+      button.setAttribute('aria-label', 'Open figure ' + (index + 1) + ' at full size');
       button.setAttribute('aria-describedby', caption.id);
     }
     button.addEventListener('click', () => {
@@ -90,6 +90,16 @@
     });
   });
   dialog.addEventListener('close', () => { captionTicket++; });
+  let printDescriptions = null;
+  addEventListener('beforeprint', () => {
+    if (printDescriptions !== null) return;
+    printDescriptions = [...document.querySelectorAll('.figure-description')].filter(node => !node.open);
+    printDescriptions.forEach(node => { node.open = true; });
+  });
+  addEventListener('afterprint', () => {
+    printDescriptions?.forEach(node => { node.open = false; });
+    printDescriptions = null;
+  });
   document.getElementById('figure-close').addEventListener('click', () => dialog.close());
   fitButton.addEventListener('click', () => {
     const fit = imageWrap.classList.toggle('dialog-fit');

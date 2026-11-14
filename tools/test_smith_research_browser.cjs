@@ -1,5 +1,6 @@
 /* Optional end-to-end check against a built or deployed reading. Requires Playwright. */
 const { chromium } = require('playwright');
+const expectedEquations = require('../research/smith-chart/unified/READING_REVIEW.json').mathematics.output_expressions;
 
 const url = process.argv[2];
 if (!url) throw new Error('Provide the URL of read/smith-chart/research.html');
@@ -41,14 +42,14 @@ async function run() {
             const raw = [];
             while (walker.nextNode()) {
               const node = walker.currentNode;
-              if (!node.parentElement.closest('mjx-container,.arithmatex,code,pre') && /\\[([]|\\(?:frac|boxed|mathbb)\b/.test(node.textContent)) raw.push(node.textContent.slice(0,100));
+              if (!node.parentElement.closest('mjx-container,.arithmatex,code,pre') && /\\[([]|\\[A-Za-z]+\b/.test(node.textContent)) raw.push(node.textContent.slice(0,100));
             }
             return raw;
           })(),
           touchHeight: Math.min(...[...document.querySelectorAll('.research-actions a, .research-actions button, .figure-open')]
             .map(element => element.getBoundingClientRect().height).filter(height => height > 0)),
         }));
-        if (layout.width > layout.viewport || layout.figures !== 51 || layout.vectorFigures !== 51 || layout.originalLinks !== 51 || layout.mobileFigures !== (name === 'desktop' ? 0 : 16) || layout.mathReady !== 'true' || layout.mathErrors || layout.unrendered || layout.rawTex.length || layout.equations !== 3516 || layout.headings !== 1 || layout.articles !== 1 || layout.touchHeight < 44) {
+        if (layout.width > layout.viewport || layout.figures !== 51 || layout.vectorFigures !== 51 || layout.originalLinks !== 51 || layout.mobileFigures !== (name === 'desktop' ? 0 : 16) || layout.mathReady !== 'true' || layout.mathErrors || layout.unrendered || layout.rawTex.length || layout.equations !== expectedEquations || layout.headings !== 1 || layout.articles !== 1 || layout.touchHeight < 44) {
           throw new Error('Reading layout, images, mathematics, or touch controls failed: ' + JSON.stringify(layout));
         }
         const figure = page.locator('#figure-2 .figure-open');
