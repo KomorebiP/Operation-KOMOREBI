@@ -165,6 +165,38 @@ still be invertible: the coordinate-swap matrix is a simple example.
 
 [Eliminate a block by hand](../examples/12_BLOCK_ELIMINATION.md).
 
+## Test a claimed identity on its actual space
+
+For linear maps on a finite-dimensional space, equality on every vector
+of a basis proves equality on the whole space. The reason is linearity:
+write an arbitrary input as a linear combination of those basis vectors.
+A single successful input proves less, and nonlinear maps are not
+determined by their values on a basis.
+
+The space matters just as much as the test vectors. On the full polynomial
+space over $\mathbb Q$, differentiation $D$ and multiplication $M$ by $z$
+satisfy $DM-MD=I$. On the truncated basis $(1,z,z^2)$, let $D_2$ be
+differentiation and let $M_2$ multiply by $z$ then discard $z^3$. Directly,
+
+```math
+\begin{aligned}
+D_2&=\begin{pmatrix}0&1&0\\0&0&2\\0&0&0\end{pmatrix},\\
+M_2&=\begin{pmatrix}0&0&0\\1&0&0\\0&1&0\end{pmatrix},\\
+D_2M_2-M_2D_2&=\operatorname{diag}(1,1,-2).
+\end{aligned}
+```
+
+The full-space identity holds on the first two basis vectors, but the
+highest-degree vector detects the boundary error. There is also a quick
+consistency check: for finite square matrices over $\mathbb Q$,
+$\operatorname{tr}(AB)=\operatorname{tr}(BA)$, so a commutator has trace
+zero. The three-dimensional identity has trace $3$ and cannot be such a
+commutator. Here $1+1-2=0$, as required.
+
+For the full polynomial calculation, retain the extra raised degree before
+differentiating. The [polynomial chapter](POLYNOMIAL.md#3-raising-and-degree-operators)
+uses this same boundary check for transported raising and lowering.
+
 ## Try it: a short operator word
 
 With $N$ as above and $P=\operatorname{diag}(1,0)$, calculate $PN$, $NP$,

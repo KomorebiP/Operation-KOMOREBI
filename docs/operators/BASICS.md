@@ -170,6 +170,33 @@ Thus ordinary matrix symmetry alone does not settle self-adjointness after
 changing the inner product. See the
 [weighted-average example](../examples/08_WEIGHTED_AVERAGES.md).
 
+### Carry the inner product with the coordinates
+
+Suppose the original real coordinates use the Euclidean inner product and
+$y=Cx$, where $C$ is invertible. To measure the same geometric length in
+the new coordinates, use
+
+```math
+W'=C^{-\mathsf T}C^{-1},\qquad
+y^{\mathsf T}W'y=x^{\mathsf T}x.
+```
+
+Here $C^{-\mathsf T}$ means $(C^{-1})^{\mathsf T}$. For
+$C=\operatorname{diag}(2,1)$ and $x=(1,1)^{\mathsf T}$, the new vector is
+$y=(2,1)^{\mathsf T}$ and $W'=\operatorname{diag}(1/4,1)$. Both geometric
+squared lengths are $2$. Using the unweighted Euclidean length of $y$
+instead gives $5$, which measures a different quantity.
+
+For a real linear map $T:X\to Y$ with positive-definite metric matrices
+$W_X$ and $W_Y$, the corresponding formula is
+$T^*=W_X^{-1}T^{\mathsf T}W_Y$. It follows by writing both sides of
+the defining adjoint identity as matrix products. Keeping both metrics is
+especially useful for rectangular maps: the adjoint reverses the arrow,
+while an inverse would have to undo the map. They need not coincide.
+
+**Check:** Record a coordinate map and its metric together before comparing
+lengths, energy, adjoints, or orthogonality in the two descriptions.
+
 ## Try it: a rectangular inverse
 
 Let $A=[2\ \ {-1}]$ and $B=(1/2,0)^{\mathsf T}$. Find $AB$, $BA$,

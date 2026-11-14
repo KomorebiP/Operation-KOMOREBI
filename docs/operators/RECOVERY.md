@@ -120,6 +120,35 @@ change the admissible repair problem. The
 [repair-menu example](../examples/25_REPAIR_MENUS.md) shows why a minimum
 free dimension and a cheapest allowed selection can differ.
 
+### An exact repair can amplify noise
+
+The rank formula counts missing directions. It does not measure how well
+the added measurements distinguish them. Suppose the requested answer is
+$x_2$ and the measurements are
+
+```math
+s=x_1,\qquad t=x_1+\varepsilon x_2,\qquad
+\varepsilon=1/1000.
+```
+
+The two rows are independent, and exact recovery is
+$x_2=(t-s)/\varepsilon$. If the measured values contain errors $\eta_s$
+and $\eta_t$, the answer error is exactly
+$(\eta_t-\eta_s)/\varepsilon$. When each measurement error has absolute
+value at most $\delta$, the answer error can reach $2000\delta$.
+The signs $\eta_t=\delta$ and $\eta_s=-\delta$ attain that bound.
+
+For the true input $(2,3)$, the readings are $s=2$ and $t=2003/1000$.
+Taking $\delta=1/1000$ with those opposite error signs produces measured
+values $1999/1000$ and $2004/1000$. The recovered second coordinate is
+$5$, an error of $2$ despite small measurement errors.
+
+Measuring $x_2$ directly as the added row also uses one extra measurement,
+but gives answer error at most $\delta$ under the same per-reading error
+model. Practical measurement constraints may prevent that choice. State
+those constraints, the units or scaling, and the error model when comparing
+repairs. Minimal dimension and small noise amplification are separate goals.
+
 ## 6. Conditional expectation and estimation
 
 Exact recovery for all inputs and minimum expected error are different
@@ -166,6 +195,29 @@ The pair $(u_n,u_{n+1})$ determines $v=u_{n+1}-u_n$ and supports a closed
 update. The [hidden-memory example](../examples/22_HIDDEN_MEMORY.md)
 develops another system whose retained history gives a Fibonacci recurrence.
 Both examples require a declared transition rule and initialization scope.
+
+### Ask how much observation history is needed
+
+For a finite-dimensional linear state update $x_{n+1}=Tx_n$ and a linear
+observation $y_n=Rx_n$, the first $h$ observations are summarized by
+
+```math
+\mathcal O_h x_0=
+\begin{pmatrix}R\\RT\\\vdots\\RT^{h-1}\end{pmatrix}x_0,
+\qquad h\ge1.
+```
+
+To recover a requested linear answer $Fx_0$, apply entry 3 to this stacked
+matrix: $\ker\mathcal O_h\subseteq\ker F$ is the criterion. Recovering the
+whole initial state requires $\ker\mathcal O_h=\{0\}$. A particular answer
+can require fewer observations than the whole state.
+
+For the shear update above, $R=[1\ \ 0]$ and $RT=[1\ \ 1]$. Thus
+$\mathcal O_2=\begin{pmatrix}1&0\\1&1\end{pmatrix}$, and two noiseless
+observations $(a,b)$ give $x_0=(a,b-a)^{\mathsf T}$. One observation
+cannot distinguish $(0,0)$ from $(0,1)$. The calculation assumes both
+observations belong to the same unforced trajectory with the stated $T$;
+unknown inputs or measurement noise require additional terms and assumptions.
 
 ## Try it: recover a difference or a total
 

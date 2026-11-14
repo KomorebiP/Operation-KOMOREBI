@@ -3,9 +3,9 @@
 # Operator guide
 
 Explore the concepts used to describe operations, split objects into parts,
-change coordinates, and recover information from summaries. Use the concept
-list as a reference, then follow the worked examples to see how the ideas
-fit together in a calculation. Seven reference chapters provide 54 worked
+change coordinates, and recover information from summaries. Start with one
+concrete task, then follow the worked examples to see how the ideas
+fit together in a calculation. Seven reference chapters provide 54 numbered
 entries. The [operator catalog](operators/catalog/README.md) adds a searchable
 reference to 205 entries in twelve families, with formulas, assumptions,
 source links, and named finite checks. A complete introductory audit and a
@@ -27,6 +27,27 @@ in the interactive diagram, or
 
 Each chapter combines definitions, hypotheses, exact examples, common mistakes,
 and an exercise with its answer. Read them in sequence or jump to one topic.
+
+### Read the notation before the calculation
+
+Vectors are columns. In $UTx$, apply $T$ to $x$ first, then apply $U$ to
+the result. The symbol $I$ means the identity on the space currently named;
+$0$ may mean a zero vector, scalar, or map, as its type specifies.
+
+| Notation | Meaning and required check |
+|---|---|
+| $T:X\to Y$ | $T$ takes inputs in $X$ to outputs in $Y$. Specify the allowed inputs and coefficient field. |
+| $T^{-1}$ | A two-sided inverse. Check both inverse identities, or state a restriction where they hold. |
+| $T^*$ | The adjoint. Specify the inner products before replacing it by a transpose. |
+| $P_i x$ | The part selected by packet $i$. Check the packet identities and representation. |
+| $T_{ji}=Q_jTP_i$ | Transfer from input $i$ to output $j$. Columns name sources; rows name targets. |
+| $\widetilde T$ | A retained or approximate operation. List the blocks or terms it includes. |
+| $\lVert T\rVert$ | The induced operator norm. Specify the input and output norms. |
+
+The packet letters label selected subspaces; they do not automatically label
+frequency, physical location, or polynomial degree. State that interpretation
+for the example at hand. A superscript such as $P_r^{(m)}$ in the polynomial
+chapter records the modulus, while $T^n$ records repeated composition.
 
 | Chapter | What it covers | Entries |
 |---|---|---|
@@ -55,8 +76,9 @@ For an exact calculation across polynomial bases, continue with
 
 The [exact check program](../examples/operator_guide.py) runs the finite
 examples using Python's standard library. From a repository checkout, run
-`python -B examples/operator_guide.py`. The program checks finite identities
-and failure witnesses; the general arguments and infinite-dimensional
+`python -B examples/operator_guide.py`. Its 62 finite example groups cover
+the 54 numbered entries and eight supplementary calculations. The program
+checks finite identities and failure witnesses; the general arguments and infinite-dimensional
 statements retain the explanations and assumptions given in the text.
 
 ## Look up an operator or a composition law
@@ -352,6 +374,44 @@ it does not change the recorded review or formal-verification status of a work.
 | What happens when a filter is applied in the wrong basis? | [Roots of unity and falling-factorial coordinates](demonstrations/ROOTS_UNITY_FALLING_FACTORIAL.md). |
 | Which coherence does a measurement remove? | [Quantum phase and measurement](demonstrations/QUANTUM_PHASE_MEASUREMENT.md). |
 | Which answers survive a summary, and how can it be repaired? | [Realization Boundaries](works/realization-boundaries.md), [hidden memory](examples/22_HIDDEN_MEMORY.md), and [repair directions](examples/25_REPAIR_MENUS.md). |
+
+## Diagnose a failed calculation
+
+Use the first disagreement to choose the next check. A plausible final
+number can conceal an error in an intermediate representation.
+
+| What you observe | What to check next | Worked explanation |
+|---|---|---|
+| The dimensions match, but composition gives the wrong answer. | Do the two middle vectors use the same coordinates? | [Insert the middle coordinate bridge](operators/COMPOSITION.md#middle-chart-bridge). |
+| All packets reconstruct the input, but the output is wrong. | Were off-diagonal transfers omitted? | [Recover all four transfers](#account-for-all-four-transfers). |
+| One update agrees, but a later retained value differs. | Can discarded output return to a retained packet? | [Follow a two-step excursion](operators/TRANSFER.md#two-updates-can-leave-and-return). |
+| A summary works on a chosen representative only. | Does a kernel direction change the requested answer? | [Test exact reduced dynamics](operators/TRANSFER.md#5-compression-and-exact-reduced-dynamics). |
+| Exact recovery succeeds, but measured noise dominates. | How large is the recovery map in the chosen norms? | [Compare two measurement repairs](operators/RECOVERY.md#an-exact-repair-can-amplify-noise). |
+| A coordinate change appears to change physical length. | Was the metric transported with the coordinates? | [Carry the inner product](operators/BASICS.md#carry-the-inner-product-with-the-coordinates). |
+| The equation residual is small, but the solution is poor. | What inverse bound converts residual to forward error? | [Interpret a numerical residual](operators/STABILITY.md#8-numerical-residuals-and-certified-statements). |
+
+### A completed audit: keeping one coordinate for two updates
+
+Take $T=\begin{pmatrix}1&2\\3&4\end{pmatrix}$ and retain the first
+coordinate with $P=\operatorname{diag}(1,0)$. Start from
+$x=(1,0)^{\mathsf T}$, so the input is entirely retained.
+
+| Worksheet field | Completed record |
+|---|---|
+| Task | Find the first coordinate after exactly two applications of $T$. |
+| Inputs and coefficients | All first-axis vectors in $\mathbb R^2$; the displayed control uses $x=(1,0)^{\mathsf T}$. |
+| Proposed shortcut | Apply $PTP$ twice, deleting the second coordinate after each update. |
+| Required comparison | $PT^2P$ against $(PTP)^2$ on the retained input range. |
+| Exact result | $Tx=(1,3)^{\mathsf T}$, $T^2x=(7,15)^{\mathsf T}$, and the requested retained output is $(7,0)^{\mathsf T}$. |
+| Shortcut result | $(PTP)^2x=(1,0)^{\mathsf T}$. |
+| Missing contribution | $PT(I-P)TPx=(6,0)^{\mathsf T}$ leaves the retained range and returns on the next update. |
+| Conclusion | This shortcut fails for the two-update task, although its first retained output agrees exactly. |
+
+The [transfer chapter](operators/TRANSFER.md#two-updates-can-leave-and-return)
+derives the missing-path identity. For approximate repeated updates, continue
+with the [error budget](operators/STABILITY.md#budget-error-over-several-updates).
+Specify the number of updates in the task: a one-step comparison does not
+answer every later observation question.
 
 ## A worksheet for your own operation
 

@@ -383,10 +383,112 @@ SOURCE_BINDINGS = {
 }
 
 
+def supplementary_audits():
+    """Eight finite teaching cases; all constants use exact rational arithmetic.
+
+    These are the specific displayed examples in the guide's reading notes.
+    The text supplies the general identities and their hypotheses.
+    """
+    results = {}
+
+    C = M([[2, 0], [0, 1]])
+    W = mm(transpose(inverse2(C)), inverse2(C))
+    x = v(1, 1)
+    y = mm(C, x)
+    results['coordinate-metric'] = {
+        'metric': W, 'coordinate': y,
+        'weighted_squared_length': mm(mm(transpose(y), W), y)[0][0],
+        'unweighted_squared_length': length_squared(y),
+    }
+    assert mm(mm(transpose(C), W), C) == I
+    assert results['coordinate-metric']['weighted_squared_length'] == length_squared(x) == 2
+
+    derivative = M([[0, 1, 0], [0, 0, 2], [0, 0, 0]])
+    raising = M([[0, 0, 0], [1, 0, 0], [0, 1, 0]])
+    commutator = sub(mm(derivative, raising), mm(raising, derivative))
+    results['cutoff-commutator'] = {'commutator': commutator,
+        'trace': sum(commutator[j][j] for j in range(3))}
+    assert commutator == M([[1, 0, 0], [0, 1, 0], [0, 0, -2]])
+    assert results['cutoff-commutator']['trace'] == 0
+
+    z = v(0, 0, 1)
+    projection = mm(A, S)
+    corrected = mm(projection, z)
+    residual = sub(z, corrected)
+    results['redundant-coordinates'] = {
+        'synthesized': mm(S, z), 'corrected': corrected, 'residual': residual}
+    assert transpose(projection) == projection == mm(projection, projection)
+    assert mm(S, residual) == v(0, 0)
+    assert corrected[2][0] == corrected[0][0] + corrected[1][0]
+
+    full = mm(mm(P, mm(T, T)), P)
+    compressed = mm(mm(P, T), P)
+    repeated = mm(compressed, compressed)
+    excursion = mm(mm(mm(mm(P, T), Q), T), P)
+    results['two-step-return'] = {
+        'full': full, 'repeated': repeated, 'excursion': excursion,
+        'first_state': mm(T, v(1, 0)), 'second_state': mm(mm(T, T), v(1, 0))}
+    assert full == add(repeated, excursion) and full != repeated
+
+    epsilon = delta = F(1, 1000)
+    measurements = M([[1, 0], [1, epsilon]])
+    recovery = M([[-1 / epsilon, 1 / epsilon]])
+    clean = mm(measurements, v(2, 3))
+    noise = v(-delta, delta)
+    noisy = add(clean, noise)
+    results['noisy-repair'] = {'clean': clean, 'noisy': noisy,
+        'recovered': mm(recovery, noisy)[0][0],
+        'noise_gain': norm_inf(recovery), 'error': mm(recovery, noise)[0][0]}
+    assert rank(measurements) == 2 and mm(recovery, measurements) == M([[0, 1]])
+    assert results['noisy-repair']['error'] == norm_inf(recovery) * delta
+
+    shear, R = M([[1, 1], [0, 1]]), M([[1, 0]])
+    observation = R + mm(R, shear)
+    recovering = inverse2(observation)
+    results['observation-history'] = {'observations': observation, 'inverse': recovering}
+    assert rank(R) == 1 and rank(observation) == 2
+    assert mm(recovering, observation) == I
+    assert mm(R, v(0, 0)) == mm(R, v(0, 1))
+    assert mm(observation, v(0, 0)) != mm(observation, v(0, 1))
+
+    def power(a, n):
+        answer = eye(len(a))
+        for _ in range(n):
+            answer = mm(answer, a)
+        return answer
+
+    exact = M([[1, 0], [0, F(1, 2)]])
+    approximate = M([[1, 0], [0, F(2, 5)]])
+    difference = sub(power(exact, 3), power(approximate, 3))
+    results['repeated-error'] = {'difference': difference,
+        'norm': norm_inf(difference), 'bound': F(3, 10)}
+    assert norm_inf(difference) <= F(3, 10)
+    # A noncommuting pair detects the invalid scalar-factorization shortcut.
+    other = M([[2, 0], [1, 1]])
+    assert mm(shear, other) != mm(other, shear)
+    for n in range(1, 7):
+        telescoped = zero(2, 2)
+        for k in range(n):
+            term = mm(mm(power(shear, n - 1 - k), sub(shear, other)), power(other, k))
+            telescoped = add(telescoped, term)
+        assert telescoped == sub(power(shear, n), power(other, n))
+
+    coefficients = v(0, 1, 3, 1)
+    falling_values, ordinary_values = M([[1, 4, 12, 24]]), M([[1, 4, 16, 64]])
+    results['polynomial-observation'] = {
+        'transported': mm(falling_values, coefficients)[0][0],
+        'unchanged': mm(ordinary_values, coefficients)[0][0]}
+    assert results['polynomial-observation']['transported'] == 4 ** 3
+    assert results['polynomial-observation']['unchanged'] != 4 ** 3
+    return results
+
+
 def run_checks():
     groups = {name: list(check()) for name, check in CHECKS.items()}
-    return {'result': 'PASS', 'finite_example_groups': sum(map(len, groups.values())),
+    supplementary = supplementary_audits()
+    return {'result': 'PASS', 'finite_example_groups': sum(map(len, groups.values())) + len(supplementary),
             'chapters': groups, 'arithmetic': 'exact rational',
+            'supplementary_audits': sorted(supplementary),
             'scope': 'Specified finite examples and failure controls; no general theorem or Lean certification.'}
 
 

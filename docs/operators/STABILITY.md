@@ -75,6 +75,42 @@ norm, $\|Ex\|_2^2=72\le9\cdot13=\|E\|_2^2\|x\|_2^2$.
 The bound applies to every input; this particular input need not attain it.
 Relative error additionally needs a specified nonzero reference magnitude.
 
+### Budget error over several updates
+
+Let $T$ and $\widetilde T$ be bounded linear endomorphisms of one normed space.
+For an integer $n\ge1$, a telescoping identity gives
+
+```math
+T^n-\widetilde T^n=
+\sum_{k=0}^{n-1}T^{n-1-k}(T-\widetilde T)\widetilde T^k.
+```
+
+Consecutive terms cancel after expanding the difference. No commutation
+assumption is needed. If $\|T\|,\|\widetilde T\|\le M$, with $M>0$,
+and $\|T-\widetilde T\|\le\epsilon$, then
+
+```math
+\|T^n-\widetilde T^n\|\le nM^{n-1}\epsilon.
+```
+
+The estimate records both the one-step defect and possible amplification
+over the requested number of updates. It can be conservative. For
+$T=\operatorname{diag}(1,1/2)$ and
+$\widetilde T=\operatorname{diag}(1,2/5)$ in Euclidean norm, take
+$M=1$ and $\epsilon=1/10$. After three updates,
+
+```math
+T^3-\widetilde T^3=\operatorname{diag}(0,61/1000),\qquad
+\|T^3-\widetilde T^3\|_2=61/1000\le3/10.
+```
+
+If the starting input is also perturbed, compare
+$T^nx$ with $\widetilde T^n(x+\eta)$. The corresponding bound is
+$nM^{n-1}\epsilon\|x\|+M^n\|\eta\|$. Arithmetic or measurement error
+injected at each step must be propagated from that step onward as well.
+A tolerance for one update is therefore only one part of a repeated-update
+error budget.
+
 ## 4. Coordinate conditioning
 
 For invertible $C$ on a nonzero finite-dimensional normed space, define
