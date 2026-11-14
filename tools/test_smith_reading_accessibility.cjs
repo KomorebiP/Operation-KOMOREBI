@@ -24,7 +24,24 @@ const expected = require('../research/smith-chart/unified/READING_REVIEW.json').
         const headings=[...document.querySelectorAll('article :is(h2,h3,h4,h5,h6)')];
         let previous=1;const jumps=[];
         for(const h of headings){const level=Number(h.tagName[1]);if(level>previous+1)jumps.push(h.id);previous=level;}
+        const rgb=s=>(s.match(/[\d.]+/g)||[]).map(Number);
+        const luminance=v=>v.slice(0,3).map(x=>x/255).map(x=>x<=.04045?x/12.92:((x+.055)/1.055)**2.4).reduce((a,x,i)=>a+x*[.2126,.7152,.0722][i],0);
+        const contrastPairs=new Map();
+        for(const el of document.querySelectorAll('#smith-research *')){
+          if(el.closest('script,style,svg,mjx-container,.arithmatex')||!el.getClientRects().length)continue;
+          const text=[...el.childNodes].filter(x=>x.nodeType===3).map(x=>x.textContent.trim()).join(' ').trim();if(!text)continue;
+          const style=getComputedStyle(el),fg=rgb(style.color);let bg=[255,255,255],opacity=fg[3]??1;
+          const chain=[];for(let a=el;a;a=a.parentElement)chain.unshift(a);
+          for(const a of chain){const s=getComputedStyle(a),c=rgb(s.backgroundColor),alpha=c[3]??1;opacity*=Number(s.opacity);if(c.length>=3&&alpha)bg=bg.map((x,i)=>c[i]*alpha+x*(1-alpha));}
+          const ink=fg.slice(0,3).map((x,i)=>x*opacity+bg[i]*(1-opacity));
+          const [low,high]=[luminance(ink),luminance(bg)].sort((a,b)=>a-b),ratio=(high+.05)/(low+.05);
+          const large=parseFloat(style.fontSize)>=24||(parseFloat(style.fontSize)>=18.6667&&parseInt(style.fontWeight)>=700),minimum=large?3:4.5;
+          const key=[ink.join(','),bg.join(','),minimum].join('|');
+          if(!contrastPairs.has(key))contrastPairs.set(key,{contrast:Math.round(ratio*1000)/1000,minimum,pass:ratio>=minimum,sample:text.slice(0,100)});
+        }
+        const htmlTextContrast={scope:'Visible HTML text; excludes source artwork, MathJax and external controls',pairs:contrastPairs.size,failures:[...contrastPairs.values()].filter(x=>!x.pass)};
         return {
+          htmlTextContrast,
           tables:tables.length,unnamedTables:tables.filter(t=>!t.caption?.textContent.trim()).length,
           unfocusableTables:tables.filter(t=>t.parentElement.tabIndex!==0||t.parentElement.getAttribute('role')!=='region'||!t.parentElement.getAttribute('aria-label')).length,
           missingHeaderScopes:document.querySelectorAll('article th:not([scope])').length,
@@ -43,6 +60,7 @@ const expected = require('../research/smith-chart/unified/READING_REVIEW.json').
       });
       if(data.tables!==35||data.figures!==51||data.descriptions!==51||data.unnamedTables||data.unfocusableTables||data.missingHeaderScopes||data.inaccessiblePre||data.brokenFigureDetails||data.headingJumps.length||!data.guide||data.overflow||data.math!==expected||data.mathErrors||data.lang!=='en')throw new Error(name+': '+JSON.stringify(data));
       if(js&&(data.renderedMath<expected||data.assistiveMath<expected||!data.mathMenu))throw new Error('Mathematical rendering or assistive markup is unavailable: '+name);
+      if(data.htmlTextContrast.failures.length)throw new Error('HTML text contrast failed: '+name+' '+JSON.stringify(data.htmlTextContrast));
       const disclosure=page.locator('#smith-figure-description-20');
       await disclosure.locator('summary').focus();await page.keyboard.press('Enter');
       if(!await disclosure.evaluate(el=>el.open))throw new Error('Figure description cannot be opened with keyboard');
