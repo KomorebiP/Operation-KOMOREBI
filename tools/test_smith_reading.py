@@ -64,7 +64,7 @@ class ReadingTests(unittest.TestCase):
         self.assertEqual(len(figures),51)
         for i,n in enumerate(figures,1):
             fragment=self.final[n['start']:n['end']]
-            self.assertEqual(re.findall(r'<figcaption><strong>Figure (\d+)\.</strong>',fragment),[str(i)])
+            self.assertEqual(re.findall(r'<figcaption\b[^>]*><strong>Figure (\d+)\.</strong>',fragment),[str(i)])
             self.assertEqual(len(re.findall(r'Figure \d+\.',fragment)),1)
         for n in new.nodes:
             href=n['attrs'].get('href','')
@@ -84,5 +84,58 @@ class ReadingTests(unittest.TestCase):
         text=e.prose(self.final)
         self.assertNotRegex(text,re.compile(r'\bdraft\b|superseded|predecessor|checkpoint|outstanding|remains? open|remaining work|we have not proved',re.I))
         self.assertNotRegex(text,re.compile(r'\b(?:terminal|vertices|totals|below|minus|value|radius|baseline|all|step)\d',re.I))
+    def test_reading_support_is_bound_to_its_reviewed_sources(self):
+        path=ROOT/book.BASE/'reader-support.json'
+        record=json.loads(path.read_bytes())
+        self.assertEqual(self.review['reader_support']['support_sha256'],hashlib.sha256(path.read_bytes()).hexdigest())
+        self.assertEqual(record['guide_sha256'],hashlib.sha256((ROOT/record['guide']).read_bytes()).hexdigest())
+        self.assertIn('id="reading-guide"',self.final)
+        with self.assertRaisesRegex(ValueError,'source changed'):
+            e.reader_support(ROOT,'<article>Unreviewed input</article>')
+    def test_each_figure_has_a_source_bound_text_alternative(self):
+        source=e.Source(self.final)
+        figures=[n for n in source.nodes if n['tag']=='figure']
+        for index,node in enumerate(figures,1):
+            fragment=self.final[node['start']:node['end']]
+            self.assertIn('aria-details="smith-figure-description-'+str(index)+'"',fragment)
+            self.assertIn('<summary>Text description of figure '+str(index)+'</summary>',fragment)
+            self.assertEqual(fragment.count('class="figure-description"'),1)
+            self.assertNotIn('alt="Python-generated',fragment)
+    def test_tables_and_preformatted_examples_have_reading_semantics(self):
+        source=e.Source(self.final)
+        for node in source.nodes:
+            if node['tag']=='table':
+                fragment=self.final[node['start']:node['end']]
+                self.assertEqual(len(re.findall('<caption\\b',fragment)),1)
+                self.assertTrue(all('scope=' in tag for tag in re.findall('<th(?:\\s[^>]*)?>',fragment)))
+                parent=source.nodes[node['parent']]
+                self.assertEqual(parent['attrs'].get('tabindex'),'0')
+                self.assertEqual(parent['attrs'].get('role'),'region')
+                self.assertTrue(parent['attrs'].get('aria-label'))
+            if node['tag']=='pre':
+                self.assertEqual(node['attrs'].get('tabindex'),'0')
+                self.assertTrue(node['attrs'].get('aria-label'))
+    def test_source_notation_survives_markdown_rendering(self):
+        self.assertIn('dP*Q-P*dQ',self.final)
+        self.assertIn("k'_e differs relatively from k_e",self.final)
+        self.assertIn('A_j*x=(Gamma_Z(s_j)-h_j)*(P(s_j)+Q(s_j))',self.final)
+        self.assertIn(r'\[N:(12,51,95,111,81,33,6),\]',self.final)
+        self.assertIn(r'\[D:(17,68,139,164,126,57,10).\]',self.final)
+        for node in e.Source(self.final).blocks():
+            if node['tag']=='p':self.assertNotIn('$',e.MATH.sub('',node['html']))
+    def test_described_figure_accepts_only_its_two_bound_line_endings(self):
+        record=json.loads((ROOT/book.BASE/'reader-support.json').read_bytes())
+        entries=[x for x in record['figures'] if x.get('checkout_sha256')]
+        self.assertEqual(len(entries),1)
+        entry=entries[0];path=ROOT/entry['path'];raw=path.read_bytes();lf=raw.replace(b'\r\n',b'\n')
+        self.assertEqual(hashlib.sha256(lf).hexdigest(),entry['source_sha256'])
+        self.assertEqual(hashlib.sha256(lf.replace(b'\n',b'\r\n')).hexdigest(),entry['checkout_sha256'])
+        original=Path.read_bytes
+        for variant in (lf,lf.replace(b'\n',b'\r\n')):
+            def read(candidate):return variant if candidate==path else original(candidate)
+            with patch.object(Path,'read_bytes',read):self.assertEqual(e.finalize(ROOT,self.raw),self.final)
+        def changed(candidate):return lf+b'<!-- changed -->' if candidate==path else original(candidate)
+        with patch.object(Path,'read_bytes',changed),self.assertRaisesRegex(ValueError,'described figure source changed'):
+            e.finalize(ROOT,self.raw)
 
 if __name__=='__main__':unittest.main()

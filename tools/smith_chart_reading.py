@@ -179,6 +179,95 @@ def polish_text(body,rules):
         if rule.get('expected_count') is not None and count!=rule['expected_count']:raise ValueError('Smith proofreading rule count changed: '+rule['pattern'])
     return splices(body,parser.changes),parser.counts
 
+def reader_support(root,body):
+    """Add source-bound explanations and semantic reading aids to the edition."""
+    from smith_chart_continuation import render,load
+    record=json.loads((root/'research/smith-chart/unified/reader-support.json').read_bytes())
+    archive_files=None
+    for edit in record['edits']:
+        repair=edit.get('mathematical_repair')
+        if not repair:continue
+        if 'archive' in repair:
+            if archive_files is None:_,archive_files=load(root)
+            raw=archive_files[repair['archive']][repair['member']]
+        else:raw=(root/repair['source_path']).read_bytes()
+        if hashlib.sha256(raw).hexdigest()!=repair['source_sha256'] or repair['source_fragment'] not in raw.decode('utf-8').replace('\r\n','\n'):
+            raise ValueError('Smith reader restoration source changed')
+    body=apply_edits(body,record)
+    guide_raw=(root/record['guide']).read_bytes()
+    if hashlib.sha256(guide_raw).hexdigest()!=record['guide_sha256']:
+        raise ValueError('Smith reader guide changed without review')
+    guide=render(guide_raw.decode('utf-8'))
+    guide=re.sub(r'(<h2\b[^>]*\bid=")[^"]+"',r'\1reading-guide"',guide,count=1)
+    guide=re.sub(r'(<h[3-6]\b[^>]*\bid=")([^"]+)"',r'\1reader-guide--\2"',guide)
+    article=next(n for n in Source(body).nodes if n['tag']=='article')
+    body=body[:article['open_end']]+'<section class="reader-guide" aria-labelledby="reading-guide">'+guide+'</section>'+body[article['open_end']:]
+    body=body.replace('<div class="toc-links">','<div class="toc-links"><a href="#reading-guide">Reading guide and engineering meaning</a>',1)
+    body=re.sub(r'(<nav class="quick-nav"[^>]*>)',r'\1<a href="#reading-guide">Reading guide</a>',body,count=1)
+    source=Source(body);changes=[]
+    figures=[n for n in source.nodes if n['tag']=='figure']
+    if len(figures)!=len(record['figures']):raise ValueError('Smith described figure inventory changed')
+    for index,(node,entry) in enumerate(zip(figures,record['figures']),1):
+        fragment=body[node['start']:node['end']]
+        image=re.search(r'<img\b[^>]*\bsrc="([^"]+)"[^>]*>',fragment)
+        if not image or image[1].split('/')[-1]!=entry['file'] or entry['number']!=index:
+            raise ValueError('Smith described figure order changed')
+        if entry.get('path'):raw=(root/entry['path']).read_bytes()
+        else:
+            if archive_files is None:_,archive_files=load(root)
+            raw=archive_files[entry['archive']][entry['member']]
+        if hashlib.sha256(raw).hexdigest() not in {entry['source_sha256'],entry.get('checkout_sha256')}:
+            raise ValueError('Smith described figure source changed')
+        image_tag=re.sub(r'\balt="[^"]*"',lambda m:'alt="'+html.escape(entry['alt'],quote=True)+'"',image[0])
+        if 'aria-details=' in image_tag:raise ValueError('Unexpected pre-existing figure detail binding')
+        detail_id='smith-figure-description-'+str(index)
+        image_tag=image_tag[:-1]+' aria-details="'+detail_id+'">'
+        fragment=fragment[:image.start()]+image_tag+fragment[image.end():]
+        fragment=re.sub(r'(<button\b[^>]*\bclass="[^"]*\bfigure-open\b[^"]*"[^>]*>).*?(</button>)',r'\1Open diagram\2',fragment,flags=re.S)
+        caption=re.search(r'<figcaption([^>]*)>(.*?)</figcaption>',fragment,re.S)
+        if not caption:raise ValueError('Missing described Smith figure caption')
+        existing_id=re.search(r'\bid="([^"]+)"',caption[1])
+        caption_id=existing_id[1] if existing_id else 'smith-figure-caption-'+str(index)
+        caption_attrs=caption[1] if existing_id else caption[1]+' id="'+caption_id+'"'
+        caption_body=caption[2]
+        if entry.get('caption'):
+            if MATH.search(caption_body):raise ValueError('Descriptive caption would replace retained mathematics')
+            caption_body='<strong>Figure '+str(index)+'.</strong> '+html.escape(entry['caption'])
+        elif prose(caption_body)[-1] not in '.!?':caption_body+='.'
+        replacement='<figcaption'+caption_attrs+'>'+caption_body+'</figcaption>'
+        fragment=fragment[:caption.start()]+replacement+fragment[caption.end():]
+        description=('<details class="figure-description" id="'+detail_id+'"><summary>Text description of figure '+str(index)+
+            '</summary><div><p>'+html.escape(entry['description'])+'</p></div></details>')
+        fragment=fragment.replace('</figure>',description+'</figure>',1)
+        changes.append((node['start'],node['end'],fragment))
+    body=splices(body,changes)
+    source=Source(body);changes=[];wrappers=set();heading='Reading example';table_number=0;pre_number=0
+    for node in source.nodes:
+        tag=node['tag'];attrs=node['attrs']
+        if tag in {'h2','h3'}:heading=prose(body[node['start']:node['end']]).replace('[math]','the stated parameter')
+        if tag=='table':
+            table_number+=1;fragment=body[node['start']:node['end']]
+            if '<caption' not in fragment:
+                title=html.escape('Table '+str(table_number)+'. '+heading)
+                end=fragment.index('>')+1
+                fragment=fragment[:end]+'<caption class="table-caption">'+title+'</caption>'+fragment[end:]
+            fragment=re.sub(r'<th(\s[^>]*)?>',lambda m:'<th'+(m[1] or '')+('' if 'scope=' in (m[1] or '') else ' scope="col"')+'>',fragment)
+            parent=source.nodes[node['parent']] if node['parent'] is not None else None
+            if not parent or not set(parent['attrs'].get('class','').split())&{'table-wrap','table-scroll'}:
+                fragment='<div class="table-scroll" tabindex="0" role="region" aria-label="'+html.escape('Scrollable table '+str(table_number)+'. '+heading,quote=True)+'">'+fragment+'</div>'
+            elif parent['start'] not in wrappers:
+                opening=body[parent['start']:parent['open_end']]
+                for attr,value in [('tabindex','0'),('role','region'),('aria-label','Scrollable table '+str(table_number)+'. '+heading)]:
+                    if attr not in parent['attrs']:opening=opening[:-1]+' '+attr+'="'+html.escape(value,quote=True)+'">'
+                changes.append((parent['start'],parent['open_end'],opening));wrappers.add(parent['start'])
+            changes.append((node['start'],node['end'],fragment))
+        if tag=='pre' and 'tabindex' not in attrs:
+            pre_number+=1;opening=body[node['start']:node['open_end']]
+            label=html.escape('Preformatted example '+str(pre_number)+'. '+heading,quote=True)
+            changes.append((node['start'],node['open_end'],opening[:-1]+' tabindex="0" role="region" aria-label="'+label+'">'))
+    return splices(body,changes)
+
+
 def finalize(root,body,site=None):
     record=json.loads((root/EDITION).read_bytes())
     for edit in record['edits']:
@@ -209,4 +298,4 @@ def finalize(root,body,site=None):
     result,_=polish_text(result,record.get('text_rules',[]))
     for phrase in record['forbidden_visible_phrases']:
         if re.search(phrase,prose(result),re.I):raise ValueError('Obsolete research-log language in final reading: '+phrase)
-    return result
+    return reader_support(root,result)

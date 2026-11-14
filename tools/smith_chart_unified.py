@@ -297,6 +297,7 @@ def publish_sources(site):
     source_files += [site.root/'docs/demonstrations'/ (name+'.md') for name in ('SMITH_CHART','SMITH_FIRST_ORDER_RL','SMITH_SINGULAR_COMPLETION')]
     source_files += [site.root/'docs/demonstrations/figures'/name for name in ('smith-first-order-rl.svg','smith-two-packet-feasibility.svg')]
     source_files += [site.root/'tools'/name for name in ('smith_chart_unified.py','smith_chart_continuation.py','smith_chart_research.py','smith_chart_reading.py')]
+    source_files += [site.root/'website/assets'/name for name in ('smith-research.css','smith-book.css','smith-research.js','smith-research-mathjax.js')]
     target = site.output/'downloads/smith-rlc-current-source.zip'
     target.parent.mkdir(parents=True,exist_ok=True)
     hashes = {}
