@@ -2,24 +2,25 @@
 
 **Komorebi P. · Research checkpoint · 13 November 2026**
 
-How much of an electronic Hamiltonian can be recovered from a few of its
-actions on known states? This project studies that question through exact
-finite models, then asks which conclusions survive numerical error and
-chemical restrictions.
-
 For the real, spin-free **three-spatial-orbital sector with two alpha and one
-beta electrons**, the answer is precise: the nine-state Hamiltonian family
+beta electrons**, the result is precise: the nine-state Hamiltonian family
 has **21 independent parameters**, and **exactly three complete action
 vectors** identify every member. A fixed probe design, an exact rational
 decoder and rigorous error bounds accompany the proof.
+
+The question is how much of an electronic Hamiltonian can be recovered
+from its actions on a few known states. This project first answers that
+question for a specified finite family, then separates numerical recovery
+error from the additional assumptions needed for a chemical calculation.
 
 > This closes a specified finite-family recovery problem. The molecular
 > example certifies arithmetic in a reduced H10 model. Novelty, approximation
 > error for the full molecule and a practical speed advantage remain open.
 
-[Read the normal-form proof](https://KomorebiP.github.io/Operation-KOMOREBI/read/computational-chemistry/normal-form.html)
+[Start with notation and reading routes](https://KomorebiP.github.io/Operation-KOMOREBI/read/computational-chemistry/notation.html)
+· [Read the normal-form proof](https://KomorebiP.github.io/Operation-KOMOREBI/read/computational-chemistry/normal-form.html)
 · [Read the three-query theorem](https://KomorebiP.github.io/Operation-KOMOREBI/read/computational-chemistry/three-queries.html)
-· [Download the focused replay bundle](https://KomorebiP.github.io/Operation-KOMOREBI/assets/chemistry/stage14/Stage14_Fixed_Spin_Recovery.zip)
+· [Download the validated replay bundle](https://KomorebiP.github.io/Operation-KOMOREBI/assets/chemistry/validation-v1/Stage14_Validated_Replay.zip)
 · [Return to the Physics collection](PHYSICS_COLLECTION.md)
 
 ## What is being recovered?
@@ -38,7 +39,7 @@ symmetry. These give 27 input coefficients, but six combinations are
 redundant after restriction to this sector. The resulting operator space
 has dimension 21. The energy shift is included.
 
-An **action query** supplies a known real nine-component vector and returns
+An **action query** supplies a known real vector with nine components and returns
 the complete vector obtained by applying the unknown Hamiltonian to it.
 This is a classical matrix-vector oracle model. Three such queries do not
 mean three scalar expectation measurements or three quantum experiments.
@@ -126,7 +127,9 @@ response at energy \(E\) and positive broadening \(\eta\) by
 g=b^{\mathsf T}\bigl((E+i\eta)I-H\bigr)^{-1}b.
 ```
 
-The recovered center \(\widehat g\) obeys
+The recovered center is
+\(\widehat g=\widehat b^{\mathsf T}((E+i\eta)I-\widehat H)^{-1}\widehat b\).
+It obeys
 
 ```math
 |g-\widehat g|\le
@@ -139,6 +142,13 @@ roots are enclosed outward by rational bounds. These certificates are
 conditional on valid action and source error caps. The molecular example
 below measures its action cap independently.
 
+Zero noise, an inconsistent cache and a singleton compatible set are
+handled explicitly. Positivity **existence** is distinct from a guarantee
+that **every** compatible operator has a positive-integral representative.
+Failing a sufficient all-compatible margin does not imply infeasibility.
+The [complete case distinctions](https://KomorebiP.github.io/Operation-KOMOREBI/read/computational-chemistry/three-queries.html#positivity-existence-and-an-all-compatible-guarantee)
+also explain when the decoder returns an unresolved feasibility status.
+
 ## Information beyond total spin
 
 An exact example separates two operators that have the same three-probe
@@ -146,7 +156,14 @@ cache, preserve the same total-spin operator and share the spectral interval
 \([-1,1]\). One belongs to the positive-integral family; the other lies
 outside the integral-symmetry family.
 
-Their pi-scaled local density of states differs by about **0.06140**. At the
+For a normalized source, the broadened source-resolved density is
+\(\rho_b=-\operatorname{Im}(g)/\pi\). Its **pi-scaled** value is
+\(\ell_b=\pi\rho_b=-\operatorname{Im}(g)\); it is not the total density
+obtained by tracing over all sources. A response disk of radius \(R_g\)
+gives an interval of half-width \(R_g\) for \(\ell_b\), or \(R_g/\pi\)
+for \(\rho_b\).
+
+The example's pi-scaled densities differ by about **0.06140**. At the
 stated nonzero action and source error caps, the structured response radius
 is below **0.001336**, excluding the outside-family response. This proves a
 strict information gain from integral structure even after spin conservation
@@ -157,7 +174,9 @@ advantage over a method targeted at one observable.
 
 ## A reduced model from the H10 integrals
 
-The arithmetic test starts from the stored H10 integral fixture. Spatial
+The arithmetic test starts from the stored H10 integral fixture: ten
+hydrogen atoms in a linear chain, with adjacent separation 1.4 angstroms,
+in the STO-3G basis. Spatial
 orbitals 0, 1 and 2 are frozen doubly occupied, orbitals 3, 4 and 5 are
 active, and orbitals 6 through 9 are empty. The active sector has two alpha
 and one beta electrons. Symmetry completion of the stored integrals is
@@ -166,16 +185,17 @@ defined explicitly before evaluation.
 The frozen-core formula agrees exactly with an embedded ladder-operator
 projection. Three binary64 actions are then compared against rational
 reference actions, including the error from converting the Hamiltonian to
-binary64.
+binary64. In the active-space formulas, orbitals 3, 4 and 5 are relabeled
+as 0, 1 and 2; the frozen occupations are implicit.
 
 | Quantity | Checked result |
 |---|---|
 | Active determinant space | 9 states |
-| Aggregate action-error cap | Approximately \(2.092\times10^{-15}\) |
+| Aggregate action-error cap | Approximately \(2.092\times10^{-15}\) Hartree |
 | Broadening | \(0.01\) Hartree |
 | Source | First active determinant, exact norm 1 |
-| Response center | Approximately \(-16.9789009973742-3.17602569421687i\) |
-| Certified response radius | Less than \(9.314\times10^{-11}\) |
+| Response center | Approximately \(-16.9789009973742-3.17602569421687i\) per Hartree |
+| Certified response radius | Less than \(9.314\times10^{-11}\) per Hartree |
 | Integral admissibility | Exact positivity and a positive margin for every compatible operator |
 
 The disk contains the exact rational response of this declared nine-state
@@ -202,19 +222,42 @@ The proofs received a same-author adversarial self-review. A second matrix
 implementation is a computational cross-check, not independent expert
 review or proof-assistant verification.
 
-- [Read the proof self-review](https://KomorebiP.github.io/Operation-KOMOREBI/read/computational-chemistry/review.html).
-- [Read the exact audit results](https://KomorebiP.github.io/Operation-KOMOREBI/assets/chemistry/stage14/chemistry_stage14/exact-audit-001/checks.json).
-- [Download the focused replay bundle](https://KomorebiP.github.io/Operation-KOMOREBI/assets/chemistry/stage14/Stage14_Fixed_Spin_Recovery.zip): proofs, Python code, probes, saved certificates and the required input arrays.
+The reading review added **62 exact checks covering 174 aggregated cases**,
+including the full coefficient dictionaries, positivity and parser
+boundaries, 108 coupling examples and a joint-error example. These finite
+checks support the written derivations; they do not replace the general
+proofs. Fresh bounded-run manifests and a standard-library verifier are
+included in the validated replay bundle.
+
+- [Read the review and correction report](https://KomorebiP.github.io/Operation-KOMOREBI/read/computational-chemistry/review.html).
+- [Read the fresh exact audit results](https://KomorebiP.github.io/Operation-KOMOREBI/assets/chemistry/validation-v1/validation/exact-001/checks.json).
+- [Inspect the added derivation and boundary checks](https://KomorebiP.github.io/Operation-KOMOREBI/assets/chemistry/validation-v1/validation/extensions-001/checks.json).
+- [Download the validated replay bundle](https://KomorebiP.github.io/Operation-KOMOREBI/assets/chemistry/validation-v1/Stage14_Validated_Replay.zip): proofs, code, probes, input arrays, saved certificates, completed-run manifests and a verifier.
 - [Follow the replay instructions](https://KomorebiP.github.io/Operation-KOMOREBI/read/computational-chemistry/reproduce.html).
-- [Inspect the export manifest](https://KomorebiP.github.io/Operation-KOMOREBI/assets/chemistry/stage14/export.json) for file hashes and input-view provenance.
+- [Inspect the validated export manifest](https://KomorebiP.github.io/Operation-KOMOREBI/assets/chemistry/validation-v1/export.json) for file hashes and input-view provenance.
+- [Obtain the original focused archive](https://KomorebiP.github.io/Operation-KOMOREBI/assets/chemistry/stage14/Stage14_Fixed_Spin_Recovery.zip) as a separately identified historical export.
 
 The small replay input retains exactly the shapes, types and element bytes
 of the original fixture's `h1`, `eri` and `ground_energy` arrays. Unused
 state vectors are omitted. Its NPZ container hash therefore differs from
-the full original fixture; this is recorded explicitly. Replaying it gives
-the same Hamiltonian, action-error cap and response. Original host-specific
-runtime logs and the full earlier research history are outside this focused
-export.
+the full original fixture; this is recorded explicitly. The checked replay
+matched the Hamiltonian, action-error cap and response exactly. A different
+numerical environment must measure and validate its own cap. The new public
+manifests record the actual selected-array container used. The original
+machine-specific manifests and full earlier research history remain outside
+this focused export.
+
+## How a reduced certificate could reach the full model
+
+The [conditional model-error bridge](https://KomorebiP.github.io/Operation-KOMOREBI/read/computational-chemistry/model-error.html)
+proves an enclosure that combines numerical recovery error with block-model
+mismatch, discarded-space coupling, source leakage and energy-reference
+error. It also specifies the embedding and operator conventions needed
+to compare those quantities consistently.
+
+Only the reduced model's numerical cap has been measured here. The bridge
+does not supply unmeasured physical caps or establish a zero-broadening
+limit. It makes the remaining full-H10 obligations explicit.
 
 ## What remains open
 

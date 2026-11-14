@@ -359,6 +359,9 @@ class Site:
             for name in ('home.css','home-slides.js'):
                 url=self.rel('assets/'+name,path)+'?v='+hashlib.sha256((self.root/'website/assets'/name).read_bytes()).hexdigest()[:12]
                 home_assets+=('<link rel="stylesheet" href="'+url+'">') if name.endswith('.css') else ('<script defer src="'+url+'"></script>')
+        if path=='collection/COMPUTATIONAL_CHEMISTRY.html' or path.startswith('read/computational-chemistry/'):
+            url=self.rel('assets/chemistry-reading.css',path)+'?v='+hashlib.sha256((self.root/'website/assets/chemistry-reading.css').read_bytes()).hexdigest()[:12]
+            home_assets+='<link rel="stylesheet" href="'+url+'">'
         brand_assets={name:self.rel('assets/brand/'+name,path)+'?v='+hashlib.sha256(
             (self.root/'website/assets/brand'/name).read_bytes()).hexdigest()[:12]
             for name in ('komorebi-logo.svg','favicon.svg','favicon-32.png','apple-touch-icon.png')}
@@ -474,6 +477,9 @@ class Site:
                 continue
             rendered=markdown.markdown(text,extensions=['tables','fenced_code','toc','pymdownx.arithmatex'],extension_configs={'toc':{'slugify':slugify},'pymdownx.arithmatex':{'generic':True}})
             rendered=math_fences(rendered)
+            if repo=='collection' and path=='docs/COMPUTATIONAL_CHEMISTRY.md':
+                from computational_chemistry import overview_rendering
+                rendered=overview_rendering(self,rendered)
             rewrite=Rewriter(lambda target,image:self.resolve(repo,path,page,target,image))
             rewrite.feed(rendered)
             title_match=re.search(r'^#\s+(.+)',text,re.M)

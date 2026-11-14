@@ -54,11 +54,11 @@ class ChemistryCheckpointTests(unittest.TestCase):
     def test_reader_and_overview_have_shared_chrome_math_and_download_routes(self):
         with tempfile.TemporaryDirectory() as directory:
             site=fixture_site(Path(directory));report=chemistry.publish(site);site.markdown_pages()
-            self.assertEqual(report['reading_pages'],7);self.assertFalse(report['new_scientific_execution'])
-            self.assertEqual(len(site.search),9)
+            self.assertEqual(report['reading_pages'],9);self.assertFalse(report['new_scientific_execution'])
+            self.assertEqual(len(site.search),11)
             self.assertTrue(all(row['group']=='Collection' for row in site.search))
             proof_rows=[row for row in site.search if row.get('kind')=='Written proofs']
-            self.assertEqual({Path(row['url']).name for row in proof_rows},{'normal-form.html','three-queries.html','spin-comparison.html'})
+            self.assertEqual({Path(row['url']).name for row in proof_rows},{'normal-form.html','three-queries.html','spin-comparison.html','model-error.html'})
             overview=(site.output/chemistry.OVERVIEW).read_text(encoding='utf-8')
             self.assertIn('<title>Computational chemistry:',overview)
             self.assertIn('21 independent parameters',overview)
@@ -67,16 +67,57 @@ class ChemistryCheckpointTests(unittest.TestCase):
             self.assertIn('class="arithmatex"',overview)
             self.assertNotIn('language-math',overview)
             self.assertIn('../assets/chemistry/stage14/Stage14_Fixed_Spin_Recovery.zip',overview)
-            self.assertIn('world priority', (site.output/'read/computational-chemistry/reproduce.html').read_text(encoding='utf-8'))
+            self.assertIn('world-priority', (site.output/'read/computational-chemistry/reproduce.html').read_text(encoding='utf-8'))
+            self.assertIn('../assets/chemistry/validation-v1/Stage14_Validated_Replay.zip',overview)
             physics=(site.output/'collection/PHYSICS_COLLECTION.html').read_text(encoding='utf-8')
             self.assertIn('href="COMPUTATIONAL_CHEMISTRY.html"',physics)
             for _,(name,_) in chemistry.PAGES.items():
                 body=(site.output/'read/computational-chemistry'/name).read_text(encoding='utf-8')
                 self.assertIn('../../collection/COMPUTATIONAL_CHEMISTRY.html',body)
                 self.assertIn('Source identity and download',body)
+                self.assertIn('Explore the chemistry notes',body)
+                self.assertIn('chemistry-reading.css',body)
+                self.assertEqual(body.count('aria-current="page"'),1)
+                self.assertEqual(len(re.findall(r'<table\b',body)),body.count('<caption>'))
+                self.assertEqual(len(re.findall(r'<th\b',body)),body.count('<th scope="col">'))
+                self.assertEqual(len(re.findall(r'<h1\b',body)),1)
                 self.assertIn('/blob/'+'a'*40+'/',body)
                 ids=set(re.findall(r'\bid="([^"]+)"',body))
                 self.assertFalse(set(re.findall(r'href="#([^"]+)"',body))-ids)
+
+    def test_reading_edition_is_bound_to_both_current_and_original_sources(self):
+        original,_=chemistry.load(ROOT);edition=chemistry.load_edition(ROOT,original)
+        self.assertEqual(len(edition['pages']),9)
+        self.assertEqual(sum(bool(x['original_member']) for x in edition['pages']),7)
+        for page in edition['pages']:
+            if page['original_member']:self.assertEqual(page['original_sha256'],original['files'][page['original_member']]['sha256'])
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);(root/'manifests').mkdir();shutil.copyfile(ROOT/chemistry.EDITION,root/chemistry.EDITION)
+            for page in edition['pages']:
+                target=root/page['source'];target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(ROOT/page['source'],target)
+            page=edition['pages'][0];(root/page['source']).write_text('Changed source')
+            with self.assertRaisesRegex(ValueError,'source changed'):chemistry.load_edition(root,original)
+
+    def test_new_validation_binds_actual_view_and_fresh_run_dependencies(self):
+        record,files=chemistry.load_validation(ROOT)
+        self.assertEqual(len(record['validation_runs']),3)
+        self.assertIn('verify_public_replay.py',files)
+        self.assertIn('reading-edition/model-error.md',files)
+        self.assertEqual(json.loads(files['BUNDLE_CONTENTS.json'])['files'],sorted(files))
+        for run in record['validation_runs']:
+            manifest=json.loads(files[run+'/manifest.json'])
+            self.assertEqual(manifest['command'][0],'python')
+            self.assertEqual(manifest['run']['status'],'completed')
+        extensions=json.loads(files['validation/extensions-001/checks.json'])
+        self.assertEqual(extensions['aggregated_cases'],174)
+        self.assertFalse(any(b'C:\\Users\\' in value or b'C:/Users/' in value for value in files.values()))
+        current=(ROOT/'research/computational-chemistry/reading-edition/three-queries.md').read_text(encoding='utf-8')
+        self.assertIn('the estimate itself is compatible',current)
+        self.assertIn('not positive semidefinite',current)
+        self.assertIn('finite\nconvex feasibility problem',current)
+
+    def test_caption_mismatch_is_rejected(self):
+        with self.assertRaisesRegex(ValueError,'caption coverage'):chemistry.caption_tables('<table></table>',[])
 
     def test_saved_rational_certificates_support_the_displayed_numerical_bounds(self):
         _,files=chemistry.load(ROOT)
