@@ -216,7 +216,7 @@ def reader_support(root,body):
         else:
             if archive_files is None:_,archive_files=load(root)
             raw=archive_files[entry['archive']][entry['member']]
-        if hashlib.sha256(raw).hexdigest()!=entry['source_sha256']:
+        if hashlib.sha256(raw).hexdigest() not in {entry['source_sha256'],entry.get('checkout_sha256')}:
             raise ValueError('Smith described figure source changed')
         image_tag=re.sub(r'\balt="[^"]*"',lambda m:'alt="'+html.escape(entry['alt'],quote=True)+'"',image[0])
         if 'aria-details=' in image_tag:raise ValueError('Unexpected pre-existing figure detail binding')

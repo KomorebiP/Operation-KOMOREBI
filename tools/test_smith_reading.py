@@ -123,5 +123,19 @@ class ReadingTests(unittest.TestCase):
         self.assertIn(r'\[D:(17,68,139,164,126,57,10).\]',self.final)
         for node in e.Source(self.final).blocks():
             if node['tag']=='p':self.assertNotIn('$',e.MATH.sub('',node['html']))
+    def test_described_figure_accepts_only_its_two_bound_line_endings(self):
+        record=json.loads((ROOT/book.BASE/'reader-support.json').read_bytes())
+        entries=[x for x in record['figures'] if x.get('checkout_sha256')]
+        self.assertEqual(len(entries),1)
+        entry=entries[0];path=ROOT/entry['path'];raw=path.read_bytes();lf=raw.replace(b'\r\n',b'\n')
+        self.assertEqual(hashlib.sha256(lf).hexdigest(),entry['source_sha256'])
+        self.assertEqual(hashlib.sha256(lf.replace(b'\n',b'\r\n')).hexdigest(),entry['checkout_sha256'])
+        original=Path.read_bytes
+        for variant in (lf,lf.replace(b'\n',b'\r\n')):
+            def read(candidate):return variant if candidate==path else original(candidate)
+            with patch.object(Path,'read_bytes',read):self.assertEqual(e.finalize(ROOT,self.raw),self.final)
+        def changed(candidate):return lf+b'<!-- changed -->' if candidate==path else original(candidate)
+        with patch.object(Path,'read_bytes',changed),self.assertRaisesRegex(ValueError,'described figure source changed'):
+            e.finalize(ROOT,self.raw)
 
 if __name__=='__main__':unittest.main()
