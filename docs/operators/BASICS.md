@@ -197,6 +197,11 @@ while an inverse would have to undo the map. They need not coincide.
 **Check:** Record a coordinate map and its metric together before comparing
 lengths, energy, adjoints, or orthogonality in the two descriptions.
 
+The [stable-update study](DYNAMICS.md#3-choose-a-norm-that-makes-contraction-visible)
+uses a weighted maximum norm to expose contraction. It distinguishes that
+choice from transporting the original Euclidean geometry, and carries
+disturbance budgets through the same coordinate change.
+
 ## Try it: a rectangular inverse
 
 Let $A=[2\ \ {-1}]$ and $B=(1/2,0)^{\mathsf T}$. Find $AB$, $BA$,

@@ -73,6 +73,14 @@ amplification, a fourth-reading consistency check, and two fitting criteria.
 It also shows how changing sample times changes the reconstruction and its
 error bounds. An exact program and answered exercises accompany the study.
 
+The [stable-update study](operators/DYNAMICS.md) follows a two-coordinate
+system that eventually decays but first amplifies some inputs. Compare exact
+power norms with a contraction estimate, construct a decreasing quadratic
+energy, and account for a discarded transfer and repeated disturbances.
+The same calculation gives a residual-based stopping test for an affine
+iteration. Exact examples and answered exercises connect each conclusion
+to its norm and error assumptions.
+
 **First reading:** Begin with [basics](operators/BASICS.md), continue to
 [packets](operators/PACKETS.md), then work through the
 [two-coordinate audit](#a-complete-audit-of-a-two-coordinate-operation) below.
@@ -120,6 +128,7 @@ formal statements and their precise scope.
 | Compose a filter or carry it across scales | [Transfer blocks](operators/TRANSFER.md#3-compose-blocks-through-intermediate-packets), then the [signal and polyphase family](operators/catalog/E_SIGNAL.md). |
 | Decide whether a compressed state supports the next update | [Exact reduced dynamics](operators/TRANSFER.md#5-compression-and-exact-reduced-dynamics), then [recovery](operators/RECOVERY.md). |
 | Reconstruct a hidden state from a sequence of readings | [Observation and recovery](operators/OBSERVATION.md), including noise bounds, consistency checks, and changed sample times. |
+| Bound a repeated update before and after its transient | [Stable updates and transient growth](operators/DYNAMICS.md), including energy, disturbances, and a fixed-point stopping test. |
 | Compare an operation in different metrics | [Adjoints](operators/BASICS.md#8-adjoint-and-self-adjoint-operators) and [conditioning](operators/STABILITY.md#4-coordinate-conditioning), then the [metric transport family](operators/catalog/K_METRICS.md). |
 | Turn an integral or moment question into a finite functional | [Operator types](operators/BASICS.md#1-typed-operators-domains-and-codomains), then the [finite integration and observation family](operators/catalog/L_INTEGRATION.md). |
 

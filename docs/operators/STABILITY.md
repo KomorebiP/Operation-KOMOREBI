@@ -183,6 +183,12 @@ nonnegative integers $n$. A spectral radius of one therefore does not by
 itself bound all iterates. Additional structure, such as normality in a
 specified inner product, changes what spectral information controls.
 
+The [stable-update study](DYNAMICS.md) follows a matrix with both eigenvalues
+equal to $1/2$. Its exact power norm grows before decaying, while a specified
+quadratic energy decreases at every unforced update. The study also derives
+a sharp [persistent-disturbance bound](DYNAMICS.md#6-propagate-disturbances-from-the-step-where-they-enter)
+and compares it with a more conservative contraction estimate.
+
 ## 7. Finite truncation and infinite convergence
 
 Finite packet identities use finite sums. An infinite decomposition must
@@ -226,6 +232,12 @@ to the claimed error. Exact rational identities, bounded floating-point
 checks, and formal statements support different conclusions. Use the
 [verification guide](../VERIFICATION.md) and the
 [binary-rounding example](../examples/09_BINARY_ROUNDING.md) for their scope.
+
+For an iterative solver, the
+[worked fixed-point calculation](DYNAMICS.md#7-turn-an-iteration-residual-into-a-solution-error-bound)
+turns a next-iterate difference into a sufficient stopping condition. It
+computes the inverse bound and shows a residual smaller than the actual
+solution error.
 
 ## Try it: attain an operator bound
 
