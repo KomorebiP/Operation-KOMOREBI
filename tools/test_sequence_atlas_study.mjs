@@ -59,3 +59,9 @@ test('CSV and indexed copies retain missing values, signs, fractions and every l
   assert.equal(studyIndexed(model),'0 undefined\n1 2\n2 0\n3 undefined');
   assert.ok(studyCSV(analyzeStudy([huge,huge+1n],{count:2})).includes('9007199254740993'));
 });
+test('study plot scale retains huge samples and avoids overflow of a signed linear span',()=>{
+  assert.equal(analyzeStudy(Array(64).fill(10n**600n),{start:52,count:12}).plotScale,'signed-log');
+  assert.equal(analyzeStudy([10n**308n,-(10n**308n)],{count:2}).plotScale,'signed-log');
+  assert.equal(analyzeStudy(Array(64).fill(10n**600n),{transform:'mod',start:52,count:12}).plotScale,'linear');
+  assert.equal(analyzeStudy([0n,1n,3n,6n],{count:4}).plotScale,'linear');
+});

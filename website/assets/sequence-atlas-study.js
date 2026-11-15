@@ -25,7 +25,7 @@ export function setupStudy(root,terms){
     const observation=model.observation;
     $('observation').textContent=observation?`Order ${observation.order} backward differences are constant (${observation.value}) across ${observation.count} tested indices, n=${observation.start}–${observation.end}. This is a finite observation.`:'No constant difference row of orders 1–4 with at least four defined values was found in this window. This does not rule out other patterns.';
     const plot=new URL('../sequences.html',location.href);plot.hash='explorer';
-    for(const [key,value]of Object.entries({sequence:id,view:state.transform==='mod'?'mod':'standard',transform:state.transform==='mod'?'raw':state.transform,start:state.start,count:state.count,modulus:state.modulus}))plot.searchParams.set(key,String(value));$('plot').href=plot;$('plot').hidden=facts.defined===0;
+    for(const [key,value]of Object.entries({sequence:id,view:state.transform==='mod'?'mod':'standard',transform:state.transform==='mod'?'raw':state.transform,scale:model.plotScale,start:state.start,count:state.count,modulus:state.modulus}))plot.searchParams.set(key,String(value));$('plot').href=plot;$('plot').hidden=facts.defined===0;$('plot').textContent='Plot this window'+(model.plotScale==='signed-log'?' (signed log)':'');
     const search=model.search,discovery=model.discovery;
     for(const [name,values,key,fragment]of [['search',search,'q','find'],['discover',discovery,'discover','discover']]){
       $(name).hidden=!values.length;if(values.length){const url=new URL('../sequences.html',location.href);url.searchParams.set(key,values.join(','));url.hash=fragment;$(name).href=url;}else $(name).removeAttribute('href');

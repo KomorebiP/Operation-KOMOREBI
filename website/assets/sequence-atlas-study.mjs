@@ -1,4 +1,4 @@
-import {transform,exact,fraction,mod} from './sequence-atlas-core.mjs';
+import {transform,exact,fraction,mod,coordinate} from './sequence-atlas-core.mjs';
 
 export const STUDY_MODES={
   raw:['Original terms','b(n) = a(n).'],
@@ -57,7 +57,9 @@ export function analyzeStudy(input,options={}){
   if(first>=0)for(let i=first;i<window.length&&window[i]!==null&&window[i].b===1n;i++)run.push(String(window[i].a));
   const prefix=(maxDigits,maxCount)=>{const result=[];for(const value of run){if(value.replace('-','').length>maxDigits||result.length>=maxCount||(result.join(',').length+value.length+1)>20000)break;result.push(value);}return result;};
   const search=prefix(2000,8),discovery=prefix(300,32);
-  return {state,rows,facts,ladder,observation,search,discovery:discovery.length>=6?discovery:[],searchStart:first<0?null:state.start+first};
+  const coordinates=defined.map(v=>coordinate(v,'linear'));
+  const plotScale=state.transform!=='mod'&&coordinates.length&&(coordinates.some(v=>v===null)||!Number.isFinite(Math.max(...coordinates)-Math.min(...coordinates)))?'signed-log':'linear';
+  return {state,rows,facts,ladder,observation,plotScale,search,discovery:discovery.length>=6?discovery:[],searchStart:first<0?null:state.start+first};
 }
 export function studyCSV(model){return 'n,value,defined\n'+model.rows.map(row=>`${row.n},${row.value??''},${row.value!==null}`).join('\n')+'\n';}
 export function studyIndexed(model){return model.rows.map(row=>`${row.n} ${row.value??'undefined'}`).join('\n');}

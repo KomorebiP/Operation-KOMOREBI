@@ -243,6 +243,9 @@ that discovery reindexes its input from zero. Other values remain available
 in indexed copies and exact CSV/JSON downloads. CSV retains every n and a
 defined flag; JSON retains undefined positions as null and records the
 transform, window, modulus, conventions and finite observations.
+Plot links select signed-log scale when a defined value or the full signed
+range exceeds linear floating-point coordinates; modular plots stay linear.
+The link names the signed-log choice, while the study table remains exact.
 
 Copy study link preserves the applied state, and browser Back/Forward restores
 it. Invalid links display a message and the first twelve original terms;
