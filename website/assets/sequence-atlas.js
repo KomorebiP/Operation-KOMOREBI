@@ -23,7 +23,7 @@ function render(){
     const entry=known(next.sequence), values=valuesFor(next.sequence,next.start+next.count+1);
     if(next.start>=values.length-1)throw Error(`First index must be below ${values.length-1} for this sequence.`);
     const series=[{name:entry?entry.title:'Pasted sequence (unreviewed)',values}];
-    if(next.compare){const comparison=known(next.compare);series.push({name:comparison.title,values:valuesFor(next.compare,next.start+next.count+1)});}
+    if(next.compare){const comparison=known(next.compare);series.push({name:comparison.title+' (comparison)',values:valuesFor(next.compare,next.start+next.count+1)});}
     const rows=series.flatMap(s=>rowsFor(s.values,next,s.name));
     if(!rows.some(r=>r.y!==null&&r.x!==null))throw Error('No plottable values in this window. Try linear or signed logarithmic scale, or another starting index.');
     state=next;lastRows=rows;$('error').hidden=true;
@@ -50,7 +50,7 @@ function draw(rows,names){
   const modular=['mod','grid','frequency'].includes(state.view), frequency=state.view==='frequency';
   let points=rows.filter(r=>r.x!==null&&r.y!==null).map(r=>({...r,series:names.indexOf(r.name)}));
   if(frequency){points=[];names.forEach((name,series)=>{const selected=rows.filter(r=>r.name===name);for(let i=0;i<state.modulus;i++)points.push({name,n:i,x:i,y:selected.filter(r=>r.residue===i).length,value:'',raw:'',residue:i,series});});}
-  let xs=points.map(r=>r.x),ys=points.map(r=>r.y),xmin=Math.min(...xs),xmax=Math.max(...xs),ymin=Math.min(0,...ys),ymax=Math.max(...ys);
+  let xs=points.map(r=>r.x),ys=points.map(r=>r.y),xmin=Math.min(...xs),xmax=Math.max(...xs),ymin=Math.min(0,...ys),ymax=Math.max(0,...ys);
   if(state.view==='grid'){xmin=0;xmax=state.modulus-1;ymin=0;ymax=state.modulus-1;}
   if(state.view==='mod'){ymin=0;ymax=state.modulus-1;}
   if(xmin===xmax)xmax=xmin+1;if(ymin===ymax)ymax=ymin+1;
