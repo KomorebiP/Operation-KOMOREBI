@@ -3,10 +3,10 @@
 [Open the atlas](https://komorebip.github.io/Operation-KOMOREBI/sequences.html) · [Sequence derivations](demonstrations/SEQUENCE_SHAPES.md)
 
 The atlas organizes source-linked integer sequences and formulas, with exact
-term tables and an interactive plot explorer. Its initial catalogue contains
+term tables and an interactive plot explorer. Its catalogue contains
 the 21 published reciprocal families for N=2,…,8 and r=1,…,3, together with
 Bell numbers, Fubini numbers, factorials, Fibonacci numbers, and signed even
-Euler numbers. The identifiers KSEQ-000001 through KSEQ-000026 are stable.
+Euler numbers. Twelve further references add nonnegative integers, odd numbers, triangular numbers, squares, cubes, powers of two and three, Catalan numbers, central binomial coefficients, integer partitions, Lucas numbers and Pell numbers. The 38 identifiers KSEQ-000001 through KSEQ-000038 are stable.
 New entries must be appended, preserving existing identifiers.
 
 These are existing published families and classical reference sequences.
@@ -17,7 +17,7 @@ independent mathematical review, or change to the linked works’ proof status.
 
 Use sequence values, values modulo m, residue grids, residue frequencies,
 successive-term pairs, or successive-residue plots. First and second differences, partial sums, successive ratios, and
-running averages are available as transforms. Sums and averages start at
+running averages are available as transforms. Alternating signs, absolute values, binomial and inverse binomial transforms are also available. Sums and averages start at
 index zero, even when the displayed window starts later. Undefined ratios
 and initial differences are omitted. The second difference at n is
 a(n) - 2a(n-1) + a(n-2), defined from n=2 onward. Modular views require integer-valued
@@ -95,7 +95,7 @@ offsets. A match does not prove identity; no match does not establish novelty.
 
 The retained comparison report records retrieval time, export headers,
 compressed-file SHA-256 hashes, catalogue-term hash, and all finite matches.
-The bulk dumps are kept outside the public site. Only the small comparison
+The same retained bulk dumps were compared again for the expanded catalogue; their original retrieval time is preserved separately from comparison time. The bulk dumps are kept outside the public site. Only the comparison
 report and attribution are published. Refresh explicitly with:
 
 ```text
@@ -127,10 +127,50 @@ Reproduce the recorded terms for a selected entry:
 ```text
 python -B tools/sequence_atlas.py --id KSEQ-000004
 python -B -m unittest discover -s tools -p test_sequence_atlas.py -v
-node --test tools/test_sequence_atlas.mjs tools/test_sequence_atlas_search.mjs
+node --test tools/test_sequence_atlas.mjs tools/test_sequence_atlas_search.mjs tools/test_sequence_atlas_discovery.mjs
 ```
 
 Each future entry needs a definition, indexing convention, source, exact
 generator, finite test range, and separate formula/sequence originality
 assessment. Add conjectural entries with an explicit conjecture label;
 never infer novelty or proof from a matching result or a plot.
+
+## Discover connections
+
+The discovery form accepts 6–64 exact integers. It tests the original input,
+first and second differences, partial sums, alternating signs, absolute values,
+binomial and inverse binomial transforms, and omission of the first one or two
+input terms. Each usable probe must retain at least six terms. A candidate
+must match every available transformed input term consecutively in a catalogue
+entry's first 64 recorded terms; no floating-point rounding or fuzzy integer
+matching is used.
+
+The optional catalogue-transform comparison additionally tests its original
+terms, differences, sums and sign transforms. Binomial transforms are applied
+to input only in discovery. Initial undefined differences are skipped and the
+source and target indices are reported. Binomial transforms use
+b(n)=sum_{k=0}^n binom(n,k)a(k); the inverse includes (-1)^(n-k).
+All sums start at zero. Omitting terms changes only the input start position.
+
+Results rank longer matches first and prefer simpler operations; samples with
+fewer than three distinct transformed values are ranked later and labelled.
+Repeated target positions are grouped in a single suggestion, with all starting indices in the JSON. Redundant shortened-input results are omitted when the full input already matches that target transform. Up to 24 suggestions are displayed. Buttons plot the transformed input or the
+catalogue transform at the reported target indices. Pasted transformed input
+is reindexed from zero and remains labelled unreviewed. A transform too large
+for the existing plot paste limits is retained in the discovery JSON instead.
+The JSON records matched values, operations and index ranges. This is a bounded
+local discovery tool, not a full OEIS search or an identity/novelty test.
+
+Copy discovery link deliberately includes the entered terms and comparison
+option; no background queries are sent to OEIS. The explicit external link uses
+signed term search. The local example follows squares to odd first differences.
+Topic links offer a compact browse index, and Random entry opens a local record.
+
+Entry pages now have permanent section anchors for definitions/indexing,
+formulas/recurrences, worked examples, programs, computed connections, exact
+data, and references. The program block is a named keyboard-focusable scroll region, including without JavaScript. Copyable self-contained Python programs reproduce the
+first sixteen terms with the standard library. Four exact transforms are
+checked over twelve terms to suggest cross-references; each is labelled with
+both index origins and finite scope. Similar-topic navigation is separate.
+The full snapshot comparison remains in catalogue JSON; pages show at most
+twelve hits per entry, with its declared OEIS reference first when present.

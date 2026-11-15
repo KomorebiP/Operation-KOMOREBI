@@ -6,6 +6,36 @@ const path=require('node:path');
 const base=process.argv[2]||'http://127.0.0.1:8826/';
 const out=process.argv[3]||'sequence-atlas-browser';
 fs.mkdirSync(out,{recursive:true});
+async function discoveryChecks(page,width){
+  const external=[];const watch=request=>{if(request.url().includes('oeis.org/search'))external.push(request.url());};page.on('request',watch);
+  await page.locator('#sa-discovery-example').click();
+  assert.ok((await page.locator('#sa-discovery-status').textContent()).includes('8 input terms'));
+  const odd=page.locator('#sa-discovery-results li').filter({has:page.getByRole('heading',{name:'Positive odd numbers',exact:true})}).first();
+  assert.ok((await odd.textContent()).includes('indices 1–7'));
+  await page.locator('#sa-discovery-share').click();const link=await page.evaluate(()=>navigator.clipboard.readText());
+  assert.equal(new URL(link).searchParams.get('dc'),'1');assert.equal(new URL(link).hash,'#discover');
+  await page.goto(link,{waitUntil:'networkidle'});await page.locator('#sa-workspace').waitFor({state:'visible'});
+  assert.ok((await page.locator('#sa-discovery-status').textContent()).includes('8 input terms'));
+  const pending=page.waitForEvent('download');await page.locator('#sa-discovery-export').click();const download=await pending;
+  const report=JSON.parse(fs.readFileSync(await download.path(),'utf8'));assert.equal(report.catalogueEntries,38);assert.equal(report.input.length,8);await download.saveAs(path.join(out,`discovery-${width}.json`));
+  await odd.getByRole('button',{name:'Plot transformed input',exact:true}).click();
+  assert.equal(await page.inputValue('#sa-sequence'),'custom');assert.equal(await page.locator('#sa-values tr').count(),7);
+  assert.equal(await page.locator('#sa-values tr').last().locator('td').nth(2).textContent(),'13');
+  await odd.getByRole('button',{name:'Plot catalogue match',exact:true}).click();assert.equal(await page.inputValue('#sa-sequence'),'KSEQ-000028');
+  await page.locator('#sa-discovery-input').fill('1,2,3');await page.locator('#sa-discovery-form button[type=submit]').click();
+  assert.equal(await page.locator('#sa-discovery-input').getAttribute('aria-invalid'),'true');
+  await page.locator('#sa-discovery-example').click();assert.equal(await page.locator('#sa-discovery-error').isVisible(),false);
+  const bounds=await page.evaluate(()=>({width:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth}));assert.ok(bounds.scroll<=bounds.width+1,JSON.stringify(bounds));
+  await page.locator('#discover').scrollIntoViewIfNeeded();await page.screenshot({path:path.join(out,`discovery-${width}.png`),fullPage:false});
+  assert.equal(external.length,0);page.off('request',watch);
+  await page.locator('#sa-random-entry').click();await page.waitForURL(/sequences\/KSEQ-\d{6}\.html/);assert.equal(await page.locator('tbody tr').count(),64);
+  await page.goto(new URL('sequences/KSEQ-000034.html',base).href,{waitUntil:'networkidle'});
+  await page.locator('[data-copy-entry="sa-entry-program"]').click();assert.ok((await page.evaluate(()=>navigator.clipboard.readText())).includes('comb(2*n,n)//(n+1)'));
+  await page.locator('[data-copy-entry="sa-entry-formula"]').click();assert.ok((await page.evaluate(()=>navigator.clipboard.readText())).includes('binom(2n,n)'));
+  await page.locator('.sa-entry-outline a[href="#programs"]').click();assert.equal(new URL(page.url()).hash,'#programs');
+  await page.screenshot({path:path.join(out,`entry-${width}.png`),fullPage:false});
+  await page.goto(new URL('sequences.html',base).href,{waitUntil:'networkidle'});await page.locator('#sa-workspace').waitFor({state:'visible'});
+}
 async function refinementChecks(page){
   await page.locator('#sa-query').fill('n:4 r:2');
   assert.equal(await page.locator('[data-sequence]:visible').count(),1);
@@ -47,7 +77,7 @@ async function refinementChecks(page){
   assert.equal(await page.locator('#sa-search-error').isVisible(),false);
   assert.ok(!(await page.locator('#sa-query').getAttribute('aria-describedby')).includes('sa-search-error'));
   assert.ok(!(await page.locator('#sa-query').getAttribute('aria-describedby')).includes('sa-query-help'));
-  assert.equal(await page.locator('[data-sequence]:visible').count(),1);
+  assert.equal(await page.locator('[data-sequence]:visible').count(),2);
   await page.locator('#sa-query').press('ArrowDown');
   assert.ok(await page.evaluate(()=>Boolean(document.activeElement.closest('#sa-results'))));
   const resultFocus=await page.evaluate(()=>document.activeElement.outerHTML);
@@ -98,7 +128,7 @@ async function refinementChecks(page){
     const response=await page.goto(new URL('sequences.html',base).href,{waitUntil:'networkidle'});assert.equal(response.status(),200);
     await page.locator('#sa-workspace').waitFor({state:'visible'});
     await page.evaluate(async()=>{await document.fonts.ready;await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));});
-    assert.equal(await page.locator('[data-sequence]').count(),26);
+    assert.equal(await page.locator('[data-sequence]').count(),38);
     const layout=await page.evaluate(()=>({width:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth,h1:document.querySelectorAll('h1').length,plot:document.querySelector('#sa-plot svg').getBoundingClientRect().toJSON()}));
     assert.ok(layout.scroll<=width+1,JSON.stringify(layout));assert.equal(layout.h1,1);
     report.layouts.push(layout);
@@ -106,6 +136,7 @@ async function refinementChecks(page){
     await page.locator('#sa-plot').scrollIntoViewIfNeeded();
     await page.screenshot({path:path.join(out,`plot-${width}.png`),fullPage:false});
     await refinementChecks(page);
+    await discoveryChecks(page,width);
     await page.locator('.sa-advanced summary').click();
     for(const view of ['standard','mod','grid','frequency','pairs','mod-pairs']){
       await page.selectOption('#sa-view',view);
@@ -184,13 +215,16 @@ async function refinementChecks(page){
     const entryData=await page.evaluate(async()=>({json:await(await fetch('KSEQ-000007.json')).json(),text:await(await fetch('KSEQ-000007.txt')).text()}));
     assert.equal(entryData.json.terms.length,64);assert.ok(entryData.text.includes('0 1\n1 1\n2 69\n'));
     const entryLayout=await page.evaluate(()=>({width:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth}));assert.ok(entryLayout.scroll<=entryLayout.width+1,JSON.stringify(entryLayout));
-    report.interactions.push({width,views:6,fieldedSearch:true,wildcards:true,offsets:true,savedEntries:true,spellingSuggestions:true,searchLinks:true,parameters:true,comparison:true,invalidTransform:true,customExact:true,rovingKeyboard:true,animation:true,windowControls:true,invalidLinkRecovery:true,exports:4,shareRestore:true,entryExports:true});
+    report.interactions.push({width,discovery:true,discoveryExport:true,discoveryShare:true,programCopy:true,randomEntry:true,views:6,fieldedSearch:true,wildcards:true,offsets:true,savedEntries:true,spellingSuggestions:true,searchLinks:true,parameters:true,comparison:true,invalidTransform:true,customExact:true,rovingKeyboard:true,animation:true,windowControls:true,invalidLinkRecovery:true,exports:4,shareRestore:true,entryExports:true});
     await context.close();
   }
   const context=await browser.newContext({javaScriptEnabled:false,viewport:{width:320,height:900}});const page=await context.newPage();
-  await page.goto(new URL('sequences.html',base).href);assert.equal(await page.locator('[data-sequence]:visible').count(),26);assert.equal(await page.locator('#sa-workspace').isVisible(),false);
+  await page.goto(new URL('sequences.html',base).href);assert.equal(await page.locator('[data-sequence]:visible').count(),38);assert.equal(await page.locator('#sa-workspace').isVisible(),false);
   await page.locator('a[href="sequences/KSEQ-000007.html"]').click();assert.equal(await page.locator('tbody tr').count(),64);
-  report.noJavaScript=true;await context.close();
+  const program=page.getByRole('region',{name:'Python reproduction program',exact:true});await program.focus();
+  for(let n=0;n<5;n++)await program.press('ArrowRight');await page.waitForTimeout(200);
+  assert.ok(await program.evaluate(node=>node.scrollLeft>0),'Long code can be scrolled with the keyboard without JavaScript.');
+  report.noJavaScript=true;report.programKeyboardNoJavaScript=true;await context.close();
   const accessible=await browser.newContext({viewport:{width:320,height:1000},forcedColors:'active',reducedMotion:'reduce'});
   const accessiblePage=await accessible.newPage();accessiblePage.on('pageerror',e=>report.errors.push(e.message));
   await accessiblePage.goto(new URL('sequences.html',base).href,{waitUntil:'networkidle'});await accessiblePage.locator('#sa-workspace').waitFor({state:'visible'});
@@ -199,7 +233,10 @@ async function refinementChecks(page){
   await accessiblePage.evaluate(async()=>{await document.fonts.ready;await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)))});
   const enlarged=await accessiblePage.evaluate(()=>({width:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth}));assert.ok(enlarged.scroll<=enlarged.width+1,JSON.stringify(enlarged));
   await accessiblePage.locator('#sa-query').fill('n:4 r:2');await accessiblePage.screenshot({path:path.join(out,'enlarged-high-contrast.png'),fullPage:false});
-  report.enlargedText={percent:200,forcedColors:true,reducedMotion:true,...enlarged};await accessible.close();
+  await accessiblePage.locator('#sa-discovery-example').click();
+  const discoveryBounds=await accessiblePage.evaluate(()=>({width:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth}));assert.ok(discoveryBounds.scroll<=discoveryBounds.width+1,JSON.stringify(discoveryBounds));
+  await accessiblePage.locator('#discover').scrollIntoViewIfNeeded();await accessiblePage.screenshot({path:path.join(out,'discovery-high-contrast.png'),fullPage:false});
+  report.enlargedText={percent:200,forcedColors:true,reducedMotion:true,discovery:true,...enlarged};await accessible.close();
   const denied=await browser.newContext({viewport:{width:390,height:1000}});
   await denied.addInitScript(()=>{Object.defineProperty(window,'localStorage',{get(){throw new DOMException('Storage denied','SecurityError');}});});
   const deniedPage=await denied.newPage();deniedPage.on('pageerror',e=>report.errors.push(e.message));
@@ -207,6 +244,13 @@ async function refinementChecks(page){
   await deniedPage.locator('#sa-query').fill('id:KSEQ7');await deniedPage.locator('#sa-results [data-save-sequence="KSEQ-000007"]').click();
   assert.ok((await deniedPage.locator('#sa-action-status').textContent()).includes('storage is unavailable'));
   await deniedPage.locator('#sa-show-saved').click();assert.equal(await deniedPage.locator('[data-sequence]:visible').count(),1);
-  report.deniedStorageFallback=true;await denied.close();assert.deepEqual(report.errors,[]);await browser.close();
+  report.deniedStorageFallback=true;
+  await deniedPage.evaluate(()=>Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async()=>{throw Error('Clipboard denied');}}}));
+  await deniedPage.locator('#sa-discovery-example').click();await deniedPage.locator('#sa-discovery-share').click();
+  assert.equal(await deniedPage.evaluate(()=>document.activeElement.id),'sa-discovery-copy-text');assert.ok((await deniedPage.inputValue('#sa-discovery-copy-text')).includes('discover='));
+  await deniedPage.goto(new URL('sequences/KSEQ-000034.html',base).href,{waitUntil:'networkidle'});
+  await deniedPage.evaluate(()=>Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async()=>{throw Error('Clipboard denied');}}}));
+  await deniedPage.locator('[data-copy-entry="sa-entry-program"]').click();assert.equal(await deniedPage.evaluate(()=>document.activeElement.id),'sa-entry-copy-text');assert.ok((await deniedPage.inputValue('#sa-entry-copy-text')).includes('comb(2*n,n)'));
+  report.deniedClipboardFallback=true;await denied.close();assert.deepEqual(report.errors,[]);await browser.close();
   fs.writeFileSync(path.join(out,'report.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report));
 })().catch(e=>{console.error(e);process.exit(1);});
