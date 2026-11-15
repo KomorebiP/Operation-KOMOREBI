@@ -263,6 +263,8 @@ def build(site):
 <p><a href="assets/sequence-atlas-data.json">Download catalogue JSON and snapshot metadata</a> · <a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/docs/SEQUENCE_ATLAS.md">Maintenance and reproducibility</a> · <a href="collection/demonstrations/SEQUENCE_SHAPES.html">Sequence derivations and Python experiments</a></p>
 </section></div>'''
     body=refine_body(body,entries)
+    body=body.replace('<figure class="sa-figure">','<div id="sa-plot-presets" class="sp-preset-bar" role="group" aria-label="Plot view presets"></div><p class="sa-note">View presets keep your sequence and index window. Appearance settings are shared with the research library.</p><div id="sa-plot-options"></div><figure class="sa-figure">')
+    body='<link rel="stylesheet" href="assets/sequence-plot-options.css?v='+version('sequence-plot-options.css')+'">'+body
     discovery_script=(site.root/'website/assets/sequence-atlas-discovery.mjs').read_text(encoding='utf-8')
     for dependency in ('sequence-atlas-core.mjs','sequence-atlas-search.mjs'):
         discovery_script=discovery_script.replace("'./"+dependency+"'","'./"+dependency+'?v='+version(dependency)+"'")
@@ -272,7 +274,7 @@ def build(site):
     script = script.replace("'./sequence-atlas-core.mjs'", "'./sequence-atlas-core.mjs?v="+version('sequence-atlas-core.mjs')+"'")
     script = script.replace("'./sequence-atlas-data.json'", "'./sequence-atlas-data.json?v="+hashlib.sha256(raw.encode()).hexdigest()[:12]+"'")
     script=script.replace("'./sequence-atlas-discovery.mjs'","'./sequence-atlas-discovery.mjs?v="+hashlib.sha256(discovery_script.encode()).hexdigest()[:12]+"'")
-    for name in ('sequence-atlas-search.mjs','sequence-atlas-saved.mjs','sequence-atlas-interface.mjs'):
+    for name in ('sequence-atlas-search.mjs','sequence-atlas-saved.mjs','sequence-atlas-interface.mjs','sequence-plot-options.mjs'):
         script=script.replace("'./"+name+"'", "'./"+name+'?v='+version(name)+"'")
     script=script.replace("'./sequence-atlas-directory.mjs'", "'./sequence-atlas-directory.mjs?v="+hashlib.sha256(directory_script.encode()).hexdigest()[:12]+"'")
     site.write('assets/sequence-atlas.js', script)
@@ -285,7 +287,7 @@ def build(site):
     for dependency in ('sequence-atlas-saved.mjs','sequence-atlas-core.mjs'):
         entry_script=entry_script.replace("'./"+dependency+"'","'./"+dependency+'?v='+version(dependency)+"'")
     site.write('assets/sequence-atlas-entry.js',entry_script)
-    for name in ('sequence-atlas-core.mjs', 'sequence-atlas.css','sequence-atlas-search.mjs','sequence-atlas-saved.mjs','sequence-atlas-discovery.mjs','sequence-atlas-interface.mjs'):
+    for name in ('sequence-atlas-core.mjs', 'sequence-atlas.css','sequence-atlas-search.mjs','sequence-atlas-saved.mjs','sequence-atlas-discovery.mjs','sequence-atlas-interface.mjs','sequence-plot-options.mjs','sequence-plot-options.css'):
         content=(site.root/'website/assets'/name).read_text(encoding='utf-8')
         if name=='sequence-atlas-discovery.mjs':
             content=discovery_script
