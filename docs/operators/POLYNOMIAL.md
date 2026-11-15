@@ -105,6 +105,12 @@ retain that extra degree before checking the commutator.
 The [three-coordinate boundary calculation](ALGEBRA.md#test-a-claimed-identity-on-its-actual-space)
 shows the exact extra diagonal term when raising is truncated at degree two.
 
+The [finite-cutoff study](CUTOFFS.md#5-transport-the-boundary-together-with-the-operators)
+carries this boundary through the falling-factorial map. It computes the
+transported highest-degree packet and distinguishes truncation in falling
+degree from simply deleting the highest ordinary power. The same study gives
+a degree budget for longer raising-and-lowering compositions.
+
 ## 4. Coefficient selectors and roots-of-unity averaging
 
 For an integer $m\ge2$ and $0\le r<m$, define

@@ -204,6 +204,11 @@ For the full polynomial calculation, retain the extra raised degree before
 differentiating. The [polynomial chapter](POLYNOMIAL.md#3-raising-and-degree-operators)
 uses this same boundary check for transported raising and lowering.
 
+The [finite-cutoff study](CUTOFFS.md) derives the correction at every degree
+and follows a cubic witness through the missing return path. Its padding rule
+handles complete operator words, while its finite-field control explains why
+the coefficient field matters to the trace obstruction.
+
 ## Try it: a short operator word
 
 With $N$ as above and $P=\operatorname{diag}(1,0)$, calculate $PN$, $NP$,

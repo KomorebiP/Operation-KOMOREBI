@@ -210,6 +210,12 @@ Pointwise convergence of outputs and uniform control over all unit inputs
 are different assertions. A finite successful experiment establishes
 neither infinite convergence statement by itself.
 
+The [finite-cutoff study](CUTOFFS.md#6-distinguish-an-interior-identity-from-a-uniform-bound)
+gives a polynomial counterpart: a commutator defect eventually vanishes on
+each fixed polynomial while its worst-case coefficient norm grows with the
+cutoff. It also computes how that norm changes after transporting the
+polynomial coordinates.
+
 ## 8. Numerical residuals and certified statements
 
 For an invertible linear system $Ax=b$ and an approximation $\widehat x$,
