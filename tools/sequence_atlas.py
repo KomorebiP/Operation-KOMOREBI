@@ -12,6 +12,7 @@ import json
 import re
 from math import comb, factorial
 from pathlib import Path
+from sequence_formula_catalogue import formula_block, formula_variants
 from sequence_atlas_reference import REFERENCES, KINDS, reference_terms, program, connections
 from sequence_atlas_reading import reading_metadata, reading_block
 from sequence_atlas_study import study_block
@@ -117,7 +118,7 @@ def structured_entry(entry, graph):
     snapshot=entry_body(entry,'../').split('<details><summary>OEIS snapshot matches',1)
     snapshot_html='<details><summary>OEIS snapshot matches'+snapshot[1] if len(snapshot)>1 else '<p>No six-term comparison recorded in the loaded snapshot.</p>'
     return (reading_block(entry)
-        +'<section id="formulas"><h2>Formulas and recurrences</h2><div class="sa-typeset arithmatex" tabindex="0" role="region" aria-label="Typeset defining formula" hidden>\\['+e(entry['reading']['tex'])+'\\]</div><details class="sa-plain-formula" open><summary>Plain text formula</summary><p id="sa-entry-formula" class="sa-formula">'+e(entry['formula'])+'</p></details><p>'+e(entry['recurrence'])+'</p><button type="button" data-copy-entry="sa-entry-formula" hidden>Copy formula</button></section>'
+        +'<section id="formulas"><h2>Formulas and recurrences</h2><div class="sa-typeset arithmatex" tabindex="0" role="region" aria-label="Typeset defining formula" hidden>\\['+e(entry['reading']['tex'])+'\\]</div><details class="sa-plain-formula" open><summary>Plain text formula</summary><p id="sa-entry-formula" class="sa-formula">'+e(entry['formula'])+'</p></details><p>'+e(entry['recurrence'])+'</p><button type="button" data-copy-entry="sa-entry-formula" hidden>Copy formula</button>'+formula_block(entry)+'</section>'
         '<section id="examples"><h2>Comments and examples</h2><p>'+e(entry['example'])+'</p></section>'
         +study_block(entry)+
         '<section id="programs"><h2>Reproduce the terms</h2><p>Self-contained Python, using exact integers and the standard library. Change count to choose the finite number of terms.</p><button type="button" data-copy-entry="sa-entry-program" hidden>Copy Python program</button><pre tabindex="0" role="region" aria-label="Python reproduction program"><code id="sa-entry-program">'+e(entry['python'])+'</code></pre></section>'
@@ -216,7 +217,7 @@ def build(site):
     if snapshot:
         for entry in entries:
             entry['matches'] = snapshot['matches'].get(entry['id'], [])
-    data = dict(schema=1, entries=entries, snapshot=snapshot,
+    data = dict(schema=1, entries=[dict(entry,formulas=formula_variants(entry)) for entry in entries], snapshot=snapshot,
         scope='Search covers the curated Komorebi catalogue. OEIS snapshot matches are finite comparisons, not originality or identity proofs.')
     raw = json.dumps(data, ensure_ascii=False, separators=(',', ':'))+'\n'
     site.write('assets/sequence-atlas-data.json', raw)
@@ -304,6 +305,8 @@ def build(site):
         '<details class="sa-advanced"><summary>Compare sequences, transform values, and adjust the plot</summary>'
         '<div class="sa-controls">'+''.join(advanced)+'</div></details>')+body[controls.end():]
     body += '<script type="module" src="assets/sequence-atlas.js?v='+hashlib.sha256(script.encode()).hexdigest()[:12]+'"></script>'
+    body='<link rel="stylesheet" href="assets/sequence-library.css?v='+version('sequence-library.css')+'">'+body
+    body=body.replace('<nav class="sa-mode-nav"','<p class="sa-library-link"><a href="sequence-library.html">Search the full sequence and formula library →</a> · expanded families, multiple representations and full OEIS snapshot matching</p><nav class="sa-mode-nav"',1)
     site.page('sequences.html', 'Sequence and Formula Atlas', body)
     site.search.append(dict(title='Sequence and Formula Atlas', group='Collection', kind='Examples', work_ids=['paper-iv','monographs-special-functions'], url='sequences.html', text='Integer sequence formula catalogue exact modular plotting residues recurrence generating function OEIS comparison differences ratios partial sums'))
     for entry in entries:
@@ -330,11 +333,13 @@ def build(site):
             '</section><section aria-labelledby="sa-related-title"><h2 id="sa-related-title">Related entries</h2><ul>'+''.join('<li><a href="'+x['id']+'.html">'+e(x['title'])+'</a> · '+x['id']+'</li>' for x in related)+'</ul></section>'
             '<nav class="sa-neighbours" aria-label="Previous and next sequence">'+neighbours+'</nav></div></div></article>'
             '<script type="module" src="../assets/sequence-atlas-entry.js?v='+hashlib.sha256(entry_script.encode()).hexdigest()[:12]+'"></script>')
-        site.page('sequences/'+identifier+'.html', entry['title']+' · '+identifier, content)
+        site.page('sequences/'+identifier+'.html', entry['title']+' · '+identifier, '<link rel="stylesheet" href="../assets/sequence-library.css?v='+version('sequence-library.css')+'">'+content)
         site.search.append(dict(title=entry['title']+' · '+identifier, group='Collection', kind='Examples', work_ids=entry['work_ids'], url='sequences/'+identifier+'.html', text=entry['formula']+' '+entry['recurrence']+' '+', '.join(entry['terms'][:8])))
     from sequence_archive import build as build_archive
     archive=build_archive(site,entries)
-    return dict(entries=len(entries), snapshot=bool(snapshot), archive=archive)
+    from sequence_library import build as build_library
+    library=build_library(site,entries)
+    return dict(entries=len(entries), snapshot=bool(snapshot), archive=archive, library=library)
 
 
 if __name__ == '__main__':

@@ -1,6 +1,6 @@
 import {archiveWindow,archiveLink,windowCSV,moveArchiveWindow,triangleWindow,archivePreset} from './sequence-archive-core.mjs';
 import {mod} from './sequence-atlas-core.mjs';
-import {mountPlotOptions,plotColors,plotHeight,showIndexLabel,mergePlotLabels,exportPlot} from './sequence-plot-options.mjs';
+import {mountPlotOptions,plotColors,plotHeight,showIndexLabel,mergePlotLabels,exportPlot,finishPlotTheme} from './sequence-plot-options.mjs';
 
 const make=(tag,text)=>{const el=document.createElement(tag);if(text!==undefined)el.textContent=text;return el;};
 const svg=(tag,attrs,text)=>{const el=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const [key,val]of Object.entries(attrs))el.setAttribute(key,String(val));if(text!==undefined)el.textContent=text;return el;};
@@ -26,8 +26,9 @@ export function setupArchivePlot(entry){
       const scaleCaption=!modular&&state.scale==='signed-log'?'sgn(v) log10(1+|v|)':'',top=scaleCaption&&width<560?104:80;
       const xx=v=>65+(v-minX)/(maxX-minX)*(right-65),yy=v=>bottom-(v/unit-lo)/(hi-lo)*(bottom-top);
       picture.append(svg('path',{d:`M65 ${top-10}V${bottom}H${right}`,class:'sar-axis'}));
-      for(let k=0;k<=4;k++){
-        const value=modular?Math.round(minY+(maxY-minY)*k/4):(lo+(hi-lo)*k/4)*unit,py=yy(value);
+      const ticks=modular?(state.mod<=12?Array.from({length:state.mod},(_,k)=>k):[...new Set(Array.from({length:5},(_,k)=>Math.round(minY+(maxY-minY)*k/4)))]):Array.from({length:5},(_,k)=>(lo+(hi-lo)*k/4)*unit);
+      for(const value of ticks){
+        const py=yy(value);
         if(appearance.grid==='on')picture.append(svg('path',{d:`M65 ${py}H${right}`,stroke:'#d9dfd4','stroke-width':1,fill:'none','data-plot-grid':'true'}));
         picture.append(svg('text',{x:57,y:py+4,'text-anchor':'end'},value===0?'0':modular?String(value):Number(value).toPrecision(3)));
       }
@@ -55,7 +56,7 @@ export function setupArchivePlot(entry){
       for(const label of mergePlotLabels(indexLabels)){const text=svg('text',{x:label.x,y:label.y,'text-anchor':'middle',class:'sp-plot-index'},label.text);text.append(svg('title',{},'Indices '+label.full));picture.append(text);}
       point(valid[active]);
     }else picture.append(svg('text',{x:25,y:100},'No defined coordinates. Try another window or scale.'));
-    $('plot').replaceChildren(picture);figure=picture;
+    finishPlotTheme(picture,appearance);$('plot').replaceChildren(picture);figure=picture;
     if(focused)picture.querySelector('circle[tabindex="0"]')?.focus({preventScroll:true});
     const table=$('window-values');table.replaceChildren();for(const row of result.rows){const tr=make('tr');for(const value of [row.n,row.raw,row.value??'undefined',row.next??'—'])tr.append(make('td',value));table.append(tr);}
     say($('window'),`${result.rows.length} index positions, ${valid.length} plotted points; indices ${state.start}–${state.start+state.size-1}. Stored range ${entry.offset}–${entry.offset+entry.terms.length-1}.`);

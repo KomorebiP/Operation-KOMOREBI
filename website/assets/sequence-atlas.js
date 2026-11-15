@@ -4,7 +4,7 @@ import {readSaved,writeSaved,updateSaveButtons} from './sequence-atlas-saved.mjs
 import {discover,analyzeInput,operationLabel,OPERATIONS} from './sequence-atlas-discovery.mjs';
 import {setupInterface,workspaceForURL} from './sequence-atlas-interface.mjs';
 import {setupDirectory} from './sequence-atlas-directory.mjs';
-import {PLOT_DEFAULTS,plotColors,plotHeight,showIndexLabel,mergePlotLabels,mountPlotOptions,exportPlot} from './sequence-plot-options.mjs';
+import {PLOT_DEFAULTS,plotColors,plotHeight,showIndexLabel,mergePlotLabels,mountPlotOptions,exportPlot,plotTheme,finishPlotTheme} from './sequence-plot-options.mjs';
 
 const $=id=>document.getElementById('sa-'+id);
 const ids=['sequence','compare','view','transform','scale','marks','start','count','modulus','color'];
@@ -120,7 +120,7 @@ function draw(rows,names){
     if(frequency||state.marks==='bars'&&!grid){
       const width=Math.max(1,Math.min(24,pw/(frequency?state.modulus:rows.length)*0.7));const baseline=y(0);
       mark=element('rect',{x:x(r.x)-width/2+(r.series?width/3:0),y:Math.min(baseline,y(r.y)),width,height:Math.max(1,Math.abs(baseline-y(r.y))),...attrs,opacity:r.series?0.6:0.85});
-    }else if(r.series){mark=element('rect',{x:x(r.x)-radius,y:y(r.y)-radius,width:radius*2,height:radius*2,...attrs,fill:'#fafaf5'});
+    }else if(r.series){mark=element('rect',{x:x(r.x)-radius,y:y(r.y)-radius,width:radius*2,height:radius*2,...attrs,fill:plotTheme(appearance).background});
     }else mark=element('circle',{cx:x(r.x),cy:y(r.y),r:radius,...attrs});
     const label=frequency?`${r.name}: residue ${r.x}, count ${r.y}`:grid?`${r.name}: residue pair (${r.x}, ${r.y}), ${r.hits} occurrence${r.hits===1?'':'s'}`:`${r.name}: n=${r.n}; a(n)=${r.raw}; transformed=${r.value}${modular?`; residue=${r.residue}`:''}`;
     const index=markIndex++;
@@ -131,7 +131,7 @@ function draw(rows,names){
     if(showIndexLabel(index,points.length,appearance,pw))indexLabels.push({x:x(r.x),y:Math.max(pad.top-5,y(r.y)-radius-6),text:frequency?'r='+r.x:grid?String(r.hits):String(r.n)});
   }
   for(const label of mergePlotLabels(indexLabels)){const text=element('text',{x:label.x,y:label.y,'text-anchor':'middle','font-size':11,fill:'#243d2d',class:'sp-plot-index'},label.text);text.append(element('title',{},label.full));svg.append(text);}
-  $('plot').replaceChildren(svg);plot=svg;
+  finishPlotTheme(svg,appearance);$('plot').replaceChildren(svg);plot=svg;
   inspectPoint(pointIndex,{focus:hadFocus});
   const bars=frequency||state.marks==='bars'&&!grid;
   $('caption').textContent=`${names.map((name,i)=>`${bars?(i?'Translucent bars':'Filled bars'):(i?'Outlined squares'+(state.marks==='line'&&!grid?' / dashed line':''):'Filled circles'+(state.marks==='line'&&!grid?' / solid line':''))}: ${name}`).join('. ')}. ${state.color==='series'?'':'Colors cycle through eight colors; exact residue labels are available on each point. '}${frequency?'Bars count residues among the selected samples.':grid?'Larger marks indicate repeated residue pairs.':'Use First index and Terms shown to move or zoom the sample window.'} ${modular?`Modulus ${state.modulus}.`:''} ${rows.filter(r=>r.y===null||r.x===null).length} undefined or out-of-range samples omitted.`;
