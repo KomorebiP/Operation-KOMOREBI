@@ -106,3 +106,10 @@ named focusable program region and clearer discovery input/empty-result
 feedback. The separate no-JavaScript Edge check focuses the long program
 and scrolls it horizontally with Arrow Right. All thirty targeted tests and
 the browser suite remain passing.
+
+`run-007` repeats the contract with an additional coverage regression: the
+reported discovery count excludes forms shortened below six terms and
+identity-equivalent forms omitted by the matcher. Fixtures with eight squares,
+six powers of two and six zeros report nine, five and one distinct usable
+forms respectively. Eight Python and twenty-three Node tests pass. Matched
+values, index ranges and original catalogue terms are unchanged by this fix.
