@@ -64,3 +64,10 @@ entry-JSON files, related-entry navigation, no-JavaScript reading, 200% text
 at 320px with system high-contrast colors and reduced motion, and browser
 storage denial. These are implementation and browser checks, without
 screen-reader user testing or accessibility certification.
+
+`run-004` repeats the same finite contract after changing the global search
+shortcut to Ctrl+/ (Command+/ on Mac). The separate Edge regression verifies
+that plain / leaves a result link focused and can be typed normally in search,
+while Ctrl+/ focuses search outside an input. This avoids a bare character
+shortcut; see the W3C explanation of
+[character key shortcuts](https://www.w3.org/WAI/WCAG22/Understanding/character-key-shortcuts.html).
