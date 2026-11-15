@@ -61,10 +61,10 @@ def build(site, atlas):
     for entry in entries:
         if hashlib.sha256(bfile(entry).encode()).hexdigest()!=manifest[entry['id']+'_candidate_bfile.txt']:
             raise ValueError('Archive b-file identity failed: '+entry['id'])
-    assets=['sequence-archive.css','sequence-archive.js','sequence-archive-core.mjs','sequence-archive-plot.mjs','sequence-plot-options.mjs','sequence-plot-options.css']
+    assets=['sequence-archive.css','sequence-archive.js','sequence-archive-core.mjs','sequence-archive-plot.mjs','sequence-plot-options.mjs','sequence-plot-options.css','sequence-reading-theme.mjs','sequence-reading.css']
     versions={}
     version=lambda name:versions.get(name) or hashlib.sha256((site.root/'website/assets'/name).read_bytes()).hexdigest()[:12]
-    for name in ['sequence-plot-options.mjs','sequence-plot-options.css','sequence-archive-core.mjs','sequence-archive-plot.mjs','sequence-archive.js','sequence-archive.css']:
+    for name in ['sequence-reading-theme.mjs','sequence-reading.css','sequence-plot-options.mjs','sequence-plot-options.css','sequence-archive-core.mjs','sequence-archive-plot.mjs','sequence-archive.js','sequence-archive.css']:
         content=(site.root/'website/assets'/name).read_text(encoding='utf-8')
         if name.endswith(('.js','.mjs')):
             for dependency in assets+['sequence-atlas-core.mjs','sequence-atlas-search.mjs']:
@@ -72,7 +72,7 @@ def build(site, atlas):
         site.write('assets/'+name,content)
         versions[name]=hashlib.sha256(content.encode('utf-8')).hexdigest()[:12]
     def wrap(body, prefix=''):
-        return '<link rel="stylesheet" href="'+prefix+'assets/sequence-archive.css?v='+version(assets[0])+'"><link rel="stylesheet" href="'+prefix+'assets/sequence-plot-options.css?v='+version('sequence-plot-options.css')+'"><div class="sar" data-archive>'+body+'</div><script type="module" src="'+prefix+'assets/sequence-archive.js?v='+version(assets[1])+'"></script>'
+        return '<link rel="stylesheet" href="'+prefix+'assets/sequence-archive.css?v='+version(assets[0])+'"><link rel="stylesheet" href="'+prefix+'assets/sequence-plot-options.css?v='+version('sequence-plot-options.css')+'"><div class="sar" data-archive>'+body+'</div><script type="module" src="'+prefix+'assets/sequence-archive.js?v='+version(assets[1])+'"></script><link rel="stylesheet" href="'+prefix+'assets/sequence-reading.css?v='+version('sequence-reading.css')+'">'
     out=io.StringIO(newline=''); writer=csv.writer(out);writer.writerow(['id','name','family','classification','offset','count','definition','oeis_reference','entry_url'])
     for x in entries:writer.writerow([x['id'],x['title'],x['kind'],x['classification'],x['offset'],len(x['terms']),x['formula'],x['oeis'] or '', 'sequence-archive/'+x['id']+'.html'])
     site.write('assets/sequence-archive-index.csv',out.getvalue())

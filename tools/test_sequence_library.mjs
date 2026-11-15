@@ -14,9 +14,9 @@ test('alternate formulas and parameter fields are searchable without changing te
 });
 test('theme, custom comparison, reversal and opacity survive shared links and legacy preferences',()=>{
   assert.equal(contrastRatio('#ffffff','#000000'),21);assert.equal(contrastRatio('#ffffff','#ffffff'),1);
-  const state=validateAppearance({theme:'night',palette:'custom',custom:'#aabbcc',secondary:'#ffeecc',reverse:'reverse',opacity:'0.55'}),colors=plotColors(state);assert.equal(colors[0],'#aabbcc');assert.equal(colors[1],'#ffeecc');assert.equal(plotTheme(state).background,'#142130');
+  const state=validateAppearance({theme:'night',palette:'custom',custom:'#aabbcc',secondary:'#ffeecc',reverse:'reverse',opacity:'0.55'}),colors=plotColors(state);assert.equal(colors[0],'#aabbcc');assert.equal(colors[1],'#ffeecc');assert.equal(plotTheme(state).background,'#111827');
   assert.deepEqual(readAppearance(appearanceLink('https://example.test/',state)).state,state);
   for(const palette of ['lagoon','plum','cividis','spectrum'])assert.equal(plotColors({...PLOT_DEFAULTS,palette}).length,8);
-  assert.equal(readAppearance('https://example.test/',{getItem:()=>JSON.stringify({schema:1,appearance:{palette:'ocean'}})}).state.theme,'paper');
+  assert.equal(readAppearance('https://example.test/',{getItem:()=>JSON.stringify({schema:1,appearance:{palette:'ocean'}})}).state.theme,PLOT_DEFAULTS.theme);
   for(const options of [{secondary:'red'},{opacity:'0'},{theme:'arbitrary'},{reverse:'yes'}])assert.throws(()=>validateAppearance(options));
 });

@@ -47,6 +47,62 @@ def appell(N, j, power, x, count=COUNT):
     return [sum(comb(n,N*k)*q[k]*x**(n-N*k) for k in range(n//N+1)) for n in range(count)]
 
 
+@lru_cache(maxsize=None)
+def secancy_polynomials(N, count=COUNT):
+    """Ordinary coefficients [r^k] P_(N,n)(r), from exponential Bell columns."""
+    cumulants=[0]+tangent(N,count-1)
+    rows=[[1]]
+    for n in range(1,count):
+        row=[0]
+        for k in range(1,n+1):
+            total=sum(comb(N*n,N*m)*cumulants[m]*(rows[n-m][k-1] if k-1<len(rows[n-m]) else 0) for m in range(1,n+1))
+            assert total%k==0,(N,n,k)
+            row.append(total//k)
+        rows.append(row)
+    return tuple(tuple(row) for row in rows)
+
+
+@lru_cache(maxsize=None)
+def theta_polynomial_rows(count=COUNT):
+    """[x^k] Theta_(2n)(x); the sign of the signed Euler branch is retained."""
+    from sequence_atlas import reciprocal
+    p=secancy_polynomials(2,count);secant=reciprocal(2,1,count)
+    return tuple(tuple((-1)**n*sum(comb(2*n,2*j)*secant[j]*p[n-j][k-2*j] for j in range(n+1) if 0<=k-2*j<len(p[n-j])) for k in range(2*n+1)) for n in range(count))
+
+
+def research_catalogue():
+    """Source-derived additions; priority and pairwise distinctness are unassessed."""
+    entries=[]
+    def add(item,family,offset,explanation,source):
+        item.update(offset=offset,research_family=family,status='Research-derived family · historical novelty unassessed',source=source,source_note='Explicit definitions in the authored special-function registry. The registry requests a literature audit before historical novelty is claimed.',explanation=explanation)
+        item['tags']+=['research-derived',family];entries.append(item)
+    for N in range(2,13):
+        rows=secancy_polynomials(N,COUNT+8);source=REGISTRY_URL+'#L489'
+        for k in range(1,9):
+            values=[rows[n][k] for n in range(k,k+COUNT)]
+            forms=[variant('Parameter-polynomial coefficient','coefficient formula',f'a(n)=[r^{k}] P_({N},n)(r); P_({N},n)(r)=({N}n)! [z^({N}n)] D_{N}(z)^(-r); D_{N}(z)=sum_(m>=0) (-1)^m z^({N}m)/({N}m)!',source=source),
+                variant('Finite composition and Stirling formula','finite sum',f'a(n)=({N}n)! sum_(ell={k})^n [ell,{k}]_1/ell! * (-1)^(n+ell) sum_(q_1+...+q_ell=n; q_i>=1) product_i 1/({N}q_i)!', '[ell,k]_1 is the unsigned Stirling number of the first kind. Empty sums are zero. This is an ordinary coefficient in r, without multiplying by k!.',source),
+                variant('Bell-column recurrence','recurrence',f'B(0,0)=1; B(n,0)=0 for n>0; B(n,k)=sum_(m=1)^n binom({N}n,{N}m) K(m) B(n-m,k-1)/k; K(m)=({N}m)! [z^({N}m)] (-log D_{N}(z)); a(n)=B(n,{k})', 'Use B(n,k)=0 outside 0<=k<=n. K(m) is a block cumulant, not a raw generating-function coefficient.',source),
+                variant('Hypergeometric parameter coefficient','hypergeometric',f'a(n)=({N}n)! [r^{k} z^({N}n)] ({hyper(N,0,"-")})^(-r)', 'Coefficient extraction from a parameterized inverse hypergeometric generator; this is not a single hypergeometric term formula.',source)]
+            item=record(f'KFOR-P-{N:02d}-{k:02d}',f'Secancy parameter column · N={N}, k={k}','secancy parameter column',values,forms,N=N,k=k,degree=f'{N}n')
+            if k==1:item['related_records']=[dict(id=f'KFOR-T-{N:02d}',note=f'The same coefficients appear in the transfer tangent after reindexing: a(n)=T_{N}(n-1), n>=1. Their source Taylor degrees differ by one. This follows by differentiating -log D_{N}(z).')]
+            add(item,'transfer-secancy parameter polynomials',k,f'The coefficient of r^{k} in P_({N},n)(r) is zero for 0<=n<{k}. The stored window starts at the first nonzero local index n={k}; ordinary polynomial coefficients are used, without a k! factor.',source)
+    rows=theta_polynomial_rows(COUNT+6);source=REGISTRY_URL+'#L525'
+    for x in range(1,13):
+        values=[sum(value*x**k for k,value in enumerate(row)) for row in rows[:COUNT]]
+        forms=[variant('Theta polynomial specialization','generating function',f'sum a(n) z^(2n)/(2n)! = sech({x}z) sech(z)^{x}; a(n)=Theta_(2n)({x})', 'n is the local even-degree index; the source Taylor degree is 2n. Signs are retained.',source),
+            variant('Finite signed Euler convolution','finite sum',f'a(n)=sum_(j=0)^n binom(2n,2j) E_(2j) {x}^(2j) H_(2(n-j))^({x}); E_(2j)=(2j)! [z^(2j)] sech(z); H_(2m)^({x})=(2m)! [z^(2m)] sech(z)^{x}', 'Both Euler factors use the signed sech convention.',source),
+            variant('Product of inverse hypergeometric generators','hypergeometric',f'sum a(n) z^(2n)/(2n)! = (0F1(;1/2;{x*x}z^2/4))^(-1) (0F1(;1/2;z^2/4))^(-{x})', 'This is a product of inverse hypergeometric generating functions, not a single hypergeometric term formula.',source)]
+        add(record(f'KFOR-H-{x:02d}',f'Euler-transfer theta · x={x}','Euler-transfer theta',values,forms,N=2,x=x,degree='2n'),'Euler-transfer theta polynomials',0,'The authored registry defines Theta_(2n)(x) by sech(xz) sech(z)^x. This record evaluates x at the stated positive integer. Its source degree is 2n, not n.'+(' At x=1 the generator is the classical sech(z)^2 specialization.' if x==1 else ''),source)
+    for k in range(1,13):
+        offset=(k+1)//2;values=[rows[n][k] for n in range(offset,offset+COUNT)]
+        forms=[variant('Theta polynomial coefficient','coefficient formula',f'a(n)=[x^{k}] Theta_(2n)(x); Theta_(2n)(x)=(2n)! [z^(2n)] (sech(xz) exp(x log(sech(z))))', 'The logarithm is the formal power series with constant term zero. Ordinary coefficients in x are used.',source),
+            variant('Finite secancy-polynomial convolution','finite sum',f'a(n)=(-1)^n sum_(j=0)^n binom(2n,2j) A_2(j) [x^({k}-2j)] P_(2,n-j)(x); A_2(j)=(2j)! [z^(2j)] sec(z)', 'A polynomial coefficient outside its degree range is zero. This relates the two research-derived families.',source),
+            variant('Hypergeometric coefficient extraction','hypergeometric',f'a(n)=(2n)! [x^{k} z^(2n)] ((0F1(;1/2;x^2 z^2/4))^(-1) exp(-x log(0F1(;1/2;z^2/4))))', 'A formal bivariate coefficient formula; not a claim that the extracted sequence is a hypergeometric term.',source)]
+        add(record(f'KFOR-HC-{k:02d}',f'Theta polynomial column · k={k}','theta polynomial column',values,forms,N=2,k=k,degree='2n'),'Euler-transfer theta polynomials',offset,f'Theta_(2n)(x) has degree 2n. Its x^{k} coefficient vanishes for n<{offset}; the stored window begins at n={offset}. Signs and ordinary polynomial coefficients are retained.',source)
+    return entries
+
+
 def formula_variants(entry):
     if entry.get('formulas'):
         return entry['formulas']
@@ -149,6 +205,7 @@ def expanded_catalogue():
                     f=formula_variants(original)[1]
                     forms.append(variant('Alternative source formula','closed form',f['expression']+'; replace every source index n by '+m, 'The substitution acts on the source formula before evaluating the local sequence.',f['source']))
                 entries.append(record(f'KFOR-S-{kind}-{N:02d}-{j:02d}',f'{original["title"]} · indices {N}n+{j}','classical multisection',[all_values[N*n+j] for n in range(COUNT)],forms,N=N,j=j,degree=f'{N}n+{j}',parent=original['id'],source_kind=kind))
+    entries+=research_catalogue()
     assert len({x['id'] for x in entries})==len(entries)
     return entries
 
