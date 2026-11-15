@@ -4,6 +4,7 @@ import {readSaved,writeSaved,updateSaveButtons} from './sequence-atlas-saved.mjs
 import {discover,analyzeInput,operationLabel,OPERATIONS} from './sequence-atlas-discovery.mjs';
 import {setupInterface,workspaceForURL} from './sequence-atlas-interface.mjs';
 import {setupDirectory} from './sequence-atlas-directory.mjs';
+import {PLOT_DEFAULTS,plotColors,plotHeight,showIndexLabel,mergePlotLabels,mountPlotOptions,exportPlot} from './sequence-plot-options.mjs';
 
 const $=id=>document.getElementById('sa-'+id);
 const ids=['sequence','compare','view','transform','scale','marks','start','count','modulus','color'];
@@ -16,7 +17,7 @@ const storage={getItem:key=>localStorage.getItem(key),setItem:(key,value)=>local
 const searchOptions=()=>({filter:$('filter').value,topic:$('topic').value,match:$('match').value,sort:$('sort').value,saved:[...saved]});
 const optionLabel=(id,value)=>[...$(id).options].find(o=>o.value===value)?.textContent||value;
 const briefValue=value=>{if(value.length<=60)return value;if(value.includes('/'))return value.split('/').map(briefValue).join(' divided by ');return value.slice(0,14)+'…'+value.slice(-8)+` (${value.replace(/[-+]/g,'').length} digits)`;};
-const palette=['#185a43','#a44916','#3d5eaa','#854799','#8b6a0c','#167482','#b13c60','#4e7130'];
+let appearance={...PLOT_DEFAULTS},appearanceControls;
 const stopAnimation=()=>{const running=timer!==null;clearInterval(timer);timer=null;$('animate').textContent='Animate modulus';$('animate').setAttribute('aria-pressed','false');$('summary').setAttribute('aria-live','polite');if(running)$('action-status').textContent='Modulus animation paused.';};
 const known=id=>entries.find(e=>e.id===id);
 const message=(text,error=false)=>{const target=$(error?'error':'action-status');target.hidden=false;if(target.textContent!==text)target.textContent=text;};
@@ -69,11 +70,12 @@ function render(){
   }catch(error){stopAnimation();if(/integer-valued/.test(error.message)){$('transform').setAttribute('aria-invalid','true');$('transform').setAttribute('aria-describedby','sa-error');}message(error.message+(plot?' The last valid plot is retained.':''),true);return false;}
 }
 function draw(rows,names){
-  const W=Math.max(320,Math.round($('plot').clientWidth)),H=W<560?360:480,pad={left:W<560?56:82,right:20,top:names.length>1?90:68,bottom:62}, pw=W-pad.left-pad.right,ph=H-pad.top-pad.bottom;
+  const palette=plotColors(appearance),W=Math.max(320,Math.round($('plot').clientWidth)),H=plotHeight(W,appearance),pad={left:W<560?56:82,right:20,top:names.length>1?90:68,bottom:62}, pw=W-pad.left-pad.right,ph=H-pad.top-pad.bottom;
   const modular=['mod','grid','frequency','mod-pairs'].includes(state.view), frequency=state.view==='frequency',grid=['grid','mod-pairs'].includes(state.view);
   let points=rows.filter(r=>r.x!==null&&r.y!==null).map(r=>({...r,series:names.indexOf(r.name)}));
   if(frequency){points=[];names.forEach((name,series)=>{const selected=rows.filter(r=>r.name===name);for(let i=0;i<state.modulus;i++)points.push({name,n:i,x:i,y:selected.filter(r=>r.residue===i).length,value:'',raw:'',residue:i,series});});}
-  let xs=points.map(r=>r.x),ys=points.map(r=>r.y),xmin=Math.min(...xs),xmax=Math.max(...xs),ymin=Math.min(0,...ys),ymax=Math.max(0,...ys);
+  const zero=appearance.baseline==='zero'||frequency||state.marks==='bars'||modular;appearanceControls?.context(modular||state.marks==='bars');
+  let xs=points.map(r=>r.x),ys=points.map(r=>r.y),xmin=Math.min(...xs),xmax=Math.max(...xs),ymin=Math.min(...ys,...(zero?[0]:[])),ymax=Math.max(...ys,...(zero?[0]:[]));
   if(grid){xmin=0;xmax=state.modulus-1;ymin=0;ymax=state.modulus-1;}
   if(state.view==='mod'){ymin=0;ymax=state.modulus-1;}
   const expandConstant=(low,high)=>{if(low!==high)return[low,high];const margin=Math.max(1,Math.abs(low)*0.05),left=low-margin,right=high+margin;return[Number.isFinite(left)?left:low,Number.isFinite(right)?right:high];};
@@ -86,11 +88,12 @@ function draw(rows,names){
   svg.append(element('rect',{width:W,height:H,fill:'#fafaf5'}));
   svg.append(element('title',{id:'sa-svg-title'},optionLabel('view',state.view)));
   svg.append(element('desc',{id:'sa-svg-description'},`Discrete samples for ${names.join(' and ')}. Exact values are available in the atlas table and CSV export.`));
+  svg.append(element('path',{d:`M${pad.left} ${pad.top}V${H-pad.bottom}H${W-pad.right}`,stroke:'#87988b','stroke-width':1,fill:'none'}));
   const tick=v=>v===0?'0':Math.abs(v)>=1e6||Math.abs(v)<0.001?v.toExponential(1):Number(v.toPrecision(4)).toString();
   const yTicks=modular?[...new Set(Array.from({length:6},(_,i)=>Math.round((1-i/5)*ymax+(i/5)*ymin)))]:Array.from({length:6},(_,i)=>(1-i/5)*ymax+(i/5)*ymin);
   for(const pyValue of yTicks){
     const py=y(pyValue);
-    svg.append(element('line',{x1:pad.left,x2:W-pad.right,y1:py,y2:py,stroke:'#d9dfd4','stroke-width':1}));
+    if(appearance.grid==='on')svg.append(element('line',{x1:pad.left,x2:W-pad.right,y1:py,y2:py,stroke:'#d9dfd4','stroke-width':1}));
     svg.append(element('text',{x:pad.left-10,y:py+4,'text-anchor':'end',fill:'#465347','font-size':12},tick(pyValue)));
   }
   const xTicks=[...new Set(Array.from({length:6},(_,i)=>state.view==='pairs'?(1-i/5)*xmin+(i/5)*xmax:Math.round((1-i/5)*xmin+(i/5)*xmax)))];
@@ -104,16 +107,16 @@ function draw(rows,names){
   names.forEach((name,i)=>svg.append(element('text',{x:pad.left,y:23+i*22,fill:palette[i],'font-size':14},fit(name))));
   svg.append(element('text',{x:pad.left,y:names.length>1?67:45,fill:'#243d2d','font-size':12},fit(yLabel+(modular?` · m = ${state.modulus}`:` · ${optionLabel('scale',state.scale)}`))));
   if(state.marks==='line'&&!frequency&&!grid){
-    names.forEach((name,i)=>{let d='',connected=false;for(const r of rows.filter(r=>r.name===name)){if(r.x===null||r.y===null){connected=false;continue;}d+=`${connected?'L':'M'}${x(r.x)},${y(r.y)} `;connected=true;}svg.append(element('path',{d,fill:'none',stroke:palette[i], 'stroke-width':1.6,'stroke-dasharray':i?'6 4':'none'}));});
+    names.forEach((name,i)=>{let d='',connected=false;for(const r of rows.filter(r=>r.name===name)){if(r.x===null||r.y===null){connected=false;continue;}d+=`${connected?'L':'M'}${x(r.x)},${y(r.y)} `;connected=true;}svg.append(element('path',{d,fill:'none',stroke:palette[i], 'stroke-width':Number(appearance.width),'stroke-dasharray':i?'6 4':'none'}));});
   }
   // Aggregate grid collisions into count-labelled marks.
   if(grid){
     const groups=new Map();for(const r of points){const key=[r.series,r.x,r.y].join(':');const g=groups.get(key);if(g){g.hits++;}else groups.set(key,{...r,hits:1});}points=[...groups.values()];
   }
-  let markIndex=0;
+  let markIndex=0;const indexLabels=[];
   for(const r of points){
     const color=palette[state.color==='value'?Number(BigInt(r.raw||r.residue)%BigInt(state.modulus)+BigInt(state.modulus))%state.modulus%palette.length:state.color==='index'?r.n%state.modulus%palette.length:r.series];
-    let mark;const attrs={fill:color,stroke:r.series?'#a44916':color,'stroke-width':1.5},radius=r.hits?Math.min(13,4+Math.log2(r.hits)):4;
+    let mark;const attrs={fill:color,stroke:r.series?palette[1]:color,'stroke-width':Number(appearance.width)},radius=r.hits?Math.min(16,Number(appearance.point)+Math.log2(r.hits)):Number(appearance.point);
     if(frequency||state.marks==='bars'&&!grid){
       const width=Math.max(1,Math.min(24,pw/(frequency?state.modulus:rows.length)*0.7));const baseline=y(0);
       mark=element('rect',{x:x(r.x)-width/2+(r.series?width/3:0),y:Math.min(baseline,y(r.y)),width,height:Math.max(1,Math.abs(baseline-y(r.y))),...attrs,opacity:r.series?0.6:0.85});
@@ -125,7 +128,9 @@ function draw(rows,names){
     mark.setAttribute('data-point',String(index));mark.setAttribute('tabindex','-1');mark.setAttribute('role','button');mark.setAttribute('aria-label',abbreviated);mark.setAttribute('data-exact-description',label);mark.append(element('title',{},label));
     mark.addEventListener('focus',()=>{if(timer)stopAnimation();inspectPoint(index);});
     mark.addEventListener('pointerenter',()=>{$('inspect').textContent=label;});mark.addEventListener('click',()=>{stopAnimation();inspectPoint(index,{focus:true,announce:true});});svg.append(mark);
+    if(showIndexLabel(index,points.length,appearance,pw))indexLabels.push({x:x(r.x),y:Math.max(pad.top-5,y(r.y)-radius-6),text:frequency?'r='+r.x:grid?String(r.hits):String(r.n)});
   }
+  for(const label of mergePlotLabels(indexLabels)){const text=element('text',{x:label.x,y:label.y,'text-anchor':'middle','font-size':11,fill:'#243d2d',class:'sp-plot-index'},label.text);text.append(element('title',{},label.full));svg.append(text);}
   $('plot').replaceChildren(svg);plot=svg;
   inspectPoint(pointIndex,{focus:hadFocus});
   const bars=frequency||state.marks==='bars'&&!grid;
@@ -149,7 +154,7 @@ function integerBlock(){
 function viewURL(hash='explorer'){
   const url=new URL(location.href);url.search='';for(const [key,value]of Object.entries(state))url.searchParams.set(key,String(value));
   if(state.sequence==='custom')url.searchParams.set('terms',lastCustomTerms);
-  const linked=new URL(searchLink(url.href,$('query').value,searchOptions()));linked.hash=hash;return linked.href;
+  const linked=new URL(searchLink(url.href,$('query').value,searchOptions()));linked.hash=hash;return appearanceControls?appearanceControls.link(linked.href):linked.href;
 }
 async function copyText(text,label,success){
   try{await navigator.clipboard.writeText(text);$('share-fallback').hidden=true;message(success);}
@@ -302,8 +307,11 @@ async function init(){
   $('reset').addEventListener('click',()=>{stopAnimation();ids.forEach(id=>$(id).value=defaults[id]);render();});
   $('share').addEventListener('click',()=>copyText(viewURL(),'View link','View link copied.'));
   $('csv').addEventListener('click',()=>{const csv='sequence,n,a_n,transformed,residue,plot_x,plot_y,modulus,transform,view,scale\n'+lastRows.map(r=>[r.name,r.n,r.raw,r.value,r.residue??'',r.x??'',r.y??'',state.modulus,state.transform,state.view,state.scale].map(v=>'"'+String(v).replaceAll('"','""')+'"').join(',')).join('\n')+'\n';download(csv,'text/csv;charset=utf-8','komorebi-sequence-exact.csv');});
-  $('svg').addEventListener('click',()=>{if(plot)download(new XMLSerializer().serializeToString(plot),'image/svg+xml','komorebi-sequence.svg');});
-  $('png').addEventListener('click',()=>{if(!plot)return;const source=new Blob([new XMLSerializer().serializeToString(plot)],{type:'image/svg+xml'}),url=URL.createObjectURL(source),img=new Image();img.onload=()=>{const canvas=document.createElement('canvas');canvas.width=plot.viewBox.baseVal.width*2;canvas.height=plot.viewBox.baseVal.height*2;canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);URL.revokeObjectURL(url);canvas.toBlob(blob=>{if(blob)download(blob,'image/png','komorebi-sequence.png');},'image/png');};img.onerror=()=>{URL.revokeObjectURL(url);message('PNG export failed. SVG export remains available.',true);};img.src=url;});
+  for(const format of ['svg','png'])$(format).addEventListener('click',()=>exportPlot(plot,format,'komorebi-sequence').catch(error=>message(error.message,true)));
+  appearanceControls=mountPlotOptions({host:$('plot-options'),prefix:'sa',onChange:style=>{appearance=style;if(lastRows.length)draw(lastRows,[...new Set(lastRows.map(row=>row.name))]);}});appearance=appearanceControls.state;
+  for(const [name,label,settings]of [['growth','Growth view',{view:'standard',transform:'raw',scale:'signed-log',marks:'line',color:'series'}],['residues','Residue view',{view:'mod',transform:'raw',scale:'linear',marks:'points',color:'value'}],['changes','Changes',{view:'standard',transform:'difference',scale:'signed-log',marks:'bars',color:'series'}]]){
+    const button=document.createElement('button');button.type='button';button.textContent=label;button.dataset.plotPreset=name;button.addEventListener('click',()=>{stopAnimation();for(const [key,value]of Object.entries(settings))$(key).value=value;render();});$('plot-presets').append(button);
+  }
   render();search();
   if($('compare').value||$('transform').value!=='raw'||$('scale').value!=='linear')document.querySelector('.sa-advanced').open=true;
   if(ignored)message('Some link settings were invalid and were replaced with defaults.');

@@ -2,11 +2,13 @@
 import {mod, coordinate, fraction} from './sequence-atlas-core.mjs';
 
 export function archiveWindow(entry, options={}) {
-  const state={view:'mod',scale:'signed-log',start:entry.offset,size:Math.min(32,entry.terms.length),mod:7,...options};
+  const state={view:'mod',scale:'signed-log',start:entry.offset,size:Math.min(32,entry.terms.length),mod:7,marks:'points',color:'single',...options};
   const last=entry.offset+entry.terms.length-1;
   if(!['raw','difference','sum','mod','pairs'].includes(state.view))throw Error('Choose a listed plot view.');
   if(!['linear','signed-log'].includes(state.scale))throw Error('Choose a listed scale.');
-  for(const [key,min,max,label] of [['start',entry.offset,last,'First index'],['size',1,128,'Index positions'],['mod',2,1000000,'Modulus']]) {
+  if(!['points','line','stems'].includes(state.marks))throw Error('Choose points, connected points, or stems.');
+  if(!['single','value','index'].includes(state.color))throw Error('Choose a listed point-color mode.');
+  for(const [key,min,max,label] of [['start',entry.offset,last,'First index'],['size',1,Math.min(1000,entry.terms.length),'Index positions'],['mod',2,1000000,'Modulus']]) {
     if(String(state[key]).trim()===''||!Number.isSafeInteger(Number(state[key]))||Number(state[key])<min||Number(state[key])>max){const error=Error(`${label} must be a whole number from ${min} to ${max}.`);error.field=key;throw error;}
     state[key]=Number(state[key]);
   }
@@ -24,6 +26,30 @@ export function archiveWindow(entry, options={}) {
     rows.push({n,raw:String(values[i]),value:v===null?null:String(v),next:next===null?null:String(next),x,y});
   }
   return {state,rows};
+}
+
+export function moveArchiveWindow(entry,state,action){
+  const {state:valid}=archiveWindow(entry,state),length=entry.terms.length,last=entry.offset+length-1;let start=valid.start,size=valid.size;
+  if(action==='all'){start=entry.offset;size=Math.min(1000,length);}
+  else if(action==='next')start=Math.min(last-size+1,start+size);
+  else if(action==='previous')start=Math.max(entry.offset,start-size);
+  else if(action==='in')size=Math.max(1,Math.ceil(size/2));
+  else if(action==='out'){size=Math.min(length,1000,size*2);start=Math.min(start,last-size+1);}
+  else throw Error('Choose a listed window action.');
+  return {...valid,start,size};
+}
+
+export function triangleWindow(entry,row){
+  if(entry.id!=='KOM084'||String(row).trim()===''||!Number.isSafeInteger(Number(row))||Number(row)<0)throw Error('Choose a stored polynomial row.');
+  row=Number(row);const start=row*(row+1)/2,size=row+1;
+  if(start+size>entry.terms.length)throw Error('That polynomial row is not fully stored.');
+  return {start,size,view:'raw',scale:'linear',marks:'line',color:'single'};
+}
+
+export function archivePreset(entry,name){
+  const presets={growth:{view:'raw',scale:'signed-log',marks:'line',color:'single'},residues:{view:'mod',scale:'linear',marks:'points',color:'value'},changes:{view:'difference',scale:'linear',marks:'stems',color:'single'},profile:{view:'raw',scale:'linear',marks:'stems',color:'single'}};
+  if(!Object.hasOwn(presets,name))throw Error('Choose a listed preset.');
+  return {...presets[name]};
 }
 
 export function archiveLink(href, values, hash='records') {

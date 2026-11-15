@@ -1,8 +1,9 @@
 # Recovered archive integration: finite verification
 
-`run-005/manifest.json` is the current receipt. Its run status is `completed`;
-the result reports `passed`. Runs 001-004 are retained development receipts
-and predate the portable launcher or final renderer and notation corrections.
+`run-006/manifest.json` is the current source replay receipt. Its run status is
+`completed`; the result reports `passed`. Run 005 describes the published import
+checkpoint; runs 001-004 are retained development receipts. Plot-window and
+appearance evidence is recorded separately in `../sequence-plots/`.
 
 The exact replay compares the entire recovered registry (90 records, 5,487
 integer terms) with the preserved generator. All 90 indexed text outputs

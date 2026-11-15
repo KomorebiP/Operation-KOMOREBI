@@ -338,3 +338,41 @@ browser suite checks filtering, independent Browse state, copied links,
 history, all 21 family cells, downloads, incoming/outgoing offsets,
 source-to-Study actions, no-JavaScript keyboard scrolling, narrow layouts,
 200% text with forced colors, and clipboard denial.
+
+## Plot appearance, preferences, and research-record windows
+
+Both plot interfaces have **Customize appearance and layout** controls for
+palettes, a custom main color, point size, line weight, chart height, grid lines,
+value-axis fitting, and endpoint or sparse index labels. Coincident labels are
+combined instead of being printed over one another. Comparison marks retain
+their separate shapes and line patterns. Modular plots and bars/stems retain
+their zero baseline; other value plots can fit their observed range.
+
+**Remember palette and layout** stores presentation preferences in this browser.
+Copied view links contain the complete appearance and override the recipient's
+saved settings. Denied or corrupt storage falls back to a usable default; it
+does not prevent plotting. These preferences do not change terms or indexing.
+
+Growth, residue, and difference presets provide starting views while retaining
+the current sequence and index window. Research records also have valuation or
+arithmetic-profile presets where appropriate, points/connected points/stems,
+and coloring by the displayed value or original index modulo m. Lines connect
+discrete samples; they do not add interpolated sequence data.
+
+The research-record viewer adds window navigation, zoom in/out, and **Fit stored
+data**. Every window stays within the record's original offset and stored range.
+KOM084 additionally selects complete polynomial rows while retaining its flat
+index j=n(n+1)/2+k. It never presents a flat index as the polynomial row number.
+
+SVG exports include their styling and point titles; PNG exports use twice the
+SVG canvas dimensions. Exact CSV exports remain available, and
+all 384 existing KSEQ/KOM exact exports retain their data. Source definitions
+and exact modular arithmetic are independent of the appearance choices.
+
+Presentation preferences and image export live in
+`website/assets/sequence-plot-options.mjs`; research-record rendering lives in
+`sequence-archive-plot.mjs`. The pure window model remains in
+`sequence-archive-core.mjs`. The plot browser suite covers three viewport widths,
+preferences, shared links, exports, triangle rows, storage denial, forced colors,
+and enlarged text. The finite checks are software checks, not accessibility
+certification or new mathematical review.
