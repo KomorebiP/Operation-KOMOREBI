@@ -5,8 +5,8 @@ const fields = new Set(['id','name','formula','tag','kind','oeis','n','r','statu
 const aliases = {title:'name',keyword:'tag',topic:'tag',type:'kind',power:'r'};
 
 export function canonicalID(value) {
-  const match = /^(a|kseq-?)(\d{1,6})$/i.exec(value.trim());
-  return match ? (match[1].toLowerCase()==='a'?'A':'KSEQ-')+match[2].padStart(6,'0') : value;
+  const match = /^(a|kseq-?|kom-?)(\d{1,6})$/i.exec(value.trim());
+  return match ? (match[1].toLowerCase()==='a'?'A':match[1].toLowerCase().startsWith('kom')?'KOM':'KSEQ-')+match[2].padStart(match[1].toLowerCase().startsWith('kom')?3:6,'0') : value;
 }
 
 export function termPattern(value) {
@@ -81,7 +81,7 @@ export function searchEntries(entries, query, options={}) {
         let matched=false,weight=0,detail='';
         if(clause.field==='terms'){
           const positions=matchTerms(entry.terms,clause.value,options.match||'any');matched=positions.length>0;
-          if(matched){weight=200+(positions[0]===0?20:0)+clause.value.filter(v=>v!==null).length;detail=`Term pattern at n = ${positions[0]}–${positions[0]+clause.value.length-1}`;
+          if(matched){weight=200+(positions[0]===0?20:0)+clause.value.filter(v=>v!==null).length;detail=`Term pattern at ${entry.index_symbol||'n'} = ${positions[0]+(entry.offset||0)}–${positions[0]+clause.value.length-1+(entry.offset||0)}`;
             if(!clause.exclude)termMatch={start:positions[0],length:clause.value.length,positions,pattern:clause.value};}
         }else{
           const value=clause.value,field=clause.field;
@@ -92,7 +92,7 @@ export function searchEntries(entries, query, options={}) {
         if(clause.exclude?matched:!matched){ok=false;break;}
         if(!clause.exclude){score+=weight;if(weight>=20)reason=detail;}
       }
-      if(ok&&(!best||score>best.score))best={entry,score,termMatch,reason:termMatch?`Term pattern at n = ${termMatch.start}–${termMatch.start+termMatch.length-1}`:reason};
+      if(ok&&(!best||score>best.score))best={entry,score,termMatch,reason:termMatch?`Term pattern at ${entry.index_symbol||'n'} = ${termMatch.start+(entry.offset||0)}–${termMatch.start+termMatch.length-1+(entry.offset||0)}`:reason};
     }
     if(best)results.push(best);
   }

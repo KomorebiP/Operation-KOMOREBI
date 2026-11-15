@@ -1,0 +1,40 @@
+/* Product tests against a generated local preview or the published reader. */
+const {chromium}=require('playwright');
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+const base=process.argv[2]||'http://127.0.0.1:8832/',out=process.argv[3]||'sequence-archive-browser';
+fs.mkdirSync(out,{recursive:true});
+const ready=page=>page.locator('[data-archive-ready="true"]').waitFor();
+const cards=page=>page.locator('[data-record]:visible');
+async function fits(page,js=true){if(js)await page.evaluate(async()=>{await document.fonts.ready;await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)))});const size=await page.evaluate(()=>({width:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth}));assert.ok(size.scroll<=size.width+1,JSON.stringify(size));return size;}
+(async()=>{
+ const browser=await chromium.launch({channel:'msedge',headless:true}),report={widths:[],errors:[]};
+ for(const width of [1440,390,320]){
+  const context=await browser.newContext({viewport:{width,height:1000},isMobile:width<500,hasTouch:width<500,permissions:['clipboard-read','clipboard-write']}),page=await context.newPage();page.on('pageerror',e=>report.errors.push(e.message));
+  await page.goto(new URL('sequence-archive.html',base).href);await ready(page);assert.equal(await cards(page).count(),90);await fits(page);
+  await page.screenshot({path:path.join(out,'library-'+width+'.png'),fullPage:false});
+  await page.locator('#sar-query').fill('id:kom85');await page.locator('#sar-search button[type=submit]').click();assert.equal(await cards(page).count(),1);assert.equal(await cards(page).first().getAttribute('data-record'),'KOM085');
+  await page.locator('#sar-clear').click();await page.selectOption('#sar-review','exploratory');await page.locator('#sar-search button[type=submit]').click();assert.equal(await cards(page).count(),62);
+  await page.locator('#sar-share').click();const link=await page.evaluate(()=>navigator.clipboard.readText());assert.equal(new URL(link).searchParams.get('review'),'exploratory');
+  await page.goto(link);await ready(page);assert.equal(await cards(page).count(),62);
+  await page.locator('#sar-query').fill('unknown:value');await page.locator('#sar-search button[type=submit]').click();assert.equal(await page.locator('#sar-error').isVisible(),true);assert.equal(await cards(page).count(),62);
+  await page.goto(new URL('sequence-archive.html?query=id%3AKOM067',base).href);await ready(page);assert.equal(await cards(page).count(),1);
+  await cards(page).first().locator('h2 a').click();await ready(page);assert.match(await page.locator('h1').textContent(),/sum=1/);assert.equal(await page.inputValue('#sar-start'),'2');assert.match(await page.locator('#sar-window').textContent(),/indices 2–33/);
+  await page.locator('#sar-inspect').fill('0');assert.equal(await page.locator('#sar-inspect').getAttribute('aria-invalid'),'true');await page.locator('#sar-inspect').fill('2');assert.match(await page.locator('#sar-exact').textContent(),/^a\(2\) = /);
+  await page.selectOption('#sar-view','difference');await page.locator('#sar-plot-form button[type=submit]').click();assert.equal(await page.locator('#sar-window-values tr').first().locator('td').nth(2).textContent(),'undefined');
+  await page.locator('#sar-start').fill('3');await page.locator('#sar-size').fill('5');await page.selectOption('#sar-view','sum');await page.locator('#sar-plot-form button[type=submit]').click();assert.match(await page.locator('#sar-window').textContent(),/indices 3–7/);
+  for(const mode of ['raw','mod','pairs']){await page.selectOption('#sar-view',mode);await page.locator('#sar-plot-form button[type=submit]').click();assert.equal(await page.locator('#sar-plot circle').count(),5);}
+  const dot=page.locator('#sar-plot circle').first();await dot.focus();const before=await page.locator('#sar-point').textContent();await page.keyboard.press('ArrowRight');assert.notEqual(await page.locator('#sar-point').textContent(),before);
+  await page.locator('#sar-start').fill('999');await page.locator('#sar-plot-form button[type=submit]').click();assert.equal(await page.locator('#sar-plot-error').isVisible(),true);assert.equal(await page.locator('#sar-plot circle').count(),5);
+  await page.locator('#sar-view-link').click();const plotLink=await page.evaluate(()=>navigator.clipboard.readText());assert.equal(new URL(plotLink).searchParams.get('start'),'3');
+  const download=page.waitForEvent('download');await page.locator('#sar-export').click();const exported=await download;const saved=path.join(out,'window-'+width+'.csv');await exported.saveAs(saved);assert.match(fs.readFileSync(saved,'utf8'),/^n,a\(n\),plotted_value,following_residue\n3,/);
+  await page.goto(new URL('sequence-archive/KOM084.html#exact-data',base).href);await ready(page);assert.equal(await page.locator('#exact-data tbody tr').count(),276);assert.deepEqual(await page.locator('#n-5').locator('th,td').allTextContents(),['5','2','2','1']);await fits(page);
+  await page.goto(new URL('sequence-archive/KOM004.html#plot',base).href);await ready(page);await page.locator('#sar-inspect').fill('25');const big=await page.locator('#sar-exact code').textContent();assert.ok(big.length>100);await fits(page);
+  await page.locator('#plot').scrollIntoViewIfNeeded();await page.screenshot({path:path.join(out,'plot-'+width+'.png'),fullPage:false});
+  await page.goto(new URL('sequence-archive/KOM067.html?start=0&mod=bad#plot',base).href);await ready(page);assert.equal(await page.locator('#sar-plot-error').isVisible(),true);assert.equal(await page.inputValue('#sar-start'),'2');assert.ok(await page.locator('#sar-plot circle').count()>0);
+  await page.goto(new URL('sequences.html?q=id%3AKOM085#find',base).href);await page.locator('[data-interface-ready="true"]').waitFor();assert.equal(new URL(await page.locator('#sa-archive-search').getAttribute('href'),base).searchParams.get('query'),'id:KOM085');await page.locator('#sa-archive-search').click();await ready(page);assert.equal(await cards(page).count(),1);
+  report.widths.push({width,search:true,offset:true,exactValues:true,keyboard:true,downloads:true,triangle:true,...await fits(page)});await context.close();
+ }
+ const plain=await browser.newContext({javaScriptEnabled:false,viewport:{width:320,height:900}}),nojs=await plain.newPage();await nojs.goto(new URL('sequence-archive.html',base).href);assert.equal(await cards(nojs).count(),90);assert.equal(await nojs.locator('#sar-search').isVisible(),false);await fits(nojs,false);await nojs.goto(new URL('sequence-archive/KOM067.html',base).href);assert.equal(await nojs.locator('#exact-data tbody tr').count(),40);assert.equal(await nojs.locator('#exact-data tbody tr').first().locator('th').textContent(),'2');await fits(nojs,false);report.noJavaScript=true;await plain.close();
+ const denied=await browser.newContext({viewport:{width:320,height:900},forcedColors:'active',reducedMotion:'reduce'});await denied.addInitScript(()=>Object.defineProperty(navigator,'clipboard',{value:{writeText:async()=>{throw Error('Denied')}}}));const fallback=await denied.newPage();await fallback.goto(new URL('sequence-archive.html?query=id%3AKOM085',base).href);await ready(fallback);await fallback.locator('#sar-share').click();assert.equal(await fallback.locator('#sar-share-fallback').isVisible(),true);await fallback.addStyleTag({content:'html{font-size:200%!important}'});await fits(fallback);await fallback.screenshot({path:path.join(out,'high-contrast-large.png')});report.clipboardFallback=true;report.highContrastEnlarged=true;await denied.close();
+ assert.deepEqual(report.errors,[]);fs.writeFileSync(path.join(out,'report.json'),JSON.stringify(report,null,2)+'\n');await browser.close();console.log(JSON.stringify(report));
+})().catch(error=>{console.error(error);process.exit(1)});
