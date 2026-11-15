@@ -81,6 +81,12 @@ The same calculation gives a residual-based stopping test for an affine
 iteration. Exact examples and answered exercises connect each conclusion
 to its norm and error assumptions.
 
+The [compression and memory study](operators/REDUCTION.md) follows information
+that leaves a retained coordinate and later returns. Derive an exact memory
+kernel, save the state needed for a restart, and bound a recursively advanced
+finite-memory approximation. Generating functions and invariant packets provide
+two further ways to understand which reduced updates are valid.
+
 **First reading:** Begin with [basics](operators/BASICS.md), continue to
 [packets](operators/PACKETS.md), then work through the
 [two-coordinate audit](#a-complete-audit-of-a-two-coordinate-operation) below.
@@ -129,6 +135,7 @@ formal statements and their precise scope.
 | Decide whether a compressed state supports the next update | [Exact reduced dynamics](operators/TRANSFER.md#5-compression-and-exact-reduced-dynamics), then [recovery](operators/RECOVERY.md). |
 | Reconstruct a hidden state from a sequence of readings | [Observation and recovery](operators/OBSERVATION.md), including noise bounds, consistency checks, and changed sample times. |
 | Bound a repeated update before and after its transient | [Stable updates and transient growth](operators/DYNAMICS.md), including energy, disturbances, and a fixed-point stopping test. |
+| Retain a smaller state or shorten its history | [Compression and memory](operators/REDUCTION.md), including closure obstructions, checkpoints, and memory-tail error bounds. |
 | Compare an operation in different metrics | [Adjoints](operators/BASICS.md#8-adjoint-and-self-adjoint-operators) and [conditioning](operators/STABILITY.md#4-coordinate-conditioning), then the [metric transport family](operators/catalog/K_METRICS.md). |
 | Turn an integral or moment question into a finite functional | [Operator types](operators/BASICS.md#1-typed-operators-domains-and-codomains), then the [finite integration and observation family](operators/catalog/L_INTEGRATION.md). |
 

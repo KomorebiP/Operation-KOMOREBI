@@ -165,6 +165,12 @@ block remains nonzero.
 
 [See the transfer blocks](TRANSFER.md#1-source-to-target-blocks).
 
+The [compression and memory study](REDUCTION.md#7-change-the-summary-when-the-task-permits)
+compares coordinate packets with invariant sum-and-difference packets for one
+matrix. Each invariant summary has a closed update. The worked collision
+check also shows why keeping only the sum cannot answer every question about
+the original coordinates.
+
 ## 8. Spectral projectors and diagonalizability
 
 For a finite-dimensional operator diagonalizable over the chosen field,
