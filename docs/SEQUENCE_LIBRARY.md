@@ -88,21 +88,28 @@ Cancellation terminates the worker. Unsupported browser features retain download
 links and precomputed record comparisons. OEIS data, extracts and matching are
 attributed under CC BY-SA 4.0; full entry details remain on OEIS.
 
-The sequence routes default to clean white pages, near-black text and strong
-blue links. The Page appearance control changes every reading surface, control,
-code block and table together; light/dark/system choices persist independently
-of saved entries. No-JavaScript pages use the light theme even under a dark OS.
-Plot presets provide full-opacity blue/orange marks, stronger lines and clear
-axis labels. Built-in plot colors are adjusted to at least 4.5:1 against the
-chosen plot background at full opacity. Custom colors remain exact and show
-contrast feedback. These are measured implementation checks, not certification.
+The sequence routes use the site's green tones by default. The visible Color
+scheme buttons switch between Site green and Black & white; Light/Dark/System
+is a separate display control. Choices persist across sequence routes. Switching
+a page scheme also applies it to the current plots, including when an older
+saved plot preference used color. Black & white uses neutral gray text, panels,
+controls, plot backgrounds and marks. Shapes and line patterns distinguish
+series without requiring hue. Print output uses black text on white paper.
 
-The shared appearance panel includes nine built-in palettes and custom main /
-comparison colors, paper/white/night backgrounds, direction, opacity, palette
-previews, and contrast feedback for custom colors. Built-in colors adapt to the
-background; explicit custom colors remain exact. Saved v1 settings and earlier
-view links remain supported. System forced colors take precedence. Appearance
-changes never alter integer terms, rational reduction, or modular arithmetic.
+Plots default to Match page scheme. Green-only and monochrome palettes are
+listed first; the remaining multicolor and custom palettes are grouped as
+Optional colors. A user can choose these independently after switching page
+schemes. Readable light/dark plot presets preserve the chosen page scheme.
+Copied plot links resolve Match page scheme to an explicit palette so recipients
+see the same plotted colors. Exact arithmetic and source data are independent
+of appearance settings.
+
+The shared appearance panel also supports custom colors, backgrounds, direction,
+opacity, point size, line weight, chart height, grid, baseline and labels.
+Built-in mark colors meet 4.5:1 against the chosen background at full opacity;
+custom colors remain exact with contrast feedback. Saved v1 preferences and
+older explicit view links remain supported. System forced colors take precedence.
+These are measured implementation checks, not accessibility certification.
 
 Validation commands:
 
