@@ -27,6 +27,31 @@ and `?`. Fields include `formula:`, `representation:`, `collection:`, `n:`
 pagination and shared links preserve applied state. Result CSVs export the
 complete filtered set rather than only the current page.
 
+Saved entries use the existing browser-local saved-list key across all 1,911
+records, with a 500-record limit. Scoped writes from the older atlas preserve
+records from other collections. The saved filter uses the recipient's own list
+when sharing a search. Storage denial leaves the current session usable.
+
+The comparison workbench accepts up to four local records or OEIS excerpts.
+It supports raw integers, first differences and prefix sums, linear or signed
+logarithmic coordinates, residues, and common stored-position windows. Prefix
+sums include earlier stored terms before the visible window. Each source keeps
+its original local index convention. Position alignment starts the chosen
+windows together; recorded-index alignment is available for local records only
+and does not imply equal source degrees. The bulk OEIS files omit mathematical
+offsets, so reference excerpts always use export positions.
+
+Comparison links contain source descriptors and display settings. Local records
+restore immediately; reference descriptors must match the retained snapshot
+hash and require an explicit load action. Opening a link does not download the
+bulk data. The finder and restoration reuse the same worker's compressed-file
+cache. Exact agreement counts compare displayed integers over the overlap;
+modular views label these as residue agreements. SVG/PNG exports include the
+series legend and OEIS credit when applicable. CSVs retain exact values, index
+conventions, source URLs, reference hashes and reference licensing. Points use
+roving keyboard focus, with arrows within/across series and Home/End endpoints;
+the HTML table provides the same exact integers.
+
 The OEIS snapshot contains 401,422 records, downloaded from the official
 `stripped.gz` and `names.gz` URLs. Precomputed comparisons require eight local
 terms at a contiguous export position and extend through every available local
@@ -36,7 +61,7 @@ A-numbers, name words, or patterns of 3..1,000 terms. It reports all matching
 record counts and shows at most 50 records. Shorter patterns may have many hits.
 
 The bulk files total 41,692,183 compressed bytes and load on explicit reference
-search. A worker streams decompression for each scan, retaining compressed
+search or explicit shared-excerpt restoration. A worker streams decompression for each scan, retaining compressed
 bytes rather than the whole decompressed database. Queries stay in the browser.
 Cancellation terminates the worker. Unsupported browser features retain download
 links and precomputed record comparisons. OEIS data, extracts and matching are
@@ -53,8 +78,9 @@ Validation commands:
 
 ```text
 python -m unittest discover -s tools -p test_sequence_library.py
-node --test tools/test_sequence_library.mjs
+node --test tools/test_sequence_library.mjs tools/test_sequence_workbench.mjs
 node tools/test_sequence_library_browser.cjs http://127.0.0.1:8834/ OUTPUT_DIRECTORY
+node tools/test_sequence_workbench_browser.cjs http://127.0.0.1:8836/ OUTPUT_DIRECTORY
 python tools/audit_sequence_library.py --oeis --output RESULT_JSON
 ```
 
