@@ -15,6 +15,7 @@ CARD_RECORD = 'assets/brand/sharing-card.json'
 NOINDEX = {'404.html', 'search.html', 'side-by-side.html', 'reading-list.html', 'lean/run.html'}
 MAX_DESCRIPTION = 165
 DESCRIPTIONS = {
+    'sequences.html': 'Search integer sequences and formulas, compare published families, explore exact modular plots, and follow the source derivations.',
     'index.html': 'Explore mathematical papers, visual guides, recorded proofs, and executable examples in the Komorebi collection.',
     'sitemap.html': 'Browse every Komorebi reader page by section, including papers, books, visual guides, collection records, Lean proofs and software documentation.',
     'collection/START_HERE.html': 'Start with a worked calculation, choose a reading route, and learn how to interpret the collection’s claims and evidence.',

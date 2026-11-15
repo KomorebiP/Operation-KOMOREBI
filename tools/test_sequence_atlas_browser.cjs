@@ -1,0 +1,84 @@
+/* Run with NODE_PATH pointing at Playwright, against a reader build or focused preview. */
+const {chromium}=require('playwright');
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const base=process.argv[2]||'http://127.0.0.1:8826/';
+const out=process.argv[3]||'sequence-atlas-browser';
+fs.mkdirSync(out,{recursive:true});
+(async()=>{
+  const browser=await chromium.launch({channel:'msedge',headless:true});
+  const report={layouts:[],interactions:[],errors:[]};
+  for(const width of [1440,390,320]){
+    const context=await browser.newContext({viewport:{width,height:1000},isMobile:width<500,hasTouch:width<500,permissions:['clipboard-read','clipboard-write']});
+    const page=await context.newPage();page.on('pageerror',e=>report.errors.push(e.message));
+    const response=await page.goto(new URL('sequences.html',base).href,{waitUntil:'networkidle'});assert.equal(response.status(),200);
+    await page.locator('#sa-workspace').waitFor({state:'visible'});
+    await page.evaluate(async()=>{await document.fonts.ready;await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));});
+    assert.equal(await page.locator('[data-sequence]').count(),26);
+    const layout=await page.evaluate(()=>({width:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth,h1:document.querySelectorAll('h1').length,plot:document.querySelector('#sa-plot svg').getBoundingClientRect().toJSON()}));
+    assert.ok(layout.scroll<=width+1,JSON.stringify(layout));assert.equal(layout.h1,1);
+    report.layouts.push(layout);
+    await page.screenshot({path:path.join(out,`atlas-${width}.png`),fullPage:false});
+    await page.locator('#sa-plot').scrollIntoViewIfNeeded();
+    await page.screenshot({path:path.join(out,`plot-${width}.png`),fullPage:false});
+    await page.locator('.sa-advanced summary').click();
+    for(const view of ['standard','mod','grid','frequency','pairs']){
+      await page.selectOption('#sa-view',view);
+      assert.equal(await page.locator('#sa-error').isVisible(),false,view);
+      assert.ok(await page.locator('#sa-plot svg [tabindex]').count()>0);
+      const bounds=await page.evaluate(()=>({width:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth}));
+      assert.ok(bounds.scroll<=bounds.width+1,JSON.stringify({view,...bounds}));
+    }
+    await page.selectOption('#sa-view','mod');
+    await page.locator('#sa-query').fill('1, 1, 69');
+    assert.equal(await page.locator('[data-sequence]:visible').count(),1);
+    await page.locator('[data-load="KSEQ-000007"]').click();
+    assert.equal(await page.inputValue('#sa-sequence'),'KSEQ-000007');
+    await page.locator('#sa-query').fill('Fubini');
+    assert.equal(await page.locator('[data-sequence]:visible').count(),1);
+    await page.locator('#sa-query').fill('');
+    await page.selectOption('#sa-N','4');await page.selectOption('#sa-power','2');
+    assert.equal(await page.inputValue('#sa-sequence'),'KSEQ-000008');
+    await page.selectOption('#sa-compare','KSEQ-000001');
+    assert.ok((await page.locator('#sa-values tr').count())>32);
+    await page.selectOption('#sa-transform','ratio');
+    assert.equal(await page.locator('#sa-error').isVisible(),true);
+    await page.selectOption('#sa-view','standard');
+    assert.equal(await page.locator('#sa-error').isVisible(),false);
+    await page.selectOption('#sa-transform','raw');await page.selectOption('#sa-compare','');
+    await page.selectOption('#sa-sequence','custom');
+    assert.equal(await page.locator('#sa-custom-panel').isVisible(),true);
+    await page.locator('#sa-custom').fill('-1, 9007199254740993, 3, 4, 5, 6');
+    await page.selectOption('#sa-view','mod');await page.locator('#sa-modulus').fill('7');await page.locator('#sa-modulus').dispatchEvent('change');
+    assert.equal(await page.locator('#sa-error').isVisible(),false);
+    assert.equal(await page.locator('#sa-values tr').first().locator('td').nth(4).textContent(),'6');
+    assert.equal(await page.locator('#sa-values tr').nth(1).locator('td').nth(4).textContent(),'5');
+    const point=page.locator('#sa-plot [tabindex]').first();await point.focus();
+    assert.ok((await page.locator('#sa-inspect').textContent()).includes('-1'));
+    await page.locator('#sa-animate').click();await page.waitForTimeout(900);await page.locator('#sa-animate').click();
+    assert.equal(await page.locator('#sa-animate').getAttribute('aria-pressed'),'false');
+    for(const [id,extension]of [['csv','csv'],['svg','svg'],['png','png']]){
+      const pending=page.waitForEvent('download');await page.locator('#sa-'+id).click();const download=await pending;assert.ok(download.suggestedFilename().endsWith('.'+extension));await download.saveAs(path.join(out,`export-${width}.${extension}`));
+    }
+    await page.locator('#sa-share').click();
+    let shared=await page.locator('#sa-share-link').inputValue();
+    if(!shared)shared=await page.evaluate(()=>navigator.clipboard.readText());
+    assert.ok(shared.includes('sequence=custom')&&shared.includes('terms='));
+    await page.goto(shared,{waitUntil:'networkidle'});await page.locator('#sa-workspace').waitFor({state:'visible'});
+    assert.equal(await page.inputValue('#sa-sequence'),'custom');
+    assert.ok((await page.locator('#sa-values').textContent()).includes('9007199254740993'));
+    await page.locator('#sa-reset').click();
+    assert.equal(await page.inputValue('#sa-sequence'),'KSEQ-000007');
+    await page.goto(new URL('sequences/KSEQ-000007.html',base).href,{waitUntil:'networkidle'});
+    assert.equal(await page.locator('tbody tr').count(),64);
+    const entryLayout=await page.evaluate(()=>({width:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth}));assert.ok(entryLayout.scroll<=entryLayout.width+1,JSON.stringify(entryLayout));
+    report.interactions.push({width,views:5,search:true,parameters:true,comparison:true,invalidTransform:true,customExact:true,keyboardPoint:true,animation:true,exports:3,shareRestore:true,entry:true});
+    await context.close();
+  }
+  const context=await browser.newContext({javaScriptEnabled:false,viewport:{width:320,height:900}});const page=await context.newPage();
+  await page.goto(new URL('sequences.html',base).href);assert.equal(await page.locator('[data-sequence]:visible').count(),26);assert.equal(await page.locator('#sa-workspace').isVisible(),false);
+  await page.locator('a[href="sequences/KSEQ-000007.html"]').click();assert.equal(await page.locator('tbody tr').count(),64);
+  report.noJavaScript=true;assert.deepEqual(report.errors,[]);await browser.close();
+  fs.writeFileSync(path.join(out,'report.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report));
+})().catch(e=>{console.error(e);process.exit(1);});

@@ -825,8 +825,9 @@ class ReaderSiteTests(unittest.TestCase):
         self.assertIn('DEMONSTRATIONS.html#extended-case-studies', [a['href'] for a in links])
         self.assertIn('OPERATOR_AUDIT.html', [a['href'] for a in links])
         self.assertIn('FUTURE_DEVELOPMENTS.html', [a['href'] for a in links])
-        self.assertEqual(len(links),29)
-        self.assertEqual(len({a['href'] for a in links}),29)
+        self.assertIn('../sequences.html', [a['href'] for a in links])
+        self.assertEqual(len(links),30)
+        self.assertEqual(len({a['href'] for a in links}),30)
         self.assertIn('SPECIAL_FUNCTIONS.html', [a['href'] for a in links])
         special=Links(site_navigation('collection/SPECIAL_FUNCTIONS.html')).links
         self.assertEqual([a['href'] for a in special if a.get('aria-current')=='page'], ['SPECIAL_FUNCTIONS.html'])
