@@ -1,7 +1,7 @@
 // Native links remain usable without JavaScript. Enhancement shows one workspace.
 export function workspaceForURL(href){
   const url=new URL(href);
-  return url.hash.slice(1)||(url.searchParams.has('discover')?'discover':['sequence','seq','view','compare'].some(key=>url.searchParams.has(key))?'explorer':'find');
+  return url.hash.slice(1)||(url.searchParams.has('discover')?'discover':['index-query','index-topic','index-order','index-connected'].some(key=>url.searchParams.has(key))?'catalogue':['sequence','seq','view','compare'].some(key=>url.searchParams.has(key))?'explorer':'find');
 }
 export function setupInterface(root,{onLeavePlot=()=>{}}={}){
   const names=['find','discover','explorer','catalogue','reference'];let current=null;
@@ -15,6 +15,8 @@ export function setupInterface(root,{onLeavePlot=()=>{}}={}){
     for(const [name,panel]of panels)panel.hidden=name!==id;
     root.querySelectorAll('[data-atlas-mode]').forEach(link=>{if(link.dataset.atlasMode===id)link.setAttribute('aria-current','location');else link.removeAttribute('aria-current');});
     current=id;root.dataset.activePanel=id;
+    const selected=nav.querySelector('[aria-current]');
+    if(selected&&nav.scrollWidth>nav.clientWidth){const item=selected.getBoundingClientRect(),bounds=nav.getBoundingClientRect();if(item.left<bounds.left+8)nav.scrollLeft+=item.left-bounds.left-8;else if(item.right>bounds.right-8)nav.scrollLeft+=item.right-bounds.right+8;}
     if(history&&location.hash!=='#'+id){const url=new URL(location.href);url.hash=id;window.history.pushState(null,'',url);}
     if(focus)panels.get(id).querySelector('h2').focus({preventScroll:true});
   }
