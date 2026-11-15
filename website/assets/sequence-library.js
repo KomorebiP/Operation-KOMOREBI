@@ -13,7 +13,7 @@ function render(){
   for(const hit of results.slice(page*24,(page+1)*24)){
     const entry=hit.entry,li=make('li'),label=make('p',entry.id+' / '+entry.collection);label.className='sar-kicker';const heading=make('h3'),link=make('a',entry.title);link.href=entry.url;heading.append(link);li.append(label,heading,make('p',entry.kind+' · '+entry.formulas.length+' representations · first index '+entry.offset));
     const expression=make('p',entry.formula);expression.className='sar-formula';li.append(expression,make('p',hit.termMatch?hit.reason:entry.tags.filter(x=>x==='hypergeometric').length?'Includes a hypergeometric representation.':entry.status));
-    const links=make('div'),plot=make('a','Plot and inspect →'),formulas=make('a','Read formulas');links.className='sp-actions';plot.href=entry.url+(entry.collection==='atlas'?'#analysis':'#plot');formulas.href=entry.url+'#formulas';links.append(plot,formulas);li.append(links);$('results').append(li);
+    const links=make('div'),plot=make('a','Plot and inspect →'),formulas=make('a','Read formulas');links.className='sp-actions';plot.href=entry.url+(entry.collection==='atlas'?'#analysis':'#plot');formulas.href=entry.url+(entry.collection==='recovered'?'#definition':'#formulas');links.append(plot,formulas);li.append(links);$('results').append(li);
   }
   $('results').start=page*24+1;$('count').textContent=`${results.length.toLocaleString()} matching local records. ${results.length?`Showing ${page*24+1}–${Math.min(results.length,(page+1)*24)}.`:'Try fewer words or another formula type.'}`;$('page').textContent=`Page ${page+1} of ${Math.max(1,Math.ceil(results.length/24))}`;$('previous').disabled=page===0;$('next').disabled=(page+1)*24>=results.length;$('pages').hidden=results.length<=24;
 }
