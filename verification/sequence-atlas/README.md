@@ -113,3 +113,32 @@ identity-equivalent forms omitted by the matcher. Fixtures with eight squares,
 six powers of two and six zeros report nine, five and one distinct usable
 forms respectively. Eight Python and twenty-three Node tests pass. Matched
 values, index ranges and original catalogue terms are unchanged by this fix.
+
+## Reading-interface run 008
+
+`reading-contract.json` and `run-008` record nine Python and twenty-three
+Node tests for the reading-interface revision. The 38 identifiers and all
+2,432 stored integer terms retain the existing snapshot signature. No OEIS
+rescan, new definition of a sequence, proof-status change or novelty claim
+is introduced.
+
+The new finite controls check 228 index-map rows (six per entry). The 126
+reciprocal rows map compressed n to degree N*n and compare the displayed
+ordinary coefficient against Python Fraction(a(n), factorial(N*n)). Euler
+rows map n to Euler index 2n without factorial division; direct references
+retain index n. The term inspector uses the stored table and exact browser
+integer/fraction operations. Its representative reciprocal, Euler and
+direct-index interactions are checked separately at n=2 and n=63.
+
+The updated prior Edge suite preserves search, saving, discovery, plotting,
+link restoration and exports through the separated workspaces. The new
+interface suite checks workspace switching and history, all-entry browsing
+independently of search, exact term copying and deep links, index errors,
+entry search, and the 38 typeset formulas without MathJax error nodes or
+duplicate containers. Nine entry flows cover three index conventions at
+1440px, 390px and 320px. No-JavaScript reading, 200% text with forced colors,
+and unavailable-math-runtime fallback are checked. These are implementation
+and self-review results, without screen-reader user testing or accessibility
+certification. Self-review covered the added definition prose, domains,
+normalization, symbol legends, TeX and index conventions; original formula
+strings and sequence generators are retained.
