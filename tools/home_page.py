@@ -102,6 +102,7 @@ def entry_slides():
 
 def home_page():
     features = [
+        ('Sequence and Formula Atlas', 'Search source-linked integer sequences and formulas. Plot exact terms, compare families, explore residues modulo m, and export your calculations and figures.', 'sequences.html', 'Explore'),
         ('Operator guide', 'Explore seven worked chapters and a searchable catalog of 205 operator entries. Follow linear maps, packets, transfer, recovery, stability, and polynomial calculus through exact examples, with formulas, assumptions, and source links close at hand.', 'collection/OPERATOR_AUDIT.html', 'Understand'),
         ('Recovery laboratory', 'Choose what you can measure and what you want to recover. Change the measurements, inspect exact calculations and graphs, and see either a recovery rule or two inputs that the summary cannot distinguish. Then add the information that is missing.', 'recovery-lab.html', 'Experiment'),
         ('Read side by side', 'Keep a statement beside its proof, or compare papers, chapters, worked examples, and formal sources. Follow references in the other pane, adjust the layout, and save a paired reading session so you can return to the same passages.', 'side-by-side.html', 'Compare'),
