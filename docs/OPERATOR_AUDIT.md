@@ -65,27 +65,17 @@ compose coarse and metric defects, integrate from a changed polynomial basis,
 retain a finite measure's correlations, and continue a recursive filter across
 a chunk boundary. Each calculation includes an exact result and a failure control.
 
-**Follow one task from start to finish:** The
-[observation and recovery study](operators/OBSERVATION.md) reconstructs a
-three-coordinate hidden state from scalar readings. It follows the same
-system through a failure with too little history, exact recovery, noise
-amplification, a fourth-reading consistency check, and two fitting criteria.
-It also shows how changing sample times changes the reconstruction and its
-error bounds. An exact program and answered exercises accompany the study.
+### Worked studies
 
-The [stable-update study](operators/DYNAMICS.md) follows a two-coordinate
-system that eventually decays but first amplifies some inputs. Compare exact
-power norms with a contraction estimate, construct a decreasing quadratic
-energy, and account for a discarded transfer and repeated disturbances.
-The same calculation gives a residual-based stopping test for an affine
-iteration. Exact examples and answered exercises connect each conclusion
-to its norm and error assumptions.
+Follow one task from start to finish. Each study supplies exact examples,
+failure controls, answered exercises, and a reproducible check program.
 
-The [compression and memory study](operators/REDUCTION.md) follows information
-that leaves a retained coordinate and later returns. Derive an exact memory
-kernel, save the state needed for a restart, and bound a recursively advanced
-finite-memory approximation. Generating functions and invariant packets provide
-two further ways to understand which reduced updates are valid.
+| Study | Follow the calculation |
+|---|---|
+| [Observation and recovery](operators/OBSERVATION.md) | Recover a hidden state from scalar readings; compare history length, noise bounds, consistency checks, fitting criteria, and sample times. |
+| [Stable updates and transient growth](operators/DYNAMICS.md) | Follow early amplification and eventual decay; compare power norms, quadratic energy, repeated disturbances, and a fixed-point stopping test. |
+| [Compression and memory](operators/REDUCTION.md) | Derive a memory kernel, restart from a checkpoint, bound a truncated recurrence, and compare generating functions with invariant summaries. |
+| [Finite cutoffs and safe compositions](operators/CUTOFFS.md) | Locate a boundary defect, budget intermediate degrees, transport the cutoff, and check how the coefficient field changes the conclusion. |
 
 **First reading:** Begin with [basics](operators/BASICS.md), continue to
 [packets](operators/PACKETS.md), then work through the
@@ -136,6 +126,7 @@ formal statements and their precise scope.
 | Reconstruct a hidden state from a sequence of readings | [Observation and recovery](operators/OBSERVATION.md), including noise bounds, consistency checks, and changed sample times. |
 | Bound a repeated update before and after its transient | [Stable updates and transient growth](operators/DYNAMICS.md), including energy, disturbances, and a fixed-point stopping test. |
 | Retain a smaller state or shorten its history | [Compression and memory](operators/REDUCTION.md), including closure obstructions, checkpoints, and memory-tail error bounds. |
+| Check an operator identity in a finite polynomial model | [Finite cutoffs](operators/CUTOFFS.md), including safe padding, boundary norms, and characteristic-dependent controls. |
 | Compare an operation in different metrics | [Adjoints](operators/BASICS.md#8-adjoint-and-self-adjoint-operators) and [conditioning](operators/STABILITY.md#4-coordinate-conditioning), then the [metric transport family](operators/catalog/K_METRICS.md). |
 | Turn an integral or moment question into a finite functional | [Operator types](operators/BASICS.md#1-typed-operators-domains-and-codomains), then the [finite integration and observation family](operators/catalog/L_INTEGRATION.md). |
 
