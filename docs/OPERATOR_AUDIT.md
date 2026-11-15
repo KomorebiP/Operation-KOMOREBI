@@ -65,6 +65,14 @@ compose coarse and metric defects, integrate from a changed polynomial basis,
 retain a finite measure's correlations, and continue a recursive filter across
 a chunk boundary. Each calculation includes an exact result and a failure control.
 
+**Follow one task from start to finish:** The
+[observation and recovery study](operators/OBSERVATION.md) reconstructs a
+three-coordinate hidden state from scalar readings. It follows the same
+system through a failure with too little history, exact recovery, noise
+amplification, a fourth-reading consistency check, and two fitting criteria.
+It also shows how changing sample times changes the reconstruction and its
+error bounds. An exact program and answered exercises accompany the study.
+
 **First reading:** Begin with [basics](operators/BASICS.md), continue to
 [packets](operators/PACKETS.md), then work through the
 [two-coordinate audit](#a-complete-audit-of-a-two-coordinate-operation) below.
@@ -111,6 +119,7 @@ formal statements and their precise scope.
 | Select coefficients after changing polynomial coordinates | [Polynomial packets](operators/POLYNOMIAL.md#5-transported-projectors-and-a-complete-packet-calculation), then the [coordinate](operators/catalog/C_COORDINATES.md) and [spectral](operators/catalog/B_CYCLIC.md) families. |
 | Compose a filter or carry it across scales | [Transfer blocks](operators/TRANSFER.md#3-compose-blocks-through-intermediate-packets), then the [signal and polyphase family](operators/catalog/E_SIGNAL.md). |
 | Decide whether a compressed state supports the next update | [Exact reduced dynamics](operators/TRANSFER.md#5-compression-and-exact-reduced-dynamics), then [recovery](operators/RECOVERY.md). |
+| Reconstruct a hidden state from a sequence of readings | [Observation and recovery](operators/OBSERVATION.md), including noise bounds, consistency checks, and changed sample times. |
 | Compare an operation in different metrics | [Adjoints](operators/BASICS.md#8-adjoint-and-self-adjoint-operators) and [conditioning](operators/STABILITY.md#4-coordinate-conditioning), then the [metric transport family](operators/catalog/K_METRICS.md). |
 | Turn an integral or moment question into a finite functional | [Operator types](operators/BASICS.md#1-typed-operators-domains-and-codomains), then the [finite integration and observation family](operators/catalog/L_INTEGRATION.md). |
 

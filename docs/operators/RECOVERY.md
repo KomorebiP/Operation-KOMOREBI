@@ -219,6 +219,13 @@ cannot distinguish $(0,0)$ from $(0,1)$. The calculation assumes both
 observations belong to the same unforced trajectory with the stated $T$;
 unknown inputs or measurement noise require additional terms and assumptions.
 
+For a complete three-coordinate calculation, continue with
+[observation and recovery](OBSERVATION.md). It constructs the observation
+and inverse matrices, turns a three-reading history into a state, and uses
+a fourth reading to compare exact recovery, bounded measurement error, and
+a squared-error fit. The [sample-time calculation](OBSERVATION.md#7-change-the-sample-times-explicitly)
+also shows why the number of readings alone does not specify the problem.
+
 ## Try it: recover a difference or a total
 
 Measure $d_1=x_1-x_2$ and $d_2=x_2-x_3$ on $\mathbb R^3$. Can these
