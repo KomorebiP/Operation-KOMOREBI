@@ -221,7 +221,10 @@ async function refinementChecks(page){
   const context=await browser.newContext({javaScriptEnabled:false,viewport:{width:320,height:900}});const page=await context.newPage();
   await page.goto(new URL('sequences.html',base).href);assert.equal(await page.locator('[data-sequence]:visible').count(),38);assert.equal(await page.locator('#sa-workspace').isVisible(),false);
   await page.locator('a[href="sequences/KSEQ-000007.html"]').click();assert.equal(await page.locator('tbody tr').count(),64);
-  report.noJavaScript=true;await context.close();
+  const program=page.getByRole('region',{name:'Python reproduction program',exact:true});await program.focus();
+  for(let n=0;n<5;n++)await program.press('ArrowRight');await page.waitForTimeout(200);
+  assert.ok(await program.evaluate(node=>node.scrollLeft>0),'Long code can be scrolled with the keyboard without JavaScript.');
+  report.noJavaScript=true;report.programKeyboardNoJavaScript=true;await context.close();
   const accessible=await browser.newContext({viewport:{width:320,height:1000},forcedColors:'active',reducedMotion:'reduce'});
   const accessiblePage=await accessible.newPage();accessiblePage.on('pageerror',e=>report.errors.push(e.message));
   await accessiblePage.goto(new URL('sequences.html',base).href,{waitUntil:'networkidle'});await accessiblePage.locator('#sa-workspace').waitFor({state:'visible'});

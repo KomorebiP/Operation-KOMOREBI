@@ -168,7 +168,7 @@ Topic links offer a compact browse index, and Random entry opens a local record.
 
 Entry pages now have permanent section anchors for definitions/indexing,
 formulas/recurrences, worked examples, programs, computed connections, exact
-data, and references. Copyable self-contained Python programs reproduce the
+data, and references. The program block is a named keyboard-focusable scroll region, including without JavaScript. Copyable self-contained Python programs reproduce the
 first sixteen terms with the standard library. Four exact transforms are
 checked over twelve terms to suggest cross-references; each is labelled with
 both index origins and finite scope. Similar-topic navigation is separate.

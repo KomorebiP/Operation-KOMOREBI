@@ -13,7 +13,9 @@ function probe(values,operation){
   return {operation,start,values:rows.slice(start)};
 }
 export function analyzeInput(text){
-  const values=parseTerms(text.replace(/\u2212/g,'-'));
+  if(text.length>20000)throw Error('Keep discovery input below 20,000 characters.');
+  let values;
+  try{values=parseTerms(text.replace(/\u2212/g,'-'));}catch{throw Error('Use 6–64 comma- or space-separated integers, with at most 300 digits per integer. Fractions and decimal values are not supported.');}
   if(values.length<6||values.length>64)throw Error('Use 6–64 consecutive integers for discovery. Up to 300 digits per integer.');
   return values;
 }
