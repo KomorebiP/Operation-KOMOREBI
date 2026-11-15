@@ -51,3 +51,8 @@ test('repeated target positions are grouped and redundant shortened-input matche
   const square=discover(entries,'0,1,4,9,16,25,36,49',{limit:500});
   assert.ok(!square.results.some(r=>r.id==='KSEQ-000030'&&r.inputOperation.startsWith('drop-')&&r.targetOperation==='raw'));
 });
+test('the coverage counter excludes short and identity-equivalent input forms',()=>{
+  assert.equal(discover(entries,'0,1,4,9,16,25,36,49').testedOperations,9);
+  assert.equal(discover(entries,'1,2,4,8,16,32').testedOperations,5);
+  assert.equal(discover(entries,'0,0,0,0,0,0').testedOperations,1);
+});

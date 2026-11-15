@@ -22,13 +22,11 @@ export function analyzeInput(text){
 export function discover(entries,text,{both=false,limit=24}={}){
   const values=analyzeInput(text),probes=OPERATIONS.map(([operation])=>probe(values,operation));
   for(const skip of [1,2])probes.push({operation:'drop-'+skip,start:skip,values:values.slice(skip).map(String)});
+  const usable=probes.filter(input=>input.values.length>=6&&(input.operation==='raw'||input.start!==0||input.values.some((v,n)=>v!==String(values[n]))));
   const results=[];
   for(const entry of entries){
     const raw=entry.terms.map(BigInt),candidates=(both?OPERATIONS.filter(([op])=>!['binomial','inverse-binomial'].includes(op)):[OPERATIONS[0]]).map(([op])=>probe(raw,op));
-    for(const input of probes){
-      if(input.values.length<6)continue;
-      // Identity-like transforms can repeat the same values; retain the simplest explanation.
-      if(input.operation!=='raw'&&input.start===0&&input.values.every((v,n)=>v===String(values[n])))continue;
+    for(const input of usable){
       for(const target of candidates){
         if(target.operation!=='raw'&&target.values.every((v,n)=>v===entry.terms[n]))continue;
         const positions=matchTerms(target.values,input.values);
@@ -42,6 +40,6 @@ export function discover(entries,text,{both=false,limit=24}={}){
   }
   const simplified=results.filter(hit=>!hit.inputOperation.startsWith('drop-')||!results.some(other=>other.id===hit.id&&other.targetOperation===hit.targetOperation&&other.inputOperation==='raw'));
   simplified.sort((a,b)=>Number(a.constant)-Number(b.constant)||b.score-a.score||a.id.localeCompare(b.id)||a.inputOperation.localeCompare(b.inputOperation));
-  return {input:values.map(String),testedOperations:probes.length,catalogueEntries:entries.length,total:simplified.length,results:simplified.slice(0,limit)};
+  return {input:values.map(String),testedOperations:usable.length,catalogueEntries:entries.length,total:simplified.length,results:simplified.slice(0,limit)};
 }
 export function operationLabel(operation){return OPERATIONS.find(([id])=>id===operation)?.[1]||(operation.startsWith('drop-')?'Omit the first '+operation.slice(5)+' input terms':operation);}

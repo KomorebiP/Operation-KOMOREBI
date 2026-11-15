@@ -224,7 +224,7 @@ function setupDiscovery(params){
         const input=document.createElement('button');input.type='button';input.textContent='Plot transformed input';input.dataset.discoveryPlot=String(i);input.disabled=hit.values.join(',').length>20000||hit.values.some(v=>v.replace('-','').length>300);if(input.disabled)input.title='This transform exceeds the plot input capacity; download the exact discovery JSON.';
         const target=document.createElement('button');target.type='button';target.textContent='Plot catalogue match';target.dataset.discoveryTarget=String(i);actions.append(input,target);item.append(actions);list.append(item);
       }
-      $('discovery-status').textContent=`Checked ${result.input.length} input terms using ${result.testedOperations} input forms against ${entries.length} entries. ${result.total} finite matches; ${result.results.length} shown.${result.total?'':' The explicit OEIS link offers a broader search. No match is not evidence of novelty.'}`;
+      $('discovery-status').textContent=`Checked ${result.input.length} input terms using ${result.testedOperations} distinct usable input forms against ${entries.length} entries. ${result.total} finite matches; ${result.results.length} shown.${result.total?'':' The explicit OEIS link offers a broader search. No match is not evidence of novelty.'}`;
       $('discovery-export').hidden=false;
       const integers=result.input.join(',');$('discovery-oeis').href=integers.length<1800?'https://oeis.org/search?q='+encodeURIComponent('signed:'+integers):'https://oeis.org/';$('discovery-oeis').textContent=integers.length<1800?'look up the last checked input in OEIS':'open OEIS';
       return true;
