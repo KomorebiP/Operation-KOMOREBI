@@ -223,3 +223,10 @@ Original sequence formulas, generators and proof status are unchanged.
 This is finite implementation evidence and prose self-review, without
 independent proof review, accessibility certification or screen-reader user
 testing.
+
+`run-013` repeats the completed contract after limiting copied directory
+links to applied directory filters. Local history retains its Browse/Plot
+context; shared directory URLs omit unrelated queries, pasted terms and
+discovery input. Ten Python and thirty-four Node tests pass. The directory
+browser regression opens a custom-input plot URL, moves through the directory,
+and checks the copied link contains only the directory settings at every width.
