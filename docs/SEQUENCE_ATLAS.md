@@ -127,7 +127,7 @@ Reproduce the recorded terms for a selected entry:
 ```text
 python -B tools/sequence_atlas.py --id KSEQ-000004
 python -B -m unittest discover -s tools -p test_sequence_atlas.py -v
-node --test tools/test_sequence_atlas.mjs tools/test_sequence_atlas_search.mjs tools/test_sequence_atlas_discovery.mjs
+node --test tools/test_sequence_atlas.mjs tools/test_sequence_atlas_search.mjs tools/test_sequence_atlas_discovery.mjs tools/test_sequence_atlas_interface.mjs
 ```
 
 Each future entry needs a definition, indexing convention, source, exact
@@ -174,3 +174,44 @@ checked over twelve terms to suggest cross-references; each is labelled with
 both index origins and finite scope. Similar-topic navigation is separate.
 The full snapshot comparison remains in catalogue JSON; pages show at most
 twelve hits per entry, with its declared OEIS reference first when present.
+
+## Reading interface and index conventions
+
+The atlas uses linked Browse, Discover, Plot, All entries, and About workspaces.
+JavaScript shows one workspace at a time; native fragment links and the full
+catalogue remain available without JavaScript. Browser Back/Forward restores
+workspace selection. Search, discovery and plot controls retain their values
+when switching. Opening a search/discovery match selects Plot, while searching
+displayed values selects Browse. Ctrl+/ (Command+/ on Mac) outside a form field opens Browse and
+focuses search. Leaving Plot pauses modulus animation. All entries always
+shows the entire catalogue independently of the current search query.
+
+Entry pages place the identifier, status, primary actions and first eight
+values at the top. A contents sidebar becomes a horizontal section menu on
+phones. Search from an entry submits a normal catalogue URL. Formula rendering
+uses the existing accessible MathJax runtime, with an open plain-text formula
+when JavaScript or the math runtime is unavailable. Formula copying always
+uses the unchanged plain-text definition, independent of the rendered SVG.
+
+Each record includes a specific definition, the meaning and domain of n,
+local offset, value convention, and an exact six-row index map. Reciprocal
+entries distinguish compressed index n from ordinary degree Nn, and show the
+ordinary coefficient a(n)/(Nn)! beside the stored factorial-weighted integer.
+Signed Euler entries distinguish n from Euler index 2n without extra factorial
+scaling. Direct reference sequences use their stated n with no shift.
+
+The entry term inspector reads the 64 stored values, reports the source index
+and exact normalization, and can copy a value or link to its data-table row.
+Term links use #n-0 through #n-63 and do not change the indexing convention.
+The mathematical domain n>=0 and the finite stored range 0..63 are stated
+separately. Snapshot positions remain zero-based excerpt positions; OEIS
+mathematical offsets are not inferred from them. The explanatory model draws
+on the [OEIS offset guidance](https://oeis.org/wiki/Offsets).
+
+Reading metadata is maintained in tools/sequence_atlas_reading.py. It does not
+change sequence generators or any of the 2,432 stored values. The metadata is
+included in entry JSON under reading; existing formula and term fields are
+preserved. Index-map fractions are computed with Python Fraction and the
+browser inspector uses exact BigInt arithmetic. Browser checks cover all 38
+formula renderings and representative reciprocal, Euler and direct-index
+records at desktop, phone and 320px widths, including plain-text fallbacks.

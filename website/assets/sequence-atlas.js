@@ -2,6 +2,7 @@ import {generate,parseTerms,rowsFor,candidatePeriod} from './sequence-atlas-core
 import {searchEntries,suggestions,searchLink} from './sequence-atlas-search.mjs';
 import {readSaved,writeSaved,updateSaveButtons} from './sequence-atlas-saved.mjs';
 import {discover,analyzeInput,operationLabel,OPERATIONS} from './sequence-atlas-discovery.mjs';
+import {setupInterface,workspaceForURL} from './sequence-atlas-interface.mjs';
 
 const $=id=>document.getElementById('sa-'+id);
 const ids=['sequence','compare','view','transform','scale','marks','start','count','modulus','color'];
@@ -9,6 +10,7 @@ const defaults={sequence:'KSEQ-000007',compare:'',view:'mod',transform:'raw',sca
 const svgNS='http://www.w3.org/2000/svg';
 const element=(tag,attrs={},text='')=>{const e=document.createElementNS(svgNS,tag);Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));if(text)e.textContent=text;return e;};
 let data,entries,state={...defaults},timer=null,lastRows=[],plot,saved=new Set(),resultLimit=6,lastResults=[],pointIndex=0,statusTimer=null,searchErrorTimer=null,lastCustomTerms='',minimumWindow=2;
+let showPanel=()=>{};
 const storage={getItem:key=>localStorage.getItem(key),setItem:(key,value)=>localStorage.setItem(key,value)};
 const searchOptions=()=>({filter:$('filter').value,topic:$('topic').value,match:$('match').value,sort:$('sort').value,saved:[...saved]});
 const optionLabel=(id,value)=>[...$(id).options].find(o=>o.value===value)?.textContent||value;
@@ -153,7 +155,7 @@ async function copyText(text,label,success){
   catch{$('share-fallback').hidden=false;$('share-fallback').firstChild.textContent=label;const field=$('share-link');field.value=text;field.focus();field.select();message('Copy '+label.toLowerCase()+' from the selected field.');}
 }
 function loadSequence(id){
-  if(!known(id))return;stopAnimation();$('sequence').value=id;$('start').value=0;$('count').value=32;pointIndex=0;
+  if(!known(id))return;showPanel('explorer');stopAnimation();$('sequence').value=id;$('start').value=0;$('count').value=32;pointIndex=0;
   render();document.getElementById('explorer-title').focus({preventScroll:true});document.getElementById('explorer').scrollIntoView({block:'start',behavior:'auto'});
 }
 function search({reset=false,restoreID=null,deferErrors=false}={}){
@@ -167,8 +169,6 @@ function search({reset=false,restoreID=null,deferErrors=false}={}){
       lastResults.sort((a,b)=>{const order=id=>featured.includes(id)?featured.indexOf(id):100+Number(id.slice(-6));return order(a.entry.id)-order(b.entry.id);});
     }
     $('search-error').hidden=true;$('query').removeAttribute('aria-invalid');$('query').setAttribute('aria-describedby','sa-query-summary sa-search-status');
-    const matched=new Set(lastResults.map(result=>result.entry.id));
-    document.querySelectorAll('[data-sequence]').forEach(card=>{card.hidden=!matched.has(card.dataset.sequence);});
     const list=$('results');list.replaceChildren();
     list.classList.toggle('sa-featured',!query.trim()&&options.filter==='all'&&!options.topic);
     $('results-title').textContent=!query.trim()&&options.filter==='all'&&!options.topic?'Quick starting points':'Search results';
@@ -243,7 +243,7 @@ function setupDiscovery(params){
     const button=event.target.closest('button');if(!button||!latest)return;
     const index=button.dataset.discoveryPlot??button.dataset.discoveryTarget;if(index===undefined)return;const hit=latest.results[Number(index)];
     const input=button.dataset.discoveryPlot!==undefined,next={...defaults,view:'standard',sequence:input?'custom':hit.id,transform:input?'raw':hit.targetOperation,start:input?0:hit.targetStart,count:Math.min(32,hit.length),scale:hit.values.some(v=>v.length>15)?'signed-log':'linear'};
-    stopAnimation();ids.forEach(id=>$(id).value=next[id]);if(input)$('custom').value=hit.values.join(',');pointIndex=0;
+    showPanel('explorer');stopAnimation();ids.forEach(id=>$(id).value=next[id]);if(input)$('custom').value=hit.values.join(',');pointIndex=0;
     if(render()){document.querySelector('.sa-advanced').open=true;document.getElementById('explorer-title').focus({preventScroll:true});document.getElementById('explorer').scrollIntoView({block:'start',behavior:'auto'});}
   });
   if(params.has('discover')){$('discovery-input').value=params.get('discover');$('discovery-both').checked=params.get('dc')==='1';run();}
@@ -271,9 +271,9 @@ function setupRefinements(){
   const move=(direction)=>{stopAnimation();const cap=state.sequence==='custom'?parseTerms(lastCustomTerms).length:known(state.sequence).cap;const next=direction==='less'?{count:Math.max(minimumWindow,Math.floor(Math.min(state.count,cap-state.start)/2))}:direction==='more'?{count:Math.min(cap-state.start,state.count*2)}:{start:Math.max(0,Math.min(cap-2,state.start+(direction==='next'?state.count:-state.count)))};for(const [key,value]of Object.entries(next))$(key).value=value;pointIndex=0;render();};
   for(const [id,direction]of [['previous-window','previous'],['next-window','next'],['fewer','less'],['more','more']])$(id).addEventListener('click',()=>move(direction));
   $('copy-values').addEventListener('click',()=>{const primary=lastRows[0]?.name;copyText(lastRows.filter(row=>row.name===primary).map(row=>row.value).join(', '),'Displayed values','Displayed transformed values copied. Undefined positions remain labelled.');});
-  $('search-values').addEventListener('click',()=>{const block=integerBlock();if(!block)return;$('query').value=block.join(',');$('filter').value='all';$('topic').value='';$('match').value='any';search({reset:true});$('query').focus({preventScroll:true});document.getElementById('find').scrollIntoView({block:'start',behavior:'auto'});});
+  $('search-values').addEventListener('click',()=>{const block=integerBlock();if(!block)return;showPanel('find');$('query').value=block.join(',');$('filter').value='all';$('topic').value='';$('match').value='any';search({reset:true});$('query').focus({preventScroll:true});document.getElementById('find').scrollIntoView({block:'start',behavior:'auto'});});
   $('json').addEventListener('click',()=>download(JSON.stringify({schema:1,view:state,customTerms:state.sequence==='custom'?lastCustomTerms:null,rows:lastRows,oeisSnapshotRetrievedAt:data.snapshot?.retrieved_at||null},null,2)+'\n','application/json','komorebi-sequence-view.json'));
-  document.addEventListener('keydown',event=>{if(event.key==='/'&&(event.ctrlKey||event.metaKey)&&!event.altKey&&!event.target.isContentEditable&&!['INPUT','TEXTAREA','SELECT'].includes(event.target.tagName)){event.preventDefault();$('query').focus();}});
+  document.addEventListener('keydown',event=>{if(event.key==='/'&&(event.ctrlKey||event.metaKey)&&!event.altKey&&!event.target.isContentEditable&&!['INPUT','TEXTAREA','SELECT'].includes(event.target.tagName)){event.preventDefault();showPanel('find');$('query').focus();}});
   addEventListener('storage',()=>{saved=new Set(readSaved(storage,new Set(entries.map(entry=>entry.id))).ids);updateSaveButtons(root,saved);search();});
 }
 async function init(){
@@ -306,5 +306,8 @@ async function init(){
   if(ignored)message('Some link settings were invalid and were replaced with defaults.');
   let observedWidth=$('plot').clientWidth;
   new ResizeObserver(()=>{const width=$('plot').clientWidth;if(Math.abs(width-observedWidth)>2&&lastRows.length){observedWidth=width;draw(lastRows,[...new Set(lastRows.map(r=>r.name))]);}}).observe($('plot'));
+  showPanel=setupInterface(document.getElementById('sequence-atlas'),{onLeavePlot:stopAnimation});
+  showPanel(workspaceForURL(location.href),{history:false});
+  document.getElementById('sequence-atlas').dataset.interfaceReady='true';
 }
 init().catch(error=>{$('loading').textContent='The interactive explorer could not load. Read the catalogue and term pages below. '+error.message;});
