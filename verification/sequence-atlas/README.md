@@ -100,3 +100,9 @@ clipboard and storage denial fallbacks. These are implementation checks,
 without screen-reader user testing or accessibility certification. Self-review
 covered the added definitions, displayed recurrences, worked examples,
 compressed indices, transform signs and finite-scope wording.
+
+`run-006` repeats the same completed finite contract after adding an explicit
+named focusable program region and clearer discovery input/empty-result
+feedback. The separate no-JavaScript Edge check focuses the long program
+and scrolls it horizontally with Arrow Right. All thirty targeted tests and
+the browser suite remain passing.
