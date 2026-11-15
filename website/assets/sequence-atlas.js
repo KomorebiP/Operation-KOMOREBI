@@ -53,7 +53,8 @@ function draw(rows,names){
   let xs=points.map(r=>r.x),ys=points.map(r=>r.y),xmin=Math.min(...xs),xmax=Math.max(...xs),ymin=Math.min(0,...ys),ymax=Math.max(0,...ys);
   if(state.view==='grid'){xmin=0;xmax=state.modulus-1;ymin=0;ymax=state.modulus-1;}
   if(state.view==='mod'){ymin=0;ymax=state.modulus-1;}
-  if(xmin===xmax)xmax=xmin+1;if(ymin===ymax)ymax=ymin+1;
+  const expandConstant=(low,high)=>{if(low!==high)return[low,high];const margin=Math.max(1,Math.abs(low)*0.05),left=low-margin,right=high+margin;return[Number.isFinite(left)?left:low,Number.isFinite(right)?right:high];};
+  [xmin,xmax]=expandConstant(xmin,xmax);[ymin,ymax]=expandConstant(ymin,ymax);
   // Normalize before multiplying to keep very large finite values within range.
   const between=(v,a,b)=>{const scale=Math.max(Math.abs(a),Math.abs(b),1);return (v/scale-a/scale)/(b/scale-a/scale);};
   const x=v=>pad.left+between(v,xmin,xmax)*pw,y=v=>H-pad.bottom-between(v,ymin,ymax)*ph;
