@@ -107,6 +107,12 @@ $RTS=2$. It is exact on those chosen representatives, but not on every
 input with the same summary. For $(0,1)^{\mathsf T}$ it predicts $2$
 while the next summary is $3$.
 
+The [compression and memory study](REDUCTION.md) follows a two-coordinate
+system for which the first coordinate has no closed update. Eliminating the
+hidden coordinate gives an exact history kernel and an initial-state term.
+The study derives a compact checkpoint, then separates a truncated kernel's
+one-step defect from the error of advancing the truncated model recursively.
+
 ## 6. Leakage from a retained packet
 
 For a projector $P$, the map $(I-P)TP$ measures output leaving the retained

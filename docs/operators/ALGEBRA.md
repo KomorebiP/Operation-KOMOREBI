@@ -165,6 +165,13 @@ still be invertible: the coordinate-swap matrix is a simple example.
 
 [Eliminate a block by hand](../examples/12_BLOCK_ELIMINATION.md).
 
+For a dynamic example, the
+[compression and memory study](REDUCTION.md#6-read-the-memory-term-through-block-elimination)
+applies the same substitution to two generating-function equations. The Schur
+complement retains the feedback through the hidden coordinate. Its coefficients
+give an exact two-value recurrence and identify the interaction lost by repeated
+one-coordinate compression.
+
 ## Test a claimed identity on its actual space
 
 For linear maps on a finite-dimensional space, equality on every vector
