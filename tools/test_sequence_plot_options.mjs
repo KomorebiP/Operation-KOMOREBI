@@ -21,7 +21,7 @@ test('view links fully override recipient preferences and tolerate unavailable o
   const saved={getItem:()=>JSON.stringify({schema:1,appearance:{palette:'ocean',point:'8'}})};
   assert.equal(readAppearance('https://example.test/a',saved).state.palette,'ocean');
   const href=appearanceLink('https://example.test/a?start=2',PLOT_DEFAULTS);
-  assert.deepEqual(readAppearance(href,saved).state,PLOT_DEFAULTS);assert.equal(new URL(href).searchParams.get('start'),'2');
+  assert.deepEqual(readAppearance(href,saved).state,{...PLOT_DEFAULTS,palette:'green'});assert.equal(new URL(href).searchParams.get('start'),'2');
   assert.deepEqual(readAppearance('https://example.test/a',{getItem:()=>{throw Error('Denied')}}).state,PLOT_DEFAULTS);
   assert.deepEqual(readAppearance('https://example.test/a',{getItem:()=>'{invalid'}).state,PLOT_DEFAULTS);
   assert.deepEqual(readAppearance('https://example.test/a?plot-palette=bad',saved).state,PLOT_DEFAULTS);
