@@ -20,14 +20,14 @@ if __name__ == '__main__':
     result=unittest.TextTestRunner(verbosity=2).run(suite)
     import os
     env=dict(os.environ,PYTHON=sys.executable)
-    browser_core=subprocess.run([args.node,'--test','tools/test_sequence_atlas.mjs'],cwd=ROOT,env=env,capture_output=True,text=True,encoding='utf-8')
+    browser_core=subprocess.run([args.node,'--test','tools/test_sequence_atlas.mjs','tools/test_sequence_atlas_search.mjs'],cwd=ROOT,env=env,capture_output=True,text=True,encoding='utf-8')
     print(browser_core.stdout)
     print(browser_core.stderr,file=sys.stderr)
     report=dict(status='passed' if result.wasSuccessful() and browser_core.returncode==0 else 'failed',
         python_tests=result.testsRun,python_errors=len(result.errors),python_failures=len(result.failures),
         browser_core_exit=browser_core.returncode,entries=len(catalogue()),
         assertion_tested='Exact catalogue terms and bounded transforms agree with the documented independent implementations and source definitions over the tested ranges.',
-        bounds=dict(reciprocal_N=[2,8],reciprocal_powers=[1,3],rational_oracle_terms=16,python_browser_terms=64,partition_recurrence_terms=32),
+        bounds=dict(reciprocal_N=[2,8],reciprocal_powers=[1,3],rational_oracle_terms=16,python_browser_terms=64,partition_recurrence_terms=32,second_difference_terms=64,successive_modular_fixture_terms=3),
         non_claims=['No new sequence or formula novelty','No global period or asymptotic result','No new formal or independent mathematical review'])
     args.output.parent.mkdir(parents=True,exist_ok=True)
     args.output.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')

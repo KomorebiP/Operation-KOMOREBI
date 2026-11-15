@@ -26,6 +26,17 @@ test('transforms preserve exact fractions, undefined values, and full prefix sum
   assert.deepEqual(rowsFor(values,state,'test').map(r=>[r.n,r.value,r.residue]),[[2,'7',2],[3,'6',1]]);
   assert.throws(()=>rowsFor(values,{...state,transform:'average'},'test'));
 });
+test('second differences agree with the polynomial identity at every tested index',()=>{
+  const squares=Array.from({length:64},(_,n)=>BigInt(n)**2n);
+  assert.deepEqual(transform(squares,'second-difference').map(exact),['undefined','undefined',...Array(62).fill('2')]);
+  assert.deepEqual(transform([5n,-2n,7n,1n],'second-difference').map(exact),['undefined','undefined','16','-15']);
+});
+test('successive modular coordinates use exact residues before floating conversion',()=>{
+  const values=[-1n,9007199254740993n,3n];
+  const state={start:0,count:3,transform:'raw',view:'mod-pairs',scale:'log',modulus:7};
+  assert.deepEqual(rowsFor(values,state,'fixture').map(row=>[row.x,row.y]),[[6,5],[5,3],[3,null]]);
+  assert.throws(()=>rowsFor([2n,3n,7n],{...state,transform:'average'},'fixture'));
+});
 test('plot boundary handles large exact ratios and log domains',()=>{
   assert.equal(coordinate({a:10n**400n,b:10n**399n},'linear'),10);
   assert.equal(coordinate({a:-2n,b:1n},'log'),null);
