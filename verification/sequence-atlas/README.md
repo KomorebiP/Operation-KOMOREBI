@@ -179,3 +179,12 @@ finite-sample wording and documentation. Original entry formulas and terms
 were not edited. These are implementation checks and mathematical prose
 self-review, without independent proof review, accessibility certification
 or screen-reader user testing.
+
+`run-011` repeats the study contract after the plot-link review fix. Nine
+Python and thirty-one Node tests pass. Study links choose signed-log scale
+if a defined linear coordinate or its signed span would overflow. Small
+windows and residues retain linear scale. Additional fixtures cover
+600-digit values and a signed overflowing range. The browser study suite
+follows KSEQ-000007 at n=52–63 into Plot at every tested width and verifies
+all twelve marks render without a plot error. Study rows and exports retain
+their exact values.
