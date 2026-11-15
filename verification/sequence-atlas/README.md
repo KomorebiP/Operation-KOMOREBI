@@ -142,3 +142,10 @@ and self-review results, without screen-reader user testing or accessibility
 certification. Self-review covered the added definition prose, domains,
 normalization, symbol legends, TeX and index conventions; original formula
 strings and sequence generators are retained.
+
+`run-009` repeats the completed contract after a review fix shares the same
+URL-to-workspace resolver between initialization and browser-history
+restoration. A Node regression and the Edge suite verify query-only Plot and
+Discover links: navigate to Browse, press Back, and restore the original
+workspace. Nine Python and twenty-four Node tests pass. The 38 formula and
+nine responsive entry checks remain passing; index maps and terms are unchanged.
