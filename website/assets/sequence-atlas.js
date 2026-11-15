@@ -3,6 +3,7 @@ import {searchEntries,suggestions,searchLink} from './sequence-atlas-search.mjs'
 import {readSaved,writeSaved,updateSaveButtons} from './sequence-atlas-saved.mjs';
 import {discover,analyzeInput,operationLabel,OPERATIONS} from './sequence-atlas-discovery.mjs';
 import {setupInterface,workspaceForURL} from './sequence-atlas-interface.mjs';
+import {setupDirectory} from './sequence-atlas-directory.mjs';
 
 const $=id=>document.getElementById('sa-'+id);
 const ids=['sequence','compare','view','transform','scale','marks','start','count','modulus','color'];
@@ -307,6 +308,7 @@ async function init(){
   if(ignored)message('Some link settings were invalid and were replaced with defaults.');
   let observedWidth=$('plot').clientWidth;
   new ResizeObserver(()=>{const width=$('plot').clientWidth;if(Math.abs(width-observedWidth)>2&&lastRows.length){observedWidth=width;draw(lastRows,[...new Set(lastRows.map(r=>r.name))]);}}).observe($('plot'));
+  setupDirectory(document.getElementById('sequence-atlas'),entries);
   showPanel=setupInterface(document.getElementById('sequence-atlas'),{onLeavePlot:stopAnimation});
   showPanel(workspaceForURL(location.href),{history:false});
   document.getElementById('sequence-atlas').dataset.interfaceReady='true';

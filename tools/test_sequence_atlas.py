@@ -14,10 +14,24 @@ from contextlib import redirect_stdout
 from build_reader_site import Site
 from check_reader_site import Page, check_search_targets
 from sequence_atlas import ROOT, build, catalogue, reciprocal, terms
+from sequence_atlas_index import connection_graph, connection_counts
 from update_sequence_atlas_oeis import compare
 
 
 class SequenceAtlasTests(unittest.TestCase):
+    def test_connection_graph_preserves_directed_offsets_and_rejects_invalid_records(self):
+        entries=catalogue();graph=connection_graph(entries)
+        self.assertEqual(len(graph['edges']),7)
+        self.assertEqual(sum(len(edge['rows']) for edge in graph['edges']),84)
+        self.assertEqual(connection_counts(graph,'KSEQ-000001'),(1,2))
+        self.assertEqual(connection_counts(graph,'KSEQ-000024'),(0,0))
+        self.assertEqual(sum(sum(connection_counts(graph,entry['id'])) for entry in entries),14)
+        edge=next(edge for edge in graph['edges'] if edge['source_id']=='KSEQ-000030')
+        self.assertEqual((edge['source_start'],edge['target_start']),(1,0))
+        self.assertEqual([row['transformed_value'] for row in edge['rows'][:3]],['1','3','5'])
+        entries[0]['connections'][0]['matched_terms']=11
+        with self.assertRaises(ValueError):connection_graph(entries)
+
     def test_reading_index_maps_preserve_the_value_and_basis_conventions(self):
         for entry in catalogue():
             reading=entry['reading']
@@ -122,6 +136,14 @@ class SequenceAtlasTests(unittest.TestCase):
             main=(site.output/'sequences.html').read_text(encoding='utf-8')
             self.assertIn('<noscript>',main)
             self.assertIn('CC BY-SA 4.0',main)
+            self.assertEqual(main.count('data-index-entry='),38)
+            self.assertIn('aria-label="Alphabetical sequence index"',main)
+            graph=json.loads((site.output/'assets/sequence-atlas-connections.json').read_text(encoding='utf-8'))
+            self.assertEqual(len(graph['edges']),7)
+            import csv
+            index=list(csv.DictReader((site.output/'assets/sequence-atlas-index.csv').read_text(encoding='utf-8').splitlines()))
+            self.assertEqual([row['id'] for row in index],[entry['id'] for entry in catalogue()])
+            self.assertEqual(index[0]['connections_in'],'2')
             self.assertNotIn('data-side-reader-link',main)
             for identifier in ('sa-query','sa-search-form','sa-results','sa-search-error','sa-previous-point','sa-next-window','sa-table-detail'):
                 self.assertIn('id="'+identifier+'"',main)
@@ -158,6 +180,8 @@ class SequenceAtlasTests(unittest.TestCase):
                 self.assertEqual('rel="next"' in source,entry['id']!='KSEQ-000038')
                 self.assertIn('id="programs"',source)
                 self.assertIn('id="connections"',source)
+                expected=sum(connection_counts(graph,entry['id']))
+                self.assertEqual(source.count('data-connection-key='),expected)
                 self.assertIn('id="analysis"',source)
                 self.assertIn('aria-label="Backward difference table"',source)
                 self.assertIn('n=0–11',source)
@@ -167,6 +191,7 @@ class SequenceAtlasTests(unittest.TestCase):
                     self.assertTrue((ROOT/target).is_file(),target)
             script=(site.output/'assets/sequence-atlas.js').read_text(encoding='utf-8')
             self.assertIn('./sequence-atlas-search.mjs?v=',script)
+            self.assertIn('./sequence-atlas-directory.mjs?v=',script)
             self.assertIn('./sequence-atlas-saved.mjs?v=',script)
             self.assertIn('./sequence-atlas-saved.mjs?v=',(site.output/'assets/sequence-atlas-entry.js').read_text(encoding='utf-8'))
             self.assertIn('./sequence-atlas-study.js?v=',(site.output/'assets/sequence-atlas-entry.js').read_text(encoding='utf-8'))

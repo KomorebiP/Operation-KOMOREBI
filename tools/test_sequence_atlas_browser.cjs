@@ -222,8 +222,8 @@ async function refinementChecks(page){
     await context.close();
   }
   const context=await browser.newContext({javaScriptEnabled:false,viewport:{width:320,height:900}});const page=await context.newPage();
-  await page.goto(new URL('sequences.html',base).href);assert.equal(await page.locator('[data-sequence]:visible').count(),38);assert.equal(await page.locator('#sa-workspace').isVisible(),false);
-  await page.locator('a[href="sequences/KSEQ-000007.html"]').click();assert.equal(await page.locator('#data tbody tr').count(),64);
+  await page.goto(new URL('sequences.html',base).href);assert.equal(await page.locator('[data-index-entry]:visible').count(),38);assert.equal(await page.locator('#sa-workspace').isVisible(),false);
+  await page.locator('[data-index-entry="KSEQ-000007"] th a').click();assert.equal(await page.locator('#data tbody tr').count(),64);
   const program=page.getByRole('region',{name:'Python reproduction program',exact:true});await program.focus();
   for(let n=0;n<5;n++)await program.press('ArrowRight');await page.waitForTimeout(200);
   assert.ok(await program.evaluate(node=>node.scrollLeft>0),'Long code can be scrolled with the keyboard without JavaScript.');

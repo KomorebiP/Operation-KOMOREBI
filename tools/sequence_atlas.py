@@ -15,6 +15,7 @@ from pathlib import Path
 from sequence_atlas_reference import REFERENCES, KINDS, reference_terms, program, connections
 from sequence_atlas_reading import reading_metadata, reading_block
 from sequence_atlas_study import study_block
+from sequence_atlas_index import connection_graph, connection_block, directory_block, index_csv
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = 'collection/demonstrations/SEQUENCE_SHAPES.html'
@@ -109,9 +110,8 @@ def e(value):
     return html.escape(str(value), quote=True)
 
 
-def structured_entry(entry):
+def structured_entry(entry, graph):
     source=entry['source'] if entry['source'].startswith('https:') else '../'+entry['source']
-    links=''.join('<li><a href="'+x['id']+'.html">'+e(x['title'])+'</a>: '+e(x['transform'])+' at source indices '+str(x['source_start'])+'–'+str(x['source_start']+11)+' match target indices '+str(x['target_start'])+'–'+str(x['target_start']+11)+'.</li>' for x in entry['connections'])
     reference=('<p><a href="https://oeis.org/'+entry['oeis']+'">OEIS '+entry['oeis']+' — comments, bibliography, programs and history</a></p>' if entry['oeis'] else '')
     # Keep the finite snapshot attribution and names in the existing source section.
     snapshot=entry_body(entry,'../').split('<details><summary>OEIS snapshot matches',1)
@@ -121,7 +121,7 @@ def structured_entry(entry):
         '<section id="examples"><h2>Comments and examples</h2><p>'+e(entry['example'])+'</p></section>'
         +study_block(entry)+
         '<section id="programs"><h2>Reproduce the terms</h2><p>Self-contained Python, using exact integers and the standard library. Change count to choose the finite number of terms.</p><button type="button" data-copy-entry="sa-entry-program" hidden>Copy Python program</button><pre tabindex="0" role="region" aria-label="Python reproduction program"><code id="sa-entry-program">'+e(entry['python'])+'</code></pre></section>'
-        '<section id="connections"><h2>Computed connections</h2>'+(('<ul>'+links+'</ul>') if links else '<p>No connections from the four tested transforms were found in this catalogue.</p>')+'<p class="sa-note">These are exact twelve-term checks of alternating signs, absolute values, first differences and partial sums. They suggest relationships to investigate; they do not prove infinite sequence identities.</p></section>'
+        +connection_block(entry,graph)+
         '<section id="references"><h2>References and verification</h2><p><a href="'+e(source)+'">Definition and source context</a></p>'+reference+'<p>'+e(entry['verification'])+'</p><p>'+e(entry['novelty'])+'</p>'+snapshot_html+'</section>')
 
 
@@ -207,6 +207,9 @@ def discovery_section(entries):
 
 def build(site):
     entries = catalogue()
+    graph = connection_graph(entries)
+    site.write('assets/sequence-atlas-connections.json',json.dumps(graph,ensure_ascii=False,indent=2)+'\n')
+    site.write('assets/sequence-atlas-index.csv',index_csv(entries,graph))
     snapshot_path = site.root/'manifests/sequence-atlas-oeis.json'
     snapshot = json.loads(snapshot_path.read_text(encoding='utf-8')) if snapshot_path.exists() else None
     if snapshot:
@@ -251,11 +254,7 @@ def build(site):
 <p id="sa-period" class="sa-note"></p><p id="sa-window" class="sa-note"></p>
 <details><summary>Exact values and plotted coordinates</summary><div class="table-scroll" tabindex="0" role="region" aria-label="Exact sequence values"><table><caption id="sa-table-caption">Displayed samples</caption><thead><tr><th scope="col">Sequence</th><th scope="col">n</th><th scope="col">a(n)</th><th scope="col">Transformed value</th><th scope="col">Residue</th><th scope="col">Plot x</th><th scope="col">Plot y</th></tr></thead><tbody id="sa-values"></tbody></table></div></details>
 </div><p id="sa-loading">Loading the interactive explorer. The full catalogue is available below.</p></section>
-<section id="catalogue" aria-labelledby="catalogue-title"><h2 id="catalogue-title">Sequence catalogue</h2>
-<div id="sa-search-controls" hidden><label for="sa-query">Search names, formulas, identifiers, or integer terms</label><input id="sa-query" type="search" placeholder="Try Fubini, N=4, A000364, or 1, 1, 69" maxlength="20000">
-<label>Entry type<select id="sa-filter"><option value="all">All entries</option><option value="reference">Known reference sequences</option><option value="family">Published reciprocal families</option></select></label></div>
-<p id="sa-search-status" role="status">'''+str(len(entries))+''' entries. Pasted-term searches compare contiguous terms in this catalogue’s recorded samples.</p>
-<div class="sa-catalogue">'''+cards+'''</div></section>
+'''+directory_block(entries,graph,cards)+'''
 <section id="reference"><h2>Sources, scope, and reuse</h2><p>'''+snapshot_note+'''</p>
 <p>These entries organize existing published definitions and classical benchmarks. Formula novelty and sequence novelty require separate review. A finite match does not prove identity; an absent match does not establish novelty. Period suggestions and residue frequencies describe the selected finite window.</p>
 <p>Integer terms, differences, sums, and residues are exact. Ratios and averages are exact fractions. Plot coordinates use floating-point approximations; logarithmic views omit nonpositive values. Modular views use the integer transform before any plotting approximation, and are unavailable for fraction-valued transforms.</p>
@@ -266,12 +265,15 @@ def build(site):
     discovery_script=(site.root/'website/assets/sequence-atlas-discovery.mjs').read_text(encoding='utf-8')
     for dependency in ('sequence-atlas-core.mjs','sequence-atlas-search.mjs'):
         discovery_script=discovery_script.replace("'./"+dependency+"'","'./"+dependency+'?v='+version(dependency)+"'")
+    directory_script=(site.root/'website/assets/sequence-atlas-directory.mjs').read_text(encoding='utf-8').replace("'./sequence-atlas-search.mjs'", "'./sequence-atlas-search.mjs?v="+version('sequence-atlas-search.mjs')+"'")
+    site.write('assets/sequence-atlas-directory.mjs',directory_script)
     script = (site.root/'website/assets/sequence-atlas.js').read_text(encoding='utf-8')
     script = script.replace("'./sequence-atlas-core.mjs'", "'./sequence-atlas-core.mjs?v="+version('sequence-atlas-core.mjs')+"'")
     script = script.replace("'./sequence-atlas-data.json'", "'./sequence-atlas-data.json?v="+hashlib.sha256(raw.encode()).hexdigest()[:12]+"'")
     script=script.replace("'./sequence-atlas-discovery.mjs'","'./sequence-atlas-discovery.mjs?v="+hashlib.sha256(discovery_script.encode()).hexdigest()[:12]+"'")
     for name in ('sequence-atlas-search.mjs','sequence-atlas-saved.mjs','sequence-atlas-interface.mjs'):
         script=script.replace("'./"+name+"'", "'./"+name+'?v='+version(name)+"'")
+    script=script.replace("'./sequence-atlas-directory.mjs'", "'./sequence-atlas-directory.mjs?v="+hashlib.sha256(directory_script.encode()).hexdigest()[:12]+"'")
     site.write('assets/sequence-atlas.js', script)
     entry_script=(site.root/'website/assets/sequence-atlas-entry.js').read_text(encoding='utf-8')
     study_core=(site.root/'website/assets/sequence-atlas-study.mjs').read_text(encoding='utf-8').replace("'./sequence-atlas-core.mjs'", "'./sequence-atlas-core.mjs?v="+version('sequence-atlas-core.mjs')+"'")
@@ -319,7 +321,7 @@ def build(site):
             '<div class="sa-entry-actions"><a class="sa-primary-link" href="../sequences.html?sequence='+identifier+'#explorer">Plot this sequence</a><a href="#analysis">Study exact terms</a><button type="button" data-save-sequence="'+identifier+'" aria-pressed="false" hidden>Save entry</button><button id="sa-entry-copy" type="button" hidden>Copy the first 12 terms</button><button id="sa-entry-link" type="button" hidden>Copy link</button></div><p id="sa-entry-status" role="status" aria-live="polite"></p><label id="sa-entry-copy-fallback" for="sa-entry-copy-text" hidden>Text to copy<textarea id="sa-entry-copy-text" readonly></textarea></label></header>'
             '<div class="sa-record-data"><span class="sa-field-label">DATA</span><p class="sa-terms">'+e(', '.join(entry['terms'][:8]))+'…</p><a href="#data">All 64 terms ↓</a></div>'
             '<div class="sa-record-layout"><nav class="sa-entry-outline" aria-label="Entry sections"><span>In this entry</span><a href="#definition">Definition &amp; indexing</a><a href="#formulas">Formulas</a><a href="#examples">Examples</a><a href="#analysis">Study &amp; transforms</a><a href="#programs">Programs</a><a href="#connections">Connections</a><a href="#references">References</a><a href="#data">Exact data</a><a href="#sa-related-title">Related entries</a></nav><div class="sa-record-main">'
-            +structured_entry(entry)+'<section id="data"><h2>Exact data and downloads</h2><p><a href="../sequences.html?seq='+identifier+'#explorer">Open in plot explorer</a> · <a download href="'+identifier+'.csv">Download exact CSV</a></p>'
+            +structured_entry(entry,graph)+'<section id="data"><h2>Exact data and downloads</h2><p><a href="../sequences.html?seq='+identifier+'#explorer">Open in plot explorer</a> · <a download href="'+identifier+'.csv">Download exact CSV</a></p>'
             '<p><a href="../sequences.html?sequence='+identifier+'&amp;view=mod#explorer">Explore residues</a> · <a download href="'+identifier+'.txt">Download indexed text (b-file style)</a> · <a download href="'+identifier+'.json">Download entry JSON</a></p>'
             '<div class="table-scroll" tabindex="0" role="region" aria-label="Exact terms"><table><caption>Exact terms, indices 0–63</caption><thead><tr><th scope="col">n</th><th scope="col">a(n)</th></tr></thead><tbody>'+rows+'</tbody></table></div>'
             '</section><section aria-labelledby="sa-related-title"><h2 id="sa-related-title">Related entries</h2><ul>'+''.join('<li><a href="'+x['id']+'.html">'+e(x['title'])+'</a> · '+x['id']+'</li>' for x in related)+'</ul></section>'

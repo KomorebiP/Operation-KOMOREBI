@@ -32,7 +32,7 @@ async function inspect(page,n){await page.locator('#sa-term-index').fill(String(
     await mode(page,'find');await page.locator('#sa-query').fill('n:4 r:2');assert.equal(await page.locator('#sa-results [data-hit-id]').count(),1);
     await page.locator('#sa-results [data-load]').click();assert.equal(await page.locator('#explorer').isVisible(),true);await fits(page);
     await page.locator('#sa-plot').scrollIntoViewIfNeeded();await page.screenshot({path:path.join(out,`plot-${width}.png`)});
-    await mode(page,'catalogue');assert.equal(await page.locator('[data-sequence]:visible').count(),38);
+    await mode(page,'catalogue');assert.equal(await page.locator('[data-index-entry]:visible').count(),38);
     await mode(page,'reference');assert.ok((await page.locator('#reference').textContent()).includes('CC BY-SA'));
     await page.keyboard.press('Control+/');assert.equal(await page.locator('#find').isVisible(),true);assert.equal(await page.evaluate(()=>document.activeElement.id),'sa-query');
     report.widths.push({width,...await fits(page),workspaceNavigation:true,history:true,shortcut:true,fullCatalogue:true});
