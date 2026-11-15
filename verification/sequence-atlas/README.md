@@ -71,3 +71,32 @@ that plain / leaves a result link focused and can be typed normally in search,
 while Ctrl+/ focuses search outside an input. This avoids a bare character
 shortcut; see the W3C explanation of
 [character key shortcuts](https://www.w3.org/WAI/WCAG22/Understanding/character-key-shortcuts.html).
+
+## Discovery run 005
+
+`discovery-contract.json` and `run-005` record eight Python tests and
+twenty-two Node tests for 38 catalogue entries. A fixed signature preserves
+the original 26 identifiers and 1,664 terms. Twelve classical entries are
+appended. Each added declared OEIS reference matches twelve starting terms
+in the retained export. The same two export files were compared again over
+the expanded catalogue (401,397 records; 6,470 finite hit positions). The
+original retrieval time and file hashes are preserved; comparison time is
+separate. This is not a fresh bulk download or an identity/novelty result.
+
+Self-contained Python entry programs reproduce sixteen terms for all 38
+entries. New controls compare Catalan convolution with its closed form,
+central binomial coefficients with Vandermonde sums, and partition coin-change
+with the browser pentagonal recurrence. The binomial transform and inverse
+round-trip 64 signed integers containing 81-digit magnitudes. Discovery tests
+check full usable-input matching, sign preservation, both index origins,
+omitted initial terms, grouped repeated positions and redundant-result removal.
+Computed cross-references are explicitly twelve-term checks, not proofs.
+
+The separate Edge suite covers discovery-to-plot actions, copied/restored
+discovery links, JSON download, random entry navigation, formula/program
+copying, and previous atlas functions at 1440px, 390px and 320px. It also checks
+the discovery layout with 200% text, forced colors and reduced motion, plus
+clipboard and storage denial fallbacks. These are implementation checks,
+without screen-reader user testing or accessibility certification. Self-review
+covered the added definitions, displayed recurrences, worked examples,
+compressed indices, transform signs and finite-scope wording.
