@@ -263,6 +263,12 @@ These defects are signed changes of squared norm. Their matrices need not
 be positive-definite or positive-semidefinite. A zero composite defect can
 include cancellation between expansion and contraction.
 
+For a repeated operation, the
+[stable-update study](DYNAMICS.md#4-account-for-a-decreasing-quadratic-energy)
+constructs a positive-definite metric with defect $-I$. Summing that identity
+accounts exactly for the sum of squared Euclidean lengths along the trajectory,
+even though the Euclidean length initially grows.
+
 **Continue with:** [Quadratic metric defect, REL-14](catalog/RELATIONS.md#rel-14) ·
 [OP-189](catalog/K_METRICS.md#op-189) ·
 [OP-192](catalog/K_METRICS.md#op-192) ·
