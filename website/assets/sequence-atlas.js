@@ -181,7 +181,8 @@ function search({reset=false,restoreID=null,deferErrors=false}={}){
       for(let n=from;n<to;n++){if(n>from)sample.append(document.createTextNode(', '));if(termMatch&&n>=termMatch.start&&n<termMatch.start+termMatch.length){const mark=document.createElement('mark');mark.textContent=entry.terms[n];sample.append(mark);}else sample.append(document.createTextNode(entry.terms[n]));}if(to<entry.terms.length)sample.append(document.createTextNode('…'));item.append(sample);
       const actions=document.createElement('div');actions.className='sa-hit-actions';
       const explore=document.createElement('button');explore.type='button';explore.dataset.load=entry.id;explore.textContent='Plot sequence';explore.setAttribute('aria-label','Plot '+entry.title);
-      const save=document.createElement('button');save.type='button';save.dataset.saveSequence=entry.id;actions.append(explore,save);item.append(actions);list.append(item);
+      const study=document.createElement('a');study.href='sequences/'+entry.id+'.html?study=raw&from='+Math.min(termMatch?.start??0,52)+'&size=12#analysis';study.textContent='Study exact terms';study.setAttribute('aria-label','Study exact terms for '+entry.title);
+      const save=document.createElement('button');save.type='button';save.dataset.saveSequence=entry.id;actions.append(explore,study,save);item.append(actions);list.append(item);
     }
     $('empty').hidden=lastResults.length!==0;$('suggestions').replaceChildren();
     if(!lastResults.length){for(const suggestion of suggestions(entries,query)){const button=document.createElement('button');button.type='button';button.dataset.suggestion=suggestion;button.textContent='Try '+suggestion;$('suggestions').append(button);}}

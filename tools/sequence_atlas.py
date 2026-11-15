@@ -14,6 +14,7 @@ from math import comb, factorial
 from pathlib import Path
 from sequence_atlas_reference import REFERENCES, KINDS, reference_terms, program, connections
 from sequence_atlas_reading import reading_metadata, reading_block
+from sequence_atlas_study import study_block
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = 'collection/demonstrations/SEQUENCE_SHAPES.html'
@@ -118,6 +119,7 @@ def structured_entry(entry):
     return (reading_block(entry)
         +'<section id="formulas"><h2>Formulas and recurrences</h2><div class="sa-typeset arithmatex" tabindex="0" role="region" aria-label="Typeset defining formula" hidden>\\['+e(entry['reading']['tex'])+'\\]</div><details class="sa-plain-formula" open><summary>Plain text formula</summary><p id="sa-entry-formula" class="sa-formula">'+e(entry['formula'])+'</p></details><p>'+e(entry['recurrence'])+'</p><button type="button" data-copy-entry="sa-entry-formula" hidden>Copy formula</button></section>'
         '<section id="examples"><h2>Comments and examples</h2><p>'+e(entry['example'])+'</p></section>'
+        +study_block(entry)+
         '<section id="programs"><h2>Reproduce the terms</h2><p>Self-contained Python, using exact integers and the standard library. Change count to choose the finite number of terms.</p><button type="button" data-copy-entry="sa-entry-program" hidden>Copy Python program</button><pre tabindex="0" role="region" aria-label="Python reproduction program"><code id="sa-entry-program">'+e(entry['python'])+'</code></pre></section>'
         '<section id="connections"><h2>Computed connections</h2>'+(('<ul>'+links+'</ul>') if links else '<p>No connections from the four tested transforms were found in this catalogue.</p>')+'<p class="sa-note">These are exact twelve-term checks of alternating signs, absolute values, first differences and partial sums. They suggest relationships to investigate; they do not prove infinite sequence identities.</p></section>'
         '<section id="references"><h2>References and verification</h2><p><a href="'+e(source)+'">Definition and source context</a></p>'+reference+'<p>'+e(entry['verification'])+'</p><p>'+e(entry['novelty'])+'</p>'+snapshot_html+'</section>')
@@ -272,6 +274,11 @@ def build(site):
         script=script.replace("'./"+name+"'", "'./"+name+'?v='+version(name)+"'")
     site.write('assets/sequence-atlas.js', script)
     entry_script=(site.root/'website/assets/sequence-atlas-entry.js').read_text(encoding='utf-8')
+    study_core=(site.root/'website/assets/sequence-atlas-study.mjs').read_text(encoding='utf-8').replace("'./sequence-atlas-core.mjs'", "'./sequence-atlas-core.mjs?v="+version('sequence-atlas-core.mjs')+"'")
+    study_script=(site.root/'website/assets/sequence-atlas-study.js').read_text(encoding='utf-8').replace("'./sequence-atlas-study.mjs'", "'./sequence-atlas-study.mjs?v="+hashlib.sha256(study_core.encode()).hexdigest()[:12]+"'")
+    site.write('assets/sequence-atlas-study.mjs',study_core)
+    site.write('assets/sequence-atlas-study.js',study_script)
+    entry_script=entry_script.replace("'./sequence-atlas-study.js'", "'./sequence-atlas-study.js?v="+hashlib.sha256(study_script.encode()).hexdigest()[:12]+"'")
     for dependency in ('sequence-atlas-saved.mjs','sequence-atlas-core.mjs'):
         entry_script=entry_script.replace("'./"+dependency+"'","'./"+dependency+'?v='+version(dependency)+"'")
     site.write('assets/sequence-atlas-entry.js',entry_script)
@@ -309,9 +316,9 @@ def build(site):
         related=sorted((x for x in entries if x['id']!=identifier and related_score(x)>0),key=lambda x:(-related_score(x),x['id']))[:3]
         content = ('<link rel="stylesheet" href="../assets/sequence-atlas.css?v='+version('sequence-atlas.css')+'">'
             '<article class="sequence-atlas sa-entry" data-entry-id="'+identifier+'" data-index-kind="'+entry['reading']['index_kind']+'" data-index-factor="'+str(entry['reading']['index_factor'])+'" data-index-label="'+entry['reading']['index_label']+'"><header class="sa-record-header"><a class="sa-back" href="../sequences.html#find">← Sequence atlas</a><form class="sa-record-search" hidden action="../sequences.html#find" role="search" aria-label="Search the sequence catalogue"><label for="sa-record-query" class="sa-sr-only">Sequence name, identifier or terms</label><input id="sa-record-query" name="q" type="search" placeholder="Find another sequence"><button type="submit">Search</button></form><p class="sa-record-id">'+identifier+' <span>'+e(entry['status'])+'</span></p><h1>'+e(entry['title'])+'</h1>'
-            '<div class="sa-entry-actions"><a class="sa-primary-link" href="../sequences.html?sequence='+identifier+'#explorer">Plot this sequence</a><button type="button" data-save-sequence="'+identifier+'" aria-pressed="false" hidden>Save entry</button><button id="sa-entry-copy" type="button" hidden>Copy the first 12 terms</button><button id="sa-entry-link" type="button" hidden>Copy link</button></div><p id="sa-entry-status" role="status" aria-live="polite"></p><label id="sa-entry-copy-fallback" for="sa-entry-copy-text" hidden>Text to copy<textarea id="sa-entry-copy-text" readonly></textarea></label></header>'
+            '<div class="sa-entry-actions"><a class="sa-primary-link" href="../sequences.html?sequence='+identifier+'#explorer">Plot this sequence</a><a href="#analysis">Study exact terms</a><button type="button" data-save-sequence="'+identifier+'" aria-pressed="false" hidden>Save entry</button><button id="sa-entry-copy" type="button" hidden>Copy the first 12 terms</button><button id="sa-entry-link" type="button" hidden>Copy link</button></div><p id="sa-entry-status" role="status" aria-live="polite"></p><label id="sa-entry-copy-fallback" for="sa-entry-copy-text" hidden>Text to copy<textarea id="sa-entry-copy-text" readonly></textarea></label></header>'
             '<div class="sa-record-data"><span class="sa-field-label">DATA</span><p class="sa-terms">'+e(', '.join(entry['terms'][:8]))+'…</p><a href="#data">All 64 terms ↓</a></div>'
-            '<div class="sa-record-layout"><nav class="sa-entry-outline" aria-label="Entry sections"><span>In this entry</span><a href="#definition">Definition &amp; indexing</a><a href="#formulas">Formulas</a><a href="#examples">Examples</a><a href="#programs">Programs</a><a href="#connections">Connections</a><a href="#references">References</a><a href="#data">Exact data</a><a href="#sa-related-title">Related entries</a></nav><div class="sa-record-main">'
+            '<div class="sa-record-layout"><nav class="sa-entry-outline" aria-label="Entry sections"><span>In this entry</span><a href="#definition">Definition &amp; indexing</a><a href="#formulas">Formulas</a><a href="#examples">Examples</a><a href="#analysis">Study &amp; transforms</a><a href="#programs">Programs</a><a href="#connections">Connections</a><a href="#references">References</a><a href="#data">Exact data</a><a href="#sa-related-title">Related entries</a></nav><div class="sa-record-main">'
             +structured_entry(entry)+'<section id="data"><h2>Exact data and downloads</h2><p><a href="../sequences.html?seq='+identifier+'#explorer">Open in plot explorer</a> · <a download href="'+identifier+'.csv">Download exact CSV</a></p>'
             '<p><a href="../sequences.html?sequence='+identifier+'&amp;view=mod#explorer">Explore residues</a> · <a download href="'+identifier+'.txt">Download indexed text (b-file style)</a> · <a download href="'+identifier+'.json">Download entry JSON</a></p>'
             '<div class="table-scroll" tabindex="0" role="region" aria-label="Exact terms"><table><caption>Exact terms, indices 0–63</caption><thead><tr><th scope="col">n</th><th scope="col">a(n)</th></tr></thead><tbody>'+rows+'</tbody></table></div>'

@@ -149,3 +149,42 @@ restoration. A Node regression and the Edge suite verify query-only Plot and
 Discover links: navigate to Browse, press Back, and restore the original
 workspace. Nine Python and twenty-four Node tests pass. The 38 formula and
 nine responsive entry checks remain passing; index maps and terms are unchanged.
+
+## Exact study tools run 010
+
+`study-contract.json` and completed `run-010` record nine Python and thirty
+Node tests. The study oracle compares 1,482 windows across 38 entries:
+eleven transformations with modulus 7, additional residues modulo 2 and 128,
+and (start, count) windows (0,12), (9,16), (52,12). Exact rows, defined/sign/
+integer-parity/GCD counts, and backward-difference orders 0–4 are compared
+with independent Python Fraction and closed binomial-sum implementations.
+Known square values, negative residues, zero denominators, all-zero GCD,
+large integers, missing positions, fractions and late prefix sums provide
+hand-checkable regressions. Constant-difference reports require at least four
+defined values; they are finite sample observations, not polynomial proofs.
+
+Separate Edge suites check the new study controls, all eleven views, indexed
+copy, exact CSV/JSON, search and plot links, shared links, history, paging,
+invalid-input recovery and clipboard denial at 1440px, 390px and 320px.
+Initial tables and differences remain readable without JavaScript. Forced
+colors, reduced motion and 200% text are checked separately. The existing
+atlas and reading-interface suites retain search, discovery, plotting,
+exports, all 38 formula renderings and nine entry-inspector flows.
+
+The enlarged-text regression caught overflow from adding a second action to
+the compact starting cards. Those cards retain their compact primary action;
+full search results include the new Study link. Self-review covered only the
+new transform definitions, indexing, exact fractions, difference orientation,
+finite-sample wording and documentation. Original entry formulas and terms
+were not edited. These are implementation checks and mathematical prose
+self-review, without independent proof review, accessibility certification
+or screen-reader user testing.
+
+`run-011` repeats the study contract after the plot-link review fix. Nine
+Python and thirty-one Node tests pass. Study links choose signed-log scale
+if a defined linear coordinate or its signed span would overflow. Small
+windows and residues retain linear scale. Additional fixtures cover
+600-digit values and a signed overflowing range. The browser study suite
+follows KSEQ-000007 at n=52–63 into Plot at every tested width and verifies
+all twelve marks render without a plot error. Study rows and exports retain
+their exact values.

@@ -158,6 +158,10 @@ class SequenceAtlasTests(unittest.TestCase):
                 self.assertEqual('rel="next"' in source,entry['id']!='KSEQ-000038')
                 self.assertIn('id="programs"',source)
                 self.assertIn('id="connections"',source)
+                self.assertIn('id="analysis"',source)
+                self.assertIn('aria-label="Backward difference table"',source)
+                self.assertIn('n=0–11',source)
+                self.assertIn('A constant difference row or a transform match does not establish an infinite identity.',source)
                 if entry['source'].startswith('collection/'):
                     target=entry['source'].split('#')[0].replace('collection/','docs/').replace('.html','.md')
                     self.assertTrue((ROOT/target).is_file(),target)
@@ -165,6 +169,8 @@ class SequenceAtlasTests(unittest.TestCase):
             self.assertIn('./sequence-atlas-search.mjs?v=',script)
             self.assertIn('./sequence-atlas-saved.mjs?v=',script)
             self.assertIn('./sequence-atlas-saved.mjs?v=',(site.output/'assets/sequence-atlas-entry.js').read_text(encoding='utf-8'))
+            self.assertIn('./sequence-atlas-study.js?v=',(site.output/'assets/sequence-atlas-entry.js').read_text(encoding='utf-8'))
+            self.assertIn('./sequence-atlas-study.mjs?v=',(site.output/'assets/sequence-atlas-study.js').read_text(encoding='utf-8'))
 
 
 if __name__ == '__main__':
