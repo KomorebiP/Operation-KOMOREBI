@@ -19,6 +19,11 @@ async function inspect(page,n){await page.locator('#sa-term-index').fill(String(
     await page.goto(new URL('sequences.html',base).href,{waitUntil:'networkidle'});await ready(page);
     if(!data)data=await(await page.request.get(new URL('assets/sequence-atlas-data.json',base).href)).json();
     assert.equal(await page.locator('[data-atlas-panel]:visible').count(),1);assert.equal(await page.locator('#find').isVisible(),true);
+    for(const [query,expected]of [['sequence=KSEQ-000025','explorer'],['discover=0,1,4,9,16,25','discover']]){
+      await page.goto(new URL('sequences.html?'+query,base).href,{waitUntil:'networkidle'});await ready(page);assert.equal(await page.locator('#'+expected).isVisible(),true);
+      await mode(page,'find');await page.goBack();assert.equal(await page.locator('#'+expected).isVisible(),true);
+    }
+    await page.goto(new URL('sequences.html',base).href,{waitUntil:'networkidle'});await ready(page);
     await fits(page);await page.screenshot({path:path.join(out,`browse-${width}.png`)});
     await mode(page,'discover');await page.locator('#sa-discovery-example').click();
     const odd=page.locator('#sa-discovery-results li').filter({has:page.getByRole('heading',{name:'Positive odd numbers',exact:true})}).first();

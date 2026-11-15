@@ -127,7 +127,7 @@ Reproduce the recorded terms for a selected entry:
 ```text
 python -B tools/sequence_atlas.py --id KSEQ-000004
 python -B -m unittest discover -s tools -p test_sequence_atlas.py -v
-node --test tools/test_sequence_atlas.mjs tools/test_sequence_atlas_search.mjs tools/test_sequence_atlas_discovery.mjs
+node --test tools/test_sequence_atlas.mjs tools/test_sequence_atlas_search.mjs tools/test_sequence_atlas_discovery.mjs tools/test_sequence_atlas_interface.mjs
 ```
 
 Each future entry needs a definition, indexing convention, source, exact

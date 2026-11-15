@@ -2,7 +2,7 @@ import {generate,parseTerms,rowsFor,candidatePeriod} from './sequence-atlas-core
 import {searchEntries,suggestions,searchLink} from './sequence-atlas-search.mjs';
 import {readSaved,writeSaved,updateSaveButtons} from './sequence-atlas-saved.mjs';
 import {discover,analyzeInput,operationLabel,OPERATIONS} from './sequence-atlas-discovery.mjs';
-import {setupInterface} from './sequence-atlas-interface.mjs';
+import {setupInterface,workspaceForURL} from './sequence-atlas-interface.mjs';
 
 const $=id=>document.getElementById('sa-'+id);
 const ids=['sequence','compare','view','transform','scale','marks','start','count','modulus','color'];
@@ -307,8 +307,7 @@ async function init(){
   let observedWidth=$('plot').clientWidth;
   new ResizeObserver(()=>{const width=$('plot').clientWidth;if(Math.abs(width-observedWidth)>2&&lastRows.length){observedWidth=width;draw(lastRows,[...new Set(lastRows.map(r=>r.name))]);}}).observe($('plot'));
   showPanel=setupInterface(document.getElementById('sequence-atlas'),{onLeavePlot:stopAnimation});
-  const hash=location.hash.slice(1);
-  showPanel(hash||(params.has('discover')?'discover':['sequence','seq','view','compare'].some(key=>params.has(key))?'explorer':'find'),{history:false});
+  showPanel(workspaceForURL(location.href),{history:false});
   document.getElementById('sequence-atlas').dataset.interfaceReady='true';
 }
 init().catch(error=>{$('loading').textContent='The interactive explorer could not load. Read the catalogue and term pages below. '+error.message;});

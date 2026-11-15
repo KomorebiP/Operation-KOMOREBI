@@ -1,4 +1,8 @@
 // Native links remain usable without JavaScript. Enhancement shows one workspace.
+export function workspaceForURL(href){
+  const url=new URL(href);
+  return url.hash.slice(1)||(url.searchParams.has('discover')?'discover':['sequence','seq','view','compare'].some(key=>url.searchParams.has(key))?'explorer':'find');
+}
 export function setupInterface(root,{onLeavePlot=()=>{}}={}){
   const names=['find','discover','explorer','catalogue','reference'];let current=null;
   const nav=root.querySelector('.sa-mode-nav');root.querySelector('.sa-intro').after(nav);
@@ -15,7 +19,7 @@ export function setupInterface(root,{onLeavePlot=()=>{}}={}){
     if(focus)panels.get(id).querySelector('h2').focus({preventScroll:true});
   }
   root.addEventListener('click',event=>{const link=event.target.closest('a[href^="#"]');if(!link||event.ctrlKey||event.metaKey||event.altKey||event.shiftKey)return;const id=link.getAttribute('href').slice(1);if(panels.has(id))activate(id,{history:false,focus:true});});
-  const restore=()=>activate(location.hash.slice(1)||'find',{history:false});addEventListener('hashchange',restore);addEventListener('popstate',restore);
+  const restore=()=>activate(workspaceForURL(location.href),{history:false});addEventListener('hashchange',restore);addEventListener('popstate',restore);
   root.classList.add('sa-enhanced');
   return activate;
 }

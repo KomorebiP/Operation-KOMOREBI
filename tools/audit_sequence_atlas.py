@@ -20,7 +20,7 @@ if __name__ == '__main__':
     result=unittest.TextTestRunner(verbosity=2).run(suite)
     import os
     env=dict(os.environ,PYTHON=sys.executable)
-    browser_core=subprocess.run([args.node,'--test','tools/test_sequence_atlas.mjs','tools/test_sequence_atlas_search.mjs','tools/test_sequence_atlas_discovery.mjs'],cwd=ROOT,env=env,capture_output=True,text=True,encoding='utf-8')
+    browser_core=subprocess.run([args.node,'--test','tools/test_sequence_atlas.mjs','tools/test_sequence_atlas_search.mjs','tools/test_sequence_atlas_discovery.mjs','tools/test_sequence_atlas_interface.mjs'],cwd=ROOT,env=env,capture_output=True,text=True,encoding='utf-8')
     print(browser_core.stdout)
     print(browser_core.stderr,file=sys.stderr)
     report=dict(status='passed' if result.wasSuccessful() and browser_core.returncode==0 else 'failed',
