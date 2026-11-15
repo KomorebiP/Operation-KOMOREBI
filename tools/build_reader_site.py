@@ -340,7 +340,7 @@ class Site:
         article_start=body.find('<article id="chapter-text"')
         side_context=body[:article_start] if edition(path) and article_start>=0 else body
         has_side_action=('class="side-launch"' in side_context) if edition(path) else ('data-side-reader-link' in side_context)
-        if not work_page and not has_side_action and path not in smith_aliases and path not in {'side-by-side.html','index.html','404.html','sitemap.html','interactive.html','signal-lab.html','smith-chart.html','special-functions-lab.html','recovery-lab.html','j-lab.html','works.html','reading-list.html','lean/playground.html','lean/run.html','read/visual-guides.html','sequences.html'}:
+        if not work_page and not has_side_action and not path.startswith('sequence-archive/') and path not in smith_aliases and path not in {'side-by-side.html','index.html','404.html','sitemap.html','interactive.html','signal-lab.html','smith-chart.html','special-functions-lab.html','recovery-lab.html','j-lab.html','works.html','reading-list.html','lean/playground.html','lean/run.html','read/visual-guides.html','sequences.html','sequence-archive.html'}:
             pair=self.rel('side-by-side.html',path)+'?left='+quote(path,safe='')
             launch='<p class="side-launch"><a data-side-reader-link href="'+esc(pair,quote=True)+'">Read side by side</a></p>'
             body=re.sub(r'(</h1>)',lambda match:match[1]+launch,body,count=1)

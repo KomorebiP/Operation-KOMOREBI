@@ -1,5 +1,36 @@
 # Sequence and Formula Atlas
 
+## Recovered research library
+
+The [research sequence library](https://komorebip.github.io/Operation-KOMOREBI/sequence-archive.html)
+adds 90 recovered KOM records across 18 families, with 5,487 exact terms.
+It has fielded and exact-term search, family and review filters, shareable
+searches, and offset-aware plots of values, differences, prefix sums, residues,
+and consecutive residue pairs. Every record has a static definition, complete
+indexed data, CSV, indexed text, JSON with integer strings, and source downloads.
+The coefficient triangle KOM084 shows its flat index alongside its row and column.
+
+KOM IDs are archive labels. The 62 exploratory records make no novelty claim.
+Stored ranges vary by record; plots never extrapolate. A partial sum begins at
+that record's first stored index, and the first difference is undefined there.
+Links to the curated KSEQ atlas report finite, same-index data overlap only.
+The existing 38 KSEQ entries and their exact exports retain their identifiers
+and values. Search in the main atlas can carry the current query into this library.
+
+Source bytes and archive SHA-256 are recorded in
+`research/sequence-archive/README.md`. Reproduce the finite audit with:
+
+```text
+python -B tools/audit_sequence_archive.py --output archive-audit.json
+node --test tools/test_sequence_archive.mjs
+```
+
+The audit compares every regenerated record, all 90 b-file hashes, the historical
+numeric controls, and the generator's independent finite checks. It establishes
+bounded implementation agreement, not originality, infinite sequence identity,
+or any of the research program's global conjectures. The archive's annotations
+of OEIS references are retained as source annotations, not fresh corpus checks.
+
 [Open the atlas](https://komorebip.github.io/Operation-KOMOREBI/sequences.html) · [Sequence derivations](demonstrations/SEQUENCE_SHAPES.md)
 
 The atlas organizes source-linked integer sequences and formulas, with exact

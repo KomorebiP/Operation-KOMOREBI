@@ -156,6 +156,7 @@ def search_section(entries):
 <div class="sa-search-examples" aria-label="Example searches"><span>Try:</span><button type="button" data-search-example="n:4 r:2">n:4 r:2</button><button type="button" data-search-example='name:"ordered bell"'>ordered Bell</button><button type="button" data-search-example="1, ?, 69">1, ?, 69</button><button type="button" data-search-example="-tag:benchmark">without benchmarks</button></div>
 <div class="sa-search-actions"><button type="button" id="sa-share-search">Copy search link</button><a href="#catalogue">Browse entry details</a><button type="button" id="sa-show-saved" aria-controls="sa-results" aria-pressed="false"><span id="sa-saved-count">Saved entries</span></button></div></div>
 <p id="sa-search-error" class="sa-error" role="alert" hidden></p><p id="sa-search-status" role="status" aria-live="polite" aria-atomic="true">'''+str(len(entries))+''' entries. Browse the complete catalogue below without JavaScript.</p>
+<p><a id="sa-archive-search" href="sequence-archive.html#records">Search the 90 recovered research records →</a> · definitions, exact offsets, review stages and modular plots</p>
 <div id="sa-search-results" hidden><h3 id="sa-results-title" tabindex="-1">Search results</h3><ol id="sa-results" class="sa-results"></ol><div id="sa-empty" hidden><p>No catalogue entries match this search. Try fewer words, another topic, or a shorter term pattern.</p><div id="sa-suggestions"></div></div><button type="button" id="sa-more-results" hidden>Show more results</button></div>
 <details class="sa-search-help"><summary>Search help and examples</summary><div id="sa-query-help"><p>Words are combined with AND: <code>bell factorial</code> finds entries containing both. Quotes keep a phrase together. Use <code>|</code> for alternatives and a leading minus to exclude a word or field.</p>
 <dl><dt><code>name:"ordered bell"</code></dt><dd>Search entry names.</dd><dt><code>n:4 r:2</code></dt><dd>Select reciprocal spacing N and power r.</dd><dt><code>formula:convolution</code></dt><dd>Search definitions and recurrences.</dd><dt><code>tag:partitions -name:fubini</code></dt><dd>Combine a topic with an exclusion.</dd><dt><code>id:KSEQ-7 | oeis:A000364</code></dt><dd>Find a local identifier or recorded OEIS reference.</dd><dt><code>1, ?, 69</code></dt><dd>Match consecutive integer terms, allowing one unknown value. Match locations are shown in the results.</dd></dl>
@@ -229,7 +230,7 @@ def build(site):
     body = css+'''<div class="sequence-atlas" id="sequence-atlas">
 <header class="sa-intro"><p class="sa-label">Komorebi / sequences and formulas</p><h1>Find a sequence.<br><em>Explore its structure.</em></h1>
 <p>Follow exact integer sequences from their formulas to their plots. Compare families, change the modulus, and return to the derivations.</p>
-<nav aria-label="Atlas sections"><a href="#explorer">Plot explorer</a><a href="#catalogue">Sequence catalogue</a><a href="#reference">Sources and scope</a></nav></header>
+<nav aria-label="Atlas sections"><a href="#explorer">Plot explorer</a><a href="#catalogue">Sequence catalogue</a><a href="sequence-archive.html">Research library · 90 records</a><a href="#reference">Sources and scope</a></nav></header>
 <noscript><p class="notice">The catalogue, formulas, term tables, and CSV downloads work without JavaScript. Enable JavaScript for interactive plots and filtering.</p></noscript>
 <section id="explorer" aria-labelledby="explorer-title"><h2 id="explorer-title" tabindex="-1">Plot explorer</h2>
 <div id="sa-workspace" hidden><div class="sa-controls">
@@ -329,7 +330,9 @@ def build(site):
             '<script type="module" src="../assets/sequence-atlas-entry.js?v='+hashlib.sha256(entry_script.encode()).hexdigest()[:12]+'"></script>')
         site.page('sequences/'+identifier+'.html', entry['title']+' · '+identifier, content)
         site.search.append(dict(title=entry['title']+' · '+identifier, group='Collection', kind='Examples', work_ids=entry['work_ids'], url='sequences/'+identifier+'.html', text=entry['formula']+' '+entry['recurrence']+' '+', '.join(entry['terms'][:8])))
-    return dict(entries=len(entries), snapshot=bool(snapshot))
+    from sequence_archive import build as build_archive
+    archive=build_archive(site,entries)
+    return dict(entries=len(entries), snapshot=bool(snapshot), archive=archive)
 
 
 if __name__ == '__main__':

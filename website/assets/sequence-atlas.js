@@ -165,6 +165,7 @@ function search({reset=false,restoreID=null,deferErrors=false}={}){
   const query=$('query').value,options=searchOptions();
   try{
     lastResults=searchEntries(entries,query,options);
+    const archiveLink=new URL('sequence-archive.html',location.href);if(query.trim())archiveLink.searchParams.set('query',query);archiveLink.hash='records';$('archive-search').href=archiveLink.href;
     if(!query.trim()&&options.filter==='all'&&!options.topic&&options.sort==='relevance'){
       const featured=['KSEQ-000007','KSEQ-000025','KSEQ-000022','KSEQ-000023','KSEQ-000001','KSEQ-000026'];
       lastResults.sort((a,b)=>{const order=id=>featured.includes(id)?featured.indexOf(id):100+Number(id.slice(-6));return order(a.entry.id)-order(b.entry.id);});
