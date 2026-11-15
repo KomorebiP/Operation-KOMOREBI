@@ -37,3 +37,30 @@ certification.
 
 Self-review covered the added atlas definitions, indexing, recurrence labels,
 source routes, and scope language. No predecessor mathematical text was changed.
+
+## Refinement run 003
+
+`refinement-contract.json` and `run-003` record the completed refinement
+checks: five Python tests and fifteen Node tests. They retain the original
+26 identifiers and all 1,664 stored integer terms. The existing dated OEIS
+comparison is reused only after its catalogue-term signature is checked;
+this refinement does not claim a fresh corpus scan or a novelty result.
+
+The new finite fixtures cover second differences of squares through index
+63, a signed second-difference example, and successive modular coordinates
+containing a negative integer and an integer above 2^53. Search checks cover
+field combinations, phrases, exclusions, alternatives, wildcard boundaries,
+match offsets, identifier normalization, sorting, search links, and saved-list
+validation. The declared atlas source surface is hashed before and after;
+shared reader modules are pinned by the recorded repository commit rather
+than exhaustively included in the hash list.
+
+The separate updated Edge suite exercises six plot views at 1440px, 390px,
+and 320px; one-stop graph keyboard navigation, touch-sized inspection
+buttons, window controls, saved-entry persistence, query error recovery,
+short spoken labels with complete exact data retained, copied search/view
+links, and CSV/SVG/PNG/view-JSON downloads. It also checks indexed-text and
+entry-JSON files, related-entry navigation, no-JavaScript reading, 200% text
+at 320px with system high-contrast colors and reduced motion, and browser
+storage denial. These are implementation and browser checks, without
+screen-reader user testing or accessibility certification.
