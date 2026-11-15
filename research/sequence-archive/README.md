@@ -15,7 +15,7 @@ the formal ladder recurrence and finite Clifford word-count model.
 Reproduce the registry and generated b-files with Python 3.10 or newer:
 
 ```text
-python generate_candidates.py --output regenerated
+python reproduce.py --output regenerated
 ```
 
 The preserved generator's historical CSV control expects the CSV in a sibling
@@ -24,6 +24,11 @@ The repository audit separately checks that historical CSV and compares every
 generated record with the recovered registry. It also checks all 90 original
 b-file hashes. These are finite implementation checks, not proof of novelty,
 a Collatz or Carmichael result, or physical network realizability.
+
+`reproduce.py` is the website's portable launcher. It calls the preserved
+generator with an output-path class that explicitly writes UTF-8 and LF text.
+The original generator uses platform-default newlines in some writes, causing
+its b-file checks to fail on Windows. Its source bytes remain unchanged.
 
 The website publishes the source subset and exact data. The complete 42.2 MB
 historical ZIP remains in the task workspace. Existing KSEQ atlas identifiers,

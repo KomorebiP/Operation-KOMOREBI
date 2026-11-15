@@ -6,6 +6,7 @@ import hashlib
 import json
 from pathlib import Path
 import sys
+import tempfile
 
 from sequence_archive import SOURCE, records, bfile
 from sequence_atlas import catalogue
@@ -21,6 +22,12 @@ def audit():
     entries=records(catalogue()); hashes=json.loads((SOURCE/'BFILE_SHA256.json').read_bytes())
     for entry in entries:
         assert hashlib.sha256(bfile(entry).encode()).hexdigest()==hashes[entry['id']+'_candidate_bfile.txt']
+    import reproduce
+    with tempfile.TemporaryDirectory() as directory:
+        reproduce.reproduce(directory)
+        assert json.loads((Path(directory)/'candidate_registry.json').read_bytes())==recovered
+        for name,expected in hashes.items():
+            assert hashlib.sha256((Path(directory)/'bfiles'/name).read_bytes()).hexdigest()==expected
     historical=0
     with (SOURCE/'v10_sequence_catalog.csv').open(newline='',encoding='utf-8') as file:
         for row in csv.DictReader(file):
@@ -30,7 +37,7 @@ def audit():
                 historical+=len(expected)
     assert len(entries)==90 and sum(len(x['terms']) for x in entries)==5487
     return dict(status='passed',assertion_tested='All 90 recovered records and all 5487 exact integer terms reproduce from the preserved generator; all indexed b-file bytes reproduce their archived SHA-256 hashes.',
-        records=90,terms=5487,bfile_hashes=90,historical_control_terms=historical,
+        records=90,terms=5487,bfile_hashes=90,portable_launcher_bfiles=90,historical_control_terms=historical,
         overlaps=sum(bool(x['overlap']) for x in entries),controls=controls,
         non_claims=['No new OEIS allocation or novelty finding','No infinite identity from a finite overlap','No global Collatz or Carmichael theorem','No physical circuit realization theorem'])
 

@@ -1,14 +1,16 @@
 # Recovered archive integration: finite verification
 
-`run-004/manifest.json` is the current receipt. Its run status is `completed`;
-the result reports `passed`. Runs 001-003 are retained development receipts
-and predate the final renderer and notation corrections.
+`run-005/manifest.json` is the current receipt. Its run status is `completed`;
+the result reports `passed`. Runs 001-004 are retained development receipts
+and predate the portable launcher or final renderer and notation corrections.
 
 The exact replay compares the entire recovered registry (90 records, 5,487
 integer terms) with the preserved generator. All 90 indexed text outputs
 reproduce the original b-file SHA-256 checksums. It separately checks 162
 historical numeric control terms; the preserved generator's optional sibling
 CSV check reports zero because this source subset has a different layout.
+The portable source launcher is also executed into a temporary directory;
+its generated registry and all 90 b-file hashes must match the archive.
 
 The generator's independent controls cover 84 rational-series values, 28
 log-derivative values, 3 binomial round trips, 6 classical anchor families,
@@ -31,6 +33,9 @@ reading-workspace actions from the new tool pages, and corrected UTF-8 label
 encoding. One initial atlas browser run timed out while other browser suites
 were running; the unchanged atlas suite passed on a separate retry. No failure
 was treated as a passing run.
+Testing the actual source download caught the archived generator's Windows
+newline assertion failure. The added launcher writes explicit UTF-8/LF output;
+the preserved generator bytes were not changed.
 
 Mathematical prose self-review covered the added page templates and documentation.
 The source formulas and numerical records retain their recovered bytes. The
