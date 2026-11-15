@@ -50,7 +50,11 @@ async function refinementChecks(page){
   assert.equal(await page.locator('[data-sequence]:visible').count(),1);
   await page.locator('#sa-query').press('ArrowDown');
   assert.ok(await page.evaluate(()=>Boolean(document.activeElement.closest('#sa-results'))));
-  await page.keyboard.press('/');assert.equal(await page.evaluate(()=>document.activeElement.id),'sa-query');
+  const resultFocus=await page.evaluate(()=>document.activeElement.outerHTML);
+  await page.keyboard.press('/');assert.equal(await page.evaluate(()=>document.activeElement.outerHTML),resultFocus);
+  await page.keyboard.press('Control+/');assert.equal(await page.evaluate(()=>document.activeElement.id),'sa-query');
+  await page.locator('#sa-query').fill('name:bell');await page.locator('#sa-query').press('/');
+  assert.equal(await page.inputValue('#sa-query'),'name:bell/');
   await page.locator('#sa-clear-search').click();
   await page.getByRole('button',{name:'Fibonacci residues',exact:true}).click();
   assert.equal(await page.inputValue('#sa-sequence'),'KSEQ-000025');assert.equal(await page.inputValue('#sa-view'),'mod-pairs');

@@ -85,7 +85,7 @@ exact integer strings, with at most 2,000 digits per search term and
 20,000 characters per query. Text suggestions address spelling only and
 never change numeric matching. Topic/type/saved filters and result sorting
 compose with the query. Copy search link preserves those controls. Press
-`/` outside an input to focus search; Arrow Down reaches the result links.
+`Ctrl+/` (`Command+/` on Mac) outside an input to focus search; Arrow Down reaches the result links. Plain character keys do not move focus.
 
 The separate OEIS comparison tool reads official bulk exports locally. It
 scans every exported position for six starting terms and extends each hit
