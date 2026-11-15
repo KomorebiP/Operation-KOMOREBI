@@ -1,3 +1,4 @@
+import './sequence-reading-theme.mjs';
 import {searchEntries} from './sequence-atlas-search.mjs';
 import {archiveLink} from './sequence-archive-core.mjs';
 import {setupArchivePlot} from './sequence-archive-plot.mjs';

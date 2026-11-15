@@ -1,3 +1,4 @@
+import './sequence-reading-theme.mjs';
 import {generate,parseTerms,rowsFor,candidatePeriod} from './sequence-atlas-core.mjs';
 import {searchEntries,suggestions,searchLink} from './sequence-atlas-search.mjs';
 import {readSaved,writeSaved,updateSaveButtons} from './sequence-atlas-saved.mjs';
@@ -88,12 +89,12 @@ function draw(rows,names){
   svg.append(element('rect',{width:W,height:H,fill:'#fafaf5'}));
   svg.append(element('title',{id:'sa-svg-title'},optionLabel('view',state.view)));
   svg.append(element('desc',{id:'sa-svg-description'},`Discrete samples for ${names.join(' and ')}. Exact values are available in the atlas table and CSV export.`));
-  svg.append(element('path',{d:`M${pad.left} ${pad.top}V${H-pad.bottom}H${W-pad.right}`,stroke:'#87988b','stroke-width':1,fill:'none'}));
+  svg.append(element('path',{d:`M${pad.left} ${pad.top}V${H-pad.bottom}H${W-pad.right}`,stroke:'#87988b','data-plot-axis':'true','stroke-width':1,fill:'none'}));
   const tick=v=>v===0?'0':Math.abs(v)>=1e6||Math.abs(v)<0.001?v.toExponential(1):Number(v.toPrecision(4)).toString();
   const yTicks=modular?[...new Set(Array.from({length:6},(_,i)=>Math.round((1-i/5)*ymax+(i/5)*ymin)))]:Array.from({length:6},(_,i)=>(1-i/5)*ymax+(i/5)*ymin);
   for(const pyValue of yTicks){
     const py=y(pyValue);
-    if(appearance.grid==='on')svg.append(element('line',{x1:pad.left,x2:W-pad.right,y1:py,y2:py,stroke:'#d9dfd4','stroke-width':1}));
+    if(appearance.grid==='on')svg.append(element('line',{x1:pad.left,x2:W-pad.right,y1:py,y2:py,stroke:'#d9dfd4','data-plot-grid':'true','stroke-width':1}));
     svg.append(element('text',{x:pad.left-10,y:py+4,'text-anchor':'end',fill:'#465347','font-size':12},tick(pyValue)));
   }
   const xTicks=[...new Set(Array.from({length:6},(_,i)=>state.view==='pairs'?(1-i/5)*xmin+(i/5)*xmax:Math.round((1-i/5)*xmin+(i/5)*xmax)))];

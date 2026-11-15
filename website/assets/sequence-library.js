@@ -1,3 +1,4 @@
+import './sequence-reading-theme.mjs';
 import {searchEntries} from './sequence-atlas-search.mjs';
 import {setupArchivePlot} from './sequence-archive-plot.mjs';
 import {referenceQuery} from './sequence-oeis-core.mjs';
@@ -34,6 +35,7 @@ function setupSearch(entries){
   window.addEventListener('storage',event=>{if(event.key===STORAGE_KEY||event.key===null){saved=new Set(readSaved(storage,allowed).ids);run();}});
   $('search').hidden=false;$('search').addEventListener('submit',event=>{event.preventDefault();run(true);});
   $('clear').addEventListener('click',()=>{for(const key of keys)$(key==='q'?'query':key).value=key==='sort'?'relevance':key==='match'?'any':'';run(true);$('query').focus();});
+  $('research').hidden=false;$('research').addEventListener('click',()=>{for(const key of keys)$(key==='q'?'query':key).value=key==='sort'?'relevance':key==='match'?'any':'';$('query').value='tag:research-derived';run(true);$('count').focus();$('count').scrollIntoView({block:'start'});});
   for(const [key,step]of [['previous',-1],['next',1]])$(key).addEventListener('click',()=>{page+=step;render();history.replaceState(null,'',share());$('count').scrollIntoView({block:'nearest'});});
   $('share').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(share());$('count').textContent='Search link copied.';}catch{$('link-wrap').hidden=false;$('link').value=share();$('link').focus();$('link').select();}});
   $('export').addEventListener('click',()=>save(csv([['id','title','family','collection','offset','formulas','url'],...results.map(({entry:e})=>[e.id,e.title,e.kind,e.collection,e.offset,e.formulas.length,new URL(e.url,location.href).href])]),'text/csv;charset=utf-8','sequence-search-results.csv'));

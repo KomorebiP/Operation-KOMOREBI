@@ -19,9 +19,45 @@ def product(a,b,count):
     return [sum(a[k]*b[n-k] for k in range(n+1)) for n in range(count)]
 
 
+def research_oracles(count=COUNT+8):
+    """Independent rising-factorial expansion and formal differential recurrence."""
+    parameter={}
+    for N in range(2,13):
+        u=[Q(0)]+[Q((-1)**(m+1),factorial(N*m)) for m in range(1,count)]
+        power=[Q(1)]+[Q(0)]*(count-1);rising=[1]
+        rows=[[Q(0)]*count for _ in range(count)];rows[0][0]=1
+        for ell in range(1,count):
+            power=product(power,u,count)
+            rising=[(rising[k-1] if k else 0)+(ell-1)*(rising[k] if k<len(rising) else 0) for k in range(ell+1)]
+            for n in range(ell,count):
+                coefficient=power[n]*factorial(N*n)/factorial(ell)
+                for k in range(1,ell+1):rows[n][k]+=coefficient*rising[k]
+        assert all(v.denominator==1 for row in rows for v in row)
+        parameter[N]=rows
+    # h_n(x) = [z^(2n)] cosh(z)^(-x), computed as polynomials over Q.
+    h=[[Q(1)]];d=[Q(1,factorial(2*m)) for m in range(count)]
+    for n in range(1,count):
+        row=[Q(0)]*(n+1)
+        for m in range(1,n+1):
+            for k,value in enumerate(h[n-m]):
+                row[k]-=Q(n-m,n)*d[m]*value
+                row[k+1]-=Q(m,n)*d[m]*value
+        h.append(row)
+    even_euler=[sum(row)*factorial(2*n) for n,row in enumerate(h)]
+    theta=[]
+    for n in range(count):
+        row=[Q(0)]*(2*n+1)
+        for j in range(n+1):
+            for k,value in enumerate(h[n-j]):row[2*j+k]+=Q(even_euler[j],factorial(2*j))*value*factorial(2*n)
+        assert all(v.denominator==1 for v in row);theta.append(row)
+    assert theta[1]==[0,-1,-1]
+    assert theta[2]==[0,2,3,6,5]
+    return parameter,theta
+
+
 def checks():
     entries=expanded_catalogue();counts=Counter(x['kind'] for x in entries)
-    assert dict(counts)=={'reciprocal power':99,'logarithmic companion':15,'congruential numerator':264,'congruential denominator':264,'Appell numerator':80,'Appell denominator':60,'classical multisection':1001}
+    assert dict(counts)=={'reciprocal power':99,'logarithmic companion':15,'congruential numerator':264,'congruential denominator':264,'Appell numerator':80,'Appell denominator':60,'classical multisection':1001,'secancy parameter column':88,'Euler-transfer theta':12,'theta polynomial column':12}
     checked=Counter()
     for N in range(2,17):
         d=[Q((-1)**n,factorial(N*n)) for n in range(COUNT)]
@@ -38,7 +74,7 @@ def checks():
             checked['tangent_coefficients']+=1
         for j in range(N):
             params=[Q(p) for p in hyper_parameters(N,j)];coefficient=Q(1)
-            for n in range(COUNT):
+            for n in range(COUNT+8 if N<=12 and j==0 else COUNT):
                 if n:
                     denominator=n*N**N
                     for p in params:denominator*=p+n-1
@@ -75,11 +111,22 @@ def checks():
             'factorial':lambda:factorial(m),'catalan':lambda:comb(2*m,m)//(m+1),'central-binomial':lambda:comb(2*m,m),
             'triangular':lambda:m*(m+1)//2,'square':lambda:m*m,'cube':lambda:m**3,
             'power-two':lambda:2**m,'power-three':lambda:3**m,'bell':lambda:bell[m],'fubini':lambda:fubini[m]}[kind]()
+    parameter,theta=research_oracles()
     for entry in entries:
-        for n,value in enumerate(entry['terms']):
+        for position,value in enumerate(entry['terms']):
+            n=entry['offset']+position
             expected_degree=n if entry['kind'].startswith('Appell ') else entry['N']*(n+1)-1 if entry['kind']=='logarithmic companion' else entry['N']*n+(entry['j'] if entry['kind']=='classical multisection' else 0)
             assert source_degree(entry,n)==expected_degree
             checked['source_index_maps']+=1
+            if entry['kind']=='secancy parameter column':
+                assert int(value)==parameter[entry['N']][n][entry['k']],(entry['id'],n)
+                checked['secancy_polynomial_coefficients']+=1
+            elif entry['kind']=='theta polynomial column':
+                assert int(value)==theta[n][entry['k']],(entry['id'],n)
+                checked['theta_polynomial_coefficients']+=1
+            elif entry['kind']=='Euler-transfer theta':
+                assert int(value)==sum(v*entry['x']**k for k,v in enumerate(theta[n])),(entry['id'],n)
+                checked['theta_integer_specializations']+=1
             if entry['kind']=='classical multisection':
                 assert value==str(classical(entry['source_kind'],expected_degree)),(entry['id'],n)
                 checked['classical_subsequence_terms']+=1

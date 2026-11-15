@@ -1,3 +1,4 @@
+import './sequence-reading-theme.mjs';
 import {readSaved,writeSaved,updateSaveButtons} from './sequence-atlas-saved.mjs';
 import {fraction,exact} from './sequence-atlas-core.mjs';
 import {setupStudy} from './sequence-atlas-study.js';

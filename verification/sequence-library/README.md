@@ -1,20 +1,28 @@
 # Finite sequence-library evidence
 
-Current evidence: `run-006/manifest.json`, status `completed`, with
-`run-006/checks.json`. The input contract is `contract.json`. Earlier runs are
+Current evidence: `run-007/manifest.json`, status `completed`, with
+`run-007/checks.json`. The input contract is `contract.json`. Earlier runs are
 retained development records; their source hashes precede packaging, notation,
 attribution, portable line-ending refinements, and comparison-workbench packaging.
 
-The current exact checks cover 1,783 new parameter records and all 42,792 stored
+The current exact checks cover 1,895 parameter records and all 45,480 stored
 terms / index maps. Independent comparisons include 2,880 reciprocal terms,
-360 tangent coefficients, 3,240 hypergeometric seed coefficients, 6,336
+360 tangent coefficients, 3,328 hypergeometric seed coefficients, 6,336
 congruential rational coefficients, 1,920 Appell rational coefficients, 16,032
 reduced integer components, 24,024 classical-subsequence terms, and 3,696
 subsequence hypergeometric coefficients. These overlapping check counts are not
 counts of distinct mathematical results.
 
-The complete OEIS replay scans 401,422 retained records against all 1,911 local
-records. It reproduces 2,866 retained hits and 372,883 observed hit positions,
+The 112 research additions contribute 2,112 ordinary secancy-polynomial
+coefficients, 288 theta specializations and 288 theta-polynomial coefficients.
+The independent oracle uses powers of 1-D_N and unsigned first-kind Stirling
+coefficients for the secancy columns. Theta coefficients use a separate formal
+polynomial recurrence for cosh(z)^(-x), followed by signed Euler convolution.
+The stored windows retain their original n offsets. The seed hypergeometric
+checks extend through n=31 for the new j=0, N=2..12 formulas.
+
+The complete OEIS replay scans 401,422 retained records against all 2,023 local
+records. It reproduces 2,869 retained hits and 372,886 observed hit positions,
 including repetitive / low-information prefixes. It does not establish
 infinite identities, novelty, or pairwise distinctness.
 
@@ -32,3 +40,9 @@ collections, four-source exact comparisons, arrow-key navigation, SVG/PNG/CSV
 export and sharing, no-JavaScript tables, and enlarged text /
 forced colors. These checks are not accessibility certification. The
 mathematical proofreading scope is recorded in `PROOFREAD_REVIEW.md`.
+
+The readability browser suite measures visible text contrast in both page themes,
+checks light pages under a dark OS, preserves page preferences, and verifies new
+record offsets in HTML and CSV. The clean-light sample measured at least 7.17:1.
+All 5,733 pre-existing exact data exports remain unchanged. These are local
+implementation/self-review results; production revision checks are separate.
