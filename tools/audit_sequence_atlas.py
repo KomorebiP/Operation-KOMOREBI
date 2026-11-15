@@ -9,6 +9,9 @@ import unittest
 from sequence_atlas import ROOT, catalogue
 
 if __name__ == '__main__':
+    # Node's test reporter emits Unicode even when launched from legacy Windows pipes.
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--node',required=True)
     parser.add_argument('--output',type=Path,required=True)
