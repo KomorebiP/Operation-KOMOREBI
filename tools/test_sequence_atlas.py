@@ -18,6 +18,27 @@ from update_sequence_atlas_oeis import compare
 
 
 class SequenceAtlasTests(unittest.TestCase):
+    def test_reading_index_maps_preserve_the_value_and_basis_conventions(self):
+        for entry in catalogue():
+            reading=entry['reading']
+            self.assertEqual(reading['offset'],0)
+            self.assertEqual(reading['stored_range'],[0,63])
+            self.assertEqual(len(reading['samples']),6)
+            for n,row in enumerate(reading['samples']):
+                self.assertEqual((row['n'],row['value']),(n,entry['terms'][n]))
+                if entry['kind']=='reciprocal':
+                    self.assertEqual(row['source_index'],entry['N']*n)
+                    self.assertEqual(Fraction(row['ordinary_coefficient']),Fraction(int(entry['terms'][n]),factorial(entry['N']*n)))
+                elif entry['kind']=='euler':
+                    self.assertEqual(row['source_index'],2*n)
+                    self.assertNotIn('ordinary_coefficient',row)
+                else:
+                    self.assertEqual(row['source_index'],n)
+                    self.assertNotIn('ordinary_coefficient',row)
+            self.assertTrue(reading['definition'] and reading['index_meaning'] and reading['tex'])
+        reciprocal_entry=next(e for e in catalogue() if e['id']=='KSEQ-000007')
+        self.assertEqual(reciprocal_entry['reading']['samples'][2]['ordinary_coefficient'],'23/13440')
+
     def test_original_ids_and_terms_are_preserved(self):
         entries=catalogue()
         signature=hashlib.sha256(json.dumps([(e['id'],e['terms']) for e in entries[:26]],separators=(',',':')).encode()).hexdigest()

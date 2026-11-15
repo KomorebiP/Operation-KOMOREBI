@@ -26,8 +26,8 @@ if __name__ == '__main__':
     report=dict(status='passed' if result.wasSuccessful() and browser_core.returncode==0 else 'failed',
         python_tests=result.testsRun,python_errors=len(result.errors),python_failures=len(result.failures),
         browser_core_exit=browser_core.returncode,entries=len(catalogue()),
-        assertion_tested='Exact catalogue terms and bounded transforms agree with the documented independent implementations and source definitions over the tested ranges.',
-        bounds=dict(reciprocal_N=[2,8],reciprocal_powers=[1,3],rational_oracle_terms=16,python_browser_terms=64,partition_recurrence_terms=32,second_difference_terms=64,successive_modular_fixture_terms=3,entries=len(catalogue()),entry_program_terms=16,retained_original_terms=1664,binomial_round_trip_terms=64,partition_cross_implementation_terms=100,computed_connection_terms=12,new_oeis_prefix_terms=12),
+        assertion_tested='Exact catalogue terms, bounded transforms, and six-row index and normalization maps agree with the documented independent implementations and source definitions over the tested ranges.',
+        bounds=dict(reciprocal_N=[2,8],reciprocal_powers=[1,3],rational_oracle_terms=16,python_browser_terms=64,partition_recurrence_terms=32,second_difference_terms=64,successive_modular_fixture_terms=3,entries=len(catalogue()),entry_program_terms=16,retained_original_terms=1664,binomial_round_trip_terms=64,partition_cross_implementation_terms=100,computed_connection_terms=12,new_oeis_prefix_terms=12,reading_map_rows=228,normalized_reciprocal_rows=126),
         non_claims=['No new sequence or formula novelty','No global period or asymptotic result','No new formal or independent mathematical review'])
     args.output.parent.mkdir(parents=True,exist_ok=True)
     args.output.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
