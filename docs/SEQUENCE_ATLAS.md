@@ -127,7 +127,7 @@ Reproduce the recorded terms for a selected entry:
 ```text
 python -B tools/sequence_atlas.py --id KSEQ-000004
 python -B -m unittest discover -s tools -p test_sequence_atlas.py -v
-node --test tools/test_sequence_atlas.mjs tools/test_sequence_atlas_search.mjs tools/test_sequence_atlas_discovery.mjs tools/test_sequence_atlas_interface.mjs
+node --test tools/test_sequence_atlas.mjs tools/test_sequence_atlas_search.mjs tools/test_sequence_atlas_discovery.mjs tools/test_sequence_atlas_interface.mjs tools/test_sequence_atlas_study.mjs
 ```
 
 Each future entry needs a definition, indexing convention, source, exact
@@ -215,3 +215,47 @@ preserved. Index-map fractions are computed with Python Fraction and the
 browser inspector uses exact BigInt arithmetic. Browser checks cover all 38
 formula renderings and representative reciprocal, Euler and direct-index
 records at desktop, phone and 320px widths, including plain-text fallbacks.
+
+## Study exact values
+
+Each entry has a Study section, also reachable directly from search results.
+Eleven views show original terms, first/second differences, partial sums,
+successive ratios, running averages, alternating signs, absolute values,
+binomial/inverse binomial transforms, and residues modulo 2 through 128.
+The window covers 2–32 index positions among the 64 stored terms. Moving it
+does not reindex values: sums, averages and binomial transforms still start
+at zero, and sign alternation uses the original n. Ratios use reduced exact
+fractions; division by zero and initial differences retain undefined positions.
+
+Sample statistics count signs, integer parity and defined values. The GCD
+is reported only for a nonempty integer-valued sample; all-zero samples have
+GCD zero. A separate table shows backward differences of orders 0–4 of the
+original stored integers, before the chosen transform, across up to eight
+indices. Constant-row observations use the whole selected window and require
+at least four defined values. They are finite observations, never polynomial
+proofs or inferred infinite identities.
+
+Search and discovery actions use only an initial consecutive run of defined
+integers, without crossing missing or fractional values. Search sends up to
+eight integers within its 2,000-digit limit; discovery requires at least six
+with at most 300 digits each. The action note reports how many are used and
+that discovery reindexes its input from zero. Other values remain available
+in indexed copies and exact CSV/JSON downloads. CSV retains every n and a
+defined flag; JSON retains undefined positions as null and records the
+transform, window, modulus, conventions and finite observations.
+
+Copy study link preserves the applied state, and browser Back/Forward restores
+it. Invalid links display a message and the first twelve original terms;
+invalid form edits retain the last valid results. Prefix operations, exports
+and difference tables use exact arithmetic throughout. The initial original
+terms, sample statistics and expandable difference table are generated in
+Python and remain readable without JavaScript. Controls are an enhancement.
+
+The independent Fraction-based Python study oracle lives in
+`tools/sequence_atlas_study.py`; the browser engine and interface are
+`website/assets/sequence-atlas-study.mjs` and `sequence-atlas-study.js`.
+The Node study test compares rows, statistics and difference ladders in
+1,482 windows across all 38 entries, eleven transforms, moduli 2, 7 and 128,
+and three index windows. The separate Edge study suite covers responsive
+controls, exact exports, linked search/plot, history, copy fallback,
+no-JavaScript reading and 200% text with forced colors.

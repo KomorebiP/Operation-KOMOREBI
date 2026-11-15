@@ -1,5 +1,6 @@
 import {readSaved,writeSaved,updateSaveButtons} from './sequence-atlas-saved.mjs';
 import {fraction,exact} from './sequence-atlas-core.mjs';
+import {setupStudy} from './sequence-atlas-study.js';
 const root=document.querySelector('[data-entry-id]');
 if(root){
   const $=id=>document.getElementById('sa-'+id),id=root.dataset.entryId,status=$('entry-status');
@@ -16,6 +17,7 @@ if(root){
   $('entry-copy').hidden=false;$('entry-copy').addEventListener('click',()=>copyText([...root.querySelectorAll('#data tbody tr')].slice(0,12).map(row=>row.querySelector('td').textContent).join(', '),'First 12 terms copied.'));
   $('entry-link').hidden=false;$('entry-link').addEventListener('click',()=>copyText(location.href,'Entry link copied.'));
   const terms=[...root.querySelectorAll('#data tbody tr')].map(row=>row.querySelector('td').textContent),factor=Number(root.dataset.indexFactor);
+  setupStudy(root,terms);
   function inspect(n,{announce=true}={}){
     if(!Number.isInteger(n)||n<0||n>=terms.length){$('term-error').hidden=false;$('term-error').textContent='Choose a whole index from 0 to 63.';$('term-index').setAttribute('aria-invalid','true');$('term-index').setAttribute('aria-describedby','sa-term-help sa-term-error');return false;}
     $('term-error').hidden=true;$('term-index').removeAttribute('aria-invalid');$('term-index').setAttribute('aria-describedby','sa-term-help');$('term-index').value=n;
@@ -35,7 +37,7 @@ if(root){
   const fromHash=()=>{const match=/^#n-(\d+)$/.exec(location.hash);if(match)inspect(Number(match[1]),{announce:false});};
   inspect(2,{announce:false});fromHash();addEventListener('hashchange',fromHash);
   const links=[...root.querySelectorAll('.sa-entry-outline a')];
-  if('IntersectionObserver' in window){const observer=new IntersectionObserver(items=>{const visible=items.filter(item=>item.isIntersecting).sort((a,b)=>a.boundingClientRect.top-b.boundingClientRect.top);if(!visible.length)return;const current='#'+visible[0].target.id;links.forEach(link=>{if(link.getAttribute('href')===current)link.setAttribute('aria-current','location');else link.removeAttribute('aria-current');});},{rootMargin:'-8% 0px -65% 0px'});links.forEach(link=>{const target=document.getElementById(link.hash.slice(1));if(target)observer.observe(target);});}
+  if('IntersectionObserver' in window){const observer=new IntersectionObserver(items=>{const visible=items.filter(item=>item.isIntersecting).sort((a,b)=>a.boundingClientRect.top-b.boundingClientRect.top);if(!visible.length)return;const current='#'+visible[0].target.id;links.forEach(link=>{if(link.getAttribute('href')===current){link.setAttribute('aria-current','location');const menu=link.parentElement;if(menu.scrollWidth>menu.clientWidth){const item=link.getBoundingClientRect(),bounds=menu.getBoundingClientRect();if(item.left<bounds.left+8)menu.scrollLeft+=item.left-bounds.left-8;else if(item.right>bounds.right-8)menu.scrollLeft+=item.right-bounds.right+8;}}else link.removeAttribute('aria-current');});},{rootMargin:'-8% 0px -65% 0px'});links.forEach(link=>{const target=document.getElementById(link.hash.slice(1));if(target)observer.observe(target);});}
   async function typeset(){
     const math=root.querySelector('.sa-typeset');
     try{
