@@ -1,6 +1,7 @@
 import {generate,parseTerms,rowsFor,candidatePeriod} from './sequence-atlas-core.mjs';
 import {searchEntries,suggestions,searchLink} from './sequence-atlas-search.mjs';
 import {readSaved,writeSaved,updateSaveButtons} from './sequence-atlas-saved.mjs';
+import {discover,analyzeInput,operationLabel,OPERATIONS} from './sequence-atlas-discovery.mjs';
 
 const $=id=>document.getElementById('sa-'+id);
 const ids=['sequence','compare','view','transform','scale','marks','start','count','modulus','color'];
@@ -203,6 +204,50 @@ function investigation(key){
   };
   const preset=presets[key];if(!preset)return;stopAnimation();const next={...defaults,...preset};ids.forEach(id=>$(id).value=next[id]);$('investigation').textContent=preset.note;pointIndex=0;document.querySelector('.sa-advanced').open=Boolean(next.compare||next.scale!=='linear');render();
 }
+function setupDiscovery(params){
+  $('discovery-controls').hidden=false;
+  let latest=null;
+  const clearError=()=>{$('discovery-error').hidden=true;$('discovery-input').removeAttribute('aria-invalid');$('discovery-input').setAttribute('aria-describedby','sa-discovery-help');};
+  const reportError=error=>{$('discovery-error').hidden=false;$('discovery-error').textContent=error.message+(latest?' Previous results remain available.':'');$('discovery-input').setAttribute('aria-invalid','true');$('discovery-input').setAttribute('aria-describedby','sa-discovery-help sa-discovery-error');};
+  function run(){
+    try{
+      const result=discover(entries,$('discovery-input').value,{both:$('discovery-both').checked});latest=result;
+      clearError();
+      const list=$('discovery-results');list.replaceChildren();
+      for(const [i,hit] of result.results.entries()){
+        const item=document.createElement('li');item.className='sa-search-hit';
+        const heading=document.createElement('h3'),link=document.createElement('a');link.href='sequences/'+hit.id+'.html';link.textContent=hit.title;heading.append(link);item.append(heading);
+        const description=document.createElement('p');description.textContent=`${operationLabel(hit.inputOperation)} of your input, indices ${hit.inputStart}–${hit.inputStart+hit.length-1}, matches ${operationLabel(hit.targetOperation).toLowerCase()} of ${hit.id}, indices ${hit.targetStart}–${hit.targetStart+hit.length-1}. All ${hit.length} transformed input terms match.`;item.append(description);
+        const sample=document.createElement('p');sample.className='sa-hit-terms';sample.textContent=hit.values.slice(0,8).join(', ')+(hit.length>8?'…':'');item.append(sample);
+        const formula=document.createElement('p');formula.className='sa-note';formula.textContent=OPERATIONS.find(([id])=>id===hit.inputOperation)?.[2]||`The first ${hit.inputStart} input terms are omitted.`;if(hit.targetStarts.length>1)formula.textContent+=` Also matches at ${hit.targetStarts.length-1} other target starting indices, recorded in the JSON.`;if(hit.constant)formula.textContent+=' This sample has fewer than three distinct values, so the match may be uninformative.';item.append(formula);
+        const actions=document.createElement('div');actions.className='sa-hit-actions';
+        const input=document.createElement('button');input.type='button';input.textContent='Plot transformed input';input.dataset.discoveryPlot=String(i);input.disabled=hit.values.join(',').length>20000||hit.values.some(v=>v.replace('-','').length>300);if(input.disabled)input.title='This transform exceeds the plot input capacity; download the exact discovery JSON.';
+        const target=document.createElement('button');target.type='button';target.textContent='Plot catalogue match';target.dataset.discoveryTarget=String(i);actions.append(input,target);item.append(actions);list.append(item);
+      }
+      $('discovery-status').textContent=`Checked ${result.input.length} input terms using ${result.testedOperations} input forms against ${entries.length} entries. ${result.total} finite matches; ${result.results.length} shown.${result.total?'':' Try the optional catalogue transforms, or look up the input in OEIS. No match is not evidence of novelty.'}`;
+      $('discovery-export').hidden=false;
+      const integers=result.input.join(',');$('discovery-oeis').href=integers.length<1800?'https://oeis.org/search?q='+encodeURIComponent('signed:'+integers):'https://oeis.org/';$('discovery-oeis').textContent=integers.length<1800?'look up the last checked input in OEIS':'open OEIS';
+      return true;
+    }catch(error){reportError(error);return false;}
+  }
+  $('discovery-form').addEventListener('submit',event=>{event.preventDefault();run();});
+  $('discovery-example').addEventListener('click',()=>{$('discovery-input').value='0, 1, 4, 9, 16, 25, 36, 49';$('discovery-both').checked=true;run();});
+  $('random-entry').addEventListener('click',()=>{const word=new Uint32Array(1);crypto.getRandomValues(word);location.href='sequences/'+entries[word[0]%entries.length].id+'.html';});
+  $('discovery-share').addEventListener('click',async()=>{
+    try{const values=analyzeInput($('discovery-input').value),url=new URL(location.href);clearError();url.search='';url.searchParams.set('discover',values.join(','));if($('discovery-both').checked)url.searchParams.set('dc','1');url.hash='discover';
+      try{await navigator.clipboard.writeText(url.href);$('discovery-status').textContent='Discovery link copied. It includes the pasted terms.';}catch{const field=$('discovery-copy-text');$('discovery-copy-fallback').hidden=false;field.value=url.href;field.focus();field.select();$('discovery-status').textContent='Copy the discovery link from the selected field. It includes the pasted terms.';}
+    }catch(error){reportError(error);}
+  });
+  $('discovery-export').addEventListener('click',()=>{if(latest)download(JSON.stringify({schema:1,...latest,scope:'Finite matches in the local catalogue; not identities, proof or novelty evidence.'},null,2)+'\n','application/json','komorebi-sequence-discovery.json');});
+  $('discovery-results').addEventListener('click',event=>{
+    const button=event.target.closest('button');if(!button||!latest)return;
+    const index=button.dataset.discoveryPlot??button.dataset.discoveryTarget;if(index===undefined)return;const hit=latest.results[Number(index)];
+    const input=button.dataset.discoveryPlot!==undefined,next={...defaults,view:'standard',sequence:input?'custom':hit.id,transform:input?'raw':hit.targetOperation,start:input?0:hit.targetStart,count:Math.min(32,hit.length),scale:hit.values.some(v=>v.length>15)?'signed-log':'linear'};
+    stopAnimation();ids.forEach(id=>$(id).value=next[id]);if(input)$('custom').value=hit.values.join(',');pointIndex=0;
+    if(render()){document.querySelector('.sa-advanced').open=true;document.getElementById('explorer-title').focus({preventScroll:true});document.getElementById('explorer').scrollIntoView({block:'start',behavior:'auto'});}
+  });
+  if(params.has('discover')){$('discovery-input').value=params.get('discover');$('discovery-both').checked=params.get('dc')==='1';run();}
+}
 function setupRefinements(){
   const root=document.getElementById('sequence-atlas');
   root.addEventListener('click',event=>{
@@ -234,6 +279,7 @@ function setupRefinements(){
 async function init(){
   const response=await fetch(new URL('./sequence-atlas-data.json',import.meta.url));if(!response.ok)throw Error('Catalogue data could not be loaded.');data=await response.json();entries=data.entries;
   const params=new URL(location.href).searchParams;
+  setupDiscovery(params);
   if(params.has('seq')&&!params.has('sequence'))params.set('sequence',params.get('seq'));
   let ignored=false;
   for(const id of ids){const proposed=params.has(id)?params.get(id):String(defaults[id]);const control=$(id),valid=control.tagName==='SELECT'?[...control.options].some(option=>option.value===proposed):proposed.trim()!==''&&Number.isInteger(Number(proposed))&&Number(proposed)>=Number(control.min)&&Number(proposed)<=Number(control.max);control.value=valid?proposed:defaults[id];if(!valid)ignored=true;}

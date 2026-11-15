@@ -25,8 +25,14 @@ export function generate(entry, count) {
     if (entry.kind === 'euler') result = result.map((v,n)=>n%2 ? -v : v);
   } else if (entry.kind === 'factorial') {
     let v=1n; for(let n=0;n<count;n++){if(n) v*=BigInt(n); result.push(v);}
-  } else if (entry.kind === 'fibonacci') {
-    let a=0n,b=1n; for(let n=0;n<count;n++){result.push(a); [a,b]=[b,a+b];}
+  } else if (['fibonacci','lucas','pell'].includes(entry.kind)) {
+    let a=entry.kind==='lucas'?2n:0n,b=1n; for(let n=0;n<count;n++){result.push(a); [a,b]=[b,entry.kind==='pell'?2n*b+a:a+b];}
+  } else if (['naturals','odd','triangular','square','cube','power-two','power-three'].includes(entry.kind)) {
+    for(let n=0;n<count;n++){const k=BigInt(n);result.push(({naturals:()=>k,odd:()=>2n*k+1n,triangular:()=>k*(k+1n)/2n,square:()=>k*k,cube:()=>k*k*k,'power-two':()=>2n**k,'power-three':()=>3n**k})[entry.kind]());}
+  } else if (['catalan','central-binomial'].includes(entry.kind)) {
+    let c=1n;for(let n=0;n<count;n++){result.push(entry.kind==='catalan'?c/BigInt(n+1):c);c=c*2n*BigInt(2*n+1)/BigInt(n+1);}
+  } else if (entry.kind === 'partition') {
+    result=[1n];for(let n=1;n<count;n++){let total=0n;for(let k=1;k*(3*k-1)/2<=n;k++){const sign=k%2?1n:-1n,lo=k*(3*k-1)/2,hi=k*(3*k+1)/2;total+=sign*result[n-lo];if(hi<=n)total+=sign*result[n-hi];}result.push(total);}
   } else if (entry.kind === 'bell' || entry.kind === 'fubini') {
     let row=[1n];
     for(let n=0;n<count;n++) {
@@ -47,7 +53,11 @@ const abs = x=>x<0n?-x:x;
 function gcd(a,b){a=abs(a);b=abs(b);while(b)[a,b]=[b,a%b];return a;}
 export function fraction(a,b=1n){if(!b)return null;if(b<0n){a=-a;b=-b;}const g=gcd(a,b);return {a:a/g,b:b/g};}
 export const exact = v=>v===null?'undefined':v.b===1n?String(v.a):`${v.a}/${v.b}`;
+export function binomialTransform(values,inverse=false){
+  return values.map((_,n)=>{let choose=1n,total=0n;for(let k=0;k<=n;k++){total+=(inverse&&(n-k)%2?-1n:1n)*choose*values[k];if(k<n)choose=choose*BigInt(n-k)/BigInt(k+1);}return total;});
+}
 export function transform(values, mode='raw') {
+  if(mode==='binomial'||mode==='inverse-binomial')return binomialTransform(values,mode==='inverse-binomial').map(v=>fraction(v));
   let sum=0n;
   return values.map((v,n)=>{sum+=v;switch(mode){
     case 'difference': return n ? fraction(v-values[n-1]) : null;
@@ -55,6 +65,8 @@ export function transform(values, mode='raw') {
     case 'sum': return fraction(sum);
     case 'ratio': return n ? fraction(v,values[n-1]) : null;
     case 'average': return fraction(sum,BigInt(n+1));
+    case 'alternating': return fraction(n%2?-v:v);
+    case 'absolute': return fraction(abs(v));
     case 'raw': return fraction(v);
     default: throw Error('Unknown transform.');
   }});

@@ -12,6 +12,7 @@ import json
 import re
 from math import comb, factorial
 from pathlib import Path
+from sequence_atlas_reference import REFERENCES, KINDS, reference_terms, program, connections
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = 'collection/demonstrations/SEQUENCE_SHAPES.html'
@@ -30,6 +31,8 @@ def reciprocal(N, power, count):
 
 def terms(entry, count=64):
     kind = entry['kind']
+    if kind in KINDS:
+        return reference_terms(kind,count)
     if kind == 'reciprocal':
         return list(reciprocal(entry['N'], entry['power'], count))
     if kind == 'euler':
@@ -42,6 +45,8 @@ def terms(entry, count=64):
             values.append(a)
             a, b = b, a+b
         return values
+    if kind not in ('bell','fubini'):
+        raise ValueError('Unknown sequence definition')
     row, result = [1], []
     for n in range(count):
         result.append(sum(x*(factorial(k) if kind == 'fubini' else 1) for k, x in enumerate(row)))
@@ -73,10 +78,27 @@ def catalogue():
             explanation='A classical reference sequence. The linked source gives its definition and mathematical context.',
             source=source, work_ids=['paper-iv'] if kind == 'euler' else [] if kind == 'fibonacci' else ['monographs-special-functions'],
             tags=tags, status='Known reference sequence', oeis=oeis, cap=cap))
+    for kind,title,formula,recurrence,tags,oeis,example in REFERENCES:
+        entries.append(dict(kind=kind,title=title,formula=formula,recurrence=recurrence,tags=tags,oeis=oeis,example=example,
+            explanation='A classical reference sequence, indexed here from n=0. The linked OEIS entry records further interpretations and references.',
+            source='https://oeis.org/'+oeis,work_ids=[],status='Known reference sequence',cap=512))
     for i, entry in enumerate(entries, 1):
         entry.update(id=f'KSEQ-{i:06d}', offset=0, terms=list(map(str, terms(entry))),
             verification='Exact implementation checks; linked sources retain their recorded proof scope.',
             novelty='No originality claim is made for this entry or its formulas.')
+        if entry['kind']=='reciprocal':
+            N,r=entry['N'],entry['power'];B=comb(2*N,N)
+            entry['example']=f'At compressed n=1 the coefficient is {r}. At n=2, the factorial-weighted convolution gives {r}*({B}-1)+{comb(r,2)}*{B}={entry["terms"][2]}. These indices correspond to ordinary degrees {N} and {2*N}.'
+        elif entry['kind'] in ('bell','fubini','factorial','fibonacci','euler'):
+            entry['example']={'bell':'For a three-element set, there is one partition into one block, three into two blocks, and one into three blocks: B(3)=1+3+1=5.',
+                'fubini':'For three elements, weighting Stirling counts by the number of block orders gives F(3)=1!*1+2!*3+3!*1=13.',
+                'factorial':'At n=5, a(5)=5*4*3*2*1=120. The empty product gives a(0)=1.',
+                'fibonacci':'F(6)=F(5)+F(4)=5+3=8, with F(0)=0 and F(1)=1.',
+                'euler':'At compressed n=1, E_2=(-1)^1*1=-1; at n=2, E_4=(-1)^2*5=5. The ordinary Euler index is 2n.'}[entry['kind']]
+        entry['python']=program(entry)
+        entry.setdefault('example','The first three indexed values are '+', '.join(f'a({n})={v}' for n,v in enumerate(entry['terms'][:3]))+'. Use the program below to reproduce them from the definition.')
+    for entry in entries:
+        entry['connections']=connections(entry,entries)
     return entries
 
 
@@ -84,9 +106,27 @@ def e(value):
     return html.escape(str(value), quote=True)
 
 
+def structured_entry(entry):
+    source=entry['source'] if entry['source'].startswith('https:') else '../'+entry['source']
+    links=''.join('<li><a href="'+x['id']+'.html">'+e(x['title'])+'</a>: '+e(x['transform'])+' at source indices '+str(x['source_start'])+'–'+str(x['source_start']+11)+' match target indices '+str(x['target_start'])+'–'+str(x['target_start']+11)+'.</li>' for x in entry['connections'])
+    reference=('<p><a href="https://oeis.org/'+entry['oeis']+'">OEIS '+entry['oeis']+' — comments, bibliography, programs and history</a></p>' if entry['oeis'] else '')
+    # Keep the finite snapshot attribution and names in the existing source section.
+    snapshot=entry_body(entry,'../').split('<details><summary>OEIS snapshot matches',1)
+    snapshot_html='<details><summary>OEIS snapshot matches'+snapshot[1] if len(snapshot)>1 else '<p>No six-term comparison recorded in the loaded snapshot.</p>'
+    return ('<nav class="sa-entry-outline" aria-label="Entry sections"><a href="#definition">Definition</a><a href="#formulas">Formulas</a><a href="#examples">Examples</a><a href="#programs">Programs</a><a href="#connections">Connections</a><a href="#data">Data</a><a href="#references">References</a></nav>'
+        '<p class="sa-terms">'+e(', '.join(entry['terms'][:12]))+'…</p>'
+        '<section id="definition"><h2>Definition and indexing</h2><p>'+e(entry['explanation'])+'</p><p>The first stored index is n=0. '+e(entry['novelty'])+'</p></section>'
+        '<section id="formulas"><h2>Formulas and recurrences</h2><p id="sa-entry-formula" class="sa-formula">'+e(entry['formula'])+'</p><p>'+e(entry['recurrence'])+'</p><button type="button" data-copy-entry="sa-entry-formula" hidden>Copy formula</button></section>'
+        '<section id="examples"><h2>Comments and examples</h2><p>'+e(entry['example'])+'</p></section>'
+        '<section id="programs"><h2>Reproduce the terms</h2><p>Self-contained Python, using exact integers and the standard library. Change count to choose the finite number of terms.</p><button type="button" data-copy-entry="sa-entry-program" hidden>Copy Python program</button><pre><code id="sa-entry-program">'+e(entry['python'])+'</code></pre></section>'
+        '<section id="connections"><h2>Computed connections</h2>'+(('<ul>'+links+'</ul>') if links else '<p>No connections from the four tested transforms were found in this catalogue.</p>')+'<p class="sa-note">These are exact twelve-term checks of alternating signs, absolute values, first differences and partial sums. They suggest relationships to investigate; they do not prove infinite sequence identities.</p></section>'
+        '<section id="references"><h2>References and verification</h2><p><a href="'+e(source)+'">Definition and source context</a></p>'+reference+'<p>'+e(entry['verification'])+'</p>'+snapshot_html+'</section>')
+
+
 def entry_body(entry, prefix=''):
     identifier = entry['id']
-    matches = entry.get('matches', [])
+    all_matches = entry.get('matches', [])
+    matches = sorted(all_matches,key=lambda m:(m['id']!=entry.get('oeis'),-m['matched_terms'],m['id'],m['position']))[:12]
     match_html = ''.join('<li><a href="https://oeis.org/'+e(m['id'])+'">'+e(m['id'])+'</a> — '+e(m['name'])+
         ' ('+str(m['matched_terms'])+' matching terms; excerpt position '+str(m['position'])+')</li>' for m in matches)
     source = entry['source'] if entry['source'].startswith('https:') else prefix+entry['source']
@@ -97,7 +137,8 @@ def entry_body(entry, prefix=''):
         '<p><a href="'+e(source)+'">Read the definition and derivation</a>'
         +(' · <a href="https://oeis.org/'+entry['oeis']+'">Reference '+entry['oeis']+'</a>' if entry['oeis'] else '')+'</p>'
         + ('<details><summary>OEIS snapshot matches</summary><p>Finite contiguous matches in the recorded snapshot; matching terms alone do not prove sequence identity. Positions count from zero within the exported excerpt, not the sequence’s mathematical offset. Reference names are credited to <a href="https://oeis.org/">The Online Encyclopedia of Integer Sequences</a> under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</p><ul>'+match_html+'</ul></details>' if matches else
-           '<p class="sa-note">No six-term match recorded in the loaded reference snapshot. This is not evidence of novelty.</p>'))
+           '<p class="sa-note">No six-term match recorded in the loaded reference snapshot. This is not evidence of novelty.</p>')
+        +('<p class="sa-note">Showing '+str(len(matches))+' of '+str(len(all_matches))+' finite snapshot hits. The catalogue JSON retains all recorded comparisons.</p>' if len(all_matches)>12 else ''))
 
 
 def search_section(entries):
@@ -128,10 +169,12 @@ def refine_body(body, entries):
     body=body.replace('Follow exact integer sequences from their formulas to their plots. Compare families, change the modulus, and return to the derivations.','Search the catalogue, follow the derivations, and explore exact sequences modulo m.')
     body=body.replace('<nav aria-label="Atlas sections">','<nav aria-label="Atlas sections"><a href="#find">Find a sequence</a>')
     body=re.sub(r'<div id="sa-search-controls".*?</div>\s*<p id="sa-search-status".*?</p>', '', body, flags=re.S)
-    body=body.replace('<section id="explorer"',search_section(entries)+'<section id="explorer"',1)
+    body=body.replace('<section id="explorer"',search_section(entries).replace('26 entries.',str(len(entries))+' entries.')+discovery_section(entries)+'<section id="explorer"',1)
+    body=body.replace('<a href="#explorer">Plot explorer</a>','<a href="#discover">Discover connections</a><a href="#explorer">Plot explorer</a>')
     body=body.replace('<div id="sa-workspace" hidden>', '''<div id="sa-workspace" hidden><div class="sa-presets" role="group" aria-label="Load an investigation"><span>Start with a question:</span><button type="button" data-investigation="fibonacci">Fibonacci residues</button><button type="button" data-investigation="euler">Euler sign changes</button><button type="button" data-investigation="powers">Compare reciprocal powers</button><button type="button" data-investigation="partitions">Ordering partitions</button></div><p id="sa-investigation" class="sa-note"></p>''')
     body=body.replace('<option value="pairs">Successive-term pairs</option>','<option value="pairs">Successive-term pairs</option><option value="mod-pairs">Successive residues (a(n), a(n+1)) mod m</option>')
     body=body.replace('<option value="difference">First differences</option>','<option value="difference">First differences</option><option value="second-difference">Second differences</option>')
+    body=body.replace('<option value="raw">Original terms</option>','<option value="raw">Original terms</option><option value="alternating">Alternating signs</option><option value="absolute">Absolute values</option><option value="binomial">Binomial transform</option><option value="inverse-binomial">Inverse binomial transform</option>')
     body=body.replace('<p id="sa-error" role="alert" hidden>', '<p id="sa-error" class="sa-error" role="alert" hidden>')
     body=body.replace('<p id="sa-summary" role="status" aria-live="polite">', '<p id="sa-action-status" role="status" aria-live="polite" aria-atomic="true"></p><p id="sa-summary" role="status" aria-live="polite" aria-atomic="true">')
     body=body.replace('<p id="sa-current-formula" class="sa-formula"></p>', '''<p id="sa-current-formula" class="sa-formula"></p><p id="sa-entry-links"></p>
@@ -147,6 +190,16 @@ def refine_body(body, entries):
         body=body.replace('<details id="sa-table-detail">','<details id="sa-export-options" class="sa-export-options"><summary>Export data and figures</summary><div class="sa-toolbar">'+controls+'</div></details><details id="sa-table-detail">')
     body=body.replace('Loading the interactive explorer. The full catalogue is available below.','The full catalogue is available below. JavaScript adds interactive search and plotting.')
     return body
+
+
+def discovery_section(entries):
+    topics=['elementary','polynomial','combinatorics','partitions','recurrence','reciprocal','signed','binomial']
+    browse=''.join('<a href="?topic='+tag+'#find">'+e(tag)+' <span>('+str(sum(tag in x['tags'] for x in entries))+')</span></a>' for tag in topics)
+    return ('<nav class="sa-topic-index" aria-label="Browse sequence topics">'+browse+'</nav>'
+        '<section id="discover" aria-labelledby="sa-discovery-title"><h2 id="sa-discovery-title" tabindex="-1">What could these terms be?</h2><p>Look beyond a literal match. Try differences, sums, sign changes, binomial transforms and shifted input against this catalogue.</p>'
+        '<div id="sa-discovery-controls" hidden><form id="sa-discovery-form"><label for="sa-discovery-input">Your consecutive integer terms</label><textarea id="sa-discovery-input" rows="3" maxlength="20000" aria-describedby="sa-discovery-help" placeholder="0, 1, 4, 9, 16, 25, 36, 49"></textarea><p id="sa-discovery-help" class="sa-note">6–64 integers; a tested transform must leave at least six terms. All available transformed input terms must match consecutively within the 64 stored catalogue terms.</p>'
+        '<label class="sa-check" for="sa-discovery-both"><input id="sa-discovery-both" type="checkbox"> Also compare transformed catalogue terms</label><div class="sa-toolbar"><button type="submit">Find connections</button><button type="button" id="sa-discovery-example">Try square numbers</button><button type="button" id="sa-discovery-share">Copy discovery link</button><button type="button" id="sa-random-entry">Random entry</button><button type="button" id="sa-discovery-export" hidden>Download discovery JSON</button></div></form><label id="sa-discovery-copy-fallback" for="sa-discovery-copy-text" hidden>Discovery link<textarea id="sa-discovery-copy-text" readonly></textarea></label><p id="sa-discovery-error" class="sa-error" role="alert" hidden></p><p id="sa-discovery-status" role="status" aria-live="polite" aria-atomic="true"></p><ol id="sa-discovery-results" class="sa-results"></ol><details><summary>Which transformations are tested?</summary><ul><li>Original terms; omit the first one or two input terms.</li><li>First and second differences; partial sums.</li><li>Alternating signs and absolute values.</li><li>Binomial and inverse binomial transforms of the input.</li></ul><p>With the optional comparison enabled, catalogue terms also use differences, sums and sign transforms. Initial undefined differences are skipped, with their indices reported. Binomial transforms start at index zero.</p></details></div>'
+        '<p class="sa-note">Inspired by the <a href="https://oeis.org/wiki/Sequence_transforms">OEIS transform toolbox</a>. Matches are finite suggestions, not sequence identities or evidence of novelty. This tool searches '+str(len(entries))+' local entries; <a id="sa-discovery-oeis" href="https://oeis.org/">open OEIS</a> for a broader search. Pasted terms stay in this browser unless you copy or open a link containing them.</p></section>')
 
 
 def build(site):
@@ -207,16 +260,23 @@ def build(site):
 <p><a href="assets/sequence-atlas-data.json">Download catalogue JSON and snapshot metadata</a> · <a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/docs/SEQUENCE_ATLAS.md">Maintenance and reproducibility</a> · <a href="collection/demonstrations/SEQUENCE_SHAPES.html">Sequence derivations and Python experiments</a></p>
 </section></div>'''
     body=refine_body(body,entries)
+    discovery_script=(site.root/'website/assets/sequence-atlas-discovery.mjs').read_text(encoding='utf-8')
+    for dependency in ('sequence-atlas-core.mjs','sequence-atlas-search.mjs'):
+        discovery_script=discovery_script.replace("'./"+dependency+"'","'./"+dependency+'?v='+version(dependency)+"'")
     script = (site.root/'website/assets/sequence-atlas.js').read_text(encoding='utf-8')
     script = script.replace("'./sequence-atlas-core.mjs'", "'./sequence-atlas-core.mjs?v="+version('sequence-atlas-core.mjs')+"'")
     script = script.replace("'./sequence-atlas-data.json'", "'./sequence-atlas-data.json?v="+hashlib.sha256(raw.encode()).hexdigest()[:12]+"'")
+    script=script.replace("'./sequence-atlas-discovery.mjs'","'./sequence-atlas-discovery.mjs?v="+hashlib.sha256(discovery_script.encode()).hexdigest()[:12]+"'")
     for name in ('sequence-atlas-search.mjs','sequence-atlas-saved.mjs'):
         script=script.replace("'./"+name+"'", "'./"+name+'?v='+version(name)+"'")
     site.write('assets/sequence-atlas.js', script)
     entry_script=(site.root/'website/assets/sequence-atlas-entry.js').read_text(encoding='utf-8').replace("'./sequence-atlas-saved.mjs'", "'./sequence-atlas-saved.mjs?v="+version('sequence-atlas-saved.mjs')+"'")
     site.write('assets/sequence-atlas-entry.js',entry_script)
-    for name in ('sequence-atlas-core.mjs', 'sequence-atlas.css','sequence-atlas-search.mjs','sequence-atlas-saved.mjs'):
-        site.write('assets/'+name, (site.root/'website/assets'/name).read_text(encoding='utf-8'))
+    for name in ('sequence-atlas-core.mjs', 'sequence-atlas.css','sequence-atlas-search.mjs','sequence-atlas-saved.mjs','sequence-atlas-discovery.mjs'):
+        content=(site.root/'website/assets'/name).read_text(encoding='utf-8')
+        if name=='sequence-atlas-discovery.mjs':
+            content=discovery_script
+        site.write('assets/'+name,content)
     # Retain visible wrapping labels and explicit associations for the site audit.
     body = re.sub(r'<label>([^<]*)<(select|input)([^>]*\bid="([^"]+)")', r'<label for="\4">\1<\2\3', body)
     body = body.replace('<label id="sa-share-fallback" hidden>', '<label id="sa-share-fallback" for="sa-share-link" hidden>')
@@ -246,14 +306,12 @@ def build(site):
         related=sorted((x for x in entries if x['id']!=identifier and related_score(x)>0),key=lambda x:(-related_score(x),x['id']))[:3]
         content = ('<link rel="stylesheet" href="../assets/sequence-atlas.css?v='+version('sequence-atlas.css')+'">'
             '<article class="sequence-atlas sa-entry" data-entry-id="'+identifier+'"><p><a href="../sequences.html#find">← Sequence and Formula Atlas</a></p><h1>'+e(entry['title'])+'</h1>'
-            '<div class="sa-entry-actions"><button type="button" data-save-sequence="'+identifier+'" aria-pressed="false" hidden>Save entry</button><button id="sa-entry-copy" type="button" hidden>Copy the first 12 terms</button></div><p id="sa-entry-status" role="status" aria-live="polite"></p><label id="sa-entry-copy-fallback" for="sa-entry-copy-text" hidden>Terms to copy<textarea id="sa-entry-copy-text" readonly></textarea></label>'
+            '<div class="sa-entry-actions"><button type="button" data-save-sequence="'+identifier+'" aria-pressed="false" hidden>Save entry</button><button id="sa-entry-copy" type="button" hidden>Copy the first 12 terms</button></div><p id="sa-entry-status" role="status" aria-live="polite"></p><label id="sa-entry-copy-fallback" for="sa-entry-copy-text" hidden>Text to copy<textarea id="sa-entry-copy-text" readonly></textarea></label>'
             '<dl class="sa-entry-facts"><div><dt>Identifier</dt><dd>'+identifier+'</dd></div><div><dt>Starting index</dt><dd>0</dd></div><div><dt>Stored terms</dt><dd>64 (n = 0–63)</dd></div><div><dt>Topics</dt><dd>'+e(', '.join(entry['tags']))+'</dd></div></dl>'
-            +entry_body(entry, '../')+'<p>'+e(entry['verification'])+'</p><p><a href="../sequences.html?seq='+identifier+'#explorer">Open in plot explorer</a> · <a download href="'+identifier+'.csv">Download exact CSV</a></p>'
+            +structured_entry(entry)+'<section id="data"><h2>Exact data and downloads</h2><p><a href="../sequences.html?seq='+identifier+'#explorer">Open in plot explorer</a> · <a download href="'+identifier+'.csv">Download exact CSV</a></p>'
             '<p><a href="../sequences.html?sequence='+identifier+'&amp;view=mod#explorer">Explore residues</a> · <a download href="'+identifier+'.txt">Download indexed text (b-file style)</a> · <a download href="'+identifier+'.json">Download entry JSON</a></p>'
-            '<details><summary>Reproduce these integer terms in Python</summary><p>The generator is maintained in tools/sequence_atlas.py. Run from the repository root:</p>'
-            '<pre><code>python -B tools/sequence_atlas.py --id '+identifier+'</code></pre></details>'
             '<div class="table-scroll" tabindex="0" role="region" aria-label="Exact terms"><table><caption>Exact terms, indices 0–63</caption><thead><tr><th scope="col">n</th><th scope="col">a(n)</th></tr></thead><tbody>'+rows+'</tbody></table></div>'
-            '<section aria-labelledby="sa-related-title"><h2 id="sa-related-title">Related entries</h2><ul>'+''.join('<li><a href="'+x['id']+'.html">'+e(x['title'])+'</a> · '+x['id']+'</li>' for x in related)+'</ul></section>'
+            '</section><section aria-labelledby="sa-related-title"><h2 id="sa-related-title">Related entries</h2><ul>'+''.join('<li><a href="'+x['id']+'.html">'+e(x['title'])+'</a> · '+x['id']+'</li>' for x in related)+'</ul></section>'
             '<nav class="sa-neighbours" aria-label="Previous and next sequence">'+neighbours+'</nav></article>'
             '<script type="module" src="../assets/sequence-atlas-entry.js?v='+hashlib.sha256(entry_script.encode()).hexdigest()[:12]+'"></script>')
         site.page('sequences/'+identifier+'.html', entry['title']+' · '+identifier, content)

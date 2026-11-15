@@ -7,6 +7,9 @@ from math import comb, factorial
 from pathlib import Path
 import tempfile
 import unittest
+import ast
+import io
+from contextlib import redirect_stdout
 
 from build_reader_site import Site
 from check_reader_site import Page, check_search_targets
@@ -15,6 +18,33 @@ from update_sequence_atlas_oeis import compare
 
 
 class SequenceAtlasTests(unittest.TestCase):
+    def test_original_ids_and_terms_are_preserved(self):
+        entries=catalogue()
+        signature=hashlib.sha256(json.dumps([(e['id'],e['terms']) for e in entries[:26]],separators=(',',':')).encode()).hexdigest()
+        self.assertEqual(signature,'e6d9a62e849de548d3226c1fb657b7b0a91b92b3bb383dcd9bd6326dadb48ff3')
+        self.assertEqual([e['id'] for e in entries],[f'KSEQ-{n:06d}' for n in range(1,39)])
+
+    def test_copyable_programs_and_computed_connections(self):
+        entries=catalogue();lookup={e['id']:e for e in entries}
+        for entry in entries:
+            output=io.StringIO()
+            with redirect_stdout(output):exec(compile(entry['python'],'<atlas program>','exec'),{})
+            self.assertEqual(list(map(str,ast.literal_eval(output.getvalue()))),entry['terms'][:16],entry['id'])
+            raw=list(map(int,entry['terms']))
+            for link in entry['connections']:
+                values={'absolute values':list(map(abs,raw)),'alternating signs':[(-1)**n*v for n,v in enumerate(raw)],'first differences':[raw[n]-raw[n-1] for n in range(1,64)],'partial sums':[sum(raw[:n+1]) for n in range(64)]}[link['transform']]
+                self.assertEqual(list(map(str,values[:12])),lookup[link['id']]['terms'][link['target_start']:link['target_start']+12])
+        self.assertTrue(any(x['id']=='KSEQ-000029' for x in lookup['KSEQ-000027']['connections']))
+
+    def test_reference_definitions_against_distinct_counting_oracles(self):
+        catalan=[1]
+        for n in range(1,32):catalan.append(sum(catalan[k]*catalan[n-1-k] for k in range(n)))
+        self.assertEqual(terms({'kind':'catalan'},32),catalan)
+        self.assertEqual(terms({'kind':'central-binomial'},32),[sum(comb(n,k)**2 for k in range(n+1)) for n in range(32)])
+        self.assertEqual(terms({'kind':'square'},64),[sum(2*k+1 for k in range(n)) for n in range(64)])
+        self.assertEqual(terms({'kind':'triangular'},64),[sum(range(n+1)) for n in range(64)])
+        self.assertEqual(terms({'kind':'partition'},11),[1,1,2,3,5,7,11,15,22,30,42])
+
     def test_reciprocals_against_ordinary_rational_series(self):
         count = 16
         for N in range(2, 9):
@@ -60,12 +90,14 @@ class SequenceAtlasTests(unittest.TestCase):
         self.assertEqual(report['catalogue_terms_sha256'],signature)
         self.assertGreater(report['sequence_count'],100000)
         self.assertEqual(report['license'],'CC-BY-SA-4.0')
+        for entry in catalogue()[26:]:
+            self.assertTrue(any(m['id']==entry['oeis'] and m['position']==0 and m['matched_terms']==12 for m in report['matches'][entry['id']]),entry['id'])
 
     def test_generated_catalogue_pages_and_exact_exports(self):
         with tempfile.TemporaryDirectory() as folder:
             site=Site.__new__(Site);site.root=ROOT;site.output=Path(folder);site.search=[]
             result=build(site)
-            self.assertEqual(result['entries'],26)
+            self.assertEqual(result['entries'],38)
             main=(site.output/'sequences.html').read_text(encoding='utf-8')
             self.assertIn('<noscript>',main)
             self.assertIn('CC BY-SA 4.0',main)
@@ -102,7 +134,9 @@ class SequenceAtlasTests(unittest.TestCase):
                 self.assertIn('Related entries',source)
                 self.assertIn('data-save-sequence="'+entry['id']+'"',source)
                 self.assertEqual('rel="prev"' in source,entry['id']!='KSEQ-000001')
-                self.assertEqual('rel="next"' in source,entry['id']!='KSEQ-000026')
+                self.assertEqual('rel="next"' in source,entry['id']!='KSEQ-000038')
+                self.assertIn('id="programs"',source)
+                self.assertIn('id="connections"',source)
                 if entry['source'].startswith('collection/'):
                     target=entry['source'].split('#')[0].replace('collection/','docs/').replace('.html','.md')
                     self.assertTrue((ROOT/target).is_file(),target)

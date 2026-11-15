@@ -14,7 +14,7 @@ test('words use AND; quoted phrases and qualified fields stay together',()=>{
   assert.deepEqual(ids('n:4 r:2'),['KSEQ-000008']);
   assert.deepEqual(ids('n:04 r:+2'),['KSEQ-000008']);
   assert.deepEqual(ids('formula:convolution n:8'),['KSEQ-000019','KSEQ-000020','KSEQ-000021']);
-  assert.deepEqual(ids('tag:partitions -name:fubini'),['KSEQ-000022']);
+  assert.deepEqual(ids('tag:partitions -name:fubini'),['KSEQ-000022','KSEQ-000036']);
   assert.equal(ids('n:4 | name:bell').length,5);
 });
 test('identifiers are normalized and exact references rank ahead of descriptions',()=>{
@@ -38,11 +38,11 @@ test('numeric patterns retain signs and large integers and report their offsets'
 });
 test('filters, stable sorting and saved entries compose with queries',()=>{
   assert.equal(ids('',{filter:'family'}).length,21);
-  assert.equal(ids('',{filter:'reference'}).length,6);
-  assert.equal(ids('status:"known reference"').length,6);
+  assert.equal(ids('',{filter:'reference'}).length,18);
+  assert.equal(ids('status:"known reference"').length,18);
   assert.equal(ids('status:unassessed').length,20);
   assert.deepEqual(ids('',{filter:'saved',saved:['KSEQ-000025']}),['KSEQ-000025']);
-  assert.deepEqual(ids('',{topic:'partitions',sort:'id'}),['KSEQ-000022','KSEQ-000023']);
+  assert.deepEqual(ids('',{topic:'partitions',sort:'id'}),['KSEQ-000022','KSEQ-000023','KSEQ-000036']);
   const names=searchEntries(entries,'',{sort:'name'}).map(hit=>hit.entry.title);
   assert.deepEqual(names,[...names].sort((a,b)=>a.localeCompare(b,'en')));
 });

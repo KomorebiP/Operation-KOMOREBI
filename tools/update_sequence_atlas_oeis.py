@@ -68,6 +68,10 @@ if __name__ == '__main__':
     parser.add_argument('--names', type=Path, required=True)
     parser.add_argument('--output', type=Path, default=ROOT/'manifests/sequence-atlas-oeis.json')
     args = parser.parse_args()
+    previous=json.loads(args.output.read_text(encoding='utf-8')) if args.output.exists() else {}
     report = compare(args.stripped, args.names, catalogue())
+    report['compared_at']=report['retrieved_at']
+    if all(previous.get(key)==report[key] for key in ('stripped_sha256','names_sha256')):
+        report['retrieved_at']=previous['retrieved_at']
     args.output.write_text(json.dumps(report, indent=2, ensure_ascii=False)+'\n', encoding='utf-8', newline='\n')
     print(json.dumps(dict(sequences_scanned=report['sequence_count'], entries=len(report['matches']), matches=sum(map(len, report['matches'].values())), output=str(args.output))))
