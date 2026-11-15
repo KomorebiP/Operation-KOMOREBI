@@ -25,6 +25,12 @@ displayed cases and their failure controls using rational arithmetic.
 For the individual definitions, use the seven [reference chapters](../OPERATOR_AUDIT.md#reference-chapters).
 These calculations combine those definitions with the catalog laws.
 
+For a sustained example of one evolving system, use the
+[observation and recovery study](OBSERVATION.md). Its history-coordinate
+update is an intertwining identity, and its four-reading reconstruction
+combines a left inverse with an orthogonal projector. The same calculation
+then distinguishes a small squared residual from a per-reading error budget.
+
 <a id="middle-chart-bridge"></a>
 
 ## 1. Bridge the intermediate coordinates

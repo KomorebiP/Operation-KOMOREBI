@@ -111,6 +111,13 @@ injected at each step must be propagated from that step onward as well.
 A tolerance for one update is therefore only one part of a repeated-update
 error budget.
 
+For errors in a sequence of observations, the
+[worked observation study](OBSERVATION.md#4-put-a-bound-on-noisy-reconstruction)
+derives sharp bounds for reconstructed coordinates and a predicted reading.
+Its [four-reading fit](OBSERVATION.md#6-fit-all-four-readings-under-squared-error)
+shows why the estimator minimizing squared residuals need not satisfy a
+separate limit on every individual residual.
+
 ## 4. Coordinate conditioning
 
 For invertible $C$ on a nonzero finite-dimensional normed space, define
