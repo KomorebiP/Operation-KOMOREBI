@@ -10,11 +10,11 @@ async function apply(page,{query='',topic='',order='name',connected=false}={}){a
  const browser=await chromium.launch({channel:'msedge',headless:true}),report={widths:[],connections:[],errors:[]};let graph;
  for(const width of [1440,390,320]){
   const context=await browser.newContext({viewport:{width,height:1000},permissions:['clipboard-read','clipboard-write'],isMobile:width<500,hasTouch:width<500}),page=await context.newPage();page.on('pageerror',e=>report.errors.push(e.message));
-  await page.goto(new URL('sequences.html?q=fibonacci&index-query=name%3Abell',base).href,{waitUntil:'networkidle'});await ready(page);assert.equal(await page.locator('#catalogue').isVisible(),true);assert.equal(await rows(page).count(),2);
+  await page.goto(new URL('sequences.html?q=fibonacci&sequence=custom&terms=0,1,2,3,4,5&index-query=name%3Abell',base).href,{waitUntil:'networkidle'});await ready(page);assert.equal(await page.locator('#catalogue').isVisible(),true);assert.equal(await rows(page).count(),2);
   await page.locator('[data-atlas-mode="find"]').click();assert.equal(await page.inputValue('#sa-query'),'fibonacci');await page.goBack();assert.equal(await page.locator('#catalogue').isVisible(),true);
   await page.locator('#sa-directory-clear').click();assert.equal(await rows(page).count(),38);assert.equal(await rows(page).first().getAttribute('data-index-entry'),'KSEQ-000022');
   await apply(page,{query:'n:4 r:2'});assert.equal(await rows(page).count(),1);assert.equal(await rows(page).first().getAttribute('data-index-entry'),'KSEQ-000008');
-  await page.locator('#sa-directory-share').click();const shared=await page.evaluate(()=>navigator.clipboard.readText());assert.equal(new URL(shared).searchParams.get('index-query'),'n:4 r:2');assert.equal(new URL(shared).searchParams.get('q'),'fibonacci');
+  await page.locator('#sa-directory-share').click();const shared=await page.evaluate(()=>navigator.clipboard.readText());assert.equal(new URL(shared).searchParams.get('index-query'),'n:4 r:2');for(const key of ['q','sequence','terms'])assert.equal(new URL(shared).searchParams.has(key),false,key);
   await page.goto(shared,{waitUntil:'networkidle'});await ready(page);assert.equal(await rows(page).count(),1);
   await apply(page,{topic:'partitions'});assert.equal(await rows(page).count(),3);
   await apply(page,{connected:true,order:'id'});assert.equal(await rows(page).count(),6);assert.equal(await rows(page).first().getAttribute('data-index-entry'),'KSEQ-000001');assert.match(await rows(page).first().textContent(),/1 out.*2 in/);

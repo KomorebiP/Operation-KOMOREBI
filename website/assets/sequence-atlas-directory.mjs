@@ -18,8 +18,8 @@ export function readDirectoryURL(href,entries){
   }
   try{return {...selectDirectory(entries,state),error:null};}catch(error){return {...selectDirectory(entries),error:'Invalid directory link. Showing the full alphabetical index. '+error.message};}
 }
-export function directoryURL(href,state){
-  const url=new URL(href);for(const key of Object.keys(keys))url.searchParams.delete(key);
+export function directoryURL(href,state,{preserveContext=false}={}){
+  const url=new URL(href);if(!preserveContext)url.search='';for(const key of Object.keys(keys))url.searchParams.delete(key);
   for(const [key,name]of Object.entries(keys))if(state[name]!==DIRECTORY_DEFAULTS[name])url.searchParams.set(key,name==='connected'?'1':state[name]);
   url.hash='catalogue';return url;
 }
@@ -41,7 +41,7 @@ export function setupDirectory(root,entries){
     $('status').textContent=label;table.querySelector('caption').textContent=label;$('empty').hidden=result.entries.length>0;
   }
   function commit(state){
-    try{const result=selectDirectory(entries,state);render(result);history.pushState(null,'',directoryURL(location.href,result.state));}
+    try{const result=selectDirectory(entries,state);render(result);history.pushState(null,'',directoryURL(location.href,result.state,{preserveContext:true}));}
     catch(error){$('error').textContent=error.message;$('error').hidden=false;form.setAttribute('aria-describedby','sa-directory-error');$('query').setAttribute('aria-invalid','true');$('query').setAttribute('aria-describedby','sa-directory-help sa-directory-error');}
   }
   form.hidden=false;form.noValidate=true;

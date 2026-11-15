@@ -274,6 +274,9 @@ including a return from identifier order to a letter anchor. Invalid links
 show the full alphabetical index with an explanation, while invalid form
 edits retain the previous results. The current workspace stays visible in
 the horizontal mode menu on narrow screens.
+Copied directory links include only directory settings. Local history retains
+the existing Browse/Plot context, while copied directory links omit unrelated
+queries, pasted plot terms and discovery input.
 
 Each row links to the entry, its Study section and any connections. The
 reciprocal family index provides all 21 N/r pairs, with N mapping compressed

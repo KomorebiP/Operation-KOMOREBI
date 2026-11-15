@@ -20,12 +20,14 @@ test('directory combines exact atlas queries, topics, stable sorting and both co
   assert.equal(selectDirectory(entries,{query:'no-such-entry'}).entries.length,0);
   assert.throws(()=>selectDirectory(entries,{query:'name:"broken'}));
 });
-test('directory links retain applied state and unrelated Browse parameters, with explicit invalid recovery',()=>{
+test('directory shares only applied filters while local history retains its context, with explicit invalid recovery',()=>{
   const state={query:'name:"ordered bell"',topic:'partitions',order:'id',connected:false};
-  const url=directoryURL('https://example.test/sequences.html?q=n%3A4#find',state);
-  assert.equal(url.hash,'#catalogue');assert.equal(url.searchParams.get('q'),'n:4');assert.deepEqual(readDirectoryURL(url,entries).state,state);
+  const original='https://example.test/sequences.html?q=n%3A4&sequence=custom&terms=12,34,56&discover=1,2,3,4,5,6#find';
+  const url=directoryURL(original,state);
+  assert.equal(url.hash,'#catalogue');for(const key of ['q','terms','sequence','discover'])assert.equal(url.searchParams.has(key),false,key);assert.deepEqual(readDirectoryURL(url,entries).state,state);
+  const local=directoryURL(original,state,{preserveContext:true});assert.equal(local.searchParams.get('q'),'n:4');assert.equal(local.searchParams.get('terms'),'12,34,56');
   for(const query of ['index-order=wrong','index-connected=maybe','index-topic=unlisted','index-query=name%3A%22broken']){const result=readDirectoryURL('https://example.test/?'+query,entries);assert.ok(result.error,query);assert.equal(result.entries.length,38);}
-  const reset=directoryURL(url,{query:'',topic:'',order:'name',connected:false});assert.equal(reset.searchParams.has('index-query'),false);assert.equal(reset.searchParams.get('q'),'n:4');
+  const reset=directoryURL(local,{query:'',topic:'',order:'name',connected:false},{preserveContext:true});assert.equal(reset.searchParams.has('index-query'),false);assert.equal(reset.searchParams.get('q'),'n:4');
 });
 test('all seven directed connections and 84 evidence rows agree with independent browser transforms at original indices',()=>{
   const {graph}=fixture,lookup=new Map(entries.map(e=>[e.id,e]));assert.equal(graph.edges.length,7);assert.equal(new Set(graph.edges.map(e=>e.key)).size,7);
