@@ -188,3 +188,38 @@ windows and residues retain linear scale. Additional fixtures cover
 follows KSEQ-000007 at n=52–63 into Plot at every tested width and verifies
 all twelve marks render without a plot error. Study rows and exports retain
 their exact values.
+
+## Directory and connection evidence run 012
+
+`directory-contract.json` and completed `run-012` record ten Python and
+thirty-four Node tests. All 38 stable identifiers, 21 reciprocal N/r cells,
+and the existing seven directed connections are preserved. The 84 distinct
+connection comparisons are checked against independent browser BigInt
+transforms at their original source and target indices. Incoming and outgoing
+lists display 168 evidence rows in 14 disclosures across six entries; a
+reverse listing does not infer an inverse operation or an infinite identity.
+Fixtures cover shifted odd-number sums into square indices 1–12 and square
+differences into odd-number indices 0–11, along with signed Euler/secant edges.
+
+The directory suite checks exact queries, topics, both connection directions,
+alphabetical/identifier order, sharing, independent Browse state, invalid
+links and form input, Back/Forward including letter anchors, all 21 family
+cells, full-index CSV, and thirteen entry flows at 1440px, 390px and 320px.
+Evidence tables support keyboard scrolling without JavaScript. Checks also
+cover forced colors with 200% text, clipboard denial, compact phone controls,
+and keeping the current mode in view. Existing interface, study and plotting
+suites pass, including all 38 formula renderings and the eleven Study views.
+
+Parallel preview runs initially timed out during startup. Both affected
+suites passed without application changes after restarting the local preview
+server with quiet request logging and a larger request queue. An independent
+comparison also confirms byte identity of the original catalogue JSON and
+114 entry exports against the previous verified release. These browser
+reports and export-identity receipt are held in the task review folder.
+
+Self-review covered the new index/degree wording, direction labels, index
+ranges, evidence captions, source-transform links and finite-scope prose.
+Original sequence formulas, generators and proof status are unchanged.
+This is finite implementation evidence and prose self-review, without
+independent proof review, accessibility certification or screen-reader user
+testing.
