@@ -51,6 +51,7 @@ export function transform(values, mode='raw') {
   let sum=0n;
   return values.map((v,n)=>{sum+=v;switch(mode){
     case 'difference': return n ? fraction(v-values[n-1]) : null;
+    case 'second-difference': return n>1 ? fraction(v-2n*values[n-1]+values[n-2]) : null;
     case 'sum': return fraction(sum);
     case 'ratio': return n ? fraction(v,values[n-1]) : null;
     case 'average': return fraction(sum,BigInt(n+1));
@@ -77,6 +78,11 @@ export function rowsFor(values, state, name) {
       y=residue;if(state.view==='grid')x=n%state.modulus;
     }
     if(state.view==='pairs'){x=coordinate(v,state.scale);y=n+1<transformed.length?coordinate(transformed[n+1],state.scale):null;}
+    if(state.view==='mod-pairs'){
+      const next=transformed[n+1];
+      if(v&&v.b!==1n||next&&next.b!==1n)throw Error('Successive residue plots require integer-valued transforms.');
+      x=residue;y=next?Number(mod(next.a,state.modulus)):null;
+    }
     rows.push({name,n,raw:String(values[n]),value:exact(v),residue,x,y});
   }
   return rows;
@@ -87,6 +93,8 @@ export function candidatePeriod(residues){
   return null;
 }
 export function findMatches(entries, query, filter='all'){
+  // Preserve the original simple matcher for existing source clients.
+  // The interactive catalogue uses sequence-atlas-search.mjs for fielded ranking.
   const q=query.trim().toLowerCase();let needle=null;
   if(q && /^[-+\d\s,;]+$/.test(q)){needle=parseTerms(q).map(String);}
   return entries.filter(entry=>{

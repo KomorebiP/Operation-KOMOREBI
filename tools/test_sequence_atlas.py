@@ -70,6 +70,10 @@ class SequenceAtlasTests(unittest.TestCase):
             self.assertIn('<noscript>',main)
             self.assertIn('CC BY-SA 4.0',main)
             self.assertNotIn('data-side-reader-link',main)
+            for identifier in ('sa-query','sa-search-form','sa-results','sa-search-error','sa-previous-point','sa-next-window','sa-table-detail'):
+                self.assertIn('id="'+identifier+'"',main)
+            self.assertIn('role="search"',main)
+            self.assertIn('value="mod-pairs"',main)
             pages={}
             for path in site.output.rglob('*.html'):
                 source=path.read_text(encoding='utf-8');page=Page(source)
@@ -83,12 +87,29 @@ class SequenceAtlasTests(unittest.TestCase):
             data=json.loads((site.output/'assets/sequence-atlas-data.json').read_text(encoding='utf-8'))
             for entry in data['entries']:
                 self.assertEqual(entry['terms'],list(map(str,terms(entry))))
+                if entry['kind']=='euler':
+                    self.assertEqual(entry['work_ids'],['paper-iv'])
                 lines=(site.output/'sequences'/f"{entry['id']}.csv").read_text().splitlines()
                 self.assertEqual(len(lines),65)
                 self.assertEqual(lines[-1],f"63,{entry['terms'][63]}")
+                indexed=(site.output/'sequences'/f"{entry['id']}.txt").read_text().splitlines()
+                self.assertEqual(indexed[-1],f"63 {entry['terms'][63]}")
+                self.assertEqual(len([line for line in indexed if not line.startswith('#')]),64)
+                exported=json.loads((site.output/'sequences'/f"{entry['id']}.json").read_text(encoding='utf-8'))
+                self.assertEqual(exported['terms'],entry['terms'])
+                self.assertEqual(exported['oeis_reference']['license'],'CC-BY-SA-4.0')
+                source=(site.output/'sequences'/f"{entry['id']}.html").read_text(encoding='utf-8')
+                self.assertIn('Related entries',source)
+                self.assertIn('data-save-sequence="'+entry['id']+'"',source)
+                self.assertEqual('rel="prev"' in source,entry['id']!='KSEQ-000001')
+                self.assertEqual('rel="next"' in source,entry['id']!='KSEQ-000026')
                 if entry['source'].startswith('collection/'):
                     target=entry['source'].split('#')[0].replace('collection/','docs/').replace('.html','.md')
                     self.assertTrue((ROOT/target).is_file(),target)
+            script=(site.output/'assets/sequence-atlas.js').read_text(encoding='utf-8')
+            self.assertIn('./sequence-atlas-search.mjs?v=',script)
+            self.assertIn('./sequence-atlas-saved.mjs?v=',script)
+            self.assertIn('./sequence-atlas-saved.mjs?v=',(site.output/'assets/sequence-atlas-entry.js').read_text(encoding='utf-8'))
 
 
 if __name__ == '__main__':
