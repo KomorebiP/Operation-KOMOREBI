@@ -76,7 +76,7 @@ function draw(rows,names){
   const yLabel=frequency?'Count in window':state.view==='grid'||state.view==='mod'?'Transformed a(n) mod m':state.view==='pairs'?'Transformed a(n+1)':$('transform').selectedOptions[0].textContent;
   svg.append(element('text',{x:W/2,y:H-12,'text-anchor':'middle',fill:'#243d2d','font-size':14},xLabel));
   const fit=text=>{const limit=Math.floor(pw/7.8);return text.length>limit?text.slice(0,limit-1)+'…':text;};
-  names.forEach((name,i)=>svg.append(element('text',{x:pad.left,y:23+i*22,fill:palette[i],'font-size':14},fit((i?'□ ':'● ')+name))));
+  names.forEach((name,i)=>svg.append(element('text',{x:pad.left,y:23+i*22,fill:palette[i],'font-size':14},fit(name))));
   svg.append(element('text',{x:pad.left,y:names.length>1?67:45,fill:'#243d2d','font-size':12},fit(yLabel+(modular?` · m = ${state.modulus}`:` · ${$('scale').selectedOptions[0].textContent}`))));
   if(state.marks==='line'&&!frequency&&state.view!=='grid'){
     names.forEach((name,i)=>{let d='',connected=false;for(const r of rows.filter(r=>r.name===name)){if(r.x===null||r.y===null){connected=false;continue;}d+=`${connected?'L':'M'}${x(r.x)},${y(r.y)} `;connected=true;}svg.append(element('path',{d,fill:'none',stroke:palette[i], 'stroke-width':1.6,'stroke-dasharray':i?'6 4':'none'}));});
@@ -87,18 +87,19 @@ function draw(rows,names){
   }
   for(const r of points){
     const color=palette[state.color==='value'?Number(BigInt(r.raw||r.residue)%BigInt(state.modulus)+BigInt(state.modulus))%state.modulus%palette.length:state.color==='index'?r.n%state.modulus%palette.length:r.series];
-    let mark;const attrs={fill:color,stroke:r.series?'#a44916':color,'stroke-width':1.5};
+    let mark;const attrs={fill:color,stroke:r.series?'#a44916':color,'stroke-width':1.5},radius=r.hits?Math.min(13,4+Math.log2(r.hits)):4;
     if(frequency||state.marks==='bars'&&state.view!=='grid'){
       const width=Math.max(1,Math.min(24,pw/(frequency?state.modulus:rows.length)*0.7));const baseline=y(0);
       mark=element('rect',{x:x(r.x)-width/2+(r.series?width/3:0),y:Math.min(baseline,y(r.y)),width,height:Math.max(1,Math.abs(baseline-y(r.y))),...attrs,opacity:r.series?0.6:0.85});
-    }else if(r.series){mark=element('rect',{x:x(r.x)-4,y:y(r.y)-4,width:8,height:8,...attrs,fill:'#fafaf5'});
-    }else mark=element('circle',{cx:x(r.x),cy:y(r.y),r:r.hits?Math.min(13,4+Math.log2(r.hits)):4,...attrs});
+    }else if(r.series){mark=element('rect',{x:x(r.x)-radius,y:y(r.y)-radius,width:radius*2,height:radius*2,...attrs,fill:'#fafaf5'});
+    }else mark=element('circle',{cx:x(r.x),cy:y(r.y),r:radius,...attrs});
     const label=frequency?`${r.name}: residue ${r.x}, count ${r.y}`:state.view==='grid'?`${r.name}: residue pair (${r.x}, ${r.y}), ${r.hits} occurrence${r.hits===1?'':'s'}`:`${r.name}: n=${r.n}; a(n)=${r.raw}; transformed=${r.value}${modular?`; residue=${r.residue}`:''}`;
     mark.setAttribute('tabindex','0');mark.setAttribute('aria-label',label);mark.append(element('title',{},label));
     const inspect=()=>{$('inspect').textContent=label;};mark.addEventListener('focus',inspect);mark.addEventListener('pointerenter',inspect);mark.addEventListener('click',inspect);svg.append(mark);
   }
   $('plot').replaceChildren(svg);plot=svg;
-  $('caption').textContent=`${names.map((name,i)=>`${i?'Outlined squares / dashed line':'Filled circles / solid line'}: ${name}`).join('. ')}. ${state.color==='series'?'':'Colors cycle through eight colors; exact residue labels are available on each point. '}${frequency?'Bars count residues among the selected samples.':state.view==='grid'?'Larger marks indicate repeated residue pairs.':'Use First index and Terms shown to move or zoom the sample window.'} ${modular?`Modulus ${state.modulus}.`:''} ${rows.filter(r=>r.y===null||r.x===null).length} undefined or out-of-range samples omitted.`;
+  const bars=frequency||state.marks==='bars'&&state.view!=='grid';
+  $('caption').textContent=`${names.map((name,i)=>`${bars?(i?'Translucent bars':'Filled bars'):(i?'Outlined squares'+(state.marks==='line'&&state.view!=='grid'?' / dashed line':''):'Filled circles'+(state.marks==='line'&&state.view!=='grid'?' / solid line':''))}: ${name}`).join('. ')}. ${state.color==='series'?'':'Colors cycle through eight colors; exact residue labels are available on each point. '}${frequency?'Bars count residues among the selected samples.':state.view==='grid'?'Larger marks indicate repeated residue pairs.':'Use First index and Terms shown to move or zoom the sample window.'} ${modular?`Modulus ${state.modulus}.`:''} ${rows.filter(r=>r.y===null||r.x===null).length} undefined or out-of-range samples omitted.`;
 }
 function download(content,type,name){const blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 function viewURL(){const url=new URL(location.href);url.search='';for(const [key,value]of Object.entries(state))url.searchParams.set(key,String(value));if(state.sequence==='custom')url.searchParams.set('terms',$('custom').value);url.hash='explorer';return url.href;}
