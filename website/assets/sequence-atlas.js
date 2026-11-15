@@ -261,7 +261,7 @@ function setupRefinements(){
   root.addEventListener('click',event=>{
     const target=event.target.closest('button');if(!target)return;
     if(target.dataset.load){loadSequence(target.dataset.load);return;}
-    if(target.dataset.saveSequence){const id=target.dataset.saveSequence,wasSaved=saved.has(id),inResults=Boolean(target.closest('[data-hit-id]'));if(wasSaved)saved.delete(id);else saved.add(id);const stored=writeSaved(storage,[...saved]);updateSaveButtons(root,saved);search({restoreID:inResults?id:null});if(target.closest('[data-sequence]')?.hidden)$('results-title').focus({preventScroll:true});message((wasSaved?'Entry removed from saved entries.':'Entry saved.')+(stored?'':' Saved for this page only; browser storage is unavailable.'));return;}
+    if(target.dataset.saveSequence){const id=target.dataset.saveSequence,wasSaved=saved.has(id),inResults=Boolean(target.closest('[data-hit-id]'));if(wasSaved)saved.delete(id);else saved.add(id);const stored=writeSaved(storage,[...saved],new Set(entries.map(entry=>entry.id)));updateSaveButtons(root,saved);search({restoreID:inResults?id:null});if(target.closest('[data-sequence]')?.hidden)$('results-title').focus({preventScroll:true});message((wasSaved?'Entry removed from saved entries.':'Entry saved.')+(stored?'':' Saved for this page only; browser storage is unavailable.'));return;}
     const query=target.dataset.searchExample||target.dataset.suggestion;if(query){$('query').value=query;$('filter').value='all';$('topic').value='';search({reset:true});$('query').focus();return;}
     if(target.dataset.investigation)investigation(target.dataset.investigation);
   });

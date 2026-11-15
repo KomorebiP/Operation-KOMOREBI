@@ -12,8 +12,18 @@ async function* lines(bytes){
   try{while(true){const part=await reader.read();if(part.done)break;const chunks=(carry+part.value).split('\n');carry=chunks.pop();for(const line of chunks)if(line&&!line.startsWith('#'))yield line.trimEnd();}if(carry&&!carry.startsWith('#'))yield carry.trimEnd();}finally{reader.releaseLock();}
 }
 self.onmessage=async event=>{
-  if(event.data.type!=='search')return;
+  if(!['search','records'].includes(event.data.type))return;
   try{
+    if(event.data.type==='records'){
+      const requests=event.data.records;
+      if(!Array.isArray(requests)||!requests.length||requests.length>4||requests.some(r=>!/^A\d{6}$/.test(r.id)||!Number.isSafeInteger(r.position)||r.position<0||!Number.isSafeInteger(r.count)||r.count<1||r.count>256))throw Error('Request 1–4 reference excerpts with 1–256 terms each.');
+      const [stripped,names]=await Promise.all([bulk('stripped.gz'),bulk('names.gz')]),selected=new Set(requests.map(r=>r.id)),terms=new Map(),titles=new Map();
+      self.postMessage({type:'progress',message:'Restoring the exact shared excerpts from the retained snapshot…'});
+      for await(const line of lines(stripped)){if(selected.has(line.slice(0,7))){const row=referenceValues(line);terms.set(row.id,row.values);}}
+      for await(const line of lines(names)){const space=line.indexOf(' '),id=line.slice(0,space);if(selected.has(id))titles.set(id,line.slice(space+1));}
+      const results=requests.map(r=>{const values=terms.get(r.id)?.slice(r.position,r.position+r.count);if(!values||values.length!==r.count)throw Error('A shared reference excerpt is outside the retained snapshot.');return {id:r.id,name:titles.get(r.id)||'',sample_position:r.position,values};});
+      self.postMessage({type:'results',results});return;
+    }
     const query=referenceQuery(event.data.query),[stripped,names]=await Promise.all([bulk('stripped.gz'),bulk('names.gz')]);
     const results=[],wanted=new Map();let total=0,scanned=0,positions=0;
     if(query.type==='terms'){

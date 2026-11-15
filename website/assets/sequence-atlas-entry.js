@@ -12,7 +12,7 @@ if(root){
     catch{$('entry-copy-fallback').hidden=false;const field=$('entry-copy-text');field.value=text;field.focus();field.select();status.textContent='Copy the text from the selected field.';}
   }
   updateSaveButtons(root,saved);
-  root.querySelector('[data-save-sequence]').addEventListener('click',()=>{const active=saved.has(id);if(active)saved.delete(id);else saved.add(id);const stored=writeSaved(storage,[...saved]);updateSaveButtons(root,saved);status.textContent=(active?'Removed from saved entries.':'Entry saved.')+(stored?'':' Saved for this page only; browser storage is unavailable.');});
+  root.querySelector('[data-save-sequence]').addEventListener('click',()=>{const active=saved.has(id);if(active)saved.delete(id);else saved.add(id);const stored=writeSaved(storage,saved.has(id)?[id]:[],new Set([id]));updateSaveButtons(root,saved);status.textContent=(active?'Removed from saved entries.':'Entry saved.')+(stored?'':' Saved for this page only; browser storage is unavailable.');});
   for(const button of root.querySelectorAll('[data-copy-entry]')){button.hidden=false;button.addEventListener('click',()=>copyText(document.getElementById(button.dataset.copyEntry).textContent,button.dataset.copyEntry==='sa-entry-program'?'Python program copied.':'Formula copied.'));}
   $('entry-copy').hidden=false;$('entry-copy').addEventListener('click',()=>copyText([...root.querySelectorAll('#data tbody tr')].slice(0,12).map(row=>row.querySelector('td').textContent).join(', '),'First 12 terms copied.'));
   $('entry-link').hidden=false;$('entry-link').addEventListener('click',()=>copyText(location.href,'Entry link copied.'));

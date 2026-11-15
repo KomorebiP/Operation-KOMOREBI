@@ -1,9 +1,9 @@
 # Finite sequence-library evidence
 
-Current evidence: `run-005/manifest.json`, status `completed`, with
-`run-005/checks.json`. The input contract is `contract.json`. Earlier runs are
+Current evidence: `run-006/manifest.json`, status `completed`, with
+`run-006/checks.json`. The input contract is `contract.json`. Earlier runs are
 retained development records; their source hashes precede packaging, notation,
-attribution, and portable line-ending refinements.
+attribution, portable line-ending refinements, and comparison-workbench packaging.
 
 The current exact checks cover 1,783 new parameter records and all 42,792 stored
 terms / index maps. Independent comparisons include 2,880 reciprocal terms,
@@ -27,6 +27,8 @@ and timing. Validate it with the computation-audit skill's
 Frontend evidence is separate: the Node suites test exact query semantics,
 palette/state validation and legacy behavior; browser suites exercise the
 library and original plotting interfaces at 1440/390/320px, full-snapshot
-reference matching, export/sharing, no-JavaScript tables, and enlarged text /
+reference matching and shared-excerpt restoration, scoped saved entries across
+collections, four-source exact comparisons, arrow-key navigation, SVG/PNG/CSV
+export and sharing, no-JavaScript tables, and enlarged text /
 forced colors. These checks are not accessibility certification. The
 mathematical proofreading scope is recorded in `PROOFREAD_REVIEW.md`.
