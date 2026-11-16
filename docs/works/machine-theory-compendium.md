@@ -52,7 +52,7 @@ The links below are guides and claim maps. No Lean source is linked here. See th
 
 ## Code
 
-These links include code, examples, checks, or build tools. Read the [edition guide](../../monographs/machine-theory-compendium/README.md) for setup instructions and what each command does. All software is beta and work in progress.
+These links include code, examples, checks, or build tools. Read the [edition guide](../../monographs/machine-theory-compendium/README.md) for setup instructions and an explanation of what each command does. All software is in beta and remains a work in progress.
 
 - [Code / scripts: code](../../monographs/machine-theory-compendium/code/)
 
