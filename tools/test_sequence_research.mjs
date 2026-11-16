@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {generateFamily,workedFamily,finiteHyperH,constantRecurrence,validateFamily,familyURL,familyCSV} from '../website/assets/sequence-family-core.mjs';
+import {FAMILY_DEFAULTS,familyParameterKeys,generateFamily,workedFamily,finiteHyperH,constantRecurrence,validateFamily,familyURL,familyCSV,familyRepresentations} from '../website/assets/sequence-family-core.mjs';
 import {modularCycle} from '../website/assets/sequence-modular-core.mjs';
 import {identifyLocal,identifyInput} from '../website/assets/sequence-discovery-core.mjs';
 import {composeScalarTransfers,relationPath} from '../website/assets/sequence-graph-core.mjs';
@@ -33,6 +33,79 @@ test('family boundaries reject invalid seeds, indices, fractions and excessive w
   assert.throws(()=>generateFamily('congruential',{N:3,j:3}));assert.throws(()=>generateFamily('reciprocal',{N:1}));assert.throws(()=>generateFamily('theta',{x:0.5}));assert.throws(()=>generateFamily('appell',{component:'rounded'}));
   assert.equal(validateFamily('linear',{N:1}).k,3);
   const link=new URL(familyURL('https://example.test/library?q=old','GF-LINEAR',{k:4},{view:'mod',modulus:11}));assert.equal(link.searchParams.get('family'),'GF-LINEAR');assert.equal(link.searchParams.get('family-view'),'mod');
+});
+test('active family parameters ignore stale hidden fields and reject malformed state',()=>{
+  for(const value of [null,[],false,7,'invalid'])assert.throws(()=>validateFamily('theta',value),/parameters must be an object/);
+  assert.deepEqual(familyParameterKeys('theta',{x:12}),['x','count']);
+  assert.deepEqual(validateFamily('theta',{x:12,N:'invalid',column:-99,parent:'partition',seedMode:'invalid',seeds:null}),validateFamily('theta',{x:12}));
+  assert.deepEqual(validateFamily('reciprocal',{N:3,r:2,x:99,parent:'partition'}),validateFamily('reciprocal',{N:3,r:2}));
+  const seeded={k:2,c:1,seedMode:'custom',seeds:'2, 1',r:'inactive',count:4};
+  assert.equal(familyParameterKeys('linear',seeded).includes('r'),false);
+  assert.equal(familyParameterKeys('linear',seeded).includes('seeds'),true);
+  assert.deepEqual(generateFamily('linear',seeded).terms,['2','1','3','4']);
+  assert.equal(validateFamily('linear',seeded).r,1);
+  assert.equal(validateFamily('kbonacci',{k:4,c:'inactive',r:'inactive',seedMode:'invalid'}).seedMode,'zero');
+  assert.deepEqual(Object.keys(validateFamily('theta',{x:12})).sort(),Object.keys(FAMILY_DEFAULTS).sort());
+});
+test('stored theta specializations and high columns fit their own engine bounds',()=>{
+  const theta=generateFamily('theta',{x:12,count:4});
+  assert.deepEqual(theta.terms,['1','-156','114504','-201822816']);
+  assert.equal(workedFamily(theta).alternative,'-201822816');
+  const column=generateFamily('theta-column',{column:12,count:4});
+  assert.equal(column.offset,6);assert.deepEqual(column.degrees,[12,14,16,18]);
+  assert.deepEqual(column.terms,['2702765','-151714563','14008784790','-1693472144364']);
+  assert.equal(validateFamily('theta',{x:-12}).x,-12);
+  for(const x of [-13,13])assert.throws(()=>generateFamily('theta',{x,count:4}));
+  assert.throws(()=>generateFamily('theta-column',{column:13,count:4}));
+  assert.throws(()=>generateFamily('appell',{x:9,count:4}));
+  assert.throws(()=>generateFamily('secancy',{column:9,count:4}));
+});
+test('Appell column readouts keep ordinary coefficients and the supported source rows',()=>{
+  const first=generateFamily('appell',{appellMode:'column',N:2,j:0,r:1,column:1,count:4});
+  assert.deepEqual(first.terms,['1','-3','25','-427']);assert.deepEqual(first.degrees,[1,3,5,7]);
+  const column=generateFamily('appell',{appellMode:'column',N:3,j:0,r:1,column:2,count:4});
+  assert.equal(column.offset,0);assert.deepEqual(column.terms,['1','-10','532','-83215']);
+  assert.deepEqual(column.degrees,[2,5,8,11]);assert.match(column.formula,/\[x\^2\] P_\(3n\+2\)/);
+  assert.match(column.normalization,/ordinary coefficient.*without 2! scaling/);
+  assert.match(familyRepresentations(column)[1].note,/polynomial row 3n\+2/);
+  const zero=generateFamily('appell',{appellMode:'column',N:3,j:1,r:2,column:0,count:4});
+  const section=generateFamily('congruential',{N:3,j:1,r:2,count:4});
+  assert.deepEqual(zero.terms,section.terms);assert.deepEqual(zero.rationalTerms,section.rationalTerms);assert.deepEqual(zero.degrees,section.degrees);
+  assert.throws(()=>generateFamily('appell',{appellMode:'column',column:-1,count:4}));
+  assert.throws(()=>generateFamily('appell',{appellMode:'column',column:9,count:4}));
+});
+test('rational Appell columns reduce after extraction and export both exact components',()=>{
+  const params={appellMode:'column',N:2,j:1,r:1,column:2,count:4};
+  const numerator=generateFamily('appell',params),denominator=generateFamily('appell',{...params,component:'denominator'});
+  assert.deepEqual(numerator.rationalTerms,['1','-2','7','-124/3']);
+  assert.deepEqual(numerator.terms,['1','-2','7','-124']);assert.deepEqual(denominator.terms,['1','1','1','3']);
+  assert.equal(familyCSV(numerator),'local_n,source_degree,integer_component,original_rational\r\n0,2,1,1\r\n1,4,-2,-2\r\n2,6,7,7\r\n3,8,-124,-124/3\r\n');
+  assert.match(familyCSV(denominator),/3,8,3,-124\/3\r\n$/);
+});
+test('legacy minimal Appell column links retain their meaning without changing saved point values',()=>{
+  const minimal={N:3,j:0,r:1,column:2,count:4},oldScalar={...FAMILY_DEFAULTS,...minimal,x:2};delete oldScalar.appellMode;
+  const column=generateFamily('appell',minimal),scalar=generateFamily('appell',oldScalar);
+  assert.equal(column.params.appellMode,'column');assert.deepEqual(column.terms,['1','-10','532','-83215']);
+  assert.equal(scalar.params.appellMode,'value');assert.deepEqual(scalar.terms,['1','2','4','7']);
+  assert.deepEqual(generateFamily('appell',{...minimal,appellMode:'value'}).terms,scalar.terms);
+  assert.deepEqual(generateFamily('appell',{...minimal,appellMode:'column',x:'inactive'}).terms,column.terms);
+  assert.equal(familyParameterKeys('appell',minimal).includes('column'),true);
+  assert.equal(familyParameterKeys('appell',minimal).includes('x'),false);
+  assert.throws(()=>validateFamily('appell',{appellMode:'unknown'}));
+  const source=familySource('appell',minimal),restored=readWorkbenchLink(workbenchLink('https://example.test/sequence-library.html',[source],WORKBENCH_DEFAULTS),[],'snapshot');
+  assert.deepEqual(restored.sources[0].terms,column.terms);assert.equal(descriptor(restored.sources[0]).params.appellMode,'column');
+});
+test('family links preserve search and comparison state and use the selected definition page',()=>{
+  const base='https://example.test/project/sequence-library.html?q=Hankel&scope=families&paper=ARCHIVE&wb=retained&family=GF-LINEAR&parameters=old&family-view=mod&family-modulus=11#library-search';
+  const main=new URL(familyURL(base,'GF-THETA',{x:12,count:4}));
+  assert.equal(main.pathname,'/project/sequence-library.html');
+  for(const [key,value]of [['q','Hankel'],['scope','families'],['paper','ARCHIVE'],['wb','retained']])assert.equal(main.searchParams.get(key),value);
+  assert.equal(main.searchParams.get('family'),'GF-THETA');assert.equal(main.searchParams.has('family-view'),false);assert.equal(main.searchParams.has('family-modulus'),false);
+  assert.deepEqual(JSON.parse(main.searchParams.get('parameters')),validateFamily('theta',{x:12,count:4}));assert.equal(main.hash,'#family-explorer');
+  const detail=new URL(familyURL('https://example.test/project/generalized-families/GF-RECIPROCAL.html?q=kept','GF-APPELL',{N:3,j:0,column:2,count:4},{view:'mod',modulus:13}));
+  assert.equal(detail.pathname,'/project/generalized-families/GF-APPELL.html');assert.equal(detail.searchParams.get('q'),'kept');
+  assert.equal(detail.searchParams.get('family-modulus'),'13');assert.equal(JSON.parse(detail.searchParams.get('parameters')).appellMode,'column');
+  assert.throws(()=>familyURL(base,'GF-UNKNOWN',{}),/supported exact family/);
 });
 test('complete-state modular certificates prove cycles and retain transient prefixes',()=>{
   const fib=modularCycle({k:2},7);assert.equal(fib.period,16);assert.equal(fib.preperiod,0);assert.deepEqual(fib.repeatedState,fib.initialState);

@@ -2,7 +2,7 @@ import test from 'node:test';import assert from 'node:assert/strict';
 import {referenceQuery,referenceValues,referencePositions,referenceNameMatches} from '../website/assets/sequence-oeis-core.mjs';
 import {searchEntries} from '../website/assets/sequence-atlas-search.mjs';
 import {PLOT_DEFAULTS,plotColors,plotTheme,validateAppearance,contrastRatio,appearanceLink,readAppearance} from '../website/assets/sequence-plot-options.mjs';
-import {emptySearch,normalizeSearch,librarySearch} from '../website/assets/sequence-library-search.mjs';
+import {emptySearch,normalizeSearch,librarySearch,librarySearchCSV} from '../website/assets/sequence-library-search.mjs';
 test('bulk reference queries preserve exact large integers, signs, zero and wildcard positions',()=>{
   assert.equal(referenceQuery('a108').id,'A000108');assert.throws(()=>referenceQuery('1,2'));assert.throws(()=>referenceQuery('?,?,?,?,?,?,?,?'));
   const q=referenceQuery('0,-1,9007199254740993,?,4,5,6,7'),row=referenceValues('A123456 ,99,0,-1,9007199254740993,3,4,5,6,7,');assert.equal(row.id,'A123456');assert.deepEqual(referencePositions(row.values,q),[1]);
@@ -44,4 +44,21 @@ test('clearing a family search preserves its scope and removes stale filters',()
   assert.equal(normalizeSearch({...clear,match:'start',saved:'only',collection:'atlas'}).saved,'');
   assert.equal(normalizeSearch({...clear,scope:'records',mode:'Source-defined discrete construction',paper:'ARCHIVE'}).paper,'');
   assert.equal(emptySearch('records').scope,'records');
+});
+
+test('family CSV exports complete definitions, domains, notes and source attribution',()=>{
+  const entry={id:'GF-EXAMPLE',title:'A "quoted" family',mode:'Source-defined analytic family',domain:'a>0; n>=0',
+    formula:'a(n)=n!',note:'Source normalization.\nNo indexed examples.',paper:'SF-I',paper_title:'Special Functions I',
+    source:'https://example.test/source#L42',record_ids:[],url:'generalized-families/GF-EXAMPLE.html'};
+  const output=librarySearchCSV([{entry}],'families','https://example.test/sequence-library.html?scope=families');
+  assert.equal(output.split('\r\n')[0],'"id","title","construction_type","parameter_domain","definition","notes","source_id","source_title","source","indexed_records","url"');
+  for(const text of ['"A ""quoted"" family"','"a>0; n>=0"','"a(n)=n!"','"Source normalization.\nNo indexed examples."',
+    '"SF-I","Special Functions I","https://example.test/source#L42","0"','"https://example.test/generalized-families/GF-EXAMPLE.html"'])assert.ok(output.includes(text),text);
+});
+
+test('record CSV retains the existing index and formula-count schema',()=>{
+  const entry={id:'KFOR-TEST',title:'Record',kind:'coefficient column',collection:'formulas',offset:3,formulas:[{},{}],url:'formula-sequences/KFOR-TEST.html'};
+  const output=librarySearchCSV([{entry}],'records','https://example.test/sequence-library.html');
+  assert.equal(output.split('\r\n')[0],'"id","title","family","collection","offset","formulas","construction_type","source","indexed_records","url"');
+  assert.ok(output.includes('"KFOR-TEST","Record","coefficient column","formulas","3","2"'));
 });

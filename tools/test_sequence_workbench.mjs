@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
-import {WORKBENCH_DEFAULTS,validateWorkbench,localSource,referenceSource,workbenchRows,agreements,readWorkbenchLink,workbenchLink,comparisonCSV} from '../website/assets/sequence-workbench-core.mjs';
+import {WORKBENCH_DEFAULTS,validateWorkbench,localSource,familySource,referenceSource,workbenchRows,agreements,readWorkbenchLink,workbenchLink,comparisonCSV} from '../website/assets/sequence-workbench-core.mjs';
 import {readSaved,writeSaved,STORAGE_KEY} from '../website/assets/sequence-atlas-saved.mjs';
 import {referenceQuery,referenceValues,referencePositions,referenceNameMatches} from '../website/assets/sequence-oeis-core.mjs';
 import {identifyInput,discoveryProbes,matchProbe} from '../website/assets/sequence-discovery-core.mjs';
@@ -33,6 +33,23 @@ test('shared references require explicit restoration against the same snapshot',
 test('comparison CSV retains exact values, source positions and attribution',()=>{
   const ref=referenceSource({id:'A000001',sample_position:8,values:['9007199254740993']},'sha');const csv=comparisonCSV(workbenchRows([ref]));
   for(const text of ['9007199254740993','mathematical offset unknown','"8"','CC-BY-SA-4.0','OEIS Foundation','"sha"'])assert.ok(csv.includes(text),text);
+});
+test('Appell column comparisons retain the readout and its exact values through sharing',()=>{
+  const source=familySource('appell',{N:3,j:0,r:1,appellMode:'column',column:2,count:4});
+  assert.match(source.title,/column=2/);assert.doesNotMatch(source.title,/x=/);
+  assert.deepEqual(source.terms,['1','-10','532','-83215']);
+  const restored=readWorkbenchLink(workbenchLink('https://example.test/sequence-library.html',[source],WORKBENCH_DEFAULTS),[],'snapshot').sources[0];
+  assert.equal(restored.familyDescriptor.params.appellMode,'column');
+  assert.equal(restored.title,source.title);assert.deepEqual(restored.terms,source.terms);
+});
+test('legacy comparison aliases restore once when inactive family parameters normalize away',()=>{
+  const url=new URL('https://example.test/sequence-library.html');
+  url.searchParams.set('wb',JSON.stringify({schema:1,state:WORKBENCH_DEFAULTS,sources:[
+    {type:'family',engine:'linear',params:{k:2,r:1,c:1,count:4,N:3}},
+    {type:'family',engine:'linear',params:{k:2,r:1,c:1,count:4,N:4}},
+  ]}));
+  const restored=readWorkbenchLink(url.href,[],'snapshot');
+  assert.equal(restored.sources.length,1);assert.deepEqual(restored.sources[0].terms,['1','1','2','3']);
 });
 test('scoped saves preserve other collections and reject oversized writes',()=>{
   let raw='[]';const storage={getItem:()=>raw,setItem:(key,value)=>{assert.equal(key,STORAGE_KEY);raw=value;}};

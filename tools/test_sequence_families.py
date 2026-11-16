@@ -1,7 +1,9 @@
 import hashlib
+import csv
 from copy import deepcopy
 from html import unescape
 import json
+import io
 import re
 import unittest
 from pathlib import Path
@@ -126,6 +128,17 @@ class GeneralizedFamiliesTests(unittest.TestCase):
             self.assertNotIn('#family-explorer',linked)
             self.assertNotIn('parameters=',linked)
 
+    def test_supported_appell_column_links_preserve_the_readout_mode(self):
+        columns=[entry for entry in self.entries if entry['kind']=='block-Appell coefficient column']
+        self.assertEqual(len(columns),84)
+        for entry in columns:
+            with self.subTest(identifier=entry['id']):
+                url=unescape(re.search(r'href="([^"]+)"',links_for(entry)).group(1))
+                query=parse_qs(urlparse(url).query);params=json.loads(query['parameters'][0])
+                self.assertEqual(query['family'],['GF-APPELL'])
+                self.assertEqual(params['appellMode'],'column')
+                self.assertEqual((params['N'],params['r'],params['j'],params['column']),(entry['N'],entry['power'],0,entry['k']))
+
     def test_static_family_pages_preserve_examples_and_reproduction_access(self):
         class Site:
             root=ROOT
@@ -136,10 +149,31 @@ class GeneralizedFamiliesTests(unittest.TestCase):
         build_pages(site,self.data,lambda body,*args,**kwargs:body)
         self.assertEqual(len(site.pages),37)
         exported=json.loads(site.files['assets/sequence-generalized-data.json'])
+        index=list(csv.DictReader(io.StringIO(site.files['assets/sequence-generalized-index.csv'])))
+        self.assertEqual(len(index),36)
+        self.assertEqual({row['id'] for row in index},{family['id'] for family in exported['families']})
         for family in exported['families']:
             body=site.pages[family['url']]
             self.assertIn('id="definition"',body)
             self.assertIn(family['source'].replace('&','&amp;'),body)
+            stem=family['url'].removesuffix('.html')
+            download=json.loads(site.files[stem+'.json'])
+            self.assertEqual(download['family'],family)
+            self.assertEqual({source['id'] for source in download['sources']},set(family['paper_refs']))
+            members=list(csv.DictReader(io.StringIO(site.files[stem+'-members.csv'])))
+            self.assertEqual([row['id'] for row in members],family['record_ids'])
+            row=next(row for row in index if row['id']==family['id'])
+            self.assertEqual(row['definition'],family['formula'])
+            self.assertEqual(row['parameter_domain'],family['domain'])
+            self.assertEqual(int(row['indexed_records']),len(family['record_ids']))
+            self.assertIn(family['id']+'.json',body)
+            self.assertIn(family['id']+'-members.csv',body)
+            for member in members:
+                original=self.by_id[member['id']]
+                self.assertEqual(int(member['first_index']),original['offset'])
+                self.assertEqual(member['index_symbol'],original.get('index_symbol','n'))
+                self.assertEqual(int(member['stored_terms']),len(original['terms']))
+                self.assertEqual(member['review_status'],original['status'])
             for example in family['examples']:
                 self.assertEqual(example['terms'],self.by_id[example['id']]['terms'][:8])
                 self.assertTrue(all(isinstance(term,str) for term in example['terms']))

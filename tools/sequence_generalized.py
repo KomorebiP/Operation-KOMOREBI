@@ -1,9 +1,11 @@
 """Source-bound generalized families, kept distinct from integer records."""
 from copy import deepcopy
+import csv
 from functools import lru_cache
 from hashlib import sha256
 from html import escape as e
 import json
+import io
 from pathlib import Path
 from urllib.parse import quote, urlencode
 from sequence_archive_families import ARCHIVE_MEMBERSHIP, archive_definitions, archive_parameters
@@ -131,6 +133,8 @@ def links_for(entry):
         if 'component' in entry:p['component']=entry['component']
         if entry['kind']=='euler':p.update(N=2,j=0,r=1)
         if identifier in ('GF-CONGRUENTIAL','GF-APPELL'):p.setdefault('j',0)
+        if identifier=='GF-APPELL' and entry['kind']=='block-Appell coefficient column':
+            p.update(appellMode='column',column=entry['k'],j=0)
         if identifier=='GF-SECTIONS':p.update(parent=entry.get('source_kind',entry['kind']),N=entry.get('N',1),j=entry.get('j',0))
         if identifier in ('GF-LINEAR','GF-KBONACCI'):
             order=entry['recurrence_order'] if 'recurrence_order' in entry else 2 if entry['kind'] in ('fibonacci','lucas') else int(entry['id'][3:])-10
@@ -158,6 +162,24 @@ def sections():
 def build_pages(site,data,wrap):
     site.write('assets/sequence-generalized-data.json',json.dumps(data,ensure_ascii=False,separators=(',',':'))+'\n')
     cards=[];families={item['id']:item for item in data['families']}
+    from sequence_library import library_entries
+    from sequence_atlas import catalogue as atlas_catalogue
+    records={item['id']:item for item in library_entries(atlas_catalogue())}
+    public_base='https://komorebip.github.io/Operation-KOMOREBI/'
+    def csv_text(rows):
+        output=io.StringIO(newline='');writer=csv.writer(output);writer.writerows(rows);return output.getvalue()
+    index_rows=[['id','title','construction_type','parameter_domain','definition','notes','source_id','source_title','source','indexed_records','url']]
+    for family in data['families']:
+        stem=family['url'].removesuffix('.html')
+        index_rows.append([family['id'],family['title'],family['mode'],family['domain'],family['formula'],family['note'],family['paper'],family['paper_title'],family['source'],len(family['record_ids']),public_base+family['url']])
+        export=dict(schema=1,family=family,sources=[source for source in data['sources'] if source['id'] in family['paper_refs']],scope=data['scope'])
+        site.write(stem+'.json',json.dumps(export,ensure_ascii=False,indent=2)+'\n')
+        rows=[['id','title','collection','kind','first_index','index_symbol','stored_terms','review_status','entry_url']]
+        for identifier in family['record_ids']:
+            entry=records[identifier]
+            rows.append([identifier,entry['title'],entry['collection'],entry['kind'],entry['offset'],entry.get('index_symbol','n'),len(entry['terms']),entry['status'],public_base+entry['url']])
+        site.write(stem+'-members.csv',csv_text(rows))
+    site.write('assets/sequence-generalized-index.csv',csv_text(index_rows))
     archive_records={item['code']:item for item in json.loads((site.root/'research/sequence-archive/candidate_registry.json').read_text(encoding='utf-8'))}
     related={
         'GF-BLOCK-LOGARITHMIC':['GF-TANGENT','GF-RECIPROCAL'],
@@ -188,6 +210,7 @@ def build_pages(site,data,wrap):
         body='<nav aria-label="Family navigation"><a href="../sequence-library.html?scope=families#library-search">Generalized-family search</a> · <a href="index.html">Family index</a></nav><header class="sar-header"><p class="sar-kicker">'+e(family['id'])+' / '+e(family['family_type'])+'</p><h1>'+e(family['title'])+'</h1><p>'+e(family['mode'])+'</p></header><section id="definition"><h2>'+('Reference definitions' if family['family_type']=='reference collection' else 'General construction')+'</h2><p class="sar-formula">'+e(family['formula'])+'</p><p><strong>Parameters and domain:</strong> '+e(family['domain'])+'</p><p>'+e(family['note'])+'</p>'
         for formula in family['formulas'][1:]:body+='<h3>'+e(formula['title'])+'</h3><p class="sar-formula">'+e(formula['expression'])+'</p>'
         body+='<p><a href="'+e(family['source'])+'">'+e(family['paper_title'])+' — defining passage</a>.</p>'+members+'</section>'+examples_block(family)
+        body+='<section id="downloads"><h2>Download this construction</h2><p><a download href="'+e(family['id'])+'.json">Definition, examples and source bindings JSON</a> · <a download href="'+e(family['id'])+'-members.csv">Indexed member records CSV</a> · <a download href="../assets/sequence-generalized-index.csv">All construction definitions CSV</a></p>'+(('<p>The member index lists '+str(len(ids))+' stored integer records with their offsets, review status and entry links.</p>') if ids else '<p>No integer member records are indexed for this analytic construction. Its member CSV contains column headings only; the definition and source bindings remain available in JSON.</p>')+'</section>'
         if family.get('archive_record_ids'):
             archived=family['archive_record_ids']
             body+='<section id="archive-records"><h2>Recovered archive records</h2><p>'+str(len(archived))+' original records mapped to this construction.</p><ul>'+''.join('<li><a href="../sequence-archive/'+identifier+'.html">'+identifier+' · '+e(archive_records[identifier]['name'])+'</a> · first index '+str(archive_records[identifier]['offset'])+'</li>' for identifier in archived)+'</ul></section>'
@@ -202,5 +225,5 @@ def build_pages(site,data,wrap):
     for source in data['sources']:
         mapped=[f for f in data['families'] if source['id'] in f['paper_refs']];coverage.append('<article class="sar-card"><h3>'+e(source['title'])+'</h3><p>'+str(len(mapped))+' indexed family definitions · '+str(len(source['headings']))+' source headings surveyed.</p><p><a href="'+e(source['url'])+'">Maintained source</a></p><ul>'+''.join('<li><a href="../'+f['url']+'">'+e(f['title'])+'</a></li>' for f in mapped)+'</ul><details><summary>Other source topics and exact binding</summary><p>Indexing these passages does not assert that every formula in this paper has an integer record or a computational explorer.</p><p>Revision '+e(source['revision'])+'; normalized UTF-8/LF SHA-256 <code>'+source['normalized_sha256']+'</code>.</p><ul>'+''.join('<li><a href="'+e(source['url'])+'#L'+str(h['line'])+'">'+e(h['title'])+'</a></li>' for h in source['headings'])+'</ul></details></article>')
     count=len(data['families']);engines=sum(bool(family['engine']) for family in data['families']);analytic=sum(family['family_type']=='analytic family' for family in data['families']);discrete=sum(family['family_type']=='discrete construction' for family in data['families']);references=sum(family['family_type']=='reference collection' for family in data['families'])
-    body='<nav><a href="../sequence-library.html?scope=families#library-search">Search generalized families</a> · <a href="../sequence-library.html#family-explorer">Parameter explorer</a></nav><h1>Generalized families</h1><p>'+str(count)+' indexed definitions: '+str(engines)+' exact coefficient explorers, '+str(analytic)+' source-defined analytic families, '+str(discrete)+' discrete constructions and '+str(references)+' classical reference collection. All '+str(data['archive_coverage']['assigned'])+' recovered archive records have a family or reference home.</p><p>The index connects constructions to their exact examples and defining sources. Parameter instances need not represent distinct infinite sequences, and a reference collection is not a novelty claim.</p><ol>'+''.join(cards)+'</ol><section id="research-coverage"><h2>Research source coverage</h2><p>'+e(data['scope'])+'</p><p><a download href="../assets/sequence-generalized-data.json">Family definitions and source bindings JSON</a></p><div class="sar-grid">'+''.join(coverage)+'</div></section>'
+    body='<nav><a href="../sequence-library.html?scope=families#library-search">Search generalized families</a> · <a href="../sequence-library.html#family-explorer">Parameter explorer</a></nav><h1>Generalized families</h1><p>'+str(count)+' indexed definitions: '+str(engines)+' exact coefficient explorers, '+str(analytic)+' source-defined analytic families, '+str(discrete)+' discrete constructions and '+str(references)+' classical reference collection. All '+str(data['archive_coverage']['assigned'])+' recovered archive records have a family or reference home.</p><p>The index connects constructions to their exact examples and defining sources. Parameter instances need not represent distinct infinite sequences, and a reference collection is not a novelty claim.</p><p><a download href="../assets/sequence-generalized-index.csv">All construction definitions CSV</a> · <a download href="../assets/sequence-generalized-data.json">Complete definitions and source bindings JSON</a></p><ol>'+''.join(cards)+'</ol><section id="research-coverage"><h2>Research source coverage</h2><p>'+e(data['scope'])+'</p><p><a download href="../assets/sequence-generalized-data.json">Family definitions and source bindings JSON</a></p><div class="sar-grid">'+''.join(coverage)+'</div></section>'
     site.page('generalized-families/index.html','Generalized families and research coverage',wrap(body,'../'))

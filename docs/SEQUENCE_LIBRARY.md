@@ -270,7 +270,16 @@ search. The family index contains 36 definitions bound to 12 maintained source
 documents, including Special Functions I–VIII and the generalized closed-form
 material in Paper IV. Use `family:` to find a construction or its integer
 instances, and `paper:SF-VI` (or a quoted paper title) to search by source.
-Roman-number matches respect paper boundaries. Family searches offer construction-type and source filters; integer-only controls are hidden in this view. Clear removes the query and filters while keeping the selected scope. Shared links and result CSVs preserve construction type, source and member counts. The source coverage page lists
+Roman-number matches respect paper boundaries. Family searches offer
+construction-type and source filters; integer-only controls are hidden in this
+view. Clear removes the query and filters while keeping the selected scope.
+Family result CSVs contain the definition, parameter domain, notes, defining
+source and member count for every filtered result. The static family index
+offers the same definition CSV for all constructions. Each family page also
+offers its definition and source bindings as JSON and an indexed-member CSV
+with original offsets, review status and entry links. Families without indexed
+integer examples retain a header-only member CSV and say so explicitly.
+The source coverage page lists
 311 source headings and exact source hashes; it is an index, not a claim that
 every formula in every paper has been reviewed or converted into a record.
 
@@ -282,6 +291,23 @@ source degrees, local offsets, reduced rational values and component choices.
 The twelve analytic families retain their domains and defining passages without
 implying a numerical analytic-continuation implementation. Complex-order source
 definitions remain visible even when exact controls use bounded integer values.
+
+The Appell explorer distinguishes values at an integer x from ordinary
+coefficient columns in x. Column k uses local index n, polynomial row Nn+k,
+and binom(Nn+k,k) times the reduced positive-block inverse coefficient.
+The 84 stored supported-column records select this readout explicitly. Their
+source rows, exact rational values and selected integer components survive
+CSV export, comparison and shared links. The point-value controls keep
+x=-8..8; Appell columns use k=0..8. Theta specializations allow x=-12..12,
+and theta columns allow k=1..12, including all existing stored theta records.
+
+Only parameters active for the selected construction are validated. Inactive
+fields cannot block a different family. Invalid shared settings show an error
+and do not start a substitute calculation; readers can review the displayed
+settings and explicitly calculate. Calculator links preserve the library's
+search scope, query and filters. On a family detail page, selecting another
+construction opens its matching definition page, and older mismatched links
+resolve to the selected family's page before calculation.
 
 Thirteen source-defined discrete constructions and one explicitly labeled
 classical reference collection cover the remaining archived material: weighted

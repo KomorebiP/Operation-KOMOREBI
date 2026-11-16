@@ -1,7 +1,7 @@
 import './sequence-reading-theme.mjs';
 import {enhanceMath,clearMath} from './math-display.mjs';
 import {searchEntries} from './sequence-atlas-search.mjs';
-import {SEARCH_KEYS,RECORD_FILTERS,FAMILY_FILTERS,emptySearch,normalizeSearch,librarySearch} from './sequence-library-search.mjs';
+import {SEARCH_KEYS,RECORD_FILTERS,FAMILY_FILTERS,emptySearch,normalizeSearch,librarySearch,librarySearchCSV} from './sequence-library-search.mjs';
 import {setupArchivePlot} from './sequence-archive-plot.mjs';
 import {referenceQuery} from './sequence-oeis-core.mjs';
 import {createReferenceClient} from './sequence-oeis-client.mjs';
@@ -15,7 +15,6 @@ const root=document.querySelector('[data-library]'),$=id=>document.getElementByI
 const collectionLabels={atlas:'Curated sequences',recovered:'Research archive',formulas:'Formula families'};
 const keys=SEARCH_KEYS;
 let results=[],page=0,applied={},workbench,transfers,toggleSaved,saved=new Set();
-const csv=rows=>rows.map(row=>row.map(value=>'"'+String(value??'').replaceAll('"','""')+'"').join(',')).join('\r\n')+'\r\n';
 function save(content,type,name){const url=URL.createObjectURL(new Blob([content],{type})),link=make('a');link.href=url;link.download=name;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 function share(){const url=new URL(location.href);url.search='';for(const [key,value]of Object.entries(applied))if(value&&value!=='any'&&value!=='relevance')url.searchParams.set(key,value);if(page)url.searchParams.set('page',String(page+1));url.hash='library-search';return url.href;}
 function render(){
@@ -27,7 +26,7 @@ function render(){
       li.dataset.resultId=entry.id;li.className='sl-family-result';link.href=entry.url;heading.append(link);formula.className='sar-formula';actions.className='sp-actions';
       const identifier=make('p',entry.id),mode=make('span',entry.mode),domain=make('p'),sourceNote=make('p',entry.paper_title);
       identifier.className='sar-kicker';mode.className='sl-result-badge';sourceNote.className='sl-family-source';domain.append(make('strong','Parameters: '),document.createTextNode(entry.domain));
-      const explore=make('a',entry.engine?'Explore parameters':'Read construction and examples');explore.href=entry.url+(entry.engine?'#family-explorer':'#definition');
+      const explore=make('a',entry.engine?'Explore parameters':entry.examples?.length?'Read construction and examples':'Read definition and source');explore.href=entry.url+(entry.engine?'#family-explorer':'#definition');
       const source=make('a','Defining source');source.href=entry.source;actions.append(explore,source);
       if(entry.record_ids.length){const members=make('a','Search '+entry.record_ids.length+' integer record'+(entry.record_ids.length===1?'':'s'));members.href='sequence-library.html?q='+encodeURIComponent('family:'+entry.id)+'#library-search';actions.append(members);}
       li.append(identifier,heading,mode,sourceNote,formula,domain,make('p',entry.note),actions);$('results').append(li);continue;
@@ -93,9 +92,9 @@ function setupSearch(entries,families,sources=[]){
   $('clear').addEventListener('click',clear);$('reset').addEventListener('click',clear);
   $('triangles').hidden=false;$('triangles').addEventListener('click',()=>{reset('records');$('query').value='tag:triangle';run(true);$('count').focus();$('count').scrollIntoView({block:'start'});});
   $('research').hidden=false;$('research').addEventListener('click',()=>{reset('records');$('query').value='tag:research-derived';run(true);$('count').focus();$('count').scrollIntoView({block:'start'});});
-  for(const [key,step]of [['previous',-1],['next',1]])$(key).addEventListener('click',()=>{page+=step;render();history.replaceState(null,'',share());$('count').scrollIntoView({block:'nearest'});});
+  for(const [key,step]of [['previous',-1],['next',1]])$(key).addEventListener('click',()=>{page+=step;render();history.replaceState(null,'',share());$('count').focus({preventScroll:true});$('count').scrollIntoView({block:'nearest'});});
   $('share').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(share());$('action-status').textContent='Search link copied.';}catch{$('link-wrap').hidden=false;$('link').value=share();$('link').focus();$('link').select();}});
-  $('export').addEventListener('click',()=>save(csv([['id','title','family','collection','offset','formulas','construction_type','source','indexed_records','url'],...results.map(({entry:e})=>[e.id,e.title,e.kind,e.collection,e.collection==='generalized'?'':e.offset,e.formulas.length,e.mode||'',e.source||'',e.record_ids?.length??'',new URL(e.url,location.href).href])]),'text/csv;charset=utf-8','sequence-search-results.csv'));
+  $('export').addEventListener('click',()=>save(librarySearchCSV(results,applied.scope,location.href),'text/csv;charset=utf-8',applied.scope==='families'?'family-definitions.csv':'sequence-search-results.csv'));
   run();
   function validate(value){if(!value||typeof value.q!=='string'||!['records','families'].includes(value.scope||'records'))throw Error('Choose valid saved search settings.');searchEntries(value.scope==='families'?families:entries,value.q);for(const key of keys.filter(k=>k!=='q'))if(value[key]!==undefined&&!Array.from($(key).options).some(o=>o.value===value[key]))throw Error('A saved search filter is unavailable: '+key);if(value.page!==undefined&&(!Number.isSafeInteger(value.page)||value.page<0||value.page>10000))throw Error('The saved search page is invalid.');return value;}
   return {snapshot:()=>({...applied,page}),validate,restore(value){validate(value);for(const key of keys)$(key==='q'?'query':key).value=value[key]??(key==='scope'?'records':key==='sort'?'relevance':key==='match'?'any':'');page=value.page||0;run();}};

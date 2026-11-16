@@ -50,6 +50,91 @@ async function factorialEquality(page,family){
   assert.equal(await page.locator('#definition mjx-assistive-mml mo').filter({hasText:'≠'}).count(),0);
   await fits(page);
 }
+function familyLink(family,params,{path:target='sequence-library.html',...query}={}){
+  const result=new URL(target,base);
+  for(const [key,value]of Object.entries({...query,family,parameters:typeof params==='string'?params:JSON.stringify(params)}))result.searchParams.set(key,value);
+  result.hash='family-explorer';return result.href;
+}
+async function familyReady(page){await ready(page);await page.locator('[data-family-ready=true]').waitFor({timeout:60000});await math(page);}
+async function exactRows(page){return page.locator('#gf-output table tbody tr').evaluateAll(rows=>rows.slice(0,4).map(row=>Array.from(row.cells,cell=>cell.textContent)));}
+async function recordHandoff(page,id,family,expectedDegrees){
+  const response=await page.request.get(url(`sequence-families/${id}.json`));assert.equal(response.ok(),true);
+  const record=await response.json();
+  await page.goto(url(`sequence-families/${id}.html`));await ready(page);
+  const link=page.locator(`a[href*="generalized-families/${family}.html"][href*="parameters="]`);
+  assert.equal(await link.count(),1);await link.click();await familyReady(page);
+  const rows=await exactRows(page);
+  assert.deepEqual(rows.map(row=>row[0]),Array.from({length:4},(_,i)=>String(record.offset+i)));
+  assert.deepEqual(rows.map(row=>row[1]),expectedDegrees.map(String));
+  assert.deepEqual(rows.map(row=>row[2]),record.terms.slice(0,4));
+  assert.equal(await page.locator('#gf-error').isVisible(),false);await fits(page);
+}
+async function explorerRefinements(page,width){
+  await recordHandoff(page,'KFOR-AC-03-01-02','GF-APPELL',[2,5,8,11]);
+  assert.equal(await page.inputValue('#gf-appellMode'),'column');
+  assert.equal(await page.locator('#gf-column').isVisible(),true);assert.equal(await page.locator('#gf-x').isVisible(),false);
+  assert.deepEqual((await exactRows(page)).map(row=>row[2]),['1','-10','532','-83215']);
+  const columnCSV=await download(page,'#gf-form button:has-text("Download family CSV")',`appell-column-${width}.csv`);
+  assert.match(columnCSV,/local_n,source_degree,integer_component,original_rational/);
+  assert.match(columnCSV,/\r\n0,2,1,1\r\n/);assert.match(columnCSV,/\r\n1,5,-10,-10\r\n/);
+  await page.locator('#gf-form button:has-text("Copy family link")').click();
+  await page.getByText('Family link copied.',{exact:true}).waitFor();
+  const shared=await page.evaluate(()=>navigator.clipboard.readText());
+  assert.equal(JSON.parse(new URL(shared).searchParams.get('parameters')).appellMode,'column');
+  await page.goto(shared);await familyReady(page);
+  assert.deepEqual((await exactRows(page)).map(row=>row[1]),['2','5','8','11']);
+  await page.selectOption('#gf-appellMode','value');
+  assert.equal(await page.locator('#gf-x').isVisible(),true);assert.equal(await page.locator('#gf-column').isVisible(),false);
+  await page.fill('#gf-x','2');await page.locator('#gf-form button[type=submit]').click();
+  await page.waitForURL(value=>JSON.parse(value.searchParams.get('parameters')||'{}').appellMode==='value');
+  assert.deepEqual((await exactRows(page)).map(row=>row[1]),['0','1','2','3']);
+  assert.deepEqual((await exactRows(page)).map(row=>row[2]),['1','2','4','7']);
+
+  await recordHandoff(page,'KFOR-H-12','GF-THETA',[0,2,4,6]);assert.equal(await page.inputValue('#gf-x'),'12');
+  await recordHandoff(page,'KFOR-HC-12','GF-THETA-COLUMN',[12,14,16,18]);assert.equal(await page.inputValue('#gf-column'),'12');
+
+  await page.goto(familyLink('GF-THETA',{x:12,count:4},{scope:'families',q:'theta',paper:'REGISTRY'}));await familyReady(page);
+  assert.match(await page.locator('#sl-count').textContent(),/2 matching families/);
+  await page.fill('#gf-x','6');await page.locator('#gf-form button[type=submit]').click();
+  await page.waitForURL(value=>JSON.parse(value.searchParams.get('parameters')||'{}').x===6);
+  for(const [key,value]of Object.entries({scope:'families',q:'theta',paper:'REGISTRY'}))assert.equal(new URL(page.url()).searchParams.get(key),value);
+  await page.locator('#gf-form button:has-text("Copy family link")').click();
+  await page.getByText('Family link copied.',{exact:true}).waitFor();
+  const filteredLink=await page.evaluate(()=>navigator.clipboard.readText());
+  await page.goto(filteredLink);await familyReady(page);
+  assert.equal(await page.inputValue('#sl-query'),'theta');assert.equal(await page.inputValue('#sl-paper'),'REGISTRY');
+  assert.equal(await page.inputValue('#sl-scope'),'families');assert.equal(await page.inputValue('#gf-x'),'6');
+  assert.match(await page.locator('#sl-count').textContent(),/2 matching families/);
+  await page.fill('#gf-x','100');await page.selectOption('#gf-family','GF-LINEAR');
+  await page.waitForURL(value=>value.searchParams.get('family')==='GF-LINEAR');
+  assert.equal(await page.locator('#gf-error').isVisible(),false);
+  assert.match(await page.locator('#gf-output h3').textContent(),/Weighted k-step/);
+  assert.equal(new URL(page.url()).searchParams.get('q'),'theta');
+
+  for(const [family,parameters,message]of [
+    ['GF-THETA',{x:13},/x must be an integer/],
+    ['GF-THETA','{',/not valid JSON/],
+    ['GF-NOT-AVAILABLE',{},/unavailable exact family/],
+  ]){
+    await page.goto(familyLink(family,parameters));await ready(page);
+    assert.equal(await page.locator('#gf-error').isVisible(),true);assert.match(await page.locator('#gf-error').textContent(),message);
+    assert.equal(await page.locator('#gf-output table').count(),0);assert.equal(await page.locator('[data-family-ready=true]').count(),0);
+    assert.equal(await page.locator('#gf-form button:has-text("Copy family link")').isDisabled(),true);
+    assert.match(await page.locator('#gf-status').textContent(),/No family calculation has been run/);
+    await page.locator('#gf-form button[type=submit]').click();await familyReady(page);
+    assert.equal(await page.locator('#gf-error').isVisible(),false);
+  }
+
+  await page.goto(familyLink('GF-APPELL',{N:3,j:0,r:1,appellMode:'column',column:2,count:4},
+    {path:'generalized-families/GF-RECIPROCAL.html'}));
+  await page.waitForURL(value=>value.pathname.endsWith('/generalized-families/GF-APPELL.html'));await familyReady(page);
+  assert.match(await page.locator('h1').textContent(),/Appell/);
+  assert.deepEqual((await exactRows(page)).map(row=>row[2]),['1','-10','532','-83215']);
+  await page.selectOption('#gf-family','GF-THETA');
+  await page.waitForURL(value=>value.pathname.endsWith('/generalized-families/GF-THETA.html'));await familyReady(page);
+  assert.match(await page.locator('h1').textContent(),/theta/i);
+  assert.equal(await page.inputValue('#gf-family'),'GF-THETA');await fits(page);
+}
 
 (async()=>{
   let browser,active;
@@ -89,6 +174,7 @@ async function factorialEquality(page,family){
 
       await page.locator('#sl-next').click();
       assert.match(await page.locator('#sl-count').textContent(),/25–36/);
+      assert.equal(await page.evaluate(()=>document.activeElement.id),'sl-count');
       await page.reload();await ready(page);
       assert.match(await page.locator('#sl-count').textContent(),/25–36/);
       await query(page,'Hankel');
@@ -109,6 +195,7 @@ async function factorialEquality(page,family){
       assert.match(await page.locator('#sl-count').textContent(),/13 matching families/);
       await fits(page);
       await page.locator('#sl-share').click();
+      await page.getByText('Search link copied.',{exact:true}).waitFor();
       const shared=await page.evaluate(()=>navigator.clipboard.readText());
       assert.equal(new URL(shared).searchParams.get('scope'),'families');
       assert.equal(new URL(shared).searchParams.get('mode'),'Source-defined discrete construction');
@@ -116,7 +203,7 @@ async function factorialEquality(page,family){
       await page.goto(shared);await ready(page);
       assert.match(await page.locator('#sl-count').textContent(),/13 matching families/);
       const exported=await download(page,'#sl-export',`archive-families-${width}.csv`);
-      assert.match(exported,/"construction_type","source","indexed_records","url"/);
+      assert.match(exported,/"construction_type","parameter_domain","definition","notes","source_id","source_title","source","indexed_records","url"/);
       assert.match(exported,/"GF-SMITH-POLYNOMIALS"/);
       assert.equal(exported.trim().split(/\r?\n/).length,14);
 
@@ -126,6 +213,8 @@ async function factorialEquality(page,family){
       assert.match(await page.locator('#sl-count').textContent(),/2 matching families/);
       assert.deepEqual((await page.locator('#sl-results>li').evaluateAll(items=>items.map(item=>item.dataset.resultId))).sort(),
         ['GF-CROSS-SHAPE','GF-SHAPE-TRANSFER']);
+      assert.equal(await page.locator('#sl-results a').filter({hasText:'Read definition and source'}).count(),2);
+      assert.equal(await page.locator('#sl-results a').filter({hasText:'Read construction and examples'}).count(),0);
       await page.locator('#sl-clear').click();
       await query(page,'no_such_family_987654');
       assert.equal(await page.locator('#sl-empty').isVisible(),true);
@@ -146,6 +235,10 @@ async function factorialEquality(page,family){
       assert.equal(bundle.ok(),true);
       assert.equal((await bundle.body()).subarray(0,2).toString(),'PK');
       assert.match(await page.locator('#reproduce').textContent(),/python reproduce\.py --output regenerated/);
+      const familyDefinition=JSON.parse(await download(page,'#downloads a[href="GF-BLOCK-HANKEL.json"]',`hankel-definition-${width}.json`));
+      assert.equal(familyDefinition.family.id,'GF-BLOCK-HANKEL');assert.equal(familyDefinition.family.record_ids.length,4);
+      const memberIndex=await download(page,'#downloads a[href="GF-BLOCK-HANKEL-members.csv"]',`hankel-members-${width}.csv`);
+      for(const id of ['KOM043','KOM044','KOM045','KOM046'])assert.ok(memberIndex.includes(id));
       await page.locator('#definition').screenshot({path:path.join(out,`hankel-definition-${width}.png`)});
 
       await page.goto(url('sequence-library.html?q=family:GF-BLOCK-HANKEL#library-search'));
@@ -171,8 +264,11 @@ async function factorialEquality(page,family){
       assert.equal(await page.locator('#family-explorer>p').filter({hasText:'Enable JavaScript'}).count(),0);
       await fits(page);
 
+      await explorerRefinements(page,width);
+
       report.widths.push({width,scopedSearch:true,filters:true,sharing:true,csv:true,archivePages:true,
-        memberLinks:true,factorialEquality:true,exactParameterHandoff:true,noHorizontalOverflow:true});
+        memberLinks:true,factorialEquality:true,exactParameterHandoff:true,appellColumn:true,thetaBounds:true,
+        sharedContext:true,invalidLinkRecovery:true,canonicalNavigation:true,definitionExports:true,paginationFocus:true,noHorizontalOverflow:true});
       await context.close();active=null;
     }
 
@@ -186,6 +282,7 @@ async function factorialEquality(page,family){
     assert.equal(await page.locator('#archive-records li').count(),5);
     assert.match(await page.locator('#definition').textContent(),/flat j=n\(n\+1\)\/2\+k/);
     assert.equal(await page.locator('#reproduce a[download]').count(),1);
+    assert.equal(await page.locator('#downloads a[download]').count(),3);
     await fits(page,{staticOnly:true});await nojs.close();active=null;
     report.noJavaScript=true;
     assert.deepEqual(report.errors,[]);
