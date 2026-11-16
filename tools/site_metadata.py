@@ -15,6 +15,7 @@ CARD_RECORD = 'assets/brand/sharing-card.json'
 NOINDEX = {'404.html', 'search.html', 'side-by-side.html', 'reading-list.html', 'lean/run.html'}
 MAX_DESCRIPTION = 165
 DESCRIPTIONS = {
+    'chemistry-lab.html': 'Recover a nine-state Hamiltonian with three probes, explore exact ambiguity witnesses and conditional error disks, and inspect reproducible chemistry certificates.',
     'sequences.html': 'Search integer sequences and formulas, compare published families, explore exact modular plots, and follow the source derivations.',
     'index.html': 'Explore mathematical papers, visual guides, recorded proofs, and executable examples in the Komorebi collection.',
     'sitemap.html': 'Browse every Komorebi reader page by section, including papers, books, visual guides, collection records, Lean proofs and software documentation.',
