@@ -1,7 +1,7 @@
 # Finite sequence-library evidence
 
-Current evidence: `run-013/manifest.json`, status `completed`, with
-`run-013/checks.json`. The input contract is `contract.json`. This run replays
+Current evidence: `run-014/manifest.json`, status `completed`, with
+`run-014/checks.json`. The input contract is `contract.json`. This run replays
 the extended finite assertion for the displayed coefficient tables and columns. Earlier runs preserve
 the evidence for their recorded source inputs.
 

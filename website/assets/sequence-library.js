@@ -62,7 +62,8 @@ function setupTriangleNavigation(){
   const rows=[...table.tBodies[0].rows].map(row=>[...row.querySelectorAll('td a')]);
   const all=rows.flat();let active=all[0];
   for(const [n,row]of rows.entries())for(const [k,link]of row.entries()){
-    link.tabIndex=link===active?0:-1;link.setAttribute('aria-label',`Row ${n}, column ${k}; coefficient ${link.textContent}`);
+    const exact=link.textContent,digits=exact.replace('-',''),spoken=digits.length>60?`${exact.startsWith('-')?'negative ':''}${digits.length} digits, beginning ${digits.slice(0,12)}, ending ${digits.slice(-8)}`:exact;
+    link.tabIndex=link===active?0:-1;link.setAttribute('aria-label',`Row ${n}, column ${k}; coefficient ${spoken}`);
     link.addEventListener('focus',()=>{if(active)active.tabIndex=-1;active=link;link.tabIndex=0;});
     link.addEventListener('keydown',event=>{
       let r=n,c=k;if(event.key==='ArrowDown')r=Math.min(rows.length-1,n+1);else if(event.key==='ArrowUp')r=Math.max(0,n-1);else if(event.key==='ArrowRight')c=Math.min(row.length-1,k+1);else if(event.key==='ArrowLeft')c=Math.max(0,k-1);else if(event.key==='Home'){r=event.ctrlKey?0:n;c=0;}else if(event.key==='End'){r=event.ctrlKey?rows.length-1:n;c=rows[r].length-1;}else return;

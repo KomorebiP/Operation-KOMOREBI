@@ -53,15 +53,15 @@ def research_additions():
     for N in range(2,13):
         source=REGISTRY_URL+'#L489'
         forms=[variant('Ordinary parameter coefficients','coefficient formula',f'T(n,k)=[r^k] P_({N},n)(r)\nP_({N},n)(r)=({N}n)! [z^({N}n)] D_{N}(z)^(-r)\nD_{N}(z)=sum_(m>=0) (-1)^m z^({N}m)/({N}m)!', '0≤k≤n. These are ordinary coefficients in r; no k! scaling is applied.',source),
-               variant('Finite composition formula','finite sum',f'T(n,k)=({N}n)! sum_(ell=k)^n [ell,k]_1/ell! * (-1)^(n+ell) sum_(q_1+...+q_ell=n; q_i>=1) product_i 1/({N}q_i)!', '[ell,k]_1 denotes unsigned first-kind Stirling numbers. T(0,0)=1. For n>0 the constant coefficient is zero.',source),
+               variant('Finite composition formula','finite sum',f'T(n,k)=({N}n)! sum_(ell=k)^n [ell,k]_1/ell! * (-1)^(n+ell) sum_(q_1+...+q_ell=n; q_i>=1) product_(i=1)^ell 1/({N}q_i)!', '[ell,k]_1 denotes unsigned first-kind Stirling numbers. T(0,0)=1. For n>0 the constant coefficient is zero.',source),
                variant('Block-binomial parameter law','polynomial identity',f'P_({N},n)(r+s)=sum_(q=0)^n binom({N}n,{N}q) P_({N},q)(r) P_({N},n-q)(s)', 'Evaluating a row polynomial at a nonnegative integer r recovers the reciprocal-power family.',source)]
         item=add_table(f'KFOR-TRI-P-{N:02d}',f'Secancy coefficient triangle · N={N}','secancy coefficient triangle',secancy_polynomials(N,ROWS),forms,source,'r',N,N=N)
-        item['related_records']=[dict(id=f'KFOR-P-{N:02d}-{k:02d}',note=f'The k={k} column, continued through 24 nonzero-index positions.') for k in (1,2,3)]
+        item['related_records']=[dict(id=f'KFOR-P-{N:02d}-{k:02d}',note=f'Read 24 values of column k={k}, starting at polynomial row n={k}.') for k in (1,2,3)]
 
     source=REGISTRY_URL+'#L525'
     add_table('KFOR-TRI-H','Euler-transfer theta coefficient triangle','theta coefficient triangle',theta_polynomial_rows(ROWS),[
         variant('Theta coefficient definition','coefficient formula','T(n,k)=[x^k] Theta_(2n)(x)\nTheta_(2n)(x)=(2n)! [z^(2n)] sech(xz) sech(z)^x','Row n has degree 2n, so 0≤k≤2n. Its flat index is j=n^2+k.',source),
-        variant('Secancy-polynomial convolution','finite sum','T(n,k)=(-1)^n sum_(q=0)^n binom(2n,2q) A_2(q) [x^(k-2q)] P_(2,n-q)(x)','Coefficients outside the degree range are zero. Signs use the signed sech convention.',source),
+        variant('Secancy-polynomial convolution','finite sum','T(n,k)=(-1)^n sum_(q=0)^n binom(2n,2q) A_2(q) [x^(k-2q)] P_(2,n-q)(x)\nA_2(q)=(2q)! [z^(2q)] sec(z)\nP_(2,m)(x)=(2m)! [z^(2m)] sec(z)^x','Coefficients outside the degree range are zero. Signs use the signed sech convention.',source),
         variant('Hypergeometric coefficient definition','hypergeometric','T(n,k)=(2n)! [x^k z^(2n)] ((0F1(;1/2;x^2 z^2/4))^(-1) exp(-x log(0F1(;1/2;z^2/4))))','A bivariate coefficient extraction, not a single hypergeometric term.',source)], source,'x',2,N=2)
 
     for N in range(2,9):

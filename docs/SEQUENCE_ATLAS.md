@@ -1,7 +1,7 @@
 # Sequence and Formula Atlas
 
 The [Sequence library](https://komorebip.github.io/Operation-KOMOREBI/sequence-library.html)
-is the main search for all 2,023 records and is available from the homepage.
+is the main search for all 2,162 records and is available from the homepage.
 The [curated generators](https://komorebip.github.io/Operation-KOMOREBI/sequence-explorer.html)
 provide the extensible plotting interface for 38 of those records. Existing
 atlas links retain their search or plot state. The Math display preference is
