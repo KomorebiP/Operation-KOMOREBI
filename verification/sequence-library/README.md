@@ -167,3 +167,12 @@ forced colors, enlarged text and print. It includes a full 401,422-record OEIS
 identification run. Existing unified-search, readability and transfer browser
 suites also pass. These are automated implementation checks, not certification
 or physical-device user testing.
+
+The deployed-host probe accepts a 6,000-character query and rejects 12,000-
+and 20,000-character queries with HTTP 414. Notebook payloads now travel in
+fragments; earlier query links remain readable. Other new research-tool links
+and comparison links check the encoded request length. Large comparison JSON
+restores retain the larger data limit. The follow-up passes 86 Node tests, the
+three-viewport studio suite and the share-link browser regression, including an
+8,000-character notebook, large pasted comparison restoration and clipboard
+preservation when a link is rejected. Exact engine inputs in run-024 are unchanged.

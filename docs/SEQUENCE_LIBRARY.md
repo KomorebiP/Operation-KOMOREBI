@@ -314,3 +314,8 @@ JSON import/export and bounded share links. All tool settings are validated
 before restoration. Shared notebooks require an explicit load action; OEIS
 excerpts require a separate explicit download. Unavailable or unreadable browser
 storage is preserved, with session-only saving and JSON export available.
+
+Notebook links keep their payload in the URL fragment, which is not sent in
+the page request. Earlier query-based notebook links remain readable. Comparison
+and identification links that exceed the host-safe bound direct the reader to
+notebook JSON export; full JSON workspaces retain their larger data limit.
