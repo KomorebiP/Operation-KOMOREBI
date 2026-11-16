@@ -1,4 +1,4 @@
-import {archiveWindow,archiveLink,windowCSV,moveArchiveWindow,triangleWindow,archivePreset} from './sequence-archive-core.mjs';
+import {archiveWindow,archiveLink,windowCSV,moveArchiveWindow,triangleWindow,triangleLayout,trianglePolynomial,archivePreset} from './sequence-archive-core.mjs';
 import {mod} from './sequence-atlas-core.mjs';
 import {mountPlotOptions,plotColors,plotHeight,showIndexLabel,mergePlotLabels,exportPlot,finishPlotTheme} from './sequence-plot-options.mjs';
 
@@ -6,7 +6,7 @@ const make=(tag,text)=>{const el=document.createElement(tag);if(text!==undefined
 const svg=(tag,attrs,text)=>{const el=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const [key,val]of Object.entries(attrs))el.setAttribute(key,String(val));if(text!==undefined)el.textContent=text;return el;};
 export function setupArchivePlot(entry){
   const $=id=>document.getElementById('sar-'+id),keys=['view','scale','start','size','mod','marks','color'],params=new URL(location.href).searchParams;
-  let current,appearance,selectedN=null,figure;
+  let current,appearance,selectedN=null,figure,rowSync=()=>{};
   const link=state=>appearanceControls.link(archiveLink(location.href,state,'plot'));
   const say=(target,text)=>{if(target.textContent!==text)target.textContent=text;};
   function point(row){selectedN=row.n;say($('point'),`Index ${row.n}: a(${row.n}) = ${row.raw}; plotted value ${row.value??'undefined'}${row.next===null?'':`; following residue ${row.next}`}.`);}
@@ -63,7 +63,7 @@ export function setupArchivePlot(entry){
     $('previous').disabled=state.start===entry.offset;$('next').disabled=state.start+state.size>=entry.offset+entry.terms.length;$('zoom-in').disabled=state.size===1;$('zoom-out').disabled=state.size>=Math.min(1000,entry.terms.length);
   }
   function run(update=false){
-    try{const result=archiveWindow(entry,Object.fromEntries(keys.map(key=>[key,$(key).value])));current=result;draw(result);$('plot-error').hidden=true;for(const key of keys)$(key).removeAttribute('aria-invalid');if(update)history.replaceState(null,'',link(result.state));}
+    try{const result=archiveWindow(entry,Object.fromEntries(keys.map(key=>[key,$(key).value])));current=result;rowSync(result.state);draw(result);$('plot-error').hidden=true;for(const key of keys)$(key).removeAttribute('aria-invalid');if(update)history.replaceState(null,'',link(result.state));}
     catch(error){$('plot-error').textContent=error.message+' The previous plot remains available.';$('plot-error').hidden=false;if(error.field){$(error.field).setAttribute('aria-invalid','true');if(update)$(error.field).focus();}}
   }
   function apply(state){for(const key of keys)$(key).value=state[key];run(true);}
@@ -79,11 +79,16 @@ export function setupArchivePlot(entry){
   const presetBar=$('presets');
   for(const [name,label]of [['growth','Growth view'],['residues','Residue view'],['changes','Changes']]){const button=make('button',label);button.type='button';button.dataset.archivePreset=name;button.addEventListener('click',()=>{if(current)apply({...current.state,...archivePreset(entry,name)});});presetBar.append(button);}
   if(/valuation|carries|Collatz|totient/i.test(entry.kind)){const button=make('button',/valuation|carries/i.test(entry.kind)?'Valuation / count profile':'Arithmetic profile');button.type='button';button.dataset.archivePreset='profile';button.addEventListener('click',()=>{if(current)apply({...current.state,...archivePreset(entry,'profile')});});presetBar.append(button);}
-  if(entry.id==='KOM084'){
+  if(entry.id==='KOM084'||entry.triangle){
     const group=make('div');group.className='sp-row-preset';const label=make('label','Polynomial row n'),select=make('select');select.id='sar-row';label.htmlFor=select.id;
-    for(let n=0;(n+1)*(n+2)/2<=entry.terms.length;n++){const option=make('option',String(n));option.value=String(n);select.append(option);}label.append(select);
-    const button=make('button','Plot selected polynomial row');button.id='sar-apply-row';button.type='button';button.addEventListener('click',()=>{if(current)apply({...current.state,...triangleWindow(entry,select.value)});});group.append(label,button,make('p','Row n contains columns k=0…n. The plot retains flat index j=n(n+1)/2+k, so its values agree with the exact table.'));presetBar.after(group);
+    for(const row of triangleLayout(entry)){const option=make('option',String(row.row));option.value=String(row.row);select.append(option);}label.append(select);
+    const polynomial=make('p');polynomial.id='sar-row-polynomial';polynomial.className='sar-formula';const note=make('p');
+    const updateRow=()=>{polynomial.textContent=trianglePolynomial(entry,select.value);const row=triangleLayout(entry)[Number(select.value)];note.textContent=`Row ${row.row} contains columns k=0–${row.size-1}. Its flat indices are ${row.start}–${row.start+row.size-1}. The polynomial uses the stored coefficients in column order.`;};
+    select.addEventListener('change',updateRow);
+    rowSync=state=>{const row=triangleLayout(entry).find(row=>row.start===state.start&&row.size===state.size);if(row&&select.value!==String(row.row)){select.value=String(row.row);updateRow();}};
+    const button=make('button','Plot selected polynomial row');button.id='sar-apply-row';button.type='button';button.addEventListener('click',()=>{if(current)apply({...current.state,...triangleWindow(entry,select.value)});});group.append(label,button,note,polynomial);presetBar.after(group);updateRow();
   }
+
   function inspect(){const value=$('inspect').value,n=Number(value),i=n-entry.offset;if(!value.trim()||!Number.isSafeInteger(n)||i<0||i>=entry.terms.length){$('inspect').setAttribute('aria-invalid','true');$('exact').textContent=`Choose a stored index from ${entry.offset} through ${entry.offset+entry.terms.length-1}.`;return;}$('inspect').removeAttribute('aria-invalid');$('exact').replaceChildren(make('strong',`a(${n}) = `),make('code',entry.terms[i]));}
   $('inspect').addEventListener('input',inspect);inspect();run();
   if(!current){const defaults=archiveWindow(entry).state;for(const key of keys)$(key).value=defaults[key];run();$('plot-error').hidden=false;$('plot-error').textContent='Invalid plot options in this link. Showing the first recorded window.';}

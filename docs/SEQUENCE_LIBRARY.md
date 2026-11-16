@@ -1,8 +1,8 @@
 # Unified sequence and formula library
 
-`sequence-library.html` searches 2,023 local records: the original 38 KSEQ
-entries, 90 recovered KOM records, and 1,895 KFOR parameter records. It indexes
-6,095 recorded representations, including term formulas, finite sums,
+`sequence-library.html` searches 2,162 local records: the original 38 KSEQ
+entries, 90 recovered KOM records, and 2,034 KFOR parameter records. It indexes
+6,501 recorded representations, including term formulas, finite sums,
 recurrences, generating functions and hypergeometric coefficient formulas.
 These counts describe records and representations, not distinct infinite
 sequences or new discoveries.
@@ -20,7 +20,7 @@ at its recorded offset, and highlighted term matches. Collection and review
 filters share the same URL state as the query. Removable filter buttons make
 the current scope explicit; copying a link leaves the result count visible.
 
-The site-wide Math display selector offers Typeset math and Plain text. Its
+The Math display selector at the bottom of each page offers Typeset math and Plain text. Its
 preference persists across pages and tabs where browser storage is available.
 Readers retain their original TeX; sequence formulas retain their original
 plain-text source. A bounded notation parser supplies a display transcription,
@@ -29,8 +29,8 @@ source notation remains literal. Typeset formulas can scroll within their
 panels and remain keyboard accessible. Without JavaScript the original source
 and complete static index remain available.
 
-`tools/sequence_formula_catalogue.py` defines the finite parameter grids. Each
-parameter record stores 24 terms at its stated offset and an explicit source-degree map.
+`tools/sequence_formula_catalogue.py` defines the finite parameter grids. Scalar
+parameter records store 24 terms at their stated offsets and an explicit source-degree map. Coefficient triangles store all complete rows n=0..12.
 The original 1,783 records retain n=0..23; new polynomial columns begin at their
 first nonzero n. Congruential and
 Appell coefficients can be rational; numerator and denominator records reduce
@@ -51,7 +51,7 @@ and `?`. Fields include `formula:`, `representation:`, `collection:`, `n:`
 pagination and shared links preserve applied state. Result CSVs export the
 complete filtered set rather than only the current page.
 
-Saved entries use the existing browser-local saved-list key across all 2,023
+Saved entries use the existing browser-local saved-list key across all 2,162
 records, with a 500-record limit. Scoped writes from the older atlas preserve
 records from other collections. The saved filter uses the recipient's own list
 when sharing a search. Storage denial leaves the current session usable.
@@ -156,3 +156,49 @@ map, factorial versus hypergeometric coefficients, ordinary versus block
 convolutions, classical closed-form / recurrence oracles, and the full retained
 OEIS comparison. These are finite implementation checks, not novelty review,
 an infinite-identity proof, or accessibility certification.
+
+## Complete coefficient tables and supported columns
+
+The library exposes 55 additional coefficient tables from the registry: 11
+secancy parameter triangles (N=2..12), the Euler-transfer theta table, 21
+j=0 block-Appell triangles (N=2..8, r=1..3), and 22 forward/inverse
+block-binomial kernels (N=2..12). The kernels are classical block constructions
+used in the project; their inclusion is not a claim of historical priority.
+The polynomial families retain the registry's unassessed novelty status.
+
+All tables store complete rows n=0..12. Ordinary triangles flatten with
+j=n(n+1)/2+k; the theta table has degree 2n and uses j=n^2+k. Zero coefficients
+are retained. HTML and CSV show flat j, row n, column k, source degree, and the
+exact coefficient. The plot selector displays the row polynomial and selects
+its exact contiguous flat-index window. Shared row windows restore that row.
+
+Another 84 records expose the supported columns of the j=0 Appell tables,
+with N=2..8, r=1..3 and k=1..4. Local index n selects polynomial row Nn+k.
+Their formulas are obtained directly from the registry's Appell generator:
+the coefficient equals binom(Nn+k,k) times the normalized coefficient of the
+inverse block section. The displayed reciprocal-power form keeps its
+alternating sign. These are further indexed instances of existing published
+families, not 139 assertions of distinct or historically new infinite sequences.
+
+The notation pass separates defining equations, stacks constraints beneath
+sums, leaves empty hypergeometric parameter rows blank, and uses a vertical
+bar before the hypergeometric argument. Factorial powers retain their binding.
+Original formula strings, programs and exact exports remain available. The
+shared selector sits in the footer and keeps the same saved preference.
+
+
+For the inverse block kernel, fix an integer \(N\ge2\), work in the formal series ring \(\mathbb Q[[z]]\), and set
+\[
+H_N(z)=\sum_{m\ge0}\frac{z^{Nm}}{(Nm)!},\qquad
+C_N(z)=H_N(z)^{-1}=\sum_{m\ge0}c_m\frac{z^{Nm}}{(Nm)!}.
+\]
+For integers \(n\ge k\ge0\), the product of the forward and inverse matrices is
+\[
+(KL)_{n,k}=\binom{Nn}{Nk}
+\sum_{h=0}^{n-k}\binom{N(n-k)}{Nh}c_h
+=\binom{Nn}{Nk}(N(n-k))![z^{N(n-k)}]H_N(z)C_N(z)
+=\delta_{n,k}.
+\]
+The reversed product has the same convolution in the opposite order. Thus the
+inverse statement follows from the formal reciprocal identity; it is not
+inferred from the finite matrix tests. The tables use N=2..12.

@@ -39,11 +39,22 @@ export function moveArchiveWindow(entry,state,action){
   return {...valid,start,size};
 }
 
+export function triangleLayout(entry){
+  let lengths=entry.triangle?.row_lengths;
+  if(!lengths&&entry.id==='KOM084'){lengths=[];for(let n=1;n*(n+1)/2<=entry.terms.length;n++)lengths.push(n);}
+  if(!Array.isArray(lengths)||!lengths.length||lengths.some(n=>!Number.isSafeInteger(n)||n<1))throw Error('This record has no complete coefficient rows.');
+  let at=entry.offset;return lengths.map((size,row)=>{const result={row,start:at,size};at+=size;if(at>entry.offset+entry.terms.length)throw Error('Row metadata exceeds the stored terms.');return result;});
+}
 export function triangleWindow(entry,row){
-  if(entry.id!=='KOM084'||String(row).trim()===''||!Number.isSafeInteger(Number(row))||Number(row)<0)throw Error('Choose a stored polynomial row.');
-  row=Number(row);const start=row*(row+1)/2,size=row+1;
-  if(start+size>entry.terms.length)throw Error('That polynomial row is not fully stored.');
-  return {start,size,view:'raw',scale:'linear',marks:'line',color:'single'};
+  if(String(row).trim()===''||!Number.isSafeInteger(Number(row))||Number(row)<0)throw Error('Choose a stored polynomial row.');
+  const window=triangleLayout(entry)[Number(row)];if(!window)throw Error('That polynomial row is not fully stored.');
+  return {start:window.start,size:window.size,view:'raw',scale:'linear',marks:'line',color:'single'};
+}
+export function trianglePolynomial(entry,row){
+  const window=triangleLayout(entry)[Number(row)];if(!window)throw Error('Choose a stored polynomial row.');
+  const variable=entry.triangle?.variable||'s',terms=[];
+  entry.terms.slice(window.start-entry.offset,window.start-entry.offset+window.size).forEach((text,k)=>{const value=BigInt(text);if(!value)return;const magnitude=value<0n?-value:value;const body=(k&&magnitude===1n?'':String(magnitude))+(k?variable+(k===1?'':'^'+k):'');terms.push((value<0n?(terms.length?' - ':'-'):(terms.length?' + ':''))+body);});
+  return 'p('+variable+')='+(terms.join('')||'0');
 }
 
 export function archivePreset(entry,name){
