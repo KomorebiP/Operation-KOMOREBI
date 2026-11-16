@@ -51,7 +51,7 @@ export function mountFamilies(host,families,{initialFamily,addFamily}={}){
     linked.params=validate(linked);
     if(!navigateDetail(linked,true)){restore(linked,false);compute(false);}
   }catch(problem){
-    updateFields();error.hidden=false;error.textContent=problem.message+' Check the settings and select Calculate family to try again.';status.textContent='The saved settings could not be loaded. No calculation was run.';
+    updateFields();error.hidden=false;error.textContent=problem.message+' Check the settings and select Calculate family to try again.';status.textContent='The saved settings could not be loaded. No family calculation has been run.';
   }
   return {snapshot:()=>current?{family:currentFamily.id,params:current.params,plot:currentPlot}:read(),validate,restore,value:()=>current};
 }
