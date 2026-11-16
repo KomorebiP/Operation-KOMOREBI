@@ -251,7 +251,7 @@ d_k=\Delta^kf(0),\qquad f(x)=\sum_{k=0}^{d}d_k\binom{x}{k}
 b(n)=\sum_{d\mid n}a(d),\ a(n)=\sum_{d\mid n}\mu(n/d)b(d)
 ```
 
-**Scope.** Arithmetic functions on divisibility poset
+**Scope.** Arithmetic functions on the divisibility poset
 
 **Sources:** [C: General coordinate atlas](https://github.com/KomorebiP/komorebi-math/blob/a3aa04ac18a523f30c50c7f5dba709f88e904eff/docs/GENERAL_COORDINATE_ATLAS.md).
 
@@ -396,7 +396,7 @@ e_a:f\mapsto f(a)
 \ell_{[a,b],\rho}(f)=\rho\int_a^b f(x)\,dx
 ```
 
-**Scope.** Finite rational polynomial spaces, rational endpoints, and fixed rational density. For a positive-measure interpretation impose a<=b and rho>=0.
+**Scope.** Finite rational polynomial spaces, rational endpoints, and fixed rational density. For a positive-measure interpretation, impose a<=b and rho>=0.
 
 **Keep in view.** The linear functional exists for signed constant densities as well. Nonnegative density is needed only for measure-positivity interpretations.
 
@@ -482,7 +482,7 @@ C_a=I-J_aD=\mathbf1 e_a,\qquad C_a^2=C_a
 \mathcal C_g(f)=f\circ g
 ```
 
-**Scope.** For infinite formal series require g(0)=0. Polynomial outer functions can be substituted more generally. A finite jet substitution must respect its truncation ideal.
+**Scope.** For infinite formal series, require g(0)=0. Polynomial outer functions can be substituted more generally. A finite jet substitution must respect its truncation ideal.
 
 **Keep in view.** An arbitrary infinite formal composition is not defined at a nonzero constant term without extra convergence or nilpotence assumptions.
 
@@ -816,7 +816,7 @@ a_{n+d}=\sum_{j=0}^{d-1}c_j a_{n+j}+\delta_n
 
 **Scope.** Fixed order $d\ge1$, finite horizon, and recurrence coefficients. The input contains all d initial values and every required defect.
 
-**Keep in view.** With the defects retained this reconstructs arbitrary finite sequences. Dropping them changes the problem to a homogeneous recurrence.
+**Keep in view.** With the defects retained, this reconstructs arbitrary finite sequences. Dropping them changes the problem to a homogeneous recurrence.
 
 **Source relationship.** Explicit source construction.
 

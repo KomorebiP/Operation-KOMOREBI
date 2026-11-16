@@ -2,8 +2,8 @@
 
 **Komorebi P. · Research checkpoint · 13 November 2026**
 
-For the real, spin-free **three-spatial-orbital sector with two alpha and one
-beta electrons**, the result is precise: the nine-state Hamiltonian family
+For the real, spin-free **three-spatial-orbital sector with two alpha electrons
+and one beta electron**, the result is precise: the nine-state Hamiltonian family
 has **21 independent parameters**, and **exactly three complete action
 vectors** identify every member. A fixed probe design, an exact rational
 decoder, and rigorous error bounds accompany the proof.
@@ -115,7 +115,7 @@ when \(d\le\epsilon\), and every compatible operator satisfies
 \qquad r_H=\sqrt{20(\epsilon^2-d^2)}.
 ```
 
-This is a certified upper bound; the constant is not asserted sharp. The
+This is a certified upper bound; the constant is not asserted to be sharp. The
 raw inverse-noise constant is at most \(\sqrt{20}\). Normalizing each probe
 to unit length changes that constant to \(\sqrt{60}\). The decoder keeps
 these error units explicit and rejects inconsistent caches.
@@ -179,7 +179,7 @@ hydrogen atoms in a linear chain, with adjacent separation 1.4 angstroms,
 in the STO-3G basis. Spatial
 orbitals 0, 1, and 2 are frozen doubly occupied, orbitals 3, 4, and 5 are
 active, and orbitals 6 through 9 are empty. The active sector has two alpha
-and one beta electrons. Symmetry completion of the stored integrals is
+electrons and one beta electron. Symmetry completion of the stored integrals is
 defined explicitly before evaluation.
 
 The frozen-core formula agrees exactly with an embedded ladder-operator

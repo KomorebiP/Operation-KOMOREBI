@@ -96,7 +96,7 @@ controls are omitted when printing.
 
 Use **Save page**, or the bookmark beside a section heading, to keep a place in
 [Saved reading](https://KomorebiP.github.io/Operation-KOMOREBI/reading-list.html).
-Saved places stay in this browser. Saving and showing the list requires
+Saved places stay in this browser. Saving entries and viewing the list require
 JavaScript and available browser storage; browser bookmarks are another option.
 Clearing the site's browser data removes the saved list.
 

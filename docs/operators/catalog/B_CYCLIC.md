@@ -137,7 +137,7 @@ P_j=\prod_{k\ne j}(T-\lambda_kI)/(\lambda_j-\lambda_k)
 \mathcal B_{N,r}(fg)=\sum_{\substack{0\le a,b<N\\a+b\equiv r\ (N)}}(\mathcal B_{N,a}f)(\mathcal B_{N,b}g)
 ```
 
-**Scope.** Formal series over commutative ring
+**Scope.** Formal series over a commutative ring
 
 **Keep in view.** The sum is over the finite residue set. All cross-packet products, including carries, are retained.
 

@@ -274,8 +274,8 @@ $(2/25,1/50)^{\mathsf T}$. The error is eight times the residual in
 infinity norm. The factor ten in the bound is attained by a residual
 with two equal positive coordinates.
 
-A target solution error $\varepsilon$ can therefore use the sufficient
-stopping condition $\|r\|_\infty\le\varepsilon/10$ for this exact
+For a target solution error $\varepsilon$, the sufficient stopping
+condition is $\|r\|_\infty\le\varepsilon/10$ for this exact
 problem. A residual computed with rounded coefficients or rounded arithmetic
 needs those errors included in its budget. Subtracting the fixed point from
 the affine recurrence also gives $x_n-x_*=A^n(x_0-x_*)$, so the same
