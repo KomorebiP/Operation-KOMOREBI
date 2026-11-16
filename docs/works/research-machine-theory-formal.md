@@ -53,7 +53,7 @@ Start with the [edition guide](../../research/machine-theory-formal/README.md) a
 
 ## Code
 
-These links include code, examples, checks, or build tools. Read the [edition guide](../../research/machine-theory-formal/README.md) for setup instructions and what each command does. All software is beta and work in progress.
+These links include code, examples, checks, or build tools. Read the [edition guide](../../research/machine-theory-formal/README.md) for setup instructions and an explanation of what each command does. All software is in beta and remains a work in progress.
 
 - [Code / scripts: scripts](../../research/machine-theory-formal/scripts/)
 

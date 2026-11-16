@@ -50,7 +50,7 @@ No Lean source or guide is linked here. See the Lean status above and the [evide
 
 ## Code
 
-These links include code, examples, checks, or build tools. Read the [maintained edition guide](../SRIC_REPAIR_2026-10-27.md) for setup instructions and what each command does. All software is beta and work in progress.
+These links include code, examples, checks, or build tools. Read the [maintained edition guide](../SRIC_REPAIR_2026-10-27.md) for setup instructions and an explanation of what each command does. All software is in beta and remains a work in progress.
 
 - [Corrected runtime 0.3.3 (source and setup)](../../packages/sric-admission-v0.3.3/)
 - [Repair details and recorded checks](../SRIC_REPAIR_2026-10-27.md)
