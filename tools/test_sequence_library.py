@@ -12,13 +12,13 @@ from update_sequence_library_oeis import compare
 
 class SequenceLibraryTests(unittest.TestCase):
     def test_complete_parameter_windows_and_independent_formulas(self):
-        report=checks();self.assertEqual(report['records'],2034);self.assertEqual(report['terms'],52579)
-        self.assertEqual(report['checks']['source_index_maps'],52579)
+        report=checks();self.assertEqual(report['records'],2164);self.assertEqual(report['terms'],55939)
+        self.assertEqual(report['checks']['source_index_maps'],55939)
 
     def test_unified_records_preserve_old_ids_offsets_and_formula_types(self):
-        entries=library_entries(catalogue());self.assertEqual(len(entries),2162);self.assertEqual(len({x['id'] for x in entries}),2162)
-        self.assertEqual(sum(len(x['formulas']) for x in entries),6501)
-        self.assertTrue(all(len(x['terms'])==(sum(x['triangle']['row_lengths']) if x.get('triangle') else 24) for x in expanded_catalogue()))
+        entries=library_entries(catalogue());self.assertEqual(len(entries),2292);self.assertEqual(len({x['id'] for x in entries}),2292)
+        self.assertEqual(sum(len(x['formulas']) for x in entries),7033)
+        self.assertTrue(all(len(x['terms'])==(sum(x['triangle']['row_lengths']) if x.get('triangle') else 48 if x['id'].startswith('KFOR-KB-') else 24) for x in expanded_catalogue()))
         self.assertTrue(any(x['offset']==2 for x in entries))
         for kind in ['reciprocal','catalan','central-binomial']:
             entry=next(x for x in catalogue() if x['kind']==kind)

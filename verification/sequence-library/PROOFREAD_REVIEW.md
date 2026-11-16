@@ -111,3 +111,17 @@ Coefficient-explorer self-review:
 - Validation: independent coordinate/residue checks across all 55 tables;
   bounded arithmetic audit run-016; responsive browser and download checks.
 - Unresolved proofreading issues in this changed scope: none.
+
+## Recurrence and connection expansion
+
+Scope: changed record definitions and formula variants, IDENTITIES.md, AUDIT.md,
+new sequence-detail prose, research overview and transfer interface. This was a
+self-review of changed material, not a proofread of every source manuscript.
+Routine edits clarified source attribution, ordinary normalization, seed
+shifts, finite cutoffs and coefficient-domain labels. No mathematical-token
+changes were made as typographical proofreading corrections. The substantive
+new identities have their separate focused audit and derivation. No unresolved
+notation issue remains within this changed scope. Exact independent finite
+checks are in runs 019/020; 668 structural typesetting samples and 11 mixed
+parts compiled without errors across 7,033 representations. Sixty unsupported
+representations deliberately retain their literal source notation.

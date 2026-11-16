@@ -1,3 +1,4 @@
+import './sequence-research-ui.mjs';
 export const PAGE_THEME_KEY='komorebi.sequence-reading-theme.v1';
 export const PAGE_SCHEME_KEY='komorebi.sequence-reading-scheme.v1';
 export function readPageTheme(storage){try{const value=storage.getItem(PAGE_THEME_KEY);return ['light','dark','system'].includes(value)?value:'light';}catch{return 'light';}}

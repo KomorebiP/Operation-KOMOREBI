@@ -219,7 +219,9 @@ def build(site):
         scope='Search covers the curated Komorebi catalogue. OEIS comparisons are finite comparisons, not originality or identity proofs.')
     raw = json.dumps(data, ensure_ascii=False, separators=(',', ':'))+'\n'
     site.write('assets/sequence-atlas-data.json', raw)
-    version = lambda name: hashlib.sha256((site.root/'website/assets'/name).read_bytes()).hexdigest()[:12]
+    theme=(site.root/'website/assets/sequence-reading-theme.mjs').read_text(encoding='utf-8')
+    theme=theme.replace("'./sequence-research-ui.mjs'","'./sequence-research-ui.mjs?v="+hashlib.sha256((site.root/'website/assets/sequence-research-ui.mjs').read_bytes()).hexdigest()[:12]+"'")
+    version = lambda name: hashlib.sha256(theme.encode('utf-8') if name=='sequence-reading-theme.mjs' else (site.root/'website/assets'/name).read_bytes()).hexdigest()[:12]
     css = '<link rel="stylesheet" href="assets/sequence-atlas.css?v='+version('sequence-atlas.css')+'">'
     cards = ''.join('<article class="sa-card" data-sequence="'+x['id']+'"><p class="sa-label">'+x['id']+'</p><h3><a href="sequences/'+x['id']+'.html">'+e(x['title'])+'</a></h3>'
         +'<p class="sa-terms">'+e(', '.join(x['terms'][:8]))+'…</p><details class="sa-card-detail"><summary>Formula, sources, and reference matches</summary>'+entry_body(x)+'</details><div class="sa-card-actions"><button type="button" data-load="'+x['id']+'" hidden>Explore this sequence</button><button type="button" data-save-sequence="'+x['id']+'" aria-pressed="false" hidden>Save entry</button></div></article>' for x in entries)
@@ -273,7 +275,7 @@ def build(site):
     script = script.replace("'./sequence-atlas-core.mjs'", "'./sequence-atlas-core.mjs?v="+version('sequence-atlas-core.mjs')+"'")
     script = script.replace("'./sequence-atlas-data.json'", "'./sequence-atlas-data.json?v="+hashlib.sha256(raw.encode()).hexdigest()[:12]+"'")
     script=script.replace("'./sequence-atlas-discovery.mjs'","'./sequence-atlas-discovery.mjs?v="+hashlib.sha256(discovery_script.encode()).hexdigest()[:12]+"'")
-    for name in ('sequence-atlas-search.mjs','sequence-atlas-saved.mjs','sequence-atlas-interface.mjs','sequence-plot-options.mjs','sequence-reading-theme.mjs'):
+    for name in ('sequence-atlas-search.mjs','sequence-atlas-saved.mjs','sequence-atlas-interface.mjs','sequence-plot-options.mjs','sequence-research-ui.mjs','sequence-reading-theme.mjs'):
         script=script.replace("'./"+name+"'", "'./"+name+'?v='+version(name)+"'")
     script=script.replace("'./sequence-atlas-directory.mjs'", "'./sequence-atlas-directory.mjs?v="+hashlib.sha256(directory_script.encode()).hexdigest()[:12]+"'")
     site.write('assets/sequence-atlas.js', script)
@@ -283,13 +285,15 @@ def build(site):
     site.write('assets/sequence-atlas-study.mjs',study_core)
     site.write('assets/sequence-atlas-study.js',study_script)
     entry_script=entry_script.replace("'./sequence-atlas-study.js'", "'./sequence-atlas-study.js?v="+hashlib.sha256(study_script.encode()).hexdigest()[:12]+"'")
-    for dependency in ('math-display.mjs','sequence-atlas-saved.mjs','sequence-atlas-core.mjs','sequence-reading-theme.mjs'):
+    for dependency in ('math-display.mjs','sequence-atlas-saved.mjs','sequence-atlas-core.mjs','sequence-research-ui.mjs','sequence-reading-theme.mjs'):
         entry_script=entry_script.replace("'./"+dependency+"'","'./"+dependency+'?v='+version(dependency)+"'")
     site.write('assets/sequence-atlas-entry.js',entry_script)
-    for name in ('math-display.mjs','math-display.css','sequence-navigation.mjs','sequence-redirect.mjs','sequence-atlas-core.mjs', 'sequence-atlas.css','sequence-atlas-search.mjs','sequence-atlas-saved.mjs','sequence-atlas-discovery.mjs','sequence-atlas-interface.mjs','sequence-plot-options.mjs','sequence-plot-options.css','sequence-reading-theme.mjs','sequence-reading.css'):
+    for name in ('math-display.mjs','math-display.css','sequence-navigation.mjs','sequence-redirect.mjs','sequence-atlas-core.mjs', 'sequence-atlas.css','sequence-atlas-search.mjs','sequence-atlas-saved.mjs','sequence-atlas-discovery.mjs','sequence-atlas-interface.mjs','sequence-plot-options.mjs','sequence-plot-options.css','sequence-research-ui.mjs','sequence-reading-theme.mjs','sequence-reading.css'):
         content=(site.root/'website/assets'/name).read_text(encoding='utf-8')
         if name=='sequence-atlas-discovery.mjs':
             content=discovery_script
+        elif name=='sequence-reading-theme.mjs':
+            content=theme
         site.write('assets/'+name,content)
     # Retain visible wrapping labels and explicit associations for the site audit.
     body = re.sub(r'<label>([^<]*)<(select|input)([^>]*\bid="([^"]+)")', r'<label for="\4">\1<\2\3', body)
@@ -336,6 +340,8 @@ def build(site):
             '</section><section aria-labelledby="sa-related-title"><h2 id="sa-related-title">Related entries</h2><ul>'+''.join('<li><a href="'+x['id']+'.html">'+e(x['title'])+'</a> · '+x['id']+'</li>' for x in related)+'</ul></section>'
             '<nav class="sa-neighbours" aria-label="Previous and next sequence">'+neighbours+'</nav></div></div></article>'
             '<script type="module" src="../assets/sequence-atlas-entry.js?v='+hashlib.sha256(entry_script.encode()).hexdigest()[:12]+'"></script>')
+        from sequence_research_notes import entry_details
+        content=content.replace('<section id="analysis"',entry_details(entry)+'<section id="analysis"',1)
         site.page('sequences/'+identifier+'.html', entry['title']+' · '+identifier, '<link rel="stylesheet" href="../assets/sequence-library.css?v='+version('sequence-library.css')+'">'+content+'<link rel="stylesheet" href="../assets/sequence-reading.css?v='+version('sequence-reading.css')+'">')
         site.search.append(dict(title=entry['title']+' · '+identifier, group='Collection', kind='Examples', work_ids=entry['work_ids'], url='sequences/'+identifier+'.html', text=entry['formula']+' '+entry['recurrence']+' '+', '.join(entry['terms'][:8])))
     from sequence_archive import build as build_archive
