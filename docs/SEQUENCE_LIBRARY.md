@@ -88,6 +88,13 @@ Cancellation terminates the worker. Unsupported browser features retain download
 links and precomputed record comparisons. OEIS data, extracts and matching are
 attributed under CC BY-SA 4.0; full entry details remain on OEIS.
 
+Reader-facing names are Sequence library, Curated sequences, Formula families,
+and Research archive. Headings and controls describe what readers can do;
+release numbers, development milestones, and source archive filenames belong
+in reproducibility records rather than the browsing interface. Record IDs,
+original source notes, exact exports, reference dates, and attribution remain
+available for citation and reproduction.
+
 The sequence routes use the site's green tones by default. The visible Color
 scheme buttons switch between Site green and Black & white; Light/Dark/System
 is a separate display control. Choices persist across sequence routes. Switching

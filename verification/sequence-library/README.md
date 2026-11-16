@@ -1,9 +1,9 @@
 # Finite sequence-library evidence
 
-Current evidence: `run-007/manifest.json`, status `completed`, with
-`run-007/checks.json`. The input contract is `contract.json`. Earlier runs are
-retained development records; their source hashes precede packaging, notation,
-attribution, portable line-ending refinements, and comparison-workbench packaging.
+Current evidence: `run-008/manifest.json`, status `completed`, with
+`run-008/checks.json`. The input contract is `contract.json`. This run replays
+the same finite assertion after interface copyediting. Earlier runs preserve
+the evidence for their recorded source inputs.
 
 The current exact checks cover 1,895 parameter records and all 45,480 stored
 terms / index maps. Independent comparisons include 2,880 reciprocal terms,
@@ -41,8 +41,9 @@ export and sharing, no-JavaScript tables, and enlarged text /
 forced colors. These checks are not accessibility certification. The
 mathematical proofreading scope is recorded in `PROOFREAD_REVIEW.md`.
 
-The readability browser suite measures visible text contrast in both page themes,
-checks light pages under a dark OS, preserves page preferences, and verifies new
-record offsets in HTML and CSV. The clean-light sample measured at least 7.17:1.
-All 5,733 pre-existing exact data exports remain unchanged. These are local
-implementation/self-review results; production revision checks are separate.
+The readability browser suite checks green and monochrome schemes, page display
+modes, visible text contrast, saved preferences, and record offsets in HTML and
+CSV. It also covers printing, no-JavaScript reading, enlarged text, forced colors,
+and shared plot colors. All 6,069 existing exact data exports remain unchanged
+after the editorial pass. These are local implementation/self-review results;
+production delivery checks are separate.

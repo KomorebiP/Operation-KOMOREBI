@@ -30,8 +30,8 @@ export function readWorkbenchLink(href,entries,snapshot){
   const raw=new URL(href).searchParams.get('wb');if(!raw)return null;if(raw.length>6000)throw Error('This comparison link is too long.');const data=JSON.parse(raw);
   if(data.schema!==1||!Array.isArray(data.sources)||data.sources.length>4)throw Error('Choose a comparison link with at most four sources.');const lookup=new Map(entries.map(entry=>[entry.id,entry])),state=validateWorkbench(data.state);
   const sources=data.sources.map(item=>{if(item.type==='local'){if(!lookup.has(item.id))throw Error('A linked local record is unavailable in this catalogue.');return localSource(lookup.get(item.id),href);}
-    if(item.type!=='oeis'||!/^A\d{6}$/.test(item.id)||!Number.isSafeInteger(item.position)||item.position<0||!Number.isSafeInteger(item.count)||item.count<1||item.count>256||item.snapshot!==snapshot)throw Error('A linked reference uses another snapshot or an invalid excerpt.');
-    return {key:`OEIS:${item.id}:${item.position}`,type:'oeis',id:item.id,title:item.id+' · reference excerpt awaiting load',pending:true,descriptor:item};});
+    if(item.type!=='oeis'||!/^A\d{6}$/.test(item.id)||!Number.isSafeInteger(item.position)||item.position<0||!Number.isSafeInteger(item.count)||item.count<1||item.count>256||item.snapshot!==snapshot)throw Error('This shared OEIS excerpt does not match the available reference data. Add the excerpt again from an OEIS search.');
+    return {key:`OEIS:${item.id}:${item.position}`,type:'oeis',id:item.id,title:item.id+' · OEIS excerpt · select Load OEIS excerpts',pending:true,descriptor:item};});
   if(new Set(sources.map(source=>source.key)).size!==sources.length)throw Error('A comparison link contains duplicate sources.');if(state.alignment==='indices'&&sources.some(source=>source.type==='oeis'))throw Error('Use position alignment for reference excerpts.');return {sources,state};
 }
 const escape=value=>'"'+String(value??'').replaceAll('"','""')+'"';

@@ -115,8 +115,8 @@ def structured_entry(entry, graph):
     source=entry['source'] if entry['source'].startswith('https:') else '../'+entry['source']
     reference=('<p><a href="https://oeis.org/'+entry['oeis']+'">OEIS '+entry['oeis']+' — comments, bibliography, programs and history</a></p>' if entry['oeis'] else '')
     # Keep the finite snapshot attribution and names in the existing source section.
-    snapshot=entry_body(entry,'../').split('<details><summary>OEIS snapshot matches',1)
-    snapshot_html='<details><summary>OEIS snapshot matches'+snapshot[1] if len(snapshot)>1 else '<p>No six-term comparison recorded in the loaded snapshot.</p>'
+    snapshot=entry_body(entry,'../').split('<details><summary>OEIS comparisons',1)
+    snapshot_html='<details><summary>OEIS comparisons'+snapshot[1] if len(snapshot)>1 else '<p>No six-term comparison recorded in the loaded snapshot.</p>'
     return (reading_block(entry)
         +'<section id="formulas"><h2>Formulas and recurrences</h2><div class="sa-typeset arithmatex" tabindex="0" role="region" aria-label="Typeset defining formula" hidden>\\['+e(entry['reading']['tex'])+'\\]</div><details class="sa-plain-formula" open><summary>Plain text formula</summary><p id="sa-entry-formula" class="sa-formula">'+e(entry['formula'])+'</p></details><p>'+e(entry['recurrence'])+'</p><button type="button" data-copy-entry="sa-entry-formula" hidden>Copy formula</button>'+formula_block(entry)+'</section>'
         '<section id="examples"><h2>Comments and examples</h2><p>'+e(entry['example'])+'</p></section>'
@@ -139,7 +139,7 @@ def entry_body(entry, prefix=''):
         '<p class="sa-terms">'+e(', '.join(entry['terms'][:12]))+'…</p>'
         '<p><a href="'+e(source)+'">Read the definition and derivation</a>'
         +(' · <a href="https://oeis.org/'+entry['oeis']+'">Reference '+entry['oeis']+'</a>' if entry['oeis'] else '')+'</p>'
-        + ('<details><summary>OEIS snapshot matches</summary><p>Finite contiguous matches in the recorded snapshot; matching terms alone do not prove sequence identity. Positions count from zero within the exported excerpt, not the sequence’s mathematical offset. Reference names are credited to <a href="https://oeis.org/">The Online Encyclopedia of Integer Sequences</a> under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</p><ul>'+match_html+'</ul></details>' if matches else
+        + ('<details><summary>OEIS comparisons</summary><p>Finite contiguous matches in the recorded snapshot; matching terms alone do not prove sequence identity. Positions count from zero within the exported excerpt, not the sequence’s mathematical offset. Reference names are credited to <a href="https://oeis.org/">The Online Encyclopedia of Integer Sequences</a> under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</p><ul>'+match_html+'</ul></details>' if matches else
            '<p class="sa-note">No six-term match recorded in the loaded reference snapshot. This is not evidence of novelty.</p>')
         +('<p class="sa-note">Showing '+str(len(matches))+' of '+str(len(all_matches))+' finite snapshot hits. The catalogue JSON retains all recorded comparisons.</p>' if len(all_matches)>12 else ''))
 
@@ -157,7 +157,7 @@ def search_section(entries):
 <div class="sa-search-examples" aria-label="Example searches"><span>Try:</span><button type="button" data-search-example="n:4 r:2">n:4 r:2</button><button type="button" data-search-example='name:"ordered bell"'>ordered Bell</button><button type="button" data-search-example="1, ?, 69">1, ?, 69</button><button type="button" data-search-example="-tag:benchmark">without benchmarks</button></div>
 <div class="sa-search-actions"><button type="button" id="sa-share-search">Copy search link</button><a href="#catalogue">Browse entry details</a><button type="button" id="sa-show-saved" aria-controls="sa-results" aria-pressed="false"><span id="sa-saved-count">Saved entries</span></button></div></div>
 <p id="sa-search-error" class="sa-error" role="alert" hidden></p><p id="sa-search-status" role="status" aria-live="polite" aria-atomic="true">'''+str(len(entries))+''' entries. Browse the complete catalogue below without JavaScript.</p>
-<p><a id="sa-archive-search" href="sequence-archive.html#records">Search the 90 recovered research records →</a> · definitions, exact offsets, review stages and modular plots</p>
+<p><a id="sa-archive-search" href="sequence-archive.html#records">Search the 90 research archive records →</a> · definitions, exact offsets, review stages and modular plots</p>
 <div id="sa-search-results" hidden><h3 id="sa-results-title" tabindex="-1">Search results</h3><ol id="sa-results" class="sa-results"></ol><div id="sa-empty" hidden><p>No catalogue entries match this search. Try fewer words, another topic, or a shorter term pattern.</p><div id="sa-suggestions"></div></div><button type="button" id="sa-more-results" hidden>Show more results</button></div>
 <details class="sa-search-help"><summary>Search help and examples</summary><div id="sa-query-help"><p>Words are combined with AND: <code>bell factorial</code> finds entries containing both. Quotes keep a phrase together. Use <code>|</code> for alternatives and a leading minus to exclude a word or field.</p>
 <dl><dt><code>name:"ordered bell"</code></dt><dd>Search entry names.</dd><dt><code>n:4 r:2</code></dt><dd>Select reciprocal spacing N and power r.</dd><dt><code>formula:convolution</code></dt><dd>Search definitions and recurrences.</dd><dt><code>tag:partitions -name:fubini</code></dt><dd>Combine a topic with an exclusion.</dd><dt><code>id:KSEQ-7 | oeis:A000364</code></dt><dd>Find a local identifier or recorded OEIS reference.</dd><dt><code>1, ?, 69</code></dt><dd>Match consecutive integer terms, allowing one unknown value. Match locations are shown in the results.</dd></dl>
@@ -218,7 +218,7 @@ def build(site):
         for entry in entries:
             entry['matches'] = snapshot['matches'].get(entry['id'], [])
     data = dict(schema=1, entries=[dict(entry,formulas=formula_variants(entry)) for entry in entries], snapshot=snapshot,
-        scope='Search covers the curated Komorebi catalogue. OEIS snapshot matches are finite comparisons, not originality or identity proofs.')
+        scope='Search covers the curated Komorebi catalogue. OEIS comparisons are finite comparisons, not originality or identity proofs.')
     raw = json.dumps(data, ensure_ascii=False, separators=(',', ':'))+'\n'
     site.write('assets/sequence-atlas-data.json', raw)
     version = lambda name: hashlib.sha256((site.root/'website/assets'/name).read_bytes()).hexdigest()[:12]
@@ -226,12 +226,12 @@ def build(site):
     cards = ''.join('<article class="sa-card" data-sequence="'+x['id']+'"><p class="sa-label">'+x['id']+'</p><h3><a href="sequences/'+x['id']+'.html">'+e(x['title'])+'</a></h3>'
         +'<p class="sa-terms">'+e(', '.join(x['terms'][:8]))+'…</p><details class="sa-card-detail"><summary>Formula, sources, and reference matches</summary>'+entry_body(x)+'</details><div class="sa-card-actions"><button type="button" data-load="'+x['id']+'" hidden>Explore this sequence</button><button type="button" data-save-sequence="'+x['id']+'" aria-pressed="false" hidden>Save entry</button></div></article>' for x in entries)
     options = ''.join('<option value="'+x['id']+'">'+e(x['title'])+'</option>' for x in entries)
-    snapshot_note = ('Reference snapshot retrieved '+e(snapshot['retrieved_at'])+'; '+str(snapshot['sequence_count'])+' exported sequences scanned.' if snapshot else
-        'No OEIS bulk snapshot has been loaded. Reference links remain available; catalogue search is local.')
+    snapshot_note = ('OEIS reference data downloaded '+e(snapshot['retrieved_at'][:10])+'; '+str(snapshot['sequence_count'])+' exported sequences scanned.' if snapshot else
+        'OEIS reference data is unavailable. Reference links remain available; catalogue search is local.')
     body = css+'''<div class="sequence-atlas" id="sequence-atlas">
 <header class="sa-intro"><p class="sa-label">Komorebi / sequences and formulas</p><h1>Find a sequence.<br><em>Explore its structure.</em></h1>
 <p>Follow exact integer sequences from their formulas to their plots. Compare families, change the modulus, and return to the derivations.</p>
-<nav aria-label="Atlas sections"><a href="#explorer">Plot explorer</a><a href="#catalogue">Sequence catalogue</a><a href="sequence-archive.html">Research library · 90 records</a><a href="#reference">Sources and scope</a></nav></header>
+<nav aria-label="Atlas sections"><a href="#explorer">Plot explorer</a><a href="#catalogue">Sequence catalogue</a><a href="sequence-archive.html">Research archive · 90 records</a><a href="#reference">Sources and scope</a></nav></header>
 <noscript><p class="notice">The catalogue, formulas, term tables, and CSV downloads work without JavaScript. Enable JavaScript for interactive plots and filtering.</p></noscript>
 <section id="explorer" aria-labelledby="explorer-title"><h2 id="explorer-title" tabindex="-1">Plot explorer</h2>
 <div id="sa-workspace" hidden><div class="sa-controls">
@@ -261,10 +261,10 @@ def build(site):
 <p>These entries organize existing published definitions and classical benchmarks. Formula novelty and sequence novelty require separate review. A finite match does not prove identity; an absent match does not establish novelty. Period suggestions and residue frequencies describe the selected finite window.</p>
 <p>Integer terms, differences, sums, and residues are exact. Ratios and averages are exact fractions. Plot coordinates use floating-point approximations; logarithmic views omit nonpositive values. Modular views use the integer transform before any plotting approximation, and are unavailable for fraction-valued transforms.</p>
 <p>OEIS reference names and matching excerpts are credited to <a href="https://oeis.org/">The Online Encyclopedia of Integer Sequences</a> and the OEIS Foundation, under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. Matching and presentation are our adaptations. Each reference links to its OEIS entry. This atlas is an independent Komorebi project.</p>
-<p><a href="assets/sequence-atlas-data.json">Download catalogue JSON and snapshot metadata</a> · <a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/docs/SEQUENCE_ATLAS.md">Maintenance and reproducibility</a> · <a href="collection/demonstrations/SEQUENCE_SHAPES.html">Sequence derivations and Python experiments</a></p>
+<p><a href="assets/sequence-atlas-data.json">Download catalogue and reference data details</a> · <a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/docs/SEQUENCE_ATLAS.md">Sources and reproduction</a> · <a href="collection/demonstrations/SEQUENCE_SHAPES.html">Sequence derivations and Python experiments</a></p>
 </section></div>'''
     body=refine_body(body,entries)
-    body=body.replace('<figure class="sa-figure">','<div id="sa-plot-presets" class="sp-preset-bar" role="group" aria-label="Plot view presets"></div><p class="sa-note">View presets keep your sequence and index window. Appearance settings are shared with the research library.</p><div id="sa-plot-options"></div><figure class="sa-figure">')
+    body=body.replace('<figure class="sa-figure">','<div id="sa-plot-presets" class="sp-preset-bar" role="group" aria-label="Plot view presets"></div><p class="sa-note">View presets keep your sequence and index window. Appearance settings are shared across the sequence library.</p><div id="sa-plot-options"></div><figure class="sa-figure">')
     body='<link rel="stylesheet" href="assets/sequence-plot-options.css?v='+version('sequence-plot-options.css')+'">'+body
     discovery_script=(site.root/'website/assets/sequence-atlas-discovery.mjs').read_text(encoding='utf-8')
     for dependency in ('sequence-atlas-core.mjs','sequence-atlas-search.mjs'):
@@ -306,7 +306,7 @@ def build(site):
         '<div class="sa-controls">'+''.join(advanced)+'</div></details>')+body[controls.end():]
     body += '<script type="module" src="assets/sequence-atlas.js?v='+hashlib.sha256(script.encode()).hexdigest()[:12]+'"></script>'
     body='<link rel="stylesheet" href="assets/sequence-library.css?v='+version('sequence-library.css')+'">'+body+'<link rel="stylesheet" href="assets/sequence-reading.css?v='+version('sequence-reading.css')+'">'
-    body=body.replace('<nav class="sa-mode-nav"','<p class="sa-library-link"><a href="sequence-library.html">Search the full sequence and formula library →</a> · expanded families, multiple representations and full OEIS snapshot matching</p><nav class="sa-mode-nav"',1)
+    body=body.replace('<nav class="sa-mode-nav"','<p class="sa-library-link"><a href="sequence-library.html">Search the full sequence and formula library →</a> · formula families, equivalent representations and OEIS reference matching</p><nav class="sa-mode-nav"',1)
     site.page('sequences.html', 'Sequence and Formula Atlas', body)
     site.search.append(dict(title='Sequence and Formula Atlas', group='Collection', kind='Examples', work_ids=['paper-iv','monographs-special-functions'], url='sequences.html', text='Integer sequence formula catalogue exact modular plotting residues recurrence generating function OEIS comparison differences ratios partial sums'))
     for entry in entries:
