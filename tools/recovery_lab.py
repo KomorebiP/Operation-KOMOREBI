@@ -36,7 +36,7 @@ def build(site):
 <div class="rl-workspace"><section class="rl-setup" aria-labelledby="rl-setup-title"><h2 id="rl-setup-title">1. Define the information</h2>
 <fieldset id="rl-controls" disabled><legend class="sr-only">Measurements and questions</legend>
 <label class="lab-label" for="rl-dimension">Input coordinates<select id="rl-dimension"><option value="2" selected>2 coordinates</option><option value="3">3 coordinates</option><option value="4">4 coordinates</option></select></label>
-<p class="lab-control-note" id="rl-entry-help">Enter whole numbers from −99 to 99, or fractions such as −2/3 with denominator 1–99. Rows act on column vectors over the real numbers.</p>
+<p class="lab-control-note" id="rl-entry-help">Enter whole numbers from −99 to 99, or fractions such as −2/3 with a denominator from 1 to 99. Rows act on column vectors over the real numbers.</p>
 <h3>What can you measure? <span>y = Rx</span></h3>
 <p class="lab-control-note">Each checked row supplies one measurement. Uncheck a row to see what information disappears.</p>
 <div class="table-scroll rl-input-table" id="rl-r-matrix"></div>
@@ -63,7 +63,7 @@ def build(site):
 <section class="rl-motion" aria-labelledby="rl-motion-title"><div><p class="lab-kicker">Same information / different inputs</p>
 <h2 id="rl-motion-title">Move in an invisible direction.</h2>
 <p id="rl-motion-note">An invisible direction w satisfies Rw = 0. Moving from x to x + tw leaves every enabled measurement unchanged.</p></div>
-<p class="rl-control-help" id="rl-motion-help">Use the arrow keys on a slider, or the − and + buttons beside t. Home and End move to the ends. At t = 0 the inputs coincide. The pictures update without animation; exact values and descriptions are available below.</p>
+<p class="rl-control-help" id="rl-motion-help">Use the arrow keys on a slider, or the − and + buttons beside t. Home and End move to the ends. At t = 0, the inputs coincide. The pictures update without animation; exact values and descriptions are available below.</p>
 <fieldset id="rl-motion-controls" disabled><legend class="sr-only">Explore inputs with the same summary</legend>
 <div id="rl-base-inputs" class="rl-base-inputs"></div>
 <div class="lab-slider"><label for="rl-offset">Move along the invisible direction · t<output id="rl-offset-value" for="rl-offset" aria-live="off">1</output></label>

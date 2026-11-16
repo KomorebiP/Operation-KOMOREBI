@@ -137,14 +137,14 @@ Unzip this bundle, open a terminal in its folder, and run:
   python run_lean.py --source "PATH_FROM_THE_LIST" --output ../my-lean-run
 
 Use a new output directory for each run. First runs download the pinned Lean
-toolchain and Mathlib cache and can take several minutes and gigabytes of disk.
+toolchain and Mathlib cache. This can take several minutes and require several gigabytes of disk space.
 The runner executes native Lean, including the source's commands. Use it on
 source you intend to run. Nothing executes just by viewing the website.
 
 RUN_INPUTS.json records every staged source/configuration hash. RESULT.json and
 per-step logs distinguish setup failures, timeouts, compiler failures, warnings,
 and a clean compiler exit. A sorry warning is not a finished proof. No axiom or
-whole-paper audit is performed and collection coverage labels do not change.
+whole-paper audit is performed, and collection coverage labels do not change.
 
 Retained projects keep their own toolchain and lockfile. Files without a Lake
 project use a labelled reconstructed workspace: local imports are resolved to
@@ -155,7 +155,7 @@ in that environment, not a claim to have recovered the original setup.
 
 The bundle includes the retained Lean sources selected by the reading editions, plus
 source/configuration inputs for their Lake projects. Compiled objects, package
-caches, historical result logs and binary publication archives are omitted. Source/license paths and
+caches, historical result logs, and binary publication archives are omitted. Source/license paths and
 checksums are listed in CATALOG.json. Keep this bundle with a run's records.
 '''
     with zipfile.ZipFile(destination,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=6) as archive:
@@ -194,7 +194,7 @@ def build(reader):
 <p class="lean-run-help">Use a fresh output folder. The runner downloads the pinned toolchain and dependencies on its first run, then records diagnostics and source hashes.</p></section>
 <section class="lean-run-start"><h2>Run on your computer</h2><p><a class="button" download href="../downloads/komorebi-lean-runner.zip">Download Lean runner · {size} MB</a></p>
 <ol><li>Install Python 3.11+, Git, and <a href="https://lean-lang.org/install/">Elan, Lean’s toolchain manager</a>.</li><li>Unzip the bundle and open a terminal in its folder.</li><li>Choose a source above and run its command. Open <code>RESULT.json</code> and the logs in the new output folder.</li></ol>
-<p>Nothing runs when you browse this page. The downloaded runner executes native Lean on your computer. First runs can take several minutes and gigabytes of disk.</p></section>
+<p>Nothing runs when you browse this page. The downloaded runner executes native Lean on your computer. First runs can take several minutes and require several gigabytes of disk space.</p></section>
 <section class="lean-run-explain"><h2>Two environments, stated explicitly</h2><p><strong>Retained project:</strong> use the original Lake configuration, Lean pin, lockfile, and local source modules.</p><p><strong>Reconstructed workspace:</strong> keep the source bytes unchanged, collect its local imports, and use a fixed Lean/Mathlib environment. This is a new experiment rather than a replay of an absent project configuration. Ambiguous or missing imports stop preparation.</p>
 <p><strong>GitHub runs:</strong> repository maintainers can use the manual <a href="https://github.com/KomorebiP/Operation-KOMOREBI/actions/workflows/lean-source-run.yml">Lean source runner workflow</a>. Paste the selected repository path into its <strong>source</strong> input. The job checks that file and saves its result and logs as an artifact.</p>
 <p>Compiler errors, warnings, missing imports, and timeouts remain visible. A clean compiler exit does not audit axioms or establish that the entire paper is formalized. Existing coverage labels stay attached to their recorded evidence.</p>

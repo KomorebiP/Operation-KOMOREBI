@@ -250,7 +250,7 @@ class Browser:
             if title=='Lean' and has_lean:
                 text += 'Start with the '+self.setup_link(c,page)+' and the build instructions below. Check the correspondence records to see which written claims the Lean declarations cover. Source links lead to `.lean` files. PDF guides explain the formalization.\n\n'
             if title=='Code' and links:
-                text += 'These links include code, examples, checks, or build tools. Read the '+self.setup_link(c,page)+' for setup instructions and what each command does. All software is beta and work in progress.\n\n'
+                text += 'These links include code, examples, checks, or build tools. Read the '+self.setup_link(c,page)+' for setup instructions and an explanation of what each command does. All software is in beta and remains a work in progress.\n\n'
             if title=='Lean' and links and not has_lean:
                 text += 'The links below are guides and claim maps. No Lean source is linked here. See the [evidence record](#evidence) for the recorded coverage.\n\n'
             text += '\n'.join('- '+item for item in links)+'\n' if links else empty+'\n'
@@ -295,7 +295,7 @@ class Browser:
 
 [Searchable website](https://KomorebiP.github.io/Operation-KOMOREBI/) · [Reading routes](READING_ROUTES.md) · [Hand-worked examples](HAND_WORKED_EXAMPLES.md) · [Glossary](GLOSSARY.md) · [Reading downloads](DOWNLOADS.md)
 
-Browse by [mathematics, computer science, physics, or other](https://KomorebiP.github.io/Operation-KOMOREBI/works.html) and combine those filters with **completion stage**, **Lean coverage**, **evidence basis**, publication type, and a text query. The [full-text search](https://KomorebiP.github.io/Operation-KOMOREBI/search.html) applies the same work-level classifications to indexed reading pages, claims, code, and guides. Or go directly to [written statements and proofs](browse/PROOFS.md), [Lean sources](browse/LEAN.md), or [code and scripts](browse/CODE.md).
+Browse [mathematics, computer science, physics, and other fields](https://KomorebiP.github.io/Operation-KOMOREBI/works.html) and combine those filters with **completion stage**, **Lean coverage**, **evidence basis**, publication type, and a text query. The [full-text search](https://KomorebiP.github.io/Operation-KOMOREBI/search.html) applies the same work-level classifications to indexed reading pages, claims, code, and guides. Or go directly to [written statements and proofs](browse/PROOFS.md), [Lean sources](browse/LEAN.md), or [code and scripts](browse/CODE.md).
 
 Each work has its own page with **Read**, **Written proofs**, **Lean**, **Code**, and **Evidence** sections. **PDF** opens a reading file. **Text** opens editable TeX or other source text. **Lean guide** opens explanatory reading. **Lean sources** leads to `.lean` files. Code links can include research utilities and build scripts. Read the edition's README before running them.
 
@@ -308,7 +308,7 @@ Each work has its own page with **Read**, **Written proofs**, **Lean**, **Code**
 | Physics | [Physics works](https://KomorebiP.github.io/Operation-KOMOREBI/works.html?discipline=physics#catalog-results) |
 | Other | [Methodology and cross-disciplinary works](https://KomorebiP.github.io/Operation-KOMOREBI/works.html?discipline=other#catalog-results) |
 
-These are editorial primary categories. The files remain in their original repository paths so source links and formal evidence references are preserved. A finished reading edition is not necessarily a fully proved research endpoint. **Completion**, **Lean coverage**, and **evidence basis** are independent, with details in the [completion guide](COMPLETION_STATUS.md) and [status catalogue](STATUS_CATALOG.md). Filter values come from the maintained [project status manifest](../manifests/project-status.json), not inferred from a file name or its presence in a folder.
+These are editorial primary categories. The files remain in their original repository paths so source links and formal evidence references are preserved. A finished reading edition is not necessarily a fully proved research endpoint. **Completion**, **Lean coverage**, and **evidence basis** are independent, with details in the [completion guide](COMPLETION_STATUS.md) and [status catalogue](STATUS_CATALOG.md). Filter values come from the maintained [project status manifest](../manifests/project-status.json). They are not inferred from a file name or its presence in a folder.
 
 ## Choose a publication type
 
@@ -369,7 +369,7 @@ These are navigation links to preserved editions. See each work's evidence for t
             ('LEAN','Find Lean source files',{'lean','lean_setup','claims'},
              'Every work listed below has a selected `.lean` source file or directory. Setup instructions and correspondence maps are labeled separately. The recorded coverage text describes the existing assessment, not a new compiler run. Read the instructions for imports, toolchain requirements, and accepted execution records. Lean-guide PDFs appear on the work pages separately.'),
             ('CODE','Find code and scripts',{'code'},
-             'These are entry points to runtime code, examples, checks, and utilities supplied with each edition. Some are build or audit scripts. Read **Work overview** and the edition README for setup instructions and what each command does. All software remains beta / work in progress.')]:
+             'These are entry points to runtime code, examples, checks, and utilities supplied with each edition. Some are build or audit scripts. Read **Work overview** and the edition README for setup instructions and an explanation of what each command does. All software remains beta / work in progress.')]:
             page = 'docs/browse/'+name+'.md'
             text = '# '+title+'\n\n'+self.footer(page)+'\n'+intro+'\n\n'
             text += '<a id="collections"></a>\n\nJump to: '+' · '.join('['+t+'](#'+g+')' for g,t in GROUPS.items())+'\n'

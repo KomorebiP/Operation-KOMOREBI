@@ -63,7 +63,7 @@ Start with the [edition guide](../../monographs/sufficient-resolution/README.md)
 
 ## Code
 
-These links include code, examples, checks, or build tools. Read the [edition guide](../../monographs/sufficient-resolution/README.md) for setup instructions and what each command does. All software is beta and work in progress.
+These links include code, examples, checks, or build tools. Read the [edition guide](../../monographs/sufficient-resolution/README.md) for setup instructions and an explanation of what each command does. All software is in beta and remains a work in progress.
 
 - [Script: audit_release.py](../../monographs/sufficient-resolution/audit_release.py)
 

@@ -68,20 +68,20 @@ BOOK = dict(work=WORK, label='Physics', title='Physics: Resolution, dynamics, an
     reading_introduction='Read the complete foundations, continuum Dirac, spectral generator, gauge, gravity, adic, covariant fiber, and cosmology treatments. '
         'Begin with packets, currents, open dynamics, refinement, and operator domains; '
         'continue through PH01–PH12, the exact three-mode example, Fourier completion '
-        'and the self-adjoint Hamiltonian on the three-torus, then its strong generator, resolvent limits '
+        'and the self-adjoint Hamiltonian on the three-torus, then its strong generator, resolvent limits, '
         'and quantitative evolution estimates. Continue to endpoint covariance, finite matter–field dynamics, '
-        'ordered holonomy and geometric refinement, then constrained geometry, regular canonical reduction '
+        'ordered holonomy and geometric refinement, then constrained geometry, regular canonical reduction, '
         'and spherical strong-field models. Arithmetic refinement follows through normalized Haar packets, '
-        'spectral elimination and compatible Hilbert-space limits. The covariant fiber model follows through '
-        'stress exchange, canonical closure, production and ultraviolet bounds, including its failed benchmark '
+        'spectral elimination, and compatible Hilbert-space limits. The covariant fiber model follows through '
+        'stress exchange, canonical closure, production, and ultraviolet bounds, including its failed benchmark '
         'energy test and the computational evidence appendix. Cosmology continues from a prescribed distribution '
         'through background and perturbation geometry, kinetic transport, CMB, nonlinear structure, baryonic '
-        'response and linked rejection tests. One hundred four original figures accompany the text.',
+        'response, and linked rejection tests. One hundred four original figures accompany the text.',
     reading_note='These HTML reading sequences accompany the 572-page Physics book. '
         'The foundations, continuum Dirac, spectral generator, gauge, gravity, adic, covariant fiber, and cosmology treatments are complete here; '
         'all five visual atlases, the verification scope, and five formalization and verification companions '
         'are also available in HTML. Authored wording, equations, and numbered statements '
-        'are preserved. This reading edition adds no proof audit, scientific run or Lean execution.')
+        'are preserved. This reading edition adds no proof audit, scientific run, or Lean execution.')
 BOOK['table_reading_aids'].update({(row['source'],row['id']):
     {key:value for key,value in row.items() if key not in {'source','id'}}
     for row in DATA['fiber_table_aids']+DATA['cosmology_table_aids']})
