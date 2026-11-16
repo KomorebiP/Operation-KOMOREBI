@@ -5,7 +5,7 @@ import {modularCycle} from '../website/assets/sequence-modular-core.mjs';
 import {identifyLocal,identifyInput} from '../website/assets/sequence-discovery-core.mjs';
 import {composeScalarTransfers,relationPath} from '../website/assets/sequence-graph-core.mjs';
 import {createNotebook,validateNotebook,readNotebooks,writeNotebooks,notebookLink,readNotebookLink,NOTEBOOK_KEY} from '../website/assets/sequence-notebook-core.mjs';
-import {familySource,customSource,readWorkbenchLink,workbenchLink,WORKBENCH_DEFAULTS} from '../website/assets/sequence-workbench-core.mjs';
+import {familySource,customSource,descriptor,readWorkbenchLink,workbenchLink,WORKBENCH_DEFAULTS} from '../website/assets/sequence-workbench-core.mjs';
 import {searchEntries} from '../website/assets/sequence-atlas-search.mjs';
 import {formulaLatex} from '../website/assets/math-display.mjs';
 test('weighted k-step powers agree with hand-expanded denominator and seeded Lucas values',()=>{
@@ -70,4 +70,12 @@ test('notebooks round-trip Unicode without executing data or overwriting unreada
 test('family and pasted comparison descriptors restore exact values and normalization',()=>{
   const family=familySource('congruential',{N:2,j:1,count:4}),custom=customSource({title:'Pasted',offset:3,terms:['9007199254740993','-2','0']}),url=workbenchLink('https://example.test/sequence-library.html',[family,custom],WORKBENCH_DEFAULTS),restored=readWorkbenchLink(url,[],'snapshot');
   assert.deepEqual(restored.sources[0].terms,['1','-1','7','-31']);assert.match(restored.sources[0].indexKind,/numerator/);assert.equal(restored.sources[1].terms[0],'9007199254740993');assert.equal(restored.sources[1].offset,3);assert.throws(()=>customSource({title:'Bad',offset:0,terms:['1.5']}));
+});
+
+test('notebook fragments avoid host request limits, preserve legacy links and retain large JSON workspaces',()=>{
+  const notebook=createNotebook('Long research notes','x'.repeat(8000),{},'n-long'),link=notebookLink('https://example.test/library?q=old',notebook),url=new URL(link);
+  assert.ok(link.length>10000);assert.equal(url.search,'');assert.equal(link.split('#')[0],'https://example.test/library');assert.deepEqual(readNotebookLink(link),notebook);
+  const legacy=new URL('https://example.test/library#research-notebooks');legacy.searchParams.set('notebook',new URLSearchParams(url.hash.split('?')[1]).get('notebook'));assert.deepEqual(readNotebookLink(legacy.href),notebook);
+  const large=customSource({title:'Large exact integers',offset:0,terms:Array(64).fill('9'.repeat(100))});assert.throws(()=>workbenchLink('https://example.test/library',[large],WORKBENCH_DEFAULTS),/too large/);
+  const data={schema:1,state:WORKBENCH_DEFAULTS,sources:[descriptor(large)]},local=new URL('https://example.test/library');local.searchParams.set('wb',JSON.stringify(data));assert.equal(readWorkbenchLink(local.href,[],'snapshot').sources[0].terms.length,64);
 });
