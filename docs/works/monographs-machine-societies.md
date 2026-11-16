@@ -55,7 +55,7 @@ No Lean source or guide is linked here. See the Lean status above and the [evide
 
 ## Code
 
-These links include code, examples, checks, or build tools. Read the [edition guide](../../monographs/machine-societies/README.md) for setup instructions and what each command does. All software is beta and work in progress.
+These links include code, examples, checks, or build tools. Read the [edition guide](../../monographs/machine-societies/README.md) for setup instructions and an explanation of what each command does. All software is in beta and remains a work in progress.
 
 - [Code / scripts: code](../../monographs/machine-societies/code/)
 

@@ -97,7 +97,7 @@ Start with the [edition guide](../../monographs/quantum-and-circuits/README.md) 
 
 ## Code
 
-These links include code, examples, checks, or build tools. Read the [edition guide](../../monographs/quantum-and-circuits/README.md) for setup instructions and what each command does. All software is beta and work in progress.
+These links include code, examples, checks, or build tools. Read the [edition guide](../../monographs/quantum-and-circuits/README.md) for setup instructions and an explanation of what each command does. All software is in beta and remains a work in progress.
 
 - [Portable formal replay wrapper (requires the external Lean kit)](../../monographs/quantum-and-circuits/release_tools/replay_formal.py)
 - [Symmetry packet implementation and exact checks](../../monographs/quantum-and-circuits/sources/symmetry/Symmetry_Collapse_in_Quantum_Computation_Source/code/)
