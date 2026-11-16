@@ -60,7 +60,7 @@ Start with the [maintained edition guide](../components/CONSTRUCTIVE_REPAIR.md) 
 
 ## Code
 
-These links include code, examples, checks, or build tools. Read the [maintained edition guide](../components/CONSTRUCTIVE_REPAIR.md) for setup instructions and what each command does. All software is beta and work in progress.
+These links include code, examples, checks, or build tools. Read the [maintained edition guide](../components/CONSTRUCTIVE_REPAIR.md) for setup instructions and an explanation of what each command does. All software is in beta and remains a work in progress.
 
 - [Code / scripts: python/komorebi_repair](../../packages/constructive-repair/python/komorebi_repair/)
 - [Code / scripts: tests](../../packages/constructive-repair/tests/)

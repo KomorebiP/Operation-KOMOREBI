@@ -175,7 +175,7 @@ x\mapsto\sum_{r=1}^R\ell_r(x,\ldots,x)/r!
 Q_{\mathrm{obs}}=I-LL^+
 ```
 
-**Scope.** Fixed finite map $L:X\to Y$. In orthonormal coordinates use the ordinary Moore–Penrose inverse. In nonorthonormal coordinates use the declared metric adjoints and weighted inverse. The projector acts on $Y$.
+**Scope.** Fixed finite map $L:X\to Y$. In orthonormal coordinates, use the ordinary Moore–Penrose inverse. In nonorthonormal coordinates, use the declared metric adjoints and weighted inverse. The projector acts on $Y$.
 
 **Keep in view.** This projector acts on the residual codomain, not on the domain of L.
 
@@ -339,7 +339,7 @@ Q_rF(P_ax,P_by)
 (C_qf)(z)=f(qz)
 ```
 
-**Scope.** Fixed q on formal series or entire functions. For functions on a bounded domain require q times that domain to lie in the function domain.
+**Scope.** Fixed q on formal series or entire functions. For functions on a bounded domain, require q times that domain to lie in the function domain.
 
 **Keep in view.** Pullback itself does not require contraction on entire functions. Contraction is an analytic guard for specific feedback theorems.
 

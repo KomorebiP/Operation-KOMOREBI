@@ -55,7 +55,7 @@ I_\mu f=\sum_{j=1}^{m}w_j f(x_j)
 I_\mu p=\sum_\alpha c_\alpha m_\alpha,\qquad m_\alpha=\int x^\alpha\,d\mu
 ```
 
-**Scope.** Finite polynomial support and exact known moments. In a different polynomial basis the covector must be transformed with the basis witness.
+**Scope.** Finite polynomial support and exact known moments. In a different polynomial basis, the covector must be transformed with the basis witness.
 
 **Keep in view.** For monomial-to-basis synthesis B, the row is m transposed times B. Arbitrary weights labelled with a basis name are not a basis proof.
 
