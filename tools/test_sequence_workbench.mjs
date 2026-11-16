@@ -5,6 +5,7 @@ import vm from 'node:vm';
 import {WORKBENCH_DEFAULTS,validateWorkbench,localSource,referenceSource,workbenchRows,agreements,readWorkbenchLink,workbenchLink,comparisonCSV} from '../website/assets/sequence-workbench-core.mjs';
 import {readSaved,writeSaved,STORAGE_KEY} from '../website/assets/sequence-atlas-saved.mjs';
 import {referenceQuery,referenceValues,referencePositions,referenceNameMatches} from '../website/assets/sequence-oeis-core.mjs';
+import {identifyInput,discoveryProbes,matchProbe} from '../website/assets/sequence-discovery-core.mjs';
 const entry=(id,offset,terms)=>({id,title:id,offset,terms:terms.map(String),url:'records/'+id+'.html',collection:'atlas'});
 const a=entry('KSEQ-000001',2,[0,-1,'9007199254740993',7]),b=entry('KOM085',3,[0,-1,'9007199254740992',7]);
 test('windows preserve exact arithmetic and stored prefix transformations',()=>{
@@ -43,10 +44,12 @@ test('scoped saves preserve other collections and reject oversized writes',()=>{
 });
 test('worker restores selected slices and rejects absent or malformed excerpts',async()=>{
   // Run the actual worker body over bounded exported-line fixtures, without a network request.
-  const code=fs.readFileSync(new URL('../website/assets/sequence-oeis-worker.mjs',import.meta.url),'utf8').replace(/^import .*;\r?\n/,'').replaceAll('import.meta.url',"'https://example.test/assets/sequence-oeis-worker.mjs'");
-  const messages=[],files={'stripped.gz':'A000001 ,99,0,-1,9007199254740993,7,\n','names.gz':'A000001 Test reference\n'};
-  const self={postMessage:data=>messages.push(data)},context=vm.createContext({self,referenceQuery,referenceValues,referencePositions,referenceNameMatches,URL,Blob,TextDecoderStream,DecompressionStream,Uint8Array,fetch:async url=>new Response(files[new URL(url).pathname.split('/').pop()])});
+  const code=fs.readFileSync(new URL('../website/assets/sequence-oeis-worker.mjs',import.meta.url),'utf8').replace(/^import .*;\r?\n/gm,'').replaceAll('import.meta.url',"'https://example.test/assets/sequence-oeis-worker.mjs'");
+  const messages=[],files={'stripped.gz':'A000001 ,99,0,-1,9007199254740993,7,\nA000045 ,99,0,1,1,2,3,5,8,13,21,34,\n','names.gz':'A000001 Test reference\nA000045 Fibonacci numbers\n'};
+  const self={postMessage:data=>messages.push(data)},context=vm.createContext({self,referenceQuery,referenceValues,referencePositions,referenceNameMatches,identifyInput,discoveryProbes,matchProbe,URL,Blob,TextDecoderStream,DecompressionStream,Uint8Array,fetch:async url=>new Response(files[new URL(url).pathname.split('/').pop()])});
   vm.runInContext(code,context);
   await self.onmessage({data:{type:'records',records:[{id:'A000001',position:2,count:2}]}});assert.equal(messages.at(-1).type,'results');assert.deepEqual(Array.from(messages.at(-1).results[0].values),['-1','9007199254740993']);
   for(const records of [[{id:'A000001',position:99,count:1}],[{id:'A999999',position:0,count:1}],[],[{id:'bad',position:0,count:1}],[{id:'A000001',position:0,count:257}]]){await self.onmessage({data:{type:'records',records}});assert.equal(messages.at(-1).type,'error');}
+  files['stripped.gz']='A000045 ,99,0,1,1,2,3,5,8,13,21,34,\n';files['names.gz']='A000045 Fibonacci numbers\n';
+  await self.onmessage({data:{type:'discover',text:'0,2,2,4,6,10,16,26'}});assert.equal(messages.at(-1).type,'results');const hit=messages.at(-1).results.find(r=>r.id==='A000045');assert.ok(hit);assert.equal(messages.at(-1).license,'CC-BY-SA-4.0');assert.ok(messages.at(-1).snapshot.stripped_sha256);assert.match(hit.inputOperation,/gcd 2/);assert.equal(hit.targetIndex,1);assert.equal(hit.sample_position,0);assert.equal(hit.title,'Fibonacci numbers');assert.deepEqual(Array.from(hit.inputPositions),[0,1,2,3,4,5,6,7]);
 });

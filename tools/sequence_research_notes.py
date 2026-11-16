@@ -58,6 +58,7 @@ def research_connections():
 
 
 def entry_details(entry):
+    from sequence_generalized import links_for
     values=list(map(int,entry['terms']));start=entry['offset'];first=next((start+i for i,value in enumerate(values) if value),None);g=0
     for value in values:g=gcd(g,value)
     normalization='Stored integers at their stated indices; consult the defining formula for its generating-function normalization.'
@@ -78,4 +79,4 @@ def entry_details(entry):
     tools=''
     if not entry.get('triangle') and entry['id']!='KOM084':tools='<p><a href="../sequence-library.html?'+e(urlencode({'tr-source':entry['id']}))+'#transfers">Build a transfer from this sequence</a></p>'
     citation='Komorebi Sequence Library. '+entry['id']+': '+entry['title']+'. '+BASE+(entry.get('url') or ('sequences/' if entry['id'].startswith('KSEQ') else 'sequence-archive/' if entry['id'].startswith('KOM') else 'sequence-families/')+entry['id']+'.html')
-    return '<section id="sequence-details"><h2>Sequence details and connections</h2><p>'+e(normalization)+'</p><dl class="sar-facts">'+''.join('<div><dt>'+e(label)+'</dt><dd>'+e(value)+'</dd></div>' for label,value in facts)+'</dl><p>These sign, support and GCD observations describe the stored window.</p>'+connection+tools+'<details><summary>Cite this record</summary><p class="sr-citation">'+e(citation)+'</p><button type="button" data-copy-citation hidden>Copy citation</button><label for="sr-citation-copy" hidden>Copy this citation<textarea id="sr-citation-copy" readonly></textarea></label><p role="status"></p></details></section>'
+    return '<section id="sequence-details"><h2>Sequence details and connections</h2><p>'+e(normalization)+'</p><dl class="sar-facts">'+''.join('<div><dt>'+e(label)+'</dt><dd>'+e(value)+'</dd></div>' for label,value in facts)+'</dl><p>These sign, support and GCD observations describe the stored window.</p>'+links_for(entry)+connection+tools+'<details><summary>Cite this record</summary><p class="sr-citation">'+e(citation)+'</p><button type="button" data-copy-citation hidden>Copy citation</button><label for="sr-citation-copy" hidden>Copy this citation<textarea id="sr-citation-copy" readonly></textarea></label><p role="status"></p></details></section>'

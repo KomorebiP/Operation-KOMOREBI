@@ -10,5 +10,5 @@ export function createReferenceClient(){
       worker.postMessage({type,...payload});
     }catch(error){active=null;reject(error);}});
   }
-  return {get busy(){return Boolean(active);},search:(query,onProgress)=>request('search',{query},onProgress),records:(records,onProgress)=>request('records',{records},onProgress),cancel:stop};
+  return {get busy(){return Boolean(active);},search:(query,onProgress)=>request('search',{query},onProgress),discover:(text,onProgress)=>request('discover',{text},onProgress),records:(records,onProgress)=>request('records',{records},onProgress),cancel:stop};
 }
