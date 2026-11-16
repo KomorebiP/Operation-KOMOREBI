@@ -28,7 +28,7 @@ def build(site):
 <h1>Three actions.<br><em>One recovered operator.</em></h1>
 <p class="cl-lead">Nine states. Twenty-one unknown coefficients. Reveal what each probe tells you, then see how imperfect data change the answer.</p>
 <p>A probe supplies a known nine-component vector and receives the full vector H v. The experiment uses the published real, three-orbital family with two alpha electrons and one beta electron.</p>
-<nav class="cl-route" aria-label="Chemistry learning route"><a href="#cl-experiment">1. Experiment</a><a href="#cl-worked">2. Worked calculation</a><a href="read/computational-chemistry/three-queries.html">3. Theorem</a><a href="read/computational-chemistry/reproduce.html">4. Replay</a></nav>
+<nav class="cl-route" aria-label="Chemistry learning route"><a href="#cl-experiment">1. Experiment</a><a href="#cl-worked">2. Worked calculation</a><a href="read/computational-chemistry/three-queries.html">3. Theorem</a><a href="read/computational-chemistry/reproduce.html">4. Replay</a><a href="chemistry-responses.html">5. Full-model response scans</a></nav>
 </header>
 <p id="cl-load-status" role="status">Loading the experiment and checking its fixture identity. The worked calculation below is available now.</p><button id="cl-retry" type="button" hidden>Retry loading the experiment</button>
 <noscript><p>The interactive experiment needs JavaScript. Read the worked calculation below, then follow the theorem or download the replay bundle.</p></noscript>
