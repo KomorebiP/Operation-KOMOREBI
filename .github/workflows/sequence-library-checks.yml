@@ -69,12 +69,15 @@ jobs:
           mkdir -p .sequence-checks/reports
           python -B -m unittest discover -s tools -p 'test_sequence_families.py' -v 2>&1 | tee .sequence-checks/reports/family-tests.log
           python -B -m unittest discover -s tools -p 'test_sequence_library.py' -v 2>&1 | tee .sequence-checks/reports/library-tests.log
-          node --test tools/test_sequence_library.mjs tools/test_sequence_math.mjs tools/test_sequence_research.mjs 2>&1 | tee .sequence-checks/reports/node-tests.log
+          node --test tools/test_sequence_library.mjs tools/test_sequence_math.mjs tools/test_sequence_research.mjs tools/test_sequence_workbench.mjs 2>&1 | tee .sequence-checks/reports/node-tests.log
           python -B tools/audit_sequence_archive.py --output .sequence-checks/reports/archive-audit.json
       - name: Build the sequence surface with production rendering
         run: |
           python -B tools/fetch_reader_runtime.py --output .sequence-checks/mathjax 2>&1 | tee .sequence-checks/reports/mathjax.log
           python -B tools/build_sequence_preview.py --output .sequence-checks/site --mathjax-root .sequence-checks/mathjax 2>&1 | tee .sequence-checks/reports/build.log
+      - name: Audit every generated parameter link against stored exact values
+        run: |
+          python -B tools/audit_sequence_links.py --node node --output .sequence-checks/reports/link-audit/result.json 2>&1 | tee .sequence-checks/reports/link-audit.log
       - name: Check desktop, mobile and static family pages
         env:
           NODE_PATH: ${{ runner.temp }}/sequence-browser/node_modules

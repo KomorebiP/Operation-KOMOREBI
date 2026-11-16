@@ -28,3 +28,12 @@ export function librarySearch(entries,families,state,saved=new Set()){
     (!s.paper||entry.paper_refs?.includes(s.paper))
   );
 }
+
+export function librarySearchCSV(hits,scope,base){
+  const rows=scope==='families'
+    ?[['id','title','construction_type','parameter_domain','definition','notes','source_id','source_title','source','indexed_records','url'],
+      ...hits.map(({entry:e})=>[e.id,e.title,e.mode,e.domain,e.formula,e.note,e.paper,e.paper_title,e.source,e.record_ids.length,new URL(e.url,base).href])]
+    :[['id','title','family','collection','offset','formulas','construction_type','source','indexed_records','url'],
+      ...hits.map(({entry:e})=>[e.id,e.title,e.kind,e.collection,e.offset,e.formulas.length,e.mode||'',e.source||'',e.record_ids?.length??'',new URL(e.url,base).href])];
+  return rows.map(row=>row.map(value=>'"'+String(value??'').replaceAll('"','""')+'"').join(',')).join('\r\n')+'\r\n';
+}
