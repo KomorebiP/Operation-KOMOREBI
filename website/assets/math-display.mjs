@@ -107,6 +107,8 @@ export function formulaLatex(source,onFailure){
   }catch(error){onFailure?.(error.message);return null;}
 }
 
+export function readableFormulaParts(source){return formulaStatements(source.replace(/\.\s+(?=(?:[A-Z]|a\())/g,'.\n'));}
+
 let controller;
 export function enhanceMath(root){return controller?.enhance(root);}
 export function clearMath(root){window.MathJax?.typesetClear?.([root]);}
@@ -129,6 +131,11 @@ if(typeof document!=='undefined'&&!window.KomorebiMath){
     const source=items.length?items.map(item=>item.math).join('\n'):content(host.textContent);
     if(source)originals.set(host,source);hosts.add(host);
   }
+  function prettyReady(math){
+    if(!math)return false;
+    if(math.dataset.mathStructured==='true')return [...math.querySelectorAll('.arithmatex')].every(node=>node.querySelector('mjx-container')&&!node.querySelector('[data-mml-node=merror],mjx-merror'));
+    return Boolean(math.querySelector('mjx-container'))&&!math.querySelector('[data-mml-node=merror],mjx-merror');
+  }
   function show(){
     document.documentElement.dataset.mathDisplay=mode;if(select)select.value=mode;
     for(const host of hosts){
@@ -140,16 +147,22 @@ if(typeof document!=='undefined'&&!window.KomorebiMath){
     }
     for(const pair of pairs){
       if(!pair.isConnected){pairs.delete(pair);continue;}
-      const plain=pair.querySelector('[data-math-plain]'),math=pair.querySelector('[data-math-tex]'),ready=math?.querySelector('mjx-container')&&!math.querySelector('[data-mml-node="merror"],mjx-merror');
+      const plain=pair.querySelector('[data-math-plain]'),math=pair.querySelector('[data-math-tex]'),ready=prettyReady(math);
       const typed=mode==='typeset'&&ready;plain.hidden=Boolean(typed);math.hidden=!typed;pair.dataset.mathPairReady=ready?'true':'false';
       const legacy=pair.closest('[data-entry-id]');if(legacy)legacy.dataset.mathReady=ready?'true':'fallback';
     }
   }
   function mathNode(plain,tex){
+    const parts=tex?[]:readableFormulaParts(plain.textContent);
+    if(!tex&&parts.length>1){
+      const group=document.createElement('div');group.className='math-structured';group.dataset.mathTex='true';group.dataset.mathStructured='true';group.hidden=true;
+      for(const part of parts){const projected=formulaLatex(part);if(projected){const child=mathNode(plain,projected);child.hidden=false;group.append(child);}else{const prose=document.createElement('p');prose.textContent=part;group.append(prose);}}
+      return group;
+    }
     const math=document.createElement('div');math.className='arithmatex math-typeset';math.dataset.mathTex='true';math.hidden=true;math.tabIndex=0;math.setAttribute('role','region');math.setAttribute('aria-label',(plain.getAttribute('aria-label')||'Formula')+' · typeset; scroll horizontally if needed');if(tex)math.textContent='\\['+tex+'\\]';return math;
   }
   function pair(plain,tex){
-    if(!tex)return;const wrapper=document.createElement('div');wrapper.className='math-pair';
+    if(!tex&&readableFormulaParts(plain.textContent).length<2)return;const wrapper=document.createElement('div');wrapper.className='math-pair';
     plain.before(wrapper);wrapper.append(plain);plain.dataset.mathPlain='true';
     plain.removeAttribute('data-math-notation');const math=mathNode(plain,tex);wrapper.append(math);pairs.add(wrapper);plainRecords.set(plain,{source:plain.textContent,wrapper,math});capture(math);return math;
   }
@@ -160,7 +173,7 @@ if(typeof document!=='undefined'&&!window.KomorebiMath){
       if(record){
         if(record.source!==source){
           window.MathJax?.typesetClear?.([record.math]);record.math.remove();
-          const tex=formulaLatex(source),math=mathNode(plain,tex);plain.dataset.mathNotation=tex?'':'source';record.wrapper.append(math);record.source=source;record.math=math;capture(math);if(tex)pending.push(math);
+          const tex=formulaLatex(source),math=mathNode(plain,tex);plain.dataset.mathNotation=tex?'':'source';record.wrapper.append(math);record.source=source;record.math=math;capture(math);if(tex||math.dataset.mathStructured)pending.push(math);
         }
         continue;
       }
@@ -176,7 +189,7 @@ if(typeof document!=='undefined'&&!window.KomorebiMath){
     for(const host of root.querySelectorAll('.arithmatex'))capture(host);
     show();
     if(pending.length){queue=queue.then(async()=>{await domReady;await window.MathJax?.startup?.promise;if(!window.MathJax?.typesetPromise)return;
-      const live=pending.filter(node=>node.isConnected&&!node.querySelector('mjx-container'));
+      const live=pending.filter(node=>node.isConnected&&!prettyReady(node));
       if(live.length){const task=window.MathJax.startup.promise.then(()=>window.MathJax.typesetPromise(live));window.MathJax.startup.promise=task.catch(()=>{});await task;const removed=live.filter(node=>!node.isConnected);if(removed.length)window.MathJax.typesetClear(removed);}show();
     }).catch(()=>{show();announce('Typesetting is unavailable for this view. The original formula text remains available.');});}
     return queue;

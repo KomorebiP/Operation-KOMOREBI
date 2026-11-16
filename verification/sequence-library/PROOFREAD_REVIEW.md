@@ -83,3 +83,14 @@ The added generators reject nonintegral coefficients instead of truncating
 rational values. The original authored sources and the 6,069 prior exact data
 exports remain byte-identical. The row table and footer controls were checked
 at 1440/390/320px, with no-JavaScript, enlarged-text and forced-color reading.
+
+Mixed-definition presentation self-review:
+
+- Split prose and complete equations at top-level definition separators. Nested
+  hypergeometric parameter separators remain intact. No source string is edited.
+- Independently recognized equation parts are typeset; the remaining phrases
+  retain their source characters in readable paragraphs. The original complete
+  definition is restored in Plain text mode and retained in all downloads.
+- All 11 recognized equation parts from mixed definitions compiled through the
+  pinned runtime. The recovered KOM084 definition was visually inspected and
+  checked in both display modes at 1440/390/320px.

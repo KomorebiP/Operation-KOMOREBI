@@ -46,3 +46,9 @@ test('triangle row windows and polynomials retain sparse zeros, signs and variab
  assert.equal(trianglePolynomial(entry,1),'p(x)=-x - x^2');assert.equal(trianglePolynomial(entry,2),'p(x)=2x + 3x^2 + 6x^3 + 5x^4');
  assert.deepEqual(triangleWindow(entry,2),{start:4,size:5,view:'raw',scale:'linear',marks:'line',color:'single'});assert.throws(()=>triangleWindow(entry,3));
 });
+
+test('mixed source definitions separate prose from complete equations without splitting parameters',async()=>{
+ const {readableFormulaParts}=await import('../website/assets/math-display.mjs');
+ assert.deepEqual(readableFormulaParts('The row is indexed by n. P_0=1; P_(n+1)=(1+s)P_n.'),['The row is indexed by n.','P_0=1','P_(n+1)=(1+s)P_n.']);
+ assert.equal(readableFormulaParts('0F1(;1/2;z)').length,1);
+});

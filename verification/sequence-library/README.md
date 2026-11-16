@@ -79,7 +79,9 @@ The math selector is in the footer. The display pass removes empty-parameter
 dash placeholders and uses a hypergeometric argument bar, separates definition
 lines, stacks sum constraints, and fixes factorial/power binding. Source text
 is retained. Syntax checking compiles 524 representatives of 292 layouts;
-6,441 representations are recognized and 60 retain their literal source.
+6,441 complete representations are recognized. Mixed definitions separate prose
+from independently recognized equations; 11 such equation parts also compiled.
+Unrecognized notation and the original Plain text remain available.
 Triangle browser checks cover exact coordinates, restored row windows, row
 polynomials, roving keyboard links, coefficient wrapping, no-JavaScript tables,
 enlarged text and forced colors. See `triangles-browser.json`.
