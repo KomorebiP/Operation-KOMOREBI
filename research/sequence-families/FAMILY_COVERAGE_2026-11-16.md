@@ -11,7 +11,7 @@ archive. The index now contains 36 definitions: the original ten exact
 coefficient explorers and twelve analytic families, thirteen source-defined
 discrete constructions, and one classical reference collection. All 90 archived
 records have a family or reference home. These counts describe the index's
-organization; they are not a count of distinct new infinite families.
+organization. They are not a count of distinct new infinite families.
 
 The final membership sweep also assigns the three remaining curated scalar
 seeds (natural numbers, odd numbers and partition numbers) to the existing
@@ -138,7 +138,7 @@ a final report containing `status: passed`, all three viewport results and the
 completed JavaScript-disabled checks. The static layout check now waits for
 page load and measures page width synchronously without requesting MathJax,
 font-ready or animation-frame promises. The first run does not count as
-completion evidence; subsequent runs must satisfy all of these assertions.
+completion evidence. Subsequent runs must satisfy all of these assertions.
 
 ## Boundaries retained
 

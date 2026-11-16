@@ -17,7 +17,7 @@ Writing D(z)=1-c(z+...+z^k), coefficient comparison gives
     D(z) sum_(n>=0) a(n)z^n = P(z),
     P(z)=sum_(n=0)^(k-1) (s(n)-c sum_(i=0)^(n-1) s(i)) z^n.
 
-Every coefficient of degree at least k vanishes by the recurrence; the lower
+Every coefficient of degree at least k vanishes by the recurrence. The lower
 coefficients are exactly the displayed seed defects. Since D(0)=1, division is
 unique as a formal series over Z. If b(n)=[z^n]D(z)^(-1), then a(n) is the
 finite convolution of P with b. This proves the seeded closed formula used by
@@ -25,8 +25,8 @@ the explorer. In particular, k-1 zero seeds followed by one give P=z^(k-1).
 The normalized nonzero tail instead has generating function D^(-1).
 
 The reciprocal-power family D^(-r) uses its own initial values. Choosing an
-arbitrary k-seed vector switches to the order-k recurrence (r=1); the interface
-does not silently combine arbitrary k seeds with a power-r initial-value problem.
+arbitrary k-seed vector switches to the order-k recurrence (r=1). The interface
+does not combine arbitrary k seeds with a power-r initial-value problem.
 The finite binomial and hypergeometric expressions for b and D^(-r) are in
 [the existing derivation](../sequence-connections/IDENTITIES.md).
 
@@ -77,8 +77,8 @@ gives, with P(n,k)=[r^k]P_(N,n)(r),
     n P(n,k)=-sum_(i=1)^n (-1)^i binom(Nn,Ni)
                       ((n-i)P(n-i,k)+i P(n-i,k-1)).
 
-Here P(0,0)=1 and out-of-row entries vanish. This establishes the new exact
-recurrence without changing the ordinary polynomial-coefficient normalization.
+Here P(0,0)=1 and out-of-row entries vanish. This establishes the exact
+recurrence without changing the ordinary polynomial coefficient normalization.
 Its finite audit compares it to the maintained Bell-column construction.
 
 Integrality can also be read from the finite negative-binomial expansion.
@@ -94,7 +94,7 @@ For anchored ordinary tails A,B,C with nonzero constant coefficients over Q,
 the constructed kernels are H_AB=B/A and H_BC=C/B. Their product is C/A.
 The inverse kernels compose in the reverse order. On stored prefixes, all
 equalities are only modulo z^L. The leading-zero position shifts and original
-index shifts add separately; each intermediate anchor cancels in the sum.
+index shifts add separately. Each intermediate anchor cancels in the sum.
 The corresponding prescribed-zero-prefix domains remain attached to the maps.
 This construction uses the chosen targets and does not predict unrecorded terms.
 
@@ -107,11 +107,11 @@ convolution of its flattened cells.
 
 The displayed seed numerator, polynomial recurrence, recurrence-state cycle
 argument and ordinary-kernel composition are proved as written above under
-their stated domains. The source-defined analytic family cards retain their
-source hypotheses and are outside this focused proof self-review. Their
+their stated domains. The analytic family pages retain their source
+hypotheses and are outside the scope of these proofs. Their
 formula transcriptions and source bindings are checked separately.
 
-The finite computation command is documented before execution in the workspace
-audit contract. Current completed receipts and tested ranges are recorded in
-verification/sequence-library/README.md after execution. Finite checks do not
-establish historical novelty or replace the uniform arguments above.
+The workspace audit contract records the finite computation command and its
+bounds. Completed receipts and tested ranges are listed in
+`verification/sequence-library/README.md`. These tests do not establish
+historical novelty or replace the proofs above.
