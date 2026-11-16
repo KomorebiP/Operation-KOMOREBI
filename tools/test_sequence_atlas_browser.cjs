@@ -36,7 +36,7 @@ async function discoveryChecks(page,width){
   await page.locator('[data-copy-entry="sa-entry-formula"]').click();assert.ok((await page.evaluate(()=>navigator.clipboard.readText())).includes('binom(2n,n)'));
   await page.locator('.sa-entry-outline a[href="#programs"]').click();assert.equal(new URL(page.url()).hash,'#programs');
   await page.screenshot({path:path.join(out,`entry-${width}.png`),fullPage:false});
-  await page.goto(new URL('sequences.html',base).href,{waitUntil:'networkidle'});await page.locator('[data-interface-ready="true"]').waitFor();
+  await page.goto(new URL('sequence-explorer.html',base).href,{waitUntil:'networkidle'});await page.locator('[data-interface-ready="true"]').waitFor();
 }
 async function refinementChecks(page){
   await mode(page,'find');
@@ -116,11 +116,11 @@ async function refinementChecks(page){
   await page.locator('#sa-search-values').click();assert.ok((await page.inputValue('#sa-query')).startsWith('1,1,69'));
   assert.equal(await page.locator('#sa-results [data-hit-id]').first().getAttribute('data-hit-id'),'KSEQ-000007');
   await page.locator('#sa-clear-search').click();
-  await page.goto(new URL('sequences.html?view=invalid&modulus=0',base).href,{waitUntil:'networkidle'});
+  await page.goto(new URL('sequence-explorer.html?view=invalid&modulus=0',base).href,{waitUntil:'networkidle'});
   await page.locator('[data-interface-ready="true"]').waitFor();
   assert.equal(await page.inputValue('#sa-view'),'mod');assert.equal(await page.inputValue('#sa-modulus'),'7');
   assert.ok((await page.locator('#sa-action-status').textContent()).includes('invalid'));
-  await page.goto(new URL('sequences.html',base).href,{waitUntil:'networkidle'});await page.locator('[data-interface-ready="true"]').waitFor();
+  await page.goto(new URL('sequence-explorer.html',base).href,{waitUntil:'networkidle'});await page.locator('[data-interface-ready="true"]').waitFor();
 }
 (async()=>{
   const browser=await chromium.launch({channel:'msedge',headless:true});
@@ -128,7 +128,7 @@ async function refinementChecks(page){
   for(const width of [1440,390,320]){
     const context=await browser.newContext({viewport:{width,height:1000},isMobile:width<500,hasTouch:width<500,permissions:['clipboard-read','clipboard-write']});
     const page=await context.newPage();page.on('pageerror',e=>report.errors.push(e.message));
-    const response=await page.goto(new URL('sequences.html',base).href,{waitUntil:'networkidle'});assert.equal(response.status(),200);
+    const response=await page.goto(new URL('sequence-explorer.html',base).href,{waitUntil:'networkidle'});assert.equal(response.status(),200);
     await page.locator('[data-interface-ready="true"]').waitFor();
     await page.evaluate(async()=>{await document.fonts.ready;await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));});
     assert.equal(await page.locator('[data-sequence]').count(),38);
@@ -222,7 +222,7 @@ async function refinementChecks(page){
     await context.close();
   }
   const context=await browser.newContext({javaScriptEnabled:false,viewport:{width:320,height:900}});const page=await context.newPage();
-  await page.goto(new URL('sequences.html',base).href);assert.equal(await page.locator('[data-index-entry]:visible').count(),38);assert.equal(await page.locator('#sa-workspace').isVisible(),false);
+  await page.goto(new URL('sequence-explorer.html',base).href);assert.equal(await page.locator('[data-index-entry]:visible').count(),38);assert.equal(await page.locator('#sa-workspace').isVisible(),false);
   await page.locator('[data-index-entry="KSEQ-000007"] th a').click();assert.equal(await page.locator('#data tbody tr').count(),64);
   const program=page.getByRole('region',{name:'Python reproduction program',exact:true});await program.focus();
   for(let n=0;n<5;n++)await program.press('ArrowRight');await page.waitForTimeout(200);
@@ -230,7 +230,7 @@ async function refinementChecks(page){
   report.noJavaScript=true;report.programKeyboardNoJavaScript=true;await context.close();
   const accessible=await browser.newContext({viewport:{width:320,height:1000},forcedColors:'active',reducedMotion:'reduce'});
   const accessiblePage=await accessible.newPage();accessiblePage.on('pageerror',e=>report.errors.push(e.message));
-  await accessiblePage.goto(new URL('sequences.html',base).href,{waitUntil:'networkidle'});await accessiblePage.locator('[data-interface-ready="true"]').waitFor();
+  await accessiblePage.goto(new URL('sequence-explorer.html',base).href,{waitUntil:'networkidle'});await accessiblePage.locator('[data-interface-ready="true"]').waitFor();
   await accessiblePage.keyboard.press('Tab');await accessiblePage.keyboard.press('Enter');assert.equal(await accessiblePage.evaluate(()=>document.activeElement.id),'main');
   await accessiblePage.addStyleTag({content:'html{font-size:200%!important}'});
   await accessiblePage.evaluate(async()=>{await document.fonts.ready;await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)))});
@@ -243,7 +243,7 @@ async function refinementChecks(page){
   const denied=await browser.newContext({viewport:{width:390,height:1000}});
   await denied.addInitScript(()=>{Object.defineProperty(window,'localStorage',{get(){throw new DOMException('Storage denied','SecurityError');}});});
   const deniedPage=await denied.newPage();deniedPage.on('pageerror',e=>report.errors.push(e.message));
-  await deniedPage.goto(new URL('sequences.html',base).href,{waitUntil:'networkidle'});await deniedPage.locator('[data-interface-ready="true"]').waitFor();
+  await deniedPage.goto(new URL('sequence-explorer.html',base).href,{waitUntil:'networkidle'});await deniedPage.locator('[data-interface-ready="true"]').waitFor();
   await deniedPage.locator('#sa-query').fill('id:KSEQ7');await deniedPage.locator('#sa-results [data-save-sequence="KSEQ-000007"]').click();
   assert.ok((await deniedPage.locator('#sa-action-status').textContent()).includes('storage is unavailable'));
   await deniedPage.locator('#sa-show-saved').click();assert.equal(await deniedPage.locator('#sa-results [data-hit-id]:visible').count(),1);

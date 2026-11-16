@@ -15,13 +15,13 @@ async function values(page){return page.locator('#sa-study-values tbody tr td').
   for(const width of [1440,390,320]){
     const context=await browser.newContext({viewport:{width,height:1000},permissions:['clipboard-read','clipboard-write'],isMobile:width<500,hasTouch:width<500});
     const page=await context.newPage();page.on('pageerror',error=>report.errors.push(error.message));
-    await page.goto(new URL('sequences.html?q=triangular#find',base).href,{waitUntil:'networkidle'});
+    await page.goto(new URL('sequence-explorer.html?q=triangular#find',base).href,{waitUntil:'networkidle'});
     await page.getByRole('link',{name:'Study exact terms for Triangular numbers',exact:true}).click();await ready(page);
     assert.equal(await page.locator('#sa-study-values tbody tr').count(),12);assert.deepEqual((await values(page)).slice(0,5),['0','1','3','6','10']);
     await apply(page,'second-difference');assert.deepEqual((await values(page)).slice(0,4),['undefined','undefined','1','1']);
     await page.locator('.sa-study-differences summary').click();assert.match(await page.locator('#sa-study-observation').textContent(),/Order 2.*constant \(1\).*10 tested indices/);
     await page.locator('#sa-study-copy').click();assert.match((await page.evaluate(()=>navigator.clipboard.readText())).replace(/\r\n/g,'\n'),/^0 undefined\n1 undefined\n2 1/);
-    assert.equal(new URL(await page.locator('#sa-study-search').getAttribute('href')).searchParams.get('q'),'1,1,1,1,1,1,1,1');
+    const searchLink=new URL(await page.locator('#sa-study-search').getAttribute('href'));assert.ok(searchLink.pathname.endsWith('/sequence-library.html'));assert.equal(searchLink.hash,'#library-search');assert.equal(searchLink.searchParams.get('q'),'1,1,1,1,1,1,1,1');
     await page.locator('#sa-study-plot').click();await page.locator('[data-interface-ready="true"]').waitFor();assert.equal(await page.inputValue('#sa-transform'),'second-difference');assert.equal(await page.inputValue('#sa-view'),'standard');
     await page.goBack();await ready(page);assert.equal(await page.inputValue('#sa-study-transform'),'second-difference');
     await apply(page,'sum',9,16);assert.equal((await values(page))[0],'165');

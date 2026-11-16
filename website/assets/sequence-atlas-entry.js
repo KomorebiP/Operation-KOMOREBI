@@ -1,4 +1,5 @@
 import './sequence-reading-theme.mjs';
+import {enhanceMath} from './math-display.mjs';
 import {readSaved,writeSaved,updateSaveButtons} from './sequence-atlas-saved.mjs';
 import {fraction,exact} from './sequence-atlas-core.mjs';
 import {setupStudy} from './sequence-atlas-study.js';
@@ -40,13 +41,7 @@ if(root){
   const links=[...root.querySelectorAll('.sa-entry-outline a')];
   if('IntersectionObserver' in window){const observer=new IntersectionObserver(items=>{const visible=items.filter(item=>item.isIntersecting).sort((a,b)=>a.boundingClientRect.top-b.boundingClientRect.top);if(!visible.length)return;const current='#'+visible[0].target.id;links.forEach(link=>{if(link.getAttribute('href')===current){link.setAttribute('aria-current','location');const menu=link.parentElement;if(menu.scrollWidth>menu.clientWidth){const item=link.getBoundingClientRect(),bounds=menu.getBoundingClientRect();if(item.left<bounds.left+8)menu.scrollLeft+=item.left-bounds.left-8;else if(item.right>bounds.right-8)menu.scrollLeft+=item.right-bounds.right+8;}}else link.removeAttribute('aria-current');});},{rootMargin:'-8% 0px -65% 0px'});links.forEach(link=>{const target=document.getElementById(link.hash.slice(1));if(target)observer.observe(target);});}
   async function typeset(){
-    const math=root.querySelector('.sa-typeset');
-    try{
-      if(document.readyState==='loading')await new Promise(resolve=>document.addEventListener('DOMContentLoaded',resolve,{once:true}));
-      if(!window.MathJax?.startup?.promise)return;
-      await window.MathJax.startup.promise;if(!math.querySelector('mjx-container'))await window.MathJax.typesetPromise([math]);
-      if(math.querySelector('mjx-container')&&!math.querySelector('[data-mml-node="merror"]')){math.hidden=false;const plain=root.querySelector('.sa-plain-formula');if(!plain.contains(document.activeElement))plain.open=false;root.dataset.mathReady='true';}
-    }catch{root.dataset.mathReady='fallback';}
+    try{await enhanceMath(root);root.dataset.mathReady=root.querySelector('.sa-typeset mjx-container')?'true':'fallback';}
     finally{if(/^#n-\d+$/.test(location.hash))requestAnimationFrame(()=>document.getElementById(location.hash.slice(1))?.scrollIntoView({block:'center'}));}
   }
   typeset();

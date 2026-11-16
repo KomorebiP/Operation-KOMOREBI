@@ -9,6 +9,8 @@ import tempfile
 import unittest
 import ast
 import io
+import posixpath
+from urllib.parse import urlsplit, unquote
 from contextlib import redirect_stdout
 
 from build_reader_site import Site
@@ -133,7 +135,13 @@ class SequenceAtlasTests(unittest.TestCase):
             site=Site.__new__(Site);site.root=ROOT;site.output=Path(folder);site.search=[]
             result=build(site)
             self.assertEqual(result['entries'],38)
-            main=(site.output/'sequences.html').read_text(encoding='utf-8')
+            main=(site.output/'sequence-explorer.html').read_text(encoding='utf-8')
+            self.assertIn('<h1>Curated sequence generators</h1>',main)
+            handoff=(site.output/'sequences.html').read_text(encoding='utf-8')
+            self.assertIn('sequence-redirect.mjs',handoff)
+            for anchor in ('find','catalogue','saved','explorer','discover','connections','reference'):
+                self.assertIn('id="'+anchor+'"',handoff)
+            self.assertEqual(result['library']['entries'],2023)
             self.assertIn('<noscript>',main)
             self.assertIn('CC BY-SA 4.0',main)
             self.assertEqual(main.count('data-index-entry='),38)
@@ -158,6 +166,13 @@ class SequenceAtlasTests(unittest.TestCase):
                 for control in page.inputs:
                     self.assertTrue(control.get('id') in page.labels or control.get('aria-label'),control)
                 pages[path.relative_to(site.output).as_posix()]=page
+            for name,page in pages.items():
+                for href in page.links:
+                    parts=urlsplit(href)
+                    if parts.scheme or parts.netloc:continue
+                    target=posixpath.normpath(posixpath.join(posixpath.dirname(name),parts.path)) if parts.path else name
+                    if target in pages and parts.fragment:
+                        self.assertIn(unquote(parts.fragment),pages[target].ids,(name,href))
             check_search_targets(site.search,pages)
             data=json.loads((site.output/'assets/sequence-atlas-data.json').read_text(encoding='utf-8'))
             for entry in data['entries']:

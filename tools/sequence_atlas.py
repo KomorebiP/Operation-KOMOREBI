@@ -169,8 +169,6 @@ def search_section(entries):
 
 
 def refine_body(body, entries):
-    body=body.replace('<h1>Find a sequence.<br><em>Explore its structure.</em></h1>','<h1>The sequence atlas<span class="sa-title-dot">.</span></h1>')
-    body=body.replace('Follow exact integer sequences from their formulas to their plots. Compare families, change the modulus, and return to the derivations.','Search exact terms. Read the definition. Explore the pattern.')
     body=body.replace('<nav aria-label="Atlas sections">','<nav aria-label="Atlas sections"><a href="#find">Find a sequence</a>')
     body=re.sub(r'<div id="sa-search-controls".*?</div>\s*<p id="sa-search-status".*?</p>', '', body, flags=re.S)
     body=body.replace('<section id="explorer"',search_section(entries)+discovery_section(entries)+'<section id="explorer"',1)
@@ -229,8 +227,8 @@ def build(site):
     snapshot_note = ('OEIS reference data downloaded '+e(snapshot['retrieved_at'][:10])+'; '+str(snapshot['sequence_count'])+' exported sequences scanned.' if snapshot else
         'OEIS reference data is unavailable. Reference links remain available; catalogue search is local.')
     body = css+'''<div class="sequence-atlas" id="sequence-atlas">
-<header class="sa-intro"><p class="sa-label">Komorebi / sequences and formulas</p><h1>Find a sequence.<br><em>Explore its structure.</em></h1>
-<p>Follow exact integer sequences from their formulas to their plots. Compare families, change the modulus, and return to the derivations.</p>
+<header class="sa-intro"><p class="sa-label">Komorebi / sequences and formulas</p><h1>Curated sequence generators</h1>
+<p>Generate terms and explore transforms for 38 curated sequences. This tool extends their stored prefixes within its stated limits. <a href="sequence-library.html">Search all sequence records in the complete library</a> for every family, formula, and stored-data plot.</p>
 <nav aria-label="Atlas sections"><a href="#explorer">Plot explorer</a><a href="#catalogue">Sequence catalogue</a><a href="sequence-archive.html">Research archive · 90 records</a><a href="#reference">Sources and scope</a></nav></header>
 <noscript><p class="notice">The catalogue, formulas, term tables, and CSV downloads work without JavaScript. Enable JavaScript for interactive plots and filtering.</p></noscript>
 <section id="explorer" aria-labelledby="explorer-title"><h2 id="explorer-title" tabindex="-1">Plot explorer</h2>
@@ -285,10 +283,10 @@ def build(site):
     site.write('assets/sequence-atlas-study.mjs',study_core)
     site.write('assets/sequence-atlas-study.js',study_script)
     entry_script=entry_script.replace("'./sequence-atlas-study.js'", "'./sequence-atlas-study.js?v="+hashlib.sha256(study_script.encode()).hexdigest()[:12]+"'")
-    for dependency in ('sequence-atlas-saved.mjs','sequence-atlas-core.mjs','sequence-reading-theme.mjs'):
+    for dependency in ('math-display.mjs','sequence-atlas-saved.mjs','sequence-atlas-core.mjs','sequence-reading-theme.mjs'):
         entry_script=entry_script.replace("'./"+dependency+"'","'./"+dependency+'?v='+version(dependency)+"'")
     site.write('assets/sequence-atlas-entry.js',entry_script)
-    for name in ('sequence-atlas-core.mjs', 'sequence-atlas.css','sequence-atlas-search.mjs','sequence-atlas-saved.mjs','sequence-atlas-discovery.mjs','sequence-atlas-interface.mjs','sequence-plot-options.mjs','sequence-plot-options.css','sequence-reading-theme.mjs','sequence-reading.css'):
+    for name in ('math-display.mjs','math-display.css','sequence-navigation.mjs','sequence-redirect.mjs','sequence-atlas-core.mjs', 'sequence-atlas.css','sequence-atlas-search.mjs','sequence-atlas-saved.mjs','sequence-atlas-discovery.mjs','sequence-atlas-interface.mjs','sequence-plot-options.mjs','sequence-plot-options.css','sequence-reading-theme.mjs','sequence-reading.css'):
         content=(site.root/'website/assets'/name).read_text(encoding='utf-8')
         if name=='sequence-atlas-discovery.mjs':
             content=discovery_script
@@ -307,8 +305,13 @@ def build(site):
     body += '<script type="module" src="assets/sequence-atlas.js?v='+hashlib.sha256(script.encode()).hexdigest()[:12]+'"></script>'
     body='<link rel="stylesheet" href="assets/sequence-library.css?v='+version('sequence-library.css')+'">'+body+'<link rel="stylesheet" href="assets/sequence-reading.css?v='+version('sequence-reading.css')+'">'
     body=body.replace('<nav class="sa-mode-nav"','<p class="sa-library-link"><a href="sequence-library.html">Search the full sequence and formula library →</a> · formula families, equivalent representations and OEIS reference matching</p><nav class="sa-mode-nav"',1)
-    site.page('sequences.html', 'Sequence and Formula Atlas', body)
-    site.search.append(dict(title='Sequence and Formula Atlas', group='Collection', kind='Examples', work_ids=['paper-iv','monographs-special-functions'], url='sequences.html', text='Integer sequence formula catalogue exact modular plotting residues recurrence generating function OEIS comparison differences ratios partial sums'))
+    site.page('sequence-explorer.html', 'Curated sequence generators', body)
+    redirect=(site.root/'website/assets/sequence-redirect.mjs').read_text(encoding='utf-8').replace("'./sequence-navigation.mjs'","'./sequence-navigation.mjs?v="+version('sequence-navigation.mjs')+"'")
+    site.write('assets/sequence-redirect.mjs',redirect)
+    destinations=[('find','sequence-library.html#library-search','Search the sequence library'),('catalogue','sequence-library/index.html','Complete index'),('saved','sequence-library.html?saved=only#library-search','Saved entries'),('explorer','sequence-explorer.html#explorer','Curated sequence generators'),('discover','sequence-explorer.html#discover','Discover connections'),('connections','sequence-explorer.html#discover','Explore sequence relationships'),('reference','sequence-library.html#oeis','Compare with OEIS')]
+    handoff='<nav aria-label="Sequence tools"><ul>'+''.join('<li id="'+key+'"><a href="'+e(target)+'">'+label+'</a></li>' for key,target,label in destinations)+'</ul></nav>'
+    site.page('sequences.html','Sequence library','<h1>Sequence library</h1><p>Search the complete library of sequence records, formulas, and exact data.</p>'+handoff+'<script type="module" src="assets/sequence-redirect.mjs?v='+hashlib.sha256(redirect.encode()).hexdigest()[:12]+'"></script>')
+    site.search.append(dict(title='Curated sequence generators', group='Collection', kind='Examples', work_ids=['paper-iv','monographs-special-functions'], url='sequence-explorer.html', text='Integer sequence formula catalogue exact modular plotting residues recurrence generating function OEIS comparison differences ratios partial sums'))
     for entry in entries:
         identifier = entry['id']
         csv = 'n,a_n\n'+''.join(f'{n},{value}\n' for n, value in enumerate(entry['terms']))
@@ -323,12 +326,12 @@ def build(site):
         related_score=lambda x:3*(x['kind']==entry['kind'])+4*(x.get('N') is not None and x.get('N')==entry.get('N'))+len(set(x['tags'])&set(entry['tags']))
         related=sorted((x for x in entries if x['id']!=identifier and related_score(x)>0),key=lambda x:(-related_score(x),x['id']))[:3]
         content = ('<link rel="stylesheet" href="../assets/sequence-atlas.css?v='+version('sequence-atlas.css')+'">'
-            '<article class="sequence-atlas sa-entry" data-entry-id="'+identifier+'" data-index-kind="'+entry['reading']['index_kind']+'" data-index-factor="'+str(entry['reading']['index_factor'])+'" data-index-label="'+entry['reading']['index_label']+'"><header class="sa-record-header"><a class="sa-back" href="../sequences.html#find">← Sequence atlas</a><form class="sa-record-search" hidden action="../sequences.html#find" role="search" aria-label="Search the sequence catalogue"><label for="sa-record-query" class="sa-sr-only">Sequence name, identifier or terms</label><input id="sa-record-query" name="q" type="search" placeholder="Find another sequence"><button type="submit">Search</button></form><p class="sa-record-id">'+identifier+' <span>'+e(entry['status'])+'</span></p><h1>'+e(entry['title'])+'</h1>'
-            '<div class="sa-entry-actions"><a class="sa-primary-link" href="../sequences.html?sequence='+identifier+'#explorer">Plot this sequence</a><a href="#analysis">Study exact terms</a><button type="button" data-save-sequence="'+identifier+'" aria-pressed="false" hidden>Save entry</button><button id="sa-entry-copy" type="button" hidden>Copy the first 12 terms</button><button id="sa-entry-link" type="button" hidden>Copy link</button></div><p id="sa-entry-status" role="status" aria-live="polite"></p><label id="sa-entry-copy-fallback" for="sa-entry-copy-text" hidden>Text to copy<textarea id="sa-entry-copy-text" readonly></textarea></label></header>'
+            '<article class="sequence-atlas sa-entry" data-entry-id="'+identifier+'" data-index-kind="'+entry['reading']['index_kind']+'" data-index-factor="'+str(entry['reading']['index_factor'])+'" data-index-label="'+entry['reading']['index_label']+'"><header class="sa-record-header"><a class="sa-back" href="../sequence-library.html#library-search">← Sequence library</a><form class="sa-record-search" hidden action="../sequence-library.html#library-search" role="search" aria-label="Search the sequence catalogue"><label for="sa-record-query" class="sa-sr-only">Sequence name, identifier or terms</label><input id="sa-record-query" name="q" type="search" placeholder="Find another sequence"><button type="submit">Search</button></form><p class="sa-record-id">'+identifier+' <span>'+e(entry['status'])+'</span></p><h1>'+e(entry['title'])+'</h1>'
+            '<div class="sa-entry-actions"><a class="sa-primary-link" href="../sequence-explorer.html?sequence='+identifier+'#explorer">Plot this sequence</a><a href="#analysis">Study exact terms</a><button type="button" data-save-sequence="'+identifier+'" aria-pressed="false" hidden>Save entry</button><button id="sa-entry-copy" type="button" hidden>Copy the first 12 terms</button><button id="sa-entry-link" type="button" hidden>Copy link</button></div><p id="sa-entry-status" role="status" aria-live="polite"></p><label id="sa-entry-copy-fallback" for="sa-entry-copy-text" hidden>Text to copy<textarea id="sa-entry-copy-text" readonly></textarea></label></header>'
             '<div class="sa-record-data"><span class="sa-field-label">DATA</span><p class="sa-terms">'+e(', '.join(entry['terms'][:8]))+'…</p><a href="#data">All 64 terms ↓</a></div>'
             '<div class="sa-record-layout"><nav class="sa-entry-outline" aria-label="Entry sections"><span>In this entry</span><a href="#definition">Definition &amp; indexing</a><a href="#formulas">Formulas</a><a href="#examples">Examples</a><a href="#analysis">Study &amp; transforms</a><a href="#programs">Programs</a><a href="#connections">Connections</a><a href="#references">References</a><a href="#data">Exact data</a><a href="#sa-related-title">Related entries</a></nav><div class="sa-record-main">'
-            +structured_entry(entry,graph)+'<section id="data"><h2>Exact data and downloads</h2><p><a href="../sequences.html?seq='+identifier+'#explorer">Open in plot explorer</a> · <a download href="'+identifier+'.csv">Download exact CSV</a></p>'
-            '<p><a href="../sequences.html?sequence='+identifier+'&amp;view=mod#explorer">Explore residues</a> · <a download href="'+identifier+'.txt">Download indexed text (b-file style)</a> · <a download href="'+identifier+'.json">Download entry JSON</a></p>'
+            +structured_entry(entry,graph)+'<section id="data"><h2>Exact data and downloads</h2><p><a href="../sequence-explorer.html?seq='+identifier+'#explorer">Open in plot explorer</a> · <a download href="'+identifier+'.csv">Download exact CSV</a></p>'
+            '<p><a href="../sequence-explorer.html?sequence='+identifier+'&amp;view=mod#explorer">Explore residues</a> · <a download href="'+identifier+'.txt">Download indexed text (b-file style)</a> · <a download href="'+identifier+'.json">Download entry JSON</a></p>'
             '<div class="table-scroll" tabindex="0" role="region" aria-label="Exact terms"><table><caption>Exact terms, indices 0–63</caption><thead><tr><th scope="col">n</th><th scope="col">a(n)</th></tr></thead><tbody>'+rows+'</tbody></table></div>'
             '</section><section aria-labelledby="sa-related-title"><h2 id="sa-related-title">Related entries</h2><ul>'+''.join('<li><a href="'+x['id']+'.html">'+e(x['title'])+'</a> · '+x['id']+'</li>' for x in related)+'</ul></section>'
             '<nav class="sa-neighbours" aria-label="Previous and next sequence">'+neighbours+'</nav></div></div></article>'

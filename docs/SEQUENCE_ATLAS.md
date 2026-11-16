@@ -1,11 +1,19 @@
 # Sequence and Formula Atlas
 
+The [Sequence library](https://komorebip.github.io/Operation-KOMOREBI/sequence-library.html)
+is the main search for all 2,023 records and is available from the homepage.
+The [curated generators](https://komorebip.github.io/Operation-KOMOREBI/sequence-explorer.html)
+provide the extensible plotting interface for 38 of those records. Existing
+atlas links retain their search or plot state. The Math display preference is
+shared with the rest of the site.
+
 ## Recovered research library
 
 The [research sequence library](https://komorebip.github.io/Operation-KOMOREBI/sequence-archive.html)
 adds 90 recovered KOM records across 18 families, with 5,487 exact terms.
-It has fielded and exact-term search, family and review filters, shareable
-searches, and offset-aware plots of values, differences, prefix sums, residues,
+Its fielded and exact-term search, family and review filters, and shareable
+searches use the complete library with the archive filter applied. It retains
+offset-aware plots of values, differences, prefix sums, residues,
 and consecutive residue pairs. Every record has a static definition, complete
 indexed data, CSV, indexed text, JSON with integer strings, and source downloads.
 The coefficient triangle KOM084 shows its flat index alongside its row and column.
@@ -15,7 +23,7 @@ Stored ranges vary by record; plots never extrapolate. A partial sum begins at
 that record's first stored index, and the first difference is undefined there.
 Links to the curated KSEQ atlas report finite, same-index data overlap only.
 The existing 38 KSEQ entries and their exact exports retain their identifiers
-and values. Search in the main atlas can carry the current query into this library.
+and values. All collections can be searched together in the main library.
 
 Source bytes and archive SHA-256 are recorded in
 `research/sequence-archive/README.md`. Reproduce the finite audit with:
@@ -31,7 +39,7 @@ bounded implementation agreement, not originality, infinite sequence identity,
 or any of the research program's global conjectures. The archive's annotations
 of OEIS references are retained as source annotations, not fresh corpus checks.
 
-[Open the atlas](https://komorebip.github.io/Operation-KOMOREBI/sequences.html) · [Sequence derivations](demonstrations/SEQUENCE_SHAPES.md)
+[Open the curated generators](https://komorebip.github.io/Operation-KOMOREBI/sequence-explorer.html) · [Sequence derivations](demonstrations/SEQUENCE_SHAPES.md)
 
 The atlas organizes source-linked integer sequences and formulas, with exact
 term tables and an interactive plot explorer. Its catalogue contains

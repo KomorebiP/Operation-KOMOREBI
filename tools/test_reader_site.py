@@ -825,7 +825,7 @@ class ReaderSiteTests(unittest.TestCase):
         self.assertIn('DEMONSTRATIONS.html#extended-case-studies', [a['href'] for a in links])
         self.assertIn('OPERATOR_AUDIT.html', [a['href'] for a in links])
         self.assertIn('FUTURE_DEVELOPMENTS.html', [a['href'] for a in links])
-        self.assertIn('../sequences.html', [a['href'] for a in links])
+        self.assertIn('../sequence-library.html', [a['href'] for a in links])
         self.assertEqual(len(links),30)
         self.assertEqual(len({a['href'] for a in links}),30)
         self.assertIn('SPECIAL_FUNCTIONS.html', [a['href'] for a in links])
