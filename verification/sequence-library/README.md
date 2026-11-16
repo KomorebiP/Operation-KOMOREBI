@@ -1,8 +1,8 @@
 # Finite sequence-library evidence
 
-Current evidence: `run-008/manifest.json`, status `completed`, with
-`run-008/checks.json`. The input contract is `contract.json`. This run replays
-the same finite assertion after interface copyediting. Earlier runs preserve
+Current evidence: `run-010/manifest.json`, status `completed`, with
+`run-010/checks.json`. The input contract is `contract.json`. This run replays
+the same finite assertion after search consolidation and shared math display. Earlier runs preserve
 the evidence for their recorded source inputs.
 
 The current exact checks cover 1,895 parameter records and all 45,480 stored
@@ -47,3 +47,14 @@ CSV. It also covers printing, no-JavaScript reading, enlarged text, forced color
 and shared plot colors. All 6,069 existing exact data exports remain unchanged
 after the editorial pass. These are local implementation/self-review results;
 production delivery checks are separate.
+
+The homepage and navigation open the complete library; the 38 extensible
+sequences remain in the curated generator interface. Archive searches share
+the same library filters. Search cards retain exact offsets and highlight
+matched terms. The site-wide math selector preserves original source text and
+synchronizes across pages and tabs. Syntax coverage is recorded in
+`math-display-check.json`; integrated responsive behavior is recorded in
+`math-display-browser.json`. The checker is repeatable with
+`node tools/check_sequence_typesetting.cjs PREVIEW_URL REPORT_JSON` after
+building a site and loading its pinned runtime. It tests presentation syntax,
+not the truth of formula identities.

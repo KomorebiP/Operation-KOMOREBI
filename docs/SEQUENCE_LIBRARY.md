@@ -7,6 +7,28 @@ recurrences, generating functions and hypergeometric coefficient formulas.
 These counts describe records and representations, not distinct infinite
 sequences or new discoveries.
 
+The homepage search and main navigation open this complete library. Collection
+buttons show the scope and count before filtering. The 38 curated generators
+are a subset that can compute additional terms; they are not the size of the
+library. Their plotting interface is `sequence-explorer.html`. Existing
+`sequences.html` search links open the library, while saved plot links retain
+their settings in the generator interface. Research-archive searches also use
+the library, with the archive collection filter applied.
+
+Results show the defining formula, review status, collection, exact term preview
+at its recorded offset, and highlighted term matches. Collection and review
+filters share the same URL state as the query. Removable filter buttons make
+the current scope explicit; copying a link leaves the result count visible.
+
+The site-wide Math display selector offers Typeset math and Plain text. Its
+preference persists across pages and tabs where browser storage is available.
+Readers retain their original TeX; sequence formulas retain their original
+plain-text source. A bounded notation parser supplies a display transcription,
+without changing exact data, program code or formula exports. Unsupported
+source notation remains literal. Typeset formulas can scroll within their
+panels and remain keyboard accessible. Without JavaScript the original source
+and complete static index remain available.
+
 `tools/sequence_formula_catalogue.py` defines the finite parameter grids. Each
 parameter record stores 24 terms at its stated offset and an explicit source-degree map.
 The original 1,783 records retain n=0..23; new polynomial columns begin at their

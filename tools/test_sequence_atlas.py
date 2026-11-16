@@ -133,7 +133,10 @@ class SequenceAtlasTests(unittest.TestCase):
             site=Site.__new__(Site);site.root=ROOT;site.output=Path(folder);site.search=[]
             result=build(site)
             self.assertEqual(result['entries'],38)
-            main=(site.output/'sequences.html').read_text(encoding='utf-8')
+            main=(site.output/'sequence-explorer.html').read_text(encoding='utf-8')
+            self.assertIn('<h1>Curated sequence generators</h1>',main)
+            self.assertIn('sequence-redirect.mjs',(site.output/'sequences.html').read_text(encoding='utf-8'))
+            self.assertEqual(result['library']['entries'],2023)
             self.assertIn('<noscript>',main)
             self.assertIn('CC BY-SA 4.0',main)
             self.assertEqual(main.count('data-index-entry='),38)

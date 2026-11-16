@@ -15,7 +15,7 @@ async function values(page){return page.locator('#sa-study-values tbody tr td').
   for(const width of [1440,390,320]){
     const context=await browser.newContext({viewport:{width,height:1000},permissions:['clipboard-read','clipboard-write'],isMobile:width<500,hasTouch:width<500});
     const page=await context.newPage();page.on('pageerror',error=>report.errors.push(error.message));
-    await page.goto(new URL('sequences.html?q=triangular#find',base).href,{waitUntil:'networkidle'});
+    await page.goto(new URL('sequence-explorer.html?q=triangular#find',base).href,{waitUntil:'networkidle'});
     await page.getByRole('link',{name:'Study exact terms for Triangular numbers',exact:true}).click();await ready(page);
     assert.equal(await page.locator('#sa-study-values tbody tr').count(),12);assert.deepEqual((await values(page)).slice(0,5),['0','1','3','6','10']);
     await apply(page,'second-difference');assert.deepEqual((await values(page)).slice(0,4),['undefined','undefined','1','1']);

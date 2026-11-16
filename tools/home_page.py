@@ -101,8 +101,12 @@ def entry_slides():
 
 
 def home_page():
+    from sequence_atlas import catalogue
+    from sequence_library import library_entries
+    sequence_entries=library_entries(catalogue())
+    sequence_summary=f'{len(sequence_entries):,} records · {sum(len(item["formulas"]) for item in sequence_entries):,} formula representations'
     features = [
-        ('Sequence and Formula Atlas', 'Search source-linked integer sequences and formulas. Plot exact terms, compare families, explore residues modulo m, and export your calculations and figures.', 'sequences.html', 'Explore'),
+        ('Sequence library', 'Search every sequence collection in one place. Compare equivalent formulas, explore exact and modular plots, and work with OEIS reference data.', 'sequence-library.html', 'Explore'),
         ('Operator guide', 'Explore seven worked chapters and a searchable catalog of 205 operator entries. Follow linear maps, packets, transfer, recovery, stability, and polynomial calculus through exact examples, with formulas, assumptions, and source links close at hand.', 'collection/OPERATOR_AUDIT.html', 'Understand'),
         ('Recovery laboratory', 'Choose what you can measure and what you want to recover. Change the measurements, inspect exact calculations and graphs, and see either a recovery rule or two inputs that the summary cannot distinguish. Then add the information that is missing.', 'recovery-lab.html', 'Experiment'),
         ('Read side by side', 'Keep a statement beside its proof, or compare papers, chapters, worked examples, and formal sources. Follow references in the other pane, adjust the layout, and save a paired reading session so you can return to the same passages.', 'side-by-side.html', 'Compare'),
@@ -116,6 +120,7 @@ def home_page():
         '<span class="home-route-arrow" aria-hidden="true">↗</span></a>'
         for title, description, target, label in features)
     return '<section class="home-hero" aria-labelledby="home-title">'+entry_slides()+research_slides()+'''</section>
+<section class="home-sequence-library" aria-labelledby="home-sequence-title"><div><p class="home-route-label">Sequences and formulas</p><h2 id="home-sequence-title"><a href="sequence-library.html">Explore the sequence library</a></h2><p>Classical sequences, research families, equivalent formulas, and exact plots in one searchable collection.</p><p class="home-sequence-count">'''+sequence_summary+'''</p></div><form action="sequence-library.html#library-search" method="get" role="search" aria-label="Search integer sequences"><label for="home-sequence-query">Name, formula, identifier, or integer terms</label><div><input id="home-sequence-query" name="q" type="search" placeholder="Fibonacci, hypergeometric, or 1,1,2,5,14"><button type="submit">Search sequences</button></div><p><a href="sequence-library.html#library-search">Browse all records</a> · <a href="sequence-library.html#oeis">Match with OEIS</a></p></form></section>
 <section class="home-ways" aria-labelledby="home-ways-title"><div class="home-section-heading"><h2 id="home-ways-title">Explore more of the site.</h2><p>Experiment with code and proofs, compare pages, and keep a reading list.</p></div>
 <div class="home-route-grid">'''+cards+'''</div></section>
 <section class="home-toolbox" id="home-interactive-title" aria-labelledby="home-toolbox-title"><div class="home-section-heading"><h2 id="home-toolbox-title">A few useful tools.</h2><p>Explore an idea, or find a specific passage.</p></div>
