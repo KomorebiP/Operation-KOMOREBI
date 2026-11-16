@@ -266,12 +266,12 @@ The focused self-audit is in research/sequence-connections/AUDIT.md.
 ## Generalized families and research tools
 
 The homepage links to both integer records and a separate generalized-family
-search. The family index contains 22 definitions bound to 11 maintained source
+search. The family index contains 36 definitions bound to 12 maintained source
 documents, including Special Functions I–VIII and the generalized closed-form
 material in Paper IV. Use `family:` to find a construction or its integer
 instances, and `paper:SF-VI` (or a quoted paper title) to search by source.
-Roman-number matches respect paper boundaries. The source coverage page lists
-291 source headings and exact source hashes; it is an index, not a claim that
+Roman-number matches respect paper boundaries. Family searches offer construction-type and source filters; integer-only controls are hidden in this view. Clear removes the query and filters while keeping the selected scope. Shared links and result CSVs preserve construction type, source and member counts. The source coverage page lists
+311 source headings and exact source hashes; it is an index, not a claim that
 every formula in every paper has been reviewed or converted into a record.
 
 Ten families have exact parameter controls: weighted k-step reciprocal powers,
@@ -279,9 +279,38 @@ standard k-bonacci seeds, alternating reciprocal blocks, positive congruential
 inverses, block-Appell polynomials, secancy columns, theta specializations and
 columns, transfer tangents, and classical multisections. The explorer retains
 source degrees, local offsets, reduced rational values and component choices.
-Other analytic families retain their domains and defining passages without
+The twelve analytic families retain their domains and defining passages without
 implying a numerical analytic-continuation implementation. Complex-order source
 definitions remain visible even when exact controls use bounded integer values.
+
+Thirteen source-defined discrete constructions and one explicitly labeled
+classical reference collection cover the remaining archived material: weighted
+block logarithmic derivatives, binomial and Stirling transforms, Hankel
+determinants, prime-adic valuations, digit and subset residue counts, Pascal
+valuation distributions, totient prefix statistics, prime-power support,
+pointwise odd Collatz readouts, formal Smith transfer polynomials, Clifford
+identity words, and cyclic subgroup-coset masks. They have source definitions,
+representative exact terms, original offsets, full archived member links and
+reproduction access. Their finite readouts are reproduced by the archived Python generator.
+
+All 90 recovered KOM records now have a family or reference home. Nineteen
+reciprocal-block records link to the existing exact reciprocal explorer with
+their actual N and r; four k-bonacci records retain their original order and
+zero-prefix convention. The seven archived logarithmic records retain
+L_N(0)=0 and L_N(n)=Nn T_N(n-1) for n>=1, rather than silently substituting
+the differently indexed tangent readout. The original 90 records, their terms,
+classifications, b-files and offsets are preserved.
+
+The three additional curated seeds for natural numbers, odd numbers and
+partition numbers belong to the universal coefficient-section definition.
+They link to that definition because those parents are not offered by the
+browser's exact multisection controls. All 2,292 indexed integer records now
+have a family or reference assignment without extending the supported engines.
+
+The new source binding pins the archived generator to commit
+`96ef8755314fe6bfa3c5ca76b1d61e20f3c1e510` with its normalized SHA-256. The
+classical reference collection is a navigational grouping, not a new
+parameter family. Source indexing adds no historical-novelty claim.
 
 The family explorer provides exact tables, worked values, independently checked
 alternatives where available, value/residue plots, keyboard point inspection,

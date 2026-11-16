@@ -1,8 +1,8 @@
 // Display is a transcription. Stored formulas and exact arithmetic stay unchanged.
 export const MATH_DISPLAY_KEY='komorebi.math-display.v1';
 export function readMathDisplay(storage){try{return storage.getItem(MATH_DISPLAY_KEY)==='plain'?'plain':'typeset';}catch{return 'typeset';}}
-const greek={ell:'\\ell',Gamma:'\\Gamma',Theta:'\\Theta',theta:'\\theta',pi:'\\pi',alpha:'\\alpha',beta:'\\beta',omega:'\\omega',eta:'\\eta',tau:'\\tau',kappa:'\\kappa',zeta:'\\zeta',Phi:'\\Phi',mu:'\\mu',delta:'\\delta',chi:'\\chi',lambda:'\\lambda',sigma:'\\sigma',rho:'\\rho',infty:'\\infty',cdots:'\\cdots',dz:'\\mathrm{d}z'};
-const functions=new Set(['exp','log','sin','cos','tan','sinh','cosh','tanh','sec','sech','csc','cot','gcd','lcm','min','max','det','tr','Tr','floor','ceil','sqrt','binom','numerator','denominator']);
+const greek={ell:'\\ell',Gamma:'\\Gamma',Theta:'\\Theta',theta:'\\theta',pi:'\\pi',alpha:'\\alpha',beta:'\\beta',gamma:'\\gamma',omega:'\\omega',eta:'\\eta',tau:'\\tau',kappa:'\\kappa',zeta:'\\zeta',Phi:'\\Phi',phi:'\\phi',mu:'\\mu',delta:'\\delta',chi:'\\chi',lambda:'\\lambda',sigma:'\\sigma',rho:'\\rho',infty:'\\infty',cdots:'\\cdots',dz:'\\mathrm{d}z'};
+const functions=new Set(['exp','log','sin','cos','tan','sinh','cosh','tanh','sec','sech','csc','cot','gcd','lcm','min','max','det','tr','Tr','floor','ceil','sqrt','abs','binom','numerator','denominator','CE']);
 const words=new Set(['for','if','use','and']);
 const escapeText=text=>text.replace(/[{}%&#_$]/g,letter=>'\\'+letter);
 const symbol=name=>greek[name]||(name.length===1?name:'\\operatorname{'+name+'}');
@@ -14,11 +14,12 @@ function render(n){
   if(n.type==='negative')return '-'+render(n.value);
   if(n.type==='positive')return '+'+render(n.value);
   if(n.type==='postfix')return render(n.base)+n.op;
+  if(n.type==='cardinality')return '\\#'+render(n.value);
   if(n.type==='bound')return (n.base.type==='postfix'?'\\left('+render(n.base)+'\\right)':render(n.base))+(n.lower?'_{'+render(n.lower)+'}':'')+(n.upper?'^{'+render(n.upper)+'}':'')+(n.prime?"'".repeat(n.prime):'')+'!'.repeat(n.factorial||0);
-  if(n.type==='apply')return render(n.base)+'\\!\\left('+n.items.map(render).join(', ')+'\\right)';
+  if(n.type==='apply')return render(n.base)+'\\!\\left('+n.groups.map(items=>items.map(render).join(', ')).join('\\,;\\,')+'\\right)';
   if(n.type==='binary'){
     if(n.op==='/')return '\\frac{'+render(n.left)+'}{'+render(n.right)+'}';
-    return render(n.left)+({'*':'\\,','implicit':'\\,','>=':'\\ge ','<=':'\\le ','!=':'\\ne ','...':'\\cdots','%':'\\bmod '}[n.op]||n.op)+render(n.right);
+    return render(n.left)+({'*':'\\,','implicit':'\\,','>=':'\\ge ','<=':'\\le ','!=':'\\ne ','|':'\\mid ','...':'\\cdots','%':'\\bmod '}[n.op]||n.op)+render(n.right);
   }
   if(n.type==='big')return (n.name==='sum'?'\\sum':'\\prod')+(n.lower?'_{'+(n.lower.type==='list'&&n.lower.separator==='; '?'\\substack{'+n.lower.items.map(render).join('\\\\')+'}':render(n.lower))+'}':'')+(n.upper?'^{'+render(n.upper)+'}':'')+'{'+render(n.body)+'}';
   if(n.type==='call'){
@@ -31,9 +32,15 @@ function render(n){
       if(n.groups.length!==3)throw Error('Hypergeometric arguments');const [p,q]=name.split('F');
       return '{}_{'+p+'}F_{'+q+'}\\!\\left(\\begin{matrix}'+(n.groups[0].map(render).join(', ')||'\\vphantom{1}')+'\\\\'+(n.groups[1].map(render).join(', ')||'\\vphantom{1}')+'\\end{matrix}\\,\\middle|\\,'+n.groups[2].map(render).join(', ')+'\\right)';
     }
-    if(n.groups.length!==1)throw Error('Unsupported argument separators');
+    // A semicolon separates variables from parameters in B(z;a), T(n;k),
+    // and indexed packet functions. Keep that separator in the transcription.
+    if(n.groups.length!==1){
+      if(['binom','sqrt','abs','floor','ceil'].includes(name))throw Error('Unsupported argument separators');
+      return symbol(name)+'\\!\\left('+n.groups.map(items=>items.map(render).join(', ')).join('\\,;\\,')+'\\right)';
+    }
     if(name==='binom'){if(items.length!==2)throw Error('Binomial arguments');return '\\binom{'+render(items[0])+'}{'+render(items[1])+'}';}
     if(name==='sqrt'){if(items.length!==1)throw Error('Root arguments');return '\\sqrt{'+arg+'}';}
+    if(name==='abs'){if(items.length!==1)throw Error('Absolute-value arguments');return '\\left|'+arg+'\\right|';}
     if(name==='floor'||name==='ceil'){if(items.length!==1)throw Error('Rounding arguments');return '\\left'+(name==='floor'?'\\lfloor':'\\lceil')+arg+'\\right'+(name==='floor'?'\\rfloor':'\\rceil');}
     const fn=['exp','log','sin','cos','tan','sinh','cosh','tanh','gcd','min','max','det'].includes(name)?'\\'+name:symbol(name);
     return fn+'\\!\\left('+arg+'\\right)';
@@ -57,9 +64,10 @@ export function formulaLatex(source,onFailure){
     const punctuation=source.trim().endsWith('.')?'.':'';
     const input=(punctuation?source.trim().slice(0,-1):source).replaceAll('−','-').replaceAll('≥','>=').replaceAll('≤','<=').replaceAll('∞','infty').replaceAll('π','pi').replaceAll('Θ','Theta');
     const tokens=[];let at=0;
-    while(at<input.length){if(/\s/.test(input[at])){at++;continue;}const m=/^(?:\d+(?:F|phi)\d+|\d+(?:\.\d+)?|[A-Za-z]+|\.\.\.|>=|<=|!=|[+\-*/^_!%=(),;:[\]{}<>'])/.exec(input.slice(at));if(!m||tokens.length>4000)return null;tokens.push(m[0]);at+=m[0].length;}
+    // `!=` is inequality; factorial followed by equality is written `! =`.
+    while(at<input.length){if(/\s/.test(input[at])){at++;continue;}const m=/^(?:\d+(?:F|phi)\d+|\d+(?:\.\d+)?|[A-Za-z]+|\.\.\.|>=|<=|!=|[+\-*/^_!%=(),;:[\]{}<>|#'])/.exec(input.slice(at));if(!m||tokens.length>4000)return null;tokens.push(m[0]);at+=m[0].length;}
     let pos=0,depth=0;const peek=()=>tokens[pos],take=()=>tokens[pos++],node=(type,extra)=>({type,...extra});
-    const relation=()=>{let left=add();while(['=','>=','<=','!=','>','<',':'].includes(peek())){const op=take();left=node('binary',{left,op,right:add()});}return left;};
+    const relation=()=>{let left=add();while(['=','>=','<=','!=','>','<',':','|'].includes(peek())){const op=take();left=node('binary',{left,op,right:add()});}return left;};
     const add=()=>{let left=product();while(['+','-'].includes(peek())){const op=take();left=node('binary',{left,op,right:product()});}return left;};
     const starts=t=>t!==undefined&&!words.has(t)&&(/^(?:\d|[A-Za-z])/.test(t)||['(','[','{'].includes(t));
     const product=()=>{let left=unary();while(['*','/','%'].includes(peek())||starts(peek())){const op=starts(peek())?'implicit':take();left=node('binary',{left,op,right:unary()});}return left;};
@@ -74,7 +82,7 @@ export function formulaLatex(source,onFailure){
     const power=()=>{
       let base=atom();
       while(['_','^','!',"'"].includes(peek())||(peek()==='('&&((base.type==='bound'&&base.lower)||(base.type==='postfix'&&base.op==="'")))){
-        const op=take();if(op==='('){const groups=group('(');if(groups.length!==1)throw Error('Function arguments');base=node('apply',{base,items:groups[0]});continue;}
+        const op=take();if(op==='('){base=node('apply',{base,groups:group('(')});continue;}
         if(op==='!'&&base.type==='bound'&&base.upper)throw Error('Group a factorial exponent explicitly');
         if(op==='!'||op==="'"){base=node('postfix',{base,op});continue;}
         const result=base.type==='bound'?{...base}:node('bound',{base});
@@ -91,6 +99,7 @@ export function formulaLatex(source,onFailure){
     }
     function atom(){
       const t=take();if(t===undefined)throw Error('Missing value');
+      if(t==='#'){if(peek()!=='{')throw Error('Enclose the counted set in braces');return node('cardinality',{value:atom()});}
       if(['(','[','{'].includes(t)){const groups=group(t);return node('group',{open:t,items:groups.length>1?[node('list',{items:groups.map(items=>node('list',{items})),separator:'; '})]:groups[0]});}
       if(/^\d+(?:\.\d+)?$/.test(t))return node('number',{value:t});
       if(t==='...')return node('symbol',{value:'cdots'});
@@ -100,7 +109,7 @@ export function formulaLatex(source,onFailure){
         return node('big',{name:t==='sum'?'sum':'prod',lower,upper,body:product()});
       }
       if(peek()==='('){take();return node('call',{name:t,groups:group('(')});}
-      if(['Nq','Nn','Nk','Nm','xz','nz'].includes(t))return node('list',{items:[...t].map(value=>node('symbol',{value})),separator:'\\,'});
+      if(['Nq','Nn','Nk','Nm','Mn','mj','xz','nz'].includes(t))return node('list',{items:[...t].map(value=>node('symbol',{value})),separator:'\\,'});
       if(t.length>1&&!Object.hasOwn(greek,t)&&!functions.has(t)&&t!=='cdots')throw Error('Literal word');
       return node('symbol',{value:t});
     }
