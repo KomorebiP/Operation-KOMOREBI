@@ -96,7 +96,7 @@ x_i\mapsto d_ix_i
 T_{ij}=t_{i-j}
 ```
 
-**Scope.** Finite constant diagonal matrix
+**Scope.** Finite matrix with constant diagonals
 
 **Sources:** [A: Komorebi Math API inventory](https://github.com/KomorebiP/komorebi-math/blob/a3aa04ac18a523f30c50c7f5dba709f88e904eff/docs/API_INVENTORY.md).
 
@@ -399,7 +399,7 @@ c_k=\frac{2}{b-a}\int_a^bf(x)\cos\frac{k\pi(x-a)}{b-a}\,dx
 J(x)=(s(x),t(x)),\qquad\ker J=\ker s\cap\ker t
 ```
 
-**Scope.** For linear maps the displayed kernels are subspaces. For general maps read the equality as intersection of fiber-equivalence relations.
+**Scope.** For linear maps, the displayed kernels are subspaces. For general maps, read the equality as intersection of fiber-equivalence relations.
 
 **Keep in view.** The joint observation retains both queries. It need not retain all information about the original object or every future query.
 

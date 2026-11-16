@@ -25,11 +25,11 @@ def glossary_lookup(config):
     terms = sorted(config['glossary'], key=lambda t: t['term'].casefold())
     body = ('<section id="glossary-lookup" class="glossary-lookup" aria-labelledby="glossary-lookup-title">'
             '<h2 id="glossary-lookup-title">Find a glossary term</h2>'
-            '<p id="glossary-help">Search a name, abbreviation or words in a definition or example. Try “nullspace”, “projection” or “CRT”. Matches link to the full entry, '
+            '<p id="glossary-help">Search for a name, abbreviation, or words in a definition or example. Try “nullspace”, “projection”, or “CRT”. Matches link to the full entry, '
             'with fuller explanations, examples, and related terms. Select a term name to read its complete entry. You can also browse the subjects and alphabetical index below.</p>'
             '<noscript><p>Quick lookup needs JavaScript. Use the subject links and alphabetical index below, or your browser’s Find command.</p></noscript>'
             '<form id="glossary-form" role="search" aria-label="Glossary" aria-describedby="glossary-help" hidden>'
-            '<label for="glossary-query">Term, abbreviation or words to find</label>'
+            '<label for="glossary-query">Term, abbreviation, or words to find</label>'
             '<input id="glossary-query" type="search" name="q" autocomplete="off">'
             '<label for="glossary-subject">Subject</label><select id="glossary-subject" name="subject">'
             '<option value="">All subjects</option>')

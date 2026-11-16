@@ -30,7 +30,7 @@ Both functions start with slope one. Their later coefficients distinguish the fo
 
 The controls accept strict contractions with denominators at most 100, between one and sixteen retained coefficients, and a rational radius from zero to $4/3$. The displayed tail envelope updates with the radius and retained count. Decimal plots have additional floating-point roundoff. The [editable Python example](https://KomorebiP.github.io/Operation-KOMOREBI/playground.html#special-functions-coupled) remains available for following the computation in code.
 
-Writing $U(z)=\sum_{n\ge0}u_nz^{2n+1}$ and $V(z)=\sum_{n\ge0}v_nz^{2n+1}$, the first coefficients in this example are $u_0=v_0=1$, $u_1=2/27$ and $v_1=1/8$.
+With $U(z)=\sum_{n\ge0}u_nz^{2n+1}$ and $V(z)=\sum_{n\ge0}v_nz^{2n+1}$, the first coefficients in this example are $u_0=v_0=1$, $u_1=2/27$, and $v_1=1/8$.
 
 The [formal companion](../monographs/special-functions/formalization/Block01/REPORT.md) records the majorant $0<u_n,v_n\le2^{-n}$ when the four positive scales are at most one. If $N$ coefficients are retained and $0<R<\sqrt2$, put $\rho=R^2/2$. For either component, the omitted series on $|z|\le R$ is bounded by
 

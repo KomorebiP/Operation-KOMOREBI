@@ -13,7 +13,7 @@
     data = await response.json();
     if (data.schema !== 1 || !data.works.length || !data.entries.length || !data.pages) throw new Error("Invalid catalogue");
   } catch {
-    status.textContent = "The document list could not load. Reload to try again, or use the paper and accessibility links below.";
+    status.textContent = "The document list could not be loaded. Reload to try again, or use the paper and accessibility links below.";
     return;
   }
   const sides = ["left", "right"];

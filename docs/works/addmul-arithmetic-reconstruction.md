@@ -50,7 +50,7 @@ Start with the [edition guide](../../research/addmul-arithmetic-reconstruction/R
 
 ## Code
 
-These links include code, examples, checks, or build tools. Read the [edition guide](../../research/addmul-arithmetic-reconstruction/README.md) for setup instructions and what each command does. All software is beta and work in progress.
+These links include code, examples, checks, or build tools. Read the [edition guide](../../research/addmul-arithmetic-reconstruction/README.md) for setup instructions and an explanation of what each command does. All software is in beta and remains a work in progress.
 
 - [Code / scripts: tests](../../research/addmul-arithmetic-reconstruction/tests/)
 

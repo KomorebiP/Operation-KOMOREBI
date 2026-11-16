@@ -2,7 +2,7 @@
 
 [Browse hub](../BROWSE.md) · [Find proofs](PROOFS.md) · [Lean sources](LEAN.md) · [Code](CODE.md) · [Collection](../../README.md)
 
-These are entry points to runtime code, examples, checks, and utilities supplied with each edition. Some are build or audit scripts. Read **Work overview** and the edition README for setup instructions and what each command does. All software remains beta / work in progress.
+These are entry points to runtime code, examples, checks, and utilities supplied with each edition. Some are build or audit scripts. Read **Work overview** and the edition README for setup instructions and an explanation of what each command does. All software remains beta / work in progress.
 
 <a id="collections"></a>
 

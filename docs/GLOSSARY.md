@@ -346,7 +346,7 @@ For finitely many columns, solving the homogeneous matrix equation tests indepen
 
 ### Basis
 
-A linearly independent spanning family. Every vector has a unique finite linear combination in that basis. Redundant measurements can describe a vector without forming a basis.
+A linearly independent spanning family. Every vector has a unique expression as a finite linear combination of basis vectors. Redundant measurements can describe a vector without forming a basis.
 
 A basis provides a complete coordinate system with no redundancy. Spanning guarantees that each vector can be represented, while independence guarantees that the coefficients are unique. These are separate requirements; a generating list can span successfully while still storing more measurements than a basis needs.
 
@@ -2164,7 +2164,7 @@ This viewpoint supports deliberate compression: retain exactly the distinctions 
 
 ### Linear quotient map
 
-For a vector space V and subspace K, the canonical linear map V → V/K sending x to its equivalence class x+K. Its kernel is K and it is surjective. It retains exactly the distinction between inputs differing by an element of K.
+For a vector space V and subspace K, the canonical linear map V → V/K sending x to its equivalence class x+K. Its kernel is K and it is surjective. It identifies exactly those inputs whose difference lies in K.
 
 The quotient map formalizes forgetting an entire subspace of directions at once. It sends every x+k with k∈K to the same class as x. Its output is therefore an equivalence class, not a chosen representative or a numerical average.
 
@@ -2382,7 +2382,7 @@ This differs from evaluating the operation on one test vector or taking the larg
 
 ### Condition number of a coordinate map
 
-For an invertible linear coordinate map C on a nonzero finite-dimensional normed space, κ(C)=‖C‖‖C⁻¹‖. It bounds how the chosen coordinate representation can amplify errors, and depends on the norms being used.
+For an invertible linear coordinate map C on a nonzero finite-dimensional normed space, κ(C)=‖C‖‖C⁻¹‖. It bounds how the chosen coordinate representation can amplify errors and depends on the norms being used.
 
 The product ‖C‖‖C⁻¹‖ measures how unevenly a reversible coordinate map can stretch and then recover directions. It is at least one for a nonzero space under compatible induced norms. A large value signals that small stored perturbations can be magnified during recovery.
 
@@ -2418,7 +2418,7 @@ The coordinate projections onto the first m positions in ℓ² illustrate the di
 
 ### Operator norm convergence
 
-Convergence ‖Tₘ−T‖→0 for bounded linear maps between fixed normed spaces. It controls the error uniformly over all inputs of norm at most one, and implies strong operator convergence.
+Convergence ‖Tₘ−T‖→0 for bounded linear maps between fixed normed spaces. It controls the error uniformly over all inputs of norm at most one and implies strong operator convergence.
 
 Operator norm convergence makes one shrinking error bound work for all inputs of norm at most one. For any fixed x, multiplying that bound by ‖x‖ gives strong convergence. The uniformity is the additional requirement, not simply a different way to print pointwise errors.
 

@@ -29,4 +29,4 @@ try {
   if($('search'))setupSearch(entries);
   const selected=root.querySelector('[data-archive-id]');if(selected)setupArchivePlot(entries.find(x=>x.id===selected.dataset.archiveId));
   root.dataset.archiveReady='true';
-}catch(error){const note=make('p','Interactive tools could not load. All definitions, exact tables, and downloads remain available. '+error.message);note.setAttribute('role','status');root.prepend(note);}
+}catch(error){const note=make('p','Interactive tools could not be loaded. All definitions, exact tables, and downloads remain available. '+error.message);note.setAttribute('role','status');root.prepend(note);}

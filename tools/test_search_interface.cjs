@@ -183,10 +183,10 @@ test('late result previews cannot overwrite a reset or newer query',async()=>{
 });
 
 test('failed initial data and failed page previews can be retried',async()=>{
-  let p=setup('',{failLoad:true});await p.submit('Euler');assert.match(p.status(),/could not load/);
+  let p=setup('',{failLoad:true});await p.submit('Euler');assert.match(p.status(),/could not be loaded/);
   await p.submit('Euler');assert.equal(p.titles().length,40);assert.equal(p.requests.load,2);
   p=setup('',{failPreview:true});await p.submit('Euler');const first=p.titles();p.next();await flush();
-  assert.match(p.status(),/Results could not load/);assert.deepEqual(p.titles(),first);
+  assert.match(p.status(),/Results could not be loaded/);assert.deepEqual(p.titles(),first);
   assert.equal(new URL(p.location).searchParams.get('page'),null);
   p.next();await flush();assert.match(p.status(),/Showing 41–80/);
 });

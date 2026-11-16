@@ -21,7 +21,7 @@ def build(site):
 <div class="sf-workspace" id="sf-workspace"><section class="sf-panel sf-controls" aria-labelledby="sf-controls-title"><h2 id="sf-controls-title">Choose the four scales</h2>
 <div class="sf-equations arithmatex" tabindex="0" role="group" aria-label="Displayed equation. Scroll horizontally if needed.">\[U'(z)=1+U(qz)V(rz),\qquad V'(z)=1+U(az)V(bz).\]</div>
 <form id="sf-form"><fieldset id="sf-fields" disabled><legend class="sr-only">Exact experiment settings</legend>
-<p id="sf-input-help" class="sf-note">Use fractions such as 2/3, with denominator 1–100. Each scale must be strictly between zero and one.</p>
+<p id="sf-input-help" class="sf-note">Use fractions such as 2/3, with a denominator from 1 to 100. Each scale must be strictly between zero and one.</p>
 <div class="sf-scale-grid"><label for="sf-q">q · U in the first equation<input id="sf-q" type="text" value="1/3" inputmode="text" maxlength="16" aria-describedby="sf-input-help sf-error" autocomplete="off" spellcheck="false"></label>
 <label for="sf-r">r · V in the first equation<input id="sf-r" type="text" value="2/3" inputmode="text" maxlength="16" aria-describedby="sf-input-help sf-error" autocomplete="off" spellcheck="false"></label>
 <label for="sf-a">a · U in the second equation<input id="sf-a" type="text" value="1/2" inputmode="text" maxlength="16" aria-describedby="sf-input-help sf-error" autocomplete="off" spellcheck="false"></label>

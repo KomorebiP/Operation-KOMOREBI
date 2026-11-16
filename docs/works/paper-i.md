@@ -12,7 +12,7 @@ Typed systems, finite realization, seed rank, and packet coordinates.
 
 ## Before you start
 
-**Suggested background:** Vectors, matrices, linear maps, kernels, and images, and reading a statement with hypotheses. Consult the selected paper for any additional algebra or analysis it uses.
+**Suggested background:** Familiarity with vectors, matrices, linear maps, kernels, and images, plus experience reading statements with hypotheses. Consult the selected paper for any additional algebra or analysis it uses.
 
 **Recorded results and limits:** The stated manuscript scope has 69 accepted proof-level correspondences. Its 108 correspondence records are not a count of 108 theorems.
 
@@ -72,7 +72,7 @@ Start with the [edition guide](../../papers/paper-i/current/README.md) and the b
 
 ## Code
 
-These links include code, examples, checks, or build tools. Read the [edition guide](../../papers/paper-i/current/README.md) for setup instructions and what each command does. All software is beta and work in progress.
+These links include code, examples, checks, or build tools. Read the [edition guide](../../papers/paper-i/current/README.md) for setup instructions and an explanation of what each command does. All software is in beta and remains a work in progress.
 
 - [Code / scripts: code/python](../../papers/paper-i/current/code/python/)
 

@@ -386,7 +386,7 @@ S(t)=\alpha e^{tQ}\mathbf1
 
 **Scope.** Fixed finite transient row subgenerator Q and time t>=0. The row convention is intentional and differs from column-state formulas above.
 
-**Keep in view.** For fixed t and Q this is a linear functional of the initial row distribution alpha, not a linear map of Q.
+**Keep in view.** For fixed t and Q, this is a linear functional of the initial row distribution alpha, not a linear map of Q.
 
 **Sources:** [A: Komorebi Math API inventory](https://github.com/KomorebiP/komorebi-math/blob/a3aa04ac18a523f30c50c7f5dba709f88e904eff/docs/API_INVENTORY.md).
 
@@ -428,7 +428,7 @@ S(t)=\alpha e^{tQ}\mathbf1
 \mathcal C_m(u_0,\ldots,u_{m-1})=\sum_{j=0}^{m-1}A^{m-1-j}Bu_j
 ```
 
-**Scope.** Fixed finite A and B, horizon $m\ge1$, zero initial state. For nonzero initial state add $A^m x_0$.
+**Scope.** Fixed finite A and B, horizon $m\ge1$, zero initial state. For a nonzero initial state, add $A^m x_0$.
 
 **Keep in view.** The displayed order is chronological input order. Reversing columns without reversing inputs changes the action.
 

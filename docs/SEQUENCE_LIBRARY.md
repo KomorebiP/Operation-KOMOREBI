@@ -26,7 +26,7 @@ Readers retain their original TeX; sequence formulas retain their original
 plain-text source. A bounded notation parser supplies a display transcription,
 without changing exact data, program code or formula exports. Unsupported
 source notation remains literal. Typeset formulas can scroll within their
-panels and remain keyboard accessible. Without JavaScript the original source
+panels and remain keyboard accessible. Without JavaScript, the original source
 and complete static index remain available.
 
 `tools/sequence_formula_catalogue.py` defines the finite parameter grids. Scalar
@@ -154,8 +154,8 @@ python tools/audit_sequence_library.py --oeis --output RESULT_JSON
 The independent audit checks every stored new coefficient/component and index
 map, factorial versus hypergeometric coefficients, ordinary versus block
 convolutions, classical closed-form / recurrence oracles, and the full retained
-OEIS comparison. These are finite implementation checks, not novelty review,
-an infinite-identity proof, or accessibility certification.
+OEIS comparison. These finite implementation checks do not constitute a novelty
+review, a proof of an infinite identity, or accessibility certification.
 
 ## Complete coefficient tables and supported columns
 
@@ -244,7 +244,7 @@ k-bonacci source is pinned alongside it. These extensions do not establish
 historical novelty.
 
 Search fields `order:`, `weight:`, and `parent:` find recurrence order, step
-weight and source subsequence respectively. `k:` retains its polynomial-column
+weight, and source subsequence, respectively. `k:` retains its polynomial-column
 meaning. Every record has finite-window sign, support, and GCD details, source
 normalization, typed research connections, and a copyable citation.
 

@@ -31,7 +31,7 @@
       for(const original of document.querySelectorAll('script[type="application/x-mnr-deferred"]'))await new Promise((resolve,reject)=>{const script=document.createElement('script');script.src=original.dataset.src;script.onload=resolve;script.onerror=reject;original.replaceWith(script);});
       status.hidden=true;document.dispatchEvent(new CustomEvent('mnr-chapter-ready'));
       if(location.hash){const target=document.getElementById(decodeURIComponent(location.hash.slice(1)));target?.scrollIntoView();}
-    }catch(error){article.removeAttribute('aria-busy');status.firstElementChild.textContent='The chapter could not load. Retry, or use the PDF and source links below.';retry.hidden=false;console.error(error);}
+    }catch(error){article.removeAttribute('aria-busy');status.firstElementChild.textContent='The chapter could not be loaded. Retry, or use the PDF and source links below.';retry.hidden=false;console.error(error);}
   };
   retry.addEventListener('click',start);if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();

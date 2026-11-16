@@ -578,7 +578,7 @@ For \(m=3\), suppress the superscript and write the complete circulant system:
 =\begin{pmatrix}1\\0\\0\end{pmatrix}.
 \]
 
-Because every \(u_a\) has zero constant coefficient, this matrix has identity constant term, and is invertible as a formal power-series matrix. The three-packet equation is **equivalent** to the original reciprocal, not an approximation or a different sequence.
+Because every \(u_a\) has zero constant coefficient, this matrix has identity constant term and is invertible as a formal power-series matrix. The three-packet equation is **equivalent** to the original reciprocal, not an approximation or a different sequence.
 
 At degree five the output belongs to residue \(2\bmod3\). Splitting the original binomial recurrence by the *tap degree* \(j\bmod3\) gives
 
@@ -720,7 +720,7 @@ The second command regenerates the exact integer CSVs, rational packet table, SV
 
 ### Original literature and related worked examples
 
-The [Special Functions sequence atlas, lessons S07 and S08](../../monographs/special-functions/expanded_visual/chapters_sequences.tex) already gives the Bell and factorial-weighted Fubini rows, the generating functions, and the comparison plots. Its [Special Functions monograph](../works/monographs-special-functions.md) supplies the broader sequence setting and separate Lean coverage. The existing [sequence-shapes playground](SEQUENCE_SHAPES.md) lets readers modify parameters and inspect 2D and 3D sequence maps.
+[Lessons S07 and S08 of the Special Functions sequence atlas](../../monographs/special-functions/expanded_visual/chapters_sequences.tex) already give the Bell and factorial-weighted Fubini rows, the generating functions, and the comparison plots. The [Special Functions monograph](../works/monographs-special-functions.md) supplies the broader sequence setting and separate Lean coverage. The existing [sequence-shapes playground](SEQUENCE_SHAPES.md) lets readers modify parameters and inspect 2D and 3D sequence maps.
 
 For the reciprocal and residue machinery, see the [Euler extended example](EULER_PACKETS.md), [factorial lanes](FACTORIAL_LANES.md), and [Paper IV](../works/paper-iv.md). These links establish related constructions, **not** a claim that Euler, factorial-lane, and Fubini coefficients are identical.
 

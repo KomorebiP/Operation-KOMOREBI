@@ -118,7 +118,7 @@ I_X(x)=x
 \langle Tx,y\rangle_Y=\langle x,T^*y\rangle_X,\qquad (aT)^*=\overline a\,T^*
 ```
 
-**Scope.** Fixed nondegenerate inner products and finite dimensional spaces. Over the reals adjoint formation is linear.
+**Scope.** Fixed nondegenerate inner products and finite dimensional spaces. Over the reals, adjoint formation is linear.
 
 **Keep in view.** An adjoint acts linearly on vectors, but adjoint formation is conjugate-linear in a complex operator.
 
@@ -162,7 +162,7 @@ I_X(x)=x
 [T,U]=TU-UT
 ```
 
-**Scope.** Endomorphisms of same space
+**Scope.** Endomorphisms of the same space
 
 **Sources:** [U: Unified executable language](https://github.com/KomorebiP/komorebi-math/blob/a3aa04ac18a523f30c50c7f5dba709f88e904eff/docs/UNIFIED_LANGUAGE.md) · [Q: Quantum memory contracts](https://github.com/KomorebiP/komorebi-math/blob/a3aa04ac18a523f30c50c7f5dba709f88e904eff/docs/QUANTUM_MEMORY_NUMERICAL_CONTRACTS.md).
 
@@ -437,7 +437,7 @@ P_X=A_XS_X,\quad P_X^2=P_X,\quad \ker P_X=\ker S_X
 R=A_{Y,\mathrm{in}}S_{Y,\mathrm{out}}
 ```
 
-**Scope.** Different presentations of same physical intermediate space
+**Scope.** Different presentations of the same physical intermediate space
 
 **Sources:** [R: Redundant frame algebra](https://github.com/KomorebiP/komorebi-math/blob/a3aa04ac18a523f30c50c7f5dba709f88e904eff/docs/REDUNDANT_FRAME_ALGEBRA.md).
 
@@ -517,7 +517,7 @@ H_X=S_X^*S_X,\ R^*H_YR=H_X
 G\mapsto C^{-\mathsf T}GC^{-1}\quad\text{(bilinear)}
 ```
 
-**Scope.** Fixed invertible coordinate change $C$. For a complex Hermitian form use $H\mapsto C^{-*}HC^{-1}$, where $C^{-*}=(C^{-1})^*$.
+**Scope.** Fixed invertible coordinate change $C$. For a complex Hermitian form, use $H\mapsto C^{-*}HC^{-1}$, where $C^{-*}=(C^{-1})^*$.
 
 **Keep in view.** Transpose is correct for bilinear forms. Hermitian forms require conjugate transpose.
 

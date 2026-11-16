@@ -12,7 +12,7 @@ Refinement, weighted transfer, and integral structure.
 
 ## Before you start
 
-**Suggested background:** Vectors, matrices, linear maps, kernels, and images, and reading a statement with hypotheses. Consult the selected paper for any additional algebra or analysis it uses.
+**Suggested background:** Familiarity with vectors, matrices, linear maps, kernels, and images, plus experience reading statements with hypotheses. Consult the selected paper for any additional algebra or analysis it uses.
 
 **Recorded results and limits:** 53/53 proof-level scopes have recorded replay and accepted correspondence. Admissible contour existence remains an application assumption.
 
@@ -66,7 +66,7 @@ Start with the [edition guide](../../papers/paper-ii/current/README.md) and the 
 
 ## Code
 
-These links include code, examples, checks, or build tools. Read the [edition guide](../../papers/paper-ii/current/README.md) for setup instructions and what each command does. All software is beta and work in progress.
+These links include code, examples, checks, or build tools. Read the [edition guide](../../papers/paper-ii/current/README.md) for setup instructions and an explanation of what each command does. All software is in beta and remains a work in progress.
 
 - [Code / scripts: source/canonical_v1.2.1/code/python](../../papers/paper-ii/current/source/canonical_v1.2.1/code/python/)
 

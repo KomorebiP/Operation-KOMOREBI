@@ -257,7 +257,7 @@ function validInputs(){
   if(!$('resistance').value.trim()||!Number.isFinite(r)||r<0)return 'Resistance must be finite and nonnegative.';
   if(!$('reactance').value.trim()||!Number.isFinite(x))return 'Reactance must be finite.';
   if(!Number.isFinite(r/z)||!Number.isFinite(x/z)||Math.max(Math.abs(r/z),Math.abs(x/z))>1e12)
-    return 'Normalized impedance is too large for this numerical display. For an ideal open, select Open circuit.';
+    return 'Normalized impedance is too large for this numerical display. For an ideal open, select the Open preset.';
   states.z0=z;states.r=r;states.x=x;return '';
 }
 function readInputs(){
@@ -363,7 +363,7 @@ $('copy-current').addEventListener('click',async()=>{
     `Γin = ${complexString(line,6)}`,
     `Zin = ${zin?complexString(scale(zin,states.z0),3)+' Ω':'ideal open'}`].join('\n');
   try{await copyText(result);$('copy-status').textContent='Copied.'}
-  catch(error){$('copy-status').textContent='Copy unavailable; use Save settings.'}
+  catch(error){$('copy-status').textContent='Copy unavailable; use Download settings JSON.'}
 });
 $('smith-chart').addEventListener('pointerdown',e=>{const g=pointerToGamma(e);if(!g)return;dragOrigin=loadHistorySnapshot();drag=true;$('smith-chart').setPointerCapture(e.pointerId);setFromGamma(g)});
 $('smith-chart').addEventListener('pointermove',e=>{if(!drag)return;const g=pointerToGamma(e);if(g)setFromGamma(g)});
@@ -623,7 +623,7 @@ function downloadReport(){
 }
 $('download-results').addEventListener('click',downloadReport);
 $('run-tests').addEventListener('click',runChecks);
-$('copy-results').addEventListener('click',async()=>{if(!lastTestResults.length)runChecks();const textReport=['Komorebi Polyphase Smith Chart / browser numerical checks',...lastTestResults.map((c,i)=>`${i+1}. ${c.ok?'PASS':'FAIL'} ${c.label} [${c.kind==='count'?'coefficient mismatches '+c.residual:'residual '+c.residual.toExponential(4)+' / tolerance '+c.tolerance.toExponential(2)}]`),'These are finite browser checks, not formal proof.'].join('\n');try{if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(textReport);else{const a=document.createElement('textarea');a.value=textReport;a.style.position='fixed';a.style.top='-1000px';document.body.appendChild(a);a.select();const copied=document.execCommand('copy');a.remove();if(!copied)throw new Error('Browser denied clipboard access')}$('copy-results').textContent='Report copied';setTimeout(()=>$('copy-results').textContent='Copy test report',1600)}catch(e){$('test-status').textContent='Clipboard failed: '+String(e.message||e)}});
+$('copy-results').addEventListener('click',async()=>{if(!lastTestResults.length)runChecks();const textReport=['Komorebi Polyphase Smith Chart / browser numerical checks',...lastTestResults.map((c,i)=>`${i+1}. ${c.ok?'PASS':'FAIL'} ${c.label} [${c.kind==='count'?'coefficient mismatches '+c.residual:'residual '+c.residual.toExponential(4)+' / tolerance '+c.tolerance.toExponential(2)}]`),'These are finite browser checks, not formal proofs.'].join('\n');try{if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(textReport);else{const a=document.createElement('textarea');a.value=textReport;a.style.position='fixed';a.style.top='-1000px';document.body.appendChild(a);a.select();const copied=document.execCommand('copy');a.remove();if(!copied)throw new Error('Browser denied clipboard access')}$('copy-results').textContent='Report copied';setTimeout(()=>$('copy-results').textContent='Copy test report',1600)}catch(e){$('test-status').textContent='Clipboard failed: '+String(e.message||e)}});
 // Guided research views: all examples retain the same live load and packet state.
 let activeView='exact';
 function switchView(next,focus=false){

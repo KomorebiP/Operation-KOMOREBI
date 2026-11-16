@@ -242,7 +242,7 @@ P E_i^\dagger E_j P=c_{ij}P
 
 **Scope.** Fixed orthogonal code projector P and finite error family. P E_i* E_j P is conjugate-linear in E_i and linear in E_j. The criterion requires a scalar matrix c_ij for every pair.
 
-**Keep in view.** Over complex spaces the error-pair map is sesquilinear, not bilinear. The displayed scalar-compression condition is a criterion, not itself a recovery map.
+**Keep in view.** Over complex spaces, the error-pair map is sesquilinear, not bilinear. The displayed scalar-compression condition is a criterion, not itself a recovery map.
 
 **Sources:** [A: Komorebi Math API inventory](https://github.com/KomorebiP/komorebi-math/blob/a3aa04ac18a523f30c50c7f5dba709f88e904eff/docs/API_INVENTORY.md).
 

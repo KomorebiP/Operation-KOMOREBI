@@ -33,7 +33,7 @@ Both are at distance $1/8$.
 
 The lower candidate has retained significand bits $110$, whose integer value
 six is even. The upper has bits $111$, whose integer value seven is odd.
-Ties to even therefore chooses
+The ties-to-even rule therefore chooses
 
 ```math
 \widehat x=\frac32,\qquad
@@ -41,7 +41,7 @@ Ties to even therefore chooses
 ```
 
 The stored result is below the exact value. A numerical ternary return using
-the stored-minus-exact convention would have negative sign.
+the stored-minus-exact convention would have a negative sign.
 
 ## Change the precision
 

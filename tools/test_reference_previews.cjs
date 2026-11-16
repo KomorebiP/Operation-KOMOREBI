@@ -84,7 +84,7 @@ const flush=()=>new Promise(resolve=>setImmediate(resolve));
 
   let fail=true;
   p=fixture(()=>fail ? {ok:false} : response(index));p.open();await flush();
-  assert.match(p.status.textContent,/could not load/);assert.equal(p.retry.hidden,false);assert.equal(p.openLink.href,p.link.href);
+  assert.match(p.status.textContent,/could not be loaded/);assert.equal(p.retry.hidden,false);assert.equal(p.openLink.href,p.link.href);
   fail=false;p.retry.emit('click');await flush();assert.equal(p.requests(),2);assert.equal(p.content.children.length,2);
 
   const invalid=[{...index,work:'paper-ii'},

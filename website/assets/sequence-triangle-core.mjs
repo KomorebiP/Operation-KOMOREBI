@@ -40,7 +40,7 @@ export function tableCSV(slice) {
 
 export function shortInteger(raw) {
   const digits=raw.replace(/^-/,'');
-  return digits.length>48?`${raw.startsWith('-')?'negative ':''}${digits.length} digits, beginning ${digits.slice(0,10)}, ending ${digits.slice(-6)}`:raw;
+  return digits.length>48?`${raw.startsWith('-')?'negative ':''}${digits.length} digits, beginning with ${digits.slice(0,10)}, ending with ${digits.slice(-6)}`:raw;
 }
 
 export const TABLE_KEYS=['kind','index','view','mod','scale','zero'];

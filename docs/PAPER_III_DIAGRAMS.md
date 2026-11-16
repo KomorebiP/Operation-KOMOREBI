@@ -14,7 +14,7 @@ The left panel follows P₀→P₁→P₂→P₃ through edges e₁, e₂, e₃.
 <a id="figure-2-coordinate-transport-and-chosen-connection"></a>
 <h2 id="figure-02" tabindex="-1">Figure 2: Coordinate transport and chosen connection</h2>
 
-Both triangles traverse a→b→c→a. On the left, exact analysis and synthesis define J; the loop product Jₐ←c J_c←b J_b←a is identity by cancellation of coordinate maps. On the right, the independently chosen connection Γ has holonomy H=Γₐ←c Γ_c←b Γ_b←a. A gauge change at the base sends H to GₐHGₐ⁻¹. The matching arrow shapes do not identify these two kinds of transport.
+Both triangles traverse a→b→c→a. On the left, exact analysis and synthesis define J; the loop product Jₐ←c J_c←b J_b←a is the identity by cancellation of coordinate maps. On the right, the independently chosen connection Γ has holonomy H=Γₐ←c Γ_c←b Γ_b←a. A gauge change at the base sends H to GₐHGₐ⁻¹. The matching arrow shapes do not identify these two kinds of transport.
 
 [Figure and surrounding text](https://komorebip.github.io/Operation-KOMOREBI/read/paper-iii/connections-and-obstructions.html#L88)
 
@@ -28,7 +28,7 @@ The grid has output packet μ on the rows and input packet ν on the columns, ea
 <a id="figure-4-two-exact-packet-hessians"></a>
 <h2 id="figure-04" tabindex="-1">Figure 4: Two exact packet Hessians</h2>
 
-The first derivative at the origin is identity. Each two-by-two grid lists ordered input slots x and y along both rows and columns. The first output retains both mixed Hessian entries; the second has only the repeated x-input entry. The tables below give every entry. Consequently D²F(0)[h,k]=(hₓkᵧ+hᵧkₓ,2hₓkₓ), and one half of D²F(0)[h,h] is (hₓhᵧ,hₓ²). The factor one half and both mixed slots are retained. All higher jets vanish for this degree-two model.
+The first derivative at the origin is the identity. Each two-by-two grid lists ordered input slots x and y along both rows and columns. The first output retains both mixed Hessian entries; the second has only the repeated x-input entry. The tables below give every entry. Consequently D²F(0)[h,k]=(hₓkᵧ+hᵧkₓ,2hₓkₓ), and one half of D²F(0)[h,h] is (hₓhᵧ,hₓ²). The factor one half and both mixed slots are retained. All higher jets vanish for this degree-two model.
 
 <table>
 <caption>Figure 4: Two exact packet Hessians</caption>
@@ -165,7 +165,7 @@ The dashed unit square and its solid sheared image are related by H with rows (1
 <a id="atlas-page-14-gauge-changes-the-picture-not-flatness"></a>
 <h3 id="atlas-14" tabindex="-1">Atlas page 14: Gauge changes the picture, not flatness</h3>
 
-The two parallelograms are exact images of a unit square before and after the gauge D=diag(2,1). Conjugation changes the upper-right shear entry from 1 to 2. The obstruction has Frobenius norm 1 in the first fixed coordinate basis and 2 in the second, while both obstructions have rank one and are nonzero. A nonorthogonal gauge can change this numerical size without changing whether the loop is identity.
+The two parallelograms are exact images of a unit square before and after the gauge D=diag(2,1). Conjugation changes the upper-right shear entry from 1 to 2. The obstruction has Frobenius norm 1 in the first fixed coordinate basis and 2 in the second, while both obstructions have rank one and are nonzero. A nonorthogonal gauge can change this numerical size without changing whether the loop is the identity.
 
 [Original plate explanation](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/papers/paper-iii/current/manuscript/visual_atlas.tex#L295)
 

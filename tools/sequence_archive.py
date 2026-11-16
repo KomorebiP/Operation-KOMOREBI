@@ -55,7 +55,7 @@ def plot_section(entry):
 def build(site, atlas):
     entries=records(atlas)
     data=dict(schema=1, archive_sha256=ARCHIVE_SHA256, entries=entries,
-        scope='Recovered research records. Exact finite terms; no claim of novelty, infinite identity or new OEIS allocation.')
+        scope='Recovered research records. Exact finite terms; no claim of novelty, infinite identity, or new OEIS allocation.')
     site.write('assets/sequence-archive-data.json',json.dumps(data,ensure_ascii=False,separators=(',',':'))+'\n')
     manifest=json.loads((SOURCE/'BFILE_SHA256.json').read_bytes())
     for entry in entries:
@@ -98,7 +98,7 @@ def build(site, atlas):
         symbol=entry['index_symbol']
         site.write('sequence-archive/'+identifier+'.csv',symbol+',a('+symbol+')\n'+''.join(str(start+i)+','+v+'\n' for i,v in enumerate(entry['terms'])))
         triangle=identifier=='KOM084'
-        index_note=("This record flattens the coefficient triangle of P_n(s) by rows. The stored index j=n(n+1)/2+k selects coefficient [s^k]P_n(s), with 0≤k≤n. It is not the polynomial row number. The table also shows (n,k)." if triangle else f'The first stored index is {start}; the first term is a({start})={entry["terms"][0]}. The offset describes an index, not a value. The stored data stops at index {last}; the plot never extrapolates beyond it.')
+        index_note=("This record flattens the coefficient triangle of P_n(s) by rows. The stored index j=n(n+1)/2+k selects coefficient [s^k]P_n(s), with 0≤k≤n. It is not the polynomial row number. The table also shows (n,k)." if triangle else f'The first stored index is {start}; the first term is a({start})={entry["terms"][0]}. The offset describes an index, not a value. The stored terms end at index {last}; the plot never extrapolates beyond it.')
         rows=[]
         for i,value in enumerate(entry['terms']):
             flat=start+i

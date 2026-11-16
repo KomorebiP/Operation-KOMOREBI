@@ -100,7 +100,7 @@ Start with the [edition guide](../../monographs/special-functions/README.md) and
 
 ## Code
 
-These links include code, examples, checks, or build tools. Read the [edition guide](../../monographs/special-functions/README.md) for setup instructions and what each command does. All software is beta and work in progress.
+These links include code, examples, checks, or build tools. Read the [edition guide](../../monographs/special-functions/README.md) for setup instructions and an explanation of what each command does. All software is in beta and remains a work in progress.
 
 - [Code / scripts: tools](../../monographs/special-functions/tools/)
 - [Exact coupled-function regression (Python)](../../monographs/special-functions/tools/check_coupled_exact.py)

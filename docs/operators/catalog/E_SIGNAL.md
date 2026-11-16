@@ -159,7 +159,7 @@ E_{g*h}=E_gE_h
 (x_0,x_1)=(a+d,a-d)
 ```
 
-**Scope.** Inverse of preceding pair analysis
+**Scope.** Inverse of the preceding pair analysis
 
 **Sources:** [WP: Wavelet polyphase worked derivation](https://github.com/KomorebiP/Operation-KOMOREBI/blob/f49e00d6088bbc8dca4f8a3a70b232db1eea085b/docs/demonstrations/WAVELET_POLYPHASE.md) · [S: Production finite signal processing](https://github.com/KomorebiP/komorebi-math/blob/a3aa04ac18a523f30c50c7f5dba709f88e904eff/docs/PRODUCTION_SIGNAL_PROCESSING.md).
 
@@ -241,7 +241,7 @@ R_K(c)_j=\mathbf1_{j\in K}c_j
 x\mapsto x-W^{-1}R_KWx
 ```
 
-**Scope.** Fixed invertible finite transform W and fixed K. For a redundant frame use I-S R_K A instead.
+**Scope.** Fixed invertible finite transform W and fixed K. For a redundant frame, use I-S R_K A instead.
 
 **Keep in view.** A square invertible W and fixed retention set are required. Redundant analysis uses synthesis maps instead of W inverse.
 
@@ -283,7 +283,7 @@ x\mapsto x-W^{-1}R_KWx
 y_k=\alpha_k\sum_{n=0}^{N-1}x_n\cos\!\left(\frac{\pi}{N}(n+\tfrac12)k\right)
 ```
 
-**Scope.** Real length N vectors. alpha_0=1/sqrt(N), alpha_k=sqrt(2/N) for k>0. Other library normalizations must be translated explicitly.
+**Scope.** Real vectors of length N. alpha_0=1/sqrt(N), alpha_k=sqrt(2/N) for k>0. Other library normalizations must be translated explicitly.
 
 **Keep in view.** The former name-only formula is replaced by one declared orthonormal DCT-II convention.
 
@@ -306,7 +306,7 @@ x\mapsto H_{2^m}x
 
 **Scope.** Finite length N=2^m with H_N H_N^T=N I. Divide by N for the inverse, or use H_N/sqrt(N) for orthonormal coordinates.
 
-**Keep in view.** An unnormalized Hadamard matrix is not its own inverse without division by dimension.
+**Keep in view.** An unnormalized Hadamard matrix is not its own inverse without division by the dimension.
 
 **Sources:** [C: General coordinate atlas](https://github.com/KomorebiP/komorebi-math/blob/a3aa04ac18a523f30c50c7f5dba709f88e904eff/docs/GENERAL_COORDINATE_ATLAS.md) · [A: Komorebi Math API inventory](https://github.com/KomorebiP/komorebi-math/blob/a3aa04ac18a523f30c50c7f5dba709f88e904eff/docs/API_INVENTORY.md).
 

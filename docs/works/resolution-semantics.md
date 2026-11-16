@@ -55,7 +55,7 @@ Start with the [maintained edition guide](../components/RESOLUTION_SEMANTICS_LEA
 
 ## Code
 
-These links include code, examples, checks, or build tools. Read the [maintained edition guide](../components/RESOLUTION_SEMANTICS_LEAN.md) for setup instructions and what each command does. All software is beta and work in progress.
+These links include code, examples, checks, or build tools. Read the [maintained edition guide](../components/RESOLUTION_SEMANTICS_LEAN.md) for setup instructions and an explanation of what each command does. All software is in beta and remains a work in progress.
 
 - [Code / scripts: checks](../../research/resolution-semantics/checks/)
 
