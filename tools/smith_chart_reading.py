@@ -154,7 +154,7 @@ def number_figures(body,record):
         result.append(fragment);start=node['end']
     result.append(references(body[start:]));return ''.join(result)
 
-def polish_text(body,rules):
+def polish_text(body,rules,*,include_links=False):
     class Text(HTMLParser):
         def __init__(self):
             super().__init__(convert_charrefs=False);self.stack=[];self.changes=[];self.counts=[0]*len(rules);self.lines=[0]+[m.end() for m in re.finditer('\n',body)]
@@ -164,7 +164,7 @@ def polish_text(body,rules):
         def handle_endtag(self,tag):
             if self.stack:self.stack.pop()
         def handle_data(self,value):
-            if any(t in {'pre','code','script','style','a'} or 'arithmatex' in a.get('class','') or a.get('class','').startswith('math ') for t,a in self.stack):return
+            if any(t in {'pre','code','script','style'} or (t=='a' and not include_links) or 'arithmatex' in a.get('class','') or a.get('class','').startswith('math ') for t,a in self.stack):return
             def transform(text):
                 for i,rule in enumerate(rules):
                     text,n=re.subn(rule['pattern'],rule['replacement'],text,flags=re.I);self.counts[i]+=n
@@ -298,4 +298,6 @@ def finalize(root,body,site=None):
     result,_=polish_text(result,record.get('text_rules',[]))
     for phrase in record['forbidden_visible_phrases']:
         if re.search(phrase,prose(result),re.I):raise ValueError('Obsolete research-log language in final reading: '+phrase)
-    return reader_support(root,result)
+    result=reader_support(root,result)
+    result,_=polish_text(result,record.get('punctuation_rules',[]),include_links=True)
+    return result

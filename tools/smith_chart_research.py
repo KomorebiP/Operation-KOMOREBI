@@ -147,7 +147,7 @@ def historical_body(root, revision):
             '<p>Revised prose and vector diagrams accompany the complete research draft. '
             'New supplements complete selected circuit and singular-interpolation arguments.</p>'
             '<p><strong>The six-reactive gap is closed.</strong> The newer checkpoint gives the degree-six target '
-            'an exact transformer-free circuit with three inductors, three capacitors, and seven positive resistors. '
+            'an exact transformer-free circuit with three inductors, three capacitors and seven positive resistors. '
             'The degree lower bound establishes a reactive minimum of six. '
             '<a href="continuation.html">Read the closure and the current RLC continuation.</a> '
             'Earlier open-status statements below are retained as history.</p>'
