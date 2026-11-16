@@ -5,6 +5,7 @@ import {setupArchivePlot} from './sequence-archive-plot.mjs';
 import {referenceQuery} from './sequence-oeis-core.mjs';
 import {createReferenceClient} from './sequence-oeis-client.mjs';
 import {mountWorkbench} from './sequence-workbench.mjs';
+import {mountTriangleExplorer} from './sequence-triangle.mjs';
 import {STORAGE_KEY,readSaved,writeSaved,updateSaveButtons} from './sequence-atlas-saved.mjs';
 
 const root=document.querySelector('[data-library]'),$=id=>document.getElementById('sl-'+id),make=(tag,text)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;return node;};
@@ -94,7 +95,7 @@ function setupReference(client){
   $('oeis-cancel').addEventListener('click',()=>client.cancel());
 }
 try{
-  if(root.dataset.entry){const response=await fetch(new URL(root.dataset.entry,location.href));if(!response.ok)throw Error('The exact record could not load.');setupArchivePlot(await response.json());setupTriangleNavigation();}
+  if(root.dataset.entry){const response=await fetch(new URL(root.dataset.entry,location.href));if(!response.ok)throw Error('The exact record could not load.');const entry=await response.json();setupArchivePlot(entry);setupTriangleNavigation();mountTriangleExplorer(entry,root.querySelector('#triangle'));}
   else if($('search')){const response=await fetch(new URL('./sequence-library-data.json',import.meta.url));if(!response.ok)throw Error('The local catalogue could not load.');const data=await response.json(),client=createReferenceClient();workbench=mountWorkbench({root,entries:data.entries,snapshot:data.snapshot.stripped_sha256,referenceClient:client});setupSearch(data.entries);setupReference(client);}
   root.dataset.libraryReady='true';
 }catch(error){const note=make('p',error.message+' Static definitions, exact tables, and the complete index remain available.');note.setAttribute('role','status');root.prepend(note);}

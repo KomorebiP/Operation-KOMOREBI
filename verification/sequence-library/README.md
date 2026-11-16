@@ -1,7 +1,7 @@
 # Finite sequence-library evidence
 
-Current evidence: `run-014/manifest.json`, status `completed`, with
-`run-014/checks.json`. The input contract is `contract.json`. This run replays
+Current evidence: `run-016/manifest.json`, status `completed`, with
+`run-016/checks.json`. The input contract is `contract.json`. This run replays
 the extended finite assertion for the displayed coefficient tables and columns. Earlier runs preserve
 the evidence for their recorded source inputs.
 
@@ -85,3 +85,18 @@ Unrecognized notation and the original Plain text remain available.
 Triangle browser checks cover exact coordinates, restored row windows, row
 polynomials, roving keyboard links, coefficient wrapping, no-JavaScript tables,
 enlarged text and forced colors. See `triangles-browser.json`.
+
+The coefficient explorer partitions all 5,083 cells of the 55 tables by rows,
+columns and right-edge diagonals. Independent coordinate loops check all three
+partitions (15,249 cell visits) and exact signed residues. Its tests also cover
+source-degree maps, large-integer CSV/copy/search, shared options, invalid input,
+all-zero plots and UTF-8 punctuation. The 70 Node tests and 15 Python tests pass.
+The explorer browser report is `table-browser.json`; it checks 1440/390/320px,
+PNG/SVG/CSV downloads, keyboard navigation, no-JavaScript reading, enlarged text,
+forced colors and unavailable storage. All 6,486 current exact data exports
+remain byte-identical. These are implementation checks, not a novelty review or
+accessibility certification.
+
+Run-015 is retained as the intermediate display-source capture. Run-016 pins
+the corrected UTF-8 source and is the current arithmetic evidence. The new
+selection plots also retain black text on white when printing a dark page.
