@@ -17,7 +17,7 @@ Writing D(z)=1-c(z+...+z^k), coefficient comparison gives
     D(z) sum_(n>=0) a(n)z^n = P(z),
     P(z)=sum_(n=0)^(k-1) (s(n)-c sum_(i=0)^(n-1) s(i)) z^n.
 
-Every coefficient of degree at least k vanishes by the recurrence; the lower
+Every coefficient of degree at least k vanishes by the recurrence. The lower
 coefficients are exactly the displayed seed defects. Since D(0)=1, division is
 unique as a formal series over Z. If b(n)=[z^n]D(z)^(-1), then a(n) is the
 finite convolution of P with b. This proves the seeded closed formula used by
@@ -25,8 +25,8 @@ the explorer. In particular, k-1 zero seeds followed by one give P=z^(k-1).
 The normalized nonzero tail instead has generating function D^(-1).
 
 The reciprocal-power family D^(-r) uses its own initial values. Choosing an
-arbitrary k-seed vector switches to the order-k recurrence (r=1); the interface
-does not silently combine arbitrary k seeds with a power-r initial-value problem.
+arbitrary k-seed vector switches to the order-k recurrence (r=1). The interface
+does not combine arbitrary k seeds with a power-r initial-value problem.
 The finite binomial and hypergeometric expressions for b and D^(-r) are in
 [the existing derivation](../sequence-connections/IDENTITIES.md).
 
@@ -94,7 +94,7 @@ For anchored ordinary tails A,B,C with nonzero constant coefficients over Q,
 the constructed kernels are H_AB=B/A and H_BC=C/B. Their product is C/A.
 The inverse kernels compose in the reverse order. On stored prefixes, all
 equalities are only modulo z^L. The leading-zero position shifts and original
-index shifts add separately; each intermediate anchor cancels in the sum.
+index shifts add separately. Each intermediate anchor cancels in the sum.
 The corresponding prescribed-zero-prefix domains remain attached to the maps.
 This construction uses the chosen targets and does not predict unrecorded terms.
 
