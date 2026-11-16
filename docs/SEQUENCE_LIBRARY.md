@@ -7,10 +7,10 @@ recurrences, generating functions, and hypergeometric coefficient formulas.
 These counts describe records and representations, not distinct infinite
 sequences or new discoveries.
 
-The homepage search and main navigation open this complete library. Collection
+The homepage search and main navigation both lead to the complete library. Collection
 buttons show the scope and count before filtering. The 38 curated generators
 are a subset that can compute additional terms; they are not the size of the
-library. Their plotting interface is `sequence-explorer.html`. Existing
+library. Plotting and term generation are available in `sequence-explorer.html`. Existing
 `sequences.html` search links open the library, while saved plot links retain
 their settings in the generator interface. Research-archive searches also use
 the library, with the archive collection filter applied.
@@ -24,14 +24,14 @@ The Math display selector at the bottom of each page offers Typeset math and Pla
 preference persists across pages and tabs where browser storage is available.
 Readers retain their original TeX; sequence formulas retain their original
 plain-text source. A bounded notation parser supplies a display transcription,
-without changing exact data, program code or formula exports. Unsupported
+without changing exact data, program code, or formula exports. Unsupported
 source notation remains literal. Typeset formulas can scroll within their
 panels and remain keyboard accessible. Without JavaScript, the original source
 and complete static index remain available.
 
 `tools/sequence_formula_catalogue.py` defines the finite parameter grids. Scalar
 parameter records store 24 terms at their stated offsets and an explicit source-degree map. Coefficient triangles store all complete rows n=0..12.
-The original 1,783 records retain n=0..23; new polynomial columns begin at their
+The original 1,783 records retain n=0..23. New polynomial columns begin at their
 first nonzero n. Congruential and
 Appell coefficients can be rational; numerator and denominator records reduce
 the coefficient first, retain its original rational value, and plot only the
@@ -54,7 +54,7 @@ complete filtered set rather than only the current page.
 Saved entries use the existing browser-local saved-list key across all 2,292
 records, with a 500-record limit. Scoped writes from the older atlas preserve
 records from other collections. The saved filter uses the recipient's own list
-when sharing a search. Storage denial leaves the current session usable.
+when sharing a search. If browser storage is unavailable, the current session still works.
 
 The comparison workbench accepts up to four local records or OEIS excerpts.
 It supports raw integers, first differences, and prefix sums, linear or signed
@@ -69,8 +69,8 @@ Comparison links contain source descriptors and display settings. Local records
 restore immediately; reference descriptors must match the retained snapshot
 hash and require an explicit load action. Opening a link does not download the
 bulk data. The finder and restoration reuse the same worker's compressed-file
-cache. Exact agreement counts compare displayed integers over the overlap;
-modular views label these as residue agreements. SVG/PNG exports include the
+cache. Exact agreement counts compare displayed integers over the overlap.
+Modular views label residue agreements separately. SVG/PNG exports include the
 series legend and OEIS credit when applicable. CSVs retain exact values, index
 conventions, source URLs, reference hashes, and reference licensing. Points use
 roving keyboard focus, with arrows within/across series and Home/End endpoints;
@@ -87,8 +87,8 @@ Euler-transfer theta polynomials):
 - 12 ordinary coefficient columns [x^k] Theta_(2n)(x), k=1..12,
   stored at n=ceil(k/2)..ceil(k/2)+23. Signs are retained.
 
-The source identifies derived research families and requests literature review
-before historical novelty is asserted. An absent finite OEIS match does not
+The registry classifies these as derived research families. Historical novelty
+remains subject to literature review. An absent finite OEIS match does not
 change that status. The new displays include finite composition/Stirling and
 Bell-column formulas, signed Euler convolution, and inverse-hypergeometric
 coefficient representations. Parameter columns search by `k:`; `n:` still
@@ -280,7 +280,7 @@ offers its definition and source bindings as JSON and an indexed-member CSV
 with original offsets, review status and entry links. Families without indexed
 integer examples retain a header-only member CSV and say so explicitly.
 The source coverage page lists
-311 source headings and exact source hashes; it is an index, not a claim that
+311 source headings and exact source hashes. It is an index, not a claim that
 every formula in every paper has been reviewed or converted into a record.
 
 Ten families have exact parameter controls: weighted k-step reciprocal powers,
@@ -295,7 +295,7 @@ definitions remain visible even when exact controls use bounded integer values.
 The Appell explorer distinguishes values at an integer x from ordinary
 coefficient columns in x. Column k uses local index n, polynomial row Nn+k,
 and binom(Nn+k,k) times the reduced positive-block inverse coefficient.
-The 84 stored supported-column records select this readout explicitly. Their
+All 84 stored Appell column records use this readout. Their
 source rows, exact rational values and selected integer components survive
 CSV export, comparison and shared links. The point-value controls keep
 x=-8..8; Appell columns use k=0..8. Theta specializations allow x=-12..12,

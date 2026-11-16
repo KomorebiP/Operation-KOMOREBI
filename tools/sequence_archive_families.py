@@ -151,7 +151,7 @@ def archive_definitions():
             'M_G is the transition matrix for left multiplication by the declared gates on the 24 signed-Pauli-axis '
             'Clifford actions, and e is the identity action. Matrix entries count gate choices. '
             'Words are ordered and repeated gates remain distinct choices. Identity is taken modulo global phase. '
-            'these are finite-group walks, not arbitrary SU(2) matrix identities.',
+            'The counts describe walks on a finite group, not arbitrary SU(2) matrix identities.',
         ),
         (
             'GF-CYCLIC-MASKS', 'Cyclic subgroup-coset mask counts',
