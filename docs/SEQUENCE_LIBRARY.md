@@ -1,8 +1,8 @@
 # Unified sequence and formula library
 
-`sequence-library.html` searches 2,162 local records: the original 38 KSEQ
-entries, 90 recovered KOM records, and 2,034 KFOR parameter records. It indexes
-6,501 recorded representations, including term formulas, finite sums,
+`sequence-library.html` searches 2,292 local records: the original 38 KSEQ
+entries, 90 recovered KOM records, and 2,164 KFOR parameter records. It indexes
+7,033 recorded representations, including term formulas, finite sums,
 recurrences, generating functions and hypergeometric coefficient formulas.
 These counts describe records and representations, not distinct infinite
 sequences or new discoveries.
@@ -51,7 +51,7 @@ and `?`. Fields include `formula:`, `representation:`, `collection:`, `n:`
 pagination and shared links preserve applied state. Result CSVs export the
 complete filtered set rather than only the current page.
 
-Saved entries use the existing browser-local saved-list key across all 2,162
+Saved entries use the existing browser-local saved-list key across all 2,292
 records, with a 500-record limit. Scoped writes from the older atlas preserve
 records from other collections. The saved filter uses the recipient's own list
 when sharing a search. Storage denial leaves the current session usable.
@@ -229,3 +229,36 @@ the previous view or restore the default row on initial load.
 Indexing help and secondary display options are expandable. Without JavaScript,
 the complete coefficient and exact-index tables remain available. The explorer
 does not extend a stored window or infer an infinite sequence from a selection.
+
+## Recurrence families and transfer maps
+
+The ordinary k-step expansion adds 120 weighted reciprocal-power records
+(order 2..16, power 1..4, weight 1..2) and ten standard zero-seeded k-bonacci
+records (orders 7..16). The latter store 48 terms; the other scalar parameter
+records store 24. Existing orders 3..6 receive alternate finite binomial and
+hypergeometric representations while their original exports remain unchanged.
+The generalized hypergeometric expression uses an explicit finite cutoff:
+parameters may not be cancelled before that cutoff. Full derivations and domain
+conditions are in research/sequence-connections/IDENTITIES.md; the maintained
+k-bonacci source is pinned alongside it. These extensions do not establish
+historical novelty.
+
+Search fields `order:`, `weight:` and `parent:` find recurrence order, step
+weight and source subsequence respectively. `k:` retains its polynomial-column
+meaning. Every record has finite-window sign, support and GCD details, source
+normalization, typed research connections and a copyable citation.
+
+The transfer tool computes H=B/A and K=A/B exactly over Q for nonzero stored
+tails, preserving original indices, leading-zero prefixes and both shifts.
+Different zero-prefix lengths require a bijection between the prescribed-prefix
+classes, not an automorphism of all Q[[z]]. Certificates contain forward values,
+recovered values, residuals, and convolution matrices. CSV and share links retain
+the input conventions. These finite transfers do not predict unrecorded terms.
+The Euler/Fibonacci example links the infinite source derivation and explains
+F(n+1) and the transported shift's boundary term.
+
+The typed relation download distinguishes subsequences, seed shifts, polynomial
+coefficient extraction, evaluation, inverse matrices and ordinary convolution.
+A false reversibility flag means that no inverse is asserted. The available
+stored overlaps are checked without extending their original data windows.
+The focused self-audit is in research/sequence-connections/AUDIT.md.

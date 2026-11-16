@@ -6,12 +6,13 @@ import {referenceQuery} from './sequence-oeis-core.mjs';
 import {createReferenceClient} from './sequence-oeis-client.mjs';
 import {mountWorkbench} from './sequence-workbench.mjs';
 import {mountTriangleExplorer} from './sequence-triangle.mjs';
+import {mountTransfers} from './sequence-transfers.mjs';
 import {STORAGE_KEY,readSaved,writeSaved,updateSaveButtons} from './sequence-atlas-saved.mjs';
 
 const root=document.querySelector('[data-library]'),$=id=>document.getElementById('sl-'+id),make=(tag,text)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;return node;};
 const collectionLabels={atlas:'Curated sequences',recovered:'Research archive',formulas:'Formula families'};
 const keys=['q','collection','kind','representation','status','match','sort','hits','saved'];
-let results=[],page=0,applied={},workbench,toggleSaved,saved=new Set();
+let results=[],page=0,applied={},workbench,transfers,toggleSaved,saved=new Set();
 const csv=rows=>rows.map(row=>row.map(value=>'"'+String(value??'').replaceAll('"','""')+'"').join(',')).join('\r\n')+'\r\n';
 function save(content,type,name){const url=URL.createObjectURL(new Blob([content],{type})),link=make('a');link.href=url;link.download=name;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 function share(){const url=new URL(location.href);url.search='';for(const [key,value]of Object.entries(applied))if(value&&value!=='any'&&value!=='relevance')url.searchParams.set(key,value);if(page)url.searchParams.set('page',String(page+1));url.hash='library-search';return url.href;}
@@ -28,6 +29,7 @@ function render(){
     const review=make('p',entry.status);review.className='sl-result-status';li.append(review);
     if(entry.tags.includes('hypergeometric')){const badge=make('span','Hypergeometric representation');badge.className='sl-result-badge';li.append(badge);}
     const links=make('div'),plot=make('a','Plot and inspect →'),formulas=make('a','Read formulas'),bookmark=make('button'),compare=make('button','Add to comparison');links.className='sp-actions';plot.href=entry.url+(entry.collection==='atlas'?'#analysis':'#plot');formulas.href=entry.url+(entry.collection==='recovered'?'#definition':'#formulas');bookmark.type=compare.type='button';bookmark.dataset.saveSequence=entry.id;bookmark.addEventListener('click',()=>toggleSaved(entry.id));compare.setAttribute('aria-label','Add '+entry.id+' to comparison');compare.addEventListener('click',()=>workbench.addLocal(entry));links.append(plot,formulas,bookmark,compare);li.append(links);
+    if(transfers&&!entry.triangle&&entry.id!=='KOM084'){const transfer=make('button','Build a transfer');transfer.type='button';transfer.addEventListener('click',()=>transfers.source(entry));links.append(transfer);}
     const comparisons=make('details'),summary=make('summary',`OEIS comparisons (${entry.match_count.toLocaleString()} ${entry.match_count===1?'match':'matches'})`);comparisons.className='sl-matches';comparisons.append(summary);
     if(entry.matches.length){const list=make('ol');for(const hit of entry.matches.slice(0,3)){const item=make('li'),reference=make('a',hit.id+' · '+hit.name);reference.href='https://oeis.org/'+hit.id;item.append(reference,make('p',`${hit.matched_terms} matching terms, beginning at local index ${entry.offset}; OEIS export position ${hit.position}.`));list.append(item);}comparisons.append(list,make('p',`Showing ${Math.min(3,entry.matches.length)} of ${entry.match_count.toLocaleString()} observed hits; up to 50 are retained in the library data.`));}else comparisons.append(make('p','No eight-term contiguous match recorded. This does not establish novelty.'));
     const credit=make('p','Finite comparisons do not prove infinite identity. Export positions are not mathematical offsets. Reference data: '),oeis=make('a','The Online Encyclopedia of Integer Sequences'),license=make('a','CC BY-SA 4.0');oeis.href='https://oeis.org/';license.href='https://creativecommons.org/licenses/by-sa/4.0/';credit.append(oeis,document.createTextNode(' · '),license);comparisons.append(credit);li.append(comparisons);$('results').append(li);
@@ -96,6 +98,6 @@ function setupReference(client){
 }
 try{
   if(root.dataset.entry){const response=await fetch(new URL(root.dataset.entry,location.href));if(!response.ok)throw Error('The exact record could not load.');const entry=await response.json();setupArchivePlot(entry);setupTriangleNavigation();mountTriangleExplorer(entry,root.querySelector('#triangle'));}
-  else if($('search')){const response=await fetch(new URL('./sequence-library-data.json',import.meta.url));if(!response.ok)throw Error('The local catalogue could not load.');const data=await response.json(),client=createReferenceClient();workbench=mountWorkbench({root,entries:data.entries,snapshot:data.snapshot.stripped_sha256,referenceClient:client});setupSearch(data.entries);setupReference(client);}
+  else if($('search')){const response=await fetch(new URL('./sequence-library-data.json',import.meta.url));if(!response.ok)throw Error('The local catalogue could not load.');const data=await response.json(),client=createReferenceClient();workbench=mountWorkbench({root,entries:data.entries,snapshot:data.snapshot.stripped_sha256,referenceClient:client});transfers=mountTransfers(data.entries,document.getElementById('sr-transfer-tool'));setupSearch(data.entries);setupReference(client);}
   root.dataset.libraryReady='true';
 }catch(error){const note=make('p',error.message+' Static definitions, exact tables, and the complete index remain available.');note.setAttribute('role','status');root.prepend(note);}

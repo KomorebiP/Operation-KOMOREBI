@@ -1,11 +1,15 @@
 # Finite sequence-library evidence
 
-Current evidence: `run-016/manifest.json`, status `completed`, with
-`run-016/checks.json`. The input contract is `contract.json`. This run replays
-the extended finite assertion for the displayed coefficient tables and columns. Earlier runs preserve
-the evidence for their recorded source inputs.
+Current evidence: `run-019/manifest.json` and `run-021/manifest.json`, both
+completed. The first uses `contract.json` and checks all parameter families and
+OEIS replay. The second uses `connections-contract.json` and checks record
+definitions, archive source replay and exact JavaScript transfers. Each run
+retains its result in `checks.json`. Earlier runs preserve evidence for their
+recorded inputs; runs 017/018 preceded final accessibility and source-label edits. Run 020
+used the unchanged browser core with Windows CRLF bytes; run 021 replays it with
+the committed LF bytes so that the current receipt matches Git exactly.
 
-The current exact checks cover 2,034 parameter records and all 52,579 stored
+The current exact checks cover 2,164 parameter records and all 55,939 stored
 terms / index maps. Independent comparisons include 2,880 reciprocal terms,
 360 tangent coefficients, 3,328 hypergeometric seed coefficients, 6,336
 congruential rational coefficients, 1,920 Appell rational coefficients, 16,032
@@ -21,8 +25,8 @@ polynomial recurrence for cosh(z)^(-x), followed by signed Euler convolution.
 The stored windows retain their original n offsets. The seed hypergeometric
 checks extend through n=31 for the new j=0, N=2..12 formulas.
 
-The complete OEIS replay scans 401,422 retained records against all 2,162 local
-records. It reproduces 3,658 retained hits and 391,570 observed hit positions,
+The complete OEIS replay scans 401,422 retained records against all 2,292 local
+records. It reproduces 4,841 retained hits and 1,275,413 observed hit positions,
 including repetitive / low-information prefixes. It does not establish
 infinite identities, novelty, or pairwise distinctness.
 
@@ -100,3 +104,33 @@ accessibility certification.
 Run-015 is retained as the intermediate display-source capture. Run-016 pins
 the corrected UTF-8 source and is the current arithmetic evidence. The new
 selection plots also retain black text on white when printing a dark page.
+
+The recurrence expansion adds 130 records and 3,360 stored values. Its 120
+weighted k-step families are checked at n=0..95 against integer convolution
+powers, finite binomial sums and exact finite hypergeometric sums (11,520
+coefficients for each comparison). The pinned maintained k-bonacci source
+is replayed for 1,440 order/index pairs. Hypergeometric endpoint controls reject
+parameter cancellation that would change the explicitly truncated definition.
+
+The connection audit covers 2,292 definitions and 63,858 stored integers. It
+replays all 90 archive records (5,487 values), checks 1,224 typed relations and
+10,571 available overlap values, and compares 2,236 scalar transfers (26,820
+coefficients) to a separate Fraction geometric-reciprocal oracle. The 56
+coefficient tables are explicitly excluded from scalar convolution. All scalar
+windows in this snapshot have usable nonzero anchors; zero-window rejection is
+covered separately by the Node boundary tests. Transfer coefficients, shifts,
+inverse recovery, integrality flags and kernel products are exact. These are
+finite implementation checks, not predictions or universal recurrence claims.
+
+The focused mathematical self-review and full family derivations are in
+research/sequence-connections/AUDIT.md and IDENTITIES.md. Historical novelty
+and whole-manuscript independent review remain outside the completed scope.
+
+The expansion passes 75 Node tests and 15 Python tests. Browser reports
+connections-browser.json, connections-unified-browser.json and
+connections-readability-browser.json cover 1440/390/320px, exact transfer and
+inverse, late zero seeds, matrix headers, invalid-input recovery, share and CSV,
+citations, explicit finite formula notes, unchanged global display controls,
+no-JavaScript reading, forced colors, 200% text, print and clipboard fallback.
+They are local implementation checks, not accessibility certification.
+All 6,486 pre-expansion exact CSV/JSON/TXT exports are byte-identical.

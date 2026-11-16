@@ -1,7 +1,7 @@
 // Local catalogue search. Numeric matching stays exact; text ranking never changes terms.
 export const normalizeText = value => String(value).normalize('NFKD').replace(/\p{M}/gu,'').replace(/\u2212/g,'-').toLowerCase().replace(/\s+/g,' ').trim();
 const numeric = value => /^[-+?\d\s,;]+$/.test(value);
-const fields = new Set(['id','name','formula','tag','kind','oeis','n','j','r','x','k','representation','collection','status','terms']);
+const fields = new Set(['id','name','formula','tag','kind','oeis','n','j','r','x','k','order','weight','parent','representation','collection','status','terms']);
 const aliases = {title:'name',keyword:'tag',topic:'tag',type:'kind',power:'r'};
 
 export function canonicalID(value) {
@@ -44,7 +44,7 @@ export function parseQuery(query) {
     if(field==='terms'||field==='text'&&numeric(value)){
       while(i+1<tokens.length&&tokens[i+1]!=='|'&&numeric(tokens[i+1]))value+=' '+tokens[++i];
       groups.at(-1).push({field:'terms',value:termPattern(value),exclude});
-    }else groups.at(-1).push({field,value:normalizeText(canonicalID(['n','j','r','x','k'].includes(field)&&/^[-+]?\d+$/.test(value)?String(BigInt(value)):value)),exclude});
+    }else groups.at(-1).push({field,value:normalizeText(canonicalID(['n','j','r','x','k','order','weight'].includes(field)&&/^[-+]?\d+$/.test(value)?String(BigInt(value)):value)),exclude});
   }
   if(!groups.at(-1).length)throw Error('Put a search on each side of |.');
   return groups;
@@ -62,7 +62,7 @@ function index(entry){
   if(indexes.has(entry))return indexes.get(entry);
   const record={id:entry.id,name:entry.title,formula:entry.formula+' '+entry.recurrence+' '+(entry.formulas||[]).map(f=>f.expression).join(' '),
     tag:entry.tags.join(' '),kind:entry.kind,oeis:[entry.oeis||'',...(entry.matches||[]).map(m=>m.id)].join(' '),
-    n:String(entry.N??''),j:String(entry.j??''),r:String(entry.power??''),x:String(entry.x??''),k:String(entry.k??''),representation:(entry.formulas||[]).map(f=>f.kind).join(' '),collection:entry.collection||'',status:entry.status+' '+(entry.status.startsWith('Known')?'reference':'family')};
+    n:String(entry.N??''),j:String(entry.j??''),r:String(entry.power??''),x:String(entry.x??''),k:String(entry.k??''),order:String(entry.recurrence_order??''),weight:String(entry.weight??''),parent:entry.parent||'',representation:(entry.formulas||[]).map(f=>f.kind).join(' '),collection:entry.collection||'',status:entry.status+' '+(entry.status.startsWith('Known')?'reference':'family')};
   record.text=Object.values(record).join(' ')+' '+entry.explanation+' '+(entry.matches||[]).map(m=>m.name).join(' ');
   for(const key of Object.keys(record))record[key]=normalizeText(record[key]);
   indexes.set(entry,record);return record;
@@ -85,7 +85,7 @@ export function searchEntries(entries, query, options={}) {
             if(!clause.exclude)termMatch={start:positions[0],length:clause.value.length,positions,pattern:clause.value};}
         }else{
           const value=clause.value,field=clause.field;
-          matched=['n','j','r','x','k'].includes(field)?record[field]===value:field==='id'&&value.startsWith('a')?record.oeis.split(' ').includes(value):(record[field]||'').includes(value);
+          matched=['n','j','r','x','k','order','weight','parent'].includes(field)?record[field]===value:field==='id'&&value.startsWith('a')?record.oeis.split(' ').includes(value):(record[field]||'').includes(value);
           weight=field==='id'?1000:field==='oeis'?500:field==='name'?80:field==='text'&&record.id===value?1000:field==='text'&&record.oeis.split(' ').includes(value)?500:record.name===value?100:record.name.includes(value)?50:field==='formula'?20:5;
           detail=(field==='text'?(record.name.includes(value)?'Name':'Entry text'):field==='n'?'Spacing N':field==='r'?'Power r':field[0].toUpperCase()+field.slice(1))+' matches “'+value+'”';
         }

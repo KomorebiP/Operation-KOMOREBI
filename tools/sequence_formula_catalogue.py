@@ -110,6 +110,8 @@ def formula_variants(entry):
     if not source.startswith('https:'):
         source='https://komorebip.github.io/Operation-KOMOREBI/'+source
     result=[variant('Defining representation','definition',entry['formula'],source=source)]
+    from sequence_linear_research import legacy_representations
+    result+=legacy_representations(entry)
     if kind=='reciprocal':
         N,r=entry['N'],entry['power']
         result += [variant('Hypergeometric coefficient formula','hypergeometric',f'a(n)=({N}n)! [z^({N}n)] ({hyper(N,0,"-")})^(-{r})', 'This is a coefficient formula using a hypergeometric generating function, not a claim that its reciprocal is a single hypergeometric function.'),
@@ -214,6 +216,8 @@ def expanded_catalogue():
     entries+=research_catalogue()
     from sequence_research_tables import research_additions
     entries+=research_additions()
+    from sequence_linear_research import linear_catalogue
+    entries+=linear_catalogue()
     assert len({x['id'] for x in entries})==len(entries)
     return entries
 
