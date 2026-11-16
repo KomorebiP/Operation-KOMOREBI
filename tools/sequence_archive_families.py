@@ -54,16 +54,16 @@ def archive_definitions():
             369, 'n>=0; the selected named sequence fixes its initial values and normalization',
             'B(n+1)=sum_(k=0)^n binom(n,k) B(k); C(n)=binom(2n,n)/(n+1)',
             'Bell, ordered Bell/Fubini, derangement, Euler up/down, and Catalan records provide classical reference points. '
-            'The displayed formulas are examples; each linked record supplies its own complete definition and initial values. '
-            'This is a reference collection, not one new parameter family.',
+            'The formulas shown are examples. Each record gives its own definition and initial values. '
+            'These entries are classical references rather than a single parameter family.',
         ),
         (
             'GF-BLOCK-LOGARITHMIC', 'Euler-block logarithmic derivative coefficients',
             46, 'N>=2; n>=0; the stored archive uses N=2..8',
             "L_N(n)=(Nn)! [z^(Nn)] (-z D_N'(z)/D_N(z)); L_N(0)=0",
-            'Here D_N(z)=sum_(m>=0) (-1)^m z^(Nm)/(Nm)!. The extra factor z changes both the degree and the coefficient scale. '
+            'Here D_N(z)=sum_(m>=0) (-1)^m z^(Nm)/(Nm)!. The factor z shifts the degree and changes the coefficient scale. '
             'For n>=1, L_N(n)=Nn T_N(n-1), where T_N is the transfer-tangent sequence. '
-            'The archived values keep this convention and are not silently replaced by tangent-explorer values.',
+            'The stored values follow this normalization, which differs from the tangent calculator.',
         ),
         (
             'GF-BLOCK-TRANSFORMS', 'Binomial and Stirling transforms of Euler blocks',
@@ -71,7 +71,7 @@ def archive_definitions():
             'B_N(n)=sum_(k=0)^n binom(n,k) A_N(k); S_N(n)=sum_(k=0)^n S(n,k) A_N(k)',
             'A_N(k)=(Nk)! [z^(Nk)] D_N(z)^(-1), with the alternating factorial block D_N. '
             'S(n,k) denotes the Stirling number of the second kind. The transforms act on the local sequence index k, '
-            'not on the source degree Nk. Archived examples cover binomial transforms at N=3..6 and Stirling transforms at N=3..5.',
+            'not on the source degree Nk. The archive includes binomial transforms for N=3..6 and Stirling transforms for N=3..5.',
         ),
         (
             'GF-BLOCK-HANKEL', 'Hankel determinants of Euler blocks',
@@ -79,15 +79,15 @@ def archive_definitions():
             'H_N(n)=det(A_N(i+j))_(0<=i,j<=n)',
             'A_N is the factorial-normalized reciprocal Euler block. The matrix uses local indices i+j. '
             'The four archived sequences use N=2..5 and store determinant sizes 1 through 9. '
-            'Signed determinant values are retained; the finite table does not assert positivity for every size.',
+            'The table retains signed determinants. It does not imply positivity at every size.',
         ),
         (
             'GF-BLOCK-VALUATIONS', 'Prime-adic valuations of Euler blocks',
             149, 'N>=2; p prime; n>=0; A_N(n) nonzero',
             'V_(N,p)(n)=v_p(A_N(n))',
             'A_N is the positive reciprocal Euler block. For a nonzero integer a, v_p(a) is the exponent of p in a. '
-            'The archive contains eleven declared (N,p) choices and their exact finite valuations. '
-            'No finite integer is assigned to v_p(0), and these values do not supply a uniform valuation formula.',
+            'The archive contains eleven specified (N,p) pairs with exact valuations. '
+            'The valuation v_p(0) is not finite. The recorded values do not give a uniform valuation formula.',
         ),
         (
             'GF-DIGIT-RESIDUES', 'Digit-sum residue packets',
@@ -95,7 +95,7 @@ def archive_definitions():
             'C_(b,m,r)(n)=sum_(j>=0) [x^(mj+r)] (1+x+...+x^(b-1))^n',
             'Count length-n base-b digit strings whose digit sum is r modulo m. Leading zeros are allowed. '
             'The empty word contributes one at n=0 exactly when r=0. Binary popcount packets are the b=2 specializations. '
-            'The archived generator updates the entire residue-count vector exactly.',
+            'The generator updates the full vector of residue counts using exact arithmetic.',
         ),
         (
             'GF-CYCLIC-SUBSETS', 'Cyclic subset-sum packets',
@@ -111,29 +111,29 @@ def archive_definitions():
             'C_(p,j)(n)=sum_(k=0)^n [v_p(binom(n,k))=j]; V_p(n)=sum_(k=0)^n v_p(binom(n,k))',
             'Square brackets in the counting formula denote an indicator, equal to one when its condition holds. '
             'The archive includes level j=1,2 for p=2,3 and the corresponding row sums. '
-            'All binomial coefficients are nonzero. The familiar digit-carry interpretation is classical.',
+            'All binomial coefficients in these rows are nonzero. The digit carry interpretation is classical.',
         ),
         (
             'GF-TOTIENT-PREFIX', 'Totient prefix-fiber statistics',
             230, 'n>=1; phi is Euler’s totient with phi(1)=1',
             'M(n)=sum_(k=1)^n [phi(k)=phi(n)]; D(n)=#{phi(k):1<=k<=n}',
             'M(n) counts matches to phi(n) only inside the prefix 1..n. D(n) counts distinct totient values in that prefix. '
-            'The two archived readouts retain this finite-prefix definition; they do not count unrestricted inverse-totient fibers '
-            'and do not settle Carmichael’s conjecture.',
+            'Both records count values within a finite prefix, not unrestricted inverse totient fibers. They '
+            'do not settle Carmichael’s conjecture.',
         ),
         (
             'GF-PRIME-POWER-SUPPORT', 'Prime-power support and exponent slack',
             222, 'integer n>=1; rad(1)=1',
             'E(n)=n/rad(n); rad(n)=product_(p|n) p',
-            'The product defining rad(n) runs over distinct prime divisors. Dividing n by its radical retains the '
-            'multiplicity beyond the first copy of each prime. E(1)=1. This archived arithmetic function is a classical reference.',
+            'The product defining rad(n) runs over distinct prime divisors. Dividing n by its radical leaves the '
+            'extra powers of its prime factors. E(1)=1. This archived arithmetic function is a classical reference.',
         ),
         (
             'GF-COLLATZ-READOUTS', 'Odd Collatz jump and image readouts',
             246, 'n>=0; the odd input is 2n+1',
             'J(n)=v_2(3(2n+1)+1); U(n)=(3(2n+1)+1)/2^(J(n))',
             'J(n) records the exact power of two removed after one odd Collatz step, and U(n) is the resulting odd integer. '
-            'These are pointwise readouts indexed by the input, not consecutive positions in a single orbit. '
+            'Each value comes from a separate odd input, not from consecutive positions in one orbit. '
             'Their finite values do not establish a uniform jump bound or convergence of every orbit.',
         ),
         (
@@ -142,7 +142,7 @@ def archive_definitions():
             'P_0(s)=Q_0(s)=1; P_(n+1)(s)=(1+s)P_n(s)+Q_n(s); Q_(n+1)(s)=P_n(s)',
             'The five archived readouts are P_n(0), P_n(1), the sum of squared coefficients, the coefficient at floor(n/2), '
             'and the complete coefficient triangle. For the triangle, flat j=n(n+1)/2+k identifies [s^k]P_n(s). '
-            'This is a formal transfer-polynomial model; no particular physical circuit realization is asserted.',
+            'This formal transfer polynomial does not by itself describe a physical circuit realization.',
         ),
         (
             'GF-CLIFFORD-WORDS', 'Single-qubit Clifford identity-word counts',
@@ -150,7 +150,7 @@ def archive_definitions():
             'a_G(n)=(M_G^n)_(e,e)',
             'M_G is the transition matrix for left multiplication by the declared gates on the 24 signed-Pauli-axis '
             'Clifford actions, and e is the identity action. Matrix entries count gate choices. '
-            'Words are ordered and repeated gates remain distinct choices. Identity means identity modulo global phase; '
+            'Words are ordered and repeated gates remain distinct choices. Identity is taken modulo global phase. '
             'these are finite-group walks, not arbitrary SU(2) matrix identities.',
         ),
         (
@@ -158,7 +158,7 @@ def archive_definitions():
             321, 'n>=1; optional subgroup-size cutoff K>=1',
             'C_K(n)=sum_(h|n, h<=K) n/h; C(n)=sum_(h|n) n/h',
             'A subgroup of the cyclic group Z/n of size h has n/h cosets. The archived records use all subgroup sizes, '
-            'or the cutoffs K=2 and K=3. The unrestricted count equals the classical divisor sum. '
+            'or the cutoffs K=2 and K=3. The unrestricted count is the classical divisor sum. '
             'Only subgroup-coset masks are counted, not every possible contractive mask.',
         ),
     ]

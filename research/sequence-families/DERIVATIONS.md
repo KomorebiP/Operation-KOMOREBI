@@ -77,8 +77,8 @@ gives, with P(n,k)=[r^k]P_(N,n)(r),
     n P(n,k)=-sum_(i=1)^n (-1)^i binom(Nn,Ni)
                       ((n-i)P(n-i,k)+i P(n-i,k-1)).
 
-Here P(0,0)=1 and out-of-row entries vanish. This establishes the new exact
-recurrence without changing the ordinary polynomial-coefficient normalization.
+Here P(0,0)=1 and out-of-row entries vanish. This establishes the exact
+recurrence without changing the ordinary polynomial coefficient normalization.
 Its finite audit compares it to the maintained Bell-column construction.
 
 Integrality can also be read from the finite negative-binomial expansion.
@@ -107,11 +107,11 @@ convolution of its flattened cells.
 
 The displayed seed numerator, polynomial recurrence, recurrence-state cycle
 argument and ordinary-kernel composition are proved as written above under
-their stated domains. The source-defined analytic family cards retain their
-source hypotheses and are outside this focused proof self-review. Their
+their stated domains. The analytic family pages retain their source
+hypotheses and are outside the scope of these proofs. Their
 formula transcriptions and source bindings are checked separately.
 
-The finite computation command is documented before execution in the workspace
-audit contract. Current completed receipts and tested ranges are recorded in
-verification/sequence-library/README.md after execution. Finite checks do not
-establish historical novelty or replace the uniform arguments above.
+The workspace audit contract records the finite computation command and its
+bounds. Completed receipts and tested ranges are listed in
+`verification/sequence-library/README.md`. These tests do not establish
+historical novelty or replace the proofs above.
