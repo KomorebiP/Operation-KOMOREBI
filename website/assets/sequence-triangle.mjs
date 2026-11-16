@@ -53,7 +53,7 @@ export function mountTriangleExplorer(entry,section) {
       });
     }else picture.append(text(15,115,'Try the signed logarithmic scale for these values.'));
     plot.replaceChildren(picture);figure=picture;if(focused)picture.querySelector('circle[tabindex="0"]')?.focus({preventScroll:true});
-    if(valid.length!==cells.length)summary.textContent+=` ${cells.length-valid.length} coefficients exceed this plot’s numeric range; use signed logarithmic scale. Exact values remain below.`;
+    if(valid.length!==cells.length)summary.textContent+=` ${cells.length-valid.length} coefficients exceed this plot’s numeric range; use the signed logarithmic scale. Exact values remain below.`;
   }
   function render(slice,update=false){
     current=slice;active=0;const {state}=slice;

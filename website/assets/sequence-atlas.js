@@ -40,7 +40,7 @@ function render(){
     const series=[{name:entry?entry.title:'Pasted sequence (unreviewed)',values}];
     if(next.compare){const comparison=known(next.compare);series.push({name:comparison.title+' (comparison)',values:valuesFor(next.compare,next.start+next.count+1)});}
     const rows=series.flatMap(s=>rowsFor(s.values,next,s.name));
-    if(!rows.some(r=>r.y!==null&&r.x!==null))throw Error('No plottable values in this window. Try linear or signed logarithmic scale, or another starting index.');
+    if(!rows.some(r=>r.y!==null&&r.x!==null))throw Error('No plottable values in this window. Try a linear or signed logarithmic scale, or another starting index.');
     state=next;lastRows=rows;if(state.sequence==='custom')lastCustomTerms=values.map(String).join(',');$('error').hidden=true;
     $('custom-panel').hidden=next.sequence!=='custom';
     $('N').disabled=$('power').disabled=entry?.kind!=='reciprocal';
@@ -228,7 +228,7 @@ function setupDiscovery(params){
         const heading=document.createElement('h3'),link=document.createElement('a');link.href='sequences/'+hit.id+'.html';link.textContent=hit.title;heading.append(link);item.append(heading);
         const description=document.createElement('p');description.textContent=`${operationLabel(hit.inputOperation)} of your input, indices ${hit.inputStart}–${hit.inputStart+hit.length-1}, matches ${operationLabel(hit.targetOperation).toLowerCase()} of ${hit.id}, indices ${hit.targetStart}–${hit.targetStart+hit.length-1}. All ${hit.length} transformed input terms match.`;item.append(description);
         const sample=document.createElement('p');sample.className='sa-hit-terms';sample.textContent=hit.values.slice(0,8).join(', ')+(hit.length>8?'…':'');item.append(sample);
-        const formula=document.createElement('p');formula.className='sa-note';formula.textContent=OPERATIONS.find(([id])=>id===hit.inputOperation)?.[2]||`The first ${hit.inputStart} input terms are omitted.`;if(hit.targetStarts.length>1)formula.textContent+=` Also matches at ${hit.targetStarts.length-1} other target starting indices, recorded in the JSON.`;if(hit.constant)formula.textContent+=' This sample has fewer than three distinct values, so the match may be uninformative.';item.append(formula);
+        const formula=document.createElement('p');formula.className='sa-note';formula.textContent=OPERATIONS.find(([id])=>id===hit.inputOperation)?.[2]||`The first ${hit.inputStart} input terms are omitted.`;if(hit.targetStarts.length>1)formula.textContent+=` It also matches at ${hit.targetStarts.length-1} other target starting ${hit.targetStarts.length===2?'index':'indices'}, recorded in the JSON.`;if(hit.constant)formula.textContent+=' This sample has fewer than three distinct values, so the match may be uninformative.';item.append(formula);
         const actions=document.createElement('div');actions.className='sa-hit-actions';
         const input=document.createElement('button');input.type='button';input.textContent='Plot transformed input';input.dataset.discoveryPlot=String(i);input.disabled=hit.values.join(',').length>20000||hit.values.some(v=>v.replace('-','').length>300);if(input.disabled)input.title='This transform exceeds the plot input capacity; download the exact discovery JSON.';
         const target=document.createElement('button');target.type='button';target.textContent='Plot catalogue match';target.dataset.discoveryTarget=String(i);actions.append(input,target);item.append(actions);list.append(item);
@@ -247,7 +247,7 @@ function setupDiscovery(params){
       try{await navigator.clipboard.writeText(url.href);$('discovery-status').textContent='Discovery link copied. It includes the pasted terms.';}catch{const field=$('discovery-copy-text');$('discovery-copy-fallback').hidden=false;field.value=url.href;field.focus();field.select();$('discovery-status').textContent='Copy the discovery link from the selected field. It includes the pasted terms.';}
     }catch(error){reportError(error);}
   });
-  $('discovery-export').addEventListener('click',()=>{if(latest)download(JSON.stringify({schema:1,...latest,scope:'Finite matches in the local catalogue; not identities, proof or novelty evidence.'},null,2)+'\n','application/json','komorebi-sequence-discovery.json');});
+  $('discovery-export').addEventListener('click',()=>{if(latest)download(JSON.stringify({schema:1,...latest,scope:'Finite matches in the local catalogue; not identities, proofs, or evidence of novelty.'},null,2)+'\n','application/json','komorebi-sequence-discovery.json');});
   $('discovery-results').addEventListener('click',event=>{
     const button=event.target.closest('button');if(!button||!latest)return;
     const index=button.dataset.discoveryPlot??button.dataset.discoveryTarget;if(index===undefined)return;const hit=latest.results[Number(index)];
@@ -323,4 +323,4 @@ async function init(){
   showPanel(workspaceForURL(location.href),{history:false});
   document.getElementById('sequence-atlas').dataset.interfaceReady='true';
 }
-init().catch(error=>{$('loading').textContent='The interactive explorer could not load. Read the catalogue and term pages below. '+error.message;});
+init().catch(error=>{$('loading').textContent='The interactive explorer could not be loaded. Read the catalogue and term pages below. '+error.message;});
