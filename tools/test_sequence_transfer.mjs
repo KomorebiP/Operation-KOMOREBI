@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {sequenceTransfer,transferAnchor,transferMatrix,transferCSV,transferLink} from '../website/assets/sequence-transfer-core.mjs';
+import {sequenceTransfer,transferAnchor,transferMatrix,transferCSV,transferJSON,transferLink} from '../website/assets/sequence-transfer-core.mjs';
 import {searchEntries} from '../website/assets/sequence-atlas-search.mjs';
 const entry=(id,terms,offset=0)=>({id,terms:terms.map(String),offset,index_symbol:'n'});
 test('Euler to shifted Fibonacci preserves source values and exact inverse',()=>{
@@ -34,4 +34,16 @@ test('recurrence order and parent search retain polynomial k semantics',()=>{
   const a={...entry('KFOR-LR-03-02-02',[1,4]),title:'Weighted k-step',formula:'ordinary',recurrence:'',tags:[],status:'Derived',kind:'k-step',recurrence_order:3,power:2,weight:2,parent:'KSEQ-000025'};
   assert.equal(searchEntries([a],'order:03 r:02 weight:02 parent:KSEQ-25').length,1);
   assert.equal(searchEntries([a],'k:3').length,0);assert.equal(searchEntries([a],'order:30').length,0);
+});
+
+test('certificate JSON preserves the finite exact proof and distinct index shifts',()=>{
+  const source=entry('A',[0,-2,3,7],-4),target=entry('B',[0,0,3,-2,1],10);
+  const map=sequenceTransfer(source,target,3),data=JSON.parse(transferJSON(map));
+  assert.equal(data.schema,1);assert.equal(data.coefficient_domain,'Q');
+  assert.equal(data.source_anchor.value,'-2');assert.equal(data.target_anchor.value,'3');
+  assert.equal(data.original_index_shift,15);assert.equal(data.window_position_shift,1);
+  assert.equal(data.rows[0].kernel,'-3/2');assert.equal(data.rows[0].inverse,'-2/3');
+  assert.deepEqual(data.certificate_conditions,['H*A=B','K*B=A','H*K=1']);
+  assert.equal(data.verified,true);
+  assert.equal(data.rows.every((row,index)=>row.forward===row.target&&row.recovered===row.source&&row.identity===(index?'0':'1')),true);
 });

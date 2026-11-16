@@ -34,4 +34,24 @@ export function transferCSV(result){
   return [columns,...rows].map(row=>row.map(value=>'"'+String(value).replaceAll('"','""')+'"').join(',')).join('\r\n')+'\r\n';
 }
 
+export function transferJSON(result){
+  return JSON.stringify({
+    schema:1,
+    calculation:'finite ordinary power series transfer',
+    coefficient_domain:'Q',
+    source_id:result.sourceId,
+    target_id:result.targetId,
+    coefficients:result.count,
+    source_anchor:result.sourceAnchor,
+    target_anchor:result.targetAnchor,
+    window_position_shift:result.positionShift,
+    original_index_shift:result.indexShift,
+    integer_kernel:result.integerKernel,
+    integer_inverse:result.integerInverse,
+    verified:result.verified,
+    certificate_conditions:['H*A=B','K*B=A','H*K=1'],
+    rows:result.rows
+  },null,2)+'\n';
+}
+
 export function transferLink(href,result){const url=new URL(href);url.search='';url.hash='transfers';url.searchParams.set('tr-source',result.sourceId);url.searchParams.set('tr-target',result.targetId);url.searchParams.set('tr-count',String(result.count));return url.href;}

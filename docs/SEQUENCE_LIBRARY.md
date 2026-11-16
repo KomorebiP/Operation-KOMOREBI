@@ -263,6 +263,34 @@ A false reversibility flag means that no inverse is asserted. The available
 stored overlaps are checked without extending their original data windows.
 The focused self-audit is in research/sequence-connections/AUDIT.md.
 
+## Transfer workbench and exact certificates
+
+The sequence library includes a transfer workbench for stored scalar records.
+Each comparison removes the stored leading zeros from both input windows and
+forms anchored ordinary power series A and B with nonzero constant terms.
+For a selected length L, it computes H=B/A and K=A/B over the rational
+numbers, truncated modulo z^L. The calculator checks H A=B, K B=A, and
+H K=1 for every displayed coefficient. Both the offset in the stored array
+and the original sequence index are retained.
+
+A worked Euler and Fibonacci example shows the finite quotient
+H=(1, 2, -1, 53) and inverse K=(1, -2, 5, -65) over four terms.
+The first Fibonacci zero is skipped, but its original index is preserved.
+This sample illustrates a finite coefficient identity, not a claim that
+arbitrary sequences have equivalent recurrences.
+
+The workbench now provides a source identity check, window-length and
+nonzero-anchor guidance, three explicit certificate conditions, both kernel
+previews, a worked coefficient convolution, exact CSV and JSON exports,
+and links that restore a selected finite comparison. The exported JSON records
+the source and target anchors, both index shifts, coefficient domain, exact
+rows, and the verification outcome. Rational values remain exact strings.
+
+The construction does not predict additional terms or establish a common
+homogeneous recurrence. Infinite relations require a separate derivation.
+Scalar columns must be selected before a coefficient triangle can be used.
+The finite engine is checked in `tools/test_sequence_transfer.mjs`.
+
 ## Generalized families and research tools
 
 The homepage links to both integer records and a separate generalized-family
