@@ -94,3 +94,20 @@ Mixed-definition presentation self-review:
 - All 11 recognized equation parts from mixed definitions compiled through the
   pinned runtime. The recovered KOM084 definition was visually inspected and
   checked in both display modes at 1440/390/320px.
+
+Coefficient-explorer self-review:
+
+- Coverage: new row/column/diagonal descriptions, table and plot labels, CSV
+  headings and the corresponding library guide. Prior manuscripts are unchanged.
+- Distinguished flat j, row n, column k and source degree. Right-edge diagonals
+  use distance d from each row's last stored column, including theta row widths.
+- Nonnegative residues use the original signed integers. Exact copy and search
+  remain distinct from the modular display; no zero cells are dropped from a row.
+- Routine corrections: repaired a literal template expression in the browse
+  count; corrected an encoding error caught in the local visual review. Added
+  source and browser checks for garbled punctuation before publication.
+- Mathematical-token changes to earlier authored sources: none. The explorer
+  selects stored cells and does not add or alter formula identities.
+- Validation: independent coordinate/residue checks across all 55 tables;
+  bounded arithmetic audit run-016; responsive browser and download checks.
+- Unresolved proofreading issues in this changed scope: none.

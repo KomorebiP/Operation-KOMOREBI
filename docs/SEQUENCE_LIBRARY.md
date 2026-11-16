@@ -202,3 +202,30 @@ For integers \(n\ge k\ge0\), the product of the forward and inverse matrices is
 The reversed product has the same convolution in the opposite order. Thus the
 inverse statement follows from the formal reciprocal identity; it is not
 inferred from the finite matrix tests. The tables use N=2..12.
+
+## Exploring a coefficient table
+
+The 55 complete coefficient tables support selections by row, column, or
+right-edge diagonal. A row fixes n and varies k. A column fixes k and varies n.
+The right-edge distance d selects k = row length - 1 - d in each stored row;
+this is k=n-d for ordinary triangles and k=2n-d for the theta table. Rows
+without that column are omitted, rather than filled with invented zeros.
+
+Exact coefficients are the default. The modular view computes nonnegative
+residues with BigInt for moduli 2 through 1,000,000, including negative and very
+large original coefficients. Optional outlines distinguish zeros without
+requiring color. The complete source integers and their flat j, row n, column k,
+and source degree remain in the selection table and CSV. Copy and library
+search actions use the original coefficients, even when residues are displayed.
+
+The selection plot uses k on its horizontal axis for rows and n for columns or
+diagonals. Signed logarithmic and linear scales are available for exact values;
+modular plots use a linear residue axis. Arrow keys navigate plotted points;
+Enter opens the corresponding indexed coefficient. SVG and PNG exports retain
+the plotted selection, while CSV retains exact integers. Shared table links
+restore the selection, modulus, scale and zero emphasis. Invalid options retain
+the previous view or restore the default row on initial load.
+
+Indexing help and secondary display options are expandable. Without JavaScript,
+the complete coefficient and exact-index tables remain available. The explorer
+does not extend a stored window or infer an infinite sequence from a selection.
