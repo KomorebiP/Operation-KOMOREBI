@@ -93,7 +93,8 @@ def caption_tables(rendered, captions):
 
 
 def overview_rendering(site, rendered):
-    return caption_tables(rendered,load_edition(site.root)['overview']['table_captions'])
+    rendered=caption_tables(rendered,load_edition(site.root)['overview']['table_captions'])
+    return re.sub(r'(</h1>)',lambda match:match[1]+'<p class="chemistry-lab-launch"><a href="../chemistry-lab.html">Explore the three-query chemistry laboratory</a> · Reveal the probes, vary the error bounds, and inspect an exact experiment certificate.</p>',rendered,count=1)
 
 
 def load_validation(root):
@@ -174,7 +175,7 @@ def publish(site):
         rendered=caption_tables(math_fences(rendered),page_record['table_captions'])
         rewritten=Rewriter(resolve);rewritten.feed(rendered);body=''.join(rewritten.out)
         contents=page_contents(body);body=re.sub(r'(</h1>)',lambda match:match[1]+contents,body,count=1)
-        nav='<details class="chemistry-reading-nav"><summary>Explore the chemistry notes</summary><nav aria-label="Chemistry checkpoint"><ul><li><a href="'+site.rel(OVERVIEW,path)+'">Research overview</a></li>'
+        nav='<p class="chemistry-lab-launch"><a href="'+site.rel('chemistry-lab.html',path)+'">Try the three-query chemistry laboratory</a></p><details class="chemistry-reading-nav"><summary>Explore the chemistry notes</summary><nav aria-label="Chemistry checkpoint"><ul><li><a href="'+site.rel(OVERVIEW,path)+'">Research overview</a></li>'
         for _,(target,label) in PAGES.items():nav+='<li><a href="'+target+'"'+(' aria-current="page"' if target==name else '')+'>'+html.escape(label)+'</a></li>'
         nav+='</ul></nav></details>'
         provenance='<details class="chemistry-provenance"><summary>Source identity and downloads</summary><p>This is a reviewed reading edition with corrected prose, explicit derivations and source correspondence. It is distinct from the retained original checkpoint.</p><p><a href="'+site.rel(READING_ASSETS+source_name,path)+'">Read the current Markdown source</a> · <a href="'+site.rel(READING_ASSETS+'manifest.json',path)+'">Edition correspondence and hashes</a> · <a href="'+site.rel(VALIDATION_ASSETS+'Stage14_Validated_Replay.zip',path)+'">Download the validated replay bundle</a></p>'

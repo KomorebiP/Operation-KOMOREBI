@@ -4,6 +4,25 @@ The public site is at <https://KomorebiP.github.io/Operation-KOMOREBI/>.
 Its source is in this repository. The site combines maintained collection
 pages with documentation from two explicitly pinned library revisions.
 
+## Chemistry laboratory
+
+The chemistry experiment at `chemistry-lab.html` is built by
+`tools/chemistry_lab.py`. Its exact fixtures are regenerated with
+`python -B tools/chemistry_lab_data.py`; `--check` detects drift. The generator
+uses standard-library fractions and checks the sealed Stage 14 decoder outputs.
+The browser uses BigInt fractions for decoding, ambiguity witnesses, consistency,
+positivity tests, and outward bounds, and verifies response solutions by exact
+substitution. SVG coordinates and short decimal labels are approximate.
+The experiment link retains the example, probe count, and slider positions.
+
+Run `python -B -m unittest discover -s tools -p 'test_chemistry_lab.py' -v`
+and `node tools/test_chemistry_lab.mjs`. For a built preview or the live site,
+run `node tools/test_chemistry_lab_browser.cjs BASE_URL OUTPUT_DIRECTORY`.
+The browser checks desktop, 390px, 320px, enlarged text, keyboard controls,
+downloads, persisted links, no-JavaScript reading, and fixture-load failures.
+These are bounded implementation checks, without physical-molecule accuracy,
+independent expert review, or assistive-technology qualification.
+
 ## Operator reference
 
 The [operator guide](OPERATOR_AUDIT.md) combines seven reference chapters,
