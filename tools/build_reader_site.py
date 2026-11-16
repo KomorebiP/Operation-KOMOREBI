@@ -80,7 +80,6 @@ def site_navigation(page):
                  ('Smith chart laboratory', 'smith-chart.html'),
                  ('Special Functions laboratory', 'special-functions-lab.html'),
                  ('Recovery laboratory', 'recovery-lab.html'),
-                 ('Chemistry laboratory', 'chemistry-lab.html'),
                  ('J-Space laboratory', 'j-lab.html'),
                  ('Interactive diagrams', 'interactive.html'),
                  ('Run Python', 'playground.html'), ('Software', 'software.html'),
