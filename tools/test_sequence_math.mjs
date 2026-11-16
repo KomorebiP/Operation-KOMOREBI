@@ -19,7 +19,7 @@ test('hypergeometric parameters, polynomial columns, and substitutions retain th
   assert.match(formulaLatex('F(n)=2^n; replace every source index n by (3n+1)'),/Replace source index/);
 });
 test('unsupported or ambiguous notation retains its literal source instead of guessing',()=>{
-  for(const input of ['x^2^3','x_n_n','2^v_2(n)','f(a;b)','x^)',String.raw`\href{https://example.test}{x}`,'a(n)=the number of words','('.repeat(60)+'1'+')'.repeat(60)])assert.equal(formulaLatex(input),null,input);
+  for(const input of ['x^2^3','x_n_n','2^v_2(n)','sqrt(a;b)','x^)',String.raw`\href{https://example.test}{x}`,'a(n)=the number of words','('.repeat(60)+'1'+')'.repeat(60)])assert.equal(formulaLatex(input),null,input);
   assert.equal(formulaLatex('x'.repeat(12001)),null);
 });
 test('one math preference has robust defaults without requiring browser storage',()=>{
@@ -37,6 +37,57 @@ test('factorials keep their order relative to powers; definitions and constraint
   assert.ok(formulaLatex('a(n)=n!\nb(n)=n+1').includes(String.raw`\\[.55em]`));
   assert.ok(formulaLatex('sum_(q_1+q_2=n; q_i>=1) 1/q_i!').includes(String.raw`\substack`));
   const hyper=formulaLatex('0F1(;1/2;z)');assert.ok(!hyper.includes(';'));assert.ok(hyper.includes(String.raw`\vphantom{1}`));assert.ok(hyper.includes(String.raw`\middle|`));
+});
+
+test('factorial normalization followed by equality cannot turn into an inequality',()=>{
+  const reciprocal=formulaLatex('sum_(n>=0) A(n)z^(Nn)/(Nn)! = D_N(z)^(-r)');
+  const theta=formulaLatex('sum_(n>=0) Theta_(2n)(x) z^(2n)/(2n)! = sech(xz) sech(z)^x');
+  const appell=formulaLatex('sum_(n>=0) P_n(x)z^n/n! = exp(xz) CE_(N,j)(z)^r');
+  for(const tex of [reciprocal,theta,appell]){assert.ok(tex);assert.ok(tex.includes('!}}='));assert.ok(!tex.includes(String.raw`\ne `));}
+  assert.ok(reciprocal.includes(String.raw`{\left(N\,n\right)!}`));
+  assert.ok(theta.includes(String.raw`{\left(2\,n\right)!}`));
+  assert.ok(appell.includes(String.raw`{n!}`));
+  assert.equal(formulaLatex('n!=0'),String.raw`n\ne 0`);
+  assert.equal(formulaLatex('n! = m'),String.raw`n!=m`);
+});
+
+test('family function parameters and residue indices preserve their separators and coordinates',()=>{
+  assert.equal(formulaLatex('f(a;b)'),String.raw`f\!\left(a\,;\,b\right)`);
+  assert.equal(formulaLatex('W_(M,r)^(L,j)(z;a)'),String.raw`W_{M, r}^{L, j}\!\left(z\,;\,a\right)`);
+  assert.ok(formulaLatex('B(z;a)=-z zeta(1-z,a)').includes(String.raw`B\!\left(z\,;\,a\right)`));
+  const packet=formulaLatex('F_(M,r)(u)=sum_(n>=0) a_(Mn+r) u^n');
+  assert.ok(packet.includes(String.raw`a_{M\,n+r}`));
+  assert.ok(formulaLatex('CE_(N,j)(z)').includes(String.raw`\operatorname{CE}_{N, j}`));
+  assert.equal(formulaLatex('abs(chi(n))^2'),String.raw`\left|\chi\!\left(n\right)\right|^{2}`);
+});
+
+test('Racah and q-Racah families retain lower-case gamma and terminating parameters',()=>{
+  const racah=formulaLatex('R_n(lambda(x))=4F3(-n,n+alpha+beta+1,-x,x+gamma+delta+1; alpha+1,beta+delta+1,gamma+1; 1)');
+  assert.ok(racah.includes(String.raw`{}_{4}F_{3}`));
+  assert.ok(racah.includes(String.raw`x+\gamma+\delta+1`));
+  assert.ok(racah.includes(String.raw`\gamma+1\end{matrix}`));
+  const basic=formulaLatex('R_n(mu(y))=4phi3(q^(-n),alpha beta q^(n+1),q^(-y),gamma delta q^(y+1); alpha q,beta delta q,gamma q; q,q); mu(y)=q^(-y)+gamma delta q^(y+1)');
+  assert.ok(basic.includes(String.raw`{}_{4}\phi_{3}`));
+  assert.ok(basic.includes(String.raw`\gamma\,\delta\,q^{y+1}`));
+  assert.ok(basic.includes(String.raw`\mu\!\left(y\right)`));
+  assert.ok(!basic.includes(String.raw`\Gamma`));
+});
+
+test('archive constructions preserve finite set counts, divisibility conditions and residue exponents',()=>{
+  const prefix=formulaLatex('D(n)=#{phi(k):1<=k<=n}');
+  assert.ok(prefix.includes(String.raw`\#\left\{\phi\!\left(k\right):1\le k\le n\right\}`));
+  assert.equal(formulaLatex('#phi(n)'),null);
+  assert.equal(formulaLatex('p|n'),String.raw`p\mid n`);
+  assert.equal(formulaLatex('|n|'),null);
+  const masks=formulaLatex('C_K(n)=sum_(h|n, h<=K) n/h');
+  assert.ok(masks.includes(String.raw`\sum_{h\mid n, h\le K}{\frac{n}{h}}`));
+  const digits=formulaLatex('C_(b,m,r)(n)=sum_(j>=0) [x^(mj+r)] (1+x+...+x^(b-1))^n');
+  assert.ok(digits.includes(String.raw`x^{m\,j+r}`));
+  assert.ok(digits.includes(String.raw`\cdots`));
+  const counts=formulaLatex('C_(p,j)(n)=sum_(k=0)^n [v_p(binom(n,k))=j]');
+  assert.ok(counts.includes(String.raw`\left[v_{p}`));
+  assert.ok(counts.includes(String.raw`\binom{n}{k}`));
+  assert.ok(counts.includes(String.raw`=j\right]`));
 });
 
 test('triangle row windows and polynomials retain sparse zeros, signs and variable row lengths',async()=>{

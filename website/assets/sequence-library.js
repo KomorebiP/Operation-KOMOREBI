@@ -1,6 +1,7 @@
 import './sequence-reading-theme.mjs';
 import {enhanceMath,clearMath} from './math-display.mjs';
 import {searchEntries} from './sequence-atlas-search.mjs';
+import {SEARCH_KEYS,RECORD_FILTERS,FAMILY_FILTERS,emptySearch,normalizeSearch,librarySearch} from './sequence-library-search.mjs';
 import {setupArchivePlot} from './sequence-archive-plot.mjs';
 import {referenceQuery} from './sequence-oeis-core.mjs';
 import {createReferenceClient} from './sequence-oeis-client.mjs';
@@ -12,7 +13,7 @@ import {STORAGE_KEY,readSaved,writeSaved,updateSaveButtons} from './sequence-atl
 
 const root=document.querySelector('[data-library]'),$=id=>document.getElementById('sl-'+id),make=(tag,text)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;return node;};
 const collectionLabels={atlas:'Curated sequences',recovered:'Research archive',formulas:'Formula families'};
-const keys=['q','scope','collection','kind','representation','status','match','sort','hits','saved'];
+const keys=SEARCH_KEYS;
 let results=[],page=0,applied={},workbench,transfers,toggleSaved,saved=new Set();
 const csv=rows=>rows.map(row=>row.map(value=>'"'+String(value??'').replaceAll('"','""')+'"').join(',')).join('\r\n')+'\r\n';
 function save(content,type,name){const url=URL.createObjectURL(new Blob([content],{type})),link=make('a');link.href=url;link.download=name;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
@@ -22,7 +23,14 @@ function render(){
   for(const hit of results.slice(page*24,(page+1)*24)){
     const entry=hit.entry;
     if(entry.collection==='generalized'){
-      const li=make('li'),heading=make('h3'),link=make('a',entry.title),formula=make('p',entry.formula),actions=make('div');li.dataset.resultId=entry.id;link.href=entry.url;heading.append(link);formula.className='sar-formula';actions.className='sp-actions';const explore=make('a',entry.engine?'Explore parameters':'Read the source family');explore.href=entry.url+(entry.engine?'#family-explorer':'#definition');const source=make('a','Defining paper');source.href=entry.source;actions.append(explore,source);if(entry.record_ids.length){const members=make('a','Search '+entry.record_ids.length+' integer record'+(entry.record_ids.length===1?'':'s'));members.href='sequence-library.html?q='+encodeURIComponent('family:'+entry.id)+'#library-search';actions.append(members);}li.append(make('p',entry.id+' / Generalized family'),heading,make('p',entry.mode+' · '+entry.paper_title),formula,make('p',entry.domain),make('p',entry.note),actions);$('results').append(li);continue;
+      const li=make('li'),heading=make('h3'),link=make('a',entry.title),formula=make('p',entry.formula),actions=make('div');
+      li.dataset.resultId=entry.id;li.className='sl-family-result';link.href=entry.url;heading.append(link);formula.className='sar-formula';actions.className='sp-actions';
+      const identifier=make('p',entry.id),mode=make('span',entry.mode),domain=make('p'),sourceNote=make('p',entry.paper_title);
+      identifier.className='sar-kicker';mode.className='sl-result-badge';sourceNote.className='sl-family-source';domain.append(make('strong','Parameters: '),document.createTextNode(entry.domain));
+      const explore=make('a',entry.engine?'Explore parameters':'Read construction and examples');explore.href=entry.url+(entry.engine?'#family-explorer':'#definition');
+      const source=make('a','Defining source');source.href=entry.source;actions.append(explore,source);
+      if(entry.record_ids.length){const members=make('a','Search '+entry.record_ids.length+' integer record'+(entry.record_ids.length===1?'':'s'));members.href='sequence-library.html?q='+encodeURIComponent('family:'+entry.id)+'#library-search';actions.append(members);}
+      li.append(identifier,heading,mode,sourceNote,formula,domain,make('p',entry.note),actions);$('results').append(li);continue;
     }
     const li=make('li'),label=make('p',entry.id+' / '+(collectionLabels[entry.collection]||'Sequence library'));label.className='sar-kicker';const heading=make('h3'),link=make('a',entry.title);link.href=entry.url;heading.append(link);li.append(label,heading,make('p',entry.kind+' · '+entry.formulas.length+' representation'+(entry.formulas.length===1?'':'s')+' · first index '+entry.offset));
     li.dataset.resultId=entry.id;if(entry.triangle){const tableNote=make('p',`${entry.triangle.row_lengths.length} complete rows · row/column inspection · ${entry.terms.length} exact coefficients`);tableNote.className='sl-match-reason';li.append(tableNote);}
@@ -41,32 +49,53 @@ function render(){
   }
   enhanceMath($('results'));
   const active=$('active-filters');active.replaceChildren();
-  const names={collection:'Collection',kind:'Family',representation:'Formula type',status:'Review status',hits:'OEIS comparisons',saved:'Saved entries',match:'Term matching'};
+  const names={collection:'Collection',kind:'Family',representation:'Formula type',status:'Review status',hits:'OEIS comparisons',saved:'Saved entries',match:'Term matching',mode:'Construction type',paper:'Source'};
   for(const key of Object.keys(names))if(applied[key]&&!(key==='match'&&applied[key]==='any')){const field=$(key),text=field.options[field.selectedIndex]?.textContent||applied[key],button=make('button',`${names[key]}: ${text} ×`);button.type='button';button.className='sl-filter-chip';button.setAttribute('aria-label',`Clear ${names[key].toLowerCase()} filter`);button.addEventListener('click',()=>{field.value=key==='match'?'any':'';field.dispatchEvent(new Event('change'));$('count').focus({preventScroll:true});});active.append(button);}
   root.querySelectorAll('[data-scope]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.scope===(applied.scope||'records'))));
-  $('search').querySelector('.sl-collections').hidden=applied.scope==='families';
+  const familyScope=applied.scope==='families';
+  $('search').querySelector('.sl-collections').hidden=familyScope;
+  for(const key of RECORD_FILTERS){$(key).disabled=familyScope;$(key).closest('label').hidden=familyScope;}
+  for(const key of FAMILY_FILTERS){$(key).disabled=!familyScope;$(key).closest('label').hidden=!familyScope;}
+  for(const key of ['saved-status','research','triangles','generalized','help'])$(key).hidden=familyScope;
+  $('family-help').hidden=$('family-summary').hidden=!familyScope;
+  $('query-label').textContent=familyScope?'Name, construction, family ID, or source':'Name, formula, identifier, or exact terms';
+  $('query').placeholder=familyScope?'Try Hankel, theta, or paper:SF-VI':'Try hypergeometric, j:1 r:2, or 1, 1, 69';
+  $('query').setAttribute('aria-describedby',(familyScope?'sl-family-help':'sl-help')+' sl-error');
+  $('empty').hidden=results.length!==0;
+  $('export').disabled=results.length===0;
   root.querySelectorAll('[data-collection]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.collection===applied.collection)));
-  updateSaveButtons($('results'),saved);$('results').start=page*24+1;$('count').textContent=`${results.length.toLocaleString()} matching ${applied.scope==='families'?'famil'+(results.length===1?'y':'ies'):'record'+(results.length===1?'':'s')}. ${results.length?`Showing ${page*24+1}–${Math.min(results.length,(page+1)*24)}.`:applied.saved?'Save entries from any collection to find them here.':'Try fewer words or another formula type.'}`;$('page').textContent=`Page ${page+1} of ${Math.max(1,Math.ceil(results.length/24))}`;$('previous').disabled=page===0;$('next').disabled=(page+1)*24>=results.length;$('pages').hidden=results.length<=24;
+  updateSaveButtons($('results'),saved);$('results').start=page*24+1;$('count').textContent=`${results.length.toLocaleString()} matching ${familyScope?'famil'+(results.length===1?'y':'ies'):'record'+(results.length===1?'':'s')}. ${results.length?`Showing ${page*24+1}–${Math.min(results.length,(page+1)*24)}.`:applied.saved?'Save entries from any collection to find them here.':familyScope?'Try another construction, source, or fewer search terms.':'Try fewer words or another formula type.'}`;$('page').textContent=`Page ${page+1} of ${Math.max(1,Math.ceil(results.length/24))}`;$('previous').disabled=page===0;$('next').disabled=(page+1)*24>=results.length;$('pages').hidden=results.length<=24;
 }
-function setupSearch(entries,families){
+function setupSearch(entries,families,sources=[]){
   const storage={getItem:key=>localStorage.getItem(key),setItem:(key,value)=>localStorage.setItem(key,value)},allowed=new Set(entries.map(e=>e.id)),loaded=readSaved(storage,allowed);saved=new Set(loaded.ids);
   const label=make('label','Saved entries'),select=make('select');select.id='sl-saved';label.htmlFor=select.id;for(const [value,text]of [['','All entries'],['only','Saved in this browser']]){const option=make('option',text);option.value=value;select.append(option);}label.append(select);$('search').querySelector('.sar-controls').append(label);
+  const modes=[...new Set(families.map(f=>f.mode))],papers=new Map(sources.map(source=>[source.id,source.title]));
+  for(const family of families)for(const id of family.paper_refs)if(id===family.paper||!papers.has(id))papers.set(id,id===family.paper?family.paper_title:id);
+  for(const [key,title,choices]of [['mode','Construction type',[['','All construction types'],...modes.map(mode=>[mode,mode])]],['paper','Source',[['','All sources'],...Array.from(papers).sort(([a],[b])=>a.localeCompare(b))]]]){
+    const fieldLabel=make('label',title),field=make('select');field.id='sl-'+key;fieldLabel.htmlFor=field.id;
+    for(const [value,text]of choices){const option=make('option',text);option.value=value;field.append(option);}
+    fieldLabel.append(field);$('search').querySelector('.sar-controls').append(fieldLabel);
+  }
+  const modeCounts=modes.map(mode=>{const count=families.filter(f=>f.mode===mode).length,label=mode.toLowerCase();return `${count} ${count===1?label:label.endsWith('family')?label.slice(0,-1)+'ies':label+'s'}`;});
+  $('family-summary').textContent=`${families.length} indexed constructions: ${modeCounts.join(' · ')}. Open a construction for its definition, examples, and sources.`;
   const note=make('p',loaded.available?'Save up to 500 records in this browser, across all collections.':'Saved entries could not be read. Saving still works for this session.');note.id='sl-saved-status';note.setAttribute('role','status');$('search').append(note);
   const params=new URL(location.href).searchParams;for(const key of keys){const control=$(key==='q'?'query':key);if(params.has(key))control.value=params.get(key);}page=Math.max(0,(Number(params.get('page'))||1)-1);
-  function run(update=false){try{const state=Object.fromEntries(keys.map(key=>[key,$(key==='q'?'query':key).value]));state.scope=state.scope||'records';$('scope').value=state.scope;if(state.scope==='families'){for(const key of ['collection','kind','representation','status','hits','saved']){state[key]='';$(key).value='';}}for(const key of ['collection','kind','representation','status','hits','saved','match'])$(key).disabled=state.scope==='families';const found=searchEntries(state.scope==='families'?families:entries,state.q,{sort:state.sort,match:state.match}).filter(({entry})=>(!state.collection||entry.collection===state.collection)&&(!state.kind||entry.kind===state.kind)&&(!state.representation||entry.formulas.some(f=>f.kind===state.representation))&&(!state.status||entry.status===state.status)&&(!state.hits||(state.hits==='matched')===Boolean(entry.matches?.length))&&(!state.saved||saved.has(entry.id)));results=found;applied=state;if(update)page=0;render();$('error').hidden=true;$('action-status').textContent='';$('query').removeAttribute('aria-invalid');if(update)history.replaceState(null,'',share());}catch(error){$('error').textContent=error.message;$('error').hidden=false;$('query').setAttribute('aria-invalid','true');}}
+  function run(update=false){try{const state=normalizeSearch(Object.fromEntries(keys.map(key=>[key,$(key==='q'?'query':key).value])));for(const key of keys)$(key==='q'?'query':key).value=state[key];results=librarySearch(entries,families,state,saved);applied=state;if(update)page=0;render();$('error').hidden=true;$('action-status').textContent='';$('query').removeAttribute('aria-invalid');if(update)history.replaceState(null,'',share());}catch(error){$('error').textContent=error.message;$('error').hidden=false;$('query').setAttribute('aria-invalid','true');}}
+  function reset(scope=$('scope').value){const state=emptySearch(scope);for(const key of keys)$(key==='q'?'query':key).value=state[key];}
   toggleSaved=id=>{const next=new Set(saved);if(next.has(id))next.delete(id);else if(next.size>=500){note.textContent='You have 500 saved records. Remove one before saving another.';return;}else next.add(id);saved=next;const stored=writeSaved(storage,[...saved],allowed);note.textContent=(saved.has(id)?id+' saved.':id+' removed from saved entries.')+(stored?'':' Browser storage is unavailable; this change lasts for this session.');if(applied.saved){run();$('count').focus({preventScroll:true});}else updateSaveButtons($('results'),saved);};
   $('count').tabIndex=-1;for(const key of keys.filter(key=>key!=='q'))$(key).addEventListener('change',()=>run(true));
   for(const button of root.querySelectorAll('[data-scope]'))button.addEventListener('click',()=>{$('scope').value=button.dataset.scope;run(true);});
-  $('generalized').addEventListener('click',()=>{$('scope').value='families';$('query').value='';run(true);$('count').scrollIntoView({block:'start'});});
+  $('generalized').addEventListener('click',()=>{reset('families');run(true);$('count').scrollIntoView({block:'start'});});
   for(const button of root.querySelectorAll('[data-collection]'))button.addEventListener('click',()=>{$('collection').value=button.dataset.collection;run(true);});
   window.addEventListener('storage',event=>{if(event.key===STORAGE_KEY||event.key===null){saved=new Set(readSaved(storage,allowed).ids);run();}});
   $('search').hidden=false;$('search').addEventListener('submit',event=>{event.preventDefault();run(true);});
-  $('clear').addEventListener('click',()=>{for(const key of keys)$(key==='q'?'query':key).value=key==='scope'?'records':key==='sort'?'relevance':key==='match'?'any':'';run(true);$('query').focus();});
-  $('triangles').hidden=false;$('triangles').addEventListener('click',()=>{for(const key of keys)$(key==='q'?'query':key).value=key==='scope'?'records':key==='sort'?'relevance':key==='match'?'any':'';$('query').value='tag:triangle';run(true);$('count').focus();$('count').scrollIntoView({block:'start'});});
-  $('research').hidden=false;$('research').addEventListener('click',()=>{for(const key of keys)$(key==='q'?'query':key).value=key==='scope'?'records':key==='sort'?'relevance':key==='match'?'any':'';$('query').value='tag:research-derived';run(true);$('count').focus();$('count').scrollIntoView({block:'start'});});
+  function clear(){reset();run(true);$('query').focus();}
+  $('clear').addEventListener('click',clear);$('reset').addEventListener('click',clear);
+  $('triangles').hidden=false;$('triangles').addEventListener('click',()=>{reset('records');$('query').value='tag:triangle';run(true);$('count').focus();$('count').scrollIntoView({block:'start'});});
+  $('research').hidden=false;$('research').addEventListener('click',()=>{reset('records');$('query').value='tag:research-derived';run(true);$('count').focus();$('count').scrollIntoView({block:'start'});});
   for(const [key,step]of [['previous',-1],['next',1]])$(key).addEventListener('click',()=>{page+=step;render();history.replaceState(null,'',share());$('count').scrollIntoView({block:'nearest'});});
   $('share').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(share());$('action-status').textContent='Search link copied.';}catch{$('link-wrap').hidden=false;$('link').value=share();$('link').focus();$('link').select();}});
-  $('export').addEventListener('click',()=>save(csv([['id','title','family','collection','offset','formulas','url'],...results.map(({entry:e})=>[e.id,e.title,e.kind,e.collection,e.offset,e.formulas.length,new URL(e.url,location.href).href])]),'text/csv;charset=utf-8','sequence-search-results.csv'));
+  $('export').addEventListener('click',()=>save(csv([['id','title','family','collection','offset','formulas','construction_type','source','indexed_records','url'],...results.map(({entry:e})=>[e.id,e.title,e.kind,e.collection,e.collection==='generalized'?'':e.offset,e.formulas.length,e.mode||'',e.source||'',e.record_ids?.length??'',new URL(e.url,location.href).href])]),'text/csv;charset=utf-8','sequence-search-results.csv'));
   run();
   function validate(value){if(!value||typeof value.q!=='string'||!['records','families'].includes(value.scope||'records'))throw Error('Choose valid saved search settings.');searchEntries(value.scope==='families'?families:entries,value.q);for(const key of keys.filter(k=>k!=='q'))if(value[key]!==undefined&&!Array.from($(key).options).some(o=>o.value===value[key]))throw Error('A saved search filter is unavailable: '+key);if(value.page!==undefined&&(!Number.isSafeInteger(value.page)||value.page<0||value.page>10000))throw Error('The saved search page is invalid.');return value;}
   return {snapshot:()=>({...applied,page}),validate,restore(value){validate(value);for(const key of keys)$(key==='q'?'query':key).value=value[key]??(key==='scope'?'records':key==='sort'?'relevance':key==='match'?'any':'');page=value.page||0;run();}};
@@ -109,6 +138,6 @@ function setupReference(client){
 }
 try{
   if(root.dataset.entry){const response=await fetch(new URL(root.dataset.entry,location.href));if(!response.ok)throw Error('The exact record could not be loaded.');const entry=await response.json();setupArchivePlot(entry);setupTriangleNavigation();mountTriangleExplorer(entry,root.querySelector('#triangle'));}
-  else if($('search')||root.querySelector('#family-explorer-controls')){const responses=await Promise.all([fetch(new URL('./sequence-library-data.json',import.meta.url)),fetch(new URL('./sequence-generalized-data.json',import.meta.url))]);if(responses.some(r=>!r.ok))throw Error('The local sequence and family catalogue could not be loaded.');const [data,generalized]=await Promise.all(responses.map(r=>r.json())),entries=familySearchEntries(data.entries,generalized.families),client=createReferenceClient();let search;if($('search')){workbench=mountWorkbench({root,entries,snapshot:data.snapshot.stripped_sha256,referenceClient:client});transfers=mountTransfers(entries,document.getElementById('sr-transfer-tool'));search=setupSearch(entries,generalized.families);setupReference(client);}mountStudio({root,entries,data:generalized,referenceClient:client,workbench,transfers,search});}
+  else if($('search')||root.querySelector('#family-explorer-controls')){const responses=await Promise.all([fetch(new URL('./sequence-library-data.json',import.meta.url)),fetch(new URL('./sequence-generalized-data.json',import.meta.url))]);if(responses.some(r=>!r.ok))throw Error('The local sequence and family catalogue could not be loaded.');const [data,generalized]=await Promise.all(responses.map(r=>r.json())),entries=familySearchEntries(data.entries,generalized.families),client=createReferenceClient();let search;if($('search')){workbench=mountWorkbench({root,entries,snapshot:data.snapshot.stripped_sha256,referenceClient:client});transfers=mountTransfers(entries,document.getElementById('sr-transfer-tool'));search=setupSearch(entries,generalized.families,generalized.sources);setupReference(client);}mountStudio({root,entries,data:generalized,referenceClient:client,workbench,transfers,search});}
   root.dataset.libraryReady='true';
 }catch(error){const note=make('p',error.message+' Static definitions, exact tables, and the complete index remain available.');note.setAttribute('role','status');root.prepend(note);}

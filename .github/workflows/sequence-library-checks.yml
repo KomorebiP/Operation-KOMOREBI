@@ -1,0 +1,96 @@
+name: Sequence library checks
+on:
+  push:
+    paths:
+      - 'tools/*sequence*'
+      - 'website/assets/sequence-*'
+      - 'website/assets/math-display*'
+      - 'manifests/sequence-*.json'
+      - 'research/sequence-*/**'
+      - 'research/oeis-snapshot/**'
+      - '.github/workflows/sequence-library-checks.yml'
+  pull_request:
+    paths:
+      - 'tools/*sequence*'
+      - 'website/assets/sequence-*'
+      - 'website/assets/math-display*'
+      - 'manifests/sequence-*.json'
+      - 'research/sequence-*/**'
+      - 'research/oeis-snapshot/**'
+      - '.github/workflows/sequence-library-checks.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+defaults:
+  run:
+    shell: bash
+concurrency:
+  group: sequence-library-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tools/
+            /website/
+            /manifests/
+            /research/sequence-*/
+            /research/oeis-snapshot/
+            /monographs/special-functions/supporting-sources/projector-generated-special-functions-i-release/Projector_Generated_Special_Functions_I.tex
+            /monographs/special-functions/supporting-sources/projector-generated-special-functions-ii-release/Projector_Generated_Special_Functions_II.tex
+            /monographs/special-functions/supporting-sources/projector-generated-special-functions-iii-release/Projector_Generated_Special_Functions_III.tex
+            /monographs/special-functions/supporting-sources/projector-generated-special-functions-iv-release/Projector_Generated_Special_Functions_IV.tex
+            /monographs/special-functions/supporting-sources/projector-generated-special-functions-v-release/source/Projector_Generated_Special_Functions_V.tex
+            /monographs/special-functions/supporting-sources/projector-generated-special-functions-vi-release/Projector_Generated_Special_Functions_VI.tex
+            /monographs/special-functions/supporting-sources/projector-generated-special-functions-vii-release/Source/Projector_Generated_Special_Functions_VII.tex
+            /monographs/special-functions/supporting-sources/projector-generated-special-functions-viii-release/Projector_Generated_Special_Functions_VIII.tex
+            /monographs/special-functions/supporting-sources/projector-special-functions-registry/Projector_Special_Functions_Registry.tex
+            /papers/paper-iv/current/Paper_IV_Verification_Closeout_v1.1.0/publication_baseline/editable/traditional/Paper_IV_Traditional_Final.tex
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - name: Install the pinned browser test runtime
+        run: |
+          mkdir -p .sequence-checks/reports
+          npm install --prefix "$RUNNER_TEMP/sequence-browser" --no-save --package-lock=false --ignore-scripts playwright@1.62.1 2>&1 | tee .sequence-checks/reports/npm-install.log
+          "$RUNNER_TEMP/sequence-browser/node_modules/.bin/playwright" install --with-deps chromium 2>&1 | tee .sequence-checks/reports/browser-install.log
+      - name: Check sequence definitions and exact data
+        run: |
+          mkdir -p .sequence-checks/reports
+          python -B -m unittest discover -s tools -p 'test_sequence_families.py' -v 2>&1 | tee .sequence-checks/reports/family-tests.log
+          python -B -m unittest discover -s tools -p 'test_sequence_library.py' -v 2>&1 | tee .sequence-checks/reports/library-tests.log
+          node --test tools/test_sequence_library.mjs tools/test_sequence_math.mjs tools/test_sequence_research.mjs 2>&1 | tee .sequence-checks/reports/node-tests.log
+          python -B tools/audit_sequence_archive.py --output .sequence-checks/reports/archive-audit.json
+      - name: Build the sequence surface with production rendering
+        run: |
+          python -B tools/fetch_reader_runtime.py --output .sequence-checks/mathjax 2>&1 | tee .sequence-checks/reports/mathjax.log
+          python -B tools/build_sequence_preview.py --output .sequence-checks/site --mathjax-root .sequence-checks/mathjax 2>&1 | tee .sequence-checks/reports/build.log
+      - name: Check desktop, mobile and static family pages
+        env:
+          NODE_PATH: ${{ runner.temp }}/sequence-browser/node_modules
+        run: |
+          python -m http.server 8846 --bind 127.0.0.1 --directory .sequence-checks/site > .sequence-checks/reports/server.log 2>&1 &
+          sequence_server_pid=$!
+          trap 'kill "$sequence_server_pid"' EXIT
+          node tools/test_sequence_family_completion.cjs http://127.0.0.1:8846/ .sequence-checks/reports/browser 2>&1 | tee .sequence-checks/reports/browser.log
+          node -e "const assert=require('node:assert/strict'),r=require('./.sequence-checks/reports/browser/report.json');assert.equal(r.status,'passed');assert.deepEqual(r.widths.map(x=>x.width),[1440,390,320]);assert.equal(r.noJavaScript,true);"
+      - name: Preserve browser evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: sequence-family-completion-${{ github.sha }}
+          path: |
+            .sequence-checks/reports/
+            .sequence-checks/site/sequence-build-info.json
+          if-no-files-found: warn
+          retention-days: 14
