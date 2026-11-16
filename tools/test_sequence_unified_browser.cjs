@@ -1,7 +1,7 @@
 const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const base=process.argv[2]||'http://127.0.0.1:8840/',out=process.argv[3]||'sequence-unified-browser';fs.mkdirSync(out,{recursive:true});
 async function ready(p){await p.locator('[data-library-ready=true]').waitFor();}
-async function math(p){for(let i=0;i<2;i++)await p.evaluate(async()=>{await window.KomorebiMath?.ready;await document.fonts.ready;await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));});assert.equal(await p.locator('[data-mml-node=merror],mjx-merror').count(),0);}
+async function math(p){for(let i=0;i<2;i++)await p.evaluate(async()=>{await window.MathJax?.startup?.promise;await window.KomorebiMath?.ready;await document.fonts.ready;await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));});assert.equal(await p.locator('[data-mml-node=merror],mjx-merror').count(),0);}
 async function fits(p){await p.evaluate(async()=>{await document.fonts.ready;await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));});assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth+1),'horizontal overflow');}
 async function query(p,value){await p.fill('#sl-query',value);await p.locator('#sl-search button[type=submit]').click();await math(p);}
 (async()=>{
