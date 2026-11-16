@@ -1,11 +1,13 @@
 # Finite sequence-library evidence
 
-Current evidence: `run-019/manifest.json` and `run-020/manifest.json`, both
+Current evidence: `run-019/manifest.json` and `run-021/manifest.json`, both
 completed. The first uses `contract.json` and checks all parameter families and
 OEIS replay. The second uses `connections-contract.json` and checks record
 definitions, archive source replay and exact JavaScript transfers. Each run
 retains its result in `checks.json`. Earlier runs preserve evidence for their
-recorded inputs; runs 017/018 preceded final accessibility and source-label edits.
+recorded inputs; runs 017/018 preceded final accessibility and source-label edits. Run 020
+used the unchanged browser core with Windows CRLF bytes; run 021 replays it with
+the committed LF bytes so that the current receipt matches Git exactly.
 
 The current exact checks cover 2,164 parameter records and all 55,939 stored
 terms / index maps. Independent comparisons include 2,880 reciprocal terms,

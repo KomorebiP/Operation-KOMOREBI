@@ -122,6 +122,6 @@ shifts, finite cutoffs and coefficient-domain labels. No mathematical-token
 changes were made as typographical proofreading corrections. The substantive
 new identities have their separate focused audit and derivation. No unresolved
 notation issue remains within this changed scope. Exact independent finite
-checks are in runs 019/020; 668 structural typesetting samples and 11 mixed
+checks are in runs 019/021; 668 structural typesetting samples and 11 mixed
 parts compiled without errors across 7,033 representations. Sixty unsupported
 representations deliberately retain their literal source notation.
