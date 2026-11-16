@@ -24,7 +24,7 @@ test('shared references require explicit restoration against the same snapshot',
   const ref=referenceSource({id:'A000001',sample_position:8,values:['0','-1'],name:'Test'},'snapshot');
   const href=workbenchLink('https://example.test/sequence-library.html?q=old',[localSource(a),ref],{...WORKBENCH_DEFAULTS,view:'mod',modulus:11});
   const restored=readWorkbenchLink(href,[a,b],'snapshot');assert.equal(restored.state.modulus,11);assert.equal(restored.sources[1].pending,true);assert.equal(restored.sources[1].descriptor.position,8);assert.equal(new URL(href).searchParams.has('q'),false);
-  assert.throws(()=>readWorkbenchLink(href,[a,b],'other'),/snapshot/);assert.throws(()=>readWorkbenchLink(href,[b],'snapshot'),/unavailable/);
+  assert.throws(()=>readWorkbenchLink(href,[a,b],'other'),/reference data/);assert.throws(()=>readWorkbenchLink(href,[b],'snapshot'),/unavailable/);
   assert.throws(()=>readWorkbenchLink(workbenchLink(href,[localSource(a),localSource(a)],{}),[a],'snapshot'),/duplicate/);
   for(const value of [{skip:''},{count:0},{count:1.1},{modulus:1},{scale:'invented'}])assert.throws(()=>validateWorkbench(value));
   for(const values of [['-0'],['01'],[],['1.2']])assert.throws(()=>referenceSource({id:'A000001',sample_position:0,values},'snapshot'));

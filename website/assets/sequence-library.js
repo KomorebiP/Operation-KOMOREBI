@@ -7,6 +7,7 @@ import {mountWorkbench} from './sequence-workbench.mjs';
 import {STORAGE_KEY,readSaved,writeSaved,updateSaveButtons} from './sequence-atlas-saved.mjs';
 
 const root=document.querySelector('[data-library]'),$=id=>document.getElementById('sl-'+id),make=(tag,text)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;return node;};
+const collectionLabels={atlas:'Curated sequences',recovered:'Research archive',formulas:'Formula families'};
 const keys=['q','collection','kind','representation','match','sort','hits','saved'];
 let results=[],page=0,applied={},workbench,toggleSaved,saved=new Set();
 const csv=rows=>rows.map(row=>row.map(value=>'"'+String(value??'').replaceAll('"','""')+'"').join(',')).join('\r\n')+'\r\n';
@@ -15,10 +16,10 @@ function share(){const url=new URL(location.href);url.search='';for(const [key,v
 function render(){
   $('results').replaceChildren();page=Math.max(0,Math.min(page,Math.ceil(results.length/24)-1));
   for(const hit of results.slice(page*24,(page+1)*24)){
-    const entry=hit.entry,li=make('li'),label=make('p',entry.id+' / '+entry.collection);label.className='sar-kicker';const heading=make('h3'),link=make('a',entry.title);link.href=entry.url;heading.append(link);li.append(label,heading,make('p',entry.kind+' · '+entry.formulas.length+' representations · first index '+entry.offset));
+    const entry=hit.entry,li=make('li'),label=make('p',entry.id+' / '+(collectionLabels[entry.collection]||'Sequence library'));label.className='sar-kicker';const heading=make('h3'),link=make('a',entry.title);link.href=entry.url;heading.append(link);li.append(label,heading,make('p',entry.kind+' · '+entry.formulas.length+' representations · first index '+entry.offset));
     const expression=make('p',entry.formula);expression.className='sar-formula';li.append(expression,make('p',hit.termMatch?hit.reason:entry.tags.filter(x=>x==='hypergeometric').length?'Includes a hypergeometric representation.':entry.status));
     const links=make('div'),plot=make('a','Plot and inspect →'),formulas=make('a','Read formulas'),bookmark=make('button'),compare=make('button','Add to comparison');links.className='sp-actions';plot.href=entry.url+(entry.collection==='atlas'?'#analysis':'#plot');formulas.href=entry.url+(entry.collection==='recovered'?'#definition':'#formulas');bookmark.type=compare.type='button';bookmark.dataset.saveSequence=entry.id;bookmark.addEventListener('click',()=>toggleSaved(entry.id));compare.setAttribute('aria-label','Add '+entry.id+' to comparison');compare.addEventListener('click',()=>workbench.addLocal(entry));links.append(plot,formulas,bookmark,compare);li.append(links);
-    const comparisons=make('details'),summary=make('summary',`OEIS snapshot comparisons (${entry.match_count.toLocaleString()} observed hits)`);comparisons.className='sl-matches';comparisons.append(summary);
+    const comparisons=make('details'),summary=make('summary',`OEIS comparisons (${entry.match_count.toLocaleString()} observed hits)`);comparisons.className='sl-matches';comparisons.append(summary);
     if(entry.matches.length){const list=make('ol');for(const hit of entry.matches.slice(0,3)){const item=make('li'),reference=make('a',hit.id+' · '+hit.name);reference.href='https://oeis.org/'+hit.id;item.append(reference,make('p',`${hit.matched_terms} matching terms, beginning at local index ${entry.offset}; OEIS export position ${hit.position}.`));list.append(item);}comparisons.append(list,make('p',`Showing ${Math.min(3,entry.matches.length)} of ${entry.match_count.toLocaleString()} observed hits; up to 50 are retained in the library data.`));}else comparisons.append(make('p','No eight-term contiguous match recorded. This does not establish novelty.'));
     const credit=make('p','Finite comparisons do not prove infinite identity. Export positions are not mathematical offsets. Reference data: '),oeis=make('a','The Online Encyclopedia of Integer Sequences'),license=make('a','CC BY-SA 4.0');oeis.href='https://oeis.org/';license.href='https://creativecommons.org/licenses/by-sa/4.0/';credit.append(oeis,document.createTextNode(' · '),license);comparisons.append(credit);li.append(comparisons);$('results').append(li);
   }
@@ -42,12 +43,12 @@ function setupSearch(entries){
   run();
 }
 function setupReference(client){
-  if(!globalThis.Worker){$('oeis-status').textContent='Background workers are unavailable. The snapshot downloads and recorded entry comparisons remain available.';return;}
+  if(!globalThis.Worker){$('oeis-status').textContent='Interactive OEIS search is unavailable in this browser. You can still download the reference data and browse entry comparisons.';return;}
   $('oeis-form').hidden=false;
   const busy=value=>{$('oeis-search').disabled=value;$('oeis-cancel').disabled=!value;};
   $('oeis-form').addEventListener('submit',async event=>{
     event.preventDefault();try{referenceQuery($('oeis-query').value);}catch(error){$('oeis-status').textContent=error.message;return;}
-    busy(true);$('oeis-status').textContent='Loading the retained snapshot and comparing in this browser…';root.dataset.referenceReady='false';
+    busy(true);$('oeis-status').textContent='Loading OEIS reference data and searching in this browser…';root.dataset.referenceReady='false';
     try{
       const data=await client.search($('oeis-query').value,message=>{$('oeis-status').textContent=message;});
       $('oeis-results').replaceChildren();for(const hit of data.results){
@@ -57,7 +58,7 @@ function setupReference(client){
         if(hit.values?.length){const compare=make('button','Add excerpt to comparison');compare.type='button';compare.setAttribute('aria-label','Compare '+hit.id+' excerpt');compare.addEventListener('click',()=>workbench.addReference(hit));li.append(compare);}
         $('oeis-results').append(li);
       }
-      $('oeis-status').textContent=`${data.total.toLocaleString()} matching OEIS records. Showing ${data.results.length}; snapshot terms and names only. ${data.query_type==='terms'?'Finite matching does not prove sequence identity.':''}`;root.dataset.referenceReady='true';
+      $('oeis-status').textContent=`${data.total.toLocaleString()} matching OEIS records. Showing ${data.results.length}; reference terms and names only. ${data.query_type==='terms'?'Finite matching does not prove sequence identity.':''}`;root.dataset.referenceReady='true';
     }catch(error){$('oeis-status').textContent=error.message;}finally{busy(false);}
   });
   $('oeis-cancel').addEventListener('click',()=>client.cancel());

@@ -27,7 +27,7 @@ function setupSearch(entries) {
         if(hit.termMatch)note.textContent=hit.reason;
       }
       $('error').hidden=true;$('query').removeAttribute('aria-invalid');
-      $('count').textContent=`${found.length} of ${entries.length} recovered records. Matches use all stored exact terms and preserve each record's offset.`;
+      $('count').textContent=`${found.length} of ${entries.length} research records. Matches use all stored exact terms and preserve each record's offset.`;
       $('empty').hidden=found.length!==0;applied=filters;
       if(update)history.replaceState(null,'',archiveLink(location.href,applied));
     }catch(error){$('error').textContent=error.message;$('error').hidden=false;$('query').setAttribute('aria-invalid','true');}
