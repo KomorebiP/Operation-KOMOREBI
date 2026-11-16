@@ -1,7 +1,7 @@
 # Finite sequence-library evidence
 
-Current evidence: `run-010/manifest.json`, status `completed`, with
-`run-010/checks.json`. The input contract is `contract.json`. This run replays
+Current evidence: `run-011/manifest.json`, status `completed`, with
+`run-011/checks.json`. The input contract is `contract.json`. This run replays
 the same finite assertion after search consolidation and shared math display. Earlier runs preserve
 the evidence for their recorded source inputs.
 
@@ -62,3 +62,7 @@ not the truth of formula identities.
 The shared math control is constructed once by its module. The 121-chapter
 Machine-Native Reasoning reader retains its existing 1,800,000-byte shell
 budget; the generated shells occupy 1,751,895 bytes with the shared control.
+
+Study actions use the canonical library and generator routes. The handoff page
+retains the original section anchors for saved links and static navigation;
+generated-page tests check all links between sequence pages and their targets.
