@@ -6,7 +6,38 @@ from html.parser import HTMLParser
 
 MANIFEST = 'manifests/reader-copyediting.json'
 REPORT = 'documents/reader-copyediting.json'
+MARKDOWN_MANIFEST = 'manifests/reader-copyediting-markdown.json'
 VOID = {'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr'}
+
+
+def apply_markdown(root, source, text):
+    """Render reviewed commas while retaining an archived Markdown source exactly."""
+    manifest = root / MARKDOWN_MANIFEST
+    if not manifest.is_file():
+        return text
+    data = json.loads(manifest.read_bytes())
+    if data.get('schema') != 1 or data.get('mathematical_token_changes') != 0:
+        raise ValueError('Unknown Markdown copyediting record schema')
+    changes = [row for row in data['changes'] if row['source'] == source]
+    if not changes:
+        return text
+    if len(changes) != 1:
+        raise ValueError('Duplicate Markdown copyediting source: ' + source)
+    row = changes[0]
+    raw = (root / source).read_bytes()
+    if hashlib.sha256(raw).hexdigest() != row['source_sha256'] or text != raw.decode('utf-8').replace('\r\n', '\n'):
+        raise ValueError('Review stale Markdown copyediting source: ' + source)
+    positions = row['comma_positions']
+    if any(type(p) is not int or not 0 <= p < len(text) for p in positions) or positions != sorted(set(positions)):
+        raise ValueError('Invalid Markdown copyediting positions')
+    protected = list(re.finditer(r'```[\s\S]*?```|`[^`\n]*`|\\\([\s\S]*?\\\)|\\\[[\s\S]*?\\\]|\$\$[\s\S]*?\$\$|(?<!\$)\$[^$\n]+\$', text))
+    for position in reversed(positions):
+        if not re.match(r'\s+and\b', text[position:]) or any(m.start() <= position < m.end() for m in protected):
+            raise ValueError('Markdown copyediting must insert a prose comma before and')
+        text = text[:position] + ',' + text[position:]
+    if hashlib.sha256(text.encode('utf-8')).hexdigest() != row['after_normalized_sha256']:
+        raise ValueError('Markdown copyediting result differs from its reviewed text')
+    return text
 
 
 def validate(data):

@@ -1,12 +1,13 @@
 import unittest
 import hashlib
 import json
+import re
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from types import SimpleNamespace
 
 from readable_chapters import Chapter, prose_list
-from reader_copyediting import MANIFEST, prepare, transform, validate
+from reader_copyediting import MANIFEST, MARKDOWN_MANIFEST, apply_markdown, prepare, transform, validate
 
 
 class CopyeditingTests(unittest.TestCase):
@@ -61,6 +62,35 @@ class CopyeditingTests(unittest.TestCase):
         self.assertIn('</a>, and <a',chapter.inline(r'\cref{a,b,c}'))
         self.assertIn('</a>, <a',chapter.inline(r'\cite{first,second}'))
         self.assertEqual(chapter.preview(r'\cref{a,b}')[0]['text'],'Section 1 and Section 2')
+
+    def test_markdown_reading_correction_preserves_the_archived_bytes(self):
+        with TemporaryDirectory() as folder:
+            root=Path(folder);source='example.md'
+            raw=b'One, two and three.\r\n`x and y` and $a and b$.\r\n'
+            text=raw.decode().replace('\r\n','\n');position=text.index(' and three')
+            after=text[:position]+','+text[position:]
+            (root/source).write_bytes(raw)
+            manifest=root/MARKDOWN_MANIFEST;manifest.parent.mkdir()
+            row=dict(source=source,source_sha256=hashlib.sha256(raw).hexdigest(),
+                     after_normalized_sha256=hashlib.sha256(after.encode()).hexdigest(),comma_positions=[position])
+            manifest.write_text(json.dumps(dict(schema=1,mathematical_token_changes=0,changes=[row])))
+            self.assertEqual(apply_markdown(root,source,text),after)
+            self.assertEqual((root/source).read_bytes(),raw)
+            (root/source).write_bytes(raw+b'changed')
+            with self.assertRaisesRegex(ValueError,'stale Markdown'):apply_markdown(root,source,text)
+
+    def test_markdown_positions_cannot_edit_code_or_mathematics(self):
+        with TemporaryDirectory() as folder:
+            root=Path(folder);source='example.md'
+            text='`x and y`\n\\(a and b\\)\n$$c and d$$\n```\ne and f\n```\n'
+            (root/source).write_text(text,encoding='utf-8')
+            manifest=root/MARKDOWN_MANIFEST;manifest.parent.mkdir()
+            for position in [m.start() for m in re.finditer(' and ',text)]:
+                row=dict(source=source,source_sha256=hashlib.sha256((root/source).read_bytes()).hexdigest(),
+                         after_normalized_sha256='unused',comma_positions=[position])
+                manifest.write_text(json.dumps(dict(schema=1,mathematical_token_changes=0,changes=[row])))
+                with self.subTest(position=position),self.assertRaisesRegex(ValueError,'prose comma'):
+                    apply_markdown(root,source,text)
 
 
 if __name__=='__main__':unittest.main()

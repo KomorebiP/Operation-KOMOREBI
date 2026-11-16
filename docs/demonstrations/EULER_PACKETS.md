@@ -991,7 +991,7 @@ Let \(T_L^{(p)}(n)\) retain terms \(0\leq r\leq\min(L,n)\). Every omitted term c
 p^{2L+2}\mid E_{2n}-T_L^{(p)}(n).
 \]
 
-If \(L\geq n\), the omitted sum is empty, and the error is zero. For an odd prime this gives a prime-adic precision certificate. It follows from the explicit finite sum for every \(n\), rather than from the size of a tested prefix.
+If \(L\geq n\), the omitted sum is empty and the error is zero. For an odd prime this gives a prime-adic precision certificate. It follows from the explicit finite sum for every \(n\), rather than from the size of a tested prefix.
 
 For this particular row, the complete partial sums and errors are
 
@@ -1088,7 +1088,7 @@ The relevant source and kernel values are
 | 3 | \(205/7\) | \(-10240/21\) |
 | 4 | \(7381/45\) | \(229376/15\) |
 
-The dyadic source, kernel, and factorial normalization have all changed together. Merely substituting two into the odd-prime formula would miss that change of coordinates.
+The dyadic source, kernel and factorial normalization have all changed together. Merely substituting two into the odd-prime formula would miss that change of coordinates.
 
 ## Reconstruct 1385 in the dyadic chart
 
@@ -2762,7 +2762,7 @@ z_3-z_2&=1441(2,-1)=(2882,-1441).
 \end{aligned}
 \]
 
-For a homogeneous Fibonacci solution, every defect is zero, and these moving coordinates are constant. Conversely, constant moving coordinates imply zero defect, because \(\mathsf A^{-(n+1)}e\) is nonzero. The Euler example has nonzero increments. The change of coordinates exposes that difference rather than removing it.
+For a homogeneous Fibonacci solution, every defect is zero and these moving coordinates are constant. Conversely, constant moving coordinates imply zero defect, because \(\mathsf A^{-(n+1)}e\) is nonzero. The Euler example has nonzero increments. The change of coordinates exposes that difference rather than removing it.
 
 ## Transfer the Euler sequence to Fibonacci values
 
@@ -3042,7 +3042,7 @@ F_{H_ax+j}=\sum_{r=0}^x\binom xr
 }
 \]
 
-Indeed, expand \((I+2^{a+3}\mathsf B_a)^x\), then apply the indicated state and observation. If we retain only \(r<L\), every omitted term is divisible by \(2^{(a+3)L}\). When \(L>x\), no term is omitted, and the answer is exact.
+Indeed, expand \((I+2^{a+3}\mathsf B_a)^x\), then apply the indicated state and observation. If we retain only \(r<L\), every omitted term is divisible by \(2^{(a+3)L}\). When \(L>x\), no term is omitted and the answer is exact.
 
 Take \(a=0\), \(j=1\), and \(x=3\). This reconstructs \(F_{37}\). The normalized difference coefficients just calculated are \(1,29,1165,46745\), so
 
@@ -3677,7 +3677,7 @@ The program refuses to replace existing result files. The CSV values retain inte
 
 You can also inspect the published [coefficient table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/euler-coefficients.csv), [parameter-polynomial table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/power-polynomials.csv), [local reconstruction and error table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/local-reconstruction.csv), [matrix-entry table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/coefficient-matrices.csv), [supercongruence table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/congruence-ladders.csv), [Fibonacci transfer matrices](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/fibonacci-transfer.csv), [Fibonacci precision ladders](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/fibonacci-precision.csv), [polynomial calculus matrices](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/polynomial-calculus.csv), [quartic address coefficients](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/quartic-addresses.csv), [binary inversion trace](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/dyadic-inverse.csv), [Euler coordinate table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/euler-coordinate-atlas.csv), [exact dyadic tails](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/dyadic-edge-tails.csv), [exact results](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/results.json), and [source identities](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/source-record.json).
 
-The matrix table contains twelve-by-twelve blocks of each forward and inverse local transform for charts 2, 3, 5, and 7, the Pascal pair, the displayed three-by-five sampling block, and five-by-five base changes from chart three to charts five and two. The Fibonacci table adds the degree-twelve polynomial connection and its inverse, and sixteen-by-sixteen recurrence analysis, synthesis, ordinary sequence transfer, and inverse matrices. These finite tables can be inspected entry by entry. The formulas and proofs above define the infinite operators.
+The matrix table contains twelve-by-twelve blocks of each forward and inverse local transform for charts 2, 3, 5 and 7, the Pascal pair, the displayed three-by-five sampling block, and five-by-five base changes from chart three to charts five and two. The Fibonacci table adds the degree-twelve polynomial connection and its inverse, and sixteen-by-sixteen recurrence analysis, synthesis, ordinary sequence transfer and inverse matrices. These finite tables can be inspected entry by entry. The formulas and proofs above define the infinite operators.
 
 The checks use several different routes:
 
@@ -3703,13 +3703,13 @@ The checks use several different routes:
 | Refinement composition | Every coefficient of composed and direct kernel rows | Both spacings 1–4, every lane, orders 0–3 |
 | Fibonacci polynomial basis | Closed ballot coefficients against descending monic elimination, inverse products, centered recovery, and polynomial companion powers | Degrees and powers 0–12 |
 | Fibonacci sequence coordinates | Defect analysis and synthesis, companion evolution, moving-state increments, Green-kernel sums, reversible Toeplitz transfer, and full commutator rows | Sixteen even Euler values, states 0–14, all required matrix columns |
-| Fibonacci packet recurrence | Independent Lucas trace, determinant parity, direct Fibonacci values, and jump matrices | Steps 0–12, addresses 0–5, coarse indices 0–8 |
-| Fibonacci congruence ladders | Matrix factors against direct scalar differences, full finite binomial reconstructions, and every truncation | Refinements 0–4, bases 0–6, difference orders 0–5, reconstruction addresses 0–3, and coarse indices 0–6 |
-| Polynomial calculus | Direct monomial integration and differentiation against transported operators, round-trip identity, reverse boundary defect, and dual covector | Source degrees 0–8 |
-| Four quartic addresses | Ordinary reciprocal against triangular recurrence, exact differences, and displacement valuations | Indices 0–47, difference bases 0–6, steps 1–8, orders 0–5, displacement bases 0–8, and steps 1–16 |
-| Finite dyadic coordinates | Modular recurrence against rational values, residue permutations, pairwise distance, period criteria, and unique binary lift | Coefficients 0–255 modulo 8192, permutation precisions 1–8, pair inputs 0–31, period precisions 0–8, six inverse digits |
-| Finite Hurwitz modes | Cyclic group inversion, nilpotence, direct Hurwitz multiplication, and Euler coefficients | Primes 3, 5, 7 and full degrees 0–24 |
-| Logarithmic coordinates | Both Stirling inverse products, log/exp substitution, rational closed form, integer recurrence, and conjugated derivative | Stirling matrices through degree 16, derivative output through degree 16 using input through degree 17 |
+| Fibonacci packet recurrence | Independent Lucas trace, determinant parity, direct Fibonacci values and jump matrices | Steps 0–12, addresses 0–5, coarse indices 0–8 |
+| Fibonacci congruence ladders | Matrix factors against direct scalar differences, full finite binomial reconstructions and every truncation | Refinements 0–4, bases 0–6, difference orders 0–5, reconstruction addresses 0–3 and coarse indices 0–6 |
+| Polynomial calculus | Direct monomial integration and differentiation against transported operators, round-trip identity, reverse boundary defect and dual covector | Source degrees 0–8 |
+| Four quartic addresses | Ordinary reciprocal against triangular recurrence, exact differences and displacement valuations | Indices 0–47, difference bases 0–6, steps 1–8, orders 0–5, displacement bases 0–8 and steps 1–16 |
+| Finite dyadic coordinates | Modular recurrence against rational values, residue permutations, pairwise distance, period criteria and unique binary lift | Coefficients 0–255 modulo 8192, permutation precisions 1–8, pair inputs 0–31, period precisions 0–8, six inverse digits |
+| Finite Hurwitz modes | Cyclic group inversion, nilpotence, direct Hurwitz multiplication and Euler coefficients | Primes 3, 5, 7 and full degrees 0–24 |
+| Logarithmic coordinates | Both Stirling inverse products, log/exp substitution, rational closed form, integer recurrence and conjugated derivative | Stirling matrices through degree 16, derivative output through degree 16 using input through degree 17 |
 | Exact dyadic tails | Direct reconstruction against finite factorization and exact valuations; certified carry cutoff against a larger finite search | First omitted indices 1–8 with offsets 0–8 and 15, 31, 63 with offsets 0–6; carry indices 1–255 and offsets 0–256 |
 | Prime residuals | Integer polynomial coefficients and application to the three sequences | Primes 2, 3, 5, 7, and 11 |
 
@@ -3717,15 +3717,15 @@ The permutation control uses a different definition of the numbers. At length \(
 
 The [bounded run manifest](../../verification/euler-packets/run-007/manifest.json) records the command, Python version, source hashes before and after execution, time limit, observed completion, and result hashes. The [dyadic-tail self-review](../../verification/euler-packets/PROOF_REVIEW_EDGE.md) links the preceding proof reviews and checks the added arguments separately. There is no new Lean run for this example.
 
-A separate check compares 605 reciprocal coefficient values with the pinned Komorebi Math source, using both its integer sequence API and its logarithmic reciprocal-power implementation. It also makes 1,012 comparisons in the local Euler charts: 220 source, kernel, and reconstruction values, 528 truncation values and errors, and 264 row weights, across prime charts 2, 3, 5, and 7 through ordinary degree twenty. Its [comparison record](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/library-comparison.json) retains the source identity and declared ranges.
+A separate check compares 605 reciprocal coefficient values with the pinned Komorebi Math source, using both its integer sequence API and its logarithmic reciprocal-power implementation. It also makes 1,012 comparisons in the local Euler charts: 220 source, kernel and reconstruction values, 528 truncation values and errors, and 264 row weights, across prime charts 2, 3, 5 and 7 through ordinary degree twenty. Its [comparison record](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/library-comparison.json) retains the source identity and declared ranges.
 
-That supplementary checker also verifies twelve complete rows of the infinite sampling-kernel witness and 18 Euler index-shift supercongruences, for primes 3, 5, and 7 with even starting degree 2–12. It retains the failing degree-zero boundary as a negative control. It also makes 921 Fibonacci comparisons with the pinned library: 169 polynomial connection entries, 52 polynomial companion entries, 13 centered Euler values, 512 recurrence matrix entries, 150 recurrence checks, and 25 full-index records. The full and even-index streams are checked separately at every prefix length from two through twenty-six. A further 3,506 comparisons check the new literature examples against pinned APIs: 780 packet values, 1,560 packet-state coordinates, 68 jump-matrix entries, and 1,098 polynomial-calculus entries. The [source check](../../verification/euler-packets/LITERATURE_FIBONACCI.md) records the exact source statements and distinguishes their written consequences. The coordinate atlas adds 1,164 comparisons: 96 quartic coefficients, 150 modular Hurwitz inverse/product values, 578 Stirling entries, 51 formal-coordinate values, and 289 substitution entries. Its [source record](../../verification/euler-packets/LITERATURE_ATLAS.md) identifies the all-row theorem used in the universal displacement proof. The universal statements have the written proofs or checked source inputs above.
+That supplementary checker also verifies twelve complete rows of the infinite sampling-kernel witness and 18 Euler index-shift supercongruences, for primes 3, 5 and 7 with even starting degree 2–12. It retains the failing degree-zero boundary as a negative control. It also makes 921 Fibonacci comparisons with the pinned library: 169 polynomial connection entries, 52 polynomial companion entries, 13 centered Euler values, 512 recurrence matrix entries, 150 recurrence checks, and 25 full-index records. The full and even-index streams are checked separately at every prefix length from two through twenty-six. A further 3,506 comparisons check the new literature examples against pinned APIs: 780 packet values, 1,560 packet-state coordinates, 68 jump-matrix entries, and 1,098 polynomial-calculus entries. The [source check](../../verification/euler-packets/LITERATURE_FIBONACCI.md) records the exact source statements and distinguishes their written consequences. The coordinate atlas adds 1,164 comparisons: 96 quartic coefficients, 150 modular Hurwitz inverse/product values, 578 Stirling entries, 51 formal-coordinate values, and 289 substitution entries. Its [source record](../../verification/euler-packets/LITERATURE_ATLAS.md) identifies the all-row theorem used in the universal displacement proof. The universal statements have the written proofs or checked source inputs above.
 
 The tail continuation adds 234 library comparisons: 46 partial sums, 46 exact errors, 132 omitted-term weights, and ten kernel values. The [tail source check](../../verification/euler-packets/LITERATURE_EDGE.md) records the finite-polynomial result and its remaining simplicity boundary.
 
 ## What the example establishes
 
-The written calculation gives exact reciprocal recurrences, the two-packet multiplication law and its coarsening obstruction, the quartic reconstruction and enumeration identities, reciprocal parameter polynomials, Euler-polynomial power sums, odd-length and dyadic local supercongruences, infinite coefficient matrices and inverse transforms, prime-dependent base changes, congruential families with explicit addresses, coprime modular reconstruction, formal residual correction, sequence-refinement kernels with their Pascal conjugation, composition, and prime correction, and explicit Euler-to-Fibonacci polynomial, recurrence, and sequence transfers with their inverses and transported operation. The continuation derives Lucas packet recurrences, dyadic and simultaneous-prime Fibonacci precision ladders, and a complete Euler/Fibonacci polynomial calculus round trip. The quartic continuation derives exact displacement and period laws, binary inverse coordinates, finite-characteristic Euler mode inversion, and logarithmic/Stirling coordinates with a transported derivative.
+The written calculation gives exact reciprocal recurrences, the two-packet multiplication law and its coarsening obstruction, the quartic reconstruction and enumeration identities, reciprocal parameter polynomials, Euler-polynomial power sums, odd-length and dyadic local supercongruences, infinite coefficient matrices and inverse transforms, prime-dependent base changes, congruential families with explicit addresses, coprime modular reconstruction, formal residual correction, sequence-refinement kernels with their Pascal conjugation, composition and prime correction, and explicit Euler-to-Fibonacci polynomial, recurrence and sequence transfers with their inverses and transported operation. The continuation derives Lucas packet recurrences, dyadic and simultaneous-prime Fibonacci precision ladders, and a complete Euler/Fibonacci polynomial calculus round trip. The quartic continuation derives exact displacement and period laws, binary inverse coordinates, finite-characteristic Euler mode inversion, and logarithmic/Stirling coordinates with a transported derivative.
 
 The finite program checks implementations of these laws in its declared ranges. Its deliberately wrong controls expose missing carry factors, wrong factorial normalization, discarded residuals, and an invalid composite-number generalization.
 
@@ -3738,7 +3738,7 @@ The method keeps the representation, operation, preserved data, and remaining de
 - [Polyphase/tap example review and finite scope](../../verification/euler-packets/POLYPHASE_TAPS_REVIEW.md).
 - [Machine-native mathematics essay](../essays/MACHINE_NATIVE_MATHEMATICS.md) and [sequence experiments](SEQUENCE_SHAPES.md).
 
-- [Quartic and coefficient-atlas source check](../../verification/euler-packets/LITERATURE_ATLAS.md), for the exact four-address, isometry, Hurwitz-mode, and formal-logarithmic source statements and their uses here.
+- [Quartic and coefficient-atlas source check](../../verification/euler-packets/LITERATURE_ATLAS.md), for the exact four-address, isometry, Hurwitz-mode and formal-logarithmic source statements and their uses here.
 - [Paper IX: Euler Congruences](../works/paper-ix.md), for companion jumps, Fibonacci packets, and integral matrix precision amplification. Exact source identities and the distinction between source statements and new worked consequences appear in the [source check](../../verification/euler-packets/LITERATURE_FIBONACCI.md).
 - [Komorebi Math typed-expression example](https://github.com/KomorebiP/komorebi-math/blob/a3aa04ac18a523f30c50c7f5dba709f88e904eff/docs/TYPED_EXPRESSION_EXAMPLE.md), for the polynomial integration, basis changes, derivative, boundary defect, and integral covector.
 - [NIST DLMF, Euler numbers and polynomials](https://dlmf.nist.gov/24.2#ii), including the signed convention and polynomial generating function, and the [secant expansion](https://dlmf.nist.gov/4.19.E5).

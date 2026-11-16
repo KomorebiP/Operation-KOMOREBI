@@ -473,6 +473,9 @@ class Site:
     def markdown_pages(self):
         import markdown
         for (repo,path),text in self.documents.items():
+            if repo == 'collection':
+                from reader_copyediting import apply_markdown
+                text = apply_markdown(self.root, path, text)
             page=document_url(repo,path)
             from smith_chart_unified import ALIASES as smith_aliases, publish_redirect as smith_redirect
             if repo == 'collection' and page in smith_aliases:
