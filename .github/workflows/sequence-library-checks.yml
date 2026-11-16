@@ -87,6 +87,7 @@ jobs:
           trap 'kill "$sequence_server_pid"' EXIT
           node tools/test_sequence_family_completion.cjs http://127.0.0.1:8846/ .sequence-checks/reports/browser 2>&1 | tee .sequence-checks/reports/browser.log
           node -e "const assert=require('node:assert/strict'),r=require('./.sequence-checks/reports/browser/report.json');assert.equal(r.status,'passed');assert.deepEqual(r.widths.map(x=>x.width),[1440,390,320]);assert.equal(r.noJavaScript,true);"
+          node tools/test_sequence_transfer_browser.cjs http://127.0.0.1:8846/ .sequence-checks/reports/transfer-browser 2>&1 | tee .sequence-checks/reports/transfer-browser.log
       - name: Preserve browser evidence
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
