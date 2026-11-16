@@ -45,14 +45,41 @@ Shared math-display self-review:
   hypergeometric parameter rows, and source-index substitution notes.
 - Mathematical-token changes to stored formulas, authored sources, programs
   and exact data: none. The new TeX is a presentation transcription only.
-- The parser recognizes 6,035 of 6,095 recorded representations. The remaining
+- The parser recognizes 6,441 of 6,501 recorded representations. The remaining
   60 retain their literal source notation. Ambiguous or unsupported syntax
   fails to the original source rather than guessing a display.
-- The pinned MathJax runtime compiled 438 representative samples spanning all
-  242 recognized structural layouts, with no reported rendering errors. Unit
+- The pinned MathJax runtime compiled 524 representative samples spanning all
+  292 recognized structural layouts, with no reported rendering errors. Unit
   tests check binding and unsupported cases. Browser checks cover dynamic
   formula replacement and both display modes at 1440, 390 and 320px.
 - All 6,069 existing exact CSV/JSON/text exports compare byte-for-byte with the
   prior generated site. These checks establish presentation and implementation
   behavior; they do not prove the displayed identities or constitute an
   independent review of the research sources.
+
+Footer and coefficient-table self-review:
+
+- Coverage: library formula displays, source-index explanations, row polynomials,
+  complete coefficient tables and their defining representations. This does not
+  constitute proofreading of every manuscript in the project.
+- Display corrections: removed visible dashes used as empty parameter-row
+  placeholders; separated defining equations; stacked multi-condition sum
+  bounds; replaced the displayed hypergeometric argument separator with a
+  vertical bar. Legitimate parameter distinctions remain intact.
+- Mathematical display correction: n!^2 now displays as (n!)^2. Ambiguous
+  factorial exponents retain the original source instead of a guessed display.
+- Removed an irrelevant rising-factorial boilerplate note from displays of
+  formulas that do not use that notation. Original export metadata is retained.
+- Authored mathematical source/token changes: none. The 139 additions are
+  source-linked coefficient extractions and supported columns of the published
+  registry families. The block-kernel inverse follows from the reciprocal
+  generating-series identity. Classical kernels are identified as such.
+- Exact validation covers every one of the 7,099 added coefficients/terms and
+  their source maps, and both products of each forward/inverse block kernel on
+  the finite 13-row windows. These checks are finite implementation evidence,
+  not a historical novelty review or a proof inferred from matching terms.
+
+The added generators reject nonintegral coefficients instead of truncating
+rational values. The original authored sources and the 6,069 prior exact data
+exports remain byte-identical. The row table and footer controls were checked
+at 1440/390/320px, with no-JavaScript, enlarged-text and forced-color reading.

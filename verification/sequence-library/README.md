@@ -1,11 +1,11 @@
 # Finite sequence-library evidence
 
-Current evidence: `run-011/manifest.json`, status `completed`, with
-`run-011/checks.json`. The input contract is `contract.json`. This run replays
-the same finite assertion after search consolidation and shared math display. Earlier runs preserve
+Current evidence: `run-013/manifest.json`, status `completed`, with
+`run-013/checks.json`. The input contract is `contract.json`. This run replays
+the extended finite assertion for the displayed coefficient tables and columns. Earlier runs preserve
 the evidence for their recorded source inputs.
 
-The current exact checks cover 1,895 parameter records and all 45,480 stored
+The current exact checks cover 2,034 parameter records and all 52,579 stored
 terms / index maps. Independent comparisons include 2,880 reciprocal terms,
 360 tangent coefficients, 3,328 hypergeometric seed coefficients, 6,336
 congruential rational coefficients, 1,920 Appell rational coefficients, 16,032
@@ -21,8 +21,8 @@ polynomial recurrence for cosh(z)^(-x), followed by signed Euler convolution.
 The stored windows retain their original n offsets. The seed hypergeometric
 checks extend through n=31 for the new j=0, N=2..12 formulas.
 
-The complete OEIS replay scans 401,422 retained records against all 2,023 local
-records. It reproduces 2,869 retained hits and 372,886 observed hit positions,
+The complete OEIS replay scans 401,422 retained records against all 2,162 local
+records. It reproduces 3,658 retained hits and 391,570 observed hit positions,
 including repetitive / low-information prefixes. It does not establish
 infinite identities, novelty, or pairwise distinctness.
 
@@ -66,3 +66,20 @@ budget; the generated shells occupy 1,751,895 bytes with the shared control.
 Study actions use the canonical library and generator routes. The handoff page
 retains the original section anchors for saved links and static navigation;
 generated-page tests check all links between sequence pages and their targets.
+
+The 139 further records comprise 55 complete coefficient tables (5,083 cells)
+and 84 supported Appell columns (2,016 terms). The independent oracle expands
+positive block sections and their reciprocal powers over Fraction arithmetic,
+compares every coefficient and source map, and checks both products of the
+forward/inverse kernels at every stored row/column. The formal-series argument
+for inversion is written in docs/SEQUENCE_LIBRARY.md; the finite matrix checks
+do not supply that general argument.
+
+The math selector is in the footer. The display pass removes empty-parameter
+dash placeholders and uses a hypergeometric argument bar, separates definition
+lines, stacks sum constraints, and fixes factorial/power binding. Source text
+is retained. Syntax checking compiles 524 representatives of 292 layouts;
+6,441 representations are recognized and 60 retain their literal source.
+Triangle browser checks cover exact coordinates, restored row windows, row
+polynomials, roving keyboard links, coefficient wrapping, no-JavaScript tables,
+enlarged text and forced colors. See `triangles-browser.json`.

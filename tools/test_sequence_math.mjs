@@ -30,3 +30,19 @@ test('old atlas search links open the complete library while plot links keep the
   const plot=new URL(atlasDestination('https://example.test/site/sequences.html?seq=KSEQ-000025&view=mod&modulus=11#explorer'));assert.equal(plot.pathname,'/site/sequence-explorer.html');assert.equal(plot.searchParams.get('modulus'),'11');assert.equal(plot.searchParams.get('seq'),'KSEQ-000025');
   const archive=new URL(archiveDestination('https://example.test/site/sequence-archive.html',{query:'1, ?, 251',family:'Euler/block',review:'Known family',sort:'name',match:'start'}));assert.equal(archive.pathname,'/site/sequence-library.html');assert.equal(archive.searchParams.get('collection'),'recovered');assert.equal(archive.searchParams.get('q'),'1, ?, 251');assert.equal(archive.searchParams.get('status'),'Known family');assert.equal(archive.searchParams.get('match'),'start');
 });
+
+test('factorials keep their order relative to powers; definitions and constraints have separate rows',()=>{
+  assert.equal(formulaLatex('n!^2'),String.raw`\left(n!\right)^{2}`);
+  assert.equal(formulaLatex('n^2!'),null);
+  assert.ok(formulaLatex('a(n)=n!\nb(n)=n+1').includes(String.raw`\\[.55em]`));
+  assert.ok(formulaLatex('sum_(q_1+q_2=n; q_i>=1) 1/q_i!').includes(String.raw`\substack`));
+  const hyper=formulaLatex('0F1(;1/2;z)');assert.ok(!hyper.includes(';'));assert.ok(hyper.includes(String.raw`\vphantom{1}`));assert.ok(hyper.includes(String.raw`\middle|`));
+});
+
+test('triangle row windows and polynomials retain sparse zeros, signs and variable row lengths',async()=>{
+ const {triangleLayout,triangleWindow,trianglePolynomial}=await import('../website/assets/sequence-archive-core.mjs');
+ const entry={id:'KFOR-TRI-H',offset:0,terms:['1','0','-1','-1','0','2','3','6','5'],triangle:{row_lengths:[1,3,5],variable:'x'}};
+ assert.deepEqual(triangleLayout(entry).map(row=>[row.start,row.size]),[[0,1],[1,3],[4,5]]);
+ assert.equal(trianglePolynomial(entry,1),'p(x)=-x - x^2');assert.equal(trianglePolynomial(entry,2),'p(x)=2x + 3x^2 + 6x^3 + 5x^4');
+ assert.deepEqual(triangleWindow(entry,2),{start:4,size:5,view:'raw',scale:'linear',marks:'line',color:'single'});assert.throws(()=>triangleWindow(entry,3));
+});

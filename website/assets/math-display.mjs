@@ -13,18 +13,19 @@ function render(n){
   if(n.type==='list')return n.items.map(render).join(n.separator||', ');
   if(n.type==='negative')return '-'+render(n.value);
   if(n.type==='positive')return '+'+render(n.value);
-  if(n.type==='bound')return render(n.base)+(n.lower?'_{'+render(n.lower)+'}':'')+(n.upper?'^{'+render(n.upper)+'}':'')+(n.prime?"'".repeat(n.prime):'')+'!'.repeat(n.factorial||0);
+  if(n.type==='postfix')return render(n.base)+n.op;
+  if(n.type==='bound')return (n.base.type==='postfix'?'\\left('+render(n.base)+'\\right)':render(n.base))+(n.lower?'_{'+render(n.lower)+'}':'')+(n.upper?'^{'+render(n.upper)+'}':'')+(n.prime?"'".repeat(n.prime):'')+'!'.repeat(n.factorial||0);
   if(n.type==='apply')return render(n.base)+'\\!\\left('+n.items.map(render).join(', ')+'\\right)';
   if(n.type==='binary'){
     if(n.op==='/')return '\\frac{'+render(n.left)+'}{'+render(n.right)+'}';
     return render(n.left)+({'*':'\\,','implicit':'\\,','>=':'\\ge ','<=':'\\le ','!=':'\\ne ','...':'\\cdots','%':'\\bmod '}[n.op]||n.op)+render(n.right);
   }
-  if(n.type==='big')return (n.name==='sum'?'\\sum':'\\prod')+(n.lower?'_{'+render(n.lower)+'}':'')+(n.upper?'^{'+render(n.upper)+'}':'')+'{'+render(n.body)+'}';
+  if(n.type==='big')return (n.name==='sum'?'\\sum':'\\prod')+(n.lower?'_{'+(n.lower.type==='list'&&n.lower.separator==='; '?'\\substack{'+n.lower.items.map(render).join('\\\\')+'}':render(n.lower))+'}':'')+(n.upper?'^{'+render(n.upper)+'}':'')+'{'+render(n.body)+'}';
   if(n.type==='call'){
     const name=n.name,items=n.groups[0]||[],arg=items.map(render).join(', ');
     if(/^\d+F\d+$/.test(name)){
       if(n.groups.length!==3)throw Error('Hypergeometric arguments');const [p,q]=name.split('F');
-      return '{}_{'+p+'}F_{'+q+'}\\!\\left(\\begin{matrix}'+(n.groups[0].map(render).join(', ')||'-')+'\\\\'+(n.groups[1].map(render).join(', ')||'-')+'\\end{matrix};'+n.groups[2].map(render).join(', ')+'\\right)';
+      return '{}_{'+p+'}F_{'+q+'}\\!\\left(\\begin{matrix}'+(n.groups[0].map(render).join(', ')||'\\vphantom{1}')+'\\\\'+(n.groups[1].map(render).join(', ')||'\\vphantom{1}')+'\\end{matrix}\\,\\middle|\\,'+n.groups[2].map(render).join(', ')+'\\right)';
     }
     if(n.groups.length!==1)throw Error('Unsupported argument separators');
     if(name==='binom'){if(items.length!==2)throw Error('Binomial arguments');return '\\binom{'+render(items[0])+'}{'+render(items[1])+'}';}
@@ -35,6 +36,11 @@ function render(n){
   }
   throw Error('Unsupported notation');
 }
+export function formulaStatements(source){
+  const parts=[];let start=0,depth=0;
+  for(let i=0;i<source.length;i++){const c=source[i];if('([{'.includes(c))depth++;else if(')]}'.includes(c))depth--;else if(depth===0&&(c===';'||c==='\n')){const part=source.slice(start,i).trim();if(part)parts.push(part);start=i+1;}}
+  const last=source.slice(start).trim();if(last)parts.push(last);return parts;
+}
 // A bounded parser, rather than replacements that change division or sum scope.
 export function formulaLatex(source,onFailure){
   if(typeof source!=='string'||source.length>12000||/\\/.test(source))return null;
@@ -43,6 +49,7 @@ export function formulaLatex(source,onFailure){
     if(section){const first=formulaLatex(section[1]),last=formulaLatex(section[3]);if(!first||!last)return null;return '\\begin{gathered}'+first+'\\\\[.4em]\\text{b: '+escapeText(section[2])+'}\\\\[.4em]\\text{Source index m:}\\quad '+last+'\\end{gathered}';}
     const substitution=/^(.*); replace every source index n by (\([^;]+\))$/.exec(source);
     if(substitution){const first=formulaLatex(substitution[1]),index=formulaLatex(substitution[2]);return first&&index?'\\begin{gathered}'+first+'\\\\[.4em]\\text{Replace source index }n\\text{ by }'+index+'\\end{gathered}':null;}
+    const statements=formulaStatements(source);if(statements.length>1){const tex=statements.map(item=>formulaLatex(item));return tex.every(Boolean)?'\\begin{gathered}'+tex.join('\\\\[.55em]')+'\\end{gathered}':null;}
     const punctuation=source.trim().endsWith('.')?'.':'';
     const input=(punctuation?source.trim().slice(0,-1):source).replaceAll('−','-').replaceAll('≥','>=').replaceAll('≤','<=').replaceAll('∞','infty').replaceAll('π','pi').replaceAll('Θ','Theta');
     const tokens=[];let at=0;
@@ -62,12 +69,12 @@ export function formulaLatex(source,onFailure){
     };
     const power=()=>{
       let base=atom();
-      while(['_','^','!',"'"].includes(peek())||(peek()==='('&&base.type==='bound'&&(base.lower||base.prime)&&base.base.type==='symbol')){
+      while(['_','^','!',"'"].includes(peek())||(peek()==='('&&((base.type==='bound'&&base.lower)||(base.type==='postfix'&&base.op==="'")))){
         const op=take();if(op==='('){const groups=group('(');if(groups.length!==1)throw Error('Function arguments');base=node('apply',{base,items:groups[0]});continue;}
+        if(op==='!'&&base.type==='bound'&&base.upper)throw Error('Group a factorial exponent explicitly');
+        if(op==='!'||op==="'"){base=node('postfix',{base,op});continue;}
         const result=base.type==='bound'?{...base}:node('bound',{base});
-        if(op==='!')result.factorial=(result.factorial||0)+1;
-        else if(op==="'")result.prime=(result.prime||0)+1;
-        else if(op==='_'){if(result.lower||result.upper)throw Error('Ambiguous script order');result.lower=bound();}
+        if(op==='_'){if(result.lower||result.upper)throw Error('Ambiguous script order');result.lower=bound();}
         else {if(result.upper)throw Error('Repeated exponent');result.upper=bound();}
         base=result;
       }
@@ -96,7 +103,7 @@ export function formulaLatex(source,onFailure){
     function statement(){if(words.has(peek()))return node('list',{items:[node('text',{value:take()}),relation()],separator:' '});let result=relation();while(words.has(peek())){const word=take();result=node('list',{items:[result,node('text',{value:word}),relation()],separator:'\\quad '});}return result;}
     const rows=[];while(pos<tokens.length){rows.push(statement());if([';',','].includes(peek()))take();else if(pos<tokens.length)throw Error('Statement separator');}
     if(!rows.length)return null;
-    const result=rows.map(render);return (result.length===1?result[0]:'\\begin{gathered}'+result.join('\\\\[.45em]')+'\\end{gathered}')+punctuation;
+    const result=rows.map(render);return (result.length===1?result[0]:'\\begin{gathered}'+result.join('\\\\[.45em]')+'\\end{gathered}');
   }catch(error){onFailure?.(error.message);return null;}
 }
 
@@ -107,7 +114,7 @@ if(typeof document!=='undefined'&&!window.KomorebiMath){
   // Create the shared control once, without repeating it in every chapter shell.
   if(!document.getElementById('site-math-display')){
     const preference=document.createElement('div');preference.className='site-preferences';preference.innerHTML="<label class=\"math-display-control\" hidden for=\"site-math-display\">Math display<select id=\"site-math-display\" aria-describedby=\"site-math-help\"><option value=\"typeset\">Typeset math</option><option value=\"plain\">Plain text</option></select></label><span id=\"site-math-help\" class=\"math-display-status\">Choose typeset formulas or their original plain text. This choice is shared across the site.</span><span id=\"site-math-status\" class=\"math-display-status\" role=\"status\" aria-live=\"polite\"></span>";
-    const header=document.querySelector('.site-header');if(header)header.after(preference);else document.body.prepend(preference);
+    const footer=document.querySelector('body > footer');if(footer)footer.append(preference);else document.body.append(preference);
   }
   const storage={getItem:key=>localStorage.getItem(key),setItem:(key,value)=>localStorage.setItem(key,value)};
   let mode=readMathDisplay(storage),scheduled=false,queue=Promise.resolve();

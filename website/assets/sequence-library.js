@@ -18,9 +18,9 @@ function render(){
   clearMath($('results'));$('results').replaceChildren();page=Math.max(0,Math.min(page,Math.ceil(results.length/24)-1));
   for(const hit of results.slice(page*24,(page+1)*24)){
     const entry=hit.entry,li=make('li'),label=make('p',entry.id+' / '+(collectionLabels[entry.collection]||'Sequence library'));label.className='sar-kicker';const heading=make('h3'),link=make('a',entry.title);link.href=entry.url;heading.append(link);li.append(label,heading,make('p',entry.kind+' · '+entry.formulas.length+' representations · first index '+entry.offset));
-    li.dataset.resultId=entry.id;
+    li.dataset.resultId=entry.id;if(entry.triangle){const tableNote=make('p',`${entry.triangle.row_lengths.length} complete rows · row/column inspection · ${entry.terms.length} exact coefficients`);tableNote.className='sl-match-reason';li.append(tableNote);}
     const expression=make('p',entry.formula);expression.className='sar-formula';li.append(expression);
-    const start=hit.termMatch?Math.max(0,hit.termMatch.start-1):0,count=Math.min(Math.max(6,hit.termMatch?.length||0),8),values=entry.terms.slice(start,start+count),symbol=entry.index_symbol||'n';
+    const start=hit.termMatch?Math.max(0,hit.termMatch.start-(hit.termMatch.length<8?1:0)):0,count=Math.min(Math.max(6,hit.termMatch?.length||0),8),values=entry.terms.slice(start,start+count),symbol=entry.index_symbol||'n';
     const excerpt=make('div'),caption=make('p',`${symbol} = ${entry.offset+start}–${entry.offset+start+values.length-1} · exact stored terms`),terms=make('div');excerpt.className='sl-term-preview';caption.className='sl-term-caption';terms.className='sl-term-values';terms.tabIndex=0;terms.setAttribute('role','region');terms.setAttribute('aria-label',`Exact term preview for ${entry.id}`);
     values.forEach((value,i)=>{if(i)terms.append(document.createTextNode(', '));const relative=start+i-(hit.termMatch?.start??-1),matched=hit.termMatch&&relative>=0&&relative<hit.termMatch.length&&hit.termMatch.pattern[relative]!==null;const item=make(matched?'mark':'span',value);item.title=`${symbol}=${entry.offset+start+i}`;terms.append(item);});excerpt.append(caption,terms);li.append(excerpt);
     if(hit.termMatch){const reason=make('p',hit.reason);reason.className='sl-match-reason';li.append(reason);}
@@ -50,11 +50,26 @@ function setupSearch(entries){
   window.addEventListener('storage',event=>{if(event.key===STORAGE_KEY||event.key===null){saved=new Set(readSaved(storage,allowed).ids);run();}});
   $('search').hidden=false;$('search').addEventListener('submit',event=>{event.preventDefault();run(true);});
   $('clear').addEventListener('click',()=>{for(const key of keys)$(key==='q'?'query':key).value=key==='sort'?'relevance':key==='match'?'any':'';run(true);$('query').focus();});
+  $('triangles').hidden=false;$('triangles').addEventListener('click',()=>{for(const key of keys)$(key==='q'?'query':key).value=key==='sort'?'relevance':key==='match'?'any':'';$('query').value='tag:triangle';run(true);$('count').focus();$('count').scrollIntoView({block:'start'});});
   $('research').hidden=false;$('research').addEventListener('click',()=>{for(const key of keys)$(key==='q'?'query':key).value=key==='sort'?'relevance':key==='match'?'any':'';$('query').value='tag:research-derived';run(true);$('count').focus();$('count').scrollIntoView({block:'start'});});
   for(const [key,step]of [['previous',-1],['next',1]])$(key).addEventListener('click',()=>{page+=step;render();history.replaceState(null,'',share());$('count').scrollIntoView({block:'nearest'});});
   $('share').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(share());$('action-status').textContent='Search link copied.';}catch{$('link-wrap').hidden=false;$('link').value=share();$('link').focus();$('link').select();}});
   $('export').addEventListener('click',()=>save(csv([['id','title','family','collection','offset','formulas','url'],...results.map(({entry:e})=>[e.id,e.title,e.kind,e.collection,e.offset,e.formulas.length,new URL(e.url,location.href).href])]),'text/csv;charset=utf-8','sequence-search-results.csv'));
   run();
+}
+function setupTriangleNavigation(){
+  const table=root.querySelector('#triangle table');if(!table)return;
+  const rows=[...table.tBodies[0].rows].map(row=>[...row.querySelectorAll('td a')]);
+  const all=rows.flat();let active=all[0];
+  for(const [n,row]of rows.entries())for(const [k,link]of row.entries()){
+    link.tabIndex=link===active?0:-1;link.setAttribute('aria-label',`Row ${n}, column ${k}; coefficient ${link.textContent}`);
+    link.addEventListener('focus',()=>{if(active)active.tabIndex=-1;active=link;link.tabIndex=0;});
+    link.addEventListener('keydown',event=>{
+      let r=n,c=k;if(event.key==='ArrowDown')r=Math.min(rows.length-1,n+1);else if(event.key==='ArrowUp')r=Math.max(0,n-1);else if(event.key==='ArrowRight')c=Math.min(row.length-1,k+1);else if(event.key==='ArrowLeft')c=Math.max(0,k-1);else if(event.key==='Home'){r=event.ctrlKey?0:n;c=0;}else if(event.key==='End'){r=event.ctrlKey?rows.length-1:n;c=rows[r].length-1;}else return;
+      event.preventDefault();rows[r][Math.min(c,rows[r].length-1)].focus();
+    });
+  }
+  root.querySelector('.sl-triangle-help').hidden=false;table.dataset.keyboardReady='true';
 }
 function setupReference(client){
   if(!globalThis.Worker){$('oeis-status').textContent='Interactive OEIS search is unavailable in this browser. You can still download the reference data and browse entry comparisons.';return;}
@@ -78,7 +93,7 @@ function setupReference(client){
   $('oeis-cancel').addEventListener('click',()=>client.cancel());
 }
 try{
-  if(root.dataset.entry){const response=await fetch(new URL(root.dataset.entry,location.href));if(!response.ok)throw Error('The exact record could not load.');setupArchivePlot(await response.json());}
+  if(root.dataset.entry){const response=await fetch(new URL(root.dataset.entry,location.href));if(!response.ok)throw Error('The exact record could not load.');setupArchivePlot(await response.json());setupTriangleNavigation();}
   else if($('search')){const response=await fetch(new URL('./sequence-library-data.json',import.meta.url));if(!response.ok)throw Error('The local catalogue could not load.');const data=await response.json(),client=createReferenceClient();workbench=mountWorkbench({root,entries:data.entries,snapshot:data.snapshot.stripped_sha256,referenceClient:client});setupSearch(data.entries);setupReference(client);}
   root.dataset.libraryReady='true';
 }catch(error){const note=make('p',error.message+' Static definitions, exact tables, and the complete index remain available.');note.setAttribute('role','status');root.prepend(note);}

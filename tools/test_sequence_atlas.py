@@ -141,7 +141,7 @@ class SequenceAtlasTests(unittest.TestCase):
             self.assertIn('sequence-redirect.mjs',handoff)
             for anchor in ('find','catalogue','saved','explorer','discover','connections','reference'):
                 self.assertIn('id="'+anchor+'"',handoff)
-            self.assertEqual(result['library']['entries'],2023)
+            self.assertEqual(result['library']['entries'],2162)
             self.assertIn('<noscript>',main)
             self.assertIn('CC BY-SA 4.0',main)
             self.assertEqual(main.count('data-index-entry='),38)

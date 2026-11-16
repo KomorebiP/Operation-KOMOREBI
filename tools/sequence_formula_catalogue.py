@@ -136,11 +136,17 @@ def formula_variants(entry):
     return result
 
 
+def display_note(formula):
+    note=formula['note']
+    if note.startswith('(x)_n is the rising factorial; formulas have '):return 'This formula uses the entry’s original index convention.'
+    return note
+
+
 def formula_block(entry):
     formulas=formula_variants(entry)
     return '<div class="sl-formulas"><p>'+str(len(formulas))+' recorded representation'+('s' if len(formulas)!=1 else '')+'. Formula types distinguish term formulas from generating functions and recurrences.</p><p class="sl-notation"><code>[z^k]</code> extracts a coefficient. <code>(u)_m</code> is the rising factorial, with <code>(u)_0=1</code>. <code>pFq</code> denotes a generalized hypergeometric series. Numerators and positive denominators are taken after reduction to lowest terms.</p>'+''.join(
         '<details class="sl-formula" data-formula-kind="'+e(f['kind'])+'"'+(' open' if i==0 else '')+'><summary>'+e(f['title'])+' <span>· '+e(f['kind'])+'</span></summary><pre tabindex="0" role="region" aria-label="'+e(f['title'])+'">'+e(f['expression'])+'</pre>'
-        +('<p>'+e(f['note'])+'</p>' if f['note'] else '')+'<p><a href="'+e(f['source'])+'">Definition and derivation source</a></p></details>' for i,f in enumerate(formulas))+'</div>'
+        +('<p>'+e(display_note(f))+'</p>' if display_note(f) else '')+'<p><a href="'+e(f['source'])+'">Definition and derivation source</a></p></details>' for i,f in enumerate(formulas))+'</div>'
 
 
 def record(identifier,title,kind,values,formulas,**extra):
@@ -206,6 +212,8 @@ def expanded_catalogue():
                     forms.append(variant('Alternative source formula','closed form',f['expression']+'; replace every source index n by '+m, 'The substitution acts on the source formula before evaluating the local sequence.',f['source']))
                 entries.append(record(f'KFOR-S-{kind}-{N:02d}-{j:02d}',f'{original["title"]} · indices {N}n+{j}','classical multisection',[all_values[N*n+j] for n in range(COUNT)],forms,N=N,j=j,degree=f'{N}n+{j}',parent=original['id'],source_kind=kind))
     entries+=research_catalogue()
+    from sequence_research_tables import research_additions
+    entries+=research_additions()
     assert len({x['id'] for x in entries})==len(entries)
     return entries
 
