@@ -12,6 +12,10 @@ ROOT=Path(__file__).resolve().parents[1]
 MANIFEST='manifests/sequence-generalized-sources.json'
 BASE='https://github.com/KomorebiP/Operation-KOMOREBI/blob/8a97573e979e868e675629b091ed3f5841ac2eb3/'
 REG='monographs/special-functions/supporting-sources/projector-special-functions-registry/Projector_Special_Functions_Registry.tex'
+# The general coefficient-section construction applies beyond the finite set
+# of parent generators offered by the exact browser controls.
+SECTION_EXPLORER_PARENTS=frozenset(('fibonacci','lucas','pell','factorial','catalan','central-binomial','triangular','square','cube','power-two','power-three','bell','fubini'))
+SECTION_DEFINITION_PARENTS=frozenset(('naturals','odd','partition'))
 
 
 @lru_cache(maxsize=1)
@@ -28,7 +32,7 @@ def membership(entry):
     if identifier.startswith(('KFOR-TRI-P-','KFOR-TRI-H','KFOR-TRI-A-','KFOR-TRI-B-','KFOR-TRI-BI-')):
         result.append('GF-SECANCY' if identifier.startswith('KFOR-TRI-P-') else 'GF-THETA' if identifier=='KFOR-TRI-H' else 'GF-APPELL')
     if identifier.startswith('KFOR-AC-'):result.append('GF-APPELL')
-    if identifier.startswith('KSEQ-') and kind in ('fibonacci','lucas','pell','factorial','catalan','central-binomial','triangular','square','cube','power-two','power-three','bell','fubini'):result.append('GF-SECTIONS')
+    if identifier.startswith('KSEQ-') and kind in SECTION_EXPLORER_PARENTS|SECTION_DEFINITION_PARENTS:result.append('GF-SECTIONS')
     if kind=='fibonacci':result.append('GF-KBONACCI')
     if kind=='lucas':result.append('GF-LINEAR')
     return result
@@ -107,6 +111,7 @@ def catalogue(entries):
         relations.append(dict(key='finite-'+edge['key'],source=edge['source_id'],target=edge['target_id'],kind='finite transform comparison',statement=edge['label']+' agrees at the twelve displayed stored positions. This is a finite comparison, not a proof of an infinite identity.',source_url='https://komorebip.github.io/Operation-KOMOREBI/sequences/'+edge['source_id']+'.html#connections',reversible=False,checked_overlaps=edge['matched_terms']))
     archived=[entry for entry in entries if entry['id'] in ARCHIVE_MEMBERSHIP]
     return dict(schema=1,families=families,sources=source_manifest()['sources'],relations=relations,
+        record_coverage=dict(records=len(entries),assigned=sum(bool(membership(entry)) for entry in entries)),
         archive_coverage=dict(records=len(archived),assigned=sum(bool(membership(entry)) for entry in archived)),
         scope='Coefficient families, source-defined analytic and discrete constructions, and a labeled classical reference collection. Record counts are finite enumerations, not counts of distinct infinite sequences. Source indexing is not a new whole-manuscript proof review.')
 
@@ -134,7 +139,8 @@ def links_for(entry):
         return p
     def link(identifier):
         family=families[identifier];url='../'+family['url']
-        if family['engine'] and not entry.get('triangle') and entry['id']!='KOM084':
+        supported_parent=identifier!='GF-SECTIONS' or entry.get('source_kind',entry['kind']) in SECTION_EXPLORER_PARENTS
+        if family['engine'] and supported_parent and not entry.get('triangle') and entry['id']!='KOM084':
             url+='?'+urlencode({'family':identifier,'parameters':json.dumps(params(identifier),separators=(',',':'))})+'#family-explorer'
         else:url+='#definition'
         return '<a href="'+e(url)+'">'+e(family['title'])+'</a>'

@@ -301,6 +301,12 @@ L_N(0)=0 and L_N(n)=Nn T_N(n-1) for n>=1, rather than silently substituting
 the differently indexed tangent readout. The original 90 records, their terms,
 classifications, b-files and offsets are preserved.
 
+The three additional curated seeds for natural numbers, odd numbers and
+partition numbers belong to the universal coefficient-section definition.
+They link to that definition because those parents are not offered by the
+browser's exact multisection controls. All 2,292 indexed integer records now
+have a family or reference assignment without extending the supported engines.
+
 The new source binding pins the archived generator to commit
 `96ef8755314fe6bfa3c5ca76b1d61e20f3c1e510` with its normalized SHA-256. The
 classical reference collection is a navigational grouping, not a new

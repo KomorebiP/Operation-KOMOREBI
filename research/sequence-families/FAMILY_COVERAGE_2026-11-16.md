@@ -13,6 +13,14 @@ discrete constructions, and one classical reference collection. All 90 archived
 records have a family or reference home. These counts describe the index's
 organization; they are not a count of distinct new infinite families.
 
+The final membership sweep also assigns the three remaining curated scalar
+seeds (natural numbers, odd numbers and partition numbers) to the existing
+universal coefficient-section construction. It applies to their coefficient
+series without requiring a new generator. These three records link to the
+general definition rather than unsupported browser parent controls. Every one
+of the 2,292 indexed integer records now has at least one family or reference
+assignment. The definition and source-document counts stay at 36 and 12.
+
 The original integer records, terms, b-files, offsets, review classifications
 and OEIS annotations are preserved. Existing formulas and explorations remain
 available. No new analytic-continuation or general numerical engine is implied
@@ -98,6 +106,8 @@ The focused Python checks in `tools/test_sequence_families.py` verify:
 - Source text hashes and source line bounds for all 12 bindings.
 - The 36 definition types and ten unchanged exact engines.
 - One meaningful family assignment for each archived KOM identifier.
+- Complete membership for all 2,292 indexed records, with definition-only
+  links and preserved values for the three unsupported classical parent seeds.
 - Correct N and r in all nineteen reciprocal-explorer links, with eight
   coefficients per linked instance checked against the archived integers.
 - The four original k-bonacci orders in generated links.
@@ -108,8 +118,27 @@ The focused Python checks in `tools/test_sequence_families.py` verify:
 
 The broader independent family audit retains its numerical, transfer,
 modular-state and identification checks. Its report additionally records
-family modes and complete archive coverage. The family membership additions
+family modes, complete record coverage and complete archive coverage. The family membership additions
 do not alter the 1,231 existing typed record relations.
+
+## Browser validation history
+
+The first focused browser attempt,
+[Actions run 43899106388](https://github.com/KomorebiP/Operation-KOMOREBI/actions/runs/43899106388),
+completed the JavaScript-enabled checks at 1440, 390 and 320 pixels, then failed
+in the JavaScript-disabled layout check. The test incorrectly awaited an
+animation-frame promise in that context and reported
+`page.evaluate: Resulting promise was garbage collected`.
+
+That attempt was **not a clean browser pass**. The job appeared green because
+the logged `node ... | tee ...` pipeline reported the successful log writer's
+exit status instead of the failed test command's status. The workflow now
+selects the explicit Bash runner shell, which enables `pipefail`, and requires
+a final report containing `status: passed`, all three viewport results and the
+completed JavaScript-disabled checks. The static layout check now waits for
+page load and measures page width synchronously without requesting MathJax,
+font-ready or animation-frame promises. The first run does not count as
+completion evidence; subsequent runs must satisfy all of these assertions.
 
 ## Boundaries retained
 

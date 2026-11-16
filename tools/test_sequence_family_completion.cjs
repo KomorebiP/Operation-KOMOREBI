@@ -19,8 +19,10 @@ async function math(page){
   });
   assert.equal(await page.locator('[data-mml-node=merror],mjx-merror').count(),0);
 }
-async function fits(page){
-  await math(page);
+async function fits(page,{staticOnly=false}={}){
+  // Disabled page JavaScript cannot resolve a requestAnimationFrame promise.
+  // The static check waits for styles/resources, then measures synchronously.
+  if(staticOnly)await page.waitForLoadState('load');else await math(page);
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth+1),
     `Horizontal overflow at ${page.viewportSize().width}px: ${page.url()}`);
 }
@@ -76,12 +78,13 @@ async function factorialEquality(page,family){
         assert.equal(data.families.length,36);
         assert.equal(data.sources.length,12);
         assert.deepEqual(data.archive_coverage,{records:90,assigned:90});
+        assert.deepEqual(data.record_coverage,{records:2292,assigned:2292});
         const assignments=data.families.flatMap(family=>family.archive_record_ids);
         const expected=Array.from({length:90},(_,i)=>`KOM${String(i+1).padStart(3,'0')}`);
         assert.deepEqual(assignments.slice().sort(),expected);
         assert.equal(new Set(assignments).size,90);
         assert.equal(data.families.filter(family=>family.engine).length,10);
-        report.catalogue={families:36,sources:12,archiveRecords:90,exactEngines:10};
+        report.catalogue={families:36,sources:12,records:2292,assignedRecords:2292,archiveRecords:90,exactEngines:10};
       }
 
       await page.locator('#sl-next').click();
@@ -178,12 +181,12 @@ async function factorialEquality(page,family){
     await page.goto(url('generalized-families/index.html'));
     assert.equal(await page.locator('[data-library]>ol>li').count(),36);
     assert.equal(await page.locator('#research-coverage article').count(),12);
-    await fits(page);
+    await fits(page,{staticOnly:true});
     await page.goto(url('generalized-families/GF-SMITH-POLYNOMIALS.html'));
     assert.equal(await page.locator('#archive-records li').count(),5);
     assert.match(await page.locator('#definition').textContent(),/flat j=n\(n\+1\)\/2\+k/);
     assert.equal(await page.locator('#reproduce a[download]').count(),1);
-    await fits(page);await nojs.close();active=null;
+    await fits(page,{staticOnly:true});await nojs.close();active=null;
     report.noJavaScript=true;
     assert.deepEqual(report.errors,[]);
     report.status='passed';

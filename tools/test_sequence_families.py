@@ -6,7 +6,7 @@ import re
 import unittest
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
-from sequence_generalized import family_definitions, source_manifest, catalogue as family_catalogue, links_for, membership, build_pages
+from sequence_generalized import family_definitions, source_manifest, catalogue as family_catalogue, links_for, membership, build_pages, SECTION_EXPLORER_PARENTS
 from sequence_archive_families import ARCHIVE_MEMBERSHIP, archive_parameters
 from sequence_library import library_entries
 from sequence_atlas import catalogue, reciprocal
@@ -72,6 +72,32 @@ class GeneralizedFamiliesTests(unittest.TestCase):
         reference=next(f for f in self.data['families'] if f['id']=='GF-CLASSICAL-REFERENCES')
         self.assertEqual(reference['family_type'],'reference collection')
         self.assertIsNone(reference['engine'])
+
+    def test_complete_record_coverage_does_not_offer_unsupported_section_parents(self):
+        self.assertEqual(len(self.entries),2292)
+        self.assertTrue(all(membership(entry) for entry in self.entries))
+        self.assertEqual(self.data['record_coverage'],dict(records=2292,assigned=2292))
+        expected={
+            'KSEQ-000027':('naturals',['0','1','2','3','4','5','6','7']),
+            'KSEQ-000028':('odd',['1','3','5','7','9','11','13','15']),
+            'KSEQ-000036':('partition',['1','1','2','3','5','7','11','15']),
+        }
+        for identifier,(kind,values) in expected.items():
+            with self.subTest(identifier=identifier):
+                entry=self.by_id[identifier];before=deepcopy(entry)
+                self.assertEqual(entry['kind'],kind)
+                self.assertEqual(entry['offset'],0)
+                self.assertEqual(entry['terms'][:8],values)
+                self.assertEqual(membership(entry),['GF-SECTIONS'])
+                self.assertNotIn(kind,SECTION_EXPLORER_PARENTS)
+                linked=links_for(entry)
+                self.assertIn('GF-SECTIONS.html#definition',linked)
+                self.assertNotIn('parameters=',linked)
+                self.assertNotIn('#family-explorer',linked)
+                self.assertEqual(entry,before)
+        # Supported source subsequences still open their real parameter controls.
+        entry=next(e for e in self.entries if e['kind']=='classical multisection' and e['source_kind']=='fibonacci')
+        self.assertIn('#family-explorer',links_for(entry))
 
     def test_recovered_explorer_links_reproduce_the_same_reciprocal_values(self):
         for identifier,family_id in ARCHIVE_MEMBERSHIP.items():

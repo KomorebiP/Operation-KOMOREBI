@@ -71,11 +71,13 @@ def build(site,atlas):
             info=ZipInfo(name,date_time=(2026,11,15,0,0,0));info.compress_type=ZIP_DEFLATED;info.external_attr=0o100644<<16;bundle.writestr(info,(site.root/name).read_text(encoding='utf-8').encode('utf-8'))
         info=ZipInfo('README.txt',date_time=(2026,11,15,0,0,0));info.compress_type=ZIP_DEFLATED;info.external_attr=0o100644<<16
         bundle.writestr(info,'Exact formula catalogue. Python 3.10+ standard library. Text sources use UTF-8/LF for portable reproduction.\nRun: python tools/sequence_formula_catalogue.py --id KFOR-S-catalan-03-01\nExport all records: python tools/sequence_formula_catalogue.py --output records.json\nScalar records store 24 terms beginning at their explicit offsets, except standard k-bonacci records, which store 48. Coefficient triangles store complete rows n=0..12, including zeros. Triangle j is a flat cell index; n and k are the row and column. Parameter records are not claims of novelty or pairwise distinctness.\n')
+    generalized=generalized_catalogue(entries)
+    site.write('assets/sequence-generalized-data.json',json.dumps(generalized,ensure_ascii=False,separators=(',',':'))+'\n')
     scripts=['math-display.mjs','sequence-research-ui.mjs','sequence-reading-theme.mjs','sequence-oeis-core.mjs','sequence-family-core.mjs','sequence-transfer-core.mjs','sequence-graph-core.mjs','sequence-modular-core.mjs','sequence-discovery-core.mjs','sequence-notebook-core.mjs','sequence-research-worker.mjs','sequence-research-common.mjs','sequence-oeis-worker.mjs','sequence-oeis-client.mjs','sequence-workbench-core.mjs','sequence-workbench.mjs','sequence-triangle-core.mjs','sequence-triangle.mjs','sequence-transfers.mjs','sequence-families-ui.mjs','sequence-connections-ui.mjs','sequence-identification-ui.mjs','sequence-modular-ui.mjs','sequence-notebooks-ui.mjs','sequence-research-studio.mjs','sequence-library-search.mjs','sequence-library.js']
     for name in scripts:
         content=(site.root/'website/assets'/name).read_text(encoding='utf-8')
         content=content.replace('__OEIS_TERMS_SHA256__',snapshot['stripped_sha256']).replace('__OEIS_NAMES_SHA256__',snapshot['names_sha256'])
-        for dep in scripts+['sequence-atlas-search.mjs','sequence-archive-core.mjs','sequence-archive-plot.mjs','sequence-atlas-core.mjs','sequence-atlas-saved.mjs','sequence-plot-options.mjs']:
+        for dep in scripts+['sequence-atlas-search.mjs','sequence-archive-core.mjs','sequence-archive-plot.mjs','sequence-atlas-core.mjs','sequence-atlas-saved.mjs','sequence-plot-options.mjs','sequence-library-data.json','sequence-generalized-data.json']:
             path=site.output/'assets'/dep
             if path.exists():content=content.replace("'./"+dep+"'","'./"+dep+'?v='+hashlib.sha256(path.read_bytes()).hexdigest()[:12]+"'")
         site.write('assets/'+name,content)
@@ -85,7 +87,6 @@ def build(site,atlas):
         attrs=' data-entry="'+e(entry['id'])+'.json"' if entry else (' data-family="'+e(family)+'"' if family else '')
         return ''.join('<link rel="stylesheet" href="'+prefix+'assets/'+name+'?v='+hashlib.sha256((site.output/'assets'/name).read_bytes()).hexdigest()[:12]+'">' for name in ['sequence-archive.css','sequence-plot-options.css','sequence-library.css','sequence-reading.css','sequence-research.css'])+'<div class="sar sl-library" data-library'+attrs+'>'+body+'</div><script type="module" src="'+prefix+'assets/sequence-library.js?v='+hashlib.sha256((site.output/'assets/sequence-library.js').read_bytes()).hexdigest()[:12]+'"></script>'
     site.write('assets/sequence-research-connections.json',json.dumps(research_connections(),ensure_ascii=False,separators=(',',':'))+'\n')
-    generalized=generalized_catalogue(entries)
     generalized_pages(site,generalized,wrap)
     total=len(entries);representations=sum(len(x['formulas']) for x in entries)
     kinds=sorted({x['kind'] for x in entries});types=sorted({f['kind'] for x in entries for f in x['formulas']});statuses=sorted({x['status'] for x in entries})
