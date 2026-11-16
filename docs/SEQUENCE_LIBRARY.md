@@ -262,3 +262,55 @@ coefficient extraction, evaluation, inverse matrices, and ordinary convolution.
 A false reversibility flag means that no inverse is asserted. The available
 stored overlaps are checked without extending their original data windows.
 The focused self-audit is in research/sequence-connections/AUDIT.md.
+
+## Generalized families and research tools
+
+The homepage links to both integer records and a separate generalized-family
+search. The family index contains 22 definitions bound to 11 maintained source
+documents, including Special Functions I–VIII and the generalized closed-form
+material in Paper IV. Use `family:` to find a construction or its integer
+instances, and `paper:SF-VI` (or a quoted paper title) to search by source.
+Roman-number matches respect paper boundaries. The source coverage page lists
+291 source headings and exact source hashes; it is an index, not a claim that
+every formula in every paper has been reviewed or converted into a record.
+
+Ten families have exact parameter controls: weighted k-step reciprocal powers,
+standard k-bonacci seeds, alternating reciprocal blocks, positive congruential
+inverses, block-Appell polynomials, secancy columns, theta specializations and
+columns, transfer tangents, and classical multisections. The explorer retains
+source degrees, local offsets, reduced rational values and component choices.
+Other analytic families retain their domains and defining passages without
+implying a numerical analytic-continuation implementation. Complex-order source
+definitions remain visible even when exact controls use bounded integer values.
+
+The family explorer provides exact tables, worked values, independently checked
+alternatives where available, value/residue plots, keyboard point inspection,
+CSV, SVG/PNG, comparison and parameter links. Arbitrary k initial values use the
+order-k recurrence with its finite numerator; nonzero-tail reciprocal powers
+use the order-kr denominator. Derivations and conventions are in
+`research/sequence-families/DERIVATIONS.md`.
+
+The connection explorer preserves direction and evidence type across 1,231
+relations, including seven explicitly finite transform comparisons. It supports
+directed paths and exact scalar transfer composition with both position and
+original-index shifts. Finite evidence remains finite after composition.
+
+Identification scans all 2,236 local scalar records, or the retained 401,422
+OEIS reference records. It tries bounded exact transformations and reports the
+matched operation and positions. Optional target transformations apply locally;
+OEIS identification transforms the input against raw exported targets. Tables
+are excluded from scalar matching. Export positions are not mathematical
+offsets, and finite matches do not establish infinite identity or novelty.
+
+Modular dynamics checks complete recurrence states, including the order-kr
+recurrence for powers. A repeat certifies the period and possible preperiod;
+reaching the state cap reports no certificate. JSON retains the recurrence,
+initial state, repeated state and finite search bound. Displayed frequencies
+describe the displayed finite window.
+
+Named notebooks capture searches, generated and pasted comparisons, transfers,
+graph selections, modular parameters, display choices and notes. They support
+JSON import/export and bounded share links. All tool settings are validated
+before restoration. Shared notebooks require an explicit load action; OEIS
+excerpts require a separate explicit download. Unavailable or unreadable browser
+storage is preserved, with session-only saving and JSON export available.

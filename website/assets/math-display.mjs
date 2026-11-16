@@ -1,7 +1,7 @@
 // Display is a transcription. Stored formulas and exact arithmetic stay unchanged.
 export const MATH_DISPLAY_KEY='komorebi.math-display.v1';
 export function readMathDisplay(storage){try{return storage.getItem(MATH_DISPLAY_KEY)==='plain'?'plain':'typeset';}catch{return 'typeset';}}
-const greek={ell:'\\ell',Gamma:'\\Gamma',Theta:'\\Theta',theta:'\\theta',pi:'\\pi',alpha:'\\alpha',beta:'\\beta',omega:'\\omega',infty:'\\infty',cdots:'\\cdots',dz:'\\mathrm{d}z'};
+const greek={ell:'\\ell',Gamma:'\\Gamma',Theta:'\\Theta',theta:'\\theta',pi:'\\pi',alpha:'\\alpha',beta:'\\beta',omega:'\\omega',eta:'\\eta',tau:'\\tau',kappa:'\\kappa',zeta:'\\zeta',Phi:'\\Phi',mu:'\\mu',delta:'\\delta',chi:'\\chi',lambda:'\\lambda',sigma:'\\sigma',rho:'\\rho',infty:'\\infty',cdots:'\\cdots',dz:'\\mathrm{d}z'};
 const functions=new Set(['exp','log','sin','cos','tan','sinh','cosh','tanh','sec','sech','csc','cot','gcd','lcm','min','max','det','tr','Tr','floor','ceil','sqrt','binom','numerator','denominator']);
 const words=new Set(['for','if','use','and']);
 const escapeText=text=>text.replace(/[{}%&#_$]/g,letter=>'\\'+letter);
@@ -23,6 +23,10 @@ function render(n){
   if(n.type==='big')return (n.name==='sum'?'\\sum':'\\prod')+(n.lower?'_{'+(n.lower.type==='list'&&n.lower.separator==='; '?'\\substack{'+n.lower.items.map(render).join('\\\\')+'}':render(n.lower))+'}':'')+(n.upper?'^{'+render(n.upper)+'}':'')+'{'+render(n.body)+'}';
   if(n.type==='call'){
     const name=n.name,items=n.groups[0]||[],arg=items.map(render).join(', ');
+    if(/^\d+phi\d+$/.test(name)){
+      if(n.groups.length!==3||n.groups[2].length!==2)throw Error('Basic hypergeometric arguments');const [p,q]=name.split('phi');
+      return '{}_{'+p+'}\\phi_{'+q+'}\\!\\left(\\begin{matrix}'+(n.groups[0].map(render).join(', ')||'\\vphantom{1}')+'\\\\'+(n.groups[1].map(render).join(', ')||'\\vphantom{1}')+'\\end{matrix}\\,;\\,'+n.groups[2].map(render).join(', ')+'\\right)';
+    }
     if(/^\d+F\d+$/.test(name)){
       if(n.groups.length!==3)throw Error('Hypergeometric arguments');const [p,q]=name.split('F');
       return '{}_{'+p+'}F_{'+q+'}\\!\\left(\\begin{matrix}'+(n.groups[0].map(render).join(', ')||'\\vphantom{1}')+'\\\\'+(n.groups[1].map(render).join(', ')||'\\vphantom{1}')+'\\end{matrix}\\,\\middle|\\,'+n.groups[2].map(render).join(', ')+'\\right)';
@@ -53,7 +57,7 @@ export function formulaLatex(source,onFailure){
     const punctuation=source.trim().endsWith('.')?'.':'';
     const input=(punctuation?source.trim().slice(0,-1):source).replaceAll('−','-').replaceAll('≥','>=').replaceAll('≤','<=').replaceAll('∞','infty').replaceAll('π','pi').replaceAll('Θ','Theta');
     const tokens=[];let at=0;
-    while(at<input.length){if(/\s/.test(input[at])){at++;continue;}const m=/^(?:\d+F\d+|\d+(?:\.\d+)?|[A-Za-z]+|\.\.\.|>=|<=|!=|[+\-*/^_!%=(),;:[\]{}<>'])/.exec(input.slice(at));if(!m||tokens.length>4000)return null;tokens.push(m[0]);at+=m[0].length;}
+    while(at<input.length){if(/\s/.test(input[at])){at++;continue;}const m=/^(?:\d+(?:F|phi)\d+|\d+(?:\.\d+)?|[A-Za-z]+|\.\.\.|>=|<=|!=|[+\-*/^_!%=(),;:[\]{}<>'])/.exec(input.slice(at));if(!m||tokens.length>4000)return null;tokens.push(m[0]);at+=m[0].length;}
     let pos=0,depth=0;const peek=()=>tokens[pos],take=()=>tokens[pos++],node=(type,extra)=>({type,...extra});
     const relation=()=>{let left=add();while(['=','>=','<=','!=','>','<',':'].includes(peek())){const op=take();left=node('binary',{left,op,right:add()});}return left;};
     const add=()=>{let left=product();while(['+','-'].includes(peek())){const op=take();left=node('binary',{left,op,right:product()});}return left;};
@@ -90,7 +94,7 @@ export function formulaLatex(source,onFailure){
       if(['(','[','{'].includes(t)){const groups=group(t);return node('group',{open:t,items:groups.length>1?[node('list',{items:groups.map(items=>node('list',{items})),separator:'; '})]:groups[0]});}
       if(/^\d+(?:\.\d+)?$/.test(t))return node('number',{value:t});
       if(t==='...')return node('symbol',{value:'cdots'});
-      if(!/^[A-Za-z]+$|^\d+F\d+$/.test(t))throw Error('Literal notation');
+      if(!/^[A-Za-z]+$|^\d+(?:F|phi)\d+$/.test(t))throw Error('Literal notation');
       if(t==='sum'||t==='product'||t==='prod'){
         let lower,upper;while(['_','^'].includes(peek())){if(take()==='_')lower=bound();else upper=bound();}
         return node('big',{name:t==='sum'?'sum':'prod',lower,upper,body:product()});

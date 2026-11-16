@@ -1,4 +1,5 @@
 import {referenceQuery,referenceValues,referencePositions,referenceNameMatches} from './sequence-oeis-core.mjs';
+import {identifyInput,discoveryProbes,matchProbe} from './sequence-discovery-core.mjs';
 
 const cache=new Map();
 const versions={'stripped.gz':'__OEIS_TERMS_SHA256__','names.gz':'__OEIS_NAMES_SHA256__'};
@@ -12,8 +13,18 @@ async function* lines(bytes){
   try{while(true){const part=await reader.read();if(part.done)break;const chunks=(carry+part.value).split('\n');carry=chunks.pop();for(const line of chunks)if(line&&!line.startsWith('#'))yield line.trimEnd();}if(carry&&!carry.startsWith('#'))yield carry.trimEnd();}finally{reader.releaseLock();}
 }
 self.onmessage=async event=>{
-  if(!['search','records'].includes(event.data.type))return;
+  if(!['search','records','discover'].includes(event.data.type))return;
   try{
+    if(event.data.type==='discover'){
+      const input=identifyInput(event.data.text),probes=discoveryProbes(input),[stripped,names]=await Promise.all([bulk('stripped.gz'),bulk('names.gz')]),results=[];let scanned=0,total=0;
+      for await(const line of lines(stripped)){const row=referenceValues(line);if(!row)continue;scanned++;let best=null;
+        for(const probe of probes){const hit=matchProbe(row.values,probe);if(hit&&(!best||hit.score>best.score)){const start=Math.max(0,hit.position-2);best={id:row.id,position:hit.position,targetIndex:hit.position,inputOperation:probe.label,targetOperation:'Original exported terms',inputPositions:probe.positions,targetPositions:hit.positions,matchedTerms:hit.length,lowInformation:probe.lowInformation,score:hit.score,sample_position:start,values:row.values.slice(start,start+Math.min(64,probe.values.length+4)),matchedValues:probe.values};}}
+        if(best){total++;results.push(best);results.sort((a,b)=>b.score-a.score||a.id.localeCompare(b.id));if(results.length>50)results.pop();}
+        if(scanned%16384===0)self.postMessage({type:'progress',message:`Tried ${probes.length} exact input transformations against ${scanned.toLocaleString()} OEIS records…`});
+      }
+      const wanted=new Map(results.map(r=>[r.id,r]));for await(const line of lines(names)){const space=line.indexOf(' '),id=line.slice(0,space);if(wanted.has(id)){const hit=wanted.get(id);hit.name=line.slice(space+1);hit.title=hit.name;}}
+      self.postMessage({type:'results',results,total,scanned,probes:probes.length,input,attribution:'The OEIS Foundation Inc. and contributors; transformed comparisons and presentation are adaptations.',license:'CC-BY-SA-4.0',source_urls:['https://oeis.org/stripped.gz','https://oeis.org/names.gz'],snapshot:{stripped_sha256:versions['stripped.gz'],names_sha256:versions['names.gz']},scope:'Exact finite transformed-input comparisons with OEIS exported terms. Export positions are not mathematical offsets; matches do not prove infinite identity.'});return;
+    }
     if(event.data.type==='records'){
       const requests=event.data.records;
       if(!Array.isArray(requests)||!requests.length||requests.length>4||requests.some(r=>!/^A\d{6}$/.test(r.id)||!Number.isSafeInteger(r.position)||r.position<0||!Number.isSafeInteger(r.count)||r.count<1||r.count>256))throw Error('Request 1–4 reference excerpts with 1–256 terms each.');

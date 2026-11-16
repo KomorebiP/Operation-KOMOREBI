@@ -1,4 +1,5 @@
 import {transform,coordinate,mod} from './sequence-atlas-core.mjs';
+import {generateFamily,validateFamily,familyDescriptor,familyURL,FAMILY_ENGINES} from './sequence-family-core.mjs';
 
 export const WORKBENCH_DEFAULTS=Object.freeze({view:'values',transform:'raw',scale:'signed-log',alignment:'positions',skip:0,count:32,modulus:7,marks:'line'});
 export function validateWorkbench(options={}){
@@ -8,6 +9,14 @@ export function validateWorkbench(options={}){
   return state;
 }
 export function localSource(entry,base){return {key:entry.id,type:'local',id:entry.id,title:entry.title,indexKind:entry.index_symbol==='j'?'local flat index j':'local index n',offset:entry.offset,terms:entry.terms,url:base?new URL(entry.url,base).href:entry.url,collection:entry.collection};}
+export function familySource(engine,params,base='https://komorebip.github.io/Operation-KOMOREBI/sequence-library.html'){
+  const result=generateFamily(engine,params),descriptor=familyDescriptor(engine,result.params),family=Object.entries(FAMILY_ENGINES).find(([,value])=>value===engine)[0];
+  return {key:'FAMILY:'+JSON.stringify(descriptor),type:'family',id:'FAMILY-'+engine,title:result.title+' · '+(['linear','kbonacci'].includes(engine)?`k=${result.params.k}, r=${result.params.r}, c=${result.params.c}, ${result.params.seedMode}`:engine==='theta'?`x=${result.params.x}`:engine==='theta-column'?`column=${result.params.column}`:`N=${result.params.N}, r=${result.params.r}, j=${result.params.j}${engine==='appell'?', x='+result.params.x:''}${engine==='secancy'?', column='+result.params.column:''}${engine==='section'?', '+result.params.parent:''}`)+(result.rationalTerms?' · '+result.params.component:''),indexKind:'local family n'+(result.rationalTerms?' · reduced '+result.params.component+'; original q(n) in family explorer':''),offset:result.offset,terms:result.terms,url:familyURL(base,family,result.params),familyDescriptor:descriptor};
+}
+export function customSource(data){
+  if(!data||typeof data.title!=='string'||!data.title.trim()||data.title.length>120||!Number.isSafeInteger(data.offset)||Math.abs(data.offset)>1000000||!Array.isArray(data.terms)||!data.terms.length||data.terms.length>64||data.terms.some(v=>typeof v!=='string'||!/^(-?[1-9]\d*|0)$/.test(v)||v.replace('-','').length>300))throw Error('A pasted comparison needs 1–64 exact integers, up to 300 digits each, a bounded index and a title.');
+  return {key:'CUSTOM:'+data.offset+':'+data.terms.join(','),type:'custom',id:'PASTED',title:data.title,indexKind:'pasted window position n',offset:data.offset,terms:data.terms.slice(),url:''};
+}
 export function referenceSource(hit,snapshot){
   if(!/^A\d{6}$/.test(hit.id)||!Number.isSafeInteger(hit.sample_position)||hit.sample_position<0||!Array.isArray(hit.values)||!hit.values.length||hit.values.length>256||hit.values.some(v=>typeof v!=='string'||!/^(-?[1-9]\d*|0)$/.test(v)||v.length>10000))throw Error('Choose a reference excerpt with 1–256 integer values, at most 10,000 digits each.');
   return {key:`OEIS:${hit.id}:${hit.sample_position}`,type:'oeis',id:hit.id,title:hit.id+' · '+(hit.name||'OEIS excerpt'),indexKind:'OEIS export position (mathematical offset unknown)',offset:hit.sample_position,terms:hit.values.slice(),url:'https://oeis.org/'+hit.id,snapshot};
@@ -24,12 +33,14 @@ export function agreements(result){
   const first=result.series[0];if(!first)return[];const baseline=new Map(first.rows.filter(row=>row.value!==null).map(row=>[row.x,row]));
   return result.series.slice(1).map(({source,rows})=>{let compared=0,equal=0,firstMismatch=null;for(const row of rows){const other=baseline.get(row.x);if(row.value===null||!other)continue;compared++;if(row.value===other.value)equal++;else if(firstMismatch===null)firstMismatch={x:row.x,left:other.index,right:row.index,leftValue:other.value,rightValue:row.value};}return {source:source.key,baseline:first.source.key,compared,equal,firstMismatch};});
 }
-export function descriptor(source){return source.type==='local'?{type:'local',id:source.id}:{type:'oeis',id:source.id,position:source.offset,count:source.terms.length,snapshot:source.snapshot};}
-export function workbenchLink(href,sources,state){const url=new URL(href);url.search='';url.hash='comparison';url.searchParams.set('wb',JSON.stringify({schema:1,state:validateWorkbench(state),sources:sources.map(source=>source.pending?source.descriptor:descriptor(source))}));return url.href;}
+export function descriptor(source){if(source.type==='family')return source.familyDescriptor;if(source.type==='custom')return {type:'custom',title:source.title,offset:source.offset,terms:source.terms};return source.type==='local'?{type:'local',id:source.id}:{type:'oeis',id:source.id,position:source.offset,count:source.terms.length,snapshot:source.snapshot};}
+export function workbenchLink(href,sources,state){const url=new URL(href);url.search='';url.hash='comparison';const data=JSON.stringify({schema:1,state:validateWorkbench(state),sources:sources.map(source=>source.pending?source.descriptor:descriptor(source))});if(data.length>20000)throw Error('This comparison is too large for a view link. Export a research notebook to retain the complete data.');url.searchParams.set('wb',data);return url.href;}
 export function readWorkbenchLink(href,entries,snapshot){
-  const raw=new URL(href).searchParams.get('wb');if(!raw)return null;if(raw.length>6000)throw Error('This comparison link is too long.');const data=JSON.parse(raw);
+  const raw=new URL(href).searchParams.get('wb');if(!raw)return null;if(raw.length>20000)throw Error('This comparison link is too long.');const data=JSON.parse(raw);
   if(data.schema!==1||!Array.isArray(data.sources)||data.sources.length>4)throw Error('Choose a comparison link with at most four sources.');const lookup=new Map(entries.map(entry=>[entry.id,entry])),state=validateWorkbench(data.state);
   const sources=data.sources.map(item=>{if(item.type==='local'){if(!lookup.has(item.id))throw Error('A linked local record is unavailable in this catalogue.');return localSource(lookup.get(item.id),href);}
+    if(item.type==='family')return familySource(item.engine,validateFamily(item.engine,item.params),href);
+    if(item.type==='custom')return customSource(item);
     if(item.type!=='oeis'||!/^A\d{6}$/.test(item.id)||!Number.isSafeInteger(item.position)||item.position<0||!Number.isSafeInteger(item.count)||item.count<1||item.count>256||item.snapshot!==snapshot)throw Error('This shared OEIS excerpt does not match the available reference data. Add the excerpt again from an OEIS search.');
     return {key:`OEIS:${item.id}:${item.position}`,type:'oeis',id:item.id,title:item.id+' · OEIS excerpt · select Load OEIS excerpts',pending:true,descriptor:item};});
   if(new Set(sources.map(source=>source.key)).size!==sources.length)throw Error('A comparison link contains duplicate sources.');if(state.alignment==='indices'&&sources.some(source=>source.type==='oeis'))throw Error('Use position alignment for reference excerpts.');return {sources,state};

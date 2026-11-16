@@ -134,3 +134,36 @@ citations, explicit finite formula notes, unchanged global display controls,
 no-JavaScript reading, forced colors, 200% text, print and clipboard fallback.
 They are local implementation checks, not accessibility certification.
 All 6,486 pre-expansion exact CSV/JSON/TXT exports are byte-identical.
+
+## Generalized-family studio
+
+The current receipt for the generalized engines and source index is run-024,
+under families-contract.json. Its hashes validate against the current inputs.
+Runs 022 and 023 retain intermediate source/wording snapshots and are historical;
+earlier baseline receipts also retain their original inputs rather than claiming
+to cover subsequently changed library builders.
+
+Run-024 compares 1,486 exact family cases and 31,876 values with independent
+rational-series, convolution, Bell-column and classical constructions. It also
+checks 19,200 finite hypergeometric values, 802 worked alternatives, 274 modular
+searches (22,127 states and 218 certificates), and 216 scalar transfer
+compositions (2,592 coefficients) against an independent Fraction quotient
+oracle. Four identification cases each scan all 2,236 local scalar records.
+The 22 definitions, 11 source bindings and 1,231 typed relations are checked.
+The source-defined analytic families are outside the numerical engine audit.
+
+Local checks pass 85 Node tests and 17 targeted Python tests; the separate
+pinned-library Python integration suite requires the library installed by CI.
+The downloadable source ZIP reproduces all 2,164 parameter records, their 55,939
+stored integers and 6,838 formula representations. All 6,876 pre-existing
+per-record CSV/JSON/TXT exports remain byte-identical.
+
+The research-browser report covers 1440/390/320px family/paper search, exact
+controls and worked examples, keyboard plot inspection, invalid-input recovery,
+directed paths and composition exports, local transformed identification,
+modular cycles and capped searches, notebook validation/import/export/sharing,
+explicit reference loading, no-JavaScript definitions, denied storage/clipboard,
+forced colors, enlarged text and print. It includes a full 401,422-record OEIS
+identification run. Existing unified-search, readability and transfer browser
+suites also pass. These are automated implementation checks, not certification
+or physical-device user testing.

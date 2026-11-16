@@ -1,0 +1,136 @@
+"""Source-bound generalized families, kept distinct from integer records."""
+from functools import lru_cache
+from hashlib import sha256
+from html import escape as e
+import json
+from pathlib import Path
+from urllib.parse import quote, urlencode
+
+ROOT=Path(__file__).resolve().parents[1]
+MANIFEST='manifests/sequence-generalized-sources.json'
+BASE='https://github.com/KomorebiP/Operation-KOMOREBI/blob/8a97573e979e868e675629b091ed3f5841ac2eb3/'
+REG='monographs/special-functions/supporting-sources/projector-special-functions-registry/Projector_Special_Functions_Registry.tex'
+
+
+@lru_cache(maxsize=1)
+def source_manifest():
+    return json.loads((ROOT/MANIFEST).read_text(encoding='utf-8'))
+
+
+def membership(entry):
+    kind=entry['kind'];identifier=entry['id'];result=[]
+    for match,key in [(kind in ('reciprocal','reciprocal power'),'GF-RECIPROCAL'),(kind=='logarithmic companion','GF-TANGENT'),(kind.startswith('congruential ') or kind=='euler','GF-CONGRUENTIAL'),(kind.startswith('Appell '),'GF-APPELL'),(kind=='secancy parameter column','GF-SECANCY'),(kind=='Euler-transfer theta','GF-THETA'),(kind=='theta polynomial column','GF-THETA-COLUMN'),(kind=='classical multisection','GF-SECTIONS'),(kind=='k-step reciprocal power','GF-LINEAR'),(kind=='k-bonacci' or identifier in ('KOM013','KOM014','KOM015','KOM016'),'GF-KBONACCI')]:
+        if match:result.append(key)
+    if identifier.startswith(('KFOR-TRI-P-','KFOR-TRI-H','KFOR-TRI-A-','KFOR-TRI-B-','KFOR-TRI-BI-')):
+        result.append('GF-SECANCY' if identifier.startswith('KFOR-TRI-P-') else 'GF-THETA' if identifier=='KFOR-TRI-H' else 'GF-APPELL')
+    if identifier.startswith('KFOR-AC-'):result.append('GF-APPELL')
+    if identifier.startswith('KSEQ-') and kind in ('fibonacci','lucas','pell','factorial','catalan','central-binomial','triangular','square','cube','power-two','power-three','bell','fubini'):result.append('GF-SECTIONS')
+    if kind=='fibonacci':result.append('GF-KBONACCI')
+    if kind=='lucas':result.append('GF-LINEAR')
+    return result
+
+
+@lru_cache(maxsize=1)
+def family_definitions():
+    basic=[
+      ('GF-LINEAR','Weighted k-step reciprocal powers','linear','k>=2; r,c positive integers','A(z)=(1-c sum_(j=1)^k z^j)^(-r)','Ordinary coefficients. Nonzero-tail, zero-prefix and arbitrary k-seed conventions remain explicit.','CONNECTIONS','generalized-k-step-coefficients'),
+      ('GF-KBONACCI','Generalized k-bonacci initial-value families','kbonacci','k>=2; n>=0','sum_(n>=0) T(n;k)z^n=z^(k-1)/(1-sum_(j=1)^k z^j)','The standard convention has k-1 zeros followed by one. The weighted explorer also accepts a declared initial vector.','CONNECTIONS','generalized-k-step-coefficients'),
+      ('GF-RECIPROCAL','Transfer secants and reciprocal-power towers','reciprocal','N>=2; integer r>=0 or complex order using the germ normalized to 1 at the origin; explorer uses positive integer r','D_N(z)=sum_(m>=0) (-1)^m z^(Nm)/(Nm)!; sum_(n>=0) A(n)z^(Nn)/(Nn)!=D_N(z)^(-r)','Compressed EGF values with source degree Nn. The complex-order definition uses exp(-r log D_N) with log D_N(0)=0; continuation around zeros retains its branch. The exact explorer covers the declared integer slice.','REGISTRY','Transfer secants'),
+      ('GF-CONGRUENTIAL','Congruential Euler inverse sections','congruential','N>=2; 0<=j<N; integer powers or normalized complex-order germs; explorer uses positive integer powers','CE_(N,j)(z)=(sum_(m>=0) j! z^(Nm)/(Nm+j)!)^(-1)','Reduce rational coefficients before selecting numerator or positive denominator. This positive block denominator differs from D_N.','REGISTRY','Congruential Euler block functions'),
+      ('GF-APPELL','Generalized block-Appell polynomial families','appell','N>=2; 0<=j<N; normalized complex order and complex x; explorer uses integer r and x','sum_(n>=0) P_n(x)z^n/n!=exp(xz) CE_(N,j)(z)^r','Uncompressed degree n. Integer components of rational specializations and complete coefficient tables have separate coordinates.','REGISTRY','Higher congruential powers and block-Appell polynomials'),
+      ('GF-SECANCY','Transfer-secancy parameter polynomials','secancy','N>=2; n>=0; 1<=k<=n','P_(N,n)(r)=(Nn)! [z^(Nn)] D_N(z)^(-r); a(n)=[r^k] P_(N,n)(r)','Ordinary polynomial coefficients, without k! scaling; a k-column starts at n=k.','REGISTRY','Transfer-secancy parameter polynomials'),
+      ('GF-THETA','Euler-transfer theta specializations','theta','n>=0; polynomial parameter x, with its normalized generating germ; explorer uses integer x','sum_(n>=0) Theta_(2n)(x) z^(2n)/(2n)!=sech(xz) sech(z)^x','Signed EGF values. Source degree is 2n; the source convention fixes all signs.','REGISTRY','Euler-transfer theta polynomials'),
+      ('GF-THETA-COLUMN','Theta polynomial coefficient families','theta-column','k>=1; n>=ceil(k/2)','a(n)=[x^k] Theta_(2n)(x)','Ordinary x-coefficients, including zeros in the complete polynomial tables. No k! scaling.','REGISTRY','Euler-transfer theta polynomials'),
+      ('GF-TANGENT','Logarithmic-derivative transfer tangents','tangent','N>=2; n>=0','-D_N\'(z)/D_N(z)=sum_(n>=0) T_N(n)z^(N(n+1)-1)/(N(n+1)-1)!','The source degree N(n+1)-1 differs from the corresponding secancy parameter-column degree.','REGISTRY','Transfer tangents and logarithmic-derivative companions'),
+      ('GF-SECTIONS','Universal coefficient sections and classical multisections','section','M>=1; 0<=r<M; scalar coefficient germ','F(z)=sum_(r=0)^(M-1) z^r F_(M,r)(z^M); F_(M,r)(u)=sum_(n>=0) a_(Mn+r) u^n','All residue packets together reconstruct the source. A selected packet keeps its original index map.','SF-I',171),
+    ]
+    analytic=[
+      ('GF-HYPERGEOMETRIC-PACKETS','Generalized hypergeometric packet systems','SF-I',420,'M>=1; p,q nonnegative integers; source hypergeometric parameters','(theta product_(j=1)^q (theta+b_j-1)-z product_(i=1)^p (theta+a_i))F=0; (Theta_M product_(j=1)^q (Theta_M+(b_j-1)I_M)-C_M product_(i=1)^p (Theta_M+a_i I_M))F_M=0','The paper transports the scalar differential equation into a matrix packet system. Parameter singularities and the source analytic/formal interpretation remain part of the definition.'),
+      ('GF-BERNOULLI-HURWITZ','Complex-order Bernoulli–Hurwitz packets','SF-I',441,'a>0; complex order z; M>=1; 0<=r<M','B(z;a)=-z zeta(1-z,a)','The source removes the apparent pole at z=0 and defines residue packets. Positive integer samples recover Bernoulli polynomials.'),
+      ('GF-LERCH-DETAILS','Cyclotomic Bernoulli–Lerch details','SF-I',562,'Source packet parameters; positive refinement L; 0<=j<L','W_(M,r)^(L,j)(z;a)=-z M^(z-1) Phi(omega_L^(-j),1-z,(a+r)/M)/sqrt(L)','The defining finite Fourier transform, continuation and DC channel are specified in the paper.'),
+      ('GF-SQUAREFREE-ENERGY','Squarefree arithmetic moment families','SF-II',655,'a>1/2; beta>0; Dirichlet character chi; k>=0','E_(a,beta,chi)(k)=sum_(n>=1) mu(n)^2 abs(chi(n))^2 (1-n^(-beta))^(2k)/n^(2a)','Positive moment family; generally not an integer sequence. The source treats positivity separately from signed coherence.'),
+      ('GF-STIELTJES-JACOBI','Squarefree Stieltjes–Jacobi and moment-exact families','SF-III',182,'a>1/2; beta>0; character conductor q','E(k)=sum_(n>=1) w_n x_n^k; x_n=(1-n^(-beta))^2; R(z)=sum_(k>=0) E(k)z^k=sum_(n>=1) w_n/(1-z x_n)','The same positive measure generates moments, resolvents, Jacobi models, Hankel determinants and quadrature. Finite models have their own stated moment range.'),
+      ('GF-GAMMA-DEPHASING','Universal Gamma dephasing family','SF-IV',490,'alpha=(2a-1)/beta>0; real tau; source large-depth regime','G(tau)=Gamma(alpha+i tau/beta)/Gamma(alpha)','This is the limiting normalized dephasing function. It is not substituted for the finite arithmetic kernel.'),
+      ('GF-LOG-GAMMA','Log-Gamma packet and Gamma–sech kernels','SF-V',337,'alpha>0; real y,h,eta','g_alpha(y)=Gamma(alpha)^(-1/2) exp(alpha y/2-exp(y)/2)','The normalized packet has exact Fourier, ambiguity and orthogonal-polynomial coordinates in the paper.'),
+      ('GF-CROSS-SHAPE','Cross-shape Gamma–sech ambiguity families','SF-VI',258,'alpha,beta>0; real h,eta','A_(alpha,beta)(h,eta)=exp((alpha-beta)h/4) Gamma((alpha+beta)/2+i eta) sech(h/2)^((alpha+beta)/2+i eta)/sqrt(Gamma(alpha)Gamma(beta))','The paper relates this exact cross-shape kernel to shape convolution, refinement and coherent transforms.'),
+      ('GF-SHAPE-TRANSFER','Shape-semigroup polynomial transfer families','SF-VI',182,'Positive shapes alpha and t; n>=0','sigma_n(alpha,t)=sqrt((alpha)_n/(alpha+t)_n)','These are the source transfer singular values. Rising factorials, normalization and the associated packet spaces are specified in the paper.'),
+      ('GF-RACAH','Racah polynomial and packet recoupling families','SF-VII',882,'Source terminating Racah parameters and finite support','R_n(lambda(x))=4F3(-n,n+alpha+beta+1,-x,x+gamma+delta+1; alpha+1,beta+delta+1,gamma+1; 1)','Classical Racah polynomials and projector-defined recoupling matrices retain their separate normalizations. Read the source before identifying matrix entries with polynomial values.'),
+      ('GF-Q-RACAH','q-Racah polynomial and recoupling families','SF-VIII',865,'0<q<1; nonnegative integer degree n; nonsingular lower factors in the finite range; source finite-support conditions','R_n(mu(y))=4phi3(q^(-n),alpha beta q^(n+1),q^(-y),gamma delta q^(y+1); alpha q,beta delta q,gamma q; q,q); mu(y)=q^(-y)+gamma delta q^(y+1)','The paper gives the terminating 4-phi-3 formula, duality, classical limit and the separate Askey–Wilson difference equation. Basic hypergeometric notation is retained in the source.'),
+      ('GF-ASKEY-WILSON','Normalized Askey–Wilson transfer functions','SF-VIII',945,'z nonzero; nonnegative integer degree n; source q-domain and nonsingular lower factors','A_n(z)=4phi3(q^(-n),a b c d q^(n-1),a z,a z^(-1); a b,a c,a d; q,q)','This is the source normalized function without an additional polynomial prefactor. Its q-difference eigenfunction law and continuous spectral coordinate are retained in the defining passage.'),
+    ]
+    sources={s['id']:s for s in source_manifest()['sources']};result=[]
+    for identifier,title,engine,domain,formula,note,source,locator in basic:
+        result.append(dict(id=identifier,title=title,engine=engine,domain=domain,formula=formula,note=note,paper=source,locator=locator,mode='Exact coefficient explorer'))
+    for identifier,title,source,line,domain,formula,note in analytic:
+        result.append(dict(id=identifier,title=title,engine=None,domain=domain,formula=formula,note=note,paper=source,locator=line,mode='Source-defined analytic family'))
+    for item in result:
+        source=sources[item['paper']];locator=item['locator']
+        if isinstance(locator,str) and item['paper']=='REGISTRY':locator=next(h['line'] for h in source['headings'] if h['title']==locator)
+        if isinstance(locator,str):locator=next((h['line'] for h in source['headings'] if h['title'].lower().replace(' ','-')==locator),1)
+        if item['id'] in ('GF-LINEAR','GF-KBONACCI','GF-SECANCY'):item['derivation']='https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/research/sequence-families/DERIVATIONS.md'
+        refs=[item['paper']]+(['PAPER-IV'] if item['id'] in ('GF-RECIPROCAL','GF-TANGENT','GF-CONGRUENTIAL','GF-APPELL') else [])
+        item.update(source=source['url']+'#L'+str(locator),paper_title=source['title'],url='generalized-families/'+item['id']+'.html',kind='generalized family',tags=['generalized',item['mode'],item['paper']],status=item['mode'],offset=0,terms=[],formulas=[dict(title='General construction',kind='family definition',expression=item['formula'],source=source['url']+'#L'+str(locator))],recurrence='',explanation=item['note'],collection='generalized',paper_refs=refs,family_names=[item['title']])
+    return result
+
+
+def catalogue(entries):
+    families=family_definitions();by_id={f['id']:f for f in families}
+    for family in families:family['record_ids']=[]
+    for entry in entries:
+        for identifier in membership(entry):by_id[identifier]['record_ids'].append(entry['id'])
+    from sequence_research_notes import research_connections
+    from sequence_atlas_index import connection_graph
+    relations=[{k:v for k,v in edge.items() if k!='rows'} for edge in research_connections()['edges']]
+    for edge in connection_graph([e for e in entries if e['collection']=='atlas'])['edges']:
+        relations.append(dict(key='finite-'+edge['key'],source=edge['source_id'],target=edge['target_id'],kind='finite transform comparison',statement=edge['label']+' agrees at the twelve displayed stored positions. This is a finite comparison, not a proof of an infinite identity.',source_url='https://komorebip.github.io/Operation-KOMOREBI/sequences/'+edge['source_id']+'.html#connections',reversible=False,checked_overlaps=edge['matched_terms']))
+    return dict(schema=1,families=families,sources=source_manifest()['sources'],relations=relations,scope='General constructions and source-defined analytic families. Record counts are finite enumerations, not counts of distinct infinite sequences. Source indexing is not a new whole-manuscript proof review.')
+
+
+def links_for(entry):
+    ids=membership(entry)
+    if not ids:return ''
+    families={f['id']:f for f in family_definitions()}
+    def params(identifier):
+        p=dict(count=24)
+        if 'N' in entry:p['N']=entry['N']
+        if 'power' in entry:p['r']=entry['power']
+        if 'j' in entry:p['j']=entry['j']
+        if 'x' in entry:p['x']=entry['x']
+        if 'k' in entry:p['column']=entry['k']
+        if 'component' in entry:p['component']=entry['component']
+        if entry['kind']=='euler':p.update(N=2,j=0,r=1)
+        if identifier in ('GF-CONGRUENTIAL','GF-APPELL'):p.setdefault('j',0)
+        if identifier=='GF-SECTIONS':p.update(parent=entry.get('source_kind',entry['kind']),N=entry.get('N',1),j=entry.get('j',0))
+        if identifier in ('GF-LINEAR','GF-KBONACCI'):
+            order=entry['recurrence_order'] if 'recurrence_order' in entry else 2 if entry['kind'] in ('fibonacci','lucas') else int(entry['id'][3:])-10
+            p.update(k=order,c=entry.get('weight',1))
+            if entry['kind']=='lucas':p.update(seedMode='custom',seeds='2, 1',r=1)
+        return p
+    return '<p>Generalized construction: '+ ' · '.join('<a href="../'+families[i]['url']+'?'+e(urlencode({'family':i,'parameters':json.dumps(params(i),separators=(',',':'))}))+'#family-explorer">'+e(families[i]['title'])+'</a>' for i in ids)+'.</p>'
+
+
+def sections():
+    return '''<section id="generalized"><h2>Generalized families</h2><p>Search general closed-form constructions and the papers behind them. Explore parameters in the exact families, or read source-defined analytic families from Special Functions I–VIII.</p><p><a href="sequence-library.html?scope=families#library-search">Search generalized families</a> · <a href="generalized-families/index.html">Complete family index and research coverage</a></p><details><summary>Open the family explorer</summary><div id="family-explorer"></div><p class="sg-static">The general definitions and source links are readable in the family index without JavaScript.</p></details></section>
+<section id="research-graph"><h2>Explore connections</h2><p>Navigate typed source relations, inspect a directed path, or compose exact scalar transfer kernels with their index shifts.</p><details><summary>Open the connection graph</summary><div id="connection-explorer"></div></details></section>
+<section id="identify"><h2>Identify a sequence</h2><p>Try exact transformations against all scalar library records or the retained OEIS reference data. Every result records the transformation and matched positions.</p><details><summary>Open sequence identification</summary><div id="sequence-identification"></div></details></section>
+<section id="modular-dynamics"><h2>Modular dynamics</h2><p>Explore a k-step recurrence modulo m. A repeated complete recurrence state certifies a period and any preceding transient; a finite search may also end without finding a cycle.</p><details><summary>Open modular dynamics</summary><div id="modular-explorer"></div></details></section>
+<section id="research-notebooks"><h2>Research notebooks</h2><p>Save named combinations of family parameters, searches, comparisons, transfers, graph selections, modular experiments and notes. Export a notebook or share a bounded link.</p><details><summary>Open research notebooks</summary><div id="notebook-explorer"></div></details></section>'''
+
+
+def build_pages(site,data,wrap):
+    site.write('assets/sequence-generalized-data.json',json.dumps(data,ensure_ascii=False,separators=(',',':'))+'\n')
+    cards=[]
+    for family in data['families']:
+        ids=family['record_ids'];members='<p>'+str(len(ids))+' indexed integer records in this construction.</p>'
+        if ids:members+='<p><a href="../sequence-library.html?'+e(urlencode({'q':'family:'+family['id']}))+'#library-search">Search its integer records</a></p>'
+        body='<nav><a href="../sequence-library.html?scope=families#library-search">Generalized-family search</a> · <a href="index.html">Family index</a></nav><h1>'+e(family['title'])+'</h1><section id="definition"><h2>General construction</h2><p class="sar-formula">'+e(family['formula'])+'</p><p><strong>Parameters and domain:</strong> '+e(family['domain'])+'</p><p>'+e(family['note'])+'</p><p>'+e(family['mode'])+'. <a href="'+e(family['source'])+'">'+e(family['paper_title'])+' — defining passage</a>.</p>'+members+'</section>'
+        if family['engine']:body+='<section id="family-explorer"><h2>Explore parameters and exact values</h2><p>Enable JavaScript to calculate values and compare constructions. The defining family and links above remain available without it.</p><div id="family-explorer-controls"></div></section>'
+        else:body+='<p>This analytic family is indexed by its defining source and hypotheses. The integer coefficient explorer does not evaluate its analytic continuation.</p>'
+        site.page(family['url'],family['title'],wrap(body,'../',family=family['id']))
+        site.search.append(dict(title=family['title'],group='Collection',kind='Examples',work_ids=['monographs-special-functions'] if family['paper'].startswith('SF-') or family['paper']=='REGISTRY' else [],url=family['url'],text=family['formula']+' '+family['domain']+' '+family['paper_title']+' '+family['note']))
+        cards.append('<li><h2><a href="../'+family['url']+'">'+e(family['title'])+'</a></h2><p>'+e(family['mode'])+' · '+str(len(ids))+' integer records · '+e(family['paper_title'])+'</p><p>'+e(family['domain'])+'</p></li>')
+    coverage=[]
+    for source in data['sources']:
+        mapped=[f for f in data['families'] if source['id'] in f['paper_refs']];coverage.append('<article class="sar-card"><h3>'+e(source['title'])+'</h3><p>'+str(len(mapped))+' indexed family definitions · '+str(len(source['headings']))+' source headings surveyed.</p><p><a href="'+e(source['url'])+'">Maintained source</a></p><ul>'+''.join('<li><a href="../'+f['url']+'">'+e(f['title'])+'</a></li>' for f in mapped)+'</ul><details><summary>Other source topics and exact binding</summary><p>Indexing these passages does not assert that every formula in this paper has an integer record or a computational explorer.</p><p>Revision '+e(source['revision'])+'; normalized UTF-8/LF SHA-256 <code>'+source['normalized_sha256']+'</code>.</p><ul>'+''.join('<li><a href="'+e(source['url'])+'#L'+str(h['line'])+'">'+e(h['title'])+'</a></li>' for h in source['headings'])+'</ul></details></article>')
+    body='<nav><a href="../sequence-library.html?scope=families#library-search">Search generalized families</a> · <a href="../sequence-library.html#family-explorer">Parameter explorer</a></nav><h1>Generalized families</h1><p>General definitions, closed-form families and source coverage. The family index complements the integer-record index; parameter instances need not represent distinct infinite sequences.</p><ol>'+''.join(cards)+'</ol><section id="research-coverage"><h2>Research source coverage</h2><p>'+e(data['scope'])+'</p><p><a download href="../assets/sequence-generalized-data.json">Family definitions and source bindings JSON</a></p><div class="sar-grid">'+''.join(coverage)+'</div></section>'
+    site.page('generalized-families/index.html','Generalized families and research coverage',wrap(body,'../'))
