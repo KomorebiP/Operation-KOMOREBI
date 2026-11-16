@@ -50,7 +50,7 @@ function scrollRegions() {
   });
 }
 function resultStatus() {
-  status(`${result.recoverable} of ${state.F.length} questions recoverable. Question ${state.question+1} ${result.questions[state.question].recoverable?'is recoverable':'has an obstruction'}. ${result.repair.additional} extra measurements needed.`);
+  status(`${result.recoverable} of ${state.F.length} question${state.F.length===1?'':'s'} recoverable. Question ${state.question+1} ${result.questions[state.question].recoverable?'is recoverable':'has an obstruction'}. ${result.repair.additional} extra measurement${result.repair.additional===1?'':'s'} needed.`);
 }
 function motionStatus() {
   status(`At t = ${state.t}, enabled measurements stay (${result.motion.movedSummary.join(', ')}). Question ${state.question+1} is ${result.motion.movedAnswers[state.question]}.`);
@@ -248,7 +248,7 @@ function renderMotion() {
   const m=result.motion,selected=result.questions[state.question];
   const note=result.nullity===0?'There are no invisible directions: these measurements determine the entire input. The two displayed inputs coincide.':
     `Direction w = ${vector(m.direction)}. ${selected.recoverable?'The selected question stays fixed along every invisible direction.':'The selected question changes by t × ('+selected.change+').'}`+
-    (state.t===0?' At t = 0 the two inputs coincide; move the slider to separate them.':'');
+    (state.t===0?' At t = 0, the two inputs coincide; move the slider to separate them.':'');
   write('rl-motion-note',note);
   chart('rl-input-chart',state.x.map((_,i)=>'x'+subscript(i+1)),m.x,m.moved);
   chart('rl-summary-chart',result.active.map(i=>'y'+subscript(i+1)),m.summary,m.movedSummary);
@@ -274,9 +274,9 @@ function render() {
   renderCertificate();renderMotion();renderEquations();
   write('rl-repair-note',complete?'These measurements already answer every question. You can remove a measurement to investigate which answers survive.':
     `Add ${result.repair.additional} independent measurement${result.repair.additional===1?'':'s'}: ${result.repair.addedQuestions.map(i=>'F'+subscript(i+1)).join(', ')}. The new summary keeps an independent subset of the enabled rows and adds these question rows.`);
-  write('rl-kernel-note',result.nullity?`${result.nullity} independent invisible direction${result.nullity===1?'':'s'} span ker R. Every enabled measurement vanishes on each direction.`:'The kernel contains only zero. No information about the input is lost.');
+  write('rl-kernel-note',result.nullity?`${result.nullity} independent invisible direction${result.nullity===1?' spans':'s span'} ker R. Every enabled measurement vanishes on each direction.`:'The kernel contains only zero. No information about the input is lost.');
   byId('rl-kernel').replaceChildren(...result.kernel.map((w,i)=>formula('w'+subscript(i+1)+' = '+vector(w))));
-  write('rl-row-note',`Row reduction uses ${result.active.length} enabled measurement${result.active.length===1?'':'s'}, in their displayed order, relabelled from 1. ${result.rank} pivot${result.rank===1?'':'s'} give the rank.`);
+  write('rl-row-note',`Row reduction uses ${result.active.length} enabled measurement${result.active.length===1?'':'s'}, in their displayed order, relabelled from 1. ${result.rank} pivot${result.rank===1?' gives':'s give'} the rank.`);
   const headers=['Row',...Array.from({length:state.n},(_,i)=>'x'+subscript(i+1))];
   byId('rl-rref').replaceChildren(table(headers,result.rref.map((r,i)=>[i+1,...r]),'Reduced measurement matrix'));
   byId('rl-transform').replaceChildren(table(['Row',...result.active.map(i=>'y'+subscript(i+1))],result.transform.map((r,i)=>[i+1,...r]),'Exact row-operation matrix E'));

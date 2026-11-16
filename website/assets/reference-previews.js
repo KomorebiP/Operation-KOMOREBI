@@ -116,7 +116,7 @@
       }).catch(()=>{if (current===generation && dialog.open) status.textContent='Math is shown as exact TeX. Open the referenced passage for the full reading view.';});
     } catch {
       dataPromise=null;
-      if (current===generation && dialog.open) {status.textContent='The preview could not load. Retry, or open the referenced passage.';retry.hidden=false;}
+      if (current===generation && dialog.open) {status.textContent='The preview could not be loaded. Retry, or open the referenced passage.';retry.hidden=false;}
     } finally {if (current===generation) content.removeAttribute('aria-busy');}
   }
   for (const link of links) {

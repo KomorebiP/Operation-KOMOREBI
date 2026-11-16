@@ -204,29 +204,29 @@ def build_source_body(site):
     old = old.replace('id="current-result"','id="historical-current-result"',1)
     old = re.sub(r'<aside class="research-update" data-edition-addition="exact-six-closure">.*?</aside>','',old,flags=re.S)
     assembled.append('<h2 id="historical-synthesis">Research history and superseded checkpoints</h2>'
-        '<details class="book-history"><summary>Open the historical constructions, searches and status registers</summary>'
+        '<details class="book-history"><summary>Open the historical constructions, searches, and status registers</summary>'
         '<p class="book-history-notice">These are the retained earlier checkpoints. Their six-versus-seven '
         'questions and earlier status tables describe that stage of the work. The current exact minimum '
         'for the original target is six, proved by the later eight-node witness above.</p>'+old+'</details>')
-    assembled.append('<h2 id="source-ledger">Sources, checks and remaining work</h2>'
-        '<p>The current written arguments have project self-review, and forty-one selected finite-graph, '
-        'elimination, loss and shape statements have kernel replay. Complete formal compactification and transfer, independent peer review, '
+    assembled.append('<h2 id="source-ledger">Sources, checks, and remaining work</h2>'
+        '<p>The current written arguments have undergone project self-review, and forty-one selected finite-graph, '
+        'elimination, loss, and shape statements have undergone kernel replay. Complete formal compactification and transfer, independent peer review, '
         'a useful margin for the remaining mixed RLC models, arbitrary-target practical minimum synthesis, '
-        'higher-target resistor minima, broader parasitic models and physical measurements remain open. '
-        'The two-reactive separator, two series margins and dedicated-series-loss tolerance theorem close explicit subclasses. '
+        'higher-target resistor minima, broader parasitic models, and physical measurements remain open. '
+        'The two-reactive separator, two series margins, and dedicated-series-loss tolerance theorem close explicit subclasses. '
         'Physical graph and endpoint arguments now exclude every three-reactive mixed class and the '
         'four-reactive one-L/one-C classes with explicit tiny margins. Coverage is 1,334 of 2,130; '
         'the 796 balanced two-L/two-C placements remain for a stronger practical-sized bound. The exact internal-mode stratum and a certified '
         'detuning/opening-budget neighborhood are now separated too. The complete regular exact-data '
-        'stratum has two responses and margin25/2769, with a supplied open/short neighborhood margin1/300. '
+        'stratum has two responses and a margin of 25/2769, with a supplied open/short neighborhood margin of 1/300. '
         'The new nine-edge-backbone and original-node flow argument closes structural uniform transfer '
-        'with bound10^(-10^45), still extremely small. The zero-loss feature chart gives1/300 without '
-        'a supplied physical box, and the worked state certificate gives1/400. Generic total size2n+1 '
+        'with a bound of 10^(-10^45), still extremely small. The zero-loss feature chart gives 1/300 without '
+        'a supplied physical box, and the worked state certificate gives 1/400. A generic total size of 2n+1 '
         'is proved for almost every real open-family target; no individual rational R minimum follows. '
         'A practical global margin remains open. All new comparisons use positive-real Laplace samples.</p>'
         '<p><a href="../../downloads/smith-rlc-current-source.zip">Download the complete current source and checks</a> · '
         '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/tree/'+site.revision+'/'+BASE+'">'
-        'Proof, computation and source-binding records</a>. The original checkpoint ZIPs and earlier Lean receipts '
+        'Proof, computation, and source-binding records</a>. The original checkpoint ZIPs and earlier Lean receipts '
         'are retained unchanged in that source package.</p>')
     article = local_routes(diagrams(''.join(assembled),site))
     article = article.replace('This note does not resolve the transformer-free six-reactive-element question.',
@@ -234,7 +234,7 @@ def build_source_body(site):
     body = body[:match.start(2)]+article+body[match.end(2):]
     cover = ('<section class="cover"><p class="kicker">Komorebi P. · Research reading</p>'
         '<h1 id="smith-chart-through-exact-packets-passivity-and-reconstruction">'+TITLE+'</h1>'
-        '<p class="subtitle">Exact packets, passive completion, physical circuits and their verification.</p>'
+        '<p class="subtitle">Exact packets, passive completion, physical circuits, and their verification.</p>'
         '<p class="author-line">Komorebi P. · Updated 13 November 2026</p>'
         '<nav class="quick-nav" aria-label="Start reading"><a href="#current-results">Current results</a>'
         '<a href="#exact-six">Exact-six circuit</a><a href="#low-order-synthesis">Certified synthesis</a>'
@@ -242,11 +242,11 @@ def build_source_body(site):
     body = re.sub(r'<section class="cover">.*?</section>',lambda m:cover,body,count=1,flags=re.S)
     body = re.sub(r'<aside class="research-notice".*?</aside>',
         '<aside class="research-notice"><p><strong>Exact circuits and explicit limits.</strong> '
-        'The original degree-six target has reactive minimum six. Exact construction now covers first-order '
-        'targets, the RC/RL classes and specified higher-degree families. Selected graph and margin lemmas '
+        'The original degree-six target has a reactive minimum of six. Exact construction now covers first-order '
+        'targets, the RC/RL classes, and specified higher-degree families. Selected graph and margin lemmas '
         'have Lean proofs; the complete universal proof chain and general mixed-RLC solver remain open.</p>'
         '<nav class="research-actions" aria-label="Reading resources"><a class="research-download" '
-        'href="../../downloads/smith-rlc-current-source.zip">Download current source<span>Proofs, certificates and checks</span></a>'
+        'href="../../downloads/smith-rlc-current-source.zip">Download current source<span>Proofs, certificates, and checks</span></a>'
         '<a href="../../smith-chart.html">Open the laboratory</a>'
         '<span class="research-print"><button type="button" id="print-reading">Print reading</button></span></nav></aside>',body,count=1,flags=re.S)
     links = re.findall(r'<h2\b[^>]*id="([^"]+)"[^>]*>(.*?)</h2>',article,re.S)

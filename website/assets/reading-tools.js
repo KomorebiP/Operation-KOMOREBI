@@ -68,7 +68,7 @@
     const id = 'reading-statement-query-'+index;
     const label = element('label',directory ? 'Find a statement in this work' : 'Find a statement');label.htmlFor = id;
     const input = element('input');input.id = id;input.type = 'search';input.autocomplete = 'off';
-    input.placeholder = 'Title, number, type or source label';
+    input.placeholder = 'Title, number, type, or source label';
     const clear = element('button','Clear');clear.type = 'reset';clear.hidden = true;
     clear.setAttribute('aria-label','Clear statement search');
     const proofLabel = element('label',undefined,'reading-statement-proof-filter');
@@ -136,7 +136,7 @@
     form.setAttribute('role', 'search');form.setAttribute('aria-label', 'References');
     const label = element('label', 'Find a reference');label.htmlFor = 'reading-reference-query';
     const input = element('input');input.id = 'reading-reference-query';input.type = 'search';
-    input.placeholder = 'Author, title, year or citation key';input.autocomplete = 'off';
+    input.placeholder = 'Author, title, year, or citation key';input.autocomplete = 'off';
     input.setAttribute('aria-describedby', 'reading-reference-count');
     const clear = element('button', 'Clear reference search');clear.type = 'reset';clear.hidden = true;
     const status = element('p', undefined, 'reading-chapter-count');status.id = 'reading-reference-count';

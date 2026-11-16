@@ -414,7 +414,7 @@ if (form) {
       if (display === renderGeneration && request === generation) {
         page = shownPage;
         saveParams({page: page > 1 ? String(page) : ""});
-        status.textContent = "Results could not load. Try Search again or browse the work index.";
+        status.textContent = "Results could not be loaded. Try Search again or browse the work index.";
         results.removeAttribute("aria-busy");
       }
       return;
@@ -465,7 +465,7 @@ if (form) {
       results.append(li);
     }
     status.textContent = found.length === 1 ? "1 result." : found.length ? `${found.length} results. Showing ${startIndex + 1}–${Math.min(startIndex + pageSize, found.length)}.` :
-      "No results. Try fewer words, clear the filters or browse the glossary.";
+      "No results. Try fewer words, clear the filters, or browse the glossary.";
     for (const pager of pagers) {
       pager.hidden = pages === 1;
       pager.querySelector(".search-page-status").textContent = "of " + pages;
@@ -556,7 +556,7 @@ if (form) {
       await renderPage();
     } catch (error) {
       if (request === generation) {
-        status.textContent = "Search could not load. Use the work index or glossary, or try again.";
+        status.textContent = "Search could not be loaded. Use the work index or glossary, or try again.";
         results.removeAttribute("aria-busy");
       }
     }

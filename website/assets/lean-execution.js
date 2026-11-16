@@ -83,6 +83,6 @@
     search.addEventListener('input', filter);
     window.addEventListener('popstate', () => show(new URL(location.href).searchParams.get('file'), false));
   }).catch(() => {
-    status.textContent = 'The catalogue could not load. Download the bundle and run python run_lean.py --list.';
+    status.textContent = 'The catalogue could not be loaded. Download the bundle and run python run_lean.py --list.';
   });
 })();

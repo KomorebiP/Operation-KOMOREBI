@@ -268,7 +268,7 @@ async function start() {
     if(catalog)return catalog;
     catalogPending??=(async()=>{
       const response=await fetch(new URL(data.collection_catalog||'catalog.json',location.href),{cache:'no-cache',credentials:'omit'});
-      if(!response.ok)throw new Error('Retained source catalogue could not load.');
+      if(!response.ok)throw new Error('The retained source catalogue could not be loaded.');
       const next=await response.json();
       if(next.schema!==1||next.revision!==data.revision||!Array.isArray(next.entries)||!Array.isArray(next.inputs))throw new Error('The source catalogue changed. Reload this page to use the current release.');
       catalog=next;renderCatalog();return catalog;
