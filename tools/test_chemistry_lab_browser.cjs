@@ -13,6 +13,8 @@ async function main(){
       await page.locator('#cl-experiment').waitFor({state:'visible'});await frames(page);
       assert.equal(await page.locator('main h1').count(),1);assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'page overflow');
       const first=await certificate(page);assert.equal(first.example,'exact');assert.equal(first.settings.probes,2);assert.equal(first.full_linear_consistent,true);
+      assert.match(await page.locator('#cl-disk-description').textContent(),/Radius upper bound ≈/);
+      assert.match(await page.locator('#cl-metrics').textContent(),/Operator radius upper bound/);
       assert.ok(Number(first.response_radius_rational_upper.split('/')[0])/Number(first.response_radius_rational_upper.split('/')[1])<.001337);
       assert.ok(Number(await page.locator('#cl-nullity').textContent())>0);
       await page.getByRole('button',{name:'3 probes',exact:true}).focus();await page.keyboard.press('Enter');assert.equal(await page.locator('#cl-nullity').textContent(),'0');
