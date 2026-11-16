@@ -10,14 +10,14 @@ The project contains **66 named theorem declarations and 10 definitions** across
 
 | Module | Theorem declarations | Definitions | Formal scope |
 |---|---:|---:|---|
-| [PolynomialPackets](../formal/polynomial-transport/KomorebiPolynomial/PolynomialPackets.lean) | 15 | 2 | Finite polynomial coefficient masks over a semiring, linearity, projector laws, reconstruction, refinement and coefficient extension. |
-| [FallingFactorial](../formal/polynomial-transport/KomorebiPolynomial/FallingFactorial.lean) | 12 | 3 | The actual rational falling-factorial basis equivalence, its inverse on powers, constants, degree preservation and nonmultiplicativity. |
+| [PolynomialPackets](../formal/polynomial-transport/KomorebiPolynomial/PolynomialPackets.lean) | 15 | 2 | Finite polynomial coefficient masks over a semiring, linearity, projector laws, reconstruction, refinement, and coefficient extension. |
+| [FallingFactorial](../formal/polynomial-transport/KomorebiPolynomial/FallingFactorial.lean) | 12 | 3 | The actual rational falling-factorial basis equivalence, its inverse on powers, constants, degree preservation, and nonmultiplicativity. |
 | [FallingPackets](../formal/polynomial-transport/KomorebiPolynomial/FallingPackets.lean) | 15 | 2 | The concrete conjugated projectors, their finite formulas and laws, and complete input/output block reconstruction. |
-| [RootsOfUnity](../formal/polynomial-transport/KomorebiPolynomial/RootsOfUnity.lean) | 7 | 1 | The actual complex polynomial substitution average, its coefficient formula, the canonical exponential root and rational coefficient compatibility. |
+| [RootsOfUnity](../formal/polynomial-transport/KomorebiPolynomial/RootsOfUnity.lean) | 7 | 1 | The actual complex polynomial substitution average, its coefficient formula, the canonical exponential root, and rational coefficient compatibility. |
 | [FourierBridge](../formal/polynomial-transport/KomorebiPolynomial/FourierBridge.lean) | 2 | 0 | The equality connecting the rational falling-coordinate projector to complex Fourier averaging. |
-| [FallingProduct](../formal/polynomial-transport/KomorebiPolynomial/FallingProduct.lean) | 15 | 2 | Transported multiplication, its algebraic laws, basis-degree addition and exact cyclic packet convolution. |
+| [FallingProduct](../formal/polynomial-transport/KomorebiPolynomial/FallingProduct.lean) | 15 | 2 | Transported multiplication, its algebraic laws, basis-degree addition, and exact cyclic packet convolution. |
 
-The [claim map](../formal/polynomial-transport/CLAIM_MAP.json) gives every declaration's exact signature, coefficient domain, reading-page correspondence and pinned source dependencies. Counts describe declarations, rather than independent mathematical discoveries or complete coverage of every section on the page.
+The [claim map](../formal/polynomial-transport/CLAIM_MAP.json) gives every declaration's exact signature, coefficient domain, reading-page correspondence, and pinned source dependencies. Counts describe declarations, rather than independent mathematical discoveries or complete coverage of every section on the page.
 
 ## The coordinate map has the required direction
 
@@ -84,7 +84,7 @@ The product from Section 9 is constructed as
 f\star g=\Phi(\Phi^{-1}f\cdot\Phi^{-1}g).
 \]
 
-The companion proves associativity, commutativity, the unit and rational bilinearity, together with
+The companion proves associativity, commutativity, the unit, and rational bilinearity, together with
 
 \[
 x^{\underline a}\star x^{\underline b}=x^{\underline{a+b}},
@@ -103,7 +103,7 @@ The supporting coefficient-packet convolution is proved over every semiring befo
 
 ## Evidence and remaining scope
 
-The [recorded replay](../formal/polynomial-transport/verification/2026-11-04/run.json) binds the sources, verification program and compiler logs by SHA-256. It includes a fresh build, exact declaration and axiom audits, project kernel replay, **18 named positive-control theorems**, and **eight deliberate rejection controls**. The controls cover the direction of \(\Phi\), the displayed packet values, Fourier normalization and sign, invalid primitivity, zero-modulus reconstruction, ordinary-projector reuse, ordinary-product reuse and an unfinished proof.
+The [recorded replay](../formal/polynomial-transport/verification/2026-11-04/run.json) binds the sources, verification program, and compiler logs by SHA-256. It includes a fresh build, exact declaration and axiom audits, project kernel replay, **18 named positive-control theorems**, and **eight deliberate rejection controls**. The controls cover the direction of \(\Phi\), the displayed packet values, Fourier normalization and sign, invalid primitivity, zero-modulus reconstruction, ordinary-projector reuse, ordinary-product reuse, and an unfinished proof.
 
 The [internal statement review](../formal/polynomial-transport/REVIEW.md) records its source hashes and checks the correspondence between the Lean statements and the reading claims. The [Mathlib dependency record](../formal/polynomial-transport/SOURCE_DEPENDENCIES.md) identifies the exact upstream results and hypotheses. The [replay instructions](../formal/polynomial-transport/README.md#evidence-and-reproduction) use the pinned Lean 4.34.0-rc2 toolchain. The [Reader Lean companions workflow](https://github.com/KomorebiP/Operation-KOMOREBI/actions/workflows/reader-lean-companions.yml) reruns the project on relevant changes.
 

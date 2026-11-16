@@ -35,7 +35,7 @@ individual scopes; they do not measure whole-book formalization.
 | 17 | [CoupledGuardedMajorant.lean](../monographs/special-functions/lean/CoupledGuardedMajorant.lean) | 30 | [Names and source lines](../monographs/special-functions/formalization/Block17/declarations.json) |
 | 18 | [CoupledEvaluationResult.lean](../monographs/special-functions/lean/CoupledEvaluationResult.lean) | 17 | [Names and source lines](../monographs/special-functions/formalization/Block18/declarations.json) |
 | 19 | [Source model](../monographs/special-functions/lean/CoupledPythonSource.lean) and [imperative refinement](../monographs/special-functions/lean/CoupledPythonRefinement.lean) | 35 | [Names and source lines](../monographs/special-functions/formalization/Block19/declarations.json) |
-| 20 | [Interpreter](../monographs/special-functions/lean/CoupledExpressionSemantics.lean), [source expressions](../monographs/special-functions/lean/CoupledSourceExpressions.lean) and [lowering proof](../monographs/special-functions/lean/CoupledExpressionRefinement.lean) | 19 | [Names and source lines](../monographs/special-functions/formalization/Block20/declarations.json) |
+| 20 | [Interpreter](../monographs/special-functions/lean/CoupledExpressionSemantics.lean), [source expressions](../monographs/special-functions/lean/CoupledSourceExpressions.lean), and [lowering proof](../monographs/special-functions/lean/CoupledExpressionRefinement.lean) | 19 | [Names and source lines](../monographs/special-functions/formalization/Block20/declarations.json) |
 
 ## Read the evidence with the source
 
@@ -65,7 +65,7 @@ availability and successful compilation remain separate questions.
 Blocks 18 to 20 prove typed results, source-bound operational refinement including
 exact dictionaries and modeled errors, and selected arithmetic lowering against
 a typed interpreter. Actual Python correctness remains conditional on AST
-extraction, the statement/control template and standard primitive semantics.
+extraction, the statement/control template, and standard primitive semantics.
 This is not a verified general Python compiler or CPython implementation.
 Other analytic regions and ordinary type convergence retain their recorded
 conditions. Consult the [remaining-work inventory](../monographs/special-functions/formalization/Block20/REMAINING_WORK.md)

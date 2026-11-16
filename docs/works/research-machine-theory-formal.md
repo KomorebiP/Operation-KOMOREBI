@@ -12,7 +12,7 @@ The Block 15 Lean development for machine-theory structures.
 
 ## Before you start
 
-**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+**Suggested background:** Read the problem statement, recorded scope, and open questions first. The program's definitions determine its subject prerequisites.
 
 **Recorded results and limits:** Earlier Block 15 checkpoint covers 23/27 selected results. The later Reviewed Mathematical Core admission covers 27/27 in a different source edition.
 

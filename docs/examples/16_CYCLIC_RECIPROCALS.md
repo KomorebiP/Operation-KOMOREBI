@@ -50,7 +50,7 @@ an identity at arbitrary complex inputs.
 
 ## Select coefficients by residue class
 
-Keep exponents congruent to $0$, $1$ and $2$ modulo three:
+Keep exponents congruent to $0$, $1$, and $2$ modulo three:
 
 ```math
 P_0B_{<6}=1+z^3,\qquad P_1B_{<6}=-z-z^4,\qquad P_2B_{<6}=0.

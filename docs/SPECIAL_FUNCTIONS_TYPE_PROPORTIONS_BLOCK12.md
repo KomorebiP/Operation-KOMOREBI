@@ -9,7 +9,7 @@ Existence of those ordinary limits is not asserted unconditionally.
 
 The addition has 26 theorem declarations, for 299 registered names.
 All 51 fresh verification steps pass across twelve coupled modules, with
-260 fresh axiom audits, twelve kernel replays, four expected rejections and
+260 fresh axiom audits, twelve kernel replays, four expected rejections, and
 a positive interface fixture. The finite core's 39-name evidence is inherited;
 pinned Mathlib is cached, not freshly rebuilt or replayed. Review is self-review.
 
@@ -20,7 +20,7 @@ The [report](../monographs/special-functions/formalization/Block12/REPORT.md),
 [I/O inventory](../monographs/special-functions/formalization/Block12/IO_MANIFEST.json)
 and [receipt](../monographs/special-functions/formalization/Block12/evidence/receipt.json)
 bind the actual proof and replay. Formal I/O has 44 inputs, 52 packaged
-outputs, twelve generated objects and 29 staging copies. The separately
+outputs, twelve generated objects, and 29 staging copies. The separately
 bound remaining-work assessment uses twenty inputs and two outputs.
 
 Use `tools/verify_coupled_type_proportions.py` under Special Functions,
@@ -30,7 +30,7 @@ no network request. [Live continuation](../monographs/special-functions/CONTINUE
 gives the next exact target; [remaining work](../monographs/special-functions/formalization/Block12/REMAINING_WORK.md)
 retains the source-mapped backlog.
 
-The registered F.1-F.3, G.1 and guarded G.2 contracts are complete.
+The registered F.1-F.3, G.1, and guarded G.2 contracts are complete.
 Ancillary F scalar identities, H.1 operator classification, I-J resolution
 and certified-evaluator refinement, and broader A-E analytic coverage remain.
 No whole-book completion percentage is established. Source editions,

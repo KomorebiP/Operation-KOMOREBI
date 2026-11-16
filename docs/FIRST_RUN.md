@@ -8,7 +8,7 @@ All software remains beta and work in progress.
 
 For a first run that needs no library installation, use the
 [three standalone demonstrations](DEMONSTRATIONS.md). They connect exact
-calculations to their papers, proofs and recorded Lean coverage.
+calculations to their papers, proofs, and recorded Lean coverage.
 
 For the calculations before the code, use the [hand-worked examples](HAND_WORKED_EXAMPLES.md).
 The [packet example](examples/01_PACKETS.md) and [coordinate example](examples/03_COORDINATES.md)
@@ -63,7 +63,7 @@ explains their assumptions and optional dependencies.
 
 Use a Linux x86-64 environment with LP64 and 64-bit GMP limbs. On Windows,
 run these commands inside the Linux/WSL terminal, not PowerShell. Install a
-C11 compiler, CMake 3.23 or newer, a build tool and GMP development files using
+C11 compiler, CMake 3.23 or newer, a build tool, and GMP development files using
 that Linux distribution's package manager.
 
 ```bash
@@ -84,7 +84,7 @@ y (80 bits)  = 3.10000e1
 
 Both objects hold the integer 31 exactly at different binary precisions. Read
 the [complete example](https://github.com/KomorebiP/polyphase-float/blob/main/examples/basic.c)
-for initialization, error handling and cleanup. Follow
+for initialization, error handling, and cleanup. Follow
 [Building](https://github.com/KomorebiP/polyphase-float/blob/main/docs/BUILDING.md)
 for installation and use in an application.
 
@@ -96,6 +96,6 @@ for installation and use in an application.
 | `py -3.12` is unavailable | Select an installed supported Python minor or install it before creating the environment. |
 | GMP cannot be found | Install development headers and the library for the Linux compiler and architecture in use. |
 | A command is interpreted as PowerShell syntax | The Polyphase commands belong in a Linux shell. |
-| Output differs or an assertion fails | Keep the command, source revision and error output. Check the library's support instructions before relying on the result. |
+| Output differs or an assertion fails | Keep the command, source revision, and error output. Check the library's support instructions before relying on the result. |
 
 [Reading routes](READING_ROUTES.md) · [Software guide](LIBRARIES.md) · [Verification](VERIFICATION.md)

@@ -10,7 +10,7 @@ Solve the real system
 =\begin{pmatrix}5\\11\end{pmatrix}.
 ```
 
-Here each block is a scalar: $A=2$, $B=1$, $C=3$ and $D=4$.
+Here each block is a scalar: $A=2$, $B=1$, $C=3$, and $D=4$.
 
 ## Eliminate the first unknown
 

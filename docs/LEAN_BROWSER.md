@@ -10,7 +10,7 @@ file in the URL. The former `lean/playground.html` address redirects to the same
 workspace; the Lean source index and source actions use this local compiler.
 
 The picker offers 19 prepared workspaces across eleven existing reading editions:
-Papers I, II, III, VII, IX, X, XI and XII, Proof Path Theory, Komorebi Space and
+Papers I, II, III, VII, IX, X, XI, and XII, Proof Path Theory, Komorebi Space, and
 Special Functions.
 
 Paper I adds its original basic algebra checks and complete projector-calculus
@@ -31,12 +31,12 @@ remain Lean errors. The unchanged basic and projector-core sources passed actual
 browser checks; appending a false equality to the core produced a normal `rfl`
 error. No new compiler binary or library artifact is required.
 The [recorded browser checks](../verification/browser-lean/paper-i-import-profile-2026-11-04.json)
-bind these observations to the profile, original sources and adapter files.
+bind these observations to the profile, original sources, and adapter files.
 The complete retained files are listed in
 `tools/lean_workspaces.py`; the picker groups them by reading edition. Recovery
 also compiles its actual local `ProofPath.Compression` import. These are experiments in the browser
 environment, not replays of every retained Lake environment or the full reading
-collection. Original source bytes, receipts and verification labels
+collection. Original source bytes, receipts, and verification labels
 are unchanged. Unsupported imports fail.
 
 Edited workspace drafts are saved in the tab's session storage, when available,
@@ -64,19 +64,19 @@ its size and SHA-256, reads its ZIP directory without filesystem extraction, and
 checks every requested source against the individual receipt-bound hash and size.
 Dependencies cannot cross reading-edition ownership. Original downloads use the
 exact extracted bytes, including any BOM or CRLF; only the editor normalizes text.
-`catalog.json` records each source route, input identity and compatibility source.
+`catalog.json` records each source route, input identity, and compatibility source.
 
 Some missing Mathlib modules can be compiled from their original source on the
 reader's device. A bounded allowlist is extracted from the checksum-verified
 Mathlib source archive at the compiler-matched revision. Each source retains its
-copyright header, exact bytes, upstream link, revision, size and SHA-256. The
+copyright header, exact bytes, upstream link, revision, size, and SHA-256. The
 catalog lists these separately from the receipt-bound paper sources and orders
 their dependencies first. Library sources and retained sources share a single
 import order: each library is compiled before the first file that imports it,
 after earlier independent project dependencies. This avoids an observed runtime
 trap when the positivity sources were loaded before the unrelated quantum
 arithmetic and Fourier modules. The order is recomputed from the original import
-graph during site verification; duplicate, missing and invalid steps are rejected.
+graph during site verification; duplicate, missing, and invalid steps are rejected.
 The browser checks their bytes and compiles each
 library module with the same syntax check and module-export wrapper used for
 local dependencies. A failed library check stops the workspace. Library source
@@ -133,8 +133,8 @@ main. Pack binaries and provenance JSON stay outside the Pages artifact.
 Proof Path's Compression and Recovery workspaces reuse those same 298 packs
 and add 62 qualified module triplets from immutable asset commit
 `d91c4cd35509edc4e57bd19ee427bf4a36660ce2`. Both use one shared library manifest;
-their source files, compatibility helper and checking order remain separate.
-SOURCE.json records every remote URL, size and SHA-256, plus local metadata and
+their source files, compatibility helper, and checking order remain separate.
+SOURCE.json records every remote URL, size, and SHA-256, plus local metadata and
 input identities. The final site checker verifies these records and enforces
 the 1 GiB Pages publication limit.
 
@@ -167,7 +167,7 @@ The pinned binary routes exception-aware indirect calls through JavaScript,
 which exhausted the browser stack on the retained Special Functions
 `BrowserCoreLocal.lean`. The adapter now moves those calls into a small Wasm
 module, sharing the compiler's original function table. All original function
-indices, bodies and table entries remain unchanged. The original start function
+indices, bodies, and table entries remain unchanged. The original start function
 runs after the native stack helpers are bound, before Emscripten initialization.
 The unchanged Special Functions file completed with no diagnostics in the
 browser after this change. Larger sources can still exceed runtime limits.
@@ -213,7 +213,7 @@ workspaces retain their warm compiler. Warnings remain visible;
 Runtime failures identify the file being checked and retain earlier completed
 results, without giving the interrupted workspace a successful result.
 
-Drafts saved across the browser-isolation reload include module, path and source
+Drafts saved across the browser-isolation reload include module, path, and source
 role identities. They are matched by identity if the checking order changes.
 An older or mismatched draft is kept in session storage and offered as a download,
 without applying its text to different files or automatically running it.
@@ -234,7 +234,7 @@ and is not the complete upstream umbrella. Both generated sources are visible
 in the file picker and downloadable. Missing tactics and other APIs still fail.
 
 Unit tests cover source identity, runtime tampering, pack roundtrips, source
-routing, module wrappers and result states. Browser validation must also check
+routing, module wrappers, and result states. Browser validation must also check
 the original workspaces, a valid edit, a false proof, malformed syntax, `sorry`,
 dependency changes, Stop/restart, the setup reload, and a narrow viewport.
 
@@ -242,7 +242,7 @@ dependency changes, Stop/restart, the setup reload, and a narrow viewport.
 
 The optional “Support syntax defined in this file” checkbox selects a single
 synchronous frontend pass. It parses and elaborates commands in order, using
-the evolving namespace, options, open declarations and parser environment.
+the evolving namespace, options, open declarations, and parser environment.
 This supports commands and scoped notation declared earlier in the same file.
 The default checker remains the existing compiler plus separate syntax probe.
 
@@ -261,7 +261,7 @@ parser and elaboration messages are copied back with their source coordinates.
 The browser preloads available libraries and invokes the transport exactly
 once per source, with no retry after execution. A fresh random nonce identifies
 distinct started and completed messages. A result needs the exact completed
-message, successful runtime completion and no errors. The frontend consumes
+message, successful runtime completion, and no errors. The frontend consumes
 already completed command snapshots, including all descendants and both reported
 and unreported diagnostics. It checks readiness before reading any task, rejects
 cancelled or fatal snapshots, and bounds both visits and the pending frontier to
@@ -271,10 +271,10 @@ can retain the previous environment. Tasks are cleared only after these checks.
 Small nonce-named transport helpers keep the generated driver within the browser's
 elaboration stack limit and stay outside the source's exact import environment.
 
-Unfinished tasks, early terminal commands and active asynchronous scopes are
-rejected. Literal `set_option Elab.async true` forms in commands, terms and tactics
+Unfinished tasks, early terminal commands, and active asynchronous scopes are
+rejected. Literal `set_option Elab.async true` forms in commands, terms, and tactics
 are rejected before elaboration, including scoped forms that restore their options
-before the next command. Comments, strings and quoted syntax do not trigger this
+before the next command. Comments, strings, and quoted syntax do not trigger this
 syntax check. Macro-generated options and arbitrary metaprogram option changes are
 not comprehensively observed by that check; task and diagnostic validation still
 applies to every executed command. Both checking
@@ -287,7 +287,7 @@ Every experimental Run starts a fresh worker and disposes it on completion,
 failure or Stop. Imported environments use leaked compacted regions in this
 fork, so reusing these environments across repeated runs exhausted memory in
 testing. Large dependency chains can still exhaust memory within one run.
-The page owns the wrapper, Wasm and glue Blob URLs and revokes them when the
+The page owns the wrapper, Wasm, and glue Blob URLs and revokes them when the
 runtime closes. Idle disposal asks the worker to terminate its pthread pool,
 with a 100 ms hard-termination fallback. Stop during startup or an active request
 terminates immediately; fatal and incomplete checks also force termination.
@@ -307,7 +307,7 @@ Copy one case's `source` into a single-file prepared workspace with experimental
 checking enabled and run it with a fresh compiler. Check both `expected_outcome`
 and the literal `expected_marker` in Lean's response. The corpus includes hidden
 reported errors, descendant warnings, unfinished/cancelled/fatal tasks, bounds,
-scoped options, import isolation and a filesystem counter that detects replay.
+scoped options, import isolation, and a filesystem counter that detects replay.
 These are browser fixtures, not a claim that the JavaScript unit suite executes Lean.
 
 ## Extending coverage
@@ -336,7 +336,7 @@ Experimental checking still starts fresh and retains all existing completion gua
 Library loading overlaps up to two encoded pack downloads. Each prefetchable pack
 is at most 8 MiB, so the worker retains at most 16 MiB of those encoded bodies,
 including completed lookahead. Unknown or larger sizes use an exclusive serial
-fallback. SHA verification, decompression and filesystem installation stay serial,
+fallback. SHA verification, decompression, and filesystem installation stay serial,
 in manifest order. A download or installation failure aborts and drains pending
 prefetch work. Stop still terminates the active compiler immediately. This budget
 does not include decoded libraries, the Wasm heap, or browser/network internals;
@@ -349,14 +349,14 @@ service-worker upstream requests may finish caching after a client is stopped.
    Its Mathlib-layer packs contain about 24.5 MiB instead of 110.9 MiB in the
    original shared packs. Each new pack is addressed by its compressed SHA-256.
    The independently pinned `manifests/lean-module-pilot.json` binds original
-   compressed inputs, original member tables and every decoded artifact hash.
+   compressed inputs, original member tables, and every decoded artifact hash.
    Original-input qualification stages one original pack at a time through
    temporary files and compresses one module at a time. Generated-output checks
    reject altered decoded bytes even after output hashes are recomputed.
    The independently pinned `manifests/lean-module-pilot-delivery.json` freezes
    the already qualified publication bytes, avoiding gzip differences across
    Python/zlib versions. Build and site verification bind every remote URL,
-   size, checksum, member table and delivery total to these receipts. The browser
+   size, checksum, member table, and delivery total to these receipts. The browser
    verifies the frozen compressed hashes before inflation and installation.
    Standard libraries retain their original delivery; experimental frontend mode
    and expanded edited imports can still use the broad original Mathlib layer.
@@ -379,7 +379,7 @@ service-worker upstream requests may finish caching after a client is stopped.
    freezes the output pack tables and encoded hashes. Preparation rechecks every
    original member without recompressing the frozen extension. Both workspaces
    share `workspaces/proof-path-compression.json`, and the verifier pins that
-   alias, each workspace's module set, all new asset records and reuse totals.
+   alias, each workspace's module set, all new asset records, and reuse totals.
    No extension binaries or receipt JSON are copied into Pages.
    Generated JSON uses LF endings and standard-root inventories use POSIX-path
    ordering, so Windows and Linux produce the same metadata bodies.
@@ -417,23 +417,23 @@ service-worker upstream requests may finish caching after a client is stopped.
 
 2. **Checked module artifacts before parallel compilers.** Qualify complete
    export/import round trips in a fresh compiler, including corrupted parts,
-   stale generations, edits, warnings, initializers and Stop. The fixed Proof Path
+   stale generations, edits, warnings, initializers, and Stop. The fixed Proof Path
    qualification below exercises a real retained-source dependency and consumer.
    The separate Conventions diagnostic also exercises a three-module handoff;
    it closes its receiver after the selected final target. Reusing that receiver
    for an extra check failed in earlier trials. Cache authorization must come from successful checks,
    not just matching byte hashes. Bind source, module role, ordered imports,
-   transitive dependency receipts, compiler/library versions and guard policy;
+   transitive dependency receipts, compiler/library versions, and guard policy;
    invalidate edited nodes and every dependent module.
 3. **Memory-budgeted independent branches.** Keep one heavy compiler active by
    default. Only independent modules in the dependency graph are candidates for
    separate workers, after artifact interchange and aggregate memory limits are
    validated. The Quantum/Finite/Semantic chain is inherently dependent. Fresh
    imports can repeat initialization effects and reset mutable state; arbitrary
-   command splitting does not preserve parser, namespace and environment state.
+   command splitting does not preserve parser, namespace, and environment state.
 4. **Compiler compatibility and larger individual modules.** Add missing
    compiler-matched artifacts and qualify asynchronous elaboration separately,
-   preserving false-proof, kernel-error, cancellation and completion controls.
+   preserving false-proof, kernel-error, cancellation, and completion controls.
    Scheduling cannot make a single module fit if its own environment exceeds the
    browser runtime's memory capacity. A compatible larger-memory compiler build
    is a separate investigation.
@@ -462,7 +462,7 @@ python -B tools/lean_checkpoint_probe.py --runtime .reader-build/lean-wasm --out
 Open `http://127.0.0.1:8000/lean/browser/checkpoint.html` and press **Run transfer
 controls**. The local server supplies the isolation headers needed by the pinned
 pthread compiler. The generated graph records every adapter file and the exact
-runtime, frontend, wrapper, original sources, library manifests and native runtime
+runtime, frontend, wrapper, original sources, library manifests, and native runtime
 pair. Node must be available; `--node /path/to/node` selects an explicit executable.
 The output directory is never overwritten and cannot be inside the runtime.
 
@@ -490,17 +490,17 @@ starts a fresh producer. Source and import failures never trigger source retries
 
 For the generated graph, `node tools/test_lean_checkpoint_probe.mjs
 .reader-build/checkpoint-trial` tests receipt issuance, tampering, competing
-installs, cancellation, owned buffers and injected filesystem failures with mocked
+installs, cancellation, owned buffers, and injected filesystem failures with mocked
 native compilation. These checks do not run Lean; the browser control above is
 separate. CI builds and checks this probe but does not publish it into Pages.
 Imports in fresh processes can execute initializers again. Persistent artifacts,
-arbitrary edited producers, initializer effects, reusable receiver processes and parallel compilers still need
+arbitrary edited producers, initializer effects, reusable receiver processes, and parallel compilers still need
 separate qualification.
 
 ### Reproducing the three-module Conventions diagnostic
 
 `tools/lean_checkpoint_heavy_probe.py` builds a separate fixed-source developer
-diagnostic. It checks original `QuantumArithmeticBridge`, `FiniteFourier` and
+diagnostic. It checks original `QuantumArithmeticBridge`, `FiniteFourier`, and
 `SemanticBridge` once in producer A, exports all fifteen parts, closes A, and
 installs the artifacts into fresh receiver B. B checks the pinned original
 `Mathlib.Tactic.Positivity.Finset` and `Mathlib.Tactic.Positivity` sources followed
@@ -545,8 +545,8 @@ does not establish the error's cause or rule out initialization effects. Finishi
 the receiver at its actual target is a bounded workaround, not a general compiler
 call limit or state-continuity claim. See the
 [recorded observations](../verification/browser-lean/conventions-checkpoint-2026-11-04.json)
-for graph identities, successful controls and retained failures. Arbitrary edited
-producers, persistent artifact caching and parallel compilers remain unqualified.
+for graph identities, successful controls, and retained failures. Arbitrary edited
+producers, persistent artifact caching, and parallel compilers remain unqualified.
 
 ### Adding a published workspace
 

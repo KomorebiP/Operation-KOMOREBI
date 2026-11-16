@@ -54,7 +54,7 @@ has a reduced denominator that is a power of two. Since ten has a factor of
 five, $1/10$ has no finite binary expansion at any finite precision.
 
 Precision is the capacity of the representation. Accuracy depends on the
-value, the operation and its error.
+value, the operation, and its error.
 
 ## Spacing is local
 
@@ -73,7 +73,7 @@ stored-minus-exact error is $+1/8$.
 **Continue reading:** [Dyadic rational](../GLOSSARY.md#dyadic-rational),
 [ULP](../GLOSSARY.md#ulp), and
 [Polyphase Float's numerical glossary](https://github.com/KomorebiP/polyphase-float/blob/main/docs/manual/glossary.md).
-Library range behavior, error sentinels and diagnostic flags have additional
+Library range behavior, error sentinels, and diagnostic flags have additional
 contracts beyond this small rounding model.
 
 <!-- learning-navigation -->

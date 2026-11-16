@@ -236,7 +236,7 @@ come from the stated density matrices.
 If a known \(t>0\) was applied first, ideal tomography reconstructs
 \(\mathcal D_t(\rho)\), and division of its off-diagonal entries by \(t\)
 recovers the original entries algebraically. Measurement error in those
-entries is amplified by \(1/t\). At \(t=0\), division is impossible and
+entries is amplified by \(1/t\). At \(t=0\), division is impossible, and
 the two-state obstruction in section 3 applies.
 
 Write \(|+\rangle=(|0\rangle+|1\rangle)/\sqrt2\). This algebraic inverse

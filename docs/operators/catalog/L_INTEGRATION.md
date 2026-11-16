@@ -236,7 +236,7 @@ D^r\!\left(\sum_jw_jF_j\right)(x)=\sum_jw_jD^rF_j(x)
 \phi_*(\rho\,1_{[a,b]}dx)=\frac{\rho}{|s|}\,1_{\phi([a,b])}dy,\qquad\phi(x)=sx+t
 ```
 
-**Scope.** $a\le b$, $\rho\ge0$ and $s\ne0$. The image interval is ordered increasingly. At $s=0$, the pushforward is an atom, not this density.
+**Scope.** $a\le b$, $\rho\ge0$, and $s\ne0$. The image interval is ordered increasingly. At $s=0$, the pushforward is an atom, not this density.
 
 **Keep in view.** Absolute slope is required for a positive measure. Oriented integration is a different convention.
 

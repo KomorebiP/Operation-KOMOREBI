@@ -163,8 +163,8 @@ def guide_model(reader, component):
         from physics_discovery import guide_paths,reading_summary
         first,study,evidence=guide_paths()
         evidence.append(step('Evidence and recorded limits',overview+'#evidence','Keep the recorded formal scope and remaining physical obligations with each result.'))
-        summary=reading_summary()+'. Read the treatments, visual atlases and verification companions together.'
-        background='Begin with linear algebra, complex inner products and finite sums. Fourier series and operator domains enter the continuum treatment; later parts state their geometric and physical assumptions.'
+        summary=reading_summary()+'. Read the treatments, visual atlases, and verification companions together.'
+        background='Begin with linear algebra, complex inner products, and finite sums. Fourier series and operator domains enter the continuum treatment; later parts state their geometric and physical assumptions.'
     return dict(work=work,url=guide_url(work),title=meta['title'],group=meta['group'],
         summary=summary,
         question=intro['question'] if intro else None,limits=intro['limits'] if intro else meta['boundary'],

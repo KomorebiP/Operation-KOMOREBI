@@ -14,7 +14,7 @@ Python experiments for interacting agent models.
 
 **Suggested background:** Basic programming and familiarity with the stated data and evaluation method. Read the input limits and acceptance criteria before interpreting output.
 
-**Recorded results and limits:** Executed illustrative two-agent model with supplied schedule, sensor semantics and reset rule. No learned policy or general self-improvement result.
+**Recorded results and limits:** Executed illustrative two-agent model with supplied schedule, sensor semantics, and reset rule. No learned policy or general self-improvement result.
 
 **Remaining work:** Validate any learned or adaptive replacement against a preregistered baseline. Retain the supplied-rule demonstration as its own experiment.
 

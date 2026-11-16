@@ -415,7 +415,7 @@ class ReadingDocuments:
             routes = [
                 ('Written proofs', 'Written proofs and source files', 'written-proofs', 'Written arguments and available manuscript files for '+title),
                 ('Lean', 'Lean coverage and sources', 'lean', lean+'. '+assessment['scope']),
-                ('Code', 'Code and run instructions', 'code', 'Available code, scripts and software instructions for '+title)]
+                ('Code', 'Code and run instructions', 'code', 'Available code, scripts, and software instructions for '+title)]
             if any(work in t['works'] for t in self.learning.get('learning_topics', [])):
                 routes.append(('Examples', 'Worked examples', 'worked-examples-for-this-work', 'Introductory calculations linked to '+title))
             for kind, label, fragment, text in routes:

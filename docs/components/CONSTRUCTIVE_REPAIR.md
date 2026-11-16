@@ -52,7 +52,7 @@ The following checks used the committed source at [ef52463dbe47](https://github.
 |---|---|---|
 | Offline wheel build | Passed | Local setuptools 84.1.0 and wheel 0.48.0. No dependency download. |
 | Wheel/source correspondence | Passed, 7 runtime Python files | Every runtime member matches its committed source bytes. |
-| Engine regression suite | 134 passed | Existing certificate, rational-menu and branch-menu tests. |
+| Engine regression suite | 134 passed | Existing certificate, rational-menu, and branch-menu tests. |
 | Release regression suite | 95 passed, 3 skipped, 2 errors out of 100 discovered | The two errors occurred during symlink fixture creation, before the checker assertions. The three skips are explicitly POSIX/Linux-specific. **This suite did not pass.** |
 | Isolated installed-wheel acceptance | Passed, 72 cases / 369 probe checks / 20 platform checks | Offline installation, API and CLI use, fresh solutions and retained certificates, Unicode paths, overwrite prevention, resource limits, and rejection of malformed inputs and corrupt certificates. |
 | New Lean replay | Not run | Existing compiler and proof records retain their original scope and date. |

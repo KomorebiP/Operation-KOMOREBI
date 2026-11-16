@@ -115,7 +115,7 @@ if(root) {
     try{if(!navigator.clipboard?.writeText)throw new Error();await navigator.clipboard.writeText(url.href);el('share-fallback').hidden=true;say('Experiment link copied. It includes both scale sets and inspection settings.');}
     catch{el('share-fallback').hidden=false;el('share-link').focus();el('share-link').select();say('Copy the experiment link from the field below.');}
   });
-  el('csv').addEventListener('click',()=>{const blob=new Blob([coefficientCSV(state)],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='coupled-function-coefficients.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);say('Downloaded the exact coefficients, parameters and bound.');});
+  el('csv').addEventListener('click',()=>{const blob=new Blob([coefficientCSV(state)],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='coupled-function-coefficients.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);say('Downloaded the exact coefficients, parameters, and bound.');});
   window.addEventListener('hashchange',()=>{if(location.hash.startsWith('#sf=')){try{load(decodeState(location.hash),'Loaded the shared experiment.');}catch(e){error('Could not load experiment: '+e.message);}}});
   window.addEventListener('resize',()=>{if(current)draw();});
   try{const linked=location.hash.startsWith('#sf=');load(linked?decodeState(location.hash):defaultState(),linked?'Loaded the shared experiment.':'Ready. Change a scale or choose a question.');}

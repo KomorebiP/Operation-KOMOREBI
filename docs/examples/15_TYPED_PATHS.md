@@ -22,7 +22,7 @@ The other path $W\xrightarrow B V\xrightarrow A W$ has matrix $AB=(1)=I_W$.
 These products act on different spaces. It would be a type error to subtract
 them as though they were square matrices of the same size.
 
-For $x=(2,3)^{\mathsf T}$, $Ax=5$ and $B(Ax)=(5,0)^{\mathsf T}$.
+For $x=(2,3)^{\mathsf T}$, $Ax=5$, and $B(Ax)=(5,0)^{\mathsf T}$.
 For a scalar $s$, $A(Bs)=s$. Thus $B$ is a right inverse of $A$, while $A$
 is a left inverse of $B$.
 

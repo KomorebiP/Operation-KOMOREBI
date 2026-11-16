@@ -91,7 +91,7 @@ PACKET_SOURCES</section>
 <div class="lab-residual"><span>Squared residual norm · Σrᵢ²</span><output id="signal-energy">0</output></div></div>
 <p class="lab-verdict" id="signal-status" role="status">All packets retained. Every sample is recovered.</p>
 <details class="lab-data"><summary>Inspect the values and original addresses</summary>
-<div class="table-scroll"><table><caption>Original, reconstructed and residual values</caption>
+<div class="table-scroll"><table><caption>Original, reconstructed, and residual values</caption>
 <thead><tr><th scope="col">Address</th><th scope="col">Original</th><th scope="col">Rebuilt</th><th scope="col">Residual</th></tr></thead><tbody id="signal-table"></tbody></table></div></details>
 </div></div>
 <details class="lab-reason"><summary>What changes when the packets get finer?</summary>

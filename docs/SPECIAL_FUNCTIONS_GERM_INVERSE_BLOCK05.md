@@ -16,12 +16,12 @@ part of the theorem.
 The bridge pads the odd series with zero even coefficients and constructs
 Mathlib's scalar formal multilinear series. Uniqueness of convergent Taylor
 representations gives coefficient equality. These are ordinary coefficients:
-degrees three, five and seven have sequence indices one, two and three.
+degrees three, five, and seven have sequence indices one, two, and three.
 The same bridge identifies every coefficient of arbitrary supplied Taylor
 objects representing a normalized analytic solution germ, resolving that
 remaining API obligation from Block04.
 
-- [Exact result, proof mechanism, verification and continuation](../monographs/special-functions/formalization/Block05/REPORT.md)
+- [Exact result, proof mechanism, verification, and continuation](../monographs/special-functions/formalization/Block05/REPORT.md)
 - [Production Lean source](../monographs/special-functions/lean/CoupledGermInverse.lean)
 - [Claim correspondence](../monographs/special-functions/formalization/Block05/CLAIM_MAP.json)
 - [All 13 names and source hash](../monographs/special-functions/formalization/Block05/declarations.json)
@@ -40,7 +40,7 @@ growth remains a separate obligation. This block proves neither a stable
 numerical inverse near D=0 nor an inverse for unlabeled components. The old
 exceptional example remains a finite-jet collision.
 
-Earlier sources, reading PDFs and proof evidence are preserved. The earlier
+Earlier sources, reading PDFs, and proof evidence are preserved. The earlier
 [F.1 guide](SPECIAL_FUNCTIONS_UNIQUENESS_BLOCK04.md) retains its dated scope.
 
 [Return to Special Functions](works/monographs-special-functions.md) ·

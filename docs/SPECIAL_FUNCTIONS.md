@@ -2,7 +2,7 @@
 
 **Komorebi P.**
 
-Explore five families built from contraction, arithmetic, prime-sieve measures and rotation orbits. Start with a worked calculation, open the current books in the site reader, or follow a result into its written proof and formal companion.
+Explore five families built from contraction, arithmetic, prime-sieve measures, and rotation orbits. Start with a worked calculation, open the current books in the site reader, or follow a result into its written proof and formal companion.
 
 [Choose a guided reading path](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/start.html) · [Read the monograph online](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/index.html) · [Explore the visual lessons](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/atlas/index.html) · [Run the coupled-function lab](https://KomorebiP.github.io/Operation-KOMOREBI/special-functions-lab.html) · [Work and evidence](works/monographs-special-functions.md)
 
@@ -15,11 +15,11 @@ U'(z)=1+U(qz)V(rz),\qquad
 V'(z)=1+U(az)V(bz),\qquad U(0)=V(0)=0.
 ```
 
-Both functions start with slope one. Their later coefficients distinguish the four scale addresses. The [coupled chapter](../monographs/special-functions/monograph/sections_v11/coupled_visual.tex) develops existence, growth and parameter recovery; its extended arguments are collected in the monograph's proof appendices.
+Both functions start with slope one. Their later coefficients distinguish the four scale addresses. The [coupled chapter](../monographs/special-functions/monograph/sections_v11/coupled_visual.tex) develops existence, growth, and parameter recovery; its extended arguments are collected in the monograph's proof appendices.
 
 <figure>
 <img src="../monographs/special-functions/coupled_atlas/figures_v11/coupled_02_functions.png" width="1820" height="884" alt="Two panels compare U and V for scales 1/3, 2/3, 1/2 and 3/4. Both begin with slope one. On the positive real axis V grows faster than U; the second panel compares their amplification relative to the initial slope.">
-<figcaption>Original coupled-family plate for q = 1/3, r = 2/3, a = 1/2 and b = 3/4. These source curves use a numerical Taylor truncation over the larger displayed interval. The browser lab below uses the unit disk and an explicit local tail envelope.</figcaption>
+<figcaption>Original coupled-family plate for q = 1/3, r = 2/3, a = 1/2, and b = 3/4. These source curves use a numerical Taylor truncation over the larger displayed interval. The browser lab below uses the unit disk and an explicit local tail envelope.</figcaption>
 </figure>
 
 <a id="coupled-lab"></a>
@@ -49,9 +49,9 @@ For a shorter first calculation, work through [the scalar contracted-feedback re
 
 | Volume | What it offers | Read here |
 |---|---|---|
-| Special Functions | The current 134-page monograph: five families, seven chapters and ten proof appendices | [Read online](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/index.html) · [Open PDF](../monographs/special-functions/books/Special_Functions.pdf) |
+| Special Functions | The current 134-page monograph: five families, seven chapters, and ten proof appendices | [Read online](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/index.html) · [Open PDF](../monographs/special-functions/books/Special_Functions.pdf) |
 | Expanded Visual Guide | The current 180-page visual volume, with 171 worked lessons and associated plates across the eight-paper series | [Read visual lessons online](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/atlas/index.html) · [Open PDF](../monographs/special-functions/books/Expanded_Visual_Guide.pdf) |
-| Resolution and Coupled Atlas | Nineteen pages and fourteen computed plates on coupled functions, growth, recovery and finite resolution | [Open coupled atlas](../monographs/special-functions/books/Resolution_and_Coupled_Atlas.pdf) |
+| Resolution and Coupled Atlas | Nineteen pages and fourteen computed plates on coupled functions, growth, recovery, and finite resolution | [Open coupled atlas](../monographs/special-functions/books/Resolution_and_Coupled_Atlas.pdf) |
 | Packet Realization Core | The preserved 38-page consolidated core and correction register for the original series | [Open core and corrections](../monographs/special-functions/series/Komorebi_Special_Functions_Consolidated_Manuscript_v0.1.pdf) |
 | Original Series Collected Reader | The core followed by all eight original papers, assembled into 469 pages | [Open collected reader](../monographs/special-functions/series/Komorebi_Special_Functions_Complete_Reader_v0.1.pdf) |
 
@@ -66,22 +66,22 @@ The expanded visual lessons preserve the original eight-paper series. For the ne
 | Family | Central question | Begin with |
 |---|---|---|
 | Contracted nonlinear feedback | How do two contracted arguments determine coefficients and entire growth? | [Defining equation and recurrence](examples/24_CONTRACTED_FEEDBACK.md), then [Chapter 1](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/contracted-feedback.html) |
-| Arithmetic at complex depth | How do arithmetic weights produce an entire depth parameter, shift formulas and positive kernels? | [Chapter 2](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/arithmetic-depth.html), with its arithmetic and spectral constructions |
+| Arithmetic at complex depth | How do arithmetic weights produce an entire depth parameter, shift formulas, and positive kernels? | [Chapter 2](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/arithmetic-depth.html), with its arithmetic and spectral constructions |
 | Prime sieves and signed measures | When do arithmetic moments give positive orthogonal-polynomial systems, and when does positivity fail at finer resolution? | [Chapter 3](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/prime-sieves.html), with its positivity and transport arguments |
 | Spectral functions of zero orbits | How does a rotation-invariant zero address lead to spectral zeta values and exact coefficients? | [Chapter 4](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/orbit-spectra.html), [Chapter 5](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/sequences-and-polyphase.html), and the [sequence plotting guide](demonstrations/SEQUENCE_SHAPES.md) |
-| Coupled contraction functions | What do interacting scales preserve about growth, local series and recovery of parameters? | [Chapter 6](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/coupled-contractions.html), the [coupled atlas](../monographs/special-functions/books/Resolution_and_Coupled_Atlas.pdf), and the [browser lab](#coupled-lab) |
+| Coupled contraction functions | What do interacting scales preserve about growth, local series, and recovery of parameters? | [Chapter 6](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/coupled-contractions.html), the [coupled atlas](../monographs/special-functions/books/Resolution_and_Coupled_Atlas.pdf), and the [browser lab](#coupled-lab) |
 
 The related [reciprocal sequence plots](https://KomorebiP.github.io/Operation-KOMOREBI/playground.html#sequence-growth) compare exact coefficients with factorial normalization. Their guide explains the relation to Paper IV and the sequence chapter; they are distinct from the coupled-function experiment.
 
 ## Follow a result into its evidence
 
-Use the [written proof map](../monographs/special-functions/monograph/sections/proof_map.tex) to locate the relevant argument and appendices. The [current formalization guide](SPECIAL_FUNCTIONS_SOURCE_EXPRESSIONS_BLOCK20.md) records the latest Lean scope, replay command and remaining work. The [source edition Lean status](../monographs/special-functions/LEAN_STATUS.md) preserves its earlier finite-core and first-block assessment.
+Use the [written proof map](../monographs/special-functions/monograph/sections/proof_map.tex) to locate the relevant argument and appendices. The [current formalization guide](SPECIAL_FUNCTIONS_SOURCE_EXPRESSIONS_BLOCK20.md) records the latest Lean scope, replay command, and remaining work. The [source edition Lean status](../monographs/special-functions/LEAN_STATUS.md) preserves its earlier finite-core and first-block assessment.
 
 Use the [maintained continuation checkpoint](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/monographs/special-functions/current/README.md) for current restart instructions. The parent continuation and release files preserve the imported edition; dated evidence retains its original source links.
 
-The coupled formalization covers the canonical entire solution, uniqueness, exact growth order, type bounds/proportions, rescaling, guarded recovery, scalar identities, local remainders, operator classification and mathematical evaluation/normalization contracts. Blocks 18 to 20 add typed evaluation results, a source-bound imperative model equivalent to the specification, and a typed expression interpreter that checks the selected arithmetic lowering. Successful modeled returns preserve the exact dictionary fields and actual-function bounds.
+The coupled formalization covers the canonical entire solution, uniqueness, exact growth order, type bounds/proportions, rescaling, guarded recovery, scalar identities, local remainders, operator classification, and mathematical evaluation/normalization contracts. Blocks 18 to 20 add typed evaluation results, a source-bound imperative model equivalent to the specification, and a typed expression interpreter that checks the selected arithmetic lowering. Successful modeled returns preserve the exact dictionary fields and actual-function bounds.
 
-The [Block20 report](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/monographs/special-functions/formalization/Block20/REPORT.md), [claim map](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/monographs/special-functions/formalization/Block20/CLAIM_MAP.json), [lowering proof](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/monographs/special-functions/lean/CoupledExpressionRefinement.lean) and [replay receipt](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/monographs/special-functions/formalization/Block20/evidence/receipt.json) bind the extension. Actual Python correctness remains conditional on AST extraction, the fixed statement/control template and standard Python/Fraction/library primitives. The full translator and CPython are not verified. Obligations in groups J, F, H, I and A through E remain open. Ordinary type convergence is conditional. The full monograph has not been formalized.
+The [Block20 report](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/monographs/special-functions/formalization/Block20/REPORT.md), [claim map](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/monographs/special-functions/formalization/Block20/CLAIM_MAP.json), [lowering proof](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/monographs/special-functions/lean/CoupledExpressionRefinement.lean) and [replay receipt](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/monographs/special-functions/formalization/Block20/evidence/receipt.json) bind the extension. Actual Python correctness remains conditional on AST extraction, the fixed statement/control template, and standard Python/Fraction/library primitives. The full translator and CPython are not verified. Obligations in groups J, F, H, I, and A through E remain open. Ordinary type convergence is conditional. The full monograph has not been formalized.
 
 The [edition guide](../monographs/special-functions/README.md) supplies build and replay commands. The [exact coupled-function checker](../monographs/special-functions/tools/check_coupled_exact.py) is a separate computational entry point. The [work page](works/monographs-special-functions.md#evidence) keeps these routes beside the recorded completion and confidence labels.
 

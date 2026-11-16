@@ -22,7 +22,7 @@ Only synthetic estimator execution is recorded. The actual Qwen and primary caus
 
 The hardware is an uncompiled interface skeleton with success tie-offs. No hardware qualification has been run.
 
-**Requirements for returning to the reading list:** Replace success tie-offs with real generation, certificate, dependency and fault inputs. Compile/simulate the RTL and retain meaningful rejection controls. Hardware performance requires separate measured evidence.
+**Requirements for returning to the reading list:** Replace success tie-offs with real generation, certificate, dependency, and fault inputs. Compile/simulate the RTL and retain meaningful rejection controls. Hardware performance requires separate measured evidence.
 
 [Work page: paper, proofs, Lean, and code](works/research-prism-1r.md) · [Preserved source](../research/prism-1r) · [Completion and evidence record](STATUS_CATALOG.md#research-prism-1r) · [Review and findings](SOUNDNESS_REVIEW_2026-10-27.md)
 

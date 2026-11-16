@@ -81,7 +81,7 @@ export_file("parabola.csv", "x,y\\n" + "".join(f"{a},{b}\\n" for a,b in zip(x,y)
 print("Created a Matplotlib figure and parabola.csv.")
 '''),
     'symbolic': dict(title='Calculate with SymPy', group='Calculations', packages=['sympy'],
-        description='Differentiate, integrate and factor a polynomial using exact symbolic expressions.',
+        description='Differentiate, integrate, and factor a polynomial using exact symbolic expressions.',
         expected='Polynomial: x**3 - 3*x + 2\nDerivative: 3*x**2 - 3\nIntegral on [0, 1]: 3/4\nFactorization: (x - 1)**2*(x + 2)\n',
         code='''import sympy as sp
 

@@ -12,9 +12,9 @@ A finite arithmetic-reconstruction block with explicit rejection controls.
 
 ## Before you start
 
-**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+**Suggested background:** Read the problem statement, recorded scope, and open questions first. The program's definitions determine its subject prerequisites.
 
-**Recorded results and limits:** Three positive Lean units and exact finite controls cover finite observation, filter budgets and a carry example. No global height mechanism.
+**Recorded results and limits:** Three positive Lean units and exact finite controls cover finite observation, filter budgets, and a carry example. No global height mechanism.
 
 **Remaining work:** Formulate and prove the next arithmetic comparison beyond the finite reconstruction class before making a global-height claim.
 

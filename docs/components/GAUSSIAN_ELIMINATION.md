@@ -17,7 +17,7 @@ The collection's page 2 supplies this map. Collection positions below are PDF pa
 | 5–32 | From Hidden Packets to Exact Memory | 4–31 / 4–31 |
 | 33–36 | Paper VI: Lean Guide, final edition | 25–28 / 24–27 |
 | 37–42 | Komorebi Math User Guide: Technical Manual, Block 36 | 731–736 / 661–666 |
-| 43–45 | Exact-arithmetic source notes: rational elimination, Bareiss and modular rank checks | Reflowed Markdown |
+| 43–45 | Exact-arithmetic source notes: rational elimination, Bareiss, and modular rank checks | Reflowed Markdown |
 
 The technical-manual excerpt identifies version **1.0.0b4**. Its historical results and counts describe that source edition.
 

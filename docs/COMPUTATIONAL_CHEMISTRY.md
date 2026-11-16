@@ -6,7 +6,7 @@ For the real, spin-free **three-spatial-orbital sector with two alpha and one
 beta electrons**, the result is precise: the nine-state Hamiltonian family
 has **21 independent parameters**, and **exactly three complete action
 vectors** identify every member. A fixed probe design, an exact rational
-decoder and rigorous error bounds accompany the proof.
+decoder, and rigorous error bounds accompany the proof.
 
 The question is how much of an electronic Hamiltonian can be recovered
 from its actions on a few known states. This project first answers that
@@ -15,7 +15,7 @@ error from the additional assumptions needed for a chemical calculation.
 
 > This closes a specified finite-family recovery problem. The molecular
 > example certifies arithmetic in a reduced H10 model. Novelty, approximation
-> error for the full molecule and a practical speed advantage remain open.
+> error for the full molecule, and a practical speed advantage remain open.
 
 [Start with notation and reading routes](https://KomorebiP.github.io/Operation-KOMOREBI/read/computational-chemistry/notation.html)
 · [Read the normal-form proof](https://KomorebiP.github.io/Operation-KOMOREBI/read/computational-chemistry/normal-form.html)
@@ -71,7 +71,7 @@ for every member of the family. Their rank and stability claims use exact
 integer and rational arithmetic, rather than a numerical rank threshold.
 
 The [complete theorem and certificate](https://KomorebiP.github.io/Operation-KOMOREBI/read/computational-chemistry/three-queries.html)
-give the basis order, minor and frame bound. The lower bound applies to
+give the basis order, minor, and frame bound. The lower bound applies to
 the integral-symmetry family and its positive-integral relaxation. Necessity
 for the smaller set of actually Coulomb-realizable molecules is unproved.
 
@@ -100,7 +100,7 @@ is exactly the condition \(C\succeq0\). This is a useful admissibility
 test. It does not prove that an arbitrary such tensor comes from actual
 orbitals interacting through the Coulomb potential.
 
-[Read the derivation, integral gauge and positivity statement](https://KomorebiP.github.io/Operation-KOMOREBI/read/computational-chemistry/normal-form.html).
+[Read the derivation, integral gauge, and positivity statement](https://KomorebiP.github.io/Operation-KOMOREBI/read/computational-chemistry/normal-form.html).
 
 ## Recovery with imperfect actions
 
@@ -142,7 +142,7 @@ roots are enclosed outward by rational bounds. These certificates are
 conditional on valid action and source error caps. The molecular example
 below measures its action cap independently.
 
-Zero noise, an inconsistent cache and a singleton compatible set are
+Zero noise, an inconsistent cache, and a singleton compatible set are
 handled explicitly. Positivity **existence** is distinct from a guarantee
 that **every** compatible operator has a positive-integral representative.
 Failing a sufficient all-compatible margin does not imply infeasibility.
@@ -152,7 +152,7 @@ also explain when the decoder returns an unresolved feasibility status.
 ## Information beyond total spin
 
 An exact example separates two operators that have the same three-probe
-cache, preserve the same total-spin operator and share the spectral interval
+cache, preserve the same total-spin operator, and share the spectral interval
 \([-1,1]\). One belongs to the positive-integral family; the other lies
 outside the integral-symmetry family.
 
@@ -170,14 +170,14 @@ strict information gain from integral structure even after spin conservation
 is supplied to the comparison class. It does not establish a runtime
 advantage over a method targeted at one observable.
 
-[Inspect the exact operators, fractions and error comparison](https://KomorebiP.github.io/Operation-KOMOREBI/read/computational-chemistry/spin-comparison.html).
+[Inspect the exact operators, fractions, and error comparison](https://KomorebiP.github.io/Operation-KOMOREBI/read/computational-chemistry/spin-comparison.html).
 
 ## A reduced model from the H10 integrals
 
 The arithmetic test starts from the stored H10 integral fixture: ten
 hydrogen atoms in a linear chain, with adjacent separation 1.4 angstroms,
 in the STO-3G basis. Spatial
-orbitals 0, 1 and 2 are frozen doubly occupied, orbitals 3, 4 and 5 are
+orbitals 0, 1, and 2 are frozen doubly occupied, orbitals 3, 4, and 5 are
 active, and orbitals 6 through 9 are empty. The active sector has two alpha
 and one beta electrons. Symmetry completion of the stored integrals is
 defined explicitly before evaluation.
@@ -185,8 +185,8 @@ defined explicitly before evaluation.
 The frozen-core formula agrees exactly with an embedded ladder-operator
 projection. Three binary64 actions are then compared against rational
 reference actions, including the error from converting the Hamiltonian to
-binary64. In the active-space formulas, orbitals 3, 4 and 5 are relabeled
-as 0, 1 and 2; the frozen occupations are implicit.
+binary64. In the active-space formulas, orbitals 3, 4, and 5 are relabeled
+as 0, 1, and 2; the frozen occupations are implicit.
 
 | Quantity | Checked result |
 |---|---|
@@ -215,7 +215,7 @@ The exact audit passed **82 named checks, covering 260 aggregated cases**.
 It compares all 27 integral generators with a separate full-Fock
 Jordan–Wigner construction, checks the normal-form identities and integral
 gauge, certifies the probe rank and frame bound, and exercises decoding,
-noise, inconsistency and positivity cases. The molecular audit checks the
+noise, inconsistency, and positivity cases. The molecular audit checks the
 finite projection and exact reference inclusion separately.
 
 The proofs received a same-author adversarial self-review. A second matrix
@@ -224,7 +224,7 @@ review or proof-assistant verification.
 
 The reading review added **62 exact checks covering 174 aggregated cases**,
 including the full coefficient dictionaries, positivity and parser
-boundaries, 108 coupling examples and a joint-error example. These finite
+boundaries, 108 coupling examples, and a joint-error example. These finite
 checks support the written derivations; they do not replace the general
 proofs. Fresh bounded-run manifests and a standard-library verifier are
 included in the validated replay bundle.
@@ -232,16 +232,16 @@ included in the validated replay bundle.
 - [Read the review and correction report](https://KomorebiP.github.io/Operation-KOMOREBI/read/computational-chemistry/review.html).
 - [Read the fresh exact audit results](https://KomorebiP.github.io/Operation-KOMOREBI/assets/chemistry/validation-v1/validation/exact-001/checks.json).
 - [Inspect the added derivation and boundary checks](https://KomorebiP.github.io/Operation-KOMOREBI/assets/chemistry/validation-v1/validation/extensions-001/checks.json).
-- [Download the validated replay bundle](https://KomorebiP.github.io/Operation-KOMOREBI/assets/chemistry/validation-v1/Stage14_Validated_Replay.zip): proofs, code, probes, input arrays, saved certificates, completed-run manifests and a verifier.
+- [Download the validated replay bundle](https://KomorebiP.github.io/Operation-KOMOREBI/assets/chemistry/validation-v1/Stage14_Validated_Replay.zip): proofs, code, probes, input arrays, saved certificates, completed-run manifests, and a verifier.
 - [Follow the replay instructions](https://KomorebiP.github.io/Operation-KOMOREBI/read/computational-chemistry/reproduce.html).
 - [Inspect the validated export manifest](https://KomorebiP.github.io/Operation-KOMOREBI/assets/chemistry/validation-v1/export.json) for file hashes and input-view provenance.
 - [Obtain the original focused archive](https://KomorebiP.github.io/Operation-KOMOREBI/assets/chemistry/stage14/Stage14_Fixed_Spin_Recovery.zip) as a separately identified historical export.
 
-The small replay input retains exactly the shapes, types and element bytes
-of the original fixture's `h1`, `eri` and `ground_energy` arrays. Unused
+The small replay input retains exactly the shapes, types, and element bytes
+of the original fixture's `h1`, `eri`, and `ground_energy` arrays. Unused
 state vectors are omitted. Its NPZ container hash therefore differs from
 the full original fixture; this is recorded explicitly. The checked replay
-matched the Hamiltonian, action-error cap and response exactly. A different
+matched the Hamiltonian, action-error cap, and response exactly. A different
 numerical environment must measure and validate its own cap. The new public
 manifests record the actual selected-array container used. The original
 machine-specific manifests and full earlier research history remain outside
@@ -251,7 +251,7 @@ this focused export.
 
 The [conditional model-error bridge](https://KomorebiP.github.io/Operation-KOMOREBI/read/computational-chemistry/model-error.html)
 proves an enclosure that combines numerical recovery error with block-model
-mismatch, discarded-space coupling, source leakage and energy-reference
+mismatch, discarded-space coupling, source leakage, and energy-reference
 error. It also specifies the embedding and operator conventions needed
 to compare those quantities consistently.
 
@@ -264,7 +264,7 @@ limit. It makes the remaining full-H10 obligations explicit.
 The original 52,920-state H10 ion response has not received a physical
 approximation-error certificate from this result. Larger sectors need new
 dimension and query arguments. Optimal conditioning, actual Coulomb
-realizability, discarded-space coupling, source leakage and a fair runtime
+realizability, discarded-space coupling, source leakage, and a fair runtime
 comparison with certified Krylov methods remain research tasks.
 
 The previous ten-query theorem concerns a different, twenty-state arbitrary
@@ -274,8 +274,8 @@ on the same input.
 General recovery from matrix-vector products and least-squares inversion
 are established methods; see Halikias and Townsend's
 [*Structured matrix recovery from matrix-vector products*](https://arxiv.org/html/2212.09841v2).
-The exact normal form, explicit probe certificate and response-separation
-construction are candidate contributions. **Originality, priority and
+The exact normal form, explicit probe certificate, and response-separation
+construction are candidate contributions. **Originality, priority, and
 publication significance remain unestablished.** The
 [bounded source comparison](https://KomorebiP.github.io/Operation-KOMOREBI/read/computational-chemistry/literature.html)
 records what was inspected and what is still missing.

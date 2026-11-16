@@ -12,7 +12,7 @@ Finite torsion transport and separate distribution arguments. Inherited analytic
 
 ## Before you start
 
-**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+**Suggested background:** Read the problem statement, recorded scope, and open questions first. The program's definitions determine its subject prerequisites.
 
 **Recorded results and limits:** Exact 343-point torsion dynamics and written distribution identities. Numerical diagnostics are not interval certificates or gamma algebraicity.
 

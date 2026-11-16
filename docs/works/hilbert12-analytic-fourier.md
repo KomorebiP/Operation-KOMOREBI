@@ -12,7 +12,7 @@ Explicit algebraic Fourier and quotient constructions. Analytic orbit and specia
 
 ## Before you start
 
-**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+**Suggested background:** Read the problem statement, recorded scope, and open questions first. The program's definitions determine its subject prerequisites.
 
 **Recorded results and limits:** Written algebraic/Fourier reductions and exact checks with floating-point diagnostics. The gamma-to-class-field equality remains unproved.
 

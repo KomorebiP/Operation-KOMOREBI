@@ -12,7 +12,7 @@ The AVOC publication and formal source collection.
 
 ## Before you start
 
-**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+**Suggested background:** Read the problem statement, recorded scope, and open questions first. The program's definitions determine its subject prerequisites.
 
 **Recorded results and limits:** Complete reading set based on archived formal v0.41.0. Publication checks did not execute Lean or the actual Lean endpoint.
 

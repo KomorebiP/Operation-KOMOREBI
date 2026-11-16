@@ -12,7 +12,7 @@ A conceptual essay on representations and languages for machine reasoning. The r
 
 ## Before you start
 
-**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+**Suggested background:** Read the problem statement, recorded scope, and open questions first. The program's definitions determine its subject prerequisites.
 
 **Recorded results and limits:** The 25-page reading edition has editable Markdown and TeX, inspected monograph typesetting, and source-reconciled discussions of the current Papers X, XI, XII and selected companion studies. The original PDF is retained. Scientific confidence remains unassessed, with no Lean claim for the essay.
 

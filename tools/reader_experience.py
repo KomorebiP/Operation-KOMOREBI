@@ -71,7 +71,7 @@ def introduction(root, component, assessment, page):
                       'linear algebra and explicit gate costs for the catalytic part; Boolean functions and polynomials over the binary field for the circuit part. '
                       'The introductory measurement example below offers a shorter starting point.')
     if component['id']=='monographs-physics':
-        background=('Begin with linear algebra, complex inner products and finite sums. Fourier series and operator domains enter the continuum treatment; '
+        background=('Begin with linear algebra, complex inner products, and finite sums. Fourier series and operator domains enter the continuum treatment; '
                     'later parts state their geometric and physical assumptions.')
     text = ('## Before you start\n\n**Suggested background:** '+background+'\n\n'
             '**Recorded results and limits:** '+assessment['scope']+'\n\n'
@@ -84,7 +84,7 @@ def introduction(root, component, assessment, page):
         text+=quantum_reading_guide(page)
     if component['id']=='monographs-physics':
         from physics_discovery import reading_summary
-        text+='### Read Physics online\n\n'+reading_summary()+'. The HTML sequences retain the source wording, equations and evidence limits.\n\n'
+        text+='### Read Physics online\n\n'+reading_summary()+'. The HTML sequences retain the source wording, equations, and evidence limits.\n\n'
         text+=' · '.join('['+label+']('+SITE+target+')' for label,target in [
             ('Start here','read/monographs-physics/start.html'),('Treatments','read/monographs-physics/index.html'),
             ('Visual atlases','read/monographs-physics/atlas/index.html'),('Verification companions','read/monographs-physics/verification/index.html')])+'\n\n'
@@ -174,7 +174,7 @@ The [completion guide](../COMPLETION_STATUS.md#lean-coverage) explains the label
 4. Continue to [Komorebi Math worked examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/WORKED_EXAMPLES.md) or [Polyphase Float's complete C programs](https://github.com/KomorebiP/polyphase-float/blob/main/docs/manual/README.md).
 5. Use the library's testing instructions to check the operations you intend to use.
 
-Komorebi Math supports its declared Python environments. Polyphase Float's supported build baseline is Linux x86-64, LP64 and 64-bit GMP limbs. Windows readers should use its documented Linux/WSL route.
+Komorebi Math supports its declared Python environments. Polyphase Float's supported build baseline is Linux x86-64, LP64, and 64-bit GMP limbs. Windows readers should use its documented Linux/WSL route.
 ''')}
 
 
@@ -197,7 +197,7 @@ def render_reader_pages(root, components, assessments):
     downloads=downloads.replace('These are reading selections.', 'Use [Build your own ZIP]('+SITE+'downloads.html#build-a-zip) to combine files from several works. Start with reading files or PDFs, then adjust individual manuscript sources, Lean files, code, guides, and worked examples. The selector shows the file count and size, adds available license notices, and checks each file against its recorded SHA-256 checksum. Choose Prepare ZIP, then Save ZIP when it is ready. You can cancel preparation without losing your choices. Custom ZIPs support up to 200 MiB of source files and are prepared in your browser. The ready-made ZIPs also work without JavaScript.\n\nThese are reading selections.',1)
     claim_data=json.loads((root/'manifests/claim-navigation.json').read_bytes())
     counts={w['id']:sum(r['work_id']==w['id'] for r in claim_data['records']) for w in claim_data['works']}
-    claims='# Follow a written claim\n\nThe [searchable claim index]('+SITE+'claims.html) covers all 12 core papers with '+str(len(claim_data['records']))+' reading records. Search by title, statement text, source label or recorded Lean name. Filter by paper and statement type, then share the page address or a record’s permanent link.\n\nPaper I retains its 108 correspondence records. The source labels 69 as covered. Papers II through XII index explicit statement blocks in their current TeX manuscripts and literal included sections. The index keeps definitions, conjectures, classical inputs, and numerical certificates distinct from theorems. Historical environments and statements introduced only through macro expansion are outside this extraction. Counts describe reading entries, not the number of proved or formalized results.\n\nA proof link identifies the recorded passage or an immediately following proof block. It does not assess correctness. Paper I’s existing Lean mappings are retained. Lean correspondence for individual claims for Papers II through XII has not been transcribed into this index. Their formal guides, Lean coverage, code and evidence remain linked at paper level. This update performs no new proof review or Lean run.\n\n'
+    claims='# Follow a written claim\n\nThe [searchable claim index]('+SITE+'claims.html) covers all 12 core papers with '+str(len(claim_data['records']))+' reading records. Search by title, statement text, source label or recorded Lean name. Filter by paper and statement type, then share the page address or a record’s permanent link.\n\nPaper I retains its 108 correspondence records. The source labels 69 as covered. Papers II through XII index explicit statement blocks in their current TeX manuscripts and literal included sections. The index keeps definitions, conjectures, classical inputs, and numerical certificates distinct from theorems. Historical environments and statements introduced only through macro expansion are outside this extraction. Counts describe reading entries, not the number of proved or formalized results.\n\nA proof link identifies the recorded passage or an immediately following proof block. It does not assess correctness. Paper I’s existing Lean mappings are retained. Lean correspondence for individual claims for Papers II through XII has not been transcribed into this index. Their formal guides, Lean coverage, code, and evidence remain linked at paper level. This update performs no new proof review or Lean run.\n\n'
     for c in components:
         identifier=c['id']
         downloads += '<a id="'+identifier+'"></a>\n\n## '+c['title']+'\n\n[Reading ZIP and contents]('+SITE+'downloads.html#'+identifier+') · '+link('Work and evidence','docs/works/'+identifier+'.md','docs/DOWNLOADS.md')+'\n\n'
@@ -224,11 +224,11 @@ def glossary_prose(value):
 def render_glossary(config):
     terms={x['id']:x for x in config['glossary']}
     text='# Glossary\n\n'
-    text+='This guide explains '+str(len(terms))+' terms used across the collection, its operator guide and worked examples. '
+    text+='This guide explains '+str(len(terms))+' terms used across the collection, its operator guide, and worked examples. '
     text+='Use the [first reading route](#a-first-reading), '
     if config.get('glossary_routes'):text+='[follow a subject route](#subject-reading-routes), '
     text+='[compare nearby ideas](#compare-nearby-ideas), [browse by subject](#browse-by-subject), or open the [alphabetical index](#alphabetical-index).\n\n'
-    text+='[Find a glossary term on the reading website]('+SITE+'collection/GLOSSARY.html#glossary-lookup): search names, abbreviations, definitions and short examples, or choose a subject. Open the glossary beside a paper with **Read side by side**.\n\n'
+    text+='[Find a glossary term on the reading website]('+SITE+'collection/GLOSSARY.html#glossary-lookup): search names, abbreviations, definitions, and short examples, or choose a subject. Open the glossary beside a paper with **Read side by side**.\n\n'
     text+='A word can have a more specific meaning in another paper. The paper’s definitions and hypotheses take precedence. Examples and source links provide context without changing any recorded evidence status.\n\n'
     text+='[Operator guide](OPERATOR_AUDIT.md) · [Look up notation across the collection](NOTATION_INDEX.md) · [Work through the calculations by hand](HAND_WORKED_EXAMPLES.md) · [Papers, proofs, Lean, and code by topic](LEARNING_MAP.md) · [First software runs](FIRST_RUN.md)\n\n'
     if config.get('glossary_start'):

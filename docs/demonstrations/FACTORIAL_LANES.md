@@ -2,7 +2,7 @@
 
 **An extended hand-worked example · Komorebi P.**
 
-This example follows one object through residue projection, ten multiplicative factorial lanes, hypergeometric coordinates, normalization, reciprocal inversion, prime-adic valuations and refinement. The numerical tables and certificates use exact integers and rational numbers. Roots of unity appear symbolically in the projector; no floating-point approximation is needed.
+This example follows one object through residue projection, ten multiplicative factorial lanes, hypergeometric coordinates, normalization, reciprocal inversion, prime-adic valuations, and refinement. The numerical tables and certificates use exact integers and rational numbers. Roots of unity appear symbolically in the projector; no floating-point approximation is needed.
 
 Our fixed data are
 
@@ -20,7 +20,7 @@ The two numerical checkpoints are
 
 The first reconstructs a factorial from residue lanes. The second comes from inverting the same residue packet in factorial-normalized coordinates. The complete [exact Python program](../../examples/factorial_lanes.py) independently checks the examples and exports rational tables.
 
-This is a companion to [Euler numbers through packets, polynomials and residuals](EULER_PACKETS.md). The Euler example starts with a reciprocal sequence. Here we start with one projected exponential section and examine the arithmetic hidden in its factorial denominators.
+This is a companion to [Euler numbers through packets, polynomials, and residuals](EULER_PACKETS.md). The Euler example starts with a reciprocal sequence. Here we start with one projected exponential section and examine the arithmetic hidden in its factorial denominators.
 
 ## A map of the calculation
 
@@ -346,7 +346,7 @@ g_n\equiv1\pmod{125}.
 
 The last congruence means the denominator of $g_n$ can be inverted modulo $125$. It does not mean that $g_n$ is an integer in the ordinary sense.
 
-The reciprocal recurrence uses only integral binomial weights, $5$-integral $g_k$ and previous $C_{n-k}$. Induction gives
+The reciprocal recurrence uses only integral binomial weights, $5$-integral $g_k$, and previous $C_{n-k}$. Induction gives
 
 \[
 \boxed{v_5(C_n)\geq0\qquad(n\geq0).}
@@ -432,7 +432,7 @@ Three checks make the estimates concrete:
 \end{aligned}
 \]
 
-The general factorwise bounds are $1$, $2$ and $2$, respectively. The sharper single-step bound gives $3$ and $4$ for the first two calculations, and both are attained. The repeated second difference has valuation $3$, exceeding its general bound of $2$.
+The general factorwise bounds are $1$, $2$, and $2$, respectively. The sharper single-step bound gives $3$ and $4$ for the first two calculations, and both are attained. The repeated second difference has valuation $3$, exceeding its general bound of $2$.
 
 ### The distinct coefficient row in the wider transfer argument
 
@@ -563,7 +563,7 @@ python -B examples/factorial_lanes.py
 python -B examples/factorial_lanes.py --output factorial-results
 ```
 
-The first command reports `PASS: 225 exact finite assertions`, including the displayed lane products, hypergeometric coefficient identities, reciprocal inversion, prime-adic valuations, finite differences, refinement and failure witnesses. The second also writes `lane-products.csv`, `coefficients.csv` and `results.json`.
+The first command reports `PASS: 225 exact finite assertions`, including the displayed lane products, hypergeometric coefficient identities, reciprocal inversion, prime-adic valuations, finite differences, refinement, and failure witnesses. The second also writes `lane-products.csv`, `coefficients.csv`, and `results.json`.
 
 [Read the complete Python source on the website](https://KomorebiP.github.io/Operation-KOMOREBI/read/factorial-lanes.html) · [Download the standalone checker](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/factorial-lanes/factorial_lanes.py)
 
@@ -573,6 +573,6 @@ The first command reports `PASS: 225 exact finite assertions`, including the dis
 
 The derivation is exact for all indices where the identities are stated. The program checks bounded ranges, not an infinite theorem. The general lane split is proved by unique factor addresses; the reciprocal and valuation statements are proved by formal multiplication and elementary divisibility.
 
-The exact triangular-kernel bridge, five-child modulus-$50$ split and weighted-transfer direction follow the longer study *From Factorial Lanes to $p$-Adic Transfer* (Komorebi P.). This page proves the algebraic identities and the stated $g_n$ valuation bounds. It does not substitute its finite examples for the extra hypotheses of the weighted continuation.
+The exact triangular-kernel bridge, five-child modulus-$50$ split, and weighted-transfer direction follow the longer study *From Factorial Lanes to $p$-Adic Transfer* (Komorebi P.). This page proves the algebraic identities and the stated $g_n$ valuation bounds. It does not substitute its finite examples for the extra hypotheses of the weighted continuation.
 
-Continue with the [Euler extended example](EULER_PACKETS.md), [cyclic reciprocal coefficients](../examples/16_CYCLIC_RECIPROCALS.md), [Paper IV](../works/paper-iv.md), [Special Functions](../works/monographs-special-functions.md) and the [project's evidence guide](../RECORDS.md). These links identify related mechanisms, not automatic transfer of their proof status.
+Continue with the [Euler extended example](EULER_PACKETS.md), [cyclic reciprocal coefficients](../examples/16_CYCLIC_RECIPROCALS.md), [Paper IV](../works/paper-iv.md), [Special Functions](../works/monographs-special-functions.md), and the [project's evidence guide](../RECORDS.md). These links identify related mechanisms, not automatic transfer of their proof status.

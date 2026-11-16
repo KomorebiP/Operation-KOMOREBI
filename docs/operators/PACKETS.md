@@ -129,7 +129,7 @@ claims about idempotence, independent components, or orthogonal energy.
 
 Refinement replaces a packet by smaller packets whose sum equals the parent
 projector. For the four-sample vector $x=(3,1,4,2)^{\mathsf T}$, using
-zero-based sample indices, the even packet retains positions $0,2$ and the
+zero-based sample indices, the even packet retains positions $0,2$, and the
 odd packet retains positions $1,3$.
 
 With singleton coordinate projectors $E_0,\ldots,E_3$,

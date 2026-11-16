@@ -198,21 +198,21 @@ class Browser:
                 links.insert(0,link('Current formalization checkpoint and continuation',
                     c['destination']+'/'+CURRENT_GUIDANCE[c['id']],page))
             if title=='Read' and c['id']=='monographs-special-functions':
-                links.insert(0,'[Read online: chapters, proof appendices, figures and glossary](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/index.html)')
+                links.insert(0,'[Read online: chapters, proof appendices, figures, and glossary](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/index.html)')
             if title=='Read' and c['id']=='monographs-large-signal-model':
-                links.insert(0,'[Read online: all 100 sections, 87 propositions and written proofs](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-large-signal-model/index.html)')
-                links.insert(1,'[Start here: mathematics, formal scope and software](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-large-signal-model/start.html)')
-                links.insert(2,'[Visual atlas: 17 plates, diagrams and an exact example](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-large-signal-model/atlas/index.html)')
+                links.insert(0,'[Read online: all 100 sections, 87 propositions, and written proofs](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-large-signal-model/index.html)')
+                links.insert(1,'[Start here: mathematics, formal scope, and software](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-large-signal-model/start.html)')
+                links.insert(2,'[Visual atlas: 17 plates, diagrams, and an exact example](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-large-signal-model/atlas/index.html)')
             if title=='Read' and c['id']=='monographs-machine-native-reasoning':
-                links.insert(0,'[Read online: reviewed core, nine chapters and written proofs](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-machine-native-reasoning/index.html)')
-                links.insert(1,'[Start here: reading paths, formal scope and editions](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-machine-native-reasoning/start.html)')
-                links.insert(2,'[Expanded book: 97 chapters, PDF reader and editable TeX](https://KomorebiP.github.io/Operation-KOMOREBI/read/research-machine-native-reasoning-wider/reconstructed-edition.html)')
+                links.insert(0,'[Read online: reviewed core, nine chapters, and written proofs](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-machine-native-reasoning/index.html)')
+                links.insert(1,'[Start here: reading paths, formal scope, and editions](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-machine-native-reasoning/start.html)')
+                links.insert(2,'[Expanded book: 97 chapters, PDF reader, and editable TeX](https://KomorebiP.github.io/Operation-KOMOREBI/read/research-machine-native-reasoning-wider/reconstructed-edition.html)')
             if title=='Read' and c['id']=='research-machine-native-reasoning-wider':
                 links.insert(0,'[Reconstructed edition: complete 97-chapter book and editable source](https://KomorebiP.github.io/Operation-KOMOREBI/read/research-machine-native-reasoning-wider/reconstructed-edition.html)')
             if title=='Read' and c['id']=='monographs-quantum-and-circuits':
-                links.insert(0,'[Read online: complete volume, appendices, proofs and sources](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-quantum-and-circuits/index.html)')
+                links.insert(0,'[Read online: complete volume, appendices, proofs, and sources](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-quantum-and-circuits/index.html)')
             if title=='Read' and c['id'] in {'paper-v','paper-vi','paper-vii'}:
-                links.insert(0,'[Read online: chapters, figures and proof links](https://KomorebiP.github.io/Operation-KOMOREBI/read/'+c['id']+'/index.html)')
+                links.insert(0,'[Read online: chapters, figures, and proof links](https://KomorebiP.github.io/Operation-KOMOREBI/read/'+c['id']+'/index.html)')
             if title=='Read' and c['id']=='paper-vi':
                 links.insert(1,'[Worked visual atlas: all 42 HTML plates](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vi/atlas/index.html)')
             if title=='Read' and c['id']=='paper-v':
@@ -225,7 +225,7 @@ class Browser:
                 links.insert(1,'[Worked visual atlas: all 40 HTML plates](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vii/atlas/index.html)')
             if title=='Read' and c['id']=='paper-viii':
                 links.insert(0,'[Worked visual atlas: all 32 HTML plates](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-viii/atlas/index.html)')
-                links.insert(0,'[Read online: manuscript, six appendices and figures](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-viii/index.html)')
+                links.insert(0,'[Read online: manuscript, six appendices, and figures](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-viii/index.html)')
             if title=='Read' and c['id']=='paper-ix':
                 links.insert(0,'[Visual guide: all 23 HTML sections and 20 figures](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-ix/atlas/index.html)')
             if title=='Read' and c['id']=='paper-x':
@@ -235,13 +235,13 @@ class Browser:
             if title=='Read' and c['id']=='paper-xii':
                 links.insert(0,'[Visual guide: all 27 HTML plates and 23 drawings](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-xii/atlas/index.html)')
             if title=='Read' and c['id']=='paper-ix':
-                links.insert(0,'[Read online: complete manuscript, strengthening and historical appendices](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-ix/index.html)')
+                links.insert(0,'[Read online: complete manuscript, strengthening, and historical appendices](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-ix/index.html)')
             if title=='Read' and c['id']=='paper-x':
-                links.insert(0,'[Read online: manuscript, historical continuations and final conditional completion](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-x/index.html)')
+                links.insert(0,'[Read online: manuscript, historical continuations, and final conditional completion](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-x/index.html)')
             if title=='Read' and c['id']=='paper-xi':
                 links.insert(0,'[Read online: complete monograph and fifteen construction appendices](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-xi/index.html)')
             if title=='Read' and c['id']=='paper-xii':
-                links.insert(0,'[Read online: complete monograph, reading map and revision scope](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-xii/index.html)')
+                links.insert(0,'[Read online: complete monograph, reading map, and revision scope](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-xii/index.html)')
             if title=='Written proofs' and edition:
                 links.insert(0,link('Mathematical discussion in the revised essay',edition['manuscript'],page))
             has_lean = any(a['kind']=='lean' for a in self.rows[c['id']]['resources'])
@@ -308,7 +308,7 @@ Each work has its own page with **Read**, **Written proofs**, **Lean**, **Code**
 | Physics | [Physics works](https://KomorebiP.github.io/Operation-KOMOREBI/works.html?discipline=physics#catalog-results) |
 | Other | [Methodology and cross-disciplinary works](https://KomorebiP.github.io/Operation-KOMOREBI/works.html?discipline=other#catalog-results) |
 
-These are editorial primary categories. The files remain in their original repository paths so source links and formal evidence references are preserved. A finished reading edition is not necessarily a fully proved research endpoint. **Completion**, **Lean coverage** and **evidence basis** are independent, with details in the [completion guide](COMPLETION_STATUS.md) and [status catalogue](STATUS_CATALOG.md). Filter values come from the maintained [project status manifest](../manifests/project-status.json), not inferred from a file name or its presence in a folder.
+These are editorial primary categories. The files remain in their original repository paths so source links and formal evidence references are preserved. A finished reading edition is not necessarily a fully proved research endpoint. **Completion**, **Lean coverage**, and **evidence basis** are independent, with details in the [completion guide](COMPLETION_STATUS.md) and [status catalogue](STATUS_CATALOG.md). Filter values come from the maintained [project status manifest](../manifests/project-status.json), not inferred from a file name or its presence in a folder.
 
 ## Choose a publication type
 

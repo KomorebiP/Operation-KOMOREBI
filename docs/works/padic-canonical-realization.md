@@ -12,7 +12,7 @@ Canonical realization and the Block 34 finite formal development.
 
 ## Before you start
 
-**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+**Suggested background:** Read the problem statement, recorded scope, and open questions first. The program's definitions determine its subject prerequisites.
 
 **Recorded results and limits:** Cross-realization theorem establishes the stated finite linear minimality and uniqueness. Minimum module cardinality is not minimum DFA size.
 

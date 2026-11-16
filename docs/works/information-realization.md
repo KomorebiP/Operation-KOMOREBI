@@ -12,7 +12,7 @@ Information, realizations, and a finite formal core.
 
 ## Before you start
 
-**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+**Suggested background:** Read the problem statement, recorded scope, and open questions first. The program's definitions determine its subject prerequisites.
 
 **Recorded results and limits:** The first formal block contains 58 theorem declarations across six production modules. The whole information program is not formalized.
 

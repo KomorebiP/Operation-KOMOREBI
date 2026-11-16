@@ -12,7 +12,7 @@ Operator and semantic interfaces, experiments, and their retained scientific his
 
 ## Before you start
 
-**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+**Suggested background:** Read the problem statement, recorded scope, and open questions first. The program's definitions determine its subject prerequisites.
 
 **Recorded results and limits:** Frozen manuscripts and experiment evidence plus an exact finite interface. Learned results, recorded failures, and experiments not yet run retain separate statuses.
 

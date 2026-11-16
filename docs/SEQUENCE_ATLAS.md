@@ -45,7 +45,7 @@ The atlas organizes source-linked integer sequences and formulas, with exact
 term tables and an interactive plot explorer. Its catalogue contains
 the 21 published reciprocal families for N=2,…,8 and r=1,…,3, together with
 Bell numbers, Fubini numbers, factorials, Fibonacci numbers, and signed even
-Euler numbers. Twelve further references add nonnegative integers, odd numbers, triangular numbers, squares, cubes, powers of two and three, Catalan numbers, central binomial coefficients, integer partitions, Lucas numbers and Pell numbers. The 38 identifiers KSEQ-000001 through KSEQ-000038 are stable.
+Euler numbers. Twelve further references add nonnegative integers, odd numbers, triangular numbers, squares, cubes, powers of two and three, Catalan numbers, central binomial coefficients, integer partitions, Lucas numbers, and Pell numbers. The 38 identifiers KSEQ-000001 through KSEQ-000038 are stable.
 New entries must be appended, preserving existing identifiers.
 
 These are existing published families and classical reference sequences.
@@ -56,7 +56,7 @@ independent mathematical review, or change to the linked works’ proof status.
 
 Use sequence values, values modulo m, residue grids, residue frequencies,
 successive-term pairs, or successive-residue plots. First and second differences, partial sums, successive ratios, and
-running averages are available as transforms. Alternating signs, absolute values, binomial and inverse binomial transforms are also available. Sums and averages start at
+running averages are available as transforms. Alternating signs, absolute values, binomial, and inverse binomial transforms are also available. Sums and averages start at
 index zero, even when the displayed window starts later. Undefined ratios
 and initial differences are omitted. The second difference at n is
 a(n) - 2a(n-1) + a(n-2), defined from n=2 onward. Modular views require integer-valued
@@ -185,7 +185,7 @@ entry's first 64 recorded terms; no floating-point rounding or fuzzy integer
 matching is used.
 
 The optional catalogue-transform comparison additionally tests its original
-terms, differences, sums and sign transforms. Binomial transforms are applied
+terms, differences, sums, and sign transforms. Binomial transforms are applied
 to input only in discovery. Initial undefined differences are skipped and the
 source and target indices are reported. Binomial transforms use
 b(n)=sum_{k=0}^n binom(n,k)a(k); the inverse includes (-1)^(n-k).
@@ -197,7 +197,7 @@ Repeated target positions are grouped in a single suggestion, with all starting 
 catalogue transform at the reported target indices. Pasted transformed input
 is reindexed from zero and remains labelled unreviewed. A transform too large
 for the existing plot paste limits is retained in the discovery JSON instead.
-The JSON records matched values, operations and index ranges. This is a bounded
+The JSON records matched values, operations, and index ranges. This is a bounded
 local discovery tool, not a full OEIS search or an identity/novelty test.
 
 Copy discovery link deliberately includes the entered terms and comparison
@@ -219,13 +219,13 @@ twelve hits per entry, with its declared OEIS reference first when present.
 The atlas uses linked Browse, Discover, Plot, All entries, and About workspaces.
 JavaScript shows one workspace at a time; native fragment links and the full
 catalogue remain available without JavaScript. Browser Back/Forward restores
-workspace selection. Search, discovery and plot controls retain their values
+workspace selection. Search, discovery, and plot controls retain their values
 when switching. Opening a search/discovery match selects Plot, while searching
 displayed values selects Browse. Ctrl+/ (Command+/ on Mac) outside a form field opens Browse and
 focuses search. Leaving Plot pauses modulus animation. All entries always
 shows the entire catalogue independently of the current search query.
 
-Entry pages place the identifier, status, primary actions and first eight
+Entry pages place the identifier, status, primary actions, and first eight
 values at the top. A contents sidebar becomes a horizontal section menu on
 phones. Search from an entry submits a normal catalogue URL. Formula rendering
 uses the existing accessible MathJax runtime, with an open plain-text formula
@@ -252,8 +252,8 @@ change sequence generators or any of the 2,432 stored values. The metadata is
 included in entry JSON under reading; existing formula and term fields are
 preserved. Index-map fractions are computed with Python Fraction and the
 browser inspector uses exact BigInt arithmetic. Browser checks cover all 38
-formula renderings and representative reciprocal, Euler and direct-index
-records at desktop, phone and 320px widths, including plain-text fallbacks.
+formula renderings and representative reciprocal, Euler, and direct-index
+records at desktop, phone, and 320px widths, including plain-text fallbacks.
 
 ## Study exact values
 
@@ -262,11 +262,11 @@ Eleven views show original terms, first/second differences, partial sums,
 successive ratios, running averages, alternating signs, absolute values,
 binomial/inverse binomial transforms, and residues modulo 2 through 128.
 The window covers 2–32 index positions among the 64 stored terms. Moving it
-does not reindex values: sums, averages and binomial transforms still start
+does not reindex values: sums, averages, and binomial transforms still start
 at zero, and sign alternation uses the original n. Ratios use reduced exact
 fractions; division by zero and initial differences retain undefined positions.
 
-Sample statistics count signs, integer parity and defined values. The GCD
+Sample statistics count signs, integer parity, and defined values. The GCD
 is reported only for a nonempty integer-valued sample; all-zero samples have
 GCD zero. A separate table shows backward differences of orders 0–4 of the
 original stored integers, before the chosen transform, across up to eight
@@ -281,7 +281,7 @@ with at most 300 digits each. The action note reports how many are used and
 that discovery reindexes its input from zero. Other values remain available
 in indexed copies and exact CSV/JSON downloads. CSV retains every n and a
 defined flag; JSON retains undefined positions as null and records the
-transform, window, modulus, conventions and finite observations.
+transform, window, modulus, conventions, and finite observations.
 Plot links select signed-log scale when a defined value or the full signed
 range exceeds linear floating-point coordinates; modular plots stay linear.
 The link names the signed-log choice, while the study table remains exact.
@@ -290,14 +290,14 @@ Copy study link preserves the applied state, and browser Back/Forward restores
 it. Invalid links display a message and the first twelve original terms;
 invalid form edits retain the last valid results. Prefix operations, exports
 and difference tables use exact arithmetic throughout. The initial original
-terms, sample statistics and expandable difference table are generated in
+terms, sample statistics, and expandable difference table are generated in
 Python and remain readable without JavaScript. Controls are an enhancement.
 
 The independent Fraction-based Python study oracle lives in
 `tools/sequence_atlas_study.py`; the browser engine and interface are
 `website/assets/sequence-atlas-study.mjs` and `sequence-atlas-study.js`.
-The Node study test compares rows, statistics and difference ladders in
-1,482 windows across all 38 entries, eleven transforms, moduli 2, 7 and 128,
+The Node study test compares rows, statistics, and difference ladders in
+1,482 windows across all 38 entries, eleven transforms, moduli 2, 7, and 128,
 and three index windows. The separate Edge study suite covers responsive
 controls, exact exports, linked search/plot, history, copy fallback,
 no-JavaScript reading and 200% text with forced colors.
@@ -315,18 +315,18 @@ edits retain the previous results. The current workspace stays visible in
 the horizontal mode menu on narrow screens.
 Copied directory links include only directory settings. Local history retains
 the existing Browse/Plot context, while copied directory links omit unrelated
-queries, pasted plot terms and discovery input.
+queries, pasted plot terms, and discovery input.
 
-Each row links to the entry, its Study section and any connections. The
+Each row links to the entry, its Study section, and any connections. The
 reciprocal family index provides all 21 N/r pairs, with N mapping compressed
 n to ordinary degree Nn and r fixed. Expanded catalogue cards remain in a
 separate disclosure. The full index CSV contains all 38 entries regardless
-of the active filter, with metadata, public URLs and incoming/outgoing counts.
+of the active filter, with metadata, public URLs, and incoming/outgoing counts.
 
 Connection sections now list both outgoing and incoming evidence. They
 preserve the seven existing directed checks; no new transforms or matches
 are inferred. Each disclosure shows twelve exact comparisons with the
-original source index, source integer, transformed value, target index and
+original source index, source integer, transformed value, target index, and
 target integer. The 84 distinct comparisons appear in 14 disclosures across
 the six participating entries. For example, partial sums of odd numbers at
 source n=0..11 match squares at target n=1..12. The reverse listing retains
@@ -336,10 +336,10 @@ indices. Evidence tables remain available without JavaScript, with focusable
 scroll regions and a fixed source-index column.
 
 `assets/sequence-atlas-connections.json` retains the seven directed edges,
-their exact rows, operations, index ranges, scope and a SHA-256 signature of
+their exact rows, operations, index ranges, scope, and a SHA-256 signature of
 all catalogue identifiers and stored terms. The graph and full index CSV are
 generated by `tools/sequence_atlas_index.py`. Original entry JSON, generators,
-formula strings, term arrays and retained OEIS comparisons are preserved.
+formula strings, term arrays, and retained OEIS comparisons are preserved.
 `website/assets/sequence-atlas-directory.mjs` reuses the search parser for
 index filtering and supplies namespaced URL state. The directory/evidence
 browser suite checks filtering, independent Browse state, copied links,

@@ -74,13 +74,13 @@ Replace $G=1$ by $G=0$, keeping $A=B=1$ and $D=0$. Does visible evolution
 close when the hidden state is initialized to zero? Does it close for every
 initial hidden state?
 
-**Answer:** From $(y_0,0)$, the hidden coordinate stays zero and the visible
+**Answer:** From $(y_0,0)$, the hidden coordinate stays zero, and the visible
 value stays $y_0$. All prepared memory maps vanish. But $(1,0)$ and $(1,1)$
 still produce different first visible outputs, $1$ and $2$. A conclusion for
 prepared states does not automatically hold for arbitrary hidden initialization.
 
 These calculations illustrate exact state sufficiency. The wider monographs
-state their own hypotheses for controlled, stochastic and approximate models.
+state their own hypotheses for controlled, stochastic, and approximate models.
 
 <!-- learning-navigation -->
 

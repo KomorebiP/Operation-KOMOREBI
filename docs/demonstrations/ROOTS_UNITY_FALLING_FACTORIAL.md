@@ -4,7 +4,7 @@
 
 One polynomial will pass through a Fourier-style residue projector, a Newton/falling-factorial coordinate change, finite differences, exact shift-transfer blocks, and residue refinement. We will keep the objects and operations separate. In particular, we will see why projecting *after* a change of coordinates requires transporting the projector, not reusing its old formula.
 
-The mathematical identities are classical: the roots-of-unity filter, Stirling inversion, Newton interpolation, umbral polynomial coordinates, and the forward difference. The purpose of this example is to exhibit their precise composition and recovery conditions in the realization-and-transfer language of the collection. The [Lean polynomial companion](../LEAN_POLYNOMIAL_TRANSPORT.md) constructs the actual rational falling-factorial equivalence, proves the complex polynomial roots-of-unity average, and verifies the concrete projector, transported-product and cyclic-convolution laws. These classical identities carry no novelty or general analytic-continuation claim.
+The mathematical identities are classical: the roots-of-unity filter, Stirling inversion, Newton interpolation, umbral polynomial coordinates, and the forward difference. The purpose of this example is to exhibit their precise composition and recovery conditions in the realization-and-transfer language of the collection. The [Lean polynomial companion](../LEAN_POLYNOMIAL_TRANSPORT.md) constructs the actual rational falling-factorial equivalence, proves the complex polynomial roots-of-unity average, and verifies the concrete projector, transported-product, and cyclic-convolution laws. These classical identities carry no novelty or general analytic-continuation claim.
 
 [Read the complete exact Python source](https://KomorebiP.github.io/Operation-KOMOREBI/read/roots-unity-falling-factorial.html) · [Download all source and results](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/roots-unity-falling-factorial/source-and-results.zip) · [Review the generated exact diagram](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/roots-unity-falling-factorial/projection-diagram.svg)
 
@@ -60,7 +60,7 @@ Therefore
 \boxed{600+244+180=1024=4^5.}
 \]
 
-![Three exact residue packets after falling-factorial transport, with their values 600, 244 and 180 summing to 1024.](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/roots-unity-falling-factorial/projection-diagram.svg)
+![Three exact residue packets after falling-factorial transport, with their values 600, 244, and 180 summing to 1024.](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/roots-unity-falling-factorial/projection-diagram.svg)
 
 [Download the complete coefficient and contribution table](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/roots-unity-falling-factorial/packet-contributions.csv).
 
@@ -186,7 +186,7 @@ For our fifth power,
 T_5(z)=z+15z^2+25z^3+10z^4+z^5,
 \]
 
-the fifth Touchard polynomial encountered in the [Stirling, Bell and Fubini demonstration](STIRLING_BELL_FUBINI.md).
+the fifth Touchard polynomial encountered in the [Stirling, Bell, and Fubini demonstration](STIRLING_BELL_FUBINI.md).
 
 Why is the word *linear* essential? Consider
 
@@ -678,7 +678,7 @@ When \(h\) is a nonnegative integer, \(h^{\underline\ell}=0\) for \(\ell>h\). Th
 
 Fractional or negative \(h\) need not have this fixed finite bandwidth: the connection formula is still a finite sum on each polynomial of fixed degree, but its number of potentially nonzero terms can grow with the degree.
 
-The checker computes \(Q_rT_hQ_s\) from the falling-factorial binomial identity and, independently, by ordinary-power translation followed by the projector. It compares both through multiple moduli, polynomial degrees and rational shifts. A complete source-to-target table for \(h=0,1,2\) is downloadable.
+The checker computes \(Q_rT_hQ_s\) from the falling-factorial binomial identity and, independently, by ordinary-power translation followed by the projector. It compares both through multiple moduli, polynomial degrees, and rational shifts. A complete source-to-target table for \(h=0,1,2\) is downloadable.
 
 [Download the exact translation block matrix entries](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/roots-unity-falling-factorial/translation-blocks.csv) · [Download the two different shifted packet ledgers](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/roots-unity-falling-factorial/shifted-packet-ledger.csv).
 
@@ -759,7 +759,7 @@ so
 x\star x=x(x-1)\ne x^2.
 \]
 
-This product is associative, commutative and unital because ordinary multiplication in \(\mathbb Q[z]\) has those properties. The transformed difference is a derivation **for \(\star\)**:
+This product is associative, commutative, and unital because ordinary multiplication in \(\mathbb Q[z]\) has those properties. The transformed difference is a derivation **for \(\star\)**:
 
 \[
 \boxed{
@@ -852,7 +852,7 @@ No assertion about an unrelated arithmetic conjecture follows from these finite 
 
 The [polynomial claim map](../../formal/polynomial-transport/CLAIM_MAP.json) links this example to the actual constructed equivalence \(\Phi:\mathbb Q[X]\simeq_{\mathbb Q}\mathbb Q[X]\), its inverse on powers, and the concrete operators \(Q_r=\Phi P_r\Phi^{-1}\). The companion proves the finite complex polynomial averaging formula, rational coefficient compatibility, the projector laws, filtered-address refinement, and the transported product with its exact cyclic packet convolution. The displayed inverse of \(X^5\) and packet values \(600,244,180\) at four are checked in named controls. Full coefficient sequences and finite polynomial carriers remain distinct.
 
-The explicit signed-first-Stirling matrix entries, cyclic trace realization, arithmetic-progression reindexing of refinement, Newton interpolation algorithm, characteristic-three arguments, and specific difference, translation and spectral operators are outside this companion's formal coverage. The transported-product proof does not establish the \(\Delta\)-derivation rule. The [polynomial verification guide](../LEAN_POLYNOMIAL_TRANSPORT.md) provides exact sources, receipts and replay commands. The [earlier reader companion](../../formal/reader-examples/CLAIM_MAP.json) retains its separately recorded generic transport and Stirling recovery scope.
+The explicit signed-first-Stirling matrix entries, cyclic trace realization, arithmetic-progression reindexing of refinement, Newton interpolation algorithm, characteristic-three arguments, and specific difference, translation, and spectral operators are outside this companion's formal coverage. The transported-product proof does not establish the \(\Delta\)-derivation rule. The [polynomial verification guide](../LEAN_POLYNOMIAL_TRANSPORT.md) provides exact sources, receipts, and replay commands. The [earlier reader companion](../../formal/reader-examples/CLAIM_MAP.json) retains its separately recorded generic transport and Stirling recovery scope.
 
 ## 11. Run, inspect, and reproduce
 
@@ -873,7 +873,7 @@ The first command performs the exact checks and prints the three-packet reconstr
 
 - [Factorial lanes](FACTORIAL_LANES.md) gives the general cyclotomic coefficient projector and distinguishes additive residue packets from multiplicative step-factorial lanes.
 - [Euler numbers through packets](EULER_PACKETS.md) develops Newton/Pascal coordinate transformations, conjugated sampling, prime-sensitive difference estimates, and their genuine analytic boundaries.
-- [Stirling, Bell and Fubini](STIRLING_BELL_FUBINI.md) develops the triangular inversion, formal exponential substitution, and coupled roots-of-unity packets.
+- [Stirling, Bell, and Fubini](STIRLING_BELL_FUBINI.md) develops the triangular inversion, formal exponential substitution, and coupled roots-of-unity packets.
 - [Wavelets and polyphase transfer](WAVELET_POLYPHASE.md) illustrates the same requirement to transport the operation, including cross-channel terms that disappear in invalid shortcuts.
 - [Paper IV](../works/paper-iv.md), [Paper IX](../works/paper-ix.md), and [Special Functions](../works/monographs-special-functions.md) provide the corresponding broader research contexts, each with its own hypotheses and verification evidence.
 

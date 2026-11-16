@@ -12,7 +12,7 @@ The B05 valuation-hull continuation and finite formal controls.
 
 ## Before you start
 
-**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+**Suggested background:** Read the problem statement, recorded scope, and open questions first. The program's definitions determine its subject prerequisites.
 
 **Recorded results and limits:** Checked valuation-hull and structural witness interfaces. SourceWitnessTheorem remains open. No proof or disproof of IUT III Corollary 3.12 or ABC.
 

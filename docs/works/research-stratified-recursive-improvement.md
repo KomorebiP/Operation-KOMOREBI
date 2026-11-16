@@ -12,7 +12,7 @@ Stratified closure models and the Block 23 development.
 
 ## Before you start
 
-**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+**Suggested background:** Read the problem statement, recorded scope, and open questions first. The program's definitions determine its subject prerequisites.
 
 **Recorded results and limits:** Complete finite-fixture publication/evidence package. The real latent-reasoner pilot remains unexecuted.
 

@@ -27,7 +27,7 @@ seed-generation example.
 | [Smith chart and projector laboratory](demonstrations/SMITH_CHART.md) | Inspect passive RF loads and analytic impedance functions on the reflection disk. | Live Smith chart, exact cyclic impedance packets, parity duality, phase refinement, nonlinearity controls, and finite numerical verification. |
 | [Factorial lanes](demonstrations/FACTORIAL_LANES.md) | Follow one residue section of the exponential. | Reconstruction of 34!, hypergeometric coordinates, reciprocal inversion, a sharpened 5-adic displacement bound, and refinement. |
 | [Quantum phase and measurement](demonstrations/QUANTUM_PHASE_MEASUREMENT.md) | Determine which information a measurement retains. | Exact tomography, a coherence-loss obstruction, reversible records, amplitude damping, and finite syndrome recovery. |
-| [Stirling, Bell and Fubini numbers](demonstrations/STIRLING_BELL_FUBINI.md) | Transfer between counting families and coordinate profiles. | Inverse triangular kernels, generating functions, moment representations, residue transfer, and exact interpolation. |
+| [Stirling, Bell, and Fubini numbers](demonstrations/STIRLING_BELL_FUBINI.md) | Transfer between counting families and coordinate profiles. | Inverse triangular kernels, generating functions, moment representations, residue transfer, and exact interpolation. |
 | [Roots of unity and falling factorials](demonstrations/ROOTS_UNITY_FALLING_FACTORIAL.md) | Move residue projectors into Newton coordinates. | Exact spectral projectors, refinement, translation transfer, and failures caused by filtering in the wrong basis. |
 
 Each study includes hand derivations, failure controls, source links, and exact
@@ -49,7 +49,7 @@ The calculations are not claims of mathematical novelty.
 | Does a summary contain enough information for a question? | [Test recovery from a summary](demonstrations/RECOVERY.md) | Two inputs give the same summary but different requested answers. A compatible question has an exact recovery rule. |
 
 Each page gives the inputs, intermediate steps, expected output, a control that
-exposes a limitation, and links to papers, proofs, Lean coverage and code.
+exposes a limitation, and links to papers, proofs, Lean coverage, and code.
 The [project map](PROJECT_MAP.md) places these introductory examples in the
 wider collection.
 
@@ -70,7 +70,7 @@ normalizes the denominator, and inverts the packet in two equivalent
 coordinate systems. It also proves a sharpened 5-adic displacement bound,
 refines the residue packet into two and five children, and distinguishes the
 congruential transfer row from the classical Euler numbers. A standalone
-checker supplies exact rational results, downloadable code and two explicit
+checker supplies exact rational results, downloadable code, and two explicit
 failure witnesses.
 
 ## An extended derivation with wavelets and polyphase transfer
@@ -85,7 +85,7 @@ The full 16×16 matrix displays inter-scale coupling, while two noncommuting
 operation orders and explicit boundary repairs provide independent failure
 witnesses. Reproducible tables and Python-generated figures complete the example.
 
-## An extended derivation with Stirling, Bell and Fubini numbers
+## An extended derivation with Stirling, Bell, and Fubini numbers
 
 [From set partitions to exact transfer](demonstrations/STIRLING_BELL_FUBINI.md)
 starts with one Stirling-number row, constructs Bell and ordered Bell numbers,
@@ -95,7 +95,7 @@ a Touchard evaluation and Fubini as a gamma or geometric moment, then builds
 full residue transfer systems. Exact interpolation recovers a complete
 parameterized polynomial, while two scalar summaries do not determine an
 arbitrary coordinate profile. Every example has exact Python
-checks, source-bound tables and a Python-generated diagram.
+checks, source-bound tables, and a Python-generated diagram.
 
 ## An extended derivation with roots of unity and falling factorials
 
@@ -203,8 +203,8 @@ energy balance. The [multilevel calculation](demonstrations/HAAR_LAB.md)
 records the default example and its expected results.
 
 [Open the Python playground](https://KomorebiP.github.io/Operation-KOMOREBI/playground.html).
-Choose a demonstration, press Run and compare its output with the hand calculation.
-You can edit the code, stop a calculation and reset the original example.
+Choose a demonstration, press Run, and compare its output with the hand calculation.
+You can edit the code, stop a calculation, and reset the original example.
 Python loads on the first run; allow extra time for the initial download.
 The playground also includes a tested introductory Komorebi Math example.
 
@@ -247,7 +247,7 @@ the [program source](../examples/komorebi_demonstrations.py).
 
 ## What a passing run establishes
 
-The program checks the displayed fixed matrices, lists and witnesses. Each
+The program checks the displayed fixed matrices, lists, and witnesses. Each
 demonstration explains the mathematical identity or contradiction behind its
 output. Matrix identities can justify statements about every vector in the
 specified finite space. Checking a list of sample vectors alone would not do so.
@@ -259,7 +259,7 @@ prove wider research claims. All software remains beta and work in progress.
 
 ## Continue with the libraries
 
-Use [First runs](FIRST_RUN.md) for installation, supported environments and the
+Use [First runs](FIRST_RUN.md) for installation, supported environments, and the
 introductory Python and C library programs. The demonstrations here are small
 standalone teaching programs. The libraries have their own APIs and tests.
 

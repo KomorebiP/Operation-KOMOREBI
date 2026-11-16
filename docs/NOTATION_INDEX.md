@@ -4,7 +4,7 @@
 
 The notation index gathers mathematical symbols from the selected reading sources. Search by symbol, TeX spelling, symbol name or words from a source excerpt. Choose a work when a letter has several meanings. Exact TeX matching preserves case and distinguishes spellings that look similar in plain text.
 
-Each entry provides the original spelling, a source excerpt and links to its mathematical passages. The work navigation connects it to the paper, claims, written proofs, Lean, code and worked examples. Links to Lean or code retain the work's existing scope and status.
+Each entry provides the original spelling, a source excerpt, and links to its mathematical passages. The work navigation connects it to the paper, claims, written proofs, Lean, code, and worked examples. Links to Lean or code retain the work's existing scope and status.
 
 Search results group matching entries that share a source passage within one work. This keeps a notation table row from appearing repeatedly for every letter it mentions. Open “matching entries in this passage” to follow individual spellings. Exact symbol matches come first, and short queries do not match incidental letters in surrounding prose. A quoted table row retains its whole symbol expression and the source's own name or description.
 
@@ -29,12 +29,12 @@ A definition passage can mention several symbols while defining only one. Read t
 
 Every work in the reader catalogue has a notation page. The twelve core papers are included. Each page lists the source files scanned and the number of detected mathematical passages. A work with no detected notation is shown explicitly, with links to its reading files.
 
-The scan covers TeX and Markdown mathematical delimiters, common equation environments and mathematical code fences. It skips ordinary program listings, comments and TeX preambles. Additional manuscript entrypoints are declared in [the source selection](../manifests/notation-sources.json). Their literal includes are followed using the existing source receipts.
+The scan covers TeX and Markdown mathematical delimiters, common equation environments, and mathematical code fences. It skips ordinary program listings, comments, and TeX preambles. Additional manuscript entrypoints are declared in [the source selection](../manifests/notation-sources.json). Their literal includes are followed using the existing source receipts.
 
 This is an occurrence index of the selected reading sources. It does not claim that every symbol has a reviewed definition. Notation in PDFs, images, diagrams, unusual TeX syntax or prose outside mathematical delimiters still needs a manual pass. Historical archives and program identifiers are outside the scan. The live coverage section and each work's source list make these limits visible.
 
 ## Reproducibility
 
-The index is rebuilt with the reader site from the same pinned collection revision. Each source is checked against its receipt before indexing. Downloadable JSON records retain source hashes, exact mathematical passages, source positions and every detected symbol occurrence. Entry links use hashes of exact spellings so that inserting another entry does not renumber existing symbols.
+The index is rebuilt with the reader site from the same pinned collection revision. Each source is checked against its receipt before indexing. Downloadable JSON records retain source hashes, exact mathematical passages, source positions, and every detected symbol occurrence. Entry links use hashes of exact spellings so that inserting another entry does not renumber existing symbols.
 
-The site checks verify source identities, recorded positions, coverage totals, entry links and links back to the reader. Parser tests cover comments, code fences, decorated symbols, case distinctions and conservative macro display. These checks do not review proofs or change any completion, Lean or confidence assessment.
+The site checks verify source identities, recorded positions, coverage totals, entry links, and links back to the reader. Parser tests cover comments, code fences, decorated symbols, case distinctions, and conservative macro display. These checks do not review proofs or change any completion, Lean or confidence assessment.

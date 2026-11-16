@@ -351,7 +351,7 @@ BOOK = {'work': 'paper-vi',
  'html_inputs': {'atlas-pages.tex': dict(url='read/paper-vi/atlas/index.html',title='Explore all 42 Paper VI atlas plates',note='')},
  'figure_previews': 'website/paper-vi-figure-previews.json',
  'reading_introduction': 'Read the 46 manuscript sections across Parts I, II, and III, with separate orientation '
-                'pages, the bibliography and the worked visual atlas.',
+                'pages, the bibliography, and the worked visual atlas.',
  'table_reading_aids': {
      'L1632': dict(headers=['Realization','Seed','Transfer','Packet/reconstruction law'],row_header_column=0),
      'L1708': dict(headers=['Certificate','Value'],row_header_column=0),

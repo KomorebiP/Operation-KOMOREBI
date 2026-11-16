@@ -11,7 +11,7 @@ exact rational endpoints enclose the actual real canonical functions.
 
 There are **30 new theorem declarations**, for **435 registered names**.
 All **63 fresh replay steps** pass across sixteen coupled modules: 396
-theorem axiom audits, sixteen kernel replays, four expected rejections and
+theorem axiom audits, sixteen kernel replays, four expected rejections, and
 one positive fixture. The finite core's 39-name evidence is inherited and
 Mathlib imports are cached. Review provenance is self-review.
 
@@ -35,7 +35,7 @@ The Lean list and exact rational operations are mathematical specifications.
 semantics, validation and mutation, guarded disk-majorant loop/resource
 failures and returned dictionary behavior. Next: prove successful ladder
 traces match the fuel majorant and preserve step/bit errors. Other J
-degree/denominator/symmetry, ancillary F/H, I and broad A-E coverage remain.
+degree/denominator/symmetry, ancillary F/H, I, and broad A-E coverage remain.
 Ordinary type convergence is conditional. No whole-book percentage is claimed.
 See the [live continuation](../monographs/special-functions/CONTINUE_HERE.md)
 and [remaining work](../monographs/special-functions/formalization/Block16/REMAINING_WORK.md).

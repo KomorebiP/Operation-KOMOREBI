@@ -48,7 +48,7 @@ The stated manuscript scope has 69 accepted proof-level correspondences. Its 108
 
 The technical reading edition is complete. The accepted 16-module core does not cover the expanded monograph. The historical full-coverage count remains uncertified.
 
-**Next step:** Map the expanded packet-Taylor, Stirling/Touchard and later corollaries to explicit missing formal obligations.
+**Next step:** Map the expanded packet-Taylor, Stirling/Touchard, and later corollaries to explicit missing formal obligations.
 
 [Paper, proofs, Lean, and code](works/paper-iii.md) · [Source directory](../papers/paper-iii/current)
 
@@ -142,7 +142,7 @@ Internal publication release is complete. The inherited finite formal contract e
 **Lean coverage:** Selected results recorded<br>
 **Evidence basis:** Recorded formal evidence
 
-Accepted reading release preserves scoped arithmetic, dyadic and lifting formal work. Broader extensions and the Euler reciprocal endpoint remain open.
+Accepted reading release preserves scoped arithmetic, dyadic, and lifting formal work. Broader extensions and the Euler reciprocal endpoint remain open.
 
 **Next step:** Reconcile the current claim map with the narrowed threshold-free theorem and retain the refuted stronger statement as history.
 
@@ -288,7 +288,7 @@ The proofread reading volumes are accompanied by 536 registered theorem names: 3
 **Lean coverage:** No Lean claim<br>
 **Evidence basis:** Recorded written review
 
-The reading edition has 118 pages. Self-review records bound to the source cover 38 of 62 statement/proof pairs. Of those reviewed, 36 are recorded as proved as written and two carry qualifications concerning the memory domain and computability class. The remaining 24 pairs are unreviewed. This coverage does not certify the whole book.
+The reading edition has 118 pages. Self-review records bound to the source cover 38 of 62 statement/proof pairs. Of those reviewed, 36 are recorded as proved as written, and two carry qualifications concerning the memory domain and computability class. The remaining 24 pairs are unreviewed. This coverage does not certify the whole book.
 
 **Next step:** Review the remaining 24 pairs in bounded batches. In a revised source edition, state the positive finite-index condition for the memory bit bound and the event-emitting compilation premise for the computability theorem and its certificate consequence. Keep empirical and independent review separate.
 
@@ -598,7 +598,7 @@ First-edition theoretical manuscript with twenty written statements and exact ex
 **Lean coverage:** No Lean claim<br>
 **Evidence basis:** Recorded written review
 
-Frozen first-edition theoretical/editorial scope with twenty statements, bounded exact tests and explicit interpreter/resource charges.
+Frozen first-edition theoretical/editorial scope with twenty statements, bounded exact tests, and explicit interpreter/resource charges.
 
 **Next step:** Pursue external proof review and separate empirical acquisition from the supplied observation and recipient models.
 
@@ -614,7 +614,7 @@ Frozen first-edition theoretical/editorial scope with twenty statements, bounded
 **Lean coverage:** No Lean claim<br>
 **Evidence basis:** Experimental evidence
 
-Executed illustrative two-agent model with supplied schedule, sensor semantics and reset rule. No learned policy or general self-improvement result.
+Executed illustrative two-agent model with supplied schedule, sensor semantics, and reset rule. No learned policy or general self-improvement result.
 
 **Next step:** Validate any learned or adaptive replacement against a preregistered baseline. Retain the supplied-rule demonstration as its own experiment.
 
@@ -854,7 +854,7 @@ The evidence covers the architecture and semantic reference tests. The RTL is an
 
 **Reader listing: incubator.** The hardware is an uncompiled interface skeleton with success tie-offs. No hardware qualification has been run.
 
-**Requirements for returning to the reading list:** Replace success tie-offs with real generation, certificate, dependency and fault inputs. Compile/simulate the RTL and retain meaningful rejection controls. Hardware performance requires separate measured evidence.
+**Requirements for returning to the reading list:** Replace success tie-offs with real generation, certificate, dependency, and fault inputs. Compile/simulate the RTL and retain meaningful rejection controls. Hardware performance requires separate measured evidence.
 
 [Focused review](SOUNDNESS_REVIEW_2026-10-27.md)
 
@@ -868,7 +868,7 @@ The evidence covers the architecture and semantic reference tests. The RTL is an
 **Lean coverage:** No Lean claim<br>
 **Evidence basis:** Experimental evidence
 
-Behavioral architecture, planner and cost model. No production RTL, synthesis, timing or measured silicon result.
+Behavioral architecture, planner, and cost model. No production RTL, synthesis, timing or measured silicon result.
 
 **Next step:** Build a bit-accurate FPGA Packet Streaming Multiprocessor and report measured results under a fixed output contract.
 
@@ -982,7 +982,7 @@ Finished evidence reader with selected formal conditional interfaces. The actual
 **Lean coverage:** Selected results recorded<br>
 **Evidence basis:** Recorded formal evidence
 
-Three positive Lean units and exact finite controls cover finite observation, filter budgets and a carry example. No global height mechanism.
+Three positive Lean units and exact finite controls cover finite observation, filter budgets, and a carry example. No global height mechanism.
 
 **Next step:** Formulate and prove the next arithmetic comparison beyond the finite reconstruction class before making a global-height claim.
 
@@ -1030,9 +1030,9 @@ Finished exposition/evidence set with written recurrence arguments and finite ch
 **Lean coverage:** No Lean claim<br>
 **Evidence basis:** Recorded written review
 
-Finished reader/visual sets with scoped arguments, exact reductions and finite checks. Both conjectures remain open.
+Finished reader/visual sets with scoped arguments, exact reductions, and finite checks. Both conjectures remain open.
 
-**Next step:** Track each universal endpoint separately from finite orbit checks, models and conditional reductions.
+**Next step:** Track each universal endpoint separately from finite orbit checks, models, and conditional reductions.
 
 [Paper, proofs, Lean, and code](works/collatz-and-riemann-readers.md) · [Source directory](../research/collatz-and-riemann-readers)
 
@@ -1048,7 +1048,7 @@ Finished reader/visual sets with scoped arguments, exact reductions and finite c
 
 Written identities and bounded exact controls with checked source inputs. The maintained example includes formal-series and local arithmetic derivations, Fibonacci and polynomial operator transport, quartic displacement/period/isometry laws, and finite-mode/logarithmic Euler encodings. Same-assistant reviews and pinned API comparisons are separate evidence. No new formalization, independent review or global classification is asserted.
 
-**Next step:** Independent mathematical review and any broader arithmetic classification require their own hypotheses and evidence. Keep finite tests, written self-review, externally cited theorem inputs and any future formalization distinct.
+**Next step:** Independent mathematical review and any broader arithmetic classification require their own hypotheses and evidence. Keep finite tests, written self-review, externally cited theorem inputs, and any future formalization distinct.
 
 [Paper, proofs, Lean, and code](works/euler-signal-bridge.md) · [Source directory](../research/euler-signal-bridge)
 
@@ -1150,7 +1150,7 @@ Exact 343-point torsion dynamics and written distribution identities. Numerical 
 
 Finished reading set with 42 selected formal modules. Complex divisor arguments and the gamma/class-field equality exceed that formal scope.
 
-**Next step:** Resolve the polarized reality, periodic descent and principal-norm obligations before claiming the original equality.
+**Next step:** Resolve the polarized reality, periodic descent, and principal-norm obligations before claiming the original equality.
 
 [Paper, proofs, Lean, and code](works/hilbert12-cubic-divisor.md) · [Source directory](../research/hilbert12-cubic-divisor)
 
@@ -1280,7 +1280,7 @@ Internally audited final manuscript with exact finite coherence calculations. Th
 
 The separate Lean 4.24.0 companion checks 266 theorem declarations. It retains graph reconstruction, exact unpinned/partial-pin counts, and automatic checked traversal. New finite edge indexing counts each undirected edge once. Complete duplicate-free image and actual additive quotient lists have exactly `2^(n-c)` and `2^(m+c-n)` elements. Taking `log2` gives their binary cardinality ranks. Equal derivative fibers and equal cosets are proved before power cancellation, with `c <= n` and `n-c <= m`. Nineteen inherited sources are unchanged, and both obstruction theorems remain axiom-free. No external module/basis interface, sparse forest/complexity theorem, or wider transport/forcing claim is added.
 
-**Next step:** Develop a verified sparse spanning-forest implementation and state any proved complexity bounds. If a module/basis interface is introduced, connect its dimension to the established exact cardinalities. Preserve the exhaustive rank and reconstruction references, original source and earlier companions.
+**Next step:** Develop a verified sparse spanning-forest implementation and state any proved complexity bounds. If a module/basis interface is introduced, connect its dimension to the established exact cardinalities. Preserve the exhaustive rank and reconstruction references, original source, and earlier companions.
 
 [Paper, proofs, Lean, and code](works/resolution-semantics.md) · [Source directory](../research/resolution-semantics)
 
@@ -1298,7 +1298,7 @@ The separate Lean 4.24.0 companion checks 266 theorem declarations. It retains g
 **Lean coverage:** No Lean claim<br>
 **Evidence basis:** Written / finite evidence
 
-Working manuscript with 82 ledger targets, written proofs and self-review. No Lean certification or independent review.
+Working manuscript with 82 ledger targets, written proofs, and self-review. No Lean certification or independent review.
 
 **Next step:** Independently review K72-K82 and retain the unconstrained rank-two scope before adding geometric or Galois conditions.
 

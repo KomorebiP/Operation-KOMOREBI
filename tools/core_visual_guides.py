@@ -43,7 +43,7 @@ def guide_choices():
              'read/monographs-large-signal-model/atlas/index.html'),
             ('monographs-special-functions','Special Functions','Function families, packets, and finite resolution',
              'read/monographs-special-functions/atlas/index.html'),
-            ('monographs-physics','Physics','Packets, free fields, gauge, gravity and refinement',
+            ('monographs-physics','Physics','Packets, free fields, gauge, gravity, and refinement',
              'read/monographs-physics/atlas/index.html')]
 
 

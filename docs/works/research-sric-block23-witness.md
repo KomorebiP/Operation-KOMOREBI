@@ -12,7 +12,7 @@ A finite synthetic semantic-witness construction. The recorded pilot with a real
 
 ## Before you start
 
-**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+**Suggested background:** Read the problem statement, recorded scope, and open questions first. The program's definitions determine its subject prerequisites.
 
 **Recorded results and limits:** Finite synthetic semantic-witness construction and fake-runtime pilot checks. No external-checkpoint result.
 

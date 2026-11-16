@@ -2,7 +2,7 @@
 
 SF-LEAN-B17 proves the exact rational guarded-majorant algorithm specification:
 first-small-radius ladders, bounded step counts, reverse-fold equality to the
-proved fuel model, explicit step/size errors and abstract input-validation order.
+proved fuel model, explicit step/size errors, and abstract input-validation order.
 Every successful return certifies the actual complex disk bound and exact
 real polynomial endpoints under the original strict-contraction hypotheses.
 
@@ -32,9 +32,9 @@ The verifier installs nothing and makes no network request.
 
 This is the Lean algorithm model, including abstract invalid-input tags.
 **Full Python runtime refinement remains open**: interpreter, Fraction,
-stdlib bit_length/comb/factorial, type/exception objects, mutation and dictionary
+stdlib bit_length/comb/factorial, type/exception objects, mutation, and dictionary
 correspondence are separate. Next: a typed certified-evaluation result composing
-the proved arrays, guarded majorant and endpoint fields. Other J/F/H, I and A-E
+the proved arrays, guarded majorant, and endpoint fields. Other J/F/H, I, and A-E
 remain; ordinary type convergence is conditional. No whole-book percentage exists.
 Use [current guidance](../monographs/special-functions/current/README.md),
 [live continuation](../monographs/special-functions/current/CONTINUE_HERE.md)

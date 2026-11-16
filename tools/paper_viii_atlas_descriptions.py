@@ -1,6 +1,6 @@
 """Reading aids for Paper VIII's original visual-guide drawings."""
 DESCRIPTIONS={
- 'three_views':('An array, storage counts and toy compilation costs','The panels show a dense array, storage counts for dense and factored forms, and toy compilation costs under different error budgets. The cost plot uses declared model values rather than measured timings.'),
+ 'three_views':('An array, storage counts, and toy compilation costs','The panels show a dense array, storage counts for dense and factored forms, and toy compilation costs under different error budgets. The cost plot uses declared model values rather than measured timings.'),
  'work_storage':('Arithmetic work and stored data','The displayed counts compare declared representations of the same operator. They are model counts rather than measured device timings.'),
  'factored_application':('A block diagonal action plus a thin correction','The local block action and the low-rank correction contribute to the same output vector. The correction uses the complete input rather than independent packet-local inputs.'),
  'cancellation':('Support permits an interaction that cancels','Two contributions share an output address. Their signed values cancel, so structural support is an upper bound on the realized nonzero pattern.'),
@@ -21,10 +21,10 @@ DESCRIPTIONS={
  'precision':('A continuous error budget and clipped choices','The plotted allocation follows the declared error model and cost data. Bounds on allowable choices clip the continuous solution and must remain part of the optimization.'),
  'discrete':('Dynamic-programming costs by exact integer weight','Columns are exact integer weights and rows are successive numbers of processed edges. Each cell gives the minimum declared cost at that exact weight; infinity marks an unreachable state. The budget optimum is the minimum across the allowed columns.'),
  'tree_frontier':('Five legal prunings and their cost-error frontier','The finite candidate tree determines which subsets are legal prunings. The frontier compares all five choices and shows the declared budget optimum.'),
- 'local_update':('Node costs before and after a local change','The upper row shows old node costs and the lower row the new costs. Only the named leaf, its parent and the root change. The other displayed node values are reused.'),
+ 'local_update':('Node costs before and after a local change','The upper row shows old node costs and the lower row the new costs. Only the named leaf, its parent, and the root change. The other displayed node values are reused.'),
  'batch_shapes':('Shape batches and declared memory traffic','Matrices of compatible shapes can share launches. The diagram keeps launch counts and data movement as separate costs in the stated model.'),
  'amortization':('Setup cost and the first reuse win','The two affine cost models are compared at integer reuse counts. A tie is separate from the first strict win; these lines are modeled costs rather than timings.'),
- 'contract_match':('Matching output contracts before comparing methods','Each route identifies the object it returns. A timing comparison requires the same requested output, validation target and measurement conditions.'),
+ 'contract_match':('Matching output contracts before comparing methods','Each route identifies the object it returns. A timing comparison requires the same requested output, validation target, and measurement conditions.'),
  'end_to_end':('Local and thin contributions to one exact output','The displayed calculation follows the running input through the local product and low-rank correction. Their sum is compared with an independent dense reference.'),
  'complex_core':('Complex range coordinates and squared approximation error','The plotted errors correspond to retaining zero, one or two singular directions. The matrix labels distinguish Hermitian isometry from an incorrect transpose convention.'),
  'inverse_closure':('A closure-allowed inverse entry that vanishes','The graph has two signed routes to the final vertex. The dashed closure edge permits that address structurally, while the exact inverse entry is zero by cancellation.'),

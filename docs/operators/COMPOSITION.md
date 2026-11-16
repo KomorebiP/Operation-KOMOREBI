@@ -47,7 +47,7 @@ U=\begin{pmatrix}1&0\\1&1\end{pmatrix},\qquad
 x=\begin{pmatrix}1\\2\end{pmatrix}.
 ```
 
-In the physical coordinates, $Tx=(5,2)^{\mathsf T}$ and
+In the physical coordinates, $Tx=(5,2)^{\mathsf T}$, and
 $UTx=(5,7)^{\mathsf T}$. Keep the initial and final coordinates unchanged.
 The first stored map describes its output by $y_C=Cy$, while the second
 expects $y_D=Dy$, with
@@ -91,7 +91,7 @@ so matrix dimensions alone do not expose the mismatch. The two intermediate
 coordinate systems describe the same physical space, but assign different
 vectors of coefficients to its elements.
 
-When both stored maps use the same middle chart, $D=C$ and the bridge is the
+When both stored maps use the same middle chart, $D=C$, and the bridge is the
 identity. More general analysis and synthesis presentations have their own
 bridge, as described in the catalog.
 

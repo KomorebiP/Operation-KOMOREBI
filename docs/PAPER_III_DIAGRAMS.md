@@ -1,13 +1,13 @@
 # Paper III: figure and atlas descriptions
 
-These reading aids describe the 6 chapter figures, including their arrows, axes, scales and matrix entries. They retain the assumptions and example scope of the manuscript.
+These reading aids describe the 6 chapter figures, including their arrows, axes, scales, and matrix entries. They retain the assumptions and example scope of the manuscript.
 
 [Read the chapters](https://komorebip.github.io/Operation-KOMOREBI/read/paper-iii/index.html) · [Accessibility and reading options](ACCESSIBILITY.md)
 
 <a id="figure-1-typed-edge-words-and-directed-walks"></a>
 <h2 id="figure-01" tabindex="-1">Figure 1: Typed edge words and directed walks</h2>
 
-The left panel follows P₀→P₁→P₂→P₃ through edges e₁, e₂, e₃. The written operator product is Lₑ₃Lₑ₂Lₑ₁ because the rightmost factor acts first. Its only possible endpoint block is output 3, input 0. On the right, e maps Pᵢ to Pⱼ and f maps Pℓ to Pₖ, with j≠ℓ. Their intermediate types do not match, so L_f L_e=0. Rows are targets and columns are sources.
+The left panel follows P₀→P₁→P₂→P₃ through edges e₁, e₂, e₃. The written operator product is Lₑ₃Lₑ₂Lₑ₁ because the rightmost factor acts first. Its only possible endpoint block is output 3, input 0. On the right, e maps Pᵢ to Pⱼ, and f maps Pℓ to Pₖ, with j≠ℓ. Their intermediate types do not match, so L_f L_e=0. Rows are targets and columns are sources.
 
 [Figure and surrounding text](https://komorebip.github.io/Operation-KOMOREBI/read/paper-iii/finite-coordinates.html#L156)
 
@@ -81,7 +81,7 @@ Three panels distinguish a typed matrix transfer, coordinates of one ambient vec
 <a id="atlas-page-2-an-atlas-of-the-objects"></a>
 <h3 id="atlas-02" tabindex="-1">Atlas page 2: An atlas of the objects</h3>
 
-The orientation table identifies objects by their source, target and role. In particular, a discrepancy between two routes from C_a to C_c is not yet an endomorphism of C_a. Turning it into a holonomy obstruction at the base requires the specified inverse return transport. The table also distinguishes packet blocks, input labels in a tree, and the chosen semantics of operation symbols.
+The orientation table identifies objects by their source, target, and role. In particular, a discrepancy between two routes from C_a to C_c is not yet an endomorphism of C_a. Turning it into a holonomy obstruction at the base requires the specified inverse return transport. The table also distinguishes packet blocks, input labels in a tree, and the chosen semantics of operation symbols.
 
 [Original plate explanation](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/papers/paper-iii/current/manuscript/visual_atlas.tex#L17)
 
@@ -95,7 +95,7 @@ The grids use target rows and source columns numbered 0,1,2. The first edge 0→
 <a id="atlas-page-4-all-sixteen-words-only-five-walks"></a>
 <h3 id="atlas-04" tabindex="-1">Atlas page 4: All sixteen words, only five walks</h3>
 
-The four edge labels are a:0→1 with coefficient 2, b:0→1 with coefficient −1, c:1→2 with coefficient 3, and d:2→0 with coefficient 1. Columns of the four-by-four board select the first executed edge and rows select the second. Only the chronological words ac, bc, cd, da and db survive; their coefficients are 6, −3, 3, 2 and −1. Crosses mark the other eleven type mismatches. Parallel a and b remain distinct before their contributions are added.
+The four edge labels are a:0→1 with coefficient 2, b:0→1 with coefficient −1, c:1→2 with coefficient 3, and d:2→0 with coefficient 1. Columns of the four-by-four board select the first executed edge and rows select the second. Only the chronological words ac, bc, cd, da, and db survive; their coefficients are 6, −3, 3, 2, and −1. Crosses mark the other eleven type mismatches. Parallel a and b remain distinct before their contributions are added.
 
 [Original plate explanation](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/papers/paper-iii/current/manuscript/visual_atlas.tex#L69)
 
@@ -123,7 +123,7 @@ The orbit-column matrix begins with e₀, then e₁+e₂, followed by zeros. Its
 <a id="atlas-page-8-paths-through-changing-packet-lists"></a>
 <h3 id="atlas-08" tabindex="-1">Atlas page 8: Paths through changing packet lists</h3>
 
-The packet-list sizes change as 2→3→2→1 under A, B and C. For each input, the lower board lists all six choices of intermediate indices and includes zero terms. The final row is CBA=(−4,6). The contributions for input 0 are 2,−4,0,0,−2,0; for input 1 they are 0,−2,12,0,−1,−3. These are ordered signed matrix contributions rather than probabilities or unsigned path counts.
+The packet-list sizes change as 2→3→2→1 under A, B, and C. For each input, the lower board lists all six choices of intermediate indices and includes zero terms. The final row is CBA=(−4,6). The contributions for input 0 are 2,−4,0,0,−2,0; for input 1 they are 0,−2,12,0,−1,−3. These are ordered signed matrix contributions rather than probabilities or unsigned path counts.
 
 [Original plate explanation](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/papers/paper-iii/current/manuscript/visual_atlas.tex#L156)
 
@@ -144,7 +144,7 @@ A square-like coordinate grid is mapped by A(x,y)=(x,y+x²): horizontal lines be
 <a id="atlas-page-11-reversibility-is-a-real-hypothesis"></a>
 <h3 id="atlas-11" tabindex="-1">Atlas page 11: Reversibility is a real hypothesis</h3>
 
-Both rows use forward scalar transports 2, 3 and direct comparison 5. The first chooses return 1/6 and produces loop value 1, even though the forward cocycle discrepancy is 3·2−5=1. That return is not the inverse of 5. The reversible row instead returns by 1/5 and produces holonomy 6/5. Self-transport equal to identity and an inverse condition on reversed edges are separate assumptions.
+Both rows use forward scalar transports 2, 3, and direct comparison 5. The first chooses return 1/6 and produces loop value 1, even though the forward cocycle discrepancy is 3·2−5=1. That return is not the inverse of 5. The reversible row instead returns by 1/5 and produces holonomy 6/5. Self-transport equal to identity and an inverse condition on reversed edges are separate assumptions.
 
 [Original plate explanation](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/papers/paper-iii/current/manuscript/visual_atlas.tex#L227)
 
@@ -158,7 +158,7 @@ The triangle compares a two-step multiplier 3·2=6 with the specified dashed dir
 <a id="atlas-page-13-the-identity-can-hide-in-the-spectrum"></a>
 <h3 id="atlas-13" tabindex="-1">Atlas page 13: The identity can hide in the spectrum</h3>
 
-The dashed unit square and its solid sheared image are related by H with rows (1,1),(0,1). The vector e₁=(0,1) moves to (1,1), so its displacement is e₀. Although trace 2, determinant 1 and eigenvalues both 1 match the identity matrix, H−I=E₀₁ is nonzero. The explicit moved vector is the obstruction witness.
+The dashed unit square and its solid sheared image are related by H with rows (1,1),(0,1). The vector e₁=(0,1) moves to (1,1), so its displacement is e₀. Although trace 2, determinant 1, and eigenvalues both 1 match the identity matrix, H−I=E₀₁ is nonzero. The explicit moved vector is the obstruction witness.
 
 [Original plate explanation](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/papers/paper-iii/current/manuscript/visual_atlas.tex#L268)
 
@@ -172,7 +172,7 @@ The two parallelograms are exact images of a unit square before and after the ga
 <a id="atlas-page-15-flat-is-not-the-same-as-calibrated"></a>
 <h3 id="atlas-15" tabindex="-1">Atlas page 15: Flat is not the same as calibrated</h3>
 
-Three rulers have chosen scale factors g₀=1, g₁=2 and g₂=3; their marks are g_a times integers. Relative transport is the target scale divided by the source scale. Thus 0→1 multiplies by 2, 1→2 by 3/2, and 0→2 by 3. The products agree, so this connection is flat, although its edges differ from the original canonical identity transports. The rulers show supplied gauge factors rather than an intrinsic metric.
+Three rulers have chosen scale factors g₀=1, g₁=2, and g₂=3; their marks are g_a times integers. Relative transport is the target scale divided by the source scale. Thus 0→1 multiplies by 2, 1→2 by 3/2, and 0→2 by 3. The products agree, so this connection is flat, although its edges differ from the original canonical identity transports. The rulers show supplied gauge factors rather than an intrinsic metric.
 
 [Original plate explanation](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/papers/paper-iii/current/manuscript/visual_atlas.tex#L323)
 
@@ -221,7 +221,7 @@ The solid parabola is 2x² and the dashed one is 4x², with horizontal input x a
 <a id="atlas-page-22-mixed-terms-are-not-optional"></a>
 <h3 id="atlas-22" tabindex="-1">Atlas page 22: Mixed terms are not optional</h3>
 
-The rectangle has horizontal pieces of lengths 2 and 3 and vertical pieces 5 and 7, with separately scaled display units. Its four cell products are 10, 15, 14 and 21, totaling 60. Keeping only the matching-label cells 10 and 21 gives 31 and loses the mixed contributions 15 and 14. The nearby unary-square comparison similarly retains its mixed term 2ab. Distributive expansion needs the stated multilinearity and slot types.
+The rectangle has horizontal pieces of lengths 2 and 3 and vertical pieces 5 and 7, with separately scaled display units. Its four cell products are 10, 15, 14, and 21, totaling 60. Keeping only the matching-label cells 10 and 21 gives 31 and loses the mixed contributions 15 and 14. The nearby unary-square comparison similarly retains its mixed term 2ab. Distributive expansion needs the stated multilinearity and slot types.
 
 [Original plate explanation](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/papers/paper-iii/current/manuscript/visual_atlas.tex#L487)
 

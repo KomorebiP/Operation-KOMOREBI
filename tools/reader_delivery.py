@@ -220,7 +220,7 @@ def package(root, artifacts):
     (artifacts/'RELEASE.md').write_text('Reader downloads for Operation-KOMOREBI revision `'+revision+'`.\n\n'
         'These are the byte-identical reading ZIPs and raw JSON exports validated before Pages packaging. '
         'The site retains its reading content and serves compressed copies of interactive indexes. '
-        'Archive contents, source bytes and SHA-256 identities are preserved.\n', encoding='utf-8')
+        'Archive contents, source bytes, and SHA-256 identities are preserved.\n', encoding='utf-8')
     return report
 
 

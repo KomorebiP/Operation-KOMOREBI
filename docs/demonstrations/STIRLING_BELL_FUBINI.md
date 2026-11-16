@@ -1,10 +1,10 @@
-# From set partitions to exact transfer: Stirling, Bell and Fubini numbers
+# From set partitions to exact transfer: Stirling, Bell, and Fubini numbers
 
 **An extended hand-worked example · Komorebi P.**
 
 One triangular table counts partitions of labelled objects into nonempty blocks. Constant and factorial weights on that same table generate Bell and ordered Bell (Fubini) numbers. We compute both from an explicit row, prove the general generating-function substitution and its inverse, trace polynomial and moment realizations, and identify the boundary between reversible data and lossy summaries.
 
-No new mathematical result is claimed. The counting identities are classical. The purpose is to follow one explicit object through the coordinate, transfer, reconstruction and obstruction language used throughout the collection.
+No new mathematical result is claimed. The counting identities are classical. The purpose is to follow one explicit object through the coordinate, transfer, reconstruction, and obstruction language used throughout the collection.
 
 [Run the existing factorial-weight experiment](https://KomorebiP.github.io/Operation-KOMOREBI/playground.html#factorial-weights) · [Read the exact program](https://KomorebiP.github.io/Operation-KOMOREBI/read/stirling-bell-fubini.html) · [Download the verified results](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/source-and-results.zip)
 
@@ -450,7 +450,7 @@ F_n=\sum_{m\ge0}\frac{m^n}{2^{m+1}}.
 
 This is an **independent interpretation**, not a claim that infinitely many terms are required to *compute* \(F_n\): the original finite Stirling row remains exact. The signed Stirling inverse still recovers the input moments \(k!\lambda^k\) from the complete prefix \((F_0(\lambda),\ldots,F_n(\lambda))\). A single output \(F_n(\lambda)\) does not recover its underlying row.
 
-The checker verifies the parameter values, polynomial recurrences, geometric falling-factorial moments, formal generating functions, reciprocal identities and signed inversions using integers and rational fractions. Download the [parameterized moment table](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/moment-bridge.csv) alongside the earlier tables.
+The checker verifies the parameter values, polynomial recurrences, geometric falling-factorial moments, formal generating functions, reciprocal identities, and signed inversions using integers and rational fractions. Download the [parameterized moment table](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/moment-bridge.csv) alongside the earlier tables.
 
 ## 6. Split the reciprocal identity into even and odd packets
 
@@ -578,7 +578,7 @@ For \(m=3\), suppress the superscript and write the complete circulant system:
 =\begin{pmatrix}1\\0\\0\end{pmatrix}.
 \]
 
-Because every \(u_a\) has zero constant coefficient, this matrix has identity constant term and is invertible as a formal power-series matrix. The three-packet equation is **equivalent** to the original reciprocal, not an approximation or a different sequence.
+Because every \(u_a\) has zero constant coefficient, this matrix has identity constant term, and is invertible as a formal power-series matrix. The three-packet equation is **equivalent** to the original reciprocal, not an approximation or a different sequence.
 
 At degree five the output belongs to residue \(2\bmod3\). Splitting the original binomial recurrence by the *tap degree* \(j\bmod3\) gives
 
@@ -705,14 +705,14 @@ Finite computation is a regression check, not a substitute for the displayed gen
 
 ## 9. Reproduce the exact records
 
-Python 3.10 or later is sufficient; NumPy, plotting packages and external services are unnecessary. From the collection checkout run:
+Python 3.10 or later is sufficient; NumPy, plotting packages, and external services are unnecessary. From the collection checkout run:
 
 ~~~text
 python -B examples/stirling_bell_fubini.py
 python -B examples/stirling_bell_fubini.py --output stirling-results
 ~~~
 
-The second command regenerates the exact integer CSVs, rational packet table, SVG diagram and JSON verification record. The publication build generates these outputs from this same retained program, records their SHA-256 digests and makes a source-and-results archive; the website checks its links and file identities separately.
+The second command regenerates the exact integer CSVs, rational packet table, SVG diagram, and JSON verification record. The publication build generates these outputs from this same retained program, records their SHA-256 digests, and makes a source-and-results archive; the website checks its links and file identities separately.
 
 [Read the full Python source](https://KomorebiP.github.io/Operation-KOMOREBI/read/stirling-bell-fubini.html) · [Download the Python checker](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/stirling_bell_fubini.py) · [Download the source-and-results ZIP](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/stirling-bell-fubini/source-and-results.zip)
 
@@ -722,6 +722,6 @@ The second command regenerates the exact integer CSVs, rational packet table, SV
 
 The [Special Functions sequence atlas, lessons S07 and S08](../../monographs/special-functions/expanded_visual/chapters_sequences.tex) already gives the Bell and factorial-weighted Fubini rows, the generating functions, and the comparison plots. Its [Special Functions monograph](../works/monographs-special-functions.md) supplies the broader sequence setting and separate Lean coverage. The existing [sequence-shapes playground](SEQUENCE_SHAPES.md) lets readers modify parameters and inspect 2D and 3D sequence maps.
 
-For the reciprocal and residue machinery, see the [Euler extended example](EULER_PACKETS.md), [factorial lanes](FACTORIAL_LANES.md), and [Paper IV](../works/paper-iv.md). These links establish related constructions, **not** a claim that Euler, factorial-lane and Fubini coefficients are identical.
+For the reciprocal and residue machinery, see the [Euler extended example](EULER_PACKETS.md), [factorial lanes](FACTORIAL_LANES.md), and [Paper IV](../works/paper-iv.md). These links establish related constructions, **not** a claim that Euler, factorial-lane, and Fubini coefficients are identical.
 
 [All demonstrations](../DEMONSTRATIONS.md) · [All worked examples](../HAND_WORKED_EXAMPLES.md) · [Evidence guide](../RECORDS.md)

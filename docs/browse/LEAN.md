@@ -234,7 +234,7 @@ Jump to a work:
 - [Historical Block01 formal status](../../monographs/special-functions/LEAN_STATUS.md)
 - [Block01 recurrence companion report](../../monographs/special-functions/formalization/Block01/REPORT.md)
 - [Finite core and coupled Lean sources (directory)](../../monographs/special-functions/lean/)
-- [Coupled recurrence, local convergence and recovery (Lean)](../../monographs/special-functions/lean/CoupledFormal.lean)
+- [Coupled recurrence, local convergence, and recovery (Lean)](../../monographs/special-functions/lean/CoupledFormal.lean)
 - [Coupled formal claim map](../../monographs/special-functions/formalization/Block01/CLAIM_MAP.json)
 - [Block17 claim map](../../monographs/special-functions/formalization/Block17/CLAIM_MAP.json)
 - [Block17 recorded execution receipt](../../monographs/special-functions/formalization/Block17/evidence/receipt.json)

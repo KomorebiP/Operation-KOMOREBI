@@ -26,9 +26,9 @@ Use the links below to read this work and its supporting files. Ctrl+click (Comm
 
 ## Read
 
-- [Read online: reviewed core, nine chapters and written proofs](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-machine-native-reasoning/index.html)
-- [Start here: reading paths, formal scope and editions](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-machine-native-reasoning/start.html)
-- [Expanded book: 97 chapters, PDF reader and editable TeX](https://KomorebiP.github.io/Operation-KOMOREBI/read/research-machine-native-reasoning-wider/reconstructed-edition.html)
+- [Read online: reviewed core, nine chapters, and written proofs](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-machine-native-reasoning/index.html)
+- [Start here: reading paths, formal scope, and editions](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-machine-native-reasoning/start.html)
+- [Expanded book: 97 chapters, PDF reader, and editable TeX](https://KomorebiP.github.io/Operation-KOMOREBI/read/research-machine-native-reasoning-wider/reconstructed-edition.html)
 - [Edition README](../../monographs/machine-native-reasoning/README.md)
 - [Read PDF](../../monographs/machine-native-reasoning/reader/Machine_Native_Reasoning_Reviewed_Core.pdf)
 

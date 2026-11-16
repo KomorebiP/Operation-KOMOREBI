@@ -4,9 +4,9 @@
 
 This page maps all **74 named entries** in the release inventory to their canonical source components or existing repositories. It records where the work can be inspected. Several entries share a combined edition, so the row count is not a count of independent discoveries.
 
-**Source coverage does not establish mathematical completion, solve an open conjecture, demonstrate novelty, qualify a software release, or claim a new Lean replay.** Each component retains its own hypotheses, evidence, limitations and formalization boundary. Public libraries are presented as beta or work in progress. Recorded qualifications apply only to their stated scope. See the [completion, Lean coverage and confidence catalogue](COMPLETION_STATUS.md) for the separate assessment of each component.
+**Source coverage does not establish mathematical completion, solve an open conjecture, demonstrate novelty, qualify a software release, or claim a new Lean replay.** Each component retains its own hypotheses, evidence, limitations, and formalization boundary. Public libraries are presented as beta or work in progress. Recorded qualifications apply only to their stated scope. See the [completion, Lean coverage, and confidence catalogue](COMPLETION_STATUS.md) for the separate assessment of each component.
 
-The machine-readable [source-coverage manifest](../manifests/source-coverage.json) gives exact component IDs, original archive filenames and full SHA-256 identities where available. These identify source versions. Repository import receipts establish publication of the selected files.
+The machine-readable [source-coverage manifest](../manifests/source-coverage.json) gives exact component IDs, original archive filenames, and full SHA-256 identities where available. These identify source versions. Repository import receipts establish publication of the selected files.
 
 The [publication verification record](../verification/source-publication-2026-10-27.json) records the complete SHA-256 check of **139,002 source files** and the unchanged scientific sources through the subsequent catalogue reconciliation. These are file-identity checks. The [completion catalogue](COMPLETION_STATUS.md) records scientific status separately.
 
@@ -24,7 +24,7 @@ The [publication verification record](../verification/source-publication-2026-10
 
 ## Known source-availability limits
 
-**Physics Curvature v0.4:** the [research records](../research/physics-curvature-states/) include the reader PDF, progress ledger, verification report and original verification JSON. The source inventory and targeted filename search on 27 October 2026 did not locate the reproducible code/data package, stored arrays, figure source or editable manuscript source. The records retain their stated finite scope and do not repair the inherited coupled origin cutoff failure.
+**Physics Curvature v0.4:** the [research records](../research/physics-curvature-states/) include the reader PDF, progress ledger, verification report, and original verification JSON. The source inventory and targeted filename search on 27 October 2026 did not locate the reproducible code/data package, stored arrays, figure source or editable manuscript source. The records retain their stated finite scope and do not repair the inherited coupled origin cutoff failure.
 
 **K-COS source version:** the available [monograph source](../monographs/cos-method/) is `K_COS_Monograph_Final_Package.zip`, with a separate [end-to-end continuation](../monographs/cos-method/formal-continuation/). The later official 1.0 source payload referenced by `K_COS_Official_Release_Report.md` was not recovered. The available sources retain their actual identities and are not relabeled as that later release.
 
@@ -75,7 +75,7 @@ No other named entry in this 74-entry inventory remains unaccounted for. This is
 | 22 | Realization Calculus collected book | Source package | [monographs/realization-calculus](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/monographs/realization-calculus) |
 | 23 | Special Functions collection and coupled formal block | Source package | [monographs/special-functions](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/monographs/special-functions) |
 
-### Machine theory, models and circuits
+### Machine theory, models, and circuits
 
 | No. | Project | Source disposition | Canonical source |
 |---:|---|---|---|
@@ -110,8 +110,8 @@ No other named entry in this 74-entry inventory remains unaccounted for. This is
 | No. | Project | Source disposition | Canonical source |
 |---:|---|---|---|
 | 44 | Komorebi Physics main publication and generator | Source package | [monographs/physics](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/monographs/physics) |
-| 45 | Physics energy, matching and origin-locking continuations | Source package | [research/physics-energy-backreaction](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/research/physics-energy-backreaction) · [research/physics-origin-locking](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/research/physics-origin-locking) |
-| 46 | Physics curvature, initial states and conserved subtraction | Available records, source unrecovered | [research/physics-curvature-states](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/research/physics-curvature-states) |
+| 45 | Physics energy, matching, and origin-locking continuations | Source package | [research/physics-energy-backreaction](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/research/physics-energy-backreaction) · [research/physics-origin-locking](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/research/physics-origin-locking) |
+| 46 | Physics curvature, initial states, and conserved subtraction | Available records, source unrecovered | [research/physics-curvature-states](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/research/physics-curvature-states) |
 | 47 | The Komorebi Methodology reviewed professional essay | Source package | [monographs/komorebi-methodology](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/monographs/komorebi-methodology) |
 
 ### Arithmetic and conjecture programs

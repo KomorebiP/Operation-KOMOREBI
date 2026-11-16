@@ -9,7 +9,7 @@ LEGACY_ORDERS={'KOM013':3,'KOM014':4,'KOM015':5,'KOM016':6}
 
 
 def coefficients(order,power,weight,count=24):
-    if not all(type(v) is int for v in (order,power,weight,count)) or order<2 or power<1 or weight<1 or count<1:raise ValueError('Use integer order>=2, power>=1, weight>=1 and count>=1')
+    if not all(type(v) is int for v in (order,power,weight,count)) or order<2 or power<1 or weight<1 or count<1:raise ValueError('Use integer order>=2, power>=1, weight>=1, and count>=1')
     a=[1]
     for n in range(1,count):
         value=weight*sum((n+(power-1)*j)*a[n-j] for j in range(1,min(order,n)+1))

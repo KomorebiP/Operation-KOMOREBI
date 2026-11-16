@@ -12,7 +12,7 @@ Cyclic analytic families, reciprocal identities, and spectral information.
 
 ## Before you start
 
-**Suggested background:** Vectors, matrices, linear maps, kernels and images, and reading a statement with hypotheses. Consult the selected paper for any additional algebra or analysis it uses.
+**Suggested background:** Vectors, matrices, linear maps, kernels, and images, and reading a statement with hypotheses. Consult the selected paper for any additional algebra or analysis it uses.
 
 **Recorded results and limits:** 68 scoped results have recorded formal acceptance.
 

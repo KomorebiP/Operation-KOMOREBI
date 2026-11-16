@@ -27,14 +27,14 @@ thirteen generated objects and 31 staging copies. The separate source-based
 remaining-work assessment has 23 inputs and two outputs.
 
 Replay `tools/verify_coupled_scalar_reduction.py` under Special Functions with
-Lean 4.34.0-rc2, Mathlib aeb72f1e9981b6d35b426b16dca7759be3e7ba06 and
+Lean 4.34.0-rc2, Mathlib aeb72f1e9981b6d35b426b16dca7759be3e7ba06, and
 a new external work directory. The verifier installs nothing and makes no
 network request. [Live continuation](../monographs/special-functions/CONTINUE_HERE.md)
 and [remaining work](../monographs/special-functions/formalization/Block13/REMAINING_WORK.md)
 retain exact next targets and boundaries.
 
 Next major target: H.1 autonomous projections and operator decoupling.
-Some ancillary explanatory F correspondence, I-J analytic resolution and
+Some ancillary explanatory F correspondence, I-J analytic resolution, and
 arbitrary-radius evaluator/Python refinement, and broad A-E analytic coverage
 remain. Ordinary type convergence is conditional. No exhaustive whole-book
 map or completion percentage is established. Earlier sources and evidence

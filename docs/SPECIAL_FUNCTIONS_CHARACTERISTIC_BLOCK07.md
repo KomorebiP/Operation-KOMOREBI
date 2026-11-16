@@ -13,10 +13,10 @@ determinant equation. This gives a unique positive spectral exponent too.
 
 The source adds **23 theorem declarations**, including supporting lemmas,
 bringing the registered scope to **179 names**. These are matrix/exponent
-prerequisites. The analytic order, type bounds and type-vector proportions
+prerequisites. The analytic order, type bounds, and type-vector proportions
 in F.2 remain open.
 
-- [Exact result, proof, verification and continuation](../monographs/special-functions/formalization/Block07/REPORT.md)
+- [Exact result, proof, verification, and continuation](../monographs/special-functions/formalization/Block07/REPORT.md)
 - [Production Lean source](../monographs/special-functions/lean/CoupledCharacteristic.lean)
 - [Claim correspondence](../monographs/special-functions/formalization/Block07/CLAIM_MAP.json)
 - [All 23 names and source hash](../monographs/special-functions/formalization/Block07/declarations.json)
@@ -25,15 +25,15 @@ in F.2 remain open.
 - [Focused self-review](../monographs/special-functions/formalization/Block07/SELF_REVIEW.md)
 - [Current continuation file](../monographs/special-functions/CONTINUE_HERE.md)
 
-The fresh replay has 36 steps, including compilation, axiom audits and
-same-kernel replay of seven coupled modules, four rejection controls and one
+The fresh replay has 36 steps, including compilation, axiom audits, and
+same-kernel replay of seven coupled modules, four rejection controls, and one
 positive fixture file. It freshly audits 140 coupled declarations and inherits
 the finite core's 39-name evidence. Mathlib's pinned cache is reused and review
 is self-review. Exact fixtures check exponent one and normalized vectors for
 the rational and symmetric examples, a negative second eigenvalue, matrix
 orientation, and excluded boundary inputs.
 
-Sources, hashed I/O, current records and catalogue are updated. Earlier proof
+Sources, hashed I/O, current records, and catalogue are updated. Earlier proof
 blocks and reading/manuscript files are preserved. The
 [component-rescaling guide](SPECIAL_FUNCTIONS_RESCALING_BLOCK06.md) retains its
 dated scope. Next are the positive-real comparison inequalities leading to

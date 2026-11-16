@@ -12,7 +12,7 @@ Semigroup constructions and probabilistic and analytic applications.
 
 ## Before you start
 
-**Suggested background:** Vectors, matrices, linear maps, kernels and images, and reading a statement with hypotheses. Consult the selected paper for any additional algebra or analysis it uses.
+**Suggested background:** Vectors, matrices, linear maps, kernels, and images, and reading a statement with hypotheses. Consult the selected paper for any additional algebra or analysis it uses.
 
 **Recorded results and limits:** The publication is complete within its stated scope. The inherited 33-result finite formal contract does not cover all 142 theorem-like statements or the broader analytic program.
 
@@ -33,7 +33,7 @@ Use the links below to read this work and its supporting files. Ctrl+click (Comm
 
 ## Read
 
-- [Read online: chapters, figures and proof links](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vi/index.html)
+- [Read online: chapters, figures, and proof links](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vi/index.html)
 - [Worked visual atlas: all 42 HTML plates](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vi/atlas/index.html)
 - [Edition README](../../papers/paper-vi/current/README.md)
 - [Read PDF](../../papers/paper-vi/current/papers/Paper_VI_Traditional_Final.pdf)

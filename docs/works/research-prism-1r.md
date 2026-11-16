@@ -12,7 +12,7 @@ The PRISM-1R implementation and research handoff.
 
 ## Before you start
 
-**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+**Suggested background:** Read the problem statement, recorded scope, and open questions first. The program's definitions determine its subject prerequisites.
 
 **Recorded results and limits:** The evidence covers the architecture and semantic reference tests. The RTL is an uncompiled interface skeleton with candidate bit packing.
 

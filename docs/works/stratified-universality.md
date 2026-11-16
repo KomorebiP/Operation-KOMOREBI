@@ -12,7 +12,7 @@ A stratified universality development with traditional, visual, and formal compa
 
 ## Before you start
 
-**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+**Suggested background:** Read the problem statement, recorded scope, and open questions first. The program's definitions determine its subject prerequisites.
 
 **Recorded results and limits:** Complete amended reading/source package. 75 components have mixed proved/imported/conditional/conjectural status. The reconstructed Lean core has no fresh compiler pass.
 

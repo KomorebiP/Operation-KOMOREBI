@@ -12,9 +12,9 @@ Arithmetic packets, refinement towers, and local deformation.
 
 ## Before you start
 
-**Suggested background:** Vectors, matrices, linear maps, kernels and images, and reading a statement with hypotheses. Consult the selected paper for any additional algebra or analysis it uses.
+**Suggested background:** Vectors, matrices, linear maps, kernels, and images, and reading a statement with hypotheses. Consult the selected paper for any additional algebra or analysis it uses.
 
-**Recorded results and limits:** Accepted reading release preserves scoped arithmetic, dyadic and lifting formal work. Broader extensions and the Euler reciprocal endpoint remain open.
+**Recorded results and limits:** Accepted reading release preserves scoped arithmetic, dyadic, and lifting formal work. Broader extensions and the Euler reciprocal endpoint remain open.
 
 **Remaining work:** Reconcile the current claim map with the narrowed threshold-free theorem and retain the refuted stronger statement as history.
 
@@ -35,7 +35,7 @@ Use the links below to read this work and its supporting files. Ctrl+click (Comm
 
 ## Read
 
-- [Read online: complete manuscript, strengthening and historical appendices](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-ix/index.html)
+- [Read online: complete manuscript, strengthening, and historical appendices](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-ix/index.html)
 - [Visual guide: all 23 HTML sections and 20 figures](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-ix/atlas/index.html)
 - [Edition README](../../papers/paper-ix/current/README.md)
 - [Read PDF](../../papers/paper-ix/current/publication/pdfs/Paper_IX_Euler_Main_Final.pdf)

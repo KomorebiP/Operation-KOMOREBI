@@ -12,7 +12,7 @@ ABC remains open. These results do not establish a uniform abc exponent.
 
 ## Before you start
 
-**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+**Suggested background:** Read the problem statement, recorded scope, and open questions first. The program's definitions determine its subject prerequisites.
 
 **Recorded results and limits:** Scoped written radical-cost identities and obstructions. The global ABC target and exceptional-prime tail remain open. No new Lean run.
 

@@ -10,7 +10,7 @@ T=\begin{pmatrix}1&2\\3&4\end{pmatrix},\qquad
 x=\begin{pmatrix}2\\3\end{pmatrix}.
 ```
 
-The block $T_{ji}=P_jTP_i$ selects source component $i$, applies $T$ and
+The block $T_{ji}=P_jTP_i$ selects source component $i$, applies $T$, and
 selects target component $j$. The source selection acts first.
 
 ## Calculate the four blocks

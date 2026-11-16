@@ -12,7 +12,7 @@ Scoped reductions, finite checks, and retained arithmetic routes.
 
 ## Before you start
 
-**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+**Suggested background:** Read the problem statement, recorded scope, and open questions first. The program's definitions determine its subject prerequisites.
 
 **Recorded results and limits:** Finished reader with selected checked algebraic scopes. Neither general Beal nor the recovered signature route is closed.
 

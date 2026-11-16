@@ -1,10 +1,10 @@
 # Reader storage and delivery
 
 The reader workflow verifies the complete generated site, source identities,
-local links, accessibility safeguards and contents of every reading ZIP before
+local links, accessibility safeguards, and contents of every reading ZIP before
 packaging the Pages output. `tools/reader_delivery.py` then:
 
-- retains the PDFs, manuscript sources, Lean sources, figures and runtime assets;
+- retains the PDFs, manuscript sources, Lean sources, figures, and runtime assets;
 - stores generated notation and selection indexes as deterministic gzip files;
 - checks that each compressed index restores the exact original bytes;
 - retains raw JSON exports and complete reading ZIPs as byte-identical release

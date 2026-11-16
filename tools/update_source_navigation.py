@@ -615,7 +615,7 @@ The [public project and authorship statement](PROJECT_STATEMENT.md) explains the
         totals=self.state['totals']; date=self.state['as_of']
         page='docs/COMPONENT_INDEX.md'
         text='# Component index\n\nRecorded '+date+'.\n\n'+str(totals['available_primary_components'])+' primary components and '+str(totals['available_supporting_components'])+' supporting source collections are present with verified file receipts. The receipts cover **'+format(totals['unique_source_files'],',')+' distinct source files**. Older source imports remain separately available.\n'
-        text+='\n[Browse by completion stage, Lean coverage and confidence](COMPLETION_STATUS.md) · [Cleanup and finalization queue](FINALIZATION_QUEUE.md). Status labels describe the scope of each linked record. File counts do not measure proof or completion.\n'
+        text+='\n[Browse by completion stage, Lean coverage, and confidence](COMPLETION_STATUS.md) · [Cleanup and finalization queue](FINALIZATION_QUEUE.md). Status labels describe the scope of each linked record. File counts do not measure proof or completion.\n'
         text+='\nFor direct PDFs, manuscript text, Lean, and code, use the [clickable browse hub](BROWSE.md). The inventory below retains all source and receipt details.\n'
         for group,label in GROUP_LABELS.items():
             rows=[r for r in self.primary if r['group']==group]
@@ -652,7 +652,7 @@ The [public project and authorship statement](PROJECT_STATEMENT.md) explains the
 
 Recorded {date}.
 
-[Completion stages, Lean coverage and confidence](COMPLETION_STATUS.md) · [Cleanup and finalization queue](FINALIZATION_QUEUE.md). Public availability and scientific completion are separate statuses.
+[Completion stages, Lean coverage, and confidence](COMPLETION_STATUS.md) · [Cleanup and finalization queue](FINALIZATION_QUEUE.md). Public availability and scientific completion are separate statuses.
 
 The three canonical repositories are public:
 

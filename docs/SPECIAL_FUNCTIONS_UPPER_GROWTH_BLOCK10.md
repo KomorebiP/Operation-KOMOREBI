@@ -28,5 +28,5 @@ Use a fresh external output directory and the existing pinned toolchain.
 Next: formal real liminf/limsup type bounds and the radial exponent limit,
 then F.3 proportions. Operator decoupling and full analytic coverage remain
 open. The [continuation](../monographs/special-functions/CONTINUE_HERE.md)
-has the next executable target. Earlier proofs, manuscripts and reading PDFs
+has the next executable target. Earlier proofs, manuscripts, and reading PDFs
 are preserved. No new complete archive validation is claimed.

@@ -175,7 +175,7 @@ def build(site):
     body = '''<div class="side-heading"><h1>Read side by side</h1>
 <p>Read different papers or monographs together, or keep a paper open while you follow a claim, proof, Lean source, program or example.</p></div>
 <noscript><p>This workspace needs JavaScript. You can still open <a href="documents.html">papers</a>,
-<a href="claims.html">claims</a> and <a href="collection/HAND_WORKED_EXAMPLES.html">worked examples</a> in separate tabs.</p></noscript>
+<a href="claims.html">claims</a>, and <a href="collection/HAND_WORKED_EXAMPLES.html">worked examples</a> in separate tabs.</p></noscript>
 <div id="side-reader" data-index="side-reader-index.json?v='''+site.revision+'''" hidden>'''+session_controls()+work_picker()+'''
 <div class="side-toolbar"><div class="side-view" role="group" aria-label="Visible reading panes">
 <button type="button" data-side-view="both" aria-pressed="true">Both panes</button>
@@ -187,7 +187,7 @@ def build(site):
 <label for="side-width">Left pane width <output id="side-width-value" for="side-width">50%</output></label>
 <input type="range" id="side-width" min="35" max="65" value="50" step="5">
 <p>Each pane scrolls independently. Use its document picker to change what you read.
-<strong>Related material</strong> opens this work's claims, proofs, Lean, code and other reading routes in the other pane.
+<strong>Related material</strong> opens this work's claims, proofs, Lean, code, and other reading routes in the other pane.
 For material shared by several works, choose <strong>Work for these links</strong>.
 To follow a reference without moving the current page, turn on <strong>Open links from this document in the other pane</strong>.
 External links and the full PDF viewer open in a new tab. PDF toolbar links stay within the PDF viewer.</p>

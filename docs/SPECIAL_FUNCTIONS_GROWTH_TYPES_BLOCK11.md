@@ -19,7 +19,7 @@ The [report](../monographs/special-functions/formalization/Block11/REPORT.md),
 [review](../monographs/special-functions/formalization/Block11/SELF_REVIEW.md),
 [I/O inventory](../monographs/special-functions/formalization/Block11/IO_MANIFEST.json)
 and [receipt](../monographs/special-functions/formalization/Block11/evidence/receipt.json)
-bind 41 formal inputs, 49 packaged outputs, eleven generated objects and 27
+bind 41 formal inputs, 49 packaged outputs, eleven generated objects, and 27
 staged source copies. A resource-failed first replay is preserved separately.
 The public verifier is `tools/verify_coupled_growth_types.py`
 under the Special Functions directory; use a new external output directory.

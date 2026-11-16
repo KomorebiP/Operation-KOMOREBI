@@ -396,7 +396,7 @@ e_a:f\mapsto f(a)
 \ell_{[a,b],\rho}(f)=\rho\int_a^b f(x)\,dx
 ```
 
-**Scope.** Finite rational polynomial spaces, rational endpoints and fixed rational density. For a positive-measure interpretation impose a<=b and rho>=0.
+**Scope.** Finite rational polynomial spaces, rational endpoints, and fixed rational density. For a positive-measure interpretation impose a<=b and rho>=0.
 
 **Keep in view.** The linear functional exists for signed constant densities as well. Nonnegative density is needed only for measure-positivity interpretations.
 
@@ -814,7 +814,7 @@ f\star g=\Phi\bigl((\Phi^{-1}f)(\Phi^{-1}g)\bigr)
 a_{n+d}=\sum_{j=0}^{d-1}c_j a_{n+j}+\delta_n
 ```
 
-**Scope.** Fixed order $d\ge1$, finite horizon and recurrence coefficients. The input contains all d initial values and every required defect.
+**Scope.** Fixed order $d\ge1$, finite horizon, and recurrence coefficients. The input contains all d initial values and every required defect.
 
 **Keep in view.** With the defects retained this reconstructs arbitrary finite sequences. Dropping them changes the problem to a homogeneous recurrence.
 

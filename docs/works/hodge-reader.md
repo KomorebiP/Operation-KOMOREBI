@@ -12,7 +12,7 @@ Actual cycle realization and comparison correspondence remain open. Sources mark
 
 ## Before you start
 
-**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+**Suggested background:** Read the problem statement, recorded scope, and open questions first. The program's definitions determine its subject prerequisites.
 
 **Recorded results and limits:** Finished evidence reader with conditional geometric arguments. Current Lean elaboration was blocked before compilation, and the general Hodge conjecture remains open.
 

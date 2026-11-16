@@ -165,7 +165,7 @@ are $7e_1$ and $e_1$. The first-step agreement did not test the return path.
 For bounded operators with compatible norms, its size is at most
 $\|PT(I-P)\|\,\|(I-P)TP\|$, using $(I-P)^2=I-P$.
 
-If $(I-P)TP=0$, the retained range is invariant and these excursions are
+If $(I-P)TP=0$, the retained range is invariant, and these excursions are
 absent at every step for inputs in that range. The two-step return term
 can also vanish for other reasons, so its vanishing alone does not establish
 invariance. For a general summary rather than a projector, use the kernel

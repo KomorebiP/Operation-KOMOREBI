@@ -20,7 +20,7 @@ The source adds **19 theorem declarations**, including supporting lemmas,
 bringing the registered scope to **156 names**. Full analytic-monograph
 coverage remains open.
 
-- [Exact result, proof, file I/O and remaining work](../monographs/special-functions/formalization/Block06/REPORT.md)
+- [Exact result, proof, file I/O, and remaining work](../monographs/special-functions/formalization/Block06/REPORT.md)
 - [Production Lean source](../monographs/special-functions/lean/CoupledRescaling.lean)
 - [Claim correspondence](../monographs/special-functions/formalization/Block06/CLAIM_MAP.json)
 - [All 19 names and source hash](../monographs/special-functions/formalization/Block06/declarations.json)
@@ -29,7 +29,7 @@ coverage remains open.
 - [Focused self-review](../monographs/special-functions/formalization/Block06/SELF_REVIEW.md)
 - [Current continuation file](../monographs/special-functions/CONTINUE_HERE.md)
 
-The fresh replay has 33 steps: dependency checks, compilation and axiom
+The fresh replay has 33 steps: dependency checks, compilation, and axiom
 audits of six coupled modules, same-kernel replay, four rejection controls
 and one positive fixture file. It freshly audits 117 declarations and inherits
 the finite core's 39-name evidence. Mathlib's pinned cache is reused; review
@@ -37,7 +37,7 @@ is self-review. Input and output hashes are recorded explicitly.
 
 The next larger target is the Perron growth law, beginning with an exact
 characteristic-exponent contract. Operator decoupling and broader coverage
-remain separate obligations. Earlier sources, guides, reading PDFs and
+remain separate obligations. Earlier sources, guides, reading PDFs, and
 verification records are preserved; the current files and catalogue are
 updated.
 

@@ -44,7 +44,7 @@ REFERENCES=[
  ['thm:weighted-lifting','thm:coefficient-motion']]
 
 TABLE_AIDS={
- 29:dict(caption='Rows, degrees and addresses',headers=['Symbol','Meaning','At rank four'],row_header_column=0),
+ 29:dict(caption='Rows, degrees, and addresses',headers=['Symbol','Meaning','At rank four'],row_header_column=0),
  66:dict(caption='Branches of the original conjecture',headers=['Prime branch',r'Allowed $m$',r'$q$','Row step for the original shift'],row_header_column=0),
  252:dict(caption='Mixed-step equality criterion',headers=['Order parity','Number of even steps','Conclusion'],row_header_column=0),
  436:dict(caption='Exact upper-half counterexamples',headers=[r'$(N,j)$',r'$v_2(C(1)-C(0))$','Step-two prediction','Actual step-two valuation'],row_header_column=0),
@@ -239,11 +239,11 @@ def render(reader):
         body+=resources(tools+reading_options('Show each passage’s permalink and original source line.'))+'<p class="reading-start"><a href="#chapter-text">Start reading</a></p>'
         toc='<nav class="chapter-contents" aria-label="Section contents"><h2>On this page</h2><ul>'
         for node in chapter.nodes:
-            label='Figure, description and selectable labels' if node['kind']=='figure' else 'Source table' if node['kind'] in {'table','tabular','tabularx'} else node['title'] or 'Passage at source line '+str(node['line'])
+            label='Figure, description, and selectable labels' if node['kind']=='figure' else 'Source table' if node['kind'] in {'table','tabular','tabularx'} else node['title'] or 'Passage at source line '+str(node['line'])
             toc+='<li><a href="#'+node['id']+'">'+html.escape(label)+'</a></li>'
         body+=outline(toc+'</ul></nav>')+'<article id="chapter-text" class="readable-chapter atlas-plate" aria-label="'+html.escape(title,quote=True)+'">'
         body+=content(row,chapter,atlas['figures'],reader.resolve,site.rel)+'</article>'+navigation(config,page,'bottom')
-        body+='<details class="document-provenance"><summary>Source and conversion record</summary><p>The full edition has 23 sections and 20 figures, including eight worked examples. The older visual README describes 15 sections and 12 figures. Original wording, equations and finite-check scope are retained. Descriptions and data tables are reading aids. This conversion renders existing figure PDFs without rebuilding TeX, running the mathematical generators, auditing proofs or compiling Lean.</p><p><a href="'+site.rel(REPORT,page)+'">Source hashes and conversion checks</a></p></details>'
+        body+='<details class="document-provenance"><summary>Source and conversion record</summary><p>The full edition has 23 sections and 20 figures, including eight worked examples. The older visual README describes 15 sections and 12 figures. Original wording, equations, and finite-check scope are retained. Descriptions and data tables are reading aids. This conversion renders existing figure PDFs without rebuilding TeX, running the mathematical generators, auditing proofs or compiling Lean.</p><p><a href="'+site.rel(REPORT,page)+'">Source hashes and conversion checks</a></p></details>'
         expected=expected_math(row,atlas['figures'],atlas['inputs'])
         if chapter.math!=expected:raise ValueError('Paper IX visual mathematical sequence changed in section '+str(number))
         site.page(page,title,body)

@@ -12,7 +12,7 @@ A scalar binary backend and its normalization development.
 
 ## Before you start
 
-**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+**Suggested background:** Read the problem statement, recorded scope, and open questions first. The program's definitions determine its subject prerequisites.
 
 **Recorded results and limits:** Verified scalar binary backend and finite discovery fixtures. End-to-end discovery bit-cost lowering remains open.
 

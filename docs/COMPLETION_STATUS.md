@@ -2,7 +2,7 @@
 
 Recorded 2026-10-27 · **Komorebi P.**
 
-[Filter by discipline, completion and proof evidence](https://KomorebiP.github.io/Operation-KOMOREBI/works.html) · [Browse the collection](BROWSE.md) · [Start here](START_HERE.md) · [Repository home](../README.md)
+[Filter by discipline, completion, and proof evidence](https://KomorebiP.github.io/Operation-KOMOREBI/works.html) · [Browse the collection](BROWSE.md) · [Start here](START_HERE.md) · [Repository home](../README.md)
 
 **Completion, Lean coverage, and confidence describe different things.** A finished book may contain open research. A checked Lean proof may belong to an unfinished project. Choose a completion stage below, open a work's evidence record, then follow its paper, proofs, Lean, and code link.
 
@@ -21,7 +21,7 @@ Entries deferred from the main reading lists remain in the [incubator](INCUBATOR
 | Stage | Primary entries | Meaning |
 |---|---|---|
 | Scoped release | 10 | The release record marks the stated mathematical or executable requirements as complete. The scope below defines what is covered. |
-| Reading edition complete | 41 | The stated manuscript or reader set is released. Formal coverage, review depth and wider research can remain incomplete. |
+| Reading edition complete | 41 | The stated manuscript or reader set is released. Formal coverage, review depth, and wider research can remain incomplete. |
 | Active development | 19 | A candidate, working manuscript or bounded research milestone with identified unfinished work. |
 | Experiment / prototype | 12 | A research instrument, implementation or experiment whose tested scope does not establish a general scientific endpoint. |
 | Reader available, source qualification pending | 1 | The PDF edition and reading scope have been identified. Matching editable sources, full page review, and reproducible build qualification remain pending. |
@@ -43,13 +43,13 @@ These categories describe the state of a work. They are not percentages or a ran
 | No Lean claim | The assessed scope claims writing, calculations or experiments rather than Lean verification. |
 | Not assessed | No formal-coverage assessment is made. |
 
-“Declared contract” covers only the registered claims in the linked map. Modules, declarations, named theorems, proof bodies and finite test cases count different things, so their totals cannot be combined into a project completion percentage. A source map, file hash, Lean guide PDF or inventory does not establish that Lean accepted a proof. Evidence from an earlier edition keeps its own scope and does not certify a changed or expanded edition.
+“Declared contract” covers only the registered claims in the linked map. Modules, declarations, named theorems, proof bodies, and finite test cases count different things, so their totals cannot be combined into a project completion percentage. A source map, file hash, Lean guide PDF or inventory does not establish that Lean accepted a proof. Evidence from an earlier edition keeps its own scope and does not certify a changed or expanded edition.
 
 ## Confidence basis
 
 | Label | What supports confidence |
 |---|---|
-| Recorded formal evidence | Strong evidence for the exact checked subset, conditional on correct formal statements, source correspondence, dependencies and recorded execution. |
+| Recorded formal evidence | Strong evidence for the exact checked subset, conditional on correct formal statements, source correspondence, dependencies, and recorded execution. |
 | Historical formal evidence | Earlier/related formal records support their own scope. Current-edition replay or expanded coverage may be missing. |
 | Recorded written review | The cited edition records a scoped written review and/or proof audit with its stated depth. Finite checks support only their tested claims. |
 | Written / finite evidence | Written arguments, author review or bounded computations. These records do not establish independent review or formal assurance. |

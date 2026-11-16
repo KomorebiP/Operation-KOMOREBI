@@ -26,7 +26,7 @@ The registered source scope is **124 named theorem declarations**: the inherited
 39 in the finite core, 29 in Block01, 21 in Block02, 19 in Block03, and 16 here.
 Supporting lemmas and bundled contracts are included in that count.
 
-- [Exact result, mechanism, verification and remaining work](../monographs/special-functions/formalization/Block04/REPORT.md)
+- [Exact result, mechanism, verification, and remaining work](../monographs/special-functions/formalization/Block04/REPORT.md)
 - [New production Lean source](../monographs/special-functions/lean/CoupledUniqueness.lean)
 - [Claim correspondence](../monographs/special-functions/formalization/Block04/CLAIM_MAP.json)
 - [All 16 new theorem names and source hash](../monographs/special-functions/formalization/Block04/declarations.json)
@@ -49,7 +49,7 @@ rescaling remain open. The full analytic monograph is not formalized.
 
 The earlier [local analytic guide](SPECIAL_FUNCTIONS_ANALYTIC_BLOCK02.md) and
 [entire-existence guide](SPECIAL_FUNCTIONS_ENTIRE_BLOCK03.md) retain their dated
-scope. Earlier proof sources, evidence, manuscript sources and reading PDFs
+scope. Earlier proof sources, evidence, manuscript sources, and reading PDFs
 are unchanged.
 
 [Return to Special Functions](works/monographs-special-functions.md) ·

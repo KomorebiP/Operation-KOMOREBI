@@ -96,7 +96,7 @@
     fold(byId('cDonorInfo'), 'How the target reference was prepared', true);
     fold(query('.causal-edit > .fieldgrid'), 'Intervention and writing agent', true);
     label('cAlpha', 'Edit amount α');
-    noteAfter(byId('cAlpha'), 'For the default J edit, 0 leaves the state unchanged and 1 applies the full target projection. Values above 1 push past that projection; they are not confidence scores.', 'jl-amount-help');
+    noteAfter(byId('cAlpha'), 'For the default J edit, 0 leaves the state unchanged, and 1 applies the full target projection. Values above 1 push past that projection; they are not confidence scores.', 'jl-amount-help');
     byId('cApply').textContent = 'Set amount to 1';
     byId('cUndo').textContent = 'Remove edit';
     label('cAgent', 'Which agents receive the edit?');
@@ -199,7 +199,7 @@
 
     const challengePanels = [...doc.querySelectorAll('#challenge > .panel')];
     heading('#challenge > .panel:first-of-type h3', '1  Set up the test');
-    intro(challengePanels[0], 'The edit is applied once. The original, edited and whole-target runs then perform the same later work. Factual recall can be tested afterward.');
+    intro(challengePanels[0], 'The edit is applied once. The original, edited, and whole-target runs then perform the same later work. Factual recall can be tested afterward.');
     fold(byId('tContext'), 'Current model and edit settings', true);
     label('tFamily', 'What should happen after the edit?');
     options('tFamily', {swap: 'Swap the left and right values once', commute: 'Flip both values, then flip them back', conjugate: 'Swap, flip left, swap back, flip right', idle: 'Keep the pair unchanged · I steps', custom: 'Write your own working program'});
@@ -218,7 +218,7 @@
     byId('tMemoryChart').before(recall);
     recall.append(element('h3', '', '3  Inspect factual recall'), element('p', 'jl-help-text', 'The chart audits recall from independent copies at each checkpoint. If you selected factual reloads, those later rows follow a real sequence without resetting.'), byId('tMemoryChart'));
     readingKey(byId('tResultsPanel').querySelector('.panelhead'), 'Understand the result labels', [
-      ['Transferred', 'For this agent, both reference answers work and the edited answer matches the intended target.'],
+      ['Transferred', 'For this agent, both reference answers work, and the edited answer matches the intended target.'],
       ['Reverted', 'For this agent, both reference answers work but the edit gives the original answer again.'],
       ['Other error', 'For this agent, both reference answers work but the edited answer is neither the original nor the intended target.'],
       ['Reference error', 'An unedited or whole-target comparison already failed. Judge this separately from edit-specific failures.'],

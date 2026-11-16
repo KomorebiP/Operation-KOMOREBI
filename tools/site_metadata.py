@@ -18,7 +18,7 @@ DESCRIPTIONS = {
     'chemistry-lab.html': 'Recover a nine-state Hamiltonian with three probes, explore exact ambiguity witnesses and conditional error disks, and inspect reproducible chemistry certificates.',
     'sequences.html': 'Search integer sequences and formulas, compare published families, explore exact modular plots, and follow the source derivations.',
     'index.html': 'Explore mathematical papers, visual guides, recorded proofs, and executable examples in the Komorebi collection.',
-    'sitemap.html': 'Browse every Komorebi reader page by section, including papers, books, visual guides, collection records, Lean proofs and software documentation.',
+    'sitemap.html': 'Browse every Komorebi reader page by section, including papers, books, visual guides, collection records, Lean proofs, and software documentation.',
     'collection/START_HERE.html': 'Start with a worked calculation, choose a reading route, and learn how to interpret the collection’s claims and evidence.',
     'collection/OPERATOR_AUDIT.html': 'A worked operator reference covering maps, algebra, packets, transfer, recovery, and stability, with definitions, examples, exercises, and a practical checklist.',
     'read/index.html': 'Read the Komorebi papers and books online, with formatted mathematics, chapter navigation, visual guides, and links to source files.',
@@ -28,7 +28,7 @@ DESCRIPTIONS = {
     'playground.html': 'Run and edit mathematical Python examples in your browser. Inspect the output and follow links to the written calculations and recorded scope.',
     'smith-chart.html': 'Explore passive RF impedance, reflection coefficients, exact cyclic projector packets, dyadic refinement, and phase sampling in an interactive Smith chart.',
     'read/smith-chart/research.html': 'Reflection geometry, exact packet calculus, passive completion, minimum-reactive RLC circuits, and explicit separation and tolerance bounds.',
-    'read/smith-chart/continuation.html': 'Read the exact six-reactive closure, certified RLC composition, degree-matching families and the current Hughes-margin audit obligations.',
+    'read/smith-chart/continuation.html': 'Read the exact six-reactive closure, certified RLC composition, degree-matching families, and the current Hughes-margin audit obligations.',
     'collection/demonstrations/SMITH_FIRST_ORDER_RL.html': 'Derive a positive one-inductor circuit for the Smith chart draft’s affine limit, with explicit component values and Lean-checked algebra.',
     'collection/demonstrations/SMITH_SINGULAR_COMPLETION.html': 'Use nullspace constraints to predict from singular Pick data and derive the exact feasibility boundary for two real cyclic packets.',
     'special-functions-lab.html': 'Explore coupled contraction functions with exact rational coefficients, recurrence terms, parameter comparisons, and explicit local truncation bounds.',
@@ -202,7 +202,7 @@ def publish_navigation(site):
             e(quote(path, safe='/'), quote=True)+'">'+e(titles[path])+'</a></li>' for path in ordered)+'</ol>'
     body = ('<div class="reading-contents-index"><h1>Sitemap</h1>'
             '<p class="lede">Find your way around the Komorebi collection.</p>'
-            '<p>Browse pages by section. Open a paper or book to see its chapters, visual guides and source readers.</p>')
+            '<p>Browse pages by section. Open a paper or book to see its chapters, visual guides, and source readers.</p>')
     if 'search.html' in site.discovery_pages:
         body += '<p>Looking for a particular term? <a href="search.html">Search the collection</a>.</p>'
     body += '<nav class="document-routes" aria-label="Sitemap sections">'+''.join(

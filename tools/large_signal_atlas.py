@@ -299,7 +299,7 @@ def publish_index(reader, atlas):
         n = p['number']; keywords = ' '.join('P'+str(r['number'])+' Proposition '+str(r['number']) for r in atlas['routes'].get(n,[]))
         body += '<li class="lsm-atlas-card" data-search="'+e(p['title']+' '+p['subtitle']+' '+QUESTIONS[n]+' '+keywords,quote=True)+'"><a href="'+site.rel(p['url'],INDEX)+'"><span class="eyebrow">Plate '+str(n)+' · '+e(p['locator'].replace('--','–'))+'</span><h3>'+e(p['title'])+'</h3><p>'+e(QUESTIONS[n])+'</p></a></li>'
     body += '</ol><p id="lsm-visual-empty" hidden>No plates match. Try another topic or clear the search.</p></section>'
-    body += '<p class="lsm-atlas-boundary">This is a visual companion to the mathematical volume. Exact identities, geometric obstructions and worked rational examples connect the theory to its formal proofs. The source scope notes remain with every plate; the finite explorer illustrates the declared example.</p>'
+    body += '<p class="lsm-atlas-boundary">This is a visual companion to the mathematical volume. Exact identities, geometric obstructions, and worked rational examples connect the theory to its formal proofs. The source scope notes remain with every plate; the finite explorer illustrates the declared example.</p>'
     body += '<p><a href="'+reader.viewer_url(reader.records[PDF],INDEX)+'">Read the original 19-page PDF</a> · <a href="'+site.rel(REPORT,INDEX)+'">Conversion record</a> · <a href="'+reader.resolve(EXACT_EXAMPLE,INDEX)+'">Retained exact-example receipt</a></p></div>'
     site.page(INDEX,'Large Signal Model visual atlas',body)
     site.search.append(dict(title='Large Signal Model / Visual atlas',group='Collection',kind='Guides',visual_guide=True,

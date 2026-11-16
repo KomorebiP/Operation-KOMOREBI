@@ -128,7 +128,7 @@ the evidence for its software and empirical development.
 
 Easier navigation and access are priorities for the website and GitHub
 repositories.
-Planned improvements include clearer starting points, better search and
+Planned improvements include clearer starting points, better search, and
 cross-links, simpler setup instructions, useful downloads, and straightforward
 ways to report corrections.
 

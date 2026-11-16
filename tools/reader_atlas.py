@@ -278,7 +278,7 @@ def render(reader):
                 body+=chapter.paragraphs(node['body'])+passage_links(links)+'</section>'
             else: raise ValueError('Unsupported atlas node '+kind)
         body+='</article>'+neighbours(reader,plate,'bottom')
-        body+='<details class="document-provenance"><summary>Source and conversion record</summary><p>The editable source, drawings and PDF are matched to this edition. Text descriptions and table headings are reading aids. Recorded mathematical and formal checks retain their stated dates and scope.</p><p><a href="'+reader.resolve(SOURCE,page,'L'+str(plate['line']))+'">Editable atlas source</a> · <a href="'+site.rel(REPORT,page)+'">Conversion checks</a></p></details>'
+        body+='<details class="document-provenance"><summary>Source and conversion record</summary><p>The editable source, drawings, and PDF are matched to this edition. Text descriptions and table headings are reading aids. Recorded mathematical and formal checks retain their stated dates and scope.</p><p><a href="'+reader.resolve(SOURCE,page,'L'+str(plate['line']))+'">Editable atlas source</a> · <a href="'+site.rel(REPORT,page)+'">Conversion checks</a></p></details>'
         expected=expected_math(plate,atlas['figures'])
         if chapter.math!=expected: raise ValueError('Atlas mathematical sequence differs on V'+str(plate['number']))
         site.page(page,title,body)

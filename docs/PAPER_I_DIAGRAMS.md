@@ -28,7 +28,7 @@ than a claim that every object comes with all these choices automatically.
 This three-by-three heatmap gives the Frobenius norm of each block of a sampled
 operator. Rows are **output** packets and columns are **input** packets. Select
 input packet j, apply the operator, then select output packet i. The packet
-dimensions are 5, 6 and 7. Numbers are rounded to one decimal place; darker
+dimensions are 5, 6, and 7. Numbers are rounded to one decimal place; darker
 cells indicate larger norms.
 
 <table>
@@ -134,7 +134,7 @@ Two applications multiply each packet by x cubed − x, matching the relation.
 
 This numerical heatmap records Frobenius norms of products of transported
 projectors Q_i Q_j. There are three four-dimensional packets in a
-twelve-dimensional space. Diagonal entries are **12.16, 16.02 and 17.31**.
+twelve-dimensional space. Diagonal entries are **12.16, 16.02, and 17.31**.
 The off-diagonal entries, by output row, are:
 
 - Row 1: column 2 is 1.5 × 10⁻¹⁴; column 3 is 2.2 × 10⁻¹⁴.
@@ -190,7 +190,7 @@ A three-column table pairs each symbol with its role and a concrete example.
 The space X supplies possible target vectors; S supplies seeds; the fixed
 algebra supplies allowed operations; and the hull is their invariant linear
 span. Projectors extract packet spaces, while a transfer block specifies an
-input packet, an operator and an output packet. A word quotient records seed
+input packet, an operator, and an output packet. A word quotient records seed
 relations as a module. An invertible U changes coordinates; an intertwiner
 need not be invertible. A topology specifies which limits are allowed.
 The reading order for P_beta T P_alpha is right to left: extract alpha,
@@ -225,7 +225,7 @@ chain heads attain that bound in the original space.
 <a id="plate-5-relations-identify-words-not-just-outputs"></a>
 <h2 id="atlas-05" tabindex="-1">Plate 5: relations identify words, not just outputs</h2>
 
-Three two-by-two matrices show C = E_12, B = E_21 and their product
+Three two-by-two matrices show C = E_12, B = E_21, and their product
 CB = E_11. C has a one only in its upper-right cell, B only in its lower-left
 cell, and CB only in its upper-left cell. C kills the first basis vector;
 CB sends that vector to itself. Multiplying a seed-annihilating relation on
@@ -276,7 +276,7 @@ These are actual signed coefficients, not a matrix of norms or a support graph.
 A diamond graph starts at e_1, branches to e_2 and e_3, then rejoins at e_4.
 The first two arrows have weight +1. The e_2-to-e_4 arrow has weight +1,
 while the e_3-to-e_4 arrow has weight −1. The two length-two contributions
-cancel. The neighbouring Krylov matrix has columns e_1, e_2 + e_3 and zero,
+cancel. The neighbouring Krylov matrix has columns e_1, e_2 + e_3, and zero,
 so its rank is two. Every graph vertex is reachable, but the single-operator
 hull does not span the four-dimensional space. Inserting a packet projector
 between steps would change the allowed grammar.
@@ -286,8 +286,8 @@ between steps would change the allowed grammar.
 <a id="plate-10-which-zero-patterns-survive-multiplication"></a>
 <h2 id="atlas-10" tabindex="-1">Plate 10: which zero patterns survive multiplication?</h2>
 
-Three matrices compare an allowed support pattern, an offending product and
-the transitive closure. The first allows the diagonal, 1-to-2 and 2-to-3, but
+Three matrices compare an allowed support pattern, an offending product, and
+the transitive closure. The first allows the diagonal, 1-to-2, and 2-to-3, but
 omits 1-to-3. Multiplying E_32 by E_21 produces E_31, outside that pattern.
 Adding the missing position gives the lower-triangular support pattern.
 Here a one means “allowed position,” not a fixed coefficient. For the universal
@@ -327,7 +327,7 @@ maximum rather than their sum.
 
 Three two-by-five seed matrices cover columns 1 and 2, then 3 and 4, then 5.
 Their cumulative orbit dimensions under left multiplication by two-by-two
-matrices are **4, 8 and 10**. One seed has at most two independent row-space
+matrices are **4, 8, and 10**. One seed has at most two independent row-space
 directions, while the multiplicity space has dimension five. Three seeds are
 therefore needed in this model. The displayed target matrix has rows
 (1,2,3,4,5) and (6,7,8,9,10); its successive column pairs determine coefficients
@@ -353,7 +353,7 @@ operations already in the polynomial grammar.
 
 A five-vertex path marks vertex 1 as the seed. Under it, the five Krylov columns
 count walks of lengths 0 through 4. The matrix rows are **(1,0,1,0,2)**,
-**(0,1,0,2,0)**, **(0,0,1,0,3)**, **(0,0,0,1,0)** and **(0,0,0,0,1)**.
+**(0,1,0,2,0)**, **(0,0,1,0,3)**, **(0,0,0,1,0)**, and **(0,0,0,0,1)**.
 Every diagonal entry is one, and every entry below the diagonal is zero.
 A vertex cannot be reached sooner than its distance from the endpoint, and
 there is one shortest path. This is the unit-triangular structure used by the
@@ -395,7 +395,7 @@ zero and halves at each step away from zero in either direction. The shaded
 window contains indices −3 through 3. Outside every finite window, entries
 remain nonzero; the picture is not periodic wraparound. Truncating to indices
 −N through N gives squared error two-thirds times 4 to the power −N. The
-displayed errors for N = 1, 3 and 5 are **1/6, 1/96 and 1/1536**. Shifted impulses
+displayed errors for N = 1, 3, and 5 are **1/6, 1/96, and 1/1536**. Shifted impulses
 give finite-support approximants whose norm limit is the infinite sequence.
 
 [Original plate 18](../papers/paper-i/current/papers/Paper_I_Traditional_Final.pdf#page=100)
@@ -404,8 +404,8 @@ give finite-support approximants whose norm limit is the infinite sequence.
 <h2 id="atlas-19" tabindex="-1">Plate 19: residue packets retain an address carry</h2>
 
 Three rows divide a window of integer addresses into residue classes modulo
-three. Row 0 contains −6, −3, 0, 3 and 6; row 1 contains −5, −2, 1 and 4; row 2
-contains −4, −1, 2 and 5. Each address belongs to exactly one row. Under one
+three. Row 0 contains −6, −3, 0, 3, and 6; row 1 contains −5, −2, 1, and 4; row 2
+contains −4, −1, 2, and 5. Each address belongs to exactly one row. Under one
 shift, packet 0 moves to packet 1, packet 1 to packet 2, and packet 2 to packet
 0 with a shift of the coarse address. In formulas, the new packet 0 at k uses
 the old packet 2 at k−1. Replacing that boundary shift by a scalar would lose
@@ -445,7 +445,7 @@ equality or a theorem about completed topological tensor products.
 
 A three-column table connects seven topics to their mathematical content and
 the hypotheses that must remain attached. Presentations require a fixed
-grammar. Finite packets require idempotence, annihilation and completeness;
+grammar. Finite packets require idempotence, annihilation, and completeness;
 orthogonality is additional. Semisimple counts require the specified
 decomposition data. Primary and graph counts retain their field and
 multiplicity conventions. Path and cycle proofs are distinct from finite
@@ -459,7 +459,7 @@ contracts and executable records.
 ## Sources and coverage
 
 Descriptions were checked against all ten rendered chapter figures, the
-twenty-two rendered atlas plates, their captions and the retained atlas source.
+twenty-two rendered atlas plates, their captions, and the retained atlas source.
 They do not replace the manuscript’s arguments or add a mathematical review.
 The existing PDF remains the reference for the original visual layout.
 

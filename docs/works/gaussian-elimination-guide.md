@@ -12,7 +12,7 @@ A standalone reader PDF is supplied. This component does not include editable so
 
 ## Before you start
 
-**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+**Suggested background:** Read the problem statement, recorded scope, and open questions first. The program's definitions determine its subject prerequisites.
 
 **Recorded results and limits:** 45-page collection compiled 7 October 2026 from four source PDFs and two reflowed arithmetic notes. Edition, source map, and rendered front matter inspected. The compilation explicitly reports no new source-experiment or Lean replay. Mathematical confidence remains unassessed.
 

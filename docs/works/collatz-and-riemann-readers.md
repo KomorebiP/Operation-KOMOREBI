@@ -12,11 +12,11 @@ Reader editions, finite results, and research evidence for both programs.
 
 ## Before you start
 
-**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+**Suggested background:** Read the problem statement, recorded scope, and open questions first. The program's definitions determine its subject prerequisites.
 
-**Recorded results and limits:** Finished reader/visual sets with scoped arguments, exact reductions and finite checks. Both conjectures remain open.
+**Recorded results and limits:** Finished reader/visual sets with scoped arguments, exact reductions, and finite checks. Both conjectures remain open.
 
-**Remaining work:** Track each universal endpoint separately from finite orbit checks, models and conditional reductions.
+**Remaining work:** Track each universal endpoint separately from finite orbit checks, models, and conditional reductions.
 
 The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
 

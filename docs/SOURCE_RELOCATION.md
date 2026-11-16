@@ -6,7 +6,7 @@ installable mathematical software in the independent `komorebi-math` repository.
 Every file in the retained preview remains byte-identical to its source archive.
 
 Run the preview commands from `formal/research-preview-1`, where its sealed
-hashes, dependency pins and relative paths retain their original meaning.
+hashes, dependency pins, and relative paths retain their original meaning.
 The collection workflow runs its checks with that working directory. The manual
 Lean replay workflow also directs the bootstrap action to the relocated package.
 

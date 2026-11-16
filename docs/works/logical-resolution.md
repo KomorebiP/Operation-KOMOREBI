@@ -12,7 +12,7 @@ Logical resolution and the structures used to represent it.
 
 ## Before you start
 
-**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+**Suggested background:** Read the problem statement, recorded scope, and open questions first. The program's definitions determine its subject prerequisites.
 
 **Recorded results and limits:** 13 checked modules and 112 theorem declarations cover the standard-syntax bridge and relational layer. Arbitrary formula preservation is outside the stated interface.
 

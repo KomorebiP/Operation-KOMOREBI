@@ -12,7 +12,7 @@ Stratified relational workspaces and their mathematical interfaces.
 
 ## Before you start
 
-**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+**Suggested background:** Read the problem statement, recorded scope, and open questions first. The program's definitions determine its subject prerequisites.
 
 **Recorded results and limits:** Complete preprint monograph with finite regression checks. External mathematical and empirical reviews remain pending.
 

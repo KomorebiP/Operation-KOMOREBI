@@ -116,7 +116,7 @@ def publish(site):
         body+='<li id="chapter-'+str(chapter['number'])+'"><a href="'+e(target,quote=True)+'">'+e(chapter['title'])+'</a> <span class="muted">(printed page '+e(chapter['printed_page'])+')</span></li>'
         site.search.append(dict(title='Machine-Native Reasoning / Chapter '+str(chapter['number'])+'. '+chapter['title'],
           group='Collection',kind='Papers and source',work_ids=[WORK],url=PAGE+'#chapter-'+str(chapter['number']),
-          text=chapter['title']+' '+part+' Expanded reconstructed monograph, PDF chapter and complete editable TeX source.'))
+          text=chapter['title']+' '+part+' Expanded reconstructed monograph, PDF chapter, and complete editable TeX source.'))
     body+='</ol></details><h2 id="verification">Build and source checks</h2>'
     body+='<p>The source package regenerates the active TeX exactly. A clean build reproduced all 977 pages in text, page geometry, content streams, and rendered pixels at 36 dpi, with matching outline trees. Page-boundary checks and all internal PDF links passed. These are reproduction and production checks, not an independent proof audit.</p>'
     body+='<p>'+link('Download the publication record',RECORD)+' · <a href="'+e(github(REPOSITORY,site.revision,MANIFEST),quote=True)+'">Source identities and full chapter map on GitHub</a></p>'

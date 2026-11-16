@@ -8,15 +8,15 @@
 
 **Completion:** Active development · **Lean:** Selected results recorded · **Confidence:** Recorded formal evidence
 
-Active development with exact binary image and quotient cardinality ranks, automatic checked finite-graph reconstruction, exact pin counts and the inherited two-world obstruction. Sparse forest/complexity results and wider transport and forcing claims remain open.
+Active development with exact binary image and quotient cardinality ranks, automatic checked finite-graph reconstruction, exact pin counts, and the inherited two-world obstruction. Sparse forest/complexity results and wider transport and forcing claims remain open.
 
 ## Before you start
 
-**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+**Suggested background:** Read the problem statement, recorded scope, and open questions first. The program's definitions determine its subject prerequisites.
 
 **Recorded results and limits:** The separate Lean 4.24.0 companion checks 266 theorem declarations. It retains graph reconstruction, exact unpinned/partial-pin counts, and automatic checked traversal. New finite edge indexing counts each undirected edge once. Complete duplicate-free image and actual additive quotient lists have exactly `2^(n-c)` and `2^(m+c-n)` elements. Taking `log2` gives their binary cardinality ranks. Equal derivative fibers and equal cosets are proved before power cancellation, with `c <= n` and `n-c <= m`. Nineteen inherited sources are unchanged, and both obstruction theorems remain axiom-free. No external module/basis interface, sparse forest/complexity theorem, or wider transport/forcing claim is added.
 
-**Remaining work:** Develop a verified sparse spanning-forest implementation and state any proved complexity bounds. If a module/basis interface is introduced, connect its dimension to the established exact cardinalities. Preserve the exhaustive rank and reconstruction references, original source and earlier companions.
+**Remaining work:** Develop a verified sparse spanning-forest implementation and state any proved complexity bounds. If a module/basis interface is introduced, connect its dimension to the established exact cardinalities. Preserve the exhaustive rank and reconstruction references, original source, and earlier companions.
 
 The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
 

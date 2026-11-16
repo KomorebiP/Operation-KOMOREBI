@@ -482,7 +482,7 @@ The Lean links open each work’s recorded coverage and sources. They do not cer
 
 **Terms:** [Complex conjugate](GLOSSARY.md#complex-conjugate) · [Adjoint matrix](GLOSSARY.md#adjoint) · [Unitary matrix](GLOSSARY.md#unitary) · [Quantum amplitude](GLOSSARY.md#amplitude) · [Density matrix](GLOSSARY.md#density-matrix) · [Matrix trace](GLOSSARY.md#trace) · [Born probability](GLOSSARY.md#born-probability) · [Purity of a density matrix](GLOSSARY.md#purity) · [Dephasing](GLOSSARY.md#dephasing) · [Kraus operators](GLOSSARY.md#kraus-operator) · [Hermitian matrix](GLOSSARY.md#hermitian) · [Positive semidefinite matrix](GLOSSARY.md#positive-semidefinite) · [Coherence in a chosen basis](GLOSSARY.md#coherence)
 
-This introductory calculation covers one two-dimensional state, a unitary phase change and a measurement channel. Paper VII develops the finite quantum setting and separate continuum research targets. Quantum and Circuits provides a related route through arithmetic realizations and symmetry; the extended demonstration also reproduces its modulus-12 phase example. These subject routes add no formal claim correspondence.
+This introductory calculation covers one two-dimensional state, a unitary phase change, and a measurement channel. Paper VII develops the finite quantum setting and separate continuum research targets. Quantum and Circuits provides a related route through arithmetic realizations and symmetry; the extended demonstration also reproduces its modulus-12 phase example. These subject routes add no formal claim correspondence.
 
 ### Paper VII: Quantum Seed Calculus
 
@@ -513,7 +513,7 @@ The Lean links open each work’s recorded coverage and sources. They do not cer
 
 **Terms:** [Prime power](GLOSSARY.md#prime-power) · [Modular reduction](GLOSSARY.md#modular-reduction) · [Lift branch](GLOSSARY.md#lift-branch) · [Compatible tower](GLOSSARY.md#compatible-tower) · [p-adic integer](GLOSSARY.md#padic-integer) · [Survival to a finite level](GLOSSARY.md#surviving-branch)
 
-Finite lift branches give elementary background for Paper X’s residual constructions. Its completion result requires supplied all-depth data, closure and the other stated inputs.
+Finite lift branches give elementary background for Paper X’s residual constructions. Its completion result requires supplied all-depth data, closure, and the other stated inputs.
 
 ### Paper X: Universal Residual Seeds and Conditional Occupied-System Completion
 
@@ -567,7 +567,7 @@ The Lean links open each work’s recorded coverage and sources. They do not cer
 
 **Terms:** [Commutative ring with identity](GLOSSARY.md#ring) · [Module](GLOSSARY.md#module) · [Module presentation](GLOSSARY.md#module-presentation) · [Cokernel](GLOSSARY.md#cokernel) · [Nilpotent operator](GLOSSARY.md#nilpotent) · [Module annihilator](GLOSSARY.md#annihilator) · [Module support](GLOSSARY.md#module-support) · [Zeroth Fitting ideal](GLOSSARY.md#fitting-ideal) · [Multiplicity in the module example](GLOSSARY.md#multiplicity) · [Ideal](GLOSSARY.md#ideal) · [Prime ideal](GLOSSARY.md#prime-ideal) · [Localization at a prime](GLOSSARY.md#localization)
 
-Paper XII distinguishes module support from packet and arithmetic constructions. This example compares two explicitly supplied modules. Patching, classicality and the other arithmetic inputs remain separate.
+Paper XII distinguishes module support from packet and arithmetic constructions. This example compares two explicitly supplied modules. Patching, classicality, and the other arithmetic inputs remain separate.
 
 ### Paper XII: Patching Support, Hecke Packets, and Conditional Automorphic Completion
 
@@ -709,7 +709,7 @@ The Lean links open each work’s recorded coverage and sources. They do not cer
 
 **Terms:** [Repair direction](GLOSSARY.md#repair-direction) · [Free linear repair](GLOSSARY.md#free-repair) · [Finite repair menu](GLOSSARY.md#repair-menu) · [Repair selection cost](GLOSSARY.md#repair-cost) · [Feasibility](GLOSSARY.md#feasibility) · [Linear obstruction witness](GLOSSARY.md#dual-witness)
 
-The example uses rational linear repair with supplied menu costs. It distinguishes feasibility, optimal selection and rejection of a proposed certificate. Python checks and Lean acceptance retain their separate recorded meanings.
+The example uses rational linear repair with supplied menu costs. It distinguishes feasibility, optimal selection, and rejection of a proposed certificate. Python checks and Lean acceptance retain their separate recorded meanings.
 
 ### Constructive Repair
 
@@ -737,7 +737,7 @@ The Lean links open each work’s recorded coverage and sources. They do not cer
 
 **Terms:** [Finite-dimensional Gaussian model](GLOSSARY.md#gaussian-model) · [Prior distribution](GLOSSARY.md#prior) · [Likelihood](GLOSSARY.md#likelihood) · [Posterior distribution](GLOSSARY.md#posterior) · [Covariance matrix](GLOSSARY.md#covariance) · [Precision matrix](GLOSSARY.md#precision-matrix) · [Observation innovation](GLOSSARY.md#innovation) · [Exact Gaussian gain](GLOSSARY.md#gaussian-gain) · [Joseph covariance](GLOSSARY.md#joseph-covariance)
 
-These calculations explain the exact Gaussian model and a candidate Joseph covariance. The release’s law-error tolerance, interval output and emitted Lean-instance checks require their full contracts.
+These calculations explain the exact Gaussian model and a candidate Joseph covariance. The release’s law-error tolerance, interval output, and emitted Lean-instance checks require their full contracts.
 
 ### Certified Inference
 

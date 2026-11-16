@@ -117,7 +117,7 @@ def render(data):
 
 Recorded {data['as_of']} · **Komorebi P.**
 
-[Filter by discipline, completion and proof evidence](https://KomorebiP.github.io/Operation-KOMOREBI/works.html) · [Browse the collection](BROWSE.md) · [Start here](START_HERE.md) · [Repository home](../README.md)
+[Filter by discipline, completion, and proof evidence](https://KomorebiP.github.io/Operation-KOMOREBI/works.html) · [Browse the collection](BROWSE.md) · [Start here](START_HERE.md) · [Repository home](../README.md)
 
 **Completion, Lean coverage, and confidence describe different things.** A finished book may contain open research. A checked Lean proof may belong to an unfinished project. Choose a completion stage below, open a work's evidence record, then follow its paper, proofs, Lean, and code link.
 
@@ -146,7 +146,7 @@ These categories describe the state of a work. They are not percentages or a ran
 '''
     text += table(['Label', 'Meaning'], labels['lean'].values())
     text += '''
-“Declared contract” covers only the registered claims in the linked map. Modules, declarations, named theorems, proof bodies and finite test cases count different things, so their totals cannot be combined into a project completion percentage. A source map, file hash, Lean guide PDF or inventory does not establish that Lean accepted a proof. Evidence from an earlier edition keeps its own scope and does not certify a changed or expanded edition.
+“Declared contract” covers only the registered claims in the linked map. Modules, declarations, named theorems, proof bodies, and finite test cases count different things, so their totals cannot be combined into a project completion percentage. A source map, file hash, Lean guide PDF or inventory does not establish that Lean accepted a proof. Evidence from an earlier edition keeps its own scope and does not certify a changed or expanded edition.
 
 ## Confidence basis
 
@@ -272,7 +272,7 @@ Recorded {data['as_of']}. This queue tracks documentation, research, formalizati
     queue += '''
 ## Release discipline
 
-Keep accepted source packages and dated failures intact. New claims or corrected mathematics belong in a new edition with its own evidence. A control counts as a successful rejection check only when it fails for the intended mathematical reason. Missing imports, timeouts and unavailable runtimes do not establish proof rejection. Conditional results keep their assumptions after editorial work is complete.
+Keep accepted source packages and dated failures intact. New claims or corrected mathematics belong in a new edition with its own evidence. A control counts as a successful rejection check only when it fails for the intended mathematical reason. Missing imports, timeouts, and unavailable runtimes do not establish proof rejection. Conditional results keep their assumptions after editorial work is complete.
 
 The [current reuse terms](../LICENSE.md) explain how retained historical undecided notices are handled. Navigation can clarify those terms while preserving historical source files and third-party terms.
 

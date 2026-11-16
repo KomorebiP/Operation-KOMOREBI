@@ -197,8 +197,8 @@ def render(reader):
         site.page(page,'Physics verification / '+spec['title'],body+content+navigation(config(),page,'bottom'))
         site.search.append(dict(title='Physics verification / '+spec['title'],group='Collection',kind='Papers and source',work_ids=[WORK],url=page,text=' '.join(s['title']+' '+s['text'] for s in spec['sections'])))
         scope_reports.append(dict(url=page,source=SCOPE,source_sha256=data['scope_sha256'],pdf_page=spec['pdf_page'],article_sha256=article_identity(content)))
-    body='<p class="eyebrow">Physics · Verification and sources</p><h1>Verification and formalization companions</h1><p>Read the retained verification scope and all five companions. Follow the declarations, hypotheses, evidence records and remaining obligations alongside the mathematical treatments.</p>'+reader.work_routes(WORK,INDEX)
-    body+='<p class="reading-note">These documents describe their archived publication checkpoints. Recorded compiler passes, source-identity audits and bounded computations retain their original scope. This HTML edition adds no proof audit, Lean execution or scientific computation.</p>'
+    body='<p class="eyebrow">Physics · Verification and sources</p><h1>Verification and formalization companions</h1><p>Read the retained verification scope and all five companions. Follow the declarations, hypotheses, evidence records, and remaining obligations alongside the mathematical treatments.</p>'+reader.work_routes(WORK,INDEX)
+    body+='<p class="reading-note">These documents describe their archived publication checkpoints. Recorded compiler passes, source-identity audits, and bounded computations retain their original scope. This HTML edition adds no proof audit, Lean execution or scientific computation.</p>'
     body+='<nav class="reading-contents-index" aria-label="Physics verification pages"><h2>Choose a companion or topic</h2>'+contents_list(config(),INDEX)+'</nav>'
     body+='<details class="reading-resources"><summary>Original companions in the full Physics PDF</summary><ul>'
     for companion in data['companions']:

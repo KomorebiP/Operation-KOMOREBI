@@ -26,7 +26,7 @@ def glossary_lookup(config):
     body = ('<section id="glossary-lookup" class="glossary-lookup" aria-labelledby="glossary-lookup-title">'
             '<h2 id="glossary-lookup-title">Find a glossary term</h2>'
             '<p id="glossary-help">Search a name, abbreviation or words in a definition or example. Try “nullspace”, “projection” or “CRT”. Matches link to the full entry, '
-            'with fuller explanations, examples and related terms. Select a term name to read its complete entry. You can also browse the subjects and alphabetical index below.</p>'
+            'with fuller explanations, examples, and related terms. Select a term name to read its complete entry. You can also browse the subjects and alphabetical index below.</p>'
             '<noscript><p>Quick lookup needs JavaScript. Use the subject links and alphabetical index below, or your browser’s Find command.</p></noscript>'
             '<form id="glossary-form" role="search" aria-label="Glossary" aria-describedby="glossary-help" hidden>'
             '<label for="glossary-query">Term, abbreviation or words to find</label>'
@@ -143,5 +143,5 @@ def glossary_reader_page(content, config):
                 chunk[start:finish]+'</section>')
         body += '</section>'
     body += ('</div>'+navigation()+'</div><details id="glossary-guide" class="glossary-guide">'
-        '<summary>Reading routes, comparisons and A–Z index</summary>'+guide+'</details>')
+        '<summary>Reading routes, comparisons, and A–Z index</summary>'+guide+'</details>')
     return body

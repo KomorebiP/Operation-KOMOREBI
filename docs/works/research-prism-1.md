@@ -12,9 +12,9 @@ The PRISM-1 mathematical and computational development.
 
 ## Before you start
 
-**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+**Suggested background:** Read the problem statement, recorded scope, and open questions first. The program's definitions determine its subject prerequisites.
 
-**Recorded results and limits:** Behavioral architecture, planner and cost model. No production RTL, synthesis, timing or measured silicon result.
+**Recorded results and limits:** Behavioral architecture, planner, and cost model. No production RTL, synthesis, timing or measured silicon result.
 
 **Remaining work:** Build a bit-accurate FPGA Packet Streaming Multiprocessor and report measured results under a fixed output contract.
 

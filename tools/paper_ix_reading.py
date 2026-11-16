@@ -23,7 +23,7 @@ BOOK=dict(work=WORK,label='Paper IX',base=BASE,main=MAIN,bib=MAIN,inline_bibliog
         'development, and all five mathematical appendices. Historical checkpoints retain their dated scope. '
         'The complete visual guide and eight worked arithmetic and lifting examples also have HTML sections.',
     atlas_index=PREFIX+'atlas/index.html',atlas_link_text='Explore all 23 visual sections in HTML',
-    atlas_note='With 20 original figures, descriptions, selectable labels and recorded data tables.',
+    atlas_note='With 20 original figures, descriptions, selectable labels, and recorded data tables.',
     reading_note='The complete visual guide includes 15 explanations and eight worked arithmetic and lifting examples in HTML.',
     html_inputs={'../worked_atlas.tex':dict(url=PREFIX+'atlas/index.html#s16',title='Read the eight worked arithmetic and lifting examples',note='')})
 _table_path=Path(__file__).with_name('paper_ix_tables.json')

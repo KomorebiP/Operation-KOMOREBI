@@ -70,7 +70,7 @@ when $b\ne0$. If $b=0$, both vectors lie on the first coordinate axis.
 **Continue reading:** [Span](../GLOSSARY.md#span),
 [seed rank](../GLOSSARY.md#seed-rank), and the
 [seed operations guide](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#1-seed).
-Paper I's broader definitions may use modules, topology and cardinalities.
+Paper I's broader definitions may use modules, topology, and cardinalities.
 
 <!-- learning-navigation -->
 

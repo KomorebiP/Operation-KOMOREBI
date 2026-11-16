@@ -1,10 +1,10 @@
 # Paper IV: figure and atlas descriptions
 
-These reading aids describe the 6 chapter figures, including their arrows, axes, scales and matrix entries. They retain the assumptions and example scope of the manuscript.
+These reading aids describe the 6 chapter figures, including their arrows, axes, scales, and matrix entries. They retain the assumptions and example scope of the manuscript.
 
 [Read the chapters](https://komorebip.github.io/Operation-KOMOREBI/read/paper-iv/index.html) · [Accessibility and reading options](ACCESSIBILITY.md)
 
-The [26 HTML atlas plates](https://komorebip.github.io/Operation-KOMOREBI/read/paper-iv/atlas/index.html) already provide the original atlas drawings, all drawing labels, structured tables and selectable equations.
+The [26 HTML atlas plates](https://komorebip.github.io/Operation-KOMOREBI/read/paper-iv/atlas/index.html) already provide the original atlas drawings, all drawing labels, structured tables, and selectable equations.
 
 <a id="figure-1-exact-residue-lanes-for-order-three"></a>
 <h2 id="figure-01" tabindex="-1">Figure 1: Exact residue lanes for order three</h2>

@@ -12,9 +12,9 @@ A cumulative two-axis calculus and rank-two p-adic lifting tool.
 
 ## Before you start
 
-**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+**Suggested background:** Read the problem statement, recorded scope, and open questions first. The program's definitions determine its subject prerequisites.
 
-**Recorded results and limits:** Working manuscript with 82 ledger targets, written proofs and self-review. No Lean certification or independent review.
+**Recorded results and limits:** Working manuscript with 82 ledger targets, written proofs, and self-review. No Lean certification or independent review.
 
 **Remaining work:** Independently review K72-K82 and retain the unconstrained rank-two scope before adding geometric or Galois conditions.
 

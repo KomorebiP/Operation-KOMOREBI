@@ -99,6 +99,6 @@ PASS: recovery
 | Written proof of that further claim | [Readable composition theorem and proof](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-iii/nonlinear-coordinates.html#L748). Keep its hypotheses when moving beyond this example. |
 | Lean | [Paper III coverage](../works/paper-iii.md#lean) and [Realization Boundaries coverage](../works/realization-boundaries.md#lean). No theorem-to-Lean correspondence is asserted for this standalone demonstration. |
 | Program | [Read or download the complete program](https://KomorebiP.github.io/Operation-KOMOREBI/read/demonstrations.html), then explore the [library code and instructions](../works/realization-boundaries.md#code). |
-| More hand calculations | [Kernels and fibers](../examples/10_KERNELS.md), [hidden memory](../examples/22_HIDDEN_MEMORY.md) and [repair directions](../examples/25_REPAIR_MENUS.md). |
+| More hand calculations | [Kernels and fibers](../examples/10_KERNELS.md), [hidden memory](../examples/22_HIDDEN_MEMORY.md), and [repair directions](../examples/25_REPAIR_MENUS.md). |
 
 [Previous: Refine a signal](REFINEMENT.md) · [All demonstrations](../DEMONSTRATIONS.md) · [Project overview](../START_HERE.md)

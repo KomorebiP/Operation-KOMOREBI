@@ -167,7 +167,7 @@ recursively:
 \end{aligned}
 ```
 
-For $m=0$, the sum is empty and this is repeated compression. A cutoff
+For $m=0$, the sum is empty, and this is repeated compression. A cutoff
 of two retains $u_{n-1}$ and $u_{n-2}$ when they are available, in addition
 to the current value $u_n$.
 

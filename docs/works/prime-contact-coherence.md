@@ -12,7 +12,7 @@ Structural limitations and conditional routes are stated explicitly. No abc proo
 
 ## Before you start
 
-**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+**Suggested background:** Read the problem statement, recorded scope, and open questions first. The program's definitions determine its subject prerequisites.
 
 **Recorded results and limits:** Internally audited final manuscript with exact finite coherence calculations. The abc conjecture is not proved.
 

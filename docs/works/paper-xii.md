@@ -12,7 +12,7 @@ Patching, Hecke packets, and conditional automorphic constructions.
 
 ## Before you start
 
-**Suggested background:** Vectors, matrices, linear maps, kernels and images, and reading a statement with hypotheses. Consult the selected paper for any additional algebra or analysis it uses.
+**Suggested background:** Vectors, matrices, linear maps, kernels, and images, and reading a statement with hypotheses. Consult the selected paper for any additional algebra or analysis it uses.
 
 **Recorded results and limits:** Historical evidence maps 49 revised claims to 291 production targets. Under the original wording, 41 claims are complete, seven are partial, and one is unchecked. Arithmetic and automorphic inputs remain explicit.
 
@@ -32,7 +32,7 @@ Use the links below to read this work and its supporting files. Ctrl+click (Comm
 
 ## Read
 
-- [Read online: complete monograph, reading map and revision scope](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-xii/index.html)
+- [Read online: complete monograph, reading map, and revision scope](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-xii/index.html)
 - [Visual guide: all 27 HTML plates and 23 drawings](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-xii/atlas/index.html)
 - [Edition README](../../papers/paper-xii/current/README.md)
 - [Read PDF](../../papers/paper-xii/current/core/publication/pdfs/Paper_XII_Traditional_v1.0.0.pdf)

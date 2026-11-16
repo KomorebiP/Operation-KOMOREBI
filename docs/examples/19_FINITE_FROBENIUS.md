@@ -35,7 +35,7 @@ $(a+b\alpha)^5=a^5+b^5\alpha^5$. In the base field $a^5=a$, and
 Consequently $F(a+b\alpha)=a-b\alpha$. Applying $F$ twice is the identity.
 The element $\beta$ has the two-element orbit $1+\alpha,1-\alpha$.
 
-## Compute trace, norm and inverse
+## Compute trace, norm, and inverse
 
 ```math
 \mathrm{Tr}(\beta)=\beta+\beta^5=2,\qquad
@@ -72,7 +72,7 @@ require their own supplied objects and hypotheses.
 
 ## Try it
 
-For $\gamma=2+\alpha$, find its Frobenius conjugate, trace, norm and inverse.
+For $\gamma=2+\alpha$, find its Frobenius conjugate, trace, norm, and inverse.
 
 **Answer:** $\gamma^5=2-\alpha$, trace $4$, norm $4-3=1$, and
 $\gamma^{-1}=2-\alpha$. All scalars in this answer are read modulo five.

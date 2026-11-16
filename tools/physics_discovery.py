@@ -19,7 +19,7 @@ def counts():
 
 def reading_summary():
     n=counts()
-    return f"{n['total']} reading pages: {n['treatments']} treatments, {n['visual']} visual studies and {n['verification']} verification pages"
+    return f"{n['total']} reading pages: {n['treatments']} treatments, {n['visual']} visual studies, and {n['verification']} verification pages"
 
 
 def destination(row):
@@ -47,18 +47,18 @@ def guide_paths():
     def step(title,url,description):return dict(title=title,url=url,description=description)
     data=metadata()
     first=[step('Work through the packet-current example','collection/PHYSICS_COLLECTION.html#packet-current','Begin with two packets and an explicit balance calculation.'),
-           step('Explore the five visual atlases',VISUAL_INDEX,'Read 60 original plates with their equations, explanations and scope notes.'),
+           step('Explore the five visual atlases',VISUAL_INDEX,'Read 60 original plates with their equations, explanations, and scope notes.'),
            step('Begin the foundations treatment',CHAPTERS[0]['url'],'Continue from the example into the definitions and stated hypotheses.'),
-           step('Read the verification scope',data['scope_pages'][0]['url'],'Distinguish written mathematics, recorded checks and physical interpretation.')]
+           step('Read the verification scope',data['scope_pages'][0]['url'],'Distinguish written mathematics, recorded checks, and physical interpretation.')]
     study=[step(group['title'],group['start'],'Read this treatment in its retained source order.') for group in DATA['groups']]
     study+=[step('All treatment contents',BOOK['index'],'Choose among the 160 treatment pages and the original PDF destinations.'),
             step('Visual atlas contents',VISUAL_INDEX,'Read the 72 illustrated and supporting pages.'),
             step('Verification and formalization companions',VERIFY_INDEX,'Continue through the three scope pages and all five companions.')]
-    evidence=[step('Verification scope and source conventions',data['scope_pages'][0]['url'],'Begin with the distinction between a mathematical statement, a source-identity check and a recorded run.'),
+    evidence=[step('Verification scope and source conventions',data['scope_pages'][0]['url'],'Begin with the distinction between a mathematical statement, a source-identity check, and a recorded run.'),
               step('Find a statement and written proof',statement_directory_url(BOOK),'Search the explicit statement blocks in the Physics treatments.')]
     for companion in data['companions']:
         url=next(p['url'] for p in data['pages'] if p['companion']==companion['id'])
-        evidence.append(step(companion['title'],url,'Read the declarations, assumptions, retained evidence and remaining obligations for this subject.'))
+        evidence.append(step(companion['title'],url,'Read the declarations, assumptions, retained evidence, and remaining obligations for this subject.'))
     evidence.append(step('Inspect the retained Lean project','lean/'+WORK+'/index.html','Inspect selected source modules and their recorded environment; HTML publication adds no Lean execution.'))
     return first,study,evidence
 

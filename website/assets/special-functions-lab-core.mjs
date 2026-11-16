@@ -29,7 +29,7 @@ export function parse(value) {
   return rational(BigInt(n),BigInt(d));
 }
 export function parameters(values) {
-  if (!Array.isArray(values) || values.length !== 4) throw new RangeError('Supply q, r, a and b.');
+  if (!Array.isArray(values) || values.length !== 4) throw new RangeError('Supply q, r, a, and b.');
   return Array.from(values, (v,i) => {
     const x = parse(v);
     if (x.n <= 0n || x.n >= x.d) throw new RangeError(`${['q','r','a','b'][i]} must be strictly between 0 and 1.`);

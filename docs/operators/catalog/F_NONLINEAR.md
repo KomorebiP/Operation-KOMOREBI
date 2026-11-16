@@ -97,7 +97,7 @@ D^n(F\circ G)(x)[h]=\sum_{\pi}D^{|\pi|}F(G(x))\bigl[D^{|B|}G(x)[h_B]\bigr]_{B\in
 \text{tree}\mapsto\text{composition of vertex multilinear maps}
 ```
 
-**Scope.** Finite ordered rooted tree, fixed multilinear maps at internal vertices and independent leaf inputs. Diagonal seed specialization is nonlinear.
+**Scope.** Finite ordered rooted tree, fixed multilinear maps at internal vertices, and independent leaf inputs. Diagonal seed specialization is nonlinear.
 
 **Keep in view.** A fixed tree is multilinear in independent leaf inputs. Reusing the same seed at all leaves gives a polynomial, usually nonlinear, map of the seed.
 

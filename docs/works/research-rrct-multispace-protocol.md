@@ -12,7 +12,7 @@ The v0.61 multispace convergence research protocol.
 
 ## Before you start
 
-**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+**Suggested background:** Read the problem statement, recorded scope, and open questions first. The program's definitions determine its subject prerequisites.
 
 **Recorded results and limits:** The available evidence covers the protocol and numerical smoke checks. The primary multi-family causal campaign is incomplete, and the Qwen runner was not executed in the recorded build.
 

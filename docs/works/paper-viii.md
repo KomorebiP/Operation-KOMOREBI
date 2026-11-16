@@ -12,7 +12,7 @@ Exact finite algorithms, compilation, and computational realization.
 
 ## Before you start
 
-**Suggested background:** Vectors, matrices, linear maps, kernels and images, and reading a statement with hypotheses. Consult the selected paper for any additional algebra or analysis it uses.
+**Suggested background:** Vectors, matrices, linear maps, kernels, and images, and reading a statement with hypotheses. Consult the selected paper for any additional algebra or analysis it uses.
 
 **Recorded results and limits:** Internal publication release is complete. The inherited finite formal contract excludes numerical QR/SVD and canonical singular-value API identification. GPU execution was not performed.
 
@@ -32,7 +32,7 @@ Use the links below to read this work and its supporting files. Ctrl+click (Comm
 
 ## Read
 
-- [Read online: manuscript, six appendices and figures](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-viii/index.html)
+- [Read online: manuscript, six appendices, and figures](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-viii/index.html)
 - [Worked visual atlas: all 32 HTML plates](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-viii/atlas/index.html)
 - [Edition README](../../papers/paper-viii/current/README.md)
 - [Read PDF](../../papers/paper-viii/current/papers/Paper_VIII_Traditional_Final.pdf)

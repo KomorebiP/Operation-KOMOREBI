@@ -12,7 +12,7 @@ Representations, their transformations, and compatibility.
 
 ## Before you start
 
-**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+**Suggested background:** Read the problem statement, recorded scope, and open questions first. The program's definitions determine its subject prerequisites.
 
 **Recorded results and limits:** The generic adapter and 202 frozen matrix certificates are checked. The build covered 235 local modules. Most declaration counts include inherited or generated facts.
 

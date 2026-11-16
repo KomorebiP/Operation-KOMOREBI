@@ -12,7 +12,7 @@ Written reductions and bounded exact calculations for tau nonvanishing.
 
 ## Before you start
 
-**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+**Suggested background:** Read the problem statement, recorded scope, and open questions first. The program's definitions determine its subject prerequisites.
 
 **Recorded results and limits:** Finished reader on Ramanujan tau nonvanishing with written and finite evidence. No recovered Lean certificate and no all-prime theorem.
 

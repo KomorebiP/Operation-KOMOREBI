@@ -12,7 +12,7 @@ The general ABC endpoint remains open. The newer RR8 branch is listed separately
 
 ## Before you start
 
-**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+**Suggested background:** Read the problem statement, recorded scope, and open questions first. The program's definitions determine its subject prerequisites.
 
 **Recorded results and limits:** Finished evidence reader with selected formal conditional interfaces. The actual arithmetic/IUT witness and uniform abc inequality are not supplied.
 

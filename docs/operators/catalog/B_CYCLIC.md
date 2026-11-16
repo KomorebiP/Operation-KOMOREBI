@@ -74,7 +74,7 @@ P_r^{(N)}f(z)=N^{-1}\sum_{j=0}^{N-1}\zeta^{-rj}f(\zeta^jz)
 P_\chi=|G|^{-1}\sum_{g\in G}\overline{\chi(g)}\,\rho(g)
 ```
 
-**Scope.** Finite group G, a complex representation rho and a one-dimensional character chi. The result is algebraically idempotent; it is an orthogonal projection when rho is unitary.
+**Scope.** Finite group G, a complex representation rho, and a one-dimensional character chi. The result is algebraically idempotent; it is an orthogonal projection when rho is unitary.
 
 **Keep in view.** The formula applies to a one-dimensional character of any finite group, not only a cyclic group.
 
@@ -255,7 +255,7 @@ x=\sum_ir_ie_i\pmod M
 \Lambda_r\bigl(\sum_na_nz^n\bigr)=\sum_na_{pn+r}z^n
 ```
 
-**Scope.** Formal series over a declared coefficient ring, integer radix p>=2 and 0<=r<p. No characteristic-p hypothesis is needed for decimation itself.
+**Scope.** Formal series over a declared coefficient ring, integer radix p>=2, and 0<=r<p. No characteristic-p hypothesis is needed for decimation itself.
 
 **Keep in view.** Decimation reindexes retained coefficients. It is not the same as the degree-preserving projector OP-025.
 

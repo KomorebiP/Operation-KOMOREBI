@@ -12,7 +12,7 @@ Set-theoretic structures, multiverse interfaces, and residual reflection.
 
 ## Before you start
 
-**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+**Suggested background:** Read the problem statement, recorded scope, and open questions first. The program's definitions determine its subject prerequisites.
 
 **Recorded results and limits:** The depth-zero and multiverse blocks are checked. The arbitrary complete obstruction tower can be vacuous. No model existence follows from the conditional extraction theorem.
 

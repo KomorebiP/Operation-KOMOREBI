@@ -325,7 +325,7 @@ x\mapsto H_{2^m}x
 (V_gx)_{m,k}=\sum_{n=0}^{L-1}x[mh+n]\overline{g[n]}\,e^{-2\pi i kn/N}
 ```
 
-**Scope.** Fixed window, hop h, frame length L, FFT length N>=L and extension rule. Real-window implementations are a specialization.
+**Scope.** Fixed window, hop h, frame length L, FFT length N>=L, and extension rule. Real-window implementations are a specialization.
 
 **Keep in view.** This displayed convention conjugates g. An implementation that multiplies by w has the same action when w=conj(g); window and Fourier conventions must be matched explicitly.
 
@@ -407,9 +407,9 @@ x\mapsto\sum_j\operatorname{shift}_{jH}(x_j*h)
 R_{u,d}=\downarrow_d H\uparrow_u
 ```
 
-**Scope.** Fixed integer factors u,d and fixed FIR. The implementation also declares delay compensation, crop and boundary extension. Data-adaptive filter design is not included in the linear map.
+**Scope.** Fixed integer factors u,d and fixed FIR. The implementation also declares delay compensation, crop, and boundary extension. Data-adaptive filter design is not included in the linear map.
 
-**Keep in view.** The algebraic core is linear for a fixed filter. Exact output length, delay correction and cropping belong to the contract.
+**Keep in view.** The algebraic core is linear for a fixed filter. Exact output length, delay correction, and cropping belong to the contract.
 
 **Sources:** [S: Production finite signal processing](https://github.com/KomorebiP/komorebi-math/blob/a3aa04ac18a523f30c50c7f5dba709f88e904eff/docs/PRODUCTION_SIGNAL_PROCESSING.md).
 

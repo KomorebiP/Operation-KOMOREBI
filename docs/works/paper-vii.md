@@ -12,7 +12,7 @@ Finite quantum constructions and seed representations.
 
 ## Before you start
 
-**Suggested background:** Vectors, matrices, linear maps, kernels and images, and reading a statement with hypotheses. Consult the selected paper for any additional algebra or analysis it uses.
+**Suggested background:** Vectors, matrices, linear maps, kernels, and images, and reading a statement with hypotheses. Consult the selected paper for any additional algebra or analysis it uses.
 
 **Recorded results and limits:** The reading edition has completed its editorial review. The 19 inherited finite formal items are separate from the book. All five physical continuum targets remain open.
 
@@ -34,7 +34,7 @@ Use the links below to read this work and its supporting files. Ctrl+click (Comm
 
 ## Read
 
-- [Read online: chapters, figures and proof links](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vii/index.html)
+- [Read online: chapters, figures, and proof links](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vii/index.html)
 - [Worked visual atlas: all 40 HTML plates](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-vii/atlas/index.html)
 - [Edition README](../../papers/paper-vii/current/README.md)
 - [Read PDF](../../papers/paper-vii/current/papers/Paper_VII_Traditional_Final.pdf)

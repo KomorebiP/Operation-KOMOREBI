@@ -12,7 +12,7 @@ Typed systems, finite realization, seed rank, and packet coordinates.
 
 ## Before you start
 
-**Suggested background:** Vectors, matrices, linear maps, kernels and images, and reading a statement with hypotheses. Consult the selected paper for any additional algebra or analysis it uses.
+**Suggested background:** Vectors, matrices, linear maps, kernels, and images, and reading a statement with hypotheses. Consult the selected paper for any additional algebra or analysis it uses.
 
 **Recorded results and limits:** The stated manuscript scope has 69 accepted proof-level correspondences. Its 108 correspondence records are not a count of 108 theorems.
 

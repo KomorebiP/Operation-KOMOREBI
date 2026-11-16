@@ -212,7 +212,7 @@ matrix: $\ker\mathcal O_h\subseteq\ker F$ is the criterion. Recovering the
 whole initial state requires $\ker\mathcal O_h=\{0\}$. A particular answer
 can require fewer observations than the whole state.
 
-For the shear update above, $R=[1\ \ 0]$ and $RT=[1\ \ 1]$. Thus
+For the shear update above, $R=[1\ \ 0]$, and $RT=[1\ \ 1]$. Thus
 $\mathcal O_2=\begin{pmatrix}1&0\\1&1\end{pmatrix}$, and two noiseless
 observations $(a,b)$ give $x_0=(a,b-a)^{\mathsf T}$. One observation
 cannot distinguish $(0,0)$ from $(0,1)$. The calculation assumes both

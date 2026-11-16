@@ -40,7 +40,7 @@ Use the links below to read this work and its supporting files. Ctrl+click (Comm
 
 ## Read
 
-- [Read online: chapters, proof appendices, figures and glossary](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/index.html)
+- [Read online: chapters, proof appendices, figures, and glossary](https://KomorebiP.github.io/Operation-KOMOREBI/read/monographs-special-functions/index.html)
 - [Edition README](../../monographs/special-functions/README.md)
 - [Read PDF](../../monographs/special-functions/books/Special_Functions.pdf)
 - [Expanded Visual Guide (current PDF)](../../monographs/special-functions/books/Expanded_Visual_Guide.pdf)
@@ -79,7 +79,7 @@ Start with the [edition guide](../../monographs/special-functions/README.md) and
 - [Historical Block01 formal status](../../monographs/special-functions/LEAN_STATUS.md)
 - [Block01 recurrence companion report](../../monographs/special-functions/formalization/Block01/REPORT.md)
 - [Finite core and coupled Lean sources (directory)](../../monographs/special-functions/lean/)
-- [Coupled recurrence, local convergence and recovery (Lean)](../../monographs/special-functions/lean/CoupledFormal.lean)
+- [Coupled recurrence, local convergence, and recovery (Lean)](../../monographs/special-functions/lean/CoupledFormal.lean)
 - [Coupled formal claim map](../../monographs/special-functions/formalization/Block01/CLAIM_MAP.json)
 - [Block17 claim map](../../monographs/special-functions/formalization/Block17/CLAIM_MAP.json)
 - [Block17 recorded execution receipt](../../monographs/special-functions/formalization/Block17/evidence/receipt.json)

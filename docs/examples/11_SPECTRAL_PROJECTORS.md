@@ -44,7 +44,7 @@ P_2^2=9I-6T+T^2=3I-T=P_2,\qquad
 P_3^2=T^2-4T+4I=T-2I=P_3.
 ```
 
-Also $P_2P_3=P_3P_2=0$, $P_2+P_3=I$ and $T=2P_2+3P_3$.
+Also $P_2P_3=P_3P_2=0$, $P_2+P_3=I$, and $T=2P_2+3P_3$.
 
 ## Compute through the packets
 

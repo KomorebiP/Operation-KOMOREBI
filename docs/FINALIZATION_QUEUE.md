@@ -11,7 +11,7 @@ Recorded 2026-10-27. This queue tracks documentation, research, formalization, a
 | Item | Status | Work to complete |
 |---|---|---|
 | [F01](#f01) | done | Separate current and historical status |
-| [F02](#f02) | done | Make completion, Lean and confidence independently visible |
+| [F02](#f02) | done | Make completion, Lean, and confidence independently visible |
 | [F03](#f03) | open | Reconcile the expanded Machine-Native Reasoning book |
 | [F04](#f04) | done | Resolve Paper IV visual-guide source correspondence |
 | [F05](#f05) | open | Replay editions that currently rely on inherited formal evidence |
@@ -47,11 +47,11 @@ Related works and source records: [Machine Theory: formal development](works/res
 
 <a id="f02--make-completion-lean-and-confidence-independently-visible"></a>
 
-### F02: Make completion, Lean and confidence independently visible
+### F02: Make completion, Lean, and confidence independently visible
 
 **Status: done**
 
-All primary components receive distinct stage, Lean, confidence, scope, evidence and next-step fields.
+All primary components receive distinct stage, Lean, confidence, scope, evidence, and next-step fields.
 
 **Done when:** Every selected component is represented once. Supporting sources remain separately classified.
 
@@ -65,7 +65,7 @@ Coverage: all primary entries in the [status guide](COMPLETION_STATUS.md).
 
 **Status: done**
 
-Resolved by the explicitly labeled 3 November 2026 reconstructed edition: a complete editable source package, successful build, matching text on all 27 content pages and visual review of all 28 PDF pages.
+Resolved by the explicitly labeled 3 November 2026 reconstructed edition: a complete editable source package, successful build, matching text on all 27 content pages, and visual review of all 28 PDF pages.
 
 **Done when:** An authenticated matching source or explicitly new reconstructed edition has a documented PDF/text comparison and page review.
 
@@ -135,7 +135,7 @@ The expanded reconstructed edition is published with editable TeX and reproducti
 
 **Done when:** Reconcile the published 97-chapter edition with the accepted core result map and complete a scoped mathematical review of remaining expanded claims, retaining the exact artifact identities.
 
-**Progress:** 4 November 2026: reconstructed 97 chapters in thirteen parts as a new 977-page edition; authenticated PDF and editable-source ZIP, clean build reproduction, page boundaries and internal links. No new Lean run or whole-book proof audit. The missing historical TeX archive is no longer a build prerequisite.
+**Progress:** 4 November 2026: reconstructed 97 chapters in thirteen parts as a new 977-page edition; authenticated PDF and editable-source ZIP, clean build reproduction, page boundaries, and internal links. No new Lean run or whole-book proof audit. The missing historical TeX archive is no longer a build prerequisite.
 
 Related works and source records: [Machine Native Reasoning: wider continuation](works/research-machine-native-reasoning-wider.md) · [Machine Native Reasoning](works/monographs-machine-native-reasoning.md).
 
@@ -149,7 +149,7 @@ Related works and source records: [Machine Native Reasoning: wider continuation]
 
 These editions do not have a fresh whole-edition Lean replay in the assessed publication record.
 
-**Done when:** Pinned sources/dependencies, accepted builds, exact declaration/axiom checks and appropriate controls are saved under new receipts. Coverage is not enlarged by replay.
+**Done when:** Pinned sources/dependencies, accepted builds, exact declaration/axiom checks, and appropriate controls are saved under new receipts. Coverage is not enlarged by replay.
 
 Related works and source records: [Sufficient Resolution](works/sufficient-resolution.md) · [AVOC](works/research-avoc.md) · [Strong Artin: source and evidence](works/strong-artin-reader.md) · [Paper V: Polyphase Signal Calculus](works/paper-v.md) · [Paper VI: Transfer Semigroups: Stochastic, Bayesian, Fractional, and PDE Realizations](works/paper-vi.md) · [Paper VII: Quantum Seed Calculus](works/paper-vii.md) · [Paper VIII: Packet Operator Algorithms, Exact Compilation, and GPU Realization](works/paper-viii.md) · [Paper XII: Patching Support, Hecke Packets, and Conditional Automorphic Completion](works/paper-xii.md).
 
@@ -165,7 +165,7 @@ Source text or static inventories are not compiler acceptance.
 
 **Done when:** Compile the exact intended source with pinned dependencies, record diagnostics and axioms, and map accepted statements to the manuscript. Retain missing mathematical inputs.
 
-**Progress:** Resolution Semantics has a separate 0.8.0 companion with 266 accepted declarations. It retains reconstruction, pin counts and automatic checked traversal, and proves exact cardinality rank formulas for the actual derivative image and additive edge-field quotient. Complete duplicate-free lists have 2^(n-c) and 2^(m+c-n) elements, with valid natural-subtraction bounds; ranks are their log2 sizes. The clean source-bound Windows replay passes 73 executable cases and 26 rejection controls. Standard axiom dependencies are recorded, and both obstruction theorems remain axiom-free. Original and earlier companions are preserved. A module/basis interface, sparse forest implementation, complexity bounds, the wider paper, Hodge and Stratified Universality obligations remain open.
+**Progress:** Resolution Semantics has a separate 0.8.0 companion with 266 accepted declarations. It retains reconstruction, pin counts, and automatic checked traversal, and proves exact cardinality rank formulas for the actual derivative image and additive edge-field quotient. Complete duplicate-free lists have 2^(n-c) and 2^(m+c-n) elements, with valid natural-subtraction bounds; ranks are their log2 sizes. The clean source-bound Windows replay passes 73 executable cases and 26 rejection controls. Standard axiom dependencies are recorded, and both obstruction theorems remain axiom-free. Original and earlier companions are preserved. A module/basis interface, sparse forest implementation, complexity bounds, the wider paper, Hodge, and Stratified Universality obligations remain open.
 
 Related works and source records: [Resolution Semantics](works/resolution-semantics.md) · [Hodge: source and evidence](works/hodge-reader.md) · [Stratified Universality](works/stratified-universality.md).
 
@@ -179,7 +179,7 @@ Related works and source records: [Resolution Semantics](works/resolution-semant
 
 Availability alone does not establish an editorial or mathematical completion level.
 
-**Done when:** Identify the edition, editable sources, claim scope and actual review/build records, then replace the unassessed labels.
+**Done when:** Identify the edition, editable sources, claim scope, and actual review/build records, then replace the unassessed labels.
 
 **Progress:** The machine-native mathematics essay has a separately identified 25-page reading edition with editable sources, inspected typesetting, local mathematical clarifications, and source-reconciled accounts of the current papers and selected companion studies. Its scientific confidence remains unassessed. The original editable source, the Gaussian Elimination entry, and independent scientific review requirements remain open.
 
@@ -249,7 +249,7 @@ Publication completion and checked subresults leave wider formal or implementati
 
 **Done when:** Choose one precise next theorem/refinement contract, establish its dependencies, and admit it only with corresponding source and verification evidence.
 
-**Progress:** Special Functions SF-LEAN-B17 adds 30 theorems, for 465 registered names. The exact guarded-majorant algorithm specification, explicit failures and abstract validation order are proved; successful returns certify actual bounds and endpoints. All 66 replay steps pass across seventeen modules. Exact formal/assessment I/O is recorded. Full Python runtime/dictionary refinement, other J/F/H, I and A-E remain.
+**Progress:** Special Functions SF-LEAN-B17 adds 30 theorems, for 465 registered names. The exact guarded-majorant algorithm specification, explicit failures, and abstract validation order are proved; successful returns certify actual bounds and endpoints. All 66 replay steps pass across seventeen modules. Exact formal/assessment I/O is recorded. Full Python runtime/dictionary refinement, other J/F/H, I, and A-E remain.
 
 Related works and source records: [Paper III: Typed Transfer, Nonlinear Packets, and Obstruction Theory](works/paper-iii.md) · [Special Functions](works/monographs-special-functions.md) · [Quantum and Circuits](works/monographs-quantum-and-circuits.md) · [Signal Reconstruction](works/signal-reconstruction.md) · [COS Method: formal continuation](works/monographs-cos-method-formal-continuation.md) · [p-adic Canonical Realization](works/padic-canonical-realization.md) · [Model-Theory Normalization](works/model-theory-normalization.md).
 
@@ -261,7 +261,7 @@ Related works and source records: [Paper III: Typed Transfer, Nonlinear Packets,
 
 **Status: open**
 
-Fixtures, candidate diagnostics and interface skeletons do not establish real-model or hardware endpoints.
+Fixtures, candidate diagnostics, and interface skeletons do not establish real-model or hardware endpoints.
 
 **Done when:** Use frozen inputs and gates, retain failures, execute held-out/replicated tests or hardware compilation/measurement, and report the actual tested scope.
 
@@ -283,7 +283,7 @@ Related works and source records: [Paper X: Universal Residual Seeds and Conditi
 
 ## Release discipline
 
-Keep accepted source packages and dated failures intact. New claims or corrected mathematics belong in a new edition with its own evidence. A control counts as a successful rejection check only when it fails for the intended mathematical reason. Missing imports, timeouts and unavailable runtimes do not establish proof rejection. Conditional results keep their assumptions after editorial work is complete.
+Keep accepted source packages and dated failures intact. New claims or corrected mathematics belong in a new edition with its own evidence. A control counts as a successful rejection check only when it fails for the intended mathematical reason. Missing imports, timeouts, and unavailable runtimes do not establish proof rejection. Conditional results keep their assumptions after editorial work is complete.
 
 The [current reuse terms](../LICENSE.md) explain how retained historical undecided notices are handled. Navigation can clarify those terms while preserving historical source files and third-party terms.
 

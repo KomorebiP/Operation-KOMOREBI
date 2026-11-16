@@ -8,7 +8,7 @@ Komorebi Math package. Each plot has an exact CSV export, editable parameters,
 and routes back to its mathematical sources.
 
 For a complete combinatorial hand derivation, follow
-[Stirling, Bell and Fubini numbers through exact transfer](STIRLING_BELL_FUBINI.md).
+[Stirling, Bell, and Fubini numbers through exact transfer](STIRLING_BELL_FUBINI.md).
 It connects the factorial-weighted Stirling charts below to an invertible
 triangular transformation, a reciprocal generating function, residue-packet
 identities, and an explicit information-loss witness.
@@ -46,7 +46,7 @@ $A_2^{[1]}(2)=5$ contributes $5t^4/4!$. Its normalized value is $5/24$,
 not $5/2!$. At the default $N=4,r=1$, the first five values are
 $1,1,69,33661,60376809$.
 
-The preset supports integer $2\leq N\leq8$, $1\leq r\leq3$ and at most
+The preset supports integer $2\leq N\leq8$, $1\leq r\leq3$, and at most
 16 terms beginning at $n=0$. Try changing $N$ from four to two or $r$ from
 one to two. Exact integer and rational values are preserved in
 `reciprocal-growth-exact.csv`. Floating-point logarithms are used only for
@@ -57,7 +57,7 @@ separate exact CSV contains the original mathematical values.
 
 [Compare the reciprocal families](https://KomorebiP.github.io/Operation-KOMOREBI/playground.html#sequence-landscape)
 
-Start with the 2D chart. Each line has its own label, point shape and color.
+Start with the 2D chart. Each line has its own label, point shape, and color.
 Use the series checkboxes to compare fewer families. A vertical value of
 minus ten means $10^{-10}$. Each fall of one unit means a normalized value
 ten times smaller. The Enlarge plot button gives the chart more space.
@@ -109,7 +109,7 @@ omits zero contributions. The export includes all 190 triangular positions,
 including zeros. `last` can be reduced from 18, and `row` selects a row
 between zero and `last`.
 
-## Papers, proofs, Lean and code
+## Papers, proofs, Lean, and code
 
 | Experiment | Reading and written proofs | Formal coverage | Code and hand calculation |
 |---|---|---|---|
@@ -125,7 +125,7 @@ identifies the library revision and downloadable code checksums.
 ## What was checked
 
 An independent ordinary rational-series inversion is compared with the
-library's integer recurrence for $N=2,\ldots,8$, $r=0,\ldots,3$ and
+library's integer recurrence for $N=2,\ldots,8$, $r=0,\ldots,3$, and
 $n=0,\ldots,15$: 448 coefficients. The power-zero row is an additional
 boundary control. The test also rejects replacing the degree factorial by
 the compressed-index factorial in the secant example.

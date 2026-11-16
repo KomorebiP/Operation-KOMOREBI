@@ -226,7 +226,7 @@
       const details = doc.createElement("details");
       details.className = "side-document-routes";
       const summary = doc.createElement("summary");
-      summary.textContent = "Paper, proofs, Lean, code and examples";
+      summary.textContent = "Paper, proofs, Lean, code, and examples";
       details.append(summary);
       nav.before(details);
       details.append(nav);

@@ -15,7 +15,7 @@ We use the averaging normalization throughout this example.
 
 ## Analyze the first level
 
-For $(2,6)$, the average is $4$ and the detail is $-2$. For $(10,14)$,
+For $(2,6)$, the average is $4$, and the detail is $-2$. For $(10,14)$,
 they are $12$ and $-2$. The averaging transform and its inverse are
 
 ```math

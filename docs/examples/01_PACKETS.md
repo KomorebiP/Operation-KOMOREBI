@@ -2,7 +2,7 @@
 
 [All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: projector](../GLOSSARY.md#projector) · [Papers, proofs, Lean, and code](#papers-proofs-lean-and-code)
 
-For a complete route through blocks, a runnable program and the recorded proof
+For a complete route through blocks, a runnable program, and the recorded proof
 links, use [Reconstruct an operator](../demonstrations/PACKETS.md).
 
 We will split a vector into two components and put it back together. Work over
@@ -64,7 +64,7 @@ For example,
 Q_1Q_2=\begin{pmatrix}0&1-1\\0&0\end{pmatrix}=0.
 ```
 
-Likewise $Q_2Q_1=0$, $Q_1^2=Q_1$, $Q_2^2=Q_2$ and $Q_1+Q_2=I_2$.
+Likewise $Q_2Q_1=0$, $Q_1^2=Q_1$, $Q_2^2=Q_2$, and $Q_1+Q_2=I_2$.
 The components of the same input are now
 
 ```math

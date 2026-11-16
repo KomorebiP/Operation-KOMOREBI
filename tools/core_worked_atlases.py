@@ -6,7 +6,7 @@ from worked_atlas_descriptions import FIGURES
 TABLE_AIDS={
  'paper-ii':{
   (2,'L24'):dict(caption='Objects and their roles in the refinement atlas',headers=[r'\textbf{Object}',r'\textbf{Role}',r'\textbf{Worked instance}'],row_header_column=0),
-  (24,'L583'):dict(caption='Inherited interfaces, inputs and boundaries',headers=[r'\textbf{Inherited interface}',r'\textbf{Inputs and checked scope}',r'\textbf{Boundary of that interface}'],row_header_column=0),
+  (24,'L583'):dict(caption='Inherited interfaces, inputs, and boundaries',headers=[r'\textbf{Inherited interface}',r'\textbf{Inputs and checked scope}',r'\textbf{Boundary of that interface}'],row_header_column=0),
  },
  'paper-iii':{
   (2,'L21'):dict(caption='Objects and their first worked plates',headers=[r'\textbf{Object}',r'\textbf{What it records}',r'\textbf{First worked page}'],row_header_column=0),

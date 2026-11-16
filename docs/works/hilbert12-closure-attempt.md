@@ -12,7 +12,7 @@ Weighted transport obstruction, arithmetic certificates, and rational interval c
 
 ## Before you start
 
-**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+**Suggested background:** Read the problem statement, recorded scope, and open questions first. The program's definitions determine its subject prerequisites.
 
 **Recorded results and limits:** Interval certificate bounds a ratio distance below 10^-60 and resolves a branch condition. It does not establish exact equality.
 

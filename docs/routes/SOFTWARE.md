@@ -8,6 +8,6 @@ Choose the library and environment before installing dependencies. All software 
 4. Continue to [Komorebi Math worked examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/WORKED_EXAMPLES.md) or [Polyphase Float's complete C programs](https://github.com/KomorebiP/polyphase-float/blob/main/docs/manual/README.md).
 5. Use the library's testing instructions to check the operations you intend to use.
 
-Komorebi Math supports its declared Python environments. Polyphase Float's supported build baseline is Linux x86-64, LP64 and 64-bit GMP limbs. Windows readers should use its documented Linux/WSL route.
+Komorebi Math supports its declared Python environments. Polyphase Float's supported build baseline is Linux x86-64, LP64, and 64-bit GMP limbs. Windows readers should use its documented Linux/WSL route.
 
 [Reading routes](../READING_ROUTES.md) · [Hand-worked examples](../HAND_WORKED_EXAMPLES.md) · [Browse works](../BROWSE.md) · [Glossary](../GLOSSARY.md)

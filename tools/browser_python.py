@@ -104,7 +104,7 @@ RESEARCH_OPTIONS<optgroup label="Worked examples"><option value="packets">Recons
 <div id="python-playground" data-worker="assets/python-worker.js" data-manifest="downloads/python-playground.json" data-results="assets/python-results.js?v=RESULTS_HASH" data-plotly="assets/python/plotly-4.1.1.min.js">
 <details class="python-files"><summary>Upload data or open saved Python code</summary>
 <label for="python-data-files">CSV or JSON data files</label><input id="python-data-files" type="file" accept=".csv,.json" multiple aria-describedby="python-upload-help">
-<p id="python-upload-help">Up to 5 UTF-8 files, 2 MB each and 4 MB in total. The page reads them locally. It does not upload them to a server. Python receives their text in the <code>uploaded_files</code> dictionary. Try the Plot CSV or JSON data preset.</p><p id="python-upload-status" role="status">No data files selected.</p><button type="button" id="python-clear-files">Clear data files</button>
+<p id="python-upload-help">Up to 5 UTF-8 files, 2 MB each, and 4 MB in total. The page reads them locally. It does not upload them to a server. Python receives their text in the <code>uploaded_files</code> dictionary. Try the Plot CSV or JSON data preset.</p><p id="python-upload-status" role="status">No data files selected.</p><button type="button" id="python-clear-files">Clear data files</button>
 <p><a download href="downloads/sample-data.csv">Sample CSV</a> · <a download href="downloads/sample-data.json">Sample JSON</a></p>
 <label for="python-code-file">Open a Python file in the selected editor</label><input id="python-code-file" type="file" accept=".py" aria-describedby="python-code-file-help"><p id="python-code-file-help">This replaces the selected editor's text. It does not run the code. Maximum 256 KB.</p></details>
 <p id="python-status" role="status" aria-live="polite">Choose an example, then press Run.</p>'''
@@ -121,19 +121,19 @@ RESEARCH_OPTIONS<optgroup label="Worked examples"><option value="packets">Recons
         record['examples'][name] = dict(url=download, sha256=sha(source.encode()), expected_output=expected, packages=PRESETS[name]['packages'] if name in PRESETS else ['numpy'] if name=='library' else [])
         body += '<section class="python-example" id="'+name+'"><h2>'+title+'</h2>'
         if doc:
-            body += '<p><a href="collection/demonstrations/'+doc+'.html">Hand calculation, expected output and source connections</a></p>'
+            body += '<p><a href="collection/demonstrations/'+doc+'.html">Hand calculation, expected output, and source connections</a></p>'
         elif name in PRESETS:
             body += '<p>'+html.escape(PRESETS[name]['description'])+'</p>'
             if PRESETS[name].get('guide_page'):
                 guide = 'collection/'+html.escape(PRESETS[name]['guide_page'], quote=True)+'.html'
                 if PRESETS[name].get('guide_anchor'):
                     guide += '#'+html.escape(PRESETS[name]['guide_anchor'], quote=True)
-                body += '<p><a href="'+guide+'">Function definitions, reading volumes and proof sources</a></p>'
+                body += '<p><a href="'+guide+'">Function definitions, reading volumes, and proof sources</a></p>'
             if PRESETS[name].get('collection_guide'):
-                body += '<p><a href="collection/PHYSICS_COLLECTION.html#'+html.escape(PRESETS[name]['collection_guide'], quote=True)+'">Physics collection, hand calculations and proof sources</a></p>'
+                body += '<p><a href="collection/PHYSICS_COLLECTION.html#'+html.escape(PRESETS[name]['collection_guide'], quote=True)+'">Physics collection, hand calculations, and proof sources</a></p>'
             if PRESETS[name].get('guide'):
-                body += '<p><a href="collection/demonstrations/SEQUENCE_SHAPES.html#'+PRESETS[name]['guide']+'">Definitions, exact values and how to read this plot</a> · <a href="math/sequences_oeis.html">Komorebi Math sequence API</a></p>'
-            body += '<p><a href="#python-features-help">Plotting, data and saving guide</a></p>'
+                body += '<p><a href="collection/demonstrations/SEQUENCE_SHAPES.html#'+PRESETS[name]['guide']+'">Definitions, exact values, and how to read this plot</a> · <a href="math/sequences_oeis.html">Komorebi Math sequence API</a></p>'
+            body += '<p><a href="#python-features-help">Plotting, data, and saving guide</a></p>'
         else:
             body += '<p>This uses the published Komorebi Math library for packet reconstruction and exact rational coordinate changes. These two operations are tested here. The sequence research presets separately test reciprocal coefficients and Fubini row sums in their documented finite ranges. Optional backends and other operations remain outside that scope.</p><p><a href="collection/FIRST_RUN.html">Installation and expected output</a> · <a href="math/index.html">Komorebi Math guide</a></p>'
         body += '<nav class="document-routes" aria-label="'+title+' sources">' if works else ''
@@ -156,7 +156,7 @@ RESEARCH_OPTIONS<optgroup label="Worked examples"><option value="packets">Recons
     body += '''<div class="python-results"><h2 id="python-output-title">Output</h2><button type="button" id="python-stop" disabled>Stop Python</button>
 <div class="python-actions"><button type="button" id="python-download-output" disabled>Download output</button><button type="button" id="python-download-report" disabled>Download run report</button><a href="#python-picker">Choose another preset</a></div><div id="python-figures" aria-label="Figures and exported files"></div><pre id="python-output" role="region" aria-labelledby="python-output-title" tabindex="0">Run an example to see its output here.</pre>
 <h3 id="python-error-title">Errors</h3><pre id="python-error" role="region" aria-labelledby="python-error-title" tabindex="0">None.</pre></div></div>
-<details id="python-features-help"><summary>Plotting, data and saving guide</summary>
+<details id="python-features-help"><summary>Plotting, data, and saving guide</summary>
 <p>Matplotlib figures appear as downloadable PNGs. Use <code>plt.show()</code> or <code>show_matplotlib(fig, description="...")</code>. Interactive plots use <code>from komorebi_browser import show_plot</code> and Plotly-style trace dictionaries. Supported traces are scatter, bar, heatmap, surface, and scatter3d. The playground supplies this helper. It is separate from the Komorebi Math package.</p>
 <p>Use <code>show_plot(data, layout, description="...")</code> to label a figure and its axes. Interactive plots have series checkboxes, an Enlarge plot button, zoom controls, image and data downloads, and a table of the first 100 samples. 3D views also have keyboard buttons for front, top, and default views. The sequence family and factorial weights presets start with 2D views of the same data. If WebGL is unavailable, use those views, the table or the data downloads.</p>
 <p>NumPy, Matplotlib, SymPy and SciPy load when selected presets or direct imports need them. Optional Komorebi backends remain outside the tested browser scope. Each run has a two minute limit, up to 50,000 samples per interactive figure, a 2 MB limit per figure or export, and an 8 MB combined figure and export limit.</p>

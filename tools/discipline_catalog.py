@@ -151,7 +151,7 @@ def render_works_catalog(root, registry, components, assessments, status):
         'Read the <a href="collection/COMPLETION_STATUS.html">status guide</a> before '
         'interpreting them. Cross-disciplinary subjects have one primary home and '
         'may list related fields.</p></details>',
-        '<p class="catalog-other-search"><a href="search.html">Search full text, Lean and code</a> · '
+        '<p class="catalog-other-search"><a href="search.html">Search full text, Lean, and code</a> · '
         '<a href="claims.html">Find individual statements</a></p></div>',
         '<div id="catalog-results">',
         '<div class="catalog-results-toolbar">',

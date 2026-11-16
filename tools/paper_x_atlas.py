@@ -139,7 +139,7 @@ class PaperXAtlas(WorkedAtlas):
 TABLE_AIDS={
  (2,'L15'):dict(caption='Objects and their precise contracts',headers=['Object','What it records','What it does not supply'],row_header_column=0),
  # The final evidence ledger retains the three different input contracts.
- (30,'L454'):dict(caption='Historical, checked and later scope records',headers=['Record','What it establishes'],row_header_column=0),
+ (30,'L454'):dict(caption='Historical, checked, and later scope records',headers=['Record','What it establishes'],row_header_column=0),
 }
 ATLAS=PaperXAtlas('paper-x',SPEC,FIGURES,TABLE_AIDS)
 prepare=ATLAS.prepare

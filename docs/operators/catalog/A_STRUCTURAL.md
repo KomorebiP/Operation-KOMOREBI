@@ -332,7 +332,7 @@ p(T)=\sum_{k=0}^{d}a_kT^k
 BT=TA
 ```
 
-**Scope.** A:X to X, B:Y to Y and T:X to Y over the same coefficient field.
+**Scope.** A:X to X, B:Y to Y, and T:X to Y over the same coefficient field.
 
 **Keep in view.** The intertwining equation has typed endpoints.
 

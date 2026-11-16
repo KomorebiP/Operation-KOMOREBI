@@ -3,7 +3,7 @@
 SF-LEAN-B14 proves the registered main H.1 operator theorem for positive
 scales, without assuming contraction or distinct scale nodes. A nonzero
 complex row has an arbitrary scalar functional of its projection on every
-zero-constant analytic input exactly when q=a, r=b and the row is
+zero-constant analytic input exactly when q=a, r=b, and the row is
 gamma*(1,-1), gamma!=0. The projected field is zero. No invertible constant
 complex 2x2 change decouples the operator. Entire-function and actual local
 analytic-germ versions are both proved; no quadratic ansatz on the scalar
@@ -27,7 +27,7 @@ assessment has 26 inputs and two outputs. Development diagnostics are separately
 identified and are not accepted proof evidence.
 
 Replay `tools/verify_coupled_operator.py` under Special Functions with
-Lean 4.34.0-rc2, Mathlib aeb72f1e9981b6d35b426b16dca7759be3e7ba06 and
+Lean 4.34.0-rc2, Mathlib aeb72f1e9981b6d35b426b16dca7759be3e7ba06, and
 a new external work directory. The verifier installs nothing and makes no
 network request. [Live continuation](../monographs/special-functions/CONTINUE_HERE.md)
 and [remaining work](../monographs/special-functions/formalization/Block14/REMAINING_WORK.md)

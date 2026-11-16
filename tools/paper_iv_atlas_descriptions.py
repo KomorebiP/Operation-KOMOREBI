@@ -65,7 +65,7 @@ FIGURES = {
         matrix(0,1,4),table(17,['Index','Coefficient'],[['0',18],['1',19],['2',20],['3',21]]),text(22),
         table(23,['Index','Coefficient'],[['0',24],['1',25],['2',26],['3',27]]),text(28,29,30,31)),
     'bell_partitions': figure(
-        'Three partition types contribute the cubic, quadratic and linear terms of the reciprocal-order polynomial.',
+        'Three partition types contribute the cubic, quadratic, and linear terms of the reciprocal-order polynomial.',
         'Each row names a partition type, gives its logarithmic contribution, and gives the resulting term after the plate’s factorial normalization. Three singleton pieces produce the cubic term, a pair and singleton produce the quadratic term, and a single triple produces the linear term. The Bell-polynomial identity underneath combines the three rows.',
         table('Partition contributions',['Partition type','Logarithmic term','Normalized contribution'],[[0,1,2],[3,4,5],[6,7,8]]),text(9)),
     'newton_addition': figure(

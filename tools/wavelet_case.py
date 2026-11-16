@@ -81,7 +81,7 @@ def publish(site):
         '<p>Four Haar levels, circular three-tap FIR filtering, exact '
         'polyphase and all-four-level Haar operator transfers, exact lifting, '
         'weighted coefficient budgets, finite filter stability, order-of-'
-        'operations comparison, boundary repair and counterexamples. '
+        'operations comparison, boundary repair, and counterexamples. '
         'Python 3.10 or later, standard library only.</p>'
         '<p><a class="button" href="../collection/demonstrations/WAVELET_POLYPHASE.html">'
         'Read the complete worked example</a> '

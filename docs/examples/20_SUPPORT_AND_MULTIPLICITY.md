@@ -22,8 +22,8 @@ These are also the annihilator ideals in these two cyclic examples.
 
 Specializing the parameter to a rational value $t=\lambda$ replaces the
 presentation matrices by $[\lambda]$ and $[\lambda^2]$ over $\mathbb Q$.
-When $\lambda\ne0$, both matrices are invertible and both cokernels are zero.
-At $\lambda=0$, both are zero maps and both cokernels have dimension one.
+When $\lambda\ne0$, both matrices are invertible, and both cokernels are zero.
+At $\lambda=0$, both are zero maps, and both cokernels have dimension one.
 
 Thus both modules have support at the point $t=0$. More precisely, the only
 prime ideal in their support is $(t)$. Their support sets agree even though
@@ -71,7 +71,7 @@ point does not provide an extra packet splitting.
 Replace the relation by $t^3=0$. Find the rational dimension, Fitting ideal,
 special-fiber dimension and nilpotency index of multiplication by $t$.
 
-**Answer:** For $M_3=R/(t^3)$ they are $3$, $(t^3)$, $1$ and $3$.
+**Answer:** For $M_3=R/(t^3)$ they are $3$, $(t^3)$, $1$, and $3$.
 In the basis $(1,t,t^2)$, multiplication shifts $1$ to $t$ and $t$ to $t^2$,
 then sends $t^2$ to zero. The support is still the point $t=0$.
 
@@ -84,7 +84,7 @@ automorphic conclusions also require its stated arithmetic inputs.
 
 **Terms in this example:** [Commutative ring with identity](../GLOSSARY.md#ring) · [Module](../GLOSSARY.md#module) · [Module presentation](../GLOSSARY.md#module-presentation) · [Cokernel](../GLOSSARY.md#cokernel) · [Nilpotent operator](../GLOSSARY.md#nilpotent) · [Module annihilator](../GLOSSARY.md#annihilator) · [Module support](../GLOSSARY.md#module-support) · [Zeroth Fitting ideal](../GLOSSARY.md#fitting-ideal) · [Multiplicity in the module example](../GLOSSARY.md#multiplicity) · [Ideal](../GLOSSARY.md#ideal) · [Prime ideal](../GLOSSARY.md#prime-ideal) · [Localization at a prime](../GLOSSARY.md#localization)
 
-Paper XII distinguishes module support from packet and arithmetic constructions. This example compares two explicitly supplied modules. Patching, classicality and the other arithmetic inputs remain separate.
+Paper XII distinguishes module support from packet and arithmetic constructions. This example compares two explicitly supplied modules. Patching, classicality, and the other arithmetic inputs remain separate.
 
 ### Paper XII: Patching Support, Hecke Packets, and Conditional Automorphic Completion
 

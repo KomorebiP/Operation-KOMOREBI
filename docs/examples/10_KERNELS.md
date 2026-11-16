@@ -24,7 +24,7 @@ The map is not injective.
 ## Find the image
 
 The first and third columns are $(1,0)^{\mathsf T}$ and $(0,1)^{\mathsf T}$.
-They span the entire target, so $T$ is surjective and its rank is two.
+They span the entire target, so $T$ is surjective, and its rank is two.
 The dimensions satisfy
 
 ```math

@@ -86,7 +86,7 @@ $Ax$ for any $x$, since valid analyzed coordinates satisfy $z_3=z_1+z_2$.
 Calculate the three contributions for $x=(1,-1)^{\mathsf T}$.
 
 **Answer:** $Ax=(1,-1,0)^{\mathsf T}$. The contributions are
-$(2/3,-1/3)^{\mathsf T}$, $(1/3,-2/3)^{\mathsf T}$ and zero.
+$(2/3,-1/3)^{\mathsf T}$, $(1/3,-2/3)^{\mathsf T}$, and zero.
 They sum to the original vector.
 
 **Continue reading:** [Left inverse](../GLOSSARY.md#left-inverse),

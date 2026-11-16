@@ -49,7 +49,7 @@ Use the [records guide](RECORDS.md) to locate the current entry point and dated 
 ## Selected published cleanup checkpoints
 
 The [reader website guide](READER_SITE.md) documents the shared HTML site,
-reading ZIPs, claim locations, library pins and publication workflow. Update
+reading ZIPs, claim locations, library pins, and publication workflow. Update
 the reader registry and templates alongside generated pages. Keep the
 accessibility limitations and the scope of transcribed claim links explicit.
 

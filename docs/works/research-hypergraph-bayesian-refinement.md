@@ -12,7 +12,7 @@ Hypergraph structure, lumpability, and Bayesian refinement.
 
 ## Before you start
 
-**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+**Suggested background:** Read the problem statement, recorded scope, and open questions first. The program's definitions determine its subject prerequisites.
 
 **Recorded results and limits:** Internally complete manuscript and finite certificates. External proof and literature-priority reviews remain pending.
 

@@ -17,7 +17,7 @@ V\sim\mathcal N(0,1),
 
 where $V$ is independent of $X$. Take the observed value to be $y=3$.
 The model describes a noisy sum of the two state coordinates. In the package's
-factor convention, $L=I_2$, a zero noise factor and $\sigma=1$ give the
+factor convention, $L=I_2$, a zero noise factor, and $\sigma=1$ give the
 declared prior covariance $P=I_2$ and noise covariance $R=1$.
 
 ## Calculate the gain and posterior mean
@@ -107,7 +107,7 @@ checks. No new Lean instance or sampler is claimed here.
 
 **Terms in this example:** [Finite-dimensional Gaussian model](../GLOSSARY.md#gaussian-model) · [Prior distribution](../GLOSSARY.md#prior) · [Likelihood](../GLOSSARY.md#likelihood) · [Posterior distribution](../GLOSSARY.md#posterior) · [Covariance matrix](../GLOSSARY.md#covariance) · [Precision matrix](../GLOSSARY.md#precision-matrix) · [Observation innovation](../GLOSSARY.md#innovation) · [Exact Gaussian gain](../GLOSSARY.md#gaussian-gain) · [Joseph covariance](../GLOSSARY.md#joseph-covariance)
 
-These calculations explain the exact Gaussian model and a candidate Joseph covariance. The release’s law-error tolerance, interval output and emitted Lean-instance checks require their full contracts.
+These calculations explain the exact Gaussian model and a candidate Joseph covariance. The release’s law-error tolerance, interval output, and emitted Lean-instance checks require their full contracts.
 
 ### Certified Inference
 

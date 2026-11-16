@@ -135,7 +135,7 @@ P_r^{(m)}g(z)=\frac1m\sum_{\ell=0}^{m-1}
 
 On $z^k$ the sum is one times $z^k$ when $k\equiv r\pmod m$,
 and zero otherwise. This verifies the formula on every polynomial.
-For parity, $P_0g=(g(z)+g(-z))/2$ and $P_1g=(g(z)-g(-z))/2$.
+For parity, $P_0g=(g(z)+g(-z))/2$, and $P_1g=(g(z)-g(-z))/2$.
 Applied to $g=z+3z^2+z^3$, these return $3z^2$ and $z+z^3$.
 
 The coefficient selector is defined over any commutative ring. A particular

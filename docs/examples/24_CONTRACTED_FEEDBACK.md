@@ -82,7 +82,7 @@ Use the same recurrence with $q=r=1/2$. Find $c_1$ and $c_2$.
 $5c_2=(1/12)(1/16+1/16)=1/96$, so $c_2=1/480$.
 
 These finite coefficient identities explain the construction. The monograph's
-analytic existence, growth and separation results require their full arguments.
+analytic existence, growth, and separation results require their full arguments.
 
 <!-- learning-navigation -->
 

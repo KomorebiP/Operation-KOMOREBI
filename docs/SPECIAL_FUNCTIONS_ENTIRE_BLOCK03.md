@@ -22,7 +22,7 @@ in the finite core, 29 in Block01, 21 in Block02, and 19 here. Supporting lemmas
 are included in that count. This completes the entire-existence step, with
 the global equations, but does not prove the full analytic monograph.
 
-- [Exact result, proof mechanism and replay instructions](../monographs/special-functions/formalization/Block03/REPORT.md)
+- [Exact result, proof mechanism, and replay instructions](../monographs/special-functions/formalization/Block03/REPORT.md)
 - [New production Lean source](../monographs/special-functions/lean/CoupledEntire.lean)
 - [Claim correspondence and remaining obligations](../monographs/special-functions/formalization/Block03/CLAIM_MAP.json)
 - [All 19 new theorem names and source hash](../monographs/special-functions/formalization/Block03/declarations.json)
@@ -44,7 +44,7 @@ analytic-germ version of parameter recovery. Perron growth and full component
 rescaling remain later obligations.
 
 The [Block02 guide](SPECIAL_FUNCTIONS_ANALYTIC_BLOCK02.md) retains its earlier
-local scope. All earlier formal sources, manuscript sources and reading PDFs
+local scope. All earlier formal sources, manuscript sources, and reading PDFs
 are preserved. Current catalogue entries link to this dated extension record.
 
 [Return to Special Functions](works/monographs-special-functions.md) ·

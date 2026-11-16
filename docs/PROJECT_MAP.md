@@ -4,7 +4,7 @@
 
 Use this map to choose a route through the collection. It covers the twelve
 core papers and selected connecting books. The [complete catalogue](BROWSE.md)
-also includes research continuations, software and experiments.
+also includes research continuations, software, and experiments.
 
 **Read the relationships carefully.** The cards show subject groups and a
 suggested learning order. The table under [documented connections](#documented-connections)
@@ -20,9 +20,9 @@ Vectors, matrices, linear maps, kernels and images provide a useful starting
 background. Individual chapters state additional algebraic and analytic assumptions.
 
 <div class="project-map" role="group" aria-label="Suggested foundation reading order">
-<div class="map-card"><h3>1. Describe the parts</h3><p><a href="works/paper-i.md">Paper I: Typed systems and exact packet coordinates</a></p><p>Seeds, operator actions, packet families and reconstruction.</p><p><a href="demonstrations/PACKETS.md">Try operator reconstruction</a></p></div>
-<div class="map-card"><h3>2. Compare resolutions</h3><p><a href="works/paper-ii.md">Paper II: Refinement, transfer and integral separation</a></p><p>Coarse and fine coordinates, weighted paths and lattice constraints.</p><p><a href="demonstrations/REFINEMENT.md">Try residue refinement</a></p></div>
-<div class="map-card"><h3>3. Track compatibility</h3><p><a href="works/paper-iii.md">Paper III: Typed transfer and obstructions</a></p><p>Composable operations, chosen connections, nonlinear coordinates and defects.</p><p><a href="demonstrations/RECOVERY.md">Begin with a recovery obstruction</a></p></div>
+<div class="map-card"><h3>1. Describe the parts</h3><p><a href="works/paper-i.md">Paper I: Typed systems and exact packet coordinates</a></p><p>Seeds, operator actions, packet families, and reconstruction.</p><p><a href="demonstrations/PACKETS.md">Try operator reconstruction</a></p></div>
+<div class="map-card"><h3>2. Compare resolutions</h3><p><a href="works/paper-ii.md">Paper II: Refinement, transfer, and integral separation</a></p><p>Coarse and fine coordinates, weighted paths, and lattice constraints.</p><p><a href="demonstrations/REFINEMENT.md">Try residue refinement</a></p></div>
+<div class="map-card"><h3>3. Track compatibility</h3><p><a href="works/paper-iii.md">Paper III: Typed transfer and obstructions</a></p><p>Composable operations, chosen connections, nonlinear coordinates, and defects.</p><p><a href="demonstrations/RECOVERY.md">Begin with a recovery obstruction</a></p></div>
 </div>
 
 [Realization Calculus](works/realization-calculus-book.md) collects the core
@@ -36,8 +36,8 @@ The groups below organize subjects. They do not assert that every paper in one
 group is a formal prerequisite of the next group.
 
 <div class="project-map" role="group" aria-label="Core paper subject map">
-<div class="map-card"><h3>Functions, signals and evolution</h3><p><a href="works/paper-iv.md">IV: Cyclic analytic functions and reciprocal families</a></p><p><a href="works/paper-v.md">V: Polyphase signal calculus</a></p><p><a href="works/paper-vi.md">VI: Transfer semigroups and their realizations</a></p><p>Begin with series, signal indexing or linear evolution as appropriate. Analytic convergence and probability assumptions belong to the selected result.</p></div>
-<div class="map-card"><h3>Quantum and computation</h3><p><a href="works/paper-vii.md">VII: Quantum seed calculus</a></p><p><a href="works/paper-viii.md">VIII: Packet algorithms and exact compilation</a></p><p>Packet algebra connects to finite quantum examples and algorithms. Physical interpretation, performance and hardware behavior need their own evidence.</p></div>
+<div class="map-card"><h3>Functions, signals, and evolution</h3><p><a href="works/paper-iv.md">IV: Cyclic analytic functions and reciprocal families</a></p><p><a href="works/paper-v.md">V: Polyphase signal calculus</a></p><p><a href="works/paper-vi.md">VI: Transfer semigroups and their realizations</a></p><p>Begin with series, signal indexing or linear evolution as appropriate. Analytic convergence and probability assumptions belong to the selected result.</p></div>
+<div class="map-card"><h3>Quantum and computation</h3><p><a href="works/paper-vii.md">VII: Quantum seed calculus</a></p><p><a href="works/paper-viii.md">VIII: Packet algorithms and exact compilation</a></p><p>Packet algebra connects to finite quantum examples and algorithms. Physical interpretation, performance, and hardware behavior need their own evidence.</p></div>
 <div class="map-card"><h3>Arithmetic and comparison</h3><p><a href="works/paper-ix.md">IX: Arithmetic packets and local deformation</a></p><p><a href="works/paper-x.md">X: Residual seeds and conditional completion</a></p><p><a href="works/paper-xi.md">XI: Arithmetic realization and conditional comparison</a></p><p><a href="works/paper-xii.md">XII: Patching support and conditional automorphic completion</a></p><p>Use each work's algebraic and arithmetic hypotheses. A finite construction does not discharge an open arithmetic premise.</p></div>
 </div>
 
@@ -68,7 +68,7 @@ reading map. Read the linked statement and its hypotheses before using a result.
 
 | Earlier work → later use | What the source actually records | Source |
 |---|---|---|
-| Paper I → Paper III's starting framework | The introduction credits Paper I with typed seeds, operator grammars, exact projector packets, generated hulls and reconstruction. This is a statement of background use. | [Paper III, purpose and formal status](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-iii/finite-coordinates.html#L8). |
+| Paper I → Paper III's starting framework | The introduction credits Paper I with typed seeds, operator grammars, exact projector packets, generated hulls, and reconstruction. This is a statement of background use. | [Paper III, purpose and formal status](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-iii/finite-coordinates.html#L8). |
 | Paper II → Paper III's coordinate transport | The canonical triangle holonomy result names the inherited `refineCoordinates_comp` and `refineCoordinates_self` declarations. This is an explicit inherited formal dependency recorded by the manuscript. | [Result and inherited names](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-iii/finite-coordinates.html#L534), then the [refinement boundary](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-iii/finite-coordinates.html#L543). |
 | Earlier finite contracts → Paper III's release scope | The manuscript distinguishes its thirty original result environments from definitions and interfaces, and separates Paper III declarations from inherited results. | [Finite contract and its denominator](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-iii/finite-coordinates.html#L39). |
 

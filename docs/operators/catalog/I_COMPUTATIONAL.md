@@ -195,7 +195,7 @@ UV^*\mapsto\widetilde U\widetilde V^*
 \mathcal K_k(A,v)=\operatorname{span}\{v,Av,\ldots,A^{k-1}v\}
 ```
 
-**Scope.** Fixed finite matrix A, starting vector v and integer k>=1. No projection or restriction operator is defined until a basis and coordinate maps are supplied.
+**Scope.** Fixed finite matrix A, starting vector v, and integer k>=1. No projection or restriction operator is defined until a basis and coordinate maps are supplied.
 
 **Keep in view.** The span is a subspace construction. A restriction or compression requires additional analysis and synthesis maps.
 

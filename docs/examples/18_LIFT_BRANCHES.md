@@ -68,7 +68,7 @@ level five.
 
 **Terms in this example:** [Prime power](../GLOSSARY.md#prime-power) · [Modular reduction](../GLOSSARY.md#modular-reduction) · [Lift branch](../GLOSSARY.md#lift-branch) · [Compatible tower](../GLOSSARY.md#compatible-tower) · [p-adic integer](../GLOSSARY.md#padic-integer) · [Survival to a finite level](../GLOSSARY.md#surviving-branch)
 
-Finite lift branches give elementary background for Paper X’s residual constructions. Its completion result requires supplied all-depth data, closure and the other stated inputs.
+Finite lift branches give elementary background for Paper X’s residual constructions. Its completion result requires supplied all-depth data, closure, and the other stated inputs.
 
 ### Paper X: Universal Residual Seeds and Conditional Occupied-System Completion
 

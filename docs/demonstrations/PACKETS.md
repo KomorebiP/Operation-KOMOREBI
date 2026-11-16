@@ -92,7 +92,7 @@ output. Its calculations use integers exactly.
 | Continue to | Route and scope |
 |---|---|
 | Paper | [Paper I](../works/paper-i.md#read), for packet families and operator reconstruction. |
-| Exact claim | [Exact operator reconstruction](https://KomorebiP.github.io/Operation-KOMOREBI/claims.html#psc-i-t-operator-reconstruction). This record links the written statement, proof and transcribed Lean declarations. |
+| Exact claim | [Exact operator reconstruction](https://KomorebiP.github.io/Operation-KOMOREBI/claims.html#psc-i-t-operator-reconstruction). This record links the written statement, proof, and transcribed Lean declarations. |
 | Written proof | [Paper I, proof beginning at line 512](../../papers/paper-i/current/editable/traditional/03_packets_and_graphs.tex#L512). |
 | Lean | [Recorded coverage and setup](../works/paper-i.md#lean). The claim record names the existing correspondence. This demonstration adds no Lean verification. |
 | Program | [Read or download the complete program](https://KomorebiP.github.io/Operation-KOMOREBI/read/demonstrations.html). |
@@ -100,6 +100,6 @@ output. Its calculations use integers exactly.
 | More hand calculations | [Packets](../examples/01_PACKETS.md), [transfer blocks](../examples/04_TRANSFER.md), [coordinate changes](../examples/03_COORDINATES.md). |
 
 This illustrates a finite algebraic reconstruction. Infinite sums, convergence,
-conditioning and application-specific models require their stated hypotheses.
+conditioning, and application-specific models require their stated hypotheses.
 
 [Next: Refine a signal](REFINEMENT.md) · [All demonstrations](../DEMONSTRATIONS.md) · [Project overview](../START_HERE.md)

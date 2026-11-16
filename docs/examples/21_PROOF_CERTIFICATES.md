@@ -15,7 +15,7 @@ There are four obligations, $a,b,c,d$. The final rule requires all four:
 ```
 
 Choose from four admissible leaves. Each selected leaf costs one unit and can
-be used more than once. Obligation nodes, the target and all rules cost zero.
+be used more than once. Obligation nodes, the target, and all rules cost zero.
 There are no mandatory starting leaves.
 
 | Leaf | Certified consequences | Cost |

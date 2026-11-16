@@ -73,7 +73,7 @@ the earlier identity $e_1-e_2=r$ stop being valid?
 remains valid but is no longer cheapest.
 
 This is exact rational linear repair with a finite, unconstrained selection
-menu. Integer coefficients, nonlinear constraints and other admissibility rules
+menu. Integer coefficients, nonlinear constraints, and other admissibility rules
 require their own problem statements. The linked package distinguishes Python
 certificate validity from acceptance of an emitted Lean certificate.
 
@@ -83,7 +83,7 @@ certificate validity from acceptance of an emitted Lean certificate.
 
 **Terms in this example:** [Repair direction](../GLOSSARY.md#repair-direction) · [Free linear repair](../GLOSSARY.md#free-repair) · [Finite repair menu](../GLOSSARY.md#repair-menu) · [Repair selection cost](../GLOSSARY.md#repair-cost) · [Feasibility](../GLOSSARY.md#feasibility) · [Linear obstruction witness](../GLOSSARY.md#dual-witness)
 
-The example uses rational linear repair with supplied menu costs. It distinguishes feasibility, optimal selection and rejection of a proposed certificate. Python checks and Lean acceptance retain their separate recorded meanings.
+The example uses rational linear repair with supplied menu costs. It distinguishes feasibility, optimal selection, and rejection of a proposed certificate. Python checks and Lean acceptance retain their separate recorded meanings.
 
 ### Constructive Repair
 

@@ -65,8 +65,8 @@ BOOK = dict(work=WORK, label='Physics', title='Physics: Resolution, dynamics, an
         ('adic/finite.tex', 'L835'): dict(caption='Per-leaf and collective coupling choices',
             headers=['Per-leaf choice',r'$\alpha$',r'$|G_{p,w}|$',r'$|G_{p,w}|^2$'],row_header_column=0)},
     require_table_reading_aids=True,
-    reading_introduction='Read the complete foundations, continuum Dirac, spectral generator, gauge, gravity, adic, covariant fiber and cosmology treatments. '
-        'Begin with packets, currents, open dynamics, refinement and operator domains; '
+    reading_introduction='Read the complete foundations, continuum Dirac, spectral generator, gauge, gravity, adic, covariant fiber, and cosmology treatments. '
+        'Begin with packets, currents, open dynamics, refinement, and operator domains; '
         'continue through PH01–PH12, the exact three-mode example, Fourier completion '
         'and the self-adjoint Hamiltonian on the three-torus, then its strong generator, resolvent limits '
         'and quantitative evolution estimates. Continue to endpoint covariance, finite matter–field dynamics, '
@@ -78,9 +78,9 @@ BOOK = dict(work=WORK, label='Physics', title='Physics: Resolution, dynamics, an
         'through background and perturbation geometry, kinetic transport, CMB, nonlinear structure, baryonic '
         'response and linked rejection tests. One hundred four original figures accompany the text.',
     reading_note='These HTML reading sequences accompany the 572-page Physics book. '
-        'The foundations, continuum Dirac, spectral generator, gauge, gravity, adic, covariant fiber and cosmology treatments are complete here; '
-        'all five visual atlases, the verification scope and five formalization and verification companions '
-        'are also available in HTML. Authored wording, equations and numbered statements '
+        'The foundations, continuum Dirac, spectral generator, gauge, gravity, adic, covariant fiber, and cosmology treatments are complete here; '
+        'all five visual atlases, the verification scope, and five formalization and verification companions '
+        'are also available in HTML. Authored wording, equations, and numbered statements '
         'are preserved. This reading edition adds no proof audit, scientific run or Lean execution.')
 BOOK['table_reading_aids'].update({(row['source'],row['id']):
     {key:value for key,value in row.items() if key not in {'source','id'}}
@@ -431,7 +431,7 @@ def full_book_routes(reader, book, page):
     body = ('<section aria-labelledby="source-continuations"><h2 id="source-continuations">Continue in the full Physics book</h2>'
         '<p>The complete 572-page PDF contains all six parts below. Each PDF link opens at '
         'the beginning of that treatment. The HTML installments above cover the complete foundations, '
-        'continuum Dirac, spectral generator, gauge, gravity, adic, covariant fiber and cosmology treatments, '
+        'continuum Dirac, spectral generator, gauge, gravity, adic, covariant fiber, and cosmology treatments, '
         'including the fiber computational evidence appendix and the cosmology reproduction limits.</p>'
         '<p><a href="'+html.escape(reader.site.rel('read/monographs-physics/verification/index.html',page),quote=True)+'">Read the verification scope and formalization companions</a>.</p>')
     part = None

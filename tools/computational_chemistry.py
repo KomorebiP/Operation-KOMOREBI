@@ -18,7 +18,7 @@ ASSETS='assets/chemistry/stage14/'
 READING_ASSETS='assets/chemistry/reading-edition/'
 VALIDATION_ASSETS='assets/chemistry/validation-v1/'
 PAGES={
-    'reading-edition/notation.md':('notation.html','Notation, units and reading routes'),
+    'reading-edition/notation.md':('notation.html','Notation, units, and reading routes'),
     'chemistry_stage14/NORMAL_FORM.md':('normal-form.html','The 21-parameter molecular normal form'),
     'chemistry_stage14/RECOVERY_THEOREM.md':('three-queries.html','Exactly three action queries'),
     'chemistry_stage14/ROBUST_SPIN_COMPARISON.md':('spin-comparison.html','Information beyond total spin'),
@@ -178,7 +178,7 @@ def publish(site):
         nav='<p class="chemistry-lab-launch"><a href="'+site.rel('chemistry-lab.html',path)+'">Try the three-query chemistry laboratory</a></p><details class="chemistry-reading-nav"><summary>Explore the chemistry notes</summary><nav aria-label="Chemistry checkpoint"><ul><li><a href="'+site.rel(OVERVIEW,path)+'">Research overview</a></li>'
         for _,(target,label) in PAGES.items():nav+='<li><a href="'+target+'"'+(' aria-current="page"' if target==name else '')+'>'+html.escape(label)+'</a></li>'
         nav+='</ul></nav></details>'
-        provenance='<details class="chemistry-provenance"><summary>Source identity and downloads</summary><p>This is a reviewed reading edition with corrected prose, explicit derivations and source correspondence. It is distinct from the retained original checkpoint.</p><p><a href="'+site.rel(READING_ASSETS+source_name,path)+'">Read the current Markdown source</a> · <a href="'+site.rel(READING_ASSETS+'manifest.json',path)+'">Edition correspondence and hashes</a> · <a href="'+site.rel(VALIDATION_ASSETS+'Stage14_Validated_Replay.zip',path)+'">Download the validated replay bundle</a></p>'
+        provenance='<details class="chemistry-provenance"><summary>Source identity and downloads</summary><p>This is a reviewed reading edition with corrected prose, explicit derivations, and source correspondence. It is distinct from the retained original checkpoint.</p><p><a href="'+site.rel(READING_ASSETS+source_name,path)+'">Read the current Markdown source</a> · <a href="'+site.rel(READING_ASSETS+'manifest.json',path)+'">Edition correspondence and hashes</a> · <a href="'+site.rel(VALIDATION_ASSETS+'Stage14_Validated_Replay.zip',path)+'">Download the validated replay bundle</a></p>'
         if page_record.get('original_member'):provenance+='<p><a href="'+site.rel(ASSETS+page_record['original_member'],path)+'">Read the original checkpoint member</a>. Its bytes remain unchanged.</p>'
         provenance+='<pre tabindex="0" role="group" aria-label="Current source SHA256; scroll horizontally if needed"><code>'+page_record['sha256']+'</code></pre></details>'
         index=order.index(source);pagination='<nav class="chemistry-pagination" aria-label="Previous and next chemistry notes">'

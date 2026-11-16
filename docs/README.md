@@ -15,9 +15,9 @@ Use these guides to find works, software, and project records. Each dated review
 | Calculations with every step shown | [Hand-worked examples](HAND_WORKED_EXAMPLES.md) |
 | Examples connected to papers, proofs, Lean, and code | [Topic map](LEARNING_MAP.md) |
 | A small program with expected output | [First runs](FIRST_RUN.md) |
-| Statement locations, formal modules and reading ZIPs | [Claim links](CLAIM_LINKS.md) and [downloads](DOWNLOADS.md) |
+| Statement locations, formal modules, and reading ZIPs | [Claim links](CLAIM_LINKS.md) and [downloads](DOWNLOADS.md) |
 | Checked claims in the extended examples and K-COS certificates | [Lean reader companions](LEAN_READER_COMPANIONS.md) |
-| Actual falling-factorial coordinates, Fourier projectors and packet products | [Lean polynomial transport](LEAN_POLYNOMIAL_TRANSPORT.md) |
+| Actual falling-factorial coordinates, Fourier projectors, and packet products | [Lean polynomial transport](LEAN_POLYNOMIAL_TRANSPORT.md) |
 | Accessible formats and known limits | [Accessibility](ACCESSIBILITY.md) |
 | Direct PDFs, manuscript text, proofs, Lean, and code | [Browse by work](BROWSE.md) |
 | A reading route through the mathematics | [Start here](START_HERE.md) |

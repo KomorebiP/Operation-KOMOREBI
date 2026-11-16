@@ -12,7 +12,7 @@ The broader continuation accompanying the reviewed core volume.
 
 ## Before you start
 
-**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+**Suggested background:** Read the problem statement, recorded scope, and open questions first. The program's definitions determine its subject prerequisites.
 
 **Recorded results and limits:** The older 74-page continuation retains its historical 23/27 core map. A separate reconstructed editorial edition now supplies all 97 chapters in thirteen parts, 977 pages, and verified editable TeX. The accepted selected-core contract does not certify the expanded book.
 

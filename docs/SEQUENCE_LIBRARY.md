@@ -3,7 +3,7 @@
 `sequence-library.html` searches 2,292 local records: the original 38 KSEQ
 entries, 90 recovered KOM records, and 2,164 KFOR parameter records. It indexes
 7,033 recorded representations, including term formulas, finite sums,
-recurrences, generating functions and hypergeometric coefficient formulas.
+recurrences, generating functions, and hypergeometric coefficient formulas.
 These counts describe records and representations, not distinct infinite
 sequences or new discoveries.
 
@@ -57,7 +57,7 @@ records from other collections. The saved filter uses the recipient's own list
 when sharing a search. Storage denial leaves the current session usable.
 
 The comparison workbench accepts up to four local records or OEIS excerpts.
-It supports raw integers, first differences and prefix sums, linear or signed
+It supports raw integers, first differences, and prefix sums, linear or signed
 logarithmic coordinates, residues, and common stored-position windows. Prefix
 sums include earlier stored terms before the visible window. Each source keeps
 its original local index convention. Position alignment starts the chosen
@@ -72,7 +72,7 @@ bulk data. The finder and restoration reuse the same worker's compressed-file
 cache. Exact agreement counts compare displayed integers over the overlap;
 modular views label these as residue agreements. SVG/PNG exports include the
 series legend and OEIS credit when applicable. CSVs retain exact values, index
-conventions, source URLs, reference hashes and reference licensing. Points use
+conventions, source URLs, reference hashes, and reference licensing. Points use
 roving keyboard focus, with arrows within/across series and Home/End endpoints;
 the HTML table provides the same exact integers.
 
@@ -99,7 +99,7 @@ The OEIS snapshot contains 401,422 records, downloaded from the official
 `stripped.gz` and `names.gz` URLs. Precomputed comparisons require eight local
 terms at a contiguous export position and extend through every available local
 term. They report the uncapped hit count and retain the best 50, ranked by
-matched length, A-number and position. The browser reference finder accepts
+matched length, A-number, and position. The browser reference finder accepts
 A-numbers, name words, or patterns of 3..1,000 terms. It reports all matching
 record counts and shows at most 50 records. Shorter patterns may have many hits.
 
@@ -107,7 +107,7 @@ The bulk files total 41,692,183 compressed bytes and load on explicit reference
 search or explicit shared-excerpt restoration. A worker streams decompression for each scan, retaining compressed
 bytes rather than the whole decompressed database. Queries stay in the browser.
 Cancellation terminates the worker. Unsupported browser features retain download
-links and precomputed record comparisons. OEIS data, extracts and matching are
+links and precomputed record comparisons. OEIS data, extracts, and matching are
 attributed under CC BY-SA 4.0; full entry details remain on OEIS.
 
 Reader-facing names are Sequence library, Curated sequences, Formula families,
@@ -122,7 +122,7 @@ scheme buttons switch between Site green and Black & white; Light/Dark/System
 is a separate display control. Choices persist across sequence routes. Switching
 a page scheme also applies it to the current plots, including when an older
 saved plot preference used color. Black & white uses neutral gray text, panels,
-controls, plot backgrounds and marks. Shapes and line patterns distinguish
+controls, plot backgrounds, and marks. Shapes and line patterns distinguish
 series without requiring hue. Print output uses black text on white paper.
 
 Plots default to Match page scheme. Green-only and monochrome palettes are
@@ -134,7 +134,7 @@ see the same plotted colors. Exact arithmetic and source data are independent
 of appearance settings.
 
 The shared appearance panel also supports custom colors, backgrounds, direction,
-opacity, point size, line weight, chart height, grid, baseline and labels.
+opacity, point size, line weight, chart height, grid, baseline, and labels.
 Built-in mark colors meet 4.5:1 against the chosen background at full opacity;
 custom colors remain exact with contrast feedback. Saved v1 preferences and
 older explicit view links remain supported. System forced colors take precedence.
@@ -173,7 +173,7 @@ exact coefficient. The plot selector displays the row polynomial and selects
 its exact contiguous flat-index window. Shared row windows restore that row.
 
 Another 84 records expose the supported columns of the j=0 Appell tables,
-with N=2..8, r=1..3 and k=1..4. Local index n selects polynomial row Nn+k.
+with N=2..8, r=1..3, and k=1..4. Local index n selects polynomial row Nn+k.
 Their formulas are obtained directly from the registry's Appell generator:
 the coefficient equals binom(Nn+k,k) times the normalized coefficient of the
 inverse block section. The displayed reciprocal-power form keeps its
@@ -183,7 +183,7 @@ families, not 139 assertions of distinct or historically new infinite sequences.
 The notation pass separates defining equations, stacks constraints beneath
 sums, leaves empty hypergeometric parameter rows blank, and uses a vertical
 bar before the hypergeometric argument. Factorial powers retain their binding.
-Original formula strings, programs and exact exports remain available. The
+Original formula strings, programs, and exact exports remain available. The
 shared selector sits in the footer and keeps the same saved preference.
 
 
@@ -223,7 +223,7 @@ diagonals. Signed logarithmic and linear scales are available for exact values;
 modular plots use a linear residue axis. Arrow keys navigate plotted points;
 Enter opens the corresponding indexed coefficient. SVG and PNG exports retain
 the plotted selection, while CSV retains exact integers. Shared table links
-restore the selection, modulus, scale and zero emphasis. Invalid options retain
+restore the selection, modulus, scale, and zero emphasis. Invalid options retain
 the previous view or restore the default row on initial load.
 
 Indexing help and secondary display options are expandable. Without JavaScript,
@@ -243,13 +243,13 @@ conditions are in research/sequence-connections/IDENTITIES.md; the maintained
 k-bonacci source is pinned alongside it. These extensions do not establish
 historical novelty.
 
-Search fields `order:`, `weight:` and `parent:` find recurrence order, step
+Search fields `order:`, `weight:`, and `parent:` find recurrence order, step
 weight and source subsequence respectively. `k:` retains its polynomial-column
-meaning. Every record has finite-window sign, support and GCD details, source
-normalization, typed research connections and a copyable citation.
+meaning. Every record has finite-window sign, support, and GCD details, source
+normalization, typed research connections, and a copyable citation.
 
 The transfer tool computes H=B/A and K=A/B exactly over Q for nonzero stored
-tails, preserving original indices, leading-zero prefixes and both shifts.
+tails, preserving original indices, leading-zero prefixes, and both shifts.
 Different zero-prefix lengths require a bijection between the prescribed-prefix
 classes, not an automorphism of all Q[[z]]. Certificates contain forward values,
 recovered values, residuals, and convolution matrices. CSV and share links retain
@@ -258,7 +258,7 @@ The Euler/Fibonacci example links the infinite source derivation and explains
 F(n+1) and the transported shift's boundary term.
 
 The typed relation download distinguishes subsequences, seed shifts, polynomial
-coefficient extraction, evaluation, inverse matrices and ordinary convolution.
+coefficient extraction, evaluation, inverse matrices, and ordinary convolution.
 A false reversibility flag means that no inverse is asserted. The available
 stored overlaps are checked without extending their original data windows.
 The focused self-audit is in research/sequence-connections/AUDIT.md.

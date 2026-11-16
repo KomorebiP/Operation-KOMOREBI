@@ -7,10 +7,10 @@ retaining odd indices 0 through N gives actual complex error at most
 B(S)*(R/S)^(2N+3) throughout the closed disk of radius R. The real partial
 polynomial and that error give an enclosure for every nonnegative real input.
 For rational scales and rational target/outer radii, the Lean rational
-coefficient, polynomial and majorant definitions cast to these canonical
+coefficient, polynomial, and majorant definitions cast to these canonical
 quantities, so the enclosure has exact rational endpoints.
 
-The unequal pair (1/5,2/5,3/5,7/10), R=1, S=2 and last index 30 has actual
+The unequal pair (1/5,2/5,3/5,7/10), R=1, S=2, and last index 30 has actual
 complex error **below 1.6e-13** on the unit disk. Last index 30 retains
 31 coefficients through degree 61, with first omitted degree 63.
 
@@ -41,6 +41,6 @@ give the exact next targets.
 The existing Python program is **not yet proved to refine the Lean model**.
 Next: factorial-normalized arrays and ordinary coefficient conversion, then
 the guarded loop and exact returned endpoints. Other J normalization/degree
-claims, ancillary F/H correspondence, I's resolution mechanisms and broad
+claims, ancillary F/H correspondence, I's resolution mechanisms, and broad
 A-E analytic development remain. Ordinary type convergence is conditional;
 no whole-book coverage percentage is established. Earlier sources are preserved.

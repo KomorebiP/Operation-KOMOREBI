@@ -1,13 +1,13 @@
 # Paper II: figure and atlas descriptions
 
-These reading aids describe the 13 chapter figures, including their arrows, axes, scales and matrix entries. They retain the assumptions and example scope of the manuscript.
+These reading aids describe the 13 chapter figures, including their arrows, axes, scales, and matrix entries. They retain the assumptions and example scope of the manuscript.
 
 [Read the chapters](https://komorebip.github.io/Operation-KOMOREBI/read/paper-ii/index.html) · [Accessibility and reading options](ACCESSIBILITY.md)
 
 <a id="figure-1-nested-dyadic-residue-addresses"></a>
 <h2 id="figure-01" tabindex="-1">Figure 1: Nested dyadic residue addresses</h2>
 
-Three horizontal levels contain residues modulo 2, 4 and 8. At the top, residue 0 branches to 0 and 2 modulo 4, while residue 1 branches to 1 and 3. Each middle node r branches to r and r+4 modulo 8. The bottom display order is 0, 4, 2, 6, 1, 5, 3, 7, which keeps siblings adjacent. Lines express exact parent membership; they do not average or interpolate coefficient values.
+Three horizontal levels contain residues modulo 2, 4, and 8. At the top, residue 0 branches to 0 and 2 modulo 4, while residue 1 branches to 1 and 3. Each middle node r branches to r and r+4 modulo 8. The bottom display order is 0, 4, 2, 6, 1, 5, 3, 7, which keeps siblings adjacent. Lines express exact parent membership; they do not average or interpolate coefficient values.
 
 [Figure and surrounding text](https://komorebip.github.io/Operation-KOMOREBI/read/paper-ii/refinement-and-residue-coordinates.html#L209)
 
@@ -127,7 +127,7 @@ The horizontal axis is precision L, from 1 through 12. The vertical axis is the 
 <a id="figure-7-rational-sign-projectors"></a>
 <h2 id="figure-07" tabindex="-1">Figure 7: Rational sign projectors</h2>
 
-For the integral involution A with rows (1,1) and (0,−1), the left matrix is E₊=(I+A)/2 and the right is E₋=(I−A)/2. Their exact entries are given below. Each is idempotent, their products in either order vanish, and their sum is I. Both have denominator weight one at the prime 2 on the specified standard lattice.
+For the integral involution A with rows (1,1) and (0,−1), the left matrix is E₊=(I+A)/2, and the right is E₋=(I−A)/2. Their exact entries are given below. Each is idempotent, their products in either order vanish, and their sum is I. Both have denominator weight one at the prime 2 on the specified standard lattice.
 
 <table>
 <caption>Figure 7: Rational sign projectors</caption>
@@ -145,14 +145,14 @@ For the integral involution A with rows (1,1) and (0,−1), the left matrix is E
 <a id="figure-8-the-prime-two-and-denominator-weight"></a>
 <h2 id="figure-08" tabindex="-1">Figure 8: The prime two and denominator weight</h2>
 
-The horizontal axis lists the coefficient primes 2, 3, 5, 7 and 11. The vertical axis is the denominator weight vₚ(2) of each sign projector in Figure 7. The only positive bar has height 1 at prime 2. The four labeled points at odd primes have height 0 because 2 is a unit there.
+The horizontal axis lists the coefficient primes 2, 3, 5, 7, and 11. The vertical axis is the denominator weight vₚ(2) of each sign projector in Figure 7. The only positive bar has height 1 at prime 2. The four labeled points at odd primes have height 0 because 2 is a unit there.
 
 [Figure and surrounding text](https://komorebip.github.io/Operation-KOMOREBI/read/paper-ii/integral-separation.html#L674)
 
 <a id="figure-9-propagation-of-a-refinement-defect"></a>
 <h2 id="figure-09" tabindex="-1">Figure 9: Propagation of a refinement defect</h2>
 
-The horizontal axis is operator power n, from 1 through 12. The vertical axis is spectral norm on a logarithmic scale. Circles trace the measured defect and squares trace its telescoping bound. They agree at the first power, about 0.03, then separate: the measured error decreases while the bound grows. The delivered model uses three coarse coordinates with values 0.4, 0.8 and 1.3, three fine children each, averaging by one third, and a 0.09 perturbation in the first fine diagonal entry. The bound is valid but loose in this example.
+The horizontal axis is operator power n, from 1 through 12. The vertical axis is spectral norm on a logarithmic scale. Circles trace the measured defect and squares trace its telescoping bound. They agree at the first power, about 0.03, then separate: the measured error decreases while the bound grows. The delivered model uses three coarse coordinates with values 0.4, 0.8, and 1.3, three fine children each, averaging by one third, and a 0.09 perturbation in the first fine diagonal entry. The bound is valid but loose in this example.
 
 <table>
 <caption>Figure 9: Propagation of a refinement defect</caption>
@@ -198,14 +198,14 @@ Rows select output packets i and columns select input packets j, both numbered 0
 <a id="figure-11-nested-polyphase-samples"></a>
 <h2 id="figure-11" tabindex="-1">Figure 11: Nested polyphase samples</h2>
 
-Four panels use horizontal real reflection coordinate Re Γ and vertical imaginary coordinate Im Γ, with ticks −1, 0 and 1 and an outer unit circle. At N=2,4,8,16 the samples are Γₖ=0.72 exp(2πik/N), for k=0 through N−1. Thus the new order inserts midpoints in angular position while retaining every old sample. The dashed circle is the sample radius 0.72; the outer circle is radius 1. Marked additions at each refinement are also distinguished by their interleaving positions. These are Smith impedance-chart samples, distinct from Smith normal form.
+Four panels use horizontal real reflection coordinate Re Γ and vertical imaginary coordinate Im Γ, with ticks −1, 0, and 1 and an outer unit circle. At N=2,4,8,16 the samples are Γₖ=0.72 exp(2πik/N), for k=0 through N−1. Thus the new order inserts midpoints in angular position while retaining every old sample. The dashed circle is the sample radius 0.72; the outer circle is radius 1. Marked additions at each refinement are also distinguished by their interleaving positions. These are Smith impedance-chart samples, distinct from Smith normal form.
 
 [Figure and surrounding text](https://komorebip.github.io/Operation-KOMOREBI/read/paper-ii/models-and-algorithms.html#L71)
 
 <a id="figure-12-symmetric-refinement-weight-in-the-reflection-disk"></a>
 <h2 id="figure-12" tabindex="-1">Figure 12: Symmetric refinement weight in the reflection disk</h2>
 
-The horizontal axis is Re Γ and the vertical axis is Im Γ. Color records log₁₀ w(Γ), with ticks 0.5, 1, 2 and 3, where w(Γ)=|1−Γ|⁻²+|1+Γ|⁻². The 300-by-300 sampling grid spans −0.98 to 0.98 in each coordinate and displays only points with |Γ|<0.985. Larger values cluster near Γ=−1 and Γ=1. The field is symmetric about both coordinate axes. The singular boundary points themselves are outside the displayed sample.
+The horizontal axis is Re Γ and the vertical axis is Im Γ. Color records log₁₀ w(Γ), with ticks 0.5, 1, 2, and 3, where w(Γ)=|1−Γ|⁻²+|1+Γ|⁻². The 300-by-300 sampling grid spans −0.98 to 0.98 in each coordinate and displays only points with |Γ|<0.985. Larger values cluster near Γ=−1 and Γ=1. The field is symmetric about both coordinate axes. The singular boundary points themselves are outside the displayed sample.
 
 [Figure and surrounding text](https://komorebip.github.io/Operation-KOMOREBI/read/paper-ii/models-and-algorithms.html#L88)
 
@@ -221,7 +221,7 @@ Each row is read from its input, through the middle construction, to its conclus
 <tr><th scope="row">Complete packet axioms</th><td>Coordinate coherence</td><td>Naturality and refined transfer blocks</td></tr>
 <tr><th scope="row">Residue selectors and finite Fourier table</th><td>Finite Fourier formulas</td><td>Spectral residue projectors</td></tr>
 <tr><th scope="row">Residue selectors and coprime moduli</th><td>Dyadic and odd CRT</td><td>Concrete refinement families</td></tr>
-<tr><th scope="row">Quotient, filtration and weight certificates</th><td>Pruned finite inverse</td><td>Precision cutoff</td></tr>
+<tr><th scope="row">Quotient, filtration, and weight certificates</th><td>Pruned finite inverse</td><td>Precision cutoff</td></tr>
 <tr><th scope="row">Finite graph with positive edge weights</th><td>Walk enumeration and first-edge recurrence</td><td>Determinant rationality and recurrence</td></tr>
 <tr><th scope="row">Evaluated Bézout data and lattice action</th><td>Integral separation</td><td>Upward closure and precision delay</td></tr>
 <tr><th scope="row">Supplied Smith data and coordinate fibres</th><td>Finite Smith product</td><td>Solvability and fibre cardinality</td></tr>
@@ -245,14 +245,14 @@ Three side-by-side routes distinguish a finer coefficient address, a deeper arit
 <a id="atlas-page-2-an-atlas-of-the-refinement-layer"></a>
 <h3 id="atlas-02" tabindex="-1">Atlas page 2: An atlas of the refinement layer</h3>
 
-This orientation page is a table of objects and their roles, rather than a geometric plot. It distinguishes residue selectors, analysis and synthesis, coordinate changes, transfer blocks, filtration weights, graph adjacency, rational projectors, Smith weights and an intertwining defect. In particular, an unsigned graph count and an ordered signed operator sum answer different questions. Smith normal form and the nonlinear Smith impedance chart also have different roles.
+This orientation page is a table of objects and their roles, rather than a geometric plot. It distinguishes residue selectors, analysis and synthesis, coordinate changes, transfer blocks, filtration weights, graph adjacency, rational projectors, Smith weights, and an intertwining defect. In particular, an unsigned graph count and an ordered signed operator sum answer different questions. Smith normal form and the nonlinear Smith impedance chart also have different roles.
 
 [Original plate explanation](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/papers/paper-ii/current/editable/traditional/visual_atlas.tex#L20)
 
 <a id="atlas-page-3-follow-one-coefficient-through-the-tower"></a>
 <h3 id="atlas-03" tabindex="-1">Atlas page 3: Follow one coefficient through the tower</h3>
 
-Three rails contain all sixteen coefficient addresses, grouped modulo 2, 4 and 8. Heavier dividers mark packet boundaries. Follow address 6 from the even packet to residue 2 modulo 4 and then residue 6 modulo 8. Each level retains the same sixteen independent coefficients. The relations P₂,₀=P₄,₀+P₄,₂ and P₄,₂=P₈,₂+P₈,₆ describe exact parent membership.
+Three rails contain all sixteen coefficient addresses, grouped modulo 2, 4, and 8. Heavier dividers mark packet boundaries. Follow address 6 from the even packet to residue 2 modulo 4 and then residue 6 modulo 8. Each level retains the same sixteen independent coefficients. The relations P₂,₀=P₄,₀+P₄,₂ and P₄,₂=P₈,₂+P₈,₆ describe exact parent membership.
 
 [Original plate explanation](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/papers/paper-ii/current/editable/traditional/visual_atlas.tex#L44)
 
@@ -308,7 +308,7 @@ The matrix calculation takes T with rows (5,3),(4,1) and gives its inverse K mod
 <a id="atlas-page-11-the-residual-tells-you-when-to-stop"></a>
 <h3 id="atlas-11" tabindex="-1">Atlas page 11: The residual tells you when to stop</h3>
 
-The horizontal coordinate counts geometric-series terms N. The vertical coordinate is the minimum dyadic valuation of a nonzero residual entry. Since A²=8I, even residual powers have valuation 3k at N=2k and odd powers have 3k+1 at N=2k+1. The dashed requested level is 5. Three terms leave valuation 4 and fail, while four leave valuation 6 and suffice. The generic minimum-weight estimate gives the more conservative cutoff of five terms.
+The horizontal coordinate counts geometric-series terms N. The vertical coordinate is the minimum dyadic valuation of a nonzero residual entry. Since A²=8I, even residual powers have valuation 3k at N=2k, and odd powers have 3k+1 at N=2k+1. The dashed requested level is 5. Three terms leave valuation 4 and fail, while four leave valuation 6 and suffice. The generic minimum-weight estimate gives the more conservative cutoff of five terms.
 
 [Original plate explanation](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/papers/paper-ii/current/editable/traditional/visual_atlas.tex#L249)
 
@@ -350,7 +350,7 @@ For requested output agreement modulo 8, compare input differences (0,8) and (0,
 <a id="atlas-page-17-see-every-smith-fiber-modulo-eight"></a>
 <h3 id="atlas-17" tabindex="-1">Atlas page 17: See every Smith fiber modulo eight</h3>
 
-Both square grids use residues 0 through 7 on their two axes. The map is (x,y)↦(2x,4y) modulo 8. The left grid contains all 64 inputs. The right has eight attainable targets: first coordinate 0,2,4,6 and second coordinate 0 or 4. Each has eight preimages. For target (2,4), x is 1 or 5 and y is 1,3,5 or 7. Every other target has an empty fibre.
+Both square grids use residues 0 through 7 on their two axes. The map is (x,y)↦(2x,4y) modulo 8. The left grid contains all 64 inputs. The right has eight attainable targets: first coordinate 0,2,4,6 and second coordinate 0 or 4. Each has eight preimages. For target (2,4), x is 1 or 5, and y is 1,3,5 or 7. Every other target has an empty fibre.
 
 [Original plate explanation](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/papers/paper-ii/current/editable/traditional/visual_atlas.tex#L400)
 

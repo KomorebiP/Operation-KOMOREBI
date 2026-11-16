@@ -156,7 +156,7 @@ T_{N,k}(z)
 \]
 
 The action preserves the positive-real half-plane and composes by adding
-indices modulo \(N\). In particular, \(T_{N,0}(z)=z\) and
+indices modulo \(N\). In particular, \(T_{N,0}(z)=z\), and
 \(T_{2,1}(z)=1/z\). These are algebraic phase actions; the line-length
 control remains a separate physical model. See the
 [Paper V Smith-coordinate chapter](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-v/smith-coordinates.html)
@@ -555,7 +555,7 @@ be less than \(M\). The equal-mass partition attains \(M/N\) for every
 interval, so it minimizes the largest of these integrated
 coordinate-speed bounds. Consecutive displayed mass-midpoint nodes also
 have equal mass between them, including across the wrap around the circle.
-At \(\rho=0\), the coordinate speeds all vanish and every partition
+At \(\rho=0\), the coordinate speeds all vanish, and every partition
 attains the zero bound.
 
 To see why an interval mass is an error bound, let \(L\) be the linear

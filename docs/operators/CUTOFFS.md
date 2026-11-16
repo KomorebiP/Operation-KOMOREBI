@@ -41,7 +41,7 @@ operation. The matrix represents multiplication followed by a cutoff.
 
 On the full polynomial space, the product rule gives $DM-MD=I$.
 For a retained monomial $z^k$ with $k<N$, the same calculation works with
-$D_N,M_N$. At $k=N$, however, $D_NM_Nz^N=0$ and
+$D_N,M_N$. At $k=N$, however, $D_NM_Nz^N=0$, and
 $M_ND_Nz^N=Nz^N$. If $P_N$ selects the coefficient of $z^N$, then
 
 ```math

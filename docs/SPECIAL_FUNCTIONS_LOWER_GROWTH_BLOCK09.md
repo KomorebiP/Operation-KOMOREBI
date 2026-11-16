@@ -19,13 +19,13 @@ The [report](../monographs/special-functions/formalization/Block09/REPORT.md),
 [review](../monographs/special-functions/formalization/Block09/SELF_REVIEW.md),
 [I/O inventory](../monographs/special-functions/formalization/Block09/IO_MANIFEST.json)
 and [receipt](../monographs/special-functions/formalization/Block09/evidence/receipt.json)
-bind the exact scope, 35 input files, 43 packaged outputs and nine generated
+bind the exact scope, 35 input files, 43 packaged outputs, and nine generated
 object hashes. The public replay is `tools/verify_coupled_lower_growth.py`
 under the Special Functions directory. Use a fresh external output directory.
 
-Next: full-radius product upper recurrence, geometric seed ladder and explicit
+Next: full-radius product upper recurrence, geometric seed ladder, and explicit
 upper comparison. Real liminf/limsup type bounds, the radial exponent limit,
-type-vector proportions, operator decoupling and full analytic coverage remain
+type-vector proportions, operator decoupling, and full analytic coverage remain
 open. The live [continuation](../monographs/special-functions/CONTINUE_HERE.md)
-has the executable next target. Prior proof blocks, manuscript sources and
+has the executable next target. Prior proof blocks, manuscript sources, and
 reading PDFs are preserved. No new complete archive validation is claimed.

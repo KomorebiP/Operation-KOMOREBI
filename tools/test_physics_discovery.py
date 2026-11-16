@@ -36,7 +36,7 @@ class PhysicsDiscoveryTests(unittest.TestCase):
             pages[BOOK['index']].links=[p for p in pages[BOOK['index']].links if p!=target]
             with self.assertRaises(AssertionError):verify(output,documents,pages)
             library=(output/'read/index.html').read_text(encoding='utf-8')
-            self.assertIn('305 reading pages: 160 treatments, 72 visual studies and 73 verification pages',library)
+            self.assertIn('305 reading pages: 160 treatments, 72 visual studies, and 73 verification pages',library)
             self.assertIn('Verification and sources',library)
             self.assertNotIn('opening selection',library)
 

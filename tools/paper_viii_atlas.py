@@ -66,7 +66,7 @@ class PaperVIIIAtlas(WorkedAtlas):
             current_crosswalk_source=VIII_CROSSWALK,pdf_page_checks=SPEC['pdf_page_checks'],
             inherited_reference_kind_translation={'fact:cg':{'crosswalk':'Classical input','manuscript':'Standard fact'}},
             isolated_drawing_objects=self.ISOLATED_DRAWINGS,
-            manuscript_targets='Stable labels, statement numbers, kinds and titles independently rechecked against the retained manuscript source')
+            manuscript_targets='Stable labels, statement numbers, kinds, and titles independently rechecked against the retained manuscript source')
 
     def edition_note(self):
         return '<p>The revised crosswalk binds all 32 plates to the retained PDF. Manuscript links use stable source labels checked against the manuscript. The guide’s “Classical input 7.5” resolves to the manuscript’s “Standard fact 7.5” at the same label.</p>'

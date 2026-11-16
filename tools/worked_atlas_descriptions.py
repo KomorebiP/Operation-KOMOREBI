@@ -1,15 +1,15 @@
 """Reading aids for the retained Paper II and III drawings."""
 DESCRIPTIONS={
  'paper-ii':{
-  'three_resolutions':('Address, weight and separation','Three panels distinguish regrouping unchanged coordinates, adding the weights of operator letters, and clearing a rational projector denominator. The panel dividers do not represent maps between these operations.'),
+  'three_resolutions':('Address, weight, and separation','Three panels distinguish regrouping unchanged coordinates, adding the weights of operator letters, and clearing a rational projector denominator. The panel dividers do not represent maps between these operations.'),
   'coefficient_tower':('Sixteen addresses in three packet arrangements','Each arrangement contains all sixteen addresses once. The heavier boundaries in the drawing group the residues into packets; the coefficient values are unchanged. The label tables list the residue groups in the displayed order.'),
   'regrouping_not_averaging':('Complete packet vectors and scalar summaries','The first two arrangements retain all four coordinate directions. The final matrix replaces the four coordinates with two scalar sums.'),
   'operator_naturality':('Three exact eight-by-eight operator matrices','Rows are outputs and columns are inputs. Heavy rules mark packet blocks. The middle permutation changes the coordinate order, and the last matrix is the same operator in the new coordinates.'),
   'division_free_masks':('Binary coefficients selected by even and odd masks','The first row is the input over the field with two elements. The next two rows retain disjoint address classes, and the last row reconstructs their sum without division.'),
   'finite_fourier_table':('A finite orthogonality table modulo seven','The entries are exact residues. The successful inverse normalization is compared with a failed certificate over a different ring; the lower failure is part of the example.'),
   'crt_address_grid':('One address indexed by two residue classes','The rectangular grid lists the twelve residue addresses once. Row and column selectors identify a common cell; shading selects its congruence class.'),
-  'weighted_word_cutoff':('Signed inverse terms below a precision cutoff','Rows give the displayed operator words, their total weights and signed matrix contributions. The first discarded nonzero word reaches the cutoff. A short word can still vanish algebraically.'),
-  'modular_inverse':('An inverse checked on both sides modulo thirty-two','The matrices display the operator, its proposed inverse and both product orders. Entries are canonical residues; the identity products are exact modular statements.'),
+  'weighted_word_cutoff':('Signed inverse terms below a precision cutoff','Rows give the displayed operator words, their total weights, and signed matrix contributions. The first discarded nonzero word reaches the cutoff. A short word can still vanish algebraically.'),
+  'modular_inverse':('An inverse checked on both sides modulo thirty-two','The matrices display the operator, its proposed inverse, and both product orders. Entries are canonical residues; the identity products are exact modular statements.'),
   'inverse_residual_depth':('Exact residual valuations by truncation length','The plotted minimum entry valuations are compared with the horizontal requested precision. The points describe exact dyadic arithmetic rather than measured floating-point convergence.'),
   'weighted_multigraph':('A weighted multigraph and its edge words','Parallel edges remain separate choices. The word list reads traversals chronologically from left to right and permits repeated edges and vertices.'),
   'zeta_recurrence':('Walk-count coefficients and a rational denominator','The displayed coefficient rows compare the graph recurrence and rational generating series. These are unsigned counts with the finite checking ranges retained in the source note.'),
@@ -25,7 +25,7 @@ DESCRIPTIONS={
   'resolvent_amplification':('Five exact amplification samples near a pole','Each bar corresponds to its labeled rational spectral parameter. The rows are separate samples rather than equally spaced axis values; the local defect coefficient is divided out.'),
  },
  'paper-iii':{
-  'three_structures':('Edge action, exact coordinates and chosen connection','The three panels show a supported matrix entry, one ambient vector in three frames, and an independently chosen loop transport. Similar arrows carry different mathematical data.'),
+  'three_structures':('Edge action, exact coordinates, and chosen connection','The three panels show a supported matrix entry, one ambient vector in three frames, and an independently chosen loop transport. Similar arrows carry different mathematical data.'),
   'edge_orientation':('Matrix multiplication in traversal order','Three matrices compare the elementary transfers and their composition. Rows are outputs, columns are inputs, and the rightmost written factor acts first.'),
   'all_word_interfaces':('Sixteen edge pairs and five compatible walks','Columns give the first edge and rows the second. Crosses mark incompatible interfaces; the five surviving cells retain their signed coefficients and parallel edge labels.'),
   'ordered_matrix_coefficients':('Two noncommuting coefficient matrices','The matrices and their products have exact integer entries. The products differ on the diagonal and send the same input vector to different outputs.'),
@@ -46,7 +46,7 @@ DESCRIPTIONS={
   'tree_input_locality':('An operation tree and the leaves it reads','Ordered input slots feed the parent operation. Arrows indicate evaluation rather than chart transport; additional environment variables are unused by this tree.'),
   'node_defect_not_coordinate_defect':('A nonlinear rule compared across charts','Solid and dashed parabolas display the two exact quadratic formulas. The table gives rational evaluations, showing the mismatch introduced by the chosen transport and rule.'),
   'bilinear_vs_nonlinear':('All four terms of a bilinear expansion','The rectangle splits into four products with separately scaled horizontal and vertical units. The diagonal pair alone omits two mixed contributions.'),
-  'worked_holonomy_diagnosis':('A witness followed around a reversible triangle','The vector row follows the source through the first matrix, the second and the inverse comparison map. Its final displacement supplies the named nonzero packet witness.'),
+  'worked_holonomy_diagnosis':('A witness followed around a reversible triangle','The vector row follows the source through the first matrix, the second, and the inverse comparison map. Its final displacement supplies the named nonzero packet witness.'),
  },
 }
 FIGURES={work:{name:dict(alt=alt,description=description) for name,(alt,description) in figures.items()} for work,figures in DESCRIPTIONS.items()}

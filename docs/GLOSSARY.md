@@ -1,8 +1,8 @@
 # Glossary
 
-This guide explains 332 terms used across the collection, its operator guide and worked examples. Use the [first reading route](#a-first-reading), [follow a subject route](#subject-reading-routes), [compare nearby ideas](#compare-nearby-ideas), [browse by subject](#browse-by-subject), or open the [alphabetical index](#alphabetical-index).
+This guide explains 332 terms used across the collection, its operator guide, and worked examples. Use the [first reading route](#a-first-reading), [follow a subject route](#subject-reading-routes), [compare nearby ideas](#compare-nearby-ideas), [browse by subject](#browse-by-subject), or open the [alphabetical index](#alphabetical-index).
 
-[Find a glossary term on the reading website](https://KomorebiP.github.io/Operation-KOMOREBI/collection/GLOSSARY.html#glossary-lookup): search names, abbreviations, definitions and short examples, or choose a subject. Open the glossary beside a paper with **Read side by side**.
+[Find a glossary term on the reading website](https://KomorebiP.github.io/Operation-KOMOREBI/collection/GLOSSARY.html#glossary-lookup): search names, abbreviations, definitions, and short examples, or choose a subject. Open the glossary beside a paper with **Read side by side**.
 
 A word can have a more specific meaning in another paper. The paper’s definitions and hypotheses take precedence. Examples and source links provide context without changing any recorded evidence status.
 
@@ -12,12 +12,12 @@ A word can have a more specific meaning in another paper. The paper’s definiti
 
 Follow these terms for a short route through the main ideas. Use their examples and source links to go deeper.
 
-1. [Realization](#realization) · [Seed](#seed) · [Seed rank](#seed-rank) — Identify the system, the allowed action and the data that generate it.
+1. [Realization](#realization) · [Seed](#seed) · [Seed rank](#seed-rank) — Identify the system, the allowed action, and the data that generate it.
 2. [Projector](#projector) · [Packet](#packet) — See how an object splits into selected components.
 3. [Coordinates](#coordinates) · [Analysis and synthesis](#analysis-synthesis) — Follow a representation from the object to coordinates and back.
 4. [Transfer block](#transfer-block) · [Residual](#residual) — Track an operation between components and check a reconstruction.
 5. [Refinement](#refinement) · [Coarsening](#coarsening) · [Obstruction](#obstruction) — Check which distinctions survive a change of description and which lost information prevents a requested recovery.
-6. [Hypothesis](#hypothesis) · [Exact](#exact) · [Proof](#proof) — Identify the assumptions, arithmetic setting and supporting argument for the claim being read.
+6. [Hypothesis](#hypothesis) · [Exact](#exact) · [Proof](#proof) — Identify the assumptions, arithmetic setting, and supporting argument for the claim being read.
 
 ## Subject reading routes
 
@@ -97,7 +97,7 @@ Which probabilities detect relative phase, and what is lost when outcomes are di
 
 ### Read the Smith chart
 
-How do a physical load, a reflection point and a realizable circuit relate?
+How do a physical load, a reflection point, and a realizable circuit relate?
 
 [Impedance](#impedance) → [Normalized impedance](#normalized-impedance) → [Reflection coefficient](#reflection-coefficient) → [Lossless transmission line](#lossless-line) → [Cyclic reachability](#cyclic-reachability) → [Circuit realization](#circuit-realization)
 
@@ -164,7 +164,7 @@ These distinctions use the glossary’s stated settings. Follow both entries for
 | [Free linear repair](#free-repair) / [Finite repair menu](#repair-menu) | Free linear repair allows added directions chosen freely over the stated field. A finite repair menu restricts the choices to supplied candidates, with their costs and selection rules. Their minima answer different problems. |
 | [Reconstruction component](#reconstruction-component) / [Projector](#projector) | Reconstruction components SEᵢA sum to the identity when the coefficient selectors partition all coordinates and SA = I. In a redundant system, individual components need not satisfy Cᵢ² = Cᵢ. A projector must satisfy that extra identity. |
 | [Classical frame operator](#classical-frame-operator) / [Coefficient projection](#coefficient-projection) | A*A acts on the original vector space and measures the frame analysis. AS acts on coefficient space and projects onto valid analyzed coordinates. The reconstruction identity is SA = I, a third map with a different role. |
-| [Spectral radius](#spectral-radius) / [Induced operator norm](#operator-norm) | Spectral radius uses eigenvalue magnitudes. An induced norm measures the largest one-step gain over all directions. The nilpotent matrix [[0,M],[0,0]] has spectral radius zero and Euclidean operator norm M. |
+| [Spectral radius](#spectral-radius) / [Induced operator norm](#operator-norm) | Spectral radius uses eigenvalue magnitudes. An induced norm measures the largest one-step gain over all directions. The nilpotent matrix [[0,M],[0,0]] has spectral radius zero, and Euclidean operator norm M. |
 | [Strong operator convergence](#strong-convergence) / [Operator norm convergence](#operator-norm-convergence) | Strong convergence follows each fixed input. Operator norm convergence controls all unit inputs uniformly. The first-m-coordinate projections on ℓ² converge strongly to I while their operator norm distance from I stays one. |
 | [Ordinary generating function](#ordinary-generating-function) / [Exponential generating function](#exponential-generating-function) | An ordinary generating function stores aₙ against zⁿ. An exponential generating function stores aₙ against tⁿ/n!. Multiplication therefore uses ordinary coefficient convolution in the first convention and binomial convolution in the second. |
 | [Formal reciprocal](#formal-reciprocal) / [Compositional inverse of a formal series](#compositional-inverse) | A reciprocal solves A(t)B(t) = 1 and needs a nonzero constant coefficient over a field. A substitution inverse solves A(B(t)) = t and needs zero constant coefficient with nonzero linear coefficient. |
@@ -244,7 +244,7 @@ The chosen field affects more than arithmetic notation. A real rotation can acqu
 
 An element of a vector space. In the finite examples it is a column of numbers. Its coordinates depend on a chosen representation.
 
-The abstract object and its coordinate list are different things. A polynomial, a sampled signal and a column of numbers can each be vectors in an appropriate space. Once a basis is fixed, a coordinate list describes the object; choosing another basis changes that list without necessarily changing the object.
+The abstract object and its coordinate list are different things. A polynomial, a sampled signal, and a column of numbers can each be vectors in an appropriate space. Once a basis is fixed, a coordinate list describes the object; choosing another basis changes that list without necessarily changing the object.
 
 This distinction matters when comparing calculations in two representations. Before subtracting their coordinate columns, first put both columns in the same coordinate system. Otherwise an apparent discrepancy can come from comparing different descriptions rather than different vectors. The collection’s transfer and coordinate-change examples repeatedly use this separation.
 
@@ -258,9 +258,9 @@ This distinction matters when comparing calculations in two representations. Bef
 
 A collection of vectors closed under addition and scalar multiplication, with the usual distributive and associative laws. The space of pairs of real numbers is denoted R².
 
-The closure requirements mean that taking sums, differences and scalar multiples never leaves the space. A useful way to check a proposed example is to ask whether it contains zero and whether a general linear combination stays inside it. A plane through the origin can satisfy these conditions; a translated parallel plane generally does not.
+The closure requirements mean that taking sums, differences, and scalar multiples never leaves the space. A useful way to check a proposed example is to ask whether it contains zero and whether a general linear combination stays inside it. A plane through the origin can satisfy these conditions; a translated parallel plane generally does not.
 
-Specifying the underlying set alone is insufficient: the scalar field and the addition and scaling operations also belong to the definition. In the finite examples, these choices let us speak consistently about kernels, bases and dimension. Other works may use spaces of functions or infinite sequences with additional analytic structure.
+Specifying the underlying set alone is insufficient: the scalar field and the addition and scaling operations also belong to the definition. In the finite examples, these choices let us speak consistently about kernels, bases, and dimension. Other works may use spaces of functions or infinite sequences with additional analytic structure.
 
 **Quick example:** Pairs (x,y) with x+y = 0 form a vector space; pairs with x+y = 1 do not contain zero.
 
@@ -440,7 +440,7 @@ Over complex scalars, conjugation is essential: without it, the expression for a
 
 ### Norm
 
-A nonnegative measure of size that is zero only at the zero vector, scales by the absolute value of a scalar and satisfies the triangle inequality. The Euclidean norm is the square root of the sum of squared coordinates.
+A nonnegative measure of size that is zero only at the zero vector, scales by the absolute value of a scalar, and satisfies the triangle inequality. The Euclidean norm is the square root of the sum of squared coordinates.
 
 A norm measures size but does not necessarily specify angles. The triangle inequality makes error bounds possible: the size of a sum of discrepancies is at most the sum of their sizes. Different norms can emphasize different features, such as the largest coordinate, total absolute magnitude or Euclidean energy.
 
@@ -596,7 +596,7 @@ The domain tells us which inputs a formula is required to handle; the codomain t
 
 Restrictions can materially change a problem. A summary that loses information on all of R² might become injective on a specified line. Conversely, a formula that works on valid analyzed coordinates may fail on arbitrary coefficient lists. Recovery and transfer claims should therefore state their admissible input set as well as their map formulas.
 
-**Quick example:** For T: R² → R³ with T(x,y) = (x,y,0), the domain is R², codomain is R³ and image is a plane.
+**Quick example:** For T: R² → R³ with T(x,y) = (x,y,0), the domain is R², codomain is R³, and image is a plane.
 
 [Hand-worked example](examples/15_TYPED_PATHS.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#typed-paths) · [Image](#image) · [Surjective map](#surjective) · [Typed system](#typed-system)
 
@@ -696,7 +696,7 @@ For a vector space V over a field, the vector space V\* of linear scalar-valued 
 
 The dual space collects all linear scalar observations on the original space. In finite dimensions its dimension equals the original dimension, but this equal count does not supply a preferred identification of vectors with covectors. A basis determines a corresponding dual basis of questions that extract the individual coordinates.
 
-When an operator changes an object, its pullback changes the questions asked of that object. This is why integration rows, measurement functionals and coordinate covectors often transform contravariantly. Keeping object space and dual space separate helps prevent a transpose or inverse from being placed on the wrong side of a formula.
+When an operator changes an object, its pullback changes the questions asked of that object. This is why integration rows, measurement functionals, and coordinate covectors often transform contravariantly. Keeping object space and dual space separate helps prevent a transpose or inverse from being placed on the wrong side of a formula.
 
 **Quick example:** On pairs, ℓ(x,y) = 2x−y is a covector. It sends (3,4) to 2.
 
@@ -754,7 +754,7 @@ They differ from eigenvalues because the input and output directions need not be
 
 ### Singular value decomposition
 
-A factorization A = UΣV\* of a finite real or complex matrix, where U and V are orthogonal or unitary and Σ is rectangular diagonal with nonnegative entries. These entries are the singular values. It separates input directions, gains and output directions.
+A factorization A = UΣV\* of a finite real or complex matrix, where U and V are orthogonal or unitary and Σ is rectangular diagonal with nonnegative entries. These entries are the singular values. It separates input directions, gains, and output directions.
 
 Read the factorization from right to left: V\* changes to orthonormal input coordinates, Σ scales or erases those coordinates, and U places the results in orthonormal output coordinates. This separates geometry from gain and reveals the map’s rank through its positive singular values.
 
@@ -772,7 +772,7 @@ The same factorization constructs the Moore–Penrose inverse by reciprocating p
 
 ### Bilinear form
 
-A scalar-valued function B(u,v) linear separately in u and v. Over the real numbers a matrix M gives B(u,v) = uᵀMv. Symmetry, positivity and nondegeneracy are additional properties rather than part of bilinearity.
+A scalar-valued function B(u,v) linear separately in u and v. Over the real numbers a matrix M gives B(u,v) = uᵀMv. Symmetry, positivity, and nondegeneracy are additional properties rather than part of bilinearity.
 
 Bilinearity means that fixing either argument leaves a linear scalar question in the other. A matrix encodes those pairings between basis vectors, so the form can describe interactions or energies without being a positive notion of length. Symmetry and positivity should therefore be checked explicitly.
 
@@ -792,7 +792,7 @@ In the real finite-dimensional setting, a scalar expression q(x) = xᵀMx, usual
 
 A quadratic form combines coordinates in pairs, including cross terms that record interaction between directions. With a symmetric real matrix, an off-diagonal entry appears twice in the expanded expression. For instance, the all-ones two-by-two matrix gives x²+2xy+y² rather than x²+xy+y².
 
-Testing the sign on all vectors distinguishes positive definite, positive semidefinite and indefinite forms. A single negative value disproves positive semidefiniteness and can serve as an exact feasibility witness. In probability, evaluating such a form on a random vector gives a random variable; its distribution needs the vector’s law as additional data.
+Testing the sign on all vectors distinguishes positive definite, positive semidefinite, and indefinite forms. A single negative value disproves positive semidefiniteness and can serve as an exact feasibility witness. In probability, evaluating such a form on a random vector gives a random variable; its distribution needs the vector’s law as additional data.
 
 **Quick example:** With M = \[\[1,1\],\[1,1\]\], q(x,y) = (x+y)². It is nonnegative and vanishes on the nonzero direction (1,−1).
 
@@ -826,7 +826,7 @@ How an allowed action generates, selects, and decomposes objects.
 
 A way to represent a declared system using concrete spaces and operations while respecting its required relations. A finite matrix realization assigns a space to each type and a matrix to each permitted arrow.
 
-A realization gives an abstract specification something concrete to act on. The specification names objects, permitted operations and relations among compositions; the realization chooses spaces and actual maps that obey those relations. Merely drawing arrows or assigning matrices is insufficient if a required relation fails after the assignment.
+A realization gives an abstract specification something concrete to act on. The specification names objects, permitted operations, and relations among compositions; the realization chooses spaces and actual maps that obey those relations. Merely drawing arrows or assigning matrices is insufficient if a required relation fails after the assignment.
 
 For example, a specification with one arrow n and relation n²=0 can be realized by a nonzero square matrix N with N²=0. The relation constrains every input, not just one demonstrated vector. Different realizations can satisfy the same specification while having different dimensions, generating seeds, numerical conditioning or computational costs.
 
@@ -878,9 +878,9 @@ The kernel specifies the directions along which the projection is taken. Choosin
 
 ### Packet
 
-In the finite projector example, a selected component Pᵢx or the subspace in which it lies, according to context. Signal, algebraic and arithmetic works may assign the word more specific meanings.
+In the finite projector example, a selected component Pᵢx or the subspace in which it lies, according to context. Signal, algebraic, and arithmetic works may assign the word more specific meanings.
 
-The packet language keeps track of a selected part of an object together with the rule selecting it. In a projector decomposition, Pᵢx is the actual packet value and im Pᵢ is its possible packet space. These are related objects, but a vector in a packet space is not the projector that selected it.
+The packet language keeps track of a selected part of an object together with the rule selecting it. In a projector decomposition, Pᵢx is the actual packet value, and im Pᵢ is its possible packet space. These are related objects, but a vector in a packet space is not the projector that selected it.
 
 Completeness asks whether all retained packets reconstruct the original object. Transfer blocks then describe how an operation sends one packet into another. A packet decomposition need not be an eigenvector decomposition or an orthogonal split, so diagonal action and energy additivity require additional hypotheses stated in the relevant work.
 
@@ -906,7 +906,7 @@ Typing alone does not establish a system’s equations. Two paths can both be le
 
 In the finite linear setting, a collection of linear operators closed under sums, scalar multiples, and composition. When a unital algebra is intended, the identity operator is included.
 
-The algebra specifies the allowed linear ways to act: one may compose available operators, add them and scale them. Enlarging this collection can increase what a seed generates without changing the underlying vector space. Thus the action is part of the data in any generator-counting problem.
+The algebra specifies the allowed linear ways to act: one may compose available operators, add them, and scale them. Enlarging this collection can increase what a seed generates without changing the underlying vector space. Thus the action is part of the data in any generator-counting problem.
 
 Composition is generally noncommutative, so reversing two allowed operators can change their result. A unital algebra also includes the empty action through the identity. Infinite-dimensional uses of the phrase may impose topology, norm closure or adjoint closure; the finite algebraic definition here does not automatically include those extra requirements.
 
@@ -930,7 +930,7 @@ This can be much smaller than vector-space dimension. A cyclic vector gives seed
 
 ### Cyclic vector
 
-For a single linear operator T, a vector v is cyclic when v, Tv, T²v and further iterates span the space under consideration. One cyclic vector is enough to generate that operator module.
+For a single linear operator T, a vector v is cyclic when v, Tv, T²v, and further iterates span the space under consideration. One cyclic vector is enough to generate that operator module.
 
 A cyclic vector packages enough starting information for repeated application of one operator to generate the whole space by linear combination. In a d-dimensional space, this can be checked by the rank of the d-column matrix \[v,Tv,…,Tᵈ⁻¹v\]. Later iterates supply no new directions once the generated span becomes invariant.
 
@@ -1018,7 +1018,7 @@ A scalar λ such that Tv = λv for some nonzero v over the specified field. A re
 
 Eigenvalues reveal scalar behavior on invariant directions. Repeated powers multiply an eigenvector by λⁿ, which makes them useful for studying iteration. They depend on the coefficient field: a quarter-turn matrix has complex eigenvalues i and −i but no real eigenvector direction.
 
-Eigenvalues alone can miss large one-step or transient amplification in a nonnormal matrix. They also do not describe the gain of a rectangular map, for which singular values are more appropriate. A spectral claim should state the field, multiplicities and structural assumptions under which eigenvalue information is being used.
+Eigenvalues alone can miss large one-step or transient amplification in a nonnormal matrix. They also do not describe the gain of a rectangular map, for which singular values are more appropriate. A spectral claim should state the field, multiplicities, and structural assumptions under which eigenvalue information is being used.
 
 [Hand-worked example](examples/11_SPECTRAL_PROJECTORS.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#spectral) · [Eigenvector](#eigenvector) · [Field](#field) · [Singular value](#singular-value) · [Normal matrix](#normal-matrix)
 
@@ -1150,9 +1150,9 @@ Finite geometric identities then become exact: if Nᵏ=0, the inverse of I−N i
 
 A specified rule T:X→Y taking each allowed input to an output of the declared type. The word alone does not imply linearity, invertibility, or continuity. Those are additional properties of the rule.
 
-An operator is first a rule with a specified domain and output type. Its extra properties must then be established: linearity concerns combinations, continuity concerns limits, invertibility concerns recovery and boundedness concerns norm growth. The same written formula can have different properties on different declared domains.
+An operator is first a rule with a specified domain and output type. Its extra properties must then be established: linearity concerns combinations, continuity concerns limits, invertibility concerns recovery, and boundedness concerns norm growth. The same written formula can have different properties on different declared domains.
 
-This broad usage lets the collection discuss matrices, coefficient selectors, nonlinear summaries and differential operations in one language. It does not justify applying a linear identity to every operator. Before decomposing an output into packet contributions or moving an operation between coordinates, check the hypotheses needed by that particular transfer formula.
+This broad usage lets the collection discuss matrices, coefficient selectors, nonlinear summaries, and differential operations in one language. It does not justify applying a linear identity to every operator. Before decomposing an output into packet contributions or moving an operation between coordinates, check the hypotheses needed by that particular transfer formula.
 
 **In the worked example:** R(x₁,x₂)=x₁+x₂ maps a pair to a scalar, while B(s)=(s,0) maps a scalar to a pair. Thus RB and BR act on different spaces.
 
@@ -1314,7 +1314,7 @@ How descriptions change and operations move between components.
 
 Values describing an object relative to a chosen representation. Coordinates can be unique basis coefficients or redundant measurements, depending on the setup.
 
-A coordinate list is meaningful only with its decoding convention. In basis coordinates, every list represents one vector and every vector has one list. In redundant analysis coordinates, valid lists satisfy relations, and several arbitrary lists can synthesize to the same vector.
+A coordinate list is meaningful only with its decoding convention. In basis coordinates, every list represents one vector, and every vector has one list. In redundant analysis coordinates, valid lists satisfy relations, and several arbitrary lists can synthesize to the same vector.
 
 When a calculation moves between representations, carry the maps and their directions with the numbers. Matching list lengths is insufficient to show that two lists describe the same object. This is particularly important when one stage stores ordinary polynomial coefficients and another stores falling-factorial coefficients or packet measurements.
 
@@ -1326,9 +1326,9 @@ When a calculation moves between representations, carry the maps and their direc
 
 ### Analysis and synthesis
 
-Analysis sends an object to coordinates. Synthesis returns an object from coordinates. In the finite linear model, A and S are linear maps and exact reconstruction is the identity SA = I.
+Analysis sends an object to coordinates. Synthesis returns an object from coordinates. In the finite linear model, A and S are linear maps, and exact reconstruction is the identity SA = I.
 
-Analysis describes what is measured or stored, while synthesis describes how those stored values are combined into an object. The order SA begins with an original vector, analyzes it and then reconstructs it. Exact reconstruction requires this composite to fix every vector in the stated input space.
+Analysis describes what is measured or stored, while synthesis describes how those stored values are combined into an object. The order SA begins with an original vector, analyzes it, and then reconstructs it. Exact reconstruction requires this composite to fix every vector in the stated input space.
 
 The reverse order AS begins with a coefficient list. In a redundant representation it generally removes coefficient inconsistencies or gauge components instead of acting as the identity. Keeping these two spaces visible explains how exact object reconstruction can coexist with nonunique coefficient descriptions.
 
@@ -1340,7 +1340,7 @@ The reverse order AS begins with a coefficient list. In a redundant representati
 
 ### Transfer block
 
-The part of an operation connecting a source component to a target component. With source projector Pᵢ, target projector Qⱼ and operator T, the block is QⱼTPᵢ. Complete source and target families allow the blocks to reconstruct T.
+The part of an operation connecting a source component to a target component. With source projector Pᵢ, target projector Qⱼ, and operator T, the block is QⱼTPᵢ. Complete source and target families allow the blocks to reconstruct T.
 
 Read QⱼTPᵢ from right to left: select input packet i, apply T, then retain output packet j. The two indices therefore name different roles, even when input and output spaces happen to coincide. A block may represent movement between scales, coordinates, phases or other declared components.
 
@@ -1412,7 +1412,7 @@ The cost is that coefficient-space identities require care. An arbitrary triple 
 
 ### Composition
 
-Applying one map after another. In a matrix product UT, T acts first and U acts second. The intermediate dimensions or types must agree.
+Applying one map after another. In a matrix product UT, T acts first, and U acts second. The intermediate dimensions or types must agree.
 
 Composition connects operations through the actual intermediate object. Its order matters: UT means that T acts first, so its output must be a legal input for U. Associativity permits regrouping compatible operations, but does not permit swapping their order.
 
@@ -1502,7 +1502,7 @@ Mutually perpendicular rows are insufficient unless their lengths are normalized
 
 A declared scaling convention. For a Haar pair, dividing sums and differences by two gives averages, while dividing by √2 gives a Euclidean norm-preserving transform.
 
-Normalization fixes the scale at which coordinates, transforms or probabilities are reported. Two formulas can describe equivalent information while using different numerical coefficients. The inverse map, coefficient metric and error thresholds must follow the same convention for their results to agree.
+Normalization fixes the scale at which coordinates, transforms or probabilities are reported. Two formulas can describe equivalent information while using different numerical coefficients. The inverse map, coefficient metric, and error thresholds must follow the same convention for their results to agree.
 
 In a Haar pair, average/detail scaling gives u²+v²=2(a²+d²), whereas orthonormal scaling removes that factor. In a Fourier transform, the factor 1/N may be placed in the inverse or split between directions. A comparison made before matching these conventions can mistake a predictable scale factor for an error.
 
@@ -1554,7 +1554,7 @@ Zero leakage means that range is invariant, so its internal dynamics can be repr
 
 **Also called:** Packet leakage, Off-packet leakage.
 
-**In the worked example:** With P=diag(1,0), T=\[\[1,2\],\[3,4\]\], and x=(2,0)ᵀ, the full output is (2,6)ᵀ and the retained output is (2,0)ᵀ. The leakage is (0,6)ᵀ.
+**In the worked example:** With P=diag(1,0), T=\[\[1,2\],\[3,4\]\], and x=(2,0)ᵀ, the full output is (2,6)ᵀ, and the retained output is (2,0)ᵀ. The leakage is (0,6)ᵀ.
 
 **Keep in mind:** For an arbitrary input, T−PTP also includes transfers starting in the discarded input range. The single leakage term is not the whole residual in that setting.
 
@@ -1590,7 +1590,7 @@ Redundancy can provide alternative synthesis rules and useful consistency relati
 
 **Also called:** Frame, Finite analysis frame.
 
-**In the worked example:** The vectors (1,0), (0,1) and (1,1) give A(a,b) = (a,b,a+b). Three measurements recover a vector in R², although the three frame vectors are not a basis.
+**In the worked example:** The vectors (1,0), (0,1), and (1,1) give A(a,b) = (a,b,a+b). Three measurements recover a vector in R², although the three frame vectors are not a basis.
 
 [Hand-worked example](examples/06_REDUNDANT_COORDINATES.md) · [Further reading](operators/catalog/A_STRUCTURAL.md#op-202) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#redundancy) · [Basis](#basis) · [Analysis and synthesis](#analysis-synthesis) · [Frame bounds](#frame-bounds) · [Canonical dual synthesis](#canonical-dual)
 
@@ -1646,7 +1646,7 @@ This choice depends on the declared Euclidean or Hermitian geometry. It is not t
 
 ### Moore–Penrose inverse
 
-For a real or complex matrix A in Euclidean coordinates, the unique matrix A⁺ satisfying AA⁺A = A, A⁺AA⁺ = A⁺, (AA⁺)\* = AA⁺ and (A⁺A)\* = A⁺A. It is defined even for rectangular or rank-deficient matrices. AA⁺ and A⁺A are orthogonal projectors on the respective coordinate spaces.
+For a real or complex matrix A in Euclidean coordinates, the unique matrix A⁺ satisfying AA⁺A = A, A⁺AA⁺ = A⁺, (AA⁺)\* = AA⁺, and (A⁺A)\* = A⁺A. It is defined even for rectangular or rank-deficient matrices. AA⁺ and A⁺A are orthogonal projectors on the respective coordinate spaces.
 
 The pseudoinverse reverses the nonzero singular-value directions and assigns zero to the missing ones. In Euclidean least squares, A⁺b is the minimum-norm input among the inputs minimizing ‖Ax−b‖. The two orthogonal projectors in its defining identities live on different spaces.
 
@@ -1818,7 +1818,7 @@ How descriptions become finer, discard information or meet a compatibility condi
 
 ### Refinement
 
-A compatible move from a coarser description to a finer one. In finite packet refinement, each fine packet has a coarse parent and each coarse projector is the sum of its children.
+A compatible move from a coarser description to a finer one. In finite packet refinement, each fine packet has a coarse parent, and each coarse projector is the sum of its children.
 
 Refinement records more detailed distinctions while retaining a rule for recovering the coarser description. In a packet tree, children belong to specified parents, and summing the children’s projectors recovers the parent projector. The extra detail is organized information rather than an unrelated second representation.
 
@@ -1862,7 +1862,7 @@ For a pair of samples, retaining their average loses the signed difference but s
 
 For a sequence x and a positive integer m, the phase r collects samples x\_(mk+r), with 0 ≤ r &lt; m. Interleaving all phases reconstructs the indexed sequence. Filtering requires additional boundary and convention choices.
 
-Polyphase decomposition reorganizes a sequence by its index modulo m. For m=2, one stream contains even-indexed samples and another odd-indexed samples. Keeping all phases with their within-phase positions is reversible; discarding a phase is an additional information-losing operation.
+Polyphase decomposition reorganizes a sequence by its index modulo m. For m=2, one stream contains even-indexed samples, and another odd-indexed samples. Keeping all phases with their within-phase positions is reversible; discarding a phase is an additional information-losing operation.
 
 A shift can move a sample to a different phase and also change its within-phase index. That extra carry is why a filter’s polyphase representation is more than a permutation of its scalar taps. Finite signals additionally need a boundary rule before the resulting shifts and filter matrices are determined.
 
@@ -1890,7 +1890,7 @@ Agreement between specified maps, operations or levels of a construction. The re
 
 Compatibility says that independently described pieces fit together according to a specified equality. For example, refining and then summing children should agree with selecting the original parent packet. The equality identifies exactly which outputs are meant to coincide and on which inputs.
 
-It is not a general assurance that two constructions are similar or intuitively consistent. A coordinate system, a refinement tower and a dynamics summary each require their own compatibility equations. Checking those equations exposes whether an apparent discrepancy comes from a convention mismatch, omitted data or an actual failure of the proposed construction.
+It is not a general assurance that two constructions are similar or intuitively consistent. A coordinate system, a refinement tower, and a dynamics summary each require their own compatibility equations. Checking those equations exposes whether an apparent discrepancy comes from a convention mismatch, omitted data or an actual failure of the proposed construction.
 
 [Hand-worked example](examples/05_REFINEMENT.md) · [Further reading](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#6-refine) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#refinement) · [Commuting diagram](#commuting-diagram) · [Refinement](#refinement) · [Completion](#completion)
 
@@ -1900,7 +1900,7 @@ It is not a general assurance that two constructions are similar or intuitively 
 
 A diagram in which the declared routes between the same starting and ending objects give the same map. In Example 3 the equality is D\_y C = C D.
 
-A commuting diagram expresses route independence: following either declared path gives the same result at the common endpoint. To read one, identify its starting space, ending space and the composition order along each route, then translate those routes into an equation of maps.
+A commuting diagram expresses route independence: following either declared path gives the same result at the common endpoint. To read one, identify its starting space, ending space, and the composition order along each route, then translate those routes into an equation of maps.
 
 Drawing the diagram does not prove the equation. In a finite linear setting, equality on a spanning family can establish it; for a nonlinear map, sampled agreement generally has narrower scope. A transfer defect quantifies how much the routes disagree when exact commutation is unavailable.
 
@@ -1926,7 +1926,7 @@ For a map R and an output s, the set of all inputs with R(x) = s. A proposed obs
 
 A fiber gathers all inputs that a map regards as indistinguishable at one output value. For a linear summary, each nonempty fiber is a translate of the kernel. For a nonlinear summary, fibers can have very different shapes, sizes or numbers of connected pieces.
 
-Fibers turn a recovery question into a test of constancy. If the requested answer varies within one fiber, the summary cannot determine it. If it is constant on every fiber, an answer rule exists on the attained summary values, although continuity, stable evaluation and efficient computation remain additional questions.
+Fibers turn a recovery question into a test of constancy. If the requested answer varies within one fiber, the summary cannot determine it. If it is constant on every fiber, an answer rule exists on the attained summary values, although continuity, stable evaluation, and efficient computation remain additional questions.
 
 **Also called:** Fibre, Preimage of a point.
 
@@ -1950,7 +1950,7 @@ For unrestricted linear maps, ker R⊆ker F supplies the corresponding existence
 
 ### Lift
 
-An object at a finer or richer level that maps to a specified object at a coarser level. Existence, uniqueness and compatibility of lifts are separate questions.
+An object at a finer or richer level that maps to a specified object at a coarser level. Existence, uniqueness, and compatibility of lifts are separate questions.
 
 A lift supplies a finer object whose coarse image is the required one. There may be no lift, exactly one lift or many lifts. When many exist, selecting one representative is a further choice and may affect later computations that depend on the hidden finer information.
 
@@ -2016,7 +2016,7 @@ An allowed vector added to the span of the original image so that a required tar
 
 A repair direction adds a permitted way to move beyond the outputs already attainable. If a target is outside the original image, its class in the cokernel records the missing part. A useful added direction must address that missing class rather than merely duplicate an existing image direction.
 
-The allowed coefficient system and admissibility rules matter. Rational linear combinations, nonnegative combinations and discrete component selections define different repair problems. A direction that repairs the unrestricted linear span may therefore fail to be an allowable physical or menu-constrained repair.
+The allowed coefficient system and admissibility rules matter. Rational linear combinations, nonnegative combinations, and discrete component selections define different repair problems. A direction that repairs the unrestricted linear span may therefore fail to be an allowable physical or menu-constrained repair.
 
 [Hand-worked example](examples/25_REPAIR_MENUS.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#repair-menus) · [Image](#image) · [Span](#span) · [Finite repair menu](#repair-menu)
 
@@ -2062,7 +2062,7 @@ Optimality is meaningful only after this convention is fixed. Changing a candida
 
 Existence of a solution satisfying the stated equations and admissibility conditions. Failure of one candidate or exhaustion of a search budget does not by itself show infeasibility.
 
-Feasibility asks whether at least one allowed solution exists, before asking which is best. The allowed set includes the equations, input restrictions, coefficient field and any positivity or topology constraints. Removing or weakening a restriction changes the problem whose feasibility is being assessed.
+Feasibility asks whether at least one allowed solution exists, before asking which is best. The allowed set includes the equations, input restrictions, coefficient field, and any positivity or topology constraints. Removing or weakening a restriction changes the problem whose feasibility is being assessed.
 
 A valid witness proves feasibility by satisfying those requirements. Infeasibility needs a reason excluding every allowed witness, such as a separating linear functional or an exhaustive argument over a finite domain. A rejected candidate or timed-out solver leaves a more limited conclusion.
 
@@ -2188,7 +2188,7 @@ How exact values, stored approximations, and error measures differ.
 
 A discrepancy computed for a specified identity or reconstruction. In Example 5 it is r = x − x̂. Other operations may use a different sign or norm, so the definition belongs with the reported number.
 
-A residual measures failure of a particular equation or reconstruction, so its interpretation begins with that equation. The reconstruction residual x−x̂ differs from the equation residual b−Ax̂, even when both concern the same computed answer. Their signs, units and norms can also differ.
+A residual measures failure of a particular equation or reconstruction, so its interpretation begins with that equation. The reconstruction residual x−x̂ differs from the equation residual b−Ax̂, even when both concern the same computed answer. Their signs, units, and norms can also differ.
 
 A small residual shows that the tested relation is nearly satisfied under its chosen measure. It does not automatically show that the computed answer is close to the desired answer: an ill-conditioned problem can turn a small equation residual into a large forward error. Recovering such a bound requires a stability estimate.
 
@@ -2204,7 +2204,7 @@ Computed or stated in exact algebra or arithmetic under the declared hypotheses.
 
 Exactness describes the arithmetic or equality being claimed, not the completeness of the entire investigation. Rational operations can retain fractions without rounding, and symbolic algebra can establish identities under explicit assumptions. These methods remove a particular source of numerical uncertainty.
 
-The encoded problem can still differ from the intended model, omit cases or rely on an unproved premise. An exact calculation on sampled inputs also remains a finite calculation unless a general argument extends it. Read exact together with the domain, hypotheses and quantity actually computed.
+The encoded problem can still differ from the intended model, omit cases or rely on an unproved premise. An exact calculation on sampled inputs also remains a finite calculation unless a general argument extends it. Read exact together with the domain, hypotheses, and quantity actually computed.
 
 [Hand-worked example](examples/03_COORDINATES.md) · [Further reading](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#execution-classes) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#coordinates) · [Numerical](#numerical) · [Hypothesis](#hypothesis) · [Dyadic rational](#dyadic-rational)
 
@@ -2214,7 +2214,7 @@ The encoded problem can still differ from the intended model, omit cases or rely
 
 Computed with finite-precision arithmetic and interpreted using a stated error or residual rule. A zero observed floating-point residual does not turn the whole computation into an exact-arithmetic proof.
 
-Numerical work approximates quantities using finite representations and algorithms. Its reliability depends on input interpretation, rounding, conditioning and approximation error, not merely on the number of printed digits. A reproducible numerical result should identify the relevant precision and acceptance rule.
+Numerical work approximates quantities using finite representations and algorithms. Its reliability depends on input interpretation, rounding, conditioning, and approximation error, not merely on the number of printed digits. A reproducible numerical result should identify the relevant precision and acceptance rule.
 
 Some numerical methods provide rigorous enclosures when their arithmetic and analytic remainders are controlled. Others provide estimates supported by residuals or convergence studies. These are different evidence classes. Repeated agreement or a displayed zero residual alone does not establish exact equality of the underlying mathematical objects.
 
@@ -2252,9 +2252,9 @@ A dyadic value may still exceed the range or precision of a particular floating-
 
 Choosing a representable stored value for an exact value according to a specified rule. Nearest, ties to even chooses the closer value and resolves an exact midpoint by the parity of the last retained significand bit.
 
-Rounding maps an exact value onto the available representable grid. The chosen rule determines which stored neighbor is selected and how midpoint cases are resolved. A rounding error is consequently a property of the exact value, format, scale and rule together.
+Rounding maps an exact value onto the available representable grid. The chosen rule determines which stored neighbor is selected and how midpoint cases are resolved. A rounding error is consequently a property of the exact value, format, scale, and rule together.
 
-Repeated rounded operations need not equal one final rounding of the exact combined expression. This matters for cancellation, summation and reproducibility. Directed rounding deliberately selects enclosing neighbors, while nearest rounding aims at closeness; one convention cannot be silently substituted for the other in a numerical certificate.
+Repeated rounded operations need not equal one final rounding of the exact combined expression. This matters for cancellation, summation, and reproducibility. Directed rounding deliberately selects enclosing neighbors, while nearest rounding aims at closeness; one convention cannot be silently substituted for the other in a numerical certificate.
 
 [Hand-worked example](examples/09_BINARY_ROUNDING.md) · [Further reading](https://github.com/KomorebiP/polyphase-float/blob/main/docs/manual/glossary.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#rounding) · [Precision](#precision) · [ULP](#ulp) · [Numerical ternary](#ternary)
 
@@ -2480,7 +2480,7 @@ The denominator matters. Dividing by the exact target, the computed answer or an
 
 ### Forward error
 
-The difference between a computed output and the exact output of the declared problem on the declared input. A forward bound controls the answer directly. It can include effects from input uncertainty, operator approximation and finite arithmetic.
+The difference between a computed output and the exact output of the declared problem on the declared input. A forward bound controls the answer directly. It can include effects from input uncertainty, operator approximation, and finite arithmetic.
 
 Forward error concerns the answer the user wanted: how far the computed output lies from the exact output for the same declared input. It is the most direct accuracy question, but the exact reference answer is often unavailable, so a bound must be derived indirectly.
 
@@ -2548,9 +2548,9 @@ How to read assumptions, proofs, formal links, and computation records.
 
 A structured report describing a particular check, with its evidence class, residuals, and assumptions. The producer determines what was checked. A saved certificate describes a past calculation and needs revalidation for a new one.
 
-A certificate makes a check inspectable by recording what was tested, the assumptions used and the evidence returned. Its force comes from the checker’s contract and the validity of the recorded data, not from the file’s name or a success flag alone.
+A certificate makes a check inspectable by recording what was tested, the assumptions used, and the evidence returned. Its force comes from the checker’s contract and the validity of the recorded data, not from the file’s name or a success flag alone.
 
-A numerical enclosure, a linear obstruction witness and a proof-path certificate therefore have different contents and implications. Check the input identity, source revision and evidence class before reusing one. Replaying a certificate can confirm its stated check without establishing additional modeling assumptions or broader mathematical claims.
+A numerical enclosure, a linear obstruction witness, and a proof-path certificate therefore have different contents and implications. Check the input identity, source revision, and evidence class before reusing one. Replaying a certificate can confirm its stated check without establishing additional modeling assumptions or broader mathematical claims.
 
 [Further reading](https://github.com/KomorebiP/komorebi-math/blob/main/docs/USER_GUIDE.md#certificates-and-saved-evidence) · [How to inspect a proof](routes/PROOF_REVIEW.md) · [Exact](#exact) · [Numerical](#numerical) · [Conditional](#conditional) · [Derivation trace](#derivation-trace) · [Inconclusive search](#search-inconclusive)
 
@@ -2572,9 +2572,9 @@ Computation records need the same separation. A run may verify an algebraic step
 
 A recorded connection between a written claim and a formal Lean statement. Compare hypotheses, the full formal type, source edition, and execution record. A similar declaration name or a working link alone does not establish the correspondence.
 
-Correspondence concerns meaning between two statements, while Lean execution concerns checking the formal statement that was actually supplied. A successful kernel check does not by itself show that the formal types encode the intended objects, hypotheses and conclusion of the written theorem.
+Correspondence concerns meaning between two statements, while Lean execution concerns checking the formal statement that was actually supplied. A successful kernel check does not by itself show that the formal types encode the intended objects, hypotheses, and conclusion of the written theorem.
 
-Compare the full declaration, imported assumptions and source edition with the relevant written passage. Also distinguish selected formal results from coverage of an entire work. A functioning source link or a similarly named declaration can help locate evidence, but cannot replace that comparison or an accepted execution record.
+Compare the full declaration, imported assumptions, and source edition with the relevant written passage. Also distinguish selected formal results from coverage of an entire work. A functioning source link or a similarly named declaration can help locate evidence, but cannot replace that comparison or an accepted execution record.
 
 [Further reading](COMPLETION_STATUS.md#lean-coverage) · [How to inspect a proof](routes/PROOF_REVIEW.md) · [Proof](#proof) · [Theorem](#theorem) · [Certificate](#certificate)
 
@@ -2598,7 +2598,7 @@ A mathematical statement established by a proof from its specified assumptions. 
 
 A theorem is a proved statement with a particular logical scope. It can assert an implication, an existence result, an equivalence or a bound, and these forms have different uses. For example, an existence theorem need not provide an efficient construction of the object whose existence it proves.
 
-The theorem’s assumptions, definitions and dependencies travel with its conclusion. A finite example can illustrate it, and a formal companion can cover a precisely encoded version, but neither automatically enlarges the written result. Distinguishing mathematical validity from implementation efficiency is especially important in computational applications.
+The theorem’s assumptions, definitions, and dependencies travel with its conclusion. A finite example can illustrate it, and a formal companion can cover a precisely encoded version, but neither automatically enlarges the written result. Distinguishing mathematical validity from implementation efficiency is especially important in computational applications.
 
 [Further reading](VERIFICATION.md) · [How to inspect a proof](routes/PROOF_REVIEW.md) · [Hypothesis](#hypothesis) · [Proof](#proof) · [Conditional](#conditional)
 
@@ -2608,7 +2608,7 @@ The theorem’s assumptions, definitions and dependencies travel with its conclu
 
 An argument establishing a statement from its hypotheses and accepted prior results. A worked input illustrates a statement. A general identity or argument is needed to establish a claim about every allowed input.
 
-A proof explains why the conclusion follows throughout the stated domain. Its steps can use definitions, logical inference, algebraic identities and established results. A chain of correct calculations still needs to address the actual hypotheses and quantifiers of the claim being proved.
+A proof explains why the conclusion follows throughout the stated domain. Its steps can use definitions, logical inference, algebraic identities, and established results. A chain of correct calculations still needs to address the actual hypotheses and quantifiers of the claim being proved.
 
 Examples are valuable for understanding and detecting errors, but sampled agreement does not generally settle a universal statement. Exhaustive checking of a finite domain can form a proof when coverage and checking correctness are established. Formal verification likewise proves the encoded proposition, whose correspondence with the intended written claim needs separate care.
 
@@ -2634,7 +2634,7 @@ A check over specified, finitely many inputs or cases. Exhaustive checking can p
 
 A finite check has a declared population of cases. It can be exhaustive over that population or sample only some of it. These alternatives must be distinguished because checking every member of a finite domain can settle a finite claim, while testing a subset leaves untested cases.
 
-Coverage is part of the evidence: bounds, skipped cases, early exits and resource caps matter. An exact computation removes rounding concerns for the arithmetic performed, but does not automatically prove that the enumerator covered the promised population or that a finite pattern continues indefinitely.
+Coverage is part of the evidence: bounds, skipped cases, early exits, and resource caps matter. An exact computation removes rounding concerns for the arithmetic performed, but does not automatically prove that the enumerator covered the promised population or that a finite pattern continues indefinitely.
 
 [Hand-worked example](examples/01_PACKETS.md) · [Further reading](VERIFICATION.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#packets) · [Proof](#proof) · [Certificate](#certificate) · [Hypothesis](#hypothesis)
 
@@ -2696,7 +2696,7 @@ Inclusion-minimality asks whether any selected node or rule can be removed while
 
 It does not say that another incomparable certificate uses fewer items or costs less. Several minimal certificates can reach the same target through different leaves and rules. To compare all valid certificates by cost, cardinality or a least-element property, one must solve the corresponding stronger and differently ordered problem.
 
-**In the worked example:** The certificate built from leaves s₁ and s₃ derives a, b, c and d, then the target t. Removing either selected leaf or any of its five retained rules breaks that derivation, so this certificate is inclusion-minimal.
+**In the worked example:** The certificate built from leaves s₁ and s₃ derives a, b, c, and d, then the target t. Removing either selected leaf or any of its five retained rules breaks that derivation, so this certificate is inclusion-minimal.
 
 [Hand-worked example](examples/21_PROOF_CERTIFICATES.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#proof-certificates) · [Certificate](#certificate) · [Least certificate](#least-certificate) · [Minimum-cost certificate](#minimum-cost-certificate)
 
@@ -2812,7 +2812,7 @@ A search that has established neither a valid witness nor a proof that none exis
 
 An inconclusive search leaves the existence question unresolved. The procedure may have explored only part of the candidate space, exhausted a resource budget or failed to validate the candidate it happened to find. None of those outcomes by itself excludes valid candidates elsewhere.
 
-A useful record distinguishes this status from infeasibility and from a checked witness. It should preserve the search bounds, stopping reason and any valid intermediate evidence. Later work can then continue from a known limitation instead of treating a timeout or a rejected proposal as an impossibility theorem.
+A useful record distinguishes this status from infeasibility and from a checked witness. It should preserve the search bounds, stopping reason, and any valid intermediate evidence. Later work can then continue from a known limitation instead of treating a timeout or a rejected proposal as an impossibility theorem.
 
 **Also called:** UNKNOWN, Search timeout, Unresolved search.
 
@@ -2824,9 +2824,9 @@ A useful record distinguishes this status from infeasibility and from a checked 
 
 ### Formal statement
 
-A proposition expressed in a proof assistant’s language with explicit types, hypotheses and conclusion. Its relationship to a written theorem depends on the interpretation of every object and assumption. A declaration name alone does not specify that relationship.
+A proposition expressed in a proof assistant’s language with explicit types, hypotheses, and conclusion. Its relationship to a written theorem depends on the interpretation of every object and assumption. A declaration name alone does not specify that relationship.
 
-A formal statement makes types, assumptions and quantifiers part of an expression that a proof assistant can check. Small differences in those details can change its meaning substantially, even when its declaration name resembles a familiar written theorem.
+A formal statement makes types, assumptions, and quantifiers part of an expression that a proof assistant can check. Small differences in those details can change its meaning substantially, even when its declaration name resembles a familiar written theorem.
 
 To establish correspondence, compare the full formal type with the written claim and explain how its objects are interpreted. An encoded finite model can prove useful selected facts without covering an unrestricted infinite-dimensional claim. Successful compilation confirms the accepted formal development, not every informal interpretation attached to it.
 
@@ -2838,13 +2838,13 @@ To establish correspondence, compare the full formal type with the written claim
 
 ### Reproducible computation
 
-A computation with enough recorded inputs, source identity, environment information and instructions to repeat the stated check. Reproduction should compare the promised outputs or invariants. Repeating a calculation preserves the scope of the calculation rather than extending it.
+A computation with enough recorded inputs, source identity, environment information, and instructions to repeat the stated check. Reproduction should compare the promised outputs or invariants. Repeating a calculation preserves the scope of the calculation rather than extending it.
 
-Reproducibility makes a claimed run repeatable on identified inputs with identified code and conventions. Source hashes, commands, versions and expected invariants help another reader distinguish a genuine replay from a similar calculation performed on changed data.
+Reproducibility makes a claimed run repeatable on identified inputs with identified code and conventions. Source hashes, commands, versions, and expected invariants help another reader distinguish a genuine replay from a similar calculation performed on changed data.
 
-A reproduced result retains its original scope. Repeating finite tests does not establish untested asymptotic behavior, and reproducing an implementation’s output does not independently establish the implementation’s correctness. The strongest records keep execution success, mathematical interpretation and source-to-claim correspondence separate.
+A reproduced result retains its original scope. Repeating finite tests does not establish untested asymptotic behavior, and reproducing an implementation’s output does not independently establish the implementation’s correctness. The strongest records keep execution success, mathematical interpretation, and source-to-claim correspondence separate.
 
-**Quick example:** A source archive, its hash, the arithmetic convention and the expected rational output let another reader replay one exact example.
+**Quick example:** A source archive, its hash, the arithmetic convention, and the expected rational output let another reader replay one exact example.
 
 [Further reading](routes/PROOF_REVIEW.md) · [How to inspect a proof](routes/PROOF_REVIEW.md) · [Certificate](#certificate) · [Finite check](#finite-check) · [Exact](#exact) · [Numerical](#numerical)
 
@@ -2864,7 +2864,7 @@ The scalar multiplying a specified basis term. In f(z) = sum aₙzⁿ, aₙ is t
 
 A coefficient is attached to a particular basis element, not just to the represented object. The same polynomial can have different coefficient lists in ordinary powers and falling factorials. Specifying the basis is therefore part of specifying which scalar is being read.
 
-Normalization matters too. In an exponential generating function, the stored sequence entry multiplies tⁿ/n!, so the ordinary coefficient of tⁿ is smaller by n!. Changing basis or normalization without changing coefficient formulas can create incorrect products, derivatives and comparisons.
+Normalization matters too. In an exponential generating function, the stored sequence entry multiplies tⁿ/n!, so the ordinary coefficient of tⁿ is smaller by n!. Changing basis or normalization without changing coefficient formulas can create incorrect products, derivatives, and comparisons.
 
 **Quick example:** In 2+5x+3x², the coefficient of x is 5; in a different basis the coefficient list changes.
 
@@ -2958,7 +2958,7 @@ An equation relating an unknown function to one or more of its derivatives. The 
 
 A differential equation constrains an unknown function through its rates of change, rather than merely listing its values. A power-series approach substitutes an unknown coefficient sequence and compares like degrees, converting the equation into algebraic relationships among those coefficients.
 
-The feedback example also uses values at scaled arguments, so the recurrence must include the corresponding powers of the contraction factors. Solving the formal coefficient equations does not alone establish an analytic solution or its convergence interval. Existence, uniqueness and evaluation error require the hypotheses of the particular equation.
+The feedback example also uses values at scaled arguments, so the recurrence must include the corresponding powers of the contraction factors. Solving the formal coefficient equations does not alone establish an analytic solution or its convergence interval. Existence, uniqueness, and evaluation error require the hypotheses of the particular equation.
 
 [Hand-worked example](examples/24_CONTRACTED_FEEDBACK.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#contracted-feedback) · [Derivative in the series example](#derivative) · [Initial condition](#initial-condition) · [Contracted argument](#contracted-argument)
 
@@ -2968,7 +2968,7 @@ The feedback example also uses values at scaled arguments, so the recurrence mus
 
 A specified value, or collection of derivative values, used with a differential equation. The feedback example fixes T(0)=0, and the equation then forces T′(0)=1.
 
-Initial data select among functions that satisfy a differential equation. The number and type of conditions needed depend on the equation, its order and its domain. A value at zero can also enter the coefficient recurrence as its starting coefficient.
+Initial data select among functions that satisfy a differential equation. The number and type of conditions needed depend on the equation, its order, and its domain. A value at zero can also enter the coefficient recurrence as its starting coefficient.
 
 Some derivative values are consequences of the equation rather than independent choices. In the stated feedback example, imposing T(0)=0 makes the equation force T′(0)=1. Assigning an incompatible derivative value as extra data would therefore change the problem into an inconsistent one.
 
@@ -3024,7 +3024,7 @@ The operator Δf(x)=f(x+1)−f(x). On rational polynomials, Δbₖ=k bₖ₋₁ 
 
 Forward difference measures the change in a function after a unit shift of its input. On polynomials it lowers degree, and on falling factorials it has the simple coefficient k, matching the source monomial derivative under the stated coordinate map.
 
-It should not be confused with ordinary differentiation or backward difference. For x², these give 2x+1, 2x and 2x−1 respectively. The direction and step size are mathematical data, so changing either can alter transport identities and the placement of phase carries.
+It should not be confused with ordinary differentiation or backward difference. For x², these give 2x+1, 2x, and 2x−1 respectively. The direction and step size are mathematical data, so changing either can alter transport identities and the placement of phase carries.
 
 **Also called:** Unit forward difference, Delta operator in the polynomial example.
 
@@ -3040,11 +3040,11 @@ For an integer m≥2 and 0≤r&lt;m, the projector Pᵣ retaining exactly the co
 
 A coefficient selector keeps named basis positions and sets the rest to zero. Applying it again changes nothing, which makes it a projector. The residue selectors are mutually annihilating and sum to the identity when all residue classes are included.
 
-The basis determines what is selected. Selecting ordinary-power degrees after a polynomial has been converted to falling-factorial coordinates generally gives the wrong transported packet. The correct selector is obtained by decoding, selecting in the source basis and encoding again.
+The basis determines what is selected. Selecting ordinary-power degrees after a polynomial has been converted to falling-factorial coordinates generally gives the wrong transported packet. The correct selector is obtained by decoding, selecting in the source basis, and encoding again.
 
 **Also called:** Coefficient selector, Residue projector.
 
-**In the worked example:** For x³=b₁+3b₂+b₃, the even falling-degree packet is 3b₂ and the odd packet is b₁+b₃. At x=4 their values are 36 and 28, summing to 64.
+**In the worked example:** For x³=b₁+3b₂+b₃, the even falling-degree packet is 3b₂, and the odd packet is b₁+b₃. At x=4 their values are 36 and 28, summing to 64.
 
 **Keep in mind:** Coefficient selection is defined over any commutative ring. Over a field, its roots-of-unity averaging formula requires a primitive mth root and invertible m.
 
@@ -3198,7 +3198,7 @@ Bell numbers forget how many blocks a partition has and retain only the total co
 
 This is a scalar summary of richer data. Keeping a Touchard polynomial retains the block-count distribution as coefficients, while evaluating it at one gives the Bell number. Recovering arbitrary coefficient information from that one value would require additional restrictions or measurements.
 
-**Quick example:** B₃ = 1+3+1 = 5, summing S(3,1), S(3,2) and S(3,3).
+**Quick example:** B₃ = 1+3+1 = 5, summing S(3,1), S(3,2), and S(3,3).
 
 **In the worked example:** Adding the n = 5 Stirling row gives B₅ = 1+15+25+10+1 = 52.
 
@@ -3230,7 +3230,7 @@ The polynomial Tₙ(z) = Σₖ₌₀ⁿ S(n,k)zᵏ retaining the complete partit
 
 The variable z marks the number of blocks, so the polynomial retains every entry of one second-kind Stirling row. Different evaluations or linear functionals then extract different summaries from the same coefficient data.
 
-Setting z=1 yields the Bell count. Replacing each monomial zᵏ by k! yields the Fubini count through a different functional, not a fixed ordinary evaluation at one universal z. This makes the family a useful example of representation, observation and information loss within a finite coefficient space.
+Setting z=1 yields the Bell count. Replacing each monomial zᵏ by k! yields the Fubini count through a different functional, not a fixed ordinary evaluation at one universal z. This makes the family a useful example of representation, observation, and information loss within a finite coefficient space.
 
 **Also called:** Bell polynomial of one variable.
 
@@ -3286,7 +3286,7 @@ The coefficient-defined series ₚF\_q(a₁,…,aₚ; b₁,…,b\_q; z) = Σₙ�
 
 The rising factorials encode a systematic ratio between consecutive coefficients, which makes many special-function expansions recognizable in this form. The parameter lists determine both that ratio and whether a numerator can terminate the sequence.
 
-Denominator factors must remain valid for every term being used. A terminating numerator does not license an undefined denominator without a separately specified interpretation. Formal coefficient identities also do not settle convergence at a numerical argument; parameter counts, exceptional parameters and the argument’s location require their own analytic treatment.
+Denominator factors must remain valid for every term being used. A terminating numerator does not license an undefined denominator without a separately specified interpretation. Formal coefficient identities also do not settle convergence at a numerical argument; parameter counts, exceptional parameters, and the argument’s location require their own analytic treatment.
 
 **Also called:** Hypergeometric series.
 
@@ -3308,7 +3308,7 @@ Published Euler tables use several conventions, including compressed even indice
 
 **Also called:** Euler numbers in the sech convention.
 
-**In the worked example:** E₀ = 1, E₂ = −1, E₄ = 5 and E₆ = −61. The sequence a(n) = E₂ₙ has a(1) = −1, although E₁ = 0.
+**In the worked example:** E₀ = 1, E₂ = −1, E₄ = 5, and E₆ = −61. The sequence a(n) = E₂ₙ has a(1) = −1, although E₁ = 0.
 
 [Hand-worked example](demonstrations/EULER_PACKETS.md) · [Secant numbers](#secant-numbers) · [Exponential generating function](#exponential-generating-function) · [Formal reciprocal](#formal-reciprocal)
 
@@ -3324,7 +3324,7 @@ The positive secant values and signed sech Euler values encode related data with
 
 **Also called:** Positive Euler secant numbers.
 
-**In the worked example:** The first values are 1, 1, 5, 61, 1385, 50521 and 2702765. Thus s₆ = 2702765 is the coefficient of t¹²/12!, not t⁶/6!.
+**In the worked example:** The first values are 1, 1, 5, 61, 1385, 50521, and 2702765. Thus s₆ = 2702765 is the coefficient of t¹²/12!, not t⁶/6!.
 
 [Hand-worked example](demonstrations/EULER_PACKETS.md) · [Signed Euler numbers](#signed-euler-numbers) · [Binomial coefficient convolution](#binomial-convolution) · [Formal reciprocal](#formal-reciprocal)
 
@@ -3404,7 +3404,7 @@ The finite product (a)ₙ = a(a+1)⋯(a+n−1), with (a)₀ = 1. This is the Poc
 
 The rising factorial advances its factors upward by one, and the zero-length product is one. It provides compact coefficient formulas for hypergeometric series and for rescaled arithmetic-progression products.
 
-Notation is a common source of confusion because some sources use similar parentheses for falling products. Check the displayed factors or the stated Pochhammer convention. Reversing the direction changes roots, signs and recurrence relations, so a familiar-looking symbol alone does not justify importing another source’s formula.
+Notation is a common source of confusion because some sources use similar parentheses for falling products. Check the displayed factors or the stated Pochhammer convention. Reversing the direction changes roots, signs, and recurrence relations, so a familiar-looking symbol alone does not justify importing another source’s formula.
 
 **Also called:** Pochhammer symbol.
 
@@ -3434,7 +3434,7 @@ An infinite coefficient list written as Σₙ≥₀ aₙzⁿ and manipulated coe
 
 A formal series is treated as its entire coefficient sequence, with equality meaning agreement at every position. The variable is a bookkeeping symbol rather than a numerical input. Infinite notation is harmless for operations whose individual output coefficients have well-defined finite formulas.
 
-This makes formal inversion, residue selection and suitable composition useful independently of analytic convergence. A finite prefix verifies only a finite set of coefficient statements. To evaluate the series or bound a discarded tail at a chosen number, one must supply analytic information beyond the formal algebra.
+This makes formal inversion, residue selection, and suitable composition useful independently of analytic convergence. A finite prefix verifies only a finite set of coefficient statements. To evaluate the series or bound a discarded tail at a chosen number, one must supply analytic information beyond the formal algebra.
 
 **Also called:** Formal series.
 
@@ -3480,7 +3480,7 @@ Backward difference compares the current value with its value one step earlier. 
 
 In the falling-factorial calculus, multiplying the backward difference by x gives the degree operator. The plain backward difference alone is not that degree counter. On finite sampled signals, both directions also require a boundary rule for the sample requested outside the stored range.
 
-**Quick example:** For f(x) = x², ∇f = 2x−1 and Δf = 2x+1.
+**Quick example:** For f(x) = x², ∇f = 2x−1, and Δf = 2x+1.
 
 [Further reading](operators/POLYNOMIAL.md) · [Forward difference](#forward-difference) · [Falling-degree operator](#degree-operator) · [Polynomial translation operator](#translation-operator)
 
@@ -3488,7 +3488,7 @@ In the falling-factorial calculus, multiplying the backward difference by x give
 
 ## Signals and spectral evaluation
 
-Finite transforms, phase carries, Gaussian quadratic forms and the distinct error controls used in K-COS.
+Finite transforms, phase carries, Gaussian quadratic forms, and the distinct error controls used in K-COS.
 
 [Finite impulse response filter](#finite-impulse-response-filter) · [Polyphase carry](#polyphase-carry) · [Discrete Fourier transform](#discrete-fourier-transform) · [Discrete cosine transform](#discrete-cosine-transform) · [Gram operator](#gram-operator) · [Range core](#range-core) · [Characteristic function](#characteristic-function) · [Gaussian quadratic form](#gaussian-quadratic-form) · [COS method](#cos-method) · [Centered spectral packet](#centered-spectral-packet) · [Directed enclosure](#directed-enclosure) · [Analytic error budget](#analytic-error-budget) · [Circular shift](#circular-shift) · [Downsampling](#downsampling) · [Aliasing](#aliasing) · [Analysis filter bank](#filter-bank) · [Wavelet lifting step](#lifting-step) · [Parseval identity in chosen coordinates](#parseval-identity) · [Signal boundary convention](#boundary-condition)
 
@@ -3500,7 +3500,7 @@ A linear filter given by finitely many taps, or coefficients, applied to specifi
 
 Each tap weights one shifted copy of the input, and summing those copies forms the output. The filter is linear because its coefficients are fixed and each shift is linear. A short tap list therefore defines an operation on an entire sequence, not just on one sample.
 
-For a finite stored signal, taps alone do not determine the matrix. Circular indexing, zero extension and other boundary rules produce different endpoint outputs. Moving the filter into polyphase or wavelet coordinates must carry the actual shifts, their phase carries and the selected boundary convention.
+For a finite stored signal, taps alone do not determine the matrix. Circular indexing, zero extension, and other boundary rules produce different endpoint outputs. Moving the filter into polyphase or wavelet coordinates must carry the actual shifts, their phase carries, and the selected boundary convention.
 
 **Also called:** FIR, FIR filter, Finite convolution filter.
 
@@ -3522,7 +3522,7 @@ For a one-sample delay and even–odd phases, the new odd phase comes from the o
 
 **Also called:** Lane-boundary carry, Phase carry.
 
-**In the worked example:** For even and odd rows E and O, one backward circular shift sends the even output to ZO and the odd output to E. Its two-phase matrix is \[\[0,Z\],\[I,0\]\], with Z the half-rate delay.
+**In the worked example:** For even and odd rows E and O, one backward circular shift sends the even output to ZO, and the odd output to E. Its two-phase matrix is \[\[0,Z\],\[I,0\]\], with Z the half-rate delay.
 
 **Keep in mind:** Forward shifts place the carry in a different block from backward shifts. Its position follows from the index convention.
 
@@ -3600,7 +3600,7 @@ For a real random variable Q, φ(t) = E\[exp(itQ)\] at real frequency t. It enco
 
 The expectation averages complex phases generated by the random variable at a chosen frequency. At t=0 every phase is one, so φ(0)=1. Its real and imaginary parts capture cosine and sine averages, making it a natural input for Fourier-based distribution calculations.
 
-Unlike a moment-generating function at arbitrary real arguments, it always exists for a real random variable. That existence does not automatically give a stable finite inversion formula. Tail evaluation still needs truncation windows, mode bounds and arithmetic control in the method using the transform.
+Unlike a moment-generating function at arbitrary real arguments, it always exists for a real random variable. That existence does not automatically give a stable finite inversion formula. Tail evaluation still needs truncation windows, mode bounds, and arithmetic control in the method using the transform.
 
 **Also called:** Probability characteristic function, CF.
 
@@ -3644,7 +3644,7 @@ K-COS additionally approximates spectral transform data using packets. A justifi
 
 ### Centered spectral packet
 
-In K-COS, a nonempty group P of eigenvalues represented by its count n, mean μ and centered power sums Mₘ = Σⱼ∈P(λⱼ−μ)ᵐ. Thus M₀ = n and M₁ = 0. Truncated transform expansions also carry a remainder bound.
+In K-COS, a nonempty group P of eigenvalues represented by its count n, mean μ, and centered power sums Mₘ = Σⱼ∈P(λⱼ−μ)ᵐ. Thus M₀ = n and M₁ = 0. Truncated transform expansions also carry a remainder bound.
 
 Centering separates a packet’s location from its internal spread. The mean supplies the reference eigenvalue, while centered power sums describe deviations around it. The first centered sum vanishes by construction, simplifying the expansion used to approximate transform contributions.
 
@@ -3742,7 +3742,7 @@ A collection of filters and sampling maps sending one signal to several componen
 
 An analysis bank distributes information across several filtered streams, often followed by phase selection or downsampling. A synthesis bank reconstructs by filtering and combining those streams. Individual streams may be insufficient even when their complete collection retains the original signal.
 
-Perfect reconstruction is an identity of the combined maps, with any allowed delay or scale stated explicitly. It depends on the filters, boundary rules and sampling phases together. Checking each channel separately or retaining only its energy does not establish that joint identity.
+Perfect reconstruction is an identity of the combined maps, with any allowed delay or scale stated explicitly. It depends on the filters, boundary rules, and sampling phases together. Checking each channel separately or retaining only its energy does not establish that joint identity.
 
 **Quick example:** For a pair (u,v), the Haar analysis stores average (u+v)/2 and detail (u−v)/2; synthesis returns their sum and difference.
 
@@ -3796,7 +3796,7 @@ These choices can agree on interior outputs while disagreeing at the edges. Cons
 
 ## Smith chart and circuit synthesis
 
-Impedance, reflection, cyclic reachability and the distinction between interpolation and a circuit realization.
+Impedance, reflection, cyclic reachability, and the distinction between interpolation and a circuit realization.
 
 [Impedance](#impedance) · [Normalized impedance](#normalized-impedance) · [Admittance](#admittance) · [Reflection coefficient](#reflection-coefficient) · [Impedance Cayley transform](#cayley-transform) · [Matched load](#matched-load) · [Voltage standing-wave ratio](#vswr) · [Return loss](#return-loss) · [Lossless transmission line](#lossless-line) · [Cyclic reachability](#cyclic-reachability) · [Pole of a rational function](#pole) · [Rational function](#rational-function) · [Positive-real impedance function](#positive-real-function) · [Scalar Schur function](#schur-function) · [Interpolation](#interpolation) · [Pick matrix](#pick-matrix) · [Singular block range condition](#singular-range-condition) · [Scalar McMillan degree](#mcmillan-degree) · [Circuit realization](#circuit-realization)
 
@@ -3856,7 +3856,7 @@ The magnitude is especially useful because a lossless line preserves it. Equal m
 
 **Also called:** Gamma, Load reflection coefficient.
 
-**Quick example:** For z = (1+i)/2, Γ = (−1+2i)/5 and |Γ|² = 1/5.
+**Quick example:** For z = (1+i)/2, Γ = (−1+2i)/5, and |Γ|² = 1/5.
 
 [Further reading](demonstrations/SMITH_CHART.md) · [Impedance Cayley transform](#cayley-transform) · [Impedance](#impedance) · [Matched load](#matched-load) · [Voltage standing-wave ratio](#vswr)
 
@@ -4016,7 +4016,7 @@ The Cayley-coordinate viewpoint relates such bounded reflection functions to hal
 
 ### Interpolation
 
-Finding a function in a declared class that takes prescribed values at prescribed nodes. Feasibility, uniqueness and the range of possible unmeasured values are separate questions. A fit in an unrestricted polynomial class need not satisfy the analytic or passive constraints of a circuit model.
+Finding a function in a declared class that takes prescribed values at prescribed nodes. Feasibility, uniqueness, and the range of possible unmeasured values are separate questions. A fit in an unrestricted polynomial class need not satisfy the analytic or passive constraints of a circuit model.
 
 Interpolation first asks whether the requested values can be attained within a specified function class. Once feasible, one can ask whether the interpolant is unique, what other values it can take or how small its degree can be.
 
@@ -4078,11 +4078,11 @@ This is an input-output complexity measure, not a universal count of circuit ele
 
 ### Circuit realization
 
-A network built from the allowed components whose driving-point impedance or transfer function equals the specified function on its stated domain. The component alphabet, positivity rules and permitted transformers determine the realization problem.
+A network built from the allowed components whose driving-point impedance or transfer function equals the specified function on its stated domain. The component alphabet, positivity rules, and permitted transformers determine the realization problem.
 
-A circuit realization must reproduce the specified impedance or transfer behavior using the permitted component laws. Topology, element values and admissibility restrictions all belong to the construction. Two algebraically equivalent rational expressions need not display the same circuit directly.
+A circuit realization must reproduce the specified impedance or transfer behavior using the permitted component laws. Topology, element values, and admissibility restrictions all belong to the construction. Two algebraically equivalent rational expressions need not display the same circuit directly.
 
-Existence of an unrestricted state-space model or a Schur interpolant is therefore only part of a restricted synthesis argument. Exact realization, approximation quality and minimum component count are distinct claims. The one-inductor supplement explicitly realizes its degree-one approximation without settling the harder exact higher-degree target question.
+Existence of an unrestricted state-space model or a Schur interpolant is therefore only part of a restricted synthesis argument. Exact realization, approximation quality, and minimum component count are distinct claims. The one-inductor supplement explicitly realizes its degree-one approximation without settling the harder exact higher-degree target question.
 
 **Quick example:** The linked one-inductor example uses a series resistor 5/4 followed by a parallel resistor 9/4 and inductor 9/8 in normalized units.
 
@@ -4094,7 +4094,7 @@ Existence of an unrestricted state-space model or a Schur interpolant is therefo
 
 ## Finite quantum systems
 
-States, measurement and channels on finite complex vector spaces.
+States, measurement, and channels on finite complex vector spaces.
 
 [Complex conjugate](#complex-conjugate) · [Adjoint matrix](#adjoint) · [Unitary matrix](#unitary) · [Quantum amplitude](#amplitude) · [Density matrix](#density-matrix) · [Matrix trace](#trace) · [Born probability](#born-probability) · [Purity of a density matrix](#purity) · [Dephasing](#dephasing) · [Kraus operators](#kraus-operator) · [Hermitian matrix](#hermitian) · [Positive semidefinite matrix](#positive-semidefinite) · [Coherence in a chosen basis](#coherence) · [Qubit](#qubit) · [Global phase](#global-phase) · [Relative phase](#relative-phase) · [Pure quantum state](#pure-state) · [Mixed quantum state](#mixed-state) · [Quantum measurement effect](#quantum-effect) · [Quantum observable](#observable) · [Quantum channel](#quantum-channel) · [Quantum state tomography](#quantum-tomography) · [Selective projective measurement](#selective-measurement)
 
@@ -4262,7 +4262,7 @@ A Hermitian matrix A for which v\*Av is nonnegative for every vector v. Zero eig
 
 Positive semidefiniteness rules out negative quadratic energy in every direction while allowing invisible zero directions. For finite Hermitian matrices it is equivalent to all eigenvalues being nonnegative. One exact negative quadratic-form value is enough to disprove it.
 
-This condition appears in density matrices, covariance matrices, Gram operators and Pick feasibility matrices, but their other constraints differ. Singular cases also need care in block elimination: replacing an inverse by a pseudoinverse without a range condition can miss an actual positivity obstruction.
+This condition appears in density matrices, covariance matrices, Gram operators, and Pick feasibility matrices, but their other constraints differ. Singular cases also need care in block elimination: replacing an inverse by a pseudoinverse without a range condition can miss an actual positivity obstruction.
 
 **Also called:** PSD, PSD matrix.
 
@@ -4328,7 +4328,7 @@ The selected basis and nonzero amplitudes matter to the comparison. In the demon
 
 ### Pure quantum state
 
-A density matrix of the form ρ = |ψ⟩⟨ψ| for a unit vector ψ. In finite dimensions it has rank one, satisfies ρ² = ρ and has purity tr(ρ²) = 1. The vector representative is determined only up to global phase.
+A density matrix of the form ρ = |ψ⟩⟨ψ| for a unit vector ψ. In finite dimensions it has rank one, satisfies ρ² = ρ, and has purity tr(ρ²) = 1. The vector representative is determined only up to global phase.
 
 A pure-state density matrix is the orthogonal projector onto one normalized state direction. The unit-vector representative carries no additional information through its overall phase, which is why different phase representatives give the same projector.
 
@@ -4380,7 +4380,7 @@ In the finite setting, a Hermitian operator whose real eigenvalues label possibl
 
 An observable packages numerical outcome labels together with their spectral projectors. The Born probabilities determine how likely those outcomes are, and their weighted average equals tr(Aρ). Its expectation is therefore a summary of a measurement distribution, not necessarily an individual outcome.
 
-Different observables ask different questions about the same state. The Pauli X, Y and Z settings in the example reveal different combinations of its entries. Noncommuting observables need not share a measurement basis, so their probability descriptions cannot be identified simply by reusing coordinate populations.
+Different observables ask different questions about the same state. The Pauli X, Y, and Z settings in the example reveal different combinations of its entries. Noncommuting observables need not share a measurement basis, so their probability descriptions cannot be identified simply by reusing coordinate populations.
 
 **Quick example:** The Pauli matrix Z = diag(1,−1) has mean 9/25−16/25 = −7/25 in the demonstration state.
 
@@ -4406,15 +4406,15 @@ Unitary evolution is one channel, but dephasing and damping can lose information
 
 ### Quantum state tomography
 
-Reconstructing a state from probabilities for a sufficiently informative collection of measurement settings. For a qubit, exact X, Y and Z outcome probabilities determine its density matrix. Experimental estimates introduce sampling error and must still describe a positive state.
+Reconstructing a state from probabilities for a sufficiently informative collection of measurement settings. For a qubit, exact X, Y, and Z outcome probabilities determine its density matrix. Experimental estimates introduce sampling error and must still describe a positive state.
 
-Tomography treats measurement probabilities as a representation of the unknown state. Informationally sufficient settings permit reconstruction of all its independent matrix parameters. For a qubit, X, Y and Z settings provide the three real parameters left after Hermitian symmetry and trace normalization.
+Tomography treats measurement probabilities as a representation of the unknown state. Informationally sufficient settings permit reconstruction of all its independent matrix parameters. For a qubit, X, Y, and Z settings provide the three real parameters left after Hermitian symmetry and trace normalization.
 
 The demonstration uses exact ensemble probabilities, so inversion is an exact algebraic calculation. Experimental frequencies are estimates and can yield an unconstrained reconstructed matrix that is not positive. Statistical uncertainty and state-validity constraints must therefore be handled in an actual estimation procedure.
 
 **Also called:** State tomography.
 
-**Quick example:** For the phase-one demonstration state, X-plus = 49/50, Y-plus = 1/2 and Z-plus = 9/25 recover the upper-right entry 12/25.
+**Quick example:** For the phase-one demonstration state, X-plus = 49/50, Y-plus = 1/2, and Z-plus = 9/25 recover the upper-right entry 12/25.
 
 **Keep in mind:** One outcome from a single copy does not supply the three ensemble probabilities.
 
@@ -4526,7 +4526,7 @@ The smallest subfield of a field. In characteristic p it consists of the p scala
 
 Every field contains a canonical copy of the arithmetic generated by its multiplicative identity and the required inverses. Positive characteristic gives the finite prime field Fₚ; characteristic zero gives a copy of Q. Other field elements can then be regarded as extending this starting scalar system.
 
-The prime field should not be confused with every finite field of the same characteristic. F₂₅ contains F₅ but has additional elements and extension degree two over it. That distinction affects Frobenius, trace and norm formulas.
+The prime field should not be confused with every finite field of the same characteristic. F₂₅ contains F₅ but has additional elements and extension degree two over it. That distinction affects Frobenius, trace, and norm formulas.
 
 **Quick example:** The field F₅ has five elements. Its nonzero element 2 has inverse 3.
 
@@ -4604,7 +4604,7 @@ The no-root test is sufficient for irreducibility only in degrees two and three.
 
 ### Commutative ring with identity
 
-A system with addition, subtraction and commutative multiplication satisfying the ring laws and having a multiplicative identity. A nonzero element need not have a multiplicative inverse.
+A system with addition, subtraction, and commutative multiplication satisfying the ring laws and having a multiplicative identity. A nonzero element need not have a multiplicative inverse.
 
 A ring retains addition and multiplication while allowing more varied division behavior than a field. It may contain nonzero nonunits or zero divisors. The glossary’s convention is commutative and includes an identity, so those assumptions should be checked when another work uses the same word differently.
 
@@ -4636,7 +4636,7 @@ A description of a module by generators and relations. A finite matrix A: Rᵐ �
 
 Generators describe possible formal coordinates, while relations identify combinations that represent zero. A presentation matrix maps relation coordinates into generator coordinates, and taking its cokernel imposes those relations on the free generator module.
 
-Different presentation matrices can describe isomorphic modules, so presentation-dependent entries should be distinguished from module invariants. The matrix’s sizes, coefficient ring and direction are essential. Over a general ring, treating it as an ordinary real matrix can discard the arithmetic structure the presentation was meant to retain.
+Different presentation matrices can describe isomorphic modules, so presentation-dependent entries should be distinguished from module invariants. The matrix’s sizes, coefficient ring, and direction are essential. Over a general ring, treating it as an ordinary real matrix can discard the arithmetic structure the presentation was meant to retain.
 
 [Hand-worked example](examples/20_SUPPORT_AND_MULTIPLICITY.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#support-multiplicity) · [Module](#module) · [Cokernel](#cokernel) · [Image](#image)
 
@@ -4716,7 +4716,7 @@ An additive subgroup of a commutative ring closed under multiplication by every 
 
 An ideal contains scalar combinations that remain within it even after multiplication by arbitrary ring elements. This absorption property allows a quotient ring to have well-defined multiplication, because changing a representative by an ideal element does not change its product class.
 
-A principal ideal (f) records all multiples of one element. Different generators can give the same ideal when they differ by a unit. Ideals are therefore more structural than the choice of one displayed equation, and they underlie annihilators, Fitting invariants and prime-local support.
+A principal ideal (f) records all multiples of one element. Different generators can give the same ideal when they differ by a unit. Ideals are therefore more structural than the choice of one displayed equation, and they underlie annihilators, Fitting invariants, and prime-local support.
 
 **Quick example:** The even integers form the ideal (2) in Z: multiplying an even integer by any integer stays even.
 
@@ -4792,7 +4792,7 @@ The least positive integer p for which adding the multiplicative identity to its
 
 Characteristic describes how ordinary integer coefficients are interpreted inside a field. In characteristic p, the integer p becomes zero, so factorials and denominators containing p cannot be inverted there. In characteristic zero, no positive integer becomes zero.
 
-This affects derivative coefficients, eigenvalue degree labels and roots-of-unity averages. A monic triangular polynomial basis change can remain invertible even when a factorial-based sampling formula fails. Checking characteristic therefore separates a failure of one formula from a failure of the underlying representation itself.
+This affects derivative coefficients, eigenvalue degree labels, and roots-of-unity averages. A monic triangular polynomial basis change can remain invertible even when a factorial-based sampling formula fails. Checking characteristic therefore separates a failure of one formula from a failure of the underlying representation itself.
 
 **Quick example:** In the field with three elements, 1+1+1 = 0. A formula dividing by 3 cannot be used there.
 
@@ -4828,7 +4828,7 @@ The part of the declared full state omitted by the current observation or summar
 
 Hidden state includes whatever the current representation omits. Its significance comes from how the full dynamics couples it to the visible coordinates, not from whether it is directly measured now. An initially invisible difference can return to the visible part later.
 
-The block update makes those pathways explicit through visible-to-hidden, hidden-to-hidden and hidden-to-visible maps. Ignoring the hidden state can introduce memory into the visible equation. A preparation fixing hidden coordinates reduces one kind of ambiguity, but need not make every later visible state sufficient on its own.
+The block update makes those pathways explicit through visible-to-hidden, hidden-to-hidden, and hidden-to-visible maps. Ignoring the hidden state can introduce memory into the visible equation. A preparation fixing hidden coordinates reduces one kind of ambiguity, but need not make every later visible state sufficient on its own.
 
 [Hand-worked example](examples/22_HIDDEN_MEMORY.md) · [Papers, proofs, Lean, and code](LEARNING_MAP.md#hidden-memory) · [Visible state](#visible-state) · [Discrete memory maps](#memory-kernel)
 
@@ -4978,7 +4978,7 @@ Several different models can agree on a requested prediction even when their uno
 
 ### Finite linear state-space realization
 
-A description of a discrete linear system by xₙ₊₁ = Axₙ+Buₙ and yₙ = Cxₙ+Duₙ. It declares the retained state x, input u and observation y. Different coordinate systems can describe the same input-output behavior.
+A description of a discrete linear system by xₙ₊₁ = Axₙ+Buₙ and yₙ = Cxₙ+Duₙ. It declares the retained state x, input u, and observation y. Different coordinate systems can describe the same input-output behavior.
 
 The state stores the information used to continue the system, while the observation extracts the quantity reported externally. Inputs affect the next state through B and can contribute immediately to the output through D. The matrices therefore have different typed roles despite appearing in one model.
 
@@ -5022,7 +5022,7 @@ Existence of a fixed point does not establish uniqueness or attraction. Nearby s
 
 ## Inference and probability
 
-The model, observation and Gaussian calculations used in the inference example.
+The model, observation, and Gaussian calculations used in the inference example.
 
 [Finite-dimensional Gaussian model](#gaussian-model) · [Prior distribution](#prior) · [Likelihood](#likelihood) · [Posterior distribution](#posterior) · [Covariance matrix](#covariance) · [Precision matrix](#precision-matrix) · [Observation innovation](#innovation) · [Exact Gaussian gain](#gaussian-gain) · [Joseph covariance](#joseph-covariance)
 
@@ -5030,7 +5030,7 @@ The model, observation and Gaussian calculations used in the inference example.
 
 ### Finite-dimensional Gaussian model
 
-A model with a Gaussian state and specified linear observations with Gaussian noise. The tutorial supplies an independent noise variable, a prior mean and covariance, an observation matrix and a positive noise variance.
+A model with a Gaussian state and specified linear observations with Gaussian noise. The tutorial supplies an independent noise variable, a prior mean and covariance, an observation matrix, and a positive noise variance.
 
 The model specifies a prior state distribution and an observation mechanism, including the noise distribution and its independence assumptions. Linearity and Gaussian structure make the conditional mean and covariance computable through explicit finite matrix formulas.
 
@@ -5118,7 +5118,7 @@ The difference d=y−Hm between an observation and its predicted mean in the lin
 
 The innovation measures how surprising the observation is relative to its predicted mean before updating. Its covariance includes both projected state uncertainty and observation noise, so a given discrepancy can have different significance at different uncertainty scales.
 
-The gain maps this observation-space discrepancy back into a state-space correction. The subtraction convention matters for its sign. An innovation is also not by itself a diagnosis of model error: it combines random state variation, noise and any mismatch present in the assumed model.
+The gain maps this observation-space discrepancy back into a state-space correction. The subtraction convention matters for its sign. An innovation is also not by itself a diagnosis of model error: it combines random state variation, noise, and any mismatch present in the assumed model.
 
 **Also called:** Observation residual.
 
