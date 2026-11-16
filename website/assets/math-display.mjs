@@ -104,6 +104,11 @@ let controller;
 export function enhanceMath(root){return controller?.enhance(root);}
 export function clearMath(root){window.MathJax?.typesetClear?.([root]);}
 if(typeof document!=='undefined'&&!window.KomorebiMath){
+  // Create the shared control once, without repeating it in every chapter shell.
+  if(!document.getElementById('site-math-display')){
+    const preference=document.createElement('div');preference.className='site-preferences';preference.innerHTML="<label class=\"math-display-control\" hidden for=\"site-math-display\">Math display<select id=\"site-math-display\" aria-describedby=\"site-math-help\"><option value=\"typeset\">Typeset math</option><option value=\"plain\">Plain text</option></select></label><span id=\"site-math-help\" class=\"math-display-status\">Choose typeset formulas or their original plain text. This choice is shared across the site.</span><span id=\"site-math-status\" class=\"math-display-status\" role=\"status\" aria-live=\"polite\"></span>";
+    const header=document.querySelector('.site-header');if(header)header.after(preference);else document.body.prepend(preference);
+  }
   const storage={getItem:key=>localStorage.getItem(key),setItem:(key,value)=>localStorage.setItem(key,value)};
   let mode=readMathDisplay(storage),scheduled=false,queue=Promise.resolve();
   const originals=new WeakMap(),pairs=new Set(),hosts=new Set(),seen=new WeakSet(),seenText=new WeakMap(),plainRecords=new WeakMap();

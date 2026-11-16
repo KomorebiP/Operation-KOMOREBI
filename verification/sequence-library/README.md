@@ -58,3 +58,7 @@ synchronizes across pages and tabs. Syntax coverage is recorded in
 `node tools/check_sequence_typesetting.cjs PREVIEW_URL REPORT_JSON` after
 building a site and loading its pinned runtime. It tests presentation syntax,
 not the truth of formula identities.
+
+The shared math control is constructed once by its module. The 121-chapter
+Machine-Native Reasoning reader retains its existing 1,800,000-byte shell
+budget; the generated shells occupy 1,751,895 bytes with the shared control.
