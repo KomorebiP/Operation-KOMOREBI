@@ -63,7 +63,7 @@ def replay(root=ROOT):
     stream=io.BytesIO()
     with zipfile.ZipFile(stream,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as z:
         for path,raw in sorted(files.items()):
-            info=zipfile.ZipInfo(path,(2026,11,16,0,0,0));info.compress_type=zipfile.ZIP_DEFLATED;info.external_attr=0o100644<<16
+            info=zipfile.ZipInfo(path,(2026,11,16,0,0,0));info.create_system=0;info.compress_type=zipfile.ZIP_DEFLATED;info.external_attr=0o100644<<16
             z.writestr(info,raw)
     return stream.getvalue()
 

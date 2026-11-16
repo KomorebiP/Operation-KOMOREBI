@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest import mock
 import zipfile
 from chemistry_responses_data import build as data_build,DATA,VERIFY,replay
 from chemistry_responses import build
@@ -35,7 +36,10 @@ class ChemistryResponsesTests(unittest.TestCase):
 
     def test_replay_is_deterministic_and_complete(self):
         raw=replay();self.assertEqual(raw,replay())
+        with mock.patch('zipfile.sys.platform','linux'):
+            self.assertEqual(raw,replay())
         with zipfile.ZipFile(io.BytesIO(raw)) as z:
+            self.assertTrue(all(info.create_system==0 for info in z.infolist()))
             package=json.loads(z.read('PACKAGE.json'))
             self.assertEqual(len(z.namelist()),len(set(z.namelist())))
             for item in package['files']:
