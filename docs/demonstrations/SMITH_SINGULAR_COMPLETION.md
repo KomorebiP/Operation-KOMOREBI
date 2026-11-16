@@ -5,7 +5,7 @@
 **Author:** Komorebi P.  
 **Status:** A mathematical supplement to the 11 November 2026 draft. The proofs
 below complete two specific singular-data cases left outside its strict
-eigenvalue-margin argument. The proofs and source mapping have been self-reviewed.
+eigenvalue-margin argument. The review and source mapping are self-review.
 
 A singular Pick matrix has no positive smallest-eigenvalue margin. It can
 nevertheless determine an unmeasured value exactly. The missing condition is
