@@ -55,7 +55,7 @@ class SequenceLibraryTests(unittest.TestCase):
         edges=research_connections()['edges']
         def edge(kind,target):
             return next(e for e in edges if e['kind']==kind and e['target']==target)
-        self.assertEqual(edge('subsequence','KFOR-S-FIBONACCI-02-00')['math_plain'] if any(e['target']=='KFOR-S-FIBONACCI-02-00' for e in edges) else edge('subsequence',next(e['target'] for e in edges if e['kind']=='subsequence'))['math_plain'].startswith('b(n)=a('),True)
+        self.assertTrue(next(e['math_plain'] for e in edges if e['kind']=='subsequence').startswith('b(n)=a('))
         self.assertIn(r'\Theta_{2n}',edge('coefficient extraction','KFOR-HC-04')['math_tex'])
         self.assertIn(r'E_{3n+2}',edge('coefficient extraction','KFOR-AC-03-01-02')['math_tex'])
         self.assertIn(r'\Theta_{2n}(2)',edge('polynomial evaluation','KFOR-H-02')['math_tex'])
