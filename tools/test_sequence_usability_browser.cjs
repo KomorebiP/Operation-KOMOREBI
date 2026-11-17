@@ -84,8 +84,11 @@ async function visit(page,name,kind){
       await page.getByRole('button',{name:'Try Fibonacci + Lucas',exact:true}).click();
       assert.equal(await page.locator('#sw-sources>li').count(),2);
       await fit(page);
-      await visit(page,'sequence-research.html#research-families','research');
+      await visit(page,'sequence-research.html','research');
       assert.equal(await page.locator('#sl-search,#tr-form,#sw-form,#sl-oeis-form').count(),0);
+      assert.equal(await page.locator('#research-families .sl-topic-disclosure').evaluate(el=>el.open),true,
+        'The dedicated research directory must show its family groups on arrival');
+      assert.equal(await page.locator('#research-families .sl-research-group ul a:visible').count(),9);
       assert.equal(await page.locator('#research-families .sl-research-group').count(),4);
       assert.equal(await page.locator('#research-families .sl-research-group ul a').count(),9);
       assert.equal(await page.locator('#generalized').count(),1);
@@ -163,6 +166,15 @@ async function visit(page,name,kind){
       assert.ok(page.url().includes('sequence-modular.html'),'Old Research modular link must redirect');
       await visit(page,'sequence-oeis.html#oeis','oeis');
       assert.equal(await page.locator('#sl-search,#tr-form,#sw-form').count(),0);
+      const oeisAssets=await page.evaluate(()=>performance.getEntriesByType('resource')
+        .map(entry=>new URL(entry.name).pathname.split('/').at(-1)));
+      assert.ok(oeisAssets.includes('sequence-oeis-meta.json'),
+        'The standalone OEIS page needs its small snapshot identifier');
+      assert.equal(oeisAssets.includes('sequence-library-data.json'),false,
+        'The OEIS finder should not fetch the full integer catalogue before search');
+      assert.equal(oeisAssets.includes('sequence-generalized-data.json'),false,
+        'The OEIS finder should not fetch generalized family data before search');
+      assert.match(await page.locator('[data-library]').getAttribute('data-oeis-snapshot'),/^[0-9a-f]{64}$/);
       assert.equal(await page.locator('#sl-oeis-query').isVisible(),true);
       assert.equal(await page.locator('#oeis>.sl-topic-disclosure').evaluate(el=>el.open),true);
       assert.equal(await page.locator('#sl-oeis-results').count(),1);
@@ -199,7 +211,7 @@ async function visit(page,name,kind){
     await page.locator('.sr-transfer-example>summary').click();
     assert.equal(await page.locator('.sr-transfer-example').evaluate(el=>el.open),true);
     await page.goto(href('sequence-research.html'));
-    await page.locator('#research-families .sl-topic-disclosure>summary').click();
+    assert.equal(await page.locator('#research-families .sl-topic-disclosure').evaluate(el=>el.open),true);
     assert.equal(await page.locator('#research-families .sl-research-group ul a').count(),9);
     assert.equal(await page.locator('.sl-research-choices article').count(),4);
     assert.equal(await page.locator('#research-graph a[href^="sequence-connections.html"]').count(),1);
