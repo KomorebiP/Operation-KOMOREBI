@@ -249,6 +249,7 @@ def build(site,atlas):
         ('comparison','sequence-compare.html#comparison','Sequence comparison'),
         ('research-families','sequence-research.html#research-families','Research families'),
         ('generalized','sequence-research.html#generalized','Generalized families'),
+        ('family-explorer','sequence-research.html#generalized','Generalized family explorer'),
         ('research-graph','sequence-research.html#research-graph','Connection graph'),
         ('identify','sequence-research.html#identify','Sequence identification'),
         ('modular-dynamics','sequence-research.html#modular-dynamics','Modular dynamics'),
