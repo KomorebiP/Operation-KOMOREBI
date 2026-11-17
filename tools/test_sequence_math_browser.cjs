@@ -53,7 +53,7 @@ async function fit(page) {
       const exact=await page.locator('#st-row-polynomial [data-math-plain]').textContent();
       assert.equal(exact,'P_(3,2)(r) = 9r + 10r^2');
       assert.ok(await page.locator('#st-row-polynomial mjx-container').count()>=1,'Row polynomial was not typeset');
-      assert.ok(await page.locator('#triangle .sr-triangle-index mjx-container').count()>=1,'Index map was not typeset');
+      assert.ok(await page.locator('#triangle .math-pair:has(.sr-triangle-index) mjx-container').count()>=1,'Index map was not typeset');
       await page.selectOption('#site-math-display','plain');
       assert.equal(await page.locator('#st-row-polynomial [data-math-plain]').isVisible(),true);
       await page.selectOption('#site-math-display','typeset');
