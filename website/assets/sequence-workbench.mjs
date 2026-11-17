@@ -149,7 +149,7 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
     picture.append(svg('line',{x1:left,x2:width-right,y1:bottom,y2:bottom,stroke:'#87988b','data-plot-axis':'true'}));
     const xLabel=svg('text',{x:left+plotWidth/2,y:bottom+42,'font-size':mobile?11:12,'text-anchor':'middle','data-x-axis-title':'true','aria-label':xTitle},short(xTitle,Math.max(12,Math.floor(plotWidth/7))));
     picture.append(xLabel);
-    const yLabel=svg('text',{x:16,y:(top+bottom)/2,'font-size':mobile?10:12,'text-anchor':'middle',transform:'rotate(-90 16 '+((top+bottom)/2)+')','data-y-axis-title':'true','aria-label':yTitle},short(yTitle,Math.max(10,Math.floor((bottom-top)/7))));
+    const yLabel=svg('text',{x:16,y:(top+bottom)/2,'font-size':mobile?10:12,'text-anchor':'middle',transform:'rotate(-90 16 '+((top+bottom)/2)+')','data-y-axis-title':'true','aria-label':yTitle},short(yTitle,Math.max(10,Math.floor((bottom-top)/(mobile?5:6)))));
     picture.append(yLabel);
     const focusables=[],labels=[],patterns=['','7 4','2 4','9 3 2 3'];
     const inspected=(source,row)=>`${source.id} · ${source.indexKind} ${row.index} · window position ${row.position} · original ${row.raw} · ${state.view==='mod'?'residue':'displayed'} ${row.value}`;
