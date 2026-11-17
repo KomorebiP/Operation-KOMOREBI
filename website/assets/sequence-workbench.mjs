@@ -28,7 +28,10 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
     <label id="sw-link-wrap" for="sw-link" hidden>Copy this comparison link<input id="sw-link" readonly></label>
     <details id="sw-data"><summary>Exact comparison table</summary><div class="sar-scroll" role="region" aria-label="Exact comparison values" tabindex="0"><table><caption>Stored indices and displayed exact integers</caption><thead><tr><th scope="col">Series</th><th scope="col">Index convention</th><th scope="col">Index / position</th><th scope="col">Window position</th><th scope="col">Original integer</th><th scope="col">Displayed integer</th></tr></thead><tbody></tbody></table></div></details>`;
   // Keep the comparison task beside search and transfers, ahead of optional research tools.
-  (root.querySelector('#transfers')||root.querySelector('#oeis')).after(section);
+  if(!root.querySelector('#comparison')){
+    const previous=root.querySelector('#transfers')||root.querySelector('#oeis');
+    if(previous)previous.after(section);else root.append(section);
+  }
   const $=id=>section.querySelector('#sw-'+id);let sources=[],state={...WORKBENCH_DEFAULTS},result=null,activeKey=null;
   const say=text=>{$('status').textContent=text;},fail=error=>{$('error').textContent=error.message;$('error').hidden=false;};
   try{const linked=readWorkbenchLink(location.href,entries,snapshot);if(linked){sources=linked.sources;state=linked.state;}}catch(error){fail(error);}
