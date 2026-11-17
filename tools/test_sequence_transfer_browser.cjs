@@ -51,8 +51,8 @@ async function run(){
       assert.equal(await page.locator('#tr-matrices .sr-matrices mjx-container').count(),2);
       assert.equal(await page.locator('#tr-matrices [data-mml-node=merror],#tr-matrices mjx-merror').count(),0);
       await page.getByRole('button',{name:'Copy displayed matrices as LaTeX',exact:true}).click();
-      assert.match(await page.evaluate(()=>navigator.clipboard.readText()),/L\\(H\\)=\\\\begin\\{pmatrix\\}/);
-      assert.match(await page.evaluate(()=>navigator.clipboard.readText()),/L_\\{8\\}\\(K\\)L_\\{8\\}\\(H\\)=I_\\{8\\}/);
+      assert.ok((await page.evaluate(()=>navigator.clipboard.readText())).includes("L(H)=\\begin{pmatrix}"));
+      assert.ok((await page.evaluate(()=>navigator.clipboard.readText())).includes("L_{8}(K)L_{8}(H)=I_{8}"));
       await page.selectOption('#site-math-display','plain');
       assert.equal(await page.locator('#tr-matrices .sr-matrices [data-math-plain]').first().isVisible(),true);
       await page.selectOption('#site-math-display','typeset');
