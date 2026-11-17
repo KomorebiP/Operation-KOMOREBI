@@ -206,7 +206,7 @@ export function mountTransfers(entries,host){
     }catch(problem){
       composeError.textContent=problem.message;composeError.hidden=false;
       composeVia.setAttribute('aria-invalid','true');
-      if(!composition){composeOutput.hidden=true;composeExport.disabled=composeCopy.disabled=true;}
+      composition=null;clearMath(composeOutput);composeOutput.replaceChildren();composeOutput.hidden=true;composeExport.disabled=composeCopy.disabled=true;
     }
   }
   function render(map,a,b,update){
