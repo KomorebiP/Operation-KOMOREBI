@@ -24,6 +24,20 @@ class SequenceLibraryTests(unittest.TestCase):
             entry=next(x for x in catalogue() if x['kind']==kind)
             self.assertTrue(any(f['kind']=='hypergeometric' for f in formula_variants(entry)))
 
+    def test_research_tools_have_disjoint_reading_sections(self):
+        from sequence_generalized import sections
+        ids=('generalized','research-graph','identify','modular-dynamics','research-notebooks')
+        complete=sections()
+        for identifier in ids:
+            part=sections(only=[identifier])
+            self.assertIn('id="'+identifier+'"',part)
+            self.assertEqual(part.count('<section id='),1)
+            self.assertIn(part,complete)
+            self.assertTrue(part.endswith('</section>'))
+        self.assertEqual(sections(only=['generalized','research-graph']).count('<section id='),2)
+        with self.assertRaises(ValueError):
+            sections(only=['missing-tool'])
+
     def test_research_family_directory_covers_all_indexed_records(self):
         from collections import Counter
         entries=library_entries(catalogue())
