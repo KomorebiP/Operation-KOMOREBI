@@ -74,7 +74,7 @@ def build(site,atlas):
         bundle.writestr(info,'Exact formula catalogue. Python 3.10+ standard library. Text sources use UTF-8/LF for portable reproduction.\nRun: python tools/sequence_formula_catalogue.py --id KFOR-S-catalan-03-01\nExport all records: python tools/sequence_formula_catalogue.py --output records.json\nScalar records store 24 terms beginning at their explicit offsets, except standard k-bonacci records, which store 48. Coefficient triangles store complete rows n=0..12, including zeros. Triangle j is a flat cell index. Its row and column are n and k. Parameter records are not claims of novelty or pairwise distinctness.\n')
     generalized=generalized_catalogue(entries)
     site.write('assets/sequence-generalized-data.json',json.dumps(generalized,ensure_ascii=False,separators=(',',':'))+'\n')
-    scripts=['math-display.mjs','sequence-research-ui.mjs','sequence-reading-theme.mjs','sequence-oeis-core.mjs','sequence-family-core.mjs','sequence-transfer-core.mjs','sequence-math.mjs','sequence-graph-core.mjs','sequence-modular-core.mjs','sequence-discovery-core.mjs','sequence-notebook-core.mjs','sequence-research-worker.mjs','sequence-research-common.mjs','sequence-oeis-worker.mjs','sequence-oeis-client.mjs','sequence-workbench-core.mjs','sequence-workbench.mjs','sequence-triangle-core.mjs','sequence-triangle.mjs','sequence-transfers.mjs','sequence-families-ui.mjs','sequence-connections-ui.mjs','sequence-identification-ui.mjs','sequence-modular-ui.mjs','sequence-notebooks-ui.mjs','sequence-research-studio.mjs','sequence-library-search.mjs','sequence-library.js']
+    scripts=['math-display.mjs','sequence-research-ui.mjs','sequence-reading-theme.mjs','sequence-oeis-core.mjs','sequence-family-core.mjs','sequence-transfer-core.mjs','sequence-math.mjs','sequence-graph-core.mjs','sequence-modular-core.mjs','sequence-discovery-core.mjs','sequence-notebook-core.mjs','sequence-research-worker.mjs','sequence-research-common.mjs','sequence-oeis-worker.mjs','sequence-oeis-client.mjs','sequence-workbench-core.mjs','sequence-workbench.mjs','sequence-triangle-core.mjs','sequence-triangle.mjs','sequence-transfers.mjs','sequence-families-ui.mjs','sequence-connections-ui.mjs','sequence-identification-ui.mjs','sequence-modular-ui.mjs','sequence-notebooks-ui.mjs','sequence-library-membership.mjs','sequence-research-studio.mjs','sequence-library-search.mjs','sequence-library.js']
     for name in scripts:
         content=(site.root/'website/assets'/name).read_text(encoding='utf-8')
         content=content.replace('__OEIS_TERMS_SHA256__',snapshot['stripped_sha256']).replace('__OEIS_NAMES_SHA256__',snapshot['names_sha256'])
@@ -84,8 +84,9 @@ def build(site,atlas):
         site.write('assets/'+name,content)
     site.write('assets/sequence-library.css',(site.root/'website/assets/sequence-library.css').read_text(encoding='utf-8'))
     site.write('assets/sequence-research.css',(site.root/'website/assets/sequence-research.css').read_text(encoding='utf-8'))
-    def wrap(body,prefix='',entry=None,family=None):
+    def wrap(body,prefix='',entry=None,family=None,page_kind=None):
         attrs=' data-entry="'+e(entry['id'])+'.json"' if entry else (' data-family="'+e(family)+'"' if family else '')
+        if page_kind:attrs+=' data-page="'+e(page_kind,quote=True)+'"'
         return ''.join('<link rel="stylesheet" href="'+prefix+'assets/'+name+'?v='+hashlib.sha256((site.output/'assets'/name).read_bytes()).hexdigest()[:12]+'">' for name in ['sequence-archive.css','sequence-plot-options.css','sequence-library.css','sequence-reading.css','sequence-research.css'])+'<div class="sar sl-library" data-library'+attrs+'>'+body+'</div><script type="module" src="'+prefix+'assets/sequence-library.js?v='+hashlib.sha256((site.output/'assets/sequence-library.js').read_bytes()).hexdigest()[:12]+'"></script>'
     site.write('assets/sequence-research-connections.json',json.dumps(research_connections(),ensure_ascii=False,separators=(',',':'))+'\n')
     generalized_pages(site,generalized,wrap)
@@ -93,7 +94,20 @@ def build(site,atlas):
     kinds=sorted({x['kind'] for x in entries});types=sorted({f['kind'] for x in entries for f in x['formulas']});statuses=sorted({x['status'] for x in entries})
     collections=[('', 'All records',total)]+[(key,label,sum(x['collection']==key for x in entries)) for key,label in [('formulas','Formula families'),('atlas','Curated sequences'),('recovered','Research archive')]]
     collection_buttons='<div class="sl-collections" role="group" aria-label="Search collections">'+''.join('<button type="button" data-collection="'+key+'" aria-pressed="'+('true' if not key else 'false')+'">'+label+' <span>'+f'{count:,}'+'</span></button>' for key,label,count in collections)+'</div>'
-    header='<a class="sl-skip" href="#library-search">Skip to sequence search</a><header class="sl-hero"><p class="sar-kicker">Komorebi / Sequence library</p><h1>Sequence library</h1><p class="sar-lede">Find exact integer sequences, inspect their definitions, or transfer coefficients between two records. Advanced research tools are available below.</p><div class="sar-stats"><span><strong>'+f'{total:,}'+'</strong> sequence records</span><span><strong>'+f'{representations:,}'+'</strong> formula representations</span><span><strong>'+f'{snapshot["sequence_count"]:,}'+'</strong> OEIS reference records</span></div><nav class="sl-primary-nav" aria-label="Primary sequence tasks"><a href="#library-search">Search sequences</a><a href="#transfers">Transfer sequences</a><a href="#comparison">Compare records</a></nav><details class="sl-nav-more"><summary>Other tools and reference pages</summary><nav aria-label="More sequence tools"><a href="#generalized">Generalized families</a><a href="#research-graph">Connection graph</a><a href="#identify">Identify terms</a><a href="#modular-dynamics">Modular dynamics</a><a href="#research-notebooks">Research notebooks</a><a href="#research-families">Research families</a><a href="#oeis">Match with OEIS</a><a href="sequence-explorer.html#explorer">Curated generators</a><a href="sequence-library/index.html">Complete index</a></nav></details></header>'
+    def page_nav(active):
+        pages=[('Search','sequence-library.html','search'),('Transfer','sequence-transfers.html#transfers','transfer'),('Compare','sequence-compare.html#comparison','compare'),('Research','sequence-research.html#research-families','research'),('OEIS','sequence-oeis.html#oeis','oeis')]
+        return '<nav class="sl-page-tabs" aria-label="Sequence Library pages">'+''.join('<a href="'+url+'"'+(' aria-current="page"' if active==key else '')+'>'+label+'</a>' for label,url,key in pages)+'</nav>'
+    def page_heading(title,description,active,anchor):
+        return ('<a class="sl-skip" href="#'+anchor+'">Skip to '+e(title)+'</a>'
+                '<header class="sl-section-head"><p class="sar-kicker">Komorebi / Sequence Library</p>'
+                '<h1>'+e(title)+'</h1><p class="sl-section-lede">'+e(description)+'</p>'
+                +page_nav(active)+'</header>')
+    header=('<a class="sl-skip" href="#library-search">Skip to sequence search</a>'
+            '<header class="sl-hero"><p class="sar-kicker">Komorebi / Sequence Library</p>'
+            '<h1>Sequence Library</h1>'
+            '<p class="sar-lede">Search exact sequence records and inspect their formulas and stored terms. Open a dedicated page for transfers, comparison, research or OEIS.</p>'
+            '<p class="sl-figures"><strong>'+f'{total:,}'+'</strong> records · <strong>'+f'{representations:,}'+'</strong> representations · <strong>'+f'{snapshot["sequence_count"]:,}'+'</strong> OEIS references</p>'
+            +page_nav('search')+'</header>')
     research_entries=[item for item in entries if 'research-derived' in item['tags']]
     research_count=len(research_entries)
     triangle_count=sum('triangle' in item['tags'] for item in entries)
@@ -171,13 +185,13 @@ def build(site,atlas):
 <p>Words separated by spaces must all match unless joined with <code>|</code>. Quoted phrases stay together. A question mark represents one unknown integer in a term pattern. All stored formula variants are searchable.</p>
 </details><p id="sl-count" role="status" aria-live="polite">Browse the <a href="sequence-library/index.html">complete static index</a> without JavaScript.</p><div id="sl-result-layout" class="sl-layout-controls" role="group" aria-label="Sequence result layout" hidden><span>Results view</span><button type="button" data-layout="compact" aria-pressed="true">Compact rows</button><button type="button" data-layout="cards" aria-pressed="false">Cards</button></div><div id="sl-empty" class="sl-empty" hidden><h3>No matches in this view</h3><p>Try a shorter query or remove a filter. Clearing the search keeps your current view.</p><button id="sl-reset" type="button">Clear search and filters</button></div><ol id="sl-results" class="sl-results" tabindex="-1" aria-label="Sequence search results"></ol><div id="sl-pages" class="sp-actions" hidden><button id="sl-previous" type="button">Previous results</button><span id="sl-page"></span><button id="sl-next" type="button">Next results</button></div></section>'''
     mb=sum(x['bytes'] for x in snapshot['snapshot']['files'])/1048576
-    reference='''<section id="oeis" class="sl-reference sl-optional-section"><h2>Compare with OEIS</h2><details class="sl-topic-disclosure"><summary>Open OEIS lookup and reference downloads</summary><p class="sar-kicker">Reference matching</p><p>Search for an A-number, words from a sequence name, or at least three comma-separated exact terms. ? matches one unknown integer. This tool uses the official terms and names exports from '''+e(snapshot['snapshot']['downloaded_at'][:10])+'''. Excerpt positions are not mathematical offsets.</p><form id="sl-oeis-form" hidden><label for="sl-oeis-query">OEIS ID, name, or integer pattern</label><div class="sl-query"><input id="sl-oeis-query" maxlength="20000" placeholder="A000108 or 1,1,2,5,14,42,132,429"><button id="sl-oeis-search" type="submit">Search OEIS data</button><button id="sl-oeis-cancel" type="button" disabled>Cancel</button></div></form><p>The first search downloads about '''+f'{mb:.1f}'+''' MiB of reference data. Searches run in your browser, and queries are not sent to OEIS. Up to 50 results are displayed, with the total reported. The bulk files contain terms and names. Open an OEIS entry for its formulas, comments, offset, and history.</p><p id="sl-oeis-status" role="status" aria-live="polite">Ready to search OEIS reference data.</p><ol id="sl-oeis-results"></ol><p>Downloads: <a download href="assets/oeis/stripped.gz">OEIS terms</a> · <a download href="assets/oeis/names.gz">OEIS names</a> · <a href="assets/oeis/snapshot.json">Dates, sizes, and SHA-256 hashes</a></p><p>OEIS data © The OEIS Foundation Inc., <a href="https://oeis.org/">The Online Encyclopedia of Integer Sequences</a>, available under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. Reference matching and presentation are adaptations. <a href="https://oeis.org/wiki/Download">Official download guidance</a>.</p></details></section>'''
+    reference='''<section id="oeis" class="sl-reference sl-optional-section"><h2>Compare with OEIS</h2><details class="sl-topic-disclosure"><summary>Open OEIS lookup and reference downloads</summary><p class="sar-kicker">Reference matching</p><p>Search an OEIS A-number, a name or at least three exact integer terms. Use ? for one unknown integer. This local snapshot uses the official names and terms exports from '''+e(snapshot['snapshot']['downloaded_at'][:10])+'''. Export positions are not mathematical offsets.</p><form id="sl-oeis-form" hidden><label for="sl-oeis-query">OEIS ID, name, or integer pattern</label><div class="sl-query"><input id="sl-oeis-query" maxlength="20000" placeholder="A000108 or 1,1,2,5,14,42,132,429"><button id="sl-oeis-search" type="submit">Search OEIS data</button><button id="sl-oeis-cancel" type="button" disabled>Cancel</button></div></form><details class="sl-oeis-info"><summary>Reference size and search limits</summary><p>The first search downloads about '''+f'{mb:.1f}'+''' MiB of reference data. Searches run in your browser, and queries are not sent to OEIS. Up to 50 results are displayed, with the total reported. The bulk files contain terms and names. Open an OEIS entry for its full formulas, comments and index offset.</p></details><p id="sl-oeis-status" role="status" aria-live="polite">Ready to search OEIS reference data.</p><ol id="sl-oeis-results"></ol><details class="sl-oeis-info"><summary>Source files and attribution</summary><p>Downloads: <a download href="assets/oeis/stripped.gz">OEIS terms</a> · <a download href="assets/oeis/names.gz">OEIS names</a> · <a href="assets/oeis/snapshot.json">Dates, sizes, and SHA-256 hashes</a></p><p>OEIS data © The OEIS Foundation Inc., <a href="https://oeis.org/">The Online Encyclopedia of Integer Sequences</a>, available under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. Reference matching and presentation are adaptations. <a href="https://oeis.org/wiki/Download">Official download guidance</a>.</p></details></details></section>'''
     transfers=r'''<section id="transfers" class="sr-transfer-reading">
  <p class="sar-kicker">Exact coefficient transport</p>
  <h2>Transfer between sequences</h2>
- <p>Construct a reversible ordinary convolution map between two stored scalar sequences. Exact rational arithmetic verifies each coefficient in the selected finite window. The construction does not require the sequences to satisfy the same recurrence.</p>
+ <p>Compare two stored scalar sequences through an exact forward and inverse convolution. Every coefficient is checked over the selected finite window. The calculation does not imply that the sequences share a recurrence.</p>
  <div id="sr-transfer-tool"></div>
- <p class="sr-transfer-static">The worked example and source links remain readable without JavaScript. Enable JavaScript to construct and export a transfer for other records.</p>
+ <p class="sr-transfer-static">Enable JavaScript to calculate and export other transfers. The worked example and sources remain available without it.</p>
  <details class="sr-transfer-method"><summary>How the transfer is calculated</summary>
  <div class="sr-transfer-overview">
  <div><h3>How to use this workbench</h3>
@@ -216,19 +230,68 @@ def build(site,atlas):
  <p>Here is the corresponding action on the anchored sequence coefficients:</p>
  <p class="sar-formula sr-transfer-equation" data-math-latex="L(H)\begin{pmatrix}1\\-1\\5\\-61\end{pmatrix}=\begin{pmatrix}1\\1\\2\\3\end{pmatrix}">L(H) [1, -1, 5, -61] = [1, 1, 2, 3]</p>
  <p class="sar-formula sr-transfer-equation" data-math-latex="L(K)\begin{pmatrix}1\\1\\2\\3\end{pmatrix}=\begin{pmatrix}1\\-1\\5\\-61\end{pmatrix}">L(K) [1, 1, 2, 3] = [1, -1, 5, -61]</p>
- <p>The matrices use local tail positions rather than the original Euler and Fibonacci indices. Their first four rows are inverse to each other over the exact rationals.</p>
- <p>This example verifies four coefficients. The cited derivation treats the separate infinite formal identity and the boundary term needed when transporting a recurrence. This finite certificate does not establish an infinite identity.</p>
+ <p>Matrix rows and columns use anchored tail positions. The displayed four-by-four matrices are exact inverses, with the original Euler and Fibonacci indices tracked separately.</p>
+ <p>Only four coefficients are verified here. The cited derivation addresses the separate infinite formal relation and the boundary term required to transport a recurrence.</p>
  </details>
  <details class="sr-transfer-sources"><summary>Sources and derivations</summary><p class="sr-transfer-links"><a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/research/sequence-connections/IDENTITIES.md">Recurrence and transfer derivations</a> · <a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/research/sequence-connections/AUDIT.md">Research audit</a> · <a href="collection/demonstrations/EULER_PACKETS.html#transfer-the-euler-sequence-to-fibonacci-values">Euler and Fibonacci worked derivation</a> · <a download href="assets/sequence-research-connections.json">Related connections JSON</a></p></details>
  <details class="sr-transfer-compose-details"><summary>Composition through a third sequence</summary><div class="sr-transfer-compose-static">
  <h3>Composition through an intermediate sequence</h3>
- <p>For three anchored ordinary generating series with nonzero constant coefficients, formal division composes exactly within the chosen coefficient window:</p>
+ <p>For three anchored series with nonzero constant coefficients, formal division gives the following finite composition:</p>
  <p class="sar-formula sr-transfer-equation" data-math-latex="H_{AC}(z)\equiv H_{BC}(z)H_{AB}(z)\pmod{z^L},\qquad L(H_{AC})=L(H_{BC})L(H_{AB})">H_AC(z) = H_BC(z)*H_AB(z) (mod z^L); L(H_AC) = L(H_BC)*L(H_AB)</p>
- <p>The original index shifts add: <code>Δ_AC = Δ_AB + Δ_BC</code>. This identity follows from invertibility of the anchored formal series. It does not establish that the unrecorded sequence terms agree or that the three sequences satisfy a common recurrence. With JavaScript enabled, the composition panel checks each stored coefficient and exports an exact certificate.</p>
+ <p>The original index shifts add: <code>Δ_AC = Δ_AB + Δ_BC</code>. This is an algebraic consequence of invertible anchored series, not evidence of a shared recurrence or agreement beyond stored coefficients. The interactive composition panel checks each coefficient and exports its exact certificate.</p>
  </div></details>
  </section>'''
     about='<section id="library-sources" class="sl-optional-section"><h2>Definitions, scope, and downloads</h2><details class="sl-topic-disclosure"><summary>Read catalogue scope and download exact source files</summary><p>The '+str(len(expanded_catalogue()))+' parameter records cover reciprocal powers (N=2–16, r=1–8, complementing the curated sequences), transfer tangents (N=2–16), congruential coefficient components (N=2–12, 1≤j&lt;N, r=1–4), Appell components (N=2–6, 0≤j&lt;N, r=1–2, x=1 or 2), and classical multisections (N=2–12, 0≤j&lt;N).</p><p>Research families include secancy parameter columns (N=2–12, k=1–8), theta specializations (x=1–12), and theta polynomial columns (k=1–12). Ordinary k-step families add 120 instances with order 2–16, power 1–4, and weight 1–2. Ten k-bonacci records with zero initial seeds use orders 7–16 and store 48 terms.</p><p>Other scalar records store 24 terms at their stated offsets. Polynomial columns begin at their first nonzero n. The coefficient triangles preserve complete rows n=0–12, with separate row, column, and flat indices. The supported Appell columns retain their polynomial row map Nn+k. Other parameter records use n=0–23. Each rational coefficient is reduced before its signed numerator or positive denominator is recorded. Every entry links to its definition and states its normalization.</p><p>Different parameter choices can yield the same sequence. Finite comparisons alone do not prove an identity or establish novelty. Hypergeometric labels distinguish term formulas, generating functions, and coefficient extraction.</p><p><a download href="assets/sequence-library-index.csv">Complete index CSV</a> · <a download href="assets/sequence-formulas.json">All formula representations JSON</a> · <a download href="assets/sequence-formula-source.zip">Exact Python generator and defining source</a> · <a href="sequence-archive.html">Research archive and generator</a></p></details></section>'
-    site.page('sequence-library.html','Sequence library',wrap(header+controls+transfers+'<details id="sl-extra-tools" class="sl-tool-drawer"><summary>Research families, connections and other tools</summary><div class="sl-tool-drawer-body">'+research+generalized_sections()+'</div></details>'+'<section id="comparison"><h2>Compare records</h2><p>Enable JavaScript to compare up to four library records or OEIS excerpts, transform exact terms, and export plots. Definitions and exact tables remain available in the <a href="sequence-library/index.html">complete index</a>.</p></section>'+reference+about))
+    # Keep older hash links functional. With JavaScript they redirect to focused
+    # pages; without JavaScript the targeted gateway provides a usable link.
+    legacy_routes=[
+        ('transfers','sequence-transfers.html#transfers','Transfer workbench'),
+        ('comparison','sequence-compare.html#comparison','Sequence comparison'),
+        ('research-families','sequence-research.html#research-families','Research families'),
+        ('generalized','sequence-research.html#generalized','Generalized families'),
+        ('family-explorer','sequence-research.html#generalized','Generalized family explorer'),
+        ('research-graph','sequence-research.html#research-graph','Connection graph'),
+        ('identify','sequence-research.html#identify','Sequence identification'),
+        ('modular-dynamics','sequence-research.html#modular-dynamics','Modular dynamics'),
+        ('research-notebooks','sequence-workspace.html#research-notebooks','Research notebooks and older workspaces'),
+        ('oeis','sequence-oeis.html#oeis','OEIS reference lookup')]
+    legacy=''.join('<section class="sl-legacy-gateway" id="'+key+'"><h2>'+label+'</h2><p>This tool now has its own page. <a href="'+url+'">Open '+label+'</a>.</p></section>'
+                   for key,url,label in legacy_routes)
+    site.page('sequence-library.html','Sequence Library · Search',
+              wrap(header+controls+about+legacy,page_kind='search'))
+    site.page('sequence-transfers.html','Sequence Library · Transfer',
+              wrap(page_heading('Transfer between sequences',
+                  'Calculate exact forward and inverse convolution maps between stored scalar prefixes. All certificates refer to the selected finite window.',
+                  'transfer','transfers')+transfers,page_kind='transfer'))
+    site.page('sequence-compare.html','Sequence Library · Compare',
+              wrap(page_heading('Compare sequences',
+                  'Compare up to four stored sequences or OEIS excerpts. Exact values remain in the data table while plots show finite windows.',
+                  'compare','comparison')+
+                  '<section id="comparison"><h2>Comparison workbench</h2><p>Enable JavaScript to compare records. You can browse the <a href="sequence-library.html#library-search">sequence search</a> without it.</p></section>',
+                  page_kind='compare'))
+    research_nav=('<nav class="sl-research-nav" aria-label="Research tool sections">'
+                  '<a href="#research-families">Research families</a><a href="#generalized">Generalized families</a>'
+                  '<a href="#research-graph">Connections</a><a href="#identify">Identify terms</a>'
+                  '<a href="#modular-dynamics">Modular dynamics</a><a href="#research-notebooks">Notebooks</a></nav>')
+    site.page('sequence-research.html','Sequence Library · Research',
+              wrap(page_heading('Research tools',
+                  'Browse indexed research families, investigate relations and work with exact recurrence and sequence data.',
+                  'research','research-families')+research_nav+research+generalized_sections(),
+                   page_kind='research'))
+    standalone_reference=reference.replace('<details class="sl-topic-disclosure">',
+                                           '<details class="sl-topic-disclosure" open>',1)
+    site.page('sequence-oeis.html','Sequence Library · OEIS',
+              wrap(page_heading('OEIS reference lookup',
+                  'Search the retained OEIS terms and names in your browser. Reference excerpts do not include mathematical offsets.',
+                  'oeis','oeis')+standalone_reference,page_kind='oeis'))
+    # Optional compatibility workspace supports notebooks spanning several tools.
+    site.page('sequence-workspace.html','Sequence Library · Combined workspace',
+              wrap(page_heading('Combined research workspace',
+                  'Advanced compatibility view for saved notebooks and links that use several tools together.',
+                  'research','library-search')+controls+transfers+research+generalized_sections()+
+                  '<section id="comparison"></section>'+reference+about,
+                  page_kind='workspace'))
+
     rows=''.join('<tr><th scope="row"><a href="../'+x['url']+'">'+e(x['id'])+'</a></th><td>'+e(x['title'])+'</td><td>'+e(x['kind'])+'</td><td>'+str(len(x['formulas']))+'</td><td>'+str(x['offset'])+'</td></tr>' for x in entries)
     site.page('sequence-library/index.html','Complete sequence index',wrap('<nav><a href="../sequence-library.html">Search the library</a></nav><h1>Complete sequence index</h1><p>This index lists all '+str(total)+' local records. Definitions and exact tables remain available without JavaScript.</p><div class="sar-scroll" tabindex="0" role="region" aria-label="Complete sequence index"><table><thead><tr><th scope="col">ID</th><th scope="col">Name</th><th scope="col">Family</th><th scope="col">Formulas</th><th scope="col">Offset</th></tr></thead><tbody>'+rows+'</tbody></table></div>','../'))
     urls={item['id']:item['url'] for item in entries}
@@ -252,5 +315,7 @@ def build(site,atlas):
         if entry.get('linear_addition'):body=body.replace(REGISTRY_PATH,'research/sequence-connections/IDENTITIES.md')
         site.page(entry['url'],entry['title']+' · '+identifier,wrap(body,'../',entry))
         site.search.append(dict(title=entry['title']+' · '+identifier,group='Collection',kind='Examples',work_ids=[],url=entry['url'],text=' '.join(f['expression'] for f in entry['formulas'])))
-    site.search.append(dict(title='Sequence library',group='Collection',kind='Examples',work_ids=[],url='sequence-library.html',text=f'{total} local records, {representations} formulas, hypergeometric representations, exact plots and full OEIS snapshot matching.'))
+    site.search.append(dict(title='Sequence Library · Search',group='Collection',kind='Examples',work_ids=[],url='sequence-library.html',text=f'{total} indexed records and {representations} exact formula representations.'))
+    for title,url in [('Transfer between sequences','sequence-transfers.html'),('Compare sequences','sequence-compare.html'),('Research families and sequence tools','sequence-research.html'),('OEIS reference lookup','sequence-oeis.html')]:
+        site.search.append(dict(title=title,group='Collection',kind='Examples',work_ids=[],url=url,text='Sequence Library exact arithmetic and research tools.'))
     return dict(entries=total,new_entries=len(expanded_catalogue()),formulas=representations,oeis_sequences=snapshot['sequence_count'],oeis_bytes=sum(x['bytes'] for x in snapshot['snapshot']['files']),generalized_families=len(generalized['families']),generalized_sources=len(generalized['sources']))

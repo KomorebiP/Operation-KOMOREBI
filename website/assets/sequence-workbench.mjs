@@ -10,6 +10,7 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
     <p>Add up to four records from the search results or OEIS finder. Compare exact terms, differences, partial sums, and residues. Each line has its own mark and pattern as well as a color.</p>
     <p id="sw-status" role="status" aria-live="polite"></p><ol id="sw-sources" class="sw-sources"></ol>
     <div class="sp-actions"><button type="button" id="sw-example">Try Fibonacci + Lucas</button><button type="button" id="sw-clear">Clear comparison</button></div>
+    <form id="sw-add-form" class="sw-add-form"><label for="sw-record">Add a sequence by name or record ID<input id="sw-record" autocomplete="off" list="sw-record-choices" placeholder="Fibonacci or KSEQ-000025"></label><datalist id="sw-record-choices"></datalist><button type="submit">Add record</button><p id="sw-add-error" role="alert" hidden></p></form>
     <div id="sw-restore" hidden><p>Shared OEIS excerpts require the reference data, about 39.8 MiB on first use. Nothing downloads until you choose to load it. Mathematical offsets are absent from these exports.</p><div class="sp-actions"><button type="button" id="sw-load">Load OEIS excerpts</button><button type="button" id="sw-cancel" disabled>Cancel loading</button></div></div>
     <form id="sw-form"><div class="sar-controls">
     <label for="sw-view">View<select id="sw-view"><option value="values">Integer values</option><option value="mod">Residues modulo m</option></select></label>
@@ -28,8 +29,27 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
     <label id="sw-link-wrap" for="sw-link" hidden>Copy this comparison link<input id="sw-link" readonly></label>
     <details id="sw-data"><summary>Exact comparison table</summary><div class="sar-scroll" role="region" aria-label="Exact comparison values" tabindex="0"><table><caption>Stored indices and displayed exact integers</caption><thead><tr><th scope="col">Series</th><th scope="col">Index convention</th><th scope="col">Index / position</th><th scope="col">Window position</th><th scope="col">Original integer</th><th scope="col">Displayed integer</th></tr></thead><tbody></tbody></table></div></details>`;
   // Keep the comparison task beside search and transfers, ahead of optional research tools.
-  (root.querySelector('#transfers')||root.querySelector('#oeis')).after(section);
+  if(!root.querySelector('#comparison')){
+    const previous=root.querySelector('#transfers')||root.querySelector('#oeis');
+    if(previous)previous.after(section);else root.append(section);
+  }
   const $=id=>section.querySelector('#sw-'+id);let sources=[],state={...WORKBENCH_DEFAULTS},result=null,activeKey=null;
+  const matches=entries.map(entry=>({entry,key:(entry.id+' '+entry.title).toLowerCase()}));
+  function suggest(){
+    const term=$('record').value.toLowerCase().trim();
+    $('record-choices').replaceChildren();
+    for(const {entry} of matches.filter(item=>!term||item.key.includes(term)).slice(0,16)){
+      const option=node('option');option.value=entry.id;option.label=entry.title;$('record-choices').append(option);
+    }
+  }
+  $('record').addEventListener('input',suggest);suggest();
+  $('add-form').addEventListener('submit',event=>{
+    event.preventDefault();const text=$('record').value.trim();
+    const entry=entries.find(item=>item.id.toLowerCase()===text.toLowerCase()||item.title.toLowerCase()===text.toLowerCase());
+    if(!entry){$('add-error').hidden=false;$('add-error').textContent='Choose a sequence from the suggested names or record IDs.';return;}
+    $('add-error').hidden=true;if(add(localSource(entry,location.href))){$('record').value='';suggest();}
+  });
+
   const say=text=>{$('status').textContent=text;},fail=error=>{$('error').textContent=error.message;$('error').hidden=false;};
   try{const linked=readWorkbenchLink(location.href,entries,snapshot);if(linked){sources=linked.sources;state=linked.state;}}catch(error){fail(error);}
   const fields=Object.keys(WORKBENCH_DEFAULTS);for(const key of fields)$(key).value=state[key];

@@ -2,14 +2,16 @@ import './sequence-reading-theme.mjs';
 import {enhanceMath,clearMath} from './math-display.mjs';
 import {searchEntries} from './sequence-atlas-search.mjs';
 import {SEARCH_KEYS,RECORD_FILTERS,FAMILY_FILTERS,emptySearch,normalizeSearch,librarySearch,librarySearchCSV} from './sequence-library-search.mjs';
-import {setupArchivePlot} from './sequence-archive-plot.mjs';
+
 import {referenceQuery} from './sequence-oeis-core.mjs';
 import {createReferenceClient} from './sequence-oeis-client.mjs';
-import {mountWorkbench} from './sequence-workbench.mjs';
-import {mountTriangleExplorer} from './sequence-triangle.mjs';
-import {mountTransfers} from './sequence-transfers.mjs';
-import {mountStudio,familySearchEntries} from './sequence-research-studio.mjs';
+
+import {workbenchLink,localSource,referenceSource,customSource,familySource,WORKBENCH_DEFAULTS} from './sequence-workbench-core.mjs';
+
+
+
 import {STORAGE_KEY,readSaved,writeSaved,updateSaveButtons} from './sequence-atlas-saved.mjs';
+import {familySearchEntries} from './sequence-library-membership.mjs';
 
 const root=document.querySelector('[data-library]'),$=id=>document.getElementById('sl-'+id),make=(tag,text)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;return node;};
 /** Deep links reveal optional panels without discarding static source content. */
@@ -39,6 +41,41 @@ function definitionPreview(formula,label,expanded){
   return detail;
 }
 
+function legacyDestination(){
+  if(root?.dataset.page!=='search')return null;
+  let hash='';try{hash=decodeURIComponent(location.hash.slice(1));}catch{}
+  const routes={
+    transfers:'sequence-transfers.html',comparison:'sequence-compare.html',
+    oeis:'sequence-oeis.html','research-families':'sequence-research.html',
+    generalized:'sequence-research.html','research-graph':'sequence-research.html',
+    identify:'sequence-research.html','modular-dynamics':'sequence-research.html',
+    'research-notebooks':'sequence-workspace.html','family-explorer':'sequence-research.html',
+    'tr-matrices':'sequence-transfers.html','tr-convolution-witness':'sequence-transfers.html',
+    'tr-compose':'sequence-transfers.html'
+  };
+  const params=new URL(location.href).searchParams;
+  const combinedFamily=hash==='family-explorer'&&['q','scope','mode','paper','collection'].some(key=>params.has(key));
+  const target=combinedFamily?'sequence-workspace.html':(routes[hash]||(params.has('wb')?'sequence-compare.html':params.has('tr-source')?'sequence-transfers.html':params.has('graph')||params.has('identify')?'sequence-research.html':params.has('notebook')?'sequence-workspace.html':null));
+  if(!target)return null;
+  const url=new URL(target,location.href);
+  url.search=location.search;url.hash=location.hash||
+    (target==='sequence-compare.html'?'#comparison':target==='sequence-transfers.html'?'#transfers':target==='sequence-oeis.html'?'#oeis':'#research-families');
+  return url.href;
+}
+const legacyRoute=legacyDestination();
+if(legacyRoute)location.replace(legacyRoute);
+function comparisonHandoff(entries,snapshot){
+  const link=sources=>{
+    const target=new URL('sequence-compare.html',location.href);
+    location.href=workbenchLink(target.href,sources,WORKBENCH_DEFAULTS);
+  };
+  return {
+    addLocal(entry){link([localSource(entry,location.href)]);return true;},
+    addReference(hit){link([referenceSource(hit,snapshot)]);return true;},
+    addCustom(terms,title='Identification input',offset=0){link([customSource({terms,title,offset})]);return true;},
+    addFamily(engine,params){link([familySource(engine,params,location.href)]);return true;}
+  };
+}
 const collectionLabels={atlas:'Curated sequences',recovered:'Research archive',formulas:'Formula families'};
 const keys=SEARCH_KEYS;
 let results=[],page=0,applied={},workbench,transfers,toggleSaved,saved=new Set();
@@ -77,8 +114,8 @@ function render(){
     if(hit.termMatch){const reason=make('p',hit.reason);reason.className='sl-match-reason';overview.append(reason);}
     const review=make('p',entry.status);review.className='sl-result-status';overview.append(review);
     if(entry.tags.includes('hypergeometric')){const badge=make('span','Hypergeometric representation');badge.className='sl-result-badge';overview.append(badge);}
-    const links=make('div'),plot=make('a','Plot and inspect'),formulas=make('a','Read formulas'),bookmark=make('button'),compare=make('button','Add to comparison');links.className='sp-actions';plot.href=entry.url+(entry.collection==='atlas'?'#analysis':'#plot');formulas.href=entry.url+(entry.collection==='recovered'?'#definition':'#formulas');bookmark.type=compare.type='button';bookmark.dataset.saveSequence=entry.id;bookmark.addEventListener('click',()=>toggleSaved(entry.id));compare.setAttribute('aria-label','Add '+entry.id+' to comparison');compare.addEventListener('click',()=>workbench.addLocal(entry));links.append(plot,formulas,bookmark,compare);li.append(links);
-    if(transfers&&!entry.triangle&&entry.id!=='KOM084'){const transfer=make('button','Build a transfer');transfer.type='button';transfer.addEventListener('click',()=>transfers.source(entry));links.append(transfer);}
+    const links=make('div'),plot=make('a','Plot and inspect'),formulas=make('a','Read formulas'),bookmark=make('button'),compare=make('button','Add to comparison');links.className='sp-actions';plot.href=entry.url+(entry.collection==='atlas'?'#analysis':'#plot');formulas.href=entry.url+(entry.collection==='recovered'?'#definition':'#formulas');bookmark.type=compare.type='button';bookmark.dataset.saveSequence=entry.id;bookmark.addEventListener('click',()=>toggleSaved(entry.id));compare.setAttribute('aria-label','Add '+entry.id+' to comparison');compare.addEventListener('click',()=>{if(workbench)workbench.addLocal(entry);else comparisonHandoff([],null).addLocal(entry);});links.append(plot,formulas,bookmark,compare);li.append(links);
+    if(!entry.triangle&&entry.id!=='KOM084'){const transfer=make('button','Build a transfer');transfer.type='button';transfer.addEventListener('click',()=>{if(transfers)transfers.source(entry);else{const url=new URL('sequence-transfers.html',location.href);url.searchParams.set('tr-source',entry.id);url.hash='transfers';location.href=url.href;}});links.append(transfer);}
     const comparisons=make('details'),summary=make('summary',`OEIS comparisons (${entry.match_count.toLocaleString()} ${entry.match_count===1?'match':'matches'})`);comparisons.className='sl-matches';comparisons.append(summary);
     if(entry.matches.length){const list=make('ol');for(const hit of entry.matches.slice(0,3)){const item=make('li'),reference=make('a',hit.id+' · '+hit.name);reference.href='https://oeis.org/'+hit.id;item.append(reference,make('p',`${hit.matched_terms} matching terms, beginning at local index ${entry.offset}. OEIS export position: ${hit.position}.`));list.append(item);}comparisons.append(list,make('p',`Showing ${Math.min(3,entry.matches.length)} of ${entry.match_count.toLocaleString()} recorded matches. Up to 50 matches are retained.`));}else comparisons.append(make('p','No contiguous match of eight terms was recorded. That does not establish novelty.'));
     const credit=make('p','Finite matches do not prove that infinite sequences are identical. Export positions are not mathematical offsets. Reference data: '),oeis=make('a','The Online Encyclopedia of Integer Sequences'),license=make('a','CC BY-SA 4.0');oeis.href='https://oeis.org/';license.href='https://creativecommons.org/licenses/by-sa/4.0/';credit.append(oeis,document.createTextNode(' · '),license);comparisons.append(credit);li.append(comparisons);$('results').append(li);
@@ -173,7 +210,7 @@ function setupReference(client){
         const li=make('li'),link=make('a',hit.id+' · '+(hit.name||'Name not recorded'));link.href='https://oeis.org/'+hit.id;
         li.append(link,make('p',hit.position===null?'Terms from the exported excerpt; its mathematical offset is not included.':`Pattern at excerpt position ${hit.position}; ${hit.matched_terms} pattern positions (${hit.known_terms} known integers); ${hit.positions} matching position(s) in this excerpt.`));
         const values=make('p',(hit.values||[]).join(', '));values.className='sar-formula';li.append(values);
-        if(hit.values?.length){const compare=make('button','Add excerpt to comparison');compare.type='button';compare.setAttribute('aria-label','Compare '+hit.id+' excerpt');compare.addEventListener('click',()=>workbench.addReference(hit));li.append(compare);}
+        if(hit.values?.length){const compare=make('button','Add excerpt to comparison');compare.type='button';compare.setAttribute('aria-label','Compare '+hit.id+' excerpt');compare.addEventListener('click',()=>{if(workbench)workbench.addReference(hit);else comparisonHandoff([],root.dataset.oeisSnapshot||'').addReference(hit);});li.append(compare);}
         $('oeis-results').append(li);
       }
       $('oeis-status').textContent=`Matching OEIS records: ${data.total.toLocaleString()}. Showing ${data.results.length}. Results use reference terms and names only. ${data.query_type==='terms'?'Finite matching does not prove sequence identity.':''}`;root.dataset.referenceReady='true';
@@ -181,8 +218,23 @@ function setupReference(client){
   });
   $('oeis-cancel').addEventListener('click',()=>client.cancel());
 }
-try{
-  if(root.dataset.entry){const response=await fetch(new URL(root.dataset.entry,location.href));if(!response.ok)throw Error('The exact record could not be loaded.');const entry=await response.json();setupArchivePlot(entry);setupTriangleNavigation();mountTriangleExplorer(entry,root.querySelector('#triangle'));}
-  else if($('search')||root.querySelector('#family-explorer-controls')){const responses=await Promise.all([fetch(new URL('./sequence-library-data.json',import.meta.url)),fetch(new URL('./sequence-generalized-data.json',import.meta.url))]);if(responses.some(r=>!r.ok))throw Error('The local sequence and family catalogue could not be loaded.');const [data,generalized]=await Promise.all(responses.map(r=>r.json())),entries=familySearchEntries(data.entries,generalized.families),client=createReferenceClient();let search;if($('search')){workbench=mountWorkbench({root,entries,snapshot:data.snapshot.stripped_sha256,referenceClient:client});transfers=mountTransfers(entries,document.getElementById('sr-transfer-tool'));search=setupSearch(entries,generalized.families,generalized.sources);setupReference(client);}mountStudio({root,entries,data:generalized,referenceClient:client,workbench,transfers,search});}
+if(!legacyRoute)try{
+  if(root.dataset.entry){const [{setupArchivePlot},{mountTriangleExplorer}]=await Promise.all([import('./sequence-archive-plot.mjs'),import('./sequence-triangle.mjs')]);const response=await fetch(new URL(root.dataset.entry,location.href));if(!response.ok)throw Error('The exact record could not be loaded.');const entry=await response.json();setupArchivePlot(entry);setupTriangleNavigation();mountTriangleExplorer(entry,root.querySelector('#triangle'));}
+  else if($('search')||root.querySelector('#family-explorer-controls')||root.querySelector('#sr-transfer-tool')||root.querySelector('#comparison')||root.querySelector('#sl-oeis-form')||root.querySelector('#research-families')){
+    const responses=await Promise.all([fetch(new URL('./sequence-library-data.json',import.meta.url)),fetch(new URL('./sequence-generalized-data.json',import.meta.url))]);
+    if(responses.some(r=>!r.ok))throw Error('The local sequence and family catalogue could not be loaded.');
+    const [data,generalized]=await Promise.all(responses.map(r=>r.json()));
+    const entries=familySearchEntries(data.entries,generalized.families),client=createReferenceClient();
+    const snapshot=data.snapshot.stripped_sha256,handoff=comparisonHandoff(entries,snapshot);
+    root.dataset.oeisSnapshot=snapshot;
+    if(root.querySelector('#comparison:not(.sl-legacy-gateway)')){const {mountWorkbench}=await import('./sequence-workbench.mjs');workbench=mountWorkbench({root,entries,snapshot,referenceClient:client});}
+    if(root.querySelector('#sr-transfer-tool')){const {mountTransfers}=await import('./sequence-transfers.mjs');transfers=mountTransfers(entries,document.getElementById('sr-transfer-tool'));}
+    let search;
+    if($('search'))search=setupSearch(entries,generalized.families,generalized.sources);
+    if($('oeis-form'))setupReference(client);
+    if(root.querySelector('#family-explorer-controls')||['research','workspace'].includes(root.dataset.page)){
+      const {mountStudio}=await import('./sequence-research-studio.mjs');mountStudio({root,entries,data:generalized,referenceClient:client,workbench:workbench||handoff,transfers,search});
+    }
+  }
   root.dataset.libraryReady='true';
-}catch(error){const note=make('p',error.message+' Static definitions, exact tables, and the complete index remain available.');note.setAttribute('role','status');root.prepend(note);}
+}catch(error){const note=make('p',error.message+' Static definitions and the complete index remain available.');note.setAttribute('role','status');root.prepend(note);}

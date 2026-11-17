@@ -479,6 +479,53 @@ Targeted browser checks verify search-card spacing, main-task order,
 expandable index alignment, and no horizontal overflow across mobile and
 desktop widths.
 
+## Focused pages and existing links
+
+The main Sequence Library now serves search and exact record discovery rather
+than mounting every workbench on one page. These sections have dedicated
+reader pages:
+
+- Search: sequence-library.html
+- Transfer: sequence-transfers.html
+- Comparison: sequence-compare.html
+- Research families, relation graph, identification, modular dynamics and
+  notebooks: sequence-research.html
+- OEIS lookup: sequence-oeis.html
+
+The five-page navigation is shared across these pages. The primary pages
+load only their relevant tools instead of mounting every graph, transfer
+matrix, chart and reference worker during a basic search. Their headers,
+controls and formulas have been proofread and spaced for narrow screens.
+Long mathematical displays and exact tables have their own horizontal
+scrolling regions. Source data, finite arithmetic certificates, and
+exports remain unchanged.
+
+Older links to sequence-library.html#transfers, #comparison, #oeis,
+#research-families, #research-graph and the other research anchors
+redirect to the matching focused pages when JavaScript is available.
+The landing page retains targeted static gateways for those hashes
+when JavaScript is disabled. Search URLs, collection and family filters,
+saved records and original record links stay on the Search page.
+
+The Search result action "Build a transfer" opens the dedicated Transfer
+page with that source record selected. The "Add to comparison" action
+opens the dedicated Compare page with that source already loaded.
+Compare also has its own sequence picker, so it can be used without
+returning to Search. OEIS comparisons can be transferred in the same
+way without downloading references automatically.
+
+The optional sequence-workspace.html is a combined compatibility
+workspace for notebooks and links involving multiple tools at once.
+It is not the default landing page. Research-only notebooks continue
+to work in the focused Research page. For saved notebooks containing
+search, comparison and transfer state together, use the combined
+workspace to restore every component.
+
+Dedicated browser tests cover cross-page selections, old hash links,
+the standalone record picker, responsive MathJax displays, exact tables,
+and static fallback content on desktop and 390/320-pixel screens.
+Passing these tests is not an independent WCAG conformance certification.
+
 ## Search help and full research-family navigation
 
 The Sequence Library's expanded search guide now separates basic examples,
