@@ -29,12 +29,45 @@ export function mountModular(host,{family}={}){
   }
   function render(result){$('result').replaceChildren();$('result').append(node('h3',result.certified?`Certified cycle: period ${result.period}, preperiod ${result.preperiod}`:'No repeated complete state within the chosen bound'),node('p',`Recurrence order ${result.model.order}. ${result.scanned} complete states inspected modulo ${result.modulus}.`),node('p',result.scope));if(result.certified)$('result').append(node('p',`The state at n=${result.preperiod} repeats at n=${result.repeatIndex}: (${result.repeatedState.join(', ')}).`));
     const detail=node('details');detail.append(node('summary','Recurrence, initial state and certificate interpretation'),mathLine('a(n) = sum_(j=1)^d b(j) a(n-j), n >= d',String.raw`a_n=\sum_{j=1}^{d}b_j a_{n-j},\qquad n\ge d`,'sr-modular-equation'),node('p','Here d is the recurrence order. The coefficients b(1), …, b(d) are reduced modulo m.'),node('p','Coefficients: '+result.coefficients.join(', ')),node('p','Initial complete state: '+result.initialState.join(', ')),node('p','A repeated value alone does not certify a cycle. The certificate checks every coordinate of the recurrence state. A noninvertible transition can have a preperiod.'));detail.addEventListener('toggle',()=>{if(detail.open)enhanceMath(detail);});$('result').append(detail);
-    const chart=node('div'),inspection=node('p'),visible=result.values.slice(0,128);
+    const chart=node('div'),inspection=node('p'),plotControls=node('div'),
+      plotPrev=node('button','Previous window'),plotNext=node('button','Next window'),
+      startLabel=node('label','Plot start index'),startInput=node('input'),
+      sampleNote=node('p');let plotStart=0;
     chart.id='md-chart';inspection.setAttribute('role','status');
-    plotValues(chart,visible.map(String),{modulus:result.modulus,label:'Modular recurrence orbit, first '+visible.length+' positions',inspect:(n,v)=>{inspection.textContent='n='+n+'; residue '+v+' modulo '+result.modulus;}});
-    const sampleNote=node('p','The plot shows the first '+visible.length+' of '+result.values.length+' recorded residues. Expand an exact table below to inspect all available positions.');
-    sampleNote.className='sg-plot-note';
-    $('result').append(chart,inspection,sampleNote,
+    plotControls.id='md-plot-controls';plotControls.className='sg-plot-controls';
+    plotControls.hidden=result.values.length<=128;
+    for(const button of [plotPrev,plotNext])button.type='button';
+    plotPrev.id='md-plot-back';plotNext.id='md-plot-next';
+    startInput.id='md-plot-start';startInput.type='number';
+    startInput.min='0';startInput.max=String(Math.max(0,result.values.length-1));
+    startInput.step='1';startInput.value='0';
+    startLabel.htmlFor=startInput.id;startLabel.append(startInput);
+    plotControls.append(plotPrev,startLabel,plotNext);
+    sampleNote.className='sg-plot-note';sampleNote.id='md-plot-note';
+    startInput.setAttribute('aria-describedby',sampleNote.id);
+    function drawPlot(start){
+      if(!Number.isSafeInteger(start)||start<0||start>=result.values.length){
+        sampleNote.textContent='Enter a plot start index from 0 to '+Math.max(0,result.values.length-1)+'.';
+        startInput.value=String(plotStart);return;
+      }
+      plotStart=start;
+      const end=Math.min(start+128,result.values.length);
+      const values=result.values.slice(start,end);
+      plotValues(chart,values.map(String),{offset:start,modulus:result.modulus,
+        label:'Modular recurrence orbit, indices '+start+' through '+(end-1),
+        inspect:(local,v)=>{inspection.textContent='n='+(start+local)+'; residue '+v+' modulo '+result.modulus;}});
+      inspection.textContent='Select a plotted point to inspect its exact index and residue.';
+      sampleNote.textContent=end===result.values.length&&start===0
+        ?'The plot shows all '+result.values.length+' recorded residues.'
+        :'Plot positions '+start+'–'+(end-1)+' of '+result.values.length+' recorded residues. Complete exact data is available below.';
+      plotPrev.disabled=start===0;plotNext.disabled=end===result.values.length;
+      startInput.value=String(start);
+    }
+    plotPrev.addEventListener('click',()=>drawPlot(Math.max(0,plotStart-128)));
+    plotNext.addEventListener('click',()=>drawPlot(Math.min(result.values.length-1,plotStart+128)));
+    startInput.addEventListener('change',()=>drawPlot(Number(startInput.value)));
+    drawPlot(0);
+    $('result').append(plotControls,chart,inspection,sampleNote,
       deferredPanel('Residue frequency chart ('+result.modulus+' residue classes)',()=>frequency(result)),
       deferredPanel('Exact modular values ('+result.values.length+' rows)',()=>indexedTable(
         ['n','a(n) mod m'],result.values.map((v,n)=>[n,v]),'Complete exact modular values')),
