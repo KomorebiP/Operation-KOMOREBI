@@ -69,11 +69,9 @@ function definitionPreview(formula,label,expanded,recordedVariants=[]){
         const index=Number(selector.value);
         if(!Number.isInteger(index)||index<0||index>=variants.length)return;
         selected=index;
-        const variant=variants[index],next=make('p',variant.expression);
-        next.className='sar-formula';
-        clearMath(detail);
-        formula.replaceWith(next);
-        formula=next;
+        // Mutate the original source node so the shared MathJax controller can
+        // replace its existing typeset pair without leaving stale formulas.
+        formula.textContent=variants[index].expression;
         updateInformation();
         enhanceMath(detail);
       });
