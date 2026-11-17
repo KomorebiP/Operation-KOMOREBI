@@ -206,3 +206,44 @@ export function transferIndexMath(map){
       '+j\\\\\\Delta i&='+String(b-a)+',\\quad 0\\le j<'+n+'\\end{aligned}'
   };
 }
+
+
+/**
+ * Display-only transcription of an independently certified three-sequence
+ * transfer composition. All coefficients come from the exact Q certificate.
+ */
+export function transferCompositionMath(map,position=2){
+  if(!map?.verified||!Array.isArray(map.rows)||!Number.isSafeInteger(map.count)||
+     map.count<1||map.rows.length!==map.count||
+     !Number.isSafeInteger(position)||position<0||position>=map.count){
+    throw Error('Choose a verified finite transfer composition and a stored position.');
+  }
+  const row=map.rows[position];
+  if(row.composed!==row.direct||!row.verified)throw Error('The composed and direct kernels disagree.');
+  const source=map.rows[0].sourceIndex,via=map.rows[0].viaIndex,target=map.rows[0].targetIndex;
+  const shiftAB=via-source,shiftBC=target-via,shiftAC=target-source;
+  if(![source,via,target,shiftAB,shiftBC,shiftAC].every(Number.isSafeInteger)||
+     shiftAC!==map.indexShift||shiftAB+shiftBC!==shiftAC){
+    throw Error('The three stored index shifts do not compose.');
+  }
+  const parts=[];
+  for(let q=0;q<=position;q++){
+    const left=map.rows[q].second,right=map.rows[position-q].first;
+    if(typeof left!=='string'||typeof right!=='string')throw Error('Missing exact composed-kernel coefficients.');
+    parts.push({plain:'('+left+')*('+right+')',tex:'\\left('+rationalTeX(left)+'\\right)\\left('+rationalTeX(right)+'\\right)'});
+  }
+  return {
+    identity:{
+      plain:'H_AC(z) = H_BC(z)*H_AB(z) (mod z^'+map.count+'); L(H_AC) = L(H_BC)*L(H_AB)',
+      tex:'\\begin{aligned}H_{AC}(z)&\\equiv H_{BC}(z)H_{AB}(z)\\pmod{z^{'+map.count+'}}\\\\L(H_{AC})&=L(H_{BC})L(H_{AB})\\end{aligned}'
+    },
+    witness:{
+      plain:'h_AC('+position+') = '+parts.map(part=>part.plain).join(' + ')+' = '+row.composed+' = direct h_AC('+position+')',
+      tex:'\\begin{aligned}h_{AC,'+position+'}&=\\sum_{q=0}^{'+position+'}h_{BC,q}h_{AB,'+position+'-q}\\\\&='+parts.map(part=>part.tex).join('+')+'\\\\&='+rationalTeX(row.composed)+'=h^{\\mathrm{direct}}_{AC,'+position+'}\\end{aligned}'
+    },
+    shifts:{
+      plain:'A index '+source+'+j; B index '+via+'+j; C index '+target+'+j; shifts '+shiftAB+' + '+shiftBC+' = '+shiftAC,
+      tex:'\\begin{aligned}i_A(j)&='+source+'+j,\\quad i_B(j)='+via+'+j,\\quad i_C(j)='+target+'+j\\\\\\Delta_{AB}+\\Delta_{BC}&='+shiftAB+'+('+shiftBC+')='+shiftAC+'=\\Delta_{AC}\\end{aligned}'
+    }
+  };
+}

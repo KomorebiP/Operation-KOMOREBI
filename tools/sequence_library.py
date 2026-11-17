@@ -144,6 +144,12 @@ def build(site,atlas):
  <p>This example verifies four coefficients. The cited derivation treats the separate infinite formal identity and the boundary term needed when transporting a recurrence. This finite certificate does not establish an infinite identity.</p>
  </details>
  <p class="sr-transfer-links"><a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/research/sequence-connections/IDENTITIES.md">Recurrence and transfer derivations</a> · <a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/research/sequence-connections/AUDIT.md">Research audit</a> · <a href="collection/demonstrations/EULER_PACKETS.html#transfer-the-euler-sequence-to-fibonacci-values">Euler and Fibonacci worked derivation</a> · <a download href="assets/sequence-research-connections.json">Related connections JSON</a></p>
+ <div class="sr-transfer-compose-static">
+ <h3>Composition through an intermediate sequence</h3>
+ <p>For three anchored ordinary generating series with nonzero constant coefficients, formal division composes exactly within the chosen coefficient window:</p>
+ <p class="sar-formula sr-transfer-equation" data-math-latex="H_{AC}(z)\equiv H_{BC}(z)H_{AB}(z)\pmod{z^L},\qquad L(H_{AC})=L(H_{BC})L(H_{AB})">H_AC(z) = H_BC(z)*H_AB(z) (mod z^L); L(H_AC) = L(H_BC)*L(H_AB)</p>
+ <p>The original index shifts add: <code>Δ_AC = Δ_AB + Δ_BC</code>. This identity follows from invertibility of the anchored formal series. It does not establish that the unrecorded sequence terms agree or that the three sequences satisfy a common recurrence. With JavaScript enabled, the composition panel checks each stored coefficient and exports an exact certificate.</p>
+ </div>
  <p class="sr-transfer-static">The worked example and source links remain readable without JavaScript. Enable JavaScript to construct and export a transfer for other records.</p>
  <div id="sr-transfer-tool"></div>
  </section>'''
