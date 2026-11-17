@@ -116,9 +116,14 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
     $('chart').replaceChildren();$('agreements').replaceChildren();$('data').querySelector('tbody').replaceChildren();
     const pending=sources.some(s=>s.pending),ready=sources.length&&!pending;
     for(const key of ['csv','svg','png','share','share-top'])$(key).disabled=!ready;
+    $('scale-note').textContent=comparisonScaleExplanation(state,chartLabels);
     if(!ready){result=null;$('summary').textContent=pending?'Load or remove the pending reference excerpts to draw this comparison.':'Choose Add to comparison on any local result, or try the example.';$('inspector').textContent='Exact point values will appear here.';return;}
     try{result=workbenchRows(sources,state);}catch(error){fail(error);return;}
-    const colors=plotColors(appearance.state),theme=appearance.state,chart=$('chart'),width=Math.max(280,chart.clientWidth),height=plotHeight(width,theme),mobile=width<560,left=mobile?49:68,right=18,top=62+sources.length*14,bottom=height-(sources.some(s=>s.type==='oeis')?94:65),plotWidth=width-left-right;
+    const colors=plotColors(appearance.state),theme=appearance.state,chart=$('chart');
+    const width=Math.max(280,chart.clientWidth),height=plotHeight(width,theme),mobile=width<560;
+    const showLegend=chartLabels.legend==='show',bottomLegend=showLegend&&chartLabels.legendPosition==='bottom',hasOEIS=sources.some(s=>s.type==='oeis');
+    const left=mobile?74:92,right=18,top=showLegend&&!bottomLegend?54+sources.length*17:56;
+    const bottom=height-(hasOEIS?106:69)-(bottomLegend?sources.length*17+8:0),plotWidth=width-left-right;
     const all=result.series.flatMap(s=>s.rows),points=all.filter(r=>r.y!==null&&Number.isFinite(r.y));
     for(const {source,rows}of result.series)for(const row of rows){const tr=node('tr');for(const value of [source.id,source.indexKind,row.index,row.position,row.raw,row.value??'undefined'])tr.append(node('td',String(value)));$('data').querySelector('tbody').append(tr);}
     const checks=agreements(result);if(checks.length){$('agreements').append(node('h3',state.view==='mod'?`Finite residue agreements · mod ${state.modulus}`:'Finite exact agreements'),node('p','Compared with the first selected series at overlapping displayed positions. Finite agreement does not prove that the infinite sequences are identical.'));const list=node('ul');for(const check of checks){const source=sources.find(s=>s.key===check.source);list.append(node('li',`${source.id}: ${check.equal} of ${check.compared} displayed integers agree.`+(check.firstMismatch?` First difference at ${state.alignment==='positions'?'window position':'local index'} ${check.firstMismatch.x}.`:'')));}$('agreements').append(list);}
@@ -127,14 +132,25 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
     if(state.view==='mod'){ymin=0;ymax=state.modulus-1;}else if(theme.baseline==='zero'){ymin=Math.min(ymin,0);ymax=Math.max(ymax,0);}if(xmin===xmax){xmin-=.5;xmax+=.5;}if(ymin===ymax){ymin=Math.min(0,ymin);ymax=Math.max(0,ymax);if(ymin===ymax){ymin=-1;ymax=1;}}
     const normalizer=Math.max(1,Math.abs(ymin),Math.abs(ymax)),lo=ymin/normalizer,hi=ymax/normalizer;
     const x=value=>left+(value-xmin)/(xmax-xmin)*plotWidth,y=value=>bottom-(value/normalizer-lo)/(hi-lo)*(bottom-top),picture=svg('svg',{viewBox:`0 0 ${width} ${height}`,role:'group','aria-labelledby':'sw-chart-title sw-chart-desc'});
-    picture.append(svg('title',{id:'sw-chart-title'},state.view==='mod'?`Sequence residues modulo ${state.modulus}`:'Exact sequence comparison'),svg('desc',{id:'sw-chart-desc'},'Finite stored terms. Focus a point for its exact value. Arrow keys navigate. A full HTML table follows the chart.'),svg('rect',{width,height,fill:'#fafaf5'}));
-    picture.append(svg('text',{x:left,y:23,'font-size':mobile?12:15,'font-weight':600},state.view==='mod'?`Residues mod ${state.modulus} · ${state.transform}`:`${state.transform} · ${state.scale==='signed-log'?'sgn(v) log10(1+|v|)':'linear scale'}`));
-    result.series.forEach(({source},i)=>{const text=svg('text',{x:left,y:45+i*14,'font-size':11},short(`${i+1}. ${source.id} · ${source.title}`,Math.floor((width-left-right)/7)));text.append(svg('title',{},source.title));picture.append(text);picture.append(svg('line',{x1:left-24,x2:left-5,y1:41+i*14,y2:41+i*14,stroke:colors[i],'stroke-width':theme.width,'stroke-dasharray':['','7 4','2 4','9 3 2 3'][i]}));});
+    const chartTitle=comparisonChartTitle(state,chartLabels),xTitle=comparisonXAxisTitle(state,chartLabels),yTitle=comparisonYAxisTitle(state,chartLabels);
+    picture.append(svg('title',{id:'sw-chart-title'},chartTitle),svg('desc',{id:'sw-chart-desc'},comparisonScaleExplanation(state,chartLabels)+' Focus a point to inspect exact integer values. A complete indexed HTML table follows the chart.'),svg('rect',{width,height,fill:'#fafaf5'}));
+    const heading=svg('text',{x:width/2,y:23,'text-anchor':'middle','font-size':mobile?13:15,'font-weight':650,'data-chart-title':'true'},short(chartTitle,Math.max(12,Math.floor((width-38)/8))));
+    heading.append(svg('title',{},chartTitle));picture.append(heading);
+    if(showLegend)result.series.forEach(({source},i)=>{
+      const raw=chartLabels.seriesLabels[i]||source.title||source.id,label=(i+1)+'. '+raw;
+      const ly=bottomLegend?bottom+67+i*17:45+i*17,display=svg('text',{x:left,y:ly,'font-size':mobile?11:12,'data-legend-label':String(i)},short(label,Math.max(12,Math.floor((width-left-right-12)/7))));
+      display.append(svg('title',{},source.id+' · '+raw));picture.append(display);
+      picture.append(svg('line',{x1:left-24,x2:left-5,y1:ly-4,y2:ly-4,stroke:colors[i],'stroke-width':theme.width,'stroke-dasharray':['','7 4','2 4','9 3 2 3'][i]}));
+    });
     const yticks=state.view==='mod'?[...new Set(Array.from({length:Math.min(state.modulus,5)},(_,i)=>Math.round(i*(state.modulus-1)/(Math.min(state.modulus,5)-1))))]:Array.from({length:5},(_,i)=>(lo+(hi-lo)*i/4)*normalizer);
-    for(const tick of yticks){if(theme.grid==='on')picture.append(svg('line',{x1:left,x2:width-right,y1:y(tick),y2:y(tick),stroke:'#d9dfd4','data-plot-grid':'true'}));picture.append(svg('text',{x:left-8,y:y(tick)+4,'text-anchor':'end','font-size':11,'data-y-tick':''},state.view==='mod'?String(tick):Number(tick.toPrecision(3)).toString()));}
+    for(const tick of yticks){if(theme.grid==='on')picture.append(svg('line',{x1:left,x2:width-right,y1:y(tick),y2:y(tick),stroke:'#d9dfd4','data-plot-grid':'true'}));picture.append(svg('text',{x:left-9,y:y(tick)+4,'text-anchor':'end','font-size':11,'data-y-tick':''},comparisonYAxisTick(tick,{view:state.view,scale:state.scale,ticks:chartLabels.ticks})));}
     const xticks=[...new Set(Array.from({length:mobile?3:5},(_,i)=>Math.round(xmin+(xmax-xmin)*i/(mobile?2:4))))].filter(v=>v>=xmin&&v<=xmax);
     for(const tick of xticks)picture.append(svg('text',{x:x(tick),y:bottom+20,'text-anchor':'middle','font-size':11},String(tick)));
-    picture.append(svg('line',{x1:left,x2:width-right,y1:bottom,y2:bottom,stroke:'#87988b','data-plot-axis':'true'}),svg('text',{x:left,y:bottom+42,'font-size':11},state.alignment==='indices'?'Recorded local index':'Window position (each stored prefix + skip)'));
+    picture.append(svg('line',{x1:left,x2:width-right,y1:bottom,y2:bottom,stroke:'#87988b','data-plot-axis':'true'}));
+    const xLabel=svg('text',{x:left+plotWidth/2,y:bottom+42,'font-size':mobile?11:12,'text-anchor':'middle','data-x-axis-title':'true'},short(xTitle,Math.max(12,Math.floor(plotWidth/7))));
+    xLabel.append(svg('title',{},xTitle));picture.append(xLabel);
+    const yLabel=svg('text',{x:16,y:(top+bottom)/2,'font-size':mobile?10:12,'text-anchor':'middle',transform:'rotate(-90 16 '+((top+bottom)/2)+')','data-y-axis-title':'true'},short(yTitle,Math.max(10,Math.floor((bottom-top)/7))));
+    yLabel.append(svg('title',{},yTitle));picture.append(yLabel);
     const focusables=[],labels=[],patterns=['','7 4','2 4','9 3 2 3'];
     const inspected=(source,row)=>`${source.id} · ${source.indexKind} ${row.index} · window position ${row.position} · original ${row.raw} · ${state.view==='mod'?'residue':'displayed'} ${row.value}`;
     for(const [si,{source,rows}]of result.series.entries()){
