@@ -3,7 +3,14 @@ import {modularCSV} from './sequence-modular-core.mjs';
 import {node,indexedTable,job,download,plotValues,copyTools,plotExports,svg} from './sequence-research-common.mjs';
 export function mountModular(host,{family}={}){
   if(!host)return null;host.classList.add('sg-tool');host.innerHTML=`<form id="md-form"><div class="sar-controls"><label for="md-k">Step count k<input id="md-k" type="number" min="2" max="16" value="2"></label><label for="md-r">Reciprocal power r<input id="md-r" type="number" min="1" max="8" value="1"></label><label for="md-c">Step weight c<input id="md-c" type="number" min="1" max="5" value="1"></label><label for="md-seedMode">Initial values<select id="md-seedMode"><option value="tail">Nonzero tail</option><option value="zero">k−1 zeros, then one</option><option value="custom">My initial values</option></select></label><label for="md-seeds">k initial values<input id="md-seeds" value="0, 1" maxlength="2000"></label><label for="md-modulus">Modulus m<input id="md-modulus" type="number" min="2" max="256" value="7"></label><label for="md-maximum">Complete states to search<input id="md-maximum" type="number" min="1" max="20000" value="5000"></label></div><div class="sp-actions"><button type="submit">Compute modular certificate</button><button type="button" id="md-cancel" disabled>Cancel modular search</button><button type="button" id="md-current">Use current k-step family</button><button type="button" id="md-share">Copy modular link</button><button type="button" id="md-csv">Download modular CSV</button><button type="button" id="md-json">Download modular certificate</button></div></form><p id="md-status" role="status" aria-live="polite"></p><p id="md-error" role="alert" hidden></p><div id="md-result"></div>`;
-  const $=id=>host.querySelector('#md-'+id),runner=job(),clipboard=copyTools(host);let current=null,requestId=0;const fields=['k','r','c','seedMode','seeds'];
+  const $=id=>host.querySelector('#md-'+id),runner=job(),clipboard=copyTools(host);
+  if(!family){
+    $('current').disabled=true;
+    $('current').title='Open the family explorer before using this shortcut.';
+    const link=node('a','Open the family explorer');
+    link.href='sequence-research.html#generalized';
+    $('current').after(link);
+  }let current=null,requestId=0;const fields=['k','r','c','seedMode','seeds'];
   function read(){return {params:validateFamily('linear',Object.fromEntries(fields.map(k=>[k,$(k).value]))),modulus:Number($('modulus').value),maximum:Number($('maximum').value)};}
   function validate(s){if(!s)throw Error('Choose valid modular parameters.');validateFamily('linear',s.params);if(!Number.isSafeInteger(s.modulus)||s.modulus<2||s.modulus>256||!Number.isSafeInteger(s.maximum)||s.maximum<1||s.maximum>20000)throw Error('Choose a modulus from 2 to 256 and a search bound from 1 to 20,000.');return s;}
   function fail(error){$('error').hidden=false;$('error').textContent=error.message;}
