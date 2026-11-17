@@ -112,11 +112,30 @@ windows together; recorded-index alignment is available for local records only
 and does not imply equal source degrees. The bulk OEIS files omit mathematical
 offsets, so reference excerpts always use export positions.
 
-Comparison links contain source descriptors and display settings. Local records
-restore immediately; reference descriptors must match the retained snapshot
-hash and require an explicit load action. Opening a link does not download the
-bulk data. The finder and restoration reuse the same worker's compressed-file
-cache. Exact agreement counts compare displayed integers over the overlap.
+Comparison links contain source descriptors and display settings. New links
+also bind each local sequence to a SHA-256 receipt of its complete indexed
+integer data: record ID, collection, stored index convention and offset, exact
+term strings, and source degrees where available. A recipient's current
+catalogue must match those receipts, offsets and stored lengths before a pinned
+comparison is shown. A mismatch stops restoration with a visible error instead
+of silently substituting revised coefficients. The source receipts are available
+under **Source identity and comparison receipts** on the Compare page. That
+panel distinguishes exact local data from parameter-generated families, pasted
+integer data, and retained OEIS reference snapshots. These receipts check data
+identity, not the truth of an infinite identity or historical priority.
+
+Earlier comparison URLs still open through the original schema. They carry
+record identifiers but cannot attest to the original exact local coefficients;
+the Compare page explicitly labels such links as legacy. Pinned links remain
+reproducible only while the corresponding exact records are present in the
+published catalogue. Use the complete notebook or source exports for durable
+offline records. The Copy comparison link action is available beside the
+selected sources as well as below the chart.
+
+Local records restore immediately; reference descriptors must match the retained
+snapshot hash and require an explicit load action. Opening a link does not
+download the bulk data. The finder and restoration reuse the same worker's
+compressed-file cache. Exact agreement counts compare displayed integers over the overlap.
 Modular views label residue agreements separately. SVG/PNG exports include the
 series legend and OEIS credit when applicable. CSVs retain exact values, index
 conventions, source URLs, reference hashes, and reference licensing. Points use
