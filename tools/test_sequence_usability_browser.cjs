@@ -63,7 +63,11 @@ async function visit(page,name,kind){
       assert.equal(await page.locator('#sl-results>li').first().locator('.sl-result-more .sp-actions a').isVisible(),true);
       await page.locator('#sl-results .sl-result-definition summary').first().click();
       assert.equal(await page.locator('#sl-results .sl-result-definition').first().evaluate(el=>el.open),true);
-      assert.equal(await page.locator('#sl-results .sl-result-definition').first().locator('.sar-formula').isVisible(),true);
+      await page.waitForFunction(()=>{
+        const detail=document.querySelector('#sl-results .sl-result-definition');
+        const plain=detail?.querySelector('.sar-formula'),typeset=detail?.querySelector('[data-math-tex]');
+        return Boolean(plain?.getClientRects().length||typeset?.getClientRects().length);
+      },{timeout:30000});
       await fit(page);
       await page.goto(href('sequence-library.html?q=id%3AKSEQ-000025#library-search'));
       await ready(page);
