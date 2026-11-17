@@ -139,6 +139,50 @@ async function visit(page,name,kind){
       assert.match(await definition.locator('.sl-variant-kind').textContent(),/finite sum · 2 of 4/);
       assert.equal((await definition.locator('.sl-variant-note').textContent()).trim(),recorded.formulas[1].note);
       assert.equal(await definition.locator('.sl-variant-source a').getAttribute('href'),recorded.formulas[1].source);
+
+      await inspector.getByRole('button',{name:'Copy inspection link'}).click();
+      await page.waitForFunction(()=>
+        document.querySelector('#sl-results .sl-inspection-link-status')?.textContent.includes('copied')
+      );
+      const inspectionHref=await page.evaluate(()=>navigator.clipboard.readText());
+      const inspectedUrl=new URL(inspectionHref);
+      assert.equal(inspectedUrl.pathname.endsWith('/sequence-library.html'),true);
+      assert.equal(inspectedUrl.searchParams.get('q'),'id:'+recorded.id);
+      assert.equal(inspectedUrl.searchParams.get('sl-record'),recorded.id);
+      assert.equal(inspectedUrl.searchParams.get('sl-formula'),'1');
+      assert.equal(inspectedUrl.searchParams.get('sl-start'),String(recorded.offset+16));
+      assert.equal(inspectedUrl.hash,'#sl-results');
+      const recipient=await context.newPage();
+      recipient.on('pageerror',error=>report.errors.push(error.message));
+      await recipient.goto(inspectionHref);await ready(recipient);
+      assert.equal(await recipient.locator('#sl-results>li').count(),1);
+      const restoredDefinition=recipient.locator('#sl-results .sl-result-definition');
+      const restoredInspector=restoredDefinition.locator('.sl-term-inspector');
+      assert.equal(await restoredDefinition.evaluate(el=>el.open),true);
+      assert.equal(await restoredDefinition.locator('.sl-variant-select').inputValue(),'1');
+      assert.equal(await restoredDefinition.locator('p.sar-formula').first().textContent(),recorded.formulas[1].expression);
+      assert.equal(await restoredInspector.evaluate(el=>el.open),true);
+      await restoredInspector.locator('tbody tr').first().waitFor({state:'attached',timeout:30000});
+      assert.equal(await restoredInspector.locator('tbody tr').first().locator('th').textContent(),String(recorded.offset+16));
+      assert.equal(await restoredInspector.locator('tbody tr').first().locator('td').last().textContent(),recorded.terms[16]);
+      await fit(recipient);
+      if(width===1440){
+        await recipient.evaluate(()=>Object.defineProperty(navigator,'clipboard',{configurable:true,value:undefined}));
+        await restoredInspector.getByRole('button',{name:'Copy inspection link'}).click();
+        await restoredInspector.locator('.sl-inspection-link-fallback').waitFor({state:'visible',timeout:30000});
+        assert.equal(await restoredInspector.locator('.sl-inspection-link-fallback input').inputValue(),inspectionHref,
+          'Clipboard-disabled readers still receive the complete exact view link');
+        const bad=new URL(inspectionHref);
+        bad.searchParams.set('sl-formula','999');
+        const invalid=await context.newPage();
+        invalid.on('pageerror',error=>report.errors.push(error.message));
+        await invalid.goto(bad.href);await ready(invalid);
+        assert.equal(await invalid.locator('#sl-results .sl-variant-select').inputValue(),'0');
+        assert.equal(await invalid.locator('#sl-results .sl-term-inspector').evaluate(el=>el.open),false,
+          'Invalid formula positions must not restore another inspection view');
+        await fit(invalid);await invalid.close();
+      }
+      await recipient.close();
       await page.selectOption('#site-math-display','plain');
       assert.equal(await definition.locator('p.sar-formula').first().isVisible(),true,
         'The original exact source must remain visible in plain-text mode, including notation fallbacks');

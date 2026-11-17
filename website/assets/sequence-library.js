@@ -2,6 +2,7 @@ import './sequence-reading-theme.mjs';
 import {enhanceMath,clearMath} from './math-display.mjs';
 import {searchEntries} from './sequence-atlas-search.mjs';
 import {SEARCH_KEYS,RECORD_FILTERS,FAMILY_FILTERS,emptySearch,normalizeSearch,librarySearch,librarySearchCSV} from './sequence-library-search.mjs';
+import {createInspectionLink,readInspectionLink} from './sequence-inspection-links.mjs';
 
 import {referenceQuery} from './sequence-oeis-core.mjs';
 import {createReferenceClient} from './sequence-oeis-client.mjs';
@@ -34,7 +35,7 @@ if(root){
 }
 
 /** Render stored integer strings without numeric conversion or invented source-degree maps. */
-function inlineExactValues(entry,initialPosition=0){
+function inlineExactValues(entry,initialPosition=0,openFromLink=false,selectedFormula=()=>0,variantCount=1){
   const values=entry.terms;
   if(!Array.isArray(values)||!values.length)return null;
   const panel=make('details'),summary=make('summary',`Inspect exact values (${values.length})`);
@@ -50,14 +51,15 @@ function inlineExactValues(entry,initialPosition=0){
   function init(){
     if(mounted)return;
     mounted=true;
-    const container=make('div'),controls=make('form'),previous=make('button','Previous 8'),next=make('button','Next 8'),exportWindow=make('button','Export window CSV');
+    const container=make('div'),controls=make('form'),previous=make('button','Previous 8'),next=make('button','Next 8'),exportWindow=make('button','Export window CSV'),copyLink=make('button','Copy inspection link');
     const jumpLabel=make('label',`Go to stored ${symbol}`),jump=make('input'),go=make('button','Go');
     container.className='sl-term-inspector-body';controls.className='sl-term-controls';
-    previous.type=next.type=exportWindow.type='button';go.type='submit';
+    previous.type=next.type=exportWindow.type=copyLink.type='button';go.type='submit';
+    copyLink.className='sl-term-share-button';
     exportWindow.className='sl-term-export';
     jump.type='number';jump.min=String(offset);jump.max=String(offset+values.length-1);jump.step='1';
     jump.inputMode='numeric';jumpLabel.append(jump);
-    controls.append(previous,next,jumpLabel,go,exportWindow);
+    controls.append(previous,next,jumpLabel,go,exportWindow,copyLink);
     const status=make('p'),frame=make('div'),table=make('table'),head=make('thead'),header=make('tr'),body=make('tbody');
     status.className='sl-term-status';status.setAttribute('role','status');status.setAttribute('aria-live','polite');
     frame.className='sl-term-scroll';frame.tabIndex=0;frame.setAttribute('role','region');
@@ -71,7 +73,12 @@ function inlineExactValues(entry,initialPosition=0){
       'Indices are the stored sequence indices, which may differ from source Taylor degrees.');
     if(hasDegrees)detail.textContent+=' Source degrees follow each record’s audited index map.';
     detail.className='sl-term-index-note';
-    container.append(controls,status,frame,detail);panel.append(container);
+    const shareStatus=make('p'),fallbackLabel=make('label','Select and copy this inspection link'),fallbackInput=make('input');
+    shareStatus.className='sl-inspection-link-status';shareStatus.setAttribute('role','status');shareStatus.setAttribute('aria-live','polite');
+    fallbackLabel.className='sl-inspection-link-fallback';fallbackLabel.hidden=true;
+    fallbackInput.type='url';fallbackInput.readOnly=true;
+    fallbackLabel.append(fallbackInput);
+    container.append(controls,status,frame,detail,shareStatus,fallbackLabel);panel.append(container);
     let currentRows=[];
     function renderWindow(){
       const end=Math.min(values.length,first+size);
@@ -100,6 +107,19 @@ function inlineExactValues(entry,initialPosition=0){
         body.append(row);
       }
     }
+    copyLink.addEventListener('click',async()=>{
+      const url=createInspectionLink(location.href,entry,selectedFormula(),offset+first,variantCount);
+      try {
+        if(!navigator.clipboard?.writeText)throw Error('Clipboard unavailable');
+        await navigator.clipboard.writeText(url);
+        fallbackLabel.hidden=true;
+        shareStatus.textContent='Inspection link copied. The recipient will see this formula and index window.';
+      }catch{
+        fallbackLabel.hidden=false;fallbackInput.value=url;
+        shareStatus.textContent='Clipboard unavailable. Select and copy the link below.';
+        fallbackInput.focus();fallbackInput.select();
+      }
+    });
     exportWindow.addEventListener('click',()=>{
       const encodeCell=value=>'"'+String(value).replaceAll('"','""')+'"';
       const data=[csvColumns,...currentRows.map(row=>[entry.id,...row])];
@@ -124,6 +144,7 @@ function inlineExactValues(entry,initialPosition=0){
     renderWindow();
   }
   panel.addEventListener('toggle',()=>{if(panel.open)init();});
+  if(openFromLink){panel.open=true;init();}
   return panel;
 }
 
@@ -143,6 +164,12 @@ function definitionPreview(formula,label,expanded,recordedVariants=[],entry=null
     variants.unshift({title:'Defining formula',kind:'definition',expression:definingExpression});
   }
   let selected=Math.max(0,variants.findIndex(v=>v.expression===definingExpression)),mounted=false;
+  const shared=entry&&results.length===1?readInspectionLink(location.href,entry,variants.length):null;
+  if(shared){
+    selected=shared.variantIndex;
+    formula.textContent=variants[selected].expression;
+    detail.open=true;
+  }
   function mountVariants(){
     if(mounted||!variants.length)return;
     mounted=true;
@@ -176,7 +203,7 @@ function definitionPreview(formula,label,expanded,recordedVariants=[],entry=null
     const layout=make('div');layout.className='sl-formula-inspection-layout';
     detail.insertBefore(layout,formula);layout.append(formula);
     if(entry){
-      const inspector=inlineExactValues(entry,initialPosition);
+      const inspector=inlineExactValues(entry,shared?.startPosition??initialPosition,Boolean(shared),()=>selected,variants.length);
       if(inspector){
         layout.append(inspector);
         inspector.addEventListener('toggle',()=>{layout.dataset.exactOpen=String(inspector.open);});
