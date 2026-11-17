@@ -479,6 +479,34 @@ Targeted browser checks verify search-card spacing, main-task order,
 expandable index alignment, and no horizontal overflow across mobile and
 desktop widths.
 
+## Compact research workbench rendering
+
+The dedicated Connections page shows the exact relationship descriptions and
+their derivation links first. Its neighborhood diagram starts closed and is
+drawn only when the reader opens **View relationship diagram**. The SVG scales
+to a shorter 280, 350 or 440-unit canvas according to the number of
+neighbors in the displayed connection page. Closing the diagram discards
+its SVG nodes, and opening it again uses the current relation filters.
+The recorded edges, proofs, directed-path logic and exports are unchanged.
+
+The Modular dynamics page now displays the certificate summary and a bounded
+plot of the first 128 recorded residues. For longer exact orbits it states
+the displayed-versus-recorded count. Three labelled disclosures hold the
+residue frequency chart, the complete indexed residue table, and the
+complete recurrence-state table. Their visual contents are created on
+first opening, rather than inserting thousands of table rows at initial
+render. Each table retains all computed records and is scrollable within
+its own region. The exported CSV and JSON are unaffected by the display
+limit, and the original recurrence, transient and period certificates
+remain exact.
+
+The responsive browser checks open and close the graph visualization,
+verify its compact viewport, check the optional modular panels are initially
+unpopulated, and then inspect their full exact values at 1440, 390 and
+320 pixels. No-JavaScript explanations and the existing Research directory
+remain available. These are presentation and DOM-performance changes,
+not new mathematical results.
+
 ## Focused pages and existing links
 
 The main Sequence Library now serves search and exact record discovery rather
