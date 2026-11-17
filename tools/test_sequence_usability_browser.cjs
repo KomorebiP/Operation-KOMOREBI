@@ -100,7 +100,7 @@ async function visit(page,name,kind){
       await page.locator('#cg-diagram-details>summary').click();
       await page.locator('#cg-chart svg').waitFor({timeout:30000});
       const graphLayout=await page.locator('#cg-chart svg').evaluate(svg=>({
-        height:Number(svg.getAttribute('viewBox').split(/\\s+/).at(-1)),
+        height:Number(svg.getAttribute('viewBox').trim().split(' ').at(-1)),
         neighbors:Math.max(0,svg.querySelectorAll('a').length-1)
       }));
       assert.equal(graphLayout.height,graphLayout.neighbors<=3?280:graphLayout.neighbors<=6?350:440);
