@@ -54,7 +54,8 @@ function legacyDestination(){
     'tr-compose':'sequence-transfers.html'
   };
   const params=new URL(location.href).searchParams;
-  const target=routes[hash]||(params.has('wb')?'sequence-compare.html':params.has('tr-source')?'sequence-transfers.html':params.has('graph')||params.has('identify')?'sequence-research.html':params.has('notebook')?'sequence-workspace.html':null);
+  const combinedFamily=hash==='family-explorer'&&['q','scope','mode','paper','collection'].some(key=>params.has(key));
+  const target=combinedFamily?'sequence-workspace.html':(routes[hash]||(params.has('wb')?'sequence-compare.html':params.has('tr-source')?'sequence-transfers.html':params.has('graph')||params.has('identify')?'sequence-research.html':params.has('notebook')?'sequence-workspace.html':null));
   if(!target)return null;
   const url=new URL(target,location.href);
   url.search=location.search;url.hash=location.hash||
