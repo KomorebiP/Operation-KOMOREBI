@@ -126,6 +126,13 @@ def build(site,atlas):
  <p class="sar-formula sr-transfer-equation" data-math-latex="\begin{aligned}H(z)&amp;\equiv 1+2z-z^2+53z^3\\K(z)&amp;\equiv 1-2z+5z^2-65z^3\end{aligned}\pmod{z^4}">H(z) = 1 + 2z - z^2 + 53z^3; K(z) = 1 - 2z + 5z^2 - 65z^3 (mod z^4)</p>
  <p>For example, at tail position 2, convolution recovers the target coefficient:</p>
  <p class="sar-formula sr-transfer-equation" data-math-latex="\begin{aligned}b_2&amp;=h_0a_2+h_1a_1+h_2a_0\\&amp;=(1)(5)+(2)(-1)+(-1)(1)=2.\end{aligned}">b_2 = h_0*a_2 + h_1*a_1 + h_2*a_0 = 1*5 + 2*(-1) + (-1)*1 = 2</p>
+ <p>The corresponding leading four-by-four convolution matrices are</p>
+ <div class="sr-transfer-static-matrices">
+ <p class="sar-formula sr-transfer-equation" data-math-latex="L(H)=\begin{pmatrix}1&amp;0&amp;0&amp;0\\2&amp;1&amp;0&amp;0\\-1&amp;2&amp;1&amp;0\\53&amp;-1&amp;2&amp;1\end{pmatrix}">L(H) = [[1,0,0,0], [2,1,0,0], [-1,2,1,0], [53,-1,2,1]]</p>
+ <p class="sar-formula sr-transfer-equation" data-math-latex="L(K)=\begin{pmatrix}1&amp;0&amp;0&amp;0\\-2&amp;1&amp;0&amp;0\\5&amp;-2&amp;1&amp;0\\-65&amp;5&amp;-2&amp;1\end{pmatrix}">L(K) = [[1,0,0,0], [-2,1,0,0], [5,-2,1,0], [-65,5,-2,1]]</p>
+ </div>
+ <p class="sar-formula sr-transfer-equation" data-math-latex="L(H)L(K)=L(K)L(H)=I_4">L(H)*L(K) = L(K)*L(H) = I_4</p>
+ <p>The matrices use local tail positions rather than the original Euler and Fibonacci indices. Their first four rows are inverse to each other over the exact rationals.</p>
  <p>This example verifies four coefficients. The cited derivation treats the separate infinite formal identity and the boundary term needed when transporting a recurrence. This finite certificate does not establish an infinite identity.</p>
  </details>
  <p class="sr-transfer-links"><a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/research/sequence-connections/IDENTITIES.md">Recurrence and transfer derivations</a> · <a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/research/sequence-connections/AUDIT.md">Research audit</a> · <a href="collection/demonstrations/EULER_PACKETS.html#transfer-the-euler-sequence-to-fibonacci-values">Euler and Fibonacci worked derivation</a> · <a download href="assets/sequence-research-connections.json">Related connections JSON</a></p>
