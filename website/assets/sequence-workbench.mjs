@@ -1,5 +1,6 @@
 import {WORKBENCH_DEFAULTS,validateWorkbench,localSource,referenceSource,familySource,customSource,descriptor,workbenchRows,agreements,readWorkbenchLink,workbenchLink,comparisonCSV} from './sequence-workbench-core.mjs';
 import {mountPlotOptions,plotColors,plotHeight,showIndexLabel,mergePlotLabels,finishPlotTheme,exportPlot,validateAppearance} from './sequence-plot-options.mjs';
+import {COMPARISON_CHART_DEFAULTS,validateComparisonChart,comparisonChartTitle,comparisonXAxisTitle,comparisonYAxisTitle,comparisonYAxisTick,comparisonScaleExplanation} from './sequence-comparison-chart.mjs';
 
 const node=(tag,text)=>{const el=document.createElement(tag);if(text!==undefined)el.textContent=text;return el;};
 const svg=(tag,attrs={},text)=>{const el=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const [key,value]of Object.entries(attrs))el.setAttribute(key,value);if(text!==undefined)el.textContent=text;return el;};
@@ -27,7 +28,23 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
        <p id="sw-receipt-status"></p><ol id="sw-receipt-list"></ol>
        <p>SHA-256 receipts identify indexed integer data, not mathematical proofs or historical priority. Generated families are reconstructed from their parameters. OEIS references retain snapshot checks and require an explicit load.</p>
      </details>
-    <div id="sw-appearance"></div><p id="sw-summary"></p><div id="sw-chart" class="sw-chart"></div>
+    <div id="sw-appearance"></div>
+    <details id="sw-chart-labels" class="sw-chart-labels"><summary>Customize chart title, legend and axes</summary>
+      <div class="sw-chart-label-grid">
+        <label for="sw-title-text">Chart title<input type="text" id="sw-title-text" maxlength="90" placeholder="Sequence comparison"></label>
+        <label for="sw-x-title">Horizontal axis title<input type="text" id="sw-x-title" maxlength="64" placeholder="Window position"></label>
+        <label for="sw-y-title">Vertical axis title<input type="text" id="sw-y-title" maxlength="64" placeholder="Auto: value scale"></label>
+        <label for="sw-tick-mode">Signed-log tick labels<select id="sw-tick-mode"><option value="magnitude">Approximate original values</option><option value="log">Signed-log coordinates</option></select></label>
+        <label for="sw-legend">Legend<select id="sw-legend"><option value="show">Show legend</option><option value="hide">Hide legend</option></select></label>
+        <label for="sw-legend-position">Legend placement<select id="sw-legend-position"><option value="top">Above plot</option><option value="bottom">Below plot</option></select></label>
+      </div>
+      <div id="sw-series-labels" class="sw-series-labels"></div>
+      <p>Leave any title blank to use a suitable default. Legend names correspond to the selected series in order. These labels change only the picture, not the integer data.</p>
+      <button type="button" id="sw-reset-chart-labels">Restore chart labels</button>
+      <p id="sw-chart-label-status" role="status" aria-live="polite"></p>
+    </details>
+    <p id="sw-summary"></p><div id="sw-chart" class="sw-chart"></div>
+    <p id="sw-scale-note" class="sw-scale-note" role="note"></p>
     <p id="sw-inspector" class="sw-inspector" role="status">Focus a plotted point to inspect its exact integer. Use the left and right arrows to move along a series, the up and down arrows to switch series, and Home or End to reach an endpoint.</p>
     <div id="sw-agreements"></div><div class="sp-actions"><button type="button" id="sw-share">Copy comparison link</button><button type="button" id="sw-csv">Export exact CSV</button><button type="button" id="sw-svg">Export SVG</button><button type="button" id="sw-png">Export PNG</button></div>
     <label id="sw-link-wrap" for="sw-link" hidden>Copy this comparison link<input id="sw-link" readonly></label>
@@ -37,7 +54,7 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
     const previous=root.querySelector('#transfers')||root.querySelector('#oeis');
     if(previous)previous.after(section);else root.append(section);
   }
-  const $=id=>section.querySelector('#sw-'+id);let sources=[],state={...WORKBENCH_DEFAULTS},result=null,activeKey=null,restoredSchema=null;
+  const $=id=>section.querySelector('#sw-'+id);let sources=[],state={...WORKBENCH_DEFAULTS},result=null,activeKey=null,restoredSchema=null,chartLabels=validateComparisonChart();
   const matches=entries.map(entry=>({entry,key:(entry.id+' '+entry.title).toLowerCase()}));
   function suggest(){
     const term=$('record').value.toLowerCase().trim();
@@ -55,9 +72,46 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
   });
 
   const say=text=>{$('status').textContent=text;},fail=error=>{$('error').textContent=error.message;$('error').hidden=false;};
-  try{const linked=readWorkbenchLink(location.href,entries,snapshot);if(linked){sources=linked.sources;state=linked.state;restoredSchema=linked.schema;}}catch(error){fail(error);}
+  try{const linked=readWorkbenchLink(location.href,entries,snapshot);if(linked){sources=linked.sources;state=linked.state;restoredSchema=linked.schema;chartLabels=linked.chartLabels;}}catch(error){fail(error);}
   const fields=Object.keys(WORKBENCH_DEFAULTS);for(const key of fields)$(key).value=state[key];
   const appearance=mountPlotOptions({host:$('appearance'),prefix:'sw',onChange:()=>draw()});
+  const labelFields={title:$('title-text'),xTitle:$('x-title'),yTitle:$('y-title'),ticks:$('tick-mode'),legend:$('legend'),legendPosition:$('legend-position')};
+  function showChartLabels(){
+    for(const [key,input] of Object.entries(labelFields))input.value=chartLabels[key];
+    $('legend-position').disabled=chartLabels.legend==='hide';
+    $('tick-mode').disabled=state.view==='mod'||state.scale!=='signed-log';
+    const controls=$('series-labels');controls.replaceChildren();
+    if(sources.length&&chartLabels.legend==='show'){
+      controls.append(node('p','Legend labels (optional)'));
+      for(const [index,source] of sources.entries()){
+        const label=node('label'),caption=node('span',(index+1)+'. '+source.id),input=node('input');
+        input.type='text';input.maxLength=60;input.value=chartLabels.seriesLabels[index]||'';
+        input.placeholder=source.title;input.setAttribute('aria-label','Legend label for '+source.id);
+        input.addEventListener('change',()=>{
+          try{
+            const seriesLabels=Array.from({length:sources.length},(_,i)=>chartLabels.seriesLabels[i]||'');
+            seriesLabels[index]=input.value;
+            chartLabels=validateComparisonChart({...chartLabels,seriesLabels});
+            $('chart-label-status').textContent='Legend label updated.';
+            draw();
+          }catch(error){$('chart-label-status').textContent=error.message;}
+        });
+        label.append(caption,input);controls.append(label);
+      }
+    }
+  }
+  for(const [key,input] of Object.entries(labelFields))input.addEventListener('change',()=>{
+    try{
+      chartLabels=validateComparisonChart({...chartLabels,[key]:input.value});
+      $('chart-label-status').textContent='Chart labels updated.';
+      showChartLabels();draw();
+    }catch(error){$('chart-label-status').textContent=error.message;}
+  });
+  $('reset-chart-labels').addEventListener('click',()=>{
+    chartLabels=validateComparisonChart(COMPARISON_CHART_DEFAULTS);
+    $('chart-label-status').textContent='Default chart labels restored.';
+    showChartLabels();draw();
+  });
   function draw(){
     $('chart').replaceChildren();$('agreements').replaceChildren();$('data').querySelector('tbody').replaceChildren();
     const pending=sources.some(s=>s.pending),ready=sources.length&&!pending;
