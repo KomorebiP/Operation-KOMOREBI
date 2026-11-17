@@ -117,6 +117,7 @@ function matrixFormula(values,symbol,tex){
     throw Error('Expected a square matrix of 1 to 8 exact coefficients.');
   }
   const rows=values.map(row=>row.map(value=>{
+    if(typeof value!=='string')throw Error('Expected an exact rational coefficient string.');
     const parsed=parseExactRational(value);
     if(tex)return rationalTeX(value);
     return (parsed.negative?'-':'')+absoluteCoefficient(parsed,false);
