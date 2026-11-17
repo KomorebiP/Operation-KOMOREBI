@@ -105,3 +105,25 @@ export function triangleRowExpressions(entry,cells) {
   };
   return {plain:plainLabel+' = '+makeExpr('plain'),tex:texLabel+'='+makeExpr('tex')};
 }
+
+/**
+ * Display a leading principal block of the exact lower-triangular
+ * convolution operator. Matrix entries are already certified rationals.
+ * This is presentation only and does not change the transfer certificate.
+ */
+function matrixFormula(values,symbol,tex){
+  if(!['H','K'].includes(symbol)||!Array.isArray(values)||!values.length||values.length>8||
+      values.some(row=>!Array.isArray(row)||row.length!==values.length)){
+    throw Error('Expected a square matrix of 1 to 8 exact coefficients.');
+  }
+  const rows=values.map(row=>row.map(value=>{
+    const parsed=parseExactRational(value);
+    if(tex)return rationalTeX(value);
+    return (parsed.negative?'-':'')+absoluteCoefficient(parsed,false);
+  }));
+  return tex
+    ?'L('+symbol+')=\\begin{pmatrix}'+rows.map(row=>row.join(' & ')).join(' \\\\ ')+'\\end{pmatrix}'
+    :'L('+symbol+') = ['+rows.map(row=>'['+row.join(', ')+']').join(', ')+']';
+}
+export function transferMatrixTeX(values,symbol){return matrixFormula(values,symbol,true);}
+export function transferMatrixPlain(values,symbol){return matrixFormula(values,symbol,false);}
