@@ -142,6 +142,24 @@ conventions, source URLs, reference hashes, and reference licensing. Points use
 roving keyboard focus, with arrows within/across series and Home/End endpoints;
 the HTML table provides the same exact integers.
 
+The Compare page has an optional **Customize chart title, legend and axes**
+panel. Readers can change the chart title, horizontal and vertical axis titles,
+legend visibility, placement above or below the plot, and up to four series
+names. Empty titles retain suitable defaults. The custom text is embedded in
+SVG/PNG exports and preserved in copied comparison links and research workspace
+snapshots. Chart labels do not alter the selected sources or arithmetic.
+
+For signed-logarithmic plots, the vertical coordinates are
+`sgn(v) log10(1+|v|)`. The default axis labels apply the inverse transform
+and show **approximate original-value magnitudes** such as `≈41`, `≈1.7K`,
+and `≈3M` rather than unlabeled log coordinates. This does not make the
+axis linear. A separate tick-label selector displays the underlying log
+coordinates for readers who prefer them. Residue plots continue to use exact
+integer tick labels. Linear plots can round their tick labels while retaining
+exact indexed integers in point details, tables, and CSV. An explanation under
+each chart states the active scale convention. No decimal axis annotation
+should be mistaken for the exact sequence value.
+
 The 112 research additions come from two explicit families in the authored
 special-function registry (sections Transfer-secancy parameter polynomials and
 Euler-transfer theta polynomials):
