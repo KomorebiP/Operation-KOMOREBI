@@ -49,12 +49,27 @@ async function visit(page,name,kind){
       await page.locator('#sl-result-layout [data-layout=compact]').click();
       assert.equal(await page.locator('#sl-results').getAttribute('data-layout'),'compact');
       assert.equal(await page.locator('#sl-results .sl-result-definition:not([open])').count(),24);
+      assert.equal(await page.locator('#sl-results .sl-definition-excerpt').count(),24,
+        'Each record needs a visible compact source formula preview');
+      assert.ok((await page.locator('#sl-results .sl-definition-excerpt').first().textContent()).trim().length>0);
+      assert.equal(await page.locator('#sl-results .sl-result-more:not([open])').count(),24,
+        'Secondary actions stay collapsed on a broad search');
+      assert.equal(await page.locator('#sl-results .math-pair').count(),0,
+        'Collapsed search definitions should not create hidden MathJax nodes');
+      assert.equal(await page.locator('#sl-results>li').first().locator(':scope > .sp-actions > *').count(),3,
+        'Only Plot, Save and Compare are the default actions');
+      await page.locator('#sl-results>li').first().locator(':scope > .sl-result-more > summary').click();
+      assert.equal(await page.locator('#sl-results>li').first().locator(':scope > .sl-result-more').evaluate(el=>el.open),true);
+      assert.equal(await page.locator('#sl-results>li').first().locator('.sl-result-more .sp-actions a').isVisible(),true);
       await page.locator('#sl-results .sl-result-definition summary').first().click();
       assert.equal(await page.locator('#sl-results .sl-result-definition').first().evaluate(el=>el.open),true);
+      assert.equal(await page.locator('#sl-results .sl-result-definition').first().locator('.sar-formula').isVisible(),true);
       await fit(page);
       await page.goto(href('sequence-library.html?q=id%3AKSEQ-000025#library-search'));
       await ready(page);
       assert.equal(await page.locator('#sl-results>li').count(),1);
+      assert.equal(await page.locator('#sl-results .sl-result-more').first().evaluate(el=>el.open),true,
+        'A precise record search retains direct access to secondary tools');
       assert.equal(await page.locator('#sl-results .sl-result-definition').first().evaluate(el=>el.open),true);
       assert.match(await page.locator('#sl-results .sl-result-definition summary').first().getAttribute('aria-label'),/Defining formula for/);
       await page.locator('#sl-results .math-pair[data-math-pair-ready=true]').first().waitFor({timeout:30000});
