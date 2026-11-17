@@ -227,12 +227,12 @@ if(!legacyRoute)try{
     const entries=familySearchEntries(data.entries,generalized.families),client=createReferenceClient();
     const snapshot=data.snapshot.stripped_sha256,handoff=comparisonHandoff(entries,snapshot);
     root.dataset.oeisSnapshot=snapshot;
-    if(root.querySelector('#comparison')){const {mountWorkbench}=await import('./sequence-workbench.mjs');workbench=mountWorkbench({root,entries,snapshot,referenceClient:client});}
+    if(root.querySelector('#comparison:not(.sl-legacy-gateway)')){const {mountWorkbench}=await import('./sequence-workbench.mjs');workbench=mountWorkbench({root,entries,snapshot,referenceClient:client});}
     if(root.querySelector('#sr-transfer-tool')){const {mountTransfers}=await import('./sequence-transfers.mjs');transfers=mountTransfers(entries,document.getElementById('sr-transfer-tool'));}
     let search;
     if($('search'))search=setupSearch(entries,generalized.families,generalized.sources);
     if($('oeis-form'))setupReference(client);
-    if(root.querySelector('#family-explorer-controls')||root.querySelector('#research-families')){
+    if(root.querySelector('#family-explorer-controls')||['research','workspace'].includes(root.dataset.page)){
       const {mountStudio}=await import('./sequence-research-studio.mjs');mountStudio({root,entries,data:generalized,referenceClient:client,workbench:workbench||handoff,transfers,search});
     }
   }
