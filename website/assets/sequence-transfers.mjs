@@ -27,6 +27,7 @@ export function mountTransfers(entries,host){
   const result=make('div');result.id='tr-result';result.hidden=true;const summary=make('p'),indices=make('p'),domain=make('p'),sourceLink=make('a'),targetLink=make('a'),links=make('p'),scope=make('p');
   const indexMap=make('details'),indexNote=make('p','Source and target indices use separate original origins. The same local tail position does not imply equal sequence values or a shared recurrence.'),indexFormula=mathLine('source index = a+j; target index = b+j',String.raw`i_{\mathrm{source}}(j)=\alpha+j,\quad i_{\mathrm{target}}(j)=\beta+j`,'sr-transfer-index-equation');
   indexMap.id='tr-index-map';indexMap.append(make('summary','Original index alignment'),indexFormula,indexNote);
+  indexMap.addEventListener('toggle',()=>{if(indexMap.open)enhanceMath(indexMap);});
   const metrics=make('div');metrics.id='tr-certificate';metrics.className='sr-transfer-facts';
   const preview=make('div');preview.id='tr-kernel-preview';preview.className='sr-transfer-previews';
   const witness=make('details'),witnessText=make('p'),witnessIndexHelp=make('p'),
