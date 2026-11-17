@@ -93,7 +93,9 @@ change that status. The new displays include finite composition/Stirling and
 Bell-column formulas, signed Euler convolution, and inverse-hypergeometric
 coefficient representations. Parameter columns search by `k:`; `n:` still
 means spacing N, while the visible local index and source degree are separate.
-The research browse button selects `tag:research-derived`.
+The dedicated Research page shows its four family groups and all nine type links
+without an initial disclosure click. The search and reference workbenches remain
+on their own pages. The research browse button selects `tag:research-derived`.
 
 The OEIS snapshot contains 401,422 records, downloaded from the official
 `stripped.gz` and `names.gz` URLs. Precomputed comparisons require eight local
@@ -103,8 +105,10 @@ matched length, A-number, and position. The browser reference finder accepts
 A-numbers, name words, or patterns of 3..1,000 terms. It reports all matching
 record counts and shows at most 50 records. Shorter patterns may have many hits.
 
-The bulk files total 41,692,183 compressed bytes and load on explicit reference
-search or explicit shared-excerpt restoration. A worker streams decompression for each scan, retaining compressed
+The standalone OEIS page first reads a small snapshot identifier instead of
+loading the full integer and generalized family catalogues. The bulk files
+total 41,692,183 compressed bytes and load on explicit reference search or
+explicit shared excerpt restoration. A worker streams decompression for each scan, retaining compressed
 bytes rather than the whole decompressed database. Queries stay in the browser.
 Cancellation terminates the worker. Unsupported browser features retain download
 links and precomputed record comparisons. OEIS data, extracts, and matching are
