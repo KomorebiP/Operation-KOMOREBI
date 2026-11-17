@@ -94,13 +94,15 @@ async function visit(page,name,kind){
       assert.equal((await definition.locator('.sl-variant-note').textContent()).trim(),recorded.formulas[1].note);
       assert.equal(await definition.locator('.sl-variant-source a').getAttribute('href'),recorded.formulas[1].source);
       await page.selectOption('#site-math-display','plain');
-      assert.equal(await definition.locator('[data-math-plain]').first().isVisible(),true);
+      assert.equal(await definition.locator('p.sar-formula').first().isVisible(),true,
+        'The original exact source must remain visible in plain-text mode, including notation fallbacks');
       await picker.selectOption('3');
       assert.equal(await definition.locator('p.sar-formula').first().textContent(),recorded.formulas[3].expression);
       assert.match(await definition.locator('.sl-variant-kind').textContent(),/hypergeometric · 4 of 4/);
       await picker.selectOption('0');
       assert.equal(await definition.locator('p.sar-formula').first().textContent(),recorded.formula);
       await page.selectOption('#site-math-display','typeset');
+      await page.evaluate(async()=>{await window.KomorebiMath?.ready;});
       await fit(page);
       await page.goto(href('sequence-library.html?q=id%3AKSEQ-000025#library-search'));
       await ready(page);
