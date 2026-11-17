@@ -50,6 +50,11 @@ def build(site,atlas):
     snapshot=json.loads((site.root/'manifests/sequence-library-oeis.json').read_text(encoding='utf-8'))
     signature=hashlib.sha256(json.dumps([(x['id'],x['terms']) for x in entries],separators=(',',':')).encode()).hexdigest()
     if signature!=snapshot['catalogue_terms_sha256']:raise ValueError('Regenerate the full-library OEIS comparison after term changes')
+    # Use the same audited index map as each record's exact data table.
+    # These are source degrees, not inferred from the flattened display index.
+    for entry in entries:
+        if entry['collection']=='formulas':
+            entry['source_degrees']=[source_degree(entry,entry['offset']+i) for i in range(len(entry['terms']))]
     for entry in entries:
         entry['matches']=snapshot['matches'].get(entry['id'],[]);entry['match_count']=snapshot['total_matches'].get(entry['id'],0)
         entry['oeis_snapshot']=dict(attribution=snapshot['attribution'],license=snapshot['license'],source_urls=snapshot['source_urls'],downloaded_at=snapshot['snapshot']['downloaded_at'],stripped_sha256=snapshot['stripped_sha256'],names_sha256=snapshot['names_sha256'],scope='Finite contiguous comparisons; export positions are not mathematical offsets and matches do not prove infinite identity.')

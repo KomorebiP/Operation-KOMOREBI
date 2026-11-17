@@ -43,36 +43,42 @@ function inlineExactValues(entry,initialPosition=0){
   const triangle=entry.triangle;
   const hasCoordinates=Array.isArray(triangle?.row_offsets)&&Array.isArray(triangle?.row_lengths);
   const rationals=Array.isArray(entry.rational_terms)&&entry.rational_terms.length===values.length;
+  const degrees=entry.source_degrees;
+  const hasDegrees=Array.isArray(degrees)&&degrees.length===values.length&&degrees.every(Number.isSafeInteger);
   const size=8;
   let first=Math.max(0,Math.min(values.length-1,Math.floor(initialPosition/size)*size)),mounted=false;
   function init(){
     if(mounted)return;
     mounted=true;
-    const container=make('div'),controls=make('form'),previous=make('button','Previous 8'),next=make('button','Next 8');
+    const container=make('div'),controls=make('form'),previous=make('button','Previous 8'),next=make('button','Next 8'),exportWindow=make('button','Export window CSV');
     const jumpLabel=make('label',`Go to stored ${symbol}`),jump=make('input'),go=make('button','Go');
     container.className='sl-term-inspector-body';controls.className='sl-term-controls';
-    previous.type=next.type='button';go.type='submit';
+    previous.type=next.type=exportWindow.type='button';go.type='submit';
+    exportWindow.className='sl-term-export';
     jump.type='number';jump.min=String(offset);jump.max=String(offset+values.length-1);jump.step='1';
     jump.inputMode='numeric';jumpLabel.append(jump);
-    controls.append(previous,next,jumpLabel,go);
+    controls.append(previous,next,jumpLabel,go,exportWindow);
     const status=make('p'),frame=make('div'),table=make('table'),head=make('thead'),header=make('tr'),body=make('tbody');
     status.className='sl-term-status';status.setAttribute('role','status');status.setAttribute('aria-live','polite');
     frame.className='sl-term-scroll';frame.tabIndex=0;frame.setAttribute('role','region');
     frame.setAttribute('aria-label',`Exact indexed values for ${entry.id}`);
-    const columns=[symbol,...(hasCoordinates?['Row n','Column k']:[]),'Exact stored value',...(rationals?['Original rational value']:[])];
+    const columns=[symbol,...(hasCoordinates?['Row n','Column k']:[]),...(hasDegrees?['Source degree']:[]),'Exact stored value',...(rationals?['Original rational value']:[])];
+    const csvColumns=['record_id','stored_index',...(hasCoordinates?['row_n','column_k']:[]),...(hasDegrees?['source_degree']:[]),'exact_stored_value',...(rationals?['original_rational_value']:[])];
     for(const col of columns){const th=make('th',col);th.scope='col';header.append(th);}
     head.append(header);table.append(head,body);frame.append(table);
     const detail=make('p',hasCoordinates?
       'The first column is the flat stored index. Row and column coordinates are shown separately.':
       'Indices are the stored sequence indices, which may differ from source Taylor degrees.');
+    if(hasDegrees)detail.textContent+=' Source degrees follow each record’s audited index map.';
     detail.className='sl-term-index-note';
     container.append(controls,status,frame,detail);panel.append(container);
+    let currentRows=[];
     function renderWindow(){
       const end=Math.min(values.length,first+size);
       status.textContent=`Stored ${symbol}=${offset+first}–${offset+end-1} · ${end-first} of ${values.length} exact values`;
       jump.value=String(offset+first);
       previous.disabled=first===0;next.disabled=end>=values.length;
-      body.replaceChildren();
+      body.replaceChildren();currentRows=[];
       for(let i=first;i<end;i++){
         const index=offset+i,row=make('tr'),cells=[String(index)];
         if(hasCoordinates){
@@ -82,8 +88,10 @@ function inlineExactValues(entry,initialPosition=0){
           }
           cells.push(n<0?'Not recorded':String(n),n<0?'Not recorded':String(index-triangle.row_offsets[n]));
         }
+        if(hasDegrees)cells.push(String(degrees[i]));
         cells.push(String(values[i]));
         if(rationals)cells.push(String(entry.rational_terms[i]));
+        currentRows.push(cells);
         for(let j=0;j<cells.length;j++){
           const cell=make(j===0?'th':'td',cells[j]);
           if(j===0)cell.scope='row';
@@ -92,6 +100,14 @@ function inlineExactValues(entry,initialPosition=0){
         body.append(row);
       }
     }
+    exportWindow.addEventListener('click',()=>{
+      const encodeCell=value=>'"'+String(value).replaceAll('"','""')+'"';
+      const data=[csvColumns,...currentRows.map(row=>[entry.id,...row])];
+      const csv=data.map(row=>row.map(encodeCell).join(',')).join('\r\n')+'\r\n';
+      const id=String(entry.id).replace(/[^A-Za-z0-9_.-]/g,'_');
+      const end=Math.min(values.length,first+size);
+      save(csv,'text/csv;charset=utf-8',`sequence-${id}-${offset+first}-${offset+end-1}.csv`);
+    });
     previous.addEventListener('click',()=>{first=Math.max(0,first-size);renderWindow();});
     next.addEventListener('click',()=>{first=Math.min(values.length-1,first+size);renderWindow();});
     controls.addEventListener('submit',event=>{
