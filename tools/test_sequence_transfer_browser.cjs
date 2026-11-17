@@ -50,6 +50,9 @@ async function run(){
       assert.match(await page.locator('#tr-matrices .sr-matrices [data-math-plain]').first().textContent(),/53, -1, 2, 1/);
       assert.equal(await page.locator('#tr-matrices .sr-matrices mjx-container').count(),2);
       assert.equal(await page.locator('#tr-matrices [data-mml-node=merror],#tr-matrices mjx-merror').count(),0);
+      await page.getByRole('button',{name:'Copy displayed matrices as LaTeX',exact:true}).click();
+      assert.match(await page.evaluate(()=>navigator.clipboard.readText()),/L\\(H\\)=\\\\begin\\{pmatrix\\}/);
+      assert.match(await page.evaluate(()=>navigator.clipboard.readText()),/L_\\{8\\}\\(K\\)L_\\{8\\}\\(H\\)=I_\\{8\\}/);
       await page.selectOption('#site-math-display','plain');
       assert.equal(await page.locator('#tr-matrices .sr-matrices [data-math-plain]').first().isVisible(),true);
       await page.selectOption('#site-math-display','typeset');
