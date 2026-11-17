@@ -161,3 +161,47 @@ export function transferActionEquations(rows,size){
   };
   return {forward,inverse};
 }
+
+/** Render an independently evaluated finite product entry without altering data. */
+export function transferProductMath(witness){
+  if(!witness||!['HK','KH'].includes(witness.order)||!Number.isSafeInteger(witness.row)||
+     !Number.isSafeInteger(witness.column)||!Array.isArray(witness.terms)||
+     !['0','1'].includes(witness.expected)){
+    throw Error('Expected a valid finite matrix-product witness.');
+  }
+  const {row,column,order,terms,value,expected}=witness;
+  const [first,second]=order==='HK'?['H','K']:['K','H'];
+  const lhs='\\bigl(L('+first+')L('+second+')\\bigr)_{'+row+','+column+'}';
+  const plainLhs='(L('+first+')L('+second+'))['+row+','+column+']';
+  if(!terms.length){
+    if(row<=column&&row!==column){
+      return {plain:plainLhs+' = 0 = delta('+row+','+column+')',
+        tex:lhs+'=0=\\delta_{'+row+','+column+'}'};
+    }
+    throw Error('The lower-triangular witness has no recorded summands.');
+  }
+  const products=terms.map(term=>{
+    if(typeof term.left!=='string'||typeof term.right!=='string')throw Error('Missing exact rational summands.');
+    return {plain:'('+term.left+')*('+term.right+')',
+      tex:'\\left('+rationalTeX(term.left)+'\\right)\\left('+rationalTeX(term.right)+'\\right)'};
+  });
+  const formula=first.toLowerCase()+'_{'+row+'-\\ell}'+second.toLowerCase()+'_{\\ell-'+column+'}';
+  const tex='\\begin{aligned}'+lhs+'&=\\sum_{\\ell='+column+'}^{'+row+'}'+formula+
+    '\\\\&='+products.map(term=>term.tex).join('+')+'\\\\&='+rationalTeX(value)+
+    '=\\delta_{'+row+','+column+'}\\end{aligned}';
+  const plain=plainLhs+' = '+products.map(term=>term.plain).join(' + ')+
+    ' = '+value+' = delta('+row+','+column+')';
+  return {plain,tex};
+}
+
+/** Local coefficient position is distinct from either sequence's source index. */
+export function transferIndexMath(map){
+  const a=map?.sourceAnchor?.index,b=map?.targetAnchor?.index,n=map?.count;
+  if(!Number.isSafeInteger(a)||!Number.isSafeInteger(b)||!Number.isSafeInteger(n)||
+    n<1||map.indexShift!==b-a)throw Error('Expected consistent integer transfer anchors.');
+  return {
+    plain:'source index = '+a+'+j; target index = '+b+'+j; original index shift = '+(b-a)+'; 0<=j<'+n,
+    tex:'\\begin{aligned}i_{\\mathrm{source}}(j)&='+a+'+j\\\\i_{\\mathrm{target}}(j)&='+b+
+      '+j\\\\\\Delta i&='+String(b-a)+',\\quad 0\\le j<'+n+'\\end{aligned}'
+  };
+}
