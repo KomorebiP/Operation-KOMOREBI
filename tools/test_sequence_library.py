@@ -24,6 +24,23 @@ class SequenceLibraryTests(unittest.TestCase):
             entry=next(x for x in catalogue() if x['kind']==kind)
             self.assertTrue(any(f['kind']=='hypergeometric' for f in formula_variants(entry)))
 
+    def test_formula_source_degrees_follow_the_existing_exact_index_map(self):
+        from sequence_library import source_degree
+        entries=library_entries(catalogue())
+        formulas=[item for item in entries if item['collection']=='formulas']
+        self.assertEqual(len(formulas),2164)
+        self.assertEqual(sum(len(item['terms']) for item in formulas),55939)
+        by_id={item['id']:item for item in formulas}
+        for item in formulas:
+            degrees=[source_degree(item,item['offset']+i) for i in range(len(item['terms']))]
+            self.assertEqual(len(degrees),len(item['terms']))
+            self.assertTrue(all(isinstance(degree,int) and degree>=0 for degree in degrees))
+        self.assertEqual(source_degree(by_id['KFOR-P-03-02'],2),6)
+        self.assertEqual(source_degree(by_id['KFOR-P-03-02'],3),9)
+        self.assertEqual(source_degree(by_id['KFOR-TRI-P-03'],5),6)
+        self.assertEqual(source_degree(by_id['KFOR-HC-04'],2),4)
+        self.assertNotIn('source_degrees',next(item for item in entries if item['collection']=='atlas'))
+
     def test_research_tools_have_disjoint_reading_sections(self):
         from sequence_generalized import sections
         ids=('generalized','research-graph','identify','modular-dynamics','research-notebooks')
