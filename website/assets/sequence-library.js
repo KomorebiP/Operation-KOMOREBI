@@ -2,15 +2,16 @@ import './sequence-reading-theme.mjs';
 import {enhanceMath,clearMath} from './math-display.mjs';
 import {searchEntries} from './sequence-atlas-search.mjs';
 import {SEARCH_KEYS,RECORD_FILTERS,FAMILY_FILTERS,emptySearch,normalizeSearch,librarySearch,librarySearchCSV} from './sequence-library-search.mjs';
-import {setupArchivePlot} from './sequence-archive-plot.mjs';
+
 import {referenceQuery} from './sequence-oeis-core.mjs';
 import {createReferenceClient} from './sequence-oeis-client.mjs';
-import {mountWorkbench} from './sequence-workbench.mjs';
+
 import {workbenchLink,localSource,referenceSource,customSource,familySource,WORKBENCH_DEFAULTS} from './sequence-workbench-core.mjs';
-import {mountTriangleExplorer} from './sequence-triangle.mjs';
-import {mountTransfers} from './sequence-transfers.mjs';
-import {mountStudio,familySearchEntries} from './sequence-research-studio.mjs';
+
+
+
 import {STORAGE_KEY,readSaved,writeSaved,updateSaveButtons} from './sequence-atlas-saved.mjs';
+import {familySearchEntries} from './sequence-library-membership.mjs';
 
 const root=document.querySelector('[data-library]'),$=id=>document.getElementById('sl-'+id),make=(tag,text)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;return node;};
 /** Deep links reveal optional panels without discarding static source content. */
@@ -217,7 +218,7 @@ function setupReference(client){
   $('oeis-cancel').addEventListener('click',()=>client.cancel());
 }
 if(!legacyRoute)try{
-  if(root.dataset.entry){const response=await fetch(new URL(root.dataset.entry,location.href));if(!response.ok)throw Error('The exact record could not be loaded.');const entry=await response.json();setupArchivePlot(entry);setupTriangleNavigation();mountTriangleExplorer(entry,root.querySelector('#triangle'));}
+  if(root.dataset.entry){const [{setupArchivePlot},{mountTriangleExplorer}]=await Promise.all([import('./sequence-archive-plot.mjs'),import('./sequence-triangle.mjs')]);const response=await fetch(new URL(root.dataset.entry,location.href));if(!response.ok)throw Error('The exact record could not be loaded.');const entry=await response.json();setupArchivePlot(entry);setupTriangleNavigation();mountTriangleExplorer(entry,root.querySelector('#triangle'));}
   else if($('search')||root.querySelector('#family-explorer-controls')||root.querySelector('#sr-transfer-tool')||root.querySelector('#comparison')||root.querySelector('#sl-oeis-form')||root.querySelector('#research-families')){
     const responses=await Promise.all([fetch(new URL('./sequence-library-data.json',import.meta.url)),fetch(new URL('./sequence-generalized-data.json',import.meta.url))]);
     if(responses.some(r=>!r.ok))throw Error('The local sequence and family catalogue could not be loaded.');
@@ -225,13 +226,13 @@ if(!legacyRoute)try{
     const entries=familySearchEntries(data.entries,generalized.families),client=createReferenceClient();
     const snapshot=data.snapshot.stripped_sha256,handoff=comparisonHandoff(entries,snapshot);
     root.dataset.oeisSnapshot=snapshot;
-    if(root.querySelector('#comparison'))workbench=mountWorkbench({root,entries,snapshot,referenceClient:client});
-    if(root.querySelector('#sr-transfer-tool'))transfers=mountTransfers(entries,document.getElementById('sr-transfer-tool'));
+    if(root.querySelector('#comparison')){const {mountWorkbench}=await import('./sequence-workbench.mjs');workbench=mountWorkbench({root,entries,snapshot,referenceClient:client});}
+    if(root.querySelector('#sr-transfer-tool')){const {mountTransfers}=await import('./sequence-transfers.mjs');transfers=mountTransfers(entries,document.getElementById('sr-transfer-tool'));}
     let search;
     if($('search'))search=setupSearch(entries,generalized.families,generalized.sources);
     if($('oeis-form'))setupReference(client);
     if(root.querySelector('#family-explorer-controls')||root.querySelector('#research-families')){
-      mountStudio({root,entries,data:generalized,referenceClient:client,workbench:workbench||handoff,transfers,search});
+      const {mountStudio}=await import('./sequence-research-studio.mjs');mountStudio({root,entries,data:generalized,referenceClient:client,workbench:workbench||handoff,transfers,search});
     }
   }
   root.dataset.libraryReady='true';
