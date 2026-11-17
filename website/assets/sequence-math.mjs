@@ -170,6 +170,7 @@ export function transferProductMath(witness){
     throw Error('Expected a valid finite matrix-product witness.');
   }
   const {row,column,order,terms,value,expected}=witness;
+  if(!witness.verified||value!==expected)throw Error('The exact matrix product entry failed its identity check.');
   const [first,second]=order==='HK'?['H','K']:['K','H'];
   const lhs='\\bigl(L('+first+')L('+second+')\\bigr)_{'+row+','+column+'}';
   const plainLhs='(L('+first+')L('+second+'))['+row+','+column+']';
