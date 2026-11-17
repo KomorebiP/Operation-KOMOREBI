@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {sequenceTransfer,transferAnchor,transferMatrix,transferCSV,transferJSON,transferLink} from '../website/assets/sequence-transfer-core.mjs';
+import {sequenceTransfer,transferAnchor,transferMatrix,transferProductEntry,transferCSV,transferJSON,transferLink} from '../website/assets/sequence-transfer-core.mjs';
 import {searchEntries} from '../website/assets/sequence-atlas-search.mjs';
 const entry=(id,terms,offset=0)=>({id,terms:terms.map(String),offset,index_symbol:'n'});
 test('Euler to shifted Fibonacci preserves source values and exact inverse',()=>{
@@ -46,4 +46,33 @@ test('certificate JSON preserves the finite exact proof and distinct index shift
   assert.deepEqual(data.certificate_conditions,['H*A=B','K*B=A','H*K=1']);
   assert.equal(data.verified,true);
   assert.equal(data.rows.every((row,index)=>row.forward===row.target&&row.recovered===row.source&&row.identity===(index?'0':'1')),true);
+});
+
+test('every selected Toeplitz product entry equals its Kronecker delta, both orders',()=>{
+  const map=sequenceTransfer(entry('Euler',[1,-1,5,-61,1385,-50521]),entry('Fibonacci',[0,1,1,2,3,5,8]),6);
+  for(const order of ['HK','KH'])for(let row=0;row<6;row++)for(let column=0;column<6;column++){
+    const witness=transferProductEntry(map,row,column,order,6);
+    assert.equal(witness.verified,true,order+' ['+row+','+column+']');
+    assert.equal(witness.value,row===column?'1':'0');
+    assert.equal(witness.terms.length,Math.max(0,row-column+1));
+  }
+  const off=transferProductEntry(map,3,0,'HK',6);
+  assert.deepEqual(off.terms.map(item=>[item.ell,item.left,item.right,item.product]),[
+    [0,'53','1','53'],[1,'-1','-2','2'],[2,'2','5','10'],[3,'1','-65','-65']
+  ]);
+  assert.deepEqual(transferProductEntry(map,0,4,'HK',6).terms,[]);
+});
+test('exact matrix products support nonunit rational anchors and reject invalid positions',()=>{
+  const map=sequenceTransfer(entry('A',[0,0,-2,3,7],-4),entry('B',[0,3,-2,1],10),3);
+  const diagonal=transferProductEntry(map,0,0,'HK',3);
+  assert.deepEqual(diagonal.terms,[{ell:0,left:'-3/2',right:'-2/3',product:'1'}]);
+  for(const order of ['HK','KH'])assert.equal(transferProductEntry(map,2,0,order,3).value,'0');
+  for(const args of [[-1,0,'HK',3],[0,3,'HK',3],[0,0,'XX',3],[0,0,'HK',4],[0,0,'HK',0]]){
+    assert.throws(()=>transferProductEntry(map,...args),/Choose a valid matrix product/);
+  }
+  const corrupted={...map,rows:map.rows.map(row=>({...row}))};
+  corrupted.rows[2].kernel='14';
+  assert.equal(transferProductEntry(corrupted,2,0,'HK',3).verified,false);
+  corrupted.rows[2].kernel='1/0';
+  assert.throws(()=>transferProductEntry(corrupted,2,0,'HK',3),/zero denominator/);
 });
