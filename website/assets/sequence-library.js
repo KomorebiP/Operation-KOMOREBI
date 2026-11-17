@@ -33,8 +33,11 @@ if(root){
   revealLibraryTarget();
 }
 function definitionPreview(formula,label,expanded){
-  const detail=make('details'),summary=make('summary','Defining formula');
+  const detail=make('details'),summary=make('summary'),name=make('span','Defining formula'),excerpt=make('span',formula.textContent.replace(/\s+/g,' ').trim());
+  name.className='sl-definition-label';excerpt.className='sl-definition-excerpt';
+  excerpt.setAttribute('aria-hidden','true');
   summary.setAttribute('aria-label','Defining formula for '+label);
+  summary.append(name,excerpt);
   detail.className='sl-result-definition';detail.open=expanded;
   detail.append(summary,formula);
   detail.addEventListener('toggle',()=>{if(detail.open)enhanceMath(detail);});
@@ -123,13 +126,16 @@ function render(){
     if(hit.termMatch){const reason=make('p',hit.reason);reason.className='sl-match-reason';overview.append(reason);}
     const review=make('p',entry.status);review.className='sl-result-status';overview.append(review);
     if(entry.tags.includes('hypergeometric')){const badge=make('span','Hypergeometric representation');badge.className='sl-result-badge';overview.append(badge);}
-    const links=make('div'),plot=make('a','Plot and inspect'),formulas=make('a','Read formulas'),bookmark=make('button'),compare=make('button','Add to comparison');links.className='sp-actions';plot.href=entry.url+(entry.collection==='atlas'?'#analysis':'#plot');formulas.href=entry.url+(entry.collection==='recovered'?'#definition':'#formulas');bookmark.type=compare.type='button';bookmark.dataset.saveSequence=entry.id;bookmark.addEventListener('click',()=>toggleSaved(entry.id));compare.setAttribute('aria-label','Add '+entry.id+' to comparison');compare.addEventListener('click',()=>{if(workbench)workbench.addLocal(entry);else comparisonHandoff([],null).addLocal(entry);});links.append(plot,formulas,bookmark,compare);li.append(links);
-    if(!entry.triangle&&entry.id!=='KOM084'){const transfer=make('button','Build a transfer');transfer.type='button';transfer.addEventListener('click',()=>{if(transfers)transfers.source(entry);else{const url=new URL('sequence-transfers.html',location.href);url.searchParams.set('tr-source',entry.id);url.hash='transfers';location.href=url.href;}});links.append(transfer);}
+    const links=make('div'),plot=make('a','Plot and inspect'),formulas=make('a','Read formulas'),bookmark=make('button'),compare=make('button','Add to comparison');links.className='sp-actions';plot.href=entry.url+(entry.collection==='atlas'?'#analysis':'#plot');formulas.href=entry.url+(entry.collection==='recovered'?'#definition':'#formulas');bookmark.type=compare.type='button';bookmark.dataset.saveSequence=entry.id;bookmark.addEventListener('click',()=>toggleSaved(entry.id));compare.setAttribute('aria-label','Add '+entry.id+' to comparison');compare.addEventListener('click',()=>{if(workbench)workbench.addLocal(entry);else comparisonHandoff([],null).addLocal(entry);});links.append(plot,bookmark,compare);li.append(links);
+    const more=make('details'),moreSummary=make('summary',entry.match_count?`More actions · ${entry.match_count.toLocaleString()} OEIS match${entry.match_count===1?'':'es'}`:'More actions'),secondary=make('div');
+    more.className='sl-result-more';more.open=results.length<=3;secondary.className='sp-actions';secondary.append(formulas);
+    more.append(moreSummary,secondary);li.append(more);
+    if(!entry.triangle&&entry.id!=='KOM084'){const transfer=make('button','Build a transfer');transfer.type='button';transfer.addEventListener('click',()=>{if(transfers)transfers.source(entry);else{const url=new URL('sequence-transfers.html',location.href);url.searchParams.set('tr-source',entry.id);url.hash='transfers';location.href=url.href;}});secondary.append(transfer);}
     const comparisons=make('details'),summary=make('summary',`OEIS comparisons (${entry.match_count.toLocaleString()} ${entry.match_count===1?'match':'matches'})`);comparisons.className='sl-matches';comparisons.append(summary);
     if(entry.matches.length){const list=make('ol');for(const hit of entry.matches.slice(0,3)){const item=make('li'),reference=make('a',hit.id+' · '+hit.name);reference.href='https://oeis.org/'+hit.id;item.append(reference,make('p',`${hit.matched_terms} matching terms, beginning at local index ${entry.offset}. OEIS export position: ${hit.position}.`));list.append(item);}comparisons.append(list,make('p',`Showing ${Math.min(3,entry.matches.length)} of ${entry.match_count.toLocaleString()} recorded matches. Up to 50 matches are retained.`));}else comparisons.append(make('p','No contiguous match of eight terms was recorded. That does not establish novelty.'));
-    const credit=make('p','Finite matches do not prove that infinite sequences are identical. Export positions are not mathematical offsets. Reference data: '),oeis=make('a','The Online Encyclopedia of Integer Sequences'),license=make('a','CC BY-SA 4.0');oeis.href='https://oeis.org/';license.href='https://creativecommons.org/licenses/by-sa/4.0/';credit.append(oeis,document.createTextNode(' · '),license);comparisons.append(credit);li.append(comparisons);$('results').append(li);
+    const credit=make('p','Finite matches do not prove that infinite sequences are identical. Export positions are not mathematical offsets. Reference data: '),oeis=make('a','The Online Encyclopedia of Integer Sequences'),license=make('a','CC BY-SA 4.0');oeis.href='https://oeis.org/';license.href='https://creativecommons.org/licenses/by-sa/4.0/';credit.append(oeis,document.createTextNode(' · '),license);comparisons.append(credit);more.append(comparisons);$('results').append(li);
   }
-  enhanceMath($('results'));
+  for(const definition of $('results').querySelectorAll('.sl-result-definition[open]'))enhanceMath(definition);
   const active=$('active-filters');active.replaceChildren();
   const names={collection:'Collection',kind:'Family',representation:'Formula type',status:'Review status',hits:'OEIS comparisons',saved:'Saved entries',match:'Term matching',mode:'Construction type',paper:'Source'};
   for(const key of Object.keys(names))if(applied[key]&&!(key==='match'&&applied[key]==='any')){const field=$(key),text=field.options[field.selectedIndex]?.textContent||applied[key],button=make('button',`${names[key]}: ${text} ×`);button.type='button';button.className='sl-filter-chip';button.setAttribute('aria-label',`Clear ${names[key].toLowerCase()} filter`);button.addEventListener('click',()=>{field.value=key==='match'?'any':'';field.dispatchEvent(new Event('change'));$('count').focus({preventScroll:true});});active.append(button);}
