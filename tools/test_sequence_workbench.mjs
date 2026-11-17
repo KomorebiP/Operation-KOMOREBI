@@ -30,6 +30,47 @@ test('shared references require explicit restoration against the same snapshot',
   for(const value of [{skip:''},{count:0},{count:1.1},{modulus:1},{scale:'invented'}])assert.throws(()=>validateWorkbench(value));
   for(const values of [['-0'],['01'],[],['1.2']])assert.throws(()=>referenceSource({id:'A000001',sample_position:0,values},'snapshot'));
 });
+test('second-generation comparison links pin exact local source prefixes',()=>{
+  const pinnedA={...a,record_sha256:'a'.repeat(64)},pinnedB={...b,record_sha256:'b'.repeat(64)};
+  const link=workbenchLink('https://example.test/sequence-library.html?old=true',
+    [localSource(pinnedA),localSource(pinnedB)],{...WORKBENCH_DEFAULTS,transform:'sum',skip:1,count:2,alignment:'indices'});
+  const url=new URL(link),payload=JSON.parse(url.searchParams.get('wb'));
+  assert.equal(url.hash,'#comparison');
+  assert.equal(payload.schema,2);
+  assert.deepEqual(payload.sources.map(item=>[item.id,item.offset,item.count,item.sha256]),[
+    ['KSEQ-000001',2,4,'a'.repeat(64)],['KOM085',3,4,'b'.repeat(64)]
+  ]);
+  const restored=readWorkbenchLink(link,[pinnedA,pinnedB],'snapshot');
+  assert.equal(restored.schema,2);
+  assert.equal(restored.state.transform,'sum');
+  assert.equal(restored.state.skip,1);
+  assert.equal(restored.sources.length,2);
+  assert.equal(restored.sources[0].terms[2],'9007199254740993');
+  assert.deepEqual(workbenchRows(restored.sources,restored.state).series[0].rows.map(row=>row.value),
+    ['-1','9007199254740992']);
+  const altered={...pinnedA,record_sha256:'c'.repeat(64),terms:['0','-1','9007199254740994','7']};
+  assert.throws(()=>readWorkbenchLink(link,[altered,pinnedB],'snapshot'),/no longer matches its exact stored data/);
+  assert.throws(()=>readWorkbenchLink(link,[{...pinnedA,offset:3},pinnedB],'snapshot'),/no longer matches/);
+  assert.throws(()=>readWorkbenchLink(link,[{...pinnedA,terms:pinnedA.terms.slice(0,3)},pinnedB],'snapshot'),/no longer matches/);
+  const forged=new URL(link),bad=JSON.parse(forged.searchParams.get('wb'));
+  bad.sources[0].sha256='0'.repeat(64);forged.searchParams.set('wb',JSON.stringify(bad));
+  assert.throws(()=>readWorkbenchLink(forged.href,[pinnedA,pinnedB],'snapshot'),/no longer matches/);
+  bad.sources[0].sha256='invalid';forged.searchParams.set('wb',JSON.stringify(bad));
+  assert.throws(()=>readWorkbenchLink(forged.href,[pinnedA,pinnedB],'snapshot'),/missing its exact source receipt/);
+  const duplicate=new URL(link);duplicate.searchParams.append('wb',url.searchParams.get('wb'));
+  assert.throws(()=>readWorkbenchLink(duplicate.href,[pinnedA,pinnedB],'snapshot'),/one set of comparison settings/);
+});
+test('legacy comparison URLs remain usable without data pinning',()=>{
+  const v1=workbenchLink('https://example.test/sequence-compare.html',[localSource(a),localSource(b)],WORKBENCH_DEFAULTS);
+  assert.equal(JSON.parse(new URL(v1).searchParams.get('wb')).schema,1);
+  const restored=readWorkbenchLink(v1,[{...a,record_sha256:'a'.repeat(64)},{...b,record_sha256:'b'.repeat(64)}],'snapshot');
+  assert.equal(restored.schema,1);
+  assert.equal(restored.sources.length,2);
+  assert.equal(restored.sources[0].receipt,'a'.repeat(64));
+  // Old links carry no SHA-256 receipt, so they do not claim to pin the source.
+  assert.deepEqual(restored.sources[0].terms,a.terms);
+});
+
 test('comparison CSV retains exact values, source positions and attribution',()=>{
   const ref=referenceSource({id:'A000001',sample_position:8,values:['9007199254740993']},'sha');const csv=comparisonCSV(workbenchRows([ref]));
   for(const text of ['9007199254740993','mathematical offset unknown','"8"','CC-BY-SA-4.0','OEIS Foundation','"sha"'])assert.ok(csv.includes(text),text);

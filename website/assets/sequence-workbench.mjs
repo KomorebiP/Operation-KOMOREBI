@@ -9,7 +9,7 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
   section.innerHTML=`<p class="sar-kicker">Comparison workbench</p><h2 id="sw-heading" tabindex="-1">Compare sequences</h2>
     <p>Add up to four records from the search results or OEIS finder. Compare exact terms, differences, partial sums, and residues. Each line has its own mark and pattern as well as a color.</p>
     <p id="sw-status" role="status" aria-live="polite"></p><ol id="sw-sources" class="sw-sources"></ol>
-    <div class="sp-actions"><button type="button" id="sw-example">Try Fibonacci + Lucas</button><button type="button" id="sw-clear">Clear comparison</button></div>
+    <div class="sp-actions"><button type="button" id="sw-example">Try Fibonacci + Lucas</button><button type="button" id="sw-clear">Clear comparison</button><button type="button" id="sw-share-top">Copy comparison link</button></div>
     <form id="sw-add-form" class="sw-add-form"><label for="sw-record">Add a sequence by name or record ID<input id="sw-record" autocomplete="off" list="sw-record-choices" placeholder="Fibonacci or KSEQ-000025"></label><datalist id="sw-record-choices"></datalist><button type="submit">Add record</button><p id="sw-add-error" role="alert" hidden></p></form>
     <div id="sw-restore" hidden><p>Shared OEIS excerpts require the reference data, about 39.8 MiB on first use. Nothing downloads until you choose to load it. Mathematical offsets are absent from these exports.</p><div class="sp-actions"><button type="button" id="sw-load">Load OEIS excerpts</button><button type="button" id="sw-cancel" disabled>Cancel loading</button></div></div>
     <form id="sw-form"><div class="sar-controls">
@@ -23,6 +23,10 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
     <label for="sw-marks">Marks<select id="sw-marks"><option value="line">Points and lines</option><option value="points">Points only</option></select></label>
     </div><button type="submit">Update comparison</button><p id="sw-error" role="alert" hidden></p></form>
     <p id="sw-conventions">Windows count from each stored prefix, without extrapolation. Partial sums include all earlier stored terms; differences use the preceding stored term. Position alignment pairs window positions and does not assert equal mathematical indices.</p>
+     <details id="sw-provenance"><summary>Source identity and comparison receipts</summary>
+       <p id="sw-receipt-status"></p><ol id="sw-receipt-list"></ol>
+       <p>SHA-256 receipts identify indexed integer data, not mathematical proofs or historical priority. Generated families are reconstructed from their parameters. OEIS references retain snapshot checks and require an explicit load.</p>
+     </details>
     <div id="sw-appearance"></div><p id="sw-summary"></p><div id="sw-chart" class="sw-chart"></div>
     <p id="sw-inspector" class="sw-inspector" role="status">Focus a plotted point to inspect its exact integer. Use the left and right arrows to move along a series, the up and down arrows to switch series, and Home or End to reach an endpoint.</p>
     <div id="sw-agreements"></div><div class="sp-actions"><button type="button" id="sw-share">Copy comparison link</button><button type="button" id="sw-csv">Export exact CSV</button><button type="button" id="sw-svg">Export SVG</button><button type="button" id="sw-png">Export PNG</button></div>
@@ -33,7 +37,7 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
     const previous=root.querySelector('#transfers')||root.querySelector('#oeis');
     if(previous)previous.after(section);else root.append(section);
   }
-  const $=id=>section.querySelector('#sw-'+id);let sources=[],state={...WORKBENCH_DEFAULTS},result=null,activeKey=null;
+  const $=id=>section.querySelector('#sw-'+id);let sources=[],state={...WORKBENCH_DEFAULTS},result=null,activeKey=null,restoredSchema=null;
   const matches=entries.map(entry=>({entry,key:(entry.id+' '+entry.title).toLowerCase()}));
   function suggest(){
     const term=$('record').value.toLowerCase().trim();
@@ -51,13 +55,13 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
   });
 
   const say=text=>{$('status').textContent=text;},fail=error=>{$('error').textContent=error.message;$('error').hidden=false;};
-  try{const linked=readWorkbenchLink(location.href,entries,snapshot);if(linked){sources=linked.sources;state=linked.state;}}catch(error){fail(error);}
+  try{const linked=readWorkbenchLink(location.href,entries,snapshot);if(linked){sources=linked.sources;state=linked.state;restoredSchema=linked.schema;}}catch(error){fail(error);}
   const fields=Object.keys(WORKBENCH_DEFAULTS);for(const key of fields)$(key).value=state[key];
   const appearance=mountPlotOptions({host:$('appearance'),prefix:'sw',onChange:()=>draw()});
   function draw(){
     $('chart').replaceChildren();$('agreements').replaceChildren();$('data').querySelector('tbody').replaceChildren();
     const pending=sources.some(s=>s.pending),ready=sources.length&&!pending;
-    for(const key of ['csv','svg','png','share'])$(key).disabled=!ready;
+    for(const key of ['csv','svg','png','share','share-top'])$(key).disabled=!ready;
     if(!ready){result=null;$('summary').textContent=pending?'Load or remove the pending reference excerpts to draw this comparison.':'Choose Add to comparison on any local result, or try the example.';$('inspector').textContent='Exact point values will appear here.';return;}
     try{result=workbenchRows(sources,state);}catch(error){fail(error);return;}
     const colors=plotColors(appearance.state),theme=appearance.state,chart=$('chart'),width=Math.max(280,chart.clientWidth),height=plotHeight(width,theme),mobile=width<560,left=mobile?49:68,right=18,top=62+sources.length*14,bottom=height-(sources.some(s=>s.type==='oeis')?94:65),plotWidth=width-left-right;
@@ -100,18 +104,45 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
     finishPlotTheme(picture,theme);chart.append(picture);appearance.context(state.view==='mod');
     $('summary').textContent=`${points.length} points plotted from ${sources.length} stored prefixes. ${all.length-points.length} points are undefined or outside the selected numeric scale. `+(state.view==='values'?'Only the plotted coordinates are approximate. The table, point details, comparisons, and CSV retain exact integers.':'Residues are computed with exact integers before plotting.');
   }
-  function refresh(){
-    $('sources').replaceChildren();for(const [i,source]of sources.entries()){const li=node('li'),heading=node('strong',`${i+1}. ${source.title}`),info=node('p',source.pending?'Pending reference excerpt.':`${source.indexKind}: ${source.offset}–${source.offset+source.terms.length-1} · ${source.terms.length} stored integers.`),remove=node('button','Remove '+source.id);remove.type='button';remove.addEventListener('click',()=>{sources=sources.filter(s=>s.key!==source.key);refresh();$('heading').focus({preventScroll:true});});li.append(heading,info);if(!source.pending&&source.url){const link=node('a',source.type==='oeis'?'Open OEIS entry':source.type==='family'?'Open family parameters and formulas':'Read definitions and formulas');link.href=source.url;li.append(link);}li.append(remove);$('sources').append(li);}
-    const hasReference=sources.some(s=>s.type==='oeis');$('alignment').querySelector('[value="indices"]').disabled=hasReference;if(hasReference&&state.alignment==='indices'){state.alignment='positions';$('alignment').value='positions';}
-    $('restore').hidden=!sources.some(s=>s.pending);$('clear').disabled=!sources.length;draw();
+  function refreshReceipts(){
+    const list=$('receipt-list');list.replaceChildren();
+    const unpinned=sources.some(source=>source.type==='local'&&!source.receipt);
+    $('receipt-status').textContent=restoredSchema===1
+      ?'Legacy comparison link. Its local record IDs were not bound to the original exact data, so their stored terms might have changed.'
+      :restoredSchema===2
+      ?'The SHA-256 receipts in this shared comparison match the current local catalogue. The comparison retains its original view settings.'
+      :unpinned
+      ?'Some local entries have no exact-data receipt. Links containing those entries use the earlier, unpinned format.'
+      :'New comparison links pin the full indexed integer data of local records. See the receipts below.';
+    for(const source of sources){
+      const item=node('li'),name=node('strong',source.id+' · '),details=node('span');
+      if(source.type==='local'&&source.receipt){
+        details.textContent='Local record · '+source.terms.length+' stored integers · SHA-256: ';
+        details.append(node('code',source.receipt));
+      }else if(source.type==='local')details.textContent='Local record without a stored exact-data receipt.';
+      else if(source.type==='oeis'){
+        const hash=source.snapshot||source.descriptor?.snapshot||'not available';
+        details.textContent='OEIS excerpt · retained snapshot: ';
+        details.append(node('code',hash));
+      }else if(source.type==='family')details.textContent='Generated family · reconstructed from explicit parameters (no source-code digest).';
+      else details.textContent='Pasted exact integers embedded directly in the comparison link.';
+      item.append(name,details);list.append(item);
+    }
   }
-  function add(source){if(sources.some(s=>s.key===source.key)){say(source.id+' is already selected.');return false;}if(sources.length===4){say('The comparison already has four series. Remove one before adding another.');$('heading').focus();$('heading').scrollIntoView({block:'start'});return false;}sources.push(source);refresh();say(source.id+' added.');$('heading').focus({preventScroll:true});$('heading').scrollIntoView({block:'start'});return true;}
+  function refresh(){
+    $('sources').replaceChildren();for(const [i,source]of sources.entries()){const li=node('li'),heading=node('strong',`${i+1}. ${source.title}`),info=node('p',source.pending?'Pending reference excerpt.':`${source.indexKind}: ${source.offset}–${source.offset+source.terms.length-1} · ${source.terms.length} stored integers.`),remove=node('button','Remove '+source.id);remove.type='button';remove.addEventListener('click',()=>{restoredSchema=null;sources=sources.filter(s=>s.key!==source.key);refresh();$('heading').focus({preventScroll:true});});li.append(heading,info);if(!source.pending&&source.url){const link=node('a',source.type==='oeis'?'Open OEIS entry':source.type==='family'?'Open family parameters and formulas':'Read definitions and formulas');link.href=source.url;li.append(link);}li.append(remove);$('sources').append(li);}
+    const hasReference=sources.some(s=>s.type==='oeis');$('alignment').querySelector('[value="indices"]').disabled=hasReference;if(hasReference&&state.alignment==='indices'){state.alignment='positions';$('alignment').value='positions';}
+    $('restore').hidden=!sources.some(s=>s.pending);$('clear').disabled=!sources.length;refreshReceipts();draw();
+  }
+  function add(source){if(sources.some(s=>s.key===source.key)){say(source.id+' is already selected.');return false;}if(sources.length===4){say('The comparison already has four series. Remove one before adding another.');$('heading').focus();$('heading').scrollIntoView({block:'start'});return false;}restoredSchema=null;sources.push(source);refresh();say(source.id+' added.');$('heading').focus({preventScroll:true});$('heading').scrollIntoView({block:'start'});return true;}
   $('form').addEventListener('submit',event=>{event.preventDefault();try{const next=validateWorkbench(Object.fromEntries(fields.map(key=>[key,$(key).value])));workbenchRows(sources.filter(s=>!s.pending),next);state=next;$('error').hidden=true;draw();}catch(error){fail(error);}});
-  $('clear').addEventListener('click',()=>{sources=[];refresh();say('Comparison cleared.');});
-  $('example').addEventListener('click',()=>{sources=['fibonacci','lucas'].map(kind=>localSource(entries.find(e=>e.kind===kind),location.href));state={...WORKBENCH_DEFAULTS};for(const key of fields)$(key).value=state[key];refresh();say('Fibonacci and Lucas added.');});
+  $('clear').addEventListener('click',()=>{restoredSchema=null;sources=[];refresh();say('Comparison cleared.');});
+  $('example').addEventListener('click',()=>{restoredSchema=null;sources=['fibonacci','lucas'].map(kind=>localSource(entries.find(e=>e.kind===kind),location.href));state={...WORKBENCH_DEFAULTS};for(const key of fields)$(key).value=state[key];refresh();say('Fibonacci and Lucas added.');});
   $('load').addEventListener('click',async()=>{const pending=sources.filter(s=>s.pending);$('load').disabled=true;$('cancel').disabled=false;try{const response=await referenceClient.records(pending.map(s=>s.descriptor),say);for(const [i,source]of pending.entries()){const index=sources.findIndex(s=>s.key===source.key);if(index!==-1)sources[index]=referenceSource(response.results[i],snapshot);}refresh();say('Shared OEIS excerpts are ready to compare.');}catch(error){say(error.message);}finally{$('load').disabled=false;$('cancel').disabled=true;}});
   $('cancel').addEventListener('click',()=>referenceClient.cancel());
-  $('share').addEventListener('click',async()=>{let link;try{link=appearance.link(workbenchLink(location.href,sources,state));}catch(error){fail(error);return;}try{await navigator.clipboard.writeText(link);say('Comparison link copied. OEIS excerpts load only when the recipient chooses to restore them.');}catch{$('link-wrap').hidden=false;$('link').value=link;$('link').focus();$('link').select();}});
+    const copyComparison=async()=>{let link;try{link=appearance.link(workbenchLink(location.href,sources,state));}catch(error){fail(error);return;}try{await navigator.clipboard.writeText(link);say('Comparison link copied. Exact local data receipts are checked when available. OEIS excerpts require explicit restoration.');}catch{$('link-wrap').hidden=false;$('link').value=link;$('link').focus();$('link').select();}};
+  $('share').addEventListener('click',copyComparison);
+  $('share-top').addEventListener('click',copyComparison);
   $('csv').addEventListener('click',()=>{if(!result)return;const url=URL.createObjectURL(new Blob([comparisonCSV(result)],{type:'text/csv;charset=utf-8'})),link=node('a');link.href=url;link.download='sequence-comparison.csv';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
   for(const format of ['svg','png'])$(format).addEventListener('click',async()=>{try{await exportPlot($('chart').querySelector('svg'),format,'sequence-comparison');say(format.toUpperCase()+' exported.');}catch(error){say(error.message);}});
   let timer;if(typeof ResizeObserver==='function'){const observer=new ResizeObserver(()=>{clearTimeout(timer);timer=setTimeout(draw,100);});observer.observe($('chart'));}refresh();

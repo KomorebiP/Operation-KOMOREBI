@@ -41,6 +41,24 @@ class SequenceLibraryTests(unittest.TestCase):
         self.assertEqual(source_degree(by_id['KFOR-HC-04'],2),4)
         self.assertNotIn('source_degrees',next(item for item in entries if item['collection']=='atlas'))
 
+    def test_indexed_source_receipts_cover_exact_integer_data(self):
+        import hashlib
+        from sequence_library import exact_record_receipt, source_degree
+        record=next(item for item in library_entries(catalogue()) if item['id']=='KFOR-P-03-02')
+        augmented=dict(record,source_degrees=[source_degree(record,record['offset']+i)
+                              for i in range(len(record['terms']))])
+        payload=[augmented['id'],augmented['collection'],augmented['offset'],
+                 augmented.get('index_symbol','n'),augmented['terms'],augmented['source_degrees']]
+        expected=hashlib.sha256(json.dumps(payload,ensure_ascii=False,
+                          separators=(',',':')).encode('utf-8')).hexdigest()
+        self.assertEqual(exact_record_receipt(augmented),expected)
+        self.assertEqual(len(expected),64)
+        self.assertNotEqual(exact_record_receipt({**augmented,'terms':['11',*augmented['terms'][1:]]}),expected)
+        self.assertNotEqual(exact_record_receipt({**augmented,'offset':3}),expected)
+        self.assertNotEqual(exact_record_receipt({**augmented,'source_degrees':[9,*augmented['source_degrees'][1:]]}),expected)
+        plain=next(item for item in library_entries(catalogue()) if item['collection']=='atlas')
+        self.assertEqual(len(exact_record_receipt(plain)),64)
+
     def test_research_tools_have_disjoint_reading_sections(self):
         from sequence_generalized import sections
         ids=('generalized','research-graph','identify','modular-dynamics','research-notebooks')
