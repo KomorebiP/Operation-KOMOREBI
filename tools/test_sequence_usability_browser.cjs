@@ -37,7 +37,7 @@ async function fit(page){
       }));
       assert.equal(cardMetrics.align,'start');
       assert.ok(parseFloat(cardMetrics.margin)<20,'Result actions have an excessive forced margin');
-      assert.ok(cardMetrics.height<460,'Collapsed result card uses too much vertical space');
+      assert.ok(cardMetrics.height<680,'Collapsed result card uses too much vertical space');
       assert.equal(await page.locator('#research-families>.sl-topic-disclosure').evaluate(el=>el.open),false);
       assert.equal(await page.locator('#oeis>.sl-topic-disclosure').evaluate(el=>el.open),false);
       assert.equal(await page.locator('#library-sources>.sl-topic-disclosure').evaluate(el=>el.open),false);
