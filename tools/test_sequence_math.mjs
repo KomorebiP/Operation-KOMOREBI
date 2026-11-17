@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {formulaLatex,readMathDisplay} from '../website/assets/math-display.mjs';
 import {atlasDestination,archiveDestination} from '../website/assets/sequence-navigation.mjs';
 import {sequenceTransfer} from '../website/assets/sequence-transfer-core.mjs';
-import {rationalTeX,transferPolynomialPlain,transferPolynomialTeX,transferWitnessPlain,transferWitnessTeX,triangleRowExpressions,transferMatrixTeX,transferMatrixPlain,transferActionEquations} from '../website/assets/sequence-math.mjs';
+import {rationalTeX,transferPolynomialPlain,transferPolynomialTeX,transferWitnessPlain,transferWitnessTeX,triangleRowExpressions,transferMatrixTeX,transferMatrixPlain,transferActionEquations,transferProductMath,transferIndexMath} from '../website/assets/sequence-math.mjs';
 
 test('formula transcription preserves denominator function arguments and sum scope',()=>{
   const quotient=formulaLatex("a(n)=-D_2'(z)/D_2(z)");
@@ -195,4 +195,34 @@ test('inverse witnesses recover the original source with correct signs and posit
   const formulas=transferActionEquations(rational,1);
   assert.ok(formulas.forward.tex.includes(String.raw`-\frac{3}{2}`));
   assert.ok(formulas.inverse.tex.includes(String.raw`\frac{2}{3}`));
+});
+
+test('finite inverse-matrix product typesetting preserves exact summands and both orders',async()=>{
+  const {transferProductEntry}=await import('../website/assets/sequence-transfer-core.mjs');
+  const entry=(id,values)=>({id,terms:values.map(String),offset:0,index_symbol:'n'});
+  const map=sequenceTransfer(entry('E',[1,-1,5,-61]),entry('F',[0,1,1,2,3]),4);
+  const witness=transferProductEntry(map,3,0,'HK',4);
+  const math=transferProductMath(witness);
+  assert.ok(math.tex.includes(String.raw`\sum_{\ell=0}^{3}h_{3-\ell}k_{\ell-0}`));
+  assert.ok(math.tex.includes(String.raw`\left(53\right)\left(1\right)`));
+  assert.ok(math.tex.includes(String.raw`\delta_{3,0}`));
+  assert.match(math.plain,/\(53\)\*\(1\).*?\(-65\)/);
+  assert.ok(math.plain.endsWith('= 0 = delta(3,0)'));
+  const reverse=transferProductMath(transferProductEntry(map,3,0,'KH',4));
+  assert.ok(reverse.tex.includes(String.raw`k_{3-\ell}h_{\ell-0}`));
+  const upper=transferProductMath(transferProductEntry(map,0,3,'HK',4));
+  assert.equal(upper.plain,'(L(H)L(K))[0,3] = 0 = delta(0,3)');
+  const diagonal=transferProductMath(transferProductEntry(map,2,2,'HK',4));
+  assert.ok(diagonal.plain.endsWith('= 1 = delta(2,2)'));
+  assert.throws(()=>transferProductMath({...witness,verified:false}),/failed its identity/);
+});
+test('index-map display distinguishes original offsets from local tail positions',()=>{
+  const source={id:'A',terms:['0','0','-2','3','7'],offset:-4,index_symbol:'n'},
+        target={id:'B',terms:['0','3','-2','1'],offset:10,index_symbol:'n'};
+  const map=sequenceTransfer(source,target,3),display=transferIndexMath(map);
+  assert.equal(display.plain,'source index = -2+j; target index = 11+j; original index shift = 13; 0<=j<3');
+  assert.ok(display.tex.includes(String.raw`i_{\mathrm{source}}(j)&=-2+j`));
+  assert.ok(display.tex.includes(String.raw`i_{\mathrm{target}}(j)&=11+j`));
+  assert.ok(display.tex.includes(String.raw`\Delta i&=13`));
+  assert.throws(()=>transferIndexMath({...map,indexShift:12}),/consistent integer transfer anchors/);
 });
