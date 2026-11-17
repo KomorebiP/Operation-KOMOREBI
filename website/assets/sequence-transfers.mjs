@@ -30,12 +30,12 @@ export function mountTransfers(entries,host){
   const detail=make('details'),description=make('p');detail.append(make('summary','Map, inverse, and normalization'),description);description.textContent='For the selected nonzero tails A and B, define H=B/A and K=A/B as ordinary formal series modulo z^L. Convolution by H sends A to B. Convolution by K recovers A. Each matrix row uses the full preceding prefix, not just one source value. Leading zero prefixes and their displayed index shifts remain attached. Different prefix lengths require a shift between classes with prescribed leading zeros. A negative shift applies only to a stream containing the required zeros. The calculation does not substitute EGF or compressed Taylor normalizations.';detail.append(mathLine('b_j = sum_(i=0)^j h_i a_(j-i)',String.raw`b_j=\sum_{i=0}^{j}h_i a_{j-i}`),mathLine('a_j = sum_(i=0)^j k_i b_(j-i)',String.raw`a_j=\sum_{i=0}^{j}k_i b_{j-i}`));
   const matrixDetails=make('details'),matrixIntro=make('p','Each matrix acts on anchored ordinary coefficients at local tail positions 0, 1, 2, ... . Its entries are h_(i-j) or k_(i-j) on and below the diagonal, and zero above it. Original sequence index shifts are recorded separately.'),matrixRule=mathLine('L(H)_(i,j) = h_(i-j) for 0<=j<=i; 0 for j>i',String.raw`\bigl(L(H)\bigr)_{i,j}=\begin{cases}h_{i-j}&0\le j\le i\\0&j>i\end{cases}`),matrixIdentity=mathLine('L(H)*L(K) = I',String.raw`L(H)L(K)=I`);
   matrixDetails.id='tr-matrices';matrixDetails.open=true;
-  matrixDetails.append(make('summary','Transfer matrix and inverse'),matrixIntro,matrixRule);
-  const matrixSizeLabel=make('label','Typeset matrix size'),matrixSize=make('select');matrixSize.id='tr-matrix-size';matrixSizeLabel.htmlFor=matrixSize.id;matrixSizeLabel.append(matrixSize);
+  matrixDetails.append(make('summary','Transfer matrix and inverse'),matrixIntro,matrixRule,mathLine('b = L(H)*a; a = L(K)*b',String.raw`\mathbf b=L(H)\mathbf a,\qquad\mathbf a=L(K)\mathbf b`));
+  const matrixSizeLabel=make('label','Typeset matrix size'),matrixSize=make('select'),matrixCopy=make('button','Copy displayed matrices as LaTeX');matrixCopy.type='button';matrixSize.id='tr-matrix-size';matrixSizeLabel.htmlFor=matrixSize.id;matrixSizeLabel.append(matrixSize);
   const matrixHelp=make('p','The typeset display shows a leading square block. The exact tables below always retain the first eight rows and columns, or fewer when the window is shorter.');
   matrixHelp.id='tr-matrix-help';matrixSize.setAttribute('aria-describedby',matrixHelp.id);
   const matrices=make('div');matrices.className='sr-matrices';
-  matrixDetails.append(matrixSizeLabel,matrixHelp,matrices,matrixIdentity);
+  matrixDetails.append(matrixSizeLabel,matrixCopy,matrixHelp,matrices,matrixIdentity);
   const tableWrap=make('div'),table=make('table'),thead=make('thead'),tbody=make('tbody'),caption=make('caption','Exact source, target, kernel, and round-trip coefficients');tableWrap.className='sar-scroll';tableWrap.tabIndex=0;tableWrap.setAttribute('role','region');tableWrap.setAttribute('aria-label','Exact transfer certificate');const head=make('tr');for(const label of ['Tail j','Source index','Target index','Source integer','Target integer','Kernel H','Inverse K','H times source','Recovered source','Residual']){const th=make('th',label);th.scope='col';head.append(th);}thead.append(head);table.append(caption,thead,tbody);tableWrap.append(table);
   const output=make('div'),csv=make('button','Download transfer CSV'),json=make('button','Download certificate JSON'),copy=make('button','Copy kernel coefficients'),copyInverse=make('button','Copy inverse coefficients'),share=make('button','Copy transfer link'),status=make('p'),fallbackLabel=make('label','Copy this exact text'),fallback=make('textarea');output.className='sp-actions';for(const button of [csv,json,copy,copyInverse,share])button.type='button';output.append(csv,json,copy,copyInverse,share);status.setAttribute('role','status');status.setAttribute('aria-live','polite');fallbackLabel.hidden=true;fallback.id='tr-copy-text';fallback.readOnly=true;fallback.rows=3;fallbackLabel.htmlFor=fallback.id;fallbackLabel.append(fallback);
   const research=make('details');research.id='tr-euler-research';research.append(make('summary','Euler/Fibonacci research interpretation'));const researchText=make('p'),researchSource=make('a','Read the complete transfer and transported-operation derivation');researchSource.href='collection/demonstrations/EULER_PACKETS.html#transfer-the-euler-sequence-to-fibonacci-values';research.append(researchText,researchSource);
@@ -62,8 +62,8 @@ export function mountTransfers(entries,host){
     const forward=transferMatrix(map,false),inverse=transferMatrix(map,true);
     clearMath(matrices);
     matrices.replaceChildren(matrix('Transfer L(H)',forward,transferMatrix(map,false,size),'H'),matrix('Inverse L(K)',inverse,transferMatrix(map,true,size),'K'));
-    matrixIdentity.textContent='L_'+size+'(H)*L_'+size+'(K) = I_'+size;
-    matrixIdentity.setAttribute('data-math-latex','L_{'+size+'}(H)L_{'+size+'}(K)=I_{'+size+'}');
+    matrixIdentity.textContent='L_'+size+'(H)*L_'+size+'(K) = L_'+size+'(K)*L_'+size+'(H) = I_'+size;
+    matrixIdentity.setAttribute('data-math-latex','L_{'+size+'}(H)L_{'+size+'}(K)=L_{'+size+'}(K)L_{'+size+'}(H)=I_{'+size+'}');
     enhanceMath(matrixDetails);
   }
   function render(map,a,b,update){
@@ -94,6 +94,11 @@ export function mountTransfers(entries,host){
   }
   function calculate(update=false){try{const a=resolve('source'),b=resolve('target'),map=sequenceTransfer(a,b,count.value);if(!map.verified)throw Error('The exact transfer certificate failed.');render(map,a,b,update);}catch(problem){error.hidden=false;error.textContent=problem.message+(current?' The previous certificate remains available.':'');if(fields[problem.field])fields[problem.field].setAttribute('aria-invalid','true');}}
   form.addEventListener('submit',event=>{event.preventDefault();calculate(true);});matrixSize.addEventListener('change',()=>{if(current)renderMatrices(current);});
+  matrixCopy.addEventListener('click',()=>{if(!current)return;const n=Number(matrixSize.value);const equations=[
+    transferMatrixTeX(transferMatrix(current,false,n),'H'),
+    transferMatrixTeX(transferMatrix(current,true,n),'K'),
+    'L_{'+n+'}(H)L_{'+n+'}(K)=L_{'+n+'}(K)L_{'+n+'}(H)=I_{'+n+'}'
+  ];clipboard(equations.join('\n\n'),'Displayed matrix LaTeX copied.');});
   function preset(a,b){fields.source.value=a.id;fields.target.value=b.id;fields.count.value=String(Math.min(12,48,transferAnchor(a).available,transferAnchor(b).available));updateWindowHelp();calculate(true);}
   forward.addEventListener('click',()=>preset(euler,fib));back.addEventListener('click',()=>preset(fib,euler));
   identity.addEventListener('click',()=>{try{const source=resolve('source');preset(source,source);}catch(problem){error.hidden=false;error.textContent=problem.message;}});
