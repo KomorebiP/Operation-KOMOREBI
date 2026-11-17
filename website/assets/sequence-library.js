@@ -54,6 +54,7 @@ function inlineExactValues(entry,initialPosition=0){
     const jumpLabel=make('label',`Go to stored ${symbol}`),jump=make('input'),go=make('button','Go');
     container.className='sl-term-inspector-body';controls.className='sl-term-controls';
     previous.type=next.type=exportWindow.type='button';go.type='submit';
+    exportWindow.className='sl-term-export';
     jump.type='number';jump.min=String(offset);jump.max=String(offset+values.length-1);jump.step='1';
     jump.inputMode='numeric';jumpLabel.append(jump);
     controls.append(previous,next,jumpLabel,go,exportWindow);
