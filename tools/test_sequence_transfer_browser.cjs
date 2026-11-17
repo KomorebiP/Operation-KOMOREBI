@@ -32,6 +32,13 @@ async function run(){
       assert.match(await page.locator('#tr-summary').textContent(),/12 coefficients verified exactly/);
       assert.match(await page.locator('#tr-window-help').textContent(),/Source anchor/);
       assert.match(await page.locator('#tr-certificate').textContent(),/H · K = 1/);
+      assert.equal(await page.locator('.sr-transfer-algebra [data-math-latex]').count(),4);
+      await page.locator('#tr-certificate .math-pair[data-math-pair-ready=true]').first().waitFor({timeout:30000});
+      assert.equal(await page.locator('#tr-certificate .math-pair').count(),3);
+      await page.locator('#site-math-display').selectOption('plain');
+      assert.equal(await page.locator('#tr-certificate [data-math-plain]').first().isVisible(),true);
+      await page.locator('#site-math-display').selectOption('typeset');
+      assert.equal(await page.locator('#tr-certificate [data-math-tex]').first().isVisible(),true);
       assert.equal(await page.locator('#tr-result table tbody tr').first().count(),1);
       await page.locator('#tr-convolution-witness summary').click();
       assert.match(await page.locator('#tr-convolution-witness').textContent(),/At tail position 2/);
