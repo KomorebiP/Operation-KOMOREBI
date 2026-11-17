@@ -31,7 +31,14 @@ def triangle_section(entry):
     for n, (start, size) in enumerate(zip(table['row_offsets'], table['row_lengths'])):
         cells = ''.join('<td'+(' class="sl-zero"' if entry['terms'][start+k]=='0' else '')+'><a href="#n-'+str(start+k)+'" title="Row '+str(n)+', column '+str(k)+'">'+entry['terms'][start+k]+'</a></td>' for k in range(size))
         body += '<tr><th scope="row">'+str(n)+'</th>'+cells+('<td class="sl-outside" aria-label="Outside the row" colspan="'+str(width-size)+'"></td>' if size<width else '')+'</tr>'
-    return '<section id="triangle"><h2>Coefficient triangle</h2><p>'+e(table['description'])+' Select a coefficient to find its flat index in the exact table. The row selector in the plot also displays the complete row polynomial.</p><p class="sl-triangle-help" hidden>Tab to the triangle. Use arrow keys to move between coefficients, Home/End within a row, and Enter to find the exact indexed value.</p><div class="sar-scroll sl-triangle" tabindex="0" role="region" aria-label="Coefficient triangle, rows and columns"><table><caption>Complete stored rows n=0–'+str(len(table['row_lengths'])-1)+'; coefficients retain their signs and zeros.</caption><thead><tr>'+head+'</tr></thead><tbody>'+body+'</tbody></table></div></section>'
+    if entry['id']=='KFOR-TRI-H':
+        plain='j=n^2+k; 0<=k<=2n'
+        tex=r'j=n^2+k,\qquad 0\le k\le 2n'
+    else:
+        plain='j=n(n+1)/2+k; 0<=k<=n'
+        tex=r'j=\frac{n(n+1)}{2}+k,\qquad 0\le k\le n'
+    notation='<p class="sar-formula sr-triangle-index" data-math-latex="'+e(tex,quote=True)+'">'+e(plain)+'</p>'
+    return '<section id="triangle"><h2>Coefficient triangle</h2><p>'+e(table['description'])+' Select a coefficient to find its flat index in the exact table. The row selector displays the exact row polynomial when the table represents polynomial coefficients.</p>'+notation+'<p class="sl-triangle-help" hidden>Tab to the triangle. Use arrow keys to move between coefficients, Home/End within a row, and Enter to find the exact indexed value.</p><div class="sar-scroll sl-triangle" tabindex="0" role="region" aria-label="Coefficient triangle, rows and columns"><table><caption>Complete stored rows n=0–'+str(len(table['row_lengths'])-1)+'; coefficients retain their signs and zeros.</caption><thead><tr>'+head+'</tr></thead><tbody>'+body+'</tbody></table></div></section>'
 
 
 @lru_cache(maxsize=1)
