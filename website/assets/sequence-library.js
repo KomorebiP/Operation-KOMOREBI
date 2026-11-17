@@ -229,6 +229,14 @@ function setupReference(client){
 }
 if(!legacyRoute)try{
   if(root.dataset.entry){const [{setupArchivePlot},{mountTriangleExplorer}]=await Promise.all([import('./sequence-archive-plot.mjs'),import('./sequence-triangle.mjs')]);const response=await fetch(new URL(root.dataset.entry,location.href));if(!response.ok)throw Error('The exact record could not be loaded.');const entry=await response.json();setupArchivePlot(entry);setupTriangleNavigation();mountTriangleExplorer(entry,root.querySelector('#triangle'));}
+  else if(root.dataset.page==='oeis'){
+    const response=await fetch(new URL('./sequence-oeis-meta.json',import.meta.url));
+    if(!response.ok)throw Error('The local OEIS reference metadata could not be loaded.');
+    const metadata=await response.json();
+    if(!/^[0-9a-f]{64}$/.test(metadata.stripped_sha256||''))throw Error('The OEIS reference identifier is invalid.');
+    root.dataset.oeisSnapshot=metadata.stripped_sha256;
+    setupReference(createReferenceClient());
+  }
   else if($('search')||root.querySelector('#family-explorer-controls')||root.querySelector('#sr-transfer-tool')||root.querySelector('#comparison')||root.querySelector('#sl-oeis-form')||root.querySelector('#research-families')||['connections','identify','modular'].includes(root.dataset.page)){
     const responses=await Promise.all([fetch(new URL('./sequence-library-data.json',import.meta.url)),fetch(new URL('./sequence-generalized-data.json',import.meta.url))]);
     if(responses.some(r=>!r.ok))throw Error('The local sequence and family catalogue could not be loaded.');
