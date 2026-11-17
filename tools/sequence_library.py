@@ -130,8 +130,8 @@ def build(site,atlas):
         href='sequence-library.html?q='+quote(query,safe='')+'#library-search'
         return '<a href="'+e(href,quote=True)+'">'+e(label)+'</a>'
     family_cards=[]
-    for title,description,kinds,example in research_groups:
-        counts=[(label,kind,sum(item['kind']==kind for item in research_entries)) for label,kind in kinds]
+    for title,description,category_pairs,example in research_groups:
+        counts=[(label,kind,sum(item['kind']==kind for item in research_entries)) for label,kind in category_pairs]
         total_group=sum(count for _,_,count in counts)
         if not total_group:continue
         links=''.join('<li>'+research_link('kind:"'+kind+'"',label+' ('+str(count)+')')+'</li>' for label,kind,count in counts if count)
