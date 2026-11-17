@@ -27,8 +27,8 @@ async function fit(page) {
       const page=await context.newPage();page.on('pageerror',e=>pageErrors.push(e.message));
       await page.goto(url('sequence-library.html#research-graph'));
       await page.locator('[data-library-ready=true]').waitFor({timeout:90000});
-      await page.locator('#cg-form').waitFor();
       await page.locator('#research-graph > details').evaluate(element=>element.open=true);
+      await page.locator('#cg-form').waitFor();
       await settle(page);
       assert.ok(await page.locator('#cg-relations .math-pair').count()>=1,'No relation equation');
       assert.ok(await page.locator('#cg-relations mjx-container').count()>=1,'Relation was not typeset');
