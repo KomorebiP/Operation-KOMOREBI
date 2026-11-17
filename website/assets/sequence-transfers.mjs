@@ -273,7 +273,11 @@ export function mountTransfers(entries,host){
   copyInverse.addEventListener('click',()=>{if(current)clipboard(current.rows.map(row=>row.inverse).join(', '),'Inverse kernel coefficients copied exactly.');});
   share.addEventListener('click',()=>{if(current)clipboard(transferLink(location.href,current),'Transfer link copied.');});
   composeVia.value=(eligible.find(entry=>entry.collection==='atlas'&&entry.kind==='lucas')||fib).id;suggestVia();
-  const params=new URL(location.href).searchParams;fields.source.value=params.get('tr-source')||euler.id;fields.target.value=params.get('tr-target')||fib.id;fields.count.value=params.get('tr-count')||'12';suggest('source');suggest('target');updateWindowHelp();calculate();
+  const params=new URL(location.href).searchParams;fields.source.value=params.get('tr-source')||euler.id;fields.target.value=params.get('tr-target')||fib.id;fields.count.value=params.get('tr-count')||'12';suggest('source');suggest('target');updateWindowHelp();
+  if(!params.has('tr-count'))try{const source=resolve('source'),target=resolve('target');fields.count.value=String(Math.min(12,transferAnchor(source).available,transferAnchor(target).available));}catch{}
+  calculate();
+  if(['#tr-matrices','#tr-product-witness','#tr-matrix-action'].includes(location.hash))matrixDetails.open=true;
+  if(location.hash==='#tr-compose')composePanel.open=true;
   function validate(data){const a=lookup.get(normalizeText(canonicalID(data?.source||''))),b=lookup.get(normalizeText(canonicalID(data?.target||'')));if(!a||!b)throw Error('The saved transfer needs two available scalar records.');return {a,b,map:sequenceTransfer(a,b,data.count)};}
   return {snapshot:()=>current?{source:current.sourceId,target:current.targetId,count:current.count}:{source:fields.source.value,target:fields.target.value,count:Number(count.value)},validate,restore(data){const {a,b,map}=validate(data);fields.count.value=String(map.count);render(map,a,b,false);},source(entry){if(!lookup.has(normalizeText(entry.id)))return;fields.source.value=entry.id;try{const a=transferAnchor(entry),b=transferAnchor(resolve('target'));count.value=String(Math.min(Number(count.value)||12,48,a.available,b.available));}catch{}updateWindowHelp();calculate(true);host.scrollIntoView({block:'start'});fields.target.focus({preventScroll:true});}};
 }
