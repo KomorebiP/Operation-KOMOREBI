@@ -89,7 +89,7 @@ async function visit(page,name,kind){
       await picker.selectOption('1');
       assert.equal(await definition.locator('p.sar-formula').first().textContent(),recorded.formulas[1].expression);
       assert.equal(await definition.locator('.sl-definition-excerpt').textContent(),
-        recorded.formulas[1].expression.replace(/\\s+/g,' ').trim());
+        recorded.formulas[1].expression.replace(/\s+/g,' ').trim());
       assert.match(await definition.locator('.sl-variant-kind').textContent(),/finite sum · 2 of 4/);
       assert.equal((await definition.locator('.sl-variant-note').textContent()).trim(),recorded.formulas[1].note);
       assert.equal(await definition.locator('.sl-variant-source a').getAttribute('href'),recorded.formulas[1].source);
