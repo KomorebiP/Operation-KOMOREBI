@@ -130,7 +130,14 @@ test('a full group queue falls back to individual files instead of growing witho
   const f=fixture({groups:10,perGroup:2,delay:true});const tasks=f.paths.map(paths=>f.request(paths[0]));
   await until(()=>f.downloads.filter(u=>!u.endsWith('.bundle')).length===2);
   let done=false;const all=Promise.all(tasks).finally(()=>{done=true;});
-  for(let i=0;i<300&&!done;i++){f.gates.shift()?.();await new Promise(setImmediate);}
-  assert.ok(done);assert.ok((await all).every(r=>r.status===200));
+  // Allow real event-loop turns for asynchronous checksum and response work.
+  // A fixed number of immediate turns can expire before those promises settle.
+  const deadline=Date.now()+5000;
+  while(!done&&Date.now()<deadline){
+    for(const release of f.gates.splice(0))release();
+    await new Promise(resolve=>setTimeout(resolve,5));
+  }
+  assert.ok(done,'The bounded transfer queue should drain without deadlocking');
+  assert.ok((await all).every(r=>r.status===200));
   assert.equal(f.downloads.filter(u=>u.endsWith('.bundle')).length,8);assert.equal(f.maxActive,2);
 });
