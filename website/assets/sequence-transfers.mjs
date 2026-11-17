@@ -1,7 +1,7 @@
-import {sequenceTransfer,transferAnchor,transferMatrix,transferCSV,transferJSON,transferLink} from './sequence-transfer-core.mjs';
+import {sequenceTransfer,transferAnchor,transferMatrix,transferProductEntry,transferCSV,transferJSON,transferLink} from './sequence-transfer-core.mjs';
 import {canonicalID,normalizeText} from './sequence-atlas-search.mjs';
 import {enhanceMath,clearMath} from './math-display.mjs';
-import {mathLine,transferPolynomialPlain,transferPolynomialTeX,transferWitnessPlain,transferWitnessTeX,transferMatrixTeX,transferMatrixPlain,transferActionEquations} from './sequence-math.mjs';
+import {mathLine,transferPolynomialPlain,transferPolynomialTeX,transferWitnessPlain,transferWitnessTeX,transferMatrixTeX,transferMatrixPlain,transferActionEquations,transferProductMath,transferIndexMath} from './sequence-math.mjs';
 
 const make=(tag,text)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;return node;};
 const save=(text,name,type='text/csv;charset=utf-8')=>{const url=URL.createObjectURL(new Blob([text],{type})),link=make('a');link.href=url;link.download=name;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
@@ -24,6 +24,8 @@ export function mountTransfers(entries,host){
   forward.type=back.type=identity.type='button';presets.append(forward,back,identity);
   const error=make('p');error.id='tr-error';error.setAttribute('role','alert');error.hidden=true;form.append(presets,grid,hint,actions,error);host.append(form);host.parentElement.querySelector('.sr-transfer-static')?.setAttribute('hidden','');
   const result=make('div');result.id='tr-result';result.hidden=true;const summary=make('p'),indices=make('p'),domain=make('p'),sourceLink=make('a'),targetLink=make('a'),links=make('p'),scope=make('p');
+  const indexMap=make('section'),indexNote=make('p','Source and target indices use separate original origins. The same local tail position does not imply equal sequence values or a shared recurrence.'),indexFormula=mathLine('source index = a+j; target index = b+j',String.raw`i_{\mathrm{source}}(j)=\alpha+j,\quad i_{\mathrm{target}}(j)=\beta+j`,'sr-transfer-index-equation');
+  indexMap.id='tr-index-map';indexMap.append(make('h3','Original index alignment'),indexFormula,indexNote);
   const metrics=make('div');metrics.id='tr-certificate';metrics.className='sr-transfer-facts';
   const preview=make('div');preview.id='tr-kernel-preview';preview.className='sr-transfer-previews';
   const witness=make('details'),witnessText=make('p'),witnessIndexHelp=make('p'),
@@ -49,11 +51,22 @@ export function mountTransfers(entries,host){
   const matrixHelp=make('p','The typeset display shows a leading square block. The exact tables below always retain the first eight rows and columns, or fewer when the window is shorter.');
   matrixHelp.id='tr-matrix-help';matrixSize.setAttribute('aria-describedby',matrixHelp.id);
   const matrices=make('div'),matrixAction=make('div');matrices.className='sr-matrices';matrixAction.id='tr-matrix-action';
-  matrixDetails.append(matrixSizeLabel,matrixCopy,matrixHelp,matrices,matrixAction,matrixIdentity);
+  const product=make('section'),productControls=make('div'),productRow=make('select'),productColumn=make('select'),productOrder=make('select'),productStatus=make('p'),
+        productEquation=mathLine('(L(H)L(K))[i,j] = delta(i,j)',String.raw`\bigl(L(H)L(K)\bigr)_{i,j}=\delta_{i,j}`,'sr-product-equation');
+  product.id='tr-product-witness';productControls.className='sar-controls sr-product-controls';
+  for(const [select,id,title] of [[productRow,'tr-product-row','Output row i'],[productColumn,'tr-product-column','Input column j'],[productOrder,'tr-product-order','Product order']]){
+    select.id=id;const label=make('label',title);label.htmlFor=id;label.append(select);productControls.append(label);
+  }
+  for(const [value,label] of [['HK','L(H) × L(K)'],['KH','L(K) × L(H)']]){const option=make('option',label);option.value=value;productOrder.append(option);}
+  const productHelp=make('p','Select one matrix-product entry to inspect its exact rational summands. Above-diagonal entries vanish by triangularity. The identity is certified only in the selected finite coefficient window.');
+  productHelp.id='tr-product-help';for(const select of [productRow,productColumn,productOrder])select.setAttribute('aria-describedby',productHelp.id);
+  productStatus.id='tr-product-status';productStatus.setAttribute('role','status');productStatus.setAttribute('aria-live','polite');
+  product.append(make('h3','Verify one inverse-matrix entry'),productHelp,productControls,productEquation,productStatus);
+  matrixDetails.append(matrixSizeLabel,matrixCopy,matrixHelp,matrices,matrixAction,matrixIdentity,product);
   const tableWrap=make('div'),table=make('table'),thead=make('thead'),tbody=make('tbody'),caption=make('caption','Exact source, target, kernel, and round-trip coefficients');tableWrap.className='sar-scroll';tableWrap.tabIndex=0;tableWrap.setAttribute('role','region');tableWrap.setAttribute('aria-label','Exact transfer certificate');const head=make('tr');for(const label of ['Tail j','Source index','Target index','Source integer','Target integer','Kernel H','Inverse K','H times source','Recovered source','Residual']){const th=make('th',label);th.scope='col';head.append(th);}thead.append(head);table.append(caption,thead,tbody);tableWrap.append(table);
   const output=make('div'),csv=make('button','Download transfer CSV'),json=make('button','Download certificate JSON'),copy=make('button','Copy kernel coefficients'),copyInverse=make('button','Copy inverse coefficients'),share=make('button','Copy transfer link'),status=make('p'),fallbackLabel=make('label','Copy this exact text'),fallback=make('textarea');output.className='sp-actions';for(const button of [csv,json,copy,copyInverse,share])button.type='button';output.append(csv,json,copy,copyInverse,share);status.setAttribute('role','status');status.setAttribute('aria-live','polite');fallbackLabel.hidden=true;fallback.id='tr-copy-text';fallback.readOnly=true;fallback.rows=3;fallbackLabel.htmlFor=fallback.id;fallbackLabel.append(fallback);
   const research=make('details');research.id='tr-euler-research';research.append(make('summary','Euler/Fibonacci research interpretation'));const researchText=make('p'),researchSource=make('a','Read the complete transfer and transported-operation derivation');researchSource.href='collection/demonstrations/EULER_PACKETS.html#transfer-the-euler-sequence-to-fibonacci-values';research.append(researchText,researchSource);
-  result.append(summary,metrics,indices,domain,links,scope,preview,witness,detail,research,output,status,fallbackLabel,tableWrap,matrixDetails);host.append(result);let current;
+  result.append(summary,metrics,indices,indexMap,domain,links,scope,preview,witness,detail,research,output,status,fallbackLabel,tableWrap,matrixDetails);host.append(result);let current;
   function suggest(key){const value=normalizeText(fields[key].value);lists[key].replaceChildren();for(const {entry,text} of names.filter(item=>!value||item.text.includes(value)).slice(0,20)){const option=make('option');option.value=entry.id;option.label=entry.title;lists[key].append(option);}}
   function resolve(key){const text=fields[key].value.trim(),entry=lookup.get(normalizeText(canonicalID(text)))||eligible.find(entry=>normalizeText(entry.title)===normalizeText(text));if(!entry)throw Object.assign(Error('Choose a '+key+' record from the name or ID suggestions.'),{field:key});return entry;}
   function updateWindowHelp(){
@@ -67,6 +80,28 @@ export function mountTransfers(entries,host){
     }
   }
   function matrix(label,values,preview,symbol){const block=make('div'),heading=make('h3',label),display=mathLine(transferMatrixPlain(preview,symbol),transferMatrixTeX(preview,symbol),'sr-transfer-matrix-equation'),scroll=make('div'),t=make('table'),body=make('tbody'),head=make('thead'),headers=make('tr');scroll.className='sar-scroll';scroll.tabIndex=0;scroll.setAttribute('role','region');scroll.setAttribute('aria-label',label);const corner=make('th','Output / input');corner.scope='col';headers.append(corner);for(let j=0;j<values.length;j++){const th=make('th',String(j));th.scope='col';headers.append(th);}head.append(headers);for(const [n,valuesRow] of values.entries()){const row=make('tr'),th=make('th',String(n));th.scope='row';row.append(th);for(const value of valuesRow)row.append(make('td',value));body.append(row);}t.append(make('caption',label+' · rows and columns are local tail positions'),head,body);scroll.append(t);block.append(heading,display,scroll);return block;}
+  function renderProduct(map,size,reset=false){
+    const previousRow=Number(productRow.value),previousColumn=Number(productColumn.value);
+    const initial=!productRow.options.length;
+    for(const select of [productRow,productColumn]){
+      select.replaceChildren();
+      for(let k=0;k<size;k++){const option=make('option',String(k));option.value=String(k);select.append(option);}
+    }
+    productRow.value=String(initial||reset?Math.min(size-1,3):Math.max(0,Math.min(size-1,previousRow)));
+    productColumn.value=String(initial||reset?0:Math.max(0,Math.min(size-1,previousColumn)));
+    const witness=transferProductEntry(map,Number(productRow.value),Number(productColumn.value),productOrder.value,size);
+    if(!witness.verified){
+      productStatus.textContent='The exact matrix-product entry failed its identity check.';
+      productEquation.hidden=true;throw Error(productStatus.textContent);
+    }
+    productEquation.hidden=false;
+    const expression=transferProductMath(witness);
+    productEquation.textContent=expression.plain;
+    productEquation.setAttribute('data-math-latex',expression.tex);
+    productStatus.textContent='Exactly verified: entry ('+witness.row+', '+witness.column+') = '+witness.value+
+      '. '+(witness.terms.length?witness.terms.length+' rational summands.':'The entry is above the diagonal.');
+    enhanceMath(product);
+  }
   function renderMatrices(map){
     // Preserve the exact 8-by-8 tables. Only the typeset leading block is adjustable.
     const max=Math.min(8,map.count),previous=Number(matrixSize.value)||4,size=Math.max(1,Math.min(max,previous));
@@ -86,6 +121,7 @@ export function mountTransfers(entries,host){
     actionGrid.append(forwardBlock,inverseBlock);matrixAction.replaceChildren(actionTitle,actionInfo,actionGrid);
     matrixIdentity.textContent='L_'+size+'(H)*L_'+size+'(K) = L_'+size+'(K)*L_'+size+'(H) = I_'+size;
     matrixIdentity.setAttribute('data-math-latex','L_{'+size+'}(H)L_{'+size+'}(K)=L_{'+size+'}(K)L_{'+size+'}(H)=I_{'+size+'}');
+    renderProduct(map,size);
     enhanceMath(matrixDetails);
   }
   function renderWitness(map,reset=false){
@@ -106,6 +142,7 @@ export function mountTransfers(entries,host){
     current=map;result.hidden=false;fields.source.value=a.id;fields.target.value=b.id;suggest('source');suggest('target');fields.count.max=String(Math.min(48,map.sourceAnchor.available,map.targetAnchor.available));
     summary.textContent=`${map.count} coefficients verified exactly: forward transfer, inverse recovery, and kernel product.`;
     indices.textContent=`Source ${a.index_symbol||'n'}=${map.sourceAnchor.index}; target ${b.index_symbol||'n'}=${map.targetAnchor.index}. Leading stored zeros: ${map.sourceAnchor.position} and ${map.targetAnchor.position}. Window position shift: ${map.positionShift}. Original index shift: ${map.indexShift}. Tail j=0 starts at those anchors.`;
+    const mapEquation=transferIndexMath(map);indexFormula.textContent=mapEquation.plain;indexFormula.setAttribute('data-math-latex',mapEquation.tex);
     domain.textContent=map.integerKernel&&map.integerInverse?'Both computed kernels have integer coefficients in this window.':'The coefficients are exact rationals. '+(map.integerKernel?'H has integer coefficients in this window. ':'H has rational coefficients in this window. ')+(map.integerInverse?'K has integer coefficients in this window.':'K has rational coefficients in this window.');
     const checks=[
       ['Forward certificate','H · A = B',map.rows.every(row=>row.forward===row.target)],
@@ -128,13 +165,14 @@ export function mountTransfers(entries,host){
     error.hidden=true;for(const field of Object.values(fields))field.removeAttribute('aria-invalid');fallbackLabel.hidden=true;status.textContent='';updateWindowHelp();host.dataset.transferReady='true';enhanceMath(result);if(update)history.replaceState(null,'',transferLink(location.href,map));
   }
   function calculate(update=false){try{const a=resolve('source'),b=resolve('target'),map=sequenceTransfer(a,b,count.value);if(!map.verified)throw Error('The exact transfer certificate failed.');render(map,a,b,update);}catch(problem){error.hidden=false;error.textContent=problem.message+(current?' The previous certificate remains available.':'');if(fields[problem.field])fields[problem.field].setAttribute('aria-invalid','true');}}
-  form.addEventListener('submit',event=>{event.preventDefault();calculate(true);});matrixSize.addEventListener('change',()=>{if(current)renderMatrices(current);});witnessIndex.addEventListener('change',()=>{if(current)renderWitness(current);});witnessDirection.addEventListener('change',()=>{if(current)renderWitness(current);});
+  form.addEventListener('submit',event=>{event.preventDefault();calculate(true);});matrixSize.addEventListener('change',()=>{if(current)renderMatrices(current);});for(const select of [productRow,productColumn,productOrder])select.addEventListener('change',()=>{if(current)renderProduct(current,Number(matrixSize.value));});witnessIndex.addEventListener('change',()=>{if(current)renderWitness(current);});witnessDirection.addEventListener('change',()=>{if(current)renderWitness(current);});
   matrixCopy.addEventListener('click',()=>{if(!current)return;const n=Number(matrixSize.value);const equations=[
     transferMatrixTeX(transferMatrix(current,false,n),'H'),
     transferMatrixTeX(transferMatrix(current,true,n),'K'),
     'L_{'+n+'}(H)L_{'+n+'}(K)=L_{'+n+'}(K)L_{'+n+'}(H)=I_{'+n+'}',
     transferActionEquations(current.rows,n).forward.tex,
-    transferActionEquations(current.rows,n).inverse.tex
+    transferActionEquations(current.rows,n).inverse.tex,
+    transferProductMath(transferProductEntry(current,Number(productRow.value),Number(productColumn.value),productOrder.value,n)).tex
   ];clipboard(equations.join('\n\n'),'Displayed matrix LaTeX copied.');});
   function preset(a,b){fields.source.value=a.id;fields.target.value=b.id;fields.count.value=String(Math.min(12,48,transferAnchor(a).available,transferAnchor(b).available));updateWindowHelp();calculate(true);}
   forward.addEventListener('click',()=>preset(euler,fib));back.addEventListener('click',()=>preset(fib,euler));
