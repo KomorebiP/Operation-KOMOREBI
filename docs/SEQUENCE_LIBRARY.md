@@ -423,6 +423,23 @@ L_m(H) a = b and L_m(K) b = a using original stored integers. The local
 matrix position j=0 is labelled with both original source and target indices.
 The matrix panel's copy action includes the two action equations as LaTeX.
 
+The matrix panel additionally checks any displayed entry of
+`L(H)L(K)` or `L(K)L(H)`, using the exact rational product
+`sum_(ell=j)^i h_(i-ell) k_(ell-j)` when `i>=j` and zero above the diagonal.
+It displays the individual product terms and compares their exact sum to
+the Kronecker delta. A failed entry is not presented as an established
+identity. The reader may select rows and columns within the 1 to 8
+dimensional displayed block. The LaTeX copy action includes the selected
+matrix-product witness. The static Euler/Fibonacci example also includes
+the exact lower-left cancellation `53*1 + (-1)*(-2) + 2*5 + 1*(-65) = 0`.
+
+The original index map is typeset separately from the convolution
+operator: local position `j` corresponds to source index `alpha+j`
+and target index `beta+j`, with original shift `beta-alpha`.
+This coordinate pairing does not assert termwise equality or
+recurrence equivalence. As before, every matrix assertion is restricted
+to the selected finite coefficient window.
+
 The coefficient witness now supports every stored local tail position, not
 only the initial example. Readers can choose forward convolution or inverse
 recovery and inspect the precise finite sum, original indices, and stored
