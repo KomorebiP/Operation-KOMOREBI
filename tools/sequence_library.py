@@ -62,6 +62,7 @@ def build(site,atlas):
     site.write('assets/oeis/snapshot.json',json.dumps(snapshot['snapshot'],indent=2)+'\n')
     data=dict(schema=1,entries=entries,snapshot={key:value for key,value in snapshot.items() if key not in ('matches','total_matches')})
     site.write('assets/sequence-library-data.json',json.dumps(data,ensure_ascii=False,separators=(',',':'))+'\n')
+    site.write('assets/sequence-oeis-meta.json',json.dumps({'stripped_sha256':snapshot['stripped_sha256']},separators=(',',':'))+'\n')
     site.write('assets/sequence-formulas.json',json.dumps({x['id']:x['formulas'] for x in entries},ensure_ascii=False,separators=(',',':'))+'\n')
     out=io.StringIO(newline='');writer=csv.writer(out);writer.writerow(['id','title','collection','family','offset','stored_terms','representations','entry_url'])
     for x in entries:writer.writerow([x['id'],x['title'],x['collection'],x['kind'],x['offset'],len(x['terms']),len(x['formulas']),x['url']])
@@ -78,7 +79,7 @@ def build(site,atlas):
     for name in scripts:
         content=(site.root/'website/assets'/name).read_text(encoding='utf-8')
         content=content.replace('__OEIS_TERMS_SHA256__',snapshot['stripped_sha256']).replace('__OEIS_NAMES_SHA256__',snapshot['names_sha256'])
-        for dep in scripts+['sequence-atlas-search.mjs','sequence-archive-core.mjs','sequence-archive-plot.mjs','sequence-atlas-core.mjs','sequence-atlas-saved.mjs','sequence-plot-options.mjs','sequence-library-data.json','sequence-generalized-data.json']:
+        for dep in scripts+['sequence-atlas-search.mjs','sequence-archive-core.mjs','sequence-archive-plot.mjs','sequence-atlas-core.mjs','sequence-atlas-saved.mjs','sequence-plot-options.mjs','sequence-library-data.json','sequence-generalized-data.json','sequence-oeis-meta.json']:
             path=site.output/'assets'/dep
             if path.exists():content=content.replace("'./"+dep+"'","'./"+dep+'?v='+hashlib.sha256(path.read_bytes()).hexdigest()[:12]+"'")
         site.write('assets/'+name,content)
@@ -295,7 +296,7 @@ def build(site,atlas):
     site.page('sequence-research.html','Sequence Library · Research',
               wrap(page_heading('Research families',
                   'Browse exact research records and generalized family definitions. Each interactive research tool has its own page.',
-                  'research','research-families')+research_nav+research+generalized_sections(only=['generalized'])+
+                  'research','research-families')+research_nav+research.replace('<details class="sl-topic-disclosure">','<details class="sl-topic-disclosure" open>',1)+generalized_sections(only=['generalized'])+
                    '<h2 class="sl-tool-heading">Research workbenches</h2>'+research_choices+research_legacy,
                    page_kind='research'))
     for filename,title,description,section_id,page_kind in [
