@@ -24,6 +24,26 @@ class SequenceLibraryTests(unittest.TestCase):
             entry=next(x for x in catalogue() if x['kind']==kind)
             self.assertTrue(any(f['kind']=='hypergeometric' for f in formula_variants(entry)))
 
+    def test_research_family_directory_covers_all_indexed_records(self):
+        from collections import Counter
+        entries=library_entries(catalogue())
+        research=[item for item in entries if 'research-derived' in item['tags']]
+        counts=Counter(item['kind'] for item in research)
+        expected={
+            'secancy parameter column':88,
+            'secancy coefficient triangle':11,
+            'Euler-transfer theta':12,
+            'theta polynomial column':12,
+            'theta coefficient triangle':1,
+            'block-Appell coefficient triangle':21,
+            'block-Appell coefficient column':84,
+            'k-step reciprocal power':120,
+            'k-bonacci':10,
+        }
+        self.assertEqual(counts,expected)
+        self.assertEqual(sum(counts.values()),359)
+        self.assertEqual(len({item['id'] for item in research}),359)
+
     def test_research_windows_keep_real_indices_and_ordinary_polynomial_coefficients(self):
         from sequence_formula_catalogue import secancy_polynomials,theta_polynomial_rows
         from sequence_library import source_degree

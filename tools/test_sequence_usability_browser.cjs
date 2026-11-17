@@ -27,6 +27,15 @@ async function fit(page){
       await page.locator('[data-library-ready=true]').waitFor({timeout:90000});
       assert.equal(await page.locator('.sl-primary-nav a').count(),3);
       assert.equal(await page.locator('#sl-results>li').count(),24);
+      assert.equal(await page.locator('.sl-search-guide').evaluate(el=>el.open),false);
+      await page.locator('.sl-search-guide > summary').click();
+      assert.equal(await page.locator('.sl-search-examples a').count(),3);
+      assert.equal(await page.locator('.sl-search-rules>div').count(),5);
+      assert.match(await page.locator('.sl-search-guide').textContent(),/spacing N/);
+      assert.match(await page.locator('.sl-search-guide').textContent(),/recurrence order/);
+      assert.match(await page.locator('.sl-search-guide').textContent(),/question mark represents one unknown integer/i);
+      assert.equal(await page.locator('.sl-search-guide code').filter({hasText:'paper:SF-VI'}).count(),1);
+
       assert.equal(await page.locator('#sl-results').getAttribute('data-layout'),'compact');
       assert.equal(await page.locator('#sl-result-layout').isVisible(),true);
       assert.equal(await page.locator('#sl-result-layout [data-layout=compact]').getAttribute('aria-pressed'),'true');
@@ -79,6 +88,47 @@ async function fit(page){
       await page.goto(url('sequence-library.html#research-families'));
       await page.locator('[data-library-ready=true]').waitFor({timeout:90000});
       assert.equal(await page.locator('#research-families>.sl-topic-disclosure').evaluate(el=>el.open),true);
+      assert.equal(await page.locator('#sl-extra-tools').evaluate(el=>el.open),true);
+      assert.equal(await page.locator('#research-families .sl-research-group').count(),4);
+      assert.match(await page.locator('#research-families .sl-research-intro').textContent(),/359 indexed research records/);
+      const kinds={
+        'secancy parameter column':88,'secancy coefficient triangle':11,
+        'Euler-transfer theta':12,'theta polynomial column':12,'theta coefficient triangle':1,
+        'block-Appell coefficient triangle':21,'block-Appell coefficient column':84,
+        'k-step reciprocal power':120,'k-bonacci':10
+      };
+      const links=await page.locator('#research-families .sl-research-group ul a').evaluateAll(nodes=>
+        nodes.map(node=>({href:node.getAttribute('href'),label:node.textContent.trim()})));
+      assert.equal(links.length,9);
+      for(const item of links){
+        const q=new URL(item.href,url('sequence-library.html')).searchParams.get('q');
+        const kind=/^kind:"(.+)"$/.exec(q)?.[1];
+        assert.ok(kind&&kinds[kind],item.href);
+        assert.ok(item.label.includes('('+kinds[kind]+')'),item.label);
+      }
+      assert.equal(Object.values(kinds).reduce((sum,n)=>sum+n,0),359);
+      await fit(page);
+      const exercise=width===1440
+        ?['secancy parameter column','block-Appell coefficient column','k-step reciprocal power']
+        :[width===390?'theta polynomial column':'secancy coefficient triangle'];
+      for(const kind of exercise){
+        const match=links.find(item=>new URL(item.href,url('sequence-library.html')).searchParams.get('q')==='kind:"'+kind+'"');
+        assert.ok(match);
+        await page.goto(new URL(match.href,url('sequence-library.html')).href);
+        await page.locator('[data-library-ready=true]').waitFor({timeout:90000});
+        assert.match(await page.locator('#sl-count').textContent(),new RegExp('^'+kinds[kind]+' matching records'));
+        assert.equal(await page.locator('#sl-error').isVisible(),false);
+      }
+      if(width===1440){
+        await page.goto(url('sequence-library.html#research-families'));
+        await page.locator('[data-library-ready=true]').waitFor({timeout:90000});
+        const all=await page.locator('#research-families .sl-research-intro a').getAttribute('href');
+        assert.equal(new URL(all,url('sequence-library.html')).searchParams.get('q'),'tag:research-derived');
+        await page.goto(new URL(all,url('sequence-library.html')).href);
+        await page.locator('[data-library-ready=true]').waitFor({timeout:90000});
+        assert.match(await page.locator('#sl-count').textContent(),/^359 matching records/);
+      }
+
       await page.goto(url('sequence-library.html#transfers'));
       await page.locator('[data-transfer-ready=true]').waitFor({timeout:90000});
       assert.equal(await page.locator('#tr-form').isVisible(),true);
@@ -119,6 +169,9 @@ async function fit(page){
     assert.equal(await page.locator('#oeis>.sl-topic-disclosure').evaluate(el=>el.open),true);
     await page.locator('#sl-extra-tools>summary').click();
     assert.equal(await page.locator('#sl-extra-tools').evaluate(el=>el.open),true);
+    assert.equal(await page.locator('#research-families .sl-research-group ul a').count(),9);
+    await page.locator('#research-families .sl-topic-disclosure>summary').click();
+    assert.equal(await page.locator('#research-families .sl-topic-disclosure').evaluate(el=>el.open),true);
     assert.equal(await page.locator('#sl-count a[href="sequence-library/index.html"]').count(),1);
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth+1),true);
     await context.close();
