@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {formulaLatex,readMathDisplay} from '../website/assets/math-display.mjs';
 import {atlasDestination,archiveDestination} from '../website/assets/sequence-navigation.mjs';
 import {sequenceTransfer} from '../website/assets/sequence-transfer-core.mjs';
-import {rationalTeX,transferPolynomialPlain,transferPolynomialTeX,transferWitnessPlain,transferWitnessTeX,triangleRowExpressions,transferMatrixTeX,transferMatrixPlain,transferActionEquations,transferProductMath,transferIndexMath} from '../website/assets/sequence-math.mjs';
+import {rationalTeX,transferPolynomialPlain,transferPolynomialTeX,transferWitnessPlain,transferWitnessTeX,triangleRowExpressions,transferMatrixTeX,transferMatrixPlain,transferActionEquations,transferProductMath,transferIndexMath,transferCompositionMath} from '../website/assets/sequence-math.mjs';
 
 test('formula transcription preserves denominator function arguments and sum scope',()=>{
   const quotient=formulaLatex("a(n)=-D_2'(z)/D_2(z)");
@@ -225,4 +225,32 @@ test('index-map display distinguishes original offsets from local tail positions
   assert.ok(display.tex.includes(String.raw`i_{\mathrm{target}}(j)&=11+j`));
   assert.ok(display.tex.includes(String.raw`\Delta i&=13`));
   assert.throws(()=>transferIndexMath({...map,indexShift:12}),/consistent integer transfer anchors/);
+});
+
+test('composition display transcribes certified two-step and direct kernels',async()=>{
+  const {composeScalarTransfers}=await import('../website/assets/sequence-graph-core.mjs');
+  const entry=(id,values,offset=0)=>({id,terms:values.map(String),offset,index_symbol:'n'});
+  const A=entry('Euler',[1,-1,5,-61,1385]),B=entry('Lucas',[2,1,3,4,7]),C=entry('Fibonacci',[0,1,1,2,3,5]);
+  const map=composeScalarTransfers(A,B,C,4),math=transferCompositionMath(map,2);
+  assert.equal(map.verified,true);
+  assert.match(math.identity.tex,/H_\{AC\}\(z\)/);
+  assert.ok(math.identity.tex.includes(String.raw`L(H_{BC})L(H_{AB})`));
+  assert.ok(math.witness.tex.includes(String.raw`\sum_{q=0}^{2}h_{BC,q}h_{AB,2-q}`));
+  assert.match(math.witness.plain,/h_AC\(2\) = .* = .* = direct h_AC\(2\)/);
+  assert.equal(math.shifts.plain,'A index 0+j; B index 0+j; C index 1+j; shifts 0 + 1 = 1');
+  assert.equal(transferCompositionMath(map,0).witness.tex.includes(String.raw`\sum_{q=0}^{0}`),true);
+  assert.throws(()=>transferCompositionMath({...map,verified:false},2),/verified finite transfer/);
+  assert.throws(()=>transferCompositionMath(map,4),/stored position/);
+  const broken={...map,rows:map.rows.map(row=>({...row}))};broken.rows[2].composed='99';
+  assert.throws(()=>transferCompositionMath(broken,2),/composed and direct kernels disagree/);
+});
+test('composition display retains nonunit rational anchors and negative shifts',async()=>{
+  const {composeScalarTransfers}=await import('../website/assets/sequence-graph-core.mjs');
+  const entry=(id,values,offset=0)=>({id,terms:values.map(String),offset,index_symbol:'n'});
+  const A=entry('A',[0,0,-2,3,7],-4),B=entry('B',[0,3,-2,1],5),C=entry('C',[0,-5,7,9],10);
+  const map=composeScalarTransfers(A,B,C,3),math=transferCompositionMath(map,0);
+  assert.equal(map.verified,true);
+  assert.equal(map.rows[0].composed,'5/2');
+  assert.ok(math.witness.tex.includes(String.raw`\frac{5}{2}`));
+  assert.equal(math.shifts.plain,'A index -2+j; B index 6+j; C index 11+j; shifts 8 + 5 = 13');
 });
