@@ -36,7 +36,7 @@ async function visit(page,name,kind){
       await visit(page,'sequence-library.html','search');
       assert.equal(await page.locator('#sl-results>li').count(),24);
       assert.equal(await page.locator('#sl-results').getAttribute('data-layout'),'compact');
-      assert.equal(await page.locator('#tr-form,#sw-form,#sl-oeis-form,#connection-explorer').count(),0);
+      const unexpected=await page.locator('#tr-form,#sw-form,#sl-oeis-form,#connection-explorer').evaluateAll(nodes=>nodes.map(node=>({id:node.id,visible:!!node.getClientRects().length,parent:node.parentElement?.id||null})));assert.deepEqual(unexpected,[],'Search must not mount unrelated workbenches');
       assert.equal(await page.locator('.sl-search-guide').evaluate(el=>el.open),false);
       await page.locator('.sl-search-guide>summary').click();
       assert.equal(await page.locator('.sl-search-examples a').count(),3);
