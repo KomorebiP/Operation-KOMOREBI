@@ -30,7 +30,7 @@ export function createInspectionLink(baseUrl,record,variantIndex,startIndex,vari
   url.searchParams.set('sl-record',record.id);
   url.searchParams.set('sl-formula',String(variantIndex));
   url.searchParams.set('sl-start',String(startIndex));
-  url.hash='library-search';
+  url.hash='sl-results';
   return url.href;
 }
 
