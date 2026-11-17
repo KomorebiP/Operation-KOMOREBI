@@ -134,12 +134,12 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
     const x=value=>left+(value-xmin)/(xmax-xmin)*plotWidth,y=value=>bottom-(value/normalizer-lo)/(hi-lo)*(bottom-top),picture=svg('svg',{viewBox:`0 0 ${width} ${height}`,role:'group','aria-labelledby':'sw-chart-title sw-chart-desc'});
     const chartTitle=comparisonChartTitle(state,chartLabels),xTitle=comparisonXAxisTitle(state,chartLabels),yTitle=comparisonYAxisTitle(state,chartLabels);
     picture.append(svg('title',{id:'sw-chart-title'},chartTitle),svg('desc',{id:'sw-chart-desc'},comparisonScaleExplanation(state,chartLabels)+' Focus a point to inspect exact integer values. A complete indexed HTML table follows the chart.'),svg('rect',{width,height,fill:'#fafaf5'}));
-    const heading=svg('text',{x:width/2,y:23,'text-anchor':'middle','font-size':mobile?13:15,'font-weight':650,'data-chart-title':'true'},short(chartTitle,Math.max(12,Math.floor((width-38)/8))));
-    heading.append(svg('title',{},chartTitle));picture.append(heading);
+    const heading=svg('text',{x:width/2,y:23,'text-anchor':'middle','font-size':mobile?13:15,'font-weight':650,'data-chart-title':'true','aria-label':chartTitle},short(chartTitle,Math.max(12,Math.floor((width-38)/8))));
+    picture.append(heading);
     if(showLegend)result.series.forEach(({source},i)=>{
       const raw=chartLabels.seriesLabels[i]||source.title||source.id,label=(i+1)+'. '+raw;
-      const ly=bottomLegend?bottom+67+i*17:45+i*17,display=svg('text',{x:left,y:ly,'font-size':mobile?11:12,'data-legend-label':String(i)},short(label,Math.max(12,Math.floor((width-left-right-12)/7))));
-      display.append(svg('title',{},source.id+' · '+raw));picture.append(display);
+      const ly=bottomLegend?bottom+67+i*17:45+i*17,display=svg('text',{x:left,y:ly,'font-size':mobile?11:12,'data-legend-label':String(i),'aria-label':source.id+' · '+raw},short(label,Math.max(12,Math.floor((width-left-right-12)/7))));
+      picture.append(display);
       picture.append(svg('line',{x1:left-24,x2:left-5,y1:ly-4,y2:ly-4,stroke:colors[i],'stroke-width':theme.width,'stroke-dasharray':['','7 4','2 4','9 3 2 3'][i]}));
     });
     const yticks=state.view==='mod'?[...new Set(Array.from({length:Math.min(state.modulus,5)},(_,i)=>Math.round(i*(state.modulus-1)/(Math.min(state.modulus,5)-1))))]:Array.from({length:5},(_,i)=>(lo+(hi-lo)*i/4)*normalizer);
@@ -147,10 +147,10 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
     const xticks=[...new Set(Array.from({length:mobile?3:5},(_,i)=>Math.round(xmin+(xmax-xmin)*i/(mobile?2:4))))].filter(v=>v>=xmin&&v<=xmax);
     for(const tick of xticks)picture.append(svg('text',{x:x(tick),y:bottom+20,'text-anchor':'middle','font-size':11},String(tick)));
     picture.append(svg('line',{x1:left,x2:width-right,y1:bottom,y2:bottom,stroke:'#87988b','data-plot-axis':'true'}));
-    const xLabel=svg('text',{x:left+plotWidth/2,y:bottom+42,'font-size':mobile?11:12,'text-anchor':'middle','data-x-axis-title':'true'},short(xTitle,Math.max(12,Math.floor(plotWidth/7))));
-    xLabel.append(svg('title',{},xTitle));picture.append(xLabel);
-    const yLabel=svg('text',{x:16,y:(top+bottom)/2,'font-size':mobile?10:12,'text-anchor':'middle',transform:'rotate(-90 16 '+((top+bottom)/2)+')','data-y-axis-title':'true'},short(yTitle,Math.max(10,Math.floor((bottom-top)/7))));
-    yLabel.append(svg('title',{},yTitle));picture.append(yLabel);
+    const xLabel=svg('text',{x:left+plotWidth/2,y:bottom+42,'font-size':mobile?11:12,'text-anchor':'middle','data-x-axis-title':'true','aria-label':xTitle},short(xTitle,Math.max(12,Math.floor(plotWidth/7))));
+    picture.append(xLabel);
+    const yLabel=svg('text',{x:16,y:(top+bottom)/2,'font-size':mobile?10:12,'text-anchor':'middle',transform:'rotate(-90 16 '+((top+bottom)/2)+')','data-y-axis-title':'true','aria-label':yTitle},short(yTitle,Math.max(10,Math.floor((bottom-top)/7))));
+    picture.append(yLabel);
     const focusables=[],labels=[],patterns=['','7 4','2 4','9 3 2 3'];
     const inspected=(source,row)=>`${source.id} · ${source.indexKind} ${row.index} · window position ${row.position} · original ${row.raw} · ${state.view==='mod'?'residue':'displayed'} ${row.value}`;
     for(const [si,{source,rows}]of result.series.entries()){
