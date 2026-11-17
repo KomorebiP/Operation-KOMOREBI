@@ -597,3 +597,48 @@
 .sl-library[data-page=research] .sl-research-group li>a:focus-visible{
   outline:3px solid var(--sq-focus,var(--green));outline-offset:2px;
 }
+
+/* Search rows: show a bounded exact source excerpt and retain the full formula on expansion. */
+.sl-library #sl-results .sl-result-definition{min-width:0}
+.sl-library #sl-results .sl-result-definition>summary{
+  min-width:0;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.sl-library #sl-results .sl-definition-label{font-weight:650}
+.sl-library #sl-results .sl-definition-excerpt{
+  display:inline-block;min-width:0;max-width:calc(100% - 9.3rem);
+  margin-left:.6rem;vertical-align:middle;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;
+  font:400 .82rem/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;
+  color:var(--sq-muted,var(--muted));
+}
+.sl-library #sl-results .sl-result-definition[open]>summary .sl-definition-excerpt{display:none}
+/* Optional operations are grouped so they do not repeat throughout a large result list. */
+.sl-library #sl-results>li>.sl-result-more{
+  min-width:0;max-width:100%;margin:.04rem 0;
+  border-top:1px solid var(--sq-line,var(--sar-line));
+}
+.sl-library #sl-results>li>.sl-result-more>summary{
+  min-height:44px;display:list-item;padding:.3rem .1rem;cursor:pointer;
+  font-size:.88rem;font-weight:650;color:var(--sq-ink,var(--ink));
+}
+.sl-library #sl-results>li>.sl-result-more>summary:focus-visible{
+  outline:3px solid var(--sq-focus,var(--green));outline-offset:2px;
+}
+.sl-library #sl-results>li>.sl-result-more>.sp-actions{
+  display:flex;flex-wrap:wrap;align-items:center;gap:.35rem;
+  margin:.15rem 0 .35rem;padding:.3rem 0;
+}
+.sl-library #sl-results>li>.sl-result-more>.sp-actions :is(a,button){
+  min-height:44px;display:inline-flex;align-items:center;padding:.35rem .6rem;
+}
+.sl-library #sl-results>li>.sl-result-more>.sl-matches{margin:.15rem 0 .3rem;min-width:0}
+.sl-library #sl-results[data-layout=compact]>li>.sl-result-more{
+  grid-column:1/-1;grid-row:auto;
+}
+.sl-library #sl-results[data-layout=cards]>li>.sl-result-more{width:100%}
+@media(max-width:750px){
+  .sl-library #sl-results[data-layout=compact]>li>.sl-result-more{grid-column:1;grid-row:auto}
+}
+@media print{
+  .sl-library #sl-results>li>.sl-result-more{border-top:1px solid #999}
+}
