@@ -53,6 +53,8 @@ async function visit(page,name,kind){
         'Each record needs a visible compact source formula preview');
       assert.equal(await page.locator('#sl-results .sl-variant-toolbar').count(),0,
         'Formula selectors are mounted only after a definition is opened');
+      assert.equal(await page.locator('#sl-results .sl-term-inspector').count(),0,
+        'Exact value inspectors must not mount for collapsed search results');
       assert.ok((await page.locator('#sl-results .sl-definition-excerpt').first().textContent()).trim().length>0);
       assert.equal(await page.locator('#sl-results .sl-result-more:not([open])').count(),24,
         'Secondary actions stay collapsed on a broad search');
@@ -86,8 +88,33 @@ async function visit(page,name,kind){
       assert.equal(await picker.locator('option').count(),4);
       assert.equal(await picker.inputValue(),'0');
       assert.equal(await definition.locator('p.sar-formula').first().textContent(),recorded.formula);
+      const sourceDetails=definition.locator('.sl-formula-raw');
+      const originalSource=sourceDetails.locator('.sl-formula-source-text');
+      assert.equal(await sourceDetails.evaluate(el=>el.open),false);
+      await sourceDetails.locator('summary').click();
+      assert.equal(await originalSource.textContent(),recorded.formula);
+      const inspector=definition.locator('.sl-term-inspector');
+      assert.equal(await inspector.evaluate(el=>el.open),false);
+      assert.equal(await inspector.locator('tbody tr').count(),0,'Exact tables are constructed on demand');
+      await inspector.locator('summary').click();
+      await inspector.locator('tbody tr').first().waitFor({state:'attached',timeout:30000});
+      assert.equal(await inspector.locator('tbody tr').count(),8);
+      assert.equal(await inspector.locator('tbody tr').first().locator('th').textContent(),String(recorded.offset));
+      assert.equal(await inspector.locator('tbody tr').first().locator('td').textContent(),recorded.terms[0]);
+      await inspector.getByRole('button',{name:'Next 8'}).click();
+      assert.equal(await inspector.locator('tbody tr').first().locator('th').textContent(),String(recorded.offset+8));
+      await inspector.getByRole('button',{name:'Previous 8'}).click();
+      assert.equal(await inspector.locator('tbody tr').first().locator('th').textContent(),String(recorded.offset));
+      await inspector.getByLabel('Go to stored n').fill(String(recorded.offset+20));
+      await inspector.getByRole('button',{name:'Go',exact:true}).click();
+      assert.equal(await inspector.locator('tbody tr').first().locator('th').textContent(),String(recorded.offset+16));
+      assert.equal(await inspector.locator('tbody tr').last().locator('td').textContent(),recorded.terms[23]);
+      assert.equal(await inspector.getByRole('button',{name:'Next 8'}).isDisabled(),true);
       await picker.selectOption('1');
       assert.equal(await definition.locator('p.sar-formula').first().textContent(),recorded.formulas[1].expression);
+      assert.equal(await originalSource.textContent(),recorded.formulas[1].expression);
+      assert.equal(await inspector.evaluate(el=>el.open),true,'Changing representations preserves the exact value inspector');
+      assert.equal(await inspector.locator('tbody tr').last().locator('td').textContent(),recorded.terms[23]);
       assert.equal(await definition.locator('.sl-definition-excerpt').textContent(),
         recorded.formulas[1].expression.replace(/\s+/g,' ').trim());
       assert.match(await definition.locator('.sl-variant-kind').textContent(),/finite sum · 2 of 4/);
@@ -101,9 +128,37 @@ async function visit(page,name,kind){
       assert.match(await definition.locator('.sl-variant-kind').textContent(),/hypergeometric · 4 of 4/);
       await picker.selectOption('0');
       assert.equal(await definition.locator('p.sar-formula').first().textContent(),recorded.formula);
+      assert.equal(await originalSource.textContent(),recorded.formula);
       await page.selectOption('#site-math-display','typeset');
       await page.evaluate(async()=>{await window.KomorebiMath?.ready;});
       await fit(page);
+      await page.goto(href('sequence-library.html?q=id%3AKFOR-TRI-P-03#library-search'));
+      await ready(page);
+      const trianglePanel=page.locator('#sl-results .sl-result-definition .sl-term-inspector');
+      await trianglePanel.locator('summary').click();
+      await trianglePanel.locator('tbody tr').first().waitFor({state:'attached',timeout:30000});
+      assert.deepEqual(await trianglePanel.locator('thead th').allTextContents(),
+        ['j','Row n','Column k','Exact stored value']);
+      assert.deepEqual(await trianglePanel.locator('tbody tr').nth(5).locator('th,td').allTextContents(),
+        ['5','2','2','10'],'Flat triangle indices must retain row and column coordinates');
+      await fit(page);
+      if(width===1440){
+        await page.goto(href('sequence-library.html?q=id%3AKFOR-C-03-01-02-num#library-search'));
+        await ready(page);
+        const ratioPanel=page.locator('#sl-results .sl-result-definition .sl-term-inspector');
+        await ratioPanel.locator('summary').click();
+        await ratioPanel.locator('tbody tr').first().waitFor({state:'attached',timeout:30000});
+        const rationalResponse=await page.evaluate(async()=>{
+          const result=await fetch(new URL('assets/sequence-library-data.json',location.href));
+          const data=await result.json();
+          return data.entries.find(x=>x.id==='KFOR-C-03-01-02-num');
+        });
+        assert.deepEqual(await ratioPanel.locator('thead th').allTextContents(),
+          ['n','Exact stored value','Original rational value']);
+        assert.deepEqual(await ratioPanel.locator('tbody tr').first().locator('td').allTextContents(),
+          [rationalResponse.terms[0],rationalResponse.rational_terms[0]]);
+        await fit(page);
+      }
       await page.goto(href('sequence-library.html?q=id%3AKSEQ-000025#library-search'));
       await ready(page);
       assert.equal(await page.locator('#sl-results>li').count(),1);

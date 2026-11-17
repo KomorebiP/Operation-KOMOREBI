@@ -28,6 +28,20 @@ alternative representations. Variant controls mount only when the definition
 is opened, and closed definitions are not typeset by MathJax, avoiding work
 on off-screen formulas.
 
+Inside an expanded formula, the optional **Inspect exact values** panel shows
+eight stored values at a time. Previous, Next and Go navigate the original
+stored index, not an inferred source Taylor degree. Complete coefficient
+triangles identify the flat index j, row n and column k separately. For
+rational-derived numerator or denominator records, the reduced component and
+original rational coefficient appear in separate columns. Long integer strings
+stay exact and scroll within the table; the user never needs to round a value
+to a JavaScript number. On wide compact rows, the indexed table can appear
+beside the selected formula. Phone layouts stack them without page-wide overflow.
+**View original formula text** provides a wrapped, selectable copy of the exact
+formula source and a copy control. It changes when the selected representation
+changes, without changing the mathematical data, source definitions or exports.
+The inspector table is built only when opened.
+
 For integer records, Plot, Save, and Compare remain visible. A More actions
 disclosure holds the defining-formula page, transfer action where applicable,
 and recorded finite OEIS comparisons. It stays closed on broad searches and
