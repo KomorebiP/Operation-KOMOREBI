@@ -109,7 +109,7 @@ async function visit(page,name,kind){
       assert.equal(await page.locator('#md-current').isDisabled(),true);
       await page.locator('#modular-explorer[data-modular-ready=true]').waitFor({timeout:60000});
       await page.locator('#md-result details>summary').first().click();
-      await page.locator('#md-result .sr-modular-equation').waitFor({timeout:30000});
+      await page.locator('#md-result .sr-modular-equation').waitFor({state:'attached',timeout:30000});
       await page.locator('#md-result .math-pair[data-math-pair-ready=true]').first().waitFor({timeout:30000});
       assert.match(await page.locator('#md-result [data-math-plain]').first().textContent(),/sum_\(j=1\)/);
       assert.equal(await page.locator('#connection-explorer,#sequence-identification').count(),0);
