@@ -83,6 +83,8 @@ async function visit(page,name,kind){
         return data.entries.find(item=>item.id==='KFOR-P-03-02');
       });
       assert.equal(recorded.formulas.length,4);
+      assert.equal(recorded.source_degrees.length,recorded.terms.length);
+      assert.equal(recorded.source_degrees[0],6,'The n=2 secancy coefficient has source degree 6');
       const definition=page.locator('#sl-results .sl-result-definition').first();
       const picker=definition.getByLabel('Formula representation');
       assert.equal(await picker.locator('option').count(),4);
@@ -99,8 +101,11 @@ async function visit(page,name,kind){
       await inspector.locator('summary').click();
       await inspector.locator('tbody tr').first().waitFor({state:'attached',timeout:30000});
       assert.equal(await inspector.locator('tbody tr').count(),8);
+      assert.deepEqual(await inspector.locator('thead th').allTextContents(),
+        ['n','Source degree','Exact stored value']);
       assert.equal(await inspector.locator('tbody tr').first().locator('th').textContent(),String(recorded.offset));
-      assert.equal(await inspector.locator('tbody tr').first().locator('td').textContent(),recorded.terms[0]);
+      assert.deepEqual(await inspector.locator('tbody tr').first().locator('td').allTextContents(),
+        [String(recorded.source_degrees[0]),recorded.terms[0]]);
       await inspector.getByRole('button',{name:'Next 8'}).click();
       assert.equal(await inspector.locator('tbody tr').first().locator('th').textContent(),String(recorded.offset+8));
       await inspector.getByRole('button',{name:'Previous 8'}).click();
@@ -108,13 +113,27 @@ async function visit(page,name,kind){
       await inspector.getByLabel('Go to stored n').fill(String(recorded.offset+20));
       await inspector.getByRole('button',{name:'Go',exact:true}).click();
       assert.equal(await inspector.locator('tbody tr').first().locator('th').textContent(),String(recorded.offset+16));
-      assert.equal(await inspector.locator('tbody tr').last().locator('td').textContent(),recorded.terms[23]);
+      assert.equal(await inspector.locator('tbody tr').last().locator('td').last().textContent(),recorded.terms[23]);
       assert.equal(await inspector.getByRole('button',{name:'Next 8'}).isDisabled(),true);
+      const pendingWindow=page.waitForEvent('download');
+      await inspector.getByRole('button',{name:'Export window CSV'}).click();
+      const windowDownload=await pendingWindow;
+      assert.equal(windowDownload.suggestedFilename(),
+        `sequence-KFOR-P-03-02-${recorded.offset+16}-${recorded.offset+23}.csv`);
+      const csvPath=path.join(output,`inspected-window-${width}.csv`);
+      await windowDownload.saveAs(csvPath);
+      const csvRows=fs.readFileSync(csvPath,'utf8').trim().split(/\r?\n/);
+      assert.equal(csvRows.length,9);
+      assert.equal(csvRows[0],'"record_id","stored_index","source_degree","exact_stored_value"');
+      assert.equal(csvRows[1],
+        `"KFOR-P-03-02","${recorded.offset+16}","${recorded.source_degrees[16]}","${recorded.terms[16]}"`);
+      assert.equal(csvRows[8],
+        `"KFOR-P-03-02","${recorded.offset+23}","${recorded.source_degrees[23]}","${recorded.terms[23]}"`);
       await picker.selectOption('1');
       assert.equal(await definition.locator('p.sar-formula').first().textContent(),recorded.formulas[1].expression);
       assert.equal(await originalSource.textContent(),recorded.formulas[1].expression);
       assert.equal(await inspector.evaluate(el=>el.open),true,'Changing representations preserves the exact value inspector');
-      assert.equal(await inspector.locator('tbody tr').last().locator('td').textContent(),recorded.terms[23]);
+      assert.equal(await inspector.locator('tbody tr').last().locator('td').last().textContent(),recorded.terms[23]);
       assert.equal(await definition.locator('.sl-definition-excerpt').textContent(),
         recorded.formulas[1].expression.replace(/\s+/g,' ').trim());
       assert.match(await definition.locator('.sl-variant-kind').textContent(),/finite sum · 2 of 4/);
@@ -138,9 +157,9 @@ async function visit(page,name,kind){
       await trianglePanel.locator('summary').click();
       await trianglePanel.locator('tbody tr').first().waitFor({state:'attached',timeout:30000});
       assert.deepEqual(await trianglePanel.locator('thead th').allTextContents(),
-        ['j','Row n','Column k','Exact stored value']);
+        ['j','Row n','Column k','Source degree','Exact stored value']);
       assert.deepEqual(await trianglePanel.locator('tbody tr').nth(5).locator('th,td').allTextContents(),
-        ['5','2','2','10'],'Flat triangle indices must retain row and column coordinates');
+        ['5','2','2','6','10'],'Flat triangle indices must retain row, column and Taylor degree');
       await fit(page);
       if(width===1440){
         await page.goto(href('sequence-library.html?q=id%3AKFOR-C-03-01-02-num#library-search'));
@@ -154,9 +173,9 @@ async function visit(page,name,kind){
           return data.entries.find(x=>x.id==='KFOR-C-03-01-02-num');
         });
         assert.deepEqual(await ratioPanel.locator('thead th').allTextContents(),
-          ['n','Exact stored value','Original rational value']);
+          ['n','Source degree','Exact stored value','Original rational value']);
         assert.deepEqual(await ratioPanel.locator('tbody tr').first().locator('td').allTextContents(),
-          [rationalResponse.terms[0],rationalResponse.rational_terms[0]]);
+          [String(rationalResponse.source_degrees[0]),rationalResponse.terms[0],rationalResponse.rational_terms[0]]);
         await fit(page);
       }
       await page.goto(href('sequence-library.html?q=id%3AKSEQ-000025#library-search'));
