@@ -479,6 +479,44 @@ Targeted browser checks verify search-card spacing, main-task order,
 expandable index alignment, and no horizontal overflow across mobile and
 desktop widths.
 
+## Search help and full research-family navigation
+
+The Sequence Library's expanded search guide now separates basic examples,
+combination operators and field meanings. Clickable examples demonstrate
+search by name, exact record ID and integer terms. The guide states the
+logical behavior of AND, OR, exclusion, exact phrases and the unknown
+integer placeholder. It groups search fields into record details,
+mathematical parameters and relationship or source fields. In particular,
+the n: field refers to spacing N, k: to a polynomial column and order:
+to recurrence order. These are not interchangeable with a sequence's
+stored index.
+
+The Research Families section is now a directory rather than a small
+selection of examples. Four named areas link to complete kind-filtered
+search results:
+
+- Secancy polynomials: 88 parameter columns and 11 coefficient triangles.
+- Euler-transfer theta: 12 integer specializations, 12 polynomial columns
+  and one complete coefficient triangle.
+- Block-Appell: 21 coefficient triangles and 84 supported columns.
+- Linear recurrences: 120 weighted k-step records and 10 standard
+  zero-seeded k-bonacci records.
+
+The nine full-category links cover all 359 currently tagged
+research-derived records. Counts are computed from the active catalogue
+when the page is generated, rather than copied into the displayed markup.
+An overall browse-all link uses the research-derived tag. Each area keeps
+a specific worked record for orientation. If future research kinds are added
+to the catalogue, they appear in an additional indexed-families group.
+
+Links use the existing exact search parser and retain the normal result
+filters, pagination, mathematical typesetting, source links and review
+statuses. The directory remains navigable with native HTML links and
+disclosures when JavaScript is disabled. Browser regression checks verify
+category counts and navigation, search examples, mobile layouts and
+no-JavaScript access. These records are indexed research constructions,
+not claims of historical novelty or pairwise distinctness.
+
 ## Sequence Library interface and accessibility
 
 The landing page now prioritizes three tasks: search, transfer, and compare.
