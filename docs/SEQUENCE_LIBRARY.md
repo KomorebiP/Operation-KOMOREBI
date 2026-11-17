@@ -30,12 +30,19 @@ on off-screen formulas.
 
 Inside an expanded formula, the optional **Inspect exact values** panel shows
 eight stored values at a time. Previous, Next and Go navigate the original
-stored index, not an inferred source Taylor degree. Complete coefficient
-triangles identify the flat index j, row n and column k separately. For
-rational-derived numerator or denominator records, the reduced component and
-original rational coefficient appear in separate columns. Long integer strings
-stay exact and scroll within the table; the user never needs to round a value
-to a JavaScript number. On wide compact rows, the indexed table can appear
+stored index, not an inferred source Taylor degree. Formula records also display
+an explicit source-degree column calculated with the same existing index map
+used on their full record pages. This distinction matters for multisections,
+polynomial columns and flattened triangles. Collections without a verified
+source-degree map do not display one. Complete coefficient triangles identify
+the flat index j, row n and column k separately. For rational-derived numerator
+or denominator records, the reduced component and original rational coefficient
+appear in separate columns. The **Export window CSV** control downloads precisely
+the visible eight-value window, with record ID, stored index, source degree where
+available, triangle coordinates where applicable, and exact value strings.
+The CSV does not imply that an ordinary index equals a Taylor degree.
+Long integers remain exact strings and scroll inside the table without any
+floating-point conversion. On wide compact rows, the indexed table can appear
 beside the selected formula. Phone layouts stack them without page-wide overflow.
 **View original formula text** provides a wrapped, selectable copy of the exact
 formula source and a copy control. It changes when the selected representation
