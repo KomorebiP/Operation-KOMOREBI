@@ -132,6 +132,11 @@ def build(site,atlas):
  <p class="sar-formula sr-transfer-equation" data-math-latex="L(K)=\begin{pmatrix}1&amp;0&amp;0&amp;0\\-2&amp;1&amp;0&amp;0\\5&amp;-2&amp;1&amp;0\\-65&amp;5&amp;-2&amp;1\end{pmatrix}">L(K) = [[1,0,0,0], [-2,1,0,0], [5,-2,1,0], [-65,5,-2,1]]</p>
  </div>
  <p class="sar-formula sr-transfer-equation" data-math-latex="L(H)L(K)=L(K)L(H)=I_4">L(H)*L(K) = L(K)*L(H) = I_4</p>
+ <p>For local row n and column k, the product has the exact Toeplitz convolution formula</p>
+ <p class="sar-formula sr-transfer-equation" data-math-latex="\bigl(L(H)L(K)\bigr)_{n,k}=\sum_{\ell=k}^{n}h_{n-\ell}k_{\ell-k}=\delta_{n,k},\qquad 0\le k\le n<4">(L(H)*L(K))[n,k] = sum_(ell=k)^n h_(n-ell)*k_(ell-k) = delta(n,k), 0<=k<=n<4</p>
+ <p>For example, the bottom-left entry cancels exactly:</p>
+ <p class="sar-formula sr-transfer-equation" data-math-latex="\bigl(L(H)L(K)\bigr)_{3,0}=(53)(1)+(-1)(-2)+(2)(5)+(1)(-65)=0">(L(H)*L(K))[3,0] = (53)*(1) + (-1)*(-2) + (2)*(5) + (1)*(-65) = 0</p>
+
  <p>Here is the corresponding action on the anchored sequence coefficients:</p>
  <p class="sar-formula sr-transfer-equation" data-math-latex="L(H)\begin{pmatrix}1\\-1\\5\\-61\end{pmatrix}=\begin{pmatrix}1\\1\\2\\3\end{pmatrix}">L(H) [1, -1, 5, -61] = [1, 1, 2, 3]</p>
  <p class="sar-formula sr-transfer-equation" data-math-latex="L(K)\begin{pmatrix}1\\1\\2\\3\end{pmatrix}=\begin{pmatrix}1\\-1\\5\\-61\end{pmatrix}">L(K) [1, 1, 2, 3] = [1, -1, 5, -61]</p>
