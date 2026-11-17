@@ -1,7 +1,8 @@
 import {sequenceTransfer,transferAnchor,transferMatrix,transferProductEntry,transferCSV,transferJSON,transferLink} from './sequence-transfer-core.mjs';
+import {composeScalarTransfers} from './sequence-graph-core.mjs';
 import {canonicalID,normalizeText} from './sequence-atlas-search.mjs';
 import {enhanceMath,clearMath} from './math-display.mjs';
-import {mathLine,transferPolynomialPlain,transferPolynomialTeX,transferWitnessPlain,transferWitnessTeX,transferMatrixTeX,transferMatrixPlain,transferActionEquations,transferProductMath,transferIndexMath} from './sequence-math.mjs';
+import {mathLine,transferPolynomialPlain,transferPolynomialTeX,transferWitnessPlain,transferWitnessTeX,transferMatrixTeX,transferMatrixPlain,transferActionEquations,transferProductMath,transferIndexMath,transferCompositionMath} from './sequence-math.mjs';
 
 const make=(tag,text)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;return node;};
 const save=(text,name,type='text/csv;charset=utf-8')=>{const url=URL.createObjectURL(new Blob([text],{type})),link=make('a');link.href=url;link.download=name;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
@@ -63,10 +64,25 @@ export function mountTransfers(entries,host){
   productStatus.id='tr-product-status';productStatus.setAttribute('role','status');productStatus.setAttribute('aria-live','polite');
   product.append(make('h3','Verify one inverse-matrix entry'),productHelp,productControls,productEquation,productStatus);
   matrixDetails.append(matrixSizeLabel,matrixCopy,matrixHelp,matrices,matrixAction,matrixIdentity,product);
+  const composePanel=make('details'),composeForm=make('form'),composeViaLabel=make('label','Intermediate scalar sequence B'),
+        composeVia=make('input'),composeViaList=make('datalist'),composeRun=make('button','Verify three-sequence composition'),
+        composeError=make('p'),composeOutput=make('div'),composeExport=make('button','Download composition JSON'),
+        composeCopy=make('button','Copy composition LaTeX');
+  composePanel.id='tr-compose';composeForm.id='tr-compose-form';composeForm.noValidate=true;
+  composeVia.id='tr-compose-via';composeVia.maxLength=200;composeVia.autocomplete='off';
+  composeVia.placeholder='Name or record ID';composeVia.setAttribute('list','tr-compose-via-choices');
+  composeViaList.id='tr-compose-via-choices';composeViaLabel.htmlFor=composeVia.id;
+  composeViaLabel.append(composeVia,composeViaList);composeRun.type='submit';composeExport.type=composeCopy.type='button';
+  composeExport.disabled=composeCopy.disabled=true;composeError.id='tr-compose-error';
+  composeError.hidden=true;composeError.setAttribute('role','alert');composeOutput.id='tr-compose-output';composeOutput.hidden=true;
+  const composeExplanation=make('p','Choose a third scalar sequence B and verify A → B → C against the direct A → C transfer. Every map is a formal quotient of its anchored tails. For nonzero anchors this composition follows algebraically and is not evidence of a newly shared recurrence or an infinite identity.');
+  composeForm.append(composeViaLabel,composeRun,composeError);
+  const composeActions=make('div');composeActions.className='sp-actions';composeActions.append(composeExport,composeCopy);
+  composePanel.append(make('summary','Compose through a third sequence'),composeExplanation,composeForm,composeOutput,composeActions);
   const tableWrap=make('div'),table=make('table'),thead=make('thead'),tbody=make('tbody'),caption=make('caption','Exact source, target, kernel, and round-trip coefficients');tableWrap.className='sar-scroll';tableWrap.tabIndex=0;tableWrap.setAttribute('role','region');tableWrap.setAttribute('aria-label','Exact transfer certificate');const head=make('tr');for(const label of ['Tail j','Source index','Target index','Source integer','Target integer','Kernel H','Inverse K','H times source','Recovered source','Residual']){const th=make('th',label);th.scope='col';head.append(th);}thead.append(head);table.append(caption,thead,tbody);tableWrap.append(table);
   const output=make('div'),csv=make('button','Download transfer CSV'),json=make('button','Download certificate JSON'),copy=make('button','Copy kernel coefficients'),copyInverse=make('button','Copy inverse coefficients'),share=make('button','Copy transfer link'),status=make('p'),fallbackLabel=make('label','Copy this exact text'),fallback=make('textarea');output.className='sp-actions';for(const button of [csv,json,copy,copyInverse,share])button.type='button';output.append(csv,json,copy,copyInverse,share);status.setAttribute('role','status');status.setAttribute('aria-live','polite');fallbackLabel.hidden=true;fallback.id='tr-copy-text';fallback.readOnly=true;fallback.rows=3;fallbackLabel.htmlFor=fallback.id;fallbackLabel.append(fallback);
   const research=make('details');research.id='tr-euler-research';research.append(make('summary','Euler/Fibonacci research interpretation'));const researchText=make('p'),researchSource=make('a','Read the complete transfer and transported-operation derivation');researchSource.href='collection/demonstrations/EULER_PACKETS.html#transfer-the-euler-sequence-to-fibonacci-values';research.append(researchText,researchSource);
-  result.append(summary,metrics,indices,indexMap,domain,links,scope,preview,witness,detail,research,output,status,fallbackLabel,tableWrap,matrixDetails);host.append(result);let current;
+  result.append(summary,metrics,indices,indexMap,domain,links,scope,preview,witness,detail,research,output,status,fallbackLabel,tableWrap,matrixDetails,composePanel);host.append(result);let current,composition=null;
   function suggest(key){const value=normalizeText(fields[key].value);lists[key].replaceChildren();for(const {entry,text} of names.filter(item=>!value||item.text.includes(value)).slice(0,20)){const option=make('option');option.value=entry.id;option.label=entry.title;lists[key].append(option);}}
   function resolve(key){const text=fields[key].value.trim(),entry=lookup.get(normalizeText(canonicalID(text)))||eligible.find(entry=>normalizeText(entry.title)===normalizeText(text));if(!entry)throw Object.assign(Error('Choose a '+key+' record from the name or ID suggestions.'),{field:key});return entry;}
   function updateWindowHelp(){
@@ -138,8 +154,63 @@ export function mountTransfers(entries,host){
     witnessMath.setAttribute('data-math-latex',transferWitnessTeX(map.rows,j,direction));
     enhanceMath(witness);
   }
+  function suggestVia(){
+    const q=normalizeText(composeVia.value);
+    composeViaList.replaceChildren();
+    for(const {entry,text} of names.filter(item=>!q||item.text.includes(q)).slice(0,20)){
+      const option=make('option');option.value=entry.id;option.label=entry.title;composeViaList.append(option);
+    }
+  }
+  function resolveVia(){
+    const value=composeVia.value.trim();
+    const entry=lookup.get(normalizeText(canonicalID(value)))||
+      eligible.find(item=>normalizeText(item.title)===normalizeText(value));
+    if(!entry)throw Error('Choose an intermediate scalar record by name or ID.');
+    return entry;
+  }
+  function calculateComposition(){
+    try{
+      if(!current)throw Error('Build an exact source-to-target transfer first.');
+      const source=lookup.get(normalizeText(current.sourceId)),
+            via=resolveVia(),target=lookup.get(normalizeText(current.targetId));
+      const map=composeScalarTransfers(source,via,target,current.count);
+      if(!map.verified)throw Error('The exact three-sequence composition certificate failed.');
+      const formulas=transferCompositionMath(map,Math.min(2,map.count-1));
+      clearMath(composeOutput);
+      const heading=make('h3',source.id+' → '+via.id+' → '+target.id);
+      const summaryText=make('p',map.count+' exact coefficients agree with the direct transfer. Original index shift: '+map.indexShift+'. Window position shift: '+map.positionShift+'.');
+      const rows=make('div'),table=make('table'),caption=make('caption','Three-sequence composition in original indices and exact rational coefficients'),thead=make('thead'),head=make('tr'),tbody=make('tbody');
+      rows.className='sar-scroll';rows.tabIndex=0;rows.setAttribute('role','region');
+      rows.setAttribute('aria-label','Exact three-sequence transfer composition');
+      for(const field of ['Tail j','A index','B index','C index','H_AB','H_BC','Composed H_AC','Direct H_AC','Composed inverse']){
+        const th=make('th',field);th.scope='col';head.append(th);
+      }
+      thead.append(head);
+      for(const row of map.rows){
+        const tr=make('tr');
+        for(const value of [row.j,row.sourceIndex,row.viaIndex,row.targetIndex,row.first,row.second,row.composed,row.direct,row.inverse]){
+          tr.append(make('td',String(value)));
+        }
+        tbody.append(tr);
+      }
+      table.append(caption,thead,tbody);rows.append(table);
+      composeOutput.replaceChildren(heading,summaryText,
+        mathLine(formulas.identity.plain,formulas.identity.tex,'sr-compose-equation'),
+        mathLine(formulas.shifts.plain,formulas.shifts.tex,'sr-compose-equation'),
+        make('h4','Coefficient composition witness'),
+        mathLine(formulas.witness.plain,formulas.witness.tex,'sr-compose-equation'),
+        make('p',map.scope),rows);
+      composition={map,formulas};
+      composeVia.removeAttribute('aria-invalid');composeError.hidden=true;composeExport.disabled=composeCopy.disabled=false;
+      composeOutput.hidden=false;enhanceMath(composeOutput);
+    }catch(problem){
+      composeError.textContent=problem.message;composeError.hidden=false;
+      composeVia.setAttribute('aria-invalid','true');
+      if(!composition){composeOutput.hidden=true;composeExport.disabled=composeCopy.disabled=true;}
+    }
+  }
   function render(map,a,b,update){
-    current=map;result.hidden=false;fields.source.value=a.id;fields.target.value=b.id;suggest('source');suggest('target');fields.count.max=String(Math.min(48,map.sourceAnchor.available,map.targetAnchor.available));
+    current=map;composition=null;clearMath(composeOutput);composeOutput.replaceChildren();composeOutput.hidden=true;composeError.hidden=true;composeVia.removeAttribute('aria-invalid');composeExport.disabled=composeCopy.disabled=true;result.hidden=false;fields.source.value=a.id;fields.target.value=b.id;suggest('source');suggest('target');fields.count.max=String(Math.min(48,map.sourceAnchor.available,map.targetAnchor.available));
     summary.textContent=`${map.count} coefficients verified exactly: forward transfer, inverse recovery, and kernel product.`;
     indices.textContent=`Source ${a.index_symbol||'n'}=${map.sourceAnchor.index}; target ${b.index_symbol||'n'}=${map.targetAnchor.index}. Leading stored zeros: ${map.sourceAnchor.position} and ${map.targetAnchor.position}. Window position shift: ${map.positionShift}. Original index shift: ${map.indexShift}. Tail j=0 starts at those anchors.`;
     const mapEquation=transferIndexMath(map);indexFormula.textContent=mapEquation.plain;indexFormula.setAttribute('data-math-latex',mapEquation.tex);
@@ -165,7 +236,11 @@ export function mountTransfers(entries,host){
     error.hidden=true;for(const field of Object.values(fields))field.removeAttribute('aria-invalid');fallbackLabel.hidden=true;status.textContent='';updateWindowHelp();host.dataset.transferReady='true';enhanceMath(result);if(update)history.replaceState(null,'',transferLink(location.href,map));
   }
   function calculate(update=false){try{const a=resolve('source'),b=resolve('target'),map=sequenceTransfer(a,b,count.value);if(!map.verified)throw Error('The exact transfer certificate failed.');render(map,a,b,update);}catch(problem){error.hidden=false;error.textContent=problem.message+(current?' The previous certificate remains available.':'');if(fields[problem.field])fields[problem.field].setAttribute('aria-invalid','true');}}
-  form.addEventListener('submit',event=>{event.preventDefault();calculate(true);});matrixSize.addEventListener('change',()=>{if(current)renderMatrices(current);});for(const select of [productRow,productColumn,productOrder])select.addEventListener('change',()=>{if(current)renderProduct(current,Number(matrixSize.value));});witnessIndex.addEventListener('change',()=>{if(current)renderWitness(current);});witnessDirection.addEventListener('change',()=>{if(current)renderWitness(current);});
+  form.addEventListener('submit',event=>{event.preventDefault();calculate(true);});
+  composeForm.addEventListener('submit',event=>{event.preventDefault();calculateComposition();});
+  composeVia.addEventListener('input',()=>{composeVia.removeAttribute('aria-invalid');suggestVia();});
+  composeExport.addEventListener('click',()=>{if(composition)save(JSON.stringify(composition.map,null,2)+'\n','three-sequence-composition.json','application/json;charset=utf-8');});
+  composeCopy.addEventListener('click',()=>{if(composition)clipboard([composition.formulas.identity.tex,composition.formulas.shifts.tex,composition.formulas.witness.tex].join('\n\n'),'Composition LaTeX copied.');});matrixSize.addEventListener('change',()=>{if(current)renderMatrices(current);});for(const select of [productRow,productColumn,productOrder])select.addEventListener('change',()=>{if(current)renderProduct(current,Number(matrixSize.value));});witnessIndex.addEventListener('change',()=>{if(current)renderWitness(current);});witnessDirection.addEventListener('change',()=>{if(current)renderWitness(current);});
   matrixCopy.addEventListener('click',()=>{if(!current)return;const n=Number(matrixSize.value);const equations=[
     transferMatrixTeX(transferMatrix(current,false,n),'H'),
     transferMatrixTeX(transferMatrix(current,true,n),'K'),
@@ -184,6 +259,7 @@ export function mountTransfers(entries,host){
   copy.addEventListener('click',()=>{if(current)clipboard(current.rows.map(row=>row.kernel).join(', '),'Forward kernel coefficients copied exactly.');});
   copyInverse.addEventListener('click',()=>{if(current)clipboard(current.rows.map(row=>row.inverse).join(', '),'Inverse kernel coefficients copied exactly.');});
   share.addEventListener('click',()=>{if(current)clipboard(transferLink(location.href,current),'Transfer link copied.');});
+  composeVia.value=(eligible.find(entry=>entry.collection==='atlas'&&entry.kind==='lucas')||fib).id;suggestVia();
   const params=new URL(location.href).searchParams;fields.source.value=params.get('tr-source')||euler.id;fields.target.value=params.get('tr-target')||fib.id;fields.count.value=params.get('tr-count')||'12';suggest('source');suggest('target');updateWindowHelp();calculate();
   function validate(data){const a=lookup.get(normalizeText(canonicalID(data?.source||''))),b=lookup.get(normalizeText(canonicalID(data?.target||'')));if(!a||!b)throw Error('The saved transfer needs two available scalar records.');return {a,b,map:sequenceTransfer(a,b,data.count)};}
   return {snapshot:()=>current?{source:current.sourceId,target:current.targetId,count:current.count}:{source:fields.source.value,target:fields.target.value,count:Number(count.value)},validate,restore(data){const {a,b,map}=validate(data);fields.count.value=String(map.count);render(map,a,b,false);},source(entry){if(!lookup.has(normalizeText(entry.id)))return;fields.source.value=entry.id;try{const a=transferAnchor(entry),b=transferAnchor(resolve('target'));count.value=String(Math.min(Number(count.value)||12,48,a.available,b.available));}catch{}updateWindowHelp();calculate(true);host.scrollIntoView({block:'start'});fields.target.focus({preventScroll:true});}};
