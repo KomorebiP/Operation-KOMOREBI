@@ -250,9 +250,9 @@ def build(site,atlas):
         ('research-families','sequence-research.html#research-families','Research families'),
         ('generalized','sequence-research.html#generalized','Generalized families'),
         ('family-explorer','sequence-research.html#generalized','Generalized family explorer'),
-        ('research-graph','sequence-research.html#research-graph','Connection graph'),
-        ('identify','sequence-research.html#identify','Sequence identification'),
-        ('modular-dynamics','sequence-research.html#modular-dynamics','Modular dynamics'),
+        ('research-graph','sequence-connections.html#research-graph','Connection graph'),
+        ('identify','sequence-identify.html#identify','Sequence identification'),
+        ('modular-dynamics','sequence-modular.html#modular-dynamics','Modular dynamics'),
         ('research-notebooks','sequence-workspace.html#research-notebooks','Research notebooks and older workspaces'),
         ('oeis','sequence-oeis.html#oeis','OEIS reference lookup')]
     legacy=''.join('<section class="sl-legacy-gateway" id="'+key+'"><h2>'+label+'</h2><p>This tool now has its own page. <a href="'+url+'">Open '+label+'</a>.</p></section>'
@@ -269,15 +269,50 @@ def build(site,atlas):
                   'compare','comparison')+
                   '<section id="comparison"><h2>Comparison workbench</h2><p>Enable JavaScript to compare records. You can browse the <a href="sequence-library.html#library-search">sequence search</a> without it.</p></section>',
                   page_kind='compare'))
-    research_nav=('<nav class="sl-research-nav" aria-label="Research tool sections">'
+    research_nav=('<nav class="sl-research-nav" aria-label="Research and tool pages">'
                   '<a href="#research-families">Research families</a><a href="#generalized">Generalized families</a>'
-                  '<a href="#research-graph">Connections</a><a href="#identify">Identify terms</a>'
-                  '<a href="#modular-dynamics">Modular dynamics</a><a href="#research-notebooks">Notebooks</a></nav>')
+                  '<a href="sequence-connections.html#research-graph">Connections</a>'
+                  '<a href="sequence-identify.html#identify">Identify terms</a>'
+                  '<a href="sequence-modular.html#modular-dynamics">Modular dynamics</a>'
+                  '<a href="sequence-workspace.html#research-notebooks">Combined notebooks</a></nav>')
+    research_choices=('<div class="sl-research-choices" aria-label="Specialized research tools">'
+                      '<article><h3><a href="sequence-connections.html#research-graph">Connection graph</a></h3>'
+                      '<p>Inspect documented sequence relationships, directed paths and exact transfer compositions.</p></article>'
+                      '<article><h3><a href="sequence-identify.html#identify">Identify terms</a></h3>'
+                      '<p>Test integer patterns and transformations against local records or retained OEIS excerpts.</p></article>'
+                      '<article><h3><a href="sequence-modular.html#modular-dynamics">Modular dynamics</a></h3>'
+                      '<p>Explore recurrence states and verify a finite modular cycle certificate.</p></article>'
+                      '<article><h3><a href="sequence-workspace.html#research-notebooks">Research notebooks</a></h3>'
+                      '<p>Save settings across several tools in the combined compatibility workspace.</p></article></div>')
+    research_legacy=''.join(
+        '<section class="sl-legacy-gateway" id="'+key+'"><h2>'+label+'</h2>'
+        '<p>Open the <a href="'+url+'">'+label.lower()+' page</a>.</p></section>'
+        for key,url,label in [
+            ('research-graph','sequence-connections.html#research-graph','Connection graph'),
+            ('identify','sequence-identify.html#identify','Sequence identification'),
+            ('modular-dynamics','sequence-modular.html#modular-dynamics','Modular dynamics'),
+            ('research-notebooks','sequence-workspace.html#research-notebooks','Research notebooks')])
     site.page('sequence-research.html','Sequence Library · Research',
-              wrap(page_heading('Research tools',
-                  'Browse indexed research families, investigate relations and work with exact recurrence and sequence data.',
-                  'research','research-families')+research_nav+research+generalized_sections(),
+              wrap(page_heading('Research families',
+                  'Browse exact research records and generalized family definitions. Each interactive research tool has its own page.',
+                  'research','research-families')+research_nav+research+generalized_sections(only=['generalized'])+
+                   '<h2 class="sl-tool-heading">Research workbenches</h2>'+research_choices+research_legacy,
                    page_kind='research'))
+    for filename,title,description,section_id,page_kind in [
+        ('sequence-connections.html','Sequence connections',
+         'Inspect documented relationships, directed paths and exact scalar transfer compositions.',
+         'research-graph','connections'),
+        ('sequence-identify.html','Identify a sequence',
+         'Check finite integer patterns and their transforms against local records or the retained OEIS data.',
+         'identify','identify'),
+        ('sequence-modular.html','Modular dynamics',
+         'Explore recurrence states modulo m and check exact finite cycle certificates.',
+         'modular-dynamics','modular')]:
+        site.page(filename,'Sequence Library · '+title,
+                  wrap(page_heading(title,description,'research',section_id)+
+                       '<nav class="sl-tool-back"><a href="sequence-research.html#research-families">Research families and other tools</a>'
+                       ' · <a href="sequence-workspace.html#research-notebooks">Combined workspace</a></nav>'+
+                       generalized_sections(only=[section_id]),page_kind=page_kind))
     standalone_reference=reference.replace('<details class="sl-topic-disclosure">',
                                            '<details class="sl-topic-disclosure" open>',1)
     site.page('sequence-oeis.html','Sequence Library · OEIS',
@@ -316,6 +351,6 @@ def build(site,atlas):
         site.page(entry['url'],entry['title']+' · '+identifier,wrap(body,'../',entry))
         site.search.append(dict(title=entry['title']+' · '+identifier,group='Collection',kind='Examples',work_ids=[],url=entry['url'],text=' '.join(f['expression'] for f in entry['formulas'])))
     site.search.append(dict(title='Sequence Library · Search',group='Collection',kind='Examples',work_ids=[],url='sequence-library.html',text=f'{total} indexed records and {representations} exact formula representations.'))
-    for title,url in [('Transfer between sequences','sequence-transfers.html'),('Compare sequences','sequence-compare.html'),('Research families and sequence tools','sequence-research.html'),('OEIS reference lookup','sequence-oeis.html')]:
+    for title,url in [('Transfer between sequences','sequence-transfers.html'),('Compare sequences','sequence-compare.html'),('Research families and sequence tools','sequence-research.html'),('Connection graph','sequence-connections.html'),('Identify a sequence','sequence-identify.html'),('Modular dynamics','sequence-modular.html'),('OEIS reference lookup','sequence-oeis.html')]:
         site.search.append(dict(title=title,group='Collection',kind='Examples',work_ids=[],url=url,text='Sequence Library exact arithmetic and research tools.'))
     return dict(entries=total,new_entries=len(expanded_catalogue()),formulas=representations,oeis_sequences=snapshot['sequence_count'],oeis_bytes=sum(x['bytes'] for x in snapshot['snapshot']['files']),generalized_families=len(generalized['families']),generalized_sources=len(generalized['sources']))
