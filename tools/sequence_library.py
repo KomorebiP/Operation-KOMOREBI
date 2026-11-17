@@ -111,7 +111,7 @@ def build(site,atlas):
  <div class="sr-transfer-algebra"><h3>What is being calculated?</h3>
  <p>Remove each stored leading-zero prefix, retaining its original index separately. Write the resulting ordinary generating polynomials as</p>
  <p class="sar-formula sr-transfer-equation" data-math-latex="A(z)=\sum_{j=0}^{L-1}a_j z^j,\qquad B(z)=\sum_{j=0}^{L-1}b_j z^j">A(z) = sum_(j=0)^(L-1) a_j z^j; B(z) = sum_(j=0)^(L-1) b_j z^j</p>
- <p>Since <code>a_0</code> and <code>b_0</code> are nonzero, both series are invertible in the truncated rational power-series ring. Define</p>
+ <p>Since <code>a_0</code> and <code>b_0</code> are nonzero, both series are invertible in the truncated rational power-series ring, and formal division over the rationals defines</p>
  <p class="sar-formula sr-transfer-equation" data-math-latex="\begin{aligned}H(z)&amp;\equiv B(z)A(z)^{-1}\pmod{z^L}\\K(z)&amp;\equiv A(z)B(z)^{-1}\pmod{z^L}\end{aligned}">H(z) = B(z)/A(z) (mod z^L); K(z) = A(z)/B(z) (mod z^L)</p>
  <p>Equivalently, the coefficient transport and its inverse are</p>
  <p class="sar-formula sr-transfer-equation" data-math-latex="\begin{aligned}b_j&amp;=\sum_{i=0}^{j}h_i a_{j-i}\\a_j&amp;=\sum_{i=0}^{j}k_i b_{j-i}\end{aligned}">b_j = sum_(i=0)^j h_i*a_(j-i); a_j = sum_(i=0)^j k_i*b_(j-i)</p>
