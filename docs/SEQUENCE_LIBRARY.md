@@ -490,15 +490,20 @@ its SVG nodes, and opening it again uses the current relation filters.
 The recorded edges, proofs, directed-path logic and exports are unchanged.
 
 The Modular dynamics page now displays the certificate summary and a bounded
-plot of the first 128 recorded residues. For longer exact orbits it states
-the displayed-versus-recorded count. Three labelled disclosures hold the
-residue frequency chart, the complete indexed residue table, and the
-complete recurrence-state table. Their visual contents are created on
-first opening, rather than inserting thousands of table rows at initial
-render. Each table retains all computed records and is scrollable within
-its own region. The exported CSV and JSON are unaffected by the display
-limit, and the original recurrence, transient and period certificates
-remain exact.
+plot of at most 128 retained residue samples at a time. If more are retained,
+an indexed plot-window control and Previous/Next buttons allow viewing later
+samples without rendering all plotted points at once. Plot labels show their
+original positions, and the current SVG export reflects the selected window.
+
+The recurrence engine can inspect up to 20,000 complete states, but a
+certificate currently retains at most 256 initial residue samples and
+64 initial complete-state snapshots. Three labelled disclosures contain
+a frequency chart for those retained samples, their exact indexed table
+and the initial state snapshots. The contents are created on first opening
+and remain scrollable within their own regions. Exports retain the same
+bounded samples and the exact recurrence, scanned-state count, transient
+and certified period as before. They do not purport to include every state
+examined during a longer search.
 
 The responsive browser checks open and close the graph visualization,
 verify its compact viewport, check the optional modular panels are initially
