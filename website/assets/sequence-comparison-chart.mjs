@@ -24,7 +24,9 @@ export function validateComparisonChart(options={}){
   return out;
 }
 export function comparisonChartTitle(state,options){
-  return options.title||(state.view==='mod'?'Sequence residues modulo '+state.modulus:'Sequence comparison');
+  if(options.title)return options.title;
+  const transform=state.transform==='difference'?'First differences':state.transform==='sum'?'Partial sums':'Original terms';
+  return state.view==='mod'?'Sequence residues modulo '+state.modulus+' · '+transform:transform+' · sequence comparison';
 }
 export function comparisonXAxisTitle(state,options){
   return options.xTitle||(state.alignment==='indices'?'Recorded local index':'Window position');
