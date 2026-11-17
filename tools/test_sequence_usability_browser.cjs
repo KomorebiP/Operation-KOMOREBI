@@ -97,6 +97,7 @@ async function visit(page,name,kind){
       assert.equal(await inspector.evaluate(el=>el.open),false);
       assert.equal(await inspector.locator('tbody tr').count(),0,'Exact tables are constructed on demand');
       await inspector.locator('summary').click();
+      await inspector.locator('tbody tr').first().waitFor({state:'attached',timeout:30000});
       assert.equal(await inspector.locator('tbody tr').count(),8);
       assert.equal(await inspector.locator('tbody tr').first().locator('th').textContent(),String(recorded.offset));
       assert.equal(await inspector.locator('tbody tr').first().locator('td').textContent(),recorded.terms[0]);
@@ -135,6 +136,7 @@ async function visit(page,name,kind){
       await ready(page);
       const trianglePanel=page.locator('#sl-results .sl-result-definition .sl-term-inspector');
       await trianglePanel.locator('summary').click();
+      await trianglePanel.locator('tbody tr').first().waitFor({state:'attached',timeout:30000});
       assert.deepEqual(await trianglePanel.locator('thead th').allTextContents(),
         ['j','Row n','Column k','Exact stored value']);
       assert.deepEqual(await trianglePanel.locator('tbody tr').nth(5).locator('th,td').allTextContents(),
@@ -145,6 +147,7 @@ async function visit(page,name,kind){
         await ready(page);
         const ratioPanel=page.locator('#sl-results .sl-result-definition .sl-term-inspector');
         await ratioPanel.locator('summary').click();
+        await ratioPanel.locator('tbody tr').first().waitFor({state:'attached',timeout:30000});
         const rationalResponse=await page.evaluate(async()=>{
           const result=await fetch(new URL('assets/sequence-library-data.json',location.href));
           const data=await result.json();
