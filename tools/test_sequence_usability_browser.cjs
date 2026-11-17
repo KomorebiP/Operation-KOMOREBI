@@ -107,6 +107,11 @@ async function visit(page,name,kind){
       await page.locator('#md-form').waitFor({timeout:30000});
       assert.equal(await page.locator('#modular-dynamics>details').evaluate(el=>el.open),true);
       assert.equal(await page.locator('#md-current').isDisabled(),true);
+      await page.locator('#modular-explorer[data-modular-ready=true]').waitFor({timeout:60000});
+      await page.locator('#md-result details>summary').first().click();
+      await page.locator('#md-result .sr-modular-equation').waitFor({timeout:30000});
+      await page.locator('#md-result .math-pair[data-math-pair-ready=true]').first().waitFor({timeout:30000});
+      assert.match(await page.locator('#md-result [data-math-plain]').first().textContent(),/sum_\(j=1\)/);
       assert.equal(await page.locator('#connection-explorer,#sequence-identification').count(),0);
       await fit(page);
       await page.goto(href('sequence-research.html#research-graph'));await ready(page);
