@@ -151,12 +151,24 @@ def links_for(entry):
     return '<p>Definition or reference: '+' · '.join(link(identifier) for identifier in ids)+'.</p>'
 
 
-def sections():
-    return '''<section id="generalized"><h2>Generalized families</h2><p>Browse family definitions and their source papers. Calculate exact coefficients for supported families, or read the analytic definitions in Special Functions I–VIII.</p><p><a href="sequence-library.html?scope=families#library-search">Search generalized families</a> · <a href="generalized-families/index.html">Complete family index</a></p><details><summary>Open the family explorer</summary><div id="family-explorer"></div><p class="sg-static">The general definitions and source links are readable in the family index without JavaScript.</p></details></section>
+def sections(only=None):
+    body = '''<section id="generalized"><h2>Generalized families</h2><p>Browse family definitions and their source papers. Calculate exact coefficients for supported families, or read the analytic definitions in Special Functions I–VIII.</p><p><a href="sequence-library.html?scope=families#library-search">Search generalized families</a> · <a href="generalized-families/index.html">Complete family index</a></p><details><summary>Open the family explorer</summary><div id="family-explorer"></div><p class="sg-static">The general definitions and source links are readable in the family index without JavaScript.</p></details></section>
 <section id="research-graph"><h2>Explore connections</h2><p>Browse recorded relationships, follow directed paths, and compose exact scalar transfer kernels while tracking their index shifts.</p><details><summary>Open the connection graph</summary><div id="connection-explorer"></div></details></section>
 <section id="identify"><h2>Identify a sequence</h2><p>Compare transformed terms with scalar library records or the retained OEIS data. Results show the tested transformation and the positions of finite matches.</p><details><summary>Open sequence identification</summary><div id="sequence-identification"></div></details></section>
 <section id="modular-dynamics"><h2>Modular dynamics</h2><p>Examine a k-step recurrence modulo m. A repeated complete state certifies a cycle and its preceding transient. A bounded search may end without a repeat.</p><details><summary>Open modular dynamics</summary><div id="modular-explorer"></div></details></section>
 <section id="research-notebooks"><h2>Research notebooks</h2><p>Save family parameters, searches, comparisons, transfers, graph paths, modular experiments, and notes in a named notebook. Export it or share a link.</p><details><summary>Open research notebooks</summary><div id="notebook-explorer"></div></details></section>'''
+    if only is None:
+        return body
+    valid=('generalized','research-graph','identify','modular-dynamics','research-notebooks')
+    if any(key not in valid for key in only):
+        raise ValueError('Unknown Sequence Library research tool section')
+    blocks={}
+    for key in valid:
+        marker='<section id="'+key+'">'
+        first=body.index(marker)
+        last=body.index('</section>',first)+len('</section>')
+        blocks[key]=body[first:last]
+    return ''.join(blocks[key] for key in only)
 
 
 def build_pages(site,data,wrap):

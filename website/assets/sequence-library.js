@@ -42,24 +42,33 @@ function definitionPreview(formula,label,expanded){
 }
 
 function legacyDestination(){
-  if(root?.dataset.page!=='search')return null;
+  const onSearch=root?.dataset.page==='search',onResearch=root?.dataset.page==='research';
+  if(!onSearch&&!onResearch)return null;
   let hash='';try{hash=decodeURIComponent(location.hash.slice(1));}catch{}
   const routes={
     transfers:'sequence-transfers.html',comparison:'sequence-compare.html',
     oeis:'sequence-oeis.html','research-families':'sequence-research.html',
-    generalized:'sequence-research.html','research-graph':'sequence-research.html',
-    identify:'sequence-research.html','modular-dynamics':'sequence-research.html',
+    generalized:'sequence-research.html','research-graph':'sequence-connections.html',
+    identify:'sequence-identify.html','modular-dynamics':'sequence-modular.html',
     'research-notebooks':'sequence-workspace.html','family-explorer':'sequence-research.html',
     'tr-matrices':'sequence-transfers.html','tr-convolution-witness':'sequence-transfers.html',
     'tr-compose':'sequence-transfers.html'
   };
   const params=new URL(location.href).searchParams;
   const combinedFamily=hash==='family-explorer'&&['q','scope','mode','paper','collection'].some(key=>params.has(key));
-  const target=combinedFamily?'sequence-workspace.html':(routes[hash]||(params.has('wb')?'sequence-compare.html':params.has('tr-source')?'sequence-transfers.html':params.has('graph')||params.has('identify')?'sequence-research.html':params.has('notebook')?'sequence-workspace.html':null));
+  const researchHashTarget={'research-graph':'sequence-connections.html',identify:'sequence-identify.html','modular-dynamics':'sequence-modular.html','research-notebooks':'sequence-workspace.html'};
+  const target=onResearch?(researchHashTarget[hash]||(params.has('graph')?'sequence-connections.html':params.has('identify')?'sequence-identify.html':params.has('modular')?'sequence-modular.html':null)):
+    combinedFamily?'sequence-workspace.html':
+    (routes[hash]||(params.has('wb')?'sequence-compare.html':params.has('tr-source')?'sequence-transfers.html':params.has('graph')?'sequence-connections.html':params.has('identify')?'sequence-identify.html':params.has('modular')?'sequence-modular.html':params.has('notebook')?'sequence-workspace.html':null));
   if(!target)return null;
   const url=new URL(target,location.href);
-  url.search=location.search;url.hash=location.hash||
-    (target==='sequence-compare.html'?'#comparison':target==='sequence-transfers.html'?'#transfers':target==='sequence-oeis.html'?'#oeis':'#research-families');
+  const defaultHash={
+    'sequence-compare.html':'#comparison','sequence-transfers.html':'#transfers',
+    'sequence-oeis.html':'#oeis','sequence-connections.html':'#research-graph',
+    'sequence-identify.html':'#identify','sequence-modular.html':'#modular-dynamics',
+    'sequence-workspace.html':'#research-notebooks','sequence-research.html':'#research-families'
+  };
+  url.search=location.search;url.hash=location.hash||defaultHash[target]||'#research-families';
   return url.href;
 }
 const legacyRoute=legacyDestination();
@@ -220,7 +229,7 @@ function setupReference(client){
 }
 if(!legacyRoute)try{
   if(root.dataset.entry){const [{setupArchivePlot},{mountTriangleExplorer}]=await Promise.all([import('./sequence-archive-plot.mjs'),import('./sequence-triangle.mjs')]);const response=await fetch(new URL(root.dataset.entry,location.href));if(!response.ok)throw Error('The exact record could not be loaded.');const entry=await response.json();setupArchivePlot(entry);setupTriangleNavigation();mountTriangleExplorer(entry,root.querySelector('#triangle'));}
-  else if($('search')||root.querySelector('#family-explorer-controls')||root.querySelector('#sr-transfer-tool')||root.querySelector('#comparison')||root.querySelector('#sl-oeis-form')||root.querySelector('#research-families')){
+  else if($('search')||root.querySelector('#family-explorer-controls')||root.querySelector('#sr-transfer-tool')||root.querySelector('#comparison')||root.querySelector('#sl-oeis-form')||root.querySelector('#research-families')||['connections','identify','modular'].includes(root.dataset.page)){
     const responses=await Promise.all([fetch(new URL('./sequence-library-data.json',import.meta.url)),fetch(new URL('./sequence-generalized-data.json',import.meta.url))]);
     if(responses.some(r=>!r.ok))throw Error('The local sequence and family catalogue could not be loaded.');
     const [data,generalized]=await Promise.all(responses.map(r=>r.json()));
@@ -232,7 +241,7 @@ if(!legacyRoute)try{
     let search;
     if($('search'))search=setupSearch(entries,generalized.families,generalized.sources);
     if($('oeis-form'))setupReference(client);
-    if(root.querySelector('#family-explorer-controls')||['research','workspace'].includes(root.dataset.page)){
+    if(root.querySelector('#family-explorer-controls')||['research','workspace','connections','identify','modular'].includes(root.dataset.page)){
       const {mountStudio}=await import('./sequence-research-studio.mjs');mountStudio({root,entries,data:generalized,referenceClient:client,workbench:workbench||handoff,transfers,search});
     }
   }
