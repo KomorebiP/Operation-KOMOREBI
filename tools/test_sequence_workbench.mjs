@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
 import {WORKBENCH_DEFAULTS,validateWorkbench,localSource,familySource,referenceSource,workbenchRows,agreements,readWorkbenchLink,workbenchLink,comparisonCSV} from '../website/assets/sequence-workbench-core.mjs';
+import {COMPARISON_CHART_DEFAULTS,validateComparisonChart,comparisonChartTitle,comparisonXAxisTitle,comparisonYAxisTitle,comparisonYAxisTick,comparisonScaleExplanation} from '../website/assets/sequence-comparison-chart.mjs';
 import {readSaved,writeSaved,STORAGE_KEY} from '../website/assets/sequence-atlas-saved.mjs';
 import {referenceQuery,referenceValues,referencePositions,referenceNameMatches} from '../website/assets/sequence-oeis-core.mjs';
 import {identifyInput,discoveryProbes,matchProbe} from '../website/assets/sequence-discovery-core.mjs';
@@ -71,6 +72,52 @@ test('legacy comparison URLs remain usable without data pinning',()=>{
   assert.deepEqual(restored.sources[0].terms,a.terms);
 });
 
+test('signed logarithmic tick labels show approximate original values rather than log coordinates',()=>{
+  const state={...WORKBENCH_DEFAULTS};
+  const settings={view:'values',scale:'signed-log',ticks:'magnitude'};
+  assert.equal(comparisonYAxisTick(0,settings),'0');
+  assert.equal(comparisonYAxisTick(1.62,settings),'≈41');
+  assert.equal(comparisonYAxisTick(3.24,settings),'≈1.7K');
+  assert.equal(comparisonYAxisTick(6.48,settings),'≈3M');
+  assert.equal(comparisonYAxisTick(-6.48,settings),'≈−3M');
+  assert.equal(comparisonYAxisTick(6.48,{...settings,ticks:'log'}),'6.48');
+  assert.equal(comparisonYAxisTick(4,{view:'mod',scale:'signed-log'}),'4');
+  assert.equal(comparisonYAxisTick(1234567,{view:'values',scale:'linear'}),'≈1.2M');
+  assert.equal(comparisonXAxisTitle(state,COMPARISON_CHART_DEFAULTS),'Window position');
+  assert.match(comparisonYAxisTitle(state,COMPARISON_CHART_DEFAULTS),/signed log/);
+  assert.match(comparisonScaleExplanation(state,COMPARISON_CHART_DEFAULTS),/approximate the original values/);
+  assert.match(comparisonScaleExplanation(state,{...COMPARISON_CHART_DEFAULTS,ticks:'log'}),/not sequence values/);
+});
+test('custom chart and legend text round trip with exact pinned comparisons',()=>{
+  const pinned={...a,record_sha256:'a'.repeat(64)};
+  const chartLabels=validateComparisonChart({
+    title:'Fibonacci and Lucas · coefficient comparison',
+    xTitle:'Stored local index',yTitle:'Magnitude of coefficient',
+    legend:'show',legendPosition:'bottom',ticks:'log',seriesLabels:['First family','Second family']
+  });
+  assert.equal(comparisonChartTitle(WORKBENCH_DEFAULTS,chartLabels),chartLabels.title);
+  const url=workbenchLink('https://example.test/sequence-compare.html',[localSource(pinned),localSource({...b,record_sha256:'b'.repeat(64)})],WORKBENCH_DEFAULTS,chartLabels);
+  const payload=JSON.parse(new URL(url).searchParams.get('wb'));
+  assert.equal(payload.schema,2);
+  assert.deepEqual(payload.chartLabels,chartLabels);
+  const restored=readWorkbenchLink(url,[pinned,{...b,record_sha256:'b'.repeat(64)}],'snapshot');
+  assert.deepEqual(restored.chartLabels,chartLabels);
+  assert.equal(restored.sources[0].terms[2],'9007199254740993');
+  const old=new URL(url),oldData=JSON.parse(old.searchParams.get('wb'));
+  delete oldData.chartLabels;oldData.schema=1;oldData.sources=oldData.sources.map(({type,id})=>({type,id}));
+  old.searchParams.set('wb',JSON.stringify(oldData));
+  assert.deepEqual(readWorkbenchLink(old,[pinned,b],'snapshot').chartLabels,validateComparisonChart());
+});
+test('chart text customization rejects invalid labels and does not change data',()=>{
+  for(const bad of [{title:'x'.repeat(91)},{xTitle:'x'.repeat(65)},{yTitle:'line\n2'},
+    {legend:'unknown'},{legendPosition:'left'},{ticks:'numbers'}, {seriesLabels:['a','b','c','d','e']},
+    {seriesLabels:['a\nnewline']},{seriesLabels:['x'.repeat(61)]}]){
+    assert.throws(()=>validateComparisonChart(bad));
+  }
+  const state=validateComparisonChart({legend:'hide',seriesLabels:['One','Two']});
+  assert.equal(state.legend,'hide');
+  assert.equal(workbenchRows([localSource(a)],WORKBENCH_DEFAULTS).series[0].rows[2].raw,'9007199254740993');
+});
 test('comparison CSV retains exact values, source positions and attribution',()=>{
   const ref=referenceSource({id:'A000001',sample_position:8,values:['9007199254740993']},'sha');const csv=comparisonCSV(workbenchRows([ref]));
   for(const text of ['9007199254740993','mathematical offset unknown','"8"','CC-BY-SA-4.0','OEIS Foundation','"sha"'])assert.ok(csv.includes(text),text);

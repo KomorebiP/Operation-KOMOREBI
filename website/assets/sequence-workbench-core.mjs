@@ -1,5 +1,6 @@
 import {transform,coordinate,mod} from './sequence-atlas-core.mjs';
 import {generateFamily,validateFamily,familyDescriptor,familyURL,FAMILY_ENGINES} from './sequence-family-core.mjs';
+import {validateComparisonChart} from './sequence-comparison-chart.mjs';
 
 export const WORKBENCH_DEFAULTS=Object.freeze({view:'values',transform:'raw',scale:'signed-log',alignment:'positions',skip:0,count:32,modulus:7,marks:'line'});
 export function validateWorkbench(options={}){
@@ -45,12 +46,12 @@ export function descriptor(source){
     :{type:'local',id:source.id};
   return {type:'oeis',id:source.id,position:source.offset,count:source.terms.length,snapshot:source.snapshot};
 }
-export function workbenchLink(href,sources,state){
+export function workbenchLink(href,sources,state,chartLabels={}){
   const url=new URL(href);url.search='';url.hash='comparison';
   // Version 2 binds each local record to the exact indexed prefix published on this site.
   // Earlier local callers without receipts keep version 1 links for compatibility.
   const pinned=sources.every(source=>source.type!=='local'||/^[0-9a-f]{64}$/.test(source.receipt||''));
-  const data=JSON.stringify({schema:pinned?2:1,state:validateWorkbench(state),sources:sources.map(source=>source.pending?source.descriptor:descriptor(source))});
+  const data=JSON.stringify({schema:pinned?2:1,state:validateWorkbench(state),sources:sources.map(source=>source.pending?source.descriptor:descriptor(source)),chartLabels:validateComparisonChart(chartLabels)});
   if(data.length>6000)throw Error('This comparison is too large for a view link. Export a research notebook to retain the complete data.');
   url.searchParams.set('wb',data);
   if(url.href.length>6000)throw Error('This comparison link is too large for the host. Export a research notebook JSON file to retain the complete data.');
@@ -60,7 +61,7 @@ export function readWorkbenchLink(href,entries,snapshot){
   const params=new URL(href).searchParams;
   if(params.getAll('wb').length>1)throw Error('A comparison link must contain one set of comparison settings.');
   const raw=params.get('wb');if(!raw)return null;if(raw.length>200000)throw Error('This comparison link is too long.');const data=JSON.parse(raw);
-  if(!data||![1,2].includes(data.schema)||!Array.isArray(data.sources)||data.sources.length>4)throw Error('Choose a comparison link with at most four sources.');const lookup=new Map(entries.map(entry=>[entry.id,entry])),state=validateWorkbench(data.state);
+  if(!data||![1,2].includes(data.schema)||!Array.isArray(data.sources)||data.sources.length>4)throw Error('Choose a comparison link with at most four sources.');const lookup=new Map(entries.map(entry=>[entry.id,entry])),state=validateWorkbench(data.state),chartLabels=validateComparisonChart(data.chartLabels||{});
   const sources=data.sources.map(item=>{if(item.type==='local'){
     if(!lookup.has(item.id))throw Error('A linked local record is unavailable in this catalogue.');
     const restored=localSource(lookup.get(item.id),href);
@@ -79,7 +80,7 @@ export function readWorkbenchLink(href,entries,snapshot){
   // Older links kept irrelevant family fields in their descriptors. They can
   // now normalize to the same exact construction; keep its first occurrence.
   const familyKeys=new Set(),restored=sources.filter(source=>{if(source.type!=='family')return true;if(familyKeys.has(source.key))return false;familyKeys.add(source.key);return true;});
-  if(new Set(restored.map(source=>source.key)).size!==restored.length)throw Error('A comparison link contains duplicate sources.');if(state.alignment==='indices'&&restored.some(source=>source.type==='oeis'))throw Error('Use position alignment for reference excerpts.');return {sources:restored,state,schema:data.schema};
+  if(new Set(restored.map(source=>source.key)).size!==restored.length)throw Error('A comparison link contains duplicate sources.');if(state.alignment==='indices'&&restored.some(source=>source.type==='oeis'))throw Error('Use position alignment for reference excerpts.');return {sources:restored,state,schema:data.schema,chartLabels};
 }
 const escape=value=>'"'+String(value??'').replaceAll('"','""')+'"';
 export function comparisonCSV(result){return [['series_id','series_name','index_kind','stored_index_or_export_position','window_position','raw_integer','plotted_exact_integer','view','transform','alignment','modulus','source_url','reference_snapshot_sha256','attribution','license'],...result.series.flatMap(({source,rows})=>rows.map(row=>[source.id,source.title,source.indexKind,row.index,row.position,row.raw,row.value??'',result.state.view,result.state.transform,result.state.alignment,result.state.view==='mod'?result.state.modulus:'',source.url,source.snapshot||'',source.type==='oeis'?'The Online Encyclopedia of Integer Sequences, OEIS Foundation Inc.':'',source.type==='oeis'?'CC-BY-SA-4.0':'']))].map(row=>row.map(escape).join(',')).join('\r\n')+'\r\n';}

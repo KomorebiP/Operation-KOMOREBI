@@ -256,6 +256,48 @@ async function visit(page,name,kind){
       await page.getByRole('button',{name:'Try Fibonacci + Lucas',exact:true}).click();
       assert.equal(await page.locator('#sw-sources>li').count(),2);
       assert.equal(await page.locator('#sw-share-top').isDisabled(),false);
+      assert.equal(await page.locator('#sw-chart-labels').evaluate(el=>el.open),false,
+        'Chart text settings should be optional rather than cluttering the main comparison');
+      const defaultTicks=await page.locator('#sw-chart [data-y-tick]').allTextContents();
+      assert.ok(defaultTicks.some(value=>value.startsWith('≈')),
+        'Signed-log ticks should show approximate original-value magnitudes by default');
+      assert.match(await page.locator('#sw-scale-note').textContent(),/signed logarithmic/);
+      await page.locator('#sw-chart-labels>summary').click();
+      for(const [field,value] of [['#sw-title-text','Fibonacci versus Lucas'],['#sw-x-title','Step in window'],['#sw-y-title','Approximate magnitude']]){
+        await page.locator(field).fill(value);
+        await page.locator(field).press('Tab');
+      }
+      await page.getByLabel('Legend label for KSEQ-000025').fill('Fibonacci');
+      await page.getByLabel('Legend label for KSEQ-000025').press('Tab');
+      await page.getByLabel('Legend label for KSEQ-000037').fill('Lucas');
+      await page.getByLabel('Legend label for KSEQ-000037').press('Tab');
+      await page.selectOption('#sw-legend-position','bottom');
+      await page.waitForFunction(()=>
+        document.querySelector('#sw-chart [data-chart-title]')?.textContent==='Fibonacci versus Lucas'
+      );
+      assert.equal(await page.locator('#sw-chart [data-x-axis-title]').textContent(),'Step in window');
+      assert.equal(await page.locator('#sw-chart [data-y-axis-title]').textContent(),'Approximate magnitude');
+      assert.deepEqual(await page.locator('#sw-chart [data-legend-label]').allTextContents(),['1. Fibonacci','2. Lucas']);
+      await page.selectOption('#sw-legend','hide');
+      assert.equal(await page.locator('#sw-chart [data-legend-label]').count(),0);
+      await page.selectOption('#sw-legend','show');
+      assert.equal(await page.locator('#sw-chart [data-legend-label]').count(),2);
+      await page.selectOption('#sw-tick-mode','log');
+      assert.ok((await page.locator('#sw-chart [data-y-tick]').allTextContents()).some(tick=>tick.includes('.')));
+      assert.ok((await page.locator('#sw-chart [data-y-tick]').allTextContents()).every(tick=>!tick.includes('≈')));
+      assert.match(await page.locator('#sw-scale-note').textContent(),/not sequence values/);
+      await page.selectOption('#sw-tick-mode','magnitude');
+      assert.ok((await page.locator('#sw-chart [data-y-tick]').allTextContents()).some(tick=>tick.startsWith('≈')));
+      if(width===1440){
+        const pending=page.waitForEvent('download');
+        await page.locator('#sw-svg').click();
+        const chartExport=await pending,exportPath=path.join(output,'comparison-custom-labels.svg');
+        await chartExport.saveAs(exportPath);
+        const exportedSVG=fs.readFileSync(exportPath,'utf8');
+        for(const phrase of ['Fibonacci versus Lucas','Step in window','Approximate magnitude','1. Fibonacci','2. Lucas'])
+          assert.ok(exportedSVG.includes(phrase),'Exported chart missing '+phrase);
+      }
+      await fit(page);
       await page.locator('#sw-provenance>summary').click();
       assert.equal(await page.locator('#sw-receipt-list li').count(),2);
       assert.equal(await page.locator('#sw-receipt-list code').count(),2);
@@ -270,12 +312,22 @@ async function visit(page,name,kind){
       assert.equal(receipt.sources.length,2);
       assert.ok(receipt.sources.every(source=>/^[0-9a-f]{64}$/.test(source.sha256)));
       assert.ok(receipt.sources.every(source=>Number.isInteger(source.offset)&&source.count>0));
+      assert.deepEqual(receipt.chartLabels,{
+        title:'Fibonacci versus Lucas',xTitle:'Step in window',yTitle:'Approximate magnitude',
+        legend:'show',legendPosition:'bottom',ticks:'magnitude',seriesLabels:['Fibonacci','Lucas']
+      });
       const restored=await context.newPage();
       restored.on('pageerror',error=>report.errors.push(error.message));
       await restored.goto(comparisonHref);await ready(restored);
       assert.equal(await restored.locator('#sw-sources>li').count(),2);
       assert.match(await restored.locator('#sw-receipt-status').textContent(),/match the current local catalogue/);
       assert.equal(await restored.locator('#sw-chart svg').count(),1);
+      assert.equal(await restored.locator('#sw-title-text').inputValue(),'Fibonacci versus Lucas');
+      assert.equal(await restored.locator('#sw-x-title').inputValue(),'Step in window');
+      assert.equal(await restored.locator('#sw-y-title').inputValue(),'Approximate magnitude');
+      assert.equal(await restored.locator('#sw-legend-position').inputValue(),'bottom');
+      assert.deepEqual(await restored.locator('#sw-chart [data-legend-label]').allTextContents(),['1. Fibonacci','2. Lucas']);
+      assert.equal(await restored.locator('#sw-chart [data-chart-title]').textContent(),'Fibonacci versus Lucas');
       await restored.locator('#sw-provenance>summary').click();
       assert.equal(await restored.locator('#sw-receipt-list code').count(),2);
       await fit(restored);
