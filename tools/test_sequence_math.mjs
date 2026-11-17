@@ -113,18 +113,18 @@ test('transfer equations are exact and agree with the coefficient certificate',(
   assert.equal(transferPolynomialPlain(map.rows,'kernel','H'),'H(z) = 1 + 2z - z^2 + 53z^3 (mod z^4)');
   assert.equal(transferPolynomialPlain(map.rows,'inverse','K'),'K(z) = 1 - 2z + 5z^2 - 65z^3 (mod z^4)');
   const tex=transferPolynomialTeX(map.rows,'kernel','H');
-  assert.ok(tex.startsWith(String.raw`H(z)\equiv 1 + 2\,z - z^{2} + 53\,z^{3}\`));
-  assert.ok(tex.endsWith(String.raw`\pmod{z^{4}}\`));
+  assert.ok(tex.startsWith(String.raw`H(z)\equiv 1 + 2\,z - z^{2} + 53\,z^{3}`));
+  assert.ok(tex.endsWith(String.raw`\pmod{z^{4}}`));
   assert.match(transferWitnessPlain(map.rows,2),/= 2; target=2; residual=0/);
-  assert.ok(transferWitnessTeX(map.rows,2).includes(String.raw`\sum_{i=0}^{2}\`));
-  assert.ok(transferWitnessTeX(map.rows,2).includes(String.raw`\mathrm{residual}=0\`));
+  assert.ok(transferWitnessTeX(map.rows,2).includes(String.raw`\sum_{i=0}^{2}`));
+  assert.ok(transferWitnessTeX(map.rows,2).includes(String.raw`\mathrm{residual}=0`));
 });
 test('rational source coefficients remain exact and malformed data fails closed',()=>{
   const entry=(id,terms)=>({id,terms:terms.map(String),offset:0,index_symbol:'n'});
   const map=sequenceTransfer(entry('A',[-2,3,7]),entry('B',[3,-2,1]),3);
   assert.equal(map.rows[0].kernel,'-3/2');
-  assert.equal(rationalTeX('-3/2'),String.raw`-\frac{3}{2}\`);
-  assert.ok(transferPolynomialTeX(map.rows,'kernel','H').includes(String.raw`-\frac{3}{2}\`));
+  assert.equal(rationalTeX('-3/2'),String.raw`-\frac{3}{2}`);
+  assert.ok(transferPolynomialTeX(map.rows,'kernel','H').includes(String.raw`-\frac{3}{2}`));
   assert.match(transferPolynomialPlain(map.rows,'kernel','H'),/\-3\/2/);
   assert.throws(()=>rationalTeX('1/0'),/rational coefficient/);
   assert.throws(()=>rationalTeX('1.5'),/rational coefficient/);
