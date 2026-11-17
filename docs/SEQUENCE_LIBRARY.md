@@ -488,13 +488,19 @@ reader pages:
 - Search: sequence-library.html
 - Transfer: sequence-transfers.html
 - Comparison: sequence-compare.html
-- Research families, relation graph, identification, modular dynamics and
-  notebooks: sequence-research.html
+- Research family directory: sequence-research.html
+- Connection graph and directed paths: sequence-connections.html
+- Sequence identification: sequence-identify.html
+- Modular recurrence dynamics: sequence-modular.html
 - OEIS lookup: sequence-oeis.html
+- Combined notebooks and multiple-tool restoration: sequence-workspace.html
 
-The five-page navigation is shared across these pages. The primary pages
-load only their relevant tools instead of mounting every graph, transfer
-matrix, chart and reference worker during a basic search. Their headers,
+The five primary navigation choices remain Search, Transfer, Compare,
+Research and OEIS. Research is a directory with direct links to three
+individual workbench pages. These dedicated pages load only their relevant
+tools rather than initializing graphs, searches and modular calculations
+together. Each has a return link to Research and to the combined workspace.
+The Search page does not mount those research tools. Their headers,
 controls and formulas have been proofread and spaced for narrow screens.
 Long mathematical displays and exact tables have their own horizontal
 scrolling regions. Source data, finite arithmetic certificates, and
@@ -503,6 +509,8 @@ exports remain unchanged.
 Older links to sequence-library.html#transfers, #comparison, #oeis,
 #research-families, #research-graph and the other research anchors
 redirect to the matching focused pages when JavaScript is available.
+The earlier sequence-research.html#research-graph, #identify and
+#modular-dynamics links also redirect to their individual workbench pages.
 The landing page retains targeted static gateways for those hashes
 when JavaScript is disabled. Search URLs, collection and family filters,
 saved records and original record links stay on the Search page.
@@ -522,8 +530,9 @@ search, comparison and transfer state together, use the combined
 workspace to restore every component.
 
 Dedicated browser tests cover cross-page selections, old hash links,
-the standalone record picker, responsive MathJax displays, exact tables,
-and static fallback content on desktop and 390/320-pixel screens.
+the standalone record picker, graph, identification and modular workbench
+mounting, responsive MathJax displays, exact tables, and static fallback
+content on desktop and 390/320-pixel screens.
 Passing these tests is not an independent WCAG conformance certification.
 
 ## Search help and full research-family navigation
