@@ -39,6 +39,14 @@ def library_entries(atlas):
     return entries
 
 
+def exact_record_receipt(entry):
+    """Digest the indexed integer data, never the rounded plot coordinates."""
+    payload=[entry['id'],entry['collection'],entry['offset'],
+             entry.get('index_symbol','n'),entry['terms'],
+             entry.get('source_degrees')]
+    return hashlib.sha256(json.dumps(payload,ensure_ascii=False,separators=(',',':')).encode('utf-8')).hexdigest()
+
+
 def matches_block(entry):
     hits=entry.get('matches',[]);total=entry.get('match_count',len(hits))
     return '<section id="oeis-matches"><h2>OEIS comparisons</h2><p>These finite matches begin at local index '+str(entry['offset'])+'. Positions in the bulk export start at zero and do not represent OEIS mathematical offsets. A finite match does not prove that two infinite sequences are identical.</p>'+(
@@ -56,6 +64,7 @@ def build(site,atlas):
         if entry['collection']=='formulas':
             entry['source_degrees']=[source_degree(entry,entry['offset']+i) for i in range(len(entry['terms']))]
     for entry in entries:
+        entry['record_sha256']=exact_record_receipt(entry)
         entry['matches']=snapshot['matches'].get(entry['id'],[]);entry['match_count']=snapshot['total_matches'].get(entry['id'],0)
         entry['oeis_snapshot']=dict(attribution=snapshot['attribution'],license=snapshot['license'],source_urls=snapshot['source_urls'],downloaded_at=snapshot['snapshot']['downloaded_at'],stripped_sha256=snapshot['stripped_sha256'],names_sha256=snapshot['names_sha256'],scope='Finite contiguous comparisons; export positions are not mathematical offsets and matches do not prove infinite identity.')
     source=site.root/'research/oeis-snapshot'
