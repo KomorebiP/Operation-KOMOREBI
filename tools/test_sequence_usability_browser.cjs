@@ -123,7 +123,8 @@ async function visit(page,name,kind){
       assert.equal(await page.locator('#md-result>.sg-data-panel').count(),3);
       assert.equal(await page.locator('#md-result>.sg-data-panel table').count(),0,
         'Full exact tables should not be built before the reader opens them');
-      assert.match(await page.locator('#md-result .sg-plot-note').textContent(),/first .* recorded residues/);
+      assert.match(await page.locator('#md-result .sg-plot-note').textContent(),/retained residue samples/);
+      assert.equal(await page.locator('#md-plot-controls').isVisible(),false);
       await page.locator('#md-result>.sg-data-panel').nth(1).locator('summary').click();
       await page.locator('#md-result>.sg-data-panel').nth(1).locator('tbody tr').first().waitFor({timeout:30000});
       assert.ok(await page.locator('#md-result>.sg-data-panel').nth(1).locator('tbody tr').count()>1);
@@ -137,6 +138,21 @@ async function visit(page,name,kind){
       await page.locator('#md-result .sr-modular-equation').waitFor({state:'attached',timeout:30000});
       await page.locator('#md-result .math-pair[data-math-pair-ready=true]').first().waitFor({timeout:30000});
       assert.match(await page.locator('#md-result [data-math-plain]').first().textContent(),/sum_\(j=1\)/);
+      await page.fill('#md-modulus','50');
+      await page.locator('#md-form button[type=submit]').click();
+      await page.locator('#md-plot-controls:visible').waitFor({timeout:60000});
+      assert.match(await page.locator('#md-plot-note').textContent(),/retains up to 256 residue samples and 64 initial state snapshots/);
+      assert.equal(await page.locator('#md-plot-next').isDisabled(),false);
+      await page.locator('#md-plot-next').click();
+      assert.equal(await page.locator('#md-plot-start').inputValue(),'128');
+      assert.match(await page.locator('#md-plot-note').textContent(),/Plot positions 128–255 of 256 retained residue samples/);
+      await page.fill('#md-plot-start','64');
+      await page.locator('#md-plot-start').dispatchEvent('change');
+      assert.match(await page.locator('#md-plot-note').textContent(),/Plot positions 64–191 of 256 retained residue samples/);
+      await page.locator('#md-result>.sg-data-panel').nth(1).locator('summary').click();
+      await page.locator('#md-result>.sg-data-panel').nth(1).locator('tbody tr').first().waitFor({timeout:30000});
+      assert.equal(await page.locator('#md-result>.sg-data-panel').nth(1).locator('tbody tr').count(),256);
+
       assert.equal(await page.locator('#connection-explorer,#sequence-identification').count(),0);
       await fit(page);
       await page.goto(href('sequence-research.html#research-graph'));await ready(page);
