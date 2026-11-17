@@ -32,15 +32,74 @@ if(root){
   addEventListener('hashchange',revealLibraryTarget);
   revealLibraryTarget();
 }
-function definitionPreview(formula,label,expanded){
-  const detail=make('details'),summary=make('summary'),name=make('span','Defining formula'),excerpt=make('span',formula.textContent.replace(/\s+/g,' ').trim());
+function definitionPreview(formula,label,expanded,recordedVariants=[]){
+  const definingExpression=formula.textContent;
+  const detail=make('details'),summary=make('summary'),name=make('span','Defining formula'),excerpt=make('span',definingExpression.replace(/\s+/g,' ').trim());
   name.className='sl-definition-label';excerpt.className='sl-definition-excerpt';
   excerpt.setAttribute('aria-hidden','true');
   summary.setAttribute('aria-label','Defining formula for '+label);
   summary.append(name,excerpt);
   detail.className='sl-result-definition';detail.open=expanded;
   detail.append(summary,formula);
-  detail.addEventListener('toggle',()=>{if(detail.open)enhanceMath(detail);});
+
+  // Keep the original defining expression even when a source catalogue lists only alternatives.
+  const variants=Array.isArray(recordedVariants)?recordedVariants.filter(v=>v&&typeof v.expression==='string'&&v.expression.length):[];
+  if(variants.length&&!variants.some(v=>v.expression===definingExpression)){
+    variants.unshift({title:'Defining formula',kind:'definition',expression:definingExpression});
+  }
+  let selected=Math.max(0,variants.findIndex(v=>v.expression===definingExpression)),mounted=false;
+  function mountVariants(){
+    if(mounted||!variants.length)return;
+    mounted=true;
+    const toolbar=make('div'),note=make('p'),source=make('p'),sourceLink=make('a','Definition and derivation source'),kind=make('span');
+    toolbar.className='sl-variant-toolbar';kind.className='sl-variant-kind';
+    note.className='sl-variant-note';source.className='sl-variant-source';
+    sourceLink.rel='noopener noreferrer';source.append(sourceLink);
+    let selector;
+    if(variants.length>1){
+      const field=make('label'),caption=make('span','Formula representation');
+      field.className='sl-variant-field';selector=make('select');selector.className='sl-variant-select';
+      for(const [index,variant] of variants.entries()){
+        const option=make('option',`${index+1}. ${variant.title||'Formula'} · ${variant.kind||'representation'}`);
+        option.value=String(index);selector.append(option);
+      }
+      field.append(caption,selector);toolbar.append(field);
+      selector.value=String(selected);
+      selector.addEventListener('change',()=>{
+        const index=Number(selector.value);
+        if(!Number.isInteger(index)||index<0||index>=variants.length)return;
+        selected=index;
+        // Mutate the original source node so the shared MathJax controller can
+        // replace its existing typeset pair without leaving stale formulas.
+        formula.textContent=variants[index].expression;
+        updateInformation();
+        enhanceMath(detail);
+      });
+    }
+    toolbar.append(kind);
+    detail.insertBefore(toolbar,formula);
+    detail.append(note,source);
+    function updateInformation(){
+      const item=variants[selected];
+      kind.textContent=`${item.kind||'Representation'} · ${selected+1} of ${variants.length}`;
+      name.textContent=item.expression===definingExpression?'Defining formula':'Alternative formula';
+      excerpt.textContent=item.expression.replace(/\s+/g,' ').trim();
+      note.textContent=typeof item.note==='string'?item.note:'';
+      note.hidden=!note.textContent;
+      source.hidden=true;
+      if(typeof item.source==='string'&&item.source.trim()){
+        try{
+          const url=new URL(item.source,location.href);
+          if(['https:','http:'].includes(url.protocol)){
+            sourceLink.href=url.href;source.hidden=false;
+          }
+        }catch{/* Preserve the exact formula without an unsupported source URL. */}
+      }
+    }
+    updateInformation();
+  }
+  detail.addEventListener('toggle',()=>{if(detail.open){mountVariants();enhanceMath(detail);}});
+  if(detail.open)mountVariants();
   return detail;
 }
 
@@ -119,7 +178,7 @@ function render(){
     }
     const li=make('li'),label=make('p',entry.id+' / '+(collectionLabels[entry.collection]||'Sequence library'));label.className='sar-kicker';const heading=make('h3'),link=make('a',entry.title),overview=make('div');overview.className='sl-result-main';link.href=entry.url;heading.append(link);overview.append(label,heading,make('p',entry.kind+' · '+entry.formulas.length+' representation'+(entry.formulas.length===1?'':'s')+' · first index '+entry.offset));li.append(overview);
     li.dataset.resultId=entry.id;if(entry.triangle){const tableNote=make('p',`${entry.triangle.row_lengths.length} complete rows · row/column inspection · ${entry.terms.length} exact coefficients`);tableNote.className='sl-match-reason';overview.append(tableNote);}
-    const expression=make('p',entry.formula);expression.className='sar-formula';li.append(definitionPreview(expression,entry.title,expandFormulas));
+    const expression=make('p',entry.formula);expression.className='sar-formula';li.append(definitionPreview(expression,entry.title,expandFormulas,entry.formulas));
     const start=hit.termMatch?Math.max(0,hit.termMatch.start-(hit.termMatch.length<8?1:0)):0,count=Math.min(Math.max(6,hit.termMatch?.length||0),8),values=entry.terms.slice(start,start+count),symbol=entry.index_symbol||'n';
     const excerpt=make('div'),caption=make('p',`${symbol} = ${entry.offset+start}–${entry.offset+start+values.length-1} · exact stored terms`),terms=make('div');excerpt.className='sl-term-preview';caption.className='sl-term-caption';terms.className='sl-term-values';terms.tabIndex=0;terms.setAttribute('role','region');terms.setAttribute('aria-label',`Exact term preview for ${entry.id}`);
     values.forEach((value,i)=>{if(i)terms.append(document.createTextNode(', '));const relative=start+i-(hit.termMatch?.start??-1),matched=hit.termMatch&&relative>=0&&relative<hit.termMatch.length&&hit.termMatch.pattern[relative]!==null;const item=make(matched?'mark':'span',value);item.title=`${symbol}=${entry.offset+start+i}`;terms.append(item);});excerpt.append(caption,terms);li.append(excerpt);

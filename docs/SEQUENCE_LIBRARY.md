@@ -18,8 +18,15 @@ the library, with the archive collection filter applied.
 Search results show the review status, collection, exact term preview at
 its recorded offset, highlighted term matches, and a compact source-formula
 excerpt. The complete defining expression remains in an expandable disclosure,
-with exact source text preserved. Closed result definitions are not typeset by
-MathJax until opened, avoiding work on off-screen formulas.
+with exact source text preserved. Opening a result with multiple recorded formulas
+reveals one native representation selector. The selected variant displays its
+recorded formula type, exact expression, explanatory note when supplied, and
+linked derivation source. Selecting another variant changes only the visible
+formula, not the stored terms, definition, indexes, or CSV/JSON exports.
+The main defining formula stays in the selector even if a source lists only
+alternative representations. Variant controls mount only when the definition
+is opened, and closed definitions are not typeset by MathJax, avoiding work
+on off-screen formulas.
 
 For integer records, Plot, Save, and Compare remain visible. A More actions
 disclosure holds the defining-formula page, transfer action where applicable,
