@@ -32,7 +32,86 @@ if(root){
   addEventListener('hashchange',revealLibraryTarget);
   revealLibraryTarget();
 }
-function definitionPreview(formula,label,expanded,recordedVariants=[]){
+
+/** Render stored integer strings without numeric conversion or invented source-degree maps. */
+function inlineExactValues(entry,initialPosition=0){
+  const values=entry.terms;
+  if(!Array.isArray(values)||!values.length)return null;
+  const panel=make('details'),summary=make('summary',`Inspect exact values (${values.length})`);
+  panel.className='sl-term-inspector';panel.append(summary);
+  const symbol=entry.index_symbol||'n',offset=Number.isSafeInteger(entry.offset)?entry.offset:0;
+  const triangle=entry.triangle;
+  const hasCoordinates=Array.isArray(triangle?.row_offsets)&&Array.isArray(triangle?.row_lengths);
+  const rationals=Array.isArray(entry.rational_terms)&&entry.rational_terms.length===values.length;
+  const size=8;
+  let first=Math.max(0,Math.min(values.length-1,Math.floor(initialPosition/size)*size)),mounted=false;
+  function init(){
+    if(mounted)return;
+    mounted=true;
+    const container=make('div'),controls=make('form'),previous=make('button','Previous 8'),next=make('button','Next 8');
+    const jumpLabel=make('label',`Go to stored ${symbol}`),jump=make('input'),go=make('button','Go');
+    container.className='sl-term-inspector-body';controls.className='sl-term-controls';
+    previous.type=next.type='button';go.type='submit';
+    jump.type='number';jump.min=String(offset);jump.max=String(offset+values.length-1);jump.step='1';
+    jump.inputMode='numeric';jumpLabel.append(jump);
+    controls.append(previous,next,jumpLabel,go);
+    const status=make('p'),frame=make('div'),table=make('table'),head=make('thead'),header=make('tr'),body=make('tbody');
+    status.className='sl-term-status';status.setAttribute('role','status');status.setAttribute('aria-live','polite');
+    frame.className='sl-term-scroll';frame.tabIndex=0;frame.setAttribute('role','region');
+    frame.setAttribute('aria-label',`Exact indexed values for ${entry.id}`);
+    const columns=[symbol,...(hasCoordinates?['Row n','Column k']:[]),'Exact stored value',...(rationals?['Original rational value']:[])];
+    for(const col of columns){const th=make('th',col);th.scope='col';header.append(th);}
+    head.append(header);table.append(head,body);frame.append(table);
+    const detail=make('p',hasCoordinates?
+      'The first column is the flat stored index. Row and column coordinates are shown separately.':
+      'Indices are the stored sequence indices, which may differ from source Taylor degrees.');
+    detail.className='sl-term-index-note';
+    container.append(controls,status,frame,detail);panel.append(container);
+    function renderWindow(){
+      const end=Math.min(values.length,first+size);
+      status.textContent=`Stored ${symbol}=${offset+first}–${offset+end-1} · ${end-first} of ${values.length} exact values`;
+      jump.value=String(offset+first);
+      previous.disabled=first===0;next.disabled=end>=values.length;
+      body.replaceChildren();
+      for(let i=first;i<end;i++){
+        const index=offset+i,row=make('tr'),cells=[String(index)];
+        if(hasCoordinates){
+          let n=-1;
+          for(let j=0;j<triangle.row_offsets.length;j++){
+            if(index>=triangle.row_offsets[j]&&index<triangle.row_offsets[j]+triangle.row_lengths[j]){n=j;break;}
+          }
+          cells.push(n<0?'Not recorded':String(n),n<0?'Not recorded':String(index-triangle.row_offsets[n]));
+        }
+        cells.push(String(values[i]));
+        if(rationals)cells.push(String(entry.rational_terms[i]));
+        for(let j=0;j<cells.length;j++){
+          const cell=make(j===0?'th':'td',cells[j]);
+          if(j===0)cell.scope='row';
+          row.append(cell);
+        }
+        body.append(row);
+      }
+    }
+    previous.addEventListener('click',()=>{first=Math.max(0,first-size);renderWindow();});
+    next.addEventListener('click',()=>{first=Math.min(values.length-1,first+size);renderWindow();});
+    controls.addEventListener('submit',event=>{
+      event.preventDefault();
+      const index=Number(jump.value);
+      if(!Number.isSafeInteger(index)||index<offset||index>=offset+values.length){
+        jump.setCustomValidity(`Enter a stored index from ${offset} to ${offset+values.length-1}.`);
+        jump.reportValidity();return;
+      }
+      jump.setCustomValidity('');
+      first=Math.floor((index-offset)/size)*size;renderWindow();
+    });
+    jump.addEventListener('input',()=>jump.setCustomValidity(''));
+    renderWindow();
+  }
+  panel.addEventListener('toggle',()=>{if(panel.open)init();});
+  return panel;
+}
+
+function definitionPreview(formula,label,expanded,recordedVariants=[],entry=null,initialPosition=0){
   const definingExpression=formula.textContent;
   const detail=make('details'),summary=make('summary'),name=make('span','Defining formula'),excerpt=make('span',definingExpression.replace(/\s+/g,' ').trim());
   name.className='sl-definition-label';excerpt.className='sl-definition-excerpt';
@@ -78,12 +157,39 @@ function definitionPreview(formula,label,expanded,recordedVariants=[]){
     }
     toolbar.append(kind);
     detail.insertBefore(toolbar,formula);
+    const layout=make('div');layout.className='sl-formula-inspection-layout';
+    detail.insertBefore(layout,formula);layout.append(formula);
+    if(entry){
+      const inspector=inlineExactValues(entry,initialPosition);
+      if(inspector){
+        layout.append(inspector);
+        inspector.addEventListener('toggle',()=>{layout.dataset.exactOpen=String(inspector.open);});
+      }
+    }
     detail.append(note,source);
+    const raw=make('details'),rawSummary=make('summary','View original formula text'),pre=make('pre'),copy=make('button','Copy exact formula'),copyStatus=make('span');
+    raw.className='sl-formula-raw';pre.className='sl-formula-source-text';pre.tabIndex=0;
+    pre.setAttribute('role','region');pre.setAttribute('aria-label','Original exact formula text');
+    copy.type='button';copyStatus.className='sl-source-copy-status';
+    copyStatus.setAttribute('role','status');copyStatus.setAttribute('aria-live','polite');
+    raw.append(rawSummary,pre,copy,copyStatus);detail.append(raw);
+    copy.addEventListener('click',async()=>{
+      const content=variants[selected].expression;
+      try{
+        if(!navigator.clipboard?.writeText)throw Error('Clipboard unavailable');
+        await navigator.clipboard.writeText(content);
+        copyStatus.textContent='Exact formula copied.';
+      }catch{
+        copyStatus.textContent='Clipboard unavailable. Select and copy the source text above.';
+        raw.open=true;pre.focus();
+      }
+    });
     function updateInformation(){
       const item=variants[selected];
       kind.textContent=`${item.kind||'Representation'} · ${selected+1} of ${variants.length}`;
       name.textContent=item.expression===definingExpression?'Defining formula':'Alternative formula';
       excerpt.textContent=item.expression.replace(/\s+/g,' ').trim();
+      pre.textContent=item.expression;copyStatus.textContent='';
       note.textContent=typeof item.note==='string'?item.note:'';
       note.hidden=!note.textContent;
       source.hidden=true;
@@ -178,7 +284,7 @@ function render(){
     }
     const li=make('li'),label=make('p',entry.id+' / '+(collectionLabels[entry.collection]||'Sequence library'));label.className='sar-kicker';const heading=make('h3'),link=make('a',entry.title),overview=make('div');overview.className='sl-result-main';link.href=entry.url;heading.append(link);overview.append(label,heading,make('p',entry.kind+' · '+entry.formulas.length+' representation'+(entry.formulas.length===1?'':'s')+' · first index '+entry.offset));li.append(overview);
     li.dataset.resultId=entry.id;if(entry.triangle){const tableNote=make('p',`${entry.triangle.row_lengths.length} complete rows · row/column inspection · ${entry.terms.length} exact coefficients`);tableNote.className='sl-match-reason';overview.append(tableNote);}
-    const expression=make('p',entry.formula);expression.className='sar-formula';li.append(definitionPreview(expression,entry.title,expandFormulas,entry.formulas));
+    const expression=make('p',entry.formula);expression.className='sar-formula';li.append(definitionPreview(expression,entry.title,expandFormulas,entry.formulas,entry,hit.termMatch?.start||0));
     const start=hit.termMatch?Math.max(0,hit.termMatch.start-(hit.termMatch.length<8?1:0)):0,count=Math.min(Math.max(6,hit.termMatch?.length||0),8),values=entry.terms.slice(start,start+count),symbol=entry.index_symbol||'n';
     const excerpt=make('div'),caption=make('p',`${symbol} = ${entry.offset+start}–${entry.offset+start+values.length-1} · exact stored terms`),terms=make('div');excerpt.className='sl-term-preview';caption.className='sl-term-caption';terms.className='sl-term-values';terms.tabIndex=0;terms.setAttribute('role','region');terms.setAttribute('aria-label',`Exact term preview for ${entry.id}`);
     values.forEach((value,i)=>{if(i)terms.append(document.createTextNode(', '));const relative=start+i-(hit.termMatch?.start??-1),matched=hit.termMatch&&relative>=0&&relative<hit.termMatch.length&&hit.termMatch.pattern[relative]!==null;const item=make(matched?'mark':'span',value);item.title=`${symbol}=${entry.offset+start+i}`;terms.append(item);});excerpt.append(caption,terms);li.append(excerpt);
