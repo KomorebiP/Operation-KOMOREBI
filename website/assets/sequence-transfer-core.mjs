@@ -28,6 +28,35 @@ export function transferMatrix(result,inverse=false,size=8){
   const count=Math.min(size,result.count);return Array.from({length:count},(_,n)=>Array.from({length:count},(_,j)=>j>n?'0':result.rows[n-j][inverse?'inverse':'kernel']));
 }
 
+/** Independently evaluate one entry of a finite Toeplitz matrix product over Q.
+ * The displayed matrix dimension is bounded by eight, while the transfer
+ * certificate may contain up to 48 stored coefficients.
+ */
+export function transferProductEntry(result,row,column,order='HK',size=Math.min(8,result?.count||0)){
+  if(!result||!Array.isArray(result.rows)||!Number.isSafeInteger(size)||size<1||size>8||size>result.count||
+     !Number.isSafeInteger(row)||!Number.isSafeInteger(column)||row<0||column<0||row>=size||column>=size||
+     !['HK','KH'].includes(order)){
+    throw Error('Choose a valid matrix product, row and column within the displayed block.');
+  }
+  const parse=value=>{
+    if(typeof value!=='string'||!/^[-]?\d+(?:\/\d+)?$/.test(value)||value.length>10000){
+      throw Error('The matrix product requires exact rational coefficients.');
+    }
+    const [a,b='1']=value.split('/');
+    return q(a,b);
+  };
+  const leftKey=order==='HK'?'kernel':'inverse',rightKey=order==='HK'?'inverse':'kernel';
+  const terms=[];let total=q(0);
+  for(let ell=column;ell<=row;ell++){
+    const left=result.rows[row-ell]?.[leftKey],right=result.rows[ell-column]?.[rightKey];
+    const product=mul(parse(left),parse(right));
+    total=add(total,product);
+    terms.push({ell,left,right,product:exact(product)});
+  }
+  const expected=row===column?'1':'0',value=exact(total);
+  return {row,column,order,size,terms,value,expected,verified:value===expected};
+}
+
 export function transferCSV(result){
   const columns=['source_id','target_id','source_zero_prefix','target_zero_prefix','window_position_shift','original_index_shift','coefficient_domain','tail_position','source_index','target_index','source_integer','target_integer','kernel_h','inverse_k','forward_exact','recovered_exact','residual','kernel_product'];
   const rows=result.rows.map(row=>[result.sourceId,result.targetId,result.sourceAnchor.position,result.targetAnchor.position,result.positionShift,result.indexShift,'Q',row.j,row.sourceIndex,row.targetIndex,row.source,row.target,row.kernel,row.inverse,row.forward,row.recovered,row.residual,row.identity]);
