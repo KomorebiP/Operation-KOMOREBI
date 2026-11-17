@@ -57,13 +57,18 @@ function legacyDestination(){
   const params=new URL(location.href).searchParams;
   const combinedFamily=hash==='family-explorer'&&['q','scope','mode','paper','collection'].some(key=>params.has(key));
   const researchHashTarget={'research-graph':'sequence-connections.html',identify:'sequence-identify.html','modular-dynamics':'sequence-modular.html','research-notebooks':'sequence-workspace.html'};
-  const target=onResearch?(researchHashTarget[hash]||null):
+  const target=onResearch?(researchHashTarget[hash]||(params.has('graph')?'sequence-connections.html':params.has('identify')?'sequence-identify.html':params.has('modular')?'sequence-modular.html':null)):
     combinedFamily?'sequence-workspace.html':
     (routes[hash]||(params.has('wb')?'sequence-compare.html':params.has('tr-source')?'sequence-transfers.html':params.has('graph')?'sequence-connections.html':params.has('identify')?'sequence-identify.html':params.has('modular')?'sequence-modular.html':params.has('notebook')?'sequence-workspace.html':null));
   if(!target)return null;
   const url=new URL(target,location.href);
-  url.search=location.search;url.hash=location.hash||
-    (target==='sequence-compare.html'?'#comparison':target==='sequence-transfers.html'?'#transfers':target==='sequence-oeis.html'?'#oeis':'#research-families');
+  const defaultHash={
+    'sequence-compare.html':'#comparison','sequence-transfers.html':'#transfers',
+    'sequence-oeis.html':'#oeis','sequence-connections.html':'#research-graph',
+    'sequence-identify.html':'#identify','sequence-modular.html':'#modular-dynamics',
+    'sequence-workspace.html':'#research-notebooks','sequence-research.html':'#research-families'
+  };
+  url.search=location.search;url.hash=location.hash||defaultHash[target]||'#research-families';
   return url.href;
 }
 const legacyRoute=legacyDestination();
