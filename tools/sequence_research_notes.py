@@ -14,9 +14,40 @@ def research_connections():
     from sequence_atlas import catalogue
     from sequence_library import library_entries
     entries=library_entries(catalogue());lookup={item['id']:item for item in entries};edges=[]
+    def equation_for(kind, target):
+        """Return a source-preserving display equation only for recognized relation kinds."""
+        record=lookup[target]
+        if kind=='subsequence':
+            n,j=record['N'],record['j']
+            return f'b(n)=a({n}n+{j})', rf'b(n)=a({n}n+{j})'
+        if kind=='seed shift':
+            order=record['recurrence_order']
+            return f'b(n)=T(n+{order-1};{order})', rf'b(n)=T(n+{order-1};{order})'
+        if kind=='coefficient extraction':
+            k=record['k']
+            if target.startswith('KFOR-P-'):
+                n=record['N']
+                return f'b(n)=[r^{k}] P_({n},n)(r)', rf'b(n)=[r^{{{k}}}]P_{{{n},n}}(r)'
+            if target.startswith('KFOR-HC-'):
+                return f'b(n)=[x^{k}] Theta_(2n)(x)', rf'b(n)=[x^{{{k}}}]\Theta_{{2n}}(x)'
+            if target.startswith('KFOR-AC-'):
+                n=record['N']
+                return f'b(n)=[x^{k}] E_({n}n+{k})(x)', rf'b(n)=[x^{{{k}}}]E_{{{n}n+{k}}}(x)'
+        if kind=='polynomial evaluation':
+            x=record['x']
+            return f'b(n)=Theta_(2n)({x})', rf'b(n)=\Theta_{{2n}}({x})'
+        if kind=='inverse matrices':
+            return 'K_N * L_N = I', r'(K_N L_N)_{n,k}=\sum_{\ell=k}^{n}(K_N)_{n,\ell}(L_N)_{\ell,k}=\delta_{n,k}'
+        if kind=='ordinary convolution':
+            return 'H(z)*A(z)=sum_(n>=0) F(n+1)z^n; H(z)=1/((1-z-z^2)A(z))', r'\begin{aligned}H(z)A(z)&=\sum_{n\ge0}F(n+1)z^n\\H(z)&=\frac{1}{(1-z-z^2)A(z)}\end{aligned}'
+        return None, None
+
     def add(source,target,kind,statement,source_url,rows=(),reversible=False):
         if source not in lookup or target not in lookup:raise ValueError('A research connection has a missing endpoint')
-        edges.append(dict(key=source+'-'+kind.replace(' ','-')+'-'+target,source=source,target=target,kind=kind,statement=statement,source_url=source_url,reversible=reversible,checked_overlaps=len(rows),rows=list(rows)))
+        plain,tex=equation_for(kind,target)
+        edge=dict(key=source+'-'+kind.replace(' ','-')+'-'+target,source=source,target=target,kind=kind,statement=statement,source_url=source_url,reversible=reversible,checked_overlaps=len(rows),rows=list(rows))
+        if tex:edge.update(math_plain=plain,math_tex=tex)
+        edges.append(edge)
     for target in entries:
         parent=lookup.get(target.get('parent'))
         if parent and target['kind']=='classical multisection':
@@ -72,7 +103,7 @@ def entry_details(entry):
     cards=[]
     for edge in related[:12]:
         other=edge['target'] if entry['id']==edge['source'] else edge['source'];direction='To ' if entry['id']==edge['source'] else 'From '
-        cards.append('<li><a href="../'+e(pairs['urls'][other])+'">'+direction+e(other)+'</a> · '+e(edge['kind'])+'<p>'+e(edge['statement'])+'</p><p><a href="'+e(edge['source_url'])+'">Definition and derivation</a>'+(' · '+str(edge['checked_overlaps'])+' stored overlaps checked' if edge['checked_overlaps'] else '')+'</p></li>')
+        cards.append('<li><a href="../'+e(pairs['urls'][other])+'">'+direction+e(other)+'</a> · '+e(edge['kind'])+(('<p class="sar-formula sr-connection-equation" data-math-latex="'+e(edge['math_tex'],quote=True)+'">'+e(edge['math_plain'])+'</p>') if edge.get('math_tex') else '')+'<p>'+e(edge['statement'])+'</p><p><a href="'+e(edge['source_url'])+'">Definition and derivation</a>'+(' · '+str(edge['checked_overlaps'])+' stored overlaps checked' if edge['checked_overlaps'] else '')+'</p></li>')
     connection='<details><summary>Research connections ('+str(len(related))+')</summary>'+('<ol>'+''.join(cards)+'</ol>' if cards else '<p>A finite ordinary convolution transfer to another scalar record can be constructed in the transfer tool.</p>')
     if len(related)>12:connection+='<p><a href="../sequence-library.html?'+e(urlencode({'q':' | '.join('id:'+identifier for identifier in neighbors)}))+'#library-search">Browse all connected records</a></p>'
     connection+='<p>Each connection retains its map type and direction. Reversibility is stated only where supported.</p></details>'
