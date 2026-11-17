@@ -51,6 +51,8 @@ async function visit(page,name,kind){
       assert.equal(await page.locator('#sl-results .sl-result-definition:not([open])').count(),24);
       assert.equal(await page.locator('#sl-results .sl-definition-excerpt').count(),24,
         'Each record needs a visible compact source formula preview');
+      assert.equal(await page.locator('#sl-results .sl-variant-toolbar').count(),0,
+        'Formula selectors are mounted only after a definition is opened');
       assert.ok((await page.locator('#sl-results .sl-definition-excerpt').first().textContent()).trim().length>0);
       assert.equal(await page.locator('#sl-results .sl-result-more:not([open])').count(),24,
         'Secondary actions stay collapsed on a broad search');
@@ -68,6 +70,37 @@ async function visit(page,name,kind){
         const plain=detail?.querySelector('.sar-formula'),typeset=detail?.querySelector('[data-math-tex]');
         return Boolean(plain?.getClientRects().length||typeset?.getClientRects().length);
       },{timeout:30000});
+      await fit(page);
+      await page.goto(href('sequence-library.html?q=id%3AKFOR-P-03-02#library-search'));
+      await ready(page);
+      assert.equal(await page.locator('#sl-results>li').count(),1);
+      const recorded=await page.evaluate(async()=>{
+        const response=await fetch(new URL('assets/sequence-library-data.json',location.href));
+        if(!response.ok)throw Error('Could not read exact formula fixture');
+        const data=await response.json();
+        return data.entries.find(item=>item.id==='KFOR-P-03-02');
+      });
+      assert.equal(recorded.formulas.length,4);
+      const definition=page.locator('#sl-results .sl-result-definition').first();
+      const picker=definition.getByLabel('Formula representation');
+      assert.equal(await picker.locator('option').count(),4);
+      assert.equal(await picker.inputValue(),'0');
+      assert.equal(await definition.locator('p.sar-formula').first().textContent(),recorded.formula);
+      await picker.selectOption('1');
+      assert.equal(await definition.locator('p.sar-formula').first().textContent(),recorded.formulas[1].expression);
+      assert.equal(await definition.locator('.sl-definition-excerpt').textContent(),
+        recorded.formulas[1].expression.replace(/\\s+/g,' ').trim());
+      assert.match(await definition.locator('.sl-variant-kind').textContent(),/finite sum · 2 of 4/);
+      assert.equal((await definition.locator('.sl-variant-note').textContent()).trim(),recorded.formulas[1].note);
+      assert.equal(await definition.locator('.sl-variant-source a').getAttribute('href'),recorded.formulas[1].source);
+      await page.selectOption('#site-math-display','plain');
+      assert.equal(await definition.locator('[data-math-plain]').first().isVisible(),true);
+      await picker.selectOption('3');
+      assert.equal(await definition.locator('p.sar-formula').first().textContent(),recorded.formulas[3].expression);
+      assert.match(await definition.locator('.sl-variant-kind').textContent(),/hypergeometric · 4 of 4/);
+      await picker.selectOption('0');
+      assert.equal(await definition.locator('p.sar-formula').first().textContent(),recorded.formula);
+      await page.selectOption('#site-math-display','typeset');
       await fit(page);
       await page.goto(href('sequence-library.html?q=id%3AKSEQ-000025#library-search'));
       await ready(page);
