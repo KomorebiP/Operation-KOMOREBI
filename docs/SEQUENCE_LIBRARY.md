@@ -47,7 +47,17 @@ beside the selected formula. Phone layouts stack them without page-wide overflow
 **View original formula text** provides a wrapped, selectable copy of the exact
 formula source and a copy control. It changes when the selected representation
 changes, without changing the mathematical data, source definitions or exports.
-The inspector table is built only when opened.
+The inspector table is built only when opened. The **Copy inspection link**
+control creates a focused, self-contained Search URL with the record ID,
+selected representation, and first stored index of the current eight-value
+window. On opening that URL, the intended formula and indexed table expand
+automatically. The URL carries no coefficients or private browser storage.
+Invalid, duplicate, stale, or out-of-range view parameters are ignored rather
+than selecting a different formula or a fabricated window. A selectable link
+is shown when clipboard access is unavailable. The separate **Copy search
+link** control continues to share filters and pagination, not the inspection
+state. Shared views preserve local indices and do not imply a source-degree
+identity or mathematical novelty.
 
 For integer records, Plot, Save, and Compare remain visible. A More actions
 disclosure holds the defining-formula page, transfer action where applicable,
