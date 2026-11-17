@@ -27,6 +27,21 @@ async function fit(page){
       await page.locator('[data-library-ready=true]').waitFor({timeout:90000});
       assert.equal(await page.locator('.sl-primary-nav a').count(),3);
       assert.equal(await page.locator('#sl-results>li').count(),24);
+      assert.equal(await page.locator('#sl-results').getAttribute('data-layout'),'compact');
+      assert.equal(await page.locator('#sl-result-layout').isVisible(),true);
+      assert.equal(await page.locator('#sl-result-layout [data-layout=compact]').getAttribute('aria-pressed'),'true');
+      assert.equal(await page.locator('#sl-results>li .sl-result-main').count(),24);
+      assert.equal(await page.locator('#sl-results>li .sl-term-preview').count(),24);
+      const compactHeight=await page.locator('#sl-results>li').first().evaluate(el=>el.getBoundingClientRect().height);
+      assert.ok(compactHeight>0&&compactHeight<600,'Compact result has unexpected height: '+compactHeight);
+      await page.locator('#sl-result-layout [data-layout=cards]').focus();
+      await page.keyboard.press('Enter');
+      assert.equal(await page.locator('#sl-results').getAttribute('data-layout'),'cards');
+      assert.equal(await page.locator('#sl-result-layout [data-layout=cards]').getAttribute('aria-pressed'),'true');
+      await page.reload();await page.locator('[data-library-ready=true]').waitFor({timeout:90000});
+      assert.equal(await page.locator('#sl-results').getAttribute('data-layout'),'cards');
+      await page.locator('#sl-result-layout [data-layout=compact]').click();
+      assert.equal(await page.locator('#sl-results').getAttribute('data-layout'),'compact');
       assert.equal(await page.locator('#sl-results .sl-result-definition:not([open])').count(),24);
       assert.equal(await page.locator('#sl-extra-tools').evaluate(el=>el.open),false);
       assert.equal(await page.locator('#sl-extra-tools #research-families').count(),1);
@@ -48,6 +63,7 @@ async function fit(page){
       await page.locator('[data-library-ready=true]').waitFor({timeout:90000});
       assert.equal(await page.locator('#sl-results>li').count(),1);
       assert.equal(await page.locator('#sl-results .sl-result-definition').first().evaluate(el=>el.open),true);
+      assert.match(await page.locator('#sl-results .sl-result-definition summary').first().getAttribute('aria-label'),/Defining formula for/);
       await page.locator('#sl-results .math-pair[data-math-pair-ready=true]').first().waitFor({timeout:30000});
       assert.equal(await page.locator('#sl-results [data-math-tex]').first().isVisible(),true);
       await fit(page);
@@ -85,7 +101,7 @@ async function fit(page){
       const tableHeight=await page.locator('#tr-result>.sar-scroll').evaluate(el=>el.getBoundingClientRect().height);
       assert.ok(tableHeight<=320,'Exact data section too tall: '+tableHeight);
       await fit(page);
-      report.widths.push({width,compactResults:true,deepLinks:true,accessibleDisclosures:true,transferShortcuts:true,noOverflow:true});
+      report.widths.push({width,compactResults:true,layoutToggle:true,keyboardLayoutControl:true,layoutPersistence:true,deepLinks:true,accessibleDisclosures:true,transferShortcuts:true,noOverflow:true});
       await page.screenshot({path:path.join(output,'transfer-compact-'+width+'.png')});
       await context.close();
     }
@@ -93,6 +109,7 @@ async function fit(page){
     const page=await context.newPage();
     await page.goto(url('sequence-library.html'));
     assert.equal(await page.locator('.sl-primary-nav a').count(),3);
+    assert.equal(await page.locator('#sl-result-layout').isVisible(),false);
     assert.equal(await page.locator('#sl-extra-tools').evaluate(el=>el.open),false);
     assert.equal(await page.locator('#tr-form').count(),0);
     assert.equal(await page.locator('.sr-transfer-example').count(),1);

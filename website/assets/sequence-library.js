@@ -31,7 +31,8 @@ if(root){
   revealLibraryTarget();
 }
 function definitionPreview(formula,label,expanded){
-  const detail=make('details'),summary=make('summary',label);
+  const detail=make('details'),summary=make('summary','Defining formula');
+  summary.setAttribute('aria-label','Defining formula for '+label);
   detail.className='sl-result-definition';detail.open=expanded;
   detail.append(summary,formula);
   detail.addEventListener('toggle',()=>{if(detail.open)enhanceMath(detail);});
@@ -41,6 +42,14 @@ function definitionPreview(formula,label,expanded){
 const collectionLabels={atlas:'Curated sequences',recovered:'Research archive',formulas:'Formula families'};
 const keys=SEARCH_KEYS;
 let results=[],page=0,applied={},workbench,transfers,toggleSaved,saved=new Set();
+const RESULT_LAYOUT_KEY='komorebi.sequence-library-result-layout.v1';
+function setResultLayout(layout,remember=false){
+  const normalized=layout==='cards'?'cards':'compact',buttons=root.querySelectorAll('#sl-result-layout [data-layout]');
+  $('results').dataset.layout=normalized;
+  for(const button of buttons)button.setAttribute('aria-pressed',String(button.dataset.layout===normalized));
+  if(remember){try{localStorage.setItem(RESULT_LAYOUT_KEY,normalized);}catch{/* The choice still applies to this page. */}}
+}
+
 function save(content,type,name){const url=URL.createObjectURL(new Blob([content],{type})),link=make('a');link.href=url;link.download=name;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 function share(){const url=new URL(location.href);url.search='';for(const [key,value]of Object.entries(applied))if(value&&value!=='any'&&value!=='relevance')url.searchParams.set(key,value);if(page)url.searchParams.set('page',String(page+1));url.hash='library-search';return url.href;}
 function render(){
@@ -56,17 +65,18 @@ function render(){
       const explore=make('a',entry.engine?'Explore parameters':entry.examples?.length?'Read construction and examples':'Read definition and source');explore.href=entry.url+(entry.engine?'#family-explorer':'#definition');
       const source=make('a','Defining source');source.href=entry.source;actions.append(explore,source);
       if(entry.record_ids.length){const members=make('a','Search '+entry.record_ids.length+' integer record'+(entry.record_ids.length===1?'':'s'));members.href='sequence-library.html?q='+encodeURIComponent('family:'+entry.id)+'#library-search';actions.append(members);}
-      li.append(identifier,heading,mode,sourceNote,definitionPreview(formula,'Defining formula',expandFormulas),domain,make('p',entry.note),actions);$('results').append(li);continue;
+      const overview=make('div');overview.className='sl-result-main';overview.append(identifier,heading,mode,sourceNote,domain,make('p',entry.note));
+      li.append(overview,definitionPreview(formula,entry.title,expandFormulas),actions);$('results').append(li);continue;
     }
-    const li=make('li'),label=make('p',entry.id+' / '+(collectionLabels[entry.collection]||'Sequence library'));label.className='sar-kicker';const heading=make('h3'),link=make('a',entry.title);link.href=entry.url;heading.append(link);li.append(label,heading,make('p',entry.kind+' · '+entry.formulas.length+' representation'+(entry.formulas.length===1?'':'s')+' · first index '+entry.offset));
-    li.dataset.resultId=entry.id;if(entry.triangle){const tableNote=make('p',`${entry.triangle.row_lengths.length} complete rows · row/column inspection · ${entry.terms.length} exact coefficients`);tableNote.className='sl-match-reason';li.append(tableNote);}
-    const expression=make('p',entry.formula);expression.className='sar-formula';li.append(definitionPreview(expression,'Defining formula',expandFormulas));
+    const li=make('li'),label=make('p',entry.id+' / '+(collectionLabels[entry.collection]||'Sequence library'));label.className='sar-kicker';const heading=make('h3'),link=make('a',entry.title),overview=make('div');overview.className='sl-result-main';link.href=entry.url;heading.append(link);overview.append(label,heading,make('p',entry.kind+' · '+entry.formulas.length+' representation'+(entry.formulas.length===1?'':'s')+' · first index '+entry.offset));li.append(overview);
+    li.dataset.resultId=entry.id;if(entry.triangle){const tableNote=make('p',`${entry.triangle.row_lengths.length} complete rows · row/column inspection · ${entry.terms.length} exact coefficients`);tableNote.className='sl-match-reason';overview.append(tableNote);}
+    const expression=make('p',entry.formula);expression.className='sar-formula';li.append(definitionPreview(expression,entry.title,expandFormulas));
     const start=hit.termMatch?Math.max(0,hit.termMatch.start-(hit.termMatch.length<8?1:0)):0,count=Math.min(Math.max(6,hit.termMatch?.length||0),8),values=entry.terms.slice(start,start+count),symbol=entry.index_symbol||'n';
     const excerpt=make('div'),caption=make('p',`${symbol} = ${entry.offset+start}–${entry.offset+start+values.length-1} · exact stored terms`),terms=make('div');excerpt.className='sl-term-preview';caption.className='sl-term-caption';terms.className='sl-term-values';terms.tabIndex=0;terms.setAttribute('role','region');terms.setAttribute('aria-label',`Exact term preview for ${entry.id}`);
     values.forEach((value,i)=>{if(i)terms.append(document.createTextNode(', '));const relative=start+i-(hit.termMatch?.start??-1),matched=hit.termMatch&&relative>=0&&relative<hit.termMatch.length&&hit.termMatch.pattern[relative]!==null;const item=make(matched?'mark':'span',value);item.title=`${symbol}=${entry.offset+start+i}`;terms.append(item);});excerpt.append(caption,terms);li.append(excerpt);
-    if(hit.termMatch){const reason=make('p',hit.reason);reason.className='sl-match-reason';li.append(reason);}
-    const review=make('p',entry.status);review.className='sl-result-status';li.append(review);
-    if(entry.tags.includes('hypergeometric')){const badge=make('span','Hypergeometric representation');badge.className='sl-result-badge';li.append(badge);}
+    if(hit.termMatch){const reason=make('p',hit.reason);reason.className='sl-match-reason';overview.append(reason);}
+    const review=make('p',entry.status);review.className='sl-result-status';overview.append(review);
+    if(entry.tags.includes('hypergeometric')){const badge=make('span','Hypergeometric representation');badge.className='sl-result-badge';overview.append(badge);}
     const links=make('div'),plot=make('a','Plot and inspect'),formulas=make('a','Read formulas'),bookmark=make('button'),compare=make('button','Add to comparison');links.className='sp-actions';plot.href=entry.url+(entry.collection==='atlas'?'#analysis':'#plot');formulas.href=entry.url+(entry.collection==='recovered'?'#definition':'#formulas');bookmark.type=compare.type='button';bookmark.dataset.saveSequence=entry.id;bookmark.addEventListener('click',()=>toggleSaved(entry.id));compare.setAttribute('aria-label','Add '+entry.id+' to comparison');compare.addEventListener('click',()=>workbench.addLocal(entry));links.append(plot,formulas,bookmark,compare);li.append(links);
     if(transfers&&!entry.triangle&&entry.id!=='KOM084'){const transfer=make('button','Build a transfer');transfer.type='button';transfer.addEventListener('click',()=>transfers.source(entry));links.append(transfer);}
     const comparisons=make('details'),summary=make('summary',`OEIS comparisons (${entry.match_count.toLocaleString()} ${entry.match_count===1?'match':'matches'})`);comparisons.className='sl-matches';comparisons.append(summary);
@@ -114,6 +124,15 @@ function setupSearch(entries,families,sources=[]){
   $('generalized').addEventListener('click',()=>{reset('families');run(true);$('count').scrollIntoView({block:'start'});});
   for(const button of root.querySelectorAll('[data-collection]'))button.addEventListener('click',()=>{$('collection').value=button.dataset.collection;run(true);});
   window.addEventListener('storage',event=>{if(event.key===STORAGE_KEY||event.key===null){saved=new Set(readSaved(storage,allowed).ids);run();}});
+  const layoutControls=$('result-layout');
+  if(layoutControls){
+    let selected='compact';try{selected=localStorage.getItem(RESULT_LAYOUT_KEY)==='cards'?'cards':'compact';}catch{}
+    setResultLayout(selected);
+    for(const button of layoutControls.querySelectorAll('[data-layout]'))button.addEventListener('click',()=>{
+      setResultLayout(button.dataset.layout,true);
+    });
+    layoutControls.hidden=false;
+  }
   $('search').hidden=false;$('search').addEventListener('submit',event=>{event.preventDefault();run(true);});
   function clear(){reset();run(true);$('query').focus();}
   $('clear').addEventListener('click',clear);$('reset').addEventListener('click',clear);

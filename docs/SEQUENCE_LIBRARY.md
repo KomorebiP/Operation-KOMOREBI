@@ -428,6 +428,29 @@ sequence identity, or a discovery of a historically new sequence relation.
 The no-JavaScript reading includes the definition and scope, but cannot compute
 new three-sequence certificates.
 
+## Compact result rows and accessible layout choice
+
+Sequence search results default to compact rows, rather than the earlier
+two-column card layout. Each result keeps its recorded identifier, title,
+source and review metadata, exact term sample, and actions. The left side
+shows the record; the right side shows its exact term excerpt on wide screens.
+The two regions stack on narrow screens, with no horizontal page overflow.
+Defining formulas remain optional in broad searches and open automatically
+when a search yields no more than three matches.
+
+The "Results view" control offers both **Compact rows** and **Cards**.
+It uses native buttons with explicit pressed states and supports keyboard
+activation. The chosen layout is stored in the browser when storage is
+available, otherwise it applies for the current page. The choice changes
+presentation only: result count, ordering, exact data, export and navigation
+are unaffected. It is hidden without JavaScript; static definitions remain
+accessible in the complete index.
+
+The browser regression checks default density, both layout choices, keyboard
+activation, persistence across reloads, formula disclosures, no-JavaScript
+fallback, and mobile widths 390 and 320, in addition to the existing
+source-data and search-function checks.
+
 ## Layout density and whitespace refinement
 
 The Sequence Library keeps its three primary tasks together in the rendered
