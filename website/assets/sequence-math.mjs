@@ -33,25 +33,30 @@ export function transferPolynomialTeX(rows,key,symbol,maxTerms=4) {
 export function transferPolynomialPlain(rows,key,symbol,maxTerms=4) {
   return polynomial(rows,key,symbol,maxTerms,false);
 }
-function witnessParts(rows,j,tex){
+function witnessParts(rows,j,tex,direction){
+  const first=direction==='inverse'?'inverse':'kernel';
+  const second=direction==='inverse'?'target':'source';
   const pieces=[];
   for(let i=0;i<=j;i++){
-    const a=parseExactRational(rows[i].kernel),b=parseExactRational(rows[j-i].source);
+    const a=parseExactRational(rows[i][first]),b=parseExactRational(rows[j-i][second]);
     const negative=a.negative!==b.negative;
-    const first=absoluteCoefficient(a,tex),second=absoluteCoefficient(b,tex);
-    const term=tex?'\\left('+first+'\\right)\\left('+second+'\\right)':'('+first+')*('+second+')';
+    const left=absoluteCoefficient(a,tex),right=absoluteCoefficient(b,tex);
+    const term=tex?'\\left('+left+'\\right)\\left('+right+'\\right)':'('+left+')*('+right+')';
     pieces.push((pieces.length?(negative?' - ':' + '):(negative?'-':''))+term);
   }
   return pieces.join('');
 }
-function witness(rows,j,tex) {
+function witness(rows,j,tex,direction='forward') {
   if(!Array.isArray(rows)||!Number.isSafeInteger(j)||j<0||j>=rows.length)throw Error('Witness index is outside the coefficient window.');
-  const row=rows[j],sum=witnessParts(rows,j,tex);
-  if(tex)return '\\begin{aligned}b_{'+j+'}&=\\sum_{i=0}^{'+j+'}h_i a_{'+j+'-i}\\\\&='+sum+'\\\\&='+rationalTeX(row.forward)+'\\qquad(\\mathrm{target}='+rationalTeX(row.target)+',\\;\\mathrm{residual}='+rationalTeX(row.residual)+')\\end{aligned}';
-  return 'b_'+j+' = sum(i=0..'+j+') h_i*a_('+j+'-i) = '+sum+' = '+row.forward+'; target='+row.target+'; residual='+row.residual;
+  if(!['forward','inverse'].includes(direction))throw Error('Choose a forward or inverse witness.');
+  const inverse=direction==='inverse',row=rows[j],sum=witnessParts(rows,j,tex,direction);
+  const letter=inverse?'a':'b',kernel=inverse?'k':'h',other=inverse?'b':'a';
+  const value=inverse?row.recovered:row.forward,stored=inverse?row.source:row.target;
+  if(tex)return '\\begin{aligned}'+letter+'_{'+j+'}&=\\sum_{i=0}^{'+j+'}'+kernel+'_i '+other+'_{'+j+'-i}\\\\&='+sum+'\\\\&='+rationalTeX(value)+'\\qquad(\\mathrm{stored\\ '+(inverse?'source':'target')+'}='+rationalTeX(stored)+(inverse?'':',\\;\\mathrm{residual}='+rationalTeX(row.residual))+')\\end{aligned}';
+  return letter+'_'+j+' = sum(i=0..'+j+') '+kernel+'_i*'+other+'_('+j+'-i) = '+sum+' = '+value+'; '+(inverse?'source':'target')+'='+stored+(inverse?'':'; residual='+row.residual);
 }
-export function transferWitnessTeX(rows,j){return witness(rows,j,true);}
-export function transferWitnessPlain(rows,j){return witness(rows,j,false);}
+export function transferWitnessTeX(rows,j,direction='forward'){return witness(rows,j,true,direction);}
+export function transferWitnessPlain(rows,j,direction='forward'){return witness(rows,j,false,direction);}
 export function mathLine(source,tex,className='sr-transfer-equation'){
   const element=document.createElement('p');
   element.className='sar-formula '+className;
@@ -128,3 +133,31 @@ function matrixFormula(values,symbol,tex){
 }
 export function transferMatrixTeX(values,symbol){return matrixFormula(values,symbol,true);}
 export function transferMatrixPlain(values,symbol){return matrixFormula(values,symbol,false);}
+
+/** Exact finite matrix-vector actions. Index shifts remain external metadata. */
+export function transferActionEquations(rows,size){
+  if(!Array.isArray(rows)||!Number.isSafeInteger(size)||size<1||size>8||rows.length<size){
+    throw Error('Choose 1 to 8 stored coefficients for the matrix action.');
+  }
+  const selected=rows.slice(0,size);
+  for(const row of selected)if(row.forward!==row.target||row.recovered!==row.source){
+    throw Error('Matrix action requires an exact forward and inverse certificate.');
+  }
+  const vector=(values,tex)=>{
+    const cells=values.map(value=>{
+      if(typeof value!=='string')throw Error('Matrix action requires exact coefficient strings.');
+      return tex?rationalTeX(value):value;
+    });
+    return tex?'\\begin{pmatrix}'+cells.join('\\\\')+'\\end{pmatrix}':'['+cells.join(', ')+']';
+  };
+  const source=selected.map(row=>row.source),target=selected.map(row=>row.target);
+  const forward={
+    plain:'L_'+size+'(H) '+vector(source,false)+' = '+vector(target,false),
+    tex:'L_{'+size+'}(H)'+vector(source,true)+'='+vector(target,true)
+  };
+  const inverse={
+    plain:'L_'+size+'(K) '+vector(target,false)+' = '+vector(source,false),
+    tex:'L_{'+size+'}(K)'+vector(target,true)+'='+vector(source,true)
+  };
+  return {forward,inverse};
+}

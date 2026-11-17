@@ -45,6 +45,10 @@ async function run(){
       await page.locator('#tr-matrices .sr-matrices .math-pair[data-math-pair-ready=true]').first().waitFor({timeout:30000});
       assert.match(await page.locator('#tr-matrices .sr-matrices [data-math-plain]').first().textContent(),/53, -1, 2, 1/);
       assert.equal(await page.locator('#tr-matrices .sr-matrices table').first().locator('tbody tr').count(),8);
+      await page.locator('#tr-matrix-action .math-pair[data-math-pair-ready=true]').first().waitFor({timeout:30000});
+      assert.equal(await page.locator('#tr-matrix-action [data-math-plain]').count(),2);
+      assert.match(await page.locator('#tr-matrix-action [data-math-plain]').first().textContent(),/L_4\(H\) \[1, -1, 5, -61\] = \[1, 1, 2, 3\]/);
+      assert.match(await page.locator('#tr-matrix-action [data-math-plain]').last().textContent(),/L_4\(K\) \[1, 1, 2, 3\] = \[1, -1, 5, -61\]/);
       await page.selectOption('#tr-matrix-size','8');
       await page.locator('#tr-matrices .sr-matrices .math-pair[data-math-pair-ready=true]').first().waitFor({timeout:30000});
       assert.match(await page.locator('#tr-matrices .sr-matrices [data-math-plain]').first().textContent(),/53, -1, 2, 1/);
@@ -59,6 +63,17 @@ async function run(){
       await page.selectOption('#tr-matrix-size','4');
       await page.locator('#tr-convolution-witness summary').click();
       assert.match(await page.locator('#tr-convolution-witness').textContent(),/At tail position 2/);
+      assert.equal(await page.locator('#tr-witness-index option').count(),12);
+      await page.selectOption('#tr-witness-index','3');
+      await page.selectOption('#tr-witness-direction','inverse');
+      assert.match(await page.locator('#tr-witness-indices').textContent(),/source index 3 and target index 4/);
+      assert.match(await page.locator('#tr-convolution-witness [data-math-plain]').textContent(),/a_3 = sum\(i=0\.\.3\) k_i\*b_\(3-i\)/);
+      assert.match(await page.locator('#tr-convolution-witness [data-math-plain]').textContent(),/source=-61/);
+      await page.selectOption('#site-math-display','plain');
+      assert.equal(await page.locator('#tr-convolution-witness [data-math-plain]').isVisible(),true);
+      await page.selectOption('#site-math-display','typeset');
+      await page.selectOption('#tr-witness-direction','forward');
+      await page.selectOption('#tr-witness-index','2');
       const certificate=JSON.parse(await saveDownload(page,'Download certificate JSON','transfer-'+width+'.json'));
       assert.equal(certificate.schema,1);
       assert.equal(certificate.verified,true);
@@ -95,6 +110,8 @@ async function run(){
     assert.match(await page.locator('.sr-transfer-example').textContent(),/Euler values to shifted Fibonacci values/);
     assert.match(await page.locator('.sr-transfer-overview').textContent(),/formal division over the rationals/);
     assert.equal(await page.locator('.sr-transfer-static-matrices [data-math-latex]').count(),2);
+    assert.match(await page.locator('.sr-transfer-example').textContent(),/L\(H\) \[1, -1, 5, -61\] = \[1, 1, 2, 3\]/);
+    assert.match(await page.locator('.sr-transfer-example').textContent(),/L\(K\) \[1, 1, 2, 3\] = \[1, -1, 5, -61\]/);
     assert.match(await page.locator('.sr-transfer-static-matrices').textContent(),/53,-1,2,1/);
     assert.match(await page.locator('.sr-transfer-static-matrices').textContent(),/-65,5,-2,1/);
     assert.equal(await page.locator('#tr-form').count(),0);

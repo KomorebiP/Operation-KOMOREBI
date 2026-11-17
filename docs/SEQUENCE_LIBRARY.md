@@ -416,7 +416,18 @@ not rounded plot values. The transfer workbench displays the lower-triangular
 convolution operators L(H) and L(K) as MathJax matrices. Readers can choose a
 leading principal block of order 1 through 8, with order 4 displayed initially.
 The existing exact HTML matrices retain their first eight rows and columns,
-or fewer when the selected coefficient window is shorter. The controls can
+or fewer when the selected coefficient window is shorter.
+The workbench also displays exact matrix actions on the anchored source and
+target vectors. For a selected leading block of order m it shows both
+L_m(H) a = b and L_m(K) b = a using original stored integers. The local
+matrix position j=0 is labelled with both original source and target indices.
+The matrix panel's copy action includes the two action equations as LaTeX.
+
+The coefficient witness now supports every stored local tail position, not
+only the initial example. Readers can choose forward convolution or inverse
+recovery and inspect the precise finite sum, original indices, and stored
+coefficient. The witness transcribes exact fractions and signs without
+rounding and does not assert values beyond the selected coefficient window. The controls can
 copy the selected matrix pair and inverse identity as exact LaTeX. The
 Euler/Fibonacci worked example includes fixed four-by-four matrices and a
 plain-text fallback even when JavaScript is disabled.
