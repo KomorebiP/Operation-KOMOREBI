@@ -95,6 +95,18 @@ async function visit(page,name,kind){
       await fit(page);
       await visit(page,'sequence-connections.html','connections');
       await page.locator('#cg-form').waitFor({timeout:30000});
+      assert.equal(await page.locator('#cg-diagram-details').evaluate(el=>el.open),false);
+      assert.equal(await page.locator('#cg-chart svg').count(),0,'Graph should not render a large default diagram');
+      await page.locator('#cg-diagram-details>summary').click();
+      await page.locator('#cg-chart svg').waitFor({timeout:30000});
+      const graphLayout=await page.locator('#cg-chart svg').evaluate(svg=>({
+        height:Number(svg.getAttribute('viewBox').split(/\\s+/).at(-1)),
+        neighbors:Math.max(0,svg.querySelectorAll('a').length-1)
+      }));
+      assert.equal(graphLayout.height,graphLayout.neighbors<=3?280:graphLayout.neighbors<=6?350:440);
+      await page.locator('#cg-diagram-details>summary').click();
+      await page.locator('#cg-chart svg').first().waitFor({state:'detached',timeout:30000});
+
       assert.equal(await page.locator('#research-graph>details').evaluate(el=>el.open),true);
       assert.equal(await page.locator('#modular-explorer,#sequence-identification,#sl-search').count(),0);
       await fit(page);
@@ -108,6 +120,19 @@ async function visit(page,name,kind){
       assert.equal(await page.locator('#modular-dynamics>details').evaluate(el=>el.open),true);
       assert.equal(await page.locator('#md-current').isDisabled(),true);
       await page.locator('#modular-explorer[data-modular-ready=true]').waitFor({timeout:60000});
+      assert.equal(await page.locator('#md-result>.sg-data-panel').count(),3);
+      assert.equal(await page.locator('#md-result>.sg-data-panel table').count(),0,
+        'Full exact tables should not be built before the reader opens them');
+      assert.match(await page.locator('#md-result .sg-plot-note').textContent(),/first .* recorded residues/);
+      await page.locator('#md-result>.sg-data-panel').nth(1).locator('summary').click();
+      await page.locator('#md-result>.sg-data-panel').nth(1).locator('tbody tr').first().waitFor({timeout:30000});
+      assert.ok(await page.locator('#md-result>.sg-data-panel').nth(1).locator('tbody tr').count()>1);
+      await page.locator('#md-result>.sg-data-panel').nth(2).locator('summary').click();
+      await page.locator('#md-result>.sg-data-panel').nth(2).locator('tbody tr').first().waitFor({timeout:30000});
+      await page.locator('#md-result>.sg-data-panel').first().locator('summary').click();
+      await page.locator('#md-result>.sg-data-panel').first().locator('svg').waitFor({timeout:30000});
+      assert.equal(await page.locator('#md-result>.sg-data-panel').first().locator('svg').count(),1);
+
       await page.locator('#md-result details>summary').first().click();
       await page.locator('#md-result .sr-modular-equation').waitFor({state:'attached',timeout:30000});
       await page.locator('#md-result .math-pair[data-math-pair-ready=true]').first().waitFor({timeout:30000});
