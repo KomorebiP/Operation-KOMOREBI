@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {formulaLatex,readMathDisplay} from '../website/assets/math-display.mjs';
 import {atlasDestination,archiveDestination} from '../website/assets/sequence-navigation.mjs';
 import {sequenceTransfer} from '../website/assets/sequence-transfer-core.mjs';
-import {rationalTeX,transferPolynomialPlain,transferPolynomialTeX,transferWitnessPlain,transferWitnessTeX,triangleRowExpressions} from '../website/assets/sequence-math.mjs';
+import {rationalTeX,transferPolynomialPlain,transferPolynomialTeX,transferWitnessPlain,transferWitnessTeX,triangleRowExpressions,transferMatrixTeX,transferMatrixPlain} from '../website/assets/sequence-math.mjs';
 
 test('formula transcription preserves denominator function arguments and sum scope',()=>{
   const quotient=formulaLatex("a(n)=-D_2'(z)/D_2(z)");
@@ -144,4 +144,26 @@ test('triangle rows typeset from the exact indexed integers without dropping sig
   assert.equal(triangleRowExpressions(matrix,[{n:1,k:0,raw:'1'},{n:1,k:1,raw:'-1'}]).plain,'R_1(x) = 1 - x');
   assert.throws(()=>triangleRowExpressions(entry,[{n:2,k:1,raw:'10'}]),/complete coefficient row|index map/);
   assert.throws(()=>triangleRowExpressions(theta,[{n:1,k:0,raw:'1/2'},{n:1,k:1,raw:'0'},{n:1,k:2,raw:'1'}]),/exact integers/);
+});
+
+test('typeset leading transfer matrices reproduce the exact Euler/Fibonacci inverse',()=>{
+  const h=['1','2','-1','53'],k=['1','-2','5','-65'];
+  const lower=series=>Array.from({length:4},(_,i)=>Array.from({length:4},(_,j)=>j>i?'0':series[i-j]));
+  const H=lower(h),K=lower(k);
+  assert.equal(transferMatrixPlain(H,'H'),'L(H) = [[1, 0, 0, 0], [2, 1, 0, 0], [-1, 2, 1, 0], [53, -1, 2, 1]]');
+  assert.match(transferMatrixTeX(H,'H'),/^L\(H\)=\\begin\{pmatrix\}1 & 0 & 0 & 0/);
+  assert.ok(transferMatrixTeX(K,'K').includes(String.raw`-65 & 5 & -2 & 1\end{pmatrix}`));
+  for(let i=0;i<4;i++)for(let j=0;j<4;j++){
+    const product=H[i].reduce((total,value,p)=>total+BigInt(value)*BigInt(K[p][j]),0n);
+    assert.equal(product,BigInt(i===j?1:0));
+  }
+});
+test('typeset matrices preserve exact rational signs, shape and finite size bounds',()=>{
+  assert.equal(transferMatrixTeX([['-3/2','0'],['5/7','1']],'H'),String.raw`L(H)=\begin{pmatrix}-\frac{3}{2} & 0 \\ \frac{5}{7} & 1\end{pmatrix}`);
+  assert.equal(transferMatrixPlain([['-3/2']],'K'),'L(K) = [[-3/2]]');
+  for(const bad of [[],[['1','0']],[[1]],Array.from({length:9},()=>Array(9).fill('0'))]){
+    assert.throws(()=>transferMatrixTeX(bad,'H'),/square matrix|exact rational/);
+  }
+  assert.throws(()=>transferMatrixPlain([['1/0']],'K'),/exact rational/);
+  assert.throws(()=>transferMatrixTeX([['1']],'A'),/square matrix/);
 });

@@ -412,7 +412,20 @@ unchanged by display transcription. The sequence library now presents the
 anchored transfer equations, quotient and inverse kernels, finite
 Euler/Fibonacci witness, and verification identities as display mathematics.
 The dynamic certificate uses coefficients from the exact rational transfer,
-not rounded plot values.
+not rounded plot values. The transfer workbench displays the lower-triangular
+convolution operators L(H) and L(K) as MathJax matrices. Readers can choose a
+leading principal block of order 1 through 8, with order 4 displayed initially.
+The existing exact HTML matrices retain their first eight rows and columns,
+or fewer when the selected coefficient window is shorter. The controls can
+copy the selected matrix pair and inverse identity as exact LaTeX. The
+Euler/Fibonacci worked example includes fixed four-by-four matrices and a
+plain-text fallback even when JavaScript is disabled.
+
+Matrix rows and columns refer to anchored tail positions, not the original
+source and target index conventions. The finite identities
+L(H)L(K)=L(K)L(H)=I hold for the displayed leading block because the
+kernel product is 1 modulo z^L. Neither the matrix display nor its LaTeX
+export changes the underlying rational transfer certificate.
 
 The connection graph and each record's research-connection panel display an
 equation for supported relation types. These include subsequences, seed shifts,
