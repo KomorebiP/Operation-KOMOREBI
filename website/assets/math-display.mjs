@@ -182,6 +182,8 @@ if(typeof document!=='undefined'&&!window.KomorebiMath){
   function enhance(root=document){
     const pending=[];
     for(const plain of root.querySelectorAll('.sar-formula,.sa-formula,.sl-formula pre,[data-math-latex]')){
+      // Search-result definitions have a separate visible source excerpt. Render full math only when opened.
+      if(plain.closest('.sl-result-definition:not([open])'))continue;
       const record=plainRecords.get(plain),source=plain.textContent,tex=plain.getAttribute('data-math-latex')||formulaLatex(source);
       if(record){
         if(record.source!==source||record.tex!==tex){
