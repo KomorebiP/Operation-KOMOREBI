@@ -428,6 +428,34 @@ sequence identity, or a discovery of a historically new sequence relation.
 The no-JavaScript reading includes the definition and scope, but cannot compute
 new three-sequence certificates.
 
+## Layout density and whitespace refinement
+
+The Sequence Library keeps its three primary tasks together in the rendered
+page. Search is followed by Transfer and Compare, while the research-family
+cards, generalized-family explorers, graph, identification, and notebooks
+share one secondary disclosure. Deep links still open the relevant panel.
+The complete static index, source records, sequence formulas, and exports
+remain unchanged.
+
+The results grid no longer stretches shorter cards to the height of the
+tallest adjacent card. Result card spacing and action rows have been
+reconciled to reduce unused interior space without reducing the minimum
+44-pixel control targets. Single-result searches retain their expanded
+formula view. Sequence tables continue to scroll internally instead of
+expanding the page width.
+
+The transfer workbench has a shorter vertical rhythm, including more compact
+verification summaries and coefficient previews. The original index
+alignment formula is now behind a labelled native disclosure, with the
+source and target anchor indices still visible in the summary above.
+Opening the disclosure triggers MathJax enhancement when available.
+
+This is an interface improvement, not a change to the mathematical
+certificates, source-index conventions, record count, or finite-scope claims.
+Targeted browser checks verify search-card spacing, main-task order,
+expandable index alignment, and no horizontal overflow across mobile and
+desktop widths.
+
 ## Sequence Library interface and accessibility
 
 The landing page now prioritizes three tasks: search, transfer, and compare.

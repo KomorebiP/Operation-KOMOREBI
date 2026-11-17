@@ -27,7 +27,8 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
     <div id="sw-agreements"></div><div class="sp-actions"><button type="button" id="sw-share">Copy comparison link</button><button type="button" id="sw-csv">Export exact CSV</button><button type="button" id="sw-svg">Export SVG</button><button type="button" id="sw-png">Export PNG</button></div>
     <label id="sw-link-wrap" for="sw-link" hidden>Copy this comparison link<input id="sw-link" readonly></label>
     <details id="sw-data"><summary>Exact comparison table</summary><div class="sar-scroll" role="region" aria-label="Exact comparison values" tabindex="0"><table><caption>Stored indices and displayed exact integers</caption><thead><tr><th scope="col">Series</th><th scope="col">Index convention</th><th scope="col">Index / position</th><th scope="col">Window position</th><th scope="col">Original integer</th><th scope="col">Displayed integer</th></tr></thead><tbody></tbody></table></div></details>`;
-  root.querySelector('#oeis').before(section);
+  // Keep the comparison task beside search and transfers, ahead of optional research tools.
+  (root.querySelector('#transfers')||root.querySelector('#oeis')).after(section);
   const $=id=>section.querySelector('#sw-'+id);let sources=[],state={...WORKBENCH_DEFAULTS},result=null,activeKey=null;
   const say=text=>{$('status').textContent=text;},fail=error=>{$('error').textContent=error.message;$('error').hidden=false;};
   try{const linked=readWorkbenchLink(location.href,entries,snapshot);if(linked){sources=linked.sources;state=linked.state;}}catch(error){fail(error);}

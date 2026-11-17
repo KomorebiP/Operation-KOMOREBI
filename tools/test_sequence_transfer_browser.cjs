@@ -44,6 +44,8 @@ async function run(){
       await page.locator('#tr-result-nav a[href="#tr-matrices"]').click();
       assert.equal(await page.locator('#tr-matrices').evaluate(el=>el.open),true);
       assert.equal(await page.locator('#tr-matrix-size').inputValue(),'4');
+      assert.equal(await page.locator('#tr-index-map').evaluate(el=>el.open),false);
+      await page.locator('#tr-index-map>summary').click();
       await page.locator('#tr-index-map .math-pair[data-math-pair-ready=true]').waitFor({timeout:30000});
       assert.match(await page.locator('#tr-index-map [data-math-plain]').textContent(),/source index = 0\+j; target index = 1\+j; original index shift = 1; 0<=j<12/);
       await page.locator('#tr-product-witness .math-pair[data-math-pair-ready=true]').waitFor({timeout:30000});
