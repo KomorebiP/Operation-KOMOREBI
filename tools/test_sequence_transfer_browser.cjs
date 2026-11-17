@@ -40,6 +40,8 @@ async function run(){
       await page.locator('#site-math-display').selectOption('typeset');
       assert.equal(await page.locator('#tr-certificate [data-math-tex]').first().isVisible(),true);
       assert.equal(await page.locator('#tr-result table tbody tr').first().count(),1);
+      assert.equal(await page.locator('#tr-matrices').evaluate(el=>el.open),false);
+      await page.locator('#tr-result-nav a[href="#tr-matrices"]').click();
       assert.equal(await page.locator('#tr-matrices').evaluate(el=>el.open),true);
       assert.equal(await page.locator('#tr-matrix-size').inputValue(),'4');
       await page.locator('#tr-index-map .math-pair[data-math-pair-ready=true]').waitFor({timeout:30000});

@@ -428,6 +428,41 @@ sequence identity, or a discovery of a historically new sequence relation.
 The no-JavaScript reading includes the definition and scope, but cannot compute
 new three-sequence certificates.
 
+## Sequence Library interface and accessibility
+
+The landing page now prioritizes three tasks: search, transfer, and compare.
+The primary navigation stays short. Secondary sections, reference matching,
+and the research tools open through labelled native HTML details, so their
+content remains keyboard accessible and can be read without JavaScript.
+Direct links to OEIS, research families, connections, generalized families,
+and the other advanced tools open the relevant panel on a JavaScript-enabled
+page without changing the original URL or exact data.
+
+The search results retain their identifiers, exact term excerpts, review
+status, and all existing actions. Long defining formulas are initially
+collapsed for a broad search; for three or fewer matches, the formula
+opens by default to aid focused inspection. The formula display selector
+still switches between exact source notation and MathJax typesetting.
+The advanced search syntax guide is optional and the original search
+filters, saved entries, CSV export, and OEIS comparisons are retained.
+
+In the transfer workbench the input form precedes the methodology.
+The coefficient calculation, exact indexed data, matrices, and
+three-sequence composition can be reached from a short result navigation.
+The heavy matrix panel starts collapsed, while the exact data table
+is height-limited and scrollable. Method descriptions, full Euler/Fibonacci
+example, sources, and static composition explanation remain in labelled
+disclosures. The static reading example and complete index remain
+available when JavaScript is disabled.
+
+The layout uses visible focus indicators, native summary controls, labelled
+form fields, responsive touch targets, and internal horizontal scrolling
+for long equations and exact tables. This is a usability improvement and a
+bounded browser regression, not an independent WCAG conformance certification.
+The production checks cover widths of 1440, 390, and 320 pixels, hash
+navigation into collapsed panels, focused single-result formulas, keyboard
+access to disclosures, and no-JavaScript reading.
+
 ## Typeset mathematical reading
 
 The sequence reading pages use the shared MathJax display with a site-wide

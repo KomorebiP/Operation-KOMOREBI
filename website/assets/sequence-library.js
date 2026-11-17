@@ -12,6 +12,32 @@ import {mountStudio,familySearchEntries} from './sequence-research-studio.mjs';
 import {STORAGE_KEY,readSaved,writeSaved,updateSaveButtons} from './sequence-atlas-saved.mjs';
 
 const root=document.querySelector('[data-library]'),$=id=>document.getElementById('sl-'+id),make=(tag,text)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;return node;};
+/** Deep links reveal optional panels without discarding static source content. */
+function revealLibraryTarget(){
+  if(!location.hash||!root)return;
+  let id;try{id=decodeURIComponent(location.hash.slice(1));}catch{return;}
+  const target=document.getElementById(id);
+  if(!target||!root.contains(target))return;
+  for(let ancestor=target.parentElement;ancestor&&ancestor!==root;ancestor=ancestor.parentElement){
+    if(ancestor.tagName==='DETAILS')ancestor.open=true;
+  }
+  if(target.matches('.sl-optional-section'))target.querySelector(':scope > details.sl-topic-disclosure')?.setAttribute('open','');
+  if(['generalized','research-graph','identify','modular-dynamics','research-notebooks'].includes(target.id)){
+    target.querySelector('details')?.setAttribute('open','');
+  }
+}
+if(root){
+  addEventListener('hashchange',revealLibraryTarget);
+  revealLibraryTarget();
+}
+function definitionPreview(formula,label,expanded){
+  const detail=make('details'),summary=make('summary',label);
+  detail.className='sl-result-definition';detail.open=expanded;
+  detail.append(summary,formula);
+  detail.addEventListener('toggle',()=>{if(detail.open)enhanceMath(detail);});
+  return detail;
+}
+
 const collectionLabels={atlas:'Curated sequences',recovered:'Research archive',formulas:'Formula families'};
 const keys=SEARCH_KEYS;
 let results=[],page=0,applied={},workbench,transfers,toggleSaved,saved=new Set();
@@ -19,6 +45,7 @@ function save(content,type,name){const url=URL.createObjectURL(new Blob([content
 function share(){const url=new URL(location.href);url.search='';for(const [key,value]of Object.entries(applied))if(value&&value!=='any'&&value!=='relevance')url.searchParams.set(key,value);if(page)url.searchParams.set('page',String(page+1));url.hash='library-search';return url.href;}
 function render(){
   clearMath($('results'));$('results').replaceChildren();page=Math.max(0,Math.min(page,Math.ceil(results.length/24)-1));
+  const expandFormulas=results.length<=3;
   for(const hit of results.slice(page*24,(page+1)*24)){
     const entry=hit.entry;
     if(entry.collection==='generalized'){
@@ -29,11 +56,11 @@ function render(){
       const explore=make('a',entry.engine?'Explore parameters':entry.examples?.length?'Read construction and examples':'Read definition and source');explore.href=entry.url+(entry.engine?'#family-explorer':'#definition');
       const source=make('a','Defining source');source.href=entry.source;actions.append(explore,source);
       if(entry.record_ids.length){const members=make('a','Search '+entry.record_ids.length+' integer record'+(entry.record_ids.length===1?'':'s'));members.href='sequence-library.html?q='+encodeURIComponent('family:'+entry.id)+'#library-search';actions.append(members);}
-      li.append(identifier,heading,mode,sourceNote,formula,domain,make('p',entry.note),actions);$('results').append(li);continue;
+      li.append(identifier,heading,mode,sourceNote,definitionPreview(formula,'Defining formula',expandFormulas),domain,make('p',entry.note),actions);$('results').append(li);continue;
     }
     const li=make('li'),label=make('p',entry.id+' / '+(collectionLabels[entry.collection]||'Sequence library'));label.className='sar-kicker';const heading=make('h3'),link=make('a',entry.title);link.href=entry.url;heading.append(link);li.append(label,heading,make('p',entry.kind+' · '+entry.formulas.length+' representation'+(entry.formulas.length===1?'':'s')+' · first index '+entry.offset));
     li.dataset.resultId=entry.id;if(entry.triangle){const tableNote=make('p',`${entry.triangle.row_lengths.length} complete rows · row/column inspection · ${entry.terms.length} exact coefficients`);tableNote.className='sl-match-reason';li.append(tableNote);}
-    const expression=make('p',entry.formula);expression.className='sar-formula';li.append(expression);
+    const expression=make('p',entry.formula);expression.className='sar-formula';li.append(definitionPreview(expression,'Defining formula',expandFormulas));
     const start=hit.termMatch?Math.max(0,hit.termMatch.start-(hit.termMatch.length<8?1:0)):0,count=Math.min(Math.max(6,hit.termMatch?.length||0),8),values=entry.terms.slice(start,start+count),symbol=entry.index_symbol||'n';
     const excerpt=make('div'),caption=make('p',`${symbol} = ${entry.offset+start}–${entry.offset+start+values.length-1} · exact stored terms`),terms=make('div');excerpt.className='sl-term-preview';caption.className='sl-term-caption';terms.className='sl-term-values';terms.tabIndex=0;terms.setAttribute('role','region');terms.setAttribute('aria-label',`Exact term preview for ${entry.id}`);
     values.forEach((value,i)=>{if(i)terms.append(document.createTextNode(', '));const relative=start+i-(hit.termMatch?.start??-1),matched=hit.termMatch&&relative>=0&&relative<hit.termMatch.length&&hit.termMatch.pattern[relative]!==null;const item=make(matched?'mark':'span',value);item.title=`${symbol}=${entry.offset+start+i}`;terms.append(item);});excerpt.append(caption,terms);li.append(excerpt);
