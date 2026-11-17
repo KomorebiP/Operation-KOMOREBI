@@ -312,7 +312,7 @@ def build(site,atlas):
                   wrap(page_heading(title,description,'research',section_id)+
                        '<nav class="sl-tool-back"><a href="sequence-research.html#research-families">Research families and other tools</a>'
                        ' · <a href="sequence-workspace.html#research-notebooks">Combined workspace</a></nav>'+
-                       generalized_sections(only=[section_id]),page_kind=page_kind))
+                       generalized_sections(only=[section_id]).replace('<details>','<details open>',1),page_kind=page_kind))
     standalone_reference=reference.replace('<details class="sl-topic-disclosure">',
                                            '<details class="sl-topic-disclosure" open>',1)
     site.page('sequence-oeis.html','Sequence Library · OEIS',
