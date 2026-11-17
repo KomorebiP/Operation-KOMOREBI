@@ -17,9 +17,31 @@ export function mountModular(host,{family}={}){
   function validate(s){if(!s)throw Error('Choose valid modular parameters.');validateFamily('linear',s.params);if(!Number.isSafeInteger(s.modulus)||s.modulus<2||s.modulus>256||!Number.isSafeInteger(s.maximum)||s.maximum<1||s.maximum>20000)throw Error('Choose a modulus from 2 to 256 and a search bound from 1 to 20,000.');return s;}
   function fail(error){$('error').hidden=false;$('error').textContent=error.message;}
   function frequency(result){const counts=Array(result.modulus).fill(0);for(const v of result.values)counts[v]++;const picture=svg('svg',{viewBox:'0 0 800 240',class:'sg-frequency',role:'img','aria-label':'Residue frequencies in the displayed finite window'});picture.append(svg('rect',{width:800,height:240,fill:'var(--sq-bg,#fff)'}));const max=Math.max(1,...counts);for(let i=0;i<counts.length;i++){const bar=svg('rect',{x:45+i*730/counts.length,y:200-160*counts[i]/max,width:Math.max(1,730/counts.length-2),height:160*counts[i]/max,fill:'var(--sq-link,#185a43)'});bar.append(svg('title',{},`Residue ${i}: ${counts[i]} displayed terms`));picture.append(bar);}picture.append(svg('text',{x:45,y:225,fill:'currentColor','font-size':13},`Residues 0–${result.modulus-1}; counts from ${result.values.length} displayed values`));return picture;}
+  function deferredPanel(label,build){
+    const details=node('details');details.className='sg-data-panel';
+    const summary=node('summary',label);details.append(summary);
+    details.addEventListener('toggle',()=>{
+      if(details.open&&!details.dataset.filled){
+        details.append(build());details.dataset.filled='true';
+      }
+    });
+    return details;
+  }
   function render(result){$('result').replaceChildren();$('result').append(node('h3',result.certified?`Certified cycle: period ${result.period}, preperiod ${result.preperiod}`:'No repeated complete state within the chosen bound'),node('p',`Recurrence order ${result.model.order}. ${result.scanned} complete states inspected modulo ${result.modulus}.`),node('p',result.scope));if(result.certified)$('result').append(node('p',`The state at n=${result.preperiod} repeats at n=${result.repeatIndex}: (${result.repeatedState.join(', ')}).`));
     const detail=node('details');detail.append(node('summary','Recurrence, initial state and certificate interpretation'),mathLine('a(n) = sum_(j=1)^d b(j) a(n-j), n >= d',String.raw`a_n=\sum_{j=1}^{d}b_j a_{n-j},\qquad n\ge d`,'sr-modular-equation'),node('p','Here d is the recurrence order. The coefficients b(1), …, b(d) are reduced modulo m.'),node('p','Coefficients: '+result.coefficients.join(', ')),node('p','Initial complete state: '+result.initialState.join(', ')),node('p','A repeated value alone does not certify a cycle. The certificate checks every coordinate of the recurrence state. A noninvertible transition can have a preperiod.'));detail.addEventListener('toggle',()=>{if(detail.open)enhanceMath(detail);});$('result').append(detail);
-    const chart=node('div'),inspection=node('p');chart.id='md-chart';inspection.setAttribute('role','status');plotValues(chart,result.values.map(String),{modulus:result.modulus,label:'Modular recurrence orbit',inspect:(n,v)=>{inspection.textContent=`n=${n}; residue ${v} modulo ${result.modulus}`;}});$('result').append(chart,inspection,frequency(result),indexedTable(['n','a(n) mod m'],result.values.map((v,n)=>[n,v]),'Displayed modular values'),indexedTable(['State position n','Complete state'],result.states.map((s,n)=>[n,'('+s.join(', ')+')']),'First complete recurrence states'));const exports=node('div');exports.className='sp-actions';plotExports(exports,chart,'modular',clipboard.status);$('result').append(exports);}
+    const chart=node('div'),inspection=node('p'),visible=result.values.slice(0,128);
+    chart.id='md-chart';inspection.setAttribute('role','status');
+    plotValues(chart,visible.map(String),{modulus:result.modulus,label:'Modular recurrence orbit, first '+visible.length+' positions',inspect:(n,v)=>{inspection.textContent='n='+n+'; residue '+v+' modulo '+result.modulus;}});
+    const sampleNote=node('p','The plot shows the first '+visible.length+' of '+result.values.length+' recorded residues. Expand an exact table below to inspect all available positions.');
+    sampleNote.className='sg-plot-note';
+    $('result').append(chart,inspection,sampleNote,
+      deferredPanel('Residue frequency chart ('+result.modulus+' residue classes)',()=>frequency(result)),
+      deferredPanel('Exact modular values ('+result.values.length+' rows)',()=>indexedTable(
+        ['n','a(n) mod m'],result.values.map((v,n)=>[n,v]),'Complete exact modular values')),
+      deferredPanel('Complete recurrence states ('+result.states.length+' rows)',()=>indexedTable(
+        ['State position n','Complete state'],result.states.map((state,n)=>[n,'('+state.join(', ')+')']),'Complete recurrence states')));
+    const exports=node('div');exports.className='sp-actions';
+    plotExports(exports,chart,'modular',clipboard.status);$('result').append(exports);}
   async function compute(update=false){const token=++requestId;runner.cancel();try{const s=validate(read());$('error').hidden=true;$('cancel').disabled=false;$('status').textContent='Searching exact complete states…';const result=await runner.run({type:'modular',...s});if(token!==requestId)return;current=result;render(result);$('status').textContent=result.certified?'A repeated complete state certifies the displayed cycle.':'The search reached its limit without finding a repeated complete state. No period is asserted.';host.dataset.modularReady='true';if(update){const url=new URL(location.href);url.search='';url.hash='modular-dynamics';url.searchParams.set('modular',JSON.stringify(s));history.replaceState(null,'',url.href);}}catch(error){if(token!==requestId)return;if(error.name==='AbortError')$('status').textContent='Modular search cancelled.';else fail(error);}finally{if(token===requestId)$('cancel').disabled=true;}}
   function restore(s,run=true){validate(s);const p=validateFamily('linear',s.params);for(const k of fields)$(k).value=String(p[k]);$('r').disabled=p.seedMode!=='tail';$('modulus').value=String(s.modulus);$('maximum').value=String(s.maximum);if(run)compute();}
   $('seedMode').addEventListener('change',()=>{if($('seedMode').value!=='tail')$('r').value='1';$('r').disabled=$('seedMode').value!=='tail';});
