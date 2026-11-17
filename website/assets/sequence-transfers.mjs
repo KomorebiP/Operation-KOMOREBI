@@ -25,8 +25,8 @@ export function mountTransfers(entries,host){
   forward.type=back.type=identity.type='button';presets.append(forward,back,identity);
   const error=make('p');error.id='tr-error';error.setAttribute('role','alert');error.hidden=true;form.append(presets,grid,hint,actions,error);host.append(form);host.parentElement.querySelector('.sr-transfer-static')?.setAttribute('hidden','');
   const result=make('div');result.id='tr-result';result.hidden=true;const summary=make('p'),indices=make('p'),domain=make('p'),sourceLink=make('a'),targetLink=make('a'),links=make('p'),scope=make('p');
-  const indexMap=make('section'),indexNote=make('p','Source and target indices use separate original origins. The same local tail position does not imply equal sequence values or a shared recurrence.'),indexFormula=mathLine('source index = a+j; target index = b+j',String.raw`i_{\mathrm{source}}(j)=\alpha+j,\quad i_{\mathrm{target}}(j)=\beta+j`,'sr-transfer-index-equation');
-  indexMap.id='tr-index-map';indexMap.append(make('h3','Original index alignment'),indexFormula,indexNote);
+  const indexMap=make('details'),indexNote=make('p','Source and target indices use separate original origins. The same local tail position does not imply equal sequence values or a shared recurrence.'),indexFormula=mathLine('source index = a+j; target index = b+j',String.raw`i_{\mathrm{source}}(j)=\alpha+j,\quad i_{\mathrm{target}}(j)=\beta+j`,'sr-transfer-index-equation');
+  indexMap.id='tr-index-map';indexMap.append(make('summary','Original index alignment'),indexFormula,indexNote);
   const metrics=make('div');metrics.id='tr-certificate';metrics.className='sr-transfer-facts';
   const preview=make('div');preview.id='tr-kernel-preview';preview.className='sr-transfer-previews';
   const witness=make('details'),witnessText=make('p'),witnessIndexHelp=make('p'),
