@@ -5,10 +5,7 @@ import {mountModular} from './sequence-modular-ui.mjs';
 import {mountNotebooks} from './sequence-notebooks-ui.mjs';
 import {familySource,workbenchLink,WORKBENCH_DEFAULTS} from './sequence-workbench-core.mjs';
 
-export function familySearchEntries(entries,families){
-  const memberships=new Map();for(const family of families)for(const id of family.record_ids){if(!memberships.has(id))memberships.set(id,[]);memberships.get(id).push(family);}
-  return entries.map(entry=>{const groups=memberships.get(entry.id)||[],copy={...entry,generalized_family_ids:groups.map(g=>g.id),family_names:groups.map(g=>g.title),paper_refs:[...new Set(groups.flatMap(g=>g.paper_refs))],paper_titles:groups.map(g=>g.paper_title)};if(entry.id==='KSEQ-000025')copy.recurrence_order=2;if(/^KOM01[3-6]$/.test(entry.id))copy.recurrence_order=Number(entry.id.slice(3))-10;return copy;});
-}
+export {familySearchEntries} from './sequence-library-membership.mjs';
 function displaySettings(){return {theme:document.querySelector('#sq-page-theme')?.value||'light',scheme:document.documentElement.dataset.sequenceScheme||'green',math:document.querySelector('#site-math-display')?.value||'typeset'};}
 function validateDisplay(s){if(!s||!['light','dark','system'].includes(s.theme)||!['green','mono'].includes(s.scheme)||!['plain','typeset'].includes(s.math))throw Error('Choose supported notebook display settings.');return s;}
 export function mountStudio({root,entries,data,referenceClient,workbench,transfers,search}){
