@@ -57,9 +57,10 @@ export function mountModular(host,{family}={}){
         label:'Modular recurrence orbit, indices '+start+' through '+(end-1),
         inspect:(local,v)=>{inspection.textContent='n='+(start+local)+'; residue '+v+' modulo '+result.modulus;}});
       inspection.textContent='Select a plotted point to inspect its exact index and residue.';
-      sampleNote.textContent=end===result.values.length&&start===0
-        ?'The plot shows all '+result.values.length+' recorded residues.'
-        :'Plot positions '+start+'–'+(end-1)+' of '+result.values.length+' recorded residues. Complete exact data is available below.';
+      sampleNote.textContent=(end===result.values.length&&start===0
+        ?'The plot shows all '+result.values.length+' retained residue samples.'
+        :'Plot positions '+start+'–'+(end-1)+' of '+result.values.length+' retained residue samples.')
+        +' The search inspected '+result.scanned+' complete states; the certificate retains up to 256 residue samples and 64 initial state snapshots.';
       plotPrev.disabled=start===0;plotNext.disabled=end===result.values.length;
       startInput.value=String(start);
     }
@@ -69,10 +70,10 @@ export function mountModular(host,{family}={}){
     drawPlot(0);
     $('result').append(plotControls,chart,inspection,sampleNote,
       deferredPanel('Residue frequency chart ('+result.modulus+' residue classes)',()=>frequency(result)),
-      deferredPanel('Exact modular values ('+result.values.length+' rows)',()=>indexedTable(
-        ['n','a(n) mod m'],result.values.map((v,n)=>[n,v]),'Complete exact modular values')),
-      deferredPanel('Complete recurrence states ('+result.states.length+' rows)',()=>indexedTable(
-        ['State position n','Complete state'],result.states.map((state,n)=>[n,'('+state.join(', ')+')']),'Complete recurrence states')));
+      deferredPanel('Retained modular values ('+result.values.length+' rows)',()=>indexedTable(
+        ['n','a(n) mod m'],result.values.map((v,n)=>[n,v]),'Retained exact modular values')),
+      deferredPanel('Initial recurrence states ('+result.states.length+' rows)',()=>indexedTable(
+        ['State position n','Complete state'],result.states.map((state,n)=>[n,'('+state.join(', ')+')']),'Initial complete recurrence-state snapshots')));
     const exports=node('div');exports.className='sp-actions';
     plotExports(exports,chart,'modular',clipboard.status);$('result').append(exports);}
   async function compute(update=false){const token=++requestId;runner.cancel();try{const s=validate(read());$('error').hidden=true;$('cancel').disabled=false;$('status').textContent='Searching exact complete states…';const result=await runner.run({type:'modular',...s});if(token!==requestId)return;current=result;render(result);$('status').textContent=result.certified?'A repeated complete state certifies the displayed cycle.':'The search reached its limit without finding a repeated complete state. No period is asserted.';host.dataset.modularReady='true';if(update){const url=new URL(location.href);url.search='';url.hash='modular-dynamics';url.searchParams.set('modular',JSON.stringify(s));history.replaceState(null,'',url.href);}}catch(error){if(token!==requestId)return;if(error.name==='AbortError')$('status').textContent='Modular search cancelled.';else fail(error);}finally{if(token===requestId)$('cancel').disabled=true;}}
