@@ -511,10 +511,11 @@ to the catalogue, they appear in an additional indexed-families group.
 
 Links use the existing exact search parser and retain the normal result
 filters, pagination, mathematical typesetting, source links and review
-statuses. The directory remains navigable with native HTML links and
-disclosures when JavaScript is disabled. Browser regression checks verify
-category counts and navigation, search examples, mobile layouts and
-no-JavaScript access. These records are indexed research constructions,
+statuses. Native disclosures and direct example-record links remain usable without
+JavaScript. The full category filtering itself requires JavaScript. A
+complete static sequence index is linked as the no-JavaScript alternative.
+Browser regression checks verify category counts, filtered navigation,
+search examples, mobile layouts and the static fallback. These records are indexed research constructions,
 not claims of historical novelty or pairwise distinctness.
 
 ## Sequence Library interface and accessibility
