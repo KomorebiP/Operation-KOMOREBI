@@ -479,6 +479,39 @@ Targeted browser checks verify search-card spacing, main-task order,
 expandable index alignment, and no horizontal overflow across mobile and
 desktop widths.
 
+## Compact research workbench rendering
+
+The dedicated Connections page shows the exact relationship descriptions and
+their derivation links first. Its neighborhood diagram starts closed and is
+drawn only when the reader opens **View relationship diagram**. The SVG scales
+to a shorter 280, 350 or 440-unit canvas according to the number of
+neighbors in the displayed connection page. Closing the diagram discards
+its SVG nodes, and opening it again uses the current relation filters.
+The recorded edges, proofs, directed-path logic and exports are unchanged.
+
+The Modular dynamics page now displays the certificate summary and a bounded
+plot of at most 128 retained residue samples at a time. If more are retained,
+an indexed plot-window control and Previous/Next buttons allow viewing later
+samples without rendering all plotted points at once. Plot labels show their
+original positions, and the current SVG export reflects the selected window.
+
+The recurrence engine can inspect up to 20,000 complete states, but a
+certificate currently retains at most 256 initial residue samples and
+64 initial complete-state snapshots. Three labelled disclosures contain
+a frequency chart for those retained samples, their exact indexed table
+and the initial state snapshots. The contents are created on first opening
+and remain scrollable within their own regions. Exports retain the same
+bounded samples and the exact recurrence, scanned-state count, transient
+and certified period as before. They do not purport to include every state
+examined during a longer search.
+
+The responsive browser checks open and close the graph visualization,
+verify its compact viewport, check the optional modular panels are initially
+unpopulated, and then inspect their full exact values at 1440, 390 and
+320 pixels. No-JavaScript explanations and the existing Research directory
+remain available. These are presentation and DOM-performance changes,
+not new mathematical results.
+
 ## Focused pages and existing links
 
 The main Sequence Library now serves search and exact record discovery rather
