@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {formulaLatex,readMathDisplay} from '../website/assets/math-display.mjs';
 import {atlasDestination,archiveDestination} from '../website/assets/sequence-navigation.mjs';
 import {sequenceTransfer} from '../website/assets/sequence-transfer-core.mjs';
-import {rationalTeX,transferPolynomialPlain,transferPolynomialTeX,transferWitnessPlain,transferWitnessTeX,triangleRowExpressions,transferMatrixTeX,transferMatrixPlain} from '../website/assets/sequence-math.mjs';
+import {rationalTeX,transferPolynomialPlain,transferPolynomialTeX,transferWitnessPlain,transferWitnessTeX,triangleRowExpressions,transferMatrixTeX,transferMatrixPlain,transferActionEquations} from '../website/assets/sequence-math.mjs';
 
 test('formula transcription preserves denominator function arguments and sum scope',()=>{
   const quotient=formulaLatex("a(n)=-D_2'(z)/D_2(z)");
@@ -166,4 +166,33 @@ test('typeset matrices preserve exact rational signs, shape and finite size boun
   }
   assert.throws(()=>transferMatrixPlain([['1/0']],'K'),/exact rational/);
   assert.throws(()=>transferMatrixTeX([['1']],'A'),/square matrix/);
+});
+
+test('matrix-vector images use exact anchored source and target values in both directions',()=>{
+  const entry=(id,values)=>({id,terms:values.map(String),offset:0,index_symbol:'n'});
+  const map=sequenceTransfer(entry('Euler',[1,-1,5,-61]),entry('Fibonacci',[0,1,1,2,3]),4);
+  const result=transferActionEquations(map.rows,4);
+  assert.equal(result.forward.plain,'L_4(H) [1, -1, 5, -61] = [1, 1, 2, 3]');
+  assert.equal(result.inverse.plain,'L_4(K) [1, 1, 2, 3] = [1, -1, 5, -61]');
+  assert.ok(result.forward.tex.includes(String.raw`L_{4}(H)\begin{pmatrix}1\\-1\\5\\-61\end{pmatrix}`));
+  assert.ok(result.inverse.tex.includes(String.raw`L_{4}(K)\begin{pmatrix}1\\1\\2\\3\end{pmatrix}`));
+  assert.equal(transferActionEquations(map.rows,1).forward.plain,'L_1(H) [1] = [1]');
+  assert.throws(()=>transferActionEquations(map.rows,5),/Choose 1 to 8/);
+  assert.throws(()=>transferActionEquations(map.rows,0),/Choose 1 to 8/);
+});
+test('inverse witnesses recover the original source with correct signs and positions',()=>{
+  const entry=(id,values)=>({id,terms:values.map(String),offset:0,index_symbol:'n'});
+  const map=sequenceTransfer(entry('E',[1,-1,5,-61]),entry('F',[0,1,1,2,3]),4);
+  assert.equal(transferWitnessPlain(map.rows,2,'inverse'),
+    'a_2 = sum(i=0..2) k_i*b_(2-i) = (1)*(2) - (2)*(1) + (5)*(1) = 5; source=5');
+  assert.ok(transferWitnessTeX(map.rows,2,'inverse').includes(String.raw`\mathrm{stored\ source}=5`));
+  assert.ok(transferWitnessTeX(map.rows,3,'forward').includes(String.raw`\sum_{i=0}^{3}`));
+  assert.throws(()=>transferWitnessPlain(map.rows,2,'backward'),/forward or inverse/);
+  const bad=map.rows.map(row=>({...row}));
+  bad[0].recovered='99';
+  assert.throws(()=>transferActionEquations(bad,2),/exact forward and inverse certificate/);
+  const rational=[{source:'-3/2',target:'2/3',forward:'2/3',recovered:'-3/2'}];
+  const formulas=transferActionEquations(rational,1);
+  assert.ok(formulas.forward.tex.includes(String.raw`-\frac{3}{2}`));
+  assert.ok(formulas.inverse.tex.includes(String.raw`\frac{2}{3}`));
 });
