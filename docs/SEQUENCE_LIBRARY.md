@@ -404,6 +404,30 @@ and identification links that exceed the host-safe bound direct the reader to
 notebook JSON export; full JSON workspaces retain their larger data limit.
 
 
+### Three-sequence formal transfer composition
+
+The Transfer Between Sequences workbench can now route an exact scalar transfer
+from A to C through an independently selected scalar record B. With nonzero
+anchored constant coefficients and a common finite window of length L, the
+exact rational transfer quotients satisfy
+
+    H_AB = B/A,  H_BC = C/B,  H_AC = C/A (mod z^L)
+    H_AC = H_BC * H_AB (mod z^L)
+    L(H_AC) = L(H_BC) * L(H_AB).
+
+The interface displays the two-step kernel and the independently constructed
+direct quotient side by side. It transcribes one coefficient witness, the
+original A, B, and C index maps, and the equality of accumulated original
+index shifts. A JSON export keeps the exact coefficients and the finite
+verification result. Invalid or unavailable intermediate records are rejected
+without preserving a stale certificate.
+
+This composition identity follows algebraically from the formal units of the
+anchored tails. It is **not** evidence of a new shared recurrence, a global
+sequence identity, or a discovery of a historically new sequence relation.
+The no-JavaScript reading includes the definition and scope, but cannot compute
+new three-sequence certificates.
+
 ## Typeset mathematical reading
 
 The sequence reading pages use the shared MathJax display with a site-wide
