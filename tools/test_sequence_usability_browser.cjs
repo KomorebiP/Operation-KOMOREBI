@@ -134,9 +134,11 @@ async function visit(page,name,kind){
       await page.goto(href('sequence-library.html#research-graph'));await ready(page);
       assert.ok(page.url().includes('sequence-connections.html'),'Old Search graph hash must redirect');
       await page.goto(href('sequence-library.html?modular='));await ready(page);
-      assert.ok(page.url().includes('sequence-modular.html#modular-dynamics'),'Parameterized modular link must reach the dedicated tool');
+      assert.equal(new URL(page.url()).pathname.endsWith('/sequence-modular.html'),true,'Parameterized modular link must reach the dedicated tool');
+      assert.equal(new URL(page.url()).hash,'#modular-dynamics');
       await page.goto(href('sequence-research.html?identify='));await ready(page);
-      assert.ok(page.url().includes('sequence-identify.html#identify'),'Parameterized identification link must reach the dedicated tool');
+      assert.equal(new URL(page.url()).pathname.endsWith('/sequence-identify.html'),true,'Parameterized identification link must reach the dedicated tool');
+      assert.equal(new URL(page.url()).hash,'#identify');
       await page.goto(href('sequence-library.html#oeis'));await ready(page);
       assert.ok(page.url().includes('sequence-oeis.html'),'Old OEIS hash must redirect');
       report.widths.push({width,eightPages:true,crossPageTransfer:true,standaloneComparison:true,researchDirectory:true,focusedResearchTools:true,legacyHashes:true,math:true,noOverflow:true});
