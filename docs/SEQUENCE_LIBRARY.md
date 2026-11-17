@@ -15,8 +15,17 @@ library. Plotting and term generation are available in `sequence-explorer.html`.
 their settings in the generator interface. Research-archive searches also use
 the library, with the archive collection filter applied.
 
-Results show the defining formula, review status, collection, exact term preview
-at its recorded offset, and highlighted term matches. Collection and review
+Search results show the review status, collection, exact term preview at
+its recorded offset, highlighted term matches, and a compact source-formula
+excerpt. The complete defining expression remains in an expandable disclosure,
+with exact source text preserved. Closed result definitions are not typeset by
+MathJax until opened, avoiding work on off-screen formulas.
+
+For integer records, Plot, Save, and Compare remain visible. A More actions
+disclosure holds the defining-formula page, transfer action where applicable,
+and recorded finite OEIS comparisons. It stays closed on broad searches and
+opens automatically when three or fewer records match. Generalized family
+results retain their definition and source navigation. Collection and review
 filters share the same URL state as the query. Removable filter buttons make
 the current scope explicit; copying a link leaves the result count visible.
 
