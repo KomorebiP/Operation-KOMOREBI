@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {formulaLatex,readMathDisplay} from '../website/assets/math-display.mjs';
 import {atlasDestination,archiveDestination} from '../website/assets/sequence-navigation.mjs';
 import {sequenceTransfer} from '../website/assets/sequence-transfer-core.mjs';
-import {rationalTeX,transferPolynomialPlain,transferPolynomialTeX,transferWitnessPlain,transferWitnessTeX} from '../website/assets/sequence-math.mjs';
+import {rationalTeX,transferPolynomialPlain,transferPolynomialTeX,transferWitnessPlain,transferWitnessTeX,triangleRowExpressions} from '../website/assets/sequence-math.mjs';
 
 test('formula transcription preserves denominator function arguments and sum scope',()=>{
   const quotient=formulaLatex("a(n)=-D_2'(z)/D_2(z)");
@@ -129,4 +129,19 @@ test('rational source coefficients remain exact and malformed data fails closed'
   assert.throws(()=>rationalTeX('1/0'),/rational coefficient/);
   assert.throws(()=>rationalTeX('1.5'),/rational coefficient/);
   assert.throws(()=>transferWitnessTeX(map.rows,3),/outside the coefficient window/);
+});
+
+test('triangle rows typeset from the exact indexed integers without dropping signs',()=>{
+  const entry={id:'KFOR-TRI-P-03',N:3,triangle:{variable:'r',row_lengths:[1,2,3]}};
+  const row=[0,9,10].map((raw,k)=>({n:2,k,raw:String(raw)}));
+  const result=triangleRowExpressions(entry,row);
+  assert.equal(result.plain,'P_(3,2)(r) = 9r + 10r^2');
+  assert.equal(result.tex,String.raw`P_{3,2}(r)=9\,r + 10\,r^{2}`);
+  const theta={id:'KFOR-TRI-H',triangle:{variable:'x',row_lengths:[1,3]}};
+  const thetaRow=[-1,0,2].map((raw,k)=>({n:1,k,raw:String(raw)}));
+  assert.equal(triangleRowExpressions(theta,thetaRow).plain,'Theta_(2)(x) = -1 + 2x^2');
+  const matrix={id:'KFOR-TRI-B-03',triangle:{variable:'x',row_lengths:[1,2]}};
+  assert.equal(triangleRowExpressions(matrix,[{n:1,k:0,raw:'1'},{n:1,k:1,raw:'-1'}]).plain,'R_1(x) = 1 - x');
+  assert.throws(()=>triangleRowExpressions(entry,[{n:2,k:1,raw:'10'}]),/complete coefficient row|index map/);
+  assert.throws(()=>triangleRowExpressions(theta,[{n:1,k:0,raw:'1/2'},{n:1,k:1,raw:'0'},{n:1,k:2,raw:'1'}]),/exact integers/);
 });

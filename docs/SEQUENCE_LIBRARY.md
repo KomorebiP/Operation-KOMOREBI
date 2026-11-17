@@ -402,3 +402,47 @@ Notebook links keep their payload in the URL fragment, which is not sent in
 the page request. Earlier query-based notebook links remain readable. Comparison
 and identification links that exceed the host-safe bound direct the reader to
 notebook JSON export; full JSON workspaces retain their larger data limit.
+
+
+## Typeset mathematical reading
+
+The sequence reading pages use the shared MathJax display with a site-wide
+Typeset math / Plain text selector. The source notation and exact data are
+unchanged by display transcription. The sequence library now presents the
+anchored transfer equations, quotient and inverse kernels, finite
+Euler/Fibonacci witness, and verification identities as display mathematics.
+The dynamic certificate uses coefficients from the exact rational transfer,
+not rounded plot values.
+
+The connection graph and each record's research-connection panel display an
+equation for supported relation types. These include subsequences, seed shifts,
+polynomial coefficient extraction, evaluation, inverse block matrices, and
+the Euler/Fibonacci ordinary convolution. The accompanying prose retains
+direction, indexing conditions, and evidence scope. Finite transform matches
+without an established identity remain prose rather than being promoted to
+an equation.
+
+Each complete coefficient triangle displays its flat-index map.
+Ordinary triangular rows use $j=n(n+1)/2+k$. The theta polynomial
+rows use $j=n^2+k$. The interactive row selector computes its displayed
+polynomial directly from the exact stored integers. For block matrix tables,
+$R_n(x)$ is labelled as a row encoding only. It is not asserted to be a
+generating function. The indexed coefficient table retains all zero entries
+even when a polynomial omits zero terms.
+
+Generated displays preserve the old plain-source fallback without
+JavaScript. Formula exports, comparison and transfer certificates, and
+stored sequence offsets remain independent of presentation. Complex
+expressions scroll inside their own panels on narrow screens. The targeted
+browser regression runs at 1440, 390, and 320 pixels and checks MathJax
+errors, plain-source switching, exact row transcription, index maps,
+and the no-JavaScript triangle.
+
+Run the focused checks with:
+
+```text
+node --test tools/test_sequence_math.mjs tools/test_sequence_transfer.mjs tools/test_sequence_research.mjs
+python -m unittest discover -s tools -p test_sequence_library.py
+node tools/test_sequence_math_browser.cjs http://127.0.0.1:8846/ OUTPUT_DIRECTORY
+```
+

@@ -49,6 +49,24 @@ class SequenceLibraryTests(unittest.TestCase):
         self.assertEqual(cell_coordinates(theta,8),(2,4));self.assertEqual(source_degree(theta,8),4)
         column=entries['KFOR-AC-03-01-02'];self.assertEqual(column['terms'][:2],['1','-10']);self.assertEqual(source_degree(column,1),5)
 
+    def test_connection_equations_retain_exact_indices_and_static_readability(self):
+        from sequence_research_notes import research_connections
+        from sequence_research_tables import research_additions,triangle_section
+        edges=research_connections()['edges']
+        def edge(kind,target):
+            return next(e for e in edges if e['kind']==kind and e['target']==target)
+        self.assertTrue(next(e['math_plain'] for e in edges if e['kind']=='subsequence').startswith('b(n)=a('))
+        self.assertIn(r'\Theta_{2n}',edge('coefficient extraction','KFOR-HC-04')['math_tex'])
+        self.assertIn(r'E_{3n+2}',edge('coefficient extraction','KFOR-AC-03-01-02')['math_tex'])
+        self.assertIn(r'\Theta_{2n}(2)',edge('polynomial evaluation','KFOR-H-02')['math_tex'])
+        self.assertIn(r'\delta_{n,k}',edge('inverse matrices','KFOR-TRI-BI-03')['math_tex'])
+        self.assertTrue(all(e['math_plain'] and e['math_tex'] for e in edges if e['kind'] in
+            ('subsequence','seed shift','coefficient extraction','polynomial evaluation','inverse matrices','ordinary convolution')))
+        entries={entry['id']:entry for entry in research_additions()}
+        self.assertIn('j=n^2+k',triangle_section(entries['KFOR-TRI-H']))
+        self.assertIn(r'\frac{n(n+1)}{2}',triangle_section(entries['KFOR-TRI-P-03']))
+        self.assertIn('data-math-latex=',triangle_section(entries['KFOR-TRI-B-03']))
+
     def test_snapshot_contiguous_matching_extends_and_caps_with_exact_totals(self):
         entry=dict(id='LOCAL',terms=[str(x) for x in range(1,13)])
         with tempfile.TemporaryDirectory() as tmp:
