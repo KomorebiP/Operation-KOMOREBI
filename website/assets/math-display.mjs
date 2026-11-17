@@ -177,22 +177,22 @@ if(typeof document!=='undefined'&&!window.KomorebiMath){
   function pair(plain,tex){
     if(!tex&&readableFormulaParts(plain.textContent).length<2)return;const wrapper=document.createElement('div');wrapper.className='math-pair';
     plain.before(wrapper);wrapper.append(plain);plain.dataset.mathPlain='true';
-    plain.removeAttribute('data-math-notation');const math=mathNode(plain,tex);wrapper.append(math);pairs.add(wrapper);plainRecords.set(plain,{source:plain.textContent,wrapper,math});capture(math);return math;
+    plain.removeAttribute('data-math-notation');const math=mathNode(plain,tex);wrapper.append(math);pairs.add(wrapper);plainRecords.set(plain,{source:plain.textContent,tex,wrapper,math});capture(math);return math;
   }
   function enhance(root=document){
     const pending=[];
-    for(const plain of root.querySelectorAll('.sar-formula,.sa-formula,.sl-formula pre')){
-      const record=plainRecords.get(plain),source=plain.textContent;
+    for(const plain of root.querySelectorAll('.sar-formula,.sa-formula,.sl-formula pre,[data-math-latex]')){
+      const record=plainRecords.get(plain),source=plain.textContent,tex=plain.getAttribute('data-math-latex')||formulaLatex(source);
       if(record){
-        if(record.source!==source){
+        if(record.source!==source||record.tex!==tex){
           window.MathJax?.typesetClear?.([record.math]);record.math.remove();
-          const tex=formulaLatex(source),math=mathNode(plain,tex);plain.dataset.mathNotation=tex?'':'source';record.wrapper.append(math);record.source=source;record.math=math;capture(math);if(tex||math.dataset.mathStructured)pending.push(math);
+          const math=mathNode(plain,tex);plain.dataset.mathNotation=tex?'':'source';record.wrapper.append(math);record.source=source;record.tex=tex;record.math=math;capture(math);if(tex||math.dataset.mathStructured)pending.push(math);
         }
         continue;
       }
       if(seenText.get(plain)===source||plain.closest('.math-pair,.sa-plain-formula')||plain.matches('[data-math-plain]'))continue;seenText.set(plain,source);
       if(plain.closest('#sl-oeis-results'))continue;
-      const math=pair(plain,formulaLatex(plain.textContent));if(math)pending.push(math);else plain.dataset.mathNotation='source';
+      const math=pair(plain,tex);if(math)pending.push(math);else plain.dataset.mathNotation='source';
     }
     for(const legacy of root.querySelectorAll('.sa-typeset')){
       if(seen.has(legacy))continue;seen.add(legacy);const plain=legacy.nextElementSibling;
@@ -217,12 +217,12 @@ if(typeof document!=='undefined'&&!window.KomorebiMath){
   if(select){select.value=mode;select.addEventListener('change',()=>setMode(select.value));select.closest('.math-display-control').hidden=false;}
   addEventListener('storage',event=>{if(event.key===MATH_DISPLAY_KEY||event.key===null)setMode(readMathDisplay(storage),false);});
   enhance();
-  const changed=new Set(),selector='.sar-formula,.sa-formula,.sl-formula pre,.sa-typeset,.arithmatex';
+  const changed=new Set(),selector='.sar-formula,.sa-formula,.sl-formula pre,[data-math-latex],.sa-typeset,.arithmatex';
   const observer=new MutationObserver(records=>{
     let relevant=false;
     for(const record of records){
       const target=record.target.nodeType===1?record.target:record.target.parentElement;
-      if(target?.matches('.sar-formula,.sa-formula,.sl-formula pre')){changed.add(target.parentElement);relevant=true;}
+      if(target?.matches('.sar-formula,.sa-formula,.sl-formula pre,[data-math-latex]')){changed.add(target.parentElement);relevant=true;}
       else if(target?.closest('.arithmatex'))relevant=true;
       for(const node of record.addedNodes||[])if(node.nodeType===1&&!node.matches('.math-plain-source')&&(node.matches(selector)||node.querySelector(selector))){changed.add(node.parentElement||node);relevant=true;}
     }
