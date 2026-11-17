@@ -167,6 +167,8 @@ async function run(){
     const staticContext=await browser.newContext({javaScriptEnabled:false,viewport:{width:320,height:900}});
     const page=await staticContext.newPage();
     await page.goto(new URL('sequence-library.html#transfers',base).href);
+    assert.equal(await page.locator('#transfers a[href^="sequence-transfers.html"]').count(),1);
+    await page.goto(new URL('sequence-transfers.html#transfers',base).href);
     assert.match(await page.locator('.sr-transfer-example').textContent(),/Euler values to shifted Fibonacci values/);
     assert.match(await page.locator('.sr-transfer-overview').textContent(),/formal division over the rationals/);
     assert.equal(await page.locator('.sr-transfer-static-matrices [data-math-latex]').count(),2);
