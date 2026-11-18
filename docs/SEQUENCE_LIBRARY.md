@@ -147,7 +147,8 @@ panel. Readers can change the chart title, horizontal and vertical axis titles,
 legend visibility, placement above or below the plot, and up to four series
 names. Legend presentation includes compact names, IDs only, or full IDs and
 names. Longer labels wrap within the SVG chart instead of creating page-wide
-overflow. Empty titles retain suitable defaults. The selected transformation
+overflow. Empty titles retain suitable defaults that name the selected
+sequence or sequences and the plotted transformation. The selected transformation
 remains visible in the automatic title. Custom text is included in SVG/PNG
 exports, copied comparison links, and research workspace snapshots. Plot text
 does not alter selected sources, integer arithmetic or comparison certificates.
