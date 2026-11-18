@@ -1,5 +1,5 @@
 import {WORKBENCH_DEFAULTS,validateWorkbench,localSource,referenceSource,familySource,customSource,descriptor,workbenchRows,agreements,readWorkbenchLink,workbenchLink,comparisonCSV} from './sequence-workbench-core.mjs';
-import {createComparisonCertificate} from './sequence-comparison-certificate.mjs';
+import {createComparisonCertificate,verifyComparisonCertificate,assessCertificateCatalogue} from './sequence-comparison-certificate.mjs';
 import {mountPlotOptions,plotColors,plotHeight,showIndexLabel,mergePlotLabels,finishPlotTheme,exportPlot,validateAppearance} from './sequence-plot-options.mjs';
 import {COMPARISON_CHART_DEFAULTS,validateComparisonChart,comparisonChartTitle,comparisonXAxisTitle,comparisonYAxisTitle,comparisonYAxisTick,comparisonScaleExplanation,comparisonLegendLabel,wrapLegendLabel} from './sequence-comparison-chart.mjs';
 
@@ -53,6 +53,25 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
       <p>The certificate contains its exact stored integer inputs, source data SHA-256 fingerprints, recorded index conventions, selected transforms, every displayed integer and finite agreement counts. It independently replays these calculations with exact integer arithmetic before download.</p>
       <p>It proves only the finite calculation relative to the embedded inputs, not equality of infinite sequences, source authority or novelty. For local records the complete indexed data is also checked against its published catalogue receipt. OEIS excerpt positions do not provide mathematical offsets.</p>
       <p><a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/tools/verify_sequence_comparison_certificate.mjs">Offline verification script</a> (run with Node.js 24 using the repository checkout). The exact CSV export remains available separately.</p>
+    </details>
+    <details id="sw-verify-certificate" class="sw-verify-certificate">
+      <summary>Verify a saved comparison certificate</summary>
+      <p>Choose a previously exported JSON certificate. Verification happens entirely in this browser. Your file is not uploaded, and you do not need to select its original sequences first.</p>
+      <form id="sw-verify-form" class="sw-verify-form">
+        <label for="sw-verify-file">Exact comparison certificate JSON
+          <input id="sw-verify-file" type="file" accept=".json,application/json" required>
+        </label>
+        <button type="submit" id="sw-verify-submit">Verify exact certificate</button>
+      </form>
+      <p id="sw-verify-status" role="status" aria-live="polite">Choose a JSON certificate to verify its finite arithmetic and source receipts.</p>
+      <p id="sw-verify-error" role="alert" hidden></p>
+      <div id="sw-verify-output" hidden>
+        <p id="sw-verify-summary"></p>
+        <p>Certificate content SHA-256: <code id="sw-verify-receipt"></code></p>
+        <p id="sw-verify-catalogue"></p>
+        <ul id="sw-verify-sources"></ul>
+        <p>Verified finite arithmetic does not establish infinite sequence equality, historical novelty, or independent external source authenticity. Catalogue checks compare local receipts with this site's currently published records.</p>
+      </div>
     </details>
     <label id="sw-link-wrap" for="sw-link" hidden>Copy this comparison link<input id="sw-link" readonly></label>
     <details id="sw-data"><summary>Exact comparison table</summary><div class="sar-scroll" role="region" aria-label="Exact comparison values" tabindex="0"><table><caption>Stored indices and displayed exact integers</caption><thead><tr><th scope="col">Series</th><th scope="col">Index convention</th><th scope="col">Index / position</th><th scope="col">Window position</th><th scope="col">Original integer</th><th scope="col">Displayed integer</th></tr></thead><tbody></tbody></table></div></details>`;
@@ -231,6 +250,68 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
     const copyComparison=async()=>{let link;try{link=appearance.link(workbenchLink(location.href,sources,state,chartLabels));}catch(error){fail(error);return;}try{await navigator.clipboard.writeText(link);say('Comparison link copied. Exact local data receipts are checked when available. OEIS excerpts require explicit restoration.');}catch{$('link-wrap').hidden=false;$('link').value=link;$('link').focus();$('link').select();}};
   $('share').addEventListener('click',copyComparison);
   $('share-top').addEventListener('click',copyComparison);
+  // Verification reads only the user-selected local file. No upload or
+  // external request is performed, even if no comparison is currently loaded.
+  $('verify-file').addEventListener('change',()=>{
+    $('verify-output').hidden=true;
+    $('verify-error').hidden=true;
+    $('verify-error').textContent='';
+    const file=$('verify-file').files?.[0];
+    $('verify-status').textContent=file?'Selected '+file.name+'. Choose Verify exact certificate.':'Choose a JSON certificate to verify.';
+  });
+  $('verify-form').addEventListener('submit',async event=>{
+    event.preventDefault();
+    const file=$('verify-file').files?.[0];
+    if(!file)return;
+    $('verify-output').hidden=true;
+    $('verify-error').hidden=true;
+    $('verify-error').textContent='';
+    const button=$('verify-submit');
+    button.disabled=true;
+    $('verify-status').textContent='Checking exact integers, source data digests and finite agreements.';
+    try{
+      // Pretty-printed certificates can be larger than the compact
+      // eight-million-character body verified by the certificate module.
+      if(file.size===0||file.size>16*1024*1024)
+        throw Error('Choose a nonempty certificate JSON file no larger than 16 MiB.');
+      await new Promise(resolve=>requestAnimationFrame(resolve));
+      const raw=await file.text();
+      if(raw.length>16*1024*1024)throw Error('The certificate file exceeds the local verification limit.');
+      let certificate;
+      try{certificate=JSON.parse(raw);}
+      catch{throw Error('This file is not valid JSON. Choose an exported comparison certificate.');}
+      const verified=await verifyComparisonCertificate(certificate);
+      const match=assessCertificateCatalogue(certificate,entries);
+      $('verify-summary').textContent='Verified finite arithmetic: '+verified.sources+' source prefixes, '+
+        verified.exactRows+' exact displayed rows, '+verified.comparedPositions+' compared positions across '+
+        verified.finiteChecks+' pairwise checks.';
+      $('verify-receipt').textContent=verified.certificateSha256;
+      const issueCount=match.different+match.unavailable+match.withoutReceipt;
+      $('verify-catalogue').textContent=match.localSources
+        ?'Current site catalogue: '+match.matched+' of '+match.localSources+
+          ' local source receipts match.'+(issueCount?' '+issueCount+' require attention; the embedded finite arithmetic can still be valid.':'')
+        :'No local site records in this certificate. Embedded finite inputs were verified, but external provenance was not independently checked.';
+      const labels={
+        'matches':'matches the current site catalogue receipt',
+        'different':'differs from the current site catalogue receipt',
+        'not-in-catalogue':'not present in the current site catalogue',
+        'no-receipt':'no pinned site receipt supplied',
+        'embedded-only':'embedded exact input verified; external source identity not independently checked'
+      };
+      const list=$('verify-sources');list.replaceChildren();
+      for(const source of match.sources){
+        const item=node('li',source.id+' · '+source.type+': '+labels[source.status]);
+        list.append(item);
+      }
+      $('verify-output').hidden=false;
+      $('verify-status').textContent='Finite certificate verification completed.'+
+        (issueCount?' Some catalogue sources need review.':'');
+    }catch(error){
+      $('verify-status').textContent='Certificate not verified.';
+      $('verify-error').textContent='Verification failed: '+error.message;
+      $('verify-error').hidden=false;
+    }finally{button.disabled=false;}
+  });
   $('csv').addEventListener('click',()=>{if(!result)return;const url=URL.createObjectURL(new Blob([comparisonCSV(result)],{type:'text/csv;charset=utf-8'})),link=node('a');link.href=url;link.download='sequence-comparison.csv';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
   $('certificate').addEventListener('click',async()=>{
     if(!result||sources.some(source=>source.pending))return;

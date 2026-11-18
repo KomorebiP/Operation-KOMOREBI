@@ -180,3 +180,34 @@ export async function verifyComparisonCertificate(certificate){
     certificateSha256
   };
 }
+
+/** Compare independently verified embedded local sources with this site's currently
+ * published catalogue receipts. This is a separate check from finite arithmetic.
+ * Other providers and generated sources have no local catalogue attestation.
+ */
+export function assessCertificateCatalogue(certificate,entries){
+  check(certificate&&Array.isArray(certificate.sources)&&Array.isArray(entries),
+    'Cannot compare certificate sources against the current catalogue.');
+  const catalogue=new Map(entries.filter(entry=>entry&&typeof entry.id==='string')
+    .map(entry=>[entry.id,entry]));
+  const sources=certificate.sources.map(source=>{
+    const id=String(source.id||'');
+    if(source.type!=='local')return {id,type:source.type,status:'embedded-only'};
+    const expected=source.catalogueReceipt;
+    if(!DIGEST.test(expected||''))return {id,type:'local',status:'no-receipt'};
+    const current=catalogue.get(id);
+    if(!current)return {id,type:'local',status:'not-in-catalogue'};
+    if(!DIGEST.test(current.record_sha256||'')||current.record_sha256!==expected)
+      return {id,type:'local',status:'different'};
+    return {id,type:'local',status:'matches'};
+  });
+  const local=sources.filter(source=>source.type==='local');
+  return {
+    localSources:local.length,
+    matched:local.filter(source=>source.status==='matches').length,
+    different:local.filter(source=>source.status==='different').length,
+    unavailable:local.filter(source=>source.status==='not-in-catalogue').length,
+    withoutReceipt:local.filter(source=>source.status==='no-receipt').length,
+    sources
+  };
+}
