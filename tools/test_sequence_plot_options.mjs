@@ -31,6 +31,11 @@ test('all single-sequence plot annotations round-trip without changing the view 
   assert.equal(url.hash,'#plot');
   const repeat=singlePlotLabelLink(href,parsed.state);assert.equal(repeat,href);
   assert.deepEqual(readSinglePlotLabels(source,{legend:'hide'}).state,validateComparisonChart({legend:'hide'}));
+  // An archive defaults to a hidden legend; copying an enabled legend must
+  // override that per-page default even when "show" is the global default.
+  const archiveShown=singlePlotLabelLink(source,validateComparisonChart({legend:'show'}));
+  assert.equal(new URL(archiveShown).searchParams.get('chart-legend'),'show');
+  assert.equal(readSinglePlotLabels(archiveShown,{legend:'hide'}).state.legend,'show');
   const duplicate=new URL(href);duplicate.searchParams.append('chart-ticks','log');
   const unknown=new URL(href);unknown.searchParams.set('chart-ticks','invalid');
   const tooLong=new URL(href);tooLong.searchParams.set('chart-title','X'.repeat(91));
