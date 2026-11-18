@@ -53,6 +53,20 @@ async function fit(page){
       assert.equal(await atlasRestored.locator('#sa-chart-ticks').inputValue(),'scientific');
       assert.equal(await atlasRestored.locator('#sa-chart-legendStyle').inputValue(),'id');
       assert.equal(await atlasRestored.locator('#sa-plot [data-chart-title]').getAttribute('aria-label'),'Fibonacci exact profile');
+      // A newly selected comparison series must not inherit a prior record's legend alias.
+      await atlasRestored.locator('#sa-chart-labels>summary').click();
+      await atlasRestored.selectOption('#sa-compare','KSEQ-000037');
+      assert.equal(await atlasRestored.locator('#sa-chart-labels .sp-chart-series input').count(),2);
+      const seriesAlias=atlasRestored.locator('#sa-chart-labels .sp-chart-series input').nth(1);
+      await seriesAlias.fill('Temporary Lucas alias');
+      await seriesAlias.press('Tab');
+      assert.match(await atlasRestored.locator('#sa-plot [data-legend-label="1"]').textContent(),/Temporary Lucas alias/);
+      await atlasRestored.selectOption('#sa-compare','KSEQ-000001');
+      assert.equal(await atlasRestored.locator('#sa-chart-labels .sp-chart-series input').count(),2);
+      assert.equal(await atlasRestored.locator('#sa-chart-labels .sp-chart-series input').nth(1).inputValue(),'');
+      assert.doesNotMatch(await atlasRestored.locator('#sa-plot [data-legend-label="1"]').textContent(),/Temporary Lucas alias/);
+      await atlasRestored.selectOption('#sa-compare','');
+      assert.equal(await atlasRestored.locator('#sa-chart-labels .sp-chart-series input').count(),1);
       await fit(atlasRestored);await atlasRestored.close();
       await fit(page);
 
@@ -96,6 +110,8 @@ async function fit(page){
       await page.goto(href('sequence-compare.html#comparison'));
       await page.locator('[data-library-ready=true]').waitFor({timeout:90000});
       await page.locator('#sw-example').click();
+      assert.equal(await page.locator('#sw-chart [data-chart-title]').getAttribute('aria-label'),'Original terms · Fibonacci vs Lucas',
+        'Uncustomized comparison charts should identify their plotted sequences');
       await page.locator('#sw-chart-labels>summary').click();
       await page.selectOption('#sw-legend-style','id');
       assert.match(await page.locator('#sw-chart [data-legend-label]').first().textContent(),/KSEQ-000025/);
