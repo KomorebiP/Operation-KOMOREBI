@@ -336,7 +336,7 @@ async function init(){
   appearanceControls=mountPlotOptions({host:$('plot-options'),prefix:'sa',onChange:style=>{appearance=style;if(lastRows.length)draw(lastRows,[...new Set(lastRows.map(row=>row.name))]);}});appearance=appearanceControls.state;
   chartLabelControls=mountSinglePlotLabels({
     anchor:$('plot-options'),plot:$('plot'),prefix:'sa',
-    getSources:()=>[{id:state.sequence==='custom'?'CUSTOM':state.sequence,title:known(state.sequence)?.title||'Pasted sequence'},...(state.compare?[{id:state.compare,title:known(state.compare)?.title||state.compare}]:[])],
+    getSources:()=>[{id:$('sequence').value==='custom'?'CUSTOM':$('sequence').value,title:known($('sequence').value)?.title||'Pasted sequence'},...($('compare').value?[{id:$('compare').value,title:known($('compare').value)?.title||$('compare').value}]:[])],
     onChange:()=>{if(lastRows.length)draw(lastRows,[...new Set(lastRows.map(row=>row.name))]);}
   });
   for(const [name,label,settings]of [['growth','Growth view',{view:'standard',transform:'raw',scale:'signed-log',marks:'line',color:'series'}],['residues','Residue view',{view:'mod',transform:'raw',scale:'linear',marks:'points',color:'value'}],['changes','Changes',{view:'standard',transform:'difference',scale:'signed-log',marks:'bars',color:'series'}]]){
