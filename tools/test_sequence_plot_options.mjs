@@ -31,11 +31,10 @@ test('all single-sequence plot annotations round-trip without changing the view 
   assert.equal(url.hash,'#plot');
   const repeat=singlePlotLabelLink(href,parsed.state);assert.equal(repeat,href);
   assert.deepEqual(readSinglePlotLabels(source,{legend:'hide'}).state,validateComparisonChart({legend:'hide'}));
-  for(const bad of [
-    href+'&chart-ticks=log',
-    href.replace('chart-ticks=scientific','chart-ticks=invalid'),
-    href.replace('chart-title=Exact+coefficient+growth','chart-title='+encodeURIComponent('X'.repeat(91)))
-  ]){
+  const duplicate=new URL(href);duplicate.searchParams.append('chart-ticks','log');
+  const unknown=new URL(href);unknown.searchParams.set('chart-ticks','invalid');
+  const tooLong=new URL(href);tooLong.searchParams.set('chart-title','X'.repeat(91));
+  for(const bad of [duplicate.href,unknown.href,tooLong.href]){
     const restored=readSinglePlotLabels(bad);
     assert.match(restored.note,/Invalid chart label settings/);
     assert.equal(restored.state.title,'');
