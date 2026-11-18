@@ -22,8 +22,8 @@ export function certificateInspectionWindow(certificate,{seriesIndex=-1,onlyDiff
     if(i!==seriesIndex&&seriesIndex!==-1)continue;
     for(const row of series.rows){
       const matched=i>0?baselineMap.get(row.alignmentKey):null;
-      const status=i===0?'baseline':
-        row.displayed===null?'undefined':
+      const status=row.displayed===null?'undefined':
+        i===0?'baseline':
         !matched?'no-overlap':
         matched.displayed===row.displayed?'equal':'different';
       if(onlyDifferences&&status!=='different')continue;
