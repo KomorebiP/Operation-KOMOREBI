@@ -90,7 +90,7 @@ test('independent verifier rejects changed results even when an attacker recompu
 });
 test('certificate rejects out-of-bounds data or invalid exact integers and never changes the source',async()=>{
   const before=JSON.stringify(a);
-  await assert.rejects(createComparisonCertificate([customSource({title:'One',offset:0,terms:['1','2']}),customSource({title:'Two',offset:0,terms:['1','2']})],{skip:999}),/Select a window containing stored values/);
+  await assert.rejects(createComparisonCertificate([customSource({title:'One',offset:0,terms:['1','2']})],{skip:999}),/Select a window containing stored values/);
   await assert.rejects(createComparisonCertificate([{...pinned,terms:['01']}]),/canonical exact integer strings/);
   await assert.rejects(createComparisonCertificate([pinned,pinned]),/duplicate sources/);
   await assert.rejects(createComparisonCertificate([pinned],{transform:'new'}),/Choose a listed transform/);
