@@ -181,10 +181,25 @@ rows at a time with source identity, window position, stored-prefix position,
 recorded index or OEIS export position, separately recorded source degree where available, original
 integer, exact displayed integer and comparison status. Readers can page
 through the full verified finite window, filter to one source, or show only
-genuine differences from the first source. Undefined transformed values and
-positions without an overlapping baseline are labelled separately and are
-not counted as disagreements. The first mismatch and finite agreement counts
-are displayed from the independently checked certificate. This view works
+genuine differences from the first source. The on-screen table also shows the
+alignment key and the exact displayed integer from the first source when an
+overlap exists. Undefined transformed values and positions without an
+overlapping baseline are labelled separately and are not counted as
+disagreements. The first mismatch and finite agreement counts
+are displayed from the independently checked certificate.
+
+**Export filtered exact CSV** downloads all rows matching the currently
+selected source and differences-only filter, not just the twelve rows on the
+visible page. Each exported line includes the source identity, both stored
+and recorded index conventions, optional source degree, alignment key,
+original and displayed exact integers, baseline displayed integer,
+comparison status, the original local-source receipt when available, and
+the verified certificate SHA-256 digest. This CSV is a convenient tabular
+extract, not a substitute for independently replaying the complete JSON
+certificate. The decimal integer strings remain exact in the file, but
+spreadsheet programs may round large integers during automatic import;
+select text columns rather than numeric conversion. An empty differences-only
+filter disables its CSV export instead of producing a misleading empty report. This view works
 without reconstructing the current comparison or loading OEIS data. It never
 interprets the recorded index as a Taylor degree.
 
