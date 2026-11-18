@@ -52,8 +52,11 @@ export function comparisonYAxisTick(value,{view='values',scale='signed-log',tick
   if(view==='mod')return String(Math.round(value));
   if(scale==='log'){
     if(ticks==='log')return signedLogText(value);
-    const order=Math.floor(value),mantissa=Number((10**(value-order)).toPrecision(2));
+    let order=Math.floor(value),mantissa=Number((10**(value-order)).toPrecision(2));
+    if(mantissa===10){mantissa=1;order++;}
     if(ticks==='scientific')return '≈'+mantissa+'×10^'+order;
+    // Very small fractions should not render as a long string of zeros.
+    if(value< -3)return '≈'+mantissa+'×10^'+order;
     return value>15?'≈10^'+Number(value.toFixed(1)):magnitudeFormat.format(10**value);
   }
   if(scale==='signed-log'){
