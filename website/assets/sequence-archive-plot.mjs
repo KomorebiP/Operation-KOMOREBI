@@ -51,7 +51,7 @@ export function setupArchivePlot(entry){
       picture.append(svg('text',{x:left,y:bottom+22},String(minX)),svg('text',{x:right,y:bottom+22,'text-anchor':'end'},String(maxX)));
       if(showLegend){
         const ly=textLayout.legendY,label=svg('text',{x:left,y:ly,'data-legend-label':'0','aria-label':entry.id+' · '+comparisonLegendLabel(entry,0,chart)});
-        legendLines.forEach((line,i)=>label.append(svg('tspan',{x:left,dy:i?16:0},line)));
+        legendLines.forEach((line,i)=>label.append(svg('tspan',{x:left,dy:i?16:0},line+(i<legendLines.length-1?' ':''))));
         picture.append(label,svg('line',{x1:left-22,x2:left-5,y1:ly-4,y2:ly-4,stroke:colors[0],'stroke-width':appearance.width}));
       }
       if(state.marks==='line'){

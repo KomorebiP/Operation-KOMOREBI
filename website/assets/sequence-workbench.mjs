@@ -204,7 +204,7 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
       const raw=comparisonLegendLabel(source,i,chartLabels);
       const prior=legendLines.slice(0,i).reduce((sum,lines)=>sum+lines.length,0),ly=layout.legendY+prior*16;
       const display=svg('text',{x:left,y:ly,'font-size':mobile?11:12,'data-legend-label':String(i),'aria-label':source.id+' · '+raw});
-      legendLines[i].forEach((text,j)=>display.append(svg('tspan',{x:left,dy:j?16:0},text)));
+      legendLines[i].forEach((text,j)=>display.append(svg('tspan',{x:left,dy:j?16:0},text+(j<legendLines[i].length-1?' ':''))));
       picture.append(display);
       picture.append(svg('line',{x1:left-24,x2:left-5,y1:ly-4,y2:ly-4,stroke:colors[i],'stroke-width':theme.width,'stroke-dasharray':['','7 4','2 4','9 3 2 3'][i]}));
     });

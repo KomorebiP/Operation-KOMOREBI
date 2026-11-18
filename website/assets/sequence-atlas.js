@@ -128,7 +128,7 @@ function draw(rows,names){
     const prior=legendLines.slice(0,i).reduce((total,lines)=>total+lines.length*16,0);
     const ly=textLayout.legendY+prior,raw=comparisonLegendLabel(source,i,chart);
     const text=element('text',{x:pad.left,y:ly,fill:palette[i],'font-size':W<560?11:12,'data-legend-label':String(i),'aria-label':source.id+' · '+raw});
-    legendLines[i].forEach((line,j)=>text.append(element('tspan',{x:pad.left,dy:j?16:0},line)));
+    legendLines[i].forEach((line,j)=>text.append(element('tspan',{x:pad.left,dy:j?16:0},line+(j<legendLines[i].length-1?' ':''))));
     svg.append(text);
   });
   if(state.marks==='line'&&!frequency&&!grid){
