@@ -2,11 +2,11 @@ import {WORKBENCH_DEFAULTS,validateWorkbench,localSource,referenceSource,familyS
 import {createComparisonCertificate,verifyComparisonCertificate,assessCertificateCatalogue} from './sequence-comparison-certificate.mjs';
 import {certificateInspectionWindow,certificateInspectionCSV,CERTIFICATE_INSPECTION_PAGE_SIZE} from './sequence-certificate-inspection.mjs';
 import {mountPlotOptions,plotColors,plotHeight,showIndexLabel,mergePlotLabels,finishPlotTheme,exportPlot,validateAppearance} from './sequence-plot-options.mjs';
-import {COMPARISON_CHART_DEFAULTS,validateComparisonChart,comparisonChartTitle,comparisonXAxisTitle,comparisonYAxisTitle,comparisonYAxisTick,comparisonScaleExplanation,comparisonLegendLabel,wrapLegendLabel} from './sequence-comparison-chart.mjs';
+import {COMPARISON_CHART_DEFAULTS,validateComparisonChart,comparisonChartTitle,comparisonXAxisTitle,comparisonYAxisTitle,comparisonYAxisTick,comparisonScaleExplanation,comparisonLegendLabel,wrapLegendLabel,layoutChartText,appendChartText} from './sequence-comparison-chart.mjs';
+import {mountChartTextFields} from './sequence-chart-labels.mjs';
 
 const node=(tag,text)=>{const el=document.createElement(tag);if(text!==undefined)el.textContent=text;return el;};
 const svg=(tag,attrs={},text)=>{const el=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const [key,value]of Object.entries(attrs))el.setAttribute(key,value);if(text!==undefined)el.textContent=text;return el;};
-const short=(value,max=60)=>value.length>max?value.slice(0,max-1)+'…':value;
 export function mountWorkbench({root,entries,snapshot,referenceClient}){
   const section=root.querySelector('#comparison')||node('section');section.id='comparison';section.className='sw-workbench';
   section.innerHTML=`<p class="sar-kicker">Comparison workbench</p><h2 id="sw-heading" tabindex="-1">Compare sequences</h2>
@@ -32,17 +32,16 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
      </details>
     <div id="sw-appearance"></div>
     <details id="sw-chart-labels" class="sw-chart-labels"><summary>Customize chart title, legend and axes</summary>
+      <p>Set the text, visibility and size of each title. Long labels wrap automatically. Your settings travel with image exports and shared comparison links.</p>
+      <div id="sw-chart-text-fields"></div>
       <div class="sw-chart-label-grid">
-        <label for="sw-title-text">Chart title<input type="text" id="sw-title-text" maxlength="90" placeholder="Sequence comparison"></label>
-        <label for="sw-x-title">Horizontal axis title<input type="text" id="sw-x-title" maxlength="64" placeholder="Window position"></label>
-        <label for="sw-y-title">Vertical axis title<input type="text" id="sw-y-title" maxlength="64" placeholder="Auto: value scale"></label>
         <label for="sw-tick-mode">Value-axis tick labels<select id="sw-tick-mode"><option value="magnitude">Approximate original values</option><option value="scientific">Scientific notation</option><option value="log">Logarithmic coordinates</option></select></label>
         <label for="sw-legend">Legend<select id="sw-legend"><option value="show">Show legend</option><option value="hide">Hide legend</option></select></label>
         <label for="sw-legend-position">Legend placement<select id="sw-legend-position"><option value="top">Above plot</option><option value="bottom">Below plot</option></select></label>
         <label for="sw-legend-style">Legend text<select id="sw-legend-style"><option value="compact">Names only</option><option value="full">Record IDs and names</option><option value="id">Record IDs only</option></select></label>
       </div>
       <div id="sw-series-labels" class="sw-series-labels"></div>
-      <p>Leave any title blank to use a suitable default. Legend names correspond to the selected series in order. These labels change only the picture, not the integer data.</p>
+      <p>Leave the text blank for an automatic title, or choose Hide to remove it from the picture. Legend names follow the selected series in order.</p>
       <button type="button" id="sw-reset-chart-labels">Restore chart labels</button>
       <p id="sw-chart-label-status" role="status" aria-live="polite"></p>
     </details>
@@ -128,8 +127,11 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
   try{const linked=readWorkbenchLink(location.href,entries,snapshot);if(linked){sources=linked.sources;state=linked.state;restoredSchema=linked.schema;chartLabels=linked.chartLabels;}}catch(error){fail(error);}
   const fields=Object.keys(WORKBENCH_DEFAULTS);for(const key of fields)$(key).value=state[key];
   const appearance=mountPlotOptions({host:$('appearance'),prefix:'sw',onChange:()=>draw()});
-  const labelFields={title:$('title-text'),xTitle:$('x-title'),yTitle:$('y-title'),ticks:$('tick-mode'),legend:$('legend'),legendPosition:$('legend-position'),legendStyle:$('legend-style')};
+  const textFields=mountChartTextFields({host:$('chart-text-fields'),prefix:'sw',state:chartLabels,
+    textIds:{title:'sw-title-text',xTitle:'sw-x-title',yTitle:'sw-y-title'},onChange:updateChartLabel});
+  const labelFields={ticks:$('tick-mode'),legend:$('legend'),legendPosition:$('legend-position'),legendStyle:$('legend-style')};
   function showChartLabels(){
+    textFields.refresh(chartLabels);
     for(const [key,input] of Object.entries(labelFields))input.value=chartLabels[key];
     $('legend-position').disabled=$('legend-style').disabled=chartLabels.legend==='hide';
     $('tick-mode').disabled=state.view==='mod'||state.scale!=='signed-log';
@@ -153,13 +155,14 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
       }
     }
   }
-  for(const [key,input] of Object.entries(labelFields))input.addEventListener('change',()=>{
+  function updateChartLabel(key,value){
     try{
-      chartLabels=validateComparisonChart({...chartLabels,[key]:input.value});
+      chartLabels=validateComparisonChart({...chartLabels,[key]:value});
       $('chart-label-status').textContent='Chart labels updated.';
       showChartLabels();draw();
     }catch(error){$('chart-label-status').textContent=error.message;}
-  });
+  }
+  for(const [key,input] of Object.entries(labelFields))input.addEventListener('change',()=>updateChartLabel(key,input.value));
   $('reset-chart-labels').addEventListener('click',()=>{
     chartLabels=validateComparisonChart(COMPARISON_CHART_DEFAULTS);
     $('chart-label-status').textContent='Default chart labels restored.';
@@ -173,16 +176,9 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
     if(!ready){result=null;$('summary').textContent=pending?'Load or remove the pending reference excerpts to draw this comparison.':'Choose Add to comparison on any local result, or try the example.';$('inspector').textContent='Exact point values will appear here.';return;}
     try{result=workbenchRows(sources,state);}catch(error){fail(error);return;}
     const colors=plotColors(appearance.state),theme=appearance.state,chart=$('chart');
-    const width=Math.max(280,chart.clientWidth),height=plotHeight(width,theme),mobile=width<560;
-    const showLegend=chartLabels.legend==='show',bottomLegend=showLegend&&chartLabels.legendPosition==='bottom',hasOEIS=sources.some(s=>s.type==='oeis');
-    const left=mobile?84:92,right=18,legendWidth=Math.max(12,Math.floor((width-left-right-12)/7));
-    const legendLines=showLegend?result.series.map(({source},i)=>{
-      const label=(i+1)+'. '+comparisonLegendLabel(source,i,chartLabels);
-      return wrapLegendLabel(label,legendWidth,mobile&&sources.length>=3?1:2);
-    }):[];
-    const totalLegendLines=legendLines.reduce((sum,lines)=>sum+lines.length,0),legendSpace=totalLegendLines*16;
-    const top=showLegend&&!bottomLegend?45+legendSpace+12:56;
-    const bottom=height-(hasOEIS?106:69)-(bottomLegend?legendSpace+10:0),plotWidth=width-left-right;
+    const width=Math.max(280,chart.clientWidth),mobile=width<560;
+    const showLegend=chartLabels.legend==='show',hasOEIS=sources.some(s=>s.type==='oeis');
+    const chartTitle=comparisonChartTitle(state,chartLabels,result.series.map(({source})=>source)),xTitle=comparisonXAxisTitle(state,chartLabels),yTitle=comparisonYAxisTitle(state,chartLabels);
     const all=result.series.flatMap(s=>s.rows),points=all.filter(r=>r.y!==null&&Number.isFinite(r.y));
     for(const {source,rows}of result.series)for(const row of rows){const tr=node('tr');for(const value of [source.id,source.indexKind,row.index,row.position,row.raw,row.value??'undefined'])tr.append(node('td',String(value)));$('data').querySelector('tbody').append(tr);}
     const checks=agreements(result);if(checks.length){$('agreements').append(node('h3',state.view==='mod'?`Finite residue agreements · mod ${state.modulus}`:'Finite exact agreements'),node('p','Compared with the first selected series at overlapping displayed positions. Finite agreement does not prove that the infinite sequences are identical.'));const list=node('ul');for(const check of checks){const source=sources.find(s=>s.key===check.source);list.append(node('li',`${source.id}: ${check.equal} of ${check.compared} displayed integers agree.`+(check.firstMismatch?` First difference at ${state.alignment==='positions'?'window position':'local index'} ${check.firstMismatch.x}.`:'')));}$('agreements').append(list);}
@@ -190,28 +186,32 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
     let xmin=Math.min(...points.map(r=>r.x)),xmax=Math.max(...points.map(r=>r.x)),ymin=Math.min(...points.map(r=>r.y)),ymax=Math.max(...points.map(r=>r.y));
     if(state.view==='mod'){ymin=0;ymax=state.modulus-1;}else if(theme.baseline==='zero'){ymin=Math.min(ymin,0);ymax=Math.max(ymax,0);}if(xmin===xmax){xmin-=.5;xmax+=.5;}if(ymin===ymax){ymin=Math.min(0,ymin);ymax=Math.max(0,ymax);if(ymin===ymax){ymin=-1;ymax=1;}}
     const normalizer=Math.max(1,Math.abs(ymin),Math.abs(ymax)),lo=ymin/normalizer,hi=ymax/normalizer;
+    const yticks=state.view==='mod'?[...new Set(Array.from({length:Math.min(state.modulus,5)},(_,i)=>Math.round(i*(state.modulus-1)/(Math.min(state.modulus,5)-1))))]:Array.from({length:5},(_,i)=>(lo+(hi-lo)*i/4)*normalizer);
+    const layoutOptions={width,height:plotHeight(width,theme),left:mobile?84:92,right:18,title:chartTitle,xTitle,yTitle,
+      options:chartLabels,legendPosition:chartLabels.legendPosition,footerHeight:hasOEIS?42:0,tickLabels:yticks.map(tick=>comparisonYAxisTick(tick,{view:state.view,scale:state.scale,ticks:chartLabels.ticks}))};
+    const preliminary=layoutChartText(layoutOptions),legendWidth=Math.max(12,Math.floor((preliminary.plotWidth-12)/7));
+    const legendLines=showLegend?result.series.map(({source},i)=>{
+      const label=(i+1)+'. '+comparisonLegendLabel(source,i,chartLabels);
+      return wrapLegendLabel(label,legendWidth,mobile&&sources.length>=3?1:2,preliminary.plotWidth-12);
+    }):[];
+    const totalLegendLines=legendLines.reduce((sum,lines)=>sum+lines.length,0),legendSpace=totalLegendLines*16;
+    const layout=layoutChartText({...layoutOptions,legendHeight:legendSpace});
+    const {height,left,right,top,bottom,plotWidth}=layout;
     const x=value=>left+(value-xmin)/(xmax-xmin)*plotWidth,y=value=>bottom-(value/normalizer-lo)/(hi-lo)*(bottom-top),picture=svg('svg',{viewBox:`0 0 ${width} ${height}`,role:'group','aria-labelledby':'sw-chart-title sw-chart-desc'});
-    const chartTitle=comparisonChartTitle(state,chartLabels,result.series.map(({source})=>source)),xTitle=comparisonXAxisTitle(state,chartLabels),yTitle=comparisonYAxisTitle(state,chartLabels);
     picture.append(svg('title',{id:'sw-chart-title'},chartTitle),svg('desc',{id:'sw-chart-desc'},comparisonScaleExplanation(state,chartLabels)+' Focus a point to inspect exact integer values. A complete indexed HTML table follows the chart.'),svg('rect',{width,height,fill:'#fafaf5'}));
-    const heading=svg('text',{x:width/2,y:23,'text-anchor':'middle','font-size':mobile?13:15,'font-weight':650,'data-chart-title':'true','aria-label':chartTitle},short(chartTitle,Math.max(12,Math.floor((width-38)/8))));
-    picture.append(heading);
+    appendChartText(picture,layout);
     if(showLegend)result.series.forEach(({source},i)=>{
       const raw=comparisonLegendLabel(source,i,chartLabels);
-      const prior=legendLines.slice(0,i).reduce((sum,lines)=>sum+lines.length,0),ly=(bottomLegend?bottom+67:45)+prior*16;
+      const prior=legendLines.slice(0,i).reduce((sum,lines)=>sum+lines.length,0),ly=layout.legendY+prior*16;
       const display=svg('text',{x:left,y:ly,'font-size':mobile?11:12,'data-legend-label':String(i),'aria-label':source.id+' · '+raw});
       legendLines[i].forEach((text,j)=>display.append(svg('tspan',{x:left,dy:j?16:0},text)));
       picture.append(display);
       picture.append(svg('line',{x1:left-24,x2:left-5,y1:ly-4,y2:ly-4,stroke:colors[i],'stroke-width':theme.width,'stroke-dasharray':['','7 4','2 4','9 3 2 3'][i]}));
     });
-    const yticks=state.view==='mod'?[...new Set(Array.from({length:Math.min(state.modulus,5)},(_,i)=>Math.round(i*(state.modulus-1)/(Math.min(state.modulus,5)-1))))]:Array.from({length:5},(_,i)=>(lo+(hi-lo)*i/4)*normalizer);
     for(const tick of yticks){if(theme.grid==='on')picture.append(svg('line',{x1:left,x2:width-right,y1:y(tick),y2:y(tick),stroke:'#d9dfd4','data-plot-grid':'true'}));picture.append(svg('text',{x:left-9,y:y(tick)+4,'text-anchor':'end','font-size':11,'data-y-tick':''},comparisonYAxisTick(tick,{view:state.view,scale:state.scale,ticks:chartLabels.ticks})));}
     const xticks=[...new Set(Array.from({length:mobile?3:5},(_,i)=>Math.round(xmin+(xmax-xmin)*i/(mobile?2:4))))].filter(v=>v>=xmin&&v<=xmax);
     for(const tick of xticks)picture.append(svg('text',{x:x(tick),y:bottom+20,'text-anchor':'middle','font-size':11},String(tick)));
     picture.append(svg('line',{x1:left,x2:width-right,y1:bottom,y2:bottom,stroke:'#87988b','data-plot-axis':'true'}));
-    const xLabel=svg('text',{x:left+plotWidth/2,y:bottom+42,'font-size':mobile?11:12,'text-anchor':'middle','data-x-axis-title':'true','aria-label':xTitle},short(xTitle,Math.max(12,Math.floor(plotWidth/7))));
-    picture.append(xLabel);
-    const yLabel=svg('text',{x:16,y:(top+bottom)/2,'font-size':mobile?10:12,'text-anchor':'middle',transform:'rotate(-90 16 '+((top+bottom)/2)+')','data-y-axis-title':'true','aria-label':yTitle},short(yTitle,Math.max(10,Math.floor((bottom-top)/(mobile?5:6)))));
-    picture.append(yLabel);
     const focusables=[],labels=[],patterns=['','7 4','2 4','9 3 2 3'];
     const inspected=(source,row)=>`${source.id} · ${source.indexKind} ${row.index} · window position ${row.position} · original ${row.raw} · ${state.view==='mod'?'residue':'displayed'} ${row.value}`;
     for(const [si,{source,rows}]of result.series.entries()){

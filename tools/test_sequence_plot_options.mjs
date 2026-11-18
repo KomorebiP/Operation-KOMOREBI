@@ -23,12 +23,15 @@ test('appearance accepts only bounded presentation choices and keeps source data
 test('all single-sequence plot annotations round-trip without changing the view window',()=>{
   const source='https://example.test/sequence-archive/KOM067.html?view=raw&scale=signed-log&start=2&size=8#plot';
   const state=validateComparisonChart({title:'Exact coefficient growth',xTitle:'Original index n',yTitle:'Magnitude',
+    titleDisplay:'hide',xTitleDisplay:'show',yTitleDisplay:'hide',titleSize:'26',xTitleSize:'18',yTitleSize:'16',titleAlign:'left',
     legend:'show',legendPosition:'bottom',legendStyle:'id',ticks:'scientific',seriesLabels:['Series one']});
   const href=singlePlotLabelLink(source,state),parsed=readSinglePlotLabels(href);
   assert.deepEqual(parsed.state,state);assert.equal(parsed.note,'');
   const url=new URL(href);
   for(const field of ['view','scale','start','size'])assert.equal(url.searchParams.get(field),new URL(source).searchParams.get(field));
   assert.equal(url.hash,'#plot');
+  for(const [param,value]of Object.entries({'chart-title-display':'hide','chart-x-display':'show','chart-y-display':'hide',
+    'chart-title-size':'26','chart-x-size':'18','chart-y-size':'16','chart-title-align':'left'}))assert.equal(url.searchParams.get(param),value);
   const repeat=singlePlotLabelLink(href,parsed.state);assert.equal(repeat,href);
   assert.deepEqual(readSinglePlotLabels(source,{legend:'hide'}).state,validateComparisonChart({legend:'hide'}));
   // An archive defaults to a hidden legend; copying an enabled legend must
@@ -39,11 +42,19 @@ test('all single-sequence plot annotations round-trip without changing the view 
   const duplicate=new URL(href);duplicate.searchParams.append('chart-ticks','log');
   const unknown=new URL(href);unknown.searchParams.set('chart-ticks','invalid');
   const tooLong=new URL(href);tooLong.searchParams.set('chart-title','X'.repeat(91));
-  for(const bad of [duplicate.href,unknown.href,tooLong.href]){
+  const badSize=new URL(href);badSize.searchParams.set('chart-title-size','100');
+  const duplicateSize=new URL(href);duplicateSize.searchParams.append('chart-y-size','12');
+  const badVisibility=new URL(href);badVisibility.searchParams.set('chart-x-display','invisible');
+  for(const bad of [duplicate.href,unknown.href,tooLong.href,badSize.href,duplicateSize.href,badVisibility.href]){
     const restored=readSinglePlotLabels(bad);
     assert.match(restored.note,/Invalid chart label settings/);
     assert.equal(restored.state.title,'');
   }
+  const olderURL=new URL(source);olderURL.searchParams.set('chart-title','Previous plot');olderURL.searchParams.set('chart-x','Index');
+  const older=readSinglePlotLabels(olderURL.href);
+  assert.equal(older.state.title,'Previous plot');assert.equal(older.state.xTitle,'Index');
+  assert.equal(older.state.titleSize,'auto');assert.equal(older.state.titleDisplay,'show');
+  assert.equal(older.state.titleAlign,'center');
 });
 
 test('positive and signed-log scale labels distinguish approximate magnitudes and scientific notation',()=>{

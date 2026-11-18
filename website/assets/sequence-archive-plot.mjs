@@ -2,7 +2,7 @@ import {archiveWindow,archiveLink,windowCSV,moveArchiveWindow,triangleWindow,tri
 import {mod} from './sequence-atlas-core.mjs';
 import {mountPlotOptions,plotColors,plotHeight,showIndexLabel,mergePlotLabels,exportPlot,finishPlotTheme} from './sequence-plot-options.mjs';
 import {mountSinglePlotLabels} from './sequence-chart-labels.mjs';
-import {comparisonYAxisTick,comparisonLegendLabel,wrapLegendLabel} from './sequence-comparison-chart.mjs';
+import {comparisonYAxisTick,comparisonLegendLabel,wrapLegendLabel,layoutChartText,appendChartText} from './sequence-comparison-chart.mjs';
 
 const make=(tag,text)=>{const el=document.createElement(tag);if(text!==undefined)el.textContent=text;return el;};
 const svg=(tag,attrs,text)=>{const el=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const [key,val]of Object.entries(attrs))el.setAttribute(key,String(val));if(text!==undefined)el.textContent=text;return el;};
@@ -14,39 +14,43 @@ export function setupArchivePlot(entry){
   function point(row){selectedN=row.n;say($('point'),`Index ${row.n}: a(${row.n}) = ${row.raw}; plotted value ${row.value??'undefined'}${row.next===null?'':`; following residue ${row.next}`}.`);}
   function draw(result){
     const state=result.state,valid=result.rows.filter(row=>Number.isFinite(row.x)&&Number.isFinite(row.y)),colors=plotColors(appearance);
-    const width=Math.max(270,Math.min(1000,$('plot').clientWidth||760)),height=plotHeight(width,appearance),right=width-22,left=width<560?82:94,chart=chartLabelControls?.state||{legend:'hide'};
-    const showLegend=chart.legend==='show',bottomLegend=showLegend&&chart.legendPosition==='bottom';
-    const legendLines=showLegend?wrapLegendLabel(comparisonLegendLabel(entry,0,chart),Math.max(13,Math.floor((right-left)/7)),2):[];
-    const legendHeight=legendLines.length*16;
-    const bottom=height-61-(bottomLegend?legendHeight+6:0),top=showLegend&&!bottomLegend?68+legendHeight:68;
-    const focused=$('plot').contains(document.activeElement),picture=svg('svg',{viewBox:`0 0 ${width} ${height}`,role:'group','aria-labelledby':'sar-plot-title sar-plot-desc'});
-    picture.append(svg('rect',{width,height,fill:getComputedStyle($('plot')).backgroundColor}),svg('title',{id:'sar-plot-title'},chart.title||entry.id+' · '+entry.title+' — '+state.view),svg('desc',{id:'sar-plot-desc'},'Discrete recorded samples with approximate plotted coordinates where transformed. Focus points for exact values; arrow keys move between them. Lines connect samples and do not interpolate additional data.'));
+    const width=Math.max(270,Math.min(1000,$('plot').clientWidth||760)),chart=chartLabelControls?.state||{legend:'hide'};
+    const showLegend=chart.legend==='show';
     const modular=['mod','pairs'].includes(state.view),stems=state.marks==='stems'&&state.view!=='pairs',zero=appearance.baseline==='zero'||modular||stems;
-    appearanceControls.context(modular||stems);$('scale').disabled=modular;
+    const names={raw:'Original values',difference:'First differences',sum:'Partial sums',mod:`Residues · m=${state.mod}`,pairs:`Consecutive residues · m=${state.mod}`};
+    const title=chart.title||entry.title+' · '+names[state.view];
+    const xTitle=chart.xTitle||(state.view==='pairs'?`a(${entry.index_symbol}) mod m`:`Sequence index ${entry.index_symbol}`);
+    const yTitle=chart.yTitle||(state.view==='pairs'?'Following residue':modular?'Residue (mod '+state.mod+')':state.scale==='signed-log'?(chart.ticks==='log'?'sgn(v) log₁₀(1+|v|)':'Approx. value · signed log spacing'):'Stored or transformed value');
+    let minX=0,maxX=1,minY=0,maxY=1;
     if(valid.length){
-      let minX=Math.min(...valid.map(r=>r.x)),maxX=Math.max(...valid.map(r=>r.x)),minY=Math.min(...valid.map(r=>r.y),...(zero?[0]:[])),maxY=Math.max(...valid.map(r=>r.y),...(zero?[0]:[]));
+      minX=Math.min(...valid.map(r=>r.x));maxX=Math.max(...valid.map(r=>r.x));minY=Math.min(...valid.map(r=>r.y),...(zero?[0]:[]));maxY=Math.max(...valid.map(r=>r.y),...(zero?[0]:[]));
       if(modular){minY=0;maxY=state.mod-1;if(state.view==='pairs'){minX=0;maxX=state.mod-1;}}
       const expand=(a,b)=>{if(a!==b)return[a,b];const margin=Math.max(1,Math.abs(a)*.05);return[Number.isFinite(a-margin)?a-margin:a,Number.isFinite(b+margin)?b+margin:b];};
       [minX,maxX]=expand(minX,maxX);[minY,maxY]=expand(minY,maxY);
-      const unit=Math.max(Math.abs(minY),Math.abs(maxY),1),lo=minY/unit,hi=maxY/unit;
+    }
+    const unit=Math.max(Math.abs(minY),Math.abs(maxY),1),lo=minY/unit,hi=maxY/unit;
+    const ticks=!valid.length?[]:modular?(state.mod<=12?Array.from({length:state.mod},(_,k)=>k):[...new Set(Array.from({length:5},(_,k)=>Math.round(minY+(maxY-minY)*k/4)))]):Array.from({length:5},(_,k)=>(lo+(hi-lo)*k/4)*unit);
+    const tickLabels=ticks.map(value=>comparisonYAxisTick(value,{view:modular?'mod':'values',scale:state.scale,ticks:chart.ticks||'magnitude'}));
+    const textOptions={width,height:plotHeight(width,appearance),left:width<560?82:94,right:22,title,xTitle,yTitle,options:chart,legendPosition:chart.legendPosition,tickLabels};
+    const initialLayout=layoutChartText(textOptions);
+    const legendLines=showLegend?wrapLegendLabel(comparisonLegendLabel(entry,0,chart),Math.max(13,Math.floor(initialLayout.plotWidth/7)),2,initialLayout.plotWidth):[];
+    const legendHeight=legendLines.length*16;
+    const textLayout=layoutChartText({...textOptions,legendHeight}),{height,left,top,bottom}=textLayout,right=width-textLayout.right;
+    const focused=$('plot').contains(document.activeElement),picture=svg('svg',{viewBox:`0 0 ${width} ${height}`,role:'group','aria-labelledby':'sar-plot-title sar-plot-desc'});
+    picture.append(svg('rect',{width,height,fill:getComputedStyle($('plot')).backgroundColor}),svg('title',{id:'sar-plot-title'},chart.title||entry.id+' · '+entry.title+' — '+state.view),svg('desc',{id:'sar-plot-desc'},'Discrete recorded samples with approximate plotted coordinates where transformed. Focus points for exact values; arrow keys move between them. Lines connect samples and do not interpolate additional data.'));
+    appearanceControls.context(modular||stems);$('scale').disabled=modular;
+    if(valid.length){
       const xx=v=>left+(v-minX)/(maxX-minX)*(right-left),yy=v=>bottom-(v/unit-lo)/(hi-lo)*(bottom-top);
       picture.append(svg('path',{d:`M${left} ${top-10}V${bottom}H${right}`,class:'sar-axis'}));
-      const ticks=modular?(state.mod<=12?Array.from({length:state.mod},(_,k)=>k):[...new Set(Array.from({length:5},(_,k)=>Math.round(minY+(maxY-minY)*k/4)))]):Array.from({length:5},(_,k)=>(lo+(hi-lo)*k/4)*unit);
-      for(const value of ticks){
+      for(const [index,value]of ticks.entries()){
         const py=yy(value);
         if(appearance.grid==='on')picture.append(svg('path',{d:`M${left} ${py}H${right}`,stroke:'#d9dfd4','stroke-width':1,fill:'none','data-plot-grid':'true'}));
-        picture.append(svg('text',{x:left-9,y:py+4,'text-anchor':'end','data-y-tick':''},comparisonYAxisTick(value,{view:modular?'mod':'values',scale:state.scale,ticks:chart.ticks||'magnitude'})));
+        picture.append(svg('text',{x:left-9,y:py+4,'text-anchor':'end','data-y-tick':''},tickLabels[index]));
       }
-      const names={raw:'Original values',difference:'First differences',sum:'Partial sums',mod:`Residues · m=${state.mod}`,pairs:`Consecutive residues · m=${state.mod}`};
-      const title=chart.title||entry.title+' · '+names[state.view],limit=Math.max(12,Math.floor((width-34)/7));
-      const xTitle=chart.xTitle||(state.view==='pairs'?`a(${entry.index_symbol}) mod m`:`Sequence index ${entry.index_symbol}`);
-      const yTitle=chart.yTitle||(state.view==='pairs'?'Following residue':modular?'Residue (mod '+state.mod+')':state.scale==='signed-log'?'Approx. value · signed log spacing':'Stored or transformed value');
-      picture.append(svg('text',{x:width/2,y:22,'font-size':width<560?12:15,'text-anchor':'middle','font-weight':650,'data-chart-title':'true','aria-label':title},title.length>limit?title.slice(0,limit-1)+'…':title),
-        svg('text',{x:left,y:bottom+22},String(minX)),svg('text',{x:right,y:bottom+22,'text-anchor':'end'},String(maxX)),
-        svg('text',{x:(left+right)/2,y:height-10,'text-anchor':'middle','data-x-axis-title':'true','aria-label':xTitle},xTitle.length>Math.floor((right-left)/7)?xTitle.slice(0,Math.max(10,Math.floor((right-left)/7)-1))+'…':xTitle),
-        svg('text',{x:16,y:(top+bottom)/2,'text-anchor':'middle',transform:`rotate(-90 16 ${(top+bottom)/2})`,'data-y-axis-title':'true','aria-label':yTitle},yTitle.length>Math.floor((bottom-top)/6)?yTitle.slice(0,Math.max(10,Math.floor((bottom-top)/6)-1))+'…':yTitle));
+      appendChartText(picture,textLayout);
+      picture.append(svg('text',{x:left,y:bottom+22},String(minX)),svg('text',{x:right,y:bottom+22,'text-anchor':'end'},String(maxX)));
       if(showLegend){
-        const ly=bottomLegend?bottom+51:55,label=svg('text',{x:left,y:ly,'data-legend-label':'0','aria-label':entry.id+' · '+comparisonLegendLabel(entry,0,chart)});
+        const ly=textLayout.legendY,label=svg('text',{x:left,y:ly,'data-legend-label':'0','aria-label':entry.id+' · '+comparisonLegendLabel(entry,0,chart)});
         legendLines.forEach((line,i)=>label.append(svg('tspan',{x:left,dy:i?16:0},line)));
         picture.append(label,svg('line',{x1:left-22,x2:left-5,y1:ly-4,y2:ly-4,stroke:colors[0],'stroke-width':appearance.width}));
       }

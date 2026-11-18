@@ -243,18 +243,28 @@ The Compare page has an optional **Customize chart title, legend and axes**
 panel. Readers can change the chart title, horizontal and vertical axis titles,
 legend visibility, placement above or below the plot, and up to four series
 names. Legend presentation includes compact names, IDs only, or full IDs and
-names. Longer labels wrap within the SVG chart instead of creating page-wide
-overflow. Empty titles retain suitable defaults that name the selected
+names. The chart title and each axis title can be shown or hidden independently.
+The chart title has automatic sizing or 14, 18, 22 and 26 pixel choices, with
+left, center or right alignment. Each axis title has its own automatic sizing
+or 12, 14, 16 and 18 pixel choices. Longer titles wrap in full, and the chart
+reserves space for them and its legend while retaining room for the plotted
+values. Empty titles retain suitable defaults that name the selected
 sequence or sequences and the plotted transformation. The selected transformation
-remains visible in the automatic title. Custom text is included in SVG/PNG
-exports, copied comparison links, and research workspace snapshots. Plot text
-does not alter selected sources, integer arithmetic or comparison certificates.
+remains visible in the automatic title. Hiding a visible chart title retains
+the SVG's accessible title. Custom text, visibility, sizes and alignment are
+included in SVG/PNG exports, copied comparison links, and research workspace
+snapshots. Restore chart labels returns these choices to their defaults.
+These settings are presentation metadata in exact comparison certificates.
+They do not change selected sources, stored integers or finite arithmetic
+checks. Previously exported certificates remain verifiable with their original
+presentation fields and SHA-256 digests.
 
 The curated Sequence Explorer and individual Research archive and formula
 record plots offer the same type of controls in a separate **Chart titles,
 legends and axis labels** disclosure. A single record may hide the redundant
 legend, or display its short name or ID. Chart text travels in its plot link
-without altering source terms or index windows. The original no-JavaScript
+with the same title visibility, size and alignment controls, without altering
+source terms or index windows. The original no-JavaScript
 record pages, exact-value tables and downloads remain available.
 
 For signed-logarithmic plots, the vertical coordinates are
