@@ -303,10 +303,25 @@ async function visit(page,name,kind){
       assert.equal(await page.locator('#sw-verify-inspection-rows tr').count(),12);
       assert.match(await page.locator('#sw-verify-window-status').textContent(),/Verified rows 1–12 of 64/);
       assert.deepEqual(await page.locator('#sw-verify-inspection-rows tr').first().locator('th,td').allTextContents(),
-        ['KSEQ-000025','0','0','0','Not recorded',certificate.series[0].rows[0].raw,
-          certificate.series[0].rows[0].displayed,'Baseline']);
+        ['KSEQ-000025','0','0','0','Not recorded','0',certificate.series[0].rows[0].raw,
+          certificate.series[0].rows[0].displayed,'—','Baseline']);
       await page.locator('#sw-verify-next').click();
       assert.match(await page.locator('#sw-verify-window-status').textContent(),/Verified rows 13–24 of 64/);
+      // Export must contain every qualifying exact row, not only the open page.
+      const allExportPending=page.waitForEvent('download');
+      await page.locator('#sw-verify-export-csv').click();
+      const allExport=await allExportPending;
+      assert.equal(allExport.suggestedFilename(),'komorebi-verified-certificate-all-rows.csv');
+      const allCSVFile=path.join(output,'certificate-inspected-all-'+width+'.csv');
+      await allExport.saveAs(allCSVFile);
+      const allCSV=fs.readFileSync(allCSVFile,'utf8');
+      const allCSVRows=allCSV.trim().split(/\r?\n/);
+      assert.equal(allCSVRows.length,65,'CSV must include all 64 verified rows plus the header');
+      assert.match(allCSVRows[0],/alignment_key/);
+      assert.match(allCSVRows[0],/baseline_displayed_exact_integer/);
+      assert.match(allCSVRows[0],/certificate_sha256/);
+      assert.match(allCSVRows[1],new RegExp(certificate.certificateSha256));
+      assert.match(await page.locator('#sw-verify-export-status').textContent(),/Exported 64 filtered exact rows/);
       await page.locator('#sw-verify-previous').click();
       assert.match(await page.locator('#sw-verify-window-status').textContent(),/Verified rows 1–12 of 64/);
       await page.selectOption('#sw-verify-row-filter','different');
@@ -314,14 +329,28 @@ async function visit(page,name,kind){
       assert.ok(await differentRows.count()>0,'Fibonacci and Lucas have different displayed integers');
       for(const status of await differentRows.evaluateAll(rows=>rows.map(row=>row.dataset.compareStatus)))
         assert.equal(status,'different');
+      const expectedDifferences=certificate.finiteAgreements.reduce(
+        (sum,check)=>sum+check.compared-check.equal,0);
+      const differencePending=page.waitForEvent('download');
+      await page.locator('#sw-verify-export-csv').click();
+      const differenceExport=await differencePending;
+      assert.equal(differenceExport.suggestedFilename(),'komorebi-verified-certificate-differences.csv');
+      const differenceFile=path.join(output,'certificate-inspected-differences-'+width+'.csv');
+      await differenceExport.saveAs(differenceFile);
+      const differenceRows=fs.readFileSync(differenceFile,'utf8').trim().split(/\r?\n/);
+      assert.equal(differenceRows.length,expectedDifferences+1);
+      assert.ok(differenceRows.slice(1).every(row=>row.endsWith('"different"')));
       await page.selectOption('#sw-verify-series-filter','1');
       assert.ok(await differentRows.count()>0);
       await page.selectOption('#sw-verify-series-filter','0');
       assert.equal(await differentRows.count(),0,'Baseline values should never be labeled as pairwise mismatches');
+      assert.equal(await page.locator('#sw-verify-export-csv').isDisabled(),true,
+        'Do not offer an empty differences-only CSV export');
       assert.match(await page.locator('#sw-verify-window-status').textContent(),/No defined finite disagreements/);
       await page.selectOption('#sw-verify-series-filter','-1');
       await page.selectOption('#sw-verify-row-filter','all');
       assert.equal(await differentRows.count(),12);
+      assert.equal(await page.locator('#sw-verify-export-csv').isEnabled(),true);
       assert.match(await page.locator('#sw-verify-configuration').textContent(),/Alignment by stored window position/);
       assert.match(await page.locator('#sw-verify-pairwise').textContent(),/finite|Finite|overlapping values agree/);
       await fit(page);

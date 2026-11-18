@@ -1,6 +1,6 @@
 import {WORKBENCH_DEFAULTS,validateWorkbench,localSource,referenceSource,familySource,customSource,descriptor,workbenchRows,agreements,readWorkbenchLink,workbenchLink,comparisonCSV} from './sequence-workbench-core.mjs';
 import {createComparisonCertificate,verifyComparisonCertificate,assessCertificateCatalogue} from './sequence-comparison-certificate.mjs';
-import {certificateInspectionWindow,CERTIFICATE_INSPECTION_PAGE_SIZE} from './sequence-certificate-inspection.mjs';
+import {certificateInspectionWindow,certificateInspectionCSV,CERTIFICATE_INSPECTION_PAGE_SIZE} from './sequence-certificate-inspection.mjs';
 import {mountPlotOptions,plotColors,plotHeight,showIndexLabel,mergePlotLabels,finishPlotTheme,exportPlot,validateAppearance} from './sequence-plot-options.mjs';
 import {COMPARISON_CHART_DEFAULTS,validateComparisonChart,comparisonChartTitle,comparisonXAxisTitle,comparisonYAxisTitle,comparisonYAxisTick,comparisonScaleExplanation,comparisonLegendLabel,wrapLegendLabel} from './sequence-comparison-chart.mjs';
 
@@ -87,11 +87,14 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
           </label>
           <button type="button" id="sw-verify-previous">Previous 12</button>
           <button type="button" id="sw-verify-next">Next 12</button>
+          <button type="button" id="sw-verify-export-csv">Export filtered exact CSV</button>
         </div>
         <p id="sw-verify-window-status" role="status" aria-live="polite"></p>
+        <p id="sw-verify-export-status" role="status" aria-live="polite"></p>
+        <p class="sw-verify-export-guide">CSV contains every row matching the current source and difference filters, not only the visible page. It includes the certificate receipt and exact baseline values. Keep the original JSON for independent verification. Spreadsheet programs may round long integers unless you import them as text.</p>
         <div class="sw-verify-inspection-scroll" role="region" aria-label="Verified exact comparison rows" tabindex="0">
           <table><caption>Exact values from the imported and verified certificate</caption>
-            <thead><tr><th scope="col">Source</th><th scope="col">Window position</th><th scope="col">Stored position</th><th scope="col">Recorded index / export position</th><th scope="col">Source degree</th><th scope="col">Original integer</th><th scope="col">Displayed integer</th><th scope="col">Comparison</th></tr></thead>
+            <thead><tr><th scope="col">Source</th><th scope="col">Window position</th><th scope="col">Stored position</th><th scope="col">Recorded index / export position</th><th scope="col">Source degree</th><th scope="col">Alignment key</th><th scope="col">Original integer</th><th scope="col">Displayed integer</th><th scope="col">Baseline displayed integer</th><th scope="col">Comparison</th></tr></thead>
             <tbody id="sw-verify-inspection-rows"></tbody>
           </table>
         </div>
@@ -276,13 +279,14 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
   $('share-top').addEventListener('click',copyComparison);
   // Show only independently verified finite data. This read-only inspector
   // never changes the current comparison, its plot or the imported file.
-  let importedCertificate=null,inspectionPage=0;
+  let importedCertificate=null,inspectionPage=0,filteredInspectionCount=0;
   function renderCertificateInspection(){
     if(!importedCertificate)return;
     const seriesIndex=Number($('verify-series-filter').value),
       onlyDifferences=$('verify-row-filter').value==='different';
     const result=certificateInspectionWindow(importedCertificate,{seriesIndex,onlyDifferences,page:inspectionPage});
-    inspectionPage=result.page;
+    inspectionPage=result.page;filteredInspectionCount=result.total;
+    $('verify-export-csv').disabled=result.total===0;
     const end=result.page*CERTIFICATE_INSPECTION_PAGE_SIZE+result.rows.length;
     $('verify-window-status').textContent=result.total
       ?'Verified rows '+(result.page*CERTIFICATE_INSPECTION_PAGE_SIZE+1)+'–'+end+' of '+result.total+
@@ -298,8 +302,8 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
       const cells=[
         row.sourceId,row.windowPosition,row.storedPosition,row.recordedIndex,
         row.sourceDegree===null?'Not recorded':row.sourceDegree,
-        row.raw,row.displayed===null?'Undefined':row.displayed,
-        statuses[row.status]
+        row.alignmentKey,row.raw,row.displayed===null?'Undefined':row.displayed,
+        row.baselineDisplayed===null?'—':row.baselineDisplayed,statuses[row.status]
       ];
       for(const [i,value]of cells.entries()){
         const cell=node(i===0?'th':'td',String(value));
@@ -311,6 +315,7 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
   }
   function prepareCertificateInspection(certificate){
     importedCertificate=certificate;inspectionPage=0;
+    $('verify-export-status').textContent='';
     $('verify-inspection').hidden=false;$('verify-inspection').open=false;
     $('verify-series-filter').replaceChildren();
     const all=node('option','All sources');all.value='-1';$('verify-series-filter').append(all);
@@ -345,15 +350,36 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
     renderCertificateInspection();
   }
   for(const id of ['verify-series-filter','verify-row-filter'])$(id).addEventListener('change',()=>{
-    inspectionPage=0;renderCertificateInspection();
+    inspectionPage=0;$('verify-export-status').textContent='';renderCertificateInspection();
   });
   $('verify-previous').addEventListener('click',()=>{inspectionPage=Math.max(0,inspectionPage-1);renderCertificateInspection();});
   $('verify-next').addEventListener('click',()=>{inspectionPage++;renderCertificateInspection();});
+  $('verify-export-csv').addEventListener('click',()=>{
+    if(!importedCertificate||!filteredInspectionCount)return;
+    try{
+      const seriesIndex=Number($('verify-series-filter').value),
+        onlyDifferences=$('verify-row-filter').value==='different';
+      const csv=certificateInspectionCSV(importedCertificate,{seriesIndex,onlyDifferences});
+      const filename='komorebi-verified-certificate-'+
+        (onlyDifferences?'differences':'all-rows')+
+        (seriesIndex===-1?'':'-source-'+(seriesIndex+1))+'.csv';
+      const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+      const anchor=node('a');anchor.href=url;anchor.download=filename;
+      document.body.append(anchor);anchor.click();anchor.remove();
+      setTimeout(()=>URL.revokeObjectURL(url),1000);
+      $('verify-export-status').textContent='Exported '+filteredInspectionCount+
+        ' filtered exact rows. Keep the certificate JSON for independent verification.';
+    }catch(error){
+      $('verify-export-status').textContent='CSV export failed: '+error.message;
+    }
+  });
 
   // Verification reads only the user-selected local file. No upload or
   // external request is performed, even if no comparison is currently loaded.
   $('verify-file').addEventListener('change',()=>{
-    importedCertificate=null;inspectionPage=0;$('verify-inspection').hidden=true;$('verify-inspection').open=false;
+    importedCertificate=null;inspectionPage=0;filteredInspectionCount=0;
+    $('verify-export-status').textContent='';
+    $('verify-inspection').hidden=true;$('verify-inspection').open=false;
     $('verify-output').hidden=true;
     $('verify-error').hidden=true;
     $('verify-error').textContent='';
@@ -366,7 +392,8 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
     if(!file)return;
     $('verify-output').hidden=true;
     $('verify-inspection').hidden=true;$('verify-inspection').open=false;
-    importedCertificate=null;inspectionPage=0;
+    importedCertificate=null;inspectionPage=0;filteredInspectionCount=0;
+    $('verify-export-status').textContent='';
     $('verify-error').hidden=true;
     $('verify-error').textContent='';
     const button=$('verify-submit');
