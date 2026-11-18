@@ -256,6 +256,35 @@ async function visit(page,name,kind){
       await page.getByRole('button',{name:'Try Fibonacci + Lucas',exact:true}).click();
       assert.equal(await page.locator('#sw-sources>li').count(),2);
       assert.equal(await page.locator('#sw-share-top').isDisabled(),false);
+      assert.equal(await page.locator('#sw-certificate').isEnabled(),true);
+      assert.equal(await page.locator('#sw-certificate-notes').evaluate(el=>el.open),false,
+        'Certificate scope information should not clutter the initial comparison');
+      const certificatePending=page.waitForEvent('download');
+      await page.locator('#sw-certificate').click();
+      const downloadedCertificate=await certificatePending;
+      assert.equal(downloadedCertificate.suggestedFilename(),'komorebi-sequence-comparison-certificate.json');
+      const certificateFile=path.join(output,'exact-certificate-'+width+'.json');
+      await downloadedCertificate.saveAs(certificateFile);
+      const certificate=JSON.parse(fs.readFileSync(certificateFile,'utf8'));
+      assert.equal(certificate.schema,1);
+      assert.equal(certificate.kind,'komorebi-sequence-comparison-certificate');
+      assert.equal(certificate.sources.length,2);
+      assert.ok(certificate.sources.every(s=>/^[0-9a-f]{64}$/.test(s.dataSha256)));
+      assert.ok(certificate.sources.every(s=>s.dataSha256===s.catalogueReceipt),
+        'All local source identities should match the stored indexed-data receipt');
+      assert.equal(certificate.series[0].rows.length,32);
+      assert.equal(certificate.series[0].rows[0].raw,'0');
+      assert.equal(certificate.series[0].rows[0].recordedIndex,0);
+      assert.equal(certificate.finiteAgreements.length,1);
+      assert.equal(certificate.finiteAgreements[0].compared,32);
+      const verifiedCertificate=await page.evaluate(async data=>{
+        const module=await import('./assets/sequence-comparison-certificate.mjs');
+        return module.verifyComparisonCertificate(data);
+      },certificate);
+      assert.equal(verifiedCertificate.ok,true);
+      assert.equal(verifiedCertificate.exactRows,64);
+      assert.match(await page.locator('#sw-status').textContent(),/independent BigInt replay/);
+      await fit(page);
       assert.equal(await page.locator('#sw-chart-labels').evaluate(el=>el.open),false,
         'Chart text settings should be optional rather than cluttering the main comparison');
       const defaultTicks=await page.locator('#sw-chart [data-y-tick]').allTextContents();
