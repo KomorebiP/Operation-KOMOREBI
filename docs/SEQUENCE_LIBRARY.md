@@ -175,10 +175,25 @@ catalogue. Generated, pasted and OEIS inputs are checked against their
 embedded exact data but are not independently authenticated against external
 repositories.
 
+After a successful verification, **Inspect verified exact rows and finite
+differences** provides a second, collapsed section. It displays twelve exact
+rows at a time with source identity, window position, stored-prefix position,
+recorded index or OEIS export position, separately recorded source degree where available, original
+integer, exact displayed integer and comparison status. Readers can page
+through the full verified finite window, filter to one source, or show only
+genuine differences from the first source. Undefined transformed values and
+positions without an overlapping baseline are labelled separately and are
+not counted as disagreements. The first mismatch and finite agreement counts
+are displayed from the independently checked certificate. This view works
+without reconstructing the current comparison or loading OEIS data. It never
+interprets the recorded index as a Taylor degree.
+
 Invalid JSON, altered calculations, digest mismatches, or files exceeding the
-16 MiB browser import limit produce a visible verification failure, with no
-success result retained from an earlier file. The import does not modify the
-currently selected comparison, chart settings, or saved entries.
+16 MiB browser import limit produce a visible verification failure. Selecting
+a new file or encountering any verification failure also clears the preceding
+verified table, so old successful values cannot be mistaken for the new file.
+The import does not modify the currently selected comparison, chart settings,
+or saved entries.
 
 Reverify a downloaded certificate offline using a checkout of the repository
 and Node.js 24:

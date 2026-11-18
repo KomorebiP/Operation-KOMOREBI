@@ -1,5 +1,6 @@
 import {WORKBENCH_DEFAULTS,validateWorkbench,localSource,referenceSource,familySource,customSource,descriptor,workbenchRows,agreements,readWorkbenchLink,workbenchLink,comparisonCSV} from './sequence-workbench-core.mjs';
 import {createComparisonCertificate,verifyComparisonCertificate,assessCertificateCatalogue} from './sequence-comparison-certificate.mjs';
+import {certificateInspectionWindow,CERTIFICATE_INSPECTION_PAGE_SIZE} from './sequence-certificate-inspection.mjs';
 import {mountPlotOptions,plotColors,plotHeight,showIndexLabel,mergePlotLabels,finishPlotTheme,exportPlot,validateAppearance} from './sequence-plot-options.mjs';
 import {COMPARISON_CHART_DEFAULTS,validateComparisonChart,comparisonChartTitle,comparisonXAxisTitle,comparisonYAxisTitle,comparisonYAxisTick,comparisonScaleExplanation,comparisonLegendLabel,wrapLegendLabel} from './sequence-comparison-chart.mjs';
 
@@ -72,6 +73,29 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
         <ul id="sw-verify-sources"></ul>
         <p>Verified finite arithmetic does not establish infinite sequence equality, historical novelty, or independent external source authenticity. Catalogue checks compare local receipts with this site's currently published records.</p>
       </div>
+      <details id="sw-verify-inspection" class="sw-verify-inspection" hidden>
+        <summary>Inspect verified exact rows and finite differences</summary>
+        <p>Inspect embedded exact integer values independently of the current comparison. A difference means that two defined displayed integers at the same alignment key disagree. A missing or undefined comparison value is not counted as a difference.</p>
+        <p id="sw-verify-configuration"></p>
+        <div id="sw-verify-pairwise"></div>
+        <div class="sw-verify-inspection-controls">
+          <label for="sw-verify-series-filter">Displayed source
+            <select id="sw-verify-series-filter"><option value="-1">All sources</option></select>
+          </label>
+          <label for="sw-verify-row-filter">Rows
+            <select id="sw-verify-row-filter"><option value="all">All verified rows</option><option value="different">Differences only</option></select>
+          </label>
+          <button type="button" id="sw-verify-previous">Previous 12</button>
+          <button type="button" id="sw-verify-next">Next 12</button>
+        </div>
+        <p id="sw-verify-window-status" role="status" aria-live="polite"></p>
+        <div class="sw-verify-inspection-scroll" role="region" aria-label="Verified exact comparison rows" tabindex="0">
+          <table><caption>Exact values from the imported and verified certificate</caption>
+            <thead><tr><th scope="col">Source</th><th scope="col">Window position</th><th scope="col">Stored position</th><th scope="col">Recorded index / export position</th><th scope="col">Source degree</th><th scope="col">Original integer</th><th scope="col">Displayed integer</th><th scope="col">Comparison</th></tr></thead>
+            <tbody id="sw-verify-inspection-rows"></tbody>
+          </table>
+        </div>
+      </details>
     </details>
     <label id="sw-link-wrap" for="sw-link" hidden>Copy this comparison link<input id="sw-link" readonly></label>
     <details id="sw-data"><summary>Exact comparison table</summary><div class="sar-scroll" role="region" aria-label="Exact comparison values" tabindex="0"><table><caption>Stored indices and displayed exact integers</caption><thead><tr><th scope="col">Series</th><th scope="col">Index convention</th><th scope="col">Index / position</th><th scope="col">Window position</th><th scope="col">Original integer</th><th scope="col">Displayed integer</th></tr></thead><tbody></tbody></table></div></details>`;
@@ -250,9 +274,86 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
     const copyComparison=async()=>{let link;try{link=appearance.link(workbenchLink(location.href,sources,state,chartLabels));}catch(error){fail(error);return;}try{await navigator.clipboard.writeText(link);say('Comparison link copied. Exact local data receipts are checked when available. OEIS excerpts require explicit restoration.');}catch{$('link-wrap').hidden=false;$('link').value=link;$('link').focus();$('link').select();}};
   $('share').addEventListener('click',copyComparison);
   $('share-top').addEventListener('click',copyComparison);
+  // Show only independently verified finite data. This read-only inspector
+  // never changes the current comparison, its plot or the imported file.
+  let importedCertificate=null,inspectionPage=0;
+  function renderCertificateInspection(){
+    if(!importedCertificate)return;
+    const seriesIndex=Number($('verify-series-filter').value),
+      onlyDifferences=$('verify-row-filter').value==='different';
+    const result=certificateInspectionWindow(importedCertificate,{seriesIndex,onlyDifferences,page:inspectionPage});
+    inspectionPage=result.page;
+    const end=result.page*CERTIFICATE_INSPECTION_PAGE_SIZE+result.rows.length;
+    $('verify-window-status').textContent=result.total
+      ?'Verified rows '+(result.page*CERTIFICATE_INSPECTION_PAGE_SIZE+1)+'–'+end+' of '+result.total+
+        ' · Page '+(result.page+1)+' of '+result.pages
+      : 'No defined finite disagreements in the selected sources and window.';
+    $('verify-previous').disabled=result.page===0;
+    $('verify-next').disabled=result.page>=result.pages-1;
+    const tbody=$('verify-inspection-rows');tbody.replaceChildren();
+    const statuses={baseline:'Baseline',undefined:'Undefined', 'no-overlap':'No overlap',
+      equal:'Equal',different:'Different'};
+    for(const row of result.rows){
+      const tr=node('tr');tr.dataset.compareStatus=row.status;
+      const cells=[
+        row.sourceId,row.windowPosition,row.storedPosition,row.recordedIndex,
+        row.sourceDegree===null?'Not recorded':row.sourceDegree,
+        row.raw,row.displayed===null?'Undefined':row.displayed,
+        statuses[row.status]
+      ];
+      for(const [i,value]of cells.entries()){
+        const cell=node(i===0?'th':'td',String(value));
+        if(i===0)cell.scope='row';
+        tr.append(cell);
+      }
+      tbody.append(tr);
+    }
+  }
+  function prepareCertificateInspection(certificate){
+    importedCertificate=certificate;inspectionPage=0;
+    $('verify-inspection').hidden=false;$('verify-inspection').open=false;
+    $('verify-series-filter').replaceChildren();
+    const all=node('option','All sources');all.value='-1';$('verify-series-filter').append(all);
+    for(const [index,source]of certificate.sources.entries()){
+      const option=node('option',source.id+' · '+source.title);
+      option.value=String(index);$('verify-series-filter').append(option);
+    }
+    $('verify-series-filter').value='-1';$('verify-row-filter').value='all';
+    const state=certificate.state;
+    const transform=state.transform==='sum'?'Partial sums':state.transform==='difference'?'First differences':'Original terms';
+    const alignment=state.alignment==='indices'?'recorded local index':'stored window position';
+    $('verify-configuration').textContent=transform+' · '+
+      (state.view==='mod'?'Residues modulo '+state.modulus:'Exact displayed integers')+
+      ' · Alignment by '+alignment+' · Stored skip '+state.skip+' · Requested window '+state.count+'.';
+    const pairs=$('verify-pairwise');pairs.replaceChildren();
+    if(certificate.finiteAgreements.length){
+      const heading=node('p','Finite comparison against the first recorded source:');
+      pairs.append(heading);
+      const list=node('ul');
+      for(const check of certificate.finiteAgreements){
+        const compared=certificate.sources.find(source=>source.key===check.source);
+        const mismatch=check.firstMismatch;
+        const text=compared.id+': '+check.equal+' of '+check.compared+
+          ' defined overlapping values agree.'+
+          (mismatch?' First mismatch at alignment key '+mismatch.x+
+            ' (recorded indexes '+mismatch.left+' and '+mismatch.right+'): '+
+            mismatch.leftValue+' versus '+mismatch.rightValue+'.':' No mismatch recorded.');
+        list.append(node('li',text));
+      }
+      pairs.append(list);
+    }else pairs.append(node('p','This certificate includes one source; no pairwise comparison is defined.'));
+    renderCertificateInspection();
+  }
+  for(const id of ['verify-series-filter','verify-row-filter'])$(id).addEventListener('change',()=>{
+    inspectionPage=0;renderCertificateInspection();
+  });
+  $('verify-previous').addEventListener('click',()=>{inspectionPage=Math.max(0,inspectionPage-1);renderCertificateInspection();});
+  $('verify-next').addEventListener('click',()=>{inspectionPage++;renderCertificateInspection();});
+
   // Verification reads only the user-selected local file. No upload or
   // external request is performed, even if no comparison is currently loaded.
   $('verify-file').addEventListener('change',()=>{
+    importedCertificate=null;inspectionPage=0;$('verify-inspection').hidden=true;$('verify-inspection').open=false;
     $('verify-output').hidden=true;
     $('verify-error').hidden=true;
     $('verify-error').textContent='';
@@ -264,6 +365,8 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
     const file=$('verify-file').files?.[0];
     if(!file)return;
     $('verify-output').hidden=true;
+    $('verify-inspection').hidden=true;$('verify-inspection').open=false;
+    importedCertificate=null;inspectionPage=0;
     $('verify-error').hidden=true;
     $('verify-error').textContent='';
     const button=$('verify-submit');
@@ -304,9 +407,11 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
         list.append(item);
       }
       $('verify-output').hidden=false;
+      prepareCertificateInspection(certificate);
       $('verify-status').textContent='Finite certificate verification completed.'+
         (issueCount?' Some catalogue sources need review.':'');
     }catch(error){
+      importedCertificate=null;$('verify-inspection').hidden=true;$('verify-inspection').open=false;
       $('verify-status').textContent='Certificate not verified.';
       $('verify-error').textContent='Verification failed: '+error.message;
       $('verify-error').hidden=false;
