@@ -85,6 +85,10 @@ export function comparisonYAxisTick(value,{view='values',scale='signed-log',tick
     return '≈'+sign+(Number.isFinite(magnitude)?magnitude<.01?Number(magnitude.toPrecision(2)).toString():magnitudeFormat.format(magnitude):'10^'+Number(exponent.toFixed(1)));
   }
   if(Math.abs(value)<1e-9)return '0';
+  if(Math.abs(value)>=1e15){
+    const [mantissa,exponent]=Math.abs(value).toExponential(1).split('e');
+    return '≈'+(value<0?'−':'')+Number(mantissa)+'×10^'+Number(exponent);
+  }
   if(Math.abs(value)>=1e5)return '≈'+(value<0?'−':'')+magnitudeFormat.format(Math.abs(value));
   return Number(value.toPrecision(3)).toString();
 }

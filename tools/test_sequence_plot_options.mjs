@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {PLOT_DEFAULTS,validateAppearance,readAppearance,appearanceLink,plotColors,plotHeight,showIndexLabel,mergePlotLabels} from '../website/assets/sequence-plot-options.mjs';
 import {archiveLink,archiveWindow,moveArchiveWindow,triangleWindow,archivePreset} from '../website/assets/sequence-archive-core.mjs';
 import {readSinglePlotLabels,singlePlotLabelLink} from '../website/assets/sequence-chart-labels.mjs';
-import {comparisonYAxisTick,comparisonLegendLabel,wrapLegendLabel,validateComparisonChart} from '../website/assets/sequence-comparison-chart.mjs';
+import {comparisonYAxisTick,comparisonLegendLabel,wrapLegendLabel,validateComparisonChart,layoutChartText} from '../website/assets/sequence-comparison-chart.mjs';
 import {execFileSync} from 'node:child_process';
 
 const entries=JSON.parse(execFileSync(process.env.PYTHON||'python',['-B','-c','import sys,json;sys.path.insert(0,"tools");from sequence_archive import records;print(json.dumps(records()))'],{encoding:'utf8'}));
@@ -76,6 +76,17 @@ test('compact, full and ID legend formats retain the source name and wrap withou
   assert.equal(wrapped.length,2);
   assert.ok(wrapped.every(line=>line.length<=22));
   assert.ok(wrapped.at(-1).endsWith('…'));
+});
+
+test('very large linear ticks retain room for plotted values and both axis titles',()=>{
+  const values=[1e15,1e50,-1.23e100,1e308];
+  const labels=values.map(value=>comparisonYAxisTick(value,{scale:'linear'}));
+  assert.deepEqual(labels,['≈1×10^15','≈1×10^50','≈−1.2×10^100','≈1×10^308']);
+  const layout=layoutChartText({width:280,height:280,title:'Large coefficients',
+    xTitle:'Recorded index',yTitle:'Magnitude of the original coefficient',tickLabels:labels,
+    options:{titleSize:'26',xTitleSize:'18',yTitleSize:'18'}});
+  assert.ok(layout.plotWidth>=80,'Wide numeric labels must leave a usable horizontal plotting region');
+  assert.ok(layout.plotHeight>=180,'Wrapped titles must retain room for the plotted values');
 });
 
 test('view links fully override recipient preferences and tolerate unavailable or corrupt storage',()=>{
