@@ -5,10 +5,12 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+from http.client import RemoteDisconnected
+from urllib.error import HTTPError
 from unittest.mock import patch
 
 from reader_delivery import asset_name, package, prove_page_contents, rewrite_links, verify
-from publish_reader_downloads import confirm_asset, publish
+from publish_reader_downloads import confirm_asset, publish, upload_asset
 
 
 class DeliveryTests(unittest.TestCase):
@@ -93,6 +95,92 @@ class DeliveryTests(unittest.TestCase):
             with patch.dict('os.environ', {'GITHUB_REPOSITORY': 'other/repo', 'GITHUB_SHA': 'a'*40}):
                 with self.assertRaisesRegex(ValueError, 'workflow revision'):
                     publish(root, assets, 'not-a-secret')
+
+    def test_disconnected_upload_is_reconciled_against_the_remote_digest(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)/'same.zip'
+            raw = b'original exact asset bytes'
+            path.write_bytes(raw)
+            asset = dict(name='same.zip', state='uploaded', size=len(raw),
+                         digest='sha256:'+hashlib.sha256(raw).hexdigest())
+            with patch('publish_reader_downloads.request',
+                       side_effect=[RemoteDisconnected('upload finished but response lost'), [asset]]) as request:
+                actual = upload_asset('https://api.github.com/repos/example/repo',
+                                      1234, path.name, path, 'token')
+            self.assertEqual(actual, asset)
+            self.assertEqual(request.call_count, 2, 'A matching uploaded asset must not be sent again.')
+            self.assertEqual(request.call_args_list[0].kwargs['timeout'], 300)
+            self.assertNotIn('data', request.call_args_list[1].kwargs)
+
+    def test_missing_transient_upload_retries_and_reconfirms_exact_digest(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)/'same.zip'
+            raw = b'unchanged bytes'
+            path.write_bytes(raw)
+            asset = dict(name='same.zip', state='uploaded', size=len(raw),
+                         digest='sha256:'+hashlib.sha256(raw).hexdigest())
+            failure = HTTPError('https://uploads.github.com/',503,'transient outage',{},None)
+            with patch('publish_reader_downloads.request',
+                       side_effect=[failure, [], asset]) as request, \
+                 patch('publish_reader_downloads.sleep') as sleep:
+                actual = upload_asset('https://api.github.com/repos/example/repo',
+                                      1234, path.name, path, 'token')
+            self.assertEqual(actual, asset)
+            self.assertEqual(request.call_count, 3)
+            sleep.assert_called_once_with(5)
+
+    def test_ambiguous_duplicate_upload_is_accepted_only_after_digest_check(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)/'same.zip'
+            raw = b'original bytes'
+            path.write_bytes(raw)
+            asset = dict(name='same.zip', state='uploaded', size=len(raw),
+                         digest='sha256:'+hashlib.sha256(raw).hexdigest())
+            duplicate = HTTPError('https://uploads.github.com/',422,'already exists',{},None)
+            with patch('publish_reader_downloads.request',
+                       side_effect=[duplicate, [asset]]) as request:
+                result = upload_asset('https://api.github.com/repos/example/repo',
+                                      1234, path.name, path, 'token')
+            self.assertEqual(result, asset)
+            self.assertEqual(request.call_count, 2)
+
+    def test_release_upload_never_replaces_an_asset_with_a_different_digest(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)/'same.zip'
+            path.write_bytes(b'unmodified')
+            existing = dict(name='same.zip', size=len(b'unmodified'),
+                            state='uploaded', digest='sha256:'+'0'*64)
+            with patch('publish_reader_downloads.request',
+                       side_effect=[RemoteDisconnected('connection closed'), [existing]]) as request:
+                with self.assertRaisesRegex(ValueError, 'different digest'):
+                    upload_asset('https://api.github.com/repos/example/repo',
+                                 1234, path.name, path, 'token')
+            self.assertEqual(request.call_count, 2)
+
+    def test_exhausted_upload_does_not_fake_publication(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)/'same.zip'
+            path.write_bytes(b'unmodified')
+            with patch('publish_reader_downloads.request',
+                       side_effect=[RemoteDisconnected('closed'), [],
+                                    RemoteDisconnected('closed again'), []]) as request, \
+                 patch('publish_reader_downloads.sleep') as sleep:
+                with self.assertRaisesRegex(RuntimeError, 'could not be confirmed'):
+                    upload_asset('https://api.github.com/repos/example/repo',
+                                 1234, path.name, path, 'token', max_attempts=2)
+            self.assertEqual(request.call_count, 4)
+            sleep.assert_called_once_with(5)
+
+    def test_permanent_upload_failure_is_not_retried(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)/'same.zip'
+            path.write_bytes(b'unmodified')
+            denied = HTTPError('https://uploads.github.com/',403,'not authorized',{},None)
+            with patch('publish_reader_downloads.request', side_effect=denied) as request:
+                with self.assertRaises(HTTPError):
+                    upload_asset('https://api.github.com/repos/example/repo',
+                                 1234, path.name, path, 'token')
+            request.assert_called_once()
 
     def test_existing_release_assets_must_match(self):
         with tempfile.TemporaryDirectory() as directory:
