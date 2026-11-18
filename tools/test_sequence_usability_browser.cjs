@@ -286,6 +286,8 @@ async function visit(page,name,kind){
       assert.ok((await page.locator('#sw-chart [data-y-tick]').allTextContents()).some(tick=>tick.includes('.')));
       assert.ok((await page.locator('#sw-chart [data-y-tick]').allTextContents()).every(tick=>!tick.includes('≈')));
       assert.match(await page.locator('#sw-scale-note').textContent(),/not sequence values/);
+      await page.selectOption('#sw-tick-mode','scientific');
+      assert.ok((await page.locator('#sw-chart [data-y-tick]').allTextContents()).some(tick=>tick.includes('×10^')));
       await page.selectOption('#sw-tick-mode','magnitude');
       assert.ok((await page.locator('#sw-chart [data-y-tick]').allTextContents()).some(tick=>tick.startsWith('≈')));
       if(width===1440){
@@ -314,7 +316,7 @@ async function visit(page,name,kind){
       assert.ok(receipt.sources.every(source=>Number.isInteger(source.offset)&&source.count>0));
       assert.deepEqual(receipt.chartLabels,{
         title:'Fibonacci versus Lucas',xTitle:'Step in window',yTitle:'Approximate magnitude',
-        legend:'show',legendPosition:'bottom',ticks:'magnitude',seriesLabels:['Fibonacci','Lucas']
+        legend:'show',legendPosition:'bottom',legendStyle:'compact',ticks:'magnitude',seriesLabels:['Fibonacci','Lucas']
       });
       const restored=await context.newPage();
       restored.on('pageerror',error=>report.errors.push(error.message));
@@ -326,6 +328,7 @@ async function visit(page,name,kind){
       assert.equal(await restored.locator('#sw-x-title').inputValue(),'Step in window');
       assert.equal(await restored.locator('#sw-y-title').inputValue(),'Approximate magnitude');
       assert.equal(await restored.locator('#sw-legend-position').inputValue(),'bottom');
+      assert.equal(await restored.locator('#sw-legend-style').inputValue(),'compact');
       assert.deepEqual(await restored.locator('#sw-chart [data-legend-label]').allTextContents(),['1. Fibonacci','2. Lucas']);
       assert.equal(await restored.locator('#sw-chart [data-chart-title]').textContent(),'Fibonacci versus Lucas');
       await restored.locator('#sw-provenance>summary').click();
