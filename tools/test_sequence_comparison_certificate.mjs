@@ -5,7 +5,7 @@ import {mkdtempSync,writeFileSync,rmSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {spawnSync} from 'node:child_process';
-import {COMPARISON_CERTIFICATE_SCHEMA,createComparisonCertificate,verifyComparisonCertificate} from '../website/assets/sequence-comparison-certificate.mjs';
+import {COMPARISON_CERTIFICATE_SCHEMA,createComparisonCertificate,verifyComparisonCertificate,assessCertificateCatalogue} from '../website/assets/sequence-comparison-certificate.mjs';
 import {localSource,customSource,referenceSource,WORKBENCH_DEFAULTS} from '../website/assets/sequence-workbench-core.mjs';
 
 const sha=data=>createHash('sha256').update(JSON.stringify(data),'utf8').digest('hex');
@@ -49,6 +49,34 @@ test('certificates are self-contained with exact source receipts, indices and fi
   assert.equal(verification.exactRows,6);
   assert.equal(verification.comparedPositions,3);
   assert.equal(verification.certificateSha256,cert.certificateSha256);
+});
+test('in-browser catalogue check distinguishes matching, changed, missing and unpinned local receipts',async()=>{
+  const certificate=await createComparisonCertificate([pinned,second],{skip:1,count:2});
+  const before=JSON.stringify(certificate);
+  const matched=assessCertificateCatalogue(certificate,[a]);
+  assert.equal(matched.localSources,1);
+  assert.equal(matched.matched,1);
+  assert.equal(matched.different,0);
+  assert.equal(matched.sources[0].status,'matches');
+  assert.equal(matched.sources[1].status,'embedded-only');
+  assert.equal(matched.sources[1].type,'custom');
+  assert.equal(JSON.stringify(certificate),before,'The site lookup must not mutate the exact certificate');
+  const changed=assessCertificateCatalogue(certificate,[{...a,record_sha256:'f'.repeat(64)}]);
+  assert.equal(changed.different,1);
+  assert.equal(changed.sources[0].status,'different');
+  const missing=assessCertificateCatalogue(certificate,[]);
+  assert.equal(missing.unavailable,1);
+  assert.equal(missing.sources[0].status,'not-in-catalogue');
+  const unpinned={...certificate,sources:certificate.sources.map(src=>src.type==='local'?
+    {...src,catalogueReceipt:null}:src)};
+  const withoutReceipt=assessCertificateCatalogue(unpinned,[a]);
+  assert.equal(withoutReceipt.withoutReceipt,1);
+  assert.equal(withoutReceipt.sources[0].status,'no-receipt');
+  const onlyCustom=await createComparisonCertificate([second],{count:2});
+  const external=assessCertificateCatalogue(onlyCustom,[]);
+  assert.equal(external.localSources,0);
+  assert.equal(external.sources[0].status,'embedded-only');
+  assert.throws(()=>assessCertificateCatalogue(null,[]),/Cannot compare certificate sources/);
 });
 test('independent replay covers partial sums, missing initial differences and Euclidean residues',async()=>{
   const sum=await createComparisonCertificate([pinned],{transform:'sum',skip:2,count:2});
