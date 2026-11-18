@@ -356,6 +356,24 @@ combined instead of being printed over one another. Comparison marks retain
 their separate shapes and line patterns. Modular plots and bars/stems retain
 their zero baseline; other value plots can fit their observed range.
 
+A separate **Chart titles, legends and axis labels** disclosure now appears
+in the curated Explorer and on individual archive and formula-record plots.
+Readers may customize the chart title, both axis titles, legend names,
+visibility, placement and compact/full/ID text. Long legend entries wrap
+within the SVG; default plot titles identify the displayed transform.
+These text options travel with copied plot links and figure exports but never
+alter the data or mathematical offsets. Incorrect link options fall back to
+the original chart labels.
+
+Signed-logarithmic coordinates use `sgn(v) log10(1+|v|)`, so an axis
+coordinate is **not** the integer value. Approximate original-value labels
+are the default. Scientific notation and the underlying log coordinates
+are available for readers who want them. Positive logarithmic views use
+the analogous approximate inverse tick labels, while modular counts and
+residues remain integer-labelled. Scale notes under each plot explain the
+convention. All exact coefficients, fractions and index mappings stay
+available in tables, downloadable files and point inspectors.
+
 **Remember palette and layout** stores presentation preferences in this browser.
 Copied view links contain the complete appearance and override the recipient's
 saved settings. Denied or corrupt storage falls back to a usable default; it
