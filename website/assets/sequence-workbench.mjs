@@ -1,4 +1,5 @@
 import {WORKBENCH_DEFAULTS,validateWorkbench,localSource,referenceSource,familySource,customSource,descriptor,workbenchRows,agreements,readWorkbenchLink,workbenchLink,comparisonCSV} from './sequence-workbench-core.mjs';
+import {createComparisonCertificate} from './sequence-comparison-certificate.mjs';
 import {mountPlotOptions,plotColors,plotHeight,showIndexLabel,mergePlotLabels,finishPlotTheme,exportPlot,validateAppearance} from './sequence-plot-options.mjs';
 import {COMPARISON_CHART_DEFAULTS,validateComparisonChart,comparisonChartTitle,comparisonXAxisTitle,comparisonYAxisTitle,comparisonYAxisTick,comparisonScaleExplanation,comparisonLegendLabel,wrapLegendLabel} from './sequence-comparison-chart.mjs';
 
@@ -47,7 +48,12 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
     <p id="sw-summary"></p><div id="sw-chart" class="sw-chart"></div>
     <p id="sw-scale-note" class="sw-scale-note" role="note"></p>
     <p id="sw-inspector" class="sw-inspector" role="status">Focus a plotted point to inspect its exact integer. Use the left and right arrows to move along a series, the up and down arrows to switch series, and Home or End to reach an endpoint.</p>
-    <div id="sw-agreements"></div><div class="sp-actions"><button type="button" id="sw-share">Copy comparison link</button><button type="button" id="sw-csv">Export exact CSV</button><button type="button" id="sw-svg">Export SVG</button><button type="button" id="sw-png">Export PNG</button></div>
+    <div id="sw-agreements"></div><div class="sp-actions"><button type="button" id="sw-share">Copy comparison link</button><button type="button" id="sw-csv">Export exact CSV</button><button type="button" id="sw-certificate">Export exact certificate JSON</button><button type="button" id="sw-svg">Export SVG</button><button type="button" id="sw-png">Export PNG</button></div>
+    <details id="sw-certificate-notes" class="sw-certificate-notes"><summary>What does an exact comparison certificate verify?</summary>
+      <p>The certificate contains its exact stored integer inputs, source data SHA-256 fingerprints, recorded index conventions, selected transforms, every displayed integer and finite agreement counts. It independently replays these calculations with exact integer arithmetic before download.</p>
+      <p>It proves only the finite calculation relative to the embedded inputs, not equality of infinite sequences, source authority or novelty. For local records the complete indexed data is also checked against its published catalogue receipt. OEIS excerpt positions do not provide mathematical offsets.</p>
+      <p><a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/tools/verify_sequence_comparison_certificate.mjs">Offline verification script</a> (run with Node.js 24 using the repository checkout). The exact CSV export remains available separately.</p>
+    </details>
     <label id="sw-link-wrap" for="sw-link" hidden>Copy this comparison link<input id="sw-link" readonly></label>
     <details id="sw-data"><summary>Exact comparison table</summary><div class="sar-scroll" role="region" aria-label="Exact comparison values" tabindex="0"><table><caption>Stored indices and displayed exact integers</caption><thead><tr><th scope="col">Series</th><th scope="col">Index convention</th><th scope="col">Index / position</th><th scope="col">Window position</th><th scope="col">Original integer</th><th scope="col">Displayed integer</th></tr></thead><tbody></tbody></table></div></details>`;
   // Keep the comparison task beside search and transfers, ahead of optional research tools.
@@ -116,7 +122,7 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
   function draw(){
     $('chart').replaceChildren();$('agreements').replaceChildren();$('data').querySelector('tbody').replaceChildren();
     const pending=sources.some(s=>s.pending),ready=sources.length&&!pending;
-    for(const key of ['csv','svg','png','share','share-top'])$(key).disabled=!ready;
+    for(const key of ['csv','certificate','svg','png','share','share-top'])$(key).disabled=!ready;
     $('scale-note').textContent=comparisonScaleExplanation(state,chartLabels);
     if(!ready){result=null;$('summary').textContent=pending?'Load or remove the pending reference excerpts to draw this comparison.':'Choose Add to comparison on any local result, or try the example.';$('inspector').textContent='Exact point values will appear here.';return;}
     try{result=workbenchRows(sources,state);}catch(error){fail(error);return;}
@@ -226,6 +232,22 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
   $('share').addEventListener('click',copyComparison);
   $('share-top').addEventListener('click',copyComparison);
   $('csv').addEventListener('click',()=>{if(!result)return;const url=URL.createObjectURL(new Blob([comparisonCSV(result)],{type:'text/csv;charset=utf-8'})),link=node('a');link.href=url;link.download='sequence-comparison.csv';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
+  $('certificate').addEventListener('click',async()=>{
+    if(!result||sources.some(source=>source.pending))return;
+    const button=$('certificate');button.disabled=true;say('Replaying exact comparison inputs and preparing certificate.');
+    try{
+      const certificate=await createComparisonCertificate(sources,state,{
+        appearance:appearance.state,chartLabels
+      });
+      const body=JSON.stringify(certificate,null,2)+'\n';
+      const url=URL.createObjectURL(new Blob([body],{type:'application/json;charset=utf-8'}));
+      const link=node('a');link.href=url;link.download='komorebi-sequence-comparison-certificate.json';
+      document.body.append(link);link.click();link.remove();
+      setTimeout(()=>URL.revokeObjectURL(url),1000);
+      say('Exact comparison certificate exported. The finite rows and agreements passed independent BigInt replay.');
+    }catch(error){fail(error);say('Certificate export failed: '+error.message);}
+    finally{button.disabled=!result||!sources.length||sources.some(source=>source.pending);}
+  });
   for(const format of ['svg','png'])$(format).addEventListener('click',async()=>{try{await exportPlot($('chart').querySelector('svg'),format,'sequence-comparison');say(format.toUpperCase()+' exported.');}catch(error){say(error.message);}});
   let timer;if(typeof ResizeObserver==='function'){const observer=new ResizeObserver(()=>{clearTimeout(timer);timer=setTimeout(draw,100);});observer.observe($('chart'));}refresh();
   function validate(data){if(!data||data.schema!==1)throw Error('Unsupported comparison workspace.');const url=new URL(location.href);url.search='';url.searchParams.set('wb',JSON.stringify(data));const parsed=readWorkbenchLink(url.href,entries,snapshot);if(data.appearance)validateAppearance(data.appearance);if(data.chartLabels)validateComparisonChart(data.chartLabels);return parsed;}
