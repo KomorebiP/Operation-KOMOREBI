@@ -53,6 +53,9 @@ function render(){
     $('current-formula').textContent=entry?entry.formula:'User-supplied integers. No definition, attribution, or proof has been reviewed.';
     $('entry-links').replaceChildren();
     if(entry){const link=document.createElement('a');link.href='sequences/'+entry.id+'.html';link.textContent='Read '+entry.id+' · definition, sources, and related entries';$('entry-links').append(link);}
+    // Reconcile legend aliases when the selected records change. Otherwise a
+    // previous sequence's custom label can be attached to a different record.
+    chartLabelControls?.refresh();
     draw(rows,series.map(s=>s.name));
     const shown=rows.filter(r=>r.name===series[0].name), max=shown.at(-1)?.n;
     minimumWindow=Math.max(2,Math.min(...rows.filter(row=>row.x!==null&&row.y!==null).map(row=>row.n-state.start))+1);

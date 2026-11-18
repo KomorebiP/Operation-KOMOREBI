@@ -23,10 +23,18 @@ export function validateComparisonChart(options={}){
   }
   return out;
 }
-export function comparisonChartTitle(state,options){
+export function comparisonChartTitle(state,options,sources=[]){
   if(options.title)return options.title;
   const transform=state.transform==='difference'?'First differences':state.transform==='sum'?'Partial sums':'Original terms';
-  return state.view==='mod'?'Sequence residues modulo '+state.modulus+' · '+transform:transform+' · sequence comparison';
+  const shortName=source=>{
+    const full=String(source?.title||source?.id||'Sequence').trim().replace(/\s+(?:numbers?|sequence)$/i,'');
+    return full.length>29?full.slice(0,28).trimEnd()+'…':full;
+  };
+  const comparison=sources.length===1?shortName(sources[0]):
+    sources.length===2?shortName(sources[0])+' vs '+shortName(sources[1]):
+    sources.length>2?sources.length+' sequences':'sequence comparison';
+  const view=state.view==='mod'?'Residues mod '+state.modulus+' · ':'';
+  return view+transform+' · '+comparison;
 }
 export function comparisonXAxisTitle(state,options){
   return options.xTitle||(state.alignment==='indices'?'Recorded local index':'Window position');
@@ -44,8 +52,11 @@ export function comparisonYAxisTick(value,{view='values',scale='signed-log',tick
   if(view==='mod')return String(Math.round(value));
   if(scale==='log'){
     if(ticks==='log')return signedLogText(value);
-    const order=Math.floor(value),mantissa=Number((10**(value-order)).toPrecision(2));
+    let order=Math.floor(value),mantissa=Number((10**(value-order)).toPrecision(2));
+    if(mantissa===10){mantissa=1;order++;}
     if(ticks==='scientific')return '≈'+mantissa+'×10^'+order;
+    // Very small fractions should not render as a long string of zeros.
+    if(value< -3)return '≈'+mantissa+'×10^'+order;
     return value>15?'≈10^'+Number(value.toFixed(1)):magnitudeFormat.format(10**value);
   }
   if(scale==='signed-log'){
@@ -53,8 +64,15 @@ export function comparisonYAxisTick(value,{view='values',scale='signed-log',tick
     if(Math.abs(value)<1e-9)return '0';
     const sign=value<0?'−':'';
     const exponent=Math.abs(value);
+    // Coefficients regularly exceed 10^15. Scientific mode must still use
+    // a mantissa and exponent instead of silently falling back to 10^n.
+    if(exponent>15&&ticks==='scientific'){
+      let order=Math.floor(exponent),mantissa=Number((10**(exponent-order)).toPrecision(2));
+      if(mantissa===10){mantissa=1;order++;}
+      return '≈'+sign+mantissa+'×10^'+order;
+    }
     if(exponent>15)return '≈'+sign+'10^'+Number(exponent.toFixed(1)).toString();
-    const magnitude=exponent>300?Infinity:Math.expm1(exponent*Math.LN10);
+    const magnitude=Math.expm1(exponent*Math.LN10);
     if(ticks==='scientific'){
       const order=Number.isFinite(magnitude)&&magnitude>0?Math.floor(Math.log10(magnitude)):Math.floor(exponent);
       const mantissa=Number.isFinite(magnitude)&&magnitude>0?magnitude/10**order:10**(exponent-order);

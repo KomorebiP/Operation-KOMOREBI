@@ -362,8 +362,10 @@ Readers may customize the chart title, both axis titles, legend names,
 visibility, placement and compact/full/ID text. Long legend entries wrap
 within the SVG; default plot titles identify the displayed transform.
 These text options travel with copied plot links and figure exports but never
-alter the data or mathematical offsets. Incorrect link options fall back to
-the original chart labels.
+alter the data or mathematical offsets. Changing which sequence is plotted
+also clears any custom legend alias from the previous sequence, preventing
+an unrelated record from inheriting its name. Incorrect link options fall
+back to the original chart labels.
 
 Signed-logarithmic coordinates use `sgn(v) log10(1+|v|)`, so an axis
 coordinate is **not** the integer value. Approximate original-value labels
