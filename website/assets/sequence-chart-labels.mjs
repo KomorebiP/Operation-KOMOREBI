@@ -22,7 +22,9 @@ export function singlePlotLabelLink(href,state){
   state=validateComparisonChart(state);
   const url=new URL(href);
   for(const key of allParams)url.searchParams.delete(key);
-  for(const [key,param]of Object.entries(fields))if(state[key]!==COMPARISON_CHART_DEFAULTS[key])url.searchParams.set(param,state[key]);
+  // Persist all chart settings: archive and atlas pages have different default
+  // legend visibility, so omitting a global-default value can lose the view.
+  for(const [key,param]of Object.entries(fields))url.searchParams.set(param,state[key]);
   for(let i=0;i<state.seriesLabels.length;i++)if(state.seriesLabels[i])url.searchParams.set('chart-series-'+(i+1),state.seriesLabels[i]);
   return url.href;
 }
