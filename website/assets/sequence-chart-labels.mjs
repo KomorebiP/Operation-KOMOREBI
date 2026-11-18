@@ -29,7 +29,7 @@ export function singlePlotLabelLink(href,state){
 const make=(tag,text)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;return e;};
 export function mountSinglePlotLabels({anchor,plot,prefix,getSources,onChange,defaults={}}){
   const restored=readSinglePlotLabels(location.href,defaults);
-  let state=restored.state,sourceKey='';
+  let state=restored.state,sourceKey='',lastSourceIds='';
   const panel=make('details'),summary=make('summary','Chart titles, legends and axis labels');
   panel.className='sp-chart-labels';panel.id=prefix+'-chart-labels';panel.append(summary);
   const intro=make('p','Use the default labels or customize them for exports and shared plot links. Exact values and mathematical indexing are unchanged.');
@@ -71,7 +71,9 @@ export function mountSinglePlotLabels({anchor,plot,prefix,getSources,onChange,de
   function showFields(){
     for(const [key,input]of Object.entries(inputs))input.value=state[key];
     inputs.legendPosition.disabled=inputs.legendStyle.disabled=state.legend==='hide';
-    const sources=getSources(),key=sources.map(x=>x.id||x.title).join('\u001f')+'|'+state.legend;
+    const sources=getSources(),ids=sources.map(x=>x.id||x.title).join('\u001f'),key=ids+'|'+state.legend;
+    if(lastSourceIds&&ids!==lastSourceIds)state=validateComparisonChart({...state,seriesLabels:[]});
+    lastSourceIds=ids;
     if(sourceKey===key)return;sourceKey=key;
     series.replaceChildren();
     if(state.legend==='hide'||!sources.length)return;
@@ -92,8 +94,8 @@ export function mountSinglePlotLabels({anchor,plot,prefix,getSources,onChange,de
   anchor.after(panel);
   const scaleNote=make('p');scaleNote.className='sp-scale-explanation';plot.after(scaleNote);
   function context(view,scale,modulus=7){
-    inputs.ticks.disabled=view==='mod'||view==='grid'||view==='frequency'||view==='pairs'||view==='mod-pairs'||scale==='linear';
-    if(view==='mod'||view==='grid'||view==='pairs'||view==='mod-pairs')
+    inputs.ticks.disabled=view==='mod'||view==='grid'||view==='frequency'||view==='mod-pairs'||scale==='linear';
+    if(view==='mod'||view==='grid'||view==='mod-pairs')
       scaleNote.textContent='Axes show exact integer residues. The full recorded values remain in the point inspector, table and CSV.';
     else if(view==='frequency')
       scaleNote.textContent='Bars show exact counts of residues in the selected finite window.';
