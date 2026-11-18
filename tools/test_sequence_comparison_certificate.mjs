@@ -117,6 +117,7 @@ test('inspection distinguishes absent overlap, undefined first differences and s
   const diffCert=await createComparisonCertificate([pinned,offsetSource],
     {alignment:'indices',transform:'difference',count:4});
   const first=certificateInspectionWindow(diffCert,{seriesIndex:1}).rows[0];
+  assert.equal(certificateInspectionWindow(diffCert,{seriesIndex:0}).rows[0].status,'undefined');
   assert.equal(first.status,'undefined');
   assert.equal(first.displayed,null);
   assert.equal(first.recordedIndex,5);
