@@ -508,7 +508,9 @@ async function visit(page,name,kind){
       assert.ok(receipt.sources.every(source=>Number.isInteger(source.offset)&&source.count>0));
       assert.deepEqual(receipt.chartLabels,{
         title:'Fibonacci versus Lucas',xTitle:'Step in window',yTitle:'Approximate magnitude',
-        legend:'show',legendPosition:'bottom',legendStyle:'compact',ticks:'magnitude',seriesLabels:['Fibonacci','Lucas']
+        legend:'show',legendPosition:'bottom',legendStyle:'compact',ticks:'magnitude',seriesLabels:['Fibonacci','Lucas'],
+        titleDisplay:'show',xTitleDisplay:'show',yTitleDisplay:'show',
+        titleSize:'auto',xTitleSize:'auto',yTitleSize:'auto',titleAlign:'center'
       });
       const restored=await context.newPage();
       restored.on('pageerror',error=>report.errors.push(error.message));
