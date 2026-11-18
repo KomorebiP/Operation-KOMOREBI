@@ -107,6 +107,7 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
     if(previous)previous.after(section);else root.append(section);
   }
   const $=id=>section.querySelector('#sw-'+id);let sources=[],state={...WORKBENCH_DEFAULTS},result=null,activeKey=null,restoredSchema=null,chartLabels=validateComparisonChart();
+  let resizeTimer,observedWidth;
   const matches=entries.map(entry=>({entry,key:(entry.id+' '+entry.title).toLowerCase()}));
   function suggest(){
     const term=$('record').value.toLowerCase().trim();
@@ -169,6 +170,7 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
     showChartLabels();draw();
   });
   function draw(){
+    clearTimeout(resizeTimer);observedWidth=$('chart').clientWidth;
     $('chart').replaceChildren();$('agreements').replaceChildren();$('data').querySelector('tbody').replaceChildren();
     const pending=sources.some(s=>s.pending),ready=sources.length&&!pending;
     for(const key of ['csv','certificate','svg','png','share','share-top'])$(key).disabled=!ready;
@@ -176,7 +178,7 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
     if(!ready){result=null;$('summary').textContent=pending?'Load or remove the pending reference excerpts to draw this comparison.':'Choose Add to comparison on any local result, or try the example.';$('inspector').textContent='Exact point values will appear here.';return;}
     try{result=workbenchRows(sources,state);}catch(error){fail(error);return;}
     const colors=plotColors(appearance.state),theme=appearance.state,chart=$('chart');
-    const width=Math.max(280,chart.clientWidth),mobile=width<560;
+    const width=Math.max(280,observedWidth),mobile=width<560;
     const showLegend=chartLabels.legend==='show',hasOEIS=sources.some(s=>s.type==='oeis');
     const chartTitle=comparisonChartTitle(state,chartLabels,result.series.map(({source})=>source)),xTitle=comparisonXAxisTitle(state,chartLabels),yTitle=comparisonYAxisTitle(state,chartLabels);
     const all=result.series.flatMap(s=>s.rows),points=all.filter(r=>r.y!==null&&Number.isFinite(r.y));
@@ -463,7 +465,17 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
     finally{button.disabled=!result||!sources.length||sources.some(source=>source.pending);}
   });
   for(const format of ['svg','png'])$(format).addEventListener('click',async()=>{try{await exportPlot($('chart').querySelector('svg'),format,'sequence-comparison');say(format.toUpperCase()+' exported.');}catch(error){say(error.message);}});
-  let timer;if(typeof ResizeObserver==='function'){const observer=new ResizeObserver(()=>{clearTimeout(timer);timer=setTimeout(draw,100);});observer.observe($('chart'));}refresh();
+  if(typeof ResizeObserver==='function'){
+    const observer=new ResizeObserver(()=>{
+      // Wrapped titles change height during a direct draw. Only a width change
+      // needs another layout, and a newer direct draw consumes pending work.
+      if($('chart').clientWidth===observedWidth)return;
+      clearTimeout(resizeTimer);
+      resizeTimer=setTimeout(()=>{if($('chart').clientWidth!==observedWidth)draw();},100);
+    });
+    observer.observe($('chart'));
+  }
+  refresh();
   function validate(data){if(!data||data.schema!==1)throw Error('Unsupported comparison workspace.');const url=new URL(location.href);url.search='';url.searchParams.set('wb',JSON.stringify(data));const parsed=readWorkbenchLink(url.href,entries,snapshot);if(data.appearance)validateAppearance(data.appearance);if(data.chartLabels)validateComparisonChart(data.chartLabels);return parsed;}
   return {addLocal:entry=>add(localSource(entry,location.href)),addReference:hit=>add(referenceSource(hit,snapshot)),addFamily:(engine,params)=>add(familySource(engine,params,location.href)),addCustom:(terms,title='Identification input',offset=0)=>add(customSource({terms,title,offset})),snapshot:()=>({schema:1,state:{...state},sources:sources.map(source=>source.pending?source.descriptor:descriptor(source)),appearance:appearance.state,chartLabels:{...chartLabels,seriesLabels:[...chartLabels.seriesLabels]}}),validate,restore(data){const next=validate(data);sources=next.sources;state=next.state;chartLabels=validateComparisonChart(data.chartLabels||next.chartLabels);for(const key of fields)$(key).value=state[key];if(data.appearance)appearance.set(data.appearance);refresh();say('Comparison restored. Reference excerpts load only when explicitly requested.');}};
 }
