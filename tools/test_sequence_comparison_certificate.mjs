@@ -51,6 +51,45 @@ test('certificates are self-contained with exact source receipts, indices and fi
   assert.equal(verification.comparedPositions,3);
   assert.equal(verification.certificateSha256,cert.certificateSha256);
 });
+test('certificates issued before title typography controls retain their original digest and exact verification',async()=>{
+  const legacyLabels={title:'Saved finite comparison',xTitle:'Recorded index',yTitle:'Value',
+    legend:'show',legendPosition:'bottom',legendStyle:'id',ticks:'scientific',seriesLabels:['Reference','Input']};
+  const current=await createComparisonCertificate([pinned,second],{skip:1,count:3},{chartLabels:legacyLabels});
+  current.presentation.chartLabels=legacyLabels;
+  const legacy=await resign(current),before=JSON.stringify(legacy);
+  // Captured from the previous generator before typography fields were added.
+  assert.equal(legacy.certificateSha256,'b35a31b3182b3e4cc9fdb43c19d51df2087c2551e7d3ab0c4f3070c944171f97');
+  const verified=await verifyComparisonCertificate(legacy);
+  assert.equal(verified.ok,true);assert.equal(verified.exactRows,6);
+  assert.equal(JSON.stringify(legacy),before,'Verification must not normalize or rewrite a saved certificate');
+  for(const change of [
+    labels=>{labels.titleSize='26';},
+    labels=>{labels.unrecognized='show';},
+    labels=>{delete labels.ticks;},
+    labels=>{labels.title=' Saved finite comparison ';}
+  ]){
+    const malformed=structuredClone(legacy);change(malformed.presentation.chartLabels);
+    await assert.rejects(verifyComparisonCertificate(await resign(malformed)),/Invalid chart presentation settings/);
+  }
+});
+test('full title typography survives certificates while partial or invalid presentation settings are rejected',async()=>{
+  const certificate=await createComparisonCertificate([pinned,second],{skip:1,count:3},{chartLabels:{
+    title:'Finite values',titleDisplay:'hide',xTitleDisplay:'show',yTitleDisplay:'hide',
+    titleSize:'26',xTitleSize:'18',yTitleSize:'16',titleAlign:'right'
+  }});
+  assert.equal(certificate.presentation.chartLabels.titleSize,'26');
+  assert.equal(certificate.presentation.chartLabels.yTitleDisplay,'hide');
+  assert.equal((await verifyComparisonCertificate(certificate)).ok,true);
+  for(const change of [
+    labels=>{delete labels.xTitleSize;},
+    labels=>{labels.extra='unknown';},
+    labels=>{labels.titleSize='27';},
+    labels=>{labels.titleAlign='justify';}
+  ]){
+    const malformed=structuredClone(certificate);change(malformed.presentation.chartLabels);
+    await assert.rejects(verifyComparisonCertificate(await resign(malformed)),/chart|setting/i);
+  }
+});
 test('in-browser catalogue check distinguishes matching, changed, missing and unpinned local receipts',async()=>{
   const certificate=await createComparisonCertificate([pinned,second],{skip:1,count:2});
   const before=JSON.stringify(certificate);

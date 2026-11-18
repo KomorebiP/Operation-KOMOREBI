@@ -7,7 +7,7 @@ import {setupInterface,workspaceForURL} from './sequence-atlas-interface.mjs';
 import {setupDirectory} from './sequence-atlas-directory.mjs';
 import {PLOT_DEFAULTS,plotColors,plotHeight,showIndexLabel,mergePlotLabels,mountPlotOptions,exportPlot,plotTheme,finishPlotTheme} from './sequence-plot-options.mjs';
 import {mountSinglePlotLabels} from './sequence-chart-labels.mjs';
-import {comparisonYAxisTick,comparisonLegendLabel,wrapLegendLabel} from './sequence-comparison-chart.mjs';
+import {comparisonYAxisTick,comparisonLegendLabel,wrapLegendLabel,layoutChartText,appendChartText} from './sequence-comparison-chart.mjs';
 
 const $=id=>document.getElementById('sa-'+id);
 const ids=['sequence','compare','view','transform','scale','marks','start','count','modulus','color'];
@@ -76,15 +76,15 @@ function render(){
   }catch(error){stopAnimation();if(/integer-valued/.test(error.message)){$('transform').setAttribute('aria-invalid','true');$('transform').setAttribute('aria-describedby','sa-error');}message(error.message+(plot?' The last valid plot is retained.':''),true);return false;}
 }
 function draw(rows,names){
-  const palette=plotColors(appearance),W=Math.max(320,Math.round($('plot').clientWidth)),H=plotHeight(W,appearance),chart=chartLabelControls?.state||{};
-  const showLegend=chart.legend!=='hide',bottomLegend=showLegend&&chart.legendPosition==='bottom';
-  const sourceNames=names.map((name,i)=>({id:i===0?state.sequence:state.compare,title:known(i===0?state.sequence:state.compare)?.title||name}));
-  const legendWidth=Math.max(12,Math.floor((W-(W<560?90:100)-20-10)/7));
-  const legendLines=showLegend?sourceNames.map((source,i)=>wrapLegendLabel((i+1)+'. '+comparisonLegendLabel(source,i,chart),legendWidth,H<350?1:2)):[];
-  const legendHeight=legendLines.reduce((sum,lines)=>sum+lines.length*16,0);
-  const pad={left:W<560?90:100,right:20,top:showLegend&&!bottomLegend?49+legendHeight+12:62,
-    bottom:62+(bottomLegend?legendHeight+9:0)},pw=W-pad.left-pad.right,ph=H-pad.top-pad.bottom;
+  const palette=plotColors(appearance),W=Math.max(320,Math.round($('plot').clientWidth)),baseHeight=plotHeight(W,appearance),chart=chartLabelControls?.state||{};
+  const showLegend=chart.legend!=='hide';
   const modular=['mod','grid','frequency','mod-pairs'].includes(state.view), frequency=state.view==='frequency',grid=['grid','mod-pairs'].includes(state.view);
+  const sourceNames=names.map((name,i)=>({id:i===0?state.sequence:state.compare,title:known(i===0?state.sequence:state.compare)?.title||name}));
+  const autoTitle=(sourceNames.length===1?sourceNames[0].title:'Sequence comparison')+' · '+optionLabel('view',state.view)+' · '+optionLabel('transform',state.transform);
+  const chartTitle=chart.title||autoTitle;
+  const xLabel=frequency?'Residue':state.view==='grid'?'n mod m':state.view==='mod-pairs'?'Transformed a(n) mod m':state.view==='pairs'?'Transformed a(n)':'Index n';
+  const yLabel=frequency?'Count in window':state.view==='mod-pairs'?'Transformed a(n+1) mod m':state.view==='grid'||state.view==='mod'?'Transformed a(n) mod m':state.view==='pairs'?'Transformed a(n+1)':optionLabel('transform',state.transform);
+  const xTitle=chart.xTitle||xLabel,yTitle=chart.yTitle||(modular?yLabel:state.scale==='signed-log'?(chart.ticks==='log'?'sgn(v) log₁₀(1+|v|)':'Approx. value · signed log spacing'):state.scale==='log'?(chart.ticks==='log'?'log₁₀(v)':'Approx. positive value · log spacing'):yLabel);
   let points=rows.filter(r=>r.x!==null&&r.y!==null).map(r=>({...r,series:names.indexOf(r.name)}));
   if(frequency){points=[];names.forEach((name,series)=>{const selected=rows.filter(r=>r.name===name);for(let i=0;i<state.modulus;i++)points.push({name,n:i,x:i,y:selected.filter(r=>r.residue===i).length,value:'',raw:'',residue:i,series});});}
   const zero=appearance.baseline==='zero'||frequency||state.marks==='bars'||modular;appearanceControls?.context(modular||state.marks==='bars');
@@ -93,42 +93,42 @@ function draw(rows,names){
   if(state.view==='mod'){ymin=0;ymax=state.modulus-1;}
   const expandConstant=(low,high)=>{if(low!==high)return[low,high];const margin=Math.max(1,Math.abs(low)*0.05),left=low-margin,right=high+margin;return[Number.isFinite(left)?left:low,Number.isFinite(right)?right:high];};
   [xmin,xmax]=expandConstant(xmin,xmax);[ymin,ymax]=expandConstant(ymin,ymax);
+  const tick=v=>v===0?'0':Math.abs(v)>=1e6||Math.abs(v)<0.001?v.toExponential(1):Number(v.toPrecision(4)).toString();
+  const axisTick=v=>comparisonYAxisTick(v,{view:modular?'mod':'values',scale:state.scale,ticks:chart.ticks||'magnitude'});
+  const yTicks=modular?[...new Set(Array.from({length:6},(_,i)=>Math.round((1-i/5)*ymax+(i/5)*ymin)))]:Array.from({length:6},(_,i)=>(1-i/5)*ymax+(i/5)*ymin);
+  const tickLabels=yTicks.map(value=>frequency?tick(value):axisTick(value));
+  const textOptions={width:W,height:baseHeight,left:W<560?90:100,right:20,title:chartTitle,xTitle,yTitle,options:chart,legendPosition:chart.legendPosition,tickLabels};
+  const initialLayout=layoutChartText(textOptions);
+  const legendWidth=Math.max(12,Math.floor((initialLayout.plotWidth-10)/7));
+  const legendLines=showLegend?sourceNames.map((source,i)=>wrapLegendLabel((i+1)+'. '+comparisonLegendLabel(source,i,chart),legendWidth,baseHeight<350?1:2,initialLayout.plotWidth-10)):[];
+  const legendHeight=legendLines.reduce((sum,lines)=>sum+lines.length*16,0);
+  const textLayout=layoutChartText({...textOptions,legendHeight}),H=textLayout.height;
+  const pad={left:textLayout.left,right:textLayout.right,top:textLayout.top,bottom:H-textLayout.bottom},pw=textLayout.plotWidth,ph=textLayout.plotHeight;
   // Normalize before multiplying to keep very large finite values within range.
   const between=(v,a,b)=>{const scale=Math.max(Math.abs(a),Math.abs(b),1);return (v/scale-a/scale)/(b/scale-a/scale);};
   const x=v=>pad.left+between(v,xmin,xmax)*pw,y=v=>H-pad.bottom-between(v,ymin,ymax)*ph;
   const hadFocus=$('plot').contains(document.activeElement);
   const svg=element('svg',{viewBox:`0 0 ${W} ${H}`,role:'group','aria-labelledby':'sa-svg-title sa-svg-description','aria-describedby':'sa-plot-help'});
   svg.append(element('rect',{width:W,height:H,fill:'#fafaf5'}));
-  const autoTitle=(sourceNames.length===1?sourceNames[0].title:'Sequence comparison')+' · '+optionLabel('view',state.view)+' · '+optionLabel('transform',state.transform);
-  const chartTitle=chart.title||autoTitle;
   svg.append(element('title',{id:'sa-svg-title'},chartTitle));
   svg.append(element('desc',{id:'sa-svg-description'},`Discrete samples for ${names.join(' and ')}. Plot coordinates may be transformed or approximate. Exact values are available in the atlas table and CSV export.`));
   svg.append(element('path',{d:`M${pad.left} ${pad.top}V${H-pad.bottom}H${W-pad.right}`,stroke:'#87988b','data-plot-axis':'true','stroke-width':1,fill:'none'}));
-  const tick=v=>v===0?'0':Math.abs(v)>=1e6||Math.abs(v)<0.001?v.toExponential(1):Number(v.toPrecision(4)).toString();
-  const axisTick=v=>comparisonYAxisTick(v,{view:modular?'mod':'values',scale:state.scale,ticks:chart.ticks||'magnitude'});
-  const yTicks=modular?[...new Set(Array.from({length:6},(_,i)=>Math.round((1-i/5)*ymax+(i/5)*ymin)))]:Array.from({length:6},(_,i)=>(1-i/5)*ymax+(i/5)*ymin);
-  for(const pyValue of yTicks){
+  for(const [index,pyValue]of yTicks.entries()){
     const py=y(pyValue);
     if(appearance.grid==='on')svg.append(element('line',{x1:pad.left,x2:W-pad.right,y1:py,y2:py,stroke:'#d9dfd4','data-plot-grid':'true','stroke-width':1}));
-    svg.append(element('text',{x:pad.left-9,y:py+4,'text-anchor':'end',fill:'#465347','font-size':12,'data-y-tick':''},frequency?tick(pyValue):axisTick(pyValue)));
+    svg.append(element('text',{x:pad.left-9,y:py+4,'text-anchor':'end',fill:'#465347','font-size':12,'data-y-tick':''},tickLabels[index]));
   }
   const xTicks=[...new Set(Array.from({length:6},(_,i)=>state.view==='pairs'?(1-i/5)*xmin+(i/5)*xmax:Math.round((1-i/5)*xmin+(i/5)*xmax)))];
   for(const pxValue of xTicks){const px=x(pxValue);
     const label=state.view==='pairs'?axisTick(pxValue):tick(pxValue);
     svg.append(element('text',{x:px,y:H-pad.bottom+24,'text-anchor':'middle',fill:'#465347','font-size':12},label));
   }
-  const xLabel=frequency?'Residue':state.view==='grid'?'n mod m':state.view==='mod-pairs'?'Transformed a(n) mod m':state.view==='pairs'?'Transformed a(n)':'Index n';
-  const yLabel=frequency?'Count in window':state.view==='mod-pairs'?'Transformed a(n+1) mod m':state.view==='grid'||state.view==='mod'?'Transformed a(n) mod m':state.view==='pairs'?'Transformed a(n+1)':optionLabel('transform',state.transform);
-  const xTitle=chart.xTitle||xLabel,yTitle=chart.yTitle||(modular?yLabel:state.scale==='signed-log'?'Approx. value · signed log spacing':state.scale==='log'?'Approx. positive value · log spacing':yLabel);
-  const fit=text=>{const limit=Math.max(12,Math.floor(pw/7.5));return text.length>limit?text.slice(0,limit-1)+'…':text;};
-  svg.append(element('text',{x:W/2,y:23,'text-anchor':'middle','font-weight':650,'font-size':W<560?13:15,'data-chart-title':'true','aria-label':chartTitle},chartTitle.length>Math.floor((W-30)/7.2)?chartTitle.slice(0,Math.floor((W-30)/7.2)-1)+'…':chartTitle));
-  svg.append(element('text',{x:W/2,y:H-12,'text-anchor':'middle',fill:'#243d2d','font-size':W<560?11:13,'data-x-axis-title':'true','aria-label':xTitle},fit(xTitle)));
-  svg.append(element('text',{x:16,y:(pad.top+H-pad.bottom)/2,'text-anchor':'middle',fill:'#243d2d','font-size':W<560?10:12,transform:`rotate(-90 16 ${(pad.top+H-pad.bottom)/2})`,'data-y-axis-title':'true','aria-label':yTitle},yTitle.length>Math.floor(ph/6)?yTitle.slice(0,Math.max(10,Math.floor(ph/6)-1))+'…':yTitle));
+  appendChartText(svg,textLayout);
   if(showLegend)sourceNames.forEach((source,i)=>{
     const prior=legendLines.slice(0,i).reduce((total,lines)=>total+lines.length*16,0);
-    const ly=(bottomLegend?H-pad.bottom+59:46)+prior,raw=comparisonLegendLabel(source,i,chart);
+    const ly=textLayout.legendY+prior,raw=comparisonLegendLabel(source,i,chart);
     const text=element('text',{x:pad.left,y:ly,fill:palette[i],'font-size':W<560?11:12,'data-legend-label':String(i),'aria-label':source.id+' · '+raw});
-    legendLines[i].forEach((line,j)=>text.append(element('tspan',{x:pad.left,dy:j?16:0},line)));
+    legendLines[i].forEach((line,j)=>text.append(element('tspan',{x:pad.left,dy:j?16:0},line+(j<legendLines[i].length-1?' ':''))));
     svg.append(text);
   });
   if(state.marks==='line'&&!frequency&&!grid){

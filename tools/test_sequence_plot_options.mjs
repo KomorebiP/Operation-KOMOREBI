@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {PLOT_DEFAULTS,validateAppearance,readAppearance,appearanceLink,plotColors,plotHeight,showIndexLabel,mergePlotLabels} from '../website/assets/sequence-plot-options.mjs';
 import {archiveLink,archiveWindow,moveArchiveWindow,triangleWindow,archivePreset} from '../website/assets/sequence-archive-core.mjs';
 import {readSinglePlotLabels,singlePlotLabelLink} from '../website/assets/sequence-chart-labels.mjs';
-import {comparisonYAxisTick,comparisonLegendLabel,wrapLegendLabel,validateComparisonChart} from '../website/assets/sequence-comparison-chart.mjs';
+import {comparisonYAxisTick,comparisonLegendLabel,wrapLegendLabel,validateComparisonChart,layoutChartText} from '../website/assets/sequence-comparison-chart.mjs';
 import {execFileSync} from 'node:child_process';
 
 const entries=JSON.parse(execFileSync(process.env.PYTHON||'python',['-B','-c','import sys,json;sys.path.insert(0,"tools");from sequence_archive import records;print(json.dumps(records()))'],{encoding:'utf8'}));
@@ -23,12 +23,15 @@ test('appearance accepts only bounded presentation choices and keeps source data
 test('all single-sequence plot annotations round-trip without changing the view window',()=>{
   const source='https://example.test/sequence-archive/KOM067.html?view=raw&scale=signed-log&start=2&size=8#plot';
   const state=validateComparisonChart({title:'Exact coefficient growth',xTitle:'Original index n',yTitle:'Magnitude',
+    titleDisplay:'hide',xTitleDisplay:'show',yTitleDisplay:'hide',titleSize:'26',xTitleSize:'18',yTitleSize:'16',titleAlign:'left',
     legend:'show',legendPosition:'bottom',legendStyle:'id',ticks:'scientific',seriesLabels:['Series one']});
   const href=singlePlotLabelLink(source,state),parsed=readSinglePlotLabels(href);
   assert.deepEqual(parsed.state,state);assert.equal(parsed.note,'');
   const url=new URL(href);
   for(const field of ['view','scale','start','size'])assert.equal(url.searchParams.get(field),new URL(source).searchParams.get(field));
   assert.equal(url.hash,'#plot');
+  for(const [param,value]of Object.entries({'chart-title-display':'hide','chart-x-display':'show','chart-y-display':'hide',
+    'chart-title-size':'26','chart-x-size':'18','chart-y-size':'16','chart-title-align':'left'}))assert.equal(url.searchParams.get(param),value);
   const repeat=singlePlotLabelLink(href,parsed.state);assert.equal(repeat,href);
   assert.deepEqual(readSinglePlotLabels(source,{legend:'hide'}).state,validateComparisonChart({legend:'hide'}));
   // An archive defaults to a hidden legend; copying an enabled legend must
@@ -39,11 +42,19 @@ test('all single-sequence plot annotations round-trip without changing the view 
   const duplicate=new URL(href);duplicate.searchParams.append('chart-ticks','log');
   const unknown=new URL(href);unknown.searchParams.set('chart-ticks','invalid');
   const tooLong=new URL(href);tooLong.searchParams.set('chart-title','X'.repeat(91));
-  for(const bad of [duplicate.href,unknown.href,tooLong.href]){
+  const badSize=new URL(href);badSize.searchParams.set('chart-title-size','100');
+  const duplicateSize=new URL(href);duplicateSize.searchParams.append('chart-y-size','12');
+  const badVisibility=new URL(href);badVisibility.searchParams.set('chart-x-display','invisible');
+  for(const bad of [duplicate.href,unknown.href,tooLong.href,badSize.href,duplicateSize.href,badVisibility.href]){
     const restored=readSinglePlotLabels(bad);
     assert.match(restored.note,/Invalid chart label settings/);
     assert.equal(restored.state.title,'');
   }
+  const olderURL=new URL(source);olderURL.searchParams.set('chart-title','Previous plot');olderURL.searchParams.set('chart-x','Index');
+  const older=readSinglePlotLabels(olderURL.href);
+  assert.equal(older.state.title,'Previous plot');assert.equal(older.state.xTitle,'Index');
+  assert.equal(older.state.titleSize,'auto');assert.equal(older.state.titleDisplay,'show');
+  assert.equal(older.state.titleAlign,'center');
 });
 
 test('positive and signed-log scale labels distinguish approximate magnitudes and scientific notation',()=>{
@@ -65,6 +76,17 @@ test('compact, full and ID legend formats retain the source name and wrap withou
   assert.equal(wrapped.length,2);
   assert.ok(wrapped.every(line=>line.length<=22));
   assert.ok(wrapped.at(-1).endsWith('…'));
+});
+
+test('very large linear ticks retain room for plotted values and both axis titles',()=>{
+  const values=[1e15,1e50,-1.23e100,1e308];
+  const labels=values.map(value=>comparisonYAxisTick(value,{scale:'linear'}));
+  assert.deepEqual(labels,['≈1×10^15','≈1×10^50','≈−1.2×10^100','≈1×10^308']);
+  const layout=layoutChartText({width:280,height:280,title:'Large coefficients',
+    xTitle:'Recorded index',yTitle:'Magnitude of the original coefficient',tickLabels:labels,
+    options:{titleSize:'26',xTitleSize:'18',yTitleSize:'18'}});
+  assert.ok(layout.plotWidth>=80,'Wide numeric labels must leave a usable horizontal plotting region');
+  assert.ok(layout.plotHeight>=180,'Wrapped titles must retain room for the plotted values');
 });
 
 test('view links fully override recipient preferences and tolerate unavailable or corrupt storage',()=>{

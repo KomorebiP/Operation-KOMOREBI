@@ -1,6 +1,8 @@
 /* Presentation-only comparison labels. Exact values and arithmetic live elsewhere. */
 export const COMPARISON_CHART_DEFAULTS=Object.freeze({
-  title:'',xTitle:'',yTitle:'',legend:'show',legendPosition:'top',legendStyle:'compact',ticks:'magnitude',seriesLabels:[]
+  title:'',xTitle:'',yTitle:'',legend:'show',legendPosition:'top',legendStyle:'compact',ticks:'magnitude',seriesLabels:[],
+  titleDisplay:'show',xTitleDisplay:'show',yTitleDisplay:'show',
+  titleSize:'auto',xTitleSize:'auto',yTitleSize:'auto',titleAlign:'center'
 });
 
 const MAX_TEXT={title:90,xTitle:64,yTitle:64};
@@ -12,7 +14,9 @@ export function validateComparisonChart(options={}){
   if(!options||typeof options!=='object'||Array.isArray(options))throw Error('Invalid chart label settings.');
   const out={...COMPARISON_CHART_DEFAULTS,seriesLabels:[]};
   for(const [key,max] of Object.entries(MAX_TEXT))if(Object.hasOwn(options,key))out[key]=chartText(options[key],max,key);
-  const allowed={legend:['show','hide'],legendPosition:['top','bottom'],legendStyle:['compact','full','id'],ticks:['magnitude','scientific','log']};
+  const allowed={legend:['show','hide'],legendPosition:['top','bottom'],legendStyle:['compact','full','id'],ticks:['magnitude','scientific','log'],
+    titleDisplay:['show','hide'],xTitleDisplay:['show','hide'],yTitleDisplay:['show','hide'],
+    titleSize:['auto','14','18','22','26'],xTitleSize:['auto','12','14','16','18'],yTitleSize:['auto','12','14','16','18'],titleAlign:['left','center','right']};
   for(const [key,values] of Object.entries(allowed))if(Object.hasOwn(options,key)){
     if(!values.includes(options[key]))throw Error('Choose a valid '+key+' setting.');
     out[key]=options[key];
@@ -81,6 +85,10 @@ export function comparisonYAxisTick(value,{view='values',scale='signed-log',tick
     return '≈'+sign+(Number.isFinite(magnitude)?magnitude<.01?Number(magnitude.toPrecision(2)).toString():magnitudeFormat.format(magnitude):'10^'+Number(exponent.toFixed(1)));
   }
   if(Math.abs(value)<1e-9)return '0';
+  if(Math.abs(value)>=1e15){
+    const [mantissa,exponent]=Math.abs(value).toExponential(1).split('e');
+    return '≈'+(value<0?'−':'')+Number(mantissa)+'×10^'+Number(exponent);
+  }
   if(Math.abs(value)>=1e5)return '≈'+(value<0?'−':'')+magnitudeFormat.format(Math.abs(value));
   return Number(value.toPrecision(3)).toString();
 }
@@ -106,7 +114,15 @@ export function comparisonLegendLabel(source,index,options={}){
   return source.title||source.id||'Series';
 }
 /** Wrap long SVG labels at word boundaries, with an ellipsis if a third line remains. */
-export function wrapLegendLabel(label,maxChars=24,maxLines=2){
+export function wrapLegendLabel(label,maxChars=24,maxLines=2,width){
+  if(Number.isFinite(width)){
+    const lines=wrapChartText(label,Math.max(12,width),12);
+    if(lines.length<=maxLines)return lines;
+    const visible=lines.slice(0,maxLines),characters=Array.from(visible[maxLines-1]);
+    while(characters.length&&textWidth(characters.join('')+'…',12)>width)characters.pop();
+    visible[maxLines-1]=characters.join('').trimEnd()+'…';
+    return visible;
+  }
   const words=String(label).split(/\s+/).filter(Boolean),out=[];
   for(const word of words){
     const last=out.length-1;
@@ -115,4 +131,87 @@ export function wrapLegendLabel(label,maxChars=24,maxLines=2){
     else{out[out.length-1]=out[out.length-1].slice(0,maxChars-1).replace(/…$/,'')+'…';break;}
   }
   return out.length?out:[''];
+}
+
+// Measure the same font that the standalone SVG uses. The deterministic fallback
+// also lets non-browser consumers compute a conservative layout.
+let measureContext;
+function textWidth(text,size,weight=400){
+  if(measureContext===undefined){
+    measureContext=typeof document==='undefined'?null:document.createElement('canvas').getContext('2d');
+  }
+  if(!measureContext)return Array.from(text).length*size*.68;
+  measureContext.font=weight+' '+size+'px system-ui, sans-serif';
+  return measureContext.measureText(text).width;
+}
+function wrapChartText(text,width,size,weight=400){
+  const lines=[];
+  let line='';
+  for(const word of String(text).trim().split(/\s+/).filter(Boolean)){
+    const joined=line?line+' '+word:word;
+    if(textWidth(joined,size,weight)<=width){line=joined;continue;}
+    if(line){lines.push(line);line='';}
+    for(const character of Array.from(word)){
+      if(line&&textWidth(line+character,size,weight)>width){lines.push(line);line='';}
+      line+=character;
+    }
+  }
+  if(line)lines.push(line);
+  return lines;
+}
+
+/** Reserve real space for chart text, legends and ticks before placing points. */
+export function layoutChartText({width,height,left=90,right=20,title='',xTitle='',yTitle='',options={},legendHeight=0,legendPosition='top',footerHeight=0,tickLabels=[]}){
+  const settings=validateComparisonChart(options),mobile=width<560;
+  const size=(key,automatic)=>settings[key]==='auto'?automatic:Number(settings[key]);
+  const titleSize=size('titleSize',mobile?14:16),xSize=size('xTitleSize',12),ySize=size('yTitleSize',12);
+  const titleLines=settings.titleDisplay==='hide'?[]:wrapChartText(title,width-32,titleSize,650);
+  const titleLineHeight=Math.ceil(titleSize*1.3),yLineHeight=Math.ceil(ySize*1.3);
+  // Two rotated lines leave room for numeric ticks on narrow screens. A long
+  // vertical title grows the chart height instead of consuming the plot width.
+  let ySpan=Math.max(160,Math.min(260,height*.5));
+  let yLines=settings.yTitleDisplay==='hide'?[]:wrapChartText(yTitle,ySpan,ySize);
+  while(yLines.length>2){ySpan+=16;yLines=wrapChartText(yTitle,ySpan,ySize);}
+  const tickWidth=Math.max(0,...tickLabels.map(label=>Math.ceil(textWidth(label,12))));
+  const titleBand=yLines.length?8+yLines.length*yLineHeight+10:8;
+  left=Math.max(left,titleBand+tickWidth+9);
+  const plotWidth=width-left-right,xLines=settings.xTitleDisplay==='hide'?[]:wrapChartText(xTitle,plotWidth,xSize);
+  const xLineHeight=Math.ceil(xSize*1.3),headingBottom=titleLines.length?12+titleLines.length*titleLineHeight+8:12;
+  const bottomLegend=legendHeight>0&&legendPosition==='bottom';
+  const top=headingBottom+(legendHeight&&!bottomLegend?legendHeight+12:12);
+  const xBlock=xLines.length?xLines.length*xLineHeight+8:0;
+  const bottomSpace=32+xBlock+(bottomLegend?legendHeight+12:0)+footerHeight+12;
+  const minimumPlotHeight=Math.max(180,...yLines.map(line=>Math.ceil(textWidth(line,ySize))+16));
+  height=Math.max(height,Math.ceil(top+bottomSpace+minimumPlotHeight));
+  const bottom=height-bottomSpace,centerY=(top+bottom)/2,yBlock=yLines.length*yLineHeight;
+  const titleX=settings.titleAlign==='left'?16:settings.titleAlign==='right'?width-16:width/2;
+  const plan=(text,lines,fontSize,lineHeight,x,y,anchor='middle',weight=400)=>({text,lines,fontSize,lineHeight,x,y,anchor,weight});
+  return {width,height,left,right,top,bottom,plotWidth,plotHeight:bottom-top,
+    legendY:bottomLegend?bottom+32+xBlock+12:headingBottom+12,
+    title:plan(title,titleLines,titleSize,titleLineHeight,titleX,12+titleSize,{left:'start',center:'middle',right:'end'}[settings.titleAlign],650),
+    xTitle:plan(xTitle,xLines,xSize,xLineHeight,left+plotWidth/2,bottom+32+xSize),
+    yTitle:{...plan(yTitle,yLines,ySize,yLineHeight,8+yBlock/2,centerY-(yLines.length-1)*yLineHeight/2+ySize*.35),
+      rotation:{x:8+yBlock/2,y:centerY}}
+  };
+}
+
+/** Full visible text and exportable inline typography, independent of page CSS. */
+export function appendChartText(picture,layout){
+  const svg=(name,attributes,text)=>{
+    const element=document.createElementNS('http://www.w3.org/2000/svg',name);
+    for(const [key,value]of Object.entries(attributes))element.setAttribute(key,value);
+    if(text!==undefined)element.textContent=text;
+    return element;
+  };
+  picture.append(svg('rect',{x:layout.left,y:layout.top,width:layout.plotWidth,height:layout.plotHeight,
+    fill:'none','pointer-events':'none','aria-hidden':'true','data-plot-area':''}));
+  for(const [key,attribute]of [['title','data-chart-title'],['xTitle','data-x-axis-title'],['yTitle','data-y-axis-title']]){
+    const plan=layout[key];if(!plan.lines.length)continue;
+    const text=svg('text',{x:plan.x,y:plan.y,'text-anchor':plan.anchor,'font-size':plan.fontSize,
+      'font-weight':plan.weight,[attribute]:'true','aria-label':plan.text});
+    text.style.fontFamily='system-ui, sans-serif';text.style.fontSize=plan.fontSize+'px';text.style.fontWeight=plan.weight;
+    if(plan.rotation)text.setAttribute('transform',`rotate(-90 ${plan.rotation.x} ${plan.rotation.y})`);
+    plan.lines.forEach((line,i)=>text.append(svg('tspan',{x:plan.x,dy:i?plan.lineHeight:0},line+(i<plan.lines.length-1?' ':''))));
+    picture.append(text);
+  }
 }

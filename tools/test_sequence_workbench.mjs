@@ -124,6 +124,8 @@ test('custom chart and legend text round trip with exact pinned comparisons',()=
   const chartLabels=validateComparisonChart({
     title:'Fibonacci and Lucas · coefficient comparison',
     xTitle:'Stored local index',yTitle:'Magnitude of coefficient',
+    titleDisplay:'show',xTitleDisplay:'hide',yTitleDisplay:'show',
+    titleSize:'22',xTitleSize:'14',yTitleSize:'18',titleAlign:'right',
     legend:'show',legendPosition:'bottom',ticks:'log',seriesLabels:['First family','Second family']
   });
   assert.equal(comparisonChartTitle(WORKBENCH_DEFAULTS,chartLabels),chartLabels.title);
@@ -138,11 +140,20 @@ test('custom chart and legend text round trip with exact pinned comparisons',()=
   delete oldData.chartLabels;oldData.schema=1;oldData.sources=oldData.sources.map(({type,id})=>({type,id}));
   old.searchParams.set('wb',JSON.stringify(oldData));
   assert.deepEqual(readWorkbenchLink(old,[pinned,b],'snapshot').chartLabels,validateComparisonChart());
+  const oldLabels=new URL(url),older=JSON.parse(oldLabels.searchParams.get('wb'));
+  for(const key of ['titleDisplay','xTitleDisplay','yTitleDisplay','titleSize','xTitleSize','yTitleSize','titleAlign'])delete older.chartLabels[key];
+  oldLabels.searchParams.set('wb',JSON.stringify(older));
+  const restoredOlder=readWorkbenchLink(oldLabels,[pinned,{...b,record_sha256:'b'.repeat(64)}],'snapshot');
+  assert.equal(restoredOlder.chartLabels.title,chartLabels.title);
+  assert.equal(restoredOlder.chartLabels.titleDisplay,'show');assert.equal(restoredOlder.chartLabels.xTitleDisplay,'show');
+  assert.equal(restoredOlder.chartLabels.titleSize,'auto');assert.equal(restoredOlder.chartLabels.titleAlign,'center');
 });
 test('chart text customization rejects invalid labels and does not change data',()=>{
   for(const bad of [{title:'x'.repeat(91)},{xTitle:'x'.repeat(65)},{yTitle:'line\n2'},
     {legend:'unknown'},{legendPosition:'left'},{ticks:'numbers'}, {seriesLabels:['a','b','c','d','e']},
-    {seriesLabels:['a\nnewline']},{seriesLabels:['x'.repeat(61)]}]){
+    {seriesLabels:['a\nnewline']},{seriesLabels:['x'.repeat(61)]},
+    {titleDisplay:'none'},{xTitleDisplay:false},{yTitleDisplay:'auto'},{titleSize:26},
+    {titleSize:'27'},{xTitleSize:'26'},{yTitleSize:'0'},{titleAlign:'justify'}]){
     assert.throws(()=>validateComparisonChart(bad));
   }
   const state=validateComparisonChart({legend:'hide',seriesLabels:['One','Two']});

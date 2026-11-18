@@ -12,9 +12,18 @@ const DIGEST=/^[0-9a-f]{64}$/;
 const MAX_CERTIFICATE_CHARS=8000000;
 const MAX_SOURCE_TERMS=4096;
 const MAX_TOTAL_DIGITS=3000000;
+// Certificates issued before title typography controls contain exactly these
+// fields. Validate that original shape without adding defaults to hashed data.
+const LEGACY_CHART_LABEL_KEYS=['title','xTitle','yTitle','legend','legendPosition','legendStyle','ticks','seriesLabels'];
 
 function check(ok,message){if(!ok)throw Error(message);}
 function jsonEqual(a,b){return JSON.stringify(a)===JSON.stringify(b);}
+function validCertificateChartLabels(labels){
+  const normalized=validateComparisonChart(labels);
+  if(jsonEqual(normalized,labels))return true;
+  return labels&&Object.keys(labels).length===LEGACY_CHART_LABEL_KEYS.length&&
+    jsonEqual(Object.fromEntries(LEGACY_CHART_LABEL_KEYS.map(key=>[key,normalized[key]])),labels);
+}
 function fingerprintParts(source){
   return [source.id,source.collection,source.offset,source.indexSymbol,source.terms,source.sourceDegrees];
 }
@@ -163,7 +172,7 @@ export async function verifyComparisonCertificate(certificate){
     if(source.type==='local'&&source.catalogueReceipt)
       check(sha===source.catalogueReceipt,'Local catalogue receipt mismatch for '+source.id);
   }
-  check(body.presentation&&jsonEqual(validateComparisonChart(body.presentation.chartLabels),body.presentation.chartLabels),
+  check(body.presentation&&validCertificateChartLabels(body.presentation.chartLabels),
     'Invalid chart presentation settings.');
   check(jsonEqual(validateAppearance(body.presentation.appearance),body.presentation.appearance),
     'Invalid plot appearance settings.');
