@@ -136,6 +136,44 @@ Local records restore immediately; reference descriptors must match the retained
 snapshot hash and require an explicit load action. Opening a link does not
 download the bulk data. The finder and restoration reuse the same worker's
 compressed-file cache. Exact agreement counts compare displayed integers over the overlap.
+
+The Compare page now also exports an **Exact comparison certificate (JSON)**.
+Unlike the displayed-row CSV, this self-contained finite record retains the
+entire stored integer prefixes for each selected source, including earlier
+values required for partial sums and first differences. It also records original
+offsets and index conventions, source URLs, generated-family parameters or
+retained OEIS snapshot labels when present, a SHA-256 data fingerprint for each
+input, the existing local-catalogue receipt where available, all exact window
+rows, transformed values, finite comparison counts, first mismatches,
+plot settings, and an overall SHA-256 file-content receipt. Up to four sources
+are supported. It includes no private browser storage or external requests.
+An embedded source digest detects accidental changes within the certificate,
+but does not independently establish the authority of an external source.
+
+The certificate generator invokes a separate BigInt verifier before download.
+The verifier **recomputes every row and finite agreement from the embedded
+integer strings**, independent of the workbench's transform and plotting code.
+For local records, it also checks the complete indexed source data against
+the pre-published catalogue receipt, including degree maps where recorded.
+No decimal plot position is used to establish an equality. The certificate
+documents that OEIS export positions do not supply mathematical offsets.
+The verification result is limited to the selected finite calculation; it is
+not a proof of infinite sequence equality, novelty, provenance history or
+physical realization.
+
+Reverify a downloaded certificate offline using a checkout of the repository
+and Node.js 24:
+
+```bash
+node tools/verify_sequence_comparison_certificate.mjs komorebi-sequence-comparison-certificate.json
+```
+
+The command prints verified source, row and overlap counts and returns a
+nonzero exit status for an altered input, incorrect computation, mismatched
+receipt, unsupported format or malformed file. For very large comparisons,
+the tool refuses certificate exports beyond its explicit size limit rather
+than rounding or truncating integers. The existing exact CSV is still
+available for those cases.
 Modular views label residue agreements separately. SVG/PNG exports include the
 series legend and OEIS credit when applicable. CSVs retain exact values, index
 conventions, source URLs, reference hashes, and reference licensing. Points use
