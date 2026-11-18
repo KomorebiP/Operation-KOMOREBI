@@ -11,7 +11,9 @@ export function validateWorkbench(options={}){
 }
 export function localSource(entry,base){
   const receipt=/^[0-9a-f]{64}$/.test(entry.record_sha256||'')?entry.record_sha256:null;
-  return {key:entry.id,type:'local',id:entry.id,title:entry.title,indexKind:entry.index_symbol==='j'?'local flat index j':'local index n',offset:entry.offset,terms:entry.terms,url:base?new URL(entry.url,base).href:entry.url,collection:entry.collection,receipt};
+  return {key:entry.id,type:'local',id:entry.id,title:entry.title,indexKind:entry.index_symbol==='j'?'local flat index j':'local index n',indexSymbol:entry.index_symbol||'n',
+    sourceDegrees:Array.isArray(entry.source_degrees)?entry.source_degrees.slice():null,
+    offset:entry.offset,terms:entry.terms,url:base?new URL(entry.url,base).href:entry.url,collection:entry.collection,receipt};
 }
 export function familySource(engine,params,base='https://komorebip.github.io/Operation-KOMOREBI/sequence-library.html'){
   const result=generateFamily(engine,params),descriptor=familyDescriptor(engine,result.params),family=Object.entries(FAMILY_ENGINES).find(([,value])=>value===engine)[0];
