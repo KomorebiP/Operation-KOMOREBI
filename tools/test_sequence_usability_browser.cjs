@@ -284,6 +284,48 @@ async function visit(page,name,kind){
       assert.equal(verifiedCertificate.ok,true);
       assert.equal(verifiedCertificate.exactRows,64);
       assert.match(await page.locator('#sw-status').textContent(),/independent BigInt replay/);
+      assert.equal(await page.locator('#sw-verify-certificate').evaluate(el=>el.open),false,
+        'Local certificate verification must remain optional');
+      await page.locator('#sw-verify-certificate>summary').click();
+      await page.locator('#sw-verify-file').setInputFiles(certificateFile);
+      await page.locator('#sw-verify-submit').click();
+      await page.locator('#sw-verify-output').waitFor({state:'visible',timeout:30000});
+      assert.equal(await page.locator('#sw-verify-error').isVisible(),false);
+      assert.match(await page.locator('#sw-verify-summary').textContent(),/2 source prefixes, 64 exact displayed rows, 32 compared positions/);
+      assert.match(await page.locator('#sw-verify-catalogue').textContent(),/2 of 2 local source receipts match/);
+      assert.equal(await page.locator('#sw-verify-sources li').count(),2);
+      assert.match(await page.locator('#sw-verify-receipt').textContent(),/^[0-9a-f]{64}$/);
+      if(width===1440){
+        const separate=await context.newPage();
+        separate.on('pageerror',error=>report.errors.push(error.message));
+        await separate.goto(href('sequence-compare.html#comparison'));await ready(separate);
+        assert.equal(await separate.locator('#sw-certificate').isDisabled(),true,
+          'Import must work even before selecting any comparison sources');
+        await separate.locator('#sw-verify-certificate>summary').click();
+        await separate.locator('#sw-verify-file').setInputFiles(certificateFile);
+        await separate.locator('#sw-verify-submit').click();
+        await separate.locator('#sw-verify-output').waitFor({state:'visible',timeout:30000});
+        assert.match(await separate.locator('#sw-verify-catalogue').textContent(),/2 of 2 local source receipts match/);
+        await fit(separate);await separate.close();
+        const tampered=structuredClone(certificate);
+        tampered.series[0].rows[0].displayed='123456';
+        const invalidFile=path.join(output,'tampered-exact-certificate.json');
+        fs.writeFileSync(invalidFile,JSON.stringify(tampered),'utf8');
+        await page.locator('#sw-verify-file').setInputFiles(invalidFile);
+        assert.equal(await page.locator('#sw-verify-output').isVisible(),false,
+          'Selecting another file must clear the previous verified result');
+        await page.locator('#sw-verify-submit').click();
+        await page.locator('#sw-verify-error').waitFor({state:'visible',timeout:30000});
+        assert.match(await page.locator('#sw-verify-error').textContent(),/digest does not match/);
+        assert.equal(await page.locator('#sw-verify-output').isVisible(),false);
+        const invalidJSON=path.join(output,'invalid-certificate.json');
+        fs.writeFileSync(invalidJSON,'{not valid JSON}', 'utf8');
+        await page.locator('#sw-verify-file').setInputFiles(invalidJSON);
+        await page.locator('#sw-verify-submit').click();
+        await page.locator('#sw-verify-error').waitFor({state:'visible',timeout:30000});
+        assert.match(await page.locator('#sw-verify-error').textContent(),/not valid JSON/);
+        assert.equal(await page.locator('#sw-verify-output').isVisible(),false);
+      }
       await fit(page);
       assert.equal(await page.locator('#sw-chart-labels').evaluate(el=>el.open),false,
         'Chart text settings should be optional rather than cluttering the main comparison');
