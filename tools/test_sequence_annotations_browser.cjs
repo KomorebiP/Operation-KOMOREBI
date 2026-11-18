@@ -7,7 +7,9 @@ const output=process.argv[3]||'sequence-chart-annotations';
 fs.mkdirSync(output,{recursive:true});
 const href=relative=>new URL(relative,base).href;
 async function fit(page){
-  await page.evaluate(async()=>{await document.fonts.ready;await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));});
+  // Playwright can inspect geometry even when page JavaScript is disabled.
+  // Waiting for requestAnimationFrame on such a page never settles.
+  await page.locator('body').waitFor({state:'attached'});
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth+1),true,'Unexpected plot page overflow: '+page.url());
 }
 (async()=>{
