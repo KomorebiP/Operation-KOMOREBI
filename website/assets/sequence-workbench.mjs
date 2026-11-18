@@ -296,7 +296,7 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
     for(const row of result.rows){
       const tr=node('tr');tr.dataset.compareStatus=row.status;
       const cells=[
-        row.sourceId,row.windowPosition,row.recordedIndex,
+        row.sourceId,row.windowPosition,row.storedPosition,row.recordedIndex,
         row.sourceDegree===null?'Not recorded':row.sourceDegree,
         row.raw,row.displayed===null?'Undefined':row.displayed,
         statuses[row.status]
