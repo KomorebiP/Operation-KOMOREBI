@@ -6,6 +6,8 @@ import {discover,analyzeInput,operationLabel,OPERATIONS} from './sequence-atlas-
 import {setupInterface,workspaceForURL} from './sequence-atlas-interface.mjs';
 import {setupDirectory} from './sequence-atlas-directory.mjs';
 import {PLOT_DEFAULTS,plotColors,plotHeight,showIndexLabel,mergePlotLabels,mountPlotOptions,exportPlot,plotTheme,finishPlotTheme} from './sequence-plot-options.mjs';
+import {mountSinglePlotLabels} from './sequence-chart-labels.mjs';
+import {comparisonYAxisTick,comparisonLegendLabel,wrapLegendLabel} from './sequence-comparison-chart.mjs';
 
 const $=id=>document.getElementById('sa-'+id);
 const ids=['sequence','compare','view','transform','scale','marks','start','count','modulus','color'];
@@ -18,7 +20,7 @@ const storage={getItem:key=>localStorage.getItem(key),setItem:(key,value)=>local
 const searchOptions=()=>({filter:$('filter').value,topic:$('topic').value,match:$('match').value,sort:$('sort').value,saved:[...saved]});
 const optionLabel=(id,value)=>[...$(id).options].find(o=>o.value===value)?.textContent||value;
 const briefValue=value=>{if(value.length<=60)return value;if(value.includes('/'))return value.split('/').map(briefValue).join(' divided by ');return value.slice(0,14)+'…'+value.slice(-8)+` (${value.replace(/[-+]/g,'').length} digits)`;};
-let appearance={...PLOT_DEFAULTS},appearanceControls;
+let appearance={...PLOT_DEFAULTS},appearanceControls,chartLabelControls;
 const stopAnimation=()=>{const running=timer!==null;clearInterval(timer);timer=null;$('animate').textContent='Animate modulus';$('animate').setAttribute('aria-pressed','false');$('summary').setAttribute('aria-live','polite');if(running)$('action-status').textContent='Modulus animation paused.';};
 const known=id=>entries.find(e=>e.id===id);
 const message=(text,error=false)=>{const target=$(error?'error':'action-status');target.hidden=false;if(target.textContent!==text)target.textContent=text;};
@@ -155,7 +157,9 @@ function integerBlock(){
 function viewURL(hash='explorer'){
   const url=new URL(location.href);url.search='';for(const [key,value]of Object.entries(state))url.searchParams.set(key,String(value));
   if(state.sequence==='custom')url.searchParams.set('terms',lastCustomTerms);
-  const linked=new URL(searchLink(url.href,$('query').value,searchOptions()));linked.hash=hash;return appearanceControls?appearanceControls.link(linked.href):linked.href;
+  const linked=new URL(searchLink(url.href,$('query').value,searchOptions()));linked.hash=hash;
+  const styled=appearanceControls?appearanceControls.link(linked.href):linked.href;
+  return chartLabelControls?chartLabelControls.link(styled):styled;
 }
 async function copyText(text,label,success){
   try{await navigator.clipboard.writeText(text);$('share-fallback').hidden=true;message(success);}
@@ -281,7 +285,7 @@ function setupRefinements(){
   for(const [id,direction]of [['previous-window','previous'],['next-window','next'],['fewer','less'],['more','more']])$(id).addEventListener('click',()=>move(direction));
   $('copy-values').addEventListener('click',()=>{const primary=lastRows[0]?.name;copyText(lastRows.filter(row=>row.name===primary).map(row=>row.value).join(', '),'Displayed values','Displayed transformed values copied. Undefined positions remain labelled.');});
   $('search-values').addEventListener('click',()=>{const block=integerBlock();if(!block)return;showPanel('find');$('query').value=block.join(',');$('filter').value='all';$('topic').value='';$('match').value='any';search({reset:true});$('query').focus({preventScroll:true});document.getElementById('find').scrollIntoView({block:'start',behavior:'auto'});});
-  $('json').addEventListener('click',()=>download(JSON.stringify({schema:1,view:state,customTerms:state.sequence==='custom'?lastCustomTerms:null,rows:lastRows,oeisSnapshotRetrievedAt:data.snapshot?.retrieved_at||null},null,2)+'\n','application/json','komorebi-sequence-view.json'));
+  $('json').addEventListener('click',()=>download(JSON.stringify({schema:1,view:state,chartLabels:chartLabelControls?.state||null,customTerms:state.sequence==='custom'?lastCustomTerms:null,rows:lastRows,oeisSnapshotRetrievedAt:data.snapshot?.retrieved_at||null},null,2)+'\n','application/json','komorebi-sequence-view.json'));
   document.addEventListener('keydown',event=>{if(event.key==='/'&&(event.ctrlKey||event.metaKey)&&!event.altKey&&!event.target.isContentEditable&&!['INPUT','TEXTAREA','SELECT'].includes(event.target.tagName)){event.preventDefault();showPanel('find');$('query').focus();}});
   addEventListener('storage',()=>{saved=new Set(readSaved(storage,new Set(entries.map(entry=>entry.id))).ids);updateSaveButtons(root,saved);search();});
 }
@@ -310,6 +314,11 @@ async function init(){
   $('csv').addEventListener('click',()=>{const csv='sequence,n,a_n,transformed,residue,plot_x,plot_y,modulus,transform,view,scale\n'+lastRows.map(r=>[r.name,r.n,r.raw,r.value,r.residue??'',r.x??'',r.y??'',state.modulus,state.transform,state.view,state.scale].map(v=>'"'+String(v).replaceAll('"','""')+'"').join(',')).join('\n')+'\n';download(csv,'text/csv;charset=utf-8','komorebi-sequence-exact.csv');});
   for(const format of ['svg','png'])$(format).addEventListener('click',()=>exportPlot(plot,format,'komorebi-sequence').catch(error=>message(error.message,true)));
   appearanceControls=mountPlotOptions({host:$('plot-options'),prefix:'sa',onChange:style=>{appearance=style;if(lastRows.length)draw(lastRows,[...new Set(lastRows.map(row=>row.name))]);}});appearance=appearanceControls.state;
+  chartLabelControls=mountSinglePlotLabels({
+    anchor:$('plot-options'),plot:$('plot'),prefix:'sa',
+    getSources:()=>[{id:state.sequence==='custom'?'CUSTOM':state.sequence,title:known(state.sequence)?.title||'Pasted sequence'},...(state.compare?[{id:state.compare,title:known(state.compare)?.title||state.compare}]:[])],
+    onChange:()=>{if(lastRows.length)draw(lastRows,[...new Set(lastRows.map(row=>row.name))]);}
+  });
   for(const [name,label,settings]of [['growth','Growth view',{view:'standard',transform:'raw',scale:'signed-log',marks:'line',color:'series'}],['residues','Residue view',{view:'mod',transform:'raw',scale:'linear',marks:'points',color:'value'}],['changes','Changes',{view:'standard',transform:'difference',scale:'signed-log',marks:'bars',color:'series'}]]){
     const button=document.createElement('button');button.type='button';button.textContent=label;button.dataset.plotPreset=name;button.addEventListener('click',()=>{stopAnimation();for(const [key,value]of Object.entries(settings))$(key).value=value;render();});$('plot-presets').append(button);
   }
