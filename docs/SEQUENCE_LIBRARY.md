@@ -194,7 +194,17 @@ visible page. Each exported line includes the source identity, both stored
 and recorded index conventions, optional source degree, alignment key,
 original and displayed exact integers, baseline displayed integer,
 comparison status, the original local-source receipt when available, and
-the verified certificate SHA-256 digest. This CSV is a convenient tabular
+the verified certificate SHA-256 digest. The `source_number` column identifies
+each source by its one-based position in the certificate, with source 1 as
+the baseline. The inspector table and source selector show the same numbers,
+which remain unchanged when filters select fewer sources. The source verification
+list and finite comparison summaries use the same numbering, including the
+baseline. This distinguishes sources that share a display identifier, such as two pasted inputs or two
+parameter choices from one family. The `source_data_sha256` column records
+the verified digest of that source's embedded finite data. Distinct parameter
+choices can have the same finite prefix and digest. The certificate digest
+together with `source_number` identifies the source entry. The data digest does
+not establish external provenance. This CSV is a convenient tabular
 extract, not a substitute for independently replaying the complete JSON
 certificate. The decimal integer strings remain exact in the file, but
 spreadsheet programs may round large integers during automatic import;
