@@ -88,6 +88,33 @@ test('signed logarithmic tick labels show approximate original values rather tha
   assert.match(comparisonScaleExplanation(state,COMPARISON_CHART_DEFAULTS),/approximate the original values/);
   assert.match(comparisonScaleExplanation(state,{...COMPARISON_CHART_DEFAULTS,ticks:'log'}),/not sequence values/);
 });
+test('scientific plot labels retain mantissa notation for huge exact-sequence magnitudes',()=>{
+  const settings={view:'values',scale:'signed-log',ticks:'scientific'};
+  assert.equal(comparisonYAxisTick(18.5,settings),'≈3.2×10^18');
+  assert.equal(comparisonYAxisTick(-100.25,settings),'≈−1.8×10^100');
+  assert.equal(comparisonYAxisTick(1000.3,settings),'≈2×10^1000');
+  assert.equal(comparisonYAxisTick(20.999,settings),'≈1×10^21',
+    'Rounded mantissas should normalize their exponent');
+  assert.equal(comparisonYAxisTick(18.5,{...settings,ticks:'magnitude'}),'≈10^18.5');
+  assert.equal(comparisonYAxisTick(18.5,{...settings,ticks:'log'}),'18.5');
+  assert.equal(workbenchRows([localSource(a)],WORKBENCH_DEFAULTS).series[0].rows[2].raw,'9007199254740993');
+});
+test('automatic comparison titles identify the selected records and displayed transform',()=>{
+  const names=[{id:'KSEQ-000025',title:'Fibonacci numbers'},{id:'KSEQ-000037',title:'Lucas numbers'}];
+  assert.equal(comparisonChartTitle(WORKBENCH_DEFAULTS,COMPARISON_CHART_DEFAULTS,names),
+    'Original terms · Fibonacci vs Lucas');
+  assert.equal(comparisonChartTitle({...WORKBENCH_DEFAULTS,transform:'sum'},COMPARISON_CHART_DEFAULTS,names),
+    'Partial sums · Fibonacci vs Lucas');
+  assert.equal(comparisonChartTitle({...WORKBENCH_DEFAULTS,view:'mod',modulus:7,transform:'difference'},COMPARISON_CHART_DEFAULTS,names),
+    'Residues mod 7 · First differences · Fibonacci vs Lucas');
+  assert.equal(comparisonChartTitle(WORKBENCH_DEFAULTS,COMPARISON_CHART_DEFAULTS,names.slice(0,1)),
+    'Original terms · Fibonacci');
+  assert.equal(comparisonChartTitle(WORKBENCH_DEFAULTS,COMPARISON_CHART_DEFAULTS,[...names,names[0]]),
+    'Original terms · 3 sequences');
+  assert.equal(comparisonChartTitle(WORKBENCH_DEFAULTS,{...COMPARISON_CHART_DEFAULTS,title:'Author chart'},names),
+    'Author chart');
+});
+
 test('custom chart and legend text round trip with exact pinned comparisons',()=>{
   const pinned={...a,record_sha256:'a'.repeat(64)};
   const chartLabels=validateComparisonChart({
