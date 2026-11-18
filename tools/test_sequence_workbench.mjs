@@ -126,6 +126,8 @@ test('custom chart and legend text round trip with exact pinned comparisons',()=
     xTitle:'Stored local index',yTitle:'Magnitude of coefficient',
     titleDisplay:'show',xTitleDisplay:'hide',yTitleDisplay:'show',
     titleSize:'22',xTitleSize:'14',yTitleSize:'18',titleAlign:'right',
+    titleColor:'#7c2d12',titleFont:'serif',titleWeight:'bold',titleStyle:'italic',
+    xTitleColor:'#075985',xTitleFont:'mono',xTitleWeight:'normal',yTitleStyle:'italic',
     legend:'show',legendPosition:'bottom',ticks:'log',seriesLabels:['First family','Second family']
   });
   assert.equal(comparisonChartTitle(WORKBENCH_DEFAULTS,chartLabels),chartLabels.title);
@@ -142,22 +144,29 @@ test('custom chart and legend text round trip with exact pinned comparisons',()=
   assert.deepEqual(readWorkbenchLink(old,[pinned,b],'snapshot').chartLabels,validateComparisonChart());
   const oldLabels=new URL(url),older=JSON.parse(oldLabels.searchParams.get('wb'));
   for(const key of ['titleDisplay','xTitleDisplay','yTitleDisplay','titleSize','xTitleSize','yTitleSize','titleAlign'])delete older.chartLabels[key];
+  for(const key of ['title','xTitle','yTitle'])for(const property of ['Color','Font','Weight','Style'])delete older.chartLabels[key+property];
   oldLabels.searchParams.set('wb',JSON.stringify(older));
   const restoredOlder=readWorkbenchLink(oldLabels,[pinned,{...b,record_sha256:'b'.repeat(64)}],'snapshot');
   assert.equal(restoredOlder.chartLabels.title,chartLabels.title);
   assert.equal(restoredOlder.chartLabels.titleDisplay,'show');assert.equal(restoredOlder.chartLabels.xTitleDisplay,'show');
   assert.equal(restoredOlder.chartLabels.titleSize,'auto');assert.equal(restoredOlder.chartLabels.titleAlign,'center');
+  assert.equal(restoredOlder.chartLabels.titleColor,'auto');assert.equal(restoredOlder.chartLabels.titleFont,'sans');
+  assert.equal(restoredOlder.chartLabels.titleWeight,'auto');assert.equal(restoredOlder.chartLabels.titleStyle,'normal');
 });
 test('chart text customization rejects invalid labels and does not change data',()=>{
   for(const bad of [{title:'x'.repeat(91)},{xTitle:'x'.repeat(65)},{yTitle:'line\n2'},
     {legend:'unknown'},{legendPosition:'left'},{ticks:'numbers'}, {seriesLabels:['a','b','c','d','e']},
     {seriesLabels:['a\nnewline']},{seriesLabels:['x'.repeat(61)]},
     {titleDisplay:'none'},{xTitleDisplay:false},{yTitleDisplay:'auto'},{titleSize:26},
-    {titleSize:'27'},{xTitleSize:'26'},{yTitleSize:'0'},{titleAlign:'justify'}]){
+    {titleSize:'27'},{xTitleSize:'26'},{yTitleSize:'0'},{titleAlign:'justify'},
+    {titleColor:'red'},{titleColor:'#fff'},{xTitleColor:'#00000000'},{yTitleColor:'url(https://invalid.test/a.svg)'},
+    {titleColor:'var(--ink)'},{titleFont:'External font'},{xTitleFont:'url(font.woff)'},{titleWeight:'900'},
+    {yTitleWeight:700},{titleStyle:'oblique'},{xTitleStyle:true}]){
     assert.throws(()=>validateComparisonChart(bad));
   }
   const state=validateComparisonChart({legend:'hide',seriesLabels:['One','Two']});
   assert.equal(state.legend,'hide');
+  assert.equal(validateComparisonChart({titleColor:'#ABCDEF'}).titleColor,'#abcdef');
   assert.equal(workbenchRows([localSource(a)],WORKBENCH_DEFAULTS).series[0].rows[2].raw,'9007199254740993');
 });
 test('comparison CSV retains exact values, source positions and attribution',()=>{

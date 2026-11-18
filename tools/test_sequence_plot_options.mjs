@@ -24,6 +24,8 @@ test('all single-sequence plot annotations round-trip without changing the view 
   const source='https://example.test/sequence-archive/KOM067.html?view=raw&scale=signed-log&start=2&size=8#plot';
   const state=validateComparisonChart({title:'Exact coefficient growth',xTitle:'Original index n',yTitle:'Magnitude',
     titleDisplay:'hide',xTitleDisplay:'show',yTitleDisplay:'hide',titleSize:'26',xTitleSize:'18',yTitleSize:'16',titleAlign:'left',
+    titleFont:'serif',titleWeight:'bold',titleStyle:'italic',titleColor:'#7C2D12',
+    xTitleFont:'mono',xTitleWeight:'normal',xTitleColor:'#075985',yTitleStyle:'italic',
     legend:'show',legendPosition:'bottom',legendStyle:'id',ticks:'scientific',seriesLabels:['Series one']});
   const href=singlePlotLabelLink(source,state),parsed=readSinglePlotLabels(href);
   assert.deepEqual(parsed.state,state);assert.equal(parsed.note,'');
@@ -31,7 +33,9 @@ test('all single-sequence plot annotations round-trip without changing the view 
   for(const field of ['view','scale','start','size'])assert.equal(url.searchParams.get(field),new URL(source).searchParams.get(field));
   assert.equal(url.hash,'#plot');
   for(const [param,value]of Object.entries({'chart-title-display':'hide','chart-x-display':'show','chart-y-display':'hide',
-    'chart-title-size':'26','chart-x-size':'18','chart-y-size':'16','chart-title-align':'left'}))assert.equal(url.searchParams.get(param),value);
+    'chart-title-size':'26','chart-x-size':'18','chart-y-size':'16','chart-title-align':'left',
+    'chart-title-font':'serif','chart-title-weight':'bold','chart-title-style':'italic','chart-title-color':'#7c2d12',
+    'chart-x-font':'mono','chart-x-weight':'normal','chart-x-color':'#075985','chart-y-style':'italic'}))assert.equal(url.searchParams.get(param),value);
   const repeat=singlePlotLabelLink(href,parsed.state);assert.equal(repeat,href);
   assert.deepEqual(readSinglePlotLabels(source,{legend:'hide'}).state,validateComparisonChart({legend:'hide'}));
   // An archive defaults to a hidden legend; copying an enabled legend must
@@ -45,7 +49,9 @@ test('all single-sequence plot annotations round-trip without changing the view 
   const badSize=new URL(href);badSize.searchParams.set('chart-title-size','100');
   const duplicateSize=new URL(href);duplicateSize.searchParams.append('chart-y-size','12');
   const badVisibility=new URL(href);badVisibility.searchParams.set('chart-x-display','invisible');
-  for(const bad of [duplicate.href,unknown.href,tooLong.href,badSize.href,duplicateSize.href,badVisibility.href]){
+  const invalidColor=new URL(href);invalidColor.searchParams.set('chart-title-color','url(https://invalid.test/font.svg)');
+  const duplicateFont=new URL(href);duplicateFont.searchParams.append('chart-x-font','sans');
+  for(const bad of [duplicate.href,unknown.href,tooLong.href,badSize.href,duplicateSize.href,badVisibility.href,invalidColor.href,duplicateFont.href]){
     const restored=readSinglePlotLabels(bad);
     assert.match(restored.note,/Invalid chart label settings/);
     assert.equal(restored.state.title,'');
@@ -55,6 +61,23 @@ test('all single-sequence plot annotations round-trip without changing the view 
   assert.equal(older.state.title,'Previous plot');assert.equal(older.state.xTitle,'Index');
   assert.equal(older.state.titleSize,'auto');assert.equal(older.state.titleDisplay,'show');
   assert.equal(older.state.titleAlign,'center');
+  assert.equal(older.state.titleColor,'auto');assert.equal(older.state.titleFont,'sans');
+  assert.equal(older.state.titleWeight,'auto');assert.equal(older.state.titleStyle,'normal');
+});
+
+test('font choices preserve complete wrapped titles and usable plot bounds at mobile width',()=>{
+  const labels={title:'Bold italic coefficients across the entire recorded sequence window',
+    xTitle:'Recorded local sequence index across the selected window',
+    yTitle:'Magnitude of each exact stored sequence coefficient'};
+  for(const font of ['sans','serif','mono']){
+    const options={titleFont:font,xTitleFont:font,yTitleFont:font,
+      titleWeight:'bold',xTitleWeight:'bold',yTitleWeight:'bold',
+      titleStyle:'italic',xTitleStyle:'italic',yTitleStyle:'italic',
+      titleSize:'26',xTitleSize:'18',yTitleSize:'18'};
+    const layout=layoutChartText({width:280,height:280,...labels,options,tickLabels:['0','≈1×10^308']});
+    assert.ok(layout.plotWidth>=80);assert.ok(layout.plotHeight>=180);
+    for(const key of Object.keys(labels))assert.equal(layout[key].lines.join('').replace(/\s/g,''),labels[key].replace(/\s/g,''));
+  }
 });
 
 test('positive and signed-log scale labels distinguish approximate magnitudes and scientific notation',()=>{

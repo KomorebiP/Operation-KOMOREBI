@@ -12,17 +12,20 @@ const DIGEST=/^[0-9a-f]{64}$/;
 const MAX_CERTIFICATE_CHARS=8000000;
 const MAX_SOURCE_TERMS=4096;
 const MAX_TOTAL_DIGITS=3000000;
-// Certificates issued before title typography controls contain exactly these
-// fields. Validate that original shape without adding defaults to hashed data.
+// Keep each released presentation shape verifiable without adding new defaults
+// to its hashed body. Unknown or partially specified shapes remain invalid.
 const LEGACY_CHART_LABEL_KEYS=['title','xTitle','yTitle','legend','legendPosition','legendStyle','ticks','seriesLabels'];
+const SIZED_CHART_LABEL_KEYS=[...LEGACY_CHART_LABEL_KEYS,
+  'titleDisplay','xTitleDisplay','yTitleDisplay','titleSize','xTitleSize','yTitleSize','titleAlign'];
 
 function check(ok,message){if(!ok)throw Error(message);}
 function jsonEqual(a,b){return JSON.stringify(a)===JSON.stringify(b);}
 function validCertificateChartLabels(labels){
   const normalized=validateComparisonChart(labels);
   if(jsonEqual(normalized,labels))return true;
-  return labels&&Object.keys(labels).length===LEGACY_CHART_LABEL_KEYS.length&&
-    jsonEqual(Object.fromEntries(LEGACY_CHART_LABEL_KEYS.map(key=>[key,normalized[key]])),labels);
+  return labels&&[LEGACY_CHART_LABEL_KEYS,SIZED_CHART_LABEL_KEYS].some(keys=>
+    Object.keys(labels).length===keys.length&&
+    jsonEqual(Object.fromEntries(keys.map(key=>[key,normalized[key]])),labels));
 }
 function fingerprintParts(source){
   return [source.id,source.collection,source.offset,source.indexSymbol,source.terms,source.sourceDegrees];

@@ -246,12 +246,21 @@ names. Legend presentation includes compact names, IDs only, or full IDs and
 names. The chart title and each axis title can be shown or hidden independently.
 The chart title has automatic sizing or 14, 18, 22 and 26 pixel choices, with
 left, center or right alignment. Each axis title has its own automatic sizing
-or 12, 14, 16 and 18 pixel choices. Longer titles wrap in full, and the chart
+or 12, 14, 16 and 18 pixel choices. Each title has a separate **Font and color**
+disclosure for sans serif, serif or monospace type, automatic, regular or bold
+weight, italics, and an automatic or custom text color. A color picker and hex
+field provide the same precise color choice. Automatic color follows the plot
+background. Custom colors are retained exactly, with a preview and an advisory
+contrast reading against that background. System forced colors use the reader's
+text color. **Reset font and color** resets only those four style choices for
+one title, preserving its text, size, visibility and alignment.
+
+Longer titles wrap in full using the selected font and weight. The chart
 reserves space for them and its legend while retaining room for the plotted
 values. Empty titles retain suitable defaults that name the selected
 sequence or sequences and the plotted transformation. The selected transformation
 remains visible in the automatic title. Hiding a visible chart title retains
-the SVG's accessible title. Custom text, visibility, sizes and alignment are
+the SVG's accessible title. Custom text, visibility, sizes, alignment and font styles are
 included in SVG/PNG exports, copied comparison links, and research workspace
 snapshots. Restore chart labels returns these choices to their defaults.
 These settings are presentation metadata in exact comparison certificates.
@@ -263,7 +272,7 @@ The curated Sequence Explorer and individual Research archive and formula
 record plots offer the same type of controls in a separate **Chart titles,
 legends and axis labels** disclosure. A single record may hide the redundant
 legend, or display its short name or ID. Chart text travels in its plot link
-with the same title visibility, size and alignment controls, without altering
+with the same title visibility, size, alignment and font controls, without altering
 source terms or index windows. The original no-JavaScript
 record pages, exact-value tables and downloads remain available.
 
