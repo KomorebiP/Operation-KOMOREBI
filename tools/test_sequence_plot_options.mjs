@@ -2,6 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {PLOT_DEFAULTS,validateAppearance,readAppearance,appearanceLink,plotColors,plotHeight,showIndexLabel,mergePlotLabels} from '../website/assets/sequence-plot-options.mjs';
 import {archiveLink,archiveWindow,moveArchiveWindow,triangleWindow,archivePreset} from '../website/assets/sequence-archive-core.mjs';
+import {readSinglePlotLabels,singlePlotLabelLink} from '../website/assets/sequence-chart-labels.mjs';
+import {comparisonYAxisTick,comparisonLegendLabel,wrapLegendLabel,validateComparisonChart} from '../website/assets/sequence-comparison-chart.mjs';
 import {execFileSync} from 'node:child_process';
 
 const entries=JSON.parse(execFileSync(process.env.PYTHON||'python',['-B','-c','import sys,json;sys.path.insert(0,"tools");from sequence_archive import records;print(json.dumps(records()))'],{encoding:'utf8'}));
@@ -15,6 +17,54 @@ test('appearance accepts only bounded presentation choices and keeps source data
   assert.equal(showIndexLabel(275,276,{...PLOT_DEFAULTS,labels:'ends'},300),true);
   assert.equal(showIndexLabel(12,276,{...PLOT_DEFAULTS,labels:'ends'},300),false);
   const count=Array.from({length:276},(_,n)=>showIndexLabel(n,276,{...PLOT_DEFAULTS,labels:'sparse'},300)).filter(Boolean).length;assert.ok(count<=7);
+});
+
+
+test('all single-sequence plot annotations round-trip without changing the view window',()=>{
+  const source='https://example.test/sequence-archive/KOM067.html?view=raw&scale=signed-log&start=2&size=8#plot';
+  const state=validateComparisonChart({title:'Exact coefficient growth',xTitle:'Original index n',yTitle:'Magnitude',
+    legend:'show',legendPosition:'bottom',legendStyle:'id',ticks:'scientific',seriesLabels:['Series one']});
+  const href=singlePlotLabelLink(source,state),parsed=readSinglePlotLabels(href);
+  assert.deepEqual(parsed.state,state);assert.equal(parsed.note,'');
+  const url=new URL(href);
+  for(const field of ['view','scale','start','size'])assert.equal(url.searchParams.get(field),new URL(source).searchParams.get(field));
+  assert.equal(url.hash,'#plot');
+  const repeat=singlePlotLabelLink(href,parsed.state);assert.equal(repeat,href);
+  assert.deepEqual(readSinglePlotLabels(source,{legend:'hide'}).state,validateComparisonChart({legend:'hide'}));
+  // An archive defaults to a hidden legend; copying an enabled legend must
+  // override that per-page default even when "show" is the global default.
+  const archiveShown=singlePlotLabelLink(source,validateComparisonChart({legend:'show'}));
+  assert.equal(new URL(archiveShown).searchParams.get('chart-legend'),'show');
+  assert.equal(readSinglePlotLabels(archiveShown,{legend:'hide'}).state.legend,'show');
+  const duplicate=new URL(href);duplicate.searchParams.append('chart-ticks','log');
+  const unknown=new URL(href);unknown.searchParams.set('chart-ticks','invalid');
+  const tooLong=new URL(href);tooLong.searchParams.set('chart-title','X'.repeat(91));
+  for(const bad of [duplicate.href,unknown.href,tooLong.href]){
+    const restored=readSinglePlotLabels(bad);
+    assert.match(restored.note,/Invalid chart label settings/);
+    assert.equal(restored.state.title,'');
+  }
+});
+
+test('positive and signed-log scale labels distinguish approximate magnitudes and scientific notation',()=>{
+  assert.equal(comparisonYAxisTick(1.62,{view:'values',scale:'signed-log',ticks:'scientific'}),'≈4.1×10^1');
+  assert.equal(comparisonYAxisTick(-6.48,{view:'values',scale:'signed-log',ticks:'scientific'}),'≈−3×10^6');
+  assert.equal(comparisonYAxisTick(3,{view:'values',scale:'log',ticks:'magnitude'}),'1K');
+  assert.equal(comparisonYAxisTick(3,{view:'values',scale:'log',ticks:'scientific'}),'≈1×10^3');
+  assert.equal(comparisonYAxisTick(3,{view:'values',scale:'log',ticks:'log'}),'3');
+  assert.equal(comparisonYAxisTick(5,{view:'mod',scale:'signed-log',ticks:'magnitude'}),'5');
+});
+
+test('compact, full and ID legend formats retain the source name and wrap without oversized labels',()=>{
+  const src={id:'KSEQ-000025',title:'Fibonacci numbers and a long reference explanation'};
+  assert.equal(comparisonLegendLabel(src,0,{legendStyle:'compact'}),src.title);
+  assert.equal(comparisonLegendLabel(src,0,{legendStyle:'id'}),src.id);
+  assert.match(comparisonLegendLabel(src,0,{legendStyle:'full'}),/KSEQ-000025 · Fibonacci/);
+  assert.equal(comparisonLegendLabel(src,0,{legendStyle:'id',seriesLabels:['Observed Fibonacci']}),'Observed Fibonacci');
+  const wrapped=wrapLegendLabel('1. Very long grouped mathematical sequence family and more words',22,2);
+  assert.equal(wrapped.length,2);
+  assert.ok(wrapped.every(line=>line.length<=22));
+  assert.ok(wrapped.at(-1).endsWith('…'));
 });
 
 test('view links fully override recipient preferences and tolerate unavailable or corrupt storage',()=>{

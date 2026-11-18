@@ -1,20 +1,26 @@
 import {archiveWindow,archiveLink,windowCSV,moveArchiveWindow,triangleWindow,triangleLayout,trianglePolynomial,archivePreset} from './sequence-archive-core.mjs';
 import {mod} from './sequence-atlas-core.mjs';
 import {mountPlotOptions,plotColors,plotHeight,showIndexLabel,mergePlotLabels,exportPlot,finishPlotTheme} from './sequence-plot-options.mjs';
+import {mountSinglePlotLabels} from './sequence-chart-labels.mjs';
+import {comparisonYAxisTick,comparisonLegendLabel,wrapLegendLabel} from './sequence-comparison-chart.mjs';
 
 const make=(tag,text)=>{const el=document.createElement(tag);if(text!==undefined)el.textContent=text;return el;};
 const svg=(tag,attrs,text)=>{const el=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const [key,val]of Object.entries(attrs))el.setAttribute(key,String(val));if(text!==undefined)el.textContent=text;return el;};
 export function setupArchivePlot(entry){
   const $=id=>document.getElementById('sar-'+id),keys=['view','scale','start','size','mod','marks','color'],params=new URL(location.href).searchParams;
-  let current,appearance,selectedN=null,figure,rowSync=()=>{};
-  const link=state=>appearanceControls.link(archiveLink(location.href,state,'plot'));
+  let current,appearance,selectedN=null,figure,rowSync=()=>{},chartLabelControls;
+  const link=state=>chartLabelControls?chartLabelControls.link(appearanceControls.link(archiveLink(location.href,state,'plot'))):appearanceControls.link(archiveLink(location.href,state,'plot'));
   const say=(target,text)=>{if(target.textContent!==text)target.textContent=text;};
   function point(row){selectedN=row.n;say($('point'),`Index ${row.n}: a(${row.n}) = ${row.raw}; plotted value ${row.value??'undefined'}${row.next===null?'':`; following residue ${row.next}`}.`);}
   function draw(result){
     const state=result.state,valid=result.rows.filter(row=>Number.isFinite(row.x)&&Number.isFinite(row.y)),colors=plotColors(appearance);
-    const width=Math.max(270,Math.min(1000,$('plot').clientWidth||760)),height=plotHeight(width,appearance),right=width-22,bottom=height-55;
+    const width=Math.max(270,Math.min(1000,$('plot').clientWidth||760)),height=plotHeight(width,appearance),right=width-22,left=width<560?82:94,chart=chartLabelControls?.state||{legend:'hide'};
+    const showLegend=chart.legend==='show',bottomLegend=showLegend&&chart.legendPosition==='bottom';
+    const legendLines=showLegend?wrapLegendLabel(comparisonLegendLabel(entry,0,chart),Math.max(13,Math.floor((right-left)/7)),2):[];
+    const legendHeight=legendLines.length*16;
+    const bottom=height-61-(bottomLegend?legendHeight+6:0),top=showLegend&&!bottomLegend?68+legendHeight:68;
     const focused=$('plot').contains(document.activeElement),picture=svg('svg',{viewBox:`0 0 ${width} ${height}`,role:'group','aria-labelledby':'sar-plot-title sar-plot-desc'});
-    picture.append(svg('rect',{width,height,fill:getComputedStyle($('plot')).backgroundColor}),svg('title',{id:'sar-plot-title'},entry.id+' · '+entry.title+' — '+state.view),svg('desc',{id:'sar-plot-desc'},'Discrete recorded samples. Focus points for exact values; arrow keys move between them. Lines connect samples and do not interpolate additional data.'));
+    picture.append(svg('rect',{width,height,fill:getComputedStyle($('plot')).backgroundColor}),svg('title',{id:'sar-plot-title'},chart.title||entry.id+' · '+entry.title+' — '+state.view),svg('desc',{id:'sar-plot-desc'},'Discrete recorded samples with approximate plotted coordinates where transformed. Focus points for exact values; arrow keys move between them. Lines connect samples and do not interpolate additional data.'));
     const modular=['mod','pairs'].includes(state.view),stems=state.marks==='stems'&&state.view!=='pairs',zero=appearance.baseline==='zero'||modular||stems;
     appearanceControls.context(modular||stems);$('scale').disabled=modular;
     if(valid.length){
@@ -23,19 +29,27 @@ export function setupArchivePlot(entry){
       const expand=(a,b)=>{if(a!==b)return[a,b];const margin=Math.max(1,Math.abs(a)*.05);return[Number.isFinite(a-margin)?a-margin:a,Number.isFinite(b+margin)?b+margin:b];};
       [minX,maxX]=expand(minX,maxX);[minY,maxY]=expand(minY,maxY);
       const unit=Math.max(Math.abs(minY),Math.abs(maxY),1),lo=minY/unit,hi=maxY/unit;
-      const scaleCaption=!modular&&state.scale==='signed-log'?'sgn(v) log10(1+|v|)':'',top=scaleCaption&&width<560?104:80;
-      const xx=v=>65+(v-minX)/(maxX-minX)*(right-65),yy=v=>bottom-(v/unit-lo)/(hi-lo)*(bottom-top);
-      picture.append(svg('path',{d:`M65 ${top-10}V${bottom}H${right}`,class:'sar-axis'}));
+      const xx=v=>left+(v-minX)/(maxX-minX)*(right-left),yy=v=>bottom-(v/unit-lo)/(hi-lo)*(bottom-top);
+      picture.append(svg('path',{d:`M${left} ${top-10}V${bottom}H${right}`,class:'sar-axis'}));
       const ticks=modular?(state.mod<=12?Array.from({length:state.mod},(_,k)=>k):[...new Set(Array.from({length:5},(_,k)=>Math.round(minY+(maxY-minY)*k/4)))]):Array.from({length:5},(_,k)=>(lo+(hi-lo)*k/4)*unit);
       for(const value of ticks){
         const py=yy(value);
-        if(appearance.grid==='on')picture.append(svg('path',{d:`M65 ${py}H${right}`,stroke:'#d9dfd4','stroke-width':1,fill:'none','data-plot-grid':'true'}));
-        picture.append(svg('text',{x:57,y:py+4,'text-anchor':'end'},value===0?'0':modular?String(value):Number(value).toPrecision(3)));
+        if(appearance.grid==='on')picture.append(svg('path',{d:`M${left} ${py}H${right}`,stroke:'#d9dfd4','stroke-width':1,fill:'none','data-plot-grid':'true'}));
+        picture.append(svg('text',{x:left-9,y:py+4,'text-anchor':'end','data-y-tick':''},comparisonYAxisTick(value,{view:modular?'mod':'values',scale:state.scale,ticks:chart.ticks||'magnitude'})));
       }
       const names={raw:'Original values',difference:'First differences',sum:'Partial sums',mod:`Residues · m=${state.mod}`,pairs:`Consecutive residues · m=${state.mod}`};
-      const title=entry.id+' · '+entry.title,limit=Math.max(18,Math.floor((right-65)/5.8));
-      picture.append(svg('text',{x:65,y:22},title.length>limit?title.slice(0,limit-1)+'…':title),svg('text',{x:65,y:44},names[state.view]+(scaleCaption&&width>=560?' · '+scaleCaption:!modular&&!scaleCaption?' · linear':'')),svg('text',{x:65,y:bottom+22},String(minX)),svg('text',{x:right,y:bottom+22,'text-anchor':'end'},String(maxX)),svg('text',{x:(65+right)/2,y:height-10,'text-anchor':'middle'},state.view==='pairs'?`a(${entry.index_symbol}) mod m`:`Sequence index ${entry.index_symbol}`));
-      if(scaleCaption&&width<560)picture.append(svg('text',{x:65,y:62},scaleCaption));
+      const title=chart.title||entry.title+' · '+names[state.view],limit=Math.max(12,Math.floor((width-34)/7));
+      const xTitle=chart.xTitle||(state.view==='pairs'?`a(${entry.index_symbol}) mod m`:`Sequence index ${entry.index_symbol}`);
+      const yTitle=chart.yTitle||(state.view==='pairs'?'Following residue':modular?'Residue (mod '+state.mod+')':state.scale==='signed-log'?'Approx. value · signed log spacing':'Stored or transformed value');
+      picture.append(svg('text',{x:width/2,y:22,'font-size':width<560?12:15,'text-anchor':'middle','font-weight':650,'data-chart-title':'true','aria-label':title},title.length>limit?title.slice(0,limit-1)+'…':title),
+        svg('text',{x:left,y:bottom+22},String(minX)),svg('text',{x:right,y:bottom+22,'text-anchor':'end'},String(maxX)),
+        svg('text',{x:(left+right)/2,y:height-10,'text-anchor':'middle','data-x-axis-title':'true','aria-label':xTitle},xTitle.length>Math.floor((right-left)/7)?xTitle.slice(0,Math.max(10,Math.floor((right-left)/7)-1))+'…':xTitle),
+        svg('text',{x:16,y:(top+bottom)/2,'text-anchor':'middle',transform:`rotate(-90 16 ${(top+bottom)/2})`,'data-y-axis-title':'true','aria-label':yTitle},yTitle.length>Math.floor((bottom-top)/6)?yTitle.slice(0,Math.max(10,Math.floor((bottom-top)/6)-1))+'…':yTitle));
+      if(showLegend){
+        const ly=bottomLegend?bottom+51:55,label=svg('text',{x:left,y:ly,'data-legend-label':'0','aria-label':entry.id+' · '+comparisonLegendLabel(entry,0,chart)});
+        legendLines.forEach((line,i)=>label.append(svg('tspan',{x:left,dy:i?16:0},line)));
+        picture.append(label,svg('line',{x1:left-22,x2:left-5,y1:ly-4,y2:ly-4,stroke:colors[0],'stroke-width':appearance.width}));
+      }
       if(state.marks==='line'){
         let d='',connected=false;
         for(const row of result.rows){if(!Number.isFinite(row.x)||!Number.isFinite(row.y)){connected=false;continue;}d+=(connected?'L':'M')+xx(row.x)+','+yy(row.y)+' ';connected=true;}
@@ -57,6 +71,7 @@ export function setupArchivePlot(entry){
       point(valid[active]);
     }else picture.append(svg('text',{x:25,y:100},'No defined coordinates. Try another window or scale.'));
     finishPlotTheme(picture,appearance);$('plot').replaceChildren(picture);figure=picture;
+    chartLabelControls?.context(state.view==='pairs'?'mod-pairs':state.view,state.scale,state.mod);
     if(focused)picture.querySelector('circle[tabindex="0"]')?.focus({preventScroll:true});
     const table=$('window-values');table.replaceChildren();for(const row of result.rows){const tr=make('tr');for(const value of [row.n,row.raw,row.value??'undefined',row.next??'—'])tr.append(make('td',value));table.append(tr);}
     say($('window'),`${result.rows.length} index positions, ${valid.length} plotted points; indices ${state.start}–${state.start+state.size-1}. Stored range ${entry.offset}–${entry.offset+entry.terms.length-1}.`);
@@ -69,6 +84,10 @@ export function setupArchivePlot(entry){
   function apply(state){for(const key of keys)$(key).value=state[key];run(true);}
   for(const key of keys)if(params.has(key))$(key).value=params.get(key);
   const appearanceControls=mountPlotOptions({host:$('plot-options'),prefix:'sar',onChange:style=>{appearance=style;if(current)draw(current);}});appearance=appearanceControls.state;
+  chartLabelControls=mountSinglePlotLabels({anchor:$('plot-options'),plot:$('plot'),prefix:'sar',
+    defaults:{legend:'hide'},
+    getSources:()=>[{id:entry.id,title:entry.title}],onChange:()=>{if(current)draw(current);}
+  });
   for(const key of ['marks','color'])$(key).addEventListener('change',()=>{if(!current)return;current=archiveWindow(entry,{...current.state,marks:$('marks').value,color:$('color').value});draw(current);});
   $('explorer').hidden=false;$('static-note').hidden=true;
   $('plot-form').addEventListener('submit',event=>{event.preventDefault();run(true);});

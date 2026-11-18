@@ -61,10 +61,10 @@ def build(site, atlas):
     for entry in entries:
         if hashlib.sha256(bfile(entry).encode()).hexdigest()!=manifest[entry['id']+'_candidate_bfile.txt']:
             raise ValueError('Archive b-file identity failed: '+entry['id'])
-    assets=['sequence-navigation.mjs','math-display.mjs','sequence-archive.css','sequence-archive.js','sequence-archive-core.mjs','sequence-archive-plot.mjs','sequence-plot-options.mjs','sequence-plot-options.css','sequence-research-ui.mjs','sequence-reading-theme.mjs','sequence-reading.css']
+    assets=['sequence-navigation.mjs','math-display.mjs','sequence-archive.css','sequence-archive.js','sequence-archive-core.mjs','sequence-comparison-chart.mjs','sequence-chart-labels.mjs','sequence-archive-plot.mjs','sequence-plot-options.mjs','sequence-plot-options.css','sequence-research-ui.mjs','sequence-reading-theme.mjs','sequence-reading.css']
     versions={}
     version=lambda name:versions.get(name) or hashlib.sha256((site.root/'website/assets'/name).read_bytes()).hexdigest()[:12]
-    for name in ['sequence-navigation.mjs','sequence-research-ui.mjs','sequence-reading-theme.mjs','sequence-reading.css','sequence-plot-options.mjs','sequence-plot-options.css','sequence-archive-core.mjs','sequence-archive-plot.mjs','sequence-archive.js','sequence-archive.css']:
+    for name in ['sequence-navigation.mjs','sequence-research-ui.mjs','sequence-reading-theme.mjs','sequence-reading.css','sequence-plot-options.mjs','sequence-plot-options.css','sequence-archive-core.mjs','sequence-comparison-chart.mjs','sequence-chart-labels.mjs','sequence-archive-plot.mjs','sequence-archive.js','sequence-archive.css']:
         content=(site.root/'website/assets'/name).read_text(encoding='utf-8')
         if name.endswith(('.js','.mjs')):
             for dependency in assets+['sequence-atlas-core.mjs','sequence-atlas-search.mjs']:

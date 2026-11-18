@@ -6,6 +6,8 @@ import {discover,analyzeInput,operationLabel,OPERATIONS} from './sequence-atlas-
 import {setupInterface,workspaceForURL} from './sequence-atlas-interface.mjs';
 import {setupDirectory} from './sequence-atlas-directory.mjs';
 import {PLOT_DEFAULTS,plotColors,plotHeight,showIndexLabel,mergePlotLabels,mountPlotOptions,exportPlot,plotTheme,finishPlotTheme} from './sequence-plot-options.mjs';
+import {mountSinglePlotLabels} from './sequence-chart-labels.mjs';
+import {comparisonYAxisTick,comparisonLegendLabel,wrapLegendLabel} from './sequence-comparison-chart.mjs';
 
 const $=id=>document.getElementById('sa-'+id);
 const ids=['sequence','compare','view','transform','scale','marks','start','count','modulus','color'];
@@ -18,7 +20,7 @@ const storage={getItem:key=>localStorage.getItem(key),setItem:(key,value)=>local
 const searchOptions=()=>({filter:$('filter').value,topic:$('topic').value,match:$('match').value,sort:$('sort').value,saved:[...saved]});
 const optionLabel=(id,value)=>[...$(id).options].find(o=>o.value===value)?.textContent||value;
 const briefValue=value=>{if(value.length<=60)return value;if(value.includes('/'))return value.split('/').map(briefValue).join(' divided by ');return value.slice(0,14)+'…'+value.slice(-8)+` (${value.replace(/[-+]/g,'').length} digits)`;};
-let appearance={...PLOT_DEFAULTS},appearanceControls;
+let appearance={...PLOT_DEFAULTS},appearanceControls,chartLabelControls;
 const stopAnimation=()=>{const running=timer!==null;clearInterval(timer);timer=null;$('animate').textContent='Animate modulus';$('animate').setAttribute('aria-pressed','false');$('summary').setAttribute('aria-live','polite');if(running)$('action-status').textContent='Modulus animation paused.';};
 const known=id=>entries.find(e=>e.id===id);
 const message=(text,error=false)=>{const target=$(error?'error':'action-status');target.hidden=false;if(target.textContent!==text)target.textContent=text;};
@@ -71,7 +73,14 @@ function render(){
   }catch(error){stopAnimation();if(/integer-valued/.test(error.message)){$('transform').setAttribute('aria-invalid','true');$('transform').setAttribute('aria-describedby','sa-error');}message(error.message+(plot?' The last valid plot is retained.':''),true);return false;}
 }
 function draw(rows,names){
-  const palette=plotColors(appearance),W=Math.max(320,Math.round($('plot').clientWidth)),H=plotHeight(W,appearance),pad={left:W<560?56:82,right:20,top:names.length>1?90:68,bottom:62}, pw=W-pad.left-pad.right,ph=H-pad.top-pad.bottom;
+  const palette=plotColors(appearance),W=Math.max(320,Math.round($('plot').clientWidth)),H=plotHeight(W,appearance),chart=chartLabelControls?.state||{};
+  const showLegend=chart.legend!=='hide',bottomLegend=showLegend&&chart.legendPosition==='bottom';
+  const sourceNames=names.map((name,i)=>({id:i===0?state.sequence:state.compare,title:known(i===0?state.sequence:state.compare)?.title||name}));
+  const legendWidth=Math.max(12,Math.floor((W-(W<560?90:100)-20-10)/7));
+  const legendLines=showLegend?sourceNames.map((source,i)=>wrapLegendLabel((i+1)+'. '+comparisonLegendLabel(source,i,chart),legendWidth,H<350?1:2)):[];
+  const legendHeight=legendLines.reduce((sum,lines)=>sum+lines.length*16,0);
+  const pad={left:W<560?90:100,right:20,top:showLegend&&!bottomLegend?49+legendHeight+12:62,
+    bottom:62+(bottomLegend?legendHeight+9:0)},pw=W-pad.left-pad.right,ph=H-pad.top-pad.bottom;
   const modular=['mod','grid','frequency','mod-pairs'].includes(state.view), frequency=state.view==='frequency',grid=['grid','mod-pairs'].includes(state.view);
   let points=rows.filter(r=>r.x!==null&&r.y!==null).map(r=>({...r,series:names.indexOf(r.name)}));
   if(frequency){points=[];names.forEach((name,series)=>{const selected=rows.filter(r=>r.name===name);for(let i=0;i<state.modulus;i++)points.push({name,n:i,x:i,y:selected.filter(r=>r.residue===i).length,value:'',raw:'',residue:i,series});});}
@@ -87,26 +96,38 @@ function draw(rows,names){
   const hadFocus=$('plot').contains(document.activeElement);
   const svg=element('svg',{viewBox:`0 0 ${W} ${H}`,role:'group','aria-labelledby':'sa-svg-title sa-svg-description','aria-describedby':'sa-plot-help'});
   svg.append(element('rect',{width:W,height:H,fill:'#fafaf5'}));
-  svg.append(element('title',{id:'sa-svg-title'},optionLabel('view',state.view)));
-  svg.append(element('desc',{id:'sa-svg-description'},`Discrete samples for ${names.join(' and ')}. Exact values are available in the atlas table and CSV export.`));
+  const autoTitle=(sourceNames.length===1?sourceNames[0].title:'Sequence comparison')+' · '+optionLabel('view',state.view)+' · '+optionLabel('transform',state.transform);
+  const chartTitle=chart.title||autoTitle;
+  svg.append(element('title',{id:'sa-svg-title'},chartTitle));
+  svg.append(element('desc',{id:'sa-svg-description'},`Discrete samples for ${names.join(' and ')}. Plot coordinates may be transformed or approximate. Exact values are available in the atlas table and CSV export.`));
   svg.append(element('path',{d:`M${pad.left} ${pad.top}V${H-pad.bottom}H${W-pad.right}`,stroke:'#87988b','data-plot-axis':'true','stroke-width':1,fill:'none'}));
   const tick=v=>v===0?'0':Math.abs(v)>=1e6||Math.abs(v)<0.001?v.toExponential(1):Number(v.toPrecision(4)).toString();
+  const axisTick=v=>comparisonYAxisTick(v,{view:modular?'mod':'values',scale:state.scale,ticks:chart.ticks||'magnitude'});
   const yTicks=modular?[...new Set(Array.from({length:6},(_,i)=>Math.round((1-i/5)*ymax+(i/5)*ymin)))]:Array.from({length:6},(_,i)=>(1-i/5)*ymax+(i/5)*ymin);
   for(const pyValue of yTicks){
     const py=y(pyValue);
     if(appearance.grid==='on')svg.append(element('line',{x1:pad.left,x2:W-pad.right,y1:py,y2:py,stroke:'#d9dfd4','data-plot-grid':'true','stroke-width':1}));
-    svg.append(element('text',{x:pad.left-10,y:py+4,'text-anchor':'end',fill:'#465347','font-size':12},tick(pyValue)));
+    svg.append(element('text',{x:pad.left-9,y:py+4,'text-anchor':'end',fill:'#465347','font-size':12,'data-y-tick':''},frequency?tick(pyValue):axisTick(pyValue)));
   }
   const xTicks=[...new Set(Array.from({length:6},(_,i)=>state.view==='pairs'?(1-i/5)*xmin+(i/5)*xmax:Math.round((1-i/5)*xmin+(i/5)*xmax)))];
   for(const pxValue of xTicks){const px=x(pxValue);
-    svg.append(element('text',{x:px,y:H-pad.bottom+24,'text-anchor':'middle',fill:'#465347','font-size':12},tick(pxValue)));
+    const label=state.view==='pairs'?axisTick(pxValue):tick(pxValue);
+    svg.append(element('text',{x:px,y:H-pad.bottom+24,'text-anchor':'middle',fill:'#465347','font-size':12},label));
   }
   const xLabel=frequency?'Residue':state.view==='grid'?'n mod m':state.view==='mod-pairs'?'Transformed a(n) mod m':state.view==='pairs'?'Transformed a(n)':'Index n';
   const yLabel=frequency?'Count in window':state.view==='mod-pairs'?'Transformed a(n+1) mod m':state.view==='grid'||state.view==='mod'?'Transformed a(n) mod m':state.view==='pairs'?'Transformed a(n+1)':optionLabel('transform',state.transform);
-  svg.append(element('text',{x:W/2,y:H-12,'text-anchor':'middle',fill:'#243d2d','font-size':14},xLabel));
-  const fit=text=>{const limit=Math.floor(pw/7.8);return text.length>limit?text.slice(0,limit-1)+'…':text;};
-  names.forEach((name,i)=>svg.append(element('text',{x:pad.left,y:23+i*22,fill:palette[i],'font-size':14},fit(name))));
-  svg.append(element('text',{x:pad.left,y:names.length>1?67:45,fill:'#243d2d','font-size':12},fit(yLabel+(modular?` · m = ${state.modulus}`:` · ${optionLabel('scale',state.scale)}`))));
+  const xTitle=chart.xTitle||xLabel,yTitle=chart.yTitle||(modular?yLabel:state.scale==='signed-log'?'Approx. value · signed log spacing':state.scale==='log'?'Approx. positive value · log spacing':yLabel);
+  const fit=text=>{const limit=Math.max(12,Math.floor(pw/7.5));return text.length>limit?text.slice(0,limit-1)+'…':text;};
+  svg.append(element('text',{x:W/2,y:23,'text-anchor':'middle','font-weight':650,'font-size':W<560?13:15,'data-chart-title':'true','aria-label':chartTitle},chartTitle.length>Math.floor((W-30)/7.2)?chartTitle.slice(0,Math.floor((W-30)/7.2)-1)+'…':chartTitle));
+  svg.append(element('text',{x:W/2,y:H-12,'text-anchor':'middle',fill:'#243d2d','font-size':W<560?11:13,'data-x-axis-title':'true','aria-label':xTitle},fit(xTitle)));
+  svg.append(element('text',{x:16,y:(pad.top+H-pad.bottom)/2,'text-anchor':'middle',fill:'#243d2d','font-size':W<560?10:12,transform:`rotate(-90 16 ${(pad.top+H-pad.bottom)/2})`,'data-y-axis-title':'true','aria-label':yTitle},yTitle.length>Math.floor(ph/6)?yTitle.slice(0,Math.max(10,Math.floor(ph/6)-1))+'…':yTitle));
+  if(showLegend)sourceNames.forEach((source,i)=>{
+    const prior=legendLines.slice(0,i).reduce((total,lines)=>total+lines.length*16,0);
+    const ly=(bottomLegend?H-pad.bottom+59:46)+prior,raw=comparisonLegendLabel(source,i,chart);
+    const text=element('text',{x:pad.left,y:ly,fill:palette[i],'font-size':W<560?11:12,'data-legend-label':String(i),'aria-label':source.id+' · '+raw});
+    legendLines[i].forEach((line,j)=>text.append(element('tspan',{x:pad.left,dy:j?16:0},line)));
+    svg.append(text);
+  });
   if(state.marks==='line'&&!frequency&&!grid){
     names.forEach((name,i)=>{let d='',connected=false;for(const r of rows.filter(r=>r.name===name)){if(r.x===null||r.y===null){connected=false;continue;}d+=`${connected?'L':'M'}${x(r.x)},${y(r.y)} `;connected=true;}svg.append(element('path',{d,fill:'none',stroke:palette[i], 'stroke-width':Number(appearance.width),'stroke-dasharray':i?'6 4':'none'}));});
   }
@@ -133,6 +154,7 @@ function draw(rows,names){
   }
   for(const label of mergePlotLabels(indexLabels)){const text=element('text',{x:label.x,y:label.y,'text-anchor':'middle','font-size':11,fill:'#243d2d',class:'sp-plot-index'},label.text);text.append(element('title',{},label.full));svg.append(text);}
   finishPlotTheme(svg,appearance);$('plot').replaceChildren(svg);plot=svg;
+  chartLabelControls?.context(state.view,state.scale,state.modulus);
   inspectPoint(pointIndex,{focus:hadFocus});
   const bars=frequency||state.marks==='bars'&&!grid;
   $('caption').textContent=`${names.map((name,i)=>`${bars?(i?'Translucent bars':'Filled bars'):(i?'Outlined squares'+(state.marks==='line'&&!grid?' / dashed line':''):'Filled circles'+(state.marks==='line'&&!grid?' / solid line':''))}: ${name}`).join('. ')}. ${state.color==='series'?'':'Colors cycle through eight colors; exact residue labels are available on each point. '}${frequency?'Bars count residues among the selected samples.':grid?'Larger marks indicate repeated residue pairs.':'Use First index and Terms shown to move or zoom the sample window.'} ${modular?`Modulus ${state.modulus}.`:''} ${rows.filter(r=>r.y===null||r.x===null).length} undefined or out-of-range samples omitted.`;
@@ -155,7 +177,9 @@ function integerBlock(){
 function viewURL(hash='explorer'){
   const url=new URL(location.href);url.search='';for(const [key,value]of Object.entries(state))url.searchParams.set(key,String(value));
   if(state.sequence==='custom')url.searchParams.set('terms',lastCustomTerms);
-  const linked=new URL(searchLink(url.href,$('query').value,searchOptions()));linked.hash=hash;return appearanceControls?appearanceControls.link(linked.href):linked.href;
+  const linked=new URL(searchLink(url.href,$('query').value,searchOptions()));linked.hash=hash;
+  const styled=appearanceControls?appearanceControls.link(linked.href):linked.href;
+  return chartLabelControls?chartLabelControls.link(styled):styled;
 }
 async function copyText(text,label,success){
   try{await navigator.clipboard.writeText(text);$('share-fallback').hidden=true;message(success);}
@@ -281,7 +305,7 @@ function setupRefinements(){
   for(const [id,direction]of [['previous-window','previous'],['next-window','next'],['fewer','less'],['more','more']])$(id).addEventListener('click',()=>move(direction));
   $('copy-values').addEventListener('click',()=>{const primary=lastRows[0]?.name;copyText(lastRows.filter(row=>row.name===primary).map(row=>row.value).join(', '),'Displayed values','Displayed transformed values copied. Undefined positions remain labelled.');});
   $('search-values').addEventListener('click',()=>{const block=integerBlock();if(!block)return;showPanel('find');$('query').value=block.join(',');$('filter').value='all';$('topic').value='';$('match').value='any';search({reset:true});$('query').focus({preventScroll:true});document.getElementById('find').scrollIntoView({block:'start',behavior:'auto'});});
-  $('json').addEventListener('click',()=>download(JSON.stringify({schema:1,view:state,customTerms:state.sequence==='custom'?lastCustomTerms:null,rows:lastRows,oeisSnapshotRetrievedAt:data.snapshot?.retrieved_at||null},null,2)+'\n','application/json','komorebi-sequence-view.json'));
+  $('json').addEventListener('click',()=>download(JSON.stringify({schema:1,view:state,chartLabels:chartLabelControls?.state||null,customTerms:state.sequence==='custom'?lastCustomTerms:null,rows:lastRows,oeisSnapshotRetrievedAt:data.snapshot?.retrieved_at||null},null,2)+'\n','application/json','komorebi-sequence-view.json'));
   document.addEventListener('keydown',event=>{if(event.key==='/'&&(event.ctrlKey||event.metaKey)&&!event.altKey&&!event.target.isContentEditable&&!['INPUT','TEXTAREA','SELECT'].includes(event.target.tagName)){event.preventDefault();showPanel('find');$('query').focus();}});
   addEventListener('storage',()=>{saved=new Set(readSaved(storage,new Set(entries.map(entry=>entry.id))).ids);updateSaveButtons(root,saved);search();});
 }
@@ -310,6 +334,11 @@ async function init(){
   $('csv').addEventListener('click',()=>{const csv='sequence,n,a_n,transformed,residue,plot_x,plot_y,modulus,transform,view,scale\n'+lastRows.map(r=>[r.name,r.n,r.raw,r.value,r.residue??'',r.x??'',r.y??'',state.modulus,state.transform,state.view,state.scale].map(v=>'"'+String(v).replaceAll('"','""')+'"').join(',')).join('\n')+'\n';download(csv,'text/csv;charset=utf-8','komorebi-sequence-exact.csv');});
   for(const format of ['svg','png'])$(format).addEventListener('click',()=>exportPlot(plot,format,'komorebi-sequence').catch(error=>message(error.message,true)));
   appearanceControls=mountPlotOptions({host:$('plot-options'),prefix:'sa',onChange:style=>{appearance=style;if(lastRows.length)draw(lastRows,[...new Set(lastRows.map(row=>row.name))]);}});appearance=appearanceControls.state;
+  chartLabelControls=mountSinglePlotLabels({
+    anchor:$('plot-options'),plot:$('plot'),prefix:'sa',
+    getSources:()=>[{id:$('sequence').value==='custom'?'CUSTOM':$('sequence').value,title:known($('sequence').value)?.title||'Pasted sequence'},...($('compare').value?[{id:$('compare').value,title:known($('compare').value)?.title||$('compare').value}]:[])],
+    onChange:()=>{if(lastRows.length)draw(lastRows,[...new Set(lastRows.map(row=>row.name))]);}
+  });
   for(const [name,label,settings]of [['growth','Growth view',{view:'standard',transform:'raw',scale:'signed-log',marks:'line',color:'series'}],['residues','Residue view',{view:'mod',transform:'raw',scale:'linear',marks:'points',color:'value'}],['changes','Changes',{view:'standard',transform:'difference',scale:'signed-log',marks:'bars',color:'series'}]]){
     const button=document.createElement('button');button.type='button';button.textContent=label;button.dataset.plotPreset=name;button.addEventListener('click',()=>{stopAnimation();for(const [key,value]of Object.entries(settings))$(key).value=value;render();});$('plot-presets').append(button);
   }
