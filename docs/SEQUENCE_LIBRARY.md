@@ -177,8 +177,8 @@ repositories.
 
 After a successful verification, **Inspect verified exact rows and finite
 differences** provides a second, collapsed section. It displays twelve exact
-rows at a time with source identity, window position, recorded index or OEIS
-export position, separately recorded source degree where available, original
+rows at a time with source identity, window position, stored-prefix position,
+recorded index or OEIS export position, separately recorded source degree where available, original
 integer, exact displayed integer and comparison status. Readers can page
 through the full verified finite window, filter to one source, or show only
 genuine differences from the first source. Undefined transformed values and
