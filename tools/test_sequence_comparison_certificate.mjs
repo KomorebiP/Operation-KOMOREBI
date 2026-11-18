@@ -114,7 +114,7 @@ test('filtered certificate CSV exports ALL exact rows and their baseline, indice
   assert.equal(window.rows.length,1);
   assert.equal(window.total,6);
   const csv=certificateInspectionCSV(cert);
-  const lines=csv.trimEnd().split(/\\r?\\n/);
+  const lines=csv.trimEnd().split(/\r?\n/);
   assert.equal(lines.length,7,'Export every verified displayed row, not just the current page');
   assert.match(lines[0],/certificate_sha256/);
   assert.match(lines[0],/baseline_displayed_exact_integer/);
@@ -124,15 +124,15 @@ test('filtered certificate CSV exports ALL exact rows and their baseline, indice
   assert.ok(lines[1].startsWith('"'+cert.certificateSha256+'",'));
   assert.ok(csv.includes('"9007199254740993"'));
   assert.ok(csv.includes('"9007199254740993","9007199254740993"'));
-  assert.equal((csv.match(/"different"\\r?\\n/g)||[]).length,1);
+  assert.equal((csv.match(/"different"\r?\n/g)||[]).length,1);
   const justDifferences=certificateInspectionCSV(cert,{onlyDifferences:true});
-  assert.equal(justDifferences.trimEnd().split(/\\r?\\n/).length,2);
-  assert.match(justDifferences,/"8","8","7","different"\\r?\\n/);
+  assert.equal(justDifferences.trimEnd().split(/\r?\n/).length,2);
+  assert.match(justDifferences,/"8","8","7","different"\r?\n/);
   assert.doesNotMatch(justDifferences,/"baseline"/);
-  assert.equal(certificateInspectionCSV(cert,{seriesIndex:0,onlyDifferences:true}).trimEnd().split(/\\r?\\n/).length,1,
+  assert.equal(certificateInspectionCSV(cert,{seriesIndex:0,onlyDifferences:true}).trimEnd().split(/\r?\n/).length,1,
     'The baseline has no pairwise disagreements of its own');
   const secondOnly=certificateInspectionCSV(cert,{seriesIndex:1});
-  assert.equal(secondOnly.trimEnd().split(/\\r?\\n/).length,4);
+  assert.equal(secondOnly.trimEnd().split(/\r?\n/).length,4);
   assert.ok(secondOnly.includes('"PASTED"'));
   const a2={...a,source_degrees:[0,2,4,6]};
   a2.record_sha256=sha([a2.id,a2.collection,a2.offset,a2.index_symbol,a2.terms,a2.source_degrees]);
