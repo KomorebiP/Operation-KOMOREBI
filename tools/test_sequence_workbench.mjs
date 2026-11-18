@@ -95,6 +95,10 @@ test('scientific plot labels retain mantissa notation for huge exact-sequence ma
   assert.equal(comparisonYAxisTick(1000.3,settings),'≈2×10^1000');
   assert.equal(comparisonYAxisTick(20.999,settings),'≈1×10^21',
     'Rounded mantissas should normalize their exponent');
+  assert.equal(comparisonYAxisTick(-5,{view:'values',scale:'log',ticks:'magnitude'}),'≈1×10^-5');
+  assert.equal(comparisonYAxisTick(-15.2,{view:'values',scale:'log',ticks:'magnitude'}),'≈6.3×10^-16');
+  assert.equal(comparisonYAxisTick(-15.2,{view:'values',scale:'log',ticks:'scientific'}),'≈6.3×10^-16');
+  assert.equal(comparisonYAxisTick(20.999,{view:'values',scale:'log',ticks:'scientific'}),'≈1×10^21');
   assert.equal(comparisonYAxisTick(18.5,{...settings,ticks:'magnitude'}),'≈10^18.5');
   assert.equal(comparisonYAxisTick(18.5,{...settings,ticks:'log'}),'18.5');
   assert.equal(workbenchRows([localSource(a)],WORKBENCH_DEFAULTS).series[0].rows[2].raw,'9007199254740993');
