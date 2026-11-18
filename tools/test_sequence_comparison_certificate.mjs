@@ -7,7 +7,7 @@ import {join} from 'node:path';
 import {spawnSync} from 'node:child_process';
 import {COMPARISON_CERTIFICATE_SCHEMA,createComparisonCertificate,verifyComparisonCertificate,assessCertificateCatalogue} from '../website/assets/sequence-comparison-certificate.mjs';
 import {localSource,customSource,referenceSource,WORKBENCH_DEFAULTS} from '../website/assets/sequence-workbench-core.mjs';
-import {certificateInspectionWindow,CERTIFICATE_INSPECTION_PAGE_SIZE} from '../website/assets/sequence-certificate-inspection.mjs';
+import {certificateInspectionWindow,certificateInspectionCSV,CERTIFICATE_INSPECTION_PAGE_SIZE} from '../website/assets/sequence-certificate-inspection.mjs';
 
 const sha=data=>createHash('sha256').update(JSON.stringify(data),'utf8').digest('hex');
 const a={id:'KSEQ-TEST',title:'Exact reference',collection:'atlas',index_symbol:'n',offset:2,
@@ -107,6 +107,41 @@ test('verified certificate window pages exact rows and isolates genuine finite d
   assert.equal(JSON.stringify(certificate),original,'Read-only inspection must not change verified source data');
 });
 
+test('filtered certificate CSV exports ALL exact rows and their baseline, indices and receipt',async()=>{
+  const cert=await createComparisonCertificate([pinned,second],{skip:1,count:3});
+  const before=JSON.stringify(cert);
+  const window=certificateInspectionWindow(cert,{pageSize:1});
+  assert.equal(window.rows.length,1);
+  assert.equal(window.total,6);
+  const csv=certificateInspectionCSV(cert);
+  const lines=csv.trimEnd().split(/\\r?\\n/);
+  assert.equal(lines.length,7,'Export every verified displayed row, not just the current page');
+  assert.match(lines[0],/certificate_sha256/);
+  assert.match(lines[0],/baseline_displayed_exact_integer/);
+  assert.match(lines[0],/alignment_key/);
+  assert.match(lines[0],/recorded_index_or_export_position/);
+  assert.match(lines[0],/source_degree_if_recorded/);
+  assert.ok(lines[1].startsWith('"'+cert.certificateSha256+'",'));
+  assert.ok(csv.includes('"9007199254740993"'));
+  assert.ok(csv.includes('"9007199254740993","9007199254740993"'));
+  assert.equal((csv.match(/"different"\\r?\\n/g)||[]).length,1);
+  const justDifferences=certificateInspectionCSV(cert,{onlyDifferences:true});
+  assert.equal(justDifferences.trimEnd().split(/\\r?\\n/).length,2);
+  assert.match(justDifferences,/"8","8","7","different"\\r?\\n/);
+  assert.doesNotMatch(justDifferences,/"baseline"/);
+  assert.equal(certificateInspectionCSV(cert,{seriesIndex:0,onlyDifferences:true}).trimEnd().split(/\\r?\\n/).length,1,
+    'The baseline has no pairwise disagreements of its own');
+  const secondOnly=certificateInspectionCSV(cert,{seriesIndex:1});
+  assert.equal(secondOnly.trimEnd().split(/\\r?\\n/).length,4);
+  assert.ok(secondOnly.includes('"PASTED"'));
+  const a2={...a,source_degrees:[0,2,4,6]};
+  a2.record_sha256=sha([a2.id,a2.collection,a2.offset,a2.index_symbol,a2.terms,a2.source_degrees]);
+  const indexed=await createComparisonCertificate([localSource(a2)],{skip:1,count:2});
+  const indexedCSV=certificateInspectionCSV(indexed);
+  assert.match(indexedCSV,/"local index n","n","0","1","3","2","0","-1","-1",""/);
+  assert.equal(JSON.stringify(cert),before,'Export must never change the independently verified certificate');
+  assert.throws(()=>certificateInspectionCSV(cert,{seriesIndex:2}),/Select a recorded certificate series/);
+});
 test('inspection distinguishes absent overlap, undefined first differences and stored source degrees',async()=>{
   const offsetSource=customSource({title:'Shifted index',offset:5,terms:['0','-1','9007199254740993','8']});
   const aligned=await createComparisonCertificate([pinned,offsetSource],{alignment:'indices',count:4});
