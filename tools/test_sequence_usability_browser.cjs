@@ -510,7 +510,10 @@ async function visit(page,name,kind){
         title:'Fibonacci versus Lucas',xTitle:'Step in window',yTitle:'Approximate magnitude',
         legend:'show',legendPosition:'bottom',legendStyle:'compact',ticks:'magnitude',seriesLabels:['Fibonacci','Lucas'],
         titleDisplay:'show',xTitleDisplay:'show',yTitleDisplay:'show',
-        titleSize:'auto',xTitleSize:'auto',yTitleSize:'auto',titleAlign:'center'
+        titleSize:'auto',xTitleSize:'auto',yTitleSize:'auto',titleAlign:'center',
+        titleColor:'auto',titleFont:'sans',titleWeight:'auto',titleStyle:'normal',
+        xTitleColor:'auto',xTitleFont:'sans',xTitleWeight:'auto',xTitleStyle:'normal',
+        yTitleColor:'auto',yTitleFont:'sans',yTitleWeight:'auto',yTitleStyle:'normal'
       });
       const restored=await context.newPage();
       restored.on('pageerror',error=>report.errors.push(error.message));

@@ -2,7 +2,16 @@
 export const COMPARISON_CHART_DEFAULTS=Object.freeze({
   title:'',xTitle:'',yTitle:'',legend:'show',legendPosition:'top',legendStyle:'compact',ticks:'magnitude',seriesLabels:[],
   titleDisplay:'show',xTitleDisplay:'show',yTitleDisplay:'show',
-  titleSize:'auto',xTitleSize:'auto',yTitleSize:'auto',titleAlign:'center'
+  titleSize:'auto',xTitleSize:'auto',yTitleSize:'auto',titleAlign:'center',
+  titleColor:'auto',xTitleColor:'auto',yTitleColor:'auto',
+  titleFont:'sans',xTitleFont:'sans',yTitleFont:'sans',
+  titleWeight:'auto',xTitleWeight:'auto',yTitleWeight:'auto',
+  titleStyle:'normal',xTitleStyle:'normal',yTitleStyle:'normal'
+});
+export const CHART_TEXT_FONTS=Object.freeze({
+  sans:'system-ui, sans-serif',
+  serif:'Georgia, "Times New Roman", serif',
+  mono:'ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace'
 });
 
 const MAX_TEXT={title:90,xTitle:64,yTitle:64};
@@ -17,6 +26,16 @@ export function validateComparisonChart(options={}){
   const allowed={legend:['show','hide'],legendPosition:['top','bottom'],legendStyle:['compact','full','id'],ticks:['magnitude','scientific','log'],
     titleDisplay:['show','hide'],xTitleDisplay:['show','hide'],yTitleDisplay:['show','hide'],
     titleSize:['auto','14','18','22','26'],xTitleSize:['auto','12','14','16','18'],yTitleSize:['auto','12','14','16','18'],titleAlign:['left','center','right']};
+  for(const key of Object.keys(MAX_TEXT)){
+    allowed[key+'Font']=Object.keys(CHART_TEXT_FONTS);
+    allowed[key+'Weight']=['auto','normal','bold'];
+    allowed[key+'Style']=['normal','italic'];
+    const color=options[key+'Color'];
+    if(Object.hasOwn(options,key+'Color')){
+      if(typeof color!=='string'||color!=='auto'&&!/^#[\da-f]{6}$/i.test(color))throw Error('Choose automatic color or a six-digit hex color for '+key+'.');
+      out[key+'Color']=color.toLowerCase();
+    }
+  }
   for(const [key,values] of Object.entries(allowed))if(Object.hasOwn(options,key)){
     if(!values.includes(options[key]))throw Error('Choose a valid '+key+' setting.');
     out[key]=options[key];
@@ -26,6 +45,15 @@ export function validateComparisonChart(options={}){
     out.seriesLabels=options.seriesLabels.map(value=>chartText(value,60,'Legend label'));
   }
   return out;
+}
+
+/** Portable font stacks are shared by the controls, measured layout and exports. */
+export function chartTextStyle(options={},key='title'){
+  if(!Object.hasOwn(MAX_TEXT,key))throw Error('Choose a chart title or axis title.');
+  const settings=validateComparisonChart(options),weight=settings[key+'Weight'];
+  return {fontFamily:CHART_TEXT_FONTS[settings[key+'Font']],
+    weight:weight==='bold'?700:weight==='normal'?400:key==='title'?650:400,
+    style:settings[key+'Style'],color:settings[key+'Color']};
 }
 export function comparisonChartTitle(state,options,sources=[]){
   if(options.title)return options.title;
@@ -136,23 +164,29 @@ export function wrapLegendLabel(label,maxChars=24,maxLines=2,width){
 // Measure the same font that the standalone SVG uses. The deterministic fallback
 // also lets non-browser consumers compute a conservative layout.
 let measureContext;
-function textWidth(text,size,weight=400){
+function textWidth(text,size,{weight=400,fontFamily=CHART_TEXT_FONTS.sans,style='normal'}={}){
   if(measureContext===undefined){
     measureContext=typeof document==='undefined'?null:document.createElement('canvas').getContext('2d');
   }
-  if(!measureContext)return Array.from(text).length*size*.68;
-  measureContext.font=weight+' '+size+'px system-ui, sans-serif';
-  return measureContext.measureText(text).width;
+  if(!measureContext)return Array.from(text).length*size*.72+(style==='italic'?size*.2:0);
+  measureContext.font=style+' '+weight+' '+size+'px '+fontFamily;
+  const measured=measureContext.measureText(text);
+  // Italic glyphs can extend beyond their advance width on either side.
+  return measured.width+Math.max(0,measured.actualBoundingBoxLeft||0)+
+    Math.max(0,(measured.actualBoundingBoxRight||0)-measured.width);
 }
-function wrapChartText(text,width,size,weight=400){
+function wrapChartText(text,width,size,typography={}){
   const lines=[];
+  // Wrapped tspans keep a trailing space so their text remains copyable. Reserve
+  // that advance as well as the visible glyph width before deciding line breaks.
+  width=Math.max(size,width-textWidth(' ',size,typography));
   let line='';
   for(const word of String(text).trim().split(/\s+/).filter(Boolean)){
     const joined=line?line+' '+word:word;
-    if(textWidth(joined,size,weight)<=width){line=joined;continue;}
+    if(textWidth(joined,size,typography)<=width){line=joined;continue;}
     if(line){lines.push(line);line='';}
     for(const character of Array.from(word)){
-      if(line&&textWidth(line+character,size,weight)>width){lines.push(line);line='';}
+      if(line&&textWidth(line+character,size,typography)>width){lines.push(line);line='';}
       line+=character;
     }
   }
@@ -165,32 +199,33 @@ export function layoutChartText({width,height,left=90,right=20,title='',xTitle='
   const settings=validateComparisonChart(options),mobile=width<560;
   const size=(key,automatic)=>settings[key]==='auto'?automatic:Number(settings[key]);
   const titleSize=size('titleSize',mobile?14:16),xSize=size('xTitleSize',12),ySize=size('yTitleSize',12);
-  const titleLines=settings.titleDisplay==='hide'?[]:wrapChartText(title,width-32,titleSize,650);
+  const titleType=chartTextStyle(settings,'title'),xType=chartTextStyle(settings,'xTitle'),yType=chartTextStyle(settings,'yTitle');
+  const titleLines=settings.titleDisplay==='hide'?[]:wrapChartText(title,width-32,titleSize,titleType);
   const titleLineHeight=Math.ceil(titleSize*1.3),yLineHeight=Math.ceil(ySize*1.3);
   // Two rotated lines leave room for numeric ticks on narrow screens. A long
   // vertical title grows the chart height instead of consuming the plot width.
   let ySpan=Math.max(160,Math.min(260,height*.5));
-  let yLines=settings.yTitleDisplay==='hide'?[]:wrapChartText(yTitle,ySpan,ySize);
-  while(yLines.length>2){ySpan+=16;yLines=wrapChartText(yTitle,ySpan,ySize);}
+  let yLines=settings.yTitleDisplay==='hide'?[]:wrapChartText(yTitle,ySpan,ySize,yType);
+  while(yLines.length>2){ySpan+=16;yLines=wrapChartText(yTitle,ySpan,ySize,yType);}
   const tickWidth=Math.max(0,...tickLabels.map(label=>Math.ceil(textWidth(label,12))));
   const titleBand=yLines.length?8+yLines.length*yLineHeight+10:8;
   left=Math.max(left,titleBand+tickWidth+9);
-  const plotWidth=width-left-right,xLines=settings.xTitleDisplay==='hide'?[]:wrapChartText(xTitle,plotWidth,xSize);
+  const plotWidth=width-left-right,xLines=settings.xTitleDisplay==='hide'?[]:wrapChartText(xTitle,plotWidth,xSize,xType);
   const xLineHeight=Math.ceil(xSize*1.3),headingBottom=titleLines.length?12+titleLines.length*titleLineHeight+8:12;
   const bottomLegend=legendHeight>0&&legendPosition==='bottom';
   const top=headingBottom+(legendHeight&&!bottomLegend?legendHeight+12:12);
   const xBlock=xLines.length?xLines.length*xLineHeight+8:0;
   const bottomSpace=32+xBlock+(bottomLegend?legendHeight+12:0)+footerHeight+12;
-  const minimumPlotHeight=Math.max(180,...yLines.map(line=>Math.ceil(textWidth(line,ySize))+16));
+  const minimumPlotHeight=Math.max(180,...yLines.map(line=>Math.ceil(textWidth(line,ySize,yType))+16));
   height=Math.max(height,Math.ceil(top+bottomSpace+minimumPlotHeight));
   const bottom=height-bottomSpace,centerY=(top+bottom)/2,yBlock=yLines.length*yLineHeight;
   const titleX=settings.titleAlign==='left'?16:settings.titleAlign==='right'?width-16:width/2;
-  const plan=(text,lines,fontSize,lineHeight,x,y,anchor='middle',weight=400)=>({text,lines,fontSize,lineHeight,x,y,anchor,weight});
+  const plan=(text,lines,fontSize,lineHeight,x,y,typography,anchor='middle')=>({text,lines,fontSize,lineHeight,x,y,anchor,...typography});
   return {width,height,left,right,top,bottom,plotWidth,plotHeight:bottom-top,
     legendY:bottomLegend?bottom+32+xBlock+12:headingBottom+12,
-    title:plan(title,titleLines,titleSize,titleLineHeight,titleX,12+titleSize,{left:'start',center:'middle',right:'end'}[settings.titleAlign],650),
-    xTitle:plan(xTitle,xLines,xSize,xLineHeight,left+plotWidth/2,bottom+32+xSize),
-    yTitle:{...plan(yTitle,yLines,ySize,yLineHeight,8+yBlock/2,centerY-(yLines.length-1)*yLineHeight/2+ySize*.35),
+    title:plan(title,titleLines,titleSize,titleLineHeight,titleX,12+titleSize,titleType,{left:'start',center:'middle',right:'end'}[settings.titleAlign]),
+    xTitle:plan(xTitle,xLines,xSize,xLineHeight,left+plotWidth/2,bottom+32+xSize,xType),
+    yTitle:{...plan(yTitle,yLines,ySize,yLineHeight,8+yBlock/2,centerY-(yLines.length-1)*yLineHeight/2+ySize*.35,yType),
       rotation:{x:8+yBlock/2,y:centerY}}
   };
 }
@@ -208,8 +243,10 @@ export function appendChartText(picture,layout){
   for(const [key,attribute]of [['title','data-chart-title'],['xTitle','data-x-axis-title'],['yTitle','data-y-axis-title']]){
     const plan=layout[key];if(!plan.lines.length)continue;
     const text=svg('text',{x:plan.x,y:plan.y,'text-anchor':plan.anchor,'font-size':plan.fontSize,
-      'font-weight':plan.weight,[attribute]:'true','aria-label':plan.text});
-    text.style.fontFamily='system-ui, sans-serif';text.style.fontSize=plan.fontSize+'px';text.style.fontWeight=plan.weight;
+      'font-family':plan.fontFamily,'font-weight':plan.weight,'font-style':plan.style,
+      'data-chart-text-color':plan.color,[attribute]:'true','aria-label':plan.text});
+    text.style.fontFamily=plan.fontFamily;text.style.fontSize=plan.fontSize+'px';text.style.fontWeight=plan.weight;text.style.fontStyle=plan.style;
+    if(plan.color!=='auto')text.style.fill=plan.color;
     if(plan.rotation)text.setAttribute('transform',`rotate(-90 ${plan.rotation.x} ${plan.rotation.y})`);
     plan.lines.forEach((line,i)=>text.append(svg('tspan',{x:plan.x,dy:i?plan.lineHeight:0},line+(i<plan.lines.length-1?' ':''))));
     picture.append(text);

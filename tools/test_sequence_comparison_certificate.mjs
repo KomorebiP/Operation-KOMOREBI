@@ -72,22 +72,48 @@ test('certificates issued before title typography controls retain their original
     await assert.rejects(verifyComparisonCertificate(await resign(malformed)),/Invalid chart presentation settings/);
   }
 });
+test('certificates issued with title sizing but before font styles retain their original digest',async()=>{
+  const previousLabels={title:'Saved finite comparison',xTitle:'Recorded index',yTitle:'Value',
+    legend:'show',legendPosition:'bottom',legendStyle:'id',ticks:'scientific',seriesLabels:['Reference','Input'],
+    titleDisplay:'hide',xTitleDisplay:'show',yTitleDisplay:'show',titleSize:'26',xTitleSize:'18',yTitleSize:'16',titleAlign:'right'};
+  const current=await createComparisonCertificate([pinned,second],{skip:1,count:3},{chartLabels:previousLabels});
+  current.presentation.chartLabels=previousLabels;
+  const previous=await resign(current),before=JSON.stringify(previous);
+  assert.equal(previous.certificateSha256,'7e69bd67706c846a602afb67c33624175406eca3d0a88a230e02511bed785b90');
+  assert.equal((await verifyComparisonCertificate(previous)).ok,true);
+  assert.equal(JSON.stringify(previous),before,'Existing signed presentation metadata must remain byte-for-byte unchanged');
+  for(const change of [labels=>{labels.titleColor='#123456';},labels=>{delete labels.titleAlign;}]){
+    const malformed=structuredClone(previous);change(malformed.presentation.chartLabels);
+    await assert.rejects(verifyComparisonCertificate(await resign(malformed)),/Invalid chart presentation settings/);
+  }
+});
 test('full title typography survives certificates while partial or invalid presentation settings are rejected',async()=>{
   const certificate=await createComparisonCertificate([pinned,second],{skip:1,count:3},{chartLabels:{
     title:'Finite values',titleDisplay:'hide',xTitleDisplay:'show',yTitleDisplay:'hide',
-    titleSize:'26',xTitleSize:'18',yTitleSize:'16',titleAlign:'right'
+    titleSize:'26',xTitleSize:'18',yTitleSize:'16',titleAlign:'right',
+    titleColor:'#7c2d12',titleFont:'serif',titleWeight:'bold',titleStyle:'italic',
+    xTitleColor:'#075985',xTitleFont:'mono',yTitleStyle:'italic'
   }});
   assert.equal(certificate.presentation.chartLabels.titleSize,'26');
   assert.equal(certificate.presentation.chartLabels.yTitleDisplay,'hide');
+  assert.equal(certificate.presentation.chartLabels.titleColor,'#7c2d12');
+  assert.equal(certificate.presentation.chartLabels.titleFont,'serif');
+  assert.equal(certificate.presentation.chartLabels.titleWeight,'bold');
+  assert.equal(certificate.presentation.chartLabels.titleStyle,'italic');
   assert.equal((await verifyComparisonCertificate(certificate)).ok,true);
   for(const change of [
     labels=>{delete labels.xTitleSize;},
     labels=>{labels.extra='unknown';},
     labels=>{labels.titleSize='27';},
-    labels=>{labels.titleAlign='justify';}
+    labels=>{labels.titleAlign='justify';},
+    labels=>{delete labels.xTitleColor;},
+    labels=>{labels.titleColor='#7C2D12';},
+    labels=>{labels.yTitleColor='url(https://invalid.test/a.svg)';},
+    labels=>{labels.titleWeight='900';},
+    labels=>{labels.titleStyle='oblique';}
   ]){
     const malformed=structuredClone(certificate);change(malformed.presentation.chartLabels);
-    await assert.rejects(verifyComparisonCertificate(await resign(malformed)),/chart|setting/i);
+    await assert.rejects(verifyComparisonCertificate(await resign(malformed)),/chart|setting|color/i);
   }
 });
 test('in-browser catalogue check distinguishes matching, changed, missing and unpinned local receipts',async()=>{

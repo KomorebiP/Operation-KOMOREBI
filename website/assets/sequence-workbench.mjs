@@ -32,7 +32,7 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
      </details>
     <div id="sw-appearance"></div>
     <details id="sw-chart-labels" class="sw-chart-labels"><summary>Customize chart title, legend and axes</summary>
-      <p>Set the text, visibility and size of each title. Long labels wrap automatically. Your settings travel with image exports and shared comparison links.</p>
+      <p>Set each title's text, visibility and size. Open Font and color for typeface, weight, italics and custom colors. Long labels wrap automatically. Your settings travel with image exports and shared comparison links.</p>
       <div id="sw-chart-text-fields"></div>
       <div class="sw-chart-label-grid">
         <label for="sw-tick-mode">Value-axis tick labels<select id="sw-tick-mode"><option value="magnitude">Approximate original values</option><option value="scientific">Scientific notation</option><option value="log">Logarithmic coordinates</option></select></label>
@@ -129,7 +129,8 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
   const fields=Object.keys(WORKBENCH_DEFAULTS);for(const key of fields)$(key).value=state[key];
   const appearance=mountPlotOptions({host:$('appearance'),prefix:'sw',onChange:()=>draw()});
   const textFields=mountChartTextFields({host:$('chart-text-fields'),prefix:'sw',state:chartLabels,
-    textIds:{title:'sw-title-text',xTitle:'sw-x-title',yTitle:'sw-y-title'},onChange:updateChartLabel});
+    textIds:{title:'sw-title-text',xTitle:'sw-x-title',yTitle:'sw-y-title'},getAppearance:()=>appearance.state,
+    onChange:updateChartLabel,onPatch:updateChartLabels});
   const labelFields={ticks:$('tick-mode'),legend:$('legend'),legendPosition:$('legend-position'),legendStyle:$('legend-style')};
   function showChartLabels(){
     textFields.refresh(chartLabels);
@@ -157,8 +158,11 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
     }
   }
   function updateChartLabel(key,value){
+    updateChartLabels({[key]:value});
+  }
+  function updateChartLabels(changes){
     try{
-      chartLabels=validateComparisonChart({...chartLabels,[key]:value});
+      chartLabels=validateComparisonChart({...chartLabels,...changes});
       $('chart-label-status').textContent='Chart labels updated.';
       showChartLabels();draw();
     }catch(error){$('chart-label-status').textContent=error.message;}
@@ -167,10 +171,11 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
   $('reset-chart-labels').addEventListener('click',()=>{
     chartLabels=validateComparisonChart(COMPARISON_CHART_DEFAULTS);
     $('chart-label-status').textContent='Default chart labels restored.';
-    showChartLabels();draw();
+    showChartLabels();textFields.resetDrafts();draw();
   });
   function draw(){
     clearTimeout(resizeTimer);observedWidth=$('chart').clientWidth;
+    textFields.refreshTheme();
     $('chart').replaceChildren();$('agreements').replaceChildren();$('data').querySelector('tbody').replaceChildren();
     const pending=sources.some(s=>s.pending),ready=sources.length&&!pending;
     for(const key of ['csv','certificate','svg','png','share','share-top'])$(key).disabled=!ready;
@@ -477,5 +482,5 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
   }
   refresh();
   function validate(data){if(!data||data.schema!==1)throw Error('Unsupported comparison workspace.');const url=new URL(location.href);url.search='';url.searchParams.set('wb',JSON.stringify(data));const parsed=readWorkbenchLink(url.href,entries,snapshot);if(data.appearance)validateAppearance(data.appearance);if(data.chartLabels)validateComparisonChart(data.chartLabels);return parsed;}
-  return {addLocal:entry=>add(localSource(entry,location.href)),addReference:hit=>add(referenceSource(hit,snapshot)),addFamily:(engine,params)=>add(familySource(engine,params,location.href)),addCustom:(terms,title='Identification input',offset=0)=>add(customSource({terms,title,offset})),snapshot:()=>({schema:1,state:{...state},sources:sources.map(source=>source.pending?source.descriptor:descriptor(source)),appearance:appearance.state,chartLabels:{...chartLabels,seriesLabels:[...chartLabels.seriesLabels]}}),validate,restore(data){const next=validate(data);sources=next.sources;state=next.state;chartLabels=validateComparisonChart(data.chartLabels||next.chartLabels);for(const key of fields)$(key).value=state[key];if(data.appearance)appearance.set(data.appearance);refresh();say('Comparison restored. Reference excerpts load only when explicitly requested.');}};
+  return {addLocal:entry=>add(localSource(entry,location.href)),addReference:hit=>add(referenceSource(hit,snapshot)),addFamily:(engine,params)=>add(familySource(engine,params,location.href)),addCustom:(terms,title='Identification input',offset=0)=>add(customSource({terms,title,offset})),snapshot:()=>({schema:1,state:{...state},sources:sources.map(source=>source.pending?source.descriptor:descriptor(source)),appearance:appearance.state,chartLabels:{...chartLabels,seriesLabels:[...chartLabels.seriesLabels]}}),validate,restore(data){const next=validate(data);sources=next.sources;state=next.state;chartLabels=validateComparisonChart(data.chartLabels||next.chartLabels);for(const key of fields)$(key).value=state[key];if(data.appearance)appearance.set(data.appearance);refresh();textFields.resetDrafts();say('Comparison restored. Reference excerpts load only when explicitly requested.');}};
 }

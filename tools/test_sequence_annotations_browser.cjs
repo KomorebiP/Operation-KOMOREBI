@@ -14,12 +14,35 @@ const longTitles={
 };
 const largestType={titleSize:'26',xTitleSize:'18',yTitleSize:'18',titleAlign:'left'};
 const titleSelectors={title:'[data-chart-title]',xTitle:'[data-x-axis-title]',yTitle:'[data-y-axis-title]'};
+const fontStyles={
+  title:{Font:'serif',Weight:'bold',Style:'italic',Color:'#7c2d12',family:'Georgia',weight:'700',fill:'rgb(124, 45, 18)'},
+  xTitle:{Font:'mono',Weight:'bold',Style:'normal',Color:'#075985',family:'ui-monospace',weight:'700',fill:'rgb(7, 89, 133)'},
+  yTitle:{Font:'sans',Weight:'normal',Style:'italic',Color:'#6b21a8',family:'system-ui',weight:'400',fill:'rgb(107, 33, 168)'}
+};
 const textField=(prefix,key)=>'#'+prefix+'-'+(prefix==='sw'?{title:'title-text',xTitle:'x-title',yTitle:'y-title'}[key]:'chart-'+key);
+const fontField=(prefix,key,setting)=>'#'+prefix+'-chart-'+key+setting;
+async function openFontDetails(page,prefix,key){
+  const panel=page.locator(fontField(prefix,key,'FontDetails'));
+  if(!await panel.evaluate(node=>node.open))await panel.locator(':scope > summary').click();
+}
+async function customizeFonts(page,prefix){
+  for(const [key,style]of Object.entries(fontStyles)){
+    await openFontDetails(page,prefix,key);
+    for(const setting of ['Font','Weight'])await page.selectOption(fontField(prefix,key,setting),style[setting]);
+    await page.locator(fontField(prefix,key,'Style')).setChecked(style.Style==='italic');
+    await page.selectOption(fontField(prefix,key,'ColorMode'),'custom');
+    const color=page.locator(fontField(prefix,key,'Color'));
+    await color.fill(style.Color.toUpperCase());await color.press('Tab');
+    assert.equal(await color.inputValue(),style.Color,'Valid hex colors must normalize consistently');
+    assert.equal(await page.inputValue(fontField(prefix,key,'ColorPicker')),style.Color,'Picker and precise hex input must stay synchronized');
+  }
+}
 async function customizeTitles(page,prefix){
   for(const [key,value]of Object.entries(longTitles)){
     const field=page.locator(textField(prefix,key));await field.fill(value);await field.press('Tab');
   }
   for(const [key,value]of Object.entries(largestType))await page.selectOption('#'+prefix+'-chart-'+key,value);
+  await customizeFonts(page,prefix);
 }
 async function titleGeometry(plot){
   const info=await plot.evaluate(async svg=>{
@@ -52,6 +75,10 @@ async function checkTypography(plot,alignment='left'){
     assert.equal(await label.getAttribute('aria-label'),expected);
     assert.equal((await label.textContent()).replace(/\s/g,''),expected.replace(/\s/g,''),'Visible title text must not be shortened');
     assert.equal(await label.evaluate(node=>parseFloat(getComputedStyle(node).fontSize)),key==='title'?26:18);
+    const actual=await label.evaluate(node=>{const style=getComputedStyle(node);return {family:style.fontFamily,weight:style.fontWeight,style:style.fontStyle,fill:style.fill};});
+    assert.ok(actual.family.includes(fontStyles[key].family),JSON.stringify(actual));
+    assert.equal(actual.weight,fontStyles[key].weight);assert.equal(actual.style,fontStyles[key].Style);
+    assert.equal(actual.fill,fontStyles[key].fill,'Each title keeps its own exact color');
   }
   assert.equal(await plot.locator('[data-chart-title]').evaluate(node=>getComputedStyle(node).textAnchor),{left:'start',center:'middle',right:'end'}[alignment]);
   await titleGeometry(plot);
@@ -74,19 +101,96 @@ async function showTitles(page,prefix){
 async function checkRestoredControls(page,prefix){
   for(const [key,value]of Object.entries(largestType))assert.equal(await page.inputValue('#'+prefix+'-chart-'+key),value);
   for(const key of ['title','xTitle','yTitle'])assert.equal(await page.inputValue('#'+prefix+'-chart-'+key+'Display'),'show');
+  for(const [key,style]of Object.entries(fontStyles)){
+    for(const setting of ['Font','Weight','Color'])assert.equal(await page.inputValue(fontField(prefix,key,setting)),style[setting]);
+    assert.equal(await page.locator(fontField(prefix,key,'Style')).isChecked(),style.Style==='italic');
+    assert.equal(await page.inputValue(fontField(prefix,key,'ColorMode')),'custom');
+  }
+}
+async function checkColorControls(page,prefix,plot){
+  const color=page.locator(fontField(prefix,'title','Color'));
+  await color.fill('#nope');await color.press('Tab');
+  assert.equal(await color.getAttribute('aria-invalid'),'true');
+  assert.equal(await plot.locator(titleSelectors.title).evaluate(node=>getComputedStyle(node).fill),fontStyles.title.fill,
+    'An invalid color must leave the last valid plot unchanged');
+  await color.fill('#ffffff');await color.press('Tab');
+  assert.equal(await plot.locator(titleSelectors.title).evaluate(node=>getComputedStyle(node).fill),'rgb(255, 255, 255)',
+    'A low-contrast explicit color must not be silently rewritten');
+  assert.match(await page.locator(fontField(prefix,'title','ColorHint')).textContent(),/contrast|hard to read/i);
+  await color.fill(fontStyles.title.Color);await color.press('Tab');
+  assert.notEqual(await color.getAttribute('aria-invalid'),'true');
+  await page.selectOption(fontField(prefix,'xTitle','ColorMode'),'auto');
+  const appearance=page.locator('details.sp-options').filter({has:page.locator('#'+prefix+'-plot-theme')});
+  if(!await appearance.evaluate(node=>node.open))await appearance.locator(':scope > summary').click();
+  for(const [theme,fill]of [['night','rgb(245, 245, 245)'],['white','rgb(17, 17, 17)']]){
+    await page.selectOption('#'+prefix+'-plot-theme',theme);
+    assert.equal(await plot.locator(titleSelectors.xTitle).evaluate(node=>getComputedStyle(node).fill),fill,
+      'Automatic text colors must follow the actual plot background');
+    assert.equal(await plot.locator(titleSelectors.title).evaluate(node=>getComputedStyle(node).fill),fontStyles.title.fill,
+      'Theme changes must preserve an explicit title color');
+  }
+  await page.selectOption(fontField(prefix,'xTitle','ColorMode'),'custom');
+  await page.locator(fontField(prefix,'xTitle','Color')).fill(fontStyles.xTitle.Color);
+  await page.locator(fontField(prefix,'xTitle','Color')).press('Tab');
+  await checkTypography(plot);
 }
 async function checkReset(page,prefix,plot){
   const panel=page.locator('#'+prefix+'-chart-labels');
-  if(!await panel.evaluate(node=>node.open))await panel.locator('summary').click();
+  if(!await panel.evaluate(node=>node.open))await panel.locator(':scope > summary').click();
+  await openFontDetails(page,prefix,'xTitle');
+  await page.locator(fontField(prefix,'xTitle','ResetFont')).click();
+  assert.equal(await page.inputValue(textField(prefix,'xTitle')),longTitles.xTitle,'Reset font must preserve wording');
+  assert.equal(await page.inputValue(fontField(prefix,'xTitle','Size')),'18','Reset font must preserve size');
+  assert.equal(await page.inputValue(fontField(prefix,'xTitle','Display')),'show','Reset font must preserve visibility');
+  assert.equal(await page.inputValue(fontField(prefix,'title','Font')),fontStyles.title.Font,'Reset font must preserve other titles');
+  assert.equal(await page.inputValue(fontField(prefix,'xTitle','Font')),'sans');
+  assert.equal(await page.inputValue(fontField(prefix,'xTitle','Weight')),'auto');
+  assert.equal(await page.inputValue(fontField(prefix,'xTitle','ColorMode')),'auto');
+  assert.equal(await page.locator(fontField(prefix,'xTitle','Style')).isChecked(),false);
+  await openFontDetails(page,prefix,'title');
+  await page.locator(fontField(prefix,'title','Color')).fill('#nope');
+  await page.locator(fontField(prefix,'title','Color')).press('Tab');
+  assert.equal(await page.locator(fontField(prefix,'title','Color')).getAttribute('aria-invalid'),'true');
   await panel.getByRole('button',{name:/Restore.*chart labels/}).click();
   for(const key of ['title','xTitle','yTitle']){
     assert.equal(await page.inputValue(textField(prefix,key)),'');
     assert.equal(await page.inputValue('#'+prefix+'-chart-'+key+'Display'),'show');
     assert.equal(await page.inputValue('#'+prefix+'-chart-'+key+'Size'),'auto');
     assert.equal(await plot.locator(titleSelectors[key]).isVisible(),true);
+    assert.equal(await page.inputValue(fontField(prefix,key,'Font')),'sans');
+    assert.equal(await page.inputValue(fontField(prefix,key,'Weight')),'auto');
+    assert.equal(await page.inputValue(fontField(prefix,key,'ColorMode')),'auto');
+    assert.equal(await page.locator(fontField(prefix,key,'Style')).isChecked(),false);
+    assert.notEqual(await page.locator(fontField(prefix,key,'Color')).getAttribute('aria-invalid'),'true');
+    assert.equal(await page.locator(fontField(prefix,key,'ColorError')).textContent(),'');
   }
   assert.equal(await page.inputValue('#'+prefix+'-chart-titleAlign'),'center');
   await titleGeometry(plot);
+}
+async function checkImageExports(page,context,prefix,plot,errors){
+  const paths={};
+  for(const format of ['svg','png']){
+    const pending=page.waitForEvent('download');await page.locator('#'+prefix+'-'+format).click();
+    const download=await pending;paths[format]=path.join(output,'comparison-styled.'+format);await download.saveAs(paths[format]);
+  }
+  const svg=fs.readFileSync(paths.svg,'utf8'),png=fs.readFileSync(paths.png);
+  assert.equal(png.subarray(1,4).toString(),'PNG');
+  const box=await plot.evaluate(node=>({width:node.viewBox.baseVal.width,height:node.viewBox.baseVal.height}));
+  assert.equal(png.readUInt32BE(16),Math.round(box.width*2));assert.equal(png.readUInt32BE(20),Math.round(box.height*2));
+  const exported=await context.newPage();exported.on('pageerror',err=>errors.push(err.message));
+  await exported.setContent(svg);await checkTypography(exported.locator('svg'));
+  const mismatch=await exported.evaluate(async ({svg,png})=>{
+    const render=async source=>{const image=new Image();image.src=source;await image.decode();const canvas=document.createElement('canvas');canvas.width=image.naturalWidth;canvas.height=image.naturalHeight;const ctx=canvas.getContext('2d');ctx.drawImage(image,0,0);return {image,canvas,ctx};};
+    const raster=await render('data:image/png;base64,'+png),vector=new Image();
+    vector.src='data:image/svg+xml;base64,'+svg;await vector.decode();
+    const expected=document.createElement('canvas');expected.width=raster.canvas.width;expected.height=raster.canvas.height;
+    const ctx=expected.getContext('2d');ctx.drawImage(vector,0,0,expected.width,expected.height);
+    const a=ctx.getImageData(0,0,expected.width,expected.height).data,b=raster.ctx.getImageData(0,0,expected.width,expected.height).data;
+    let different=0;for(let i=0;i<a.length;i+=4)if(Math.abs(a[i]-b[i])+Math.abs(a[i+1]-b[i+1])+Math.abs(a[i+2]-b[i+2])+Math.abs(a[i+3]-b[i+3])>4)different++;
+    return different/(a.length/4);
+  },{svg:Buffer.from(svg).toString('base64'),png:png.toString('base64')});
+  assert.ok(mismatch<0.001,'PNG must faithfully rasterize the styled SVG: different-pixel fraction '+mismatch);
+  await exported.close();
 }
 async function previousCertificate(){
   const {createComparisonCertificate}=await import('../website/assets/sequence-comparison-certificate.mjs');
@@ -113,6 +217,7 @@ async function fit(page){
 (async()=>{
   const legacyFile=await previousCertificate();
   const browser=await chromium.launch({headless:true}),report={status:'running',widths:[],errors:[]};
+  let forcedLink;
   try{
     for(const width of [1440,390,320]){
       const context=await browser.newContext({viewport:{width,height:940},permissions:['clipboard-read','clipboard-write']});
@@ -141,7 +246,7 @@ async function fit(page){
       assert.ok((await atlas.locator('[data-y-tick]').allTextContents()).some(v=>v.includes('×10^')));
       assert.match(await page.locator('.sp-scale-explanation').textContent(),/scientific notation/);
       assert.match(await atlas.locator('[data-legend-label]').first().textContent(),/KSEQ-000025/);
-      await customizeTitles(page,'sa');await checkTypography(atlas);
+      await customizeTitles(page,'sa');await checkTypography(atlas);await checkColorControls(page,'sa',atlas);
       await page.selectOption('#sa-chart-legendPosition','bottom');await checkTypography(atlas);
       await hideTitles(page,'sa',atlas);await showTitles(page,'sa');await checkTypography(atlas);
       await page.locator('#sa-share').click();
@@ -189,7 +294,7 @@ async function fit(page){
       assert.equal(await archived.locator('[data-chart-title]').getAttribute('aria-label'),'Archived coefficient profile');
       assert.ok((await archived.locator('[data-y-tick]').allTextContents()).some(v=>v.includes('×10^')));
       assert.match(await archived.locator('[data-legend-label]').first().textContent(),/KOM067/);
-      await customizeTitles(page,'sar');await checkTypography(archived);
+      await customizeTitles(page,'sar');await checkTypography(archived);await checkColorControls(page,'sar',archived);
       await page.selectOption('#sar-chart-legendPosition','bottom');await checkTypography(archived);
       await hideTitles(page,'sar',archived);await showTitles(page,'sar');await checkTypography(archived);
       await page.locator('#sar-view-link').click();
@@ -231,7 +336,7 @@ async function fit(page){
       await page.selectOption('#sw-tick-mode','scientific');
       assert.ok((await page.locator('#sw-chart [data-y-tick]').allTextContents()).some(v=>v.includes('×10^')));
       const compared=page.locator('#sw-chart svg');
-      await customizeTitles(page,'sw');await checkTypography(compared);
+      await customizeTitles(page,'sw');await checkTypography(compared);await checkColorControls(page,'sw',compared);
       await page.selectOption('#sw-legend-position','bottom');await checkTypography(compared);
       await page.selectOption('#sw-chart-xTitleSize','12');
       assert.equal(await compared.locator('[data-x-axis-title]').evaluate(node=>parseFloat(getComputedStyle(node).fontSize)),12);
@@ -266,6 +371,10 @@ async function fit(page){
       await checkReset(comparisonRestored,'sw',comparisonRestored.locator('#sw-chart svg'));
       await fit(comparisonRestored);await comparisonRestored.close();
       await showTitles(page,'sw');await checkTypography(compared);
+      if(width===1440){
+        await checkImageExports(page,context,'sw',compared,errors);
+        await page.locator('#sw-share').click();forcedLink=await page.evaluate(()=>navigator.clipboard.readText());
+      }
       await page.locator('#sw-verify-certificate>summary').click();
       await page.locator('#sw-verify-file').setInputFiles(legacyFile);
       await page.locator('#sw-verify-submit').click();
@@ -276,10 +385,22 @@ async function fit(page){
       await fit(page);
       report.widths.push({width,atlasShare:true,archiveShare:true,comparisonShare:true,scientificTicks:true,compactLegends:true,
         fullTitleWrapping:true,titleTypography:true,independentVisibility:true,titleGeometry:true,restoredDefaults:true,
-        legacyCertificate:true,noOverflow:true,errors});
+        independentFontStyles:true,preciseColors:true,invalidColorRecovery:true,automaticThemeColors:true,
+        perTitleFontReset:true,legacyCertificate:true,noOverflow:true,errors});
       assert.deepEqual(errors,[]);
       await context.close();
     }
+    const forced=await browser.newContext({viewport:{width:320,height:940},forcedColors:'active'});
+    const forcedPage=await forced.newPage();await forcedPage.goto(forcedLink);
+    await forcedPage.locator('[data-library-ready=true]').waitFor({timeout:90000});
+    for(const [key,selector]of Object.entries(titleSelectors)){
+      const label=forcedPage.locator('#sw-chart '+selector);
+      const actual=await label.evaluate(node=>({inline:node.style.fill,family:getComputedStyle(node).fontFamily,style:getComputedStyle(node).fontStyle}));
+      assert.equal(actual.inline.toLowerCase(),'canvastext','System high-contrast text colors must override explicit colors');
+      assert.ok(actual.family.includes(fontStyles[key].family));assert.equal(actual.style,fontStyles[key].Style);
+      assert.equal(await label.getAttribute('data-chart-text-color'),fontStyles[key].Color,'System colors must not erase saved custom choices');
+    }
+    await fit(forcedPage);await forced.close();report.forcedColors=true;report.styledSVGAndPNG=true;
     const context=await browser.newContext({viewport:{width:320,height:940},javaScriptEnabled:false});
     const noJS=await context.newPage();await noJS.goto(href('sequence-archive/KOM067.html'));
     assert.ok(await noJS.locator('#exact-data table tbody tr').count()>0,'Exact archive table must work without JavaScript');

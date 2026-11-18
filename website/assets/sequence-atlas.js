@@ -76,6 +76,7 @@ function render(){
   }catch(error){stopAnimation();if(/integer-valued/.test(error.message)){$('transform').setAttribute('aria-invalid','true');$('transform').setAttribute('aria-describedby','sa-error');}message(error.message+(plot?' The last valid plot is retained.':''),true);return false;}
 }
 function draw(rows,names){
+  chartLabelControls?.refreshTheme();
   const palette=plotColors(appearance),W=Math.max(320,Math.round($('plot').clientWidth)),baseHeight=plotHeight(W,appearance),chart=chartLabelControls?.state||{};
   const showLegend=chart.legend!=='hide';
   const modular=['mod','grid','frequency','mod-pairs'].includes(state.view), frequency=state.view==='frequency',grid=['grid','mod-pairs'].includes(state.view);
@@ -339,6 +340,7 @@ async function init(){
   appearanceControls=mountPlotOptions({host:$('plot-options'),prefix:'sa',onChange:style=>{appearance=style;if(lastRows.length)draw(lastRows,[...new Set(lastRows.map(row=>row.name))]);}});appearance=appearanceControls.state;
   chartLabelControls=mountSinglePlotLabels({
     anchor:$('plot-options'),plot:$('plot'),prefix:'sa',
+    getAppearance:()=>appearance,
     getSources:()=>[{id:$('sequence').value==='custom'?'CUSTOM':$('sequence').value,title:known($('sequence').value)?.title||'Pasted sequence'},...($('compare').value?[{id:$('compare').value,title:known($('compare').value)?.title||$('compare').value}]:[])],
     onChange:()=>{if(lastRows.length)draw(lastRows,[...new Set(lastRows.map(row=>row.name))]);}
   });

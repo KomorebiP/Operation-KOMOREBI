@@ -43,7 +43,23 @@ export function pagePalette(scheme=typeof document!=='undefined'?document.docume
 export function plotColors(state,scheme){state=validateAppearance(state);const palette=state.palette==='site'?pagePalette(scheme):state.palette;let colors=palette==='custom'?[state.custom,state.secondary,...PLOT_PALETTES.green.slice(2).map(color=>readableColor(color,plotTheme(state).background))]:PLOT_PALETTES[palette].map(color=>readableColor(color,plotTheme(state).background));if(state.reverse==='reverse')colors=palette==='custom'?[...colors.slice(0,2),...colors.slice(2).reverse()]:colors.reverse();return colors;}
 export function plotTheme(state){return state.theme==='night'?{background:'#111111',foreground:'#f5f5f5',grid:'#555555',axis:'#cccccc'}:state.theme==='white'?{background:'#ffffff',foreground:'#111111',grid:'#cccccc',axis:'#555555'}:{background:'#fafaf5',foreground:'#111111',grid:'#cccccc',axis:'#555555'};}
 export function contrastRatio(a,b){const luminance=hex=>hex.slice(1).match(/../g).map(x=>parseInt(x,16)/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4).reduce((sum,v,i)=>sum+v*[.2126,.7152,.0722][i],0);const x=luminance(a),y=luminance(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05);}
-export function finishPlotTheme(picture,state){const forced=typeof matchMedia==='function'&&matchMedia('(forced-colors:active)').matches,theme=forced?{background:'Canvas',foreground:'CanvasText',grid:'GrayText',axis:'CanvasText'}:plotTheme(state);picture.style.setProperty('--sp-focus',theme.foreground);picture.querySelector('rect[width][height]')?.style.setProperty('fill',theme.background);for(const node of picture.querySelectorAll('text')){node.style.setProperty('fill',theme.foreground);node.style.fontFamily='system-ui, sans-serif';if(Number(node.getAttribute('font-size')||11)<12)node.style.fontSize='12px';}for(const node of picture.querySelectorAll('[data-plot-grid]'))node.style.setProperty('stroke',theme.grid);for(const node of picture.querySelectorAll('.sar-axis,[data-plot-axis]'))node.style.setProperty('stroke',theme.axis);for(const node of picture.querySelectorAll('[data-point],circle[role="button"]'))node.style.opacity=forced?'1':state.opacity;}
+export function finishPlotTheme(picture,state){
+  const forced=typeof matchMedia==='function'&&matchMedia('(forced-colors:active)').matches;
+  const theme=forced?{background:'Canvas',foreground:'CanvasText',grid:'GrayText',axis:'CanvasText'}:plotTheme(state);
+  picture.style.setProperty('--sp-focus',theme.foreground);
+  picture.querySelector('rect[width][height]')?.style.setProperty('fill',theme.background);
+  for(const node of picture.querySelectorAll('text')){
+    const custom=node.getAttribute('data-chart-text-color');
+    node.style.setProperty('fill',!forced&&/^#[\da-f]{6}$/i.test(custom||'')?custom:theme.foreground);
+    // Title typography has already been measured and explicitly set. Generic
+    // tick, point and legend text retains the existing system font defaults.
+    if(!node.style.fontFamily)node.style.fontFamily='system-ui, sans-serif';
+    if(Number(node.getAttribute('font-size')||11)<12)node.style.fontSize='12px';
+  }
+  for(const node of picture.querySelectorAll('[data-plot-grid]'))node.style.setProperty('stroke',theme.grid);
+  for(const node of picture.querySelectorAll('.sar-axis,[data-plot-axis]'))node.style.setProperty('stroke',theme.axis);
+  for(const node of picture.querySelectorAll('[data-point],circle[role="button"]'))node.style.opacity=forced?'1':state.opacity;
+}
 export function plotHeight(width,state){return state.height==='compact'?(width<560?280:340):state.height==='tall'?(width<560?520:660):(width<560?360:480);}
 export function showIndexLabel(index,count,state,width){
   if(state.labels==='none')return false;
@@ -87,7 +103,7 @@ export function mountPlotOptions({host,prefix,href=location.href,onChange}){
 export function standaloneSVG(source){
   if(!source)throw Error('Create a plot before exporting it.');
   const copy=source.cloneNode(true),original=[source,...source.querySelectorAll('*')],cloned=[copy,...copy.querySelectorAll('*')];
-  const properties=['fill','stroke','stroke-width','stroke-dasharray','opacity','font-family','font-size','font-weight','paint-order'];
+  const properties=['fill','stroke','stroke-width','stroke-dasharray','opacity','font-family','font-size','font-weight','font-style','text-anchor','paint-order'];
   original.forEach((node,i)=>{const style=getComputedStyle(node);for(const key of properties){const value=style.getPropertyValue(key);if(value)cloned[i].style.setProperty(key,value);}cloned[i].removeAttribute('tabindex');cloned[i].removeAttribute('aria-current');if(i)cloned[i].removeAttribute('role');});
   copy.setAttribute('xmlns','http://www.w3.org/2000/svg');copy.setAttribute('role','img');
   const box=source.viewBox.baseVal;copy.setAttribute('width',box.width);copy.setAttribute('height',box.height);

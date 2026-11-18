@@ -13,6 +13,7 @@ export function setupArchivePlot(entry){
   const say=(target,text)=>{if(target.textContent!==text)target.textContent=text;};
   function point(row){selectedN=row.n;say($('point'),`Index ${row.n}: a(${row.n}) = ${row.raw}; plotted value ${row.value??'undefined'}${row.next===null?'':`; following residue ${row.next}`}.`);}
   function draw(result){
+    chartLabelControls?.refreshTheme();
     const state=result.state,valid=result.rows.filter(row=>Number.isFinite(row.x)&&Number.isFinite(row.y)),colors=plotColors(appearance);
     const width=Math.max(270,Math.min(1000,$('plot').clientWidth||760)),chart=chartLabelControls?.state||{legend:'hide'};
     const showLegend=chart.legend==='show';
@@ -89,7 +90,7 @@ export function setupArchivePlot(entry){
   for(const key of keys)if(params.has(key))$(key).value=params.get(key);
   const appearanceControls=mountPlotOptions({host:$('plot-options'),prefix:'sar',onChange:style=>{appearance=style;if(current)draw(current);}});appearance=appearanceControls.state;
   chartLabelControls=mountSinglePlotLabels({anchor:$('plot-options'),plot:$('plot'),prefix:'sar',
-    defaults:{legend:'hide'},
+    defaults:{legend:'hide'},getAppearance:()=>appearance,
     getSources:()=>[{id:entry.id,title:entry.title}],onChange:()=>{if(current)draw(current);}
   });
   for(const key of ['marks','color'])$(key).addEventListener('change',()=>{if(!current)return;current=archiveWindow(entry,{...current.state,marks:$('marks').value,color:$('color').value});draw(current);});
