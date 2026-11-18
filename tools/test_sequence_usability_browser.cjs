@@ -303,7 +303,7 @@ async function visit(page,name,kind){
       assert.equal(await page.locator('#sw-verify-inspection-rows tr').count(),12);
       assert.match(await page.locator('#sw-verify-window-status').textContent(),/Verified rows 1–12 of 64/);
       assert.deepEqual(await page.locator('#sw-verify-inspection-rows tr').first().locator('th,td').allTextContents(),
-        ['KSEQ-000025','0','0','Not recorded',certificate.series[0].rows[0].raw,
+        ['KSEQ-000025','0','0','0','Not recorded',certificate.series[0].rows[0].raw,
           certificate.series[0].rows[0].displayed,'Baseline']);
       await page.locator('#sw-verify-next').click();
       assert.match(await page.locator('#sw-verify-window-status').textContent(),/Verified rows 13–24 of 64/);
