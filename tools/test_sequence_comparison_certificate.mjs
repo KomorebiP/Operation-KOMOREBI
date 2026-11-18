@@ -1,6 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
+import {mkdtempSync,writeFileSync,rmSync} from 'node:fs';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {spawnSync} from 'node:child_process';
 import {COMPARISON_CERTIFICATE_SCHEMA,createComparisonCertificate,verifyComparisonCertificate} from '../website/assets/sequence-comparison-certificate.mjs';
 import {localSource,customSource,referenceSource,WORKBENCH_DEFAULTS} from '../website/assets/sequence-workbench-core.mjs';
 
@@ -91,4 +95,29 @@ test('certificate rejects out-of-bounds data or invalid exact integers and never
   await assert.rejects(createComparisonCertificate([pinned,pinned]),/duplicate sources/);
   await assert.rejects(createComparisonCertificate([pinned],{transform:'new'}),/Choose a listed transform/);
   assert.equal(JSON.stringify(a),before);
+});
+
+test('offline Node checker verifies a downloaded file and exits nonzero on corruption',async()=>{
+  const certificate=await createComparisonCertificate([pinned,second],{skip:1,count:3});
+  const folder=mkdtempSync(join(tmpdir(),'komorebi-sequence-certificate-'));
+  const filename=join(folder,'verified.json');
+  try{
+    writeFileSync(filename,JSON.stringify(certificate,null,2)+'\n','utf8');
+    const run=()=>spawnSync(process.execPath,
+      [new URL('./verify_sequence_comparison_certificate.mjs',import.meta.url).pathname,filename],
+      {encoding:'utf8'});
+    const accepted=run();
+    assert.equal(accepted.status,0,accepted.stderr);
+    const report=JSON.parse(accepted.stdout);
+    assert.equal(report.ok,true);
+    assert.equal(report.exactRows,6);
+    assert.equal(report.finiteChecks,1);
+    assert.match(report.scope,/not a proof of infinite identity/);
+    const broken=structuredClone(certificate);
+    broken.series[1].rows[0].displayed='wrong';
+    writeFileSync(filename,JSON.stringify(broken,null,2)+'\n','utf8');
+    const rejected=run();
+    assert.equal(rejected.status,1);
+    assert.match(rejected.stderr,/CERTIFICATE VERIFICATION FAILED/);
+  }finally{rmSync(folder,{recursive:true,force:true});}
 });
