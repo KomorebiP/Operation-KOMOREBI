@@ -74,7 +74,7 @@ async function fit(page){
       const archiveLink=await page.evaluate(()=>navigator.clipboard.readText());
       const aURL=new URL(archiveLink);
       assert.equal(aURL.searchParams.get('chart-title'),'Archived coefficient profile');
-      assert.equal(aURL.searchParams.get('chart-legendStyle'),'id');
+      assert.equal(aURL.searchParams.get('chart-legend-style'),'id');
       const archiveRestored=await context.newPage();archiveRestored.on('pageerror',err=>errors.push(err.message));
       await archiveRestored.goto(archiveLink);
       await archiveRestored.locator('[data-archive-ready=true]').waitFor({timeout:90000});
