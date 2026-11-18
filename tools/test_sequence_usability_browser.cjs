@@ -295,6 +295,36 @@ async function visit(page,name,kind){
       assert.match(await page.locator('#sw-verify-catalogue').textContent(),/2 of 2 local source receipts match/);
       assert.equal(await page.locator('#sw-verify-sources li').count(),2);
       assert.match(await page.locator('#sw-verify-receipt').textContent(),/^[0-9a-f]{64}$/);
+      const inspection=page.locator('#sw-verify-inspection');
+      assert.equal(await inspection.isVisible(),true);
+      assert.equal(await inspection.evaluate(el=>el.open),false,'Verified rows must be optional and collapsed');
+      await inspection.locator('summary').click();
+      assert.equal(await page.locator('#sw-verify-series-filter option').count(),3);
+      assert.equal(await page.locator('#sw-verify-inspection-rows tr').count(),12);
+      assert.match(await page.locator('#sw-verify-window-status').textContent(),/Verified rows 1–12 of 64/);
+      assert.deepEqual(await page.locator('#sw-verify-inspection-rows tr').first().locator('th,td').allTextContents(),
+        ['KSEQ-000025','0','0','Not recorded',certificate.series[0].rows[0].raw,
+          certificate.series[0].rows[0].displayed,'Baseline']);
+      await page.locator('#sw-verify-next').click();
+      assert.match(await page.locator('#sw-verify-window-status').textContent(),/Verified rows 13–24 of 64/);
+      await page.locator('#sw-verify-previous').click();
+      assert.match(await page.locator('#sw-verify-window-status').textContent(),/Verified rows 1–12 of 64/);
+      await page.selectOption('#sw-verify-row-filter','different');
+      const differentRows=page.locator('#sw-verify-inspection-rows tr');
+      assert.ok(await differentRows.count()>0,'Fibonacci and Lucas have different displayed integers');
+      for(const status of await differentRows.evaluateAll(rows=>rows.map(row=>row.dataset.compareStatus)))
+        assert.equal(status,'different');
+      await page.selectOption('#sw-verify-series-filter','1');
+      assert.ok(await differentRows.count()>0);
+      await page.selectOption('#sw-verify-series-filter','0');
+      assert.equal(await differentRows.count(),0,'Baseline values should never be labeled as pairwise mismatches');
+      assert.match(await page.locator('#sw-verify-window-status').textContent(),/No defined finite disagreements/);
+      await page.selectOption('#sw-verify-series-filter','-1');
+      await page.selectOption('#sw-verify-row-filter','all');
+      assert.equal(await differentRows.count(),12);
+      assert.match(await page.locator('#sw-verify-configuration').textContent(),/Alignment by stored window position/);
+      assert.match(await page.locator('#sw-verify-pairwise').textContent(),/finite|Finite|overlapping values agree/);
+      await fit(page);
       if(width===1440){
         const separate=await context.newPage();
         separate.on('pageerror',error=>report.errors.push(error.message));
@@ -306,6 +336,8 @@ async function visit(page,name,kind){
         await separate.locator('#sw-verify-submit').click();
         await separate.locator('#sw-verify-output').waitFor({state:'visible',timeout:30000});
         assert.match(await separate.locator('#sw-verify-catalogue').textContent(),/2 of 2 local source receipts match/);
+        await separate.locator('#sw-verify-inspection>summary').click();
+        assert.equal(await separate.locator('#sw-verify-inspection-rows tr').count(),12);
         await fit(separate);await separate.close();
         const tampered=structuredClone(certificate);
         tampered.series[0].rows[0].displayed='123456';
@@ -314,10 +346,13 @@ async function visit(page,name,kind){
         await page.locator('#sw-verify-file').setInputFiles(invalidFile);
         assert.equal(await page.locator('#sw-verify-output').isVisible(),false,
           'Selecting another file must clear the previous verified result');
+        assert.equal(await page.locator('#sw-verify-inspection').isVisible(),false,
+          'Changing the file must also clear all previous verified rows');
         await page.locator('#sw-verify-submit').click();
         await page.locator('#sw-verify-error').waitFor({state:'visible',timeout:30000});
         assert.match(await page.locator('#sw-verify-error').textContent(),/digest does not match/);
         assert.equal(await page.locator('#sw-verify-output').isVisible(),false);
+        assert.equal(await page.locator('#sw-verify-inspection').isVisible(),false);
         const invalidJSON=path.join(output,'invalid-certificate.json');
         fs.writeFileSync(invalidJSON,'{not valid JSON}', 'utf8');
         await page.locator('#sw-verify-file').setInputFiles(invalidJSON);
