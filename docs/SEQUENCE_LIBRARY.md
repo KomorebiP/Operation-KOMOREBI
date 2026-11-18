@@ -145,7 +145,7 @@ offsets and index conventions, source URLs, generated-family parameters or
 retained OEIS snapshot labels when present, a SHA-256 data fingerprint for each
 input, the existing local-catalogue receipt where available, all exact window
 rows, transformed values, finite comparison counts, first mismatches,
-plot settings, and an overall SHA-256 file-content receipt. Up to four sources
+plot settings, and a SHA-256 digest of the canonical certificate body (excluding the digest field itself, independent of JSON whitespace). Up to four sources
 are supported. It includes no private browser storage or external requests.
 An embedded source digest detects accidental changes within the certificate,
 but does not independently establish the authority of an external source.
@@ -160,6 +160,25 @@ documents that OEIS export positions do not supply mathematical offsets.
 The verification result is limited to the selected finite calculation; it is
 not a proof of infinite sequence equality, novelty, provenance history or
 physical realization.
+
+The Compare page also includes **Verify a saved comparison certificate**
+in a collapsed disclosure. Select the downloaded JSON file and choose
+**Verify exact certificate**. Verification runs entirely inside the reader's
+browser. The file is never uploaded or sent to a server. It is not necessary
+to load the original comparison first. The verifier recomputes every finite
+value and agreement, checks the embedded SHA-256 digests, and then reports a
+separate check of pinned local-record receipts against the current site's
+published catalogue. It displays source-by-source matches, changes, missing
+records, or missing receipts. An old certificate may still have valid finite
+arithmetic even when one of its local sources no longer matches the current
+catalogue. Generated, pasted and OEIS inputs are checked against their
+embedded exact data but are not independently authenticated against external
+repositories.
+
+Invalid JSON, altered calculations, digest mismatches, or files exceeding the
+16 MiB browser import limit produce a visible verification failure, with no
+success result retained from an earlier file. The import does not modify the
+currently selected comparison, chart settings, or saved entries.
 
 Reverify a downloaded certificate offline using a checkout of the repository
 and Node.js 24:
