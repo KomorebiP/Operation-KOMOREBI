@@ -7,6 +7,7 @@ import {join} from 'node:path';
 import {spawnSync} from 'node:child_process';
 import {COMPARISON_CERTIFICATE_SCHEMA,createComparisonCertificate,verifyComparisonCertificate,assessCertificateCatalogue} from '../website/assets/sequence-comparison-certificate.mjs';
 import {localSource,customSource,referenceSource,WORKBENCH_DEFAULTS} from '../website/assets/sequence-workbench-core.mjs';
+import {certificateInspectionWindow,CERTIFICATE_INSPECTION_PAGE_SIZE} from '../website/assets/sequence-certificate-inspection.mjs';
 
 const sha=data=>createHash('sha256').update(JSON.stringify(data),'utf8').digest('hex');
 const a={id:'KSEQ-TEST',title:'Exact reference',collection:'atlas',index_symbol:'n',offset:2,
@@ -78,6 +79,57 @@ test('in-browser catalogue check distinguishes matching, changed, missing and un
   assert.equal(external.sources[0].status,'embedded-only');
   assert.throws(()=>assessCertificateCatalogue(null,[]),/Cannot compare certificate sources/);
 });
+test('verified certificate window pages exact rows and isolates genuine finite disagreements',async()=>{
+  const certificate=await createComparisonCertificate([pinned,second],{skip:1,count:3});
+  const original=JSON.stringify(certificate);
+  assert.equal((await verifyComparisonCertificate(certificate)).ok,true);
+  assert.equal(CERTIFICATE_INSPECTION_PAGE_SIZE,12);
+  const view=certificateInspectionWindow(certificate,{pageSize:2});
+  assert.equal(view.total,6);
+  assert.equal(view.pages,3);
+  assert.equal(view.rows.length,2);
+  assert.deepEqual(view.rows.map(row=>[row.seriesIndex,row.windowPosition,row.recordedIndex,row.raw,row.displayed,row.status]),[
+    [0,0,3,'-1','-1','baseline'],[1,0,3,'-1','-1','equal']
+  ]);
+  const end=certificateInspectionWindow(certificate,{pageSize:2,page:500});
+  assert.equal(end.page,2);
+  assert.deepEqual(end.rows.map(row=>[row.seriesIndex,row.status]),[[0,'baseline'],[1,'different']]);
+  const mismatches=certificateInspectionWindow(certificate,{onlyDifferences:true});
+  assert.equal(mismatches.total,1);
+  assert.equal(mismatches.rows[0].raw,'8');
+  assert.equal(mismatches.rows[0].displayed,'8');
+  assert.equal(mismatches.rows[0].baselineDisplayed,'7');
+  assert.equal(mismatches.rows[0].recordedIndex,5);
+  assert.equal(mismatches.rows[0].alignmentKey,2);
+  assert.equal(mismatches.rows[0].sourceDegree,null);
+  assert.equal(certificateInspectionWindow(certificate,{seriesIndex:0,onlyDifferences:true}).total,0);
+  assert.equal(certificateInspectionWindow(certificate,{seriesIndex:1,onlyDifferences:true}).total,1);
+  assert.equal(JSON.stringify(certificate),original,'Read-only inspection must not change verified source data');
+});
+
+test('inspection distinguishes absent overlap, undefined first differences and stored source degrees',async()=>{
+  const offsetSource=customSource({title:'Shifted index',offset:5,terms:['0','-1','9007199254740993','8']});
+  const aligned=await createComparisonCertificate([pinned,offsetSource],{alignment:'indices',count:4});
+  const view=certificateInspectionWindow(aligned,{seriesIndex:1});
+  assert.deepEqual(view.rows.map(row=>row.status),['different','no-overlap','no-overlap','no-overlap']);
+  const differences=certificateInspectionWindow(aligned,{onlyDifferences:true});
+  assert.equal(differences.total,1);
+  const diffCert=await createComparisonCertificate([pinned,offsetSource],
+    {alignment:'indices',transform:'difference',count:4});
+  const first=certificateInspectionWindow(diffCert,{seriesIndex:1}).rows[0];
+  assert.equal(first.status,'undefined');
+  assert.equal(first.displayed,null);
+  assert.equal(first.recordedIndex,5);
+  const withDegrees={...a,source_degrees:[0,2,4,6]};
+  withDegrees.record_sha256=sha([withDegrees.id,withDegrees.collection,withDegrees.offset,
+    withDegrees.index_symbol,withDegrees.terms,withDegrees.source_degrees]);
+  const degreeCert=await createComparisonCertificate([localSource(withDegrees)],{skip:1,count:2});
+  assert.deepEqual(certificateInspectionWindow(degreeCert).rows.map(row=>row.sourceDegree),[2,4]);
+  assert.equal(certificateInspectionWindow(degreeCert).rows[0].recordedIndex,3);
+  for(const options of [{seriesIndex:2},{seriesIndex:-2},{page:-1},{pageSize:0},{pageSize:101},{onlyDifferences:'yes'}])
+    assert.throws(()=>certificateInspectionWindow(degreeCert,options));
+});
+
 test('independent replay covers partial sums, missing initial differences and Euclidean residues',async()=>{
   const sum=await createComparisonCertificate([pinned],{transform:'sum',skip:2,count:2});
   assert.deepEqual(sum.series[0].rows.map(row=>row.displayed),['9007199254740992','9007199254740999']);
