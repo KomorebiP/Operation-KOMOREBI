@@ -303,8 +303,10 @@ async function visit(page,name,kind){
       assert.equal(await page.locator('#sw-verify-inspection-rows tr').count(),12);
       assert.match(await page.locator('#sw-verify-window-status').textContent(),/Verified rows 1–12 of 64/);
       assert.deepEqual(await page.locator('#sw-verify-inspection-rows tr').first().locator('th,td').allTextContents(),
-        ['KSEQ-000025','0','0','0','Not recorded','0',certificate.series[0].rows[0].raw,
+        ['Source 1: KSEQ-000025','0','0','0','Not recorded','0',certificate.series[0].rows[0].raw,
           certificate.series[0].rows[0].displayed,'—','Baseline']);
+      assert.deepEqual(await page.locator('#sw-verify-series-filter option').allTextContents(),
+        ['All sources',...certificate.sources.map((source,index)=>'Source '+(index+1)+': '+source.id+' · '+source.title)]);
       await page.locator('#sw-verify-next').click();
       assert.match(await page.locator('#sw-verify-window-status').textContent(),/Verified rows 13–24 of 64/);
       // Export must contain every qualifying exact row, not only the open page.
@@ -320,6 +322,9 @@ async function visit(page,name,kind){
       assert.match(allCSVRows[0],/alignment_key/);
       assert.match(allCSVRows[0],/baseline_displayed_exact_integer/);
       assert.match(allCSVRows[0],/certificate_sha256/);
+      assert.match(allCSVRows[0],/source_number/);
+      assert.match(allCSVRows[0],/source_data_sha256/);
+      assert.ok(allCSVRows[1].startsWith('"'+certificate.certificateSha256+'","1",'));
       assert.match(allCSVRows[1],new RegExp(certificate.certificateSha256));
       assert.match(await page.locator('#sw-verify-export-status').textContent(),/Exported 64 filtered exact rows/);
       await page.locator('#sw-verify-previous').click();
@@ -353,6 +358,58 @@ async function visit(page,name,kind){
       assert.equal(await page.locator('#sw-verify-export-csv').isEnabled(),true);
       assert.match(await page.locator('#sw-verify-configuration').textContent(),/Alignment by stored window position/);
       assert.match(await page.locator('#sw-verify-pairwise').textContent(),/finite|Finite|overlapping values agree/);
+      await fit(page);
+      // Different family parameters can share both a display ID and the
+      // complete stored finite data. Source numbers must still distinguish them.
+      const repeatedSourceCertificate=await page.evaluate(async()=>{
+        const {familySource}=await import('./assets/sequence-workbench-core.mjs');
+        const {createComparisonCertificate}=await import('./assets/sequence-comparison-certificate.mjs');
+        return createComparisonCertificate([
+          familySource('linear',{k:2,c:1,count:2}),
+          familySource('linear',{k:3,c:1,count:2})
+        ],{count:2});
+      });
+      assert.deepEqual(repeatedSourceCertificate.sources.map(source=>source.id),['FAMILY-linear','FAMILY-linear']);
+      assert.notEqual(repeatedSourceCertificate.sources[0].key,repeatedSourceCertificate.sources[1].key);
+      assert.equal(repeatedSourceCertificate.sources[0].dataSha256,repeatedSourceCertificate.sources[1].dataSha256);
+      const repeatedSourceFile=path.join(output,'same-id-certificate-'+width+'.json');
+      fs.writeFileSync(repeatedSourceFile,JSON.stringify(repeatedSourceCertificate),'utf8');
+      await page.locator('#sw-verify-file').setInputFiles(repeatedSourceFile);
+      await page.locator('#sw-verify-submit').click();
+      await page.locator('#sw-verify-output').waitFor({state:'visible',timeout:30000});
+      assert.equal(await page.locator('#sw-verify-error').isVisible(),false);
+      assert.deepEqual((await page.locator('#sw-verify-sources li').allTextContents()).map(text=>text.split(' · ')[0]),
+        ['Source 1: FAMILY-linear','Source 2: FAMILY-linear']);
+      assert.match(await page.locator('#sw-verify-pairwise>p').textContent(),/against Source 1 \(FAMILY-linear\)/);
+      assert.match(await page.locator('#sw-verify-pairwise li').textContent(),/^Source 2: FAMILY-linear · 2 of 2/);
+      await inspection.locator('summary').click();
+      assert.deepEqual(await page.locator('#sw-verify-series-filter option').allTextContents(),
+        ['All sources',...repeatedSourceCertificate.sources.map((source,index)=>'Source '+(index+1)+': '+source.id+' · '+source.title)]);
+      assert.deepEqual(await page.locator('#sw-verify-inspection-rows th').allTextContents(),
+        ['Source 1: FAMILY-linear','Source 2: FAMILY-linear','Source 1: FAMILY-linear','Source 2: FAMILY-linear']);
+      await page.selectOption('#sw-verify-series-filter','1');
+      assert.deepEqual(await page.locator('#sw-verify-inspection-rows th').allTextContents(),
+        ['Source 2: FAMILY-linear','Source 2: FAMILY-linear']);
+      const repeatedSourceExportPending=page.waitForEvent('download');
+      await page.locator('#sw-verify-export-csv').click();
+      const repeatedSourceExport=await repeatedSourceExportPending;
+      assert.equal(repeatedSourceExport.suggestedFilename(),'komorebi-verified-certificate-all-rows-source-2.csv');
+      const repeatedSourceCSVFile=path.join(output,'certificate-source-2-'+width+'.csv');
+      await repeatedSourceExport.saveAs(repeatedSourceCSVFile);
+      // This fixture has no embedded quotes or line breaks in its CSV fields.
+      const [repeatedSourceHeader,...repeatedSourceRows]=fs.readFileSync(repeatedSourceCSVFile,'utf8')
+        .trimEnd().split(/\r?\n/).map(line=>line.slice(1,-1).split('","'));
+      const repeatedSourceRecords=repeatedSourceRows.map(row=>
+        Object.fromEntries(repeatedSourceHeader.map((key,index)=>[key,row[index]])));
+      assert.equal(repeatedSourceRecords.length,2);
+      for(const row of repeatedSourceRecords){
+        assert.equal(row.source_number,'2','Filtering must preserve the original certificate source number');
+        assert.equal(row.source_id,'FAMILY-linear');
+        assert.equal(row.source_data_sha256,repeatedSourceCertificate.sources[1].dataSha256);
+        assert.equal(row.certificate_sha256,repeatedSourceCertificate.certificateSha256);
+        assert.equal(row.comparison_status,'equal');
+      }
+      assert.equal(await page.locator('#sw-sources>li').count(),2,'Importing a certificate must not replace the current comparison');
       await fit(page);
       if(width===1440){
         const separate=await context.newPage();

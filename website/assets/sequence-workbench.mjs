@@ -300,7 +300,7 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
     for(const row of result.rows){
       const tr=node('tr');tr.dataset.compareStatus=row.status;
       const cells=[
-        row.sourceId,row.windowPosition,row.storedPosition,row.recordedIndex,
+        'Source '+(row.seriesIndex+1)+': '+row.sourceId,row.windowPosition,row.storedPosition,row.recordedIndex,
         row.sourceDegree===null?'Not recorded':row.sourceDegree,
         row.alignmentKey,row.raw,row.displayed===null?'Undefined':row.displayed,
         row.baselineDisplayed===null?'—':row.baselineDisplayed,statuses[row.status]
@@ -320,7 +320,7 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
     $('verify-series-filter').replaceChildren();
     const all=node('option','All sources');all.value='-1';$('verify-series-filter').append(all);
     for(const [index,source]of certificate.sources.entries()){
-      const option=node('option',source.id+' · '+source.title);
+      const option=node('option','Source '+(index+1)+': '+source.id+' · '+source.title);
       option.value=String(index);$('verify-series-filter').append(option);
     }
     $('verify-series-filter').value='-1';$('verify-row-filter').value='all';
@@ -332,13 +332,14 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
       ' · Alignment by '+alignment+' · Stored skip '+state.skip+' · Requested window '+state.count+'.';
     const pairs=$('verify-pairwise');pairs.replaceChildren();
     if(certificate.finiteAgreements.length){
-      const heading=node('p','Finite comparison against the first recorded source:');
+      const heading=node('p','Finite comparison against Source 1 ('+certificate.sources[0].id+'):');
       pairs.append(heading);
       const list=node('ul');
       for(const check of certificate.finiteAgreements){
-        const compared=certificate.sources.find(source=>source.key===check.source);
+        const comparedIndex=certificate.sources.findIndex(source=>source.key===check.source);
+        const compared=certificate.sources[comparedIndex];
         const mismatch=check.firstMismatch;
-        const text=compared.id+': '+check.equal+' of '+check.compared+
+        const text='Source '+(comparedIndex+1)+': '+compared.id+' · '+check.equal+' of '+check.compared+
           ' defined overlapping values agree.'+
           (mismatch?' First mismatch at alignment key '+mismatch.x+
             ' (recorded indexes '+mismatch.left+' and '+mismatch.right+'): '+
@@ -429,8 +430,8 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
         'embedded-only':'embedded exact input verified; external source identity not independently checked'
       };
       const list=$('verify-sources');list.replaceChildren();
-      for(const source of match.sources){
-        const item=node('li',source.id+' · '+source.type+': '+labels[source.status]);
+      for(const [index,source]of match.sources.entries()){
+        const item=node('li','Source '+(index+1)+': '+source.id+' · '+source.type+': '+labels[source.status]);
         list.append(item);
       }
       $('verify-output').hidden=false;

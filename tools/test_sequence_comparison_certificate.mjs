@@ -6,7 +6,7 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {spawnSync} from 'node:child_process';
 import {COMPARISON_CERTIFICATE_SCHEMA,createComparisonCertificate,verifyComparisonCertificate,assessCertificateCatalogue} from '../website/assets/sequence-comparison-certificate.mjs';
-import {localSource,customSource,referenceSource,WORKBENCH_DEFAULTS} from '../website/assets/sequence-workbench-core.mjs';
+import {localSource,customSource,familySource,referenceSource,WORKBENCH_DEFAULTS} from '../website/assets/sequence-workbench-core.mjs';
 import {certificateInspectionWindow,certificateInspectionCSV,CERTIFICATE_INSPECTION_PAGE_SIZE} from '../website/assets/sequence-certificate-inspection.mjs';
 
 const sha=data=>createHash('sha256').update(JSON.stringify(data),'utf8').digest('hex');
@@ -141,6 +141,71 @@ test('filtered certificate CSV exports ALL exact rows and their baseline, indice
   assert.match(indexedCSV,/"local index n","n","0","1","3","2","0","-1","-1",""/);
   assert.equal(JSON.stringify(cert),before,'Export must never change the independently verified certificate');
   assert.throws(()=>certificateInspectionCSV(cert,{seriesIndex:2}),/Select a recorded certificate series/);
+});
+test('certificate CSV preserves distinct source identities when display identifiers repeat',async()=>{
+  const sources=[
+    customSource({title:'Baseline input',offset:0,terms:['1','2','3']}),
+    customSource({title:'Another input',offset:0,terms:['1','4','6']}),
+    familySource('linear',{k:2,c:1,count:3}),
+    familySource('linear',{k:2,c:2,count:3})
+  ];
+  const cert=await createComparisonCertificate(sources,{count:3});
+  assert.equal((await verifyComparisonCertificate(cert)).ok,true);
+  assert.deepEqual(cert.sources.map(source=>source.id),['PASTED','PASTED','FAMILY-linear','FAMILY-linear']);
+  assert.equal(new Set(cert.sources.map(source=>source.dataSha256)).size,4);
+  const before=JSON.stringify(cert);
+  // These fixtures contain no embedded quotes or newlines in CSV fields.
+  const records=csv=>{
+    const [header,...rows]=csv.trimEnd().split(/\r?\n/).map(line=>line.slice(1,-1).split('","'));
+    return rows.map(row=>Object.fromEntries(header.map((key,index)=>[key,row[index]])));
+  };
+  const all=records(certificateInspectionCSV(cert));
+  assert.equal(all.length,12);
+  for(const [index,source]of cert.sources.entries()){
+    const rows=all.filter(row=>row.source_number===String(index+1));
+    assert.equal(rows.length,3);
+    for(const row of rows){
+      assert.equal(row.source_id,source.id);
+      assert.equal(row.source_data_sha256,source.dataSha256);
+      assert.equal(row.certificate_sha256,cert.certificateSha256);
+    }
+    assert.deepEqual(rows.map(row=>[row.recorded_index_or_export_position,row.original_exact_integer,row.displayed_exact_integer]),
+      cert.series[index].rows.map(row=>[String(row.recordedIndex),row.raw,row.displayed]));
+  }
+  // All four sources start with 1, so values and display IDs alone cannot
+  // distinguish the two pasted inputs or the two family parameter choices.
+  const first=all.filter(row=>row.window_position==='0');
+  assert.equal(new Set(first.map(row=>row.source_number)).size,4);
+  assert.equal(new Set(first.map(row=>row.source_data_sha256)).size,4);
+  const differences=records(certificateInspectionCSV(cert,{onlyDifferences:true}));
+  assert.equal(differences.length,cert.finiteAgreements.reduce((count,item)=>count+item.compared-item.equal,0));
+  assert.ok(differences.every(row=>row.comparison_status==='different'));
+  assert.deepEqual(differences,all.filter(row=>row.comparison_status==='different'));
+  for(let seriesIndex=0;seriesIndex<cert.sources.length;seriesIndex++){
+    const selected=row=>row.source_number===String(seriesIndex+1);
+    assert.deepEqual(records(certificateInspectionCSV(cert,{seriesIndex})),all.filter(selected));
+    assert.deepEqual(records(certificateInspectionCSV(cert,{seriesIndex,onlyDifferences:true})),differences.filter(selected));
+  }
+  assert.equal(JSON.stringify(cert),before);
+});
+test('certificate source numbers distinguish parameter choices with identical finite data digests',async()=>{
+  const sources=[
+    familySource('linear',{k:2,c:1,count:2}),
+    familySource('linear',{k:3,c:1,count:2})
+  ];
+  const cert=await createComparisonCertificate(sources,{count:2});
+  assert.equal((await verifyComparisonCertificate(cert)).ok,true);
+  assert.notEqual(cert.sources[0].key,cert.sources[1].key);
+  assert.equal(cert.sources[0].id,cert.sources[1].id);
+  assert.deepEqual(cert.sources[0].terms,cert.sources[1].terms);
+  assert.equal(cert.sources[0].dataSha256,cert.sources[1].dataSha256);
+  const rows=certificateInspectionCSV(cert).trimEnd().split(/\r?\n/).slice(1);
+  assert.equal(rows.length,4);
+  assert.deepEqual(rows.map(line=>line.split(',')[1]),['"1"','"2"','"1"','"2"']);
+  const selected=certificateInspectionCSV(cert,{seriesIndex:1}).trimEnd().split(/\r?\n/).slice(1);
+  assert.deepEqual(selected,rows.filter(line=>line.startsWith('"'+cert.certificateSha256+'","2",')));
+  for(const row of selected)assert.ok(row.includes('"'+cert.sources[1].dataSha256+'"'));
+  assert.equal(certificateInspectionCSV(cert,{onlyDifferences:true}).trimEnd().split(/\r?\n/).length,1);
 });
 test('inspection distinguishes absent overlap, undefined first differences and stored source degrees',async()=>{
   const offsetSource=customSource({title:'Shifted index',offset:5,terms:['0','-1','9007199254740993','8']});

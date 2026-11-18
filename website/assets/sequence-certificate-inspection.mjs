@@ -60,7 +60,8 @@ export function certificateInspectionCSV(certificate,{seriesIndex=-1,onlyDiffere
   if(typeof certificate.certificateSha256!=='string'||!/^[a-f0-9]{64}$/.test(certificate.certificateSha256))
     throw Error('A verified certificate SHA-256 receipt is required for inspection export.');
   const header=[
-    'certificate_sha256','source_id','source_type','source_receipt_sha256',
+    'certificate_sha256','source_number','source_id','source_type',
+    'source_data_sha256','source_receipt_sha256',
     'index_convention','index_symbol','window_position','stored_prefix_position',
     'recorded_index_or_export_position','source_degree_if_recorded',
     'alignment_key','original_exact_integer','displayed_exact_integer',
@@ -77,12 +78,13 @@ export function certificateInspectionCSV(certificate,{seriesIndex=-1,onlyDiffere
   for(const row of rows){
     const source=certificate.sources[row.seriesIndex];
     const values=[
-      certificate.certificateSha256,row.sourceId,row.sourceType,source.catalogueReceipt??'',
+      certificate.certificateSha256,row.seriesIndex+1,row.sourceId,row.sourceType,
+      source.dataSha256,source.catalogueReceipt??'',
       row.indexConvention,source.indexSymbol,row.windowPosition,row.storedPosition,
       row.recordedIndex,row.sourceDegree??'',row.alignmentKey,row.raw,
       row.displayed??'',row.baselineDisplayed??'',row.status
     ];
-    data.push(values.map((v,i)=>escapeCell(v,[1,2,4,5,14].includes(i))).join(','));
+    data.push(values.map((v,i)=>escapeCell(v,[2,3,6,7,16].includes(i))).join(','));
   }
   return data.join('\r\n')+'\r\n';
 }
