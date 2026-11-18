@@ -91,7 +91,7 @@ export function mountWorkbench({root,entries,snapshot,referenceClient}){
         <p id="sw-verify-window-status" role="status" aria-live="polite"></p>
         <div class="sw-verify-inspection-scroll" role="region" aria-label="Verified exact comparison rows" tabindex="0">
           <table><caption>Exact values from the imported and verified certificate</caption>
-            <thead><tr><th scope="col">Source</th><th scope="col">Window position</th><th scope="col">Recorded index / export position</th><th scope="col">Source degree</th><th scope="col">Original integer</th><th scope="col">Displayed integer</th><th scope="col">Comparison</th></tr></thead>
+            <thead><tr><th scope="col">Source</th><th scope="col">Window position</th><th scope="col">Stored position</th><th scope="col">Recorded index / export position</th><th scope="col">Source degree</th><th scope="col">Original integer</th><th scope="col">Displayed integer</th><th scope="col">Comparison</th></tr></thead>
             <tbody id="sw-verify-inspection-rows"></tbody>
           </table>
         </div>
