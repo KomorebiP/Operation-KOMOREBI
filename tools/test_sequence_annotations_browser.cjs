@@ -75,6 +75,7 @@ async function fit(page){
       const aURL=new URL(archiveLink);
       assert.equal(aURL.searchParams.get('chart-title'),'Archived coefficient profile');
       assert.equal(aURL.searchParams.get('chart-legend-style'),'id');
+      assert.equal(aURL.searchParams.get('chart-legend'),'show','Links must override the archive default of hiding the legend');
       const archiveRestored=await context.newPage();archiveRestored.on('pageerror',err=>errors.push(err.message));
       await archiveRestored.goto(archiveLink);
       await archiveRestored.locator('[data-archive-ready=true]').waitFor({timeout:90000});
