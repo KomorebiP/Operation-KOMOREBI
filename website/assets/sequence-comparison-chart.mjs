@@ -42,6 +42,12 @@ const magnitudeFormat=new Intl.NumberFormat('en-US',{notation:'compact',maximumS
 export function comparisonYAxisTick(value,{view='values',scale='signed-log',ticks='magnitude'}={}){
   if(!Number.isFinite(value))return 'undefined';
   if(view==='mod')return String(Math.round(value));
+  if(scale==='log'){
+    if(ticks==='log')return signedLogText(value);
+    const order=Math.floor(value),mantissa=Number((10**(value-order)).toPrecision(2));
+    if(ticks==='scientific')return '≈'+mantissa+'×10^'+order;
+    return value>15?'≈10^'+Number(value.toFixed(1)):magnitudeFormat.format(10**value);
+  }
   if(scale==='signed-log'){
     if(ticks==='log')return signedLogText(value);
     if(Math.abs(value)<1e-9)return '0';
@@ -62,6 +68,10 @@ export function comparisonYAxisTick(value,{view='values',scale='signed-log',tick
 }
 export function comparisonScaleExplanation(state,options){
   if(state.view==='mod')return 'Vertical ticks are exact residues modulo '+state.modulus+'. Values and index positions in the table remain exact.';
+  if(state.scale==='log'){
+    if(options.ticks==='log')return 'Tick labels are log₁₀ coordinates for positive values, not the original sequence values. Exact values remain available in the table and CSV.';
+    return 'Vertical ticks approximate positive original values'+(options.ticks==='scientific'?' in scientific notation':'')+'; their spacing remains logarithmic. Exact stored values remain in point inspection, tables and CSV.';
+  }
   if(state.scale==='signed-log'&&options.ticks!=='log')
     return 'Vertical tick labels approximate the original values'+(options.ticks==='scientific'?' in scientific notation':'')+'. Their spacing is signed logarithmic: sgn(v) × log₁₀(1+|v|). The exact integers appear in point details, the table, and CSV.';
   if(state.scale==='signed-log')
