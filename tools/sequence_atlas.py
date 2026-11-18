@@ -275,7 +275,7 @@ def build(site):
     script = script.replace("'./sequence-atlas-core.mjs'", "'./sequence-atlas-core.mjs?v="+version('sequence-atlas-core.mjs')+"'")
     script = script.replace("'./sequence-atlas-data.json'", "'./sequence-atlas-data.json?v="+hashlib.sha256(raw.encode()).hexdigest()[:12]+"'")
     script=script.replace("'./sequence-atlas-discovery.mjs'","'./sequence-atlas-discovery.mjs?v="+hashlib.sha256(discovery_script.encode()).hexdigest()[:12]+"'")
-    for name in ('sequence-atlas-search.mjs','sequence-atlas-saved.mjs','sequence-atlas-interface.mjs','sequence-plot-options.mjs','sequence-research-ui.mjs','sequence-reading-theme.mjs'):
+    for name in ('sequence-atlas-search.mjs','sequence-atlas-saved.mjs','sequence-atlas-interface.mjs','sequence-plot-options.mjs','sequence-chart-labels.mjs','sequence-comparison-chart.mjs','sequence-research-ui.mjs','sequence-reading-theme.mjs'):
         script=script.replace("'./"+name+"'", "'./"+name+'?v='+version(name)+"'")
     script=script.replace("'./sequence-atlas-directory.mjs'", "'./sequence-atlas-directory.mjs?v="+hashlib.sha256(directory_script.encode()).hexdigest()[:12]+"'")
     site.write('assets/sequence-atlas.js', script)
@@ -288,7 +288,7 @@ def build(site):
     for dependency in ('math-display.mjs','sequence-atlas-saved.mjs','sequence-atlas-core.mjs','sequence-research-ui.mjs','sequence-reading-theme.mjs'):
         entry_script=entry_script.replace("'./"+dependency+"'","'./"+dependency+'?v='+version(dependency)+"'")
     site.write('assets/sequence-atlas-entry.js',entry_script)
-    for name in ('math-display.mjs','math-display.css','sequence-navigation.mjs','sequence-redirect.mjs','sequence-atlas-core.mjs', 'sequence-atlas.css','sequence-atlas-search.mjs','sequence-atlas-saved.mjs','sequence-atlas-discovery.mjs','sequence-atlas-interface.mjs','sequence-plot-options.mjs','sequence-plot-options.css','sequence-research-ui.mjs','sequence-reading-theme.mjs','sequence-reading.css'):
+    for name in ('math-display.mjs','math-display.css','sequence-navigation.mjs','sequence-redirect.mjs','sequence-atlas-core.mjs', 'sequence-atlas.css','sequence-atlas-search.mjs','sequence-atlas-saved.mjs','sequence-atlas-discovery.mjs','sequence-atlas-interface.mjs','sequence-plot-options.mjs','sequence-plot-options.css','sequence-comparison-chart.mjs','sequence-chart-labels.mjs','sequence-research-ui.mjs','sequence-reading-theme.mjs','sequence-reading.css'):
         content=(site.root/'website/assets'/name).read_text(encoding='utf-8')
         if name=='sequence-atlas-discovery.mjs':
             content=discovery_script
