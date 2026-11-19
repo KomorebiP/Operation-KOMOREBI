@@ -112,6 +112,54 @@ h(z)R(z)M'(z)=
 
 Consequently the moments satisfy a finite-width recurrence with polynomial coefficients in the index. If \(R(0)=0\), the leading coefficient of that recurrence can vanish at the initial indices, so it must be interpreted with the exact initial moments rather than divided through blindly. No assertion is made that the **Hankel determinant sequence** of an arbitrary polynomial \(P\) has a rational generating function.
 
+### Removing singular starts: a universal forward recurrence
+
+A stronger computational consequence follows from the known initial zero block. If \(P\not\equiv0\) and \(\mathcal D\not\equiv0\), let \(\nu\) and \(\kappa\) be the least indices with \(a_\nu\ne0\) and \(c_\kappa\ne0\). Put \(\ell=2\nu+\kappa\). The first nonzero moment is
+
+\[
+\mu_\ell=c_\kappa a_\nu\frac{\ell!}{\nu!}\ne0.
+\]
+
+Because the denominator of \(M(z)\) equals \(1\) at \(z=0\), the algebraic numerator has an exact factor \(R(z)=z^\ell\widetilde R(z)\) with \(\widetilde R(0)=\mu_\ell\). Define the shifted moment series
+
+\[
+T(z)=z^{-\ell}M(z)=\frac{\widetilde R(z)}
+{h(z)^{D+r+1/2}}
+=\sum_{n\ge0}t_nz^n,
+\qquad t_n=\mu_{n+\ell}.
+\]
+
+Put \(\alpha=D+r+1/2\), and form the explicit polynomials
+
+\[
+A(z)=h(z)\widetilde R(z),\qquad
+B(z)=h(z)\widetilde R'(z)+8\alpha z\widetilde R(z).
+\]
+
+Then \(A(z)T'(z)=B(z)T(z)\), and \(A(0)=t_0=\mu_\ell\ne0\).
+
+**Theorem 1B (regularized polynomial-coefficient recurrence).** Writing \(A(z)=\sum_j A_jz^j\), \(B(z)=\sum_jB_jz^j\), the complete infinite tail of moments is determined by the one nonzero initial value \(t_0=\mu_\ell\) and
+
+\[
+\boxed{
+t_{n+1}=
+\frac{\displaystyle\sum_{j=0}^{\deg B}B_jt_{n-j}
+-\displaystyle\sum_{j=1}^{\deg A}A_j(n-j+1)t_{n-j+1}}
+{(n+1)A_0},
+\qquad n\ge0,
+}
+\]
+
+where \(t_j=0\) for \(j<0\). No denominator vanishes in characteristic zero. Moreover,
+
+\[
+\boxed{\deg A\le 2(D+r)-\ell+2.}
+\]
+
+This is a finite-width, polynomial-coefficient recurrence, not generally a constant-coefficient recurrence for the Hankel determinants. It is valid for rational, complex, and other characteristic-zero parameters. If the moment sequence is identically zero, the zero formula is handled separately without an artificial division by \(A_0=0\).
+
+The recurrence follows simply by comparing coefficients in \(AT'=BT\). Its zero-prefix removal is essential: without it, a recurrence derived from the unreduced numerator can have an unusable zero leading coefficient. The exact implementation preserves the original \(\ell\) and reconstructs every \(\mu_n\), including all initial zeros.
+
 For the worked example \(P(m)=1+m\) and \(\mathcal D=1+2\partial_x+\partial_x^2\),
 
 \[
