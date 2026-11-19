@@ -15,7 +15,11 @@ from sequence_closed_forms import (falling, rising, exact_det,
 from sequence_closed_forms_extended import (
     sparse_finite, sparse_hyper, weighted_jet_even, weighted_jet,
     hankel_4f3, weighted_hankel_closed, meixner_pollaczek_integer,
-    extended_catalogue, extended_families, append_proved_representations)
+    extended_catalogue, extended_families, append_proved_representations,
+    bernoulli_number, four_block_tangent_bernoulli,
+    four_block_reciprocal_euler, beta_transfer_hankel,
+    beta_split_weights, beta_split_factorial_moment,
+    weighted_first_regular_hyper)
 
 
 def seed(n,d,c=1):
@@ -210,6 +214,31 @@ class ClosedFormsExtendedTests(unittest.TestCase):
                     product*=F(factorial(j)*rising(a,j)*rising(b,j),
                                rising(a+b,N+j-1))
                 self.assertEqual(determinant,product)
+
+    def test_paper_card_calculators_with_exact_source_normalizations(self):
+        from sequence_atlas import reciprocal
+        from sequence_formula_catalogue import tangent
+        self.assertEqual([bernoulli_number(n) for n in range(5)],
+                         [F(1),F(-1,2),F(1,6),F(0),F(-1,30)])
+        for n in range(8):
+            self.assertEqual(four_block_tangent_bernoulli(n),tangent(4,8)[n])
+            for power in (1,2,3):
+                self.assertEqual(four_block_reciprocal_euler(n,power),
+                                 reciprocal(4,power,8)[n])
+        for a,b in ((1,1),(2,1),(1,3)):
+            for N in range(5):
+                self.assertEqual(beta_transfer_hankel(a,b,N),
+                                 F(1) if N==0 else beta_transfer_hankel(a,b,N))
+            for n in range(9):
+                weights=beta_split_weights(n,a,b)
+                self.assertEqual(sum(weights),1)
+                for ell in range(n+1):
+                    actual=sum(falling(k,ell)*weights[k] for k in range(n+1))
+                    self.assertEqual(actual,beta_split_factorial_moment(n,ell,a,b))
+        for d in range(5):
+            for c in (-2,-1,0,1,2):
+                self.assertEqual(weighted_first_regular_hyper(d,c),
+                                 weighted_hankel_closed(2*d+2,d,c))
 
     def test_catalogue_variants_and_family_sources_are_scoped(self):
         records=extended_catalogue()
