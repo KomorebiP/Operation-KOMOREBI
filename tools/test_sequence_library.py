@@ -28,10 +28,11 @@ class SequenceLibraryTests(unittest.TestCase):
         from sequence_library import calculator_link
         entries=library_entries(catalogue())
         linked=[item for item in entries if item.get('calculator_url')]
-        self.assertEqual(len(linked),21)
+        self.assertEqual(len(linked),35)
         self.assertEqual({item['closed_form_family'] for item in linked},{
-            'GF-CF-SPARSE','GF-CF-WEIGHTED-HANKEL',
-            'GF-CF-BINOMIAL-JETS','GF-CF-MEIXNER'})
+            'GF-CF-SPARSE','GF-CF-PADOVAN','GF-CF-FOUR-BLOCK',
+            'GF-CF-WEIGHTED-HANKEL','GF-CF-BETA-MOMENTS',
+            'GF-CF-BETA-HANKEL','GF-CF-BINOMIAL-JETS','GF-CF-MEIXNER'})
         for item in linked:
             url=item['calculator_url']
             parsed=urlparse(url)
@@ -57,6 +58,12 @@ class SequenceLibraryTests(unittest.TestCase):
         jets=next(item for item in linked if item['id']=='KFOR-CF-JET-02')
         self.assertEqual(jets['calculator']['lambda'],1)
         self.assertEqual(jets['calculator']['d'],2)
+        four=next(item for item in linked if item['id']=='KFOR-CF-R-p1')
+        self.assertEqual(four['offset'],1)
+        self.assertEqual(four['calculator']['a'],1)
+        beta=next(item for item in linked if item['id']=='KFOR-CF-BH-4-1-1')
+        self.assertEqual(beta['calculator']['L'],4)
+        self.assertEqual(beta['calculator']['a'],1)
 
     def test_complete_parameter_windows_and_independent_formulas(self):
         report=checks();self.assertEqual(report['records'],2199);self.assertEqual(report['terms'],56779)
