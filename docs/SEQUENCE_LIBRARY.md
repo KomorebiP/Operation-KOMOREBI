@@ -990,44 +990,89 @@ Exact arithmetic is implemented in `tools/sequence_closed_forms_extended.py`
 and checked by `tools/test_sequence_closed_forms_extended.py`. The original
 2,292-record OEIS manifest is not changed.
 
-## Exact closed-form worksheet
+## Unified sequence research desk
 
-The [Closed Forms reading page](https://komorebip.github.io/Operation-KOMOREBI/sequence-closed-forms.html)
-now has an optional, initially collapsed **Calculate exact coefficients and
-determinants** section. The reader can evaluate four constructions without
-loading another site or a remote algebra service:
+The canonical entry point is [Sequence Library](https://komorebip.github.io/Operation-KOMOREBI/sequence-library.html).
+The earlier split between Search and Closed Forms is resolved through one
+research workflow: **Find**, **Calculate**, **Investigate**, and **Verify**.
 
-- Two-delay coefficients of \`(1-u z^p-v z^q)^(-r)\`, including integer
-  negative powers, coincident delays and zero weights.
-- Weighted binomial transforms \`J_(n,d)(lambda)+c*n*J_(n-1,d)(lambda)\`,
-  with exact binomial sums and the original zero-prefix convention.
-- Weighted Hankel determinants \`W_N^[d](c)\`, computed with fraction-free
-  elimination. At \`d=0\` the calculator also compares every displayed
-  determinant with the independent terminating \`4F3\` finite sum.
-- Integer polynomial specializations of the Meixner–Pollaczek recurrence.
+Search remains the primary index of 2,327 integer records and 7,108
+representations. The exact calculator appears below the search results in an
+initially collapsed disclosure. The same engine is also available on the
+focused Closed Forms reading page, without a second implementation or
+a separate catalogue. Further down the central page, research routes lead
+to the existing comparison, transfer, family and OEIS workbenches.
+The main theorem summaries, source notes and exact verification programs
+are accessible from a collapsed proof section on the same page.
 
-Every displayed value is a decimal string derived from JavaScript \`BigInt\`,
-not a rounded chart coordinate. The upper supported index is 96 for sparse
-coefficients and Meixner polynomials, 80 for binomial jets, and 12 for
-Hankel determinants. The limits keep the reader responsive on mobile devices
-and are implementation bounds, not limits on the underlying mathematics.
-An out-of-range input produces a visible error instead of an incomplete
-series or silently rounded number.
+Specialized pages remain for longer analyses. They share the same
+record IDs, source indices and review statuses. Keeping those workbenches
+separate prevents expensive initialization and unnecessary clutter on
+mobile devices. The central page combines the research workflow, rather
+than loading every specialized tool at once. Not every indexed sequence
+has an arbitrary-parameter generator, and indexing is not evidence that
+an algorithm or historical novelty claim exists.
 
-**Download exact CSV** exports all displayed indices and decimal strings,
-along with the selected integer parameters. Import large integer columns as
-text in a spreadsheet. **Copy reproducible link** records only the selected
-parameters, index window and family in the URL. It does not transmit
-coefficients or browser storage. Duplicate, malformed, unsupported or
-out-of-range link parameters are rejected with a visible message. Without
-JavaScript, the mathematical definitions and static exact tables remain
-available.
+### Recalculate an indexed closed-form record
 
-The exact core, interface, and tests are
-\`website/assets/sequence-closed-forms-core.mjs\`,
-\`website/assets/sequence-closed-forms-ui.mjs\`,
-\`tools/test_sequence_closed_forms_core.mjs\`, and
-\`tools/test_sequence_closed_forms_browser.cjs\`. The independent source
-derivations remain in \`research/sequence-closed-forms/\`. This calculator
-does not perform historical-priority reviews or extend the pinned OEIS
-comparison to the new records.
+All 35 curated KFOR-CF integer records now contain an explicit
+`calculator` parameter object and a canonical `calculator_url` in
+their JSON records. Search results offer **Calculate exact** when
+the metadata is present. Each static formula page links to the
+same central calculator with the recorded source parameters and
+original index. The mapping is generated from source parameters,
+not inferred by parsing mathematical prose.
+
+The eight exact integer modes are sparse two-delay coefficients,
+Padovan generating-function powers, four-block logarithmic
+polynomials, polynomially weighted binomial transforms, weighted
+Hankel determinants, unnormalized beta-binomial moments,
+unnormalized beta-binomial Hankel determinants, and integer
+Meixner–Pollaczek polynomials.
+
+The modes preserve their distinct index and normalization
+conventions. Four-block coefficients begin at m=1, while the
+determinants include the size-zero value H_0=1. The beta-binomial
+Hankel determinants vanish beyond support rank L+1.
+
+The browser computes with exact BigInt arithmetic, including
+fraction-free determinants. The d=0 weighted Hankel coefficients
+also receive an independent terminating 4F3 check. Direct weighted
+Hankel calculations are bounded to sizes 0 through 12, and
+beta-binomial determinants to sizes 0 through 17. These are
+responsive-computation limits, not mathematical bounds.
+The general root-free Chebyshev formula and recurrence orders are
+documented in the mathematical supplement.
+
+**Download exact CSV** exports the original index labels and decimal
+integer strings with the selected parameters. Import the
+`exact_integer` field as text in a spreadsheet application.
+**Copy reproducible link** includes parameters but not coefficient
+data. Invalid, duplicated or out-of-range link settings are
+rejected. Without JavaScript, the static index, formula pages,
+and source notes remain accessible.
+
+### Evidence and verification
+
+Source formulations and proof qualifications are recorded in
+`research/sequence-closed-forms/IDENTITIES.md` and
+`research/sequence-closed-forms/COLLECTION_II_ADDITIONS.md`.
+The exact integer generators are `tools/sequence_closed_forms.py`
+and `tools/sequence_closed_forms_extended.py`. The browser
+engine and worksheet are
+`website/assets/sequence-closed-forms-core.mjs` and
+`website/assets/sequence-closed-forms-ui.mjs`.
+
+Exact and browser regressions run in
+`tools/test_sequence_closed_forms.py`,
+`tools/test_sequence_closed_forms_extended.py`,
+`tools/test_sequence_closed_forms_core.mjs`,
+`tools/test_sequence_closed_forms_browser.cjs`,
+`tools/test_sequence_library.py`, and `tools/test_sequence_atlas.py`.
+
+An existing A-number stated in a source is distinguished from a
+locally checked bulk match. The pinned historical OEIS manifest
+still covers only its original 2,292 records. New closed-form
+records show **OEIS bulk comparison pending** rather than using
+missing matches as evidence of novelty. Existing record receipts
+continue to hash exact indexed terms, not rounded chart values.
