@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import {test} from 'node:test';
 import {binomial,falling,sparseCoefficients,padovanCoefficients,
   fourBlockCoefficients,betaMomentCoefficients,betaHankelCoefficients,
-  polynomialDifferentialMoment,differentialHankel,
+  polynomialDifferentialMoment,differentialHankel,differentialMomentGeneratingFunction,
   centralWeightedMoment,weightedJet,
   bareissDeterminant,weightedHankel,fourFthreeHankel,meixnerCoefficients,
   computeExactWindow,exactWindowCSV,exactViewURL,readExactView
@@ -138,6 +138,52 @@ test('finite differential Hankel mode matches independent source values and pari
   assert.equal(new URL(shared).searchParams.get('cf-a1'),'1');
   assert.equal(new URL(shared).searchParams.get('cf-c2'),'1');
   assert.equal(readExactView(shared).mode,'differential_hankel');
+});
+test('every finite differential moment OGF matches independent BigInt moment sums',()=>{
+  const sample=differentialMomentGeneratingFunction([1,1],[1,2,1]);
+  assert.deepEqual(sample.numerator,['1','2','-8','-4','52','-16','-24']);
+  assert.equal(sample.twiceExponent,7);
+  assert.equal(sample.degreeBound,6);
+  assert.equal(sample.weightDegree,1);
+  assert.equal(sample.operatorOrder,2);
+  for(const a of [[1],[0,1],[1,1],[2,-3,1],[0,0,1],[1,0,2,-1],[0]]){
+    for(const c of [[1],[0,1],[1,2,1],[0,0,1],[1,0,-2,3],[0]]){
+      const g=differentialMomentGeneratingFunction(a,c);
+      const numerator=g.numerator.map(BigInt),den=[1n],t=BigInt(g.twiceExponent);
+      assert.ok(numerator.length<=g.degreeBound+1);
+      for(let m=1;m<=20;m++){
+        const exact=den[m-1]*2n*(t+2n*BigInt(m)-2n);
+        assert.equal(exact%BigInt(m),0n,'Denominator binomial coefficient failed to be integral');
+        den.push(exact/BigInt(m));
+      }
+      for(let n=0;n<35;n++){
+        let predicted=0n;
+        for(let m=0;m<=Math.floor(n/2);m++){
+          const k=n-2*m;
+          if(k<numerator.length)predicted+=numerator[k]*den[m];
+        }
+        assert.equal(predicted,polynomialDifferentialMoment(n,a,c),
+          'Moment generating function mismatch for '+JSON.stringify([a,c,n]));
+      }
+    }
+  }
+  const moments=computeExactWindow({mode:'differential_moments',start:'0',count:'10',
+    a0:'1',a1:'1',a2:'0',a3:'0',c0:'1',c1:'2',c2:'1',c3:'0'});
+  assert.deepEqual(moments.rows.map(row=>row.value),
+    ['1','2','6','24','66','180','620','1120','4830','6300']);
+  assert.deepEqual(moments.generatingFunction.numerator,sample.numerator);
+  const large=computeExactWindow({mode:'differential_moments',start:'144',count:'17',
+    a0:'1',a1:'1',a2:'0',a3:'0',c0:'1',c1:'2',c2:'1',c3:'0'});
+  assert.equal(large.rows[0].index,144);
+  assert.equal(large.rows.at(-1).index,160);
+  assert.equal(large.rows.length,17);
+  assert.equal(large.rows.at(-1).value,
+    String(polynomialDifferentialMoment(160,[1,1,0,0],[1,2,1,0])));
+  const shared=exactViewURL('https://example.test/sequence-library.html',{
+    mode:'differential_moments',start:'144',count:'17',
+    a0:'1',a1:'1',a2:'0',a3:'0',c0:'1',c1:'2',c2:'1',c3:'0'});
+  assert.equal(readExactView(shared).mode,'differential_moments');
+  assert.equal(new URL(shared).searchParams.get('cf-count'),'17');
 });
 test('integer Meixner polynomial recurrence retains exact signs and initial values',()=>{
   assert.deepEqual(meixnerCoefficients(1,2,8).map(String),
