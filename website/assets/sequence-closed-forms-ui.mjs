@@ -175,7 +175,12 @@ export function mountClosedFormsCalculator(root,{href=location.href}={}){
       ogfCode.textContent=evidence.expression;
       ogfInfo.textContent='Numerator degree ≤ '+evidence.degreeBound+
         '; effective polynomial weight degree '+evidence.weightDegree+
-        '; effective differential order '+evidence.operatorOrder+'.';
+        '; effective differential order '+evidence.operatorOrder+'. '+
+        (evidence.initialZeroMoments===null
+          ? 'The moment sequence is identically zero; no forward division is performed.'
+          : 'First nonzero moment index '+evidence.initialZeroMoments+
+            '; regularized polynomial recurrence order ≤ '+
+            evidence.regularizedRecurrenceOrderBound+'.');
     }
     fallback.hidden=true;result.hidden=false;
     status.textContent='Computed '+data.rows.length+' exact integers. First index '+data.start+
