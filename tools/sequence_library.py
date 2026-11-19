@@ -2,7 +2,7 @@
 import csv
 import hashlib
 from html import escape as e
-from urllib.parse import quote
+from urllib.parse import quote,urlencode
 import io
 import json
 from pathlib import Path
@@ -25,6 +25,39 @@ def source_degree(entry,n):
     return entry['N']*n+(entry.get('j',0) if entry['kind']=='classical multisection' else 0)
 
 
+CALCULATOR_PARAMETERS={
+    'sparse':('p','q','r','u','v'),
+    'padovan':('h',),
+    'fourblock':('a',),
+    'jet':('d','lambda','c'),
+    'hankel':('d','c'),
+    'beta_moments':('L','a','b'),
+    'beta_hankel':('L','a','b'),
+    'meixner':('s','twox'),
+}
+CALCULATOR_BOUNDS={'sparse':96,'padovan':96,'fourblock':32,'jet':80,'hankel':12,'beta_moments':96,'beta_hankel':17,'meixner':96}
+
+
+def calculator_link(entry,path='sequence-library.html'):
+    """Canonical exact calculator handoff from a source record.
+
+    Parameters are recorded by the exact generator, not parsed from a title.
+    Links contain no stored coefficients and leave the original record intact.
+    """
+    spec=entry.get('calculator')
+    if not spec:return None
+    mode=spec['mode']
+    if mode not in CALCULATOR_PARAMETERS:raise ValueError('Unrecognized exact calculation mode')
+    keys=CALCULATOR_PARAMETERS[mode]
+    if set(spec)!={'mode',*keys}:raise ValueError('Incomplete exact calculator parameters: '+entry['id'])
+    index=entry['offset']
+    count=min(12,len(entry['terms']),CALCULATOR_BOUNDS[mode]-index+1)
+    if count<1:raise ValueError('Exact calculator cannot represent the source index')
+    values={'q':'id:'+entry['id'],'cf-version':'1','cf-mode':mode,'cf-start':str(index),'cf-count':str(count)}
+    for key in keys:values['cf-'+key]=str(spec[key])
+    return path+'?'+urlencode(values)+'#closed-calculator-panel'
+
+
 def library_entries(atlas):
     groups=[('atlas',atlas,'sequences/'),('recovered',records(atlas),'sequence-archive/'),('formulas',expanded_catalogue(),'sequence-families/')]
     entries=[]
@@ -35,6 +68,7 @@ def library_entries(atlas):
             entry.setdefault('index_symbol','n');entry.setdefault('classification','family' if collection=='formulas' else 'reference')
             if entry['id']=='KOM084':entry['tags']=[*entry['tags'],'triangle']
             entry['formulas']=formula_variants(entry)
+            if entry.get('calculator'):entry['calculator_url']=calculator_link(entry)
             entries.append(entry)
     return entries
 
@@ -131,7 +165,7 @@ def build(site,atlas):
     header=('<a class="sl-skip" href="#library-search">Skip to sequence search</a>'
             '<header class="sl-hero"><p class="sar-kicker">Komorebi / Sequence Library</p>'
             '<h1>Sequence Library</h1>'
-            '<p class="sar-lede">Search exact sequence records and inspect their formulas and stored terms. Open a dedicated page for transfers, comparison, research or OEIS.</p>'
+            '<p class="sar-lede">Find exact sequences, calculate coefficients, and follow their derivations, relationships, and verification from one research workspace.</p>'
             '<p class="sl-figures"><strong>'+f'{total:,}'+'</strong> records · <strong>'+f'{representations:,}'+'</strong> representations · <strong>'+f'{snapshot["sequence_count"]:,}'+'</strong> OEIS references</p>'
             +page_nav('search')+'</header>')
     research_entries=[item for item in entries if 'research-derived' in item['tags']]
@@ -283,64 +317,6 @@ def build(site,atlas):
         ('oeis','sequence-oeis.html#oeis','OEIS reference lookup')]
     legacy=''.join('<section class="sl-legacy-gateway" id="'+key+'"><h2>'+label+'</h2><p>This tool now has its own page. <a href="'+url+'">Open '+label+'</a>.</p></section>'
                    for key,url,label in legacy_routes)
-    site.page('sequence-library.html','Sequence Library · Search',
-              wrap(header+controls+about+legacy,page_kind='search'))
-    site.page('sequence-transfers.html','Sequence Library · Transfer',
-              wrap(page_heading('Transfer between sequences',
-                  'Calculate exact forward and inverse convolution maps between stored scalar prefixes. All certificates refer to the selected finite window.',
-                  'transfer','transfers')+transfers,page_kind='transfer'))
-    site.page('sequence-compare.html','Sequence Library · Compare',
-              wrap(page_heading('Compare sequences',
-                  'Compare up to four stored sequences or OEIS excerpts. Exact values remain in the data table while plots show finite windows.',
-                  'compare','comparison')+
-                  '<section id="comparison"><h2>Comparison workbench</h2><p>Enable JavaScript to compare records. You can browse the <a href="sequence-library.html#library-search">sequence search</a> without it.</p></section>',
-                  page_kind='compare'))
-    research_nav=('<nav class="sl-research-nav" aria-label="Research and tool pages">'
-                  '<a href="#research-families">Research families</a><a href="#generalized">Generalized families</a>'
-                  '<a href="sequence-closed-forms.html#closed-forms">Closed forms II–III</a>'
-                  '<a href="sequence-connections.html#research-graph">Connections</a>'
-                  '<a href="sequence-identify.html#identify">Identify terms</a>'
-                  '<a href="sequence-modular.html#modular-dynamics">Modular dynamics</a>'
-                  '<a href="sequence-workspace.html#research-notebooks">Combined notebooks</a></nav>')
-    research_choices=('<div class="sl-research-choices" aria-label="Specialized research tools">'
-                      '<article><h3><a href="sequence-closed-forms.html#closed-forms">Closed forms II–III</a></h3>'
-                      '<p>Read six exact construction families, 24 curated integer records and their source derivations.</p></article>'
-                      '<article><h3><a href="sequence-connections.html#research-graph">Connection graph</a></h3>'
-                      '<p>Inspect documented sequence relationships, directed paths and exact transfer compositions.</p></article>'
-                      '<article><h3><a href="sequence-identify.html#identify">Identify terms</a></h3>'
-                      '<p>Test integer patterns and transformations against local records or retained OEIS excerpts.</p></article>'
-                      '<article><h3><a href="sequence-modular.html#modular-dynamics">Modular dynamics</a></h3>'
-                      '<p>Explore recurrence states and verify a finite modular cycle certificate.</p></article>'
-                      '<article><h3><a href="sequence-workspace.html#research-notebooks">Research notebooks</a></h3>'
-                      '<p>Save settings across several tools in the combined compatibility workspace.</p></article></div>')
-    research_legacy=''.join(
-        '<section class="sl-legacy-gateway" id="'+key+'"><h2>'+label+'</h2>'
-        '<p>Open the <a href="'+url+'">'+label.lower()+' page</a>.</p></section>'
-        for key,url,label in [
-            ('research-graph','sequence-connections.html#research-graph','Connection graph'),
-            ('identify','sequence-identify.html#identify','Sequence identification'),
-            ('modular-dynamics','sequence-modular.html#modular-dynamics','Modular dynamics'),
-            ('research-notebooks','sequence-workspace.html#research-notebooks','Research notebooks')])
-    site.page('sequence-research.html','Sequence Library · Research',
-              wrap(page_heading('Research families',
-                  'Browse exact research records and generalized family definitions. Each interactive research tool has its own page.',
-                  'research','research-families')+research_nav+research.replace('<details class="sl-topic-disclosure">','<details class="sl-topic-disclosure" open>',1)+generalized_sections(only=['generalized'])+
-                   '<h2 class="sl-tool-heading">Research workbenches</h2>'+research_choices+research_legacy,
-                   page_kind='research'))
-    # The closed-form supplement is a focused reading page, not a sixth tool
-    # crowded into Search. Its exact records also appear in the unified index.
-    closed_entries=[item for item in entries if item.get('closed_form_collection')]
-    closed_families=[item for item in generalized['families'] if item['id'].startswith('GF-CF-')]
-    closed_cards=''.join(
-        '<article class="sar-card"><h3><a href="'+e(family['url'])+'">'+e(family['title'])+'</a></h3>'
-        '<p>'+e(family['note'])+'</p><p>'+str(len(family['record_ids']))+' indexed integer records.</p></article>'
-        for family in closed_families)
-    closed_rows=''.join(
-        '<tr><th scope="row"><a href="'+e(item['url'])+'">'+e(item['id'])+'</a></th>'
-        '<td>'+e(item['title'])+'</td><td>'+str(item['offset'])+'</td>'
-        '<td>'+e(', '.join(item['terms'][:5]))+'</td><td>'+('Source-supplied '+e(item['oeis'])+' · bulk comparison pending' if item.get('source_claimed_oeis') else 'Not yet compared')+'</td></tr>'
-        for item in closed_entries)
-    active_closed_families=sum(bool(family['record_ids']) for family in closed_families)
     closed_theorems=('''<section id="closed-theorems" class="sl-optional-section">
       <h2>Closed forms and proved identities</h2>
       <p>Choose a result to read its precise domain and normalization.
@@ -401,6 +377,109 @@ def build(site,atlas):
         'Open any record for its complete static 24-term table.</p></noscript></details>')
     closed_css='<link rel="stylesheet" href="assets/sequence-closed-forms.css?v='+hashlib.sha256(
         (site.output/'assets/sequence-closed-forms.css').read_bytes()).hexdigest()[:12]+'">'
+    # One central entry point. Specialized pages stay as focused views, not
+    # separate catalogues. Expensive tools mount only when opened.
+    workflow_nav=(
+        '<nav id="sequence-research-desk" class="sl-workflow-nav" aria-label="Sequence research workflow">'
+        '<a href="#library-search"><strong>1. Find</strong><span>Records and formulas</span></a>'
+        '<a href="#closed-calculator-panel"><strong>2. Calculate</strong><span>Exact integer values</span></a>'
+        '<a href="#sequence-research-hub"><strong>3. Investigate</strong><span>Connections and comparisons</span></a>'
+        '<a href="#sequence-proof-path"><strong>4. Verify</strong><span>Proofs and evidence</span></a></nav>')
+    research_hub=(
+        '<section id="sequence-research-hub" class="sl-optional-section sl-research-hub">'
+        '<h2>Continue your research</h2>'
+        '<p>All '+f'{total:,}'+' integer records and their '+f'{representations:,}'+' formula representations share one index. '
+        'The views below use those same records and retain their exact indices and review boundaries.</p>'
+        '<div class="sl-workflow-choices">'
+        '<article><h3>Compare and transfer</h3>'
+        '<p>Compare exact prefixes, inspect finite disagreements, or build algebraic transfer certificates.</p>'
+        '<p><a href="sequence-compare.html#comparison">Compare sequences</a> · '
+        '<a href="sequence-transfers.html#transfers">Transfer workbench</a></p></article>'
+        '<article><h3>Explore constructions</h3>'
+        '<p>Browse all '+str(len(generalized['families']))+' generalized definitions, their source papers and member records.</p>'
+        '<p><a href="sequence-research.html#research-families">Research families</a> · '
+        '<a href="generalized-families/index.html">Complete family index</a></p></article>'
+        '<article><h3>Cross-check and reproduce</h3>'
+        '<p>Inspect the retained OEIS reference data, source notes, and reproducible exact generators.</p>'
+        '<p><a href="sequence-oeis.html#oeis">OEIS reference lookup</a> · '
+        '<a href="#sequence-proof-path">Proof and verification records</a></p></article>'
+        '</div></section>'
+        '<section id="sequence-proof-path" class="sl-optional-section sl-proof-path">'
+        '<h2>Definitions, derivations, and verification</h2>'
+        '<p>Formula records retain their original source and review status. The mathematical proofs, '
+        'finite exact tests, and OEIS comparisons are separate forms of evidence.</p>'
+        '<details class="sl-topic-disclosure" id="sl-theorem-disclosure"><summary>Read the main closed-form theorem summaries</summary>'
+        +closed_theorems+'</details>'
+        '<details class="sl-topic-disclosure"><summary>Open source notes and exact verification programs</summary>'
+        '<p><a href="sequence-closed-forms.html#closed-theorems">Full Closed Forms reading page</a> · '
+        '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/research/sequence-closed-forms/COLLECTION_II_ADDITIONS.md">'
+        'Complete mathematical supplement</a> · '
+        '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/tools/test_sequence_closed_forms_extended.py">'
+        'Independent Python regression tests</a> · '
+        '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/tools/test_sequence_closed_forms_core.mjs">'
+        'Exact browser arithmetic tests</a></p>'
+        '<p>The pinned historical OEIS comparison covers its original 2,292 records. '
+        'New closed-form records are labeled as not yet checked against that bulk snapshot. '
+        'Finite agreement is not a proof of infinite equality or historical novelty.</p></details>'
+        '</section>')
+    site.page('sequence-library.html','Sequence Library · Search',
+              wrap(closed_css+header+workflow_nav+controls+closed_calculator+research_hub+about+legacy,page_kind='search'))
+    site.page('sequence-transfers.html','Sequence Library · Transfer',
+              wrap(page_heading('Transfer between sequences',
+                  'Calculate exact forward and inverse convolution maps between stored scalar prefixes. All certificates refer to the selected finite window.',
+                  'transfer','transfers')+transfers,page_kind='transfer'))
+    site.page('sequence-compare.html','Sequence Library · Compare',
+              wrap(page_heading('Compare sequences',
+                  'Compare up to four stored sequences or OEIS excerpts. Exact values remain in the data table while plots show finite windows.',
+                  'compare','comparison')+
+                  '<section id="comparison"><h2>Comparison workbench</h2><p>Enable JavaScript to compare records. You can browse the <a href="sequence-library.html#library-search">sequence search</a> without it.</p></section>',
+                  page_kind='compare'))
+    research_nav=('<nav class="sl-research-nav" aria-label="Research and tool pages">'
+                  '<a href="#research-families">Research families</a><a href="#generalized">Generalized families</a>'
+                  '<a href="sequence-closed-forms.html#closed-forms">Closed forms II–III</a>'
+                  '<a href="sequence-connections.html#research-graph">Connections</a>'
+                  '<a href="sequence-identify.html#identify">Identify terms</a>'
+                  '<a href="sequence-modular.html#modular-dynamics">Modular dynamics</a>'
+                  '<a href="sequence-workspace.html#research-notebooks">Combined notebooks</a></nav>')
+    research_choices=('<div class="sl-research-choices" aria-label="Specialized research tools">'
+                      '<article><h3><a href="sequence-closed-forms.html#closed-forms">Closed forms II–III</a></h3>'
+                      '<p>Read six exact construction families, 24 curated integer records and their source derivations.</p></article>'
+                      '<article><h3><a href="sequence-connections.html#research-graph">Connection graph</a></h3>'
+                      '<p>Inspect documented sequence relationships, directed paths and exact transfer compositions.</p></article>'
+                      '<article><h3><a href="sequence-identify.html#identify">Identify terms</a></h3>'
+                      '<p>Test integer patterns and transformations against local records or retained OEIS excerpts.</p></article>'
+                      '<article><h3><a href="sequence-modular.html#modular-dynamics">Modular dynamics</a></h3>'
+                      '<p>Explore recurrence states and verify a finite modular cycle certificate.</p></article>'
+                      '<article><h3><a href="sequence-workspace.html#research-notebooks">Research notebooks</a></h3>'
+                      '<p>Save settings across several tools in the combined compatibility workspace.</p></article></div>')
+    research_legacy=''.join(
+        '<section class="sl-legacy-gateway" id="'+key+'"><h2>'+label+'</h2>'
+        '<p>Open the <a href="'+url+'">'+label.lower()+' page</a>.</p></section>'
+        for key,url,label in [
+            ('research-graph','sequence-connections.html#research-graph','Connection graph'),
+            ('identify','sequence-identify.html#identify','Sequence identification'),
+            ('modular-dynamics','sequence-modular.html#modular-dynamics','Modular dynamics'),
+            ('research-notebooks','sequence-workspace.html#research-notebooks','Research notebooks')])
+    site.page('sequence-research.html','Sequence Library · Research',
+              wrap(page_heading('Research families',
+                  'Browse exact research records and generalized family definitions. Each interactive research tool has its own page.',
+                  'research','research-families')+research_nav+research.replace('<details class="sl-topic-disclosure">','<details class="sl-topic-disclosure" open>',1)+generalized_sections(only=['generalized'])+
+                   '<h2 class="sl-tool-heading">Research workbenches</h2>'+research_choices+research_legacy,
+                   page_kind='research'))
+    # The closed-form supplement is a focused reading page, not a sixth tool
+    # crowded into Search. Its exact records also appear in the unified index.
+    closed_entries=[item for item in entries if item.get('closed_form_collection')]
+    closed_families=[item for item in generalized['families'] if item['id'].startswith('GF-CF-')]
+    closed_cards=''.join(
+        '<article class="sar-card"><h3><a href="'+e(family['url'])+'">'+e(family['title'])+'</a></h3>'
+        '<p>'+e(family['note'])+'</p><p>'+str(len(family['record_ids']))+' indexed integer records.</p></article>'
+        for family in closed_families)
+    closed_rows=''.join(
+        '<tr><th scope="row"><a href="'+e(item['url'])+'">'+e(item['id'])+'</a></th>'
+        '<td>'+e(item['title'])+'</td><td>'+str(item['offset'])+'</td>'
+        '<td>'+e(', '.join(item['terms'][:5]))+'</td><td>'+('Source-supplied '+e(item['oeis'])+' · bulk comparison pending' if item.get('source_claimed_oeis') else 'Not yet compared')+'</td></tr>'
+        for item in closed_entries)
+    active_closed_families=sum(bool(family['record_ids']) for family in closed_families)
     closed_body=(
         closed_css+
         page_heading('Closed forms: Collections II and III',
@@ -479,6 +558,9 @@ def build(site,atlas):
         rows=''.join('<tr id="n-'+str(n)+'"><th scope="row">'+str(n)+'</th>'+coordinates(n)+'<td>'+str(source_degree(entry,n))+'</td><td>'+value+'</td>'+('<td>'+e(rational[n-start])+'</td>' if rational else '')+'</tr>' for n,value in enumerate(entry['terms'],start=start))
         body='<nav aria-label="Breadcrumb"><a href="../sequence-library.html">Sequence library</a> / '+e(identifier)+'</nav><header class="sar-header"><p class="sar-kicker">'+e(identifier)+' / Parameter record</p><h1>'+e(entry['title'])+'</h1><p>'+e(entry['status'])+'</p><nav aria-label="Entry sections"><a href="#definition">Definition</a><a href="#formulas">Formula representations</a>'+('<a href="#triangle">Coefficient triangle</a>' if entry.get('triangle') else '')+'<a href="#plot">Plot</a><a href="#exact-data">Exact data</a><a href="#oeis-matches">OEIS comparisons</a></nav></header><section id="definition"><h2>Definition and indexing</h2><p class="sar-formula">'+e(entry['formula'])+'</p><p>'+index_note+'</p>'+related+'</section><section id="formulas"><h2>Equivalent representations</h2>'+formula_block(entry)+'</section>'+triangle_section(entry)+plot_section(entry)+'<section id="exact-data"><h2>Exact indexed data</h2><p><a download href="'+identifier+'.csv">CSV</a> · <a download href="'+identifier+'.txt">Indexed text</a> · <a download href="'+identifier+'.json">Entry JSON with all formulas and comparisons</a></p><div class="sar-scroll" tabindex="0" role="region" aria-label="Exact stored values"><table><thead><tr><th scope="col">'+index_label+'</th>'+('<th scope="col">Row n</th><th scope="col">Column k</th>' if entry.get('triangle') else '')+'<th scope="col">Source degree/index</th><th scope="col">'+value_label+'</th>'+('<th scope="col">Original rational q(n)</th>' if rational else '')+'</tr></thead><tbody>'+rows+'</tbody></table></div></section>'+matches_block(entry)+'<section id="sources"><h2>Sources and reproduction</h2><p><a href="'+e(entry['source'])+'">Published construction source</a></p><p>The terms and formulas use the parameters listed above. KFOR identifiers are local to this library. OEIS entries use A-numbers.</p><details><summary>Reproduce this sequence</summary><p>Source: <code>'+REGISTRY_PATH+'</code>. Parameter grids and exact reproduction are implemented in <code>tools/sequence_formula_catalogue.py</code>. Run the generator with the listed parameters to reproduce the stored terms.</p><p><a download href="../assets/sequence-formula-source.zip">Download the exact Python generator and source</a>. Extract the bundle, then run <code>python tools/sequence_formula_catalogue.py --id '+identifier+'</code>.</p></details></section>'
         body=body.replace('<section id="plot"',entry_details(entry)+'<section id="plot"',1)
+        if entry.get('calculator_url'):
+            handoff='<p class="sl-record-calculator"><a href="../'+e(entry['calculator_url'],quote=True)+'">Recalculate this sequence in the unified exact workspace</a>. The original indexed data and source formulas remain available here.</p>'
+            body=body.replace('</section><section id="formulas">',handoff+'</section><section id="formulas">',1)
         if entry.get('linear_addition'):body=body.replace(REGISTRY_PATH,'research/sequence-connections/IDENTITIES.md')
         site.page(entry['url'],entry['title']+' · '+identifier,wrap(body,'../',entry))
         site.search.append(dict(title=entry['title']+' · '+identifier,group='Collection',kind='Examples',work_ids=[],url=entry['url'],text=' '.join(f['expression'] for f in entry['formulas'])))

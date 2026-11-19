@@ -37,10 +37,15 @@ async function valueRows(page){
       const panel=page.locator('#closed-calculator-panel');
       assert.equal(await panel.evaluate(node=>node.open),false,'Worksheet should be collapsed on arrival');
       await openCalculator(page);
-      assert.equal(await page.locator('#cf-mode option').count(),4);
+      assert.equal(await page.locator('#cf-mode option').count(),8);
       assert.deepEqual((await valueRows(page)).slice(0,12),
         ['1','0','1','0','1','1','1','2','1','3','2','4']);
       await fit(page);
+      await page.selectOption('#cf-mode','padovan');
+      assert.deepEqual((await valueRows(page)).slice(0,8),['1','0','0','1','0','1','1','1']);
+      await page.selectOption('#cf-mode','fourblock');
+      assert.deepEqual((await valueRows(page)).slice(0,4),['1','34','11056','14873104']);
+      assert.equal(await page.locator('#cf-start').inputValue(),'1');
 
       await page.selectOption('#cf-mode','jet');
       await page.locator('#cf-jet-d').fill('0');
@@ -57,6 +62,10 @@ async function valueRows(page){
         ['1','1','1','-14','-100','56','6112','58304']);
       assert.match(await page.locator('#cf-verification').textContent(),/independent terminating 4F3/);
 
+      await page.selectOption('#cf-mode','beta_moments');
+      assert.deepEqual((await valueRows(page)).slice(0,3),['120','240','720']);
+      await page.selectOption('#cf-mode','beta_hankel');
+      assert.deepEqual((await valueRows(page)).slice(0,3),['1','120','28800']);
       await page.selectOption('#cf-mode','meixner');
       assert.deepEqual((await valueRows(page)).slice(0,9),
         ['1','2','3','-2','-31','-30','715','2510','-30015']);
@@ -111,6 +120,43 @@ async function valueRows(page){
       assert.equal(await page.locator('#cf-count').inputValue(),'12');
       assert.equal(await page.locator('#cf-results').isVisible(),true);
       await fit(page);
+      // The central Sequence Library is now the canonical exact workspace.
+      // A supported search result must carry the precise source parameters.
+      const desk=await context.newPage();
+      desk.on('pageerror',error=>report.errors.push({width,message:error.message}));
+      await desk.goto(url('sequence-library.html?q='+encodeURIComponent('id:KFOR-CF-S-2-5-1-1-1')+'#library-search'));
+      await desk.locator('[data-library-ready=true]').waitFor();
+      assert.equal(await desk.locator('#sequence-research-desk').count(),1);
+      assert.equal(await desk.locator('#sequence-research-hub').count(),1);
+      assert.equal(await desk.locator('#sequence-proof-path').count(),1);
+      assert.equal(await desk.locator('#closed-calculator-panel').count(),1);
+      assert.equal(await desk.locator('#closed-calculator-panel').evaluate(el=>el.open),false);
+      const sparseRecord=desk.locator('#sl-results>li[data-result-id="KFOR-CF-S-2-5-1-1-1"]');
+      assert.equal(await sparseRecord.count(),1);
+      const action=sparseRecord.locator('a[aria-label^="Recalculate exact integer values"]');
+      assert.equal(await action.count(),1);
+      const before=await action.getAttribute('href');
+      assert.match(before,/cf-mode=sparse/);
+      assert.match(before,/q=id%3AKFOR-CF-S-2-5-1-1-1/);
+      await action.click();
+      await desk.waitForURL(/cf-version=1/);
+      await desk.locator('#cf-mode').waitFor({state:'visible'});
+      assert.equal(await desk.locator('#closed-calculator-panel').evaluate(el=>el.open),true);
+      assert.equal(await desk.locator('#cf-sparse-p').inputValue(),'2');
+      assert.equal(await desk.locator('#cf-sparse-q').inputValue(),'5');
+      assert.deepEqual((await valueRows(desk)).slice(0,8),
+        ['1','0','1','0','1','1','1','2']);
+      assert.equal(await desk.locator('#sl-search').count(),1);
+      await fit(desk);
+      // A formula record also hands off to the same central worksheet.
+      const sourceRecord=await context.newPage();
+      await sourceRecord.goto(url('sequence-families/KFOR-CF-JET-01.html'));
+      const handoff=sourceRecord.locator('#definition a[href*="cf-mode=jet"]');
+      assert.equal(await handoff.count(),1);
+      assert.match(await handoff.getAttribute('href'),/cf-lambda=1/);
+      await sourceRecord.close();
+      await desk.close();
+
       report.widths.push({width,exactIntegers:true,plotIndependence:true,downloads:true,
         links:true,invalidLinkRejected:true,overflow:false});
       await context.close();
@@ -120,6 +166,14 @@ async function valueRows(page){
     await page.goto(url('sequence-closed-forms.html'));
     assert.equal(await page.locator('#closed-calculator-panel').count(),1);
     assert.ok(await page.locator('noscript').count()>0);
+    assert.equal(await page.locator('#cf-form').count(),0);
+    await page.locator('#closed-calculator-panel>summary').click();
+    assert.match(await page.locator('#closed-calculator-panel').textContent(),/static 24-term table/);
+    await fit(page,true);
+    await page.goto(url('sequence-library.html'));
+    assert.equal(await page.locator('#sequence-research-desk').count(),1);
+    assert.equal(await page.locator('#closed-calculator-panel').count(),1);
+    assert.equal(await page.locator('#sl-theorem-disclosure').count(),1);
     assert.equal(await page.locator('#cf-form').count(),0);
     await page.locator('#closed-calculator-panel>summary').click();
     assert.match(await page.locator('#closed-calculator-panel').textContent(),/static 24-term table/);

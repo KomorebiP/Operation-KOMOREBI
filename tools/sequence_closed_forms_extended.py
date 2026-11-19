@@ -258,7 +258,7 @@ def extended_catalogue():
     """11 additional exact integer instances; no historical novelty claim."""
     from sequence_formula_catalogue import record, variant
     results=[]
-    def add(identifier,title,kind,family,values,first,second,note,oeis=None):
+    def add(identifier,title,kind,family,values,first,second,note,oeis=None,calculator=None):
         forms=[
             variant('Defining finite formula','finite sum',first,note,SOURCE),
             variant('Equivalent construction','closed form',second,
@@ -270,6 +270,7 @@ def extended_catalogue():
                    status='Source-derived exact formula · historical priority unassessed',
                    explanation=note)
         row['tags']+=['closed forms','weighted hierarchy','2026-11-19']
+        if calculator is not None:row['calculator']=calculator
         if oeis:
             row['oeis']=oeis
             row['source_claimed_oeis']=True
@@ -283,7 +284,8 @@ def extended_catalogue():
             f'sum u(n)z^n=((2*{d})!/{d}!)z^(2*{d})*(1+(2*{d}-1)z-(2*{d}+4)z^2)/(1-2z-3z^2)^({d}+3/2)',
             'The finite sum defines every index, including the zero prefix. '
             'The equivalent ordinary generating function follows from the falling-factorial basis.',
-            oeis='A163865' if d==0 else None)
+            oeis='A163865' if d==0 else None,
+            calculator={'mode':'jet','d':d,'lambda':1,'c':1})
     for d in (2,3,4):
         add(f'KFOR-CF-W-{d}-1',
             f'Weighted swinging Hankel determinants · d={d}, c=1',
@@ -293,7 +295,8 @@ def extended_catalogue():
             f'W(N)=root-free Chebyshev remainder formula W3/W4, with k={d+1}; '
             f'Q_{d}(z)=((1+rho*z)^4+({2*d+1})^2*rho^2*z^2)^(({d}+1)*({d}+2)+1), rho=(-1)^({d}+1)*2*(2*{d})!/{d}!',
             'Empty determinant equals one. Values 1 through 2d vanish. '
-            'The original proof gives a fixed-size Chebyshev formula and an exact eventual recurrence order.')
+            'The original proof gives a fixed-size Chebyshev formula and an exact eventual recurrence order.',
+            calculator=dict(mode='hankel',d=d,c=1))
     for s in (1,2,3):
         add(f'KFOR-CF-MP-{s:02d}-01',
             f'Integer Meixner–Pollaczek polynomial · s={s}, x=1',
@@ -302,7 +305,8 @@ def extended_catalogue():
             f'Q(0)=1, Q(1)=2, Q(n+1)=2Q(n)-n(n+{s}-1)Q(n-1)',
             f'Q(n)=i^n*({s})_n*2F1(-n,{s}/2+i;{s};2) [terminating]',
             'Integer specialization of a classical polynomial family. '
-            'The recurrence determines the values without complex arithmetic.')
+            'The recurrence determines the values without complex arithmetic.',
+            calculator=dict(mode='meixner',s=s,twox=2))
     assert len(results)==11
     return results
 

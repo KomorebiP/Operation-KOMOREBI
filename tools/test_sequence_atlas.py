@@ -142,6 +142,22 @@ class SequenceAtlasTests(unittest.TestCase):
             for anchor in ('find','catalogue','saved','explorer','discover','connections','reference'):
                 self.assertIn('id="'+anchor+'"',handoff)
             self.assertEqual(result['library']['entries'],2327)
+            # One research entry point, without duplicating the exact catalogue.
+            research_desk=(site.output/'sequence-library.html').read_text(encoding='utf-8')
+            self.assertIn('id="sequence-research-desk"',research_desk)
+            self.assertIn('id="closed-calculator-panel"',research_desk)
+            self.assertIn('id="sequence-research-hub"',research_desk)
+            self.assertIn('id="sequence-proof-path"',research_desk)
+            self.assertIn('id="sl-theorem-disclosure"',research_desk)
+            self.assertIn('sequence-closed-forms.css',research_desk)
+            self.assertEqual(research_desk.count('id="closed-calculator-panel"'),1)
+            focused=(site.output/'sequence-closed-forms.html').read_text(encoding='utf-8')
+            self.assertEqual(focused.count('id="closed-calculator-panel"'),1)
+            direct=(site.output/'sequence-families/KFOR-CF-JET-01.html').read_text(encoding='utf-8')
+            self.assertIn('cf-mode=jet',direct)
+            self.assertIn('cf-lambda=1',direct)
+            self.assertIn('Recalculate this sequence in the unified exact workspace',direct)
+
             self.assertIn('<noscript>',main)
             self.assertIn('CC BY-SA 4.0',main)
             self.assertEqual(main.count('data-index-entry='),38)

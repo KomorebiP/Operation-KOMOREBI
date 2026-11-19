@@ -2,7 +2,9 @@
 // Author: Komorebi P.
 import assert from 'node:assert/strict';
 import {test} from 'node:test';
-import {binomial,falling,sparseCoefficients,centralWeightedMoment,weightedJet,
+import {binomial,falling,sparseCoefficients,padovanCoefficients,
+  fourBlockCoefficients,betaMomentCoefficients,betaHankelCoefficients,
+  centralWeightedMoment,weightedJet,
   bareissDeterminant,weightedHankel,fourFthreeHankel,meixnerCoefficients,
   computeExactWindow,exactWindowCSV,exactViewURL,readExactView
 } from '../website/assets/sequence-closed-forms-core.mjs';
@@ -45,6 +47,43 @@ test('exact two-delay recurrence matches independent finite compositions',()=>{
     ['1','0','1','0','1','1','1','2','1','3','2','4']);
   assert.deepEqual(sparseCoefficients(2,3,-2,1,1,9).map(String),
     ['1','0','-2','-2','1','2','1','0','0','0']);
+});
+test('Padovan powers reproduce the original and exact convolution squares',()=>{
+  const a=padovanCoefficients(1,24);
+  assert.deepEqual(a.slice(0,12).map(String),['1','0','0','1','0','1','1','1','2','2','3','4']);
+  const squared=padovanCoefficients(2,24);
+  for(let n=0;n<=24;n++){
+    const convolution=Array.from({length:n+1},(_,k)=>a[k]*a[n-k])
+      .reduce((s,v)=>s+v,0n);
+    assert.equal(squared[n],convolution,'Padovan power mismatch n='+n);
+  }
+});
+test('four-block polynomials preserve the offset and known integer coefficients',()=>{
+  assert.deepEqual(fourBlockCoefficients(0,4).slice(1).map(String),
+    ['1','34','11056','14873104']);
+  assert.equal(fourBlockCoefficients(1,2)[1],3n);
+  assert.equal(fourBlockCoefficients(1,2)[2],294n);
+  const row=computeExactWindow({mode:'fourblock',start:'1',count:'4',a:'0'});
+  assert.deepEqual(row.rows.map(x=>x.value),['1','34','11056','14873104']);
+});
+test('unnormalized beta-binomial moments and determinant rank stay exact',()=>{
+  const values=betaMomentCoefficients(4,1,1,8);
+  assert.deepEqual(values.slice(0,4).map(String),['120','240','720','2400']);
+  const h=betaHankelCoefficients(4,1,1,8);
+  assert.equal(h[0],1n);
+  assert.equal(h[1],120n);
+  assert.equal(h[2],28800n);
+  assert.deepEqual(h.slice(6).map(String),['0','0','0']);
+  for(const [L,a,b] of [[0,1,1],[4,1,1],[5,1,2],[6,2,1]]){
+    const moments=betaMomentCoefficients(L,a,b,2*(L+1));
+    const dets=betaHankelCoefficients(L,a,b,L+3);
+    for(let n=0;n<=L+1;n++){
+      const direct=bareissDeterminant(Array.from({length:n},(_,i)=>
+        Array.from({length:n},(_,j)=>moments[i+j])));
+      assert.equal(dets[n],direct,'beta determinant mismatch '+[L,a,b,n]);
+    }
+    assert.equal(dets[L+2],0n);
+  }
 });
 test('weighted jets agree with an independently constructed finite J formula',()=>{
   for(let d=0;d<=4;d++)for(const lambda of [-2,0,1,3])
@@ -97,6 +136,12 @@ test('window has correct original indices, exact large numbers and CSV columns',
   const h=computeExactWindow({mode:'hankel',start:'0',count:'4',d:'0',c:'1'});
   assert.deepEqual(h.rows.map(x=>x.value),['1','1','1','-14']);
   assert.match(h.verification,/independent terminating 4F3/);
+  assert.deepEqual(computeExactWindow({mode:'padovan',start:'0',count:'4',h:'1'})
+    .rows.map(x=>x.value),['1','0','0','1']);
+  assert.deepEqual(computeExactWindow({mode:'beta_moments',start:'0',count:'3',L:'4',a:'1',b:'1'})
+    .rows.map(x=>x.value),['120','240','720']);
+  assert.deepEqual(computeExactWindow({mode:'beta_hankel',start:'0',count:'3',L:'4',a:'1',b:'1'})
+    .rows.map(x=>x.value),['1','120','28800']);
 });
 test('shared calculator views restore exact parameters without sending coefficients',()=>{
   const raw={mode:'jet',start:'4',count:'11',d:'2',lambda:'-1',c:'3'};
@@ -113,6 +158,8 @@ test('shared calculator views restore exact parameters without sending coefficie
   assert.throws(()=>readExactView(unknown.href),/unexpected setting/);
   assert.throws(()=>readExactView(link.replace('cf-version=1','cf-version=999')),/Unsupported/);
   assert.equal(exactViewURL(link,raw),link);
+  const four={mode:'fourblock',start:'1',count:'4',a:'-2'};
+  assert.deepEqual(readExactView(exactViewURL('https://example.test/sequence-library.html',four)),four);
   const sparseView={mode:'sparse',start:'3',count:'4',p:'2',q:'5',r:'1',u:'1',v:'12'};
   const sparseLink=exactViewURL('https://example.test/sequence-closed-forms.html',sparseView);
   assert.equal(new URL(sparseLink).searchParams.get('cf-version'),'1');
@@ -128,4 +175,7 @@ test('calculator rejects bounds and malformed integers without numerical roundin
   assert.throws(()=>computeExactWindow({...base,r:'9007199254740993'}),/between/);
   assert.throws(()=>computeExactWindow({mode:'hankel',start:'10',count:'8',d:'1',c:'1'}),/last index/);
   assert.throws(()=>computeExactWindow({mode:'unknown',start:0,count:2}),/supported/);
+  assert.throws(()=>computeExactWindow({mode:'fourblock',start:'0',count:'4',a:'0'}),/between 1 and 32/);
+  assert.throws(()=>computeExactWindow({mode:'beta_moments',start:'0',count:'3',L:'4',a:'0',b:'1'}),/Beta shape a/);
+  assert.throws(()=>computeExactWindow({mode:'beta_hankel',start:'0',count:'3',L:'13',a:'1',b:'1'}),/between 0 and 12/);
 });

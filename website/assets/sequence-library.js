@@ -334,13 +334,33 @@ function render(){
     if(hit.termMatch){const reason=make('p',hit.reason);reason.className='sl-match-reason';overview.append(reason);}
     const review=make('p',entry.status);review.className='sl-result-status';overview.append(review);
     if(entry.tags.includes('hypergeometric')){const badge=make('span','Hypergeometric representation');badge.className='sl-result-badge';overview.append(badge);}
-    const links=make('div'),plot=make('a','Plot and inspect'),formulas=make('a','Read formulas'),bookmark=make('button'),compare=make('button','Add to comparison');links.className='sp-actions';plot.href=entry.url+(entry.collection==='atlas'?'#analysis':'#plot');formulas.href=entry.url+(entry.collection==='recovered'?'#definition':'#formulas');bookmark.type=compare.type='button';bookmark.dataset.saveSequence=entry.id;bookmark.addEventListener('click',()=>toggleSaved(entry.id));compare.setAttribute('aria-label','Add '+entry.id+' to comparison');compare.addEventListener('click',()=>{if(workbench)workbench.addLocal(entry);else comparisonHandoff([],null).addLocal(entry);});links.append(plot,bookmark,compare);li.append(links);
+    const links=make('div'),plot=make('a','Plot and inspect'),formulas=make('a','Read formulas'),bookmark=make('button'),compare=make('button','Add to comparison');links.className='sp-actions';plot.href=entry.url+(entry.collection==='atlas'?'#analysis':'#plot');formulas.href=entry.url+(entry.collection==='recovered'?'#definition':'#formulas');bookmark.type=compare.type='button';bookmark.dataset.saveSequence=entry.id;bookmark.addEventListener('click',()=>toggleSaved(entry.id));compare.setAttribute('aria-label','Add '+entry.id+' to comparison');compare.addEventListener('click',()=>{if(workbench)workbench.addLocal(entry);else comparisonHandoff([],null).addLocal(entry);});links.append(plot,bookmark,compare);
+    if(entry.calculator_url){
+      const calculate=make('a','Calculate exact');
+      calculate.href=entry.calculator_url;
+      calculate.setAttribute('aria-label','Recalculate exact integer values for '+entry.id);
+      links.append(calculate);
+    }
+    li.append(links);
     const more=make('details'),moreSummary=make('summary',entry.match_count?`More actions · ${entry.match_count.toLocaleString()} OEIS match${entry.match_count===1?'':'es'}`:'More actions'),secondary=make('div');
     more.className='sl-result-more';more.open=results.length<=3;secondary.className='sp-actions';secondary.append(formulas);
+    if(entry.closed_form_collection){
+      const proof=make('a','Research definitions and proofs');
+      proof.href='sequence-closed-forms.html#closed-theorems';
+      secondary.append(proof);
+    }
     more.append(moreSummary,secondary);li.append(more);
     if(!entry.triangle&&entry.id!=='KOM084'){const transfer=make('button','Build a transfer');transfer.type='button';transfer.addEventListener('click',()=>{if(transfers)transfers.source(entry);else{const url=new URL('sequence-transfers.html',location.href);url.searchParams.set('tr-source',entry.id);url.hash='transfers';location.href=url.href;}});secondary.append(transfer);}
-    const comparisons=make('details'),summary=make('summary',`OEIS comparisons (${entry.match_count.toLocaleString()} ${entry.match_count===1?'match':'matches'})`);comparisons.className='sl-matches';comparisons.append(summary);
-    if(entry.matches.length){const list=make('ol');for(const hit of entry.matches.slice(0,3)){const item=make('li'),reference=make('a',hit.id+' · '+hit.name);reference.href='https://oeis.org/'+hit.id;item.append(reference,make('p',`${hit.matched_terms} matching terms, beginning at local index ${entry.offset}. OEIS export position: ${hit.position}.`));list.append(item);}comparisons.append(list,make('p',`Showing ${Math.min(3,entry.matches.length)} of ${entry.match_count.toLocaleString()} recorded matches. Up to 50 matches are retained.`));}else comparisons.append(make('p','No contiguous match of eight terms was recorded. That does not establish novelty.'));
+    const comparisons=make('details'),summary=make('summary',entry.oeis_checked===false?'OEIS bulk comparison pending':`OEIS comparisons (${entry.match_count.toLocaleString()} ${entry.match_count===1?'match':'matches'})`);comparisons.className='sl-matches';comparisons.append(summary);
+    if(entry.oeis_checked===false){
+      if(entry.source_claimed_oeis&&entry.oeis){
+        const sourceNote=make('p','The source identifies this sequence as ');
+        const identified=make('a',entry.oeis);identified.href='https://oeis.org/'+entry.oeis;
+        sourceNote.append(identified,document.createTextNode('. This identification has not been rechecked against the pinned bulk snapshot.'));
+        comparisons.append(sourceNote);
+      }
+      comparisons.append(make('p','The newer record has not been compared against the historical OEIS bulk snapshot. Neither a match nor an exclusion is claimed.'));
+    }else if(entry.matches.length){const list=make('ol');for(const hit of entry.matches.slice(0,3)){const item=make('li'),reference=make('a',hit.id+' · '+hit.name);reference.href='https://oeis.org/'+hit.id;item.append(reference,make('p',`${hit.matched_terms} matching terms, beginning at local index ${entry.offset}. OEIS export position: ${hit.position}.`));list.append(item);}comparisons.append(list,make('p',`Showing ${Math.min(3,entry.matches.length)} of ${entry.match_count.toLocaleString()} recorded matches. Up to 50 matches are retained.`));}else comparisons.append(make('p','No contiguous match of eight terms was recorded. That does not establish novelty.'));
     const credit=make('p','Finite matches do not prove that infinite sequences are identical. Export positions are not mathematical offsets. Reference data: '),oeis=make('a','The Online Encyclopedia of Integer Sequences'),license=make('a','CC BY-SA 4.0');oeis.href='https://oeis.org/';license.href='https://creativecommons.org/licenses/by-sa/4.0/';credit.append(oeis,document.createTextNode(' · '),license);comparisons.append(credit);more.append(comparisons);$('results').append(li);
   }
   for(const definition of $('results').querySelectorAll('.sl-result-definition[open]'))enhanceMath(definition);
@@ -443,29 +463,6 @@ function setupReference(client){
 }
 if(!legacyRoute)try{
   if(root.dataset.entry){const [{setupArchivePlot},{mountTriangleExplorer}]=await Promise.all([import('./sequence-archive-plot.mjs'),import('./sequence-triangle.mjs')]);const response=await fetch(new URL(root.dataset.entry,location.href));if(!response.ok)throw Error('The exact record could not be loaded.');const entry=await response.json();setupArchivePlot(entry);setupTriangleNavigation();mountTriangleExplorer(entry,root.querySelector('#triangle'));}
-  else if(root.dataset.page==='closed-forms'){
-    const disclosure=root.querySelector('#closed-calculator-panel');
-    const target=root.querySelector('#closed-calculator-root');
-    let loaded=false;
-    async function loadCalculator(){
-      if(loaded||!disclosure?.open||!target)return;
-      loaded=true;
-      try{
-        const {mountClosedFormsCalculator}=await import('./sequence-closed-forms-ui.mjs');
-        mountClosedFormsCalculator(target,{href:location.href});
-      }catch(error){
-        loaded=false;
-        const message=make('p','The exact calculator could not start: '+error.message+
-          '. All source definitions and static exact tables remain available.');
-        message.setAttribute('role','status');target.replaceChildren(message);
-      }
-    }
-    disclosure?.addEventListener('toggle',()=>{void loadCalculator();});
-    if(new URL(location.href).searchParams.has('cf-version')&&disclosure){
-      disclosure.open=true;
-      await loadCalculator();
-    }
-  }
   else if(root.dataset.page==='oeis'){
     const response=await fetch(new URL('./sequence-oeis-meta.json',import.meta.url));
     if(!response.ok)throw Error('The local OEIS reference metadata could not be loaded.');
@@ -488,6 +485,31 @@ if(!legacyRoute)try{
     if($('oeis-form'))setupReference(client);
     if(root.querySelector('#family-explorer-controls')||['research','workspace','connections','identify','modular'].includes(root.dataset.page)){
       const {mountStudio}=await import('./sequence-research-studio.mjs');mountStudio({root,entries,data:generalized,referenceClient:client,workbench:workbench||handoff,transfers,search});
+    }
+  }
+  // The central Search desk and focused Closed Forms page share one
+  // calculator. The mathematical core loads only when the disclosure opens.
+  const disclosure=root.querySelector('#closed-calculator-panel');
+  const target=root.querySelector('#closed-calculator-root');
+  if(disclosure&&target){
+    let loaded=false;
+    async function loadCalculator(){
+      if(loaded||!disclosure.open)return;
+      loaded=true;
+      try{
+        const {mountClosedFormsCalculator}=await import('./sequence-closed-forms-ui.mjs');
+        mountClosedFormsCalculator(target,{href:location.href});
+      }catch(error){
+        loaded=false;
+        const note=make('p','The exact calculator could not start: '+error.message+
+          '. Source definitions and static exact tables remain available.');
+        note.setAttribute('role','status');target.replaceChildren(note);
+      }
+    }
+    disclosure.addEventListener('toggle',()=>{void loadCalculator();});
+    if(new URL(location.href).searchParams.has('cf-version')){
+      disclosure.open=true;
+      await loadCalculator();
     }
   }
   root.dataset.libraryReady='true';

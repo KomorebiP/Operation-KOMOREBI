@@ -23,6 +23,49 @@ class SequenceLibraryTests(unittest.TestCase):
         self.assertTrue(record_links <= known_records,record_links-known_records)
         self.assertTrue(family_links <= known_families,family_links-known_families)
 
+    def test_calculator_handoffs_unify_exact_records_without_changing_coefficients(self):
+        from urllib.parse import parse_qs,urlparse
+        from sequence_library import calculator_link
+        entries=library_entries(catalogue())
+        linked=[item for item in entries if item.get('calculator_url')]
+        self.assertEqual(len(linked),35)
+        self.assertEqual({item['closed_form_family'] for item in linked},{
+            'GF-CF-SPARSE','GF-CF-PADOVAN','GF-CF-FOUR-BLOCK',
+            'GF-CF-WEIGHTED-HANKEL','GF-CF-BETA-MOMENTS',
+            'GF-CF-BETA-HANKEL','GF-CF-BINOMIAL-JETS','GF-CF-MEIXNER'})
+        for item in linked:
+            url=item['calculator_url']
+            parsed=urlparse(url)
+            self.assertEqual(parsed.path,'sequence-library.html')
+            self.assertEqual(parsed.fragment,'closed-calculator-panel')
+            params=parse_qs(parsed.query,strict_parsing=True)
+            self.assertTrue(all(len(values)==1 for values in params.values()))
+            self.assertEqual(params['q'],['id:'+item['id']])
+            self.assertEqual(params['cf-version'],['1'])
+            self.assertEqual(params['cf-mode'],[item['calculator']['mode']])
+            self.assertEqual(params['cf-start'],[str(item['offset'])])
+            self.assertGreaterEqual(int(params['cf-count'][0]),1)
+            self.assertLessEqual(int(params['cf-count'][0]),12)
+            for key,value in item['calculator'].items():
+                if key!='mode':
+                    self.assertEqual(params['cf-'+key],[str(value)])
+            self.assertEqual(calculator_link(item),url)
+            self.assertEqual(len(item['terms']),24)
+        self.assertFalse(any(item.get('calculator_url')
+                             for item in entries if not item.get('closed_form_collection')))
+        sparse=next(item for item in linked if item['id']=='KFOR-CF-S-2-5-1-1-1')
+        self.assertEqual(sparse['calculator']['p'],2)
+        self.assertEqual(sparse['calculator']['q'],5)
+        jets=next(item for item in linked if item['id']=='KFOR-CF-JET-02')
+        self.assertEqual(jets['calculator']['lambda'],1)
+        self.assertEqual(jets['calculator']['d'],2)
+        four=next(item for item in linked if item['id']=='KFOR-CF-R-p1')
+        self.assertEqual(four['offset'],1)
+        self.assertEqual(four['calculator']['a'],1)
+        beta=next(item for item in linked if item['id']=='KFOR-CF-BH-4-1-1')
+        self.assertEqual(beta['calculator']['L'],4)
+        self.assertEqual(beta['calculator']['a'],1)
+
     def test_complete_parameter_windows_and_independent_formulas(self):
         report=checks();self.assertEqual(report['records'],2199);self.assertEqual(report['terms'],56779)
         self.assertEqual(report['checks']['source_index_maps'],55939)

@@ -5,8 +5,12 @@ import {MODE_DEFAULTS,MODE_LIMITS,MODE_FIELDS,computeExactWindow,
 
 const modes=[
   ['sparse','Sparse two-delay coefficients'],
+  ['padovan','Padovan generating-function powers'],
+  ['fourblock','Four-block logarithmic polynomials'],
   ['jet','Polynomially weighted binomial transform'],
   ['hankel','Weighted Hankel determinants'],
+  ['beta_moments','Beta-binomial integer moments'],
+  ['beta_hankel','Beta-binomial Hankel determinants'],
   ['meixner','Meixner–Pollaczek integer polynomials']
 ];
 const descriptions={
@@ -14,12 +18,18 @@ const descriptions={
   r:['Power r',-12,12],u:['Weight u',-12,12],v:['Weight v',-12,12],
   d:['Falling-factorial order d',0,8],lambda:['Binomial shift λ',-12,12],
   c:['Odd derivative weight c',-12,12],s:['Polynomial parameter s',-12,20],
-  twox:['Integer coefficient 2x',-20,20]
+  twox:['Integer coefficient 2x',-20,20],h:['Convolution power h',1,8],
+  a:['Integer parameter a',-12,12],b:['Positive shape b',1,12],
+  L:['Binomial support size L',0,12]
 };
 const subtitle={
   sparse:'C(n) is a coefficient of (1-u z^p-v z^q)^(-r). Negative integer powers and zero weights are supported.',
+  padovan:'The coefficient of ((1-z²)/(1-z²-z³))^h. The h=1 sequence begins 1, 0, 0, 1.',
+  fourblock:'T_m(a) is indexed from m=1, with underlying analytic exponent 4m-1.',
   jet:'Exact binomial transforms, including the A163865 specialization at d=0, λ=c=1.',
   hankel:'W(N) is an exact determinant. Its value is invariant under binomial shifts of the moments.',
+  beta_moments:'Integer unnormalized ordinary moments, not rational probability moments. Parameter a must be positive.',
+  beta_hankel:'Hankel transforms of integer unnormalized moments. Determinants vanish above support rank L+1.',
   meixner:'Integer polynomial specializations of the classical Meixner–Pollaczek recurrence.'
 };
 function node(tag,text){
@@ -121,6 +131,7 @@ export function mountClosedFormsCalculator(root,{href=location.href}={}){
     helper.textContent=subtitle[mode];
     bounds.textContent='Original indices, not inferred Taylor degrees. Maximum index: '+
       limits.maxIndex+'. Maximum window: '+limits.maxCount+' values.';
+    controls.start.min=mode==='fourblock'?'1':'0';
     controls.start.max=String(limits.maxIndex);
     controls.count.max=String(limits.maxCount);
   }
