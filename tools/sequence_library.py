@@ -27,11 +27,15 @@ def source_degree(entry,n):
 
 CALCULATOR_PARAMETERS={
     'sparse':('p','q','r','u','v'),
+    'padovan':('h',),
+    'fourblock':('a',),
     'jet':('d','lambda','c'),
     'hankel':('d','c'),
+    'beta_moments':('L','a','b'),
+    'beta_hankel':('L','a','b'),
     'meixner':('s','twox'),
 }
-CALCULATOR_BOUNDS={'sparse':96,'jet':80,'hankel':12,'meixner':96}
+CALCULATOR_BOUNDS={'sparse':96,'padovan':96,'fourblock':32,'jet':80,'hankel':12,'beta_moments':96,'beta_hankel':17,'meixner':96}
 
 
 def calculator_link(entry,path='sequence-library.html'):
