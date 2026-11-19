@@ -177,6 +177,83 @@ def meixner_pollaczek_integer(s, twice_x, count=COUNT):
     return values
 
 
+@lru_cache(maxsize=None)
+def bernoulli_number(n):
+    """Rational Bernoulli number from the defining triangular recurrence."""
+    if n < 0:
+        raise ValueError('Bernoulli index must be nonnegative')
+    if n == 0:
+        return Fraction(1)
+    return -sum(Fraction(comb(n+1,k))*bernoulli_number(k)
+                for k in range(n))/Fraction(n+1)
+
+
+def four_block_tangent_bernoulli(n):
+    """T_4(n) in the registry's (4n+3)! normalization."""
+    if n < 0:
+        raise ValueError('Index must be nonnegative')
+    ans = (Fraction(-2**(2*n+3)*(2**(4*n+4)-1),4*n+4) *
+           bernoulli_number(4*n+4))
+    return int(ans) if ans.denominator == 1 else ans
+
+
+def four_block_reciprocal_euler(n,power):
+    """Two-factor Euler convolution for a positive integer power."""
+    if n < 0 or power < 1:
+        raise ValueError('Use nonnegative index and positive integer power')
+    from sequence_atlas import reciprocal
+    secant = reciprocal(2,power,2*n+1)
+    ans = Fraction(sum((-1)**j*comb(4*n,2*j)*secant[j]*
+                       secant[2*n-j] for j in range(2*n+1)),4**n)
+    return int(ans) if ans.denominator == 1 else ans
+
+
+def beta_transfer_hankel(a,b,N):
+    """Continuous normalized beta-moment determinant (paper card P4)."""
+    if N < 0 or Fraction(a) <= 0 or Fraction(b) <= 0:
+        raise ValueError('Use positive beta shapes and nonnegative size')
+    a,b=Fraction(a),Fraction(b)
+    result=Fraction(1)
+    for j in range(N):
+        result *= Fraction(factorial(j)*rising(a,j)*rising(b,j),
+                           rising(a+b,N+j-1))
+    return result
+
+
+def beta_split_weights(n,a,b):
+    """The n+1 exact beta-binomial splitter probabilities (paper P5)."""
+    if n < 0 or Fraction(a) <= 0 or Fraction(b) <= 0:
+        raise ValueError('Use positive beta shapes and nonnegative count')
+    a,b=Fraction(a),Fraction(b)
+    scale=rising(a+b,n)
+    return [Fraction(comb(n,k)*rising(a,k)*rising(b,n-k),scale)
+            for k in range(n+1)]
+
+
+def beta_split_factorial_moment(n,ell,a,b):
+    """Falling factorial moment of the beta-binomial splitter."""
+    if ell < 0 or n < 0 or Fraction(a) <= 0 or Fraction(b) <= 0:
+        raise ValueError('Use nonnegative indices and positive shapes')
+    if ell > n:
+        return Fraction(0)
+    return Fraction(falling(n,ell)*rising(Fraction(a),ell),
+                    rising(Fraction(a+b),ell))
+
+
+def weighted_first_regular_hyper(d,c):
+    """The W_(2d+2) terminating 3F2, including exceptional c values."""
+    if d < 0:
+        raise ValueError('Weight must be nonnegative')
+    c=Fraction(c)
+    a_d=factorial(2*d)//factorial(d)
+    upper=[Fraction(-d-1),Fraction(1,2),Fraction(1)]
+    lower=[Fraction(-(2*d+1),4),Fraction(1-2*d,4)]
+    argument=Fraction(-(2*d+1)**2,16)*c*c
+    ans=a_d**(2*d+2)*comb(2*d+2,d+1)*terminating_hypergeometric(
+        upper,lower,argument,d+1)
+    return int(ans) if ans.denominator==1 else ans
+
+
 def extended_catalogue():
     """11 additional exact integer instances; no historical novelty claim."""
     from sequence_formula_catalogue import record, variant
