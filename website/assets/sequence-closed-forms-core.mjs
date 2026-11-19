@@ -9,6 +9,7 @@ export const MODE_LIMITS=Object.freeze({
   beta_moments:{maxIndex:96,maxCount:32},
   beta_hankel:{maxIndex:17,maxCount:18},
   differential_hankel:{maxIndex:12,maxCount:13},
+  differential_moments:{maxIndex:160,maxCount:32},
   meixner:{maxIndex:96,maxCount:32}
 });
 export const MODE_DEFAULTS=Object.freeze({
@@ -20,6 +21,7 @@ export const MODE_DEFAULTS=Object.freeze({
   beta_moments:{mode:'beta_moments',start:'0',count:'12',L:'4',a:'1',b:'1'},
   beta_hankel:{mode:'beta_hankel',start:'0',count:'8',L:'4',a:'1',b:'1'},
   differential_hankel:{mode:'differential_hankel',start:'0',count:'8',a0:'1',a1:'1',a2:'0',a3:'0',c0:'1',c1:'2',c2:'1',c3:'0'},
+  differential_moments:{mode:'differential_moments',start:'0',count:'12',a0:'1',a1:'1',a2:'0',a3:'0',c0:'1',c1:'2',c2:'1',c3:'0'},
   meixner:{mode:'meixner',start:'0',count:'12',s:'1',twox:'2'}
 });
 export const MODE_FIELDS=Object.freeze({
@@ -31,6 +33,7 @@ export const MODE_FIELDS=Object.freeze({
   beta_moments:['L','a','b'],
   beta_hankel:['L','a','b'],
   differential_hankel:['a0','a1','a2','a3','c0','c1','c2','c3'],
+  differential_moments:['a0','a1','a2','a3','c0','c1','c2','c3'],
   meixner:['s','twox']
 });
 const FIELD_LIMITS=Object.freeze({
@@ -197,6 +200,75 @@ export function polynomialDifferentialMoment(n, weights, operator) {
   }
   return result;
 }
+
+function exactPolynomialProduct(left,right){
+  const values=Array(left.length+right.length-1).fill(0n);
+  for(let i=0;i<left.length;i++)
+    for(let j=0;j<right.length;j++)
+      values[i+j]+=left[i]*right[j];
+  return values;
+}
+function trimmedPolynomial(values){
+  while(values.length>1&&values[values.length-1]===0n)values.pop();
+  return values;
+}
+function _effectiveExactCoefficients(values){
+  return trimmedPolynomial(values.map(value=>BigInt(value)));
+}
+export function differentialMomentGeneratingFunction(weights,operator){
+  // Exact universal algebraic OGF for polynomially weighted moments.
+  // M(z)=R(z)/(1-4z^2)^(D+r+1/2), deg R<=2(D+r).
+  const a=_effectiveExactCoefficients(weights);
+  const c=_effectiveExactCoefficients(operator);
+  const D=a.length-1,r=c.length-1,h=[1n,0n,-4n];
+  const powers=[[1n]];
+  for(let j=1;j<=Math.max(D,r);j++)
+    powers.push(exactPolynomialProduct(powers[j-1],h));
+  let current=Array(2*D+1).fill(0n);
+  for(let d=0;d<=D;d++){
+    let factor=1n;
+    for(let j=d+1;j<=2*d;j++)factor*=BigInt(j);
+    const term=exactPolynomialProduct(
+      Array(2*d).fill(0n).concat([a[d]*factor]),powers[D-d]);
+    term.forEach((value,j)=>{current[j]+=value;});
+  }
+  const numerator=Array(2*(D+r)+1).fill(0n);
+  for(let k=0;k<=r;k++){
+    const term=exactPolynomialProduct(current,powers[r-k]);
+    term.forEach((value,j)=>{numerator[j]+=c[k]*value;});
+    if(k===r)break;
+    const next=Array(current.length+3).fill(0n);
+    current.forEach((value,j)=>{
+      next[j+1]+=BigInt(j+1)*value;
+      next[j+3]+=4n*BigInt(2*D+2*k-j)*value;
+    });
+    current=trimmedPolynomial(next);
+  }
+  const R=trimmedPolynomial(numerator);
+  const twiceExponent=2*(D+r)+1;
+  if(R.length>twiceExponent)
+    throw Error('The moment generating numerator exceeded its derived degree bound.');
+  function polynomialText(values){
+    let output='';
+    values.forEach((value,k)=>{
+      if(value===0n)return;
+      const negative=value<0n,amount=negative?-value:value;
+      const factor=k===0?'':(k===1?'z':'z^'+k);
+      const term=factor?(amount===1n?factor:String(amount)+'*'+factor):String(amount);
+      if(output)output+=negative?' - ':' + ';
+      else if(negative)output+='-';
+      output+=term;
+    });
+    return output||'0';
+  }
+  return {
+    numerator:R.map(String),twiceExponent,degreeBound:2*(D+r),
+    weightDegree:D,operatorOrder:r,
+    expression:'M(z) = ('+polynomialText(R)+') / (1-4z^2)^('+twiceExponent+'/2)',
+    meaning:'M(z) = sum_(n>=0) F_P[D_x x^n] z^n. The numerator is computed by finite integer polynomial arithmetic.'
+  };
+}
+
 export function differentialHankel(n,weights,operator) {
   if(!Number.isSafeInteger(n)||n<0||n>12)
     throw Error('The differential Hankel size must be between 0 and 12.');
@@ -241,7 +313,7 @@ export function computeExactWindow(raw){
   for(const field of MODE_FIELDS[mode]){
     params[field]=integer(raw[field],field,...FIELD_LIMITS[field]);
   }
-  let values,description,verification;
+  let values,description,verification,generatingFunction;
   switch(mode){
     case 'sparse':{
       const {p,q,r,u,v}=params;
@@ -303,8 +375,19 @@ export function computeExactWindow(raw){
       const weights=[params.a0,params.a1,params.a2,params.a3];
       const operator=[params.c0,params.c1,params.c2,params.c3];
       values=Array.from({length:last+1},(_,n)=>differentialHankel(n,weights,operator));
+      generatingFunction=differentialMomentGeneratingFunction(weights,operator);
       description='Higher-order differential Hankel: P(m)=sum_(d=0)^3 a_d falling(m,d), L[p]=sum_(k=0)^3 c_k F_P[p^(k)].';
       verification='Exact fraction-free determinants. The general Chebyshev proof bounds separated-block rank by 2(degree(P)+operator order). Higher-size exact structured calculations use the Python source implementation.';
+      break;
+    }
+    case 'differential_moments':{
+      const weights=[params.a0,params.a1,params.a2,params.a3];
+      const operator=[params.c0,params.c1,params.c2,params.c3];
+      values=Array.from({length:last+1},(_,n)=>
+        polynomialDifferentialMoment(n,weights,operator));
+      generatingFunction=differentialMomentGeneratingFunction(weights,operator);
+      description='Underlying polynomial-weighted differential moments mu_n = F_P[D_x x^n], using the same parameters as the differential Hankel family.';
+      verification='Exact finite moment sums, independent of the algebraic numerator construction. The generating function has denominator (1-4z^2)^(D+r+1/2).';
       break;
     }
     case 'meixner':{
@@ -317,7 +400,7 @@ export function computeExactWindow(raw){
   }
   return {mode,start,count,parameters:params,
     rows:values.slice(start,last+1).map((value,j)=>({index:start+j,value:value.toString()})),
-    description,verification};
+    description,verification,...(generatingFunction?{generatingFunction}:{})};
 }
 function csvQuote(value){
   const s=String(value);
