@@ -107,7 +107,7 @@ def build_cases():
                 expected_rational_terms=[str(Fraction(v)) for v in rational[:count]] if rational is not None else None)
             cases.append(case);record_ids.add(entry['id'])
     if len({case['case_id'] for case in cases})!=len(cases):raise ValueError('Duplicate link cases')
-    if len(entries)!=2316 or len(cases)!=2169:raise ValueError('The declared finite population changed; revise the audit contract')
+    if len(entries)!=2327 or len(cases)!=2169:raise ValueError('The declared finite population changed; revise the audit contract')
     return dict(schema=1,assertion_tested=ASSERTION,record_count=len(entries),membership_links=all_links,
         explorer_links=len(cases),unique_explorer_records=len(record_ids),definition_only_links=definition_only,
         preserved_catalogue_terms_sha256=catalogue_hash,cases=cases)
@@ -140,9 +140,9 @@ def write_contract(path,node):
     contract=dict(claim_id='SEQUENCE_EXPLORER_LINKS_2026_11_16',mathematics=dict(
         assertion_tested=ASSERTION,coefficient_domain='Exact integers and reduced rational numbers; no floating tolerance',
         conventions='Decimal strings cross JSON; original local offsets and source-degree maps are compared. Appell columns use polynomial row N*n+k and ordinary [x^k] coefficients. Factorial normalizations belong to the stated source degree. Rational denominators are positive.',
-        inputs=['The 2,292 pinned OEIS records, 24 separate closed-form records, and every generated family-explorer link.',
+        inputs=['The 2,292 pinned OEIS records, 35 separate closed-form records, and every generated family-explorer link.',
             'Independent Python catalogue coefficients and source coordinates versus the actual JavaScript family engine.'],
-        bounds=dict(catalogue_records=2316,oeis_pinned_records=2292,generated_explorer_links=2169,minimum_compared_terms=8,
+        bounds=dict(catalogue_records=2327,oeis_pinned_records=2292,generated_explorer_links=2169,minimum_compared_terms=8,
             requested_terms_per_link=24,prefix_rule='min(emitted parameters.count, available stored terms)',
             sampling='none; every emitted link is visited'),non_claims=NON_CLAIMS),
         execution_artifacts=input_paths(path),software=[dict(name='audit Python',version=platform.python_version()),
