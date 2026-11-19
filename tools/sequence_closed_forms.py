@@ -159,14 +159,16 @@ def closed_form_catalogue():
             'GF-CF-PADOVAN','Padovan power',padovan_powers(r),
             f'a(n)=[z^n]((1-z^2)/(1-z^2-z^3))^{r}',
             f'a(n)=sum_(j=0)^min({r},floor(n/2)) (-1)^j binom({r},j)*[z^(n-2j)](1-z^2-z^3)^(-{r})',
-            'Padovan convention: r=1 yields a(0)=1, a(1)=a(2)=0, then a(n)=a(n-2)+a(n-3) for n>=3.')
+            'Padovan convention: r=1 yields a(0)=1, a(1)=a(2)=0, then a(n)=a(n-2)+a(n-3) for n>=3.',
+            calculator=dict(mode='padovan',h=r))
     for a in (-2,-1,0,1,2,3):
         id_part=('m'+str(-a)) if a<0 else ('p'+str(a))
         add(f'KFOR-CF-R-{id_part}',f'Four-block logarithmic sequence · a={a}',
             'GF-CF-FOUR-BLOCK','four-block polynomial',four_block(a),
             f'T(m)=(4m-1)![x^(4m-1)](-V_a\'(x)/V_a(x)); V_a(x)=(cosh(x/sqrt(2))-a*x/sqrt(2)*sinh(x/sqrt(2)))*(cos(x/sqrt(2))+a*x/sqrt(2)*sin(x/sqrt(2)))',
             f'T(m)=(-1)^(m+1)*A_m+sum_(k=1)^(m-1) (-1)^(k+1)*binom(4m-1,4k)*A_k*T(m-k); A_k=1-4k*({a})+2k(4k-1)*({a})^2',
-            'First local index is m=1. The defining recurrence gives an integer polynomial in a at each m.',offset=1)
+            'First local index is m=1. The defining recurrence gives an integer polynomial in a at each m.',offset=1,
+            calculator=dict(mode='fourblock',a=a))
     for d,c in ((0,0),(0,1),(1,0),(1,1)):
         add(f'KFOR-CF-W-{d}-{c}',f'Weighted moment Hankel determinant · d={d}, c={c}',
             'GF-CF-WEIGHTED-HANKEL','weighted Hankel',weighted_hankel(d,c),
@@ -180,14 +182,16 @@ def closed_form_catalogue():
             'GF-CF-BETA-MOMENTS','beta-binomial moments',beta_moments(L,a,b),
             f'U(n)=sum_(k=0)^{L} k^n*binom({L},k)*({a})_k*({b})_({L}-k)',
             f'U(n)=({a+b})_{L}*M(n); M(n)=sum_(k=0)^{L} k^n*w_k; w_k=binom({L},k)*({a})_k*({b})_({L}-k)/({a+b})_{L}',
-            'Integer unnormalized ordinary moments, not normalized probability moments. Use 0^0=1.')
+            'Integer unnormalized ordinary moments, not normalized probability moments. Use 0^0=1.',
+            calculator=dict(mode='beta_moments',L=L,a=a,b=b))
     for L,a,b in ((4,1,1),(6,2,1)):
         add(f'KFOR-CF-BH-{L}-{a}-{b}',
             f'Beta-binomial unnormalized Hankel determinant · L={L}, a={a}, b={b}',
             'GF-CF-BETA-HANKEL','beta-binomial Hankel',beta_determinants(L,a,b),
             f'H(N)=det(U_(i+j))_(0<=i,j<N); U_n=sum_(k=0)^{L} k^n*binom({L},k)*({a})_k*({b})_({L}-k)',
             f'H(N)=({a+b})_{L}^N*prod_(j=0)^(N-1) (j!*({a})_j*({b})_j*falling({L},j)*({a+b+L})_j/({a+b})_(N+j-1)); H(0)=1; H(N)=0 for N>{L+1}',
-            'Normalized determinants are multiplied by (a+b)_L^N. Terms remain exact integers.')
+            'Normalized determinants are multiplied by (a+b)_L^N. Terms remain exact integers.',
+            calculator=dict(mode='beta_hankel',L=L,a=a,b=b))
     assert len(entries)==24
     return entries
 
