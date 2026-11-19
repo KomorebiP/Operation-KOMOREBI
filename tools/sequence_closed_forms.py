@@ -125,7 +125,7 @@ def closed_form_catalogue():
     """Twenty-four curated instances with separated source and review status."""
     from sequence_formula_catalogue import variant,record
     entries=[]
-    def add(identifier,title,family,kind,values,formula,alternative,note,offset=0):
+    def add(identifier,title,family,kind,values,formula,alternative,note,offset=0,calculator=None):
         alternate_kind={'GF-CF-SPARSE':'recurrence','GF-CF-PADOVAN':'finite sum',
                         'GF-CF-FOUR-BLOCK':'recurrence',
                         'GF-CF-WEIGHTED-HANKEL':'moment definition',
@@ -142,6 +142,7 @@ def closed_form_catalogue():
                    explanation=note)
         if family=='GF-CF-FOUR-BLOCK':
             row.update(N=4,source_shift=-1,degree='4n-1')
+        if calculator is not None:row['calculator']=calculator
         row['tags']+=['closed forms','2026-11-19','reproduced finite data']
         entries.append(row)
     for p,q,u,v,r in [(2,3,1,1,1),(2,3,1,1,2),(2,5,1,1,1),
@@ -151,7 +152,8 @@ def closed_form_catalogue():
             'GF-CF-SPARSE','sparse two-delay',sparse_coefficients(p,q,u,v,r),
             f'a(n)=[z^n](1-({u})z^{p}-({v})z^{q})^(-{r})',
             f'a(0)=1; n*a(n)={u}*(n+({r}-1)*{p})*a(n-{p})+{v}*(n+({r}-1)*{q})*a(n-{q}); a(k)=0 for k<0',
-            'Formal coefficients, valid for the displayed integer parameters.')
+            'Formal coefficients, valid for the displayed integer parameters.',
+            calculator=dict(mode='sparse',p=p,q=q,r=r,u=u,v=v))
     for r in (1,2):
         add(f'KFOR-CF-PAD-{r}',f'Padovan generating-function power · r={r}',
             'GF-CF-PADOVAN','Padovan power',padovan_powers(r),
@@ -170,7 +172,8 @@ def closed_form_catalogue():
             'GF-CF-WEIGHTED-HANKEL','weighted Hankel',weighted_hankel(d,c),
             f'a(N)=det(mu_(i+j))_(0<=i,j<N); mu_n=F_{d}[x^n]+({c})*n*F_{d}[x^(n-1)]',
             f'F_d[x^(2m)]=falling(m,{d})*binom(2m,m); F_d[x^(2m+1)]=0; a(0)=1',
-            'Exact determinants. For d>0, a(N)=0 for 1<=N<=2d. Empty determinant equals one.')
+            'Exact determinants. For d>0, a(N)=0 for 1<=N<=2d. Empty determinant equals one.',
+            calculator=dict(mode='hankel',d=d,c=c))
     for L,a,b in ((4,1,1),(5,1,2),(6,2,1),(7,2,3)):
         add(f'KFOR-CF-BM-{L}-{a}-{b}',
             f'Unnormalized beta-binomial ordinary moments · L={L}, a={a}, b={b}',
