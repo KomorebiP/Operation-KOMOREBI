@@ -2,25 +2,38 @@
 // Author: Komorebi P. Source: Closed Forms Collections II–III.
 export const MODE_LIMITS=Object.freeze({
   sparse:{maxIndex:96,maxCount:32},
+  padovan:{maxIndex:96,maxCount:32},
+  fourblock:{maxIndex:32,maxCount:24},
   jet:{maxIndex:80,maxCount:32},
   hankel:{maxIndex:12,maxCount:13},
+  beta_moments:{maxIndex:96,maxCount:32},
+  beta_hankel:{maxIndex:17,maxCount:18},
   meixner:{maxIndex:96,maxCount:32}
 });
 export const MODE_DEFAULTS=Object.freeze({
   sparse:{mode:'sparse',start:'0',count:'12',p:'2',q:'5',r:'1',u:'1',v:'1'},
+  padovan:{mode:'padovan',start:'0',count:'12',h:'1'},
+  fourblock:{mode:'fourblock',start:'1',count:'10',a:'0'},
   jet:{mode:'jet',start:'0',count:'12',d:'1',lambda:'1',c:'1'},
   hankel:{mode:'hankel',start:'0',count:'8',d:'1',c:'1'},
+  beta_moments:{mode:'beta_moments',start:'0',count:'12',L:'4',a:'1',b:'1'},
+  beta_hankel:{mode:'beta_hankel',start:'0',count:'8',L:'4',a:'1',b:'1'},
   meixner:{mode:'meixner',start:'0',count:'12',s:'1',twox:'2'}
 });
 export const MODE_FIELDS=Object.freeze({
   sparse:['p','q','r','u','v'],
+  padovan:['h'],
+  fourblock:['a'],
   jet:['d','lambda','c'],
   hankel:['d','c'],
+  beta_moments:['L','a','b'],
+  beta_hankel:['L','a','b'],
   meixner:['s','twox']
 });
 const FIELD_LIMITS=Object.freeze({
   p:[1,16],q:[1,16],r:[-12,12],u:[-12,12],v:[-12,12],
-  d:[0,8],lambda:[-12,12],c:[-12,12],s:[-12,20],twox:[-20,20]
+  d:[0,8],lambda:[-12,12],c:[-12,12],s:[-12,20],twox:[-20,20],
+  h:[1,8],a:[-12,12],b:[1,12],L:[0,12]
 });
 function integer(value,label,min,max){
   const text=String(value);
@@ -64,6 +77,62 @@ export function sparseCoefficients(p,q,r,u,v,last){
   }
   return values;
 }
+
+export function rising(n,k){
+  if(k<0)throw Error('Rising-factorial order must be nonnegative.');
+  let value=1n;
+  for(let j=0;j<k;j++)value*=BigInt(n)+BigInt(j);
+  return value;
+}
+export function padovanCoefficients(h,last){
+  const denominator=sparseCoefficients(2,3,h,1,1,last),values=[];
+  for(let n=0;n<=last;n++){
+    let sum=0n;
+    for(let j=0;j<=Math.min(h,Math.floor(n/2));j++){
+      sum+=(j%2?-1n:1n)*binomial(h,j)*denominator[n-2*j];
+    }
+    values.push(sum);
+  }
+  return values;
+}
+export function fourBlockCoefficients(a,last){
+  const parameter=BigInt(a),values=[0n];
+  const A=m=>1n-4n*BigInt(m)*parameter+
+    2n*BigInt(m)*BigInt(4*m-1)*parameter*parameter;
+  for(let m=1;m<=last;m++){
+    let value=(m%2===1?1n:-1n)*A(m);
+    for(let k=1;k<m;k++){
+      value+=(k%2===1?1n:-1n)*binomial(4*m-1,4*k)*A(k)*values[m-k];
+    }
+    values.push(value);
+  }
+  return values;
+}
+export function betaWeights(L,a,b){
+  return Array.from({length:L+1},(_,k)=>
+    binomial(L,k)*rising(a,k)*rising(b,L-k));
+}
+export function betaMomentCoefficients(L,a,b,last){
+  if(!Number.isInteger(last)||last<0||last>96)
+    throw Error('The beta moment index is outside the exact calculator limit.');
+  const weights=betaWeights(L,a,b);
+  return Array.from({length:last+1},(_,n)=>
+    weights.reduce((sum,weight,k)=>sum+weight*BigInt(k)**BigInt(n),0n));
+}
+export function betaHankelCoefficients(L,a,b,last){
+  if(!Number.isInteger(last)||last<0||last>17)
+    throw Error('The beta determinant order is outside the exact calculator limit.');
+  const available=Math.min(last,L+1),highestMoment=Math.max(0,2*available-2);
+  const moments=betaMomentCoefficients(L,a,b,highestMoment);
+  const result=[];
+  for(let n=0;n<=last;n++){
+    if(n>L+1){result.push(0n);continue;}
+    result.push(bareissDeterminant(Array.from({length:n},(_,i)=>
+      Array.from({length:n},(_,j)=>moments[i+j]))));
+  }
+  return result;
+}
+
 export function centralWeightedMoment(n,d,c){
   if(n<0)return 0n;
   const m=Math.floor(n/2);
@@ -136,7 +205,7 @@ export function computeExactWindow(raw){
   const mode=String(raw.mode||'sparse');
   if(!Object.hasOwn(MODE_LIMITS,mode))throw Error('Choose a supported exact family.');
   const limits=MODE_LIMITS[mode];
-  const start=integer(raw.start,'First index',0,limits.maxIndex);
+  const start=integer(raw.start,'First index',mode==='fourblock'?1:0,limits.maxIndex);
   const count=integer(raw.count,'Number of terms',1,limits.maxCount);
   const last=start+count-1;
   if(last>limits.maxIndex)throw Error('The last index must not exceed '+limits.maxIndex+' for this family.');
@@ -151,6 +220,18 @@ export function computeExactWindow(raw){
       values=sparseCoefficients(p,q,r,u,v,last);
       description='C(n) = [z^n](1-u z^p-v z^q)^(-r). Integer powers and weights, including negative r and zero weights.';
       verification='The coefficients use the exact differentiated generating-function recurrence.';
+      break;
+    }
+    case 'padovan':{
+      values=padovanCoefficients(params.h,last);
+      description='Padovan convolution powers: [z^n]((1-z^2)/(1-z^2-z^3))^h.';
+      verification='Exact finite numerator convolution against the two-delay denominator power.';
+      break;
+    }
+    case 'fourblock':{
+      values=fourBlockCoefficients(params.a,last);
+      description='Four-block logarithmic polynomials T_m(a), indexed from m=1. The analytic source degree is 4m-1.';
+      verification='Exact integer-polynomial recurrence with the preserved factorial normalization.';
       break;
     }
     case 'jet':{
@@ -172,6 +253,22 @@ export function computeExactWindow(raw){
       }else{
         verification='Evaluated by exact fraction-free determinants. The general root-free Chebyshev formula is in the source note.';
       }
+      break;
+    }
+    case 'beta_moments':{
+      const {L,a,b}=params;
+      if(a<1)throw Error('Beta shape a must be positive.');
+      values=betaMomentCoefficients(L,a,b,last);
+      description='Unnormalized beta-binomial integer moments U_n = sum_(k=0)^L k^n binom(L,k) (a)_k (b)_(L-k).';
+      verification='Exact finite weighted sum. U_n is an integer and equals (a+b)_L times the normalized probability moment.';
+      break;
+    }
+    case 'beta_hankel':{
+      const {L,a,b}=params;
+      if(a<1)throw Error('Beta shape a must be positive.');
+      values=betaHankelCoefficients(L,a,b,last);
+      description='Hankel determinants of unnormalized beta-binomial integer moments, with H_0=1 and H_N=0 for N>L+1.';
+      verification='Exact fraction-free determinants, including the finite-support rank cutoff. The normalized product needs the factor (a+b)_L^N.';
       break;
     }
     case 'meixner':{
