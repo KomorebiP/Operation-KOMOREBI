@@ -59,11 +59,6 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '24'
-      - name: Install the pinned browser test runtime
-        run: |
-          mkdir -p .sequence-checks/reports
-          npm install --prefix "$RUNNER_TEMP/sequence-browser" --no-save --package-lock=false --ignore-scripts playwright@1.62.1 2>&1 | tee .sequence-checks/reports/npm-install.log
-          "$RUNNER_TEMP/sequence-browser/node_modules/.bin/playwright" install --with-deps chromium 2>&1 | tee .sequence-checks/reports/browser-install.log
       - name: Check sequence definitions and exact data
         run: |
           mkdir -p .sequence-checks/reports
@@ -74,6 +69,17 @@ jobs:
           node --test tools/test_sequence_closed_forms_core.mjs 2>&1 | tee .sequence-checks/reports/closed-forms-core-tests.log
           node --test tools/test_sequence_library.mjs tools/test_sequence_inspection_links.mjs tools/test_sequence_plot_options.mjs tools/test_sequence_math.mjs tools/test_sequence_research.mjs tools/test_sequence_workbench.mjs tools/test_sequence_comparison_certificate.mjs tools/test_sequence_transfer.mjs 2>&1 | tee .sequence-checks/reports/node-tests.log
           python -B tools/audit_sequence_archive.py --output .sequence-checks/reports/archive-audit.json
+      - name: Install the pinned browser test runtime
+        run: |
+          mkdir -p .sequence-checks/reports
+          npm install --prefix "$RUNNER_TEMP/sequence-browser" --no-save --package-lock=false --ignore-scripts playwright@1.62.1 2>&1 | tee .sequence-checks/reports/npm-install.log
+          # Hosted Ubuntu runners generally have the system libraries already.
+          # Avoid unconditional apt downloads, which can fail with 503 errors.
+          "$RUNNER_TEMP/sequence-browser/node_modules/.bin/playwright" install chromium 2>&1 | tee .sequence-checks/reports/browser-install.log
+          if ! NODE_PATH="$RUNNER_TEMP/sequence-browser/node_modules" node -e 'const {chromium}=require("playwright");chromium.launch({headless:true}).then(b=>b.close()).catch(e=>{console.error(e);process.exitCode=1})'; then
+            echo "Chromium launch needs additional host packages. Installing pinned dependencies."
+            "$RUNNER_TEMP/sequence-browser/node_modules/.bin/playwright" install --with-deps chromium 2>&1 | tee .sequence-checks/reports/browser-deps.log
+          fi
       - name: Build the sequence surface with production rendering
         run: |
           python -B tools/fetch_reader_runtime.py --output .sequence-checks/mathjax 2>&1 | tee .sequence-checks/reports/mathjax.log
