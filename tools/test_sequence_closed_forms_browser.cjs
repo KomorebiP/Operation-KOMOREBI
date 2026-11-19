@@ -137,6 +137,7 @@ async function valueRows(page){
       assert.equal(await action.count(),1);
       const before=await action.getAttribute('href');
       assert.match(before,/cf-mode=sparse/);
+      assert.match(before,/q=id%3AKFOR-CF-S-2-5-1-1-1/);
       await action.click();
       await desk.waitForURL(/cf-version=1/);
       await desk.locator('#cf-mode').waitFor({state:'visible'});
