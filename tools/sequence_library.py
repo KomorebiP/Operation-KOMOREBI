@@ -341,7 +341,7 @@ def build(site,atlas):
         page_heading('Closed forms: Collections II and III',
             'Exact integer records, source derivations and explicit review boundaries.',
             'research','closed-forms')+
-        '<section><h2>What is in the collection?</h2><p>24 integer records in six construction families, '
+        '<section id="closed-forms"><h2>What is in the collection?</h2><p>24 integer records in six construction families, '
         'plus two source-defined families without fabricated integer terms. Each record has '
         '24 exact values, two formula representations, a preserved index convention, and CSV/JSON downloads. '
         'The historical OEIS snapshot has not been run on these additions.</p>'
