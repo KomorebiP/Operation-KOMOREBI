@@ -14,19 +14,24 @@
   min-width:0;padding:.85rem 1rem 1rem;
 }
 .sl-library .cf-field{display:flex;flex-direction:column;gap:.3rem;min-width:0;
-  font-size:.9rem;font-weight:600;}
+  font-size:.9rem;font-weight:600;overflow-wrap:anywhere;}
 .sl-library .cf-field :is(input,select){
   box-sizing:border-box;max-width:100%;width:100%;min-width:0;min-height:44px;
   padding:.48rem .55rem;border:1px solid var(--sq-edge,var(--sar-line));
   border-radius:6px;background:var(--sq-bg,var(--paper,#fff));
-  color:var(--sq-ink,var(--ink,#203440));font:inherit;
+  color:var(--sq-ink,var(--ink,#203440));font:inherit;font-size:1rem;
 }
+.sl-library .cf-field [aria-invalid=true]{border:2px solid var(--sq-error,#7c2d2d);}
+.sl-library .cf-field-error{color:var(--sq-error,#7c2d2d);font-size:.85rem;
+  font-weight:400;line-height:1.45;overflow-wrap:anywhere;}
 .sl-library .cf-parameter-group{min-width:0;padding:.65rem .75rem;
   border:1px solid var(--sq-line,var(--sar-line));border-radius:7px;
   margin:.75rem 0;}
 .sl-library .cf-parameter-group legend{padding:0 .3rem;font-size:.9rem;font-weight:700;}
 .sl-library .cf-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,9rem),1fr));
   gap:.7rem;min-width:0;}
+.sl-library .cf-parameter-group[data-mode^=differential_] .cf-grid{
+  grid-template-columns:repeat(4,minmax(0,1fr));}
 .sl-library .cf-window{margin-top:.65rem;grid-template-columns:repeat(2,minmax(0,1fr));max-width:29rem;}
 .sl-library .cf-note{line-height:1.5;font-size:.9rem;max-width:85ch;
   overflow-wrap:anywhere;margin:.45rem 0 .7rem;}
@@ -38,15 +43,26 @@
 .sl-library .cf-actions button:first-child{font-weight:700;}
 .sl-library .cf-actions button:focus-visible,
 .sl-library .cf-field :is(select,input):focus-visible,
-.sl-library .cf-table-scroll:focus-visible{
+.sl-library .cf-table-scroll:focus-visible,
+.sl-library #cf-fallback:focus-visible,
+.sl-library #closed-calculator-panel>summary:focus-visible,
+.sl-library #cf-ogf>summary:focus-visible,
+.sl-library .cf-details>summary:focus-visible{
   outline:3px solid var(--sq-focus,#075985);outline-offset:2px;}
 .sl-library .cf-status{font-weight:600;font-size:.9rem;overflow-wrap:anywhere;
   margin:.4rem 0 .65rem;min-height:1.4rem;}
+.sl-library .cf-status[data-error=true]{color:var(--sq-error,#7c2d2d);}
+.sl-library .cf-actions button:disabled{cursor:wait;}
+.sl-library .cf-visually-hidden{position:absolute;width:1px;height:1px;padding:0;
+  margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0;}
 .sl-library .cf-table-scroll{max-height:23rem;overflow:auto;min-width:0;
   max-width:100%;border:1px solid var(--sq-line,var(--sar-line));
   border-radius:6px;}
 .sl-library .cf-table-scroll table{width:100%;border-collapse:collapse;table-layout:auto;}
 .sl-library .cf-table-scroll :is(th,td){padding:.45rem .7rem;border-bottom:1px solid var(--sq-line,var(--sar-line));text-align:left;}
+.sl-library .cf-table-scroll thead th{position:sticky;top:0;z-index:1;
+  background:var(--sq-panel,var(--surface,#fff));}
+.sl-library .cf-table-scroll tbody th{vertical-align:top;font-variant-numeric:tabular-nums;}
 .sl-library .cf-table-scroll td{min-width:0;max-width:65vw;}
 .sl-library .cf-table-scroll code{font-family:var(--mono,ui-monospace,monospace);
   white-space:normal;overflow-wrap:anywhere;font-variant-numeric:tabular-nums;
@@ -55,7 +71,17 @@
   min-height:5rem;padding:.65rem;font-family:var(--mono,ui-monospace,monospace);
   background:var(--sq-bg,var(--paper,#fff));color:var(--sq-ink,var(--ink,#203440));}
 .sl-library #cf-results h3{margin:.75rem 0 .3rem;}
+.sl-library .cf-details{min-width:0;border:1px solid var(--sq-line,var(--sar-line));
+  border-radius:7px;margin:.85rem 0;background:var(--sq-panel,var(--surface,#fff));}
+.sl-library .cf-details>summary{cursor:pointer;min-height:44px;box-sizing:border-box;
+  padding:.6rem .8rem;font-weight:600;line-height:1.45;}
+.sl-library .cf-details[open]>summary{border-bottom:1px solid var(--sq-line,var(--sar-line));}
+.sl-library .cf-details>p{margin:.55rem .8rem;}
 .sl-library #closed-calculator-root [hidden]{display:none!important;}
+@media(max-width:600px){
+ .sl-library .cf-parameter-group[data-mode^=differential_] .cf-grid{
+   grid-template-columns:repeat(2,minmax(0,1fr));}
+}
 @media(max-width:440px){
  .sl-library:is([data-page="closed-forms"],[data-page="search"]) #closed-calculator-root{padding:.65rem .55rem .9rem;}
  .sl-library .cf-parameter-group{padding:.55rem;}
@@ -66,6 +92,8 @@
 @media print{
  .sl-library #cf-form>.cf-actions,.sl-library #cf-results>.cf-actions{display:none;}
  .sl-library .cf-table-scroll{max-height:none;overflow:visible;}
+ .sl-library .cf-table-scroll thead th{position:static;}
+ .sl-library #cf-fallback,.sl-library #cf-status,.sl-library #cf-ogf>.cf-actions{display:none!important;}
 }
 
 
@@ -163,14 +191,15 @@
 }
 .sl-library .sl-math-manuscript ul{padding-left:1.4rem;margin:.45rem 0 .85rem;}
 .sl-library .sl-math-manuscript li{padding:.15rem 0;overflow-wrap:anywhere;}
-.sl-library .sl-math-manuscript .sl-math-display{
+.sl-library :is(.sl-math-manuscript,.sl-math-reading-intro) .sl-math-display{
   max-width:100%;box-sizing:border-box;overflow-x:auto;overflow-y:hidden;
   padding:.85rem .75rem;margin:.75rem 0 1.05rem;
   border:1px solid var(--sq-line,var(--sar-line));
   border-radius:7px;background:var(--sq-panel,var(--surface));
   font-size:.98rem;line-height:1.5;
 }
-.sl-library .sl-math-manuscript .sl-math-display:focus-visible{
+.sl-library :is(.sl-math-manuscript,.sl-math-reading-intro) .sl-math-display:focus-visible,
+.sl-library .sl-math-manuscript .sl-math-proof-code:focus-visible{
   outline:3px solid var(--sq-focus,#075985);outline-offset:2px;
 }
 .sl-library .sl-math-manuscript .sl-math-proof-code{
@@ -180,13 +209,29 @@
 }
 .sl-library .sl-math-manuscript code{overflow-wrap:anywhere;}
 .sl-library .sl-math-manuscript a{overflow-wrap:anywhere;}
+.sl-library .sl-proof-outline{max-width:90ch;min-width:0;margin:.8rem 0 1.25rem;
+  border:1px solid var(--sq-line,var(--sar-line));border-radius:8px;
+  background:var(--sq-panel,var(--surface));}
+.sl-library .sl-proof-outline>summary{cursor:pointer;font-weight:700;line-height:1.45;
+  min-height:44px;box-sizing:border-box;padding:.6rem .85rem;}
+.sl-library .sl-proof-outline>summary:focus-visible{outline:3px solid var(--sq-focus,#075985);outline-offset:2px;}
+.sl-library .sl-proof-outline[open]>summary{border-bottom:1px solid var(--sq-line,var(--sar-line));}
+.sl-library .sl-proof-outline ul{columns:2;column-gap:1.25rem;list-style:none;
+  margin:.45rem .85rem .7rem;padding:0;}
+.sl-library .sl-proof-outline li{break-inside:avoid;margin:0;}
+.sl-library .sl-proof-outline a{display:flex;align-items:center;min-height:44px;
+  box-sizing:border-box;padding:.35rem .25rem;line-height:1.45;font-size:.9rem;overflow-wrap:anywhere;}
+.sl-library .sl-proof-outline .sl-proof-subsection{padding-left:.75rem;}
+@media(max-width:650px){
+ .sl-library .sl-proof-outline ul{columns:1;}
+}
 @media(max-width:480px){
   .sl-library[data-page=differential-hankel] .sl-math-reading-intro{padding:.55rem .65rem;}
-  .sl-library .sl-math-manuscript .sl-math-display{padding:.65rem .45rem;font-size:.92rem;}
+  .sl-library :is(.sl-math-manuscript,.sl-math-reading-intro) .sl-math-display{padding:.65rem .45rem;font-size:.92rem;}
   .sl-library .sl-math-manuscript p{line-height:1.6;}
 }
 @media print{
-  .sl-library .sl-math-manuscript .sl-math-display,
+  .sl-library :is(.sl-math-manuscript,.sl-math-reading-intro) .sl-math-display,
   .sl-library .sl-math-manuscript .sl-math-proof-code{overflow:visible;break-inside:avoid;}
 }
 

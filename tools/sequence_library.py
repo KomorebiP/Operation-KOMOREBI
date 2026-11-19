@@ -125,15 +125,15 @@ def build(site,atlas):
     out=io.StringIO(newline='');writer=csv.writer(out);writer.writerow(['id','title','collection','family','offset','stored_terms','representations','entry_url'])
     for x in entries:writer.writerow([x['id'],x['title'],x['collection'],x['kind'],x['offset'],len(x['terms']),len(x['formulas']),x['url']])
     site.write('assets/sequence-library-index.csv',out.getvalue())
-    source_files=['tools/'+name+'.py' for name in ['sequence_formula_catalogue','sequence_closed_forms','sequence_closed_forms_extended','sequence_polynomial_hankel','sequence_differential_hankel','sequence_math_reading','sequence_research_tables','sequence_linear_research','sequence_research_notes','sequence_generalized','sequence_archive_families','sequence_atlas','sequence_atlas_reference','sequence_atlas_reading','sequence_atlas_study','sequence_atlas_index']]+[REGISTRY_PATH,'manifests/sequence-generalized-sources.json','research/sequence-connections/IDENTITIES.md','research/sequence-connections/sources/komorebi-math-families.py','research/sequence-closed-forms/IDENTITIES.md','research/sequence-closed-forms/COLLECTION_II_ADDITIONS.md','research/sequence-closed-forms/POLYNOMIAL_HANKEL_STRUCTURE.md','research/sequence-closed-forms/FINITE_DIFFERENTIAL_HANKEL.md','tools/test_sequence_polynomial_hankel.py','tools/test_sequence_differential_hankel.py','tools/test_sequence_differential_hankel_bridge.py','tools/test_sequence_differential_hankel_bridge.mjs','tools/test_sequence_math_reading.py']
+    source_files=['tools/'+name+'.py' for name in ['sequence_formula_catalogue','sequence_closed_forms','sequence_closed_forms_extended','sequence_polynomial_hankel','sequence_differential_hankel','sequence_math_reading','sequence_research_tables','sequence_linear_research','sequence_research_notes','sequence_generalized','sequence_archive_families','sequence_atlas','sequence_atlas_reference','sequence_atlas_reading','sequence_atlas_study','sequence_atlas_index']]+[REGISTRY_PATH,'manifests/sequence-generalized-sources.json','research/sequence-connections/IDENTITIES.md','research/sequence-connections/sources/komorebi-math-families.py','research/sequence-closed-forms/IDENTITIES.md','research/sequence-closed-forms/COLLECTION_II_ADDITIONS.md','research/sequence-closed-forms/POLYNOMIAL_HANKEL_STRUCTURE.md','research/sequence-closed-forms/FINITE_DIFFERENTIAL_HANKEL.md','tools/test_sequence_polynomial_hankel.py','tools/test_sequence_differential_hankel.py','tools/test_sequence_differential_hankel_bridge.py','tools/test_sequence_differential_hankel_bridge.mjs','tools/test_sequence_math_reading.py','tools/test_sequence_closed_forms_core.mjs','website/assets/sequence-closed-forms-core.mjs','website/assets/sequence-differential-hankel.mjs','website/assets/sequence-closed-forms-worker.mjs']
     with ZipFile(site.output/'assets/sequence-formula-source.zip','w',ZIP_DEFLATED) as bundle:
         for name in source_files:
             info=ZipInfo(name,date_time=(2026,11,15,0,0,0));info.compress_type=ZIP_DEFLATED;info.external_attr=0o100644<<16;bundle.writestr(info,(site.root/name).read_text(encoding='utf-8').encode('utf-8'))
         info=ZipInfo('README.txt',date_time=(2026,11,15,0,0,0));info.compress_type=ZIP_DEFLATED;info.external_attr=0o100644<<16
-        bundle.writestr(info,'Exact formula catalogue. Python 3.10+ standard library. Text sources use UTF-8/LF for portable reproduction.\nRun: python tools/sequence_formula_catalogue.py --id KFOR-S-catalan-03-01\nExport all records: python tools/sequence_formula_catalogue.py --output records.json\nScalar records store 24 terms beginning at their explicit offsets, except standard k-bonacci records, which store 48. Coefficient triangles store complete rows n=0..12, including zeros. Triangle j is a flat cell index. Its row and column are n and k. Parameter records are not claims of novelty or pairwise distinctness.\n')
+        bundle.writestr(info,'Exact formula catalogue. Python 3.10+ standard library. The browser arithmetic and cross-language checks also require Node.js 24. Text sources use UTF-8/LF for portable reproduction.\nRun: python tools/sequence_formula_catalogue.py --id KFOR-S-catalan-03-01\nExport all records: python tools/sequence_formula_catalogue.py --output records.json\nCheck browser arithmetic: node --test tools/test_sequence_closed_forms_core.mjs\nCompare Python and JavaScript: python -B -m unittest discover -s tools -p test_sequence_differential_hankel_bridge.py -v\nScalar records store 24 terms beginning at their explicit offsets, except standard k-bonacci records, which store 48. Coefficient triangles store complete rows n=0..12, including zeros. Triangle j is a flat cell index. Its row and column are n and k. Parameter records are not claims of novelty or pairwise distinctness.\n')
     generalized=generalized_catalogue(entries)
     site.write('assets/sequence-generalized-data.json',json.dumps(generalized,ensure_ascii=False,separators=(',',':'))+'\n')
-    scripts=['math-display.mjs','sequence-research-ui.mjs','sequence-reading-theme.mjs','sequence-oeis-core.mjs','sequence-family-core.mjs','sequence-transfer-core.mjs','sequence-math.mjs','sequence-graph-core.mjs','sequence-modular-core.mjs','sequence-discovery-core.mjs','sequence-notebook-core.mjs','sequence-research-worker.mjs','sequence-research-common.mjs','sequence-oeis-worker.mjs','sequence-oeis-client.mjs','sequence-comparison-chart.mjs','sequence-chart-labels.mjs','sequence-workbench-core.mjs','sequence-comparison-certificate.mjs','sequence-certificate-inspection.mjs','sequence-workbench.mjs','sequence-triangle-core.mjs','sequence-triangle.mjs','sequence-transfers.mjs','sequence-families-ui.mjs','sequence-connections-ui.mjs','sequence-identification-ui.mjs','sequence-modular-ui.mjs','sequence-notebooks-ui.mjs','sequence-library-membership.mjs','sequence-research-studio.mjs','sequence-library-search.mjs','sequence-inspection-links.mjs','sequence-closed-forms-core.mjs','sequence-closed-forms-ui.mjs','sequence-library.js']
+    scripts=['math-display.mjs','sequence-research-ui.mjs','sequence-reading-theme.mjs','sequence-oeis-core.mjs','sequence-family-core.mjs','sequence-transfer-core.mjs','sequence-math.mjs','sequence-graph-core.mjs','sequence-modular-core.mjs','sequence-discovery-core.mjs','sequence-notebook-core.mjs','sequence-research-worker.mjs','sequence-research-common.mjs','sequence-oeis-worker.mjs','sequence-oeis-client.mjs','sequence-comparison-chart.mjs','sequence-chart-labels.mjs','sequence-workbench-core.mjs','sequence-comparison-certificate.mjs','sequence-certificate-inspection.mjs','sequence-workbench.mjs','sequence-triangle-core.mjs','sequence-triangle.mjs','sequence-transfers.mjs','sequence-families-ui.mjs','sequence-connections-ui.mjs','sequence-identification-ui.mjs','sequence-modular-ui.mjs','sequence-notebooks-ui.mjs','sequence-library-membership.mjs','sequence-research-studio.mjs','sequence-library-search.mjs','sequence-inspection-links.mjs','sequence-differential-hankel.mjs','sequence-closed-forms-core.mjs','sequence-closed-forms-worker.mjs','sequence-closed-forms-ui.mjs','sequence-library.js']
     for name in scripts:
         content=(site.root/'website/assets'/name).read_text(encoding='utf-8')
         content=content.replace('__OEIS_TERMS_SHA256__',snapshot['stripped_sha256']).replace('__OEIS_NAMES_SHA256__',snapshot['names_sha256'])
@@ -430,9 +430,8 @@ def build(site,atlas):
         '<details id="closed-calculator-panel" class="sl-topic-disclosure">'
         '<summary>Calculate exact coefficients and determinants</summary>'
         '<div id="closed-calculator-root">'
-        '<p>The optional worksheet calculates finite integer windows for two-delay coefficients, '
-        'Padovan powers, four-block polynomials, weighted binomial transforms, beta-binomial moments, and ordinary or higher-order differential Hankel determinants. '
-        'It does not claim that finite agreement proves an infinite identity.</p>'
+        '<p class="cf-placeholder">Choose a construction and calculate exact coefficients, moments, '
+        'or Hankel determinants. The differential moment view also gives the algebraic generating function.</p>'
         '</div><noscript><p>JavaScript is not required to read the definitions and exact record tables above. '
         'Open any record for its complete static 24-term table.</p></noscript></details>')
     closed_css='<link rel="stylesheet" href="assets/sequence-closed-forms.css?v='+hashlib.sha256(
@@ -503,9 +502,13 @@ def build(site,atlas):
                   '<a href="sequence-identify.html#identify">Identify terms</a>'
                   '<a href="sequence-modular.html#modular-dynamics">Modular dynamics</a>'
                   '<a href="sequence-workspace.html#research-notebooks">Combined notebooks</a></nav>')
+    closed_entries=[item for item in entries if item.get('closed_form_collection')]
+    closed_families=[item for item in generalized['families'] if item['id'].startswith('GF-CF-')]
+    active_closed_families=sum(bool(family['record_ids']) for family in closed_families)
     research_choices=('<div class="sl-research-choices" aria-label="Specialized research tools">'
                       '<article><h3><a href="sequence-closed-forms.html#closed-forms">Closed forms II–III</a></h3>'
-                      '<p>Read six exact construction families, 24 curated integer records and their source derivations.</p></article>'
+                      '<p>Read '+str(active_closed_families)+' exact constructions, '+str(len(closed_entries))+
+                      ' curated integer records and their source derivations.</p></article>'
                       '<article><h3><a href="sequence-connections.html#research-graph">Connection graph</a></h3>'
                       '<p>Inspect documented sequence relationships, directed paths and exact transfer compositions.</p></article>'
                       '<article><h3><a href="sequence-identify.html#identify">Identify terms</a></h3>'
@@ -530,8 +533,6 @@ def build(site,atlas):
                    page_kind='research'))
     # The closed-form supplement is a focused reading page, not a sixth tool
     # crowded into Search. Its exact records also appear in the unified index.
-    closed_entries=[item for item in entries if item.get('closed_form_collection')]
-    closed_families=[item for item in generalized['families'] if item['id'].startswith('GF-CF-')]
     closed_cards=''.join(
         '<article class="sar-card"><h3><a href="'+e(family['url'])+'">'+e(family['title'])+'</a></h3>'
         '<p>'+e(family['note'])+'</p><p>'+str(len(family['record_ids']))+' indexed integer records.</p></article>'
@@ -541,7 +542,6 @@ def build(site,atlas):
         '<td>'+e(item['title'])+'</td><td>'+str(item['offset'])+'</td>'
         '<td>'+e(', '.join(item['terms'][:5]))+'</td><td>'+('Source-supplied '+e(item['oeis'])+' · bulk comparison pending' if item.get('source_claimed_oeis') else 'Not yet compared')+'</td></tr>'
         for item in closed_entries)
-    active_closed_families=sum(bool(family['record_ids']) for family in closed_families)
     closed_body=(
         closed_css+
         page_heading('Closed forms: Collections II and III',
@@ -575,7 +575,7 @@ def build(site,atlas):
     # A dependency-free renderer keeps preview and release output consistent.
     from sequence_math_reading import mathematical_reading_fragment
     note=(site.root/'research/sequence-closed-forms/FINITE_DIFFERENTIAL_HANKEL.md').read_text(encoding='utf-8')
-    full_note=mathematical_reading_fragment(note)
+    full_note=mathematical_reading_fragment(note,include_outline=True)
     differential_hankel_page=(
         closed_css+
         page_heading('Finite-order differential Hankel calculus',
@@ -586,17 +586,20 @@ def build(site,atlas):
         '<a href="sequence-closed-forms.html#differential-hankel-theorem">Closed Forms collection</a> · '
         '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/research/sequence-closed-forms/FINITE_DIFFERENTIAL_HANKEL.md">Versioned source</a></nav>'
         '<section id="differential-hankel" class="sl-math-reading-intro"><h2>Reproduce the worked example</h2>'
-        '<p>For P(m)=1+m and D=1+2 partial_x+partial_x^2 the first exact determinants are '
-        '1, 1, 2, -84, -456, 52197296. The browser calculates sizes 0 through 12, '
-        'while the source solver supports arbitrary finite-order operators.</p>'
-        '<p>The corresponding moment generating function has numerator '
-        '1+2z-8z^2-4z^3+52z^4-16z^5-24z^6 '
-        'and denominator (1-4z^2)^(7/2). '
+        r'<p>For <span class="arithmatex">\(P(m)=1+m\)</span> and <span class="arithmatex">\(\mathcal D=1+2\partial_x+\partial_x^2\)</span>, the first exact determinants are '
+        '1, 1, 2, −84, −456, 52197296. The browser calculates sizes 0 through 64 '
+        'with polynomial weights and differential operators of degree and order at most 3. '
+        'The general source solver supports arbitrary finite orders.</p>'
+        '<p>The corresponding moments begin 1, 2, 6, 24, 66, 180. Their exact generating function is</p>'
+        '<div class="arithmatex sl-math-display" tabindex="0" role="region" '
+        'aria-label="Generating function for the worked example">'
+        r'\[M(z)=\frac{1+2z-8z^2-4z^3+52z^4-16z^5-24z^6}{(1-4z^2)^{7/2}}.\]'
+        '</div><p>'
         '<a href="sequence-library.html?cf-version=1&amp;cf-mode=differential_moments&amp;cf-start=0&amp;cf-count=10&amp;cf-a0=1&amp;cf-a1=1&amp;cf-a2=0&amp;cf-a3=0&amp;cf-c0=1&amp;cf-c1=2&amp;cf-c2=1&amp;cf-c3=0#closed-calculator-panel">Inspect the exact moment sequence and generating function</a>.</p>'
         '<p><a href="sequence-library.html?cf-version=1&amp;cf-mode=differential_hankel&amp;cf-start=0&amp;cf-count=7&amp;cf-a0=1&amp;cf-a1=1&amp;cf-a2=0&amp;cf-a3=0&amp;cf-c0=1&amp;cf-c1=2&amp;cf-c2=1&amp;cf-c3=0#closed-calculator-panel">Open the exact calculator with these parameters</a>.</p></section>'
         '<article id="differential-hankel-reading" class="sl-math-manuscript" aria-label="Full differential Hankel mathematical derivation">'
         +full_note+'</article>'
-        '<nav class="sl-tool-back"><a href="sequence-library.html#sequence-proof-path">Return to proof and verification index</a></nav>'
+        '<nav class="sl-tool-back" aria-label="Return to verification"><a href="sequence-library.html#sequence-proof-path">Return to proof and verification index</a></nav>'
     )
     site.page('sequence-differential-hankel.html',
               'Sequence Library · Finite-order differential Hankel calculus',

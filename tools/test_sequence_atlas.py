@@ -165,6 +165,21 @@ class SequenceAtlasTests(unittest.TestCase):
             self.assertIn('math-proof',mathematical)
             self.assertIn('sequence-closed-forms.css',mathematical)
             self.assertIn('sequence-differential-hankel.html',focused)
+            self.assertIn('class="sl-proof-outline"',mathematical)
+            self.assertIn('<span class="arithmatex">',mathematical)
+            self.assertIn('aria-label="Scrollable code example"',mathematical)
+            self.assertIn('sizes 0 through 64',mathematical)
+            for asset,dependency in [
+                ('sequence-closed-forms-core.mjs','sequence-differential-hankel.mjs'),
+                ('sequence-closed-forms-worker.mjs','sequence-closed-forms-core.mjs'),
+                ('sequence-closed-forms-ui.mjs','sequence-closed-forms-worker.mjs'),
+            ]:
+                self.assertIn('./'+dependency+'?v=',(site.output/'assets'/asset).read_text())
+            from zipfile import ZipFile
+            with ZipFile(site.output/'assets/sequence-formula-source.zip') as bundle:
+                for asset in ('sequence-closed-forms-core.mjs','sequence-differential-hankel.mjs'):
+                    name='website/assets/'+asset
+                    self.assertEqual(bundle.read(name),(ROOT/name).read_bytes())
 
             direct=(site.output/'sequence-families/KFOR-CF-JET-01.html').read_text(encoding='utf-8')
             self.assertIn('cf-mode=jet',direct)

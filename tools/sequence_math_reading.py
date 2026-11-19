@@ -29,6 +29,8 @@ def _inline(raw):
     source=re.sub(r'\[([^\]\n]+)\]\(([^)\s]+)\)',link,raw)
     source=re.sub(r'\x60([^\x60\n]+)\x60',
                   lambda m:reserve('<code>'+escape(m[1])+'</code>'),source)
+    source=re.sub(r'\\\((.+?)\\\)',
+                  lambda m:reserve('<span class="arithmatex">'+escape(m[0])+'</span>'),source)
     source=escape(source)
     source=re.sub(r'\*\*([^*\n]+)\*\*',r'<strong>\1</strong>',source)
     for key,markup in holders:
@@ -36,12 +38,13 @@ def _inline(raw):
     return source
 
 
-def mathematical_reading_fragment(source):
+def mathematical_reading_fragment(source, *, include_outline=False):
     """Convert a versioned math Markdown source into safe HTML article content.
 
     The first h1 is omitted because the site page already supplies its h1.
     """
     result=[]
+    outline=[]
     paragraph=[]
     bullets=[]
     in_math=False
@@ -63,7 +66,8 @@ def mathematical_reading_fragment(source):
             bullets.clear()
 
     def flush_code():
-        result.append('<pre class="sl-math-proof-code"><code'+(
+        result.append('<pre class="sl-math-proof-code" tabindex="0" role="region" '
+                      'aria-label="Scrollable code example"><code'+(
             ' class="language-'+escape(code_lang,quote=True)+'"' if code_lang else ''
         )+'>'+escape('\n'.join(code))+'</code></pre>')
         code.clear()
@@ -113,6 +117,9 @@ def mathematical_reading_fragment(source):
                 name=base+'-'+str(i);i+=1
             used_ids.add(name)
             result.append(f'<h{level} id="{name}">'+_inline(match[2])+f'</h{level}>')
+            if level<=3:
+                outline.append('<li'+(' class="sl-proof-subsection"' if level==3 else '')+
+                               '><a href="#'+name+'">'+_inline(match[2])+'</a></li>')
             continue
         if stripped.startswith('- '):
             flush_paragraph()
@@ -125,4 +132,8 @@ def mathematical_reading_fragment(source):
     if in_code:
         raise ValueError('Unclosed fenced code block in mathematical source')
     flush_paragraph();flush_bullets()
+    if include_outline and outline:
+        result.insert(0,'<details class="sl-proof-outline"><summary>On this page</summary>'
+                        '<nav aria-label="Proof sections"><ul>'+''.join(outline)+
+                        '</ul></nav></details>')
     return '\n'.join(result)
