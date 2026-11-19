@@ -53,7 +53,7 @@ def calculator_link(entry,path='sequence-library.html'):
     index=entry['offset']
     count=min(12,len(entry['terms']),CALCULATOR_BOUNDS[mode]-index+1)
     if count<1:raise ValueError('Exact calculator cannot represent the source index')
-    values={'cf-version':'1','cf-mode':mode,'cf-start':str(index),'cf-count':str(count)}
+    values={'q':'id:'+entry['id'],'cf-version':'1','cf-mode':mode,'cf-start':str(index),'cf-count':str(count)}
     for key in keys:values['cf-'+key]=str(spec[key])
     return path+'?'+urlencode(values)+'#closed-calculator-panel'
 
