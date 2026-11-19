@@ -70,6 +70,16 @@ async function valueRows(page){
       assert.deepEqual((await valueRows(page)).slice(0,6),
         ['1','1','2','-84','-456','52197296']);
       assert.equal(await page.locator('#cf-differential_hankel-c2').inputValue(),'1');
+      const proofPage=await context.newPage();
+      proofPage.on('pageerror',error=>report.errors.push({width,message:error.message}));
+      await proofPage.goto(url('sequence-differential-hankel.html'));
+      assert.equal(await proofPage.locator('#differential-hankel-reading').count(),1);
+      assert.equal(await proofPage.locator('#differential-hankel-reading h2').count()>=5,true);
+      assert.equal(await proofPage.locator('#differential-hankel-reading .sl-math-display').count()>=12,true);
+      assert.equal(await proofPage.locator('main h1').count(),1);
+      assert.equal(await proofPage.locator('a[href*="cf-mode=differential_hankel"]').count()>=1,true);
+      await fit(proofPage);
+      await proofPage.close();
       const worked=page.locator('#differential-hankel-theorem');
       assert.equal(await worked.count(),1);
       const example=worked.locator('a[href*="cf-mode=differential_hankel"]');
@@ -180,6 +190,10 @@ async function valueRows(page){
     assert.equal(await page.locator('#cf-form').count(),0);
     await page.locator('#closed-calculator-panel>summary').click();
     assert.match(await page.locator('#closed-calculator-panel').textContent(),/static 24-term table/);
+    await fit(page,true);
+    await page.goto(url('sequence-differential-hankel.html'));
+    assert.equal(await page.locator('#differential-hankel-reading').count(),1);
+    assert.equal(await page.locator('.sl-math-display').count()>=12,true);
     await fit(page,true);
     await page.goto(url('sequence-library.html'));
     assert.equal(await page.locator('#sequence-research-desk').count(),1);
