@@ -1,8 +1,8 @@
 # Unified sequence and formula library
 
-`sequence-library.html` searches 2,292 local records: the original 38 KSEQ
-entries, 90 recovered KOM records, and 2,164 KFOR parameter records. It indexes
-7,033 recorded representations, including term formulas, finite sums,
+`sequence-library.html` searches 2,316 local records: the original 38 KSEQ
+entries, 90 recovered KOM records, and 2,188 KFOR parameter records. It indexes
+7,081 recorded representations, including term formulas, finite sums,
 recurrences, generating functions, and hypergeometric coefficient formulas.
 These counts describe records and representations, not distinct infinite
 sequences or new discoveries.
@@ -98,7 +98,7 @@ and `?`. Fields include `formula:`, `representation:`, `collection:`, `n:`
 pagination and shared links preserve applied state. Result CSVs export the
 complete filtered set rather than only the current page.
 
-Saved entries use the existing browser-local saved-list key across all 2,292
+Saved entries use the existing browser-local saved-list key across all 2,316
 records, with a 500-record limit. Scoped writes from the older atlas preserve
 records from other collections. The saved filter uses the recipient's own list
 when sharing a search. If browser storage is unavailable, the current session still works.
@@ -943,3 +943,29 @@ python -m unittest discover -s tools -p test_sequence_library.py
 node tools/test_sequence_math_browser.cjs http://127.0.0.1:8846/ OUTPUT_DIRECTORY
 ```
 
+## Closed Forms Collections II and III (19 November 2026)
+
+The focused [closed forms reading page](../sequence-closed-forms.html) includes 24
+new KFOR-CF records under six constructions: sparse two-delay coefficients,
+Padovan generating-function powers, four-block logarithmic coefficients,
+weighted Hankel determinants, beta-binomial ordinary moments, and beta-binomial
+Hankel determinants. Each new record has 24 exact coefficients, two formula
+representations, a source-linked derivation and its own CSV/JSON exports.
+The generalized-family index additionally lists two definition-only families
+for polynomially weighted binomial transforms and entire scaling limits.
+They do not contribute invented integer records.
+
+The new records do not alter existing mathematical coefficients, record IDs or
+index conventions. The four-block records start at m=1 and use source degree
+4m-1. The beta-binomial integer records use unnormalized moments U_n rather
+than rational probability moments M_n; their Hankel determinants are scaled
+by (a+b)_L^N. The old pinned OEIS manifest is deliberately checked only
+against its original 2,292 records. New records explicitly show "Not yet
+compared" in their OEIS panels, rather than incorrectly reporting no matches.
+Each new entry nevertheless has its own exact local SHA-256 record receipt.
+
+Definitions and mathematical qualifications are in
+`research/sequence-closed-forms/IDENTITIES.md`. Reproducible exact tests are
+in `tools/test_sequence_closed_forms.py` with the standard-library generator
+`tools/sequence_closed_forms.py`. The source package download includes the
+new generator and mathematical notes. Historical novelty remains unassessed.
