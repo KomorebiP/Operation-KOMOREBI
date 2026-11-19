@@ -168,7 +168,16 @@ Let \(K=(d+1)(d+2)\). The generating function denominator divides
 \left[(1+\rho_dz)^4+(2d+1)^2c^2\rho_d^2z^2\right]^{K+1}.
 \]
 
-The *minimal eventual* constant-coefficient recurrence order is \(d(d+1)+1\) for \(c=0\), \(3K+4\) for \((2d+1)c=\pm4i\), and \(4K+4\) otherwise. At \(c=1\), the orders for \(d=0,1,2\) are exactly \(12,28,52\). The all-real-zero theorem of the unweighted \(d=0\) family does not generalize to every \(d>0\).
+The *minimal eventual* constant-coefficient recurrence order is \(d(d+1)+1\) for \(c=0\), \(3K+4\) for \((2d+1)c=\pm4i\), and \(4K+4\) otherwise. At \(c=1\), the orders for \(d=0,1,2\) are exactly \(12,28,52\). Two exact examples make the zero boundary visible:
+
+\[
+W_4^{[1]}(c)=48(27c^4+6c^2+2),\qquad
+W_6^{[2]}(c)=-14929920(25c^2+2)(125c^4+20c^2-2).
+\]
+
+The first has no real zeros. The second has both real and nonreal zeros.
+These follow from the fixed-size formula and are independently reproduced
+by exact symbolic determinants. The all-real-zero theorem of the unweighted \(d=0\) family does not generalize to every \(d>0\).
 
 The published algorithm computes these determinants through polynomial remainders in \(O(dN)\) arithmetic operations rather than expanding an \(N\times N\) Hankel determinant. This is an arithmetic-operation count, not a fixed-bit-complexity bound.
 
