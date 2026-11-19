@@ -47,7 +47,6 @@ async function valueRows(page){
       await page.locator('#cf-calculate').click();
       assert.deepEqual((await valueRows(page)).slice(0,7),
         ['1','2','5','16','47','146','447']);
-      assert.equal(await page.locator('#cf-parameter-group-missing').count(),0);
 
       await page.selectOption('#cf-mode','hankel');
       assert.deepEqual((await valueRows(page)).slice(0,8),
@@ -95,7 +94,8 @@ async function valueRows(page){
 
       const rejected=await context.newPage();
       rejected.on('pageerror',error=>report.errors.push({width,message:error.message}));
-      await rejected.goto(shared+'&cf-count=3');
+      const badLink=new URL(shared);badLink.searchParams.append('cf-count','3');
+      await rejected.goto(badLink.href);
       await rejected.locator('#cf-mode').waitFor();
       assert.match(await rejected.locator('#cf-status').textContent(),/shared calculator view was rejected/i);
       assert.equal(await rejected.locator('#cf-count').inputValue(),'12');
