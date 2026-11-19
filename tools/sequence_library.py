@@ -2,7 +2,7 @@
 import csv
 import hashlib
 from html import escape as e
-from urllib.parse import quote
+from urllib.parse import quote,urlencode
 import io
 import json
 from pathlib import Path
@@ -25,6 +25,35 @@ def source_degree(entry,n):
     return entry['N']*n+(entry.get('j',0) if entry['kind']=='classical multisection' else 0)
 
 
+CALCULATOR_PARAMETERS={
+    'sparse':('p','q','r','u','v'),
+    'jet':('d','lambda','c'),
+    'hankel':('d','c'),
+    'meixner':('s','twox'),
+}
+CALCULATOR_BOUNDS={'sparse':96,'jet':80,'hankel':12,'meixner':96}
+
+
+def calculator_link(entry,path='sequence-library.html'):
+    """Canonical exact calculator handoff from a source record.
+
+    Parameters are recorded by the exact generator, not parsed from a title.
+    Links contain no stored coefficients and leave the original record intact.
+    """
+    spec=entry.get('calculator')
+    if not spec:return None
+    mode=spec['mode']
+    if mode not in CALCULATOR_PARAMETERS:raise ValueError('Unrecognized exact calculation mode')
+    keys=CALCULATOR_PARAMETERS[mode]
+    if set(spec)!={'mode',*keys}:raise ValueError('Incomplete exact calculator parameters: '+entry['id'])
+    index=entry['offset']
+    count=min(12,len(entry['terms']),CALCULATOR_BOUNDS[mode]-index+1)
+    if count<1:raise ValueError('Exact calculator cannot represent the source index')
+    values={'cf-version':'1','cf-mode':mode,'cf-start':str(index),'cf-count':str(count)}
+    for key in keys:values['cf-'+key]=str(spec[key])
+    return path+'?'+urlencode(values)+'#closed-calculator-panel'
+
+
 def library_entries(atlas):
     groups=[('atlas',atlas,'sequences/'),('recovered',records(atlas),'sequence-archive/'),('formulas',expanded_catalogue(),'sequence-families/')]
     entries=[]
@@ -35,6 +64,7 @@ def library_entries(atlas):
             entry.setdefault('index_symbol','n');entry.setdefault('classification','family' if collection=='formulas' else 'reference')
             if entry['id']=='KOM084':entry['tags']=[*entry['tags'],'triangle']
             entry['formulas']=formula_variants(entry)
+            if entry.get('calculator'):entry['calculator_url']=calculator_link(entry)
             entries.append(entry)
     return entries
 
@@ -479,6 +509,9 @@ def build(site,atlas):
         rows=''.join('<tr id="n-'+str(n)+'"><th scope="row">'+str(n)+'</th>'+coordinates(n)+'<td>'+str(source_degree(entry,n))+'</td><td>'+value+'</td>'+('<td>'+e(rational[n-start])+'</td>' if rational else '')+'</tr>' for n,value in enumerate(entry['terms'],start=start))
         body='<nav aria-label="Breadcrumb"><a href="../sequence-library.html">Sequence library</a> / '+e(identifier)+'</nav><header class="sar-header"><p class="sar-kicker">'+e(identifier)+' / Parameter record</p><h1>'+e(entry['title'])+'</h1><p>'+e(entry['status'])+'</p><nav aria-label="Entry sections"><a href="#definition">Definition</a><a href="#formulas">Formula representations</a>'+('<a href="#triangle">Coefficient triangle</a>' if entry.get('triangle') else '')+'<a href="#plot">Plot</a><a href="#exact-data">Exact data</a><a href="#oeis-matches">OEIS comparisons</a></nav></header><section id="definition"><h2>Definition and indexing</h2><p class="sar-formula">'+e(entry['formula'])+'</p><p>'+index_note+'</p>'+related+'</section><section id="formulas"><h2>Equivalent representations</h2>'+formula_block(entry)+'</section>'+triangle_section(entry)+plot_section(entry)+'<section id="exact-data"><h2>Exact indexed data</h2><p><a download href="'+identifier+'.csv">CSV</a> · <a download href="'+identifier+'.txt">Indexed text</a> · <a download href="'+identifier+'.json">Entry JSON with all formulas and comparisons</a></p><div class="sar-scroll" tabindex="0" role="region" aria-label="Exact stored values"><table><thead><tr><th scope="col">'+index_label+'</th>'+('<th scope="col">Row n</th><th scope="col">Column k</th>' if entry.get('triangle') else '')+'<th scope="col">Source degree/index</th><th scope="col">'+value_label+'</th>'+('<th scope="col">Original rational q(n)</th>' if rational else '')+'</tr></thead><tbody>'+rows+'</tbody></table></div></section>'+matches_block(entry)+'<section id="sources"><h2>Sources and reproduction</h2><p><a href="'+e(entry['source'])+'">Published construction source</a></p><p>The terms and formulas use the parameters listed above. KFOR identifiers are local to this library. OEIS entries use A-numbers.</p><details><summary>Reproduce this sequence</summary><p>Source: <code>'+REGISTRY_PATH+'</code>. Parameter grids and exact reproduction are implemented in <code>tools/sequence_formula_catalogue.py</code>. Run the generator with the listed parameters to reproduce the stored terms.</p><p><a download href="../assets/sequence-formula-source.zip">Download the exact Python generator and source</a>. Extract the bundle, then run <code>python tools/sequence_formula_catalogue.py --id '+identifier+'</code>.</p></details></section>'
         body=body.replace('<section id="plot"',entry_details(entry)+'<section id="plot"',1)
+        if entry.get('calculator_url'):
+            handoff='<p class="sl-record-calculator"><a href="../'+e(entry['calculator_url'],quote=True)+'">Recalculate this sequence in the unified exact workspace</a>. The original indexed data and source formulas remain available here.</p>'
+            body=body.replace('</section><section id="formulas">',handoff+'</section><section id="formulas">',1)
         if entry.get('linear_addition'):body=body.replace(REGISTRY_PATH,'research/sequence-connections/IDENTITIES.md')
         site.page(entry['url'],entry['title']+' · '+identifier,wrap(body,'../',entry))
         site.search.append(dict(title=entry['title']+' · '+identifier,group='Collection',kind='Examples',work_ids=[],url=entry['url'],text=' '.join(f['expression'] for f in entry['formulas'])))
