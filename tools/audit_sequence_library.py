@@ -146,7 +146,7 @@ def checks():
     checked.update(verify_additions(all_entries,parameter,theta))
     from audit_sequence_linear import verify_linear
     checked.update(verify_linear(all_entries))
-    return dict(status='passed',records=len(all_entries),terms=sum(len(x['terms']) for x in all_entries),checks=dict(checked),assertion_tested='Every enumerated stored coefficient/component, source-index map, and stated hypergeometric coefficient representation agrees with exact independent constructions in the documented finite ranges.',non_claims=['No novelty or distinctness conclusion','Finite OEIS matches do not prove infinite identities'])
+    return dict(status='passed',records=len(all_entries),terms=sum(len(x['terms']) for x in all_entries),checks=dict(checked),assertion_tested='The legacy research catalogue coefficient components, source-index maps, and hypergeometric representations agree with independent exact constructions. Closed-form additions are independently checked by tools/test_sequence_closed_forms.py.',non_claims=['No novelty or distinctness conclusion','Finite OEIS matches do not prove infinite identities'])
 
 
 if __name__=='__main__':
