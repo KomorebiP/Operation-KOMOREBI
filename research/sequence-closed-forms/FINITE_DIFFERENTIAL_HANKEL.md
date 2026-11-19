@@ -9,14 +9,16 @@ This note extends [Polynomial-weighted Hankel structure](POLYNOMIAL_HANKEL_STRUC
 
 ## 1. Moments and operator
 
-Let \(P(m)=\sum_{d=0}^{D}a_dm^{\underline d}\) and define the characteristic-zero linear functional
+Let \(D\ge0\) be an integer and \(P(m)=\sum_{d=0}^{D}a_dm^{\underline d}\). Define the linear functional over a characteristic-zero field by
 
 \[
 F_P[x^{2m}]=P(m)\binom{2m}{m},\qquad
 F_P[x^{2m+1}]=0.
 \]
 
-Let \(\mathcal D=\sum_{k=0}^r c_k\partial_x^k\), with no requirement that \(c_0=1\). Set
+Write \(F_d\) for the special case \(P(m)=m^{\underline d}\), so \(F_P=\sum_{d=0}^{D}a_dF_d\).
+
+Let \(r\ge0\) be an integer and \(\mathcal D=\sum_{k=0}^r c_k\partial_x^k\), with no requirement that \(c_0=1\). The nonnegative integers \(D\) and \(r\) are degree and order bounds. For nonzero inputs they may be chosen to equal the actual degree and order; zero inputs are also allowed. Set
 
 \[
 L[f]=F_P[\mathcal D f],\qquad
@@ -36,7 +38,7 @@ This formula includes every parity and zero-weight boundary. Shifting from \(x^i
 
 ### Algebraic ordinary generating function for every finite differential operator
 
-The moment sequence has a second universal representation that is independent of taking Hankel determinants. Put \(h(z)=1-4z^2\) and \(D=\deg P\). The original unperturbed even moments have the generating function
+The moment sequence has a second universal representation that is independent of taking Hankel determinants. Put \(h(z)=1-4z^2\). The original unperturbed even moments have the generating function
 
 \[
 M_P(z)=\sum_{m\ge0}P(m)\binom{2m}{m}z^{2m}
@@ -54,21 +56,21 @@ z^{2d}h(z)^{D-d}
 
 has degree at most \(2D\).
 
-Define the formal operator \(\mathscr T f=z\frac{d}{dz}(zf)=z(f+zf')\). Its \(k\)-fold iterate has coefficient identity
+Define the formal operator \(\mathscr T f=z\frac{d}{dz}(zf)=z(f+zf')\). Its \(k\)-fold iterate has the coefficient identity
 
 \[
 [z^n]\mathscr T^kM_P(z)
-=n^{\underline k}F_P[x^{n-k}].
+=n^{\underline k}F_P[x^{n-k}],\qquad n\ge k.
 \]
 
-Thus the perturbed moment generating function is
+For \(0\le n<k\), the coefficient is zero. Thus the perturbed moment generating function is
 
 \[
 M_{P,\mathbf c}(z)=\sum_{n\ge0}\mu_nz^n
 =\sum_{k=0}^r c_k\mathscr T^kM_P(z).
 \]
 
-**Theorem 1A (algebraic moment generating functions).** For every polynomial \(P\) of degree \(D\) and every finite constant-coefficient differential operator of order \(r\),
+**Theorem 1A (algebraic moment generating functions).** For every polynomial \(P\) of degree at most \(D\) and every finite constant-coefficient differential operator of order at most \(r\),
 
 \[
 \boxed{
@@ -286,7 +288,7 @@ O(i+j)+O(i-j),& i-j\ {\rm odd}.
 i^{2h+1-2\ell}j^{2\ell}.
 \]
 
-Both parity selectors are linear combinations of \(1\) and \((-1)^i(-1)^j\). Hence each separated block column belongs to the span of
+Both parity selectors are linear combinations of \(1\) and \((-1)^i(-1)^j\). Hence each separated block row belongs to the span of
 
 \[
 1,j^2,\ldots,j^{2(D+r-1)}
@@ -331,7 +333,7 @@ Assume \(P\not\equiv0\) and \(\mathcal D\not\equiv0\), and let \(\nu\) and \(\ka
 \mu_\ell=c_\kappa a_\nu\frac{\ell!}{\nu!}.}
 \]
 
-The first nonzero Hankel matrix is anti-triangular. Therefore
+The first nonsingular leading Hankel matrix is anti-triangular. Therefore
 
 \[
 \boxed{
@@ -363,11 +365,11 @@ This does not imply independent evenness in each odd coefficient.
 
 The mathematical identities apply over characteristic-zero fields. The standard-library Python solver evaluates rational weights and rational operator coefficients exactly:
 
-\`\`\`bash
+```bash
 python -B -m unittest discover -s tools -p 'test_sequence_differential_hankel.py' -v
 python -B tools/sequence_differential_hankel.py
-\`\`\`
+```
 
-The browser’s unified **higher-order differential Hankel** calculator supports falling-factorial weights of degree at most three, operators of order at most three, integer parameters, and determinants up to size 12. It uses exact BigInt moment sums and fraction-free determinants. The mathematical rank theorem is not limited by those user-interface bounds.
+The browser’s unified **higher-order differential Hankel** calculator supports falling-factorial weights of degree at most three, operators of order at most three, integer parameters from \(-12\) to \(12\), and determinants up to size \(64\). It displays at most \(32\) consecutive values at a time. Exact rational arithmetic built from BigInt implements the Chebyshev–Schur solver, including initial zero blocks and later singular-pivot lookahead. Every calculation is independently checked against direct moment sums and fraction-free determinants through size \(12\), or through its last requested size if smaller. The mathematical rank theorem is not limited by those interface bounds.
 
 The Python tests compare direct monomial calculations, Chebyshev derivatives, quasiseparable generators, exact matrix ranks, leading singular blocks, binomial-shift invariance, first-order specialization, and longer structured determinant prefixes. These tests substantiate the implementation but are not a Lean formalization or a historical-priority assessment. Existing sequence counts, archived integer records, and pinned OEIS receipts are unchanged.

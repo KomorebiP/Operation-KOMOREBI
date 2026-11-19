@@ -32,6 +32,20 @@ class MathematicalReadingTests(unittest.TestCase):
         self.assertNotIn('href="POLYNOMIAL_HANKEL_STRUCTURE.md"',content)
         self.assertEqual(content.count('class="arithmatex sl-math-display"'),source.count(r'\['))
         self.assertIn(r'\boxed',content)
+        self.assertEqual(content.count('class="sl-math-proof-code"'),1)
+        self.assertIn('aria-label="Scrollable code example"><code class="language-bash">',content)
+        self.assertNotIn(r'\`\`\`',content)
+        self.assertGreater(content.count('<span class="arithmatex">'),100)
+
+    def test_outline_links_match_rendered_headings(self):
+        import re
+        source=(ROOT/'research/sequence-closed-forms/FINITE_DIFFERENTIAL_HANKEL.md').read_text(encoding='utf-8')
+        content=mathematical_reading_fragment(source,include_outline=True)
+        self.assertIn('<nav aria-label="Proof sections">',content)
+        targets=re.findall(r'<a href="#(math-proof-[^"]+)"',content)
+        headings=re.findall(r'<h[23] id="(math-proof-[^"]+)"',content)
+        self.assertEqual(targets,headings)
+        self.assertEqual(len(targets),7)
 
     def test_source_renderer_escapes_markup_and_rejects_active_urls(self):
         raw=(
@@ -56,6 +70,13 @@ class MathematicalReadingTests(unittest.TestCase):
             mathematical_reading_fragment('# Example\n\n'+r'\['+'\na+b')
         with self.assertRaises(ValueError):
             mathematical_reading_fragment('# Example\n\n'+chr(96)*3+'python\nprint(1)')
+
+    def test_inline_math_is_typeset_without_processing_code(self):
+        raw=r'For \(x<y\), use `\(source\)` and **exact** arithmetic.'
+        content=mathematical_reading_fragment(raw)
+        self.assertIn(r'<span class="arithmatex">\(x&lt;y\)</span>',content)
+        self.assertIn(r'<code>\(source\)</code>',content)
+        self.assertEqual(content.count('<span class="arithmatex">'),1)
 
 
 if __name__=='__main__':

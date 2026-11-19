@@ -946,7 +946,7 @@ node tools/test_sequence_math_browser.cjs http://127.0.0.1:8846/ OUTPUT_DIRECTOR
 ## Closed Forms Collections II and III (19 November 2026)
 
 The focused [closed forms reading page](https://komorebip.github.io/Operation-KOMOREBI/sequence-closed-forms.html) includes 35
-KFOR-CF records under seven indexed constructions: sparse two-delay coefficients,
+KFOR-CF records under eight indexed constructions: sparse two-delay coefficients,
 Padovan generating-function powers, four-block logarithmic coefficients,
 weighted Hankel determinants, beta-binomial ordinary moments, beta-binomial Hankel determinants, weighted binomial jets and
 integer Meixner–Pollaczek specializations. Each new record has 24 exact coefficients, at least two formula
@@ -1023,7 +1023,7 @@ same central calculator with the recorded source parameters and
 original index. The mapping is generated from source parameters,
 not inferred by parsing mathematical prose.
 
-The eight exact integer modes are sparse two-delay coefficients,
+The eight exact integer modes used by these indexed records are sparse two-delay coefficients,
 Padovan generating-function powers, four-block logarithmic
 polynomials, polynomially weighted binomial transforms, weighted
 Hankel determinants, unnormalized beta-binomial moments,
@@ -1159,16 +1159,20 @@ leading minors. The independent test
 derivatives, polynomial Chebyshev reductions, exact separated-block
 ranks, shift invariance, sign parity, direct determinants and
 longer exact prefixes. A separate Python-to-Node bridge verifies
-the browser against the structured solver for nine parameter
-choices and all 117 returned determinant values.
+the browser against the Python structured solver across fixed
+parameter choices and complete determinant prefixes.
 
 The main Sequence Library and focused Closed Forms page both
 include a collapsed theorem summary and a parameterized
 **Higher-order differential Hankel determinants** calculator
 mode. The browser mode accepts four falling-factorial weight
 coefficients (a0..a3), four operator coefficients (c0..c3),
-and exact determinant sizes 0..12. It uses BigInt and
-fraction-free elimination, not floating-point calculation.
+and exact determinant sizes 0..64, with up to 32 consecutive
+values per window. It computes each prefix once using exact rational
+Chebyshev–Schur updates built from BigInt. Initial zero blocks and
+later singular leading minors use the same block lookahead as the
+Python solver. Every calculation independently checks its available
+sizes 0..12 using direct moments and fraction-free elimination.
 These are user-interface computation limits; the theorem
 allows arbitrary finite polynomial and differential degrees.
 
@@ -1241,12 +1245,13 @@ inferred from the algebraicity of the moments.
 
 On the [unified Sequence Library](https://komorebip.github.io/Operation-KOMOREBI/sequence-library.html),
 two calculation modes share the same a0..a3 and c0..c3 parameters:
-**Higher-order differential Hankel determinants** (exact direct
-determinants of size 0..12) and **Differential moments and algebraic
+**Higher-order differential Hankel determinants** (exact structured
+determinants of size 0..64) and **Differential moments and algebraic
 generating functions** (exact integer moments through index 160).
 Both modes show the numerator and denominator in a collapsed
-**Exact algebraic moment generating function** panel, with a
-copyable plain-text expression and exact CSV export. Values and
+**Exact algebraic moment generating function** panel with a
+copyable plain-text expression. Separate exact CSV exports contain
+the selected moment or determinant values and parameters. Values and
 source formula are computed locally using BigInt, not floating point.
 
 For P(m)=1+m and \(\mathcal D=1+2\partial_x+\partial_x^2\),
@@ -1258,10 +1263,45 @@ M(z)=\frac{1+2z-8z^2-4z^3+52z^4-16z^5-24z^6}
 
 The corresponding moments begin
 1, 2, 6, 24, 66, 180, 620, 1120, 4830, 6300.
-The full formal derivation is available on the
+The full algebraic derivation is available on the
 [finite differential Hankel reading page](https://komorebip.github.io/Operation-KOMOREBI/sequence-differential-hankel.html)
 and in the versioned
 `research/sequence-closed-forms/FINITE_DIFFERENTIAL_HANKEL.md` source.
+
+## Calculator usability and proof reading (19 November 2026)
+
+Editing a numeric input immediately hides the previous calculation and its
+exports. The result table, CSV, copied values, and reproducible link all refer
+to one completed calculation. The differential moment and differential Hankel
+views preserve their shared coefficients when switching modes or restoring
+defaults.
+
+Differential determinants above size 12 run in a module worker. The calculator
+announces progress, exposes its busy state, and allows parameter changes to
+cancel the calculation. Responses from cancelled calculations are discarded.
+If workers are unavailable, the page announces that it is using the same exact
+calculation on the main thread. Link creation and validation do not compute a
+determinant prefix.
+
+Invalid fields have a visible explanation associated with the input, and
+submission focuses the first invalid field. Inactive parameter groups are
+disabled. The table has a construction-specific caption and row/column
+headers. Exact values and exports come before the optional formula and
+calculation details. Native disclosures, the scrollable table, formulas, and
+manual clipboard fallback retain visible keyboard focus in light, dark, and
+forced-color views.
+
+The differential proof reader now typesets inline formulas as well as display
+equations, offers a collapsible section outline, and renders the reproduction
+commands as a keyboard-accessible code block. The original TeX remains
+available through the site-wide plain-text math display control. The source
+archive includes the JavaScript solver dependencies and the Python-to-Node
+comparison programs needed to reproduce the differential calculations.
+
+The focused browser audit is `tools/test_sequence_accessibility_browser.cjs`.
+It complements the existing closed-form and sequence-workspace checks; its
+scope is the calculator and differential proof page, not a whole-site
+accessibility certification.
 
 Independent verification includes the standard-library Python
 implementation of the rational numerator and differential equation,

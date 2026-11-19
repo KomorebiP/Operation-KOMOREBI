@@ -2,9 +2,9 @@
 // Author: Komorebi P.
 import assert from 'node:assert/strict';
 import {test} from 'node:test';
-import {binomial,falling,sparseCoefficients,padovanCoefficients,
+import {MODE_LIMITS,binomial,falling,sparseCoefficients,padovanCoefficients,
   fourBlockCoefficients,betaMomentCoefficients,betaHankelCoefficients,
-  polynomialDifferentialMoment,differentialHankel,differentialMomentGeneratingFunction,
+  polynomialDifferentialMoment,differentialHankel,structuredDifferentialHankel,differentialMomentGeneratingFunction,
   differentialMomentsFromAlgebraicRecurrence,
   centralWeightedMoment,weightedJet,
   bareissDeterminant,weightedHankel,fourFthreeHankel,meixnerCoefficients,
@@ -133,12 +133,75 @@ test('finite differential Hankel mode matches independent source values and pari
     a0:'1',a1:'1',a2:'0',a3:'0',c0:'1',c1:'2',c2:'1',c3:'0'});
   assert.deepEqual(report.rows.map(row=>row.value),['1','1','2','-84','-456']);
   assert.match(report.verification,/separated-block rank/);
+  assert.match(report.verification,/through size 4\./);
   const shared=exactViewURL('https://example.test/sequence-library.html',{
     mode:'differential_hankel',start:'0',count:'5',a0:'1',a1:'1',a2:'0',a3:'0',
     c0:'1',c1:'2',c2:'1',c3:'0'});
   assert.equal(new URL(shared).searchParams.get('cf-a1'),'1');
   assert.equal(new URL(shared).searchParams.get('cf-c2'),'1');
   assert.equal(readExactView(shared).mode,'differential_hankel');
+});
+test('structured Chebyshev Schur prefixes match independent Bareiss at singular and signed inputs',()=>{
+  // 42 parameter pairs, every size 0..12. The defining monomial moments
+  // and fraction-free elimination do not use the Chebyshev generators.
+  for(const a of [[1],[0,1],[1,1],[2,-3,1],[0,0,0,1],[1,0,2,-1],[0]]){
+    for(const c of [[1],[0,1],[1,2,1],[0,0,0,2],[1,0,-2,3],[0]]){
+      const prefix=structuredDifferentialHankel(a,c,12);
+      for(let n=0;n<=12;n++)assert.equal(prefix[n],differentialHankel(n,a,c),
+        'Structured/direct mismatch '+JSON.stringify([a,c,n]));
+    }
+  }
+  // A nonzero first determinant followed by an interior singular minor.
+  const interior=structuredDifferentialHankel([1],[1,2,1],12);
+  assert.equal(interior[1],1n);assert.equal(interior[2],0n);assert.notEqual(interior[3],0n);
+  // Pure odd differentiation needs repeated two-by-two lookahead.
+  const odd=structuredDifferentialHankel([1],[0,1],64);
+  for(let n=1;n<=64;n++)assert.equal(odd[n]===0n,n%2===1);
+});
+test('structured determinant reaches size 64 and agrees with larger direct matrices',()=>{
+  const examples=[
+    [[1,1],[1,2,1]],
+    [[12,-12,12,12],[12,-12,12,-12]],
+    [[0,0,0,1],[0,0,0,2]],
+  ];
+  for(const [a,c] of examples){
+    const prefix=structuredDifferentialHankel(a,c,64);
+    const moments=Array.from({length:127},(_,n)=>polynomialDifferentialMoment(n,a,c));
+    for(const n of [13,24,40,64]){
+      const direct=bareissDeterminant(Array.from({length:n},(_,i)=>
+        Array.from({length:n},(_,j)=>moments[i+j])));
+      assert.equal(prefix[n],direct,'Large independent determinant mismatch '+JSON.stringify([a,c,n]));
+    }
+    const flipped=c.map((value,k)=>k%2?-value:value);
+    assert.deepEqual(structuredDifferentialHankel(a,flipped,32),prefix.slice(0,33));
+  }
+  const raw={mode:'differential_hankel',start:'33',count:'32',
+    a0:'1',a1:'1',a2:'0',a3:'0',c0:'1',c1:'2',c2:'1',c3:'0'};
+  const report=computeExactWindow(raw);
+  assert.equal(MODE_LIMITS.differential_hankel.maxIndex,64);
+  assert.equal(report.rows.length,32);
+  assert.match(report.verification,/through size 12\./);
+  assert.equal(report.rows[0].index,33);assert.equal(report.rows.at(-1).index,64);
+  assert.equal(report.rows.at(-1).value,String(structuredDifferentialHankel([1,1],[1,2,1],64)[64]));
+  assert.deepEqual(readExactView(exactViewURL('https://example.test/sequence-library.html',raw)),raw);
+  assert.ok(exactWindowCSV(report).includes(report.rows.at(-1).value));
+});
+test('structured and algebraic APIs handle empty zero coefficients without rounding or mutation',()=>{
+  for(const [a,c] of [[[],[1]],[[],[]],[[1],[]],[[0,0],[1,2]]]){
+    assert.deepEqual(structuredDifferentialHankel(a,c,64),[1n,...Array(64).fill(0n)]);
+    assert.deepEqual(differentialMomentGeneratingFunction(a,c).numerator,['0']);
+    assert.deepEqual(differentialMomentsFromAlgebraicRecurrence(a,c,8),Array(9).fill(0n));
+  }
+  const a=Object.freeze([1,1,0,0]),c=Object.freeze([1,2,1,0]);
+  assert.equal(structuredDifferentialHankel(a,c,5)[5],52197296n);
+  const huge=2n**70n;
+  assert.deepEqual(structuredDifferentialHankel([huge],[1],3),[1n,huge,2n*huge**2n,4n*huge**3n]);
+  assert.throws(()=>structuredDifferentialHankel([1],[1],65),/between 0 and 64/);
+  assert.throws(()=>structuredDifferentialHankel([1],[1],-1),/between 0 and 64/);
+  assert.throws(()=>structuredDifferentialHankel([1,0,0,0,1],[1],12),/at most 3/);
+  assert.throws(()=>structuredDifferentialHankel([Number.MAX_SAFE_INTEGER+1],[1],2),/exact integers/);
+  assert.throws(()=>differentialMomentGeneratingFunction([Number.MAX_SAFE_INTEGER+1],[1]),/rounding/);
+  assert.throws(()=>differentialMomentGeneratingFunction([0.5],[1]),/integers/);
 });
 test('every finite differential moment OGF matches independent BigInt moment sums',()=>{
   const sample=differentialMomentGeneratingFunction([1,1],[1,2,1]);
@@ -277,6 +340,6 @@ test('calculator rejects bounds and malformed integers without numerical roundin
   assert.throws(()=>computeExactWindow({mode:'fourblock',start:'0',count:'4',a:'0'}),/between 1 and 32/);
   assert.throws(()=>computeExactWindow({mode:'beta_moments',start:'0',count:'3',L:'4',a:'0',b:'1'}),/Beta shape a/);
   assert.throws(()=>computeExactWindow({mode:'beta_hankel',start:'0',count:'3',L:'13',a:'1',b:'1'}),/between 0 and 12/);
-  assert.throws(()=>computeExactWindow({mode:'differential_hankel',start:'11',count:'5',
+  assert.throws(()=>computeExactWindow({mode:'differential_hankel',start:'61',count:'5',
     a0:'1',a1:'0',a2:'0',a3:'0',c0:'1',c1:'0',c2:'0',c3:'0'}),/last index/);
 });

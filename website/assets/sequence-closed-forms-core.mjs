@@ -1,5 +1,7 @@
 // Exact, bounded sequence calculations. No floating point, network or storage.
 // Author: Komorebi P. Source: Closed Forms Collections II–III.
+import {structuredDifferentialHankel} from './sequence-differential-hankel.mjs';
+export {structuredDifferentialHankel} from './sequence-differential-hankel.mjs';
 export const MODE_LIMITS=Object.freeze({
   sparse:{maxIndex:96,maxCount:32},
   padovan:{maxIndex:96,maxCount:32},
@@ -8,7 +10,7 @@ export const MODE_LIMITS=Object.freeze({
   hankel:{maxIndex:12,maxCount:13},
   beta_moments:{maxIndex:96,maxCount:32},
   beta_hankel:{maxIndex:17,maxCount:18},
-  differential_hankel:{maxIndex:12,maxCount:13},
+  differential_hankel:{maxIndex:64,maxCount:32},
   differential_moments:{maxIndex:160,maxCount:32},
   meixner:{maxIndex:96,maxCount:32}
 });
@@ -213,7 +215,14 @@ function trimmedPolynomial(values){
   return values;
 }
 function _effectiveExactCoefficients(values){
-  return trimmedPolynomial(values.map(value=>BigInt(value)));
+  if(!Array.isArray(values))throw Error('Exact coefficients must be an array of integers.');
+  return trimmedPolynomial((values.length?values:[0n]).map(value=>{
+    if(typeof value==='number'&&!Number.isSafeInteger(value))
+      throw Error('Exact coefficients must be integers without numerical rounding.');
+    if(typeof value!=='bigint'&&!/^-?(0|[1-9][0-9]*)$/.test(String(value)))
+      throw Error('Exact coefficients must be integers.');
+    return BigInt(value);
+  }));
 }
 export function differentialMomentGeneratingFunction(weights,operator){
   // Exact universal algebraic OGF for polynomially weighted moments.
@@ -338,7 +347,7 @@ export function meixnerCoefficients(s,twox,last){
   }
   return result;
 }
-export function computeExactWindow(raw){
+function validatedWindow(raw){
   if(!raw||typeof raw!=='object')throw Error('Choose an exact sequence family.');
   const mode=String(raw.mode||'sparse');
   if(!Object.hasOwn(MODE_LIMITS,mode))throw Error('Choose a supported exact family.');
@@ -351,6 +360,12 @@ export function computeExactWindow(raw){
   for(const field of MODE_FIELDS[mode]){
     params[field]=integer(raw[field],field,...FIELD_LIMITS[field]);
   }
+  if((mode==='beta_moments'||mode==='beta_hankel')&&params.a<1)
+    throw Error('Beta shape a must be positive.');
+  return {mode,start,count,last,params};
+}
+export function computeExactWindow(raw){
+  const {mode,start,count,last,params}=validatedWindow(raw);
   let values,description,verification,generatingFunction;
   switch(mode){
     case 'sparse':{
@@ -412,10 +427,14 @@ export function computeExactWindow(raw){
     case 'differential_hankel':{
       const weights=[params.a0,params.a1,params.a2,params.a3];
       const operator=[params.c0,params.c1,params.c2,params.c3];
-      values=Array.from({length:last+1},(_,n)=>differentialHankel(n,weights,operator));
+      values=structuredDifferentialHankel(weights,operator,last);
+      for(let n=0;n<=Math.min(last,12);n++){
+        if(values[n]!==differentialHankel(n,weights,operator))
+          throw Error('The structured solver disagrees with the independent direct determinant at size '+n+'.');
+      }
       generatingFunction=differentialMomentGeneratingFunction(weights,operator);
       description='Higher-order differential Hankel: P(m)=sum_(d=0)^3 a_d falling(m,d), L[p]=sum_(k=0)^3 c_k F_P[p^(k)].';
-      verification='Exact fraction-free determinants. The general Chebyshev proof bounds separated-block rank by 2(degree(P)+operator order). Higher-size exact structured calculations use the Python source implementation.';
+      verification='Exact Chebyshev–Schur calculation with singular-block lookahead. This calculation is independently checked by direct fraction-free determinants through size '+Math.min(last,12)+'. The separated-block rank is at most 2(degree(P)+operator order).';
       break;
     }
     case 'differential_moments':{
@@ -455,13 +474,14 @@ export function exactWindowCSV(report){
     [report.mode,row.index,row.value,metadata].map(csvQuote).join(','))].join('\r\n')+'\r\n';
 }
 export function exactViewURL(href,raw){
-  const report=computeExactWindow(raw),url=new URL(href);
+  // Link creation validates parameters without repeating an exact calculation.
+  const {mode,start,count,params}=validatedWindow(raw),url=new URL(href);
   for(const key of [...url.searchParams.keys()])if(key.startsWith('cf-'))url.searchParams.delete(key);
   url.searchParams.set('cf-version','1');
-  url.searchParams.set('cf-mode',report.mode);
-  url.searchParams.set('cf-start',String(report.start));
-  url.searchParams.set('cf-count',String(report.count));
-  for(const [key,value] of Object.entries(report.parameters))url.searchParams.set('cf-'+key,String(value));
+  url.searchParams.set('cf-mode',mode);
+  url.searchParams.set('cf-start',String(start));
+  url.searchParams.set('cf-count',String(count));
+  for(const [key,value] of Object.entries(params))url.searchParams.set('cf-'+key,String(value));
   url.hash='closed-calculator-panel';
   return url.href;
 }
@@ -481,6 +501,6 @@ export function readExactView(href){
     if(url.searchParams.getAll('cf-'+key).length!==1)throw Error('The calculator link has a missing or repeated setting.');
     values[key]=url.searchParams.get('cf-'+key);
   }
-  computeExactWindow(values);
+  validatedWindow(values);
   return values;
 }

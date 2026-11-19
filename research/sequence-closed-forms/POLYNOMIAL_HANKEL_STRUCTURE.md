@@ -11,7 +11,7 @@ The structural formula is independent of numerical experiments. The exact tests 
 
 ## 1. Arbitrary polynomial weights
 
-Let \(P(m)\in\mathbb K[m]\) have degree \(D\), over a characteristic-zero field \(\mathbb K\). Write it in the falling-factorial basis,
+Let \(P(m)\in\mathbb K[m]\) have degree at most a nonnegative integer \(D\), over a characteristic-zero field \(\mathbb K\). For \(P\ne0\), one may take \(D=\deg P\); the zero polynomial is also allowed. Write it in the falling-factorial basis,
 
 \[
 P(m)=\sum_{d=0}^D a_d m^{\underline d},
@@ -26,6 +26,8 @@ F_P[x^{2m}]=P(m)\binom{2m}{m},
 \qquad
 F_P[x^{2m+1}]=0.
 \]
+
+Write \(F_d\) for the special case \(P(m)=m^{\underline d}\), so \(F_P=\sum_{d=0}^{D}a_dF_d\).
 
 Perturb it by differentiation, and define its size-\(N\) Hankel determinant:
 
@@ -142,17 +144,17 @@ Then, for positive even \(t\), \(F_P[C_t]=\Phi_P(t)\), and for positive odd \(t\
 
 ### Proof of Theorem A
 
-Define the auxiliary functional \(F_s[x^{2m}]=s^m\binom{2m}{m}\), with odd moments zero. The rational Chebyshev generating identity is
+Define the auxiliary functional \(\mathcal F_s[x^{2m}]=s^m\binom{2m}{m}\), with odd moments zero. The rational Chebyshev generating identity is
 
 \[
 \sum_{n\ge0}C_n(x)z^n
 =1+\frac{1-z^2}{1-xz+z^2}.
 \]
 
-Applying \(F_s\) gives the formal identity
+Applying \(\mathcal F_s\) gives the formal identity
 
 \[
-F_s\!\left[\sum_{n\ge0}C_n(x)z^n\right]
+\mathcal F_s\!\left[\sum_{n\ge0}C_n(x)z^n\right]
 =1+\frac{1-z^2}{\sqrt{(1+z^2)^2-4sz^2}}.
 \]
 
@@ -220,7 +222,7 @@ c\bigl(\Psi_P(i+j)+\Psi_P(i-j)\bigr),&i-j\text{ odd}.
 \end{cases}
 \]
 
-**Theorem B (bounded quasiseparable rank).** Let \(P\) have degree \(D\). For every pair of index sets \(I,J\) with \(\min I>\max J\),
+**Theorem B (bounded quasiseparable rank).** Let \(P\) have degree at most \(D\). For every pair of index sets \(I,J\) with \(\min I>\max J\),
 
 \[
 \boxed{\operatorname{rank}G_{I,J}\le2(D+1).}
@@ -234,7 +236,7 @@ When \(c=0\), the sharper bound is \(2D\). Both bounds are independent of \(|I|,
 \frac{1\pm(-1)^i(-1)^j}{2}.
 \]
 
-Thus every separated block column belongs to the span of
+Thus every separated block row belongs to the span of
 
 \[
 1,j^2,\ldots,j^{2D},
@@ -303,7 +305,7 @@ W_{2\nu+1}(P,c)=(-1)^\nu
 }
 \]
 
-Indeed, the first nonzero leading Hankel matrix is anti-triangular, with its entire anti-diagonal equal to the first nonzero even moment. Its determinant is the displayed signed power. The derivative parameter \(c\) cannot change that anti-diagonal.
+Indeed, the first nonsingular leading Hankel matrix is anti-triangular, with its entire anti-diagonal equal to the first nonzero even moment. Its determinant is the displayed signed power. The derivative parameter \(c\) cannot change that anti-diagonal.
 
 This includes the prior result for \(P(m)=m^{\underline d}\) and explains how to initialize an exact solver without dividing by a zero leading minor.
 
@@ -396,7 +398,7 @@ F_P[q(x)^2]\ge0
 
 then \(P\) must be a nonnegative constant. Conversely, every nonnegative constant weight gives a positive semidefinite functional.
 
-**Proof.** By the classical moment representation theorem, a positive functional has a finite positive representing measure with total mass \(P(0)\). If \(P\) is nonconstant with negative leading coefficient, sufficiently high even moments are negative, a contradiction. If its leading coefficient is positive, its moments satisfy
+**Proof.** By the classical moment representation theorem, a positive functional has a finite positive representing measure with total mass \(P(0)\). If \(P\) is nonconstant with negative leading coefficient, sufficiently high even moments are negative, a contradiction. If its leading coefficient is positive, take \(D=\deg P\). Its moments satisfy
 
 \[
 F_P[x^{2m}]=P(m)\binom{2m}{m}
