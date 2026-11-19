@@ -250,6 +250,17 @@ def closed_form_families():
                            'has rank <= 2(degree(P)+1), with exact Schur generators.',
                 source=theorem))
             result[-1]['note']+=' Arbitrary polynomial weights admit a bounded-rank Chebyshev Gram representation and an exact structured determinant solver.'
+            higher=('https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/'
+                    'research/sequence-closed-forms/FINITE_DIFFERENTIAL_HANKEL.md')
+            result[-1]['formulas'].append(dict(
+                title='Finite-order differential Hankel rank theorem',
+                kind='general theorem',
+                expression='Let D_x=sum_(k=0)^r c_k*partial_x^k and deg P=D. '
+                           'For L[p]=F_P[D_x p], every strictly separated '
+                           'Chebyshev Gram block has rank <=2(D+r), '
+                           'independent of determinant size N.',
+                source=higher))
+            result[-1]['note']+=' A finite differential operator of order r has the uniform separated-block rank bound 2(D+r).'
     return result
 
 

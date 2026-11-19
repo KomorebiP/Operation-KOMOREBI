@@ -1,0 +1,59 @@
+"""Safety, completeness and markup tests for the source-driven proof reader.
+
+Author: Komorebi P. Source is the same Markdown used on GitHub.
+"""
+from pathlib import Path
+import sys
+import unittest
+
+sys.path.insert(0,str(Path(__file__).resolve().parent))
+from sequence_math_reading import mathematical_reading_fragment
+
+ROOT=Path(__file__).resolve().parents[1]
+
+
+class MathematicalReadingTests(unittest.TestCase):
+    def test_math_note_is_complete_and_readable(self):
+        source=(ROOT/'research/sequence-closed-forms/FINITE_DIFFERENTIAL_HANKEL.md').read_text(encoding='utf-8')
+        content=mathematical_reading_fragment(source)
+        self.assertNotIn('<h1',content)
+        self.assertGreaterEqual(content.count('<h2'),5)
+        self.assertGreaterEqual(content.count('class="arithmatex sl-math-display"'),12)
+        self.assertIn('rank}',content)
+        self.assertIn('2(D+r)',content)
+        self.assertIn('Weight-raising',content) if 'Weight-raising' in source else self.assertIn('weight-raising',content)
+        self.assertIn('Chebyshev',content)
+        self.assertIn('Initial',content)
+        self.assertIn('differential',content.lower())
+        self.assertIn('https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/',content)
+        self.assertNotIn('href="POLYNOMIAL_HANKEL_STRUCTURE.md"',content)
+        self.assertEqual(content.count('class="arithmatex sl-math-display"'),source.count(r'\['))
+        self.assertIn(r'\boxed',content)
+
+    def test_source_renderer_escapes_markup_and_rejects_active_urls(self):
+        raw=(
+            '# Title\n\n## Section\n\n'
+            'A **strong** theorem and '+chr(96)+'code'+chr(96)+'.\n\n'
+            '<script>alert("no")</script> [unsafe](javascript:alert(1))\n\n'
+            r'\['+'\n'+r'x<y'+'\n'+r'\]'+'\n\n'
+            '- First point\n- Second point\n'
+        )
+        content=mathematical_reading_fragment(raw)
+        self.assertNotIn('<script>',content)
+        self.assertIn('&lt;script&gt;',content)
+        self.assertNotIn('href="javascript:',content)
+        self.assertIn('<strong>strong</strong>',content)
+        self.assertIn('<code>code</code>',content)
+        self.assertIn('<ul><li>First point</li><li>Second point</li></ul>',content)
+        self.assertIn('aria-label="Displayed mathematical equation"',content)
+        self.assertIn(r'x&lt;y',content)
+
+    def test_unclosed_tex_or_code_fails_closed(self):
+        with self.assertRaises(ValueError):
+            mathematical_reading_fragment('# Example\n\n'+r'\['+'\na+b')
+        with self.assertRaises(ValueError):
+            mathematical_reading_fragment('# Example\n\n'+chr(96)*3+'python\nprint(1)')
+
+
+if __name__=='__main__':
+    unittest.main()

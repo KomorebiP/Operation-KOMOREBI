@@ -1125,3 +1125,84 @@ The existing curated records, formula counts, exact data receipts and
 pinned historical OEIS snapshot remain unchanged. This theorem is a
 general research identity, not an automatically generated collection of
 new integer records. Historical mathematical priority is unassessed.
+
+
+## Higher-order differential Hankel calculus
+
+The unified Sequence Library now includes a finite-order differential
+Hankel construction. Given a polynomial weight
+P(m) = sum_(d=0)^D a_d*m^(underline d) and a differential operator
+D_x = sum_(k=0)^r c_k*partial_x^k, define
+
+L[p] = F_P[D_x p] and W_N = det[L[x^(i+j)]]_(0<=i,j<N).
+
+The exact theorem proves that every strictly separated off-diagonal
+block in the associated Chebyshev Gram matrix has rank at most
+2(D+r), **independent of N**. This recovers the preceding first-order
+bound 2(D+1). A closed Gegenbauer-to-Chebyshev derivative formula,
+an exact falling-factorial weight ladder, and a constructive
+quasiseparable factorization are proved in
+`research/sequence-closed-forms/FINITE_DIFFERENTIAL_HANKEL.md`.
+
+The initial zero determinant block is also universal. If nu is the
+least index with a_nu nonzero and kappa is the least index with
+c_kappa nonzero, put ell=2nu+kappa. The first nonzero moment is
+mu_ell=c_kappa*a_nu*ell!/nu!, so W_N=0 for 1<=N<=ell
+and W_(ell+1)=(-1)^(ell(ell+1)/2)*mu_ell^(ell+1).
+The proof includes c_0=0 and every other exceptional endpoint.
+
+The executable Python implementation
+`tools/sequence_differential_hankel.py` uses exact rational
+Chebyshev generators and block Schur lookahead to handle singular
+leading minors. The independent test
+`tools/test_sequence_differential_hankel.py` checks direct monomial
+derivatives, polynomial Chebyshev reductions, exact separated-block
+ranks, shift invariance, sign parity, direct determinants and
+longer exact prefixes. A separate Python-to-Node bridge verifies
+the browser against the structured solver for nine parameter
+choices and all 117 returned determinant values.
+
+The main Sequence Library and focused Closed Forms page both
+include a collapsed theorem summary and a parameterized
+**Higher-order differential Hankel determinants** calculator
+mode. The browser mode accepts four falling-factorial weight
+coefficients (a0..a3), four operator coefficients (c0..c3),
+and exact determinant sizes 0..12. It uses BigInt and
+fraction-free elimination, not floating-point calculation.
+These are user-interface computation limits; the theorem
+allows arbitrary finite polynomial and differential degrees.
+
+The worked example uses P(m)=1+m and
+D_x=1+2 partial_x+partial_x^2. It begins with determinants
+1, 1, 2, -84, -456, 52197296. Reproducible share links
+preserve the integer parameters and selected index window.
+The mathematical source and source programs are packaged in
+the downloadable Sequence Library formula-source archive.
+
+This is not a claim of a new integer sequence record, historical
+novelty, formal Lean verification, or a fixed-bit complexity
+bound. The existing catalogue totals and pinned OEIS receipts
+remain unchanged.
+
+
+### Full mathematical reading edition
+
+The full finite-order differential Hankel proof is rendered on the reading site
+at [Finite-order differential Hankel calculus](https://komorebip.github.io/Operation-KOMOREBI/sequence-differential-hankel.html).
+Its headings, complete derivation, equations, references, and reproducibility
+notes are generated from the single Markdown source file
+`research/sequence-closed-forms/FINITE_DIFFERENTIAL_HANKEL.md`.
+
+The focused reading page links back to the canonical Sequence Library
+calculator with all integer parameters populated. It does not create
+a competing catalogue or a second copy of the mathematical source.
+The source-driven HTML renderer
+`tools/sequence_math_reading.py` uses only Python's standard library,
+preserves TeX display delimiters, escapes literal markup, and gives
+equations horizontally scrollable accessible regions on narrow screens.
+
+The release tests cover HTML rendering and source completeness in
+`tools/test_sequence_math_reading.py`, plus the proof page's build-time
+presence, mathematical equation markup, links, source navigation,
+desktop and phone widths, and no-JavaScript readability. Formula data
+and the pinned OEIS manifest are unchanged.

@@ -37,7 +37,7 @@ async function valueRows(page){
       const panel=page.locator('#closed-calculator-panel');
       assert.equal(await panel.evaluate(node=>node.open),false,'Worksheet should be collapsed on arrival');
       await openCalculator(page);
-      assert.equal(await page.locator('#cf-mode option').count(),8);
+      assert.equal(await page.locator('#cf-mode option').count(),9);
       assert.deepEqual((await valueRows(page)).slice(0,12),
         ['1','0','1','0','1','1','1','2','1','3','2','4']);
       await fit(page);
@@ -66,6 +66,26 @@ async function valueRows(page){
       assert.deepEqual((await valueRows(page)).slice(0,3),['120','240','720']);
       await page.selectOption('#cf-mode','beta_hankel');
       assert.deepEqual((await valueRows(page)).slice(0,3),['1','120','28800']);
+      await page.selectOption('#cf-mode','differential_hankel');
+      assert.deepEqual((await valueRows(page)).slice(0,6),
+        ['1','1','2','-84','-456','52197296']);
+      assert.equal(await page.locator('#cf-differential_hankel-c2').inputValue(),'1');
+      const proofPage=await context.newPage();
+      proofPage.on('pageerror',error=>report.errors.push({width,message:error.message}));
+      await proofPage.goto(url('sequence-differential-hankel.html'));
+      assert.equal(await proofPage.locator('#differential-hankel-reading').count(),1);
+      assert.equal(await proofPage.locator('#differential-hankel-reading h2').count()>=5,true);
+      assert.equal(await proofPage.locator('#differential-hankel-reading .sl-math-display').count()>=12,true);
+      assert.equal(await proofPage.locator('main h1').count(),1);
+      assert.equal(await proofPage.locator('a[href*="cf-mode=differential_hankel"]').count()>=1,true);
+      await fit(proofPage);
+      await proofPage.close();
+      const worked=page.locator('#differential-hankel-theorem');
+      assert.equal(await worked.count(),1);
+      const example=worked.locator('a[href*="cf-mode=differential_hankel"]');
+      assert.equal(await example.count(),1);
+      assert.match(await example.getAttribute('href'),/cf-a1=1/);
+      await fit(page);
       await page.selectOption('#cf-mode','meixner');
       assert.deepEqual((await valueRows(page)).slice(0,9),
         ['1','2','3','-2','-31','-30','715','2510','-30015']);
@@ -164,11 +184,16 @@ async function valueRows(page){
     const noJs=await browser.newContext({javaScriptEnabled:false,viewport:{width:320,height:950}});
     const page=await noJs.newPage();
     await page.goto(url('sequence-closed-forms.html'));
+    assert.equal(await page.locator('#differential-hankel-theorem').count(),1);
     assert.equal(await page.locator('#closed-calculator-panel').count(),1);
     assert.ok(await page.locator('noscript').count()>0);
     assert.equal(await page.locator('#cf-form').count(),0);
     await page.locator('#closed-calculator-panel>summary').click();
     assert.match(await page.locator('#closed-calculator-panel').textContent(),/static 24-term table/);
+    await fit(page,true);
+    await page.goto(url('sequence-differential-hankel.html'));
+    assert.equal(await page.locator('#differential-hankel-reading').count(),1);
+    assert.equal(await page.locator('.sl-math-display').count()>=12,true);
     await fit(page,true);
     await page.goto(url('sequence-library.html'));
     assert.equal(await page.locator('#sequence-research-desk').count(),1);
