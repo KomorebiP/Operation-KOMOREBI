@@ -242,10 +242,12 @@ def structured_hankel_prefixes(coefficients, c, max_size):
     result[first_nonsingular] = det / 4
 
     # K_m = V_m^T (G_m)^(-1) V_m. Its dimension never depends on m.
+    solved = [
+        [sum(inverse[i][j]*v[j][q] for j in range(first_nonsingular))
+         for q in range(width)] for i in range(first_nonsingular)
+    ]
     K = [
-        [sum(v[i][p]*inverse[i][j]*v[j][q]
-             for i in range(first_nonsingular)
-             for j in range(first_nonsingular))
+        [sum(v[i][p]*solved[i][q] for i in range(first_nonsingular))
          for q in range(width)] for p in range(width)
     ]
     m = first_nonsingular
@@ -269,9 +271,13 @@ def structured_hankel_prefixes(coefficients, c, max_size):
                 [Ku[index-m][p]-v[index][p] for p in range(width)]
                 for index in new
             ]
+            solved = [
+                [sum(inverse_schur[k][ell]*w[ell][q]
+                     for ell in range(length)) for q in range(width)]
+                for k in range(length)
+            ]
             K = [
-                [K[p][q]+sum(w[k][p]*inverse_schur[k][ell]*w[ell][q]
-                              for k in range(length) for ell in range(length))
+                [K[p][q]+sum(w[k][p]*solved[k][q] for k in range(length))
                  for q in range(width)] for p in range(width)
             ]
             det *= block_det
