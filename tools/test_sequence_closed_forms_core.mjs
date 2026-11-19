@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import {test} from 'node:test';
 import {binomial,falling,sparseCoefficients,padovanCoefficients,
   fourBlockCoefficients,betaMomentCoefficients,betaHankelCoefficients,
+  polynomialDifferentialMoment,differentialHankel,
   centralWeightedMoment,weightedJet,
   bareissDeterminant,weightedHankel,fourFthreeHankel,meixnerCoefficients,
   computeExactWindow,exactWindowCSV,exactViewURL,readExactView
@@ -113,6 +114,31 @@ test('fraction-free Hankel determinant agrees with terminating 4F3 and known wei
   assert.deepEqual(Array.from({length:8},(_,n)=>String(weightedHankel(n,2,1))),
     ['1','0','0','0','0','248832','-57644421120','-289931282841600']);
 });
+test('finite differential Hankel mode matches independent source values and parity',()=>{
+  const a=[1,1,0,0],c=[1,2,1,0];
+  assert.deepEqual(Array.from({length:6},(_,n)=>String(differentialHankel(n,a,c))),
+    ['1','1','2','-84','-456','52197296']);
+  assert.deepEqual(Array.from({length:10},(_,n)=>String(polynomialDifferentialMoment(n,a,c))),
+    ['1','2','6','24','66','180','620','1120','4830','6300']);
+  const sparse=[0,1,0,0],second=[0,0,2,0];
+  assert.equal(polynomialDifferentialMoment(3,sparse,second),0n);
+  assert.equal(polynomialDifferentialMoment(4,sparse,second),48n);
+  assert.deepEqual(Array.from({length:6},(_,n)=>String(differentialHankel(n,sparse,second))),
+    ['1','0','0','0','0','254803968']);
+  const flipped=[c[0],-c[1],c[2],-c[3]];
+  for(let n=0;n<=8;n++)
+    assert.equal(differentialHankel(n,a,c),differentialHankel(n,a,flipped));
+  const report=computeExactWindow({mode:'differential_hankel',start:'0',count:'5',
+    a0:'1',a1:'1',a2:'0',a3:'0',c0:'1',c1:'2',c2:'1',c3:'0'});
+  assert.deepEqual(report.rows.map(row=>row.value),['1','1','2','-84','-456']);
+  assert.match(report.verification,/separated-block rank/);
+  const shared=exactViewURL('https://example.test/sequence-library.html',{
+    mode:'differential_hankel',start:'0',count:'5',a0:'1',a1:'1',a2:'0',a3:'0',
+    c0:'1',c1:'2',c2:'1',c3:'0'});
+  assert.equal(new URL(shared).searchParams.get('cf-a1'),'1');
+  assert.equal(new URL(shared).searchParams.get('cf-c2'),'1');
+  assert.equal(readExactView(shared).mode,'differential_hankel');
+});
 test('integer Meixner polynomial recurrence retains exact signs and initial values',()=>{
   assert.deepEqual(meixnerCoefficients(1,2,8).map(String),
     ['1','2','3','-2','-31','-30','715','2510','-30015']);
@@ -178,4 +204,6 @@ test('calculator rejects bounds and malformed integers without numerical roundin
   assert.throws(()=>computeExactWindow({mode:'fourblock',start:'0',count:'4',a:'0'}),/between 1 and 32/);
   assert.throws(()=>computeExactWindow({mode:'beta_moments',start:'0',count:'3',L:'4',a:'0',b:'1'}),/Beta shape a/);
   assert.throws(()=>computeExactWindow({mode:'beta_hankel',start:'0',count:'3',L:'13',a:'1',b:'1'}),/between 0 and 12/);
+  assert.throws(()=>computeExactWindow({mode:'differential_hankel',start:'11',count:'5',
+    a0:'1',a1:'0',a2:'0',a3:'0',c0:'1',c1:'0',c2:'0',c3:'0'}),/last index/);
 });
