@@ -107,6 +107,32 @@ class PolynomialHankelTests(unittest.TestCase):
                             for d in range(min(m,len(a)-1)+1))
                 self.assertEqual(original,falling)
 
+    def test_algebraic_moment_generating_formula(self):
+        # [z^(2m)] sum_d a_d (2d)!/d! z^(2d)
+        #            * (1-4z^2)^(-d-1/2)
+        cases=([1],[0,1],[0,0,1],[1,-2,3],
+               [F(1,3),F(-2,5),F(3,7)])
+        for a in cases:
+            for m in range(29):
+                coefficient=F(0)
+                for d,weight in enumerate(a):
+                    if m<d:continue
+                    k=m-d
+                    rising=F(1)
+                    for j in range(k):
+                        rising*=F(2*d+2*j+1,2)
+                    coefficient+=(
+                        F(weight)*F(factorial(2*d),factorial(d))*
+                        F(4**k)*rising/factorial(k)
+                    )
+                self.assertEqual(
+                    coefficient,monomial_moment(2*m,a,0),(a,m))
+            for c in (-2,0,3):
+                for m in range(14):
+                    self.assertEqual(
+                        monomial_moment(2*m+1,a,c),
+                        F(c)*(2*m+1)*monomial_moment(2*m,a,0))
+
     def test_chebyshev_moments_and_derivatives_by_direct_expansion(self):
         poly=brute_chebyshev(35)
         for a in ([1],[0,1],[0,0,1],[1,-2,3],
