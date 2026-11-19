@@ -246,6 +246,7 @@ export function differentialMomentGeneratingFunction(weights,operator){
   }
   const R=trimmedPolynomial(numerator);
   const twiceExponent=2*(D+r)+1;
+  const initialZeroMoments=R.findIndex(value=>value!==0n);
   if(R.length>twiceExponent)
     throw Error('The moment generating numerator exceeded its derived degree bound.');
   function polynomialText(values){
@@ -264,9 +265,46 @@ export function differentialMomentGeneratingFunction(weights,operator){
   return {
     numerator:R.map(String),twiceExponent,degreeBound:2*(D+r),
     weightDegree:D,operatorOrder:r,
+    initialZeroMoments:initialZeroMoments<0?null:initialZeroMoments,
+    regularizedRecurrenceOrderBound:initialZeroMoments<0?0:2*(D+r)-initialZeroMoments+2,
     expression:'M(z) = ('+polynomialText(R)+') / (1-4z^2)^('+twiceExponent+'/2)',
     meaning:'M(z) = sum_(n>=0) F_P[D_x x^n] z^n. The numerator is computed by finite integer polynomial arithmetic.'
   };
+}
+
+
+export function differentialMomentsFromAlgebraicRecurrence(weights,operator,last,generating=null){
+  // Remove initial zero moments and reconstruct the full tail from
+  // A(z)T'(z)=B(z)T(z) with A(0)=the first nonzero moment.
+  // Every operation uses exact BigInt coefficients.
+  if(!Number.isSafeInteger(last)||last<0||last>160)
+    throw Error('The algebraic moment index must be between 0 and 160.');
+  const formula=generating||differentialMomentGeneratingFunction(weights,operator);
+  const R=formula.numerator.map(BigInt);
+  const ell=formula.initialZeroMoments;
+  if(ell===null||ell>last)return Array(last+1).fill(0n);
+  const h=[1n,0n,-4n],reduced=R.slice(ell);
+  const A=exactPolynomialProduct(reduced,h);
+  const derivative=reduced.length>1
+    ?reduced.slice(1).map((value,j)=>BigInt(j+1)*value):[0n];
+  const B=exactPolynomialProduct(derivative,h);
+  while(B.length<A.length)B.push(0n);
+  reduced.forEach((value,j)=>{
+    B[j+1]+=4n*BigInt(formula.twiceExponent)*value;
+  });
+  if(A[0]===0n)throw Error('The regularized recurrence retained a singular leading coefficient.');
+  const tail=[A[0]];
+  for(let n=0;n<last-ell;n++){
+    let rhs=0n;
+    for(let j=0;j<=Math.min(n,B.length-1);j++)rhs+=B[j]*tail[n-j];
+    for(let j=1;j<=Math.min(n+1,A.length-1);j++)
+      rhs-=A[j]*BigInt(n-j+1)*tail[n-j+1];
+    const denominator=BigInt(n+1)*A[0];
+    if(rhs%denominator!==0n)
+      throw Error('The algebraic recurrence did not yield an exact integer moment.');
+    tail.push(rhs/denominator);
+  }
+  return Array(ell).fill(0n).concat(tail);
 }
 
 export function differentialHankel(n,weights,operator) {
@@ -383,11 +421,15 @@ export function computeExactWindow(raw){
     case 'differential_moments':{
       const weights=[params.a0,params.a1,params.a2,params.a3];
       const operator=[params.c0,params.c1,params.c2,params.c3];
-      values=Array.from({length:last+1},(_,n)=>
-        polynomialDifferentialMoment(n,weights,operator));
       generatingFunction=differentialMomentGeneratingFunction(weights,operator);
+      values=differentialMomentsFromAlgebraicRecurrence(
+        weights,operator,last,generatingFunction);
+      for(let n=0;n<=last;n++){
+        if(values[n]!==polynomialDifferentialMoment(n,weights,operator))
+          throw Error('The algebraic recurrence disagrees with the independent direct moment sum at index '+n+'.');
+      }
       description='Underlying polynomial-weighted differential moments mu_n = F_P[D_x x^n], using the same parameters as the differential Hankel family.';
-      verification='Exact finite moment sums, independent of the algebraic numerator construction. The generating function has denominator (1-4z^2)^(D+r+1/2).';
+      verification='Exact algebraic forward recurrence independently checked against the direct finite moment sums, including singular initial blocks.';
       break;
     }
     case 'meixner':{
