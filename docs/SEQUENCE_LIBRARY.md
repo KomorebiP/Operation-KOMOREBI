@@ -1224,9 +1224,17 @@ M(z)=\sum_{n\ge0}F_P[\mathcal D x^n]z^n
 The numerator is computed with exact polynomial arithmetic from
 the falling-factorial weight coefficients and differential-operator
 coefficients. The same construction supplies a first-order linear
-differential equation with polynomial coefficients for M. If its
-leading coefficient vanishes at z=0, the initial moment conventions
-are retained instead of dividing by zero. This statement concerns
+differential equation with polynomial coefficients for M. For a
+nonzero sequence, the initial known zero block is factored out first.
+The resulting shifted series has a nonzero initial coefficient and
+satisfies an explicit finite-width forward recurrence of order at most
+2(D+r)-ell+2, where ell is the index of its first nonzero moment.
+No division by a singular coefficient is made.
+
+The browser computes each selected moment both from this algebraic
+forward recurrence and from its independent defining finite sum.
+The calculator displays the initial zero count and recurrence-order
+bound alongside the generating-function numerator. This statement concerns
 **moments**, not an arbitrary polynomial-weight Hankel determinant
 sequence: no rational Hankel-determinant generating function is
 inferred from the algebraicity of the moments.
