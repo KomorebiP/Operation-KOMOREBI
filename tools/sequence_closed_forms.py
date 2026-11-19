@@ -126,8 +126,13 @@ def closed_form_catalogue():
     from sequence_formula_catalogue import variant,record
     entries=[]
     def add(identifier,title,family,kind,values,formula,alternative,note,offset=0):
+        alternate_kind={'GF-CF-SPARSE':'recurrence','GF-CF-PADOVAN':'finite sum',
+                        'GF-CF-FOUR-BLOCK':'recurrence',
+                        'GF-CF-WEIGHTED-HANKEL':'moment definition',
+                        'GF-CF-BETA-MOMENTS':'normalization identity',
+                        'GF-CF-BETA-HANKEL':'determinant product'}[family]
         forms=[variant('Exact defining formula','coefficient formula',formula,note,SOURCE),
-               variant('Independent identity','recurrence',alternative,
+               variant('Equivalent description',alternate_kind,alternative,
                        'Use exact integer arithmetic. The listed terms are a finite window.',SOURCE)]
         row=record(identifier,title,kind,values,forms,N=1,degree='n',
                    closed_form_collection=True,closed_form_family=family)
