@@ -8,6 +8,7 @@ export const MODE_LIMITS=Object.freeze({
   hankel:{maxIndex:12,maxCount:13},
   beta_moments:{maxIndex:96,maxCount:32},
   beta_hankel:{maxIndex:17,maxCount:18},
+  differential_hankel:{maxIndex:12,maxCount:13},
   meixner:{maxIndex:96,maxCount:32}
 });
 export const MODE_DEFAULTS=Object.freeze({
@@ -18,6 +19,7 @@ export const MODE_DEFAULTS=Object.freeze({
   hankel:{mode:'hankel',start:'0',count:'8',d:'1',c:'1'},
   beta_moments:{mode:'beta_moments',start:'0',count:'12',L:'4',a:'1',b:'1'},
   beta_hankel:{mode:'beta_hankel',start:'0',count:'8',L:'4',a:'1',b:'1'},
+  differential_hankel:{mode:'differential_hankel',start:'0',count:'8',a0:'1',a1:'1',a2:'0',a3:'0',c0:'1',c1:'2',c2:'1',c3:'0'},
   meixner:{mode:'meixner',start:'0',count:'12',s:'1',twox:'2'}
 });
 export const MODE_FIELDS=Object.freeze({
@@ -28,12 +30,15 @@ export const MODE_FIELDS=Object.freeze({
   hankel:['d','c'],
   beta_moments:['L','a','b'],
   beta_hankel:['L','a','b'],
+  differential_hankel:['a0','a1','a2','a3','c0','c1','c2','c3'],
   meixner:['s','twox']
 });
 const FIELD_LIMITS=Object.freeze({
   p:[1,16],q:[1,16],r:[-12,12],u:[-12,12],v:[-12,12],
   d:[0,8],lambda:[-12,12],c:[-12,12],s:[-12,20],twox:[-20,20],
-  h:[1,8],a:[-12,12],b:[1,12],L:[0,12]
+  h:[1,8],a:[-12,12],b:[1,12],L:[0,12],
+  a0:[-12,12],a1:[-12,12],a2:[-12,12],a3:[-12,12],
+  c0:[-12,12],c1:[-12,12],c2:[-12,12],c3:[-12,12]
 });
 function integer(value,label,min,max){
   const text=String(value);
@@ -178,6 +183,29 @@ export function weightedHankel(n,d,c){
   return bareissDeterminant(Array.from({length:n},(_,i)=>
     Array.from({length:n},(_,j)=>centralWeightedMoment(i+j,d,c))));
 }
+
+export function polynomialDifferentialMoment(n, weights, operator) {
+  if(!Number.isSafeInteger(n)||n<0)throw Error('The moment index must be nonnegative.');
+  let result=0n;
+  for(let k=0;k<operator.length&&k<=n;k++){
+    if((n-k)%2)continue;
+    const m=(n-k)/2;
+    let weighted=0n;
+    for(let d=0;d<weights.length;d++)
+      weighted+=BigInt(weights[d])*falling(m,d);
+    result+=BigInt(operator[k])*falling(n,k)*weighted*binomial(2*m,m);
+  }
+  return result;
+}
+export function differentialHankel(n,weights,operator) {
+  if(!Number.isSafeInteger(n)||n<0||n>12)
+    throw Error('The differential Hankel size must be between 0 and 12.');
+  const moments=Array.from({length:Math.max(0,2*n-1)},(_,k)=>
+    polynomialDifferentialMoment(k,weights,operator));
+  return bareissDeterminant(Array.from({length:n},(_,i)=>
+    Array.from({length:n},(_,j)=>moments[i+j])));
+}
+
 export function fourFthreeHankel(n,c){
   if(n===0)return 1n;
   let numerator=1n,denominator=1n;
@@ -269,6 +297,14 @@ export function computeExactWindow(raw){
       values=betaHankelCoefficients(L,a,b,last);
       description='Hankel determinants of unnormalized beta-binomial integer moments, with H_0=1 and H_N=0 for N>L+1.';
       verification='Exact fraction-free determinants, including the finite-support rank cutoff. The normalized product needs the factor (a+b)_L^N.';
+      break;
+    }
+    case 'differential_hankel':{
+      const weights=[params.a0,params.a1,params.a2,params.a3];
+      const operator=[params.c0,params.c1,params.c2,params.c3];
+      values=Array.from({length:last+1},(_,n)=>differentialHankel(n,weights,operator));
+      description='Higher-order differential Hankel: P(m)=sum_(d=0)^3 a_d falling(m,d), L[p]=sum_(k=0)^3 c_k F_P[p^(k)].';
+      verification='Exact fraction-free determinants. The general Chebyshev proof bounds separated-block rank by 2(degree(P)+operator order). Higher-size exact structured calculations use the Python source implementation.';
       break;
     }
     case 'meixner':{
