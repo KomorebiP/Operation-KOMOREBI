@@ -42,6 +42,13 @@ reader compatibility study, or a new mathematical theorem.
   on phones. It now preserves its natural text size inside a labelled,
   keyboard-scrollable container. A singular result announcement was also
   corrected from “1 exact integers” to “1 exact integer.”
+- A later screenshot review found that fitting within the viewport did not
+  guarantee readable controls: nested calculator insets left coefficient
+  inputs about 57 pixels wide at 320 pixels with doubled text. The mobile
+  layout now removes redundant form insets and caps horizontal spacing while
+  preserving the enlarged type. The browser audit checks the space available
+  for editable numbers, including a negative coefficient and native spinner
+  allowance, as well as page and legend bounds.
 - The downloadable source bundle omitted JavaScript dependencies required by
   its cross-language test. Those modules are included and the production
   worker/import chain receives revision hashes.

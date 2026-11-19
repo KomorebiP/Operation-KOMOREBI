@@ -218,16 +218,34 @@ async function contrast(page){
       await page.selectOption('#sq-page-theme','light');
       await page.emulateMedia({forcedColors:'active',reducedMotion:'reduce'});await fit(page);
       await page.emulateMedia({forcedColors:'none',reducedMotion:'no-preference'});
-      if(width===320){
+      let enlargedEditableWidths;
+      if(width<500){
         await page.evaluate(()=>document.documentElement.style.fontSize='200%');
         const legends=await page.locator('#cf-form fieldset:not([disabled]) legend').evaluateAll(elements=>elements.map(el=>{
           const rect=el.getBoundingClientRect(),group=el.parentElement.getBoundingClientRect();
           return {text:el.textContent,left:rect.left,right:rect.right,parentLeft:group.left,parentRight:group.right};
         }));
         for(const legend of legends)assert.ok(legend.left>=legend.parentLeft-1&&
-          legend.right<=Math.min(legend.parentRight,320)+1,'An enlarged legend must fit its fieldset: '+JSON.stringify(legend));
+          legend.right<=Math.min(legend.parentRight,width)+1,'An enlarged legend must fit its fieldset: '+JSON.stringify(legend));
+        const editableWidths=await page.locator('#cf-form input:not(:disabled)').evaluateAll(inputs=>{
+          const canvas=document.createElement('canvas'),context=canvas.getContext('2d');
+          return inputs.map(input=>{
+            const style=getComputedStyle(input);
+            context.font=[style.fontStyle,style.fontWeight,style.fontSize,style.fontFamily].join(' ');
+            // Reserve space for native number steppers as well as CSS padding.
+            const usable=input.clientWidth-parseFloat(style.paddingLeft)-parseFloat(style.paddingRight)-24;
+            const needed=Math.max(context.measureText('-12').width,context.measureText(input.value).width)+8;
+            return {id:input.id,usable,needed,fontSize:style.fontSize};
+          });
+        });
+        for(const field of editableWidths){
+          assert.ok(parseFloat(field.fontSize)>=31.5,'Input text must retain 200% enlargement: '+JSON.stringify(field));
+          assert.ok(field.usable>=field.needed,
+            'Enlarged input must show its editable value and sign: '+JSON.stringify(field));
+        }
+        enlargedEditableWidths=editableWidths;
         await fit(page);
-        await page.locator('#closed-calculator-panel').screenshot({path:path.join(output,'calculator-enlarged-320.png')});
+        await page.locator('#closed-calculator-panel').screenshot({path:path.join(output,'calculator-enlarged-'+width+'.png')});
         await page.evaluate(()=>document.documentElement.style.removeProperty('font-size'));
       }
       await page.evaluate(()=>Object.defineProperty(navigator,'clipboard',{configurable:true,value:undefined}));
@@ -269,7 +287,8 @@ async function contrast(page){
       report.widths.push({width,staleResults:true,calculatedLinkSnapshot:true,sharedCoefficients:true,
         fieldErrors:true,realWorker:true,workerCancellation:true,longIntegerDigits:535,
         keyboardDisclosures:true,clipboardFallback:true,proofDisplays:40,proofInlineMath:true,
-        plainTextToggle:true,forcedColors:true,reducedMotion:true,enlargedText:width===320,palette,overflow:false});
+        plainTextToggle:true,forcedColors:true,reducedMotion:true,enlargedText:width<500,
+        ...(enlargedEditableWidths?{enlargedEditableWidths}:{}),palette,overflow:false});
       await context.close();activePage=null;
     }
     assert.deepEqual(report.errors,[]);report.status='passed';
