@@ -199,7 +199,7 @@ export function exactWindowCSV(report){
 export function exactViewURL(href,raw){
   const report=computeExactWindow(raw),url=new URL(href);
   for(const key of [...url.searchParams.keys()])if(key.startsWith('cf-'))url.searchParams.delete(key);
-  url.searchParams.set('cf-v','1');
+  url.searchParams.set('cf-version','1');
   url.searchParams.set('cf-mode',report.mode);
   url.searchParams.set('cf-start',String(report.start));
   url.searchParams.set('cf-count',String(report.count));
@@ -209,13 +209,13 @@ export function exactViewURL(href,raw){
 }
 export function readExactView(href){
   const url=new URL(href);
-  if(!url.searchParams.has('cf-v'))return null;
-  if(url.searchParams.getAll('cf-v').length!==1||url.searchParams.get('cf-v')!=='1')
+  if(!url.searchParams.has('cf-version'))return null;
+  if(url.searchParams.getAll('cf-version').length!==1||url.searchParams.get('cf-version')!=='1')
     throw Error('Unsupported or duplicated calculator link version.');
   const mode=url.searchParams.get('cf-mode');
   if(!Object.hasOwn(MODE_FIELDS,mode))throw Error('The calculator link has an unknown family.');
   const keys=['mode','start','count',...MODE_FIELDS[mode]];
-  const allowed=new Set(keys.map(k=>'cf-'+k).concat('cf-v'));
+  const allowed=new Set(keys.map(k=>'cf-'+k).concat('cf-version'));
   for(const key of url.searchParams.keys())if(key.startsWith('cf-')&&!allowed.has(key))
     throw Error('The calculator link contains an unexpected setting.');
   const values={};

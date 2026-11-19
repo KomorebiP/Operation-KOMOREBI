@@ -111,8 +111,13 @@ test('shared calculator views restore exact parameters without sending coefficie
   assert.throws(()=>readExactView(duplicate.href),/repeated setting/);
   const unknown=new URL(link);unknown.searchParams.append('cf-out','999');
   assert.throws(()=>readExactView(unknown.href),/unexpected setting/);
-  assert.throws(()=>readExactView(link.replace('cf-v=1','cf-v=999')),/Unsupported/);
+  assert.throws(()=>readExactView(link.replace('cf-version=1','cf-version=999')),/Unsupported/);
   assert.equal(exactViewURL(link,raw),link);
+  const sparseView={mode:'sparse',start:'3',count:'4',p:'2',q:'5',r:'1',u:'1',v:'12'};
+  const sparseLink=exactViewURL('https://example.test/sequence-closed-forms.html',sparseView);
+  assert.equal(new URL(sparseLink).searchParams.get('cf-version'),'1');
+  assert.equal(new URL(sparseLink).searchParams.get('cf-v'),'12');
+  assert.deepEqual(readExactView(sparseLink),sparseView);
 });
 test('calculator rejects bounds and malformed integers without numerical rounding',()=>{
   const base={mode:'sparse',p:'2',q:'3',r:'1',u:'1',v:'1',start:'0',count:'12'};

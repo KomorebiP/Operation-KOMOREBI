@@ -81,7 +81,8 @@ async function valueRows(page){
 
       await page.locator('#cf-link').click();
       const shared=await page.evaluate(()=>navigator.clipboard.readText());
-      assert.ok(shared.includes('cf-v=1'));
+      assert.equal(new URL(shared).searchParams.get('cf-version'),'1');
+      assert.equal(new URL(shared).searchParams.get('cf-v'),'12');
       assert.ok(shared.includes('cf-count=2'));
       assert.ok(!shared.includes((24n**72n).toString()));
       const restored=await context.newPage();

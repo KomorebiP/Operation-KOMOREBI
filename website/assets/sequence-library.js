@@ -461,7 +461,7 @@ if(!legacyRoute)try{
       }
     }
     disclosure?.addEventListener('toggle',()=>{void loadCalculator();});
-    if(new URL(location.href).searchParams.has('cf-v')&&disclosure){
+    if(new URL(location.href).searchParams.has('cf-version')&&disclosure){
       disclosure.open=true;
       await loadCalculator();
     }
