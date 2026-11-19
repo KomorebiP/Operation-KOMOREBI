@@ -11,6 +11,7 @@ const modes=[
   ['hankel','Weighted Hankel determinants'],
   ['beta_moments','Beta-binomial integer moments'],
   ['beta_hankel','Beta-binomial Hankel determinants'],
+  ['differential_hankel','Higher-order differential Hankel determinants'],
   ['meixner','Meixner–Pollaczek integer polynomials']
 ];
 const descriptions={
@@ -20,7 +21,11 @@ const descriptions={
   c:['Odd derivative weight c',-12,12],s:['Polynomial parameter s',-12,20],
   twox:['Integer coefficient 2x',-20,20],h:['Convolution power h',1,8],
   a:['Integer parameter a',-12,12],b:['Positive shape b',1,12],
-  L:['Binomial support size L',0,12]
+  L:['Binomial support size L',0,12],
+  a0:['Weight coefficient a₀',-12,12],a1:['Weight coefficient a₁',-12,12],
+  a2:['Weight coefficient a₂',-12,12],a3:['Weight coefficient a₃',-12,12],
+  c0:['Identity coefficient c₀',-12,12],c1:['First derivative c₁',-12,12],
+  c2:['Second derivative c₂',-12,12],c3:['Third derivative c₃',-12,12]
 };
 const subtitle={
   sparse:'C(n) is a coefficient of (1-u z^p-v z^q)^(-r). Negative integer powers and zero weights are supported.',
@@ -30,6 +35,7 @@ const subtitle={
   hankel:'W(N) is an exact determinant. Its value is invariant under binomial shifts of the moments.',
   beta_moments:'Integer unnormalized ordinary moments, not rational probability moments. Parameter a must be positive.',
   beta_hankel:'Hankel transforms of integer unnormalized moments. Determinants vanish above support rank L+1.',
+  differential_hankel:'Choose P(m)=a₀+a₁m+a₂m(m−1)+a₃m(m−1)(m−2) and L=ΣcₖF_P[dᵏ/dxᵏ]. Exact sizes 0–12; the general theorem covers arbitrary finite orders.',
   meixner:'Integer polynomial specializations of the classical Meixner–Pollaczek recurrence.'
 };
 function node(tag,text){
