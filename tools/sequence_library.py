@@ -125,7 +125,7 @@ def build(site,atlas):
     out=io.StringIO(newline='');writer=csv.writer(out);writer.writerow(['id','title','collection','family','offset','stored_terms','representations','entry_url'])
     for x in entries:writer.writerow([x['id'],x['title'],x['collection'],x['kind'],x['offset'],len(x['terms']),len(x['formulas']),x['url']])
     site.write('assets/sequence-library-index.csv',out.getvalue())
-    source_files=['tools/'+name+'.py' for name in ['sequence_formula_catalogue','sequence_closed_forms','sequence_closed_forms_extended','sequence_research_tables','sequence_linear_research','sequence_research_notes','sequence_generalized','sequence_archive_families','sequence_atlas','sequence_atlas_reference','sequence_atlas_reading','sequence_atlas_study','sequence_atlas_index']]+[REGISTRY_PATH,'manifests/sequence-generalized-sources.json','research/sequence-connections/IDENTITIES.md','research/sequence-connections/sources/komorebi-math-families.py','research/sequence-closed-forms/IDENTITIES.md','research/sequence-closed-forms/COLLECTION_II_ADDITIONS.md']
+    source_files=['tools/'+name+'.py' for name in ['sequence_formula_catalogue','sequence_closed_forms','sequence_closed_forms_extended','sequence_polynomial_hankel','sequence_research_tables','sequence_linear_research','sequence_research_notes','sequence_generalized','sequence_archive_families','sequence_atlas','sequence_atlas_reference','sequence_atlas_reading','sequence_atlas_study','sequence_atlas_index']]+[REGISTRY_PATH,'manifests/sequence-generalized-sources.json','research/sequence-connections/IDENTITIES.md','research/sequence-connections/sources/komorebi-math-families.py','research/sequence-closed-forms/IDENTITIES.md','research/sequence-closed-forms/COLLECTION_II_ADDITIONS.md','research/sequence-closed-forms/POLYNOMIAL_HANKEL_STRUCTURE.md','tools/test_sequence_polynomial_hankel.py']
     with ZipFile(site.output/'assets/sequence-formula-source.zip','w',ZIP_DEFLATED) as bundle:
         for name in source_files:
             info=ZipInfo(name,date_time=(2026,11,15,0,0,0));info.compress_type=ZIP_DEFLATED;info.external_attr=0o100644<<16;bundle.writestr(info,(site.root/name).read_text(encoding='utf-8').encode('utf-8'))
@@ -357,6 +357,27 @@ def build(site,atlas):
       <p>The first d=1 quartic is W_4(c) = 48(27c^4+6c^2+2). It has no real zeros, unlike the unweighted family.</p>
       <p><a href="sequence-families/KFOR-CF-W-2-1.html">Read the d=2 determinant sequence</a>.</p>
       </details>
+      <details><summary>Arbitrary polynomial weights: bounded-rank Hankel matrices</summary>
+      <p>Let P(m) be any polynomial of degree D, and put
+      F_P[x^(2m)] = P(m) binom(2m,m), with odd moments zero.
+      The perturbed functional is L_(P,c)[f] = F_P[f] + c F_P[f'].
+      Its Chebyshev Gram matrix has separated off-diagonal blocks
+      of rank at most 2(D+1), independently of determinant size N.
+      If c=0, the bound is 2D.</p>
+      <p>The explicit Chebyshev moment formulas are finite products.
+      They give a root-free, exact rational Schur algorithm with a
+      fixed-width matrix state. After initialization, ordinary
+      nonsingular steps take O(D^2) rational-arithmetic operations each.
+      Exact block lookahead recovers zeros and later nonzero leading minors.
+      This is not a uniform fixed-bit-complexity bound.</p>
+      <p>The determinant remains independent of binomial shifts and even
+      in c. An arbitrary nonconstant polynomial weight does not preserve
+      positivity, so the unweighted all-real-zero theorem cannot be
+      carried over without a separate argument.</p>
+      <p><a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/research/sequence-closed-forms/POLYNOMIAL_HANKEL_STRUCTURE.md">Read the complete polynomial-weight theorem and proof</a> ·
+      <a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/tools/sequence_polynomial_hankel.py">Run the exact structured solver</a> ·
+      <a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/tools/test_sequence_polynomial_hankel.py">Inspect independent tests</a>.</p>
+      </details>
       <details><summary>Six formulas recovered from source papers</summary>
       <p>The documented reductions cover Bernoulli four-block tangents, four-block
       Euler convolutions, integer Meixner–Pollaczek polynomials, beta-moment
@@ -371,7 +392,7 @@ def build(site,atlas):
         '<summary>Calculate exact coefficients and determinants</summary>'
         '<div id="closed-calculator-root">'
         '<p>The optional worksheet calculates finite integer windows for two-delay coefficients, '
-        'weighted binomial transforms, weighted Hankel determinants and integer Meixner–Pollaczek polynomials. '
+        'Padovan powers, four-block polynomials, weighted binomial transforms, weighted Hankel determinants, beta-binomial moments and integer Meixner–Pollaczek polynomials. '
         'It does not claim that finite agreement proves an infinite identity.</p>'
         '</div><noscript><p>JavaScript is not required to read the definitions and exact record tables above. '
         'Open any record for its complete static 24-term table.</p></noscript></details>')
@@ -416,6 +437,8 @@ def build(site,atlas):
         'Complete mathematical supplement</a> · '
         '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/tools/test_sequence_closed_forms_extended.py">'
         'Independent Python regression tests</a> · '
+        '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/research/sequence-closed-forms/POLYNOMIAL_HANKEL_STRUCTURE.md">'
+        'Arbitrary polynomial-weight Hankel theorem</a> · '
         '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/tools/test_sequence_closed_forms_core.mjs">'
         'Exact browser arithmetic tests</a></p>'
         '<p>The pinned historical OEIS comparison covers its original 2,292 records. '
