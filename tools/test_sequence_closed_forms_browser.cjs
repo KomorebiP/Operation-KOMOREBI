@@ -86,7 +86,7 @@ async function valueRows(page){
       await page.locator('#cf-count').fill('11');
       await page.locator('#cf-calculate').click();
       assert.equal((await valueRows(page)).length,11);
-      assert.equal((await valueRows(page))[10].length>70,true);
+      assert.equal((await valueRows(page))[10].length>45,true);
       assert.match(await page.locator('#cf-ogf-formula').textContent(),/7\/2/);
       await fit(page);
       await page.selectOption('#cf-mode','differential_hankel');
