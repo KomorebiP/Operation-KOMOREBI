@@ -158,6 +158,13 @@ class ClosedFormsExtendedTests(unittest.TestCase):
                                      for j in range(order+1)),0,
                                  (d,c,N))
 
+    def test_explicit_weighted_zero_geometry_polynomials(self):
+        for c in range(-4,5):
+            self.assertEqual(weighted_hankel_closed(4,1,c),
+                             48*(27*c**4+6*c*c+2))
+            self.assertEqual(weighted_hankel_closed(6,2,c),
+                             -14929920*(25*c*c+2)*(125*c**4+20*c*c-2))
+
     def test_meixner_integer_specializations_and_symmetry(self):
         expected=[1,2,3,-2,-31,-30,715,2510,-30015]
         self.assertEqual(meixner_pollaczek_integer(1,2,9),expected)
