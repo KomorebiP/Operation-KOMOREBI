@@ -37,10 +37,15 @@ async function valueRows(page){
       const panel=page.locator('#closed-calculator-panel');
       assert.equal(await panel.evaluate(node=>node.open),false,'Worksheet should be collapsed on arrival');
       await openCalculator(page);
-      assert.equal(await page.locator('#cf-mode option').count(),4);
+      assert.equal(await page.locator('#cf-mode option').count(),8);
       assert.deepEqual((await valueRows(page)).slice(0,12),
         ['1','0','1','0','1','1','1','2','1','3','2','4']);
       await fit(page);
+      await page.selectOption('#cf-mode','padovan');
+      assert.deepEqual((await valueRows(page)).slice(0,8),['1','0','0','1','0','1','1','1']);
+      await page.selectOption('#cf-mode','fourblock');
+      assert.deepEqual((await valueRows(page)).slice(0,4),['1','34','11056','14873104']);
+      assert.equal(await page.locator('#cf-start').inputValue(),'1');
 
       await page.selectOption('#cf-mode','jet');
       await page.locator('#cf-jet-d').fill('0');
@@ -57,6 +62,10 @@ async function valueRows(page){
         ['1','1','1','-14','-100','56','6112','58304']);
       assert.match(await page.locator('#cf-verification').textContent(),/independent terminating 4F3/);
 
+      await page.selectOption('#cf-mode','beta_moments');
+      assert.deepEqual((await valueRows(page)).slice(0,3),['120','240','720']);
+      await page.selectOption('#cf-mode','beta_hankel');
+      assert.deepEqual((await valueRows(page)).slice(0,3),['1','120','28800']);
       await page.selectOption('#cf-mode','meixner');
       assert.deepEqual((await valueRows(page)).slice(0,9),
         ['1','2','3','-2','-31','-30','715','2510','-30015']);
