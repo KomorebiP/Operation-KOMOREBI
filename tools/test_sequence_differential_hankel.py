@@ -17,6 +17,7 @@ from sequence_differential_hankel import (
     chebyshev_jet_polynomials, chebyshev_jet_generators,
     first_nonzero_moment, structured_differential_hankel,
     algebraic_moment_generating_function, algebraic_moment_differential_equation,
+    regularized_moment_ode, moments_from_algebraic_recurrence,
 )
 from sequence_polynomial_hankel import (
     structured_hankel_prefixes, power_to_falling,
@@ -153,6 +154,44 @@ class DifferentialHankelTests(unittest.TestCase):
         self.assertEqual(power,7)
         self.assertEqual(numerator,
                          (F(1),F(2),F(-8),F(-4),F(52),F(-16),F(-24)))
+
+    def test_regularized_p_recursive_moments_agree_with_direct_definition(self):
+        weights=([1],[0,1],[1,1],[2,-3,1],[0,0,1],
+                 [1,0,2,-1],[0],
+                 [F(1,3),F(-2,5),F(3,7)])
+        operators=([1],[0,1],[1,2,1],[0,0,1],
+                   [1,0,-2,3],[0],
+                   [F(2,7),F(-3,8),0,F(1,5)])
+        for a in weights:
+            for c in operators:
+                reconstructed=moments_from_algebraic_recurrence(a,c,91)
+                self.assertEqual(len(reconstructed),91)
+                for n,actual in enumerate(reconstructed):
+                    self.assertEqual(actual,derivative_monomial_moment(n,a,c),
+                                     (a,c,n))
+                ell,A,B=regularized_moment_ode(a,c)
+                if ell is None:
+                    self.assertTrue(all(x==0 for x in reconstructed))
+                    continue
+                self.assertNotEqual(A[0],0)
+                self.assertEqual(A[0],reconstructed[ell])
+                D=len(a)-1
+                while D>0 and a[D]==0:D-=1
+                r=len(c)-1
+                while r>0 and c[r]==0:r-=1
+                self.assertLessEqual(len(A)-1,2*(D+r)-ell+2)
+                for n in range(65):
+                    t=lambda j: reconstructed[ell+j] if j>=0 else F(0)
+                    lhs=sum(A[j]*(n-j+1)*t(n-j+1)
+                            for j in range(min(n+1,len(A)-1)+1))
+                    rhs=sum(B[j]*t(n-j)
+                            for j in range(min(n,len(B)-1)+1))
+                    self.assertEqual(lhs,rhs,(a,c,n,'regularized ODE'))
+        self.assertEqual(
+            moments_from_algebraic_recurrence([1,1],[1,2,1],10),
+            [1,2,6,24,66,180,620,1120,4830,6300])
+        self.assertEqual(regularized_moment_ode([0,1],[0,0,1])[0],4)
+        self.assertEqual(regularized_moment_ode([1],[0,0])[0],None)
 
     def test_closed_chebyshev_products_at_all_parities(self):
         for d in range(4):
