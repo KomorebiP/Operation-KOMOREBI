@@ -564,7 +564,7 @@ async function visit(page,name,kind){
       assert.equal(await page.locator('#research-families .sl-research-group').count(),4);
       assert.equal(await page.locator('#research-families .sl-research-group ul a').count(),9);
       assert.equal(await page.locator('#generalized').count(),1);
-      assert.equal(await page.locator('.sl-research-choices article').count(),4);
+      assert.equal(await page.locator('.sl-research-choices article').count(),5);
       assert.equal(await page.locator('#connection-explorer,#sequence-identification,#modular-explorer,#notebook-explorer').count(),0);
       assert.match(await page.locator('#research-families').textContent(),/359 indexed research records/);
       await fit(page);
@@ -685,7 +685,7 @@ async function visit(page,name,kind){
     await page.goto(href('sequence-research.html'));
     assert.equal(await page.locator('#research-families .sl-topic-disclosure').evaluate(el=>el.open),true);
     assert.equal(await page.locator('#research-families .sl-research-group ul a').count(),9);
-    assert.equal(await page.locator('.sl-research-choices article').count(),4);
+    assert.equal(await page.locator('.sl-research-choices article').count(),5);
     assert.equal(await page.locator('#research-graph a[href^="sequence-connections.html"]').count(),1);
     await page.goto(href('sequence-connections.html'));
     assert.equal(await page.locator('#research-graph>details').evaluate(el=>el.open),true);
