@@ -257,7 +257,7 @@ async function contrast(page){
       const proof=await context.newPage();activePage=proof;
       proof.on('pageerror',error=>report.errors.push({width,message:error.message}));
       await proof.goto(url('sequence-differential-hankel.html'));await ready(proof);await settle(proof);
-      assert.equal(await proof.locator('#differential-hankel-reading .sl-math-display').count(),39);
+      assert.equal(await proof.locator('#differential-hankel-reading .sl-math-display').count(),46);
       assert.equal(await proof.locator('.sl-math-reading-intro .sl-math-display').count(),1);
       const introSizing=await proof.locator('.sl-math-reading-intro .sl-math-display').evaluate(el=>({
         width:el.clientWidth,scroll:el.scrollWidth,maxWidth:getComputedStyle(el.querySelector('mjx-container svg')).maxWidth,
@@ -269,7 +269,7 @@ async function contrast(page){
       const inline=proof.locator('#differential-hankel-reading span.arithmatex');
       assert.ok(await inline.count()>0);assert.equal(await inline.locator(':scope > mjx-container').count(),await inline.count(),'Inline TeX must typeset');
       await keyboardDisclosure(proof,'.sl-proof-outline');
-      assert.equal(await proof.locator('.sl-proof-outline a').count(),7);
+      assert.equal(await proof.locator('.sl-proof-outline a').count(),8);
       assert.deepEqual(await proof.locator('.sl-proof-outline a').evaluateAll(links=>links.filter(link=>
         !document.getElementById(decodeURIComponent(link.hash.slice(1)))).map(link=>link.hash)),[]);
       const code=proof.locator('.sl-math-proof-code');assert.equal(await code.count(),1);

@@ -45,7 +45,7 @@ class MathematicalReadingTests(unittest.TestCase):
         targets=re.findall(r'<a href="#(math-proof-[^"]+)"',content)
         headings=re.findall(r'<h[23] id="(math-proof-[^"]+)"',content)
         self.assertEqual(targets,headings)
-        self.assertEqual(len(targets),7)
+        self.assertEqual(len(targets),8)
 
     def test_source_renderer_escapes_markup_and_rejects_active_urls(self):
         raw=(

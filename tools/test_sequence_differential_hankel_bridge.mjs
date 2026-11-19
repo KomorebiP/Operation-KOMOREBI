@@ -1,13 +1,21 @@
 // Independent Python-to-browser replay for finite differential Hankel determinants.
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {computeExactWindow,structuredDifferentialHankel} from '../website/assets/sequence-closed-forms-core.mjs';
+import {computeExactWindow,structuredDifferentialHankel,
+  differentialMomentParityPolynomials,differentialMomentFromParity
+} from '../website/assets/sequence-closed-forms-core.mjs';
 
 const cases=JSON.parse(readFileSync(0,'utf8'));
-let values=0;
+let values=0,parityMoments=0;
 for(const item of cases){
   const [a,c]=[item.a,item.c];
   assert.equal(a.length,4);assert.equal(c.length,4);
+  const polynomials=differentialMomentParityPolynomials(a,c);
+  assert.deepEqual(polynomials.map(p=>p.map(String)),item.parity,
+    'Independent polynomial coefficients disagreed for '+item.label);
+  assert.deepEqual(item.moments.map((_,n)=>String(differentialMomentFromParity(n,a,c,polynomials))),
+    item.moments,'Parity closed form disagreed with direct Python moments for '+item.label);
+  parityMoments+=item.moments.length;
   const entire=structuredDifferentialHankel(a,c,item.expected.length-1).map(String);
   assert.deepEqual(entire,item.expected,
     'Independent Python structured solver disagreed for '+item.label);
@@ -22,5 +30,5 @@ for(const item of cases){
   values+=entire.length;
 }
 process.stdout.write(JSON.stringify({
-  cases:cases.length,exact_values:values,all_exact:true
+  cases:cases.length,exact_values:values,parity_moments:parityMoments,all_exact:true
 })+'\n');

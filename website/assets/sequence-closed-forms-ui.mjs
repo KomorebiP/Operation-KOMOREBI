@@ -133,10 +133,10 @@ export function mountClosedFormsCalculator(root,{href=location.href}={}){
   method.append(node('summary','How these values are calculated'),verified);
   // Generating-function evidence is optional and hidden for other modes.
   // Keep it collapsible so long polynomial formulas do not crowd results.
-  const ogf=node('details');ogf.id='cf-ogf';ogf.hidden=true;
+  const ogf=node('details');ogf.id='cf-ogf';ogf.className='cf-formulas';ogf.hidden=true;
   const ogfTitle=node('summary','Exact algebraic moment generating function');
   const ogfInfo=node('p');ogfInfo.id='cf-ogf-info';ogfInfo.className='cf-note';
-  const ogfRegion=node('pre');ogfRegion.id='cf-ogf-formula';
+  const ogfRegion=node('pre');ogfRegion.id='cf-ogf-formula';ogfRegion.className='cf-formula';
   ogfRegion.tabIndex=0;ogfRegion.setAttribute('role','region');
   ogfRegion.setAttribute('aria-label','Exact moment generating-function formula');
   const ogfCode=node('code');ogfRegion.append(ogfCode);
@@ -146,6 +146,19 @@ export function mountClosedFormsCalculator(root,{href=location.href}={}){
   const ogfCopy=node('button','Copy generating function');ogfCopy.type='button';
   ogfCopy.id='cf-ogf-copy';ogfActions.append(ogfCopy);
   ogf.append(ogfTitle,ogfInfo,ogfRegion,ogfHelp,ogfActions);
+  const parity=node('details');parity.id='cf-parity';parity.className='cf-formulas';parity.hidden=true;
+  const parityTitle=node('summary','Closed formulas for even and odd moments');
+  const parityInfo=node('p');parityInfo.id='cf-parity-info';parityInfo.className='cf-note';
+  const parityRegion=node('pre');parityRegion.id='cf-parity-formula';parityRegion.className='cf-formula';
+  parityRegion.tabIndex=0;parityRegion.setAttribute('role','region');
+  parityRegion.setAttribute('aria-label','Exact closed formulas for even and odd moments');
+  const parityCode=node('code');parityRegion.append(parityCode);
+  const parityHelp=node('p','Evaluate any moment directly from its index. The formulas remain valid at polynomial zeros, where division in a ratio recurrence can fail. In the Hankel view, these are the underlying moments used to form the determinant.');
+  parityHelp.className='cf-note';
+  const parityActions=node('div');parityActions.className='cf-actions';
+  const parityCopy=node('button','Copy moment formulas');parityCopy.type='button';parityCopy.id='cf-parity-copy';
+  parityActions.append(parityCopy);
+  parity.append(parityTitle,parityInfo,parityRegion,parityHelp,parityActions);
   const exports=node('div');exports.className='cf-actions';
   const csv=node('button','Download exact CSV');csv.type='button';csv.id='cf-download';
   const copy=node('button','Copy exact values');copy.type='button';copy.id='cf-copy';
@@ -156,9 +169,9 @@ export function mountClosedFormsCalculator(root,{href=location.href}={}){
   fallback.rows=4;
   const warning=node('p','Spreadsheet programs may round large integers. Import the exact_integer column as text.');
   warning.className='cf-note';
-  result.append(resultTitle,explain,region,exports,warning,ogf,method,fallback);
+  result.append(resultTitle,explain,region,exports,warning,parity,ogf,method,fallback);
   root.append(form,status,result);
-  let latest=null,latestView=null,renderedMode='',generation=0,pendingWorker=null,pendingFallback=null;
+  let latest=null,latestView=null,renderedMode='',generation=0,copyGeneration=0,pendingWorker=null,pendingFallback=null;
   function rawValues(){
     const mode=modeSelect.value,raw={mode,start:controls.start.value,count:controls.count.value};
     for(const key of MODE_FIELDS[mode])raw[key]=controls[mode+':'+key].value;
@@ -241,7 +254,7 @@ export function mountClosedFormsCalculator(root,{href=location.href}={}){
     cancelPending();latest=null;latestView=null;result.hidden=true;fallback.hidden=true;
   }
   function render(data){
-    if(renderedMode!==data.mode)ogf.open=false;
+    if(renderedMode!==data.mode){ogf.open=false;parity.open=false;}
     renderedMode=data.mode;
     latest=data;latestView={mode:data.mode,start:data.start,count:data.count,...data.parameters};
     body.replaceChildren();
@@ -255,6 +268,18 @@ export function mountClosedFormsCalculator(root,{href=location.href}={}){
       ' through '+(data.start+data.count-1)+'.';
     explain.textContent=data.description;
     verified.textContent=data.verification;
+    parity.hidden=!data.momentClosedForms;
+    if(data.momentClosedForms){
+      const evidence=data.momentClosedForms;
+      parityCode.textContent=evidence.expression;
+      parityInfo.textContent=(evidence.evenDegree===null
+        ? 'Every even-indexed moment is zero.'
+        : 'Even-indexed moments use a polynomial of degree '+evidence.evenDegree+'.')+' '+
+        (evidence.oddDegree===null
+          ? 'Every odd-indexed moment is zero.'
+          : 'Odd-indexed moments use a polynomial of degree '+evidence.oddDegree+
+            ', multiplied by 2m+1.');
+    }
     ogf.hidden=!data.generatingFunction;
     if(data.generatingFunction){
       const evidence=data.generatingFunction;
@@ -330,15 +355,18 @@ export function mountClosedFormsCalculator(root,{href=location.href}={}){
     sync();calculate();
   });
   async function doCopy(text,label){
-    const id=generation;
+    const id=generation,copyId=++copyGeneration;
+    const current=()=>id===generation&&copyId===copyGeneration&&root.isConnected&&
+      !root.closest('details:not([open])');
+    fallback.hidden=true;
     try{
       if(!navigator.clipboard?.writeText)throw Error('Clipboard permission is unavailable.');
       await navigator.clipboard.writeText(text);
-      if(id!==generation)return;
+      if(!current())return;
       fallback.hidden=true;
       setStatus('Copied '+label+'.');
     }catch{
-      if(id!==generation)return;
+      if(!current())return;
       fallback.value=text;fallback.hidden=false;fallback.focus();fallback.select();
       setStatus('Clipboard access is unavailable. Use the selected text below to copy '+label+'.');
     }
@@ -346,6 +374,10 @@ export function mountClosedFormsCalculator(root,{href=location.href}={}){
   ogfCopy.addEventListener('click',()=>{
     if(!latest?.generatingFunction)return;
     doCopy(latest.generatingFunction.expression+'\n','the generating function');
+  });
+  parityCopy.addEventListener('click',()=>{
+    if(!latest?.momentClosedForms)return;
+    doCopy(latest.momentClosedForms.expression+'\n','the moment formulas');
   });
   copy.addEventListener('click',()=>{
     if(!latest)return;

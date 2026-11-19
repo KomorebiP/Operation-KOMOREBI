@@ -6,6 +6,7 @@ import {MODE_LIMITS,binomial,falling,sparseCoefficients,padovanCoefficients,
   fourBlockCoefficients,betaMomentCoefficients,betaHankelCoefficients,
   polynomialDifferentialMoment,differentialHankel,structuredDifferentialHankel,differentialMomentGeneratingFunction,
   differentialMomentsFromAlgebraicRecurrence,
+  differentialMomentParityPolynomials,differentialMomentFromParity,differentialMomentParityFormula,
   centralWeightedMoment,weightedJet,
   bareissDeterminant,weightedHankel,fourFthreeHankel,meixnerCoefficients,
   computeExactWindow,exactWindowCSV,exactViewURL,readExactView
@@ -248,6 +249,38 @@ test('every finite differential moment OGF matches independent BigInt moment sum
     a0:'1',a1:'1',a2:'0',a3:'0',c0:'1',c1:'2',c2:'1',c3:'0'});
   assert.equal(readExactView(shared).mode,'differential_moments');
   assert.equal(new URL(shared).searchParams.get('cf-count'),'17');
+});
+test('parity closed formulas match direct moments at every tested index, including zeros',()=>{
+  const weights=[[],[0],[1],[1,1],[-1,1],[2,-3,1,0,2],[0,0,0,1]];
+  const operators=[[],[0],[1],[0,1],[1,2,1],[0,0,0,0,1],[2,-1,0,3,0,-2,1,-1]];
+  for(const a of weights)for(const c of operators){
+    const polynomials=differentialMomentParityPolynomials(a,c);
+    for(let n=0;n<=80;n++)
+      assert.equal(differentialMomentFromParity(n,a,c,polynomials),polynomialDifferentialMoment(n,a,c),
+        'Parity formula mismatch '+JSON.stringify([a,c,n]));
+    for(let parity=0;parity<2;parity++)for(let m=0;m<40;m++){
+      const at=x=>polynomials[parity].reduceRight((sum,value)=>sum*BigInt(x)+value,0n);
+      const current=polynomialDifferentialMoment(2*m+parity,a,c);
+      const next=polynomialDifferentialMoment(2*m+2+parity,a,c);
+      assert.equal(BigInt(m+1)*at(m)*next,2n*BigInt(2*m+2*parity+1)*at(m+1)*current);
+    }
+  }
+  assert.deepEqual([0,2,4].map(n=>differentialMomentFromParity(n,[-1,1],[1])),[-1n,0n,6n]);
+  const a=Object.freeze([1,1,0,0]),c=Object.freeze([1,2,1,0]);
+  assert.deepEqual(differentialMomentParityPolynomials(a,c),[[1n,1n,0n,1n],[2n,2n]]);
+  assert.deepEqual(differentialMomentParityPolynomials([2n**70n],[1]),[[2n**70n],[0n]]);
+  assert.throws(()=>differentialMomentParityPolynomials([Number.MAX_SAFE_INTEGER+1],[1]),/rounding/);
+  assert.throws(()=>differentialMomentParityPolynomials([0.5],[1]),/integers/);
+  assert.throws(()=>differentialMomentFromParity(-1,a,c),/nonnegative/);
+  const formula=differentialMomentParityFormula(a,c);
+  assert.equal(formula.evenDegree,3);assert.equal(formula.oddDegree,1);
+  assert.deepEqual(formula.even,['1','1','0','1']);assert.deepEqual(formula.odd,['2','2']);
+  assert.match(formula.expression,/binom\(2m,m\) \* \(1 \+ m \+ m\^3\)/);
+  assert.equal(differentialMomentParityFormula([0],[1,2]).evenDegree,null);
+  assert.equal(differentialMomentParityFormula([1],[1]).oddDegree,null);
+  const window=computeExactWindow({mode:'differential_moments',start:'0',count:'10',
+    a0:'1',a1:'1',a2:'0',a3:'0',c0:'1',c1:'2',c2:'1',c3:'0'});
+  assert.deepEqual(window.momentClosedForms,formula);
 });
 test('regularized algebraic recurrence reconstructs exact moments after singular starts',()=>{
   for(const a of [[1],[0,1],[1,1],[2,-3,1],[0,0,1],[1,0,2,-1],[0]]){

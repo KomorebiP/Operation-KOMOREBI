@@ -318,6 +318,125 @@ async function contrast(page){
       assert.equal(await jump.evaluate(el=>el.validity.customError),true);
       assert.equal(await inspector.locator('tbody').textContent(),previousRows);
 
+      stage('inspection link lifecycle and delayed clipboard completion');
+      await page.goto(url('sequence-library.html?q=id%3AKFOR-P-03-02'));await ready(page);
+      {
+        const {definition:shareDefinition,inspector:shareInspector}=await openInspector(page);
+        const sharePicker=shareDefinition.locator('.sl-variant-select');
+        const inspectionCopy=shareInspector.getByRole('button',{name:'Copy inspection link',exact:true});
+        const fallback=shareInspector.locator('.sl-inspection-link-fallback');
+        const fallbackInput=fallback.locator('input');
+        const shareStatus=shareInspector.locator('.sl-inspection-link-status');
+        const assertCleared=async()=>{
+          assert.equal(await fallback.isVisible(),false,'An obsolete inspection link remains visible');
+          assert.equal(await fallbackInput.inputValue(),'','A hidden inspection link retains obsolete state');
+          assert.equal(await shareStatus.textContent(),'','An old inspection-copy status remains visible');
+        };
+        const failedInspectionCopy=async()=>{
+          await denyCopy(page,true);await inspectionCopy.click();
+          await fallback.waitFor({state:'visible'});
+          assert.equal(await fallbackInput.evaluate(el=>document.activeElement===el),true);
+          const copied=await fallbackInput.evaluate(el=>({value:el.value,start:el.selectionStart,end:el.selectionEnd}));
+          assert.equal(copied.start,0);assert.equal(copied.end,copied.value.length);
+          return new URL(copied.value);
+        };
+        let copied=await failedInspectionCopy();
+        assert.equal(copied.searchParams.get('sl-formula'),'0');
+        assert.equal(copied.searchParams.get('sl-start'),'2');
+        await shareInspector.getByRole('button',{name:'Next 8',exact:true}).click();
+        await assertCleared();assert.equal(await firstIndex(shareInspector),10);
+        copied=await failedInspectionCopy();
+        assert.equal(copied.searchParams.get('sl-start'),'10');
+        await sharePicker.selectOption('1');await assertCleared();
+        copied=await failedInspectionCopy();
+        assert.equal(copied.searchParams.get('sl-formula'),'1');
+        await shareInspector.getByLabel('Go to stored n').fill('18');
+        await shareInspector.getByRole('button',{name:'Go',exact:true}).click();
+        await assertCleared();assert.equal(await firstIndex(shareInspector),18);
+        await failedInspectionCopy();
+        await shareInspector.getByRole('button',{name:'Previous 8',exact:true}).click();
+        await assertCleared();assert.equal(await firstIndex(shareInspector),10);
+
+        // A rejection from the old window cannot restore its link or steal focus.
+        await page.evaluate(()=>{window.__searchClipboard.hold=true;});
+        await inspectionCopy.click();
+        await page.waitForFunction(()=>Boolean(window.__searchClipboard.pending));
+        await shareInspector.getByRole('button',{name:'Next 8',exact:true}).click();
+        await page.evaluate(()=>{window.__inspectionFocus=document.activeElement;});
+        await page.evaluate(async()=>{
+          const pending=window.__searchClipboard.pending;
+          window.__searchClipboard.hold=false;window.__searchClipboard.pending=null;
+          pending.reject(Error('Delayed denial for the previous inspection window'));
+          await new Promise(resolve=>requestAnimationFrame(resolve));
+        });
+        await assertCleared();assert.equal(await firstIndex(shareInspector),18);
+        assert.equal(await page.evaluate(()=>document.activeElement===window.__inspectionFocus),true);
+
+        // A successful completion from an earlier formula must not claim the new one was copied.
+        await page.evaluate(()=>{window.__searchClipboard.hold=true;});
+        await inspectionCopy.click();
+        await page.waitForFunction(()=>Boolean(window.__searchClipboard.pending));
+        await sharePicker.selectOption('2');
+        await page.evaluate(async()=>{
+          const pending=window.__searchClipboard.pending;
+          window.__searchClipboard.hold=false;window.__searchClipboard.pending=null;
+          pending.resolve();await new Promise(resolve=>requestAnimationFrame(resolve));
+        });
+        await assertCleared();
+        assert.equal(await sharePicker.inputValue(),'2');
+
+        // A rejected copy of the earlier source cannot reopen or focus the replacement formula.
+        const rawSource=shareDefinition.locator('.sl-formula-raw');
+        await rawSource.locator(':scope > summary').click();
+        await page.evaluate(()=>{window.__searchClipboard.hold=true;});
+        await rawSource.getByRole('button',{name:'Copy exact formula',exact:true}).click();
+        await page.waitForFunction(()=>Boolean(window.__searchClipboard.pending));
+        await rawSource.locator(':scope > summary').click();
+        await sharePicker.selectOption('0');
+        const updatedFormula=await shareDefinition.locator('p.sar-formula').first().textContent();
+        await page.evaluate(()=>{window.__inspectionFocus=document.activeElement;});
+        await page.evaluate(async()=>{
+          const pending=window.__searchClipboard.pending;
+          window.__searchClipboard.hold=false;window.__searchClipboard.pending=null;
+          pending.reject(Error('Delayed denial for the previous exact formula'));
+          await new Promise(resolve=>requestAnimationFrame(resolve));
+        });
+        assert.equal(await rawSource.evaluate(el=>el.open),false,'A stale callback reopened the source panel');
+        assert.equal(await rawSource.locator('.sl-source-copy-status').textContent(),'');
+        assert.equal(await rawSource.locator('pre').textContent(),updatedFormula);
+        assert.equal(await page.evaluate(()=>document.activeElement===window.__inspectionFocus),true);
+        await rawSource.locator(':scope > summary').click();await denyCopy(page,false);
+        await rawSource.getByRole('button',{name:'Copy exact formula',exact:true}).click();
+        await page.waitForFunction(()=>document.querySelector('#sl-results .sl-source-copy-status')?.textContent==='Exact formula copied.');
+        assert.equal(await page.evaluate(()=>window.__searchClipboard.last),updatedFormula);
+
+        // Replacing the search results detaches the old inspector completely.
+        await page.evaluate(()=>{
+          window.__staleInspectionPanel=document.querySelector('#sl-results .sl-term-inspector');
+          window.__searchClipboard.hold=true;
+        });
+        await inspectionCopy.click();
+        await page.waitForFunction(()=>Boolean(window.__searchClipboard.pending));
+        await submit(page,'id:KSEQ-000025');
+        assert.deepEqual(await resultIds(page),['KSEQ-000025']);
+        await page.evaluate(()=>{window.__inspectionFocus=document.activeElement;});
+        await page.evaluate(async()=>{
+          const pending=window.__searchClipboard.pending;
+          window.__searchClipboard.hold=false;window.__searchClipboard.pending=null;
+          pending.reject(Error('Delayed denial for a detached inspection panel'));
+          await new Promise(resolve=>requestAnimationFrame(resolve));
+        });
+        const stale=await page.evaluate(()=>({
+          connected:window.__staleInspectionPanel.isConnected,
+          fallbackHidden:window.__staleInspectionPanel.querySelector('.sl-inspection-link-fallback').hidden,
+          link:window.__staleInspectionPanel.querySelector('.sl-inspection-link-fallback input').value,
+          status:window.__staleInspectionPanel.querySelector('.sl-inspection-link-status').textContent,
+          focusPreserved:document.activeElement===window.__inspectionFocus
+        }));
+        assert.deepEqual(stale,{connected:false,fallbackHidden:true,link:'',status:'',focusPreserved:true});
+        await denyCopy(page,false);
+      }
+
       stage('cross-tab saved state preserves current inspection and draft');
       await page.goto(url('sequence-library.html?q=id%3AKFOR-P-03-02'));await ready(page);
       ({definition,inspector}=await openInspector(page));
@@ -418,7 +537,9 @@ async function contrast(page){
       report.widths.push({width,searchFallbackLifecycle:true,staleClipboardCompletionIgnored:true,
         invalidSearchRetainsResults:true,failedScopeAndFilterPreserved:true,
         initialInvalidFamilyScope:true,keyboardScopeFocus:true,formulaAccessibleName:true,
-        inspectorBoundaryFocus:true,blankIndexPreservesWindow:true,crossTabInspectionPreserved:true,
+        inspectorBoundaryFocus:true,blankIndexPreservesWindow:true,inspectionFallbackLifecycle:true,
+        staleInspectionClipboardIgnored:true,detachedInspectionClipboardIgnored:true,staleFormulaClipboardIgnored:true,
+        crossTabInspectionPreserved:true,
         draftPreserved:true,naturalFormulaSize:true,plainTextPreserved:true,palette,
         forcedColors:true,reducedMotion:true,enlarged:enlarged||null,overflow:false});
       await context.close();activePage=null;

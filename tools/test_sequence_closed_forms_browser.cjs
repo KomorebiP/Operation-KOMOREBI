@@ -73,6 +73,25 @@ async function valueRows(page){
       await page.selectOption('#cf-mode','differential_moments');
       assert.deepEqual((await valueRows(page)).slice(0,10),
         ['1','2','6','24','66','180','620','1120','4830','6300']);
+      assert.equal(await page.locator('#cf-parity').isVisible(),true);
+      assert.equal(await page.locator('#cf-parity').evaluate(el=>el.open),false);
+      await page.locator('#cf-parity > summary').focus();await page.keyboard.press('Enter');
+      const parityFormula=await page.locator('#cf-parity-formula').textContent();
+      assert.equal(parityFormula,'mu_(2m) = binom(2m,m) * (1 + m + m^3)\n'+
+        'mu_(2m+1) = (2m+1) * binom(2m,m) * (2 + 2*m)\nFor every integer m >= 0.');
+      assert.match(await page.locator('#cf-parity-info').textContent(),/polynomial of degree 3/);
+      await page.locator('#cf-parity-formula').focus();
+      assert.notEqual(await page.locator('#cf-parity-formula').evaluate(el=>getComputedStyle(el).outlineStyle),'none');
+      await page.locator('#cf-parity-copy').click();
+      assert.equal(await page.evaluate(()=>navigator.clipboard.readText()),parityFormula+'\n');
+      await fit(page);
+      await page.locator('#cf-parity').screenshot({path:path.join(output,'moment-formulas-'+width+'.png')});
+      if(width===320){
+        await page.evaluate(()=>document.documentElement.style.fontSize='200%');
+        await fit(page);
+        await page.locator('#cf-parity').screenshot({path:path.join(output,'moment-formulas-enlarged-320.png')});
+        await page.evaluate(()=>document.documentElement.style.removeProperty('font-size'));
+      }
       assert.equal(await page.locator('#cf-ogf').isVisible(),true);
       await page.locator('#cf-ogf > summary').click();
       assert.match(await page.locator('#cf-ogf-formula').textContent(),
@@ -82,7 +101,27 @@ async function valueRows(page){
       await page.locator('#cf-ogf-copy').click();
       assert.match(await page.evaluate(()=>navigator.clipboard.readText()),
         /M\(z\) =/);
+      // A newer copy on the same calculation supersedes a pending old one.
+      await page.evaluate(()=>{
+        window.__cfOriginalClipboard=navigator.clipboard;window.__cfCopyRequests=[];
+        Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:text=>
+          new Promise((resolve,reject)=>window.__cfCopyRequests.push({text,resolve,reject}))}});
+      });
+      await page.locator('#cf-parity-copy').click();
+      await page.locator('#cf-ogf-copy').click();
+      await page.evaluate(()=>window.__cfCopyRequests[1].resolve());
+      await page.locator('#cf-mode').focus();
+      await page.evaluate(async()=>{
+        window.__cfCopyRequests[0].reject(new Error('Delayed clipboard rejection'));
+        await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+      });
+      assert.equal(await page.locator('#cf-fallback').isVisible(),false);
+      assert.equal(await page.locator('#cf-status').textContent(),'Copied the generating function.');
+      assert.equal(await page.evaluate(()=>document.activeElement.id),'cf-mode');
+      await page.evaluate(()=>Object.defineProperty(navigator,'clipboard',{
+        configurable:true,value:window.__cfOriginalClipboard}));
       await page.locator('#cf-start').fill('150');
+      assert.equal(await page.locator('#cf-parity-copy').isVisible(),false,'Parameter edits must hide stale formula exports');
       await page.locator('#cf-count').fill('11');
       await page.locator('#cf-calculate').click();
       assert.equal((await valueRows(page)).length,11);
@@ -110,6 +149,7 @@ async function valueRows(page){
       assert.match(await example.getAttribute('href'),/cf-a1=1/);
       await fit(page);
       await page.selectOption('#cf-mode','meixner');
+      assert.equal(await page.locator('#cf-parity').isVisible(),false);
       assert.deepEqual((await valueRows(page)).slice(0,9),
         ['1','2','3','-2','-31','-30','715','2510','-30015']);
 

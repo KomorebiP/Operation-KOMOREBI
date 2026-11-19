@@ -174,11 +174,12 @@ def verify(root,documents,pages):
     expected={note['id']:note['page'] for note in data['notes']}
     found={identifier:[] for identifier in expected}
     for page,parsed in pages.items():
-        for identifier in parsed.ids:
-            if identifier.startswith('proofreading-'):
-                identifier=identifier.removeprefix('proofreading-')
-                assert identifier in found,('Unrecorded proofreading note',identifier)
-                found[identifier].append(page)
+        # Authored headings can share the ID prefix. The explicit marker
+        # identifies an editorial note, whose canonical ID is checked separately.
+        for identifier,element_id in parsed.proofreading_notes:
+            assert identifier in found,('Unrecorded proofreading note',identifier)
+            assert element_id=='proofreading-'+identifier,('Proofreading note ID differs from its marker',identifier)
+            found[identifier].append(page)
     assert all(found[identifier]==[page] for identifier,page in expected.items()),'Every proofreading note must appear exactly once on its recorded page'
     rendered={}
     for page in set(expected.values()):

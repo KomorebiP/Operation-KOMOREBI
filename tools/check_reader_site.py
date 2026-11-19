@@ -16,6 +16,7 @@ class Page(HTMLParser):
     def __init__(self,text):
         super().__init__()
         self.ids=[];self.links=[];self.inputs=[];self.labels=set()
+        self.proofreading_notes=[]
         self.h1=0;self.main=0;self.language=None;self.title=False;self.skip=False
         self.images_without_alt=0
         self.images=[]
@@ -33,6 +34,8 @@ class Page(HTMLParser):
             if tag=='meta' and ('name' in a or 'property' in a):self.metadata.append((a.get('name',a.get('property')),a.get('content','')))
             if tag=='link' and a.get('rel')=='canonical':self.canonicals.append(a.get('href'))
         if 'id' in a:self.ids.append(a['id'])
+        if 'data-proofreading-note' in a or 'proofreading-note' in (a.get('class') or '').split():
+            self.proofreading_notes.append((a.get('data-proofreading-note'),a.get('id')))
         if tag=='html':self.language=a.get('lang')
         if tag=='title':self.title=True
         if tag=='h1':self.h1+=1

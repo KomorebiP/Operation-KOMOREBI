@@ -35,6 +35,11 @@ screen-reader compatibility study.
 
 ## Exact-value inspection
 
+- Inspection-link fallbacks now clear when the formula or stored-value window
+  changes. Delayed clipboard success or rejection cannot restore an older link,
+  announce an obsolete view, or move focus after the result has been replaced.
+  Copying exact formula text uses the same protection when the representation
+  changes or its source panel closes.
 - Selecting an alternative formula now updates the visible disclosure label
   and its accessible name together.
 - Reaching the first or last stored window moves focus from the newly disabled
@@ -74,8 +79,8 @@ rational coefficients, and correct a historical record-count statement. The
 documentation now states that Restore defaults resets both differential views
 to their shared defaults.
 
-No source formulas, stored integer values, mathematical offsets, or record IDs
-were changed.
+The search and inspection fixes preserve the stored integer values,
+mathematical offsets, record IDs, and existing defining formulas.
 
 ## Verification
 
@@ -102,3 +107,24 @@ existing calculator, proof, family, transfer, math, usability, and chart suites.
 Consult its report for the exact tested revision and rendered result. Browser
 execution uses CI because the local environment's Chromium socket restriction
 was already confirmed during the preceding pass.
+
+## Completion and mathematical continuation
+
+The full website check initially failed because it treated an ordinary heading
+whose ID began with `proofreading-` as an editorial correction note. The
+verifier now recognizes explicit note markers and separately checks their
+canonical IDs. Its regression covers genuine missing, duplicated, malformed,
+and unrecorded notes as well as ordinary headings. All 11 focused tests pass.
+
+Theorem 1C in `research/sequence-closed-forms/FINITE_DIFFERENTIAL_HANKEL.md`
+adds explicit polynomials for the even and odd moments of every finite
+differential operator. The derivation, exact implementations, calculator
+disclosure, and source archive extend the existing collection. The 14 Python
+differential tests, 17 JavaScript calculator tests, two cross-language test
+suites, and five proof-renderer tests pass locally. The production preview
+retains 2,327 records, 45 generalized families, and 7,108 stored representations.
+
+Inspection links, exact-formula copies, and calculator copies also discard
+obsolete clipboard callbacks. A newer copy on the same calculation supersedes
+an earlier pending request. The rendered regression scenarios and screenshots
+are recorded by the updated browser workflow, which must pass before merge.

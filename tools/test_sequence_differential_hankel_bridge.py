@@ -13,7 +13,10 @@ import unittest
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'tools'))
-from sequence_differential_hankel import structured_differential_hankel
+from sequence_differential_hankel import (
+    structured_differential_hankel, moment_parity_polynomials,
+    derivative_monomial_moment,
+)
 
 
 class DifferentialHankelBridgeTests(unittest.TestCase):
@@ -22,7 +25,9 @@ class DifferentialHankelBridgeTests(unittest.TestCase):
         for label,a,c in examples:
             values=structured_differential_hankel(a,c,size)
             fixtures.append(dict(label=label,a=a,c=c,
-                                 expected=list(map(str,values))))
+                                 expected=list(map(str,values)),
+                                 parity=[list(map(str,p)) for p in moment_parity_polynomials(a,c)],
+                                 moments=[str(derivative_monomial_moment(n,a,c)) for n in range(81)]))
         completed=subprocess.run(
             ['node',str(ROOT/'tools/test_sequence_differential_hankel_bridge.mjs')],
             input=json.dumps(fixtures,separators=(',',':')),text=True,
@@ -33,6 +38,7 @@ class DifferentialHankelBridgeTests(unittest.TestCase):
         result=json.loads(completed.stdout)
         self.assertEqual(result,dict(cases=len(examples),
                                     exact_values=len(examples)*(size+1),
+                                    parity_moments=len(examples)*81,
                                     all_exact=True))
 
     def test_python_schur_agrees_with_browser_bareiss_at_all_small_sizes(self):

@@ -47,7 +47,13 @@ function inlineExactValues(entry,initialPosition=0,openFromLink=false,selectedFo
   const degrees=entry.source_degrees;
   const hasDegrees=Array.isArray(degrees)&&degrees.length===values.length&&degrees.every(Number.isSafeInteger);
   const size=8;
-  let first=Math.max(0,Math.min(values.length-1,Math.floor(initialPosition/size)*size)),mounted=false;
+  let first=Math.max(0,Math.min(values.length-1,Math.floor(initialPosition/size)*size)),mounted=false,shareGeneration=0;
+  let shareStatus,fallbackLabel,fallbackInput;
+  function invalidateShare(){
+    shareGeneration++;
+    if(!mounted)return;
+    fallbackLabel.hidden=true;fallbackInput.value='';shareStatus.textContent='';
+  }
   function init(){
     if(mounted)return;
     mounted=true;
@@ -73,7 +79,7 @@ function inlineExactValues(entry,initialPosition=0,openFromLink=false,selectedFo
       'Indices are the stored sequence indices, which may differ from source Taylor degrees.');
     if(hasDegrees)detail.textContent+=' Source degrees follow each record’s recorded index map.';
     detail.className='sl-term-index-note';
-    const shareStatus=make('p'),fallbackLabel=make('label','Select and copy this inspection link'),fallbackInput=make('input');
+    shareStatus=make('p');fallbackLabel=make('label','Select and copy this inspection link');fallbackInput=make('input');
     shareStatus.className='sl-inspection-link-status';shareStatus.setAttribute('role','status');shareStatus.setAttribute('aria-live','polite');
     fallbackLabel.className='sl-inspection-link-fallback';fallbackLabel.hidden=true;
     fallbackInput.type='url';fallbackInput.readOnly=true;
@@ -81,6 +87,7 @@ function inlineExactValues(entry,initialPosition=0,openFromLink=false,selectedFo
     container.append(controls,status,frame,detail,shareStatus,fallbackLabel);panel.append(container);
     let currentRows=[];
     function renderWindow(){
+      invalidateShare();
       const end=Math.min(values.length,first+size);
       status.textContent=`Stored ${symbol}=${offset+first}–${offset+end-1} · ${end-first} of ${values.length} exact values`;
       jump.value=String(offset+first);
@@ -108,13 +115,17 @@ function inlineExactValues(entry,initialPosition=0,openFromLink=false,selectedFo
       }
     }
     copyLink.addEventListener('click',async()=>{
-      const url=createInspectionLink(location.href,entry,selectedFormula(),offset+first,variantCount);
+      invalidateShare();
+      const url=createInspectionLink(location.href,entry,selectedFormula(),offset+first,variantCount),generation=shareGeneration;
+      const current=()=>generation===shareGeneration&&panel.isConnected&&!panel.closest('details:not([open])');
       try {
         if(!navigator.clipboard?.writeText)throw Error('Clipboard unavailable');
         await navigator.clipboard.writeText(url);
+        if(!current())return;
         fallbackLabel.hidden=true;
         shareStatus.textContent='Inspection link copied. The recipient will see this formula and index window.';
       }catch{
+        if(!current())return;
         fallbackLabel.hidden=false;fallbackInput.value=url;
         shareStatus.textContent='Clipboard unavailable. Select and copy the link below.';
         fallbackInput.focus();fallbackInput.select();
@@ -150,7 +161,7 @@ function inlineExactValues(entry,initialPosition=0,openFromLink=false,selectedFo
   }
   panel.addEventListener('toggle',()=>{if(panel.open)init();});
   if(openFromLink){panel.open=true;init();}
-  return panel;
+  return {panel,invalidateShare};
 }
 
 function definitionPreview(formula,label,expanded,recordedVariants=[],entry=null,initialPosition=0){
@@ -182,7 +193,7 @@ function definitionPreview(formula,label,expanded,recordedVariants=[],entry=null
     toolbar.className='sl-variant-toolbar';kind.className='sl-variant-kind';
     note.className='sl-variant-note';source.className='sl-variant-source';
     sourceLink.rel='noopener noreferrer';source.append(sourceLink);
-    let selector;
+    let selector,inspection;
     if(variants.length>1){
       const field=make('label'),caption=make('span','Formula representation');
       field.className='sl-variant-field';selector=make('select');selector.className='sl-variant-select';
@@ -196,6 +207,7 @@ function definitionPreview(formula,label,expanded,recordedVariants=[],entry=null
         const index=Number(selector.value);
         if(!Number.isInteger(index)||index<0||index>=variants.length)return;
         selected=index;
+        inspection?.invalidateShare();
         // Mutate the original source node so the shared MathJax controller can
         // replace its existing typeset pair without leaving stale formulas.
         formula.textContent=variants[index].expression;
@@ -208,8 +220,9 @@ function definitionPreview(formula,label,expanded,recordedVariants=[],entry=null
     const layout=make('div');layout.className='sl-formula-inspection-layout';
     detail.insertBefore(layout,formula);layout.append(formula);
     if(entry){
-      const inspector=inlineExactValues(entry,shared?.startPosition??initialPosition,Boolean(shared),()=>selected,variants.length);
-      if(inspector){
+      inspection=inlineExactValues(entry,shared?.startPosition??initialPosition,Boolean(shared),()=>selected,variants.length);
+      if(inspection){
+        const inspector=inspection.panel;
         layout.append(inspector);
         inspector.addEventListener('toggle',()=>{layout.dataset.exactOpen=String(inspector.open);});
       }
@@ -221,18 +234,24 @@ function definitionPreview(formula,label,expanded,recordedVariants=[],entry=null
     copy.type='button';copyStatus.className='sl-source-copy-status';
     copyStatus.setAttribute('role','status');copyStatus.setAttribute('aria-live','polite');
     raw.append(rawSummary,pre,copy,copyStatus);detail.append(raw);
+    let formulaCopyGeneration=0;
     copy.addEventListener('click',async()=>{
-      const content=variants[selected].expression;
+      const content=variants[selected].expression,generation=++formulaCopyGeneration;
+      const current=()=>generation===formulaCopyGeneration&&raw.isConnected&&!raw.closest('details:not([open])');
+      copyStatus.textContent='';
       try{
         if(!navigator.clipboard?.writeText)throw Error('Clipboard unavailable');
         await navigator.clipboard.writeText(content);
+        if(!current())return;
         copyStatus.textContent='Exact formula copied.';
       }catch{
+        if(!current())return;
         copyStatus.textContent='Clipboard unavailable. Select and copy the source text above.';
         raw.open=true;pre.focus();
       }
     });
     function updateInformation(){
+      formulaCopyGeneration++;
       const item=variants[selected];
       kind.textContent=`${item.kind||'Representation'} · ${selected+1} of ${variants.length}`;
       const currentLabel=item.expression===definingExpression?'Defining formula':'Alternative formula';

@@ -173,6 +173,110 @@ M(z)=\frac{1+2z-8z^2-4z^3+52z^4-16z^5-24z^6}
 
 The exact moment sequence begins \(1,2,6,24,66,180,620,1120,4830,6300,\ldots\). The construction was independently checked against the finite monomial definition using rational arithmetic, including exceptional zeros and rational parameter choices.
 
+### Two explicit polynomials for every even and odd moment
+
+The same moments admit a simpler direct formula when the two parities are
+separated. For \(\varepsilon\in\{0,1\}\), define the ordinary polynomial
+
+\[
+Q_\varepsilon(t)=
+\sum_{\substack{s\ge0\\2s+\varepsilon\le r}}
+c_{2s+\varepsilon}\bigl(t^{\underline s}\bigr)^2P(t-s).
+\]
+
+An empty sum is zero. Here \(t^{\underline0}=1\), and every shifted value
+\(P(t-s)\) is a polynomial
+evaluation, including when \(t-s\) is negative. These \(Q_0,Q_1\) are distinct
+from the Chebyshev transform polynomials \(E,O\) used in Section 3.
+
+**Theorem 1C (polynomial parity formulas).** For every integer \(m\ge0\),
+
+\[
+\boxed{
+\mu_{2m}=\binom{2m}{m}Q_0(m),\qquad
+\mu_{2m+1}=(2m+1)\binom{2m}{m}Q_1(m).
+}
+\]
+
+This identity holds over the same characteristic-zero field as the original
+functional, including zero weights, zero operators, and missing parity terms.
+If all \(a_d,c_k\) are integers, both \(Q_\varepsilon\) have integer
+coefficients. After constructing the two polynomials, each moment requires one
+binomial coefficient and one polynomial evaluation, without computing earlier
+moments.
+
+**Proof.** In a moment of index \(2m+\varepsilon\), the only possible
+derivative orders are \(2s+\varepsilon\). For \(0\le s\le m\), cancellation
+of factorials gives
+
+\[
+(2m+\varepsilon)^{\underline{2s+\varepsilon}}
+\binom{2m-2s}{m-s}
+=(2m+1)^\varepsilon\binom{2m}{m}
+\bigl(m^{\underline s}\bigr)^2.
+\]
+
+Multiply by \(c_{2s+\varepsilon}P(m-s)\) and sum. When \(s>m\), the derivative
+order exceeds the monomial degree, while \(m^{\underline s}=0\). Thus the
+additional polynomial terms vanish and the formula remains valid at every
+initial index. No factorial or binomial coefficient with a negative argument
+is used.
+
+Suppose now that \(P\ne0\), write \(d_P=\deg P\), and suppose the chosen parity
+has at least one nonzero derivative coefficient. Set
+
+\[
+s_\varepsilon=\max\{s\ge0:2s+\varepsilon\le r,
+c_{2s+\varepsilon}\ne0\}.
+\]
+
+The summand with index \(s\) has degree \(d_P+2s\) and leading coefficient
+\(a_{d_P}c_{2s+\varepsilon}\) when that coefficient is nonzero. The highest
+degree occurs in exactly one summand. Consequently
+
+\[
+\boxed{
+\deg Q_\varepsilon=d_P+2s_\varepsilon,\qquad
+[t^{d_P+2s_\varepsilon}]Q_\varepsilon(t)
+=a_{d_P}c_{2s_\varepsilon+\varepsilon}\ne0.
+}
+\]
+
+The binomial and parity factors in Theorem 1C are nonzero in characteristic
+zero. The zero moments in a nonzero parity therefore correspond exactly to
+the nonnegative integer roots of its polynomial. There are at most
+\(d_P+2s_\varepsilon\) such positions. If \(P=0\), both parity polynomials
+vanish. If \(P\ne0\), a parity vanishes identically exactly when all derivative
+coefficients of that parity are zero.
+
+The binomial ratio also gives a first-order recurrence within each parity.
+For every \(m\ge0\) and \(\varepsilon\in\{0,1\}\),
+
+\[
+\boxed{
+(m+1)Q_\varepsilon(m)\mu_{2m+2+\varepsilon}
+=2(2m+2\varepsilon+1)Q_\varepsilon(m+1)\mu_{2m+\varepsilon}.
+}
+\]
+
+The identity includes polynomial zeros, but solving it for the next moment
+requires \(Q_\varepsilon(m)\ne0\). At a root it can reduce to \(0=0\) and
+does not by itself determine the next value. The direct polynomial formula
+still applies there, and Theorem 1B supplies the earlier universally defined
+forward recurrence.
+
+For \(P(m)=1+m\) and \(\mathcal D=1+2\partial_x+\partial_x^2\), these
+polynomials are
+
+\[
+Q_0(m)=m^3+m+1,\qquad Q_1(m)=2m+2.
+\]
+
+They reproduce the worked moment sequence above. As a separate boundary
+example, \(P(m)=m-2\) and \(\mathcal D=1+\partial_x\) give
+\(Q_0(m)=Q_1(m)=m-2\). Each parity has an isolated zero at \(m=2\), followed
+by nonzero moments, illustrating why division at a polynomial root is invalid.
+
 ## 2. Exact Chebyshev derivative products
 
 Let \(C_n(x)=2T_n(x/2)\), with \(C_0=2,C_1=x\), and \(C_{n+1}=xC_n-C_{n-1}\). For \(k\ge1,n\ge k\),
@@ -372,4 +476,12 @@ python -B tools/sequence_differential_hankel.py
 
 The browser’s unified **higher-order differential Hankel** calculator supports falling-factorial weights of degree at most three, operators of order at most three, integer parameters from \(-12\) to \(12\), and determinants up to size \(64\). It displays at most \(32\) consecutive values at a time. Exact rational arithmetic built from BigInt implements the Chebyshev–Schur solver, including initial zero blocks and later singular-pivot lookahead. Every calculation is independently checked against direct moment sums and fraction-free determinants through size \(12\), or through its last requested size if smaller. The mathematical rank theorem is not limited by those interface bounds.
 
-The Python tests compare direct monomial calculations, Chebyshev derivatives, quasiseparable generators, exact matrix ranks, leading singular blocks, binomial-shift invariance, first-order specialization, and longer structured determinant prefixes. These tests substantiate the implementation but are not a Lean formalization or a historical-priority assessment. Existing sequence counts, archived integer records, and pinned OEIS receipts are unchanged.
+The Python tests compare direct monomial calculations, parity polynomials,
+their exact degrees and parity recurrences, Chebyshev derivatives,
+quasiseparable generators, exact matrix ranks, leading singular blocks,
+binomial-shift invariance, first-order specialization, and longer structured
+determinant prefixes. The parity comparisons include rational parameters,
+absent parities, initial zeros, and isolated zeros. These tests substantiate
+the implementation but are not a Lean formalization or a historical-priority
+assessment. Existing sequence counts, archived integer records, and pinned
+OEIS receipts are unchanged.

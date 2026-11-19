@@ -1241,8 +1241,9 @@ satisfies an explicit finite-width forward recurrence of order at most
 2(D+r)-ell+2, where ell is the index of its first nonzero moment.
 No division by a singular coefficient is made.
 
-The browser computes each selected moment both from this algebraic
-forward recurrence and from its independent defining finite sum.
+The browser computes each selected moment from this algebraic
+forward recurrence and checks it against both its defining finite sum
+and the explicit parity formulas below.
 The calculator displays the initial zero count and recurrence-order
 bound alongside the generating-function numerator. This statement concerns
 **moments**, not an arbitrary polynomial-weight Hankel determinant
@@ -1273,6 +1274,48 @@ The full algebraic derivation is available on the
 [finite differential Hankel reading page](https://komorebip.github.io/Operation-KOMOREBI/sequence-differential-hankel.html)
 and in the versioned
 `research/sequence-closed-forms/FINITE_DIFFERENTIAL_HANKEL.md` source.
+
+## Explicit formulas for even and odd moments
+
+Theorem 1C in the same proof source gives two polynomials for every finite
+differential operator. For parity \(\varepsilon\in\{0,1\}\), define
+
+\[
+Q_\varepsilon(t)=\sum_{\substack{s\ge0\\2s+\varepsilon\le r}}
+c_{2s+\varepsilon}\bigl(t^{\underline s}\bigr)^2P(t-s).
+\]
+
+Then, for every integer \(m\ge0\),
+
+\[
+\mu_{2m}=\binom{2m}{m}Q_0(m),\qquad
+\mu_{2m+1}=(2m+1)\binom{2m}{m}Q_1(m).
+\]
+
+This representation computes a selected moment with one binomial coefficient
+and one polynomial evaluation. It preserves initial and isolated zeros.
+For the example above, \(Q_0(m)=m^3+m+1\) and \(Q_1(m)=2m+2\).
+The proof also determines each nonzero polynomial's exact degree and leading
+coefficient, identifies its nonnegative integer roots with the zero moments
+in that parity, and gives a first-order recurrence. That recurrence must not
+be divided through at a polynomial root. The explicit formula still applies
+there.
+
+Both differential calculation modes include a collapsed **Closed formulas
+for even and odd moments** panel. It displays the expanded integer
+polynomials and offers **Copy moment formulas**. In the determinant mode,
+the panel describes the underlying moments. Changing parameters hides old
+formulas along with the old result table and exports.
+
+The Python implementation returns exact rational coefficients through
+`moment_parity_polynomials` and evaluates a selected moment through
+`parity_monomial_moment`. The independent JavaScript implementation uses
+BigInt. Regression checks compare both polynomial coefficient lists and
+their exact values against the defining moments, including absent parities,
+zero operators, high derivative orders, and zeros followed by nonzero terms.
+The construction, proof, and implementations remain in the existing
+collection and its source archive. This addition does not change the
+catalogue's stored record counts or OEIS comparison receipts.
 
 ## Calculator usability and proof reading (19 November 2026)
 
