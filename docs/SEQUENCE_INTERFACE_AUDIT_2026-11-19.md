@@ -33,6 +33,14 @@ reader compatibility study, or a new mathematical theorem.
   visible focus, and clearer table/status names improve navigation.
 - The research card still described 24 records and six constructions. Counts
   now come from the same catalogue used by the collection page.
+- The first rendered audit found 18 pixels of horizontal page overflow at
+  320 pixels with the root text size doubled. Mobile navigation now uses
+  font-aware grid columns and wrapping labels; the audit retains the enlarged
+  text check and reports the actual overflowing elements on a failure.
+- Screenshot review found that the worked-example equation was scaled down
+  on phones. It now preserves its natural text size inside a labelled,
+  keyboard-scrollable container. A singular result announcement was also
+  corrected from “1 exact integers” to “1 exact integer.”
 - The downloadable source bundle omitted JavaScript dependencies required by
   its cross-language test. Those modules are included and the production
   worker/import chain receives revision hashes.

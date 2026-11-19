@@ -269,7 +269,7 @@ export function mountClosedFormsCalculator(root,{href=location.href}={}){
             evidence.regularizedRecurrenceOrderBound+'.');
     }
     fallback.hidden=true;result.hidden=false;
-    setStatus('Computed '+data.rows.length+' exact integers. First index '+data.start+
+    setStatus('Computed '+data.rows.length+' exact integer'+(data.rows.length===1?'':'s')+'. First index '+data.start+
       ', final index '+(data.start+data.count-1)+'.');
   }
   function calculate({focusErrors=false}={}){

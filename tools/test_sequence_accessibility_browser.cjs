@@ -20,7 +20,40 @@ async function settle(page){
 }
 async function fit(page){
   await settle(page);
-  const sizes=await page.evaluate(()=>({width:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth}));
+  const sizes=await page.evaluate(()=>{
+    const width=document.documentElement.clientWidth,scroll=document.documentElement.scrollWidth;
+    if(scroll<=width+1)return {width,scroll};
+    const describe=el=>el.tagName.toLowerCase()+(el.id?'#'+el.id:'')+
+      (typeof el.className==='string'&&el.className?'.'+el.className.trim().replace(/\s+/g,'.'):'');
+    const clippedRight=(rect,el)=>{
+      let right=rect.right;
+      for(let parent=el.parentElement;parent&&parent!==document.body;parent=parent.parentElement){
+        if(['auto','scroll','hidden','clip'].includes(getComputedStyle(parent).overflowX))
+          right=Math.min(right,parent.getBoundingClientRect().right);
+      }
+      return right;
+    };
+    const offenders=[];
+    for(const el of document.body.querySelectorAll('*')){
+      if(!el.getClientRects().length)continue;
+      const rect=el.getBoundingClientRect(),style=getComputedStyle(el);
+      const right=clippedRight(rect,el);
+      if(right>width+1)offenders.push({kind:'element',element:describe(el),parent:describe(el.parentElement),
+        left:rect.left,right,width:rect.width,fontSize:style.fontSize,minWidth:style.minWidth,
+        overflowX:style.overflowX,text:el.textContent.trim().slice(0,90)});
+      for(const child of el.childNodes){
+        if(child.nodeType!==Node.TEXT_NODE||!child.textContent.trim())continue;
+        const range=document.createRange();range.selectNodeContents(child);
+        for(const textRect of range.getClientRects()){
+          const textRight=clippedRight(textRect,el);
+          if(textRight>width+1)offenders.push({kind:'text',element:describe(el),parent:describe(el.parentElement),
+            right:textRight,fontSize:style.fontSize,text:child.textContent.trim().slice(0,90)});
+        }
+      }
+    }
+    return {width,scroll,rootFont:getComputedStyle(document.documentElement).fontSize,
+      offenders:offenders.sort((a,b)=>b.right-a.right).slice(0,30)};
+  });
   assert.ok(sizes.scroll<=sizes.width+1,'Page overflow: '+JSON.stringify(sizes));
   assert.equal(await page.locator('[data-mml-node=merror],mjx-merror').count(),0,'MathJax reported a rendering error');
 }
@@ -168,6 +201,7 @@ async function contrast(page){
       await calculate(page);
       const large=(await rows(page))[0];
       assert.match(large,/^-?\d+$/);assert.equal(large.replace('-','').length,535);
+      assert.match(await page.locator('#cf-status').textContent(),/^Computed 1 exact integer\./);
       await keyboardDisclosure(page,'#cf-ogf');
       await keyboardDisclosure(page,'#cf-method');
       await page.locator('.cf-table-scroll').focus();
@@ -200,6 +234,12 @@ async function contrast(page){
       await proof.goto(url('sequence-differential-hankel.html'));await ready(proof);await settle(proof);
       assert.equal(await proof.locator('#differential-hankel-reading .sl-math-display').count(),39);
       assert.equal(await proof.locator('.sl-math-reading-intro .sl-math-display').count(),1);
+      const introSizing=await proof.locator('.sl-math-reading-intro .sl-math-display').evaluate(el=>({
+        width:el.clientWidth,scroll:el.scrollWidth,maxWidth:getComputedStyle(el.querySelector('mjx-container svg')).maxWidth,
+        focusable:el.tabIndex===0,label:el.getAttribute('aria-label')}));
+      assert.equal(introSizing.maxWidth,'none','Long equations must retain their natural glyph size');
+      assert.ok(introSizing.focusable&&introSizing.label,'The equation scroll region needs keyboard access and a label');
+      if(width<500)assert.ok(introSizing.scroll>introSizing.width,'A long equation should scroll instead of shrinking on a phone');
       assert.equal(await proof.locator('.sl-math-display:not(:has(mjx-container))').count(),0,'Every display must typeset');
       const inline=proof.locator('#differential-hankel-reading span.arithmatex');
       assert.ok(await inline.count()>0);assert.equal(await inline.locator(':scope > mjx-container').count(),await inline.count(),'Inline TeX must typeset');
@@ -222,7 +262,7 @@ async function contrast(page){
       report.widths.push({width,staleResults:true,calculatedLinkSnapshot:true,sharedCoefficients:true,
         fieldErrors:true,realWorker:true,workerCancellation:true,longIntegerDigits:535,
         keyboardDisclosures:true,clipboardFallback:true,proofDisplays:40,proofInlineMath:true,
-        plainTextToggle:true,forcedColors:true,reducedMotion:true,palette,overflow:false});
+        plainTextToggle:true,forcedColors:true,reducedMotion:true,enlargedText:width===320,palette,overflow:false});
       await context.close();activePage=null;
     }
     assert.deepEqual(report.errors,[]);report.status='passed';
