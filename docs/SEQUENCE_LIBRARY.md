@@ -965,10 +965,12 @@ The new records do not alter existing mathematical coefficients, record IDs or
 index conventions. The four-block records start at m=1 and use source degree
 4m-1. The beta-binomial integer records use unnormalized moments U_n rather
 than rational probability moments M_n; their Hankel determinants are scaled
-by (a+b)_L^N. The old pinned OEIS manifest is deliberately checked only
-against its original 2,292 records. New records explicitly show "Not yet
-compared" in their OEIS panels, rather than incorrectly reporting no matches.
-Each new entry nevertheless has its own exact local SHA-256 record receipt.
+by (a+b)_L^N. The retained OEIS snapshot from 15 November 2026 now has
+comparison receipts for all 2,327 records, including these 35 additions.
+Eleven additions have finite prefix matches and 24 have no contiguous
+eight-term match in that export. Some hits reflect a shared initial block
+of zeros, which the affected record pages explain. Every entry also has
+its own exact local SHA-256 record receipt.
 
 Definitions and mathematical qualifications are in
 `research/sequence-closed-forms/IDENTITIES.md`. Reproducible exact tests are
@@ -1077,11 +1079,20 @@ Exact and browser regressions run in
 `tools/test_sequence_library.py`, and `tools/test_sequence_atlas.py`.
 
 An existing A-number stated in a source is distinguished from a
-locally checked bulk match. The pinned historical OEIS manifest
-still covers only its original 2,292 records. New closed-form
-records show **OEIS bulk comparison pending** rather than using
-missing matches as evidence of novelty. Existing record receipts
-continue to hash exact indexed terms, not rounded chart values.
+locally checked bulk match. The comparison manifest now covers all 2,327
+records against the retained snapshot. Its 2,292 earlier comparison results
+are preserved, and the 35 closed-form records have checked status derived
+from their validated receipt membership. A finite hit does not establish
+an infinite identity, and no hit does not establish novelty. Existing record
+receipts continue to hash exact indexed terms, not rounded chart values.
+
+The generator ZIP includes the comparison updater, complete comparison
+manifest, and snapshot metadata. Its README gives the reproduction command
+and identifies the separately downloadable retained terms and names files.
+The comparison uses eight exact starting terms at every exported position,
+extends each hit through the available local terms, and retains up to 50
+ranked hits per record with the uncapped count. Export positions remain
+distinct from mathematical offsets.
 
 
 ## Polynomial-weighted Hankel structure
@@ -1314,8 +1325,8 @@ BigInt. Regression checks compare both polynomial coefficient lists and
 their exact values against the defining moments, including absent parities,
 zero operators, high derivative orders, and zeros followed by nonzero terms.
 The construction, proof, and implementations remain in the existing
-collection and its source archive. This addition does not change the
-catalogue's stored record counts or OEIS comparison receipts.
+collection and its source archive. The catalogue retains its existing
+records, offsets, and defining integer data.
 
 ## Calculator usability and proof reading (19 November 2026)
 
@@ -1356,5 +1367,6 @@ Independent verification includes the standard-library Python
 implementation of the rational numerator and differential equation,
 the browser polynomial calculation, direct moments at many integer
 and rational parameter specializations, and the existing structured
-Hankel determinant tests. This continuation does not add new
-OEIS comparisons or assert historical novelty.
+Hankel determinant tests. The separate finite OEIS comparison now covers
+all indexed records. Historical novelty and full formula/offset review
+remain unassessed by those finite comparisons.

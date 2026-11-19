@@ -128,3 +128,19 @@ Inspection links, exact-formula copies, and calculator copies also discard
 obsolete clipboard callbacks. A newer copy on the same calculation supersedes
 an earlier pending request. The rendered regression scenarios and screenshots
 are recorded by the updated browser workflow, which must pass before merge.
+
+The remaining 35 closed-form records have also been compared against the
+hash-verified OEIS snapshot retained from 15 November 2026. Eleven have finite
+prefix matches and 24 have no eight-term match. Earlier comparison results are
+preserved. Checked status now follows validated receipt membership, and records
+with an all-zero starting prefix explain why such finite hits can be weak.
+The same source download carries the updater, comparison manifest, and snapshot
+metadata. Infinite identities, original mathematical offsets, and historical
+priority require separate evidence.
+
+The final production preview preserves every exact record identity. Its
+generated-link audit passed for all 2,169 explorer links, comparing 52,017
+integers, 16,032 original rational values, and 52,017 source-degree mappings.
+The documented OEIS updater ran from a fresh extraction of the 42-file
+source ZIP after supplying the retained gzip files. Every result field agreed
+with the bundled comparison receipt except the execution timestamp.

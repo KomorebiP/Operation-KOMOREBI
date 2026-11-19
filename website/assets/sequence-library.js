@@ -391,6 +391,7 @@ function render(){
       }
       comparisons.append(make('p','This record has not been compared with the retained OEIS snapshot. Neither a match nor an exclusion is claimed.'));
     }else if(entry.matches.length){const list=make('ol');for(const hit of entry.matches.slice(0,3)){const item=make('li'),reference=make('a',hit.id+' · '+hit.name);reference.href='https://oeis.org/'+hit.id;item.append(reference,make('p',`${hit.matched_terms} matching terms, beginning at local index ${entry.offset}. OEIS export position: ${hit.position}.`));list.append(item);}comparisons.append(list,make('p',`Showing ${Math.min(3,entry.matches.length)} of ${entry.match_count.toLocaleString()} recorded matches. Up to 50 matches are retained.`));}else comparisons.append(make('p','No contiguous match of eight terms was recorded. That does not establish novelty.'));
+    if(entry.oeis_checked===true&&entry.oeis_prefix_note)comparisons.append(make('p',entry.oeis_prefix_note));
     const credit=make('p','Finite matches do not prove that infinite sequences are identical. Export positions are not mathematical offsets. Reference data: '),oeis=make('a','The Online Encyclopedia of Integer Sequences'),license=make('a','CC BY-SA 4.0');oeis.href='https://oeis.org/';license.href='https://creativecommons.org/licenses/by-sa/4.0/';credit.append(oeis,document.createTextNode(' · '),license);comparisons.append(credit);more.append(comparisons);$('results').append(li);
   }
   for(const definition of $('results').querySelectorAll('.sl-result-definition[open]'))enhanceMath(definition);

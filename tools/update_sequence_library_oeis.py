@@ -58,10 +58,28 @@ def compare(stripped,names,entries,minimum=8,limit=50):
         non_claims=['Finite matches do not prove infinite sequence identity','No novelty or pairwise distinctness claim','The bulk exports do not contain mathematical offsets, full formulas, comments or history'])
 
 
+def compare_snapshot(source,entries):
+    """Compare a retained snapshot only after checking its recorded bytes."""
+    source=Path(source)
+    snapshot=json.loads((source/'snapshot.json').read_text(encoding='utf-8'))
+    files={item['file']:item for item in snapshot['files']}
+    for name in ('stripped.gz','names.gz'):
+        if name not in files:
+            raise ValueError('Required OEIS snapshot file is not recorded: '+name)
+        raw=(source/name).read_bytes()
+        if len(raw)!=files[name]['bytes'] or hashlib.sha256(raw).hexdigest()!=files[name]['sha256']:
+            raise ValueError('OEIS snapshot bytes differ: '+name)
+    report=compare(source/'stripped.gz',source/'names.gz',entries)
+    for name,key in [('stripped.gz','stripped_sha256'),('names.gz','names_sha256')]:
+        if report[key]!=files[name]['sha256']:
+            raise ValueError('OEIS snapshot changed during comparison: '+name)
+    report['snapshot']=snapshot
+    return report
+
+
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--source',type=Path,required=True);parser.add_argument('--output',type=Path,required=True);args=parser.parse_args()
     base=catalogue();entries=base+records(base)+expanded_catalogue()
-    report=compare(args.source/'stripped.gz',args.source/'names.gz',entries)
-    snapshot=json.loads((args.source/'snapshot.json').read_text(encoding='utf-8'));report['snapshot']=snapshot
+    report=compare_snapshot(args.source,entries)
     args.output.parent.mkdir(parents=True,exist_ok=True);args.output.write_text(json.dumps(report,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8',newline='\n')
     print(json.dumps(dict(sequences_scanned=report['sequence_count'],local_records=len(entries),records_with_matches=sum(bool(x) for x in report['matches'].values()),retained_hits=sum(map(len,report['matches'].values())),observed_hits=sum(report['total_matches'].values()))))

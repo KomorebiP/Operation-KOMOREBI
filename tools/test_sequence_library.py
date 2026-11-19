@@ -1,4 +1,5 @@
 import gzip
+import hashlib
 import json
 import re
 from pathlib import Path
@@ -6,12 +7,101 @@ import tempfile
 import unittest
 from audit_sequence_library import checks
 from sequence_atlas import catalogue
-from sequence_library import library_entries
+from sequence_library import (library_entries,verified_oeis_coverage,matches_block,
+                              oeis_prefix_note,oeis_comparison_summary)
 from sequence_formula_catalogue import formula_variants,expanded_catalogue
-from update_sequence_library_oeis import compare
+from update_sequence_library_oeis import compare,compare_snapshot
 
 
 class SequenceLibraryTests(unittest.TestCase):
+    def test_complete_oeis_receipts_cover_closed_form_records_with_exact_terms(self):
+        entries=library_entries(catalogue())
+        receipt=json.loads((Path(__file__).resolve().parents[1]/
+                           'manifests/sequence-library-oeis.json').read_text())
+        covered=verified_oeis_coverage(entries,receipt)
+        self.assertEqual(covered,{entry['id'] for entry in entries})
+        self.assertEqual(len(covered),2327)
+        closed=[entry for entry in entries if entry.get('closed_form_collection')]
+        self.assertEqual(len(closed),35)
+        self.assertEqual(sum(bool(receipt['matches'][entry['id']]) for entry in closed),11)
+        for identifier,reference,length in (
+                ('KFOR-CF-PAD-1','A000931',24),
+                ('KFOR-CF-JET-00','A163865',24),
+                ('KFOR-CF-R-p0','A273352',12)):
+            self.assertTrue(any(hit['id']==reference and hit['matched_terms']==length
+                                for hit in receipt['matches'][identifier]))
+        for entry in closed:
+            entry.update(oeis_checked=entry['id'] in covered,
+                         matches=receipt['matches'][entry['id']],
+                         match_count=receipt['total_matches'][entry['id']])
+            entry['oeis_prefix_note']=oeis_prefix_note(entry,receipt['minimum_terms'])
+            html=matches_block(entry)
+            self.assertNotIn('comparison pending',html)
+            self.assertNotIn('Not yet compared',oeis_comparison_summary(entry))
+            if not entry['matches']:
+                self.assertIn('No contiguous match of eight terms',html)
+                self.assertIn('does not establish novelty',html)
+            if entry['id'] in ('KFOR-CF-JET-04','KFOR-CF-W-4-1'):
+                self.assertIn('zero',entry['oeis_prefix_note'])
+                self.assertIn('Agreement need not extend',html)
+        # The older finite comparisons are still bound to their exact inputs.
+        original=[entry for entry in entries if not entry.get('closed_form_collection')]
+        self.assertEqual(hashlib.sha256(json.dumps(
+            [(entry['id'],entry['terms']) for entry in original],
+            separators=(',',':')).encode()).hexdigest(),
+            'ed9224065b5004fb1e2d9b6cfa42ca286764228760fa9bd271305add6f0eb299')
+
+    def test_oeis_checked_status_requires_receipt_membership_and_valid_hashes(self):
+        from copy import deepcopy
+        entries=[dict(id='CHECKED',terms=[str(n) for n in range(8)]),
+                 dict(id='PENDING',terms=['0']*8)]
+        digest=hashlib.sha256(json.dumps(
+            [('CHECKED',entries[0]['terms'])],separators=(',',':')).encode()).hexdigest()
+        receipt=dict(matches={'CHECKED':[]},total_matches={'CHECKED':0},
+                     catalogue_terms_sha256=digest,stripped_sha256='a'*64,
+                     names_sha256='b'*64,snapshot=dict(files=[
+                         dict(file='stripped.gz',sha256='a'*64),
+                         dict(file='names.gz',sha256='b'*64)]))
+        self.assertEqual(verified_oeis_coverage(entries,receipt),{'CHECKED'})
+        changed=deepcopy(entries);changed[0]['terms'][3]='99'
+        with self.assertRaisesRegex(ValueError,'term changes'):
+            verified_oeis_coverage(changed,receipt)
+        changed=deepcopy(receipt);changed['total_matches']['PENDING']=0
+        with self.assertRaisesRegex(ValueError,'record sets differ'):
+            verified_oeis_coverage(entries,changed)
+        changed=deepcopy(receipt);changed['matches']['MISSING']=[];changed['total_matches']['MISSING']=0
+        with self.assertRaisesRegex(ValueError,'missing or duplicate'):
+            verified_oeis_coverage(entries,changed)
+        changed=deepcopy(receipt);changed['stripped_sha256']='c'*64
+        with self.assertRaisesRegex(ValueError,'reference hash differs'):
+            verified_oeis_coverage(entries,changed)
+        pending=dict(id='PENDING',offset=0,terms=['0']*8,oeis_checked=False,
+                     matches=[],match_count=0,closed_form_collection=True)
+        self.assertIn('comparison pending',matches_block(pending))
+        self.assertNotIn('No contiguous match',matches_block(pending))
+        self.assertEqual(oeis_comparison_summary(pending),'Not yet compared')
+
+    def test_snapshot_reproduction_rejects_wrong_reference_bytes(self):
+        entry=dict(id='LOCAL',terms=[str(n) for n in range(8)])
+        with tempfile.TemporaryDirectory() as tmp:
+            source=Path(tmp)
+            with gzip.open(source/'stripped.gz','wt',encoding='utf-8') as stream:
+                stream.write('# OEIS fixture\nA000001 ,0,1,2,3,4,5,6,7,\n')
+            with gzip.open(source/'names.gz','wt',encoding='utf-8') as stream:
+                stream.write('A000001 Fixture\n')
+            snapshot=dict(files=[])
+            for name in ('stripped.gz','names.gz'):
+                raw=(source/name).read_bytes()
+                snapshot['files'].append(dict(file=name,bytes=len(raw),
+                                              sha256=hashlib.sha256(raw).hexdigest()))
+            (source/'snapshot.json').write_text(json.dumps(snapshot))
+            report=compare_snapshot(source,[entry])
+            self.assertEqual(report['snapshot'],snapshot)
+            self.assertEqual(report['matches']['LOCAL'][0]['matched_terms'],8)
+            (source/'names.gz').write_bytes(b'different reference data')
+            with self.assertRaisesRegex(ValueError,'snapshot bytes differ: names.gz'):
+                compare_snapshot(source,[entry])
+
     def test_closed_form_reader_links_target_existing_record_ids(self):
         from sequence_generalized import family_definitions
         reader=(Path(__file__).parent/'sequence_library.py').read_text(encoding='utf-8')

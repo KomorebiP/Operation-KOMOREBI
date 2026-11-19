@@ -26,11 +26,11 @@ from urllib.parse import parse_qs, urlparse
 
 from sequence_atlas import catalogue
 from sequence_generalized import family_definitions, links_for, membership, source_manifest
-from sequence_library import library_entries
+from sequence_library import library_entries,verified_oeis_coverage
 
 ROOT=Path(__file__).resolve().parents[1]
 ASSERTION=(
-    'For every scalar-record family-explorer link generated from the 2,292-record catalogue, '
+    'For every scalar-record family-explorer link generated from the 2,327-record catalogue, '
     'the current exact JavaScript engine accepts its emitted parameters and reproduces every '
     'stored integer, original rational value where recorded, local offset and source degree '
     'in the complete requested prefix, truncated only to the available stored window. '
@@ -76,10 +76,9 @@ def source_degrees(entry,count):
 
 def build_cases():
     entries=library_entries(catalogue());families={f['id']:f for f in family_definitions()}
-    pinned=[entry for entry in entries if not entry.get('closed_form_collection')]
-    catalogue_hash=sha256(json.dumps([(entry['id'],entry['terms']) for entry in pinned],separators=(',',':')).encode()).hexdigest()
-    preserved_hash=json.loads((ROOT/'manifests/sequence-library-oeis.json').read_text(encoding='utf-8'))['catalogue_terms_sha256']
-    if catalogue_hash!=preserved_hash:raise ValueError('Stored catalogue terms changed from the preserved comparison snapshot')
+    snapshot=json.loads((ROOT/'manifests/sequence-library-oeis.json').read_text(encoding='utf-8'))
+    verified_oeis_coverage(entries,snapshot)
+    catalogue_hash=snapshot['catalogue_terms_sha256']
     cases=[];definition_only=[];record_ids=set();all_links=0
     for entry in entries:
         parser=LinkParser();parser.feed(links_for(entry))
@@ -140,9 +139,9 @@ def write_contract(path,node):
     contract=dict(claim_id='SEQUENCE_EXPLORER_LINKS_2026_11_16',mathematics=dict(
         assertion_tested=ASSERTION,coefficient_domain='Exact integers and reduced rational numbers; no floating tolerance',
         conventions='Decimal strings cross JSON; original local offsets and source-degree maps are compared. Appell columns use polynomial row N*n+k and ordinary [x^k] coefficients. Factorial normalizations belong to the stated source degree. Rational denominators are positive.',
-        inputs=['The 2,292 pinned OEIS records, 35 separate closed-form records, and every generated family-explorer link.',
+        inputs=['The 2,327 OEIS-compared records, including 35 closed-form records, and every generated family-explorer link.',
             'Independent Python catalogue coefficients and source coordinates versus the actual JavaScript family engine.'],
-        bounds=dict(catalogue_records=2327,oeis_pinned_records=2292,generated_explorer_links=2169,minimum_compared_terms=8,
+        bounds=dict(catalogue_records=2327,oeis_pinned_records=2327,generated_explorer_links=2169,minimum_compared_terms=8,
             requested_terms_per_link=24,prefix_rule='min(emitted parameters.count, available stored terms)',
             sampling='none; every emitted link is visited'),non_claims=NON_CLAIMS),
         execution_artifacts=input_paths(path),software=[dict(name='audit Python',version=platform.python_version()),

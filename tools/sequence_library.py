@@ -81,35 +81,85 @@ def exact_record_receipt(entry):
     return hashlib.sha256(json.dumps(payload,ensure_ascii=False,separators=(',',':')).encode('utf-8')).hexdigest()
 
 
+def verified_oeis_coverage(entries,snapshot):
+    """Resolve compared IDs only after binding their terms and reference hashes.
+
+    An absent receipt means pending, even when another record in the same
+    collection has been compared. Empty hit lists are completed finite scans.
+    """
+    covered=set(snapshot['matches'])
+    if covered!=set(snapshot['total_matches']):
+        raise ValueError('OEIS comparison record sets differ')
+    ids={entry['id'] for entry in entries}
+    if len(ids)!=len(entries) or not covered<=ids:
+        raise ValueError('OEIS comparison references missing or duplicate local records')
+    compared=[entry for entry in entries if entry['id'] in covered]
+    signature=hashlib.sha256(json.dumps(
+        [(entry['id'],entry['terms']) for entry in compared],
+        separators=(',',':')).encode()).hexdigest()
+    if signature!=snapshot['catalogue_terms_sha256']:
+        raise ValueError('Regenerate the full-library OEIS comparison after term changes')
+    files={item['file']:item for item in snapshot['snapshot']['files']}
+    for name,key in [('stripped.gz','stripped_sha256'),('names.gz','names_sha256')]:
+        if name not in files or files[name]['sha256']!=snapshot[key]:
+            raise ValueError('OEIS comparison reference hash differs: '+name)
+    return covered
+
+
+def oeis_prefix_note(entry,minimum=8):
+    """Explain zero-heavy initial matches without changing comparison scope."""
+    prefix=entry['terms'][:minimum]
+    if not entry.get('matches') or len(prefix)<minimum:
+        return ''
+    zeros=prefix.count('0')
+    if zeros==minimum:
+        beginning=f'The first {minimum} compared terms are zero. A shared initial zero block can account for these finite hits. '
+    elif zeros==minimum-1:
+        beginning=f'The first {minimum} compared terms contain one nonzero value and a long block of zeros. A shared starting pattern can account for these finite hits. '
+    else:
+        return ''
+    return beginning+'Agreement need not extend to later nonzero terms. Check the reported match lengths.'
+
+
+def oeis_comparison_summary(entry):
+    """Short status for the closed-form index, consistent with record pages."""
+    if entry.get('oeis_checked') is not True:
+        return 'Not yet compared'
+    hits=entry.get('matches',[])
+    if not hits:
+        return 'No eight-term hit in the snapshot'
+    total=entry['match_count']
+    longest=max(hit['matched_terms'] for hit in hits)
+    return f'{total:,} finite '+('hit' if total==1 else 'hits')+f' · longest {longest} terms'
+
+
 def matches_block(entry):
-    if entry.get('closed_form_collection'):
+    if entry.get('oeis_checked') is not True:
         stated=('<p>The source identifies <a href="https://oeis.org/'+e(entry['oeis'])+'">'+e(entry['oeis'])+'</a>. '
                 'That identification has not been checked against the retained OEIS snapshot.</p>') if entry.get('source_claimed_oeis') and entry.get('oeis') else ''
         return ('<section id="oeis-matches"><h2>OEIS comparisons</h2>'+stated+
                 '<p>OEIS comparison pending: this record has not been checked '
                 'against the retained snapshot.</p></section>')
     hits=entry.get('matches',[]);total=entry.get('match_count',len(hits))
-    return '<section id="oeis-matches"><h2>OEIS comparisons</h2><p>The comparison uses stored terms beginning at local index '+str(entry['offset'])+'. Positions in the bulk export start at zero and do not represent OEIS mathematical offsets. A finite match does not prove that two infinite sequences are identical.</p>'+(
+    quality='<p>'+e(entry['oeis_prefix_note'])+'</p>' if entry.get('oeis_prefix_note') else ''
+    return '<section id="oeis-matches"><h2>OEIS comparisons</h2><p>The comparison uses stored terms beginning at local index '+str(entry['offset'])+'. Positions in the bulk export start at zero and do not represent OEIS mathematical offsets. A finite match does not prove that two infinite sequences are identical.</p>'+quality+(
         '<ol>'+''.join('<li><a href="https://oeis.org/'+x['id']+'">'+x['id']+'</a> — '+e(x['name'])+'<br>'+str(x['matched_terms'])+' matching terms · OEIS excerpt position '+str(x['position'])+'</li>' for x in hits[:8])+'</ol><p>Showing '+str(min(8,len(hits)))+' of '+str(total)+' recorded matches. Up to 50 ranked matches are retained in the entry JSON.</p>' if hits else '<p>No contiguous match of eight terms was found in the recorded export. This does not establish novelty.</p>')+'<p>Reference names and terms: <a href="https://oeis.org/">The Online Encyclopedia of Integer Sequences</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. Matching and presentation are adaptations.</p></section>'
 
 
 def build(site,atlas):
     entries=library_entries(atlas)
     snapshot=json.loads((site.root/'manifests/sequence-library-oeis.json').read_text(encoding='utf-8'))
-    # The historical OEIS manifest attests only the original records. New
-    # closed-form windows have their own exact generator and independent checks.
-    snapshot_entries=[x for x in entries if not x.get('closed_form_collection')]
-    signature=hashlib.sha256(json.dumps([(x['id'],x['terms']) for x in snapshot_entries],separators=(',',':')).encode()).hexdigest()
-    if signature!=snapshot['catalogue_terms_sha256']:raise ValueError('Regenerate the full-library OEIS comparison after term changes')
+    checked_ids=verified_oeis_coverage(entries,snapshot)
     # Use the same audited index map as each record's exact data table.
     # These are source degrees, not inferred from the flattened display index.
     for entry in entries:
         if entry['collection']=='formulas':
             entry['source_degrees']=[source_degree(entry,entry['offset']+i) for i in range(len(entry['terms']))]
     for entry in entries:
-        entry['oeis_checked']=not bool(entry.get('closed_form_collection'))
+        entry['oeis_checked']=entry['id'] in checked_ids
         entry['record_sha256']=exact_record_receipt(entry)
         entry['matches']=snapshot['matches'].get(entry['id'],[]);entry['match_count']=snapshot['total_matches'].get(entry['id'],0)
+        entry['oeis_prefix_note']=oeis_prefix_note(entry,snapshot['minimum_terms'])
         entry['oeis_snapshot']=dict(attribution=snapshot['attribution'],license=snapshot['license'],source_urls=snapshot['source_urls'],downloaded_at=snapshot['snapshot']['downloaded_at'],stripped_sha256=snapshot['stripped_sha256'],names_sha256=snapshot['names_sha256'],scope='Finite contiguous comparisons; export positions are not mathematical offsets and matches do not prove infinite identity.')
     source=site.root/'research/oeis-snapshot'
     target=site.output/'assets/oeis';target.mkdir(parents=True,exist_ok=True)
@@ -126,11 +176,12 @@ def build(site,atlas):
     for x in entries:writer.writerow([x['id'],x['title'],x['collection'],x['kind'],x['offset'],len(x['terms']),len(x['formulas']),x['url']])
     site.write('assets/sequence-library-index.csv',out.getvalue())
     source_files=['tools/'+name+'.py' for name in ['sequence_formula_catalogue','sequence_library','sequence_archive','sequence_closed_forms','sequence_closed_forms_extended','sequence_polynomial_hankel','sequence_differential_hankel','sequence_math_reading','sequence_research_tables','sequence_linear_research','sequence_research_notes','sequence_generalized','sequence_archive_families','sequence_atlas','sequence_atlas_reference','sequence_atlas_reading','sequence_atlas_study','sequence_atlas_index']]+[REGISTRY_PATH,'manifests/sequence-generalized-sources.json','research/sequence-connections/IDENTITIES.md','research/sequence-connections/sources/komorebi-math-families.py','research/sequence-closed-forms/IDENTITIES.md','research/sequence-closed-forms/COLLECTION_II_ADDITIONS.md','research/sequence-closed-forms/POLYNOMIAL_HANKEL_STRUCTURE.md','research/sequence-closed-forms/FINITE_DIFFERENTIAL_HANKEL.md','tools/test_sequence_closed_forms.py','tools/test_sequence_closed_forms_extended.py','tools/test_sequence_polynomial_hankel.py','tools/test_sequence_differential_hankel.py','tools/test_sequence_differential_hankel_bridge.py','tools/test_sequence_differential_hankel_bridge.mjs','tools/test_sequence_math_reading.py','tools/test_sequence_closed_forms_core.mjs','website/assets/sequence-closed-forms-core.mjs','website/assets/sequence-differential-hankel.mjs','website/assets/sequence-closed-forms-worker.mjs']
+    source_files+=['tools/update_sequence_library_oeis.py','manifests/sequence-library-oeis.json','research/oeis-snapshot/snapshot.json','research/sequence-archive/candidate_registry.json']
     with ZipFile(site.output/'assets/sequence-formula-source.zip','w',ZIP_DEFLATED) as bundle:
         for name in source_files:
             info=ZipInfo(name,date_time=(2026,11,15,0,0,0));info.compress_type=ZIP_DEFLATED;info.external_attr=0o100644<<16;bundle.writestr(info,(site.root/name).read_text(encoding='utf-8').encode('utf-8'))
         info=ZipInfo('README.txt',date_time=(2026,11,15,0,0,0));info.compress_type=ZIP_DEFLATED;info.external_attr=0o100644<<16
-        bundle.writestr(info,'Exact formula catalogue. Python 3.10+ standard library. The browser arithmetic and cross-language checks also require Node.js 24. Text sources use UTF-8/LF for portable reproduction.\nRun: python tools/sequence_formula_catalogue.py --id KFOR-S-catalan-03-01\nExport all records: python tools/sequence_formula_catalogue.py --output records.json\nCheck closed-form formulas: python -B -m unittest discover -s tools -p \"test_sequence_closed_forms*.py\" -v\nCheck browser arithmetic: node --test tools/test_sequence_closed_forms_core.mjs\nCompare Python and JavaScript: python -B -m unittest discover -s tools -p test_sequence_differential_hankel_bridge.py -v\nScalar records store 24 terms beginning at their explicit offsets, except standard k-bonacci records, which store 48. Coefficient triangles store complete rows n=0..12, including zeros. Triangle j is a flat cell index. Its row and column are n and k. Parameter records are not claims of novelty or pairwise distinctness.\n')
+        bundle.writestr(info,'Exact formula catalogue. Python 3.10+ standard library. The browser arithmetic and cross-language checks also require Node.js 24. Text sources use UTF-8/LF for portable reproduction.\nRun: python tools/sequence_formula_catalogue.py --id KFOR-S-catalan-03-01\nExport all records: python tools/sequence_formula_catalogue.py --output records.json\nCheck closed-form formulas: python -B -m unittest discover -s tools -p \"test_sequence_closed_forms*.py\" -v\nCheck browser arithmetic: node --test tools/test_sequence_closed_forms_core.mjs\nCompare Python and JavaScript: python -B -m unittest discover -s tools -p test_sequence_differential_hankel_bridge.py -v\nScalar records store 24 terms beginning at their explicit offsets, except standard k-bonacci records, which store 48. Coefficient triangles store complete rows n=0..12, including zeros. Triangle j is a flat cell index. Its row and column are n and k. Parameter records are not claims of novelty or pairwise distinctness.\n\nReproduce finite OEIS comparisons using the retained snapshot:\nThe comparison receipt and updater are included. The two bulk gzip files are separate downloads, not duplicated in this source ZIP. Download https://komorebip.github.io/Operation-KOMOREBI/assets/oeis/stripped.gz and https://komorebip.github.io/Operation-KOMOREBI/assets/oeis/names.gz. Place both files in research/oeis-snapshot/ beside the included snapshot.json. That file records the required byte counts and SHA-256 hashes; the updater rejects different bytes before scanning.\nRun: python tools/update_sequence_library_oeis.py --source research/oeis-snapshot --output reproduced-oeis-comparison.json\nThe reproduction timestamp changes. Compare the snapshot hashes, catalogue_terms_sha256, matches and total_matches with manifests/sequence-library-oeis.json. Comparisons use the first eight stored terms at every exported position and extend each hit. Export positions are not mathematical offsets; finite hits are not proofs of infinite identity or novelty.\n')
     generalized=generalized_catalogue(entries)
     site.write('assets/sequence-generalized-data.json',json.dumps(generalized,ensure_ascii=False,separators=(',',':'))+'\n')
     scripts=['math-display.mjs','sequence-research-ui.mjs','sequence-reading-theme.mjs','sequence-oeis-core.mjs','sequence-family-core.mjs','sequence-transfer-core.mjs','sequence-math.mjs','sequence-graph-core.mjs','sequence-modular-core.mjs','sequence-discovery-core.mjs','sequence-notebook-core.mjs','sequence-research-worker.mjs','sequence-research-common.mjs','sequence-oeis-worker.mjs','sequence-oeis-client.mjs','sequence-comparison-chart.mjs','sequence-chart-labels.mjs','sequence-workbench-core.mjs','sequence-comparison-certificate.mjs','sequence-certificate-inspection.mjs','sequence-workbench.mjs','sequence-triangle-core.mjs','sequence-triangle.mjs','sequence-transfers.mjs','sequence-families-ui.mjs','sequence-connections-ui.mjs','sequence-identification-ui.mjs','sequence-modular-ui.mjs','sequence-notebooks-ui.mjs','sequence-library-membership.mjs','sequence-research-studio.mjs','sequence-library-search.mjs','sequence-inspection-links.mjs','sequence-differential-hankel.mjs','sequence-closed-forms-core.mjs','sequence-closed-forms-worker.mjs','sequence-closed-forms-ui.mjs','sequence-library.js']
@@ -479,8 +530,8 @@ def build(site,atlas):
         'Arbitrary polynomial-weight Hankel theorem</a> · '
         '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/tools/test_sequence_closed_forms_core.mjs">'
         'Exact browser arithmetic tests</a></p>'
-        '<p>The pinned historical OEIS comparison covers its original 2,292 records. '
-        'New closed-form records are labeled as not yet checked against that bulk snapshot. '
+        '<p>The retained OEIS snapshot has finite comparisons for '+f'{len(checked_ids):,}'+' of '+f'{len(entries):,}'+' current records. '
+        'Each comparison is bound to the stored integer terms and retained reference data. '
         'Finite agreement is not a proof of infinite equality or historical novelty.</p></details>'
         '</section>')
     site.page('sequence-library.html','Sequence Library · Search',
@@ -540,7 +591,7 @@ def build(site,atlas):
     closed_rows=''.join(
         '<tr><th scope="row"><a href="'+e(item['url'])+'">'+e(item['id'])+'</a></th>'
         '<td>'+e(item['title'])+'</td><td>'+str(item['offset'])+'</td>'
-        '<td>'+e(', '.join(item['terms'][:5]))+'</td><td>'+('Source-supplied '+e(item['oeis'])+' · bulk comparison pending' if item.get('source_claimed_oeis') else 'Not yet compared')+'</td></tr>'
+        '<td>'+e(', '.join(item['terms'][:5]))+'</td><td>'+('Source-supplied '+e(item['oeis'])+' · ' if item.get('source_claimed_oeis') else '')+e(oeis_comparison_summary(item))+'</td></tr>'
         for item in closed_entries)
     closed_body=(
         closed_css+
@@ -550,7 +601,8 @@ def build(site,atlas):
         '<section id="closed-forms"><h2>What is in the collection?</h2><p>'+str(len(closed_entries))+' exact integer records across '+str(active_closed_families)+' constructions, '
         'plus '+str(len(closed_families)-active_closed_families)+' definition-only families. Every record has '
         '24 exact values, at least two formula representations, a stated index convention, and CSV/JSON downloads. '
-        'The historical pinned OEIS comparison has not been run on these additions.</p>'
+        +str(sum(item['oeis_checked'] for item in closed_entries))+' of '+str(len(closed_entries))+' records have finite comparisons against the retained OEIS snapshot. '
+        'A finite hit does not prove infinite identity, and an absent hit does not establish novelty.</p>'
         '<p><a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/research/sequence-closed-forms/IDENTITIES.md">'
         'Read definitions, proofs and reproduction notes</a> · '
         '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/tools/test_sequence_closed_forms.py">'
