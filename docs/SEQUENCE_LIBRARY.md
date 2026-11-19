@@ -1206,3 +1206,58 @@ The release tests cover HTML rendering and source completeness in
 presence, mathematical equation markup, links, source navigation,
 desktop and phone widths, and no-JavaScript readability. Formula data
 and the pinned OEIS manifest are unchanged.
+
+
+## Algebraic differential moment generating functions
+
+The finite-order differential Hankel construction now exposes the
+**underlying moments and their exact algebraic ordinary generating
+function**. For a polynomial P of degree D and finite differential
+order r,
+
+\[
+M(z)=\sum_{n\ge0}F_P[\mathcal D x^n]z^n
+=\frac{R(z)}{(1-4z^2)^{D+r+1/2}},
+\qquad \deg R\le2(D+r).
+\]
+
+The numerator is computed with exact polynomial arithmetic from
+the falling-factorial weight coefficients and differential-operator
+coefficients. The same construction supplies a first-order linear
+differential equation with polynomial coefficients for M. If its
+leading coefficient vanishes at z=0, the initial moment conventions
+are retained instead of dividing by zero. This statement concerns
+**moments**, not an arbitrary polynomial-weight Hankel determinant
+sequence: no rational Hankel-determinant generating function is
+inferred from the algebraicity of the moments.
+
+On the [unified Sequence Library](https://komorebip.github.io/Operation-KOMOREBI/sequence-library.html),
+two calculation modes share the same a0..a3 and c0..c3 parameters:
+**Higher-order differential Hankel determinants** (exact direct
+determinants of size 0..12) and **Differential moments and algebraic
+generating functions** (exact integer moments through index 160).
+Both modes show the numerator and denominator in a collapsed
+**Exact algebraic moment generating function** panel, with a
+copyable plain-text expression and exact CSV export. Values and
+source formula are computed locally using BigInt, not floating point.
+
+For P(m)=1+m and \(\mathcal D=1+2\partial_x+\partial_x^2\),
+
+\[
+M(z)=\frac{1+2z-8z^2-4z^3+52z^4-16z^5-24z^6}
+{(1-4z^2)^{7/2}}.
+\]
+
+The corresponding moments begin
+1, 2, 6, 24, 66, 180, 620, 1120, 4830, 6300.
+The full formal derivation is available on the
+[finite differential Hankel reading page](https://komorebip.github.io/Operation-KOMOREBI/sequence-differential-hankel.html)
+and in the versioned
+`research/sequence-closed-forms/FINITE_DIFFERENTIAL_HANKEL.md` source.
+
+Independent verification includes the standard-library Python
+implementation of the rational numerator and differential equation,
+the browser polynomial calculation, direct moments at many integer
+and rational parameter specializations, and the existing structured
+Hankel determinant tests. This continuation does not add new
+OEIS comparisons or assert historical novelty.
