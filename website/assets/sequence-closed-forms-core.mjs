@@ -1,0 +1,228 @@
+// Exact, bounded sequence calculations. No floating point, network or storage.
+// Author: Komorebi P. Source: Closed Forms Collections II–III.
+export const MODE_LIMITS=Object.freeze({
+  sparse:{maxIndex:96,maxCount:32},
+  jet:{maxIndex:80,maxCount:32},
+  hankel:{maxIndex:12,maxCount:13},
+  meixner:{maxIndex:96,maxCount:32}
+});
+export const MODE_DEFAULTS=Object.freeze({
+  sparse:{mode:'sparse',start:'0',count:'12',p:'2',q:'5',r:'1',u:'1',v:'1'},
+  jet:{mode:'jet',start:'0',count:'12',d:'1',lambda:'1',c:'1'},
+  hankel:{mode:'hankel',start:'0',count:'8',d:'1',c:'1'},
+  meixner:{mode:'meixner',start:'0',count:'12',s:'1',twox:'2'}
+});
+export const MODE_FIELDS=Object.freeze({
+  sparse:['p','q','r','u','v'],
+  jet:['d','lambda','c'],
+  hankel:['d','c'],
+  meixner:['s','twox']
+});
+const FIELD_LIMITS=Object.freeze({
+  p:[1,16],q:[1,16],r:[-12,12],u:[-12,12],v:[-12,12],
+  d:[0,8],lambda:[-12,12],c:[-12,12],s:[-12,20],twox:[-20,20]
+});
+function integer(value,label,min,max){
+  const text=String(value);
+  if(!/^-?(0|[1-9][0-9]*)$/.test(text))throw Error(label+' must be an integer.');
+  const n=Number(text);
+  if(!Number.isSafeInteger(n)||n<min||n>max)throw Error(label+' must be between '+min+' and '+max+'.');
+  return n;
+}
+export function binomial(n,k){
+  if(k<0||k>n)return 0n;
+  k=Math.min(k,n-k);
+  let result=1n;
+  for(let j=1;j<=k;j++)result=result*BigInt(n-j+1)/BigInt(j);
+  return result;
+}
+export function falling(n,d){
+  if(d<0)throw Error('Falling-factorial order must be nonnegative.');
+  if(n<d)return 0n;
+  let value=1n;
+  for(let j=0;j<d;j++)value*=BigInt(n-j);
+  return value;
+}
+function abs(n){return n<0n?-n:n;}
+function gcd(a,b){a=abs(a);b=abs(b);while(b){const t=a%b;a=b;b=t;}return a;}
+function addFraction(a,b,c,d){
+  if(d===0n||b===0n)throw Error('Division by zero.');
+  const top=a*d+c*b,bottom=b*d,div=gcd(top,bottom);
+  return [top/div,bottom/div];
+}
+export function sparseCoefficients(p,q,r,u,v,last){
+  if(!Number.isInteger(last)||last<0||last>96)throw Error('The requested index is outside the exact calculator limit.');
+  const P=BigInt(p),Q=BigInt(q),R=BigInt(r),U=BigInt(u),V=BigInt(v);
+  const values=[1n];
+  for(let n=1;n<=last;n++){
+    const N=BigInt(n);
+    let numerator=0n;
+    if(n>=p)numerator+=U*(N+(R-1n)*P)*values[n-p];
+    if(n>=q)numerator+=V*(N+(R-1n)*Q)*values[n-q];
+    if(numerator%N!==0n)throw Error('The sparse exact recurrence failed its divisibility check.');
+    values.push(numerator/N);
+  }
+  return values;
+}
+export function centralWeightedMoment(n,d,c){
+  if(n<0)return 0n;
+  const m=Math.floor(n/2);
+  const base=falling(m,d)*binomial(2*m,m);
+  return n%2===0?base:BigInt(c)*BigInt(n)*base;
+}
+export function weightedJet(n,d,lambda,c){
+  if(n<0)return 0n;
+  const shift=BigInt(lambda);
+  let sum=0n;
+  for(let k=0;k<=n;k++){
+    sum+=binomial(n,k)*shift**BigInt(n-k)*centralWeightedMoment(k,d,c);
+  }
+  return sum;
+}
+export function bareissDeterminant(input){
+  const n=input.length;
+  if(!n)return 1n;
+  if(input.some(row=>row.length!==n))throw Error('Determinant matrix must be square.');
+  const a=input.map(row=>row.map(BigInt));
+  let sign=1n,denominator=1n;
+  for(let k=0;k<n-1;k++){
+    if(a[k][k]===0n){
+      const pivot=a.findIndex((row,i)=>i>k&&row[k]!==0n);
+      if(pivot===-1)return 0n;
+      [a[k],a[pivot]]=[a[pivot],a[k]];
+      sign=-sign;
+    }
+    const pivot=a[k][k];
+    for(let i=k+1;i<n;i++){
+      for(let j=k+1;j<n;j++){
+        const numerator=pivot*a[i][j]-a[i][k]*a[k][j];
+        if(numerator%denominator!==0n)throw Error('Fraction-free determinant division was not exact.');
+        a[i][j]=numerator/denominator;
+      }
+      a[i][k]=0n;
+    }
+    denominator=pivot;
+  }
+  return sign*a[n-1][n-1];
+}
+export function weightedHankel(n,d,c){
+  return bareissDeterminant(Array.from({length:n},(_,i)=>
+    Array.from({length:n},(_,j)=>centralWeightedMoment(i+j,d,c))));
+}
+export function fourFthreeHankel(n,c){
+  if(n===0)return 1n;
+  let numerator=1n,denominator=1n;
+  const C=BigInt(c);
+  for(let k=1;k<=Math.floor(n/2);k++){
+    const item=(k%2?-1n:1n)*BigInt((2*k-1)*n*(n-1))*
+      binomial(n+2*k-2,4*k-2)*C**BigInt(2*k);
+    [numerator,denominator]=addFraction(numerator,denominator,item,BigInt(4*k));
+  }
+  const scaled=(2n**BigInt(n-1))*numerator;
+  if(scaled%denominator!==0n)throw Error('The terminating 4F3 has an unexpected noninteger result.');
+  return scaled/denominator;
+}
+export function meixnerCoefficients(s,twox,last){
+  if(!Number.isInteger(last)||last<0||last>96)throw Error('The requested index is outside the calculator limit.');
+  const X=BigInt(twox),S=BigInt(s),result=[1n];
+  if(last>=1)result.push(X);
+  for(let n=1;n<last;n++){
+    result.push(X*result[n]-BigInt(n)*(BigInt(n)+S-1n)*result[n-1]);
+  }
+  return result;
+}
+export function computeExactWindow(raw){
+  if(!raw||typeof raw!=='object')throw Error('Choose an exact sequence family.');
+  const mode=String(raw.mode||'sparse');
+  if(!Object.hasOwn(MODE_LIMITS,mode))throw Error('Choose a supported exact family.');
+  const limits=MODE_LIMITS[mode];
+  const start=integer(raw.start,'First index',0,limits.maxIndex);
+  const count=integer(raw.count,'Number of terms',1,limits.maxCount);
+  const last=start+count-1;
+  if(last>limits.maxIndex)throw Error('The last index must not exceed '+limits.maxIndex+' for this family.');
+  const params={};
+  for(const field of MODE_FIELDS[mode]){
+    params[field]=integer(raw[field],field,...FIELD_LIMITS[field]);
+  }
+  let values,description,verification;
+  switch(mode){
+    case 'sparse':{
+      const {p,q,r,u,v}=params;
+      values=sparseCoefficients(p,q,r,u,v,last);
+      description='C(n) = [z^n](1-u z^p-v z^q)^(-r). Integer powers and weights, including negative r and zero weights.';
+      verification='The coefficients use the exact differentiated generating-function recurrence.';
+      break;
+    }
+    case 'jet':{
+      const {d,lambda,c}=params;
+      values=Array.from({length:last+1},(_,n)=>weightedJet(n,d,lambda,c));
+      description='Polynomially weighted binomial transform. lambda shifts the seed; c weights its odd derivative part.';
+      verification='Values use the original finite binomial sum, with the zero prefix and lambda=0 endpoints intact.';
+      break;
+    }
+    case 'hankel':{
+      const {d,c}=params;
+      values=Array.from({length:last+1},(_,n)=>weightedHankel(n,d,c));
+      description='W_N^[d](c) = det[F_d(x^(i+j)) + c(i+j)F_d(x^(i+j-1))]. W_0 = 1.';
+      if(d===0){
+        for(let n=0;n<=last;n++)if(values[n]!==fourFthreeHankel(n,c)){
+          throw Error('The determinant disagrees with the independent terminating 4F3.');
+        }
+        verification='Verified against both fraction-free determinants and the independent terminating 4F3.';
+      }else{
+        verification='Evaluated by exact fraction-free determinants. The general root-free Chebyshev formula is in the source note.';
+      }
+      break;
+    }
+    case 'meixner':{
+      const {s,twox}=params;
+      values=meixnerCoefficients(s,twox,last);
+      description='Q_(n+1) = (2x) Q_n - n(n+s-1) Q_(n-1), Q_0=1, Q_1=2x.';
+      verification='Exact polynomial recurrence. The source hypergeometric form requires its separate parameter conditions.';
+      break;
+    }
+  }
+  return {mode,start,count,parameters:params,
+    rows:values.slice(start,last+1).map((value,j)=>({index:start+j,value:value.toString()})),
+    description,verification};
+}
+function csvQuote(value){
+  const s=String(value);
+  return '"'+s.replace(/"/g,'""')+'"';
+}
+export function exactWindowCSV(report){
+  if(!report||!Array.isArray(report.rows))throw Error('Calculate a window before exporting.');
+  const metadata=JSON.stringify(report.parameters);
+  return ['family,index,exact_integer,parameters',...report.rows.map(row=>
+    [report.mode,row.index,row.value,metadata].map(csvQuote).join(','))].join('\r\n')+'\r\n';
+}
+export function exactViewURL(href,raw){
+  const report=computeExactWindow(raw),url=new URL(href);
+  for(const key of [...url.searchParams.keys()])if(key.startsWith('cf-'))url.searchParams.delete(key);
+  url.searchParams.set('cf-v','1');
+  url.searchParams.set('cf-mode',report.mode);
+  url.searchParams.set('cf-start',String(report.start));
+  url.searchParams.set('cf-count',String(report.count));
+  for(const [key,value] of Object.entries(report.parameters))url.searchParams.set('cf-'+key,String(value));
+  url.hash='closed-calculator-panel';
+  return url.href;
+}
+export function readExactView(href){
+  const url=new URL(href);
+  if(!url.searchParams.has('cf-v'))return null;
+  if(url.searchParams.getAll('cf-v').length!==1||url.searchParams.get('cf-v')!=='1')
+    throw Error('Unsupported or duplicated calculator link version.');
+  const mode=url.searchParams.get('cf-mode');
+  if(!Object.hasOwn(MODE_FIELDS,mode))throw Error('The calculator link has an unknown family.');
+  const keys=['mode','start','count',...MODE_FIELDS[mode]];
+  const allowed=new Set(keys.map(k=>'cf-'+k).concat('cf-v'));
+  for(const key of url.searchParams.keys())if(key.startsWith('cf-')&&!allowed.has(key))
+    throw Error('The calculator link contains an unexpected setting.');
+  const values={};
+  for(const key of keys){
+    if(url.searchParams.getAll('cf-'+key).length!==1)throw Error('The calculator link has a missing or repeated setting.');
+    values[key]=url.searchParams.get('cf-'+key);
+  }
+  computeExactWindow(values);
+  return values;
+}
