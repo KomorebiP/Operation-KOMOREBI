@@ -205,6 +205,18 @@ class PolynomialHankelTests(unittest.TestCase):
         self.assertEqual(structured_hankel_prefixes([1,-1],0,5),
                          [1,1,0,0,216,4464])
 
+    def test_special_single_weight_family_agrees_with_original_chebyshev_formula(self):
+        # Two independent root-free routes: the prior fixed-size polynomial
+        # remainder theorem and the new bounded-rank Schur calculation.
+        from sequence_closed_forms_extended import weighted_hankel_closed
+        for d in range(5):
+            weights=[0]*d+[1]
+            for c in (-2,0,1,2):
+                sequence=structured_hankel_prefixes(weights,c,40)
+                for n,value in enumerate(sequence):
+                    self.assertEqual(value,weighted_hankel_closed(n,d,c),
+                                     (d,c,n))
+
     def test_high_order_exact_replay_without_large_hankel_matrices(self):
         for a,c,n in [([0,1],1,200),([0,0,1],1,200),
                       ([0,0,0,1],1,100),([2,-3,5],2,140)]:
