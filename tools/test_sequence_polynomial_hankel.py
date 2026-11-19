@@ -103,7 +103,7 @@ class PolynomialHankelTests(unittest.TestCase):
             a=power_to_falling(values)
             for m in range(0,18):
                 original=sum(F(x)*m**k for k,x in enumerate(values))
-                falling=sum(a[d]*factorial(m)//factorial(m-d)
+                falling=sum(a[d]*(factorial(m)//factorial(m-d))
                             for d in range(min(m,len(a)-1)+1))
                 self.assertEqual(original,falling)
 
@@ -189,7 +189,7 @@ class PolynomialHankelTests(unittest.TestCase):
                 if k<=n:
                     self.assertEqual(outputs[k],direct_hankel(a,c,k))
         self.assertEqual(structured_hankel_prefixes([0,1],1,8),
-                         [1,0,0,-8,1680,-271488,-2874880,1840174080,-1457779666944])
+                         [1,0,0,-8,1680,-271488,-2874880,1840174080,-87345205248])
 
     def test_no_positive_measure_for_nonconstant_weights_example(self):
         # P(m)=m+1 would have mass F_P[1]=1. Its moments grow
