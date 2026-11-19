@@ -285,7 +285,7 @@ def extended_catalogue():
             'The finite sum defines every index, including the zero prefix. '
             'The equivalent ordinary generating function follows from the falling-factorial basis.',
             oeis='A163865' if d==0 else None,
-            calculator=dict(mode='jet',d=d,lambda_=1,c=1))
+            calculator={'mode':'jet','d':d,'lambda':1,'c':1})
     for d in (2,3,4):
         add(f'KFOR-CF-W-{d}-1',
             f'Weighted swinging Hankel determinants · d={d}, c=1',
