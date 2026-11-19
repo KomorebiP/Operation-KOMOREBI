@@ -125,7 +125,7 @@ def build(site,atlas):
     out=io.StringIO(newline='');writer=csv.writer(out);writer.writerow(['id','title','collection','family','offset','stored_terms','representations','entry_url'])
     for x in entries:writer.writerow([x['id'],x['title'],x['collection'],x['kind'],x['offset'],len(x['terms']),len(x['formulas']),x['url']])
     site.write('assets/sequence-library-index.csv',out.getvalue())
-    source_files=['tools/'+name+'.py' for name in ['sequence_formula_catalogue','sequence_closed_forms','sequence_closed_forms_extended','sequence_polynomial_hankel','sequence_research_tables','sequence_linear_research','sequence_research_notes','sequence_generalized','sequence_archive_families','sequence_atlas','sequence_atlas_reference','sequence_atlas_reading','sequence_atlas_study','sequence_atlas_index']]+[REGISTRY_PATH,'manifests/sequence-generalized-sources.json','research/sequence-connections/IDENTITIES.md','research/sequence-connections/sources/komorebi-math-families.py','research/sequence-closed-forms/IDENTITIES.md','research/sequence-closed-forms/COLLECTION_II_ADDITIONS.md','research/sequence-closed-forms/POLYNOMIAL_HANKEL_STRUCTURE.md','tools/test_sequence_polynomial_hankel.py']
+    source_files=['tools/'+name+'.py' for name in ['sequence_formula_catalogue','sequence_closed_forms','sequence_closed_forms_extended','sequence_polynomial_hankel','sequence_differential_hankel','sequence_research_tables','sequence_linear_research','sequence_research_notes','sequence_generalized','sequence_archive_families','sequence_atlas','sequence_atlas_reference','sequence_atlas_reading','sequence_atlas_study','sequence_atlas_index']]+[REGISTRY_PATH,'manifests/sequence-generalized-sources.json','research/sequence-connections/IDENTITIES.md','research/sequence-connections/sources/komorebi-math-families.py','research/sequence-closed-forms/IDENTITIES.md','research/sequence-closed-forms/COLLECTION_II_ADDITIONS.md','research/sequence-closed-forms/POLYNOMIAL_HANKEL_STRUCTURE.md','research/sequence-closed-forms/FINITE_DIFFERENTIAL_HANKEL.md','tools/test_sequence_polynomial_hankel.py','tools/test_sequence_differential_hankel.py']
     with ZipFile(site.output/'assets/sequence-formula-source.zip','w',ZIP_DEFLATED) as bundle:
         for name in source_files:
             info=ZipInfo(name,date_time=(2026,11,15,0,0,0));info.compress_type=ZIP_DEFLATED;info.external_attr=0o100644<<16;bundle.writestr(info,(site.root/name).read_text(encoding='utf-8').encode('utf-8'))
@@ -378,6 +378,26 @@ def build(site,atlas):
       <a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/tools/sequence_polynomial_hankel.py">Run the exact structured solver</a> ·
       <a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/tools/test_sequence_polynomial_hankel.py">Inspect independent tests</a>.</p>
       </details>
+      <details id="differential-hankel-theorem"><summary>Finite-order differential Hankel calculus</summary>
+      <p>For a polynomial P(m) of degree D and a finite constant-coefficient
+      operator D_x = c_0 + c_1 partial_x + ... + c_r partial_x^r,
+      the associated Chebyshev Gram matrix has separated off-diagonal
+      blocks of rank at most 2(D+r), independent of determinant size N.</p>
+      <p>All derivative Chebyshev moments admit exact finite products.
+      The weight-raising ladder is
+      F_(d+1)[C_n^(k)] = (n^2-(k+2d)^2) F_d[C_n^(k)] / (4(d+k)),
+      for d+k greater than zero. This leads to explicit row generators
+      and a structured exact Schur solver, including initial zero blocks
+      and singular-pivot lookahead. The runtime bound is stated in
+      rational-arithmetic operations, not fixed-bit complexity.</p>
+      <p>The bounded browser example uses P(m)=1+m and
+      D_x=1+2 partial_x+partial_x^2. Its first determinant values are
+      1, 1, 2, -84, -456, 52197296.</p>
+      <p><a href="sequence-library.html?cf-version=1&cf-mode=differential_hankel&cf-start=0&cf-count=7&cf-a0=1&cf-a1=1&cf-a2=0&cf-a3=0&cf-c0=1&cf-c1=2&cf-c2=1&cf-c3=0#closed-calculator-panel">Calculate the differential Hankel example</a> ·
+      <a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/research/sequence-closed-forms/FINITE_DIFFERENTIAL_HANKEL.md">Read the complete proof</a> ·
+      <a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/tools/sequence_differential_hankel.py">Run the general exact solver</a> ·
+      <a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/tools/test_sequence_differential_hankel.py">Inspect independent tests</a>.</p>
+      </details>
       <details><summary>Six formulas recovered from source papers</summary>
       <p>The documented reductions cover Bernoulli four-block tangents, four-block
       Euler convolutions, integer Meixner–Pollaczek polynomials, beta-moment
@@ -392,7 +412,7 @@ def build(site,atlas):
         '<summary>Calculate exact coefficients and determinants</summary>'
         '<div id="closed-calculator-root">'
         '<p>The optional worksheet calculates finite integer windows for two-delay coefficients, '
-        'Padovan powers, four-block polynomials, weighted binomial transforms, weighted Hankel determinants, beta-binomial moments and integer Meixner–Pollaczek polynomials. '
+        'Padovan powers, four-block polynomials, weighted binomial transforms, beta-binomial moments, and ordinary or higher-order differential Hankel determinants. '
         'It does not claim that finite agreement proves an infinite identity.</p>'
         '</div><noscript><p>JavaScript is not required to read the definitions and exact record tables above. '
         'Open any record for its complete static 24-term table.</p></noscript></details>')
