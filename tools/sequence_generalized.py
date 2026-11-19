@@ -27,6 +27,7 @@ def source_manifest():
 
 def membership(entry):
     kind=entry['kind'];identifier=entry['id'];result=[]
+    if entry.get('closed_form_family'):return [entry['closed_form_family']]
     if identifier in ARCHIVE_MEMBERSHIP:
         return [ARCHIVE_MEMBERSHIP[identifier]]
     for match,key in [(kind in ('reciprocal','reciprocal power'),'GF-RECIPROCAL'),(kind=='logarithmic companion','GF-TANGENT'),(kind.startswith('congruential ') or kind=='euler','GF-CONGRUENTIAL'),(kind.startswith('Appell '),'GF-APPELL'),(kind=='secancy parameter column','GF-SECANCY'),(kind=='Euler-transfer theta','GF-THETA'),(kind=='theta polynomial column','GF-THETA-COLUMN'),(kind=='classical multisection','GF-SECTIONS'),(kind=='k-step reciprocal power','GF-LINEAR'),(kind=='k-bonacci' or identifier in ('KOM013','KOM014','KOM015','KOM016'),'GF-KBONACCI')]:
@@ -89,7 +90,8 @@ def family_definitions():
         if item['id']=='GF-BLOCK-LOGARITHMIC':
             item['formulas'].append(dict(title='Transfer-tangent normalization',kind='index and scaling identity',
                 expression='L_N(n)=Nn T_N(n-1), n>=1; L_N(0)=0',source=item['source']))
-    return result
+    from sequence_closed_forms import closed_form_families
+    return result+closed_form_families()
 
 
 def catalogue(entries):
@@ -227,6 +229,8 @@ def build_pages(site,data,wrap):
             archived=family['archive_record_ids']
             body+='<section id="archive-records"><h2>Recovered archive records</h2><p>'+str(len(archived))+' original records mapped to this construction.</p><ul>'+''.join('<li><a href="../sequence-archive/'+identifier+'.html">'+identifier+' · '+e(archive_records[identifier]['name'])+'</a> · first index '+str(archive_records[identifier]['offset'])+'</li>' for identifier in archived)+'</ul></section>'
         if family['engine']:body+='<section id="family-explorer"><h2>Explore parameters and exact values</h2><noscript><p>Enable JavaScript to calculate values and compare constructions. The definitions, examples, and source links remain available above.</p></noscript><div id="family-explorer-controls"></div></section>'
+        elif family['paper']=='CLOSED-FORMS-II-III':
+            body+='<section id="reproduce"><h2>Reproduce the indexed terms</h2><p>Run the exact standard-library tests with <code>python -B -m unittest discover -s tools -p test_sequence_closed_forms.py</code>. The generator preserves the stated index and normalization conventions. Its finite results do not assert OEIS novelty.</p><p><a download href="../assets/sequence-formula-source.zip">Download the exact formula generators and mathematical source</a> · <a href="'+e(family['source'])+'">Read the construction and proof note</a></p></section>'
         elif family['family_type']=='analytic family':body+='<section id="reading"><h2>Read the analytic construction</h2><p>The linked paper gives the hypotheses, normalization, analytic interpretation, and derived identities.</p><p><a href="'+e(family['source'])+'">Open the defining passage</a> · <a href="index.html#research-coverage">Browse research source coverage</a></p></section>'
         else:body+='<section id="reproduce"><h2>Reproduce the archived values</h2><p>The original Python generator defines each construction and its recorded parameters. Extract the source bundle and run <code>python reproduce.py --output regenerated</code>.</p><p><a download href="../assets/sequence-archive-sources.zip">Download the exact generator and source records</a> · <a href="'+e(family['source'])+'">Read the generator</a> · <a href="'+e(family['registry_source'])+'">Original definitions and classifications</a></p></section>'
         if related.get(family['id']):body+='<section id="related"><h2>Related constructions</h2><ul>'+''.join('<li><a href="'+e(identifier)+'.html#definition">'+e(families[identifier]['title'])+'</a></li>' for identifier in related[family['id']])+'</ul></section>'

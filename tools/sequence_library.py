@@ -48,6 +48,10 @@ def exact_record_receipt(entry):
 
 
 def matches_block(entry):
+    if entry.get('closed_form_collection'):
+        return ('<section id="oeis-matches"><h2>OEIS comparisons</h2>'
+                '<p>Not yet compared with the pinned OEIS snapshot. No positive or negative '
+                'OEIS match, historical novelty, or distinctness is inferred from this entry.</p></section>')
     hits=entry.get('matches',[]);total=entry.get('match_count',len(hits))
     return '<section id="oeis-matches"><h2>OEIS comparisons</h2><p>These finite matches begin at local index '+str(entry['offset'])+'. Positions in the bulk export start at zero and do not represent OEIS mathematical offsets. A finite match does not prove that two infinite sequences are identical.</p>'+(
         '<ol>'+''.join('<li><a href="https://oeis.org/'+x['id']+'">'+x['id']+'</a> — '+e(x['name'])+'<br>'+str(x['matched_terms'])+' matching terms · OEIS excerpt position '+str(x['position'])+'</li>' for x in hits[:8])+'</ol><p>Showing '+str(min(8,len(hits)))+' of '+str(total)+' recorded matches. Up to 50 ranked matches are retained in the entry JSON.</p>' if hits else '<p>No contiguous match of eight terms was found in the recorded export. This does not establish novelty.</p>')+'<p>Reference names and terms: <a href="https://oeis.org/">The Online Encyclopedia of Integer Sequences</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. Matching and presentation are adaptations.</p></section>'
@@ -56,7 +60,10 @@ def matches_block(entry):
 def build(site,atlas):
     entries=library_entries(atlas)
     snapshot=json.loads((site.root/'manifests/sequence-library-oeis.json').read_text(encoding='utf-8'))
-    signature=hashlib.sha256(json.dumps([(x['id'],x['terms']) for x in entries],separators=(',',':')).encode()).hexdigest()
+    # The historical OEIS manifest attests only the original records. New
+    # closed-form windows have their own exact generator and independent checks.
+    snapshot_entries=[x for x in entries if not x.get('closed_form_collection')]
+    signature=hashlib.sha256(json.dumps([(x['id'],x['terms']) for x in snapshot_entries],separators=(',',':')).encode()).hexdigest()
     if signature!=snapshot['catalogue_terms_sha256']:raise ValueError('Regenerate the full-library OEIS comparison after term changes')
     # Use the same audited index map as each record's exact data table.
     # These are source degrees, not inferred from the flattened display index.
@@ -64,6 +71,7 @@ def build(site,atlas):
         if entry['collection']=='formulas':
             entry['source_degrees']=[source_degree(entry,entry['offset']+i) for i in range(len(entry['terms']))]
     for entry in entries:
+        entry['oeis_checked']=not bool(entry.get('closed_form_collection'))
         entry['record_sha256']=exact_record_receipt(entry)
         entry['matches']=snapshot['matches'].get(entry['id'],[]);entry['match_count']=snapshot['total_matches'].get(entry['id'],0)
         entry['oeis_snapshot']=dict(attribution=snapshot['attribution'],license=snapshot['license'],source_urls=snapshot['source_urls'],downloaded_at=snapshot['snapshot']['downloaded_at'],stripped_sha256=snapshot['stripped_sha256'],names_sha256=snapshot['names_sha256'],scope='Finite contiguous comparisons; export positions are not mathematical offsets and matches do not prove infinite identity.')
@@ -81,7 +89,7 @@ def build(site,atlas):
     out=io.StringIO(newline='');writer=csv.writer(out);writer.writerow(['id','title','collection','family','offset','stored_terms','representations','entry_url'])
     for x in entries:writer.writerow([x['id'],x['title'],x['collection'],x['kind'],x['offset'],len(x['terms']),len(x['formulas']),x['url']])
     site.write('assets/sequence-library-index.csv',out.getvalue())
-    source_files=['tools/'+name+'.py' for name in ['sequence_formula_catalogue','sequence_research_tables','sequence_linear_research','sequence_research_notes','sequence_generalized','sequence_archive_families','sequence_atlas','sequence_atlas_reference','sequence_atlas_reading','sequence_atlas_study','sequence_atlas_index']]+[REGISTRY_PATH,'manifests/sequence-generalized-sources.json','research/sequence-connections/IDENTITIES.md','research/sequence-connections/sources/komorebi-math-families.py']
+    source_files=['tools/'+name+'.py' for name in ['sequence_formula_catalogue','sequence_closed_forms','sequence_research_tables','sequence_linear_research','sequence_research_notes','sequence_generalized','sequence_archive_families','sequence_atlas','sequence_atlas_reference','sequence_atlas_reading','sequence_atlas_study','sequence_atlas_index']]+[REGISTRY_PATH,'manifests/sequence-generalized-sources.json','research/sequence-connections/IDENTITIES.md','research/sequence-connections/sources/komorebi-math-families.py','research/sequence-closed-forms/IDENTITIES.md']
     with ZipFile(site.output/'assets/sequence-formula-source.zip','w',ZIP_DEFLATED) as bundle:
         for name in source_files:
             info=ZipInfo(name,date_time=(2026,11,15,0,0,0));info.compress_type=ZIP_DEFLATED;info.external_attr=0o100644<<16;bundle.writestr(info,(site.root/name).read_text(encoding='utf-8').encode('utf-8'))
@@ -286,11 +294,14 @@ def build(site,atlas):
                   page_kind='compare'))
     research_nav=('<nav class="sl-research-nav" aria-label="Research and tool pages">'
                   '<a href="#research-families">Research families</a><a href="#generalized">Generalized families</a>'
+                  '<a href="sequence-closed-forms.html#closed-forms">Closed forms II–III</a>'
                   '<a href="sequence-connections.html#research-graph">Connections</a>'
                   '<a href="sequence-identify.html#identify">Identify terms</a>'
                   '<a href="sequence-modular.html#modular-dynamics">Modular dynamics</a>'
                   '<a href="sequence-workspace.html#research-notebooks">Combined notebooks</a></nav>')
     research_choices=('<div class="sl-research-choices" aria-label="Specialized research tools">'
+                      '<article><h3><a href="sequence-closed-forms.html#closed-forms">Closed forms II–III</a></h3>'
+                      '<p>Read six exact construction families, 24 curated integer records and their source derivations.</p></article>'
                       '<article><h3><a href="sequence-connections.html#research-graph">Connection graph</a></h3>'
                       '<p>Inspect documented sequence relationships, directed paths and exact transfer compositions.</p></article>'
                       '<article><h3><a href="sequence-identify.html#identify">Identify terms</a></h3>'
@@ -313,6 +324,44 @@ def build(site,atlas):
                   'research','research-families')+research_nav+research.replace('<details class="sl-topic-disclosure">','<details class="sl-topic-disclosure" open>',1)+generalized_sections(only=['generalized'])+
                    '<h2 class="sl-tool-heading">Research workbenches</h2>'+research_choices+research_legacy,
                    page_kind='research'))
+    # The closed-form supplement is a focused reading page, not a sixth tool
+    # crowded into Search. Its exact records also appear in the unified index.
+    closed_entries=[item for item in entries if item.get('closed_form_collection')]
+    closed_families=[item for item in generalized['families'] if item['id'].startswith('GF-CF-')]
+    closed_cards=''.join(
+        '<article class="sar-card"><h3><a href="'+e(family['url'])+'">'+e(family['title'])+'</a></h3>'
+        '<p>'+e(family['note'])+'</p><p>'+str(len(family['record_ids']))+' indexed integer records.</p></article>'
+        for family in closed_families)
+    closed_rows=''.join(
+        '<tr><th scope="row"><a href="'+e(item['url'])+'">'+e(item['id'])+'</a></th>'
+        '<td>'+e(item['title'])+'</td><td>'+str(item['offset'])+'</td>'
+        '<td>'+e(', '.join(item['terms'][:5]))+'</td><td>Not yet compared</td></tr>'
+        for item in closed_entries)
+    closed_body=(
+        page_heading('Closed forms: Collections II and III',
+            'Exact integer records, source derivations and explicit review boundaries.',
+            'research','closed-forms')+
+        '<section id="closed-forms"><h2>What is in the collection?</h2><p>24 integer records in six construction families, '
+        'plus two source-defined families without fabricated integer terms. Each record has '
+        '24 exact values, two formula representations, a preserved index convention, and CSV/JSON downloads. '
+        'The historical OEIS snapshot has not been run on these additions.</p>'
+        '<p><a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/research/sequence-closed-forms/IDENTITIES.md">'
+        'Read definitions, proofs and reproduction notes</a> · '
+        '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/tools/test_sequence_closed_forms.py">'
+        'Review the exact independent tests</a> · '
+        '<a href="sequence-library.html#library-search">Search the full library</a></p></section>'+
+        '<section><h2>Eight source-linked families</h2><div class="sar-grid">'+closed_cards+'</div></section>'+
+        '<section><h2>Twenty-four integer records</h2><p>Displayed prefixes retain their original offsets. '
+        'The four-block rows start at m=1 and refer to analytic exponent 4m-1; beta-binomial '
+        'records contain explicitly unnormalized integer values. Follow each record for full tables, '
+        'plots and exports.</p><div class="sar-scroll" tabindex="0" role="region" '
+        'aria-label="Closed-form sequence records"><table><thead><tr><th scope="col">Record</th>'
+        '<th scope="col">Construction</th><th scope="col">First index</th>'
+        '<th scope="col">First five exact terms</th><th scope="col">OEIS</th></tr></thead>'
+        '<tbody>'+closed_rows+'</tbody></table></div></section>')
+    site.page('sequence-closed-forms.html','Sequence Library · Closed forms II and III',
+              wrap(closed_body,page_kind='closed-forms'))
+
     for filename,title,description,section_id,page_kind in [
         ('sequence-connections.html','Sequence connections',
          'Inspect documented relationships, directed paths and exact scalar transfer compositions.',
