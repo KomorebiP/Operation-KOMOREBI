@@ -12,12 +12,12 @@ from update_sequence_library_oeis import compare
 
 class SequenceLibraryTests(unittest.TestCase):
     def test_complete_parameter_windows_and_independent_formulas(self):
-        report=checks();self.assertEqual(report['records'],2164);self.assertEqual(report['terms'],55939)
+        report=checks();self.assertEqual(report['records'],2188);self.assertEqual(report['terms'],56515)
         self.assertEqual(report['checks']['source_index_maps'],55939)
 
     def test_unified_records_preserve_old_ids_offsets_and_formula_types(self):
-        entries=library_entries(catalogue());self.assertEqual(len(entries),2292);self.assertEqual(len({x['id'] for x in entries}),2292)
-        self.assertEqual(sum(len(x['formulas']) for x in entries),7033)
+        entries=library_entries(catalogue());self.assertEqual(len(entries),2316);self.assertEqual(len({x['id'] for x in entries}),2316)
+        self.assertEqual(sum(len(x['formulas']) for x in entries),7081)
         self.assertTrue(all(len(x['terms'])==(sum(x['triangle']['row_lengths']) if x.get('triangle') else 48 if x['id'].startswith('KFOR-KB-') else 24) for x in expanded_catalogue()))
         self.assertTrue(any(x['offset']==2 for x in entries))
         for kind in ['reciprocal','catalan','central-binomial']:
@@ -28,8 +28,8 @@ class SequenceLibraryTests(unittest.TestCase):
         from sequence_library import source_degree
         entries=library_entries(catalogue())
         formulas=[item for item in entries if item['collection']=='formulas']
-        self.assertEqual(len(formulas),2164)
-        self.assertEqual(sum(len(item['terms']) for item in formulas),55939)
+        self.assertEqual(len(formulas),2188)
+        self.assertEqual(sum(len(item['terms']) for item in formulas),56515)
         by_id={item['id']:item for item in formulas}
         for item in formulas:
             degrees=[source_degree(item,item['offset']+i) for i in range(len(item['terms']))]
