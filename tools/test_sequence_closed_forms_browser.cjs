@@ -111,6 +111,42 @@ async function valueRows(page){
       assert.equal(await page.locator('#cf-count').inputValue(),'12');
       assert.equal(await page.locator('#cf-results').isVisible(),true);
       await fit(page);
+      // The central Sequence Library is now the canonical exact workspace.
+      // A supported search result must carry the precise source parameters.
+      const desk=await context.newPage();
+      desk.on('pageerror',error=>report.errors.push({width,message:error.message}));
+      await desk.goto(url('sequence-library.html?q='+encodeURIComponent('id:KFOR-CF-S-2-5-1-1-1')+'#library-search'));
+      await desk.locator('[data-library-ready=true]').waitFor();
+      assert.equal(await desk.locator('#sequence-research-desk').count(),1);
+      assert.equal(await desk.locator('#sequence-research-hub').count(),1);
+      assert.equal(await desk.locator('#sequence-proof-path').count(),1);
+      assert.equal(await desk.locator('#closed-calculator-panel').count(),1);
+      assert.equal(await desk.locator('#closed-calculator-panel').evaluate(el=>el.open),false);
+      const sparseRecord=desk.locator('#sl-results>li[data-result-id="KFOR-CF-S-2-5-1-1-1"]');
+      assert.equal(await sparseRecord.count(),1);
+      const action=sparseRecord.locator('a[aria-label^="Recalculate exact integer values"]');
+      assert.equal(await action.count(),1);
+      const before=await action.getAttribute('href');
+      assert.match(before,/cf-mode=sparse/);
+      await action.click();
+      await desk.waitForURL(/cf-version=1/);
+      await desk.locator('#cf-mode').waitFor({state:'visible'});
+      assert.equal(await desk.locator('#closed-calculator-panel').evaluate(el=>el.open),true);
+      assert.equal(await desk.locator('#cf-sparse-p').inputValue(),'2');
+      assert.equal(await desk.locator('#cf-sparse-q').inputValue(),'5');
+      assert.deepEqual((await valueRows(desk)).slice(0,8),
+        ['1','0','1','0','1','1','1','2']);
+      assert.equal(await desk.locator('#sl-search').count(),1);
+      await fit(desk);
+      // A formula record also hands off to the same central worksheet.
+      const sourceRecord=await context.newPage();
+      await sourceRecord.goto(url('sequence-families/KFOR-CF-JET-01.html'));
+      const handoff=sourceRecord.locator('#definition a[href*="cf-mode=jet"]');
+      assert.equal(await handoff.count(),1);
+      assert.match(await handoff.getAttribute('href'),/cf-lambda=1/);
+      await sourceRecord.close();
+      await desk.close();
+
       report.widths.push({width,exactIntegers:true,plotIndependence:true,downloads:true,
         links:true,invalidLinkRejected:true,overflow:false});
       await context.close();
@@ -120,6 +156,14 @@ async function valueRows(page){
     await page.goto(url('sequence-closed-forms.html'));
     assert.equal(await page.locator('#closed-calculator-panel').count(),1);
     assert.ok(await page.locator('noscript').count()>0);
+    assert.equal(await page.locator('#cf-form').count(),0);
+    await page.locator('#closed-calculator-panel>summary').click();
+    assert.match(await page.locator('#closed-calculator-panel').textContent(),/static 24-term table/);
+    await fit(page,true);
+    await page.goto(url('sequence-library.html'));
+    assert.equal(await page.locator('#sequence-research-desk').count(),1);
+    assert.equal(await page.locator('#closed-calculator-panel').count(),1);
+    assert.equal(await page.locator('#sl-theorem-disclosure').count(),1);
     assert.equal(await page.locator('#cf-form').count(),0);
     await page.locator('#closed-calculator-panel>summary').click();
     assert.match(await page.locator('#closed-calculator-panel').textContent(),/static 24-term table/);
