@@ -377,6 +377,7 @@ def build(site,atlas):
       modulo x^2+(2d+1)cx-4. It works at repeated roots and the initial zero block.
       The generic minimal eventual recurrence order is 4(d+1)(d+2)+4.
       At c=1 the exact orders for d=0,1,2 are 12, 28, 52.</p>
+      <p>The first d=1 quartic is W_4(c) = 48(27c^4+6c^2+2). It has no real zeros, unlike the unweighted family.</p>
       <p><a href="sequence-families/KFOR-CF-W-02-1.html">Read the d=2 determinant sequence</a>.</p>
       </details>
       <details><summary>Six formulas recovered from source papers</summary>
