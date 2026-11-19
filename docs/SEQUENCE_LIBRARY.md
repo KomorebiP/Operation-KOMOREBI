@@ -945,7 +945,7 @@ node tools/test_sequence_math_browser.cjs http://127.0.0.1:8846/ OUTPUT_DIRECTOR
 
 ## Closed Forms Collections II and III (19 November 2026)
 
-The focused [closed forms reading page](../sequence-closed-forms.html) includes 24
+The focused [closed forms reading page](https://komorebip.github.io/Operation-KOMOREBI/sequence-closed-forms.html) includes 24
 new KFOR-CF records under six constructions: sparse two-delay coefficients,
 Padovan generating-function powers, four-block logarithmic coefficients,
 weighted Hankel determinants, beta-binomial ordinary moments, and beta-binomial
