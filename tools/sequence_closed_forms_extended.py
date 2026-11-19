@@ -241,7 +241,7 @@ def extended_families():
                  paper='CLOSED-FORMS-II-III',locator=1,
                  mode='Source-linked construction',
                  derivation=SOURCE,family_type='discrete construction',
-                 source=SOURCE,paper_title='Closed Forms Collection II, paper formula P3',
+                 source=SOURCE+'#L1',paper_title='Closed Forms Collection II, paper formula P3',
                  url='generalized-families/GF-CF-MEIXNER.html',
                  kind='generalized family',tags=['generalized','closed forms'],
                  status='Source-linked construction',offset=0,terms=[],
