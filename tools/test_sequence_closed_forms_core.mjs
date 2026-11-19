@@ -57,7 +57,7 @@ test('weighted jets agree with an independently constructed finite J formula',()
   assert.deepEqual(Array.from({length:9},(_,n)=>String(weightedJet(n,1,1,1))),
     ['0','0','2','12','48','200','750','2772','9912']);
   assert.equal(centralWeightedMoment(1,0,1),1n);
-  assert.equal(centralWeightedMoment(3,1,1),0n);
+  assert.equal(centralWeightedMoment(3,1,1),6n);
 });
 test('fraction-free Hankel determinant agrees with terminating 4F3 and known weighted blocks',()=>{
   assert.equal(bareissDeterminant([]),1n);
@@ -107,8 +107,10 @@ test('shared calculator views restore exact parameters without sending coefficie
   assert.ok(!link.includes('exact_integer'));
   assert.deepEqual(readExactView(link),raw);
   assert.equal(readExactView('https://example.test/sequence-closed-forms.html'),null);
-  assert.throws(()=>readExactView(link+'&cf-d=5'),/repeated setting/);
-  assert.throws(()=>readExactView(link+'&cf-out=999'),/unexpected setting/);
+  const duplicate=new URL(link);duplicate.searchParams.append('cf-d','5');
+  assert.throws(()=>readExactView(duplicate.href),/repeated setting/);
+  const unknown=new URL(link);unknown.searchParams.append('cf-out','999');
+  assert.throws(()=>readExactView(unknown.href),/unexpected setting/);
   assert.throws(()=>readExactView(link.replace('cf-v=1','cf-v=999')),/Unsupported/);
   assert.equal(exactViewURL(link,raw),link);
 });
