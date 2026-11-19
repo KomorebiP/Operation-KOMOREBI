@@ -1183,3 +1183,26 @@ This is not a claim of a new integer sequence record, historical
 novelty, formal Lean verification, or a fixed-bit complexity
 bound. The existing catalogue totals and pinned OEIS receipts
 remain unchanged.
+
+
+### Full mathematical reading edition
+
+The full finite-order differential Hankel proof is rendered on the reading site
+at [Finite-order differential Hankel calculus](https://komorebip.github.io/Operation-KOMOREBI/sequence-differential-hankel.html).
+Its headings, complete derivation, equations, references, and reproducibility
+notes are generated from the single Markdown source file
+`research/sequence-closed-forms/FINITE_DIFFERENTIAL_HANKEL.md`.
+
+The focused reading page links back to the canonical Sequence Library
+calculator with all integer parameters populated. It does not create
+a competing catalogue or a second copy of the mathematical source.
+The source-driven HTML renderer
+`tools/sequence_math_reading.py` uses only Python's standard library,
+preserves TeX display delimiters, escapes literal markup, and gives
+equations horizontally scrollable accessible regions on narrow screens.
+
+The release tests cover HTML rendering and source completeness in
+`tools/test_sequence_math_reading.py`, plus the proof page's build-time
+presence, mathematical equation markup, links, source navigation,
+desktop and phone widths, and no-JavaScript readability. Formula data
+and the pinned OEIS manifest are unchanged.
