@@ -16,6 +16,7 @@ from sequence_differential_hankel import (
     derivative_monomial_moment, chebyshev_jet_gram_entry,
     chebyshev_jet_polynomials, chebyshev_jet_generators,
     first_nonzero_moment, structured_differential_hankel,
+    algebraic_moment_generating_function, algebraic_moment_differential_equation,
 )
 from sequence_polynomial_hankel import (
     structured_hankel_prefixes, power_to_falling,
@@ -103,6 +104,56 @@ def matrix_rank(matrix):
 
 
 class DifferentialHankelTests(unittest.TestCase):
+    def test_universal_algebraic_ogf_matches_independent_direct_moments(self):
+        weights=([1],[0,1],[1,1],[2,-3,1],[0,0,1],
+                 [1,0,2,-1],[0],
+                 [F(1,3),F(-2,5),F(3,7)])
+        operators=([1],[0,1],[1,2,1],[0,0,1],
+                   [1,0,-2,3],[0],
+                   [F(2,7),F(-3,8),0,F(1,5)])
+        for a in weights:
+            for c in operators:
+                numerator,exponent_twice=algebraic_moment_generating_function(a,c)
+                D=len(a)-1
+                while D>0 and a[D]==0:D-=1
+                R=len(c)-1
+                while R>0 and c[R]==0:R-=1
+                self.assertEqual(exponent_twice,2*(D+R)+1)
+                self.assertLessEqual(len(numerator)-1,2*(D+R))
+                beta=F(exponent_twice,2)
+                series=[F(1)]
+                for m in range(1,25):
+                    series.append(series[-1]*4*(beta+m-1)/m)
+                for n in range(42):
+                    predicted=sum(
+                        numerator[n-2*m]*series[m]
+                        for m in range(n//2+1)
+                        if 0<=n-2*m<len(numerator))
+                    self.assertEqual(
+                        predicted,derivative_monomial_moment(n,a,c),
+                        (a,c,n))
+
+    def test_universal_moment_first_order_ode(self):
+        for a,c in (([1],[1]),([1,1],[1,2,1]),
+                    ([0,1],[0,0,1]),([2,-3,1],[1,-2,3]),
+                    ([F(1,2),F(2,3)],[F(3,4),0,F(-2,5)]),
+                    ([1],[0,0,0]),([0],[1,2,3])):
+            A,B=algebraic_moment_differential_equation(a,c)
+            moments=[derivative_monomial_moment(n,a,c) for n in range(65)]
+            for n in range(50):
+                left=sum(
+                    A[j]*(n-j+1)*moments[n-j+1]
+                    for j in range(min(n+1,len(A)-1)+1))
+                right=sum(
+                    B[j]*moments[n-j]
+                    for j in range(min(n,len(B)-1)+1))
+                self.assertEqual(left,right,(a,c,n))
+        numerator,power=algebraic_moment_generating_function(
+            [1,1],[1,2,1])
+        self.assertEqual(power,7)
+        self.assertEqual(numerator,
+                         (F(1),F(2),F(-8),F(-4),F(52),F(-16),F(-24)))
+
     def test_closed_chebyshev_products_at_all_parities(self):
         for d in range(4):
             a=[0]*d+[1]
