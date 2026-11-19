@@ -40,7 +40,7 @@ class ClosedFormsTests(unittest.TestCase):
         cases=[(2,3,1,1,1),(2,3,1,1,2),(2,5,1,1,1),
                (3,5,1,2,1),(2,3,2,1,3),(3,4,1,-1,2)]
         for p,q,u,v,r in cases:
-            actual=sparse_coefficients(p,q,u,v)
+            actual=sparse_coefficients(p,q,u,v,r)
             for n in range(COUNT):
                 direct=sum(Q(rising(r,i+j)*u**i*v**j, factorial(i)*factorial(j))
                            for i in range(n//p+1) for j in range(n//q+1)
