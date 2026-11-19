@@ -5,6 +5,7 @@ import {test} from 'node:test';
 import {binomial,falling,sparseCoefficients,padovanCoefficients,
   fourBlockCoefficients,betaMomentCoefficients,betaHankelCoefficients,
   polynomialDifferentialMoment,differentialHankel,differentialMomentGeneratingFunction,
+  differentialMomentsFromAlgebraicRecurrence,
   centralWeightedMoment,weightedJet,
   bareissDeterminant,weightedHankel,fourFthreeHankel,meixnerCoefficients,
   computeExactWindow,exactWindowCSV,exactViewURL,readExactView
@@ -184,6 +185,32 @@ test('every finite differential moment OGF matches independent BigInt moment sum
     a0:'1',a1:'1',a2:'0',a3:'0',c0:'1',c1:'2',c2:'1',c3:'0'});
   assert.equal(readExactView(shared).mode,'differential_moments');
   assert.equal(new URL(shared).searchParams.get('cf-count'),'17');
+});
+test('regularized algebraic recurrence reconstructs exact moments after singular starts',()=>{
+  for(const a of [[1],[0,1],[1,1],[2,-3,1],[0,0,1],[1,0,2,-1],[0]]){
+    for(const c of [[1],[0,1],[1,2,1],[0,0,1],[1,0,-2,3],[0]]){
+      const g=differentialMomentGeneratingFunction(a,c);
+      const reconstructed=differentialMomentsFromAlgebraicRecurrence(a,c,65,g);
+      assert.equal(reconstructed.length,66);
+      const ell=g.initialZeroMoments;
+      if(ell!==null){
+        assert.ok(g.regularizedRecurrenceOrderBound>=0);
+        for(let n=0;n<ell;n++)assert.equal(reconstructed[n],0n);
+        assert.notEqual(reconstructed[ell],0n);
+      }else{
+        assert.ok(reconstructed.every(x=>x===0n));
+      }
+      for(let n=0;n<=65;n++)
+        assert.equal(reconstructed[n],polynomialDifferentialMoment(n,a,c),
+          'Regularized algebraic recurrence mismatch '+JSON.stringify([a,c,n]));
+    }
+  }
+  const singular=differentialMomentGeneratingFunction([0,1],[0,0,1]);
+  assert.equal(singular.initialZeroMoments,4);
+  assert.equal(singular.regularizedRecurrenceOrderBound,4);
+  const vanishes=differentialMomentGeneratingFunction([0],[1,2,3]);
+  assert.equal(vanishes.initialZeroMoments,null);
+  assert.equal(vanishes.regularizedRecurrenceOrderBound,0);
 });
 test('integer Meixner polynomial recurrence retains exact signs and initial values',()=>{
   assert.deepEqual(meixnerCoefficients(1,2,8).map(String),
