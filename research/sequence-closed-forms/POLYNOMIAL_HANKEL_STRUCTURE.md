@@ -39,6 +39,50 @@ The polynomial weight \(P=1\) reproduces the unweighted swinging-factorial Hanke
 
 For any shift parameter \(\lambda\), replacing the moments by \(L_{P,c}[(x+\lambda)^n]\) leaves \(W_N\) unchanged. Indeed, the change from monomials to shifted monomials is unitriangular, so it preserves the Gram determinant by congruence.
 
+### Algebraic moment generating function
+
+There is also a direct algebraic generating function for the moments
+themselves, before taking determinants. Put
+
+\[
+M_P(z)=\sum_{m\ge0}P(m)\binom{2m}{m}z^{2m}.
+\]
+
+The binomial theorem and the falling-factorial derivative rule give
+
+\[
+\boxed{
+M_P(z)=\sum_{d=0}^{D}a_d
+\frac{(2d)!}{d!}\,
+\frac{z^{2d}}{(1-4z^2)^{d+1/2}}.
+}
+\]
+
+Consequently the perturbed moments have generating function
+
+\[
+\boxed{
+M_{P,c}(z)=M_P(z)+cz\bigl(M_P(z)+zM'_P(z)\bigr).
+}
+\]
+
+For the shifted moments \(S_{\lambda,P,c}(n)=L_{P,c}[(x+\lambda)^n]\),
+write \(w=z/(1-\lambda z)\). Their generating function is exactly
+
+\[
+\boxed{
+\sum_{n\ge0}S_{\lambda,P,c}(n)z^n
+=\frac{M_{P,c}(w)}{1-\lambda z}.
+}
+\]
+
+All three identities hold formally. The generating function for the
+**moments** is algebraic for polynomial \(P\); no rationality claim for
+the **Hankel determinant sequence** of an arbitrary polynomial weight
+follows from this observation. The special single-weight determinant
+recurrences in Collections II and III are therefore not silently
+extended to every polynomial \(P\).
+
 ## 2. The exact Chebyshev transform
 
 Use
