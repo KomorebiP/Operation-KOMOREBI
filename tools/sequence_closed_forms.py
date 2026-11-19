@@ -238,6 +238,18 @@ def closed_form_families():
                                              expression=formula,source=source)],
             recurrence='',explanation=note,collection='generalized',
             paper_refs=[],family_names=[title]))
+        if identifier=='GF-CF-WEIGHTED-HANKEL':
+            theorem=('https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/'
+                     'research/sequence-closed-forms/POLYNOMIAL_HANKEL_STRUCTURE.md')
+            result[-1]['formulas'].append(dict(
+                title='Arbitrary polynomial-weight Chebyshev structure',
+                kind='general theorem',
+                expression='For P(m)=sum_d a_d*falling(m,d), let F_P[x^(2m)]=P(m)*binom(2m,m), '
+                           'L_(P,c)[p]=F_P[p]+c*F_P[p\']. '
+                           'Every separated off-diagonal block of the Chebyshev Gram matrix '
+                           'has rank <= 2(degree(P)+1), with exact Schur generators.',
+                source=theorem))
+            result[-1]['note']+=' Arbitrary polynomial weights admit a bounded-rank Chebyshev Gram representation and an exact structured determinant solver.'
     return result
 
 
