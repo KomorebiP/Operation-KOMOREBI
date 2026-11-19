@@ -1076,3 +1076,52 @@ still covers only its original 2,292 records. New closed-form
 records show **OEIS bulk comparison pending** rather than using
 missing matches as evidence of novelty. Existing record receipts
 continue to hash exact indexed terms, not rounded chart values.
+
+
+## Polynomial-weighted Hankel structure
+
+The general Chebyshev theorem now covers every polynomial weight
+P(m), not only the falling-factorial basis weights m^(underline d).
+Represent P(m) = sum_d a_d*m^(underline d), and form the even moments
+mu_(2m) = P(m)*binom(2m,m) and the derivative-perturbed odd moments
+mu_(2m+1) = c*(2m+1)*P(m)*binom(2m,m).
+
+The exact polynomial transforms of the monic Chebyshev basis show that,
+for weight degree D, **every separated off-diagonal block** of the
+Chebyshev moment Gram matrix has rank at most 2(D+1), independent of the
+size N of the Hankel determinant. For c=0 the bound becomes 2D.
+This is a quasiseparable-rank statement, not a claim that the whole
+Hankel matrix has small rank.
+
+The derivation also proves the initial zero block for every polynomial
+weight, exact binomial-shift invariance and evenness in c. The new
+source proof gives a positivity-rigidity qualification: no nonconstant
+real polynomial P yields a positive semidefinite central-binomial
+moment functional on every polynomial square.
+
+The exact standard-library solver is
+`tools/sequence_polynomial_hankel.py`. It uses a fixed-width
+Chebyshev generator and a Schur-complement recurrence, including exact
+block lookahead for zero leading minors. Once initialized, ordinary
+nonsingular scalar updates require O(D^2) rational-arithmetic
+operations, so the uninterrupted scalar case costs O(D^3 + ND^2).
+This is not an unconditional worst-case bound and does not include
+integer bit complexity. The routine returns exact rational determinants,
+including every zero prefix.
+
+The mathematical proof, generator construction, boundary cases and
+source coordinates are in
+`research/sequence-closed-forms/POLYNOMIAL_HANKEL_STRUCTURE.md`.
+The independent test
+`tools/test_sequence_polynomial_hankel.py` compares the Chebyshev
+transform to directly generated polynomials, verifies off-diagonal
+rank and generator factorization, and compares Hankel determinants
+against an independent fraction-free calculation. Long-prefix tests
+include sizes 100 and 200.
+
+The result is shown in an optional disclosure in both the central
+Sequence Library research desk and the focused Closed Forms page.
+The existing curated records, formula counts, exact data receipts and
+pinned historical OEIS snapshot remain unchanged. This theorem is a
+general research identity, not an automatically generated collection of
+new integer records. Historical mathematical priority is unassessed.
