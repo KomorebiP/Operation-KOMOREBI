@@ -40,6 +40,7 @@ class SequenceLibraryTests(unittest.TestCase):
             self.assertEqual(parsed.fragment,'closed-calculator-panel')
             params=parse_qs(parsed.query,strict_parsing=True)
             self.assertTrue(all(len(values)==1 for values in params.values()))
+            self.assertEqual(params['q'],['id:'+item['id']])
             self.assertEqual(params['cf-version'],['1'])
             self.assertEqual(params['cf-mode'],[item['calculator']['mode']])
             self.assertEqual(params['cf-start'],[str(item['offset'])])
