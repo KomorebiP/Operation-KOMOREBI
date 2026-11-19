@@ -135,6 +135,8 @@ def closed_form_catalogue():
                    source_note='Closed Forms Collections II–III. Written proofs and separate exact replay; novelty unassessed.',
                    status='Source-derived exact formula · historical priority unassessed',
                    explanation=note)
+        if family=='GF-CF-FOUR-BLOCK':
+            row.update(N=4,source_shift=-1,degree='4n-1')
         row['tags']+=['closed forms','2026-11-19','reproduced finite data']
         entries.append(row)
     for p,q,u,v,r in [(2,3,1,1,1),(2,3,1,1,2),(2,5,1,1,1),
