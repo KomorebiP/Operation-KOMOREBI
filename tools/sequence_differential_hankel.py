@@ -232,6 +232,56 @@ def algebraic_moment_differential_equation(weights,differential):
     return _trim_polynomial(A),_trim_polynomial(B)
 
 
+
+def regularized_moment_ode(weights, differential):
+    """Return (ell,A,B) for shifted moments t_n=mu_(n+ell).
+
+    After removing their exact initial zero block, the moments satisfy
+        A(z)*T'(z)=B(z)*T(z)
+    with A(0)=mu_ell != 0.  For a zero moment sequence return
+    (None,(0,),(0,)), without an invalid forward division.
+    """
+    R,exponent_twice=algebraic_moment_generating_function(weights,differential)
+    if not any(R):
+        return None,(Fraction(0),),(Fraction(0),)
+    ell=next(i for i,value in enumerate(R) if value)
+    normalized=R[ell:]
+    h=(Fraction(1),Fraction(0),Fraction(-4))
+    A=_polynomial_product(normalized,h)
+    derivative=[j*normalized[j] for j in range(1,len(normalized))]
+    B=_polynomial_product(derivative or [Fraction(0)],h)
+    B.extend(Fraction(0) for _ in range(len(A)-len(B)))
+    for j,value in enumerate(normalized):
+        B[j+1]+=4*exponent_twice*value
+    if not A[0]:
+        raise ArithmeticError("The shifted moment ODE has an unexpected zero initial coefficient")
+    return ell,_trim_polynomial(A),_trim_polynomial(B)
+
+
+def moments_from_algebraic_recurrence(weights, differential, count):
+    """Compute exact mu_0,...,mu_(count-1) from a *regular* P-recurrence.
+
+    Only the first nonzero moment is needed after the initial zero block.
+    The polynomial equation A(z)*T'=B(z)*T gives a finite-width recurrence
+    for the shifted moments. It works at rational parameters and at
+    c_0=0, without division by any singular leading coefficient.
+    """
+    if not isinstance(count,int) or count<0:
+        raise ValueError("Count must be a nonnegative integer")
+    if count==0:
+        return []
+    ell,A,B=regularized_moment_ode(weights,differential)
+    if ell is None or ell>=count:
+        return [Fraction(0)]*count
+    t=[A[0]]
+    for n in range(count-ell-1):
+        rhs=sum(B[j]*t[n-j] for j in range(min(n,len(B)-1)+1))
+        rhs-=sum(A[j]*(n-j+1)*t[n-j+1]
+                 for j in range(1,min(n+1,len(A)-1)+1))
+        t.append(rhs/(Fraction(n+1)*A[0]))
+    return [Fraction(0)]*ell+t
+
+
 def first_nonzero_moment(weights, differential):
     """Return (first moment index, nonzero moment) or None."""
     a = _weights(weights)
