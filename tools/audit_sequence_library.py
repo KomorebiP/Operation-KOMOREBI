@@ -56,7 +56,7 @@ def research_oracles(count=COUNT+8):
 
 
 def checks():
-    all_entries=expanded_catalogue();entries=[item for item in all_entries if not item.get('research_addition') and not item.get('linear_addition')];counts=Counter(x['kind'] for x in entries)
+    all_entries=expanded_catalogue();entries=[item for item in all_entries if not item.get('research_addition') and not item.get('linear_addition') and not item.get('closed_form_collection')];counts=Counter(x['kind'] for x in entries)
     assert dict(counts)=={'reciprocal power':99,'logarithmic companion':15,'congruential numerator':264,'congruential denominator':264,'Appell numerator':80,'Appell denominator':60,'classical multisection':1001,'secancy parameter column':88,'Euler-transfer theta':12,'theta polynomial column':12}
     checked=Counter()
     for N in range(2,17):
