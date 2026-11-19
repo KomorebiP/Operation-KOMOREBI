@@ -25,9 +25,9 @@ async function fit(page){
     if(scroll<=width+1)return {width,scroll};
     const describe=el=>el.tagName.toLowerCase()+(el.id?'#'+el.id:'')+
       (typeof el.className==='string'&&el.className?'.'+el.className.trim().replace(/\s+/g,'.'):'');
-    const clippedRight=(rect,el)=>{
+    const clippedRight=(rect,el,clipSelf=false)=>{
       let right=rect.right;
-      for(let parent=el.parentElement;parent&&parent!==document.body;parent=parent.parentElement){
+      for(let parent=clipSelf?el:el.parentElement;parent&&parent!==document.body;parent=parent.parentElement){
         if(['auto','scroll','hidden','clip'].includes(getComputedStyle(parent).overflowX))
           right=Math.min(right,parent.getBoundingClientRect().right);
       }
@@ -45,7 +45,7 @@ async function fit(page){
         if(child.nodeType!==Node.TEXT_NODE||!child.textContent.trim())continue;
         const range=document.createRange();range.selectNodeContents(child);
         for(const textRect of range.getClientRects()){
-          const textRight=clippedRight(textRect,el);
+          const textRight=clippedRight(textRect,el,true);
           if(textRight>width+1)offenders.push({kind:'text',element:describe(el),parent:describe(el.parentElement),
             right:textRight,fontSize:style.fontSize,text:child.textContent.trim().slice(0,90)});
         }
@@ -220,7 +220,14 @@ async function contrast(page){
       await page.emulateMedia({forcedColors:'none',reducedMotion:'no-preference'});
       if(width===320){
         await page.evaluate(()=>document.documentElement.style.fontSize='200%');
+        const legends=await page.locator('#cf-form fieldset:not([disabled]) legend').evaluateAll(elements=>elements.map(el=>{
+          const rect=el.getBoundingClientRect(),group=el.parentElement.getBoundingClientRect();
+          return {text:el.textContent,left:rect.left,right:rect.right,parentLeft:group.left,parentRight:group.right};
+        }));
+        for(const legend of legends)assert.ok(legend.left>=legend.parentLeft-1&&
+          legend.right<=Math.min(legend.parentRight,320)+1,'An enlarged legend must fit its fieldset: '+JSON.stringify(legend));
         await fit(page);
+        await page.locator('#closed-calculator-panel').screenshot({path:path.join(output,'calculator-enlarged-320.png')});
         await page.evaluate(()=>document.documentElement.style.removeProperty('font-size'));
       }
       await page.evaluate(()=>Object.defineProperty(navigator,'clipboard',{configurable:true,value:undefined}));

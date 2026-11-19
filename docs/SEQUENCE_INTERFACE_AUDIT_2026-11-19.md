@@ -34,9 +34,10 @@ reader compatibility study, or a new mathematical theorem.
 - The research card still described 24 records and six constructions. Counts
   now come from the same catalogue used by the collection page.
 - The first rendered audit found 18 pixels of horizontal page overflow at
-  320 pixels with the root text size doubled. Mobile navigation now uses
-  font-aware grid columns and wrapping labels; the audit retains the enlarged
-  text check and reports the actual overflowing elements on a failure.
+  320 pixels with the root text size doubled. Follow-up diagnostics identified
+  the native parameter legend extending to pixel 337.7. Legends now wrap
+  within their fieldsets. Mobile navigation and parameter columns use
+  font-aware grids, and the audit checks the enlarged legend's actual bounds.
 - Screenshot review found that the worked-example equation was scaled down
   on phones. It now preserves its natural text size inside a labelled,
   keyboard-scrollable container. A singular result announcement was also
