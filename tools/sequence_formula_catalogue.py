@@ -218,6 +218,9 @@ def expanded_catalogue():
     entries+=research_additions()
     from sequence_linear_research import linear_catalogue
     entries+=linear_catalogue()
+    # Curated, source-linked instances with separate OEIS review status.
+    from sequence_closed_forms import closed_form_catalogue
+    entries+=closed_form_catalogue()
     assert len({x['id'] for x in entries})==len(entries)
     return entries
 
