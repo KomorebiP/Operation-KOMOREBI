@@ -49,9 +49,11 @@ def exact_record_receipt(entry):
 
 def matches_block(entry):
     if entry.get('closed_form_collection'):
-        return ('<section id="oeis-matches"><h2>OEIS comparisons</h2>'
-                '<p>Not yet compared with the pinned OEIS snapshot. No positive or negative '
-                'OEIS match, historical novelty, or distinctness is inferred from this entry.</p></section>')
+        stated=('<p>The source identifies <a href="https://oeis.org/'+e(entry['oeis'])+'">'+e(entry['oeis'])+'</a>. '
+                'That identification has not yet been rechecked against the pinned local bulk snapshot.</p>') if entry.get('source_claimed_oeis') and entry.get('oeis') else ''
+        return ('<section id="oeis-matches"><h2>OEIS comparisons</h2>'+stated+
+                '<p>Not yet compared with the pinned OEIS snapshot. No negative matching result, '
+                'historical novelty, or distinctness is inferred from this entry.</p></section>')
     hits=entry.get('matches',[]);total=entry.get('match_count',len(hits))
     return '<section id="oeis-matches"><h2>OEIS comparisons</h2><p>These finite matches begin at local index '+str(entry['offset'])+'. Positions in the bulk export start at zero and do not represent OEIS mathematical offsets. A finite match does not prove that two infinite sequences are identical.</p>'+(
         '<ol>'+''.join('<li><a href="https://oeis.org/'+x['id']+'">'+x['id']+'</a> — '+e(x['name'])+'<br>'+str(x['matched_terms'])+' matching terms · OEIS excerpt position '+str(x['position'])+'</li>' for x in hits[:8])+'</ol><p>Showing '+str(min(8,len(hits)))+' of '+str(total)+' recorded matches. Up to 50 ranked matches are retained in the entry JSON.</p>' if hits else '<p>No contiguous match of eight terms was found in the recorded export. This does not establish novelty.</p>')+'<p>Reference names and terms: <a href="https://oeis.org/">The Online Encyclopedia of Integer Sequences</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. Matching and presentation are adaptations.</p></section>'
@@ -89,7 +91,7 @@ def build(site,atlas):
     out=io.StringIO(newline='');writer=csv.writer(out);writer.writerow(['id','title','collection','family','offset','stored_terms','representations','entry_url'])
     for x in entries:writer.writerow([x['id'],x['title'],x['collection'],x['kind'],x['offset'],len(x['terms']),len(x['formulas']),x['url']])
     site.write('assets/sequence-library-index.csv',out.getvalue())
-    source_files=['tools/'+name+'.py' for name in ['sequence_formula_catalogue','sequence_closed_forms','sequence_research_tables','sequence_linear_research','sequence_research_notes','sequence_generalized','sequence_archive_families','sequence_atlas','sequence_atlas_reference','sequence_atlas_reading','sequence_atlas_study','sequence_atlas_index']]+[REGISTRY_PATH,'manifests/sequence-generalized-sources.json','research/sequence-connections/IDENTITIES.md','research/sequence-connections/sources/komorebi-math-families.py','research/sequence-closed-forms/IDENTITIES.md']
+    source_files=['tools/'+name+'.py' for name in ['sequence_formula_catalogue','sequence_closed_forms','sequence_closed_forms_extended','sequence_research_tables','sequence_linear_research','sequence_research_notes','sequence_generalized','sequence_archive_families','sequence_atlas','sequence_atlas_reference','sequence_atlas_reading','sequence_atlas_study','sequence_atlas_index']]+[REGISTRY_PATH,'manifests/sequence-generalized-sources.json','research/sequence-connections/IDENTITIES.md','research/sequence-connections/sources/komorebi-math-families.py','research/sequence-closed-forms/IDENTITIES.md','research/sequence-closed-forms/COLLECTION_II_ADDITIONS.md']
     with ZipFile(site.output/'assets/sequence-formula-source.zip','w',ZIP_DEFLATED) as bundle:
         for name in source_files:
             info=ZipInfo(name,date_time=(2026,11,15,0,0,0));info.compress_type=ZIP_DEFLATED;info.external_attr=0o100644<<16;bundle.writestr(info,(site.root/name).read_text(encoding='utf-8').encode('utf-8'))
@@ -335,23 +337,74 @@ def build(site,atlas):
     closed_rows=''.join(
         '<tr><th scope="row"><a href="'+e(item['url'])+'">'+e(item['id'])+'</a></th>'
         '<td>'+e(item['title'])+'</td><td>'+str(item['offset'])+'</td>'
-        '<td>'+e(', '.join(item['terms'][:5]))+'</td><td>Not yet compared</td></tr>'
+        '<td>'+e(', '.join(item['terms'][:5]))+'</td><td>'+('Source-supplied '+e(item['oeis'])+' · bulk comparison pending' if item.get('source_claimed_oeis') else 'Not yet compared')+'</td></tr>'
         for item in closed_entries)
+    active_closed_families=sum(bool(family['record_ids']) for family in closed_families)
+    closed_theorems=('''<section id="closed-theorems" class="sl-optional-section">
+      <h2>Closed forms and proved identities</h2>
+      <p>Choose a result to read its precise domain and normalization.
+      For complete derivations, use the mathematical source linked below.</p>
+      <details><summary>Universal Hankel 4F3 and real-zero theorem</summary>
+      <p>The A163865 Hankel determinant is independent of the binomial-shift parameter.
+      The empty determinant equals 1. For N at least 1 and arbitrary complex c:</p>
+      <pre tabindex="0" role="region" aria-label="Hankel hypergeometric expression">H_N(c) = 2^(N-1) 4F3(-N/2, (1-N)/2, (N-1)/2, N/2;
+                           -1/2, -1/4, 1/4; -c^2/16)</pre>
+      <p>The series terminates. Its zeros as a polynomial in c are real and nonzero
+      for N at least 2. The generating-function denominator divides
+      ((1-2z)^4 + 4c^2 z^2)^3.</p>
+      <p><a href="sequence-families/KFOR-CF-W-0-1.html">Inspect the exact c=1 determinants</a>.</p>
+      </details>
+      <details><summary>Arbitrary two-delay residue-class formulas</summary>
+      <p>For C_n = [z^n](1-u z^p-v z^q)^(-r), p and q are positive integers.
+      Removing their gcd and enumerating pi+qj=n gives one terminating
+      QF(Q-1) for each admissible residue. The exact finite sum handles zero weights
+      and negative integral r without undefined divisions.</p>
+      <p><a href="sequence-families/KFOR-CF-S-2-5-1-1-1.html">Read the 2,5 delay example and its 5F4 subsequence</a>.</p>
+      </details>
+      <details><summary>Weighted A163865 and all polynomially weighted jets</summary>
+      <p>For d at least 0, u_n = J_(n,d)(1)+n J_(n-1,d)(1), where
+      J_(n,d)(lambda) = sum binom(n,2m) falling(m,d) binom(2m,m) lambda^(n-2m).
+      Every polynomial weight decomposes into finitely many of these cases.</p>
+      <pre tabindex="0" role="region" aria-label="Weighted jet generating function">sum u_n z^n =
+      ((2d)!/d!) z^(2d) (1+(2d-1)z-(2d+4)z^2)
+      / (1-2z-3z^2)^(d+3/2)</pre>
+      <p>The d=0 case is identified as A163865 in the supplied source.
+      <a href="sequence-families/KFOR-CF-JET-01.html">Read the d=1 exact sequence</a>.</p>
+      </details>
+      <details><summary>Fixed-size Chebyshev formula for weighted Hankel transforms</summary>
+      <p>The Hankel transform of u_n at weight d is W_N^[d](1). Collection III
+      proves a root-free formula using the remainders of two Chebyshev polynomials
+      modulo x^2+(2d+1)cx-4. It works at repeated roots and the initial zero block.
+      The generic minimal eventual recurrence order is 4(d+1)(d+2)+4.
+      At c=1 the exact orders for d=0,1,2 are 12, 28, 52.</p>
+      <p><a href="sequence-families/KFOR-CF-W-02-1.html">Read the d=2 determinant sequence</a>.</p>
+      </details>
+      <details><summary>Six formulas recovered from source papers</summary>
+      <p>The documented reductions cover Bernoulli four-block tangents, four-block
+      Euler convolutions, integer Meixner–Pollaczek polynomials, beta-moment
+      determinants, beta-binomial splitter polynomials, and the squarefree
+      zeta-ratio identity already proved in Paper III. Their normalization,
+      source locations and historical scope are in the full source note.</p>
+      <p><a href="generalized-families/GF-CF-MEIXNER.html">Read the Meixner–Pollaczek family</a>.</p>
+      </details>
+    </section>''')
     closed_body=(
         page_heading('Closed forms: Collections II and III',
             'Exact integer records, source derivations and explicit review boundaries.',
             'research','closed-forms')+
-        '<section id="closed-forms"><h2>What is in the collection?</h2><p>24 integer records in six construction families, '
-        'plus two source-defined families without fabricated integer terms. Each record has '
-        '24 exact values, two formula representations, a preserved index convention, and CSV/JSON downloads. '
-        'The historical OEIS snapshot has not been run on these additions.</p>'
+        '<section id="closed-forms"><h2>What is in the collection?</h2><p>'+str(len(closed_entries))+' exact integer records across '+str(active_closed_families)+' constructions, '
+        'plus '+str(len(closed_families)-active_closed_families)+' definition-only families. Every record has '
+        '24 exact values, at least two formula representations, a stated index convention, and CSV/JSON downloads. '
+        'The historical pinned OEIS comparison has not been run on these additions.</p>'
         '<p><a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/research/sequence-closed-forms/IDENTITIES.md">'
         'Read definitions, proofs and reproduction notes</a> · '
         '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/tools/test_sequence_closed_forms.py">'
         'Review the exact independent tests</a> · '
-        '<a href="sequence-library.html#library-search">Search the full library</a></p></section>'+
-        '<section><h2>Eight source-linked families</h2><div class="sar-grid">'+closed_cards+'</div></section>'+
-        '<section><h2>Twenty-four integer records</h2><p>Displayed prefixes retain their original offsets. '
+        '<a href="sequence-library.html#library-search">Search the full library</a> · '
+        '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/research/sequence-closed-forms/COLLECTION_II_ADDITIONS.md">Read the complete theorem supplement</a> · '
+        '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/tools/test_sequence_closed_forms_extended.py">Review the extended exact tests</a></p></section>'+closed_theorems+
+        '<section><h2>'+str(len(closed_families))+' source-linked families</h2><div class="sar-grid">'+closed_cards+'</div></section>'+
+        '<section><h2>'+str(len(closed_entries))+' integer records</h2><p>Displayed prefixes retain their original offsets. '
         'The four-block rows start at m=1 and refer to analytic exponent 4m-1; beta-binomial '
         'records contain explicitly unnormalized integer values. Follow each record for full tables, '
         'plots and exports.</p><div class="sar-scroll" tabindex="0" role="region" '
