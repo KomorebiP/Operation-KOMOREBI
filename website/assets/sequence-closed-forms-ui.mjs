@@ -12,6 +12,7 @@ const modes=[
   ['beta_moments','Beta-binomial integer moments'],
   ['beta_hankel','Beta-binomial Hankel determinants'],
   ['differential_hankel','Higher-order differential Hankel determinants'],
+  ['differential_moments','Differential moments and algebraic generating functions'],
   ['meixner','Meixner–Pollaczek integer polynomials']
 ];
 const descriptions={
@@ -36,6 +37,7 @@ const subtitle={
   beta_moments:'Integer unnormalized ordinary moments, not rational probability moments. Parameter a must be positive.',
   beta_hankel:'Hankel transforms of integer unnormalized moments. Determinants vanish above support rank L+1.',
   differential_hankel:'Choose P(m)=a₀+a₁m+a₂m(m−1)+a₃m(m−1)(m−2) and L=ΣcₖF_P[dᵏ/dxᵏ]. Exact sizes 0–12; the general theorem covers arbitrary finite orders.',
+  differential_moments:'Compute the exact moments mu_n=F_P[D_x x^n] and their algebraic generating function. Shares the same parameters as the differential Hankel construction.',
   meixner:'Integer polynomial specializations of the classical Meixner–Pollaczek recurrence.'
 };
 function node(tag,text){
@@ -113,6 +115,21 @@ export function mountClosedFormsCalculator(root,{href=location.href}={}){
   head.append(headers);
   const body=node('tbody');body.id='cf-table-values';
   table.append(head,body);region.append(table);
+  // Generating-function evidence is optional and hidden for other modes.
+  // Keep it collapsible so long polynomial formulas do not crowd results.
+  const ogf=node('details');ogf.id='cf-ogf';ogf.hidden=true;
+  const ogfTitle=node('summary','Exact algebraic moment generating function');
+  const ogfInfo=node('p');ogfInfo.id='cf-ogf-info';ogfInfo.className='cf-note';
+  const ogfRegion=node('pre');ogfRegion.id='cf-ogf-formula';
+  ogfRegion.tabIndex=0;ogfRegion.setAttribute('role','region');
+  ogfRegion.setAttribute('aria-label','Exact moment generating-function formula');
+  const ogfCode=node('code');ogfRegion.append(ogfCode);
+  const ogfHelp=node('p','The numerator is computed exactly from the displayed parameters. A polynomial-weighted differential moment sequence has an algebraic generating function; that fact alone does not imply a rational generating function for its Hankel determinants.');
+  ogfHelp.className='cf-note';
+  const ogfActions=node('div');ogfActions.className='cf-actions';
+  const ogfCopy=node('button','Copy generating function');ogfCopy.type='button';
+  ogfCopy.id='cf-ogf-copy';ogfActions.append(ogfCopy);
+  ogf.append(ogfTitle,ogfInfo,ogfRegion,ogfHelp,ogfActions);
   const exports=node('div');exports.className='cf-actions';
   const csv=node('button','Download exact CSV');csv.type='button';csv.id='cf-download';
   const copy=node('button','Copy exact values');copy.type='button';copy.id='cf-copy';
@@ -123,7 +140,7 @@ export function mountClosedFormsCalculator(root,{href=location.href}={}){
   fallback.rows=4;
   const warning=node('p','Spreadsheet programs may round large integers. Import the exact_integer column as text.');
   warning.className='cf-note';
-  result.append(resultTitle,explain,verified,region,exports,fallback,warning);
+  result.append(resultTitle,explain,verified,ogf,region,exports,fallback,warning);
   root.append(form,status,result);
   let latest=null;
   function rawValues(){
@@ -142,6 +159,7 @@ export function mountClosedFormsCalculator(root,{href=location.href}={}){
     controls.count.max=String(limits.maxCount);
   }
   function render(data){
+    if(!latest||latest.mode!==data.mode)ogf.open=false;
     latest=data;body.replaceChildren();
     for(const row of data.rows){
       const tr=node('tr'),index=node('th',String(row.index)),value=node('td');
@@ -151,6 +169,14 @@ export function mountClosedFormsCalculator(root,{href=location.href}={}){
     resultTitle.textContent=data.rows.length+' exact indexed value'+(data.rows.length===1?'':'s');
     explain.textContent=data.description;
     verified.textContent=data.verification;
+    ogf.hidden=!data.generatingFunction;
+    if(data.generatingFunction){
+      const evidence=data.generatingFunction;
+      ogfCode.textContent=evidence.expression;
+      ogfInfo.textContent='Numerator degree ≤ '+evidence.degreeBound+
+        '; effective polynomial weight degree '+evidence.weightDegree+
+        '; effective differential order '+evidence.operatorOrder+'.';
+    }
     fallback.hidden=true;result.hidden=false;
     status.textContent='Computed '+data.rows.length+' exact integers. First index '+data.start+
       ', final index '+(data.start+data.count-1)+'.';
@@ -187,6 +213,10 @@ export function mountClosedFormsCalculator(root,{href=location.href}={}){
       status.textContent='Clipboard access is unavailable. The text is selected below for manual copying.';
     }
   }
+  ogfCopy.addEventListener('click',()=>{
+    if(!latest?.generatingFunction)return;
+    doCopy(latest.generatingFunction.expression+'\n');
+  });
   copy.addEventListener('click',()=>{
     if(!latest)return;
     doCopy('index\texact_integer\n'+latest.rows.map(row=>row.index+'\t'+row.value).join('\n')+'\n');
