@@ -567,7 +567,7 @@ def build(site,atlas):
         '<a href="sequence-library.html#sequence-research-desk">Sequence research desk</a> · '
         '<a href="sequence-closed-forms.html#differential-hankel-theorem">Closed Forms collection</a> · '
         '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/research/sequence-closed-forms/FINITE_DIFFERENTIAL_HANKEL.md">Versioned source</a></nav>'
-        '<section class="sl-math-reading-intro"><h2>Reproduce the worked example</h2>'
+        '<section id="differential-hankel" class="sl-math-reading-intro"><h2>Reproduce the worked example</h2>'
         '<p>For P(m)=1+m and D=1+2 partial_x+partial_x^2 the first exact determinants are '
         '1, 1, 2, -84, -456, 52197296. The browser calculates sizes 0 through 12, '
         'while the source solver supports arbitrary finite-order operators.</p>'
