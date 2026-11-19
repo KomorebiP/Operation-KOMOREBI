@@ -1,8 +1,8 @@
 # Unified sequence and formula library
 
-`sequence-library.html` searches 2,316 local records: the original 38 KSEQ
-entries, 90 recovered KOM records, and 2,188 KFOR parameter records. It indexes
-7,081 recorded representations, including term formulas, finite sums,
+`sequence-library.html` searches 2,327 local records: the original 38 KSEQ
+entries, 90 recovered KOM records, and 2,199 KFOR parameter records. It indexes
+7,108 recorded representations, including term formulas, finite sums,
 recurrences, generating functions, and hypergeometric coefficient formulas.
 These counts describe records and representations, not distinct infinite
 sequences or new discoveries.
@@ -98,7 +98,7 @@ and `?`. Fields include `formula:`, `representation:`, `collection:`, `n:`
 pagination and shared links preserve applied state. Result CSVs export the
 complete filtered set rather than only the current page.
 
-Saved entries use the existing browser-local saved-list key across all 2,316
+Saved entries use the existing browser-local saved-list key across all 2,327
 records, with a 500-record limit. Scoped writes from the older atlas preserve
 records from other collections. The saved filter uses the recipient's own list
 when sharing a search. If browser storage is unavailable, the current session still works.
@@ -945,13 +945,13 @@ node tools/test_sequence_math_browser.cjs http://127.0.0.1:8846/ OUTPUT_DIRECTOR
 
 ## Closed Forms Collections II and III (19 November 2026)
 
-The focused [closed forms reading page](https://komorebip.github.io/Operation-KOMOREBI/sequence-closed-forms.html) includes 24
-new KFOR-CF records under six constructions: sparse two-delay coefficients,
+The focused [closed forms reading page](https://komorebip.github.io/Operation-KOMOREBI/sequence-closed-forms.html) includes 35
+KFOR-CF records under seven indexed constructions: sparse two-delay coefficients,
 Padovan generating-function powers, four-block logarithmic coefficients,
-weighted Hankel determinants, beta-binomial ordinary moments, and beta-binomial
-Hankel determinants. Each new record has 24 exact coefficients, two formula
+weighted Hankel determinants, beta-binomial ordinary moments, beta-binomial Hankel determinants, weighted binomial jets and
+integer Meixner–Pollaczek specializations. Each new record has 24 exact coefficients, at least two formula
 representations, a source-linked derivation and its own CSV/JSON exports.
-The generalized-family index additionally lists two definition-only families
+The generalized-family index additionally retains two definition-only families
 for polynomially weighted binomial transforms and entire scaling limits.
 They do not contribute invented integer records.
 
@@ -969,3 +969,23 @@ Definitions and mathematical qualifications are in
 in `tools/test_sequence_closed_forms.py` with the standard-library generator
 `tools/sequence_closed_forms.py`. The source package download includes the
 new generator and mathematical notes. Historical novelty remains unassessed.
+
+### General closed forms and weighted Hankel continuation
+
+The second publication records the universal terminating `4F3` for the
+A163865 Hankel determinants, the general sparse-delay `QF(Q-1)` residue
+formula, the polynomially weighted binomial hierarchy, and the fixed-size,
+root-free Chebyshev formula for weighted Hankel transforms. The original
+P1–P6 paper formulas are collected with their source coordinates. All are
+presented in separate disclosures on the closed forms reading page, with
+complete statements in `research/sequence-closed-forms/COLLECTION_II_ADDITIONS.md`.
+
+Eleven additional KFOR-CF records comprise five binomial-jet weights
+`d=0..4`, three new weighted determinant specializations `d=2,3,4`
+with `c=1`, and three integer Meixner–Pollaczek specializations.
+Source metadata identifies the weight-zero transform as A163865, but the
+historical bulk OEIS comparison has not been rerun for these records.
+The generalized-family index now includes a Meixner–Pollaczek family.
+Exact arithmetic is implemented in `tools/sequence_closed_forms_extended.py`
+and checked by `tools/test_sequence_closed_forms_extended.py`. The original
+2,292-record OEIS manifest is not changed.
