@@ -27,6 +27,7 @@ def source_manifest():
 
 def membership(entry):
     kind=entry['kind'];identifier=entry['id'];result=[]
+    if entry.get('closed_form_family'):return [entry['closed_form_family']]
     if identifier in ARCHIVE_MEMBERSHIP:
         return [ARCHIVE_MEMBERSHIP[identifier]]
     for match,key in [(kind in ('reciprocal','reciprocal power'),'GF-RECIPROCAL'),(kind=='logarithmic companion','GF-TANGENT'),(kind.startswith('congruential ') or kind=='euler','GF-CONGRUENTIAL'),(kind.startswith('Appell '),'GF-APPELL'),(kind=='secancy parameter column','GF-SECANCY'),(kind=='Euler-transfer theta','GF-THETA'),(kind=='theta polynomial column','GF-THETA-COLUMN'),(kind=='classical multisection','GF-SECTIONS'),(kind=='k-step reciprocal power','GF-LINEAR'),(kind=='k-bonacci' or identifier in ('KOM013','KOM014','KOM015','KOM016'),'GF-KBONACCI')]:
@@ -89,7 +90,8 @@ def family_definitions():
         if item['id']=='GF-BLOCK-LOGARITHMIC':
             item['formulas'].append(dict(title='Transfer-tangent normalization',kind='index and scaling identity',
                 expression='L_N(n)=Nn T_N(n-1), n>=1; L_N(0)=0',source=item['source']))
-    return result
+    from sequence_closed_forms import closed_form_families
+    return result+closed_form_families()
 
 
 def catalogue(entries):
