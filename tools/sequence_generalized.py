@@ -91,7 +91,8 @@ def family_definitions():
             item['formulas'].append(dict(title='Transfer-tangent normalization',kind='index and scaling identity',
                 expression='L_N(n)=Nn T_N(n-1), n>=1; L_N(0)=0',source=item['source']))
     from sequence_closed_forms import closed_form_families
-    return result+closed_form_families()
+    from sequence_closed_forms_extended import extended_families
+    return result+closed_form_families()+extended_families()
 
 
 def catalogue(entries):

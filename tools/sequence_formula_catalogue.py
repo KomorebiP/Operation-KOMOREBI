@@ -221,6 +221,9 @@ def expanded_catalogue():
     # Curated, source-linked instances with separate OEIS review status.
     from sequence_closed_forms import closed_form_catalogue
     entries+=closed_form_catalogue()
+    from sequence_closed_forms_extended import extended_catalogue,append_proved_representations
+    entries+=extended_catalogue()
+    append_proved_representations(entries)
     assert len({x['id'] for x in entries})==len(entries)
     return entries
 

@@ -149,7 +149,7 @@ async function explorerRefinements(page,width){
       page.on('pageerror',error=>report.errors.push({width,message:error.message}));
       await page.goto(url('sequence-library.html?scope=families#library-search'));
       await ready(page);await math(page);
-      assert.match(await page.locator('#sl-count').textContent(),/44 matching families/);
+      assert.match(await page.locator('#sl-count').textContent(),/45 matching families/);
       assert.equal(await page.locator('#sl-results>li').count(),24);
       assert.equal(await page.locator('[data-scope=families]').getAttribute('aria-pressed'),'true');
       assert.equal(await page.locator('#sl-saved-status').isVisible(),false);
@@ -160,28 +160,28 @@ async function explorerRefinements(page,width){
         const response=await page.request.get(url('assets/sequence-generalized-data.json'));
         assert.equal(response.ok(),true);
         const data=await response.json();
-        assert.equal(data.families.length,44);
+        assert.equal(data.families.length,45);
         assert.equal(data.sources.length,12);
         assert.deepEqual(data.archive_coverage,{records:90,assigned:90});
-        assert.deepEqual(data.record_coverage,{records:2316,assigned:2316});
+        assert.deepEqual(data.record_coverage,{records:2327,assigned:2327});
         const assignments=data.families.flatMap(family=>family.archive_record_ids);
         const expected=Array.from({length:90},(_,i)=>`KOM${String(i+1).padStart(3,'0')}`);
         assert.deepEqual(assignments.slice().sort(),expected);
         assert.equal(new Set(assignments).size,90);
         assert.equal(data.families.filter(family=>family.engine).length,10);
-        report.catalogue={families:44,sources:12,records:2316,assignedRecords:2316,archiveRecords:90,exactEngines:10};
+        report.catalogue={families:45,sources:12,records:2327,assignedRecords:2327,archiveRecords:90,exactEngines:10};
       }
 
       await page.locator('#sl-next').click();
-      assert.match(await page.locator('#sl-count').textContent(),/25–44/);
+      assert.match(await page.locator('#sl-count').textContent(),/25–45/);
       assert.equal(await page.evaluate(()=>document.activeElement.id),'sl-count');
       await page.reload();await ready(page);
-      assert.match(await page.locator('#sl-count').textContent(),/25–44/);
+      assert.match(await page.locator('#sl-count').textContent(),/25–45/);
       await query(page,'Hankel');
       assert.equal(await page.locator('#sl-results>li[data-result-id="GF-BLOCK-HANKEL"]').count(),1);
       await page.locator('#sl-clear').click();
       assert.equal(await page.inputValue('#sl-scope'),'families');
-      assert.match(await page.locator('#sl-count').textContent(),/44 matching families/);
+      assert.match(await page.locator('#sl-count').textContent(),/45 matching families/);
 
       await page.locator('#sl-search details').evaluate(element=>{element.open=true;});
       for(const key of ['collection','kind','representation','status','hits','saved','match']){
@@ -221,7 +221,7 @@ async function explorerRefinements(page,width){
       assert.equal(await page.locator('#sl-export').isDisabled(),true);
       await page.locator('#sl-reset').click();
       assert.equal(await page.inputValue('#sl-scope'),'families');
-      assert.match(await page.locator('#sl-count').textContent(),/44 matching families/);
+      assert.match(await page.locator('#sl-count').textContent(),/45 matching families/);
 
       await query(page,'id:GF-BLOCK-HANKEL');
       await page.locator('#sl-results a').filter({hasText:'Read construction and examples'}).click();
@@ -275,7 +275,7 @@ async function explorerRefinements(page,width){
     const nojs=await browser.newContext({javaScriptEnabled:false,viewport:{width:320,height:1000}});
     const page=active=await nojs.newPage();
     await page.goto(url('generalized-families/index.html'));
-    assert.equal(await page.locator('[data-library]>ol>li').count(),44);
+    assert.equal(await page.locator('[data-library]>ol>li').count(),45);
     assert.equal(await page.locator('#research-coverage article').count(),12);
     await fits(page,{staticOnly:true});
     await page.goto(url('generalized-families/GF-SMITH-POLYNOMIALS.html'));
