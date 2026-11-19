@@ -443,6 +443,29 @@ function setupReference(client){
 }
 if(!legacyRoute)try{
   if(root.dataset.entry){const [{setupArchivePlot},{mountTriangleExplorer}]=await Promise.all([import('./sequence-archive-plot.mjs'),import('./sequence-triangle.mjs')]);const response=await fetch(new URL(root.dataset.entry,location.href));if(!response.ok)throw Error('The exact record could not be loaded.');const entry=await response.json();setupArchivePlot(entry);setupTriangleNavigation();mountTriangleExplorer(entry,root.querySelector('#triangle'));}
+  else if(root.dataset.page==='closed-forms'){
+    const disclosure=root.querySelector('#closed-calculator-panel');
+    const target=root.querySelector('#closed-calculator-root');
+    let loaded=false;
+    async function loadCalculator(){
+      if(loaded||!disclosure?.open||!target)return;
+      loaded=true;
+      try{
+        const {mountClosedFormsCalculator}=await import('./sequence-closed-forms-ui.mjs');
+        mountClosedFormsCalculator(target,{href:location.href});
+      }catch(error){
+        loaded=false;
+        const message=make('p','The exact calculator could not start: '+error.message+
+          '. All source definitions and static exact tables remain available.');
+        message.setAttribute('role','status');target.replaceChildren(message);
+      }
+    }
+    disclosure?.addEventListener('toggle',()=>{void loadCalculator();});
+    if(new URL(location.href).searchParams.has('cf-version')&&disclosure){
+      disclosure.open=true;
+      await loadCalculator();
+    }
+  }
   else if(root.dataset.page==='oeis'){
     const response=await fetch(new URL('./sequence-oeis-meta.json',import.meta.url));
     if(!response.ok)throw Error('The local OEIS reference metadata could not be loaded.');

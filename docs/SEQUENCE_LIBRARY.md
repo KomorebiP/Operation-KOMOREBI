@@ -989,3 +989,45 @@ The generalized-family index now includes a Meixner–Pollaczek family.
 Exact arithmetic is implemented in `tools/sequence_closed_forms_extended.py`
 and checked by `tools/test_sequence_closed_forms_extended.py`. The original
 2,292-record OEIS manifest is not changed.
+
+## Exact closed-form worksheet
+
+The [Closed Forms reading page](https://komorebip.github.io/Operation-KOMOREBI/sequence-closed-forms.html)
+now has an optional, initially collapsed **Calculate exact coefficients and
+determinants** section. The reader can evaluate four constructions without
+loading another site or a remote algebra service:
+
+- Two-delay coefficients of \`(1-u z^p-v z^q)^(-r)\`, including integer
+  negative powers, coincident delays and zero weights.
+- Weighted binomial transforms \`J_(n,d)(lambda)+c*n*J_(n-1,d)(lambda)\`,
+  with exact binomial sums and the original zero-prefix convention.
+- Weighted Hankel determinants \`W_N^[d](c)\`, computed with fraction-free
+  elimination. At \`d=0\` the calculator also compares every displayed
+  determinant with the independent terminating \`4F3\` finite sum.
+- Integer polynomial specializations of the Meixner–Pollaczek recurrence.
+
+Every displayed value is a decimal string derived from JavaScript \`BigInt\`,
+not a rounded chart coordinate. The upper supported index is 96 for sparse
+coefficients and Meixner polynomials, 80 for binomial jets, and 12 for
+Hankel determinants. The limits keep the reader responsive on mobile devices
+and are implementation bounds, not limits on the underlying mathematics.
+An out-of-range input produces a visible error instead of an incomplete
+series or silently rounded number.
+
+**Download exact CSV** exports all displayed indices and decimal strings,
+along with the selected integer parameters. Import large integer columns as
+text in a spreadsheet. **Copy reproducible link** records only the selected
+parameters, index window and family in the URL. It does not transmit
+coefficients or browser storage. Duplicate, malformed, unsupported or
+out-of-range link parameters are rejected with a visible message. Without
+JavaScript, the mathematical definitions and static exact tables remain
+available.
+
+The exact core, interface, and tests are
+\`website/assets/sequence-closed-forms-core.mjs\`,
+\`website/assets/sequence-closed-forms-ui.mjs\`,
+\`tools/test_sequence_closed_forms_core.mjs\`, and
+\`tools/test_sequence_closed_forms_browser.cjs\`. The independent source
+derivations remain in \`research/sequence-closed-forms/\`. This calculator
+does not perform historical-priority reviews or extend the pinned OEIS
+comparison to the new records.

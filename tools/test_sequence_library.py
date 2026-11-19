@@ -1,5 +1,6 @@
 import gzip
 import json
+import re
 from pathlib import Path
 import tempfile
 import unittest
@@ -11,6 +12,17 @@ from update_sequence_library_oeis import compare
 
 
 class SequenceLibraryTests(unittest.TestCase):
+    def test_closed_form_reader_links_target_existing_record_ids(self):
+        from sequence_generalized import family_definitions
+        reader=(Path(__file__).parent/'sequence_library.py').read_text(encoding='utf-8')
+        record_links=set(re.findall(r'sequence-families/(KFOR-CF-[A-Za-z0-9-]+)\.html',reader))
+        family_links=set(re.findall(r'generalized-families/(GF-CF-[A-Za-z0-9-]+)\.html',reader))
+        known_records={entry['id'] for entry in expanded_catalogue()}
+        known_families={family['id'] for family in family_definitions()}
+        self.assertGreaterEqual(len(record_links),3)
+        self.assertTrue(record_links <= known_records,record_links-known_records)
+        self.assertTrue(family_links <= known_families,family_links-known_families)
+
     def test_complete_parameter_windows_and_independent_formulas(self):
         report=checks();self.assertEqual(report['records'],2199);self.assertEqual(report['terms'],56779)
         self.assertEqual(report['checks']['source_index_maps'],55939)

@@ -99,7 +99,7 @@ def build(site,atlas):
         bundle.writestr(info,'Exact formula catalogue. Python 3.10+ standard library. Text sources use UTF-8/LF for portable reproduction.\nRun: python tools/sequence_formula_catalogue.py --id KFOR-S-catalan-03-01\nExport all records: python tools/sequence_formula_catalogue.py --output records.json\nScalar records store 24 terms beginning at their explicit offsets, except standard k-bonacci records, which store 48. Coefficient triangles store complete rows n=0..12, including zeros. Triangle j is a flat cell index. Its row and column are n and k. Parameter records are not claims of novelty or pairwise distinctness.\n')
     generalized=generalized_catalogue(entries)
     site.write('assets/sequence-generalized-data.json',json.dumps(generalized,ensure_ascii=False,separators=(',',':'))+'\n')
-    scripts=['math-display.mjs','sequence-research-ui.mjs','sequence-reading-theme.mjs','sequence-oeis-core.mjs','sequence-family-core.mjs','sequence-transfer-core.mjs','sequence-math.mjs','sequence-graph-core.mjs','sequence-modular-core.mjs','sequence-discovery-core.mjs','sequence-notebook-core.mjs','sequence-research-worker.mjs','sequence-research-common.mjs','sequence-oeis-worker.mjs','sequence-oeis-client.mjs','sequence-comparison-chart.mjs','sequence-chart-labels.mjs','sequence-workbench-core.mjs','sequence-comparison-certificate.mjs','sequence-certificate-inspection.mjs','sequence-workbench.mjs','sequence-triangle-core.mjs','sequence-triangle.mjs','sequence-transfers.mjs','sequence-families-ui.mjs','sequence-connections-ui.mjs','sequence-identification-ui.mjs','sequence-modular-ui.mjs','sequence-notebooks-ui.mjs','sequence-library-membership.mjs','sequence-research-studio.mjs','sequence-library-search.mjs','sequence-inspection-links.mjs','sequence-library.js']
+    scripts=['math-display.mjs','sequence-research-ui.mjs','sequence-reading-theme.mjs','sequence-oeis-core.mjs','sequence-family-core.mjs','sequence-transfer-core.mjs','sequence-math.mjs','sequence-graph-core.mjs','sequence-modular-core.mjs','sequence-discovery-core.mjs','sequence-notebook-core.mjs','sequence-research-worker.mjs','sequence-research-common.mjs','sequence-oeis-worker.mjs','sequence-oeis-client.mjs','sequence-comparison-chart.mjs','sequence-chart-labels.mjs','sequence-workbench-core.mjs','sequence-comparison-certificate.mjs','sequence-certificate-inspection.mjs','sequence-workbench.mjs','sequence-triangle-core.mjs','sequence-triangle.mjs','sequence-transfers.mjs','sequence-families-ui.mjs','sequence-connections-ui.mjs','sequence-identification-ui.mjs','sequence-modular-ui.mjs','sequence-notebooks-ui.mjs','sequence-library-membership.mjs','sequence-research-studio.mjs','sequence-library-search.mjs','sequence-inspection-links.mjs','sequence-closed-forms-core.mjs','sequence-closed-forms-ui.mjs','sequence-library.js']
     for name in scripts:
         content=(site.root/'website/assets'/name).read_text(encoding='utf-8')
         content=content.replace('__OEIS_TERMS_SHA256__',snapshot['stripped_sha256']).replace('__OEIS_NAMES_SHA256__',snapshot['names_sha256'])
@@ -109,6 +109,7 @@ def build(site,atlas):
         site.write('assets/'+name,content)
     site.write('assets/sequence-library.css',(site.root/'website/assets/sequence-library.css').read_text(encoding='utf-8'))
     site.write('assets/sequence-research.css',(site.root/'website/assets/sequence-research.css').read_text(encoding='utf-8'))
+    site.write('assets/sequence-closed-forms.css',(site.root/'website/assets/sequence-closed-forms.css').read_text(encoding='utf-8'))
     def wrap(body,prefix='',entry=None,family=None,page_kind=None):
         attrs=' data-entry="'+e(entry['id'])+'.json"' if entry else (' data-family="'+e(family)+'"' if family else '')
         if page_kind:attrs+=' data-page="'+e(page_kind,quote=True)+'"'
@@ -389,7 +390,19 @@ def build(site,atlas):
       <p><a href="generalized-families/GF-CF-MEIXNER.html">Read the Meixner–Pollaczek family</a>.</p>
       </details>
     </section>''')
+    closed_calculator=(
+        '<details id="closed-calculator-panel" class="sl-topic-disclosure">'
+        '<summary>Calculate exact coefficients and determinants</summary>'
+        '<div id="closed-calculator-root">'
+        '<p>The optional worksheet calculates finite integer windows for two-delay coefficients, '
+        'weighted binomial transforms, weighted Hankel determinants and integer Meixner–Pollaczek polynomials. '
+        'It does not claim that finite agreement proves an infinite identity.</p>'
+        '</div><noscript><p>JavaScript is not required to read the definitions and exact record tables above. '
+        'Open any record for its complete static 24-term table.</p></noscript></details>')
+    closed_css='<link rel="stylesheet" href="assets/sequence-closed-forms.css?v='+hashlib.sha256(
+        (site.output/'assets/sequence-closed-forms.css').read_bytes()).hexdigest()[:12]+'">'
     closed_body=(
+        closed_css+
         page_heading('Closed forms: Collections II and III',
             'Exact integer records, source derivations and explicit review boundaries.',
             'research','closed-forms')+
@@ -404,6 +417,7 @@ def build(site,atlas):
         '<a href="sequence-library.html#library-search">Search the full library</a> · '
         '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/research/sequence-closed-forms/COLLECTION_II_ADDITIONS.md">Read the complete theorem supplement</a> · '
         '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/tools/test_sequence_closed_forms_extended.py">Review the extended exact tests</a></p></section>'+closed_theorems+
+        closed_calculator+
         '<section><h2>'+str(len(closed_families))+' source-linked families</h2><div class="sar-grid">'+closed_cards+'</div></section>'+
         '<section><h2>'+str(len(closed_entries))+' integer records</h2><p>Displayed prefixes retain their original offsets. '
         'The four-block rows start at m=1 and refer to analytic exponent 4m-1; beta-binomial '
