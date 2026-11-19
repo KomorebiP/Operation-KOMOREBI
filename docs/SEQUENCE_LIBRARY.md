@@ -9,8 +9,9 @@ sequences or new discoveries.
 
 The homepage search and main navigation both lead to the complete library. Collection
 buttons show the scope and count before filtering. The 38 curated generators
-are a subset that can compute additional terms; they are not the size of the
-library. Plotting and term generation are available in `sequence-explorer.html`. Existing
+can compute additional terms. The full library also includes stored records
+from other collections. Plotting and term generation for those 38 generators
+are available in `sequence-explorer.html`. Existing
 `sequences.html` search links open the library, while saved plot links retain
 their settings in the generator interface. Research-archive searches also use
 the library, with the archive collection filter applied.
@@ -19,7 +20,7 @@ Search results show the review status, collection, exact term preview at
 its recorded offset, highlighted term matches, and a compact source-formula
 excerpt. The complete defining expression remains in an expandable disclosure,
 with exact source text preserved. Opening a result with multiple recorded formulas
-reveals one native representation selector. The selected variant displays its
+reveals a formula selector. The selected variant displays its
 recorded formula type, exact expression, explanatory note when supplied, and
 linked derivation source. Selecting another variant changes only the visible
 formula, not the stored terms, definition, indexes, or CSV/JSON exports.
@@ -69,7 +70,7 @@ the current scope explicit; copying a link leaves the result count visible.
 
 The Math display selector at the bottom of each page offers Typeset math and Plain text. Its
 preference persists across pages and tabs where browser storage is available.
-Readers retain their original TeX; sequence formulas retain their original
+Readers retain their original TeX. Sequence formulas retain their original
 plain-text source. A bounded notation parser supplies a display transcription,
 without changing exact data, program code, or formula exports. Unsupported
 source notation remains literal. Typeset formulas can scroll within their
@@ -89,14 +90,19 @@ Each KFOR page has the shared exact-window plot controls, equivalent
 representations, a no-JavaScript exact table, JSON/CSV/indexed-text exports, and
 finite OEIS comparisons. The complete static index works without JavaScript.
 The generator ZIP reproduces the mathematical records using the Python standard
-library. It retains the defining registry source. Legacy KSEQ/KOM exact exports
-remain preserved; formula metadata is added separately and in page content.
+library. It includes the defining source notes and the closed-form tests with
+their dependencies. Each record's reproduction panel links to that record's
+construction source and gives a command to regenerate its JSON. Family pages
+distinguish generating a sample record from verifying the formulas.
+Legacy KSEQ/KOM exact exports remain preserved. Formula metadata is added
+separately and in page content.
 
 Search uses AND, quoted phrases, OR via `|`, exclusions, exact integer patterns
 and `?`. Fields include `formula:`, `representation:`, `collection:`, `n:`
 (spacing N), `j:`, `r:`, and `x:`. All formula variants are indexed. Filters,
-pagination and shared links preserve applied state. Result CSVs export the
-complete filtered set rather than only the current page.
+pagination and shared links preserve applied state. Clear removes the query
+and filters while retaining the Integer records or Generalized families scope.
+Result CSVs export the complete filtered set rather than only the current page.
 
 Saved entries use the existing browser-local saved-list key across all 2,327
 records, with a 500-record limit. Scoped writes from the older atlas preserve
@@ -576,8 +582,8 @@ classifications, b-files and offsets are preserved.
 The three additional curated seeds for natural numbers, odd numbers and
 partition numbers belong to the universal coefficient-section definition.
 They link to that definition because those parents are not offered by the
-browser's exact multisection controls. All 2,292 indexed integer records now
-have a family or reference assignment without extending the supported engines.
+browser's exact multisection controls. All of the original 2,292 indexed integer
+records have a family or reference assignment without extending the supported engines.
 
 The new source binding pins the archived generator to commit
 `96ef8755314fe6bfa3c5ca76b1d61e20f3c1e510` with its normalized SHA-256. The
@@ -1272,9 +1278,9 @@ and in the versioned
 
 Editing a numeric input immediately hides the previous calculation and its
 exports. The result table, CSV, copied values, and reproducible link all refer
-to one completed calculation. The differential moment and differential Hankel
-views preserve their shared coefficients when switching modes or restoring
-defaults.
+to one completed calculation. Switching between the differential moment and
+differential Hankel views preserves their shared coefficients. Restore defaults
+resets both views to their shared defaults.
 
 Differential determinants above size 12 run in a module worker. The calculator
 announces progress, exposes its busy state, and allows parameter changes to
@@ -1299,7 +1305,7 @@ archive includes the JavaScript solver dependencies and the Python-to-Node
 comparison programs needed to reproduce the differential calculations.
 
 The focused browser audit is `tools/test_sequence_accessibility_browser.cjs`.
-It complements the existing closed-form and sequence-workspace checks; its
+It complements the existing closed-form and sequence-workspace checks. Its
 scope is the calculator and differential proof page, not a whole-site
 accessibility certification.
 

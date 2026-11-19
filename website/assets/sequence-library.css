@@ -248,6 +248,9 @@
 .sl-library #sl-search .sl-collections{margin:0 0 .45rem}
 .sl-library #sl-search .sl-query{margin:.15rem 0 .35rem}
 .sl-library #sl-search>.sp-actions{margin:.4rem 0}
+.sl-library #sl-search button{margin:0}
+.sl-library #sl-query[aria-invalid=true]{border:2px solid var(--sq-error,#7c2d2d)}
+.sl-library #sl-count:focus{outline:3px solid var(--sq-focus,var(--green));outline-offset:3px;border-radius:3px}
 .sl-library #sl-active-filters{margin-top:.45rem}
 .sl-library #sl-count{margin:.55rem 0;font-size:.94rem}
 .sl-library #sl-results{align-items:start;align-content:start;gap:.65rem .75rem;margin:.55rem 0 1rem;grid-auto-flow:row}
@@ -382,9 +385,7 @@
 @media(max-width:720px){
 .sl-library .sl-research-index{grid-template-columns:minmax(0,1fr);gap:.45rem}
 .sl-library .sl-research-group{padding:.6rem .7rem}
-.sl-library .sl-search-rules{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
-@media(max-width:365px){.sl-library .sl-search-rules{grid-template-columns:minmax(0,1fr)}}
 @media(forced-colors:active){
 .sl-library .sl-research-group,.sl-library .sl-search-examples>div{border-color:CanvasText}
 }
@@ -601,7 +602,7 @@
 /* Search rows: show a bounded exact source excerpt and retain the full formula on expansion. */
 .sl-library #sl-results .sl-result-definition{min-width:0}
 .sl-library #sl-results .sl-result-definition>summary{
-  min-width:0;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere;
 }
 .sl-library #sl-results .sl-definition-label{font-weight:650}
 .sl-library #sl-results .sl-definition-excerpt{
@@ -612,6 +613,8 @@
   color:var(--sq-muted,var(--muted));
 }
 .sl-library #sl-results .sl-result-definition[open]>summary .sl-definition-excerpt{display:none}
+.sl-library #sl-results .math-typeset mjx-container[display=true]{min-width:min-content}
+.sl-library #sl-results .math-typeset mjx-container svg{max-width:none}
 /* Optional operations are grouped so they do not repeat throughout a large result list. */
 .sl-library #sl-results>li>.sl-result-more{
   min-width:0;max-width:100%;margin:.04rem 0;
@@ -638,6 +641,7 @@
 .sl-library #sl-results[data-layout=cards]>li>.sl-result-more{width:100%}
 @media(max-width:750px){
   .sl-library #sl-results[data-layout=compact]>li>.sl-result-more{grid-column:1;grid-row:auto}
+  .sl-library #sl-results .sl-definition-excerpt{display:block;max-width:100%;margin:.1rem 0 0}
 }
 @media print{
   .sl-library #sl-results>li>.sl-result-more{border-top:1px solid #999}
@@ -656,7 +660,7 @@
   display:block;width:100%;max-width:100%;min-width:0;min-height:44px;
   padding:.4rem .6rem;border:1px solid var(--sq-line,var(--sar-line));
   border-radius:6px;background:var(--sq-panel,var(--surface));
-  color:var(--sq-ink,var(--ink));font:inherit;
+  color:var(--sq-ink,var(--ink));font:inherit;font-size:1rem;
 }
 .sl-library #sl-results .sl-variant-select:focus-visible{
   outline:3px solid var(--sq-focus,var(--green));outline-offset:2px;
@@ -708,10 +712,10 @@
 }
 .sl-library #sl-results .sl-term-controls{
   display:flex;flex-wrap:wrap;align-items:end;gap:.35rem .5rem;
-  padding:0;margin:.25rem 0 .4rem;background:transparent;
+  padding:0;margin:.25rem 0 .4rem;background:transparent;border:0;border-radius:0;
 }
 .sl-library #sl-results .sl-term-controls :is(button,input){min-height:44px}
-.sl-library #sl-results .sl-term-controls button{padding:.4rem .65rem;font-size:.87rem}
+.sl-library #sl-results .sl-term-controls button{margin:0;padding:.4rem .65rem;font-size:.87rem}
 .sl-library #sl-results .sl-term-controls .sl-term-export{white-space:normal}
 .sl-library #sl-results .sl-term-controls .sl-term-share-button{white-space:normal}
 .sl-library #sl-results .sl-term-controls label{
@@ -720,7 +724,7 @@
 }
 .sl-library #sl-results .sl-term-controls input{
   box-sizing:border-box;width:100%;min-width:0;max-width:100%;
-  font:inherit;padding:.4rem .55rem;
+  font:inherit;font-size:1rem;padding:.4rem .55rem;
 }
 .sl-library #sl-results .sl-term-controls :is(button,input):focus-visible{
   outline:3px solid var(--sq-focus,var(--green));outline-offset:2px;
@@ -740,7 +744,7 @@
 }
 .sl-library #sl-results .sl-inspection-link-fallback input{
   box-sizing:border-box;width:100%;max-width:100%;min-height:44px;
-  padding:.4rem .55rem;font:inherit;
+  padding:.4rem .55rem;font:inherit;font-size:1rem;
 }
 .sl-library #sl-results .sl-inspection-link-fallback input:focus-visible{
   outline:3px solid var(--sq-focus,var(--green));outline-offset:2px;
@@ -789,14 +793,29 @@
     margin:.35rem 0 .5rem;
   }
 }
-@media(max-width:420px){
+@media(max-width:440px){
   .sl-library #sl-results .sl-term-inspector-body{padding:.2rem .45rem .5rem}
-  .sl-library #sl-results .sl-term-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .sl-library #sl-results .sl-term-controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,6.5rem),1fr))}
   .sl-library #sl-results .sl-term-controls label{grid-column:1/-1;max-width:none}
   .sl-library #sl-results .sl-term-controls button{min-width:0}
   .sl-library #sl-results .sl-term-controls .sl-term-export{grid-column:1/-1}
   .sl-library #sl-results .sl-term-controls .sl-term-share-button{grid-column:1/-1}
   .sl-library #sl-results .sl-term-scroll{max-height:16rem}
+}
+
+/* Phone insets stay compact when text enlarges; labels and controls keep their font sizes. */
+@media(max-width:440px){
+  .sl-library #sl-search{padding:min(.78rem,3vw) min(.85rem,2vw)}
+  .sl-library #sl-search :is(input,select,button){padding-inline:min(.65rem,2vw)}
+  .sl-library #sl-results[data-layout]>li{padding-inline:min(.7rem,2vw)}
+  .sl-library #sl-results .sl-term-inspector>summary{padding-inline:min(.7rem,2vw)}
+  .sl-library #sl-results .sl-term-inspector-body{padding-inline:min(.45rem,2vw)}
+  .sl-library #sl-results[data-layout]>li :is(.sp-actions,.sl-term-controls) :is(a,button){padding-inline:min(.65rem,2vw)}
+  .sl-library #sl-results :is(.sl-variant-select,.sl-term-controls input,.sl-inspection-link-fallback input){padding-inline:min(.55rem,2vw)}
+  .sl-library #sl-results .math-pair{padding-inline:min(.5rem,1vw)}
+  .sl-library #sl-results .math-typeset{padding-inline:min(.35rem,1vw)}
+  .sl-library #sl-results :is(.sar-formula,.sl-formula-source-text){padding-inline:min(.75rem,2vw)}
+  .sl-library :is(.sl-family-summary,.sl-search-examples>div){padding-inline:min(.7rem,2vw)}
 }
 @media print{
   .sl-library #sl-results .sl-term-scroll{max-height:none}
@@ -1055,3 +1074,11 @@
   .sl-library #sw-verify-export-status,
   .sl-library #sw-verify-inspection .sw-verify-export-guide{margin:.4rem .5rem}
 }
+
+.sl-library .sl-result-state{
+  max-width:85ch;margin:.45rem 0 .75rem;padding:.5rem min(.75rem,2vw);
+  border-inline-start:3px solid var(--sq-focus,var(--green));
+  background:var(--sq-panel,var(--surface));color:var(--sq-ink,var(--ink));
+  font-size:.9rem;line-height:1.5;overflow-wrap:anywhere;
+}
+.sl-library .sl-result-state[hidden]{display:none}

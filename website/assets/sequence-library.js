@@ -57,7 +57,7 @@ function inlineExactValues(entry,initialPosition=0,openFromLink=false,selectedFo
     previous.type=next.type=exportWindow.type=copyLink.type='button';go.type='submit';
     copyLink.className='sl-term-share-button';
     exportWindow.className='sl-term-export';
-    jump.type='number';jump.min=String(offset);jump.max=String(offset+values.length-1);jump.step='1';
+    jump.type='number';jump.min=String(offset);jump.max=String(offset+values.length-1);jump.step='1';jump.required=true;
     jump.inputMode='numeric';jumpLabel.append(jump);
     controls.append(previous,next,jumpLabel,go,exportWindow,copyLink);
     const status=make('p'),frame=make('div'),table=make('table'),head=make('thead'),header=make('tr'),body=make('tbody');
@@ -71,7 +71,7 @@ function inlineExactValues(entry,initialPosition=0,openFromLink=false,selectedFo
     const detail=make('p',hasCoordinates?
       'The first column is the flat stored index. Row and column coordinates are shown separately.':
       'Indices are the stored sequence indices, which may differ from source Taylor degrees.');
-    if(hasDegrees)detail.textContent+=' Source degrees follow each record’s audited index map.';
+    if(hasDegrees)detail.textContent+=' Source degrees follow each record’s recorded index map.';
     detail.className='sl-term-index-note';
     const shareStatus=make('p'),fallbackLabel=make('label','Select and copy this inspection link'),fallbackInput=make('input');
     shareStatus.className='sl-inspection-link-status';shareStatus.setAttribute('role','status');shareStatus.setAttribute('aria-live','polite');
@@ -128,11 +128,16 @@ function inlineExactValues(entry,initialPosition=0,openFromLink=false,selectedFo
       const end=Math.min(values.length,first+size);
       save(csv,'text/csv;charset=utf-8',`sequence-${id}-${offset+first}-${offset+end-1}.csv`);
     });
-    previous.addEventListener('click',()=>{first=Math.max(0,first-size);renderWindow();});
-    next.addEventListener('click',()=>{first=Math.min(values.length-1,first+size);renderWindow();});
+    function pageWindow(step,button){
+      const hadFocus=document.activeElement===button;
+      first=Math.max(0,Math.min(values.length-1,first+step*size));renderWindow();
+      if(hadFocus&&button.disabled)frame.focus({preventScroll:true});
+    }
+    previous.addEventListener('click',()=>pageWindow(-1,previous));
+    next.addEventListener('click',()=>pageWindow(1,next));
     controls.addEventListener('submit',event=>{
       event.preventDefault();
-      const index=Number(jump.value);
+      const index=jump.value.trim()===''?NaN:Number(jump.value);
       if(!Number.isSafeInteger(index)||index<offset||index>=offset+values.length){
         jump.setCustomValidity(`Enter a stored index from ${offset} to ${offset+values.length-1}.`);
         jump.reportValidity();return;
@@ -230,7 +235,8 @@ function definitionPreview(formula,label,expanded,recordedVariants=[],entry=null
     function updateInformation(){
       const item=variants[selected];
       kind.textContent=`${item.kind||'Representation'} · ${selected+1} of ${variants.length}`;
-      name.textContent=item.expression===definingExpression?'Defining formula':'Alternative formula';
+      const currentLabel=item.expression===definingExpression?'Defining formula':'Alternative formula';
+      name.textContent=currentLabel;summary.setAttribute('aria-label',currentLabel+' for '+label);
       excerpt.textContent=item.expression.replace(/\s+/g,' ').trim();
       pre.textContent=item.expression;copyStatus.textContent='';
       note.textContent=typeof item.note==='string'?item.note:'';
@@ -298,7 +304,7 @@ function comparisonHandoff(entries,snapshot){
 }
 const collectionLabels={atlas:'Curated sequences',recovered:'Research archive',formulas:'Formula families'};
 const keys=SEARCH_KEYS;
-let results=[],page=0,applied={},workbench,transfers,toggleSaved,saved=new Set();
+let results=[],page=0,applied={},workbench,transfers,toggleSaved,saved=new Set(),searchShareGeneration=0;
 const RESULT_LAYOUT_KEY='komorebi.sequence-library-result-layout.v1';
 function setResultLayout(layout,remember=false){
   const normalized=layout==='cards'?'cards':'compact',buttons=root.querySelectorAll('#sl-result-layout [data-layout]');
@@ -309,7 +315,12 @@ function setResultLayout(layout,remember=false){
 
 function save(content,type,name){const url=URL.createObjectURL(new Blob([content],{type})),link=make('a');link.href=url;link.download=name;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 function share(){const url=new URL(location.href);url.search='';for(const [key,value]of Object.entries(applied))if(value&&value!=='any'&&value!=='relevance')url.searchParams.set(key,value);if(page)url.searchParams.set('page',String(page+1));url.hash='library-search';return url.href;}
+function invalidateSearchShare(){
+  searchShareGeneration++;
+  $('link-wrap').hidden=true;$('link').value='';$('action-status').textContent='';
+}
 function render(){
+  invalidateSearchShare();
   clearMath($('results'));$('results').replaceChildren();page=Math.max(0,Math.min(page,Math.ceil(results.length/24)-1));
   const expandFormulas=results.length<=3;
   for(const hit of results.slice(page*24,(page+1)*24)){
@@ -359,14 +370,14 @@ function render(){
         sourceNote.append(identified,document.createTextNode('. This identification has not been rechecked against the pinned bulk snapshot.'));
         comparisons.append(sourceNote);
       }
-      comparisons.append(make('p','The newer record has not been compared against the historical OEIS bulk snapshot. Neither a match nor an exclusion is claimed.'));
+      comparisons.append(make('p','This record has not been compared with the retained OEIS snapshot. Neither a match nor an exclusion is claimed.'));
     }else if(entry.matches.length){const list=make('ol');for(const hit of entry.matches.slice(0,3)){const item=make('li'),reference=make('a',hit.id+' · '+hit.name);reference.href='https://oeis.org/'+hit.id;item.append(reference,make('p',`${hit.matched_terms} matching terms, beginning at local index ${entry.offset}. OEIS export position: ${hit.position}.`));list.append(item);}comparisons.append(list,make('p',`Showing ${Math.min(3,entry.matches.length)} of ${entry.match_count.toLocaleString()} recorded matches. Up to 50 matches are retained.`));}else comparisons.append(make('p','No contiguous match of eight terms was recorded. That does not establish novelty.'));
     const credit=make('p','Finite matches do not prove that infinite sequences are identical. Export positions are not mathematical offsets. Reference data: '),oeis=make('a','The Online Encyclopedia of Integer Sequences'),license=make('a','CC BY-SA 4.0');oeis.href='https://oeis.org/';license.href='https://creativecommons.org/licenses/by-sa/4.0/';credit.append(oeis,document.createTextNode(' · '),license);comparisons.append(credit);more.append(comparisons);$('results').append(li);
   }
   for(const definition of $('results').querySelectorAll('.sl-result-definition[open]'))enhanceMath(definition);
   const active=$('active-filters');active.replaceChildren();
   const names={collection:'Collection',kind:'Family',representation:'Formula type',status:'Review status',hits:'OEIS comparisons',saved:'Saved entries',match:'Term matching',mode:'Construction type',paper:'Source'};
-  for(const key of Object.keys(names))if(applied[key]&&!(key==='match'&&applied[key]==='any')){const field=$(key),text=field.options[field.selectedIndex]?.textContent||applied[key],button=make('button',`${names[key]}: ${text} ×`);button.type='button';button.className='sl-filter-chip';button.setAttribute('aria-label',`Clear ${names[key].toLowerCase()} filter`);button.addEventListener('click',()=>{field.value=key==='match'?'any':'';field.dispatchEvent(new Event('change'));$('count').focus({preventScroll:true});});active.append(button);}
+  for(const key of Object.keys(names))if(applied[key]&&!(key==='match'&&applied[key]==='any')){const field=$(key),text=Array.from(field.options).find(option=>option.value===applied[key])?.textContent||applied[key],button=make('button',`${names[key]}: ${text} ×`);button.type='button';button.className='sl-filter-chip';button.setAttribute('aria-label',`Clear ${names[key].toLowerCase()} filter`);button.addEventListener('click',()=>{field.value=key==='match'?'any':'';field.dispatchEvent(new Event('change'));$('count').focus({preventScroll:true});});active.append(button);}
   root.querySelectorAll('[data-scope]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.scope===(applied.scope||'records'))));
   const familyScope=applied.scope==='families';
   $('search').querySelector('.sl-collections').hidden=familyScope;
@@ -396,14 +407,50 @@ function setupSearch(entries,families,sources=[]){
   $('family-summary').textContent=`${families.length} indexed constructions: ${modeCounts.join(' · ')}. Select a construction to read its definition, examples, and sources.`;
   const note=make('p',loaded.available?'Save up to 500 records from any collection in this browser.':'Saved entries could not be loaded from this browser. You can still save records for this session.');note.id='sl-saved-status';note.setAttribute('role','status');$('search').append(note);
   const params=new URL(location.href).searchParams;for(const key of keys){const control=$(key==='q'?'query':key);if(params.has(key))control.value=params.get(key);}page=Math.max(0,(Number(params.get('page'))||1)-1);
-  function run(update=false){try{const state=normalizeSearch(Object.fromEntries(keys.map(key=>[key,$(key==='q'?'query':key).value])));for(const key of keys)$(key==='q'?'query':key).value=state[key];results=librarySearch(entries,families,state,saved);applied=state;if(update)page=0;render();$('error').hidden=true;$('action-status').textContent='';$('query').removeAttribute('aria-invalid');if(update)history.replaceState(null,'',share());}catch(error){$('error').textContent=error.message;$('error').hidden=false;$('query').setAttribute('aria-invalid','true');}}
+  let hasSuccessfulSearch=false;
+  const resultState=make('p');resultState.id='sl-result-state';resultState.className='sl-result-state';
+  resultState.hidden=true;resultState.setAttribute('role','status');resultState.setAttribute('aria-live','polite');resultState.setAttribute('aria-atomic','true');
+  $('count').after(resultState);
+  function run(update=false,focusError=false){
+    const state=normalizeSearch(Object.fromEntries(keys.map(key=>[key,$(key==='q'?'query':key).value])));
+    let nextResults;
+    try{nextResults=librarySearch(entries,families,state,saved);}
+    catch(error){
+      invalidateSearchShare();
+      if(!hasSuccessfulSearch)applied=emptySearch(state.scope);
+      for(const key of keys.filter(key=>key!=='q'))$(key).value=applied[key];
+      if(!hasSuccessfulSearch){
+        results=[];page=0;render();
+        $('count').textContent='Search not applied.';$('empty').hidden=true;
+      }
+      $('error').textContent=error.message;$('error').hidden=false;
+      $('query').setAttribute('aria-invalid','true');$('query').setAttribute('aria-errormessage','sl-error');
+      resultState.textContent=hasSuccessfulSearch?'Showing the previous successful search. Correct the highlighted query and search again.':'No search results yet. Correct the highlighted query and search again.';
+      resultState.hidden=false;$('share').disabled=!hasSuccessfulSearch;
+      if(focusError)$('query').focus();
+      return false;
+    }
+    for(const key of keys)$(key==='q'?'query':key).value=state[key];
+    results=nextResults;applied=state;hasSuccessfulSearch=true;if(update)page=0;
+    render();$('error').hidden=true;$('query').removeAttribute('aria-invalid');$('query').removeAttribute('aria-errormessage');
+    resultState.hidden=true;resultState.textContent='';$('share').disabled=false;
+    if(update)history.replaceState(null,'',share());
+    return true;
+  }
   function reset(scope=$('scope').value){const state=emptySearch(scope);for(const key of keys)$(key==='q'?'query':key).value=state[key];}
-  toggleSaved=id=>{const next=new Set(saved);if(next.has(id))next.delete(id);else if(next.size>=500){note.textContent='You have 500 saved records. Remove one before saving another.';return;}else next.add(id);saved=next;const stored=writeSaved(storage,[...saved],allowed);note.textContent=(saved.has(id)?id+' saved.':id+' removed from saved entries.')+(stored?'':' Browser storage is unavailable. This change lasts only for this session.');if(applied.saved){run();$('count').focus({preventScroll:true});}else updateSaveButtons($('results'),saved);};
+  function refreshSavedResults(){
+    if(hasSuccessfulSearch&&applied.saved){
+      const hadResultFocus=$('results').contains(document.activeElement);
+      results=librarySearch(entries,families,applied,saved);render();
+      if(hadResultFocus)$('count').focus({preventScroll:true});
+    }else updateSaveButtons($('results'),saved);
+  }
+  toggleSaved=id=>{const next=new Set(saved);if(next.has(id))next.delete(id);else if(next.size>=500){note.textContent='You have 500 saved records. Remove one before saving another.';return;}else next.add(id);saved=next;const stored=writeSaved(storage,[...saved],allowed);note.textContent=(saved.has(id)?id+' saved.':id+' removed from saved entries.')+(stored?'':' Browser storage is unavailable. This change lasts only for this session.');refreshSavedResults();};
   $('count').tabIndex=-1;for(const key of keys.filter(key=>key!=='q'))$(key).addEventListener('change',()=>run(true));
   for(const button of root.querySelectorAll('[data-scope]'))button.addEventListener('click',()=>{$('scope').value=button.dataset.scope;run(true);});
-  $('generalized').addEventListener('click',()=>{reset('families');run(true);$('count').scrollIntoView({block:'start'});});
+  $('generalized').addEventListener('click',()=>{reset('families');run(true);$('count').focus({preventScroll:true});$('count').scrollIntoView({block:'start'});});
   for(const button of root.querySelectorAll('[data-collection]'))button.addEventListener('click',()=>{$('collection').value=button.dataset.collection;run(true);});
-  window.addEventListener('storage',event=>{if(event.key===STORAGE_KEY||event.key===null){saved=new Set(readSaved(storage,allowed).ids);run();}});
+  window.addEventListener('storage',event=>{if(event.key===STORAGE_KEY||event.key===null){saved=new Set(readSaved(storage,allowed).ids);refreshSavedResults();}});
   const layoutControls=$('result-layout');
   if(layoutControls){
     let selected='compact';try{selected=localStorage.getItem(RESULT_LAYOUT_KEY)==='cards'?'cards':'compact';}catch{}
@@ -413,13 +460,28 @@ function setupSearch(entries,families,sources=[]){
     });
     layoutControls.hidden=false;
   }
-  $('search').hidden=false;$('search').addEventListener('submit',event=>{event.preventDefault();run(true);});
+  $('query').addEventListener('input',invalidateSearchShare);
+  $('search').hidden=false;$('search').addEventListener('submit',event=>{event.preventDefault();run(true,true);});
   function clear(){reset();run(true);$('query').focus();}
   $('clear').addEventListener('click',clear);$('reset').addEventListener('click',clear);
   $('triangles').hidden=false;$('triangles').addEventListener('click',()=>{reset('records');$('query').value='tag:triangle';run(true);$('count').focus();$('count').scrollIntoView({block:'start'});});
   $('research').hidden=false;$('research').addEventListener('click',()=>{reset('records');$('query').value='tag:research-derived';run(true);$('count').focus();$('count').scrollIntoView({block:'start'});});
   for(const [key,step]of [['previous',-1],['next',1]])$(key).addEventListener('click',()=>{page+=step;render();history.replaceState(null,'',share());$('count').focus({preventScroll:true});$('count').scrollIntoView({block:'nearest'});});
-  $('share').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(share());$('action-status').textContent='Search link copied.';}catch{$('link-wrap').hidden=false;$('link').value=share();$('link').focus();$('link').select();}});
+  $('share').addEventListener('click',async()=>{
+    if(!hasSuccessfulSearch)return;
+    const url=share(),generation=++searchShareGeneration;
+    try{
+      if(!navigator.clipboard?.writeText)throw Error('Clipboard unavailable');
+      await navigator.clipboard.writeText(url);
+      if(generation!==searchShareGeneration)return;
+      $('link-wrap').hidden=true;$('link').value='';$('action-status').textContent='Search link copied.';
+    }catch{
+      if(generation!==searchShareGeneration)return;
+      $('link-wrap').hidden=false;$('link').value=url;
+      $('action-status').textContent='Clipboard unavailable. Select and copy the search link.';
+      $('link').focus();$('link').select();
+    }
+  });
   $('export').addEventListener('click',()=>save(librarySearchCSV(results,applied.scope,location.href),'text/csv;charset=utf-8',applied.scope==='families'?'family-definitions.csv':'sequence-search-results.csv'));
   run();
   function validate(value){if(!value||typeof value.q!=='string'||!['records','families'].includes(value.scope||'records'))throw Error('Choose valid saved search settings.');searchEntries(value.scope==='families'?families:entries,value.q);for(const key of keys.filter(k=>k!=='q'))if(value[key]!==undefined&&!Array.from($(key).options).some(o=>o.value===value[key]))throw Error('A saved search filter is unavailable: '+key);if(value.page!==undefined&&(!Number.isSafeInteger(value.page)||value.page<0||value.page>10000))throw Error('The saved search page is invalid.');return value;}
