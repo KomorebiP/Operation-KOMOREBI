@@ -399,6 +399,24 @@ def build(site,atlas):
       <a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/tools/sequence_differential_hankel.py">Run the general exact solver</a> ·
       <a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/tools/test_sequence_differential_hankel.py">Inspect independent tests</a>.</p>
       </details>
+      <details id="differential-moment-generating"><summary>Algebraic generating functions for all finite differential moment sequences</summary>
+      <p>For any polynomial weight P(m) of degree D and any finite differential
+      operator D_x=sum_(k=0)^r c_k partial_x^k, the moment series
+      M(z)=sum_(n&gt;=0) F_P[D_x x^n] z^n
+      has the exact algebraic form M(z)=R(z)/(1-4z^2)^(D+r+1/2),
+      with deg R at most 2(D+r).</p>
+      <p>The numerator follows from finite polynomial operations: begin with
+      R_0(z)=sum_d a_d (2d)!/d! z^(2d)(1-4z^2)^(D-d), then apply the
+      rationalized differential transform T[f]=z(f+zf') repeatedly
+      to obtain every derivative contribution. The same representation
+      supplies a first-order polynomial differential equation for M(z).</p>
+      <p>For P(m)=1+m and D_x=1+2 partial_x+partial_x^2,
+      the numerator is 1+2z-8z^2-4z^3+52z^4-16z^5-24z^6,
+      with denominator (1-4z^2)^(7/2). These are moment coefficients,
+      not the associated Hankel determinants.</p>
+      <p><a href="sequence-library.html?cf-version=1&cf-mode=differential_moments&cf-start=0&cf-count=10&cf-a0=1&cf-a1=1&cf-a2=0&cf-a3=0&cf-c0=1&cf-c1=2&cf-c2=1&cf-c3=0#closed-calculator-panel">Calculate the exact moment sequence and its generating function</a> ·
+      <a href="sequence-differential-hankel.html#math-proof-algebraic-ordinary-generating-function-for-every-finite-differential-operator">Read the complete generating-function derivation</a>.</p>
+      </details>
       <details><summary>Six formulas recovered from source papers</summary>
       <p>The documented reductions cover Bernoulli four-block tangents, four-block
       Euler convolutions, integer Meixner–Pollaczek polynomials, beta-moment
@@ -561,7 +579,7 @@ def build(site,atlas):
     differential_hankel_page=(
         closed_css+
         page_heading('Finite-order differential Hankel calculus',
-            'Exact Chebyshev derivative products, separated-block rank bounds and a structured determinant solver.',
+            'Exact Chebyshev derivative products, algebraic moment generating functions, separated-block rank bounds and structured determinants.',
             'research','differential-hankel')+
         '<nav class="sl-tool-back" aria-label="Differential Hankel research routes">'
         '<a href="sequence-library.html#sequence-research-desk">Sequence research desk</a> · '
@@ -571,6 +589,10 @@ def build(site,atlas):
         '<p>For P(m)=1+m and D=1+2 partial_x+partial_x^2 the first exact determinants are '
         '1, 1, 2, -84, -456, 52197296. The browser calculates sizes 0 through 12, '
         'while the source solver supports arbitrary finite-order operators.</p>'
+        '<p>The corresponding moment generating function has numerator '
+        '1+2z-8z^2-4z^3+52z^4-16z^5-24z^6 '
+        'and denominator (1-4z^2)^(7/2). '
+        '<a href="sequence-library.html?cf-version=1&amp;cf-mode=differential_moments&amp;cf-start=0&amp;cf-count=10&amp;cf-a0=1&amp;cf-a1=1&amp;cf-a2=0&amp;cf-a3=0&amp;cf-c0=1&amp;cf-c1=2&amp;cf-c2=1&amp;cf-c3=0#closed-calculator-panel">Inspect the exact moment sequence and generating function</a>.</p>'
         '<p><a href="sequence-library.html?cf-version=1&amp;cf-mode=differential_hankel&amp;cf-start=0&amp;cf-count=7&amp;cf-a0=1&amp;cf-a1=1&amp;cf-a2=0&amp;cf-a3=0&amp;cf-c0=1&amp;cf-c1=2&amp;cf-c2=1&amp;cf-c3=0#closed-calculator-panel">Open the exact calculator with these parameters</a>.</p></section>'
         '<article id="differential-hankel-reading" class="sl-math-manuscript" aria-label="Full differential Hankel mathematical derivation">'
         +full_note+'</article>'

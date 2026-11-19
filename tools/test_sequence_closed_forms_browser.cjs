@@ -37,7 +37,7 @@ async function valueRows(page){
       const panel=page.locator('#closed-calculator-panel');
       assert.equal(await panel.evaluate(node=>node.open),false,'Worksheet should be collapsed on arrival');
       await openCalculator(page);
-      assert.equal(await page.locator('#cf-mode option').count(),9);
+      assert.equal(await page.locator('#cf-mode option').count(),10);
       assert.deepEqual((await valueRows(page)).slice(0,12),
         ['1','0','1','0','1','1','1','2','1','3','2','4']);
       await fit(page);
@@ -70,12 +70,35 @@ async function valueRows(page){
       assert.deepEqual((await valueRows(page)).slice(0,6),
         ['1','1','2','-84','-456','52197296']);
       assert.equal(await page.locator('#cf-differential_hankel-c2').inputValue(),'1');
+      await page.selectOption('#cf-mode','differential_moments');
+      assert.deepEqual((await valueRows(page)).slice(0,10),
+        ['1','2','6','24','66','180','620','1120','4830','6300']);
+      assert.equal(await page.locator('#cf-ogf').isVisible(),true);
+      await page.locator('#cf-ogf > summary').click();
+      assert.match(await page.locator('#cf-ogf-formula').textContent(),
+        /1 \+ 2\*z - 8\*z\^2 - 4\*z\^3 \+ 52\*z\^4 - 16\*z\^5 - 24\*z\^6/);
+      assert.match(await page.locator('#cf-ogf-info').textContent(),
+        /Numerator degree ≤ 6/);
+      await page.locator('#cf-ogf-copy').click();
+      assert.match(await page.evaluate(()=>navigator.clipboard.readText()),
+        /M\(z\) =/);
+      await page.locator('#cf-start').fill('150');
+      await page.locator('#cf-count').fill('11');
+      await page.locator('#cf-calculate').click();
+      assert.equal((await valueRows(page)).length,11);
+      assert.equal((await valueRows(page))[10].length>45,true);
+      assert.match(await page.locator('#cf-ogf-formula').textContent(),/7\/2/);
+      await fit(page);
+      await page.selectOption('#cf-mode','differential_hankel');
+      assert.equal(await page.locator('#cf-ogf').isVisible(),true);
+      await fit(page);
       const proofPage=await context.newPage();
       proofPage.on('pageerror',error=>report.errors.push({width,message:error.message}));
       await proofPage.goto(url('sequence-differential-hankel.html'));
       assert.equal(await proofPage.locator('#differential-hankel-reading').count(),1);
       assert.equal(await proofPage.locator('#differential-hankel-reading h2').count()>=5,true);
       assert.equal(await proofPage.locator('#differential-hankel-reading .sl-math-display').count()>=12,true);
+      assert.equal(await proofPage.locator('#math-proof-algebraic-ordinary-generating-function-for-every-finite-differential-operator').count(),1);
       assert.equal(await proofPage.locator('main h1').count(),1);
       assert.equal(await proofPage.locator('a[href*="cf-mode=differential_hankel"]').count()>=1,true);
       await fit(proofPage);
@@ -194,6 +217,7 @@ async function valueRows(page){
     await page.goto(url('sequence-differential-hankel.html'));
     assert.equal(await page.locator('#differential-hankel-reading').count(),1);
     assert.equal(await page.locator('.sl-math-display').count()>=12,true);
+    assert.equal(await page.locator('#math-proof-algebraic-ordinary-generating-function-for-every-finite-differential-operator').count(),1);
     await fit(page,true);
     await page.goto(url('sequence-library.html'));
     assert.equal(await page.locator('#sequence-research-desk').count(),1);

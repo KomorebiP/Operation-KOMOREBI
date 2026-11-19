@@ -144,6 +144,144 @@ def chebyshev_jet_generators(weights, differential, size):
     return rows,cols,diag
 
 
+
+def _polynomial_product(a,b):
+    """Multiply polynomials in ascending coefficient order, exactly."""
+    result=[Fraction(0)]*(len(a)+len(b)-1)
+    for i,x in enumerate(a):
+        for j,y in enumerate(b):
+            result[i+j]+=x*y
+    return result
+
+
+def _trim_polynomial(values):
+    values=list(values)
+    while len(values)>1 and values[-1]==0:
+        values.pop()
+    return tuple(values)
+
+
+def algebraic_moment_generating_function(weights, differential):
+    """Return (numerator coefficients, twice denominator exponent).
+
+    M(z)=sum_(n>=0) L[x^n] z^n
+        =R(z)/(1-4*z**2)**(exponent_twice/2).
+    deg R <= exponent_twice - 1 = 2*(degree P + order D).
+    The base numerator and each derivative transform are exact rationals.
+    No determinant is evaluated.
+    """
+    a=_weights(weights)
+    c=_operator(differential)
+    degree=len(a)-1
+    order=len(c)-1
+    h=[Fraction(1),Fraction(0),Fraction(-4)]
+    powers=[[Fraction(1)]]
+    for _ in range(max(degree,order)):
+        powers.append(_polynomial_product(powers[-1],h))
+    numerator=[Fraction(0)]*(2*degree+1)
+    for d,coefficient in enumerate(a):
+        if not coefficient:
+            continue
+        monomial=[Fraction(0)]*(2*d)+[
+            coefficient*Fraction(factorial(2*d),factorial(d))]
+        term=_polynomial_product(monomial,powers[degree-d])
+        for j,value in enumerate(term):
+            numerator[j]+=value
+    # T[A](z)=z(A(z)+zA'(z)). Repeated T maps moments to
+    # falling-factorial monomial derivatives.
+    total=[Fraction(0)]*(2*(degree+order)+1)
+    for k in range(order+1):
+        shifted=_polynomial_product(numerator,powers[order-k])
+        for j,value in enumerate(shifted):
+            total[j]+=c[k]*value
+        if k==order:
+            break
+        nxt=[Fraction(0)]*(len(numerator)+3)
+        for j,value in enumerate(numerator):
+            nxt[j+1]+=(j+1)*value
+            nxt[j+3]+=4*(2*degree+2*k-j)*value
+        numerator=list(_trim_polynomial(nxt))
+    result=_trim_polynomial(total)
+    exponent_twice=2*(degree+order)+1
+    if len(result)>exponent_twice:
+        raise ArithmeticError("Algebraic generating numerator exceeded the degree bound")
+    return result,exponent_twice
+
+
+def algebraic_moment_differential_equation(weights,differential):
+    """Return A(z), B(z) such that A(z)*M'(z)=B(z)*M(z).
+
+    For R(z)/(1-4z^2)**beta, A=(1-4z^2)*R and
+    B=(1-4z^2)*R' + 8*beta*z*R.
+    If the moment sequence vanishes, A=B=0 is a vacuous relation.
+    A zero constant term in A may make the associated coefficient
+    recurrence singular: use the recorded initial moments, not division
+    by A(0), to recover the sequence.
+    """
+    numerator,twice_exponent=algebraic_moment_generating_function(
+        weights,differential)
+    h=(Fraction(1),Fraction(0),Fraction(-4))
+    deriv=[j*numerator[j] for j in range(1,len(numerator))]
+    if not deriv:
+        deriv=[Fraction(0)]
+    A=_polynomial_product(numerator,h)
+    B=_polynomial_product(deriv,h)
+    B+=([Fraction(0)]*(len(A)-len(B)))
+    for j,value in enumerate(numerator):
+        B[j+1]+=4*twice_exponent*value
+    return _trim_polynomial(A),_trim_polynomial(B)
+
+
+
+def regularized_moment_ode(weights, differential):
+    """Return (ell,A,B) for shifted moments t_n=mu_(n+ell).
+
+    After removing their exact initial zero block, the moments satisfy
+        A(z)*T'(z)=B(z)*T(z)
+    with A(0)=mu_ell != 0.  For a zero moment sequence return
+    (None,(0,),(0,)), without an invalid forward division.
+    """
+    R,exponent_twice=algebraic_moment_generating_function(weights,differential)
+    if not any(R):
+        return None,(Fraction(0),),(Fraction(0),)
+    ell=next(i for i,value in enumerate(R) if value)
+    normalized=R[ell:]
+    h=(Fraction(1),Fraction(0),Fraction(-4))
+    A=_polynomial_product(normalized,h)
+    derivative=[j*normalized[j] for j in range(1,len(normalized))]
+    B=_polynomial_product(derivative or [Fraction(0)],h)
+    B.extend(Fraction(0) for _ in range(len(A)-len(B)))
+    for j,value in enumerate(normalized):
+        B[j+1]+=4*exponent_twice*value
+    if not A[0]:
+        raise ArithmeticError("The shifted moment ODE has an unexpected zero initial coefficient")
+    return ell,_trim_polynomial(A),_trim_polynomial(B)
+
+
+def moments_from_algebraic_recurrence(weights, differential, count):
+    """Compute exact mu_0,...,mu_(count-1) from a *regular* P-recurrence.
+
+    Only the first nonzero moment is needed after the initial zero block.
+    The polynomial equation A(z)*T'=B(z)*T gives a finite-width recurrence
+    for the shifted moments. It works at rational parameters and at
+    c_0=0, without division by any singular leading coefficient.
+    """
+    if not isinstance(count,int) or count<0:
+        raise ValueError("Count must be a nonnegative integer")
+    if count==0:
+        return []
+    ell,A,B=regularized_moment_ode(weights,differential)
+    if ell is None or ell>=count:
+        return [Fraction(0)]*count
+    t=[A[0]]
+    for n in range(count-ell-1):
+        rhs=sum(B[j]*t[n-j] for j in range(min(n,len(B)-1)+1))
+        rhs-=sum(A[j]*(n-j+1)*t[n-j+1]
+                 for j in range(1,min(n+1,len(A)-1)+1))
+        t.append(rhs/(Fraction(n+1)*A[0]))
+    return [Fraction(0)]*ell+t
+
+
 def first_nonzero_moment(weights, differential):
     """Return (first moment index, nonzero moment) or None."""
     a = _weights(weights)

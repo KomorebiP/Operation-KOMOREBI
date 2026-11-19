@@ -34,6 +34,143 @@ P\!\left(\frac{n-k}{2}\right)
 
 This formula includes every parity and zero-weight boundary. Shifting from \(x^i\) to \((x+\lambda)^i\) is a unitriangular basis change, so every \(W_N\) is independent of the binomial shift \(\lambda\).
 
+### Algebraic ordinary generating function for every finite differential operator
+
+The moment sequence has a second universal representation that is independent of taking Hankel determinants. Put \(h(z)=1-4z^2\) and \(D=\deg P\). The original unperturbed even moments have the generating function
+
+\[
+M_P(z)=\sum_{m\ge0}P(m)\binom{2m}{m}z^{2m}
+=\sum_{d=0}^{D}a_d\frac{(2d)!}{d!}
+\frac{z^{2d}}{h(z)^{d+1/2}}
+=\frac{R_0(z)}{h(z)^{D+1/2}},
+\]
+
+where the explicit polynomial
+
+\[
+R_0(z)=\sum_{d=0}^{D}a_d\frac{(2d)!}{d!}
+z^{2d}h(z)^{D-d}
+\]
+
+has degree at most \(2D\).
+
+Define the formal operator \(\mathscr T f=z\frac{d}{dz}(zf)=z(f+zf')\). Its \(k\)-fold iterate has coefficient identity
+
+\[
+[z^n]\mathscr T^kM_P(z)
+=n^{\underline k}F_P[x^{n-k}].
+\]
+
+Thus the perturbed moment generating function is
+
+\[
+M_{P,\mathbf c}(z)=\sum_{n\ge0}\mu_nz^n
+=\sum_{k=0}^r c_k\mathscr T^kM_P(z).
+\]
+
+**Theorem 1A (algebraic moment generating functions).** For every polynomial \(P\) of degree \(D\) and every finite constant-coefficient differential operator of order \(r\),
+
+\[
+\boxed{
+M_{P,\mathbf c}(z)=
+\frac{R_{P,\mathbf c}(z)}
+{(1-4z^2)^{D+r+1/2}},
+\qquad
+\deg R_{P,\mathbf c}\le2(D+r).
+}
+\]
+
+Both the numerator and an exact first-order differential equation are obtained by finite polynomial arithmetic. Starting from \(R_0\) above, define
+
+\[
+R_{k+1}(z)=
+z h(z)\bigl(R_k(z)+zR_k'(z)\bigr)
++4(2D+2k+1)z^3R_k(z)
+\quad(0\le k<r),
+\]
+
+and assemble
+
+\[
+\boxed{
+R_{P,\mathbf c}(z)=
+\sum_{k=0}^r c_kR_k(z)h(z)^{r-k}.
+}
+\]
+
+To prove the degree bound, suppose \(\deg R_k\le2(D+k)\). A coefficient \(b_jz^j\) of \(R_k\) contributes \((j+1)b_jz^{j+1}\) and \(4(2D+2k-j)b_jz^{j+3}\) to \(R_{k+1}\). The second contribution vanishes for \(j=2(D+k)\), so \(\deg R_{k+1}\le2(D+k+1)\). Multiplication by \(h^{r-k}\) gives the asserted common bound. This proves the theorem by formal differentiation, including zero weights and missing identity terms.
+
+Writing \(\beta=D+r+1/2\), the same representation implies the exact differential equation
+
+\[
+\boxed{
+h(z)R(z)M'(z)=
+\bigl[h(z)R'(z)+8\beta zR(z)\bigr]M(z),
+\qquad R=R_{P,\mathbf c}.
+}
+\]
+
+Consequently the moments satisfy a finite-width recurrence with polynomial coefficients in the index. If \(R(0)=0\), the leading coefficient of that recurrence can vanish at the initial indices, so it must be interpreted with the exact initial moments rather than divided through blindly. No assertion is made that the **Hankel determinant sequence** of an arbitrary polynomial \(P\) has a rational generating function.
+
+### Removing singular starts: a universal forward recurrence
+
+A stronger computational consequence follows from the known initial zero block. If \(P\not\equiv0\) and \(\mathcal D\not\equiv0\), let \(\nu\) and \(\kappa\) be the least indices with \(a_\nu\ne0\) and \(c_\kappa\ne0\). Put \(\ell=2\nu+\kappa\). The first nonzero moment is
+
+\[
+\mu_\ell=c_\kappa a_\nu\frac{\ell!}{\nu!}\ne0.
+\]
+
+Because the denominator of \(M(z)\) equals \(1\) at \(z=0\), the algebraic numerator has an exact factor \(R(z)=z^\ell\widetilde R(z)\) with \(\widetilde R(0)=\mu_\ell\). Define the shifted moment series
+
+\[
+T(z)=z^{-\ell}M(z)=\frac{\widetilde R(z)}
+{h(z)^{D+r+1/2}}
+=\sum_{n\ge0}t_nz^n,
+\qquad t_n=\mu_{n+\ell}.
+\]
+
+Put \(\alpha=D+r+1/2\), and form the explicit polynomials
+
+\[
+A(z)=h(z)\widetilde R(z),\qquad
+B(z)=h(z)\widetilde R'(z)+8\alpha z\widetilde R(z).
+\]
+
+Then \(A(z)T'(z)=B(z)T(z)\), and \(A(0)=t_0=\mu_\ell\ne0\).
+
+**Theorem 1B (regularized polynomial-coefficient recurrence).** Writing \(A(z)=\sum_j A_jz^j\), \(B(z)=\sum_jB_jz^j\), the complete infinite tail of moments is determined by the one nonzero initial value \(t_0=\mu_\ell\) and
+
+\[
+\boxed{
+t_{n+1}=
+\frac{\displaystyle\sum_{j=0}^{\deg B}B_jt_{n-j}
+-\displaystyle\sum_{j=1}^{\deg A}A_j(n-j+1)t_{n-j+1}}
+{(n+1)A_0},
+\qquad n\ge0,
+}
+\]
+
+where \(t_j=0\) for \(j<0\). No denominator vanishes in characteristic zero. Moreover,
+
+\[
+\boxed{\deg A\le 2(D+r)-\ell+2.}
+\]
+
+This is a finite-width, polynomial-coefficient recurrence, not generally a constant-coefficient recurrence for the Hankel determinants. It is valid for rational, complex, and other characteristic-zero parameters. If the moment sequence is identically zero, the zero formula is handled separately without an artificial division by \(A_0=0\).
+
+The recurrence follows simply by comparing coefficients in \(AT'=BT\). Its zero-prefix removal is essential: without it, a recurrence derived from the unreduced numerator can have an unusable zero leading coefficient. The exact implementation preserves the original \(\ell\) and reconstructs every \(\mu_n\), including all initial zeros.
+
+For the worked example \(P(m)=1+m\) and \(\mathcal D=1+2\partial_x+\partial_x^2\),
+
+\[
+\boxed{
+M(z)=\frac{1+2z-8z^2-4z^3+52z^4-16z^5-24z^6}
+{(1-4z^2)^{7/2}}.
+}
+\]
+
+The exact moment sequence begins \(1,2,6,24,66,180,620,1120,4830,6300,\ldots\). The construction was independently checked against the finite monomial definition using rational arithmetic, including exceptional zeros and rational parameter choices.
+
 ## 2. Exact Chebyshev derivative products
 
 Let \(C_n(x)=2T_n(x/2)\), with \(C_0=2,C_1=x\), and \(C_{n+1}=xC_n-C_{n-1}\). For \(k\ge1,n\ge k\),
