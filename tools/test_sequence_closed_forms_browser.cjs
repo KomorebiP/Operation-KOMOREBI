@@ -8,8 +8,8 @@ const base=process.argv[2]||'http://127.0.0.1:8846/';
 const output=process.argv[3]||'.sequence-checks/reports/closed-forms-browser';
 fs.mkdirSync(output,{recursive:true});
 const url=name=>new URL(name,base).href;
-async function fit(page){
-  await page.evaluate(async()=>{await document.fonts.ready;await new Promise(ok=>requestAnimationFrame(()=>requestAnimationFrame(ok)));});
+async function fit(page,staticOnly=false){
+  if(!staticOnly)await page.evaluate(async()=>{await document.fonts.ready;await new Promise(ok=>requestAnimationFrame(()=>requestAnimationFrame(ok)));});
   const dims=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,client:document.documentElement.clientWidth}));
   assert.ok(dims.scroll<=dims.client+1,'Unexpected horizontal page overflow: '+JSON.stringify(dims));
 }
@@ -123,7 +123,7 @@ async function valueRows(page){
     assert.equal(await page.locator('#cf-form').count(),0);
     await page.locator('#closed-calculator-panel>summary').click();
     assert.match(await page.locator('#closed-calculator-panel').textContent(),/static 24-term table/);
-    await fit(page);
+    await fit(page,true);
     report.noJavaScript=true;
     await noJs.close();
     assert.deepEqual(report.errors,[]);
