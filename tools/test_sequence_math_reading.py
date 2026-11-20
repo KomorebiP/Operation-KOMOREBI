@@ -57,14 +57,16 @@ class MathematicalReadingTests(unittest.TestCase):
         import re
         source=(ROOT/'research/sequence-closed-forms/ALGEBRAIC_KERNEL_EXAMPLES.md').read_text(encoding='utf-8')
         content=mathematical_example_gallery(source)
-        self.assertEqual(content.count('class="sl-kernel-example"'),23)
+        self.assertEqual(content.count('class="sl-kernel-example"'),32)
         self.assertEqual(content.count('class="arithmatex sl-math-display"'),source.count(r'\['))
         self.assertIn('kernel-classical',content)
         self.assertIn('kernel-weighted',content)
+        self.assertIn('kernel-polynomial',content)
+        self.assertIn('kernel-recurrence',content)
         self.assertIn('Fibonacci',content)
         self.assertNotIn('<h1',content)
         targets=re.findall(r'href="#(kernel-example-\d+)"',content)
-        self.assertEqual(targets,['kernel-example-'+str(n) for n in range(1,24)])
+        self.assertEqual(targets,['kernel-example-'+str(n) for n in range(1,33)])
         for target in targets:
             self.assertEqual(content.count('id="'+target+'"'),1)
         # A lost or duplicate example must not silently ship an incomplete gallery.

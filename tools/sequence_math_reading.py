@@ -8,6 +8,8 @@ use the same renderer and need no extra Python packages.
 from html import escape
 import re
 
+KERNEL_EXAMPLE_COUNT = 32
+
 
 def _inline(raw):
     holders=[]
@@ -140,14 +142,14 @@ def mathematical_reading_fragment(source, *, include_outline=False):
 
 
 def mathematical_example_gallery(source):
-    """Render the 23 source examples as native, keyboard-operable disclosures.
+    """Render the source examples as native, keyboard-operable disclosures.
 
     Equations remain in the static HTML, including when JavaScript is disabled.
     The source heading order is checked so a missing example fails the build.
     """
     headings=list(re.finditer(r'^## Example (\d+)\. (.+)$',source,re.MULTILINE))
-    if [int(item[1]) for item in headings]!=list(range(1,24)):
-        raise ValueError('The algebraic-kernel gallery must contain examples 1 through 23')
+    if [int(item[1]) for item in headings]!=list(range(1,KERNEL_EXAMPLE_COUNT+1)):
+        raise ValueError('The algebraic-kernel gallery must contain examples 1 through '+str(KERNEL_EXAMPLE_COUNT))
     groups={
         1:('kernel-classical','Classical and multistep kernels',
            'Examples 1–6 change the coefficient kernel itself.'),
@@ -157,11 +159,15 @@ def mathematical_example_gallery(source):
             'Examples 14–20 use three, four, and five positions per block.'),
         21:('kernel-weighted','Polynomial and Fibonacci weights',
             'Examples 21–23 weight the block index beyond a single geometric factor.'),
+        24:('kernel-polynomial','Higher polynomial weights',
+            'Examples 24–25 use square and falling-factorial weights.'),
+        26:('kernel-recurrence','Recurrence and periodic weights',
+            'Examples 26–32 include Lucas and Pell numbers, periodic selection, finite support, and mixed weights.'),
     }
     parts=[
         '<section id="kernel-examples" class="sl-math-manuscript sl-kernel-gallery" '
         'aria-labelledby="kernel-examples-heading">',
-        '<h2 id="kernel-examples-heading">23 worked examples</h2>',
+        '<h2 id="kernel-examples-heading">'+str(KERNEL_EXAMPLE_COUNT)+' worked examples</h2>',
         mathematical_reading_fragment(source[:headings[0].start()]),
         '<nav class="sl-binomial-jumps" aria-label="Example groups">'
         +''.join('<a href="#'+key+'">'+title+'</a>'

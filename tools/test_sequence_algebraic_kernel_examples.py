@@ -5,13 +5,15 @@ Author: Komorebi P. These tests do not establish identities for all n.
 from fractions import Fraction
 from math import comb
 from pathlib import Path
+import re
 import sys
 import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from sequence_algebraic_kernel_examples import (
-    block_values, example_values, kernel_coefficients,
-    kernel_generating_coefficients, rational_at_auxiliary,
+    block_generating_polynomials, block_values, example_values,
+    expanded_example_generating_values, kernel_coefficients,
+    kernel_generating_coefficients, quadratic_evaluate, rational_at_auxiliary,
 )
 
 
@@ -87,6 +89,60 @@ class AlgebraicKernelExamplesTests(unittest.TestCase):
         self.assertEqual(examples[21][9], 336)
         self.assertEqual(examples[22][8], 280)
         self.assertEqual(examples[23][12], 1485)
+
+    def test_nine_recurrence_weight_examples_by_independent_expansions(self):
+        # Exactly n=0,...,23 for each of the nine displayed specializations.
+        direct = example_values(24)
+        generating = expanded_example_generating_values(24)
+        self.assertEqual(set(generating), set(range(24, 33)))
+        for number, coefficients in generating.items():
+            with self.subTest(example=number):
+                self.assertEqual(len(coefficients), 24)
+                self.assertEqual(direct[number], coefficients)
+
+    def test_q_interpolation_at_an_unused_rational_parameter(self):
+        count, d, r, q = 24, 3, 1, Fraction(-2, 3)
+        polynomials = block_generating_polynomials(d, r, count=count)
+        reconstructed = [sum(c*q**m for m, c in enumerate(p))
+                         for p in polynomials]
+        expected = kernel_generating_coefficients(
+            [1, 0, 0, q], [1, 1, 1], [1, r], count)
+        self.assertEqual(reconstructed, expected)
+        for n, polynomial in enumerate(polynomials):
+            self.assertTrue(all(c == 0 for c in polynomial[n//d+1:]))
+
+    def test_exact_characteristic_root_arithmetic(self):
+        cases = [
+            ([-1, -1, 1], Fraction(1, 2), Fraction(1, 2), 5),
+            ([-1, -2, 1], 1, 1, 2),
+            ([1, 1, 1], Fraction(-1, 2), Fraction(1, 2), -3),
+        ]
+        for polynomial, a, b, square in cases:
+            with self.subTest(polynomial=polynomial):
+                self.assertEqual(quadratic_evaluate(polynomial, a, b, square),
+                                 (0, 0))
+
+    def test_expanded_example_lists_and_worked_values(self):
+        source = (Path(__file__).resolve().parents[1]
+                  / 'research/sequence-closed-forms/ALGEBRAIC_KERNEL_EXAMPLES.md')
+        manuscript = source.read_text(encoding='utf-8')
+        values = example_values(13)
+        for number in range(24, 33):
+            with self.subTest(example=number):
+                section = manuscript.split(f'## Example {number}.', 1)[1]
+                section = section.split('\n## Example ', 1)[0]
+                terms = section.split('The first terms are', 1)[1]
+                terms = re.search(r'\\begin\{gathered\}(.*?)\\end\{gathered\}',
+                                  terms, re.S).group(1)
+                displayed = list(map(int, re.findall(r'-?\d+', terms)))
+                self.assertEqual(displayed, values[number][:12])
+        for number, index, value in [
+            (24, 8, 1120), (25, 12, 5940), (26, 8, 490),
+            (27, 9, 420), (28, 12, 924), (29, 7, 13),
+            (30, 6, 40), (30, 7, 140), (31, 5, 14), (32, 4, 72),
+        ]:
+            with self.subTest(example=number, index=index):
+                self.assertEqual(values[number][index], value)
 
 
 if __name__ == '__main__':
