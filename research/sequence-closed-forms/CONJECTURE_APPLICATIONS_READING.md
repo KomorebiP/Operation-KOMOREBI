@@ -74,8 +74,10 @@ The distinction between these two uses of "Euler" is essential to the jet argume
 Set \(D=t\,d/dt\), \(\omega=-i\), where \(i^2=-1\), and let
 
 \[
-S_n(t)=D^n\left(\frac{t}{1-t}\right)
-=\sum_{k\ge1}k^nt^k.
+\begin{aligned}
+S_n(t)&=D^n\left(\frac{t}{1-t}\right)\\
+&=\sum_{k\ge1}k^nt^k.
+\end{aligned}
 \]
 
 The right-hand sum is a formal-power-series identity. At \(t=\omega\), \(S_n\) means evaluation of its **rational function**, not summation of a generally nonconvergent series.
@@ -89,8 +91,10 @@ The right-hand sum is a formal-power-series identity. At \(t=\omega\), \(S_n\) m
 **Proof.** Define
 
 \[
-Y(t)=i\frac{1+t}{1-t},
-\qquad t(z)=\omega e^{iz}.
+\begin{aligned}
+Y(t)&=i\frac{1+t}{1-t},\\
+t(z)&=\omega e^{iz}.
+\end{aligned}
 \]
 
 Then \(Y(t(0))=1\), and direct differentiation gives
@@ -118,10 +122,13 @@ This is a rank-two coefficient ring whether or not \(-1\) is a square modulo \(q
 
 \[
 \boxed{
-E_n\equiv
-\frac{2i^{n+1}}{1-\omega^q}
-\sum_{k=1}^{q}k^n\omega^k
+\begin{aligned}
+E_n&\equiv
+\frac{2i^{n+1}}{1-\omega^q}\\
+&\quad\times\sum_{k=1}^{q}
+k^n\omega^k
 \pmod q.
+\end{aligned}
 }
 \]
 
@@ -130,10 +137,11 @@ The denominator \(1-\omega^q\) is a unit in \(R_q\).
 **Proof.** Since \((k+q)^n\equiv k^n\pmod q\),
 
 \[
+\begin{aligned}
 (1-t^q)S_n(t)
-\equiv
-\sum_{k=1}^{q}k^nt^k
-\pmod q.
+&\equiv\sum_{k=1}^{q}k^nt^k\\
+&\pmod q.
+\end{aligned}
 \]
 
 Both sides are rational expressions after clearing denominators, so the identity can be evaluated at \(t=\omega\). Because \(q\) is odd, \(\omega^q=\pm i\) and the norm of \(1-\omega^q\) is two, which is invertible modulo \(q\). Division and Lemma 3.1 give the displayed formula.
@@ -176,10 +184,11 @@ L_r&=p^{r-1}\operatorname{lcm}(p-1,4),\\
 
 \[
 \boxed{
+\begin{aligned}
 E_{n+L_r}-E_n
-\equiv
--\varepsilon_{p,n}p^nE_n
-\pmod{p^r}.
+&\equiv-\varepsilon_{p,n}p^nE_n\\
+&\pmod{p^r}.
+\end{aligned}
 }
 \]
 
@@ -233,10 +242,10 @@ Let \(\mathbb Z_p\) be the ring of \(p\)-adic integers and put
 \boxed{
 \begin{gathered}
 p^{c+1-j}\mid E_{n+j}\\
-(0\le j\le c)
-\end{gathered}
-\quad\Longleftrightarrow\quad
+(0\le j\le c)\\
+\Longleftrightarrow\\
 A_n(t)\in J_p^{c+1}.
+\end{gathered}
 }
 \]
 
@@ -257,10 +266,11 @@ S_n(t)=\frac{tA_n(t)}{(1-t)^{n+1}}
 differs from \(A_n(t)\) by a unit. Further,
 
 \[
+\begin{aligned}
 D^jS_n(\omega)
-=
-j!\,\omega^jc_j+
-\sum_{k<j}\gamma_{j,k}c_k.
+&=j!\,\omega^jc_j\\
+&\quad+\sum_{k<j}\gamma_{j,k}c_k.
+\end{aligned}
 \]
 
 For \(j<p\), the diagonal factor \(j!\omega^j\) is a \(p\)-adic unit. The system is triangular, so the weighted divisibilities of the Euler numbers are equivalent, successively, to
@@ -294,9 +304,10 @@ Theorem 6.1 with \(c=2\) therefore gives an **equivalent formulation of the open
 
 \[
 \boxed{
-A_n(t)\notin(p,t^2+1)^3
-\quad
+\begin{gathered}
+A_n(t)\notin(p,t^2+1)^3\\
 \text{for all odd }p,\ n\ge1.
+\end{gathered}
 }
 \]
 
@@ -307,10 +318,11 @@ This equivalence is proved. The nonmembership statement itself is **not proved**
 Divide \(A_n(t)\) repeatedly by the monic polynomial \(Q(t)=1+t^2\) to obtain the unique expansion
 
 \[
+\begin{aligned}
 A_n(t)
-=
-\sum_{j\ge0}(a_j+b_jt)Q(t)^j,
-\qquad a_j,b_j\in\mathbb Z.
+&=\sum_{j\ge0}(a_j+b_jt)Q(t)^j,\\
+&a_j,b_j\in\mathbb Z.
+\end{aligned}
 \]
 
 Then the conjectural obstruction at prime \(p\) is precisely the simultaneous condition
@@ -334,9 +346,10 @@ The recurrence for \(A_n\) in Section 2 and monic polynomial division make these
 At index \(n=978\), the recorded exact checks confirm
 
 \[
-A_{978}(t)\in J_{43}^2,
-\qquad
-A_{978}(t)\notin J_{43}^3.
+\begin{aligned}
+A_{978}(t)&\in J_{43}^2,\\
+A_{978}(t)&\notin J_{43}^3.
+\end{aligned}
 \]
 
 Thus the weighted two-term obstruction can occur without the forbidden three-term obstruction. This is a **positive test of the distinction**, not a counterexample to the conjecture. The known preperiod example \(s(43^{980})=978\) is retained with attribution to the source discussion.
@@ -387,24 +400,24 @@ This elementary corollary extends the recorded fixed-prime computations to compo
 For positive integers \(d,h\), define the size-\((n+1)\) determinant
 
 \[
+\begin{aligned}
 H_n(d,h)
-=
-\det\left[
+&=\det\left[
 \frac1{d(i+j)+h}
 \right]_{0\le i,j\le n}.
+\end{aligned}
 \]
 
 The classical Cauchy identity gives
 
 \[
 \boxed{
-H_n(d,h)=
-\frac{
-d^{n(n+1)}
-\left(\prod_{k=1}^{n}k!\right)^2
-}{
-\prod_{i,j=0}^{n}(d(i+j)+h)
-}.
+\begin{gathered}
+H_n(d,h)=\\[-2pt]
+\frac{d^{n(n+1)}
+\bigl(\prod_{k=1}^{n}k!\bigr)^2}
+{\prod_{i,j=0}^{n}(d(i+j)+h)}.
+\end{gathered}
 }
 \]
 
@@ -480,9 +493,10 @@ This section summarizes earlier proved results; the complete proofs and independ
 For an arbitrary integer \(m\ge2\), put
 
 \[
-a_n(u,v)
-=[t^{n-1}](1+ut+vt^m)^n
-\quad(n\ge1),
+\begin{aligned}
+a_n(u,v)&=[t^{n-1}](1+ut+vt^m)^n,\\
+&n\ge1.
+\end{aligned}
 \]
 
 with \(a_0=0\). The exact terminating sum can be written compactly by taking
@@ -502,8 +516,10 @@ u^{j_k}v^k.
 Let \(T\) be uniquely specified by
 
 \[
-T=x(1+uT+vT^m),
-\qquad T(0)=0.
+\begin{aligned}
+T&=x(1+uT+vT^m),\\
+T(0)&=0.
+\end{aligned}
 \]
 
 Classical Lagrange coefficient transfer gives the algebraic generating function
