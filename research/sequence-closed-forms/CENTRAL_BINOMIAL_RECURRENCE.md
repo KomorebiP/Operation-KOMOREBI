@@ -469,13 +469,13 @@ Let \(R(x)=F(T)/(1-x\Phi'(T))\). The formal residue, denoted by
 Changing variables in that residue cancels the common derivative factor:
 
 \[
-\begin{aligned}
-[x^n]R(x)
-&=\operatorname{Res}_{x=0}\frac{R(x)}{x^{n+1}}\,dx\\
-&=\operatorname{Res}_{t=0}
+\begin{gathered}
+\left[x^n\right]R(x)\\
+=\operatorname{Res}_{x=0}\frac{R(x)}{x^{n+1}}\,dx\\
+=\operatorname{Res}_{t=0}
 \frac{F(t)\Phi(t)^n}{t^{n+1}}\,dt\\
-&=[t^n]F(t)\Phi(t)^n.
-\end{aligned}
+=[t^n]F(t)\Phi(t)^n.
+\end{gathered}
 \]
 
 This proves the generating-function identity, including its constant term
