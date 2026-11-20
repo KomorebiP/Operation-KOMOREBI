@@ -64,6 +64,11 @@ async function layout(page){
       assert.equal(await page.locator('main h1').count(),1);
       assert.equal(await page.locator('.sl-kernel-example').count(),23);
       assert.equal(await page.locator('.sl-kernel-example[open]').count(),0);
+      // Leading [x^n] must remain coefficient extraction, not an AMS layout option.
+      const residueProof=page.locator('.sl-math-display').filter({hasText:'Res'});
+      assert.equal(await residueProof.count(),1);
+      const residueMath=await residueProof.locator('mjx-assistive-mml').textContent();
+      assert.match(residueMath.replace(/[\s\u2060-\u2064]/g,''),/^\[xn\]R\(x\)=Res/);
       const brokenTargets=await page.evaluate(()=>[...document.querySelectorAll(
         '.sl-binomial-jumps a,.sl-proof-outline a,.sl-example-permalink a'
       )].filter(link=>link.hash&&!document.getElementById(link.hash.slice(1))).map(link=>link.hash));
