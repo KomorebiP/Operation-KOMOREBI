@@ -132,7 +132,14 @@ The square root is the unique formal series with constant term one whose
 square is \(1-4x^2\). The central binomial expansion is
 \(S(x)^{-1}=\sum_{m\ge0}\binom{2m}{m}x^{2m}\).
 Its coefficients follow directly from
-\((m+1)\binom{2m+2}{m+1}=2(2m+1)\binom{2m}{m}\).
+
+\[
+\begin{gathered}
+(m+1)\binom{2m+2}{m+1}\\
+=2(2m+1)\binom{2m}{m}.
+\end{gathered}
+\]
+
 Separating the even and odd indices gives
 
 \[
@@ -156,7 +163,12 @@ r(G_r-1)+QxG_r\\
 Equivalently,
 
 \[
-\boxed{2D(x)G_r(x)-(r-1)=(r+1)H(x).}
+\boxed{
+\begin{gathered}
+2DG_r-(r-1)\\
+=(r+1)H.
+\end{gathered}
+}
 \]
 
 Direct formal differentiation gives \((1-4x^2)H'(x)=2H(x)\).
@@ -232,12 +244,12 @@ D&=\frac{(r+t)(1+rt)}{1+t^2}.
 The proposed series \(F=(1+t)/(S(1+rt))\) therefore satisfies
 
 \[
-\begin{aligned}
-2DF-(r-1)
-&=\frac{2(r+t)}{1-t}-(r-1)\\
-&=(r+1)\frac{1+t}{1-t}\\
-&=(r+1)H.
-\end{aligned}
+\begin{gathered}
+2DF-(r-1)\\
+=\frac{2(r+t)}{1-t}-(r-1)\\
+=(r+1)\frac{1+t}{1-t}\\
+=(r+1)H.
+\end{gathered}
 \]
 
 Thus \(D(G_r-F)=0\). For any fixed complex \(r\), the series \(D\)
@@ -287,10 +299,12 @@ a_4(4)&=256-64+64-16+6\\
 The simpler recurrence gives the same value using only the preceding term:
 
 \[
-\begin{aligned}
-4a_4+17(-57)&=5\binom31,\\
-4a_4&=984,\qquad a_4=246.
-\end{aligned}
+\begin{gathered}
+4a_4+17(-57)\\
+=5\binom31,\\
+4a_4=984,\\
+a_4=246.
+\end{gathered}
 \]
 
 The browser calculator evaluates integer parameters from \(-12\) through
@@ -480,8 +494,9 @@ in \(\{0,\ldots,d-1\}\). Define
 \[
 \begin{aligned}
 m_k&=\lfloor k/d\rfloor,\\
+\omega_k&=w_{k\bmod d}\,q^{m_k},\\
 A_n&=\sum_{k=0}^n
-w_{k\bmod d}\,q^{m_k}\binom n{m_k}(-r)^{n-k}.
+\omega_k\binom n{m_k}(-r)^{n-k}.
 \end{aligned}
 \]
 
@@ -496,8 +511,10 @@ Put
 \[
 \begin{aligned}
 W(t)&=\sum_{j=0}^{d-1}w_jt^j,\\
-T&=x(1+qT^d),\qquad T(0)=0,\\
-V&=qT^d,\qquad G(x)=\sum_{n\ge0}A_nx^n.
+T&=x(1+qT^d),\\
+T(0)&=0,\\
+V&=qT^d,\\
+G(x)&=\sum_{n\ge0}A_nx^n.
 \end{aligned}
 \]
 
@@ -570,13 +587,13 @@ selection is required.
 ### A first-order recurrence on each residue class
 
 For \(r=0\), fix \(j\in\{0,\ldots,d-1\}\) and set
-\(B_m=A_{dm+j}\). Define
+\(B_m=A_{dm+j}\). Write \(N=dm+j\) and \(M=N-m\), and define
 
 \[
 \begin{aligned}
 L_{m,j}&=(m+1)\prod_{h=1}^{d-1}
-\bigl((d-1)m+j+h\bigr),\\
-R_{m,j}&=q\prod_{h=1}^{d}(dm+j+h).
+(M+h),\\
+R_{m,j}&=q\prod_{h=1}^{d}(N+h).
 \end{aligned}
 \]
 
@@ -599,8 +616,10 @@ Let \(P\) be any polynomial. Replacing a block weight \(q^m\) with
 \(P(m)q^m\) corresponds to the differential operator
 
 \[
-D_q=q\frac{\partial}{\partial q},\qquad
-P(D_q)q^m=P(m)q^m.
+\begin{aligned}
+D_q&=q\frac{\partial}{\partial q},\\
+P(D_q)q^m&=P(m)q^m.
+\end{aligned}
 \]
 
 Here the differentiation is at fixed \(x\), before a numerical value is

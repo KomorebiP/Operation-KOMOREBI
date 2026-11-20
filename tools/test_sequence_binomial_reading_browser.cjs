@@ -18,6 +18,11 @@ async function ready(page){
     await document.fonts.ready;
   });
 }
+async function settleLayout(page){
+  // ResizeObserver updates the reader's equation containment on the next frame.
+  await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(
+    ()=>requestAnimationFrame(resolve))));
+}
 async function layout(page){
   return page.evaluate(()=>({
     page:{scroll:document.documentElement.scrollWidth,client:document.documentElement.clientWidth},
@@ -25,6 +30,22 @@ async function layout(page){
       node=>node.getBoundingClientRect().width>0&&node.scrollWidth>node.clientWidth+2
     ).map(node=>({width:node.clientWidth,scroll:node.scrollWidth,
       tex:node.querySelector('mjx-assistive-mml')?.textContent||node.textContent})),
+    inlineOverflow:[...document.querySelectorAll('main span.arithmatex')].filter(node=>{
+      const math=node.querySelector('mjx-container');
+      return node.clientWidth>0&&math&&math.getBoundingClientRect().width>node.clientWidth+2;
+    }).map(node=>({width:node.clientWidth,
+      mathWidth:node.querySelector('mjx-container').getBoundingClientRect().width,
+      tex:node.querySelector('mjx-assistive-mml')?.textContent||node.textContent})),
+    pageOverflow:document.documentElement.scrollWidth>document.documentElement.clientWidth+1
+      ?[...document.querySelectorAll('body *')].filter(node=>{
+        const box=node.getBoundingClientRect();
+        if(!box.width||box.right<=document.documentElement.clientWidth+1)return false;
+        for(let parent=node.parentElement;parent;parent=parent.parentElement){
+          if(['auto','scroll','hidden','clip'].includes(getComputedStyle(parent).overflowX))return false;
+        }
+        return true;
+      }).slice(0,20).map(node=>({tag:node.tagName,id:node.id,className:node.className,
+        right:node.getBoundingClientRect().right,text:node.textContent.slice(0,180)})):[],
     mathErrors:[...document.querySelectorAll('[data-mml-node="merror"],[data-mjx-error]')]
       .map(node=>node.textContent),
   }));
@@ -49,6 +70,7 @@ async function layout(page){
       assert.deepEqual(brokenTargets,[]);
       await page.locator('[data-example-action="open"]').click();
       assert.equal(await page.locator('.sl-kernel-example[open]').count(),23);
+      await settleLayout(page);
       const measured=await layout(page);
       report.widths.push({width,...measured});
       assert.ok(measured.page.scroll<=measured.page.client+1,'Horizontal page overflow');
@@ -71,9 +93,11 @@ async function layout(page){
       assert.equal(await page.locator('#kernel-example-20').evaluate(node=>node.open),true);
       if(width===320){
         await page.evaluate(()=>document.documentElement.style.fontSize='200%');
+        await settleLayout(page);
         const enlarged=await layout(page);
-        assert.ok(enlarged.page.scroll<=enlarged.page.client+1,'Enlarged text overflows the page');
+        report.enlarged=enlarged;
         await page.locator('#kernel-example-20').screenshot({path:path.join(output,'weighted-example-enlarged-320.png')});
+        assert.ok(enlarged.page.scroll<=enlarged.page.client+1,'Enlarged text overflows the page');
       }
       await context.close();
     }
@@ -94,7 +118,13 @@ async function layout(page){
     const overflow=report.widths.flatMap(item=>item.equationOverflow.map(
       formula=>({width:item.width,...formula})));
     assert.deepEqual(overflow,[],'Equations should fit without horizontal scrolling at ordinary text size');
+    const inlineOverflow=report.widths.flatMap(item=>item.inlineOverflow.map(
+      formula=>({width:item.width,...formula})));
+    assert.deepEqual(inlineOverflow,[],'Inline equations should fit at ordinary text size');
     report.status='passed';
+  }catch(error){
+    report.status='failed';report.failure=error.message;
+    throw error;
   }finally{
     await browser.close();
     fs.writeFileSync(path.join(output,'report.json'),JSON.stringify(report,null,2)+'\n');

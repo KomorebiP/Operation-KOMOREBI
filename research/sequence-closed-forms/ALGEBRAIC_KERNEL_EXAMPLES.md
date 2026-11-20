@@ -39,8 +39,17 @@ For \((q,r)=(3,1)\), the first terms are
 \end{gathered}
 \]
 
-For example, \(a_3=-1+9-27+27=8\). This is the block theorem at
-\(d=1\), where its algebraic expression is rational.
+For example,
+
+\[
+\begin{aligned}
+a_3={}&-1+9\\
+&-27+27\\
+={}&8.
+\end{aligned}
+\]
+
+This is the block theorem at \(d=1\), where its algebraic expression is rational.
 
 ## Example 2. Central binomial coefficients
 
@@ -166,7 +175,11 @@ The first terms are
 At \(n=8\), the allowed pairs are \((a,b)=(4,0),(1,2)\), so
 
 \[
-a_8=\frac{8!}{4!4!}+\frac{8!}{1!2!5!}=238.
+\begin{aligned}
+a_8&=\frac{8!}{4!4!}+\frac{8!}{1!2!5!}\\
+&=70+168\\
+&=238.
+\end{aligned}
 \]
 
 This kernel combines steps of sizes two and three. It illustrates the
@@ -196,8 +209,17 @@ The first terms are
 \]
 
 The coefficients of \((1+t+t^2)^3\) through degree three are
-\(1,3,6,7\). Thus \(a_3=1+3+6+7=17\). The numerator \(F\) controls
-a separate weighting while the auxiliary equation stays unchanged.
+\(1,3,6,7\). Thus
+
+\[
+\begin{aligned}
+a_3&=1+3+6+7\\
+&=17.
+\end{aligned}
+\]
+
+The numerator \(F\) controls a separate weighting while the auxiliary equation
+stays unchanged.
 
 ## Example 7. The original family with symbolic r
 
@@ -229,8 +251,17 @@ a_4&=r^4-r^3+4r^2-4r+6.
 \]
 
 For example, substituting \(r=3\) gives
-\(a_3(3)=-27+9-9+3=-24\). The four-term recurrence in the main proof
-is an identity between these polynomials and holds for every complex parameter.
+
+\[
+\begin{aligned}
+a_3(3)={}&-27+9\\
+&-9+3\\
+={}&-24.
+\end{aligned}
+\]
+
+The four-term recurrence in the main proof is an identity between these
+polynomials and holds for every complex parameter.
 
 ## Example 8. The rational specialization r=-1
 
@@ -256,8 +287,17 @@ The first terms are
 \end{gathered}
 \]
 
-For instance, \(a_4=1+1+4+4+6=16\). A special parameter can reduce
-the algebraic degree of the generating function.
+For instance,
+
+\[
+\begin{aligned}
+a_4={}&1+1+4\\
+&+4+6\\
+={}&16.
+\end{aligned}
+\]
+
+A special parameter can reduce the algebraic degree of the generating function.
 
 ## Example 9. Even central binomial coefficients at r=1
 
@@ -286,8 +326,17 @@ The first terms are
 \end{gathered}
 \]
 
-For example, \(a_4=1-1+4-4+6=6\). The zeros on odd indices are an
-exact consequence of the even generating function.
+For example,
+
+\[
+\begin{aligned}
+a_4={}&1-1+4\\
+&-4+6\\
+={}&6.
+\end{aligned}
+\]
+
+The zeros on odd indices are an exact consequence of the even generating function.
 
 ## Example 10. The r=2 recurrence
 
@@ -320,7 +369,16 @@ The first terms are
 \end{gathered}
 \]
 
-At \(n=4\), the defining sum is \(16-8+16-8+6=22\).
+At \(n=4\), the defining sum gives
+
+\[
+\begin{aligned}
+a_4={}&16-8+16\\
+&-8+6\\
+={}&22.
+\end{aligned}
+\]
+
 Easwar proves this fixed-parameter recurrence in Theorem 7.1 of
 [arXiv:2608.22053v2](https://arxiv.org/html/2608.22053v2#S7).
 The main theorem on this page treats \(r\) as a free parameter.
@@ -357,7 +415,16 @@ The first terms are
 \end{gathered}
 \]
 
-For example, \(a_4=256-64+64-16+6=246\).
+For example,
+
+\[
+\begin{aligned}
+a_4={}&256-64\\
+&+64-16+6\\
+={}&246.
+\end{aligned}
+\]
+
 The uniform proof verifies this recorded recurrence. An equivalent recurrence
 was recorded for the sign-changed sequence in A133444, so the conjecture label
 on A127363 alone does not establish historical priority. See the page's
@@ -422,8 +489,18 @@ The first terms are
 \end{gathered}
 \]
 
-For example, \(a_8=2^4\binom84=1120\). The parameter \(q\) weights
-the block index, while \(r\) weights the complementary exponent \(n-k\).
+For example,
+
+\[
+\begin{aligned}
+a_8&=2^4\binom84\\
+&=16\cdot70\\
+&=1120.
+\end{aligned}
+\]
+
+The parameter \(q\) weights the block index, while \(r\) weights the
+complementary exponent \(n-k\).
 
 ## Example 14. Three-position blocks
 
@@ -475,8 +552,17 @@ The first terms are
 \end{gathered}
 \]
 
-The complete sum at \(n=4\) is \(1-1+1-4+4=1\). In contrast with
-\(r=0\), several positions contribute to each coefficient.
+The complete sum at \(n=4\) gives
+
+\[
+\begin{aligned}
+a_4={}&1-1+1\\
+&-4+4\\
+={}&1.
+\end{aligned}
+\]
+
+In contrast with \(r=0\), several positions contribute to each coefficient.
 
 ## Example 16. A three-residue contrast at r=2
 
@@ -505,9 +591,17 @@ The first terms are
 \end{gathered}
 \]
 
-Only the residue classes zero and two contribute to
-\(a_5=-32+8+20-5=-9\). Zero weights can remove entire classes from
-the defining sum.
+Only the residue classes zero and two contribute:
+
+\[
+\begin{aligned}
+a_5={}&-32+8\\
+&+20-5\\
+={}&-9.
+\end{aligned}
+\]
+
+Zero weights can remove entire classes from the defining sum.
 
 ## Example 17. Four-position blocks
 
@@ -601,8 +695,18 @@ The first terms are
 \end{gathered}
 \]
 
-At the next index, \(a_{10}=2^2\binom{10}{2}=180\). The construction
-works at arbitrary positive block lengths, with no restriction to square roots.
+At the next index,
+
+\[
+\begin{aligned}
+a_{10}&=2^2\binom{10}{2}\\
+&=4\cdot45\\
+&=180.
+\end{aligned}
+\]
+
+The construction works at arbitrary positive block lengths, with no restriction
+to square roots.
 
 ## Example 20. All the block parameters active
 
@@ -635,8 +739,17 @@ The first terms are
 \end{gathered}
 \]
 
-For example, \(a_4=1-2+3-8+16=10\). This combines a block weight,
-unequal residue weights, and a nonzero \(r\).
+For example,
+
+\[
+\begin{aligned}
+a_4={}&1-2+3\\
+&-8+16\\
+={}&10.
+\end{aligned}
+\]
+
+This combines a block weight, unequal residue weights, and a nonzero \(r\).
 
 ## Example 21. Three-position blocks weighted by m+1
 
@@ -740,7 +853,16 @@ The first terms are
 \end{gathered}
 \]
 
-For example, \(a_{12}=F_4\binom{12}{4}=3\cdot495=1485\).
+For example,
+
+\[
+\begin{aligned}
+a_{12}&=F_4\binom{12}{4}\\
+&=3\cdot495\\
+&=1485.
+\end{aligned}
+\]
+
 This generating function is algebraic because it is a finite linear
 combination of algebraic series. The degree bound for a single block weight
 does not automatically apply to this combination.
