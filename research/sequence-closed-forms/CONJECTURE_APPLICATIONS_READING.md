@@ -527,7 +527,17 @@ Two independent exact programs in the continuation checkpoint use integer and ra
 
 The original checkpoint additionally includes full exact verification of its Hankel, algebraic-kernel, radical, and fixed-prime Euler statements. Finite checks corroborate their tested ranges; **universal mathematical assertions are supported by written proofs, not extrapolation from finite checks**.
 
-The original continuation packages include the editable LaTeX sources, exact Python programs, frozen JSON outputs, SHA-256 checksums, and handoff instructions. The source files for this web reading edition are versioned in the Operation-KOMOREBI repository.
+The original continuation packages include the editable LaTeX sources, exact Python programs, frozen JSON outputs, SHA-256 checksums, and handoff instructions.
+
+The current exact checkers are also available directly in the repository: [Euler spectra and jets](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/tools/sequence_euler_spectral_jet.py), [arithmetic Cauchy minors](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/tools/sequence_arithmetic_subminors.py), and [test contracts](https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/tools/test_sequence_conjecture_applications.py).
+
+Run the published verification programs from the repository root using Python 3.10 or later:
+
+```bash
+python -B tools/sequence_euler_spectral_jet.py --output euler-jet-results.json
+python -B tools/sequence_arithmetic_subminors.py --output cauchy-minor-results.json
+python -B -m unittest discover -s tools -p test_sequence_conjecture_applications.py -v
+``` The source files for this web reading edition are versioned in the Operation-KOMOREBI repository.
 
 **Research boundary.** A global proof of \(A_n\notin(p,t^2+1)^3\) for all odd primes and all \(n\ge1\) is still missing. The article does not claim the original preperiod conjecture is resolved, does not claim historical first discovery, and does not claim a Lean formalization.
 
