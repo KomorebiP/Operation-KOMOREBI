@@ -2,7 +2,7 @@
 
 **Realization Calculus and Komorebi Space · Komorebi P.**
 
-Komorebi studies how mathematical structure behaves when its description changes. Decomposing an object, changing coordinates, or forming an abstraction can make a problem easier to approach. The question is whether that description retains enough information for the task, and how to account for what is lost.
+The Komorebi Program studies how mathematical structure behaves when its description changes. Decomposing an object, changing coordinates, or forming an abstraction can make a problem easier to approach. The question is whether that description retains enough information for the task, and how to account for what is lost.
 
 Realization Calculus develops decomposition, transfer, refinement, and reconstruction through packets, seeds, coordinates, and explicit residuals. Komorebi Space provides a setting for comparing realizations, their compatibility conditions, and the obstructions to moving between them.
 

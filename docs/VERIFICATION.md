@@ -2,7 +2,7 @@
 
 **Komorebi P. · Work in progress · 27 October 2026**
 
-Operation-KOMOREBI contains separate manuscripts, formal projects, packages, and experiments. Select a component before installing dependencies or attempting a build. All executable software is **beta and work in progress**. Each result applies to its recorded revision, environment, and tested scope.
+The Komorebi Program contains separate manuscripts, formal projects, packages, and experiments. Select a component before installing dependencies or attempting a build. All executable software is **beta and work in progress**. Each result applies to its recorded revision, environment, and tested scope.
 
 ## Obtain a checkout
 

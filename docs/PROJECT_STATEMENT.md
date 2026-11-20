@@ -2,7 +2,7 @@
 
 **Komorebi P. · First published 27 October 2026**
 
-Komorebi is my independent mathematical research project, published under the name **Komorebi P.** It brings together manuscripts, formal developments, software, calculations, experiments, and guides for readers.
+The Komorebi Program is my independent mathematical research project, published under the name **Komorebi P.** It brings together manuscripts, formal developments, software, calculations, experiments, and guides for readers.
 
 At its center is Realization Calculus, which studies how mathematical objects are represented, decomposed, transferred, and reconstructed, and what information or obstructions remain after those operations. Komorebi Space provides a framework for comparing compatible realizations. The individual works develop different parts of this program, each with its own assumptions, claims, and supporting evidence.
 

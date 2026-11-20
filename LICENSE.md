@@ -1,4 +1,4 @@
-# Reuse of the Komorebi collection
+# Reuse of The Komorebi Program
 
 Copyright © 2026 **Komorebi P.**
 

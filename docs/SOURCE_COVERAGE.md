@@ -103,7 +103,7 @@ No other named entry in this 74-entry inventory remains unaccounted for. This is
 | 40 | K-COS end-to-end Lean continuation | Source package | [monographs/cos-method/formal-continuation](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/monographs/cos-method/formal-continuation) |
 | 41 | J-Space Causal Lab1.4 | Source package | [experiments/jspace-causal-lab](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/experiments/jspace-causal-lab) |
 | 42 | Workspace Incubator0.6 | Source package | [experiments/workspace-incubator](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/experiments/workspace-incubator) |
-| 43 | Operation-KOMOREBI GitHub hub | Collection repository | [KomorebiP/Operation-KOMOREBI](https://github.com/KomorebiP/Operation-KOMOREBI) |
+| 43 | The Komorebi Program GitHub hub | Collection repository | [The Komorebi Program](https://github.com/KomorebiP/Operation-KOMOREBI) |
 
 ### Physics and methodology
 
