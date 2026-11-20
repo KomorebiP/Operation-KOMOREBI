@@ -179,7 +179,10 @@ def build(site,atlas):
     source_files=['tools/'+name+'.py' for name in ['sequence_formula_catalogue','sequence_library','sequence_archive','sequence_closed_forms','sequence_closed_forms_extended','sequence_polynomial_hankel','sequence_differential_hankel','sequence_math_reading','sequence_research_tables','sequence_linear_research','sequence_research_notes','sequence_generalized','sequence_archive_families','sequence_atlas','sequence_atlas_reference','sequence_atlas_reading','sequence_atlas_study','sequence_atlas_index']]+[REGISTRY_PATH,'manifests/sequence-generalized-sources.json','research/sequence-connections/IDENTITIES.md','research/sequence-connections/sources/komorebi-math-families.py','research/sequence-closed-forms/IDENTITIES.md','research/sequence-closed-forms/COLLECTION_II_ADDITIONS.md','research/sequence-closed-forms/POLYNOMIAL_HANKEL_STRUCTURE.md','research/sequence-closed-forms/FINITE_DIFFERENTIAL_HANKEL.md','tools/test_sequence_closed_forms.py','tools/test_sequence_closed_forms_extended.py','tools/test_sequence_polynomial_hankel.py','tools/test_sequence_differential_hankel.py','tools/test_sequence_differential_hankel_bridge.py','tools/test_sequence_differential_hankel_bridge.mjs','tools/test_sequence_math_reading.py','tools/test_sequence_closed_forms_core.mjs','website/assets/sequence-closed-forms-core.mjs','website/assets/sequence-differential-hankel.mjs','website/assets/sequence-closed-forms-worker.mjs']
     source_files+=['tools/update_sequence_library_oeis.py','manifests/sequence-library-oeis.json','research/oeis-snapshot/snapshot.json','research/sequence-archive/candidate_registry.json']
     source_files+=['tools/sequence_central_binomial.py','tools/test_sequence_closed_forms_central.py','research/sequence-closed-forms/CENTRAL_BINOMIAL_RECURRENCE.md','tools/test_sequence_closed_form_handoffs.py','tools/test_sequence_closed_form_handoffs.mjs']
-    source_files+=['research/sequence-closed-forms/CONJECTURE_APPLICATIONS_READING.md']
+    source_files+=['research/sequence-closed-forms/CONJECTURE_APPLICATIONS_READING.md',
+                   'tools/sequence_euler_spectral_jet.py',
+                   'tools/sequence_arithmetic_subminors.py',
+                   'tools/test_sequence_conjecture_applications.py']
     source_files+=['research/sequence-closed-forms/ALGEBRAIC_KERNEL_EXAMPLES.md',
                    'tools/sequence_algebraic_kernel_examples.py',
                    'tools/test_sequence_algebraic_kernel_examples.py',
@@ -784,6 +787,7 @@ def build(site,atlas):
         '<nav class="sl-tool-back" aria-label="Conjecture reading routes">'
         '<a href="sequence-closed-forms.html#euler-jet-obstruction">Closed Forms collection</a> · '
         '<a href="sequence-central-binomial.html">Weighted binomial theorem</a> · '
+        '<a download href="assets/sequence-formula-source.zip">Download source and exact checks</a> · '
         '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/research/sequence-closed-forms/CONJECTURE_APPLICATIONS_READING.md">Versioned article</a></nav>'
         '<nav class="sl-binomial-jumps" aria-label="Conjecture sections">'
         '<a href="#math-proof-1-results-and-evidence-boundaries">Status and scope</a>'
