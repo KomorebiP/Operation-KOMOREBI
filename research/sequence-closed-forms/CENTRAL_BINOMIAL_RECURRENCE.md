@@ -660,8 +660,18 @@ c_4&=2\cdot2\cdot\binom41=16.
 \end{aligned}
 \]
 
-Thus \(A_4=1-2+3-8+16=10\), agreeing with the coefficient of
-\(x^4\) in \(G\). Example 20 continues this sequence. The computation
+Adding all five contributions gives
+
+\[
+\begin{aligned}
+A_4&=1-2+3\\
+&\quad-8+16\\
+&=10.
+\end{aligned}
+\]
+
+This agrees with the coefficient of \(x^4\) in \(G\).
+Example 20 continues this sequence. The computation
 shows exactly where the block weight, residue weight, binomial coefficient,
 and sign enter.
 
