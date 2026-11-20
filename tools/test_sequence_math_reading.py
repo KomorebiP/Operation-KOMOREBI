@@ -7,7 +7,7 @@ import sys
 import unittest
 
 sys.path.insert(0,str(Path(__file__).resolve().parent))
-from sequence_math_reading import mathematical_reading_fragment
+from sequence_math_reading import mathematical_reading_fragment, mathematical_example_gallery
 
 ROOT=Path(__file__).resolve().parents[1]
 
@@ -52,6 +52,24 @@ class MathematicalReadingTests(unittest.TestCase):
         self.assertIn('aria-label="Scrollable code example"><code class="language-bash">',content)
         self.assertNotIn(r'\`\`\`',content)
         self.assertGreater(content.count('<span class="arithmatex">'),100)
+
+    def test_all_worked_examples_retain_their_math_and_native_disclosures(self):
+        import re
+        source=(ROOT/'research/sequence-closed-forms/ALGEBRAIC_KERNEL_EXAMPLES.md').read_text(encoding='utf-8')
+        content=mathematical_example_gallery(source)
+        self.assertEqual(content.count('class="sl-kernel-example"'),23)
+        self.assertEqual(content.count('class="arithmatex sl-math-display"'),source.count(r'\['))
+        self.assertIn('kernel-classical',content)
+        self.assertIn('kernel-weighted',content)
+        self.assertIn('Fibonacci',content)
+        self.assertNotIn('<h1',content)
+        targets=re.findall(r'href="#(kernel-example-\d+)"',content)
+        self.assertEqual(targets,['kernel-example-'+str(n) for n in range(1,24)])
+        for target in targets:
+            self.assertEqual(content.count('id="'+target+'"'),1)
+        # A lost or duplicate example must not silently ship an incomplete gallery.
+        with self.assertRaises(ValueError):
+            mathematical_example_gallery(source.replace('## Example 23.','## Example 24.',1))
 
     def test_outline_links_match_rendered_headings(self):
         import re
