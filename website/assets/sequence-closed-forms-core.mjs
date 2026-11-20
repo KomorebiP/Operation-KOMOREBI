@@ -1,6 +1,8 @@
 // Exact, bounded sequence calculations. No floating point, network or storage.
 // Author: Komorebi P. Source: Closed Forms Collections II–III.
 import {structuredDifferentialHankel} from './sequence-differential-hankel.mjs';
+import {linearHankelCoefficients,linearHankelFormula} from './sequence-linear-hankel.mjs';
+export {linearHankelCoefficients,linearHankelFormula} from './sequence-linear-hankel.mjs';
 export {structuredDifferentialHankel} from './sequence-differential-hankel.mjs';
 export const MODE_LIMITS=Object.freeze({
   central_binomial:{maxIndex:160,maxCount:32},
@@ -13,6 +15,7 @@ export const MODE_LIMITS=Object.freeze({
   beta_hankel:{maxIndex:17,maxCount:18},
   differential_hankel:{maxIndex:64,maxCount:32},
   differential_moments:{maxIndex:160,maxCount:32},
+  linear_hankel:{maxIndex:256,maxCount:32},
   meixner:{maxIndex:96,maxCount:32}
 });
 export const MODE_DEFAULTS=Object.freeze({
@@ -26,6 +29,7 @@ export const MODE_DEFAULTS=Object.freeze({
   beta_hankel:{mode:'beta_hankel',start:'0',count:'8',L:'4',a:'1',b:'1'},
   differential_hankel:{mode:'differential_hankel',start:'0',count:'8',a0:'1',a1:'1',a2:'0',a3:'0',c0:'1',c1:'2',c2:'1',c3:'0'},
   differential_moments:{mode:'differential_moments',start:'0',count:'12',a0:'1',a1:'1',a2:'0',a3:'0',c0:'1',c1:'2',c2:'1',c3:'0'},
+  linear_hankel:{mode:'linear_hankel',start:'0',count:'12',a0:'1',a1:'1'},
   meixner:{mode:'meixner',start:'0',count:'12',s:'1',twox:'2'}
 });
 export const MODE_FIELDS=Object.freeze({
@@ -39,6 +43,7 @@ export const MODE_FIELDS=Object.freeze({
   beta_hankel:['L','a','b'],
   differential_hankel:['a0','a1','a2','a3','c0','c1','c2','c3'],
   differential_moments:['a0','a1','a2','a3','c0','c1','c2','c3'],
+  linear_hankel:['a0','a1'],
   meixner:['s','twox']
 });
 const FIELD_LIMITS=Object.freeze({
@@ -402,6 +407,24 @@ export function differentialMomentGeneratingFunction(weights,operator){
 }
 
 
+export function differentialMomentCanonicalKernel(weights,operator,generating=null){
+  const g=generating||differentialMomentGeneratingFunction(weights,operator);
+  const R=g.numerator.map(BigInt),M=g.degreeBound/2;
+  const zero=R.every(value=>value===0n),poleOrder=zero?0:2*M;
+  const H=Array(4*M+1).fill(0n);
+  R.forEach((coefficient,j)=>{
+    for(let k=0;k<=2*M-j;k++)H[j+2*k]+=coefficient*binomial(2*M-j,k);
+  });
+  const numerator=trimmedPolynomial(H);
+  return {numerator:numerator.map(String),poleOrder,
+    expression:'Phi(t) = 1+t^2\n'+
+      'A(t) = ('+exactPolynomialText(numerator,'t')+') / (1-t^2)^'+poleOrder+'\n'+
+      'mu_n = [t^n] A(t)*(1+t^2)^n, n >= 0.\n'+
+      (zero?'The functional is zero.':
+        poleOrder?'The amplitude has exact pole order '+poleOrder+' at both t=1 and t=-1.':
+          'The amplitude is constant.')};
+}
+
 export function differentialMomentsFromAlgebraicRecurrence(weights,operator,last,generating=null){
   // Remove initial zero moments and reconstruct the full tail from
   // A(z)T'(z)=B(z)T(z) with A(0)=the first nonzero moment.
@@ -486,7 +509,7 @@ function validatedWindow(raw){
 }
 export function computeExactWindow(raw){
   const {mode,start,count,last,params}=validatedWindow(raw);
-  let values,description,verification,generatingFunction,momentClosedForms,centralFormulas;
+  let values,description,verification,generatingFunction,momentClosedForms,centralFormulas,canonicalKernel;
   switch(mode){
     case 'central_binomial':{
       values=centralBinomialCoefficients(params.r,last);
@@ -563,15 +586,17 @@ export function computeExactWindow(raw){
           throw Error('The structured solver disagrees with the independent direct determinant at size '+n+'.');
       }
       generatingFunction=differentialMomentGeneratingFunction(weights,operator);
+      canonicalKernel=differentialMomentCanonicalKernel(weights,operator,generatingFunction);
       momentClosedForms=differentialMomentParityFormula(weights,operator);
       description='Higher-order differential Hankel: P(m)=sum_(d=0)^3 a_d falling(m,d), L[p]=sum_(k=0)^3 c_k F_P[p^(k)].';
-      verification='Exact Chebyshev–Schur calculation with singular-block lookahead. This calculation is independently checked by direct fraction-free determinants through size '+Math.min(last,12)+'. The separated-block rank is at most 2(degree(P)+operator order).';
+      verification='Exact Chebyshev–Schur calculation with singular-block lookahead. This calculation is independently checked by direct fraction-free determinants through size '+Math.min(last,12)+'. For nonzero inputs, the sharp maximum separated-block rank is 2(degree(P)+operator order). A separate stationary-transfer proof establishes rational Hankel generating functions for all fixed finite inputs.';
       break;
     }
     case 'differential_moments':{
       const weights=[params.a0,params.a1,params.a2,params.a3];
       const operator=[params.c0,params.c1,params.c2,params.c3];
       generatingFunction=differentialMomentGeneratingFunction(weights,operator);
+      canonicalKernel=differentialMomentCanonicalKernel(weights,operator,generatingFunction);
       momentClosedForms=differentialMomentParityFormula(weights,operator);
       const parityPolynomials=[momentClosedForms.even.map(BigInt),momentClosedForms.odd.map(BigInt)];
       values=differentialMomentsFromAlgebraicRecurrence(
@@ -586,6 +611,17 @@ export function computeExactWindow(raw){
       verification='Exact algebraic forward recurrence checked against both the direct finite moment sums and the closed formulas for even and odd indices, including initial and interior zeros.';
       break;
     }
+    case 'linear_hankel':{
+      values=linearHankelCoefficients(params.a0,params.a1,last);
+      for(let n=0;n<=Math.min(last,12);n++){
+        if(values[n]!==differentialHankel(n,[params.a0,params.a1],[1]))
+          throw Error('The rational Hankel recurrence disagrees with the independent defining determinant at size '+n+'.');
+      }
+      generatingFunction=linearHankelFormula(params.a0,params.a1);
+      description='Hankel determinants for P(m)=a₀+a₁m and Dₓ=1. The even moments are (a₀+a₁m) binom(2m,m); odd moments vanish. W₀=1.';
+      verification='The uniform order-nine constant-coefficient recurrence computes every requested value without pivot division. Its first '+(Math.min(last,12)+1)+' values are independently checked by direct fraction-free determinants, including zero and degenerate weights. Order nine need not be minimal at special parameters.';
+      break;
+    }
     case 'meixner':{
       const {s,twox}=params;
       values=meixnerCoefficients(s,twox,last);
@@ -597,6 +633,7 @@ export function computeExactWindow(raw){
   return {mode,start,count,parameters:params,
     rows:values.slice(start,last+1).map((value,j)=>({index:start+j,value:value.toString()})),
     description,verification,...(generatingFunction?{generatingFunction}:{}),
+    ...(canonicalKernel?{canonicalKernel}:{}),
     ...(momentClosedForms?{momentClosedForms}:{}),
     ...(centralFormulas?{centralFormulas}:{})};
 }

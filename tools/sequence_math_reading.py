@@ -21,10 +21,21 @@ def _inline(raw):
 
     def link(match):
         href=match[2]
+        local_notes={
+            'RATIONAL_HANKEL_TAILS.md':'sequence-rational-hankel.html#rational-hankel-proof',
+            'LINEAR_WEIGHT_RECURRENCE.md':'sequence-rational-hankel.html#linear-weight-proof',
+            'FINITE_DIFFERENTIAL_HANKEL.md':'sequence-differential-hankel.html',
+            'RATIONAL_HANKEL_REVIEW.md':('https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/'
+                                       'research/sequence-closed-forms/RATIONAL_HANKEL_REVIEW.md'),
+            'RATIONAL_HANKEL_LITERATURE.md':('https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/'
+                                           'research/sequence-closed-forms/RATIONAL_HANKEL_LITERATURE.md'),
+        }
+        local=href in local_notes
+        href=local_notes.get(href,href)
         if href=='POLYNOMIAL_HANKEL_STRUCTURE.md':
             href=('https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/'
                   'research/sequence-closed-forms/POLYNOMIAL_HANKEL_STRUCTURE.md')
-        if not (href.startswith('https://') or href.startswith('http://')):
+        if not (local or href.startswith('https://') or href.startswith('http://')):
             return escape(match[0])
         return reserve('<a href="'+escape(href,quote=True)+'">'+escape(match[1])+'</a>')
 
@@ -40,7 +51,7 @@ def _inline(raw):
     return source
 
 
-def mathematical_reading_fragment(source, *, include_outline=False):
+def mathematical_reading_fragment(source, *, include_outline=False, id_prefix='math-proof-'):
     """Convert a versioned math Markdown source into safe HTML article content.
 
     The first h1 is omitted because the site page already supplies its h1.
@@ -54,7 +65,27 @@ def mathematical_reading_fragment(source, *, include_outline=False):
     in_code=False
     code=[]
     code_lang=''
+    table=[]
     tick=chr(96)
+    if not re.fullmatch(r'[a-z][a-z0-9-]*-',id_prefix):
+        raise ValueError('Invalid mathematical heading prefix')
+
+    def flush_table():
+        if not table:
+            return
+        rows=[[cell.strip() for cell in line.strip('|').split('|')] for line in table]
+        if (len(rows)<2 or not all(re.fullmatch(r':?-{3,}:?',x) for x in rows[1])
+                or any(len(row)!=len(rows[0]) for row in rows)):
+            raise ValueError('Malformed mathematical source table')
+        result.append('<div class="sar-scroll sl-math-proof-table" tabindex="0" role="region" '
+                      'aria-label="Scrollable mathematical table"><table><thead><tr>'+
+                      ''.join('<th scope="col">'+_inline(x)+'</th>' for x in rows[0])+
+                      '</tr></thead><tbody>'+
+                      ''.join('<tr>'+''.join(
+                          ('<th scope="row">'+_inline(x)+'</th>' if j==0
+                           else '<td>'+_inline(x)+'</td>') for j,x in enumerate(row))+
+                          '</tr>' for row in rows[2:])+'</tbody></table></div>')
+        table.clear()
 
     def flush_paragraph():
         if paragraph:
@@ -94,6 +125,11 @@ def mathematical_reading_fragment(source, *, include_outline=False):
             else:
                 code.append(line)
             continue
+        if stripped.startswith('|') and stripped.endswith('|'):
+            flush_paragraph();flush_bullets()
+            table.append(stripped)
+            continue
+        flush_table()
         if stripped==r'\[':
             flush_paragraph();flush_bullets()
             math=[line];in_math=True
@@ -113,7 +149,7 @@ def mathematical_reading_fragment(source, *, include_outline=False):
                 h1_skipped=True
                 continue
             name=re.sub(r'[^a-z0-9]+','-',match[2].lower()).strip('-')[:80]
-            name='math-proof-'+(name or 'section')
+            name=id_prefix+(name or 'section')
             base=name;i=2
             while name in used_ids:
                 name=base+'-'+str(i);i+=1
@@ -133,7 +169,7 @@ def mathematical_reading_fragment(source, *, include_outline=False):
         raise ValueError('Unclosed TeX display in mathematical source')
     if in_code:
         raise ValueError('Unclosed fenced code block in mathematical source')
-    flush_paragraph();flush_bullets()
+    flush_paragraph();flush_bullets();flush_table()
     if include_outline and outline:
         result.insert(0,'<details class="sl-proof-outline"><summary>On this page</summary>'
                         '<nav aria-label="Proof sections"><ul>'+''.join(outline)+
