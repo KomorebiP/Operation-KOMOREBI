@@ -183,14 +183,26 @@ def build(site,atlas):
                    'tools/sequence_algebraic_kernel_examples.py',
                    'tools/test_sequence_algebraic_kernel_examples.py',
                    'website/assets/sequence-binomial-reading.mjs']
+    source_files+=['tools/sequence_rational_hankel.py',
+                   'tools/verify_sequence_rational_hankel.py',
+                   'tools/verify_sequence_linear_hankel.py',
+                   'tools/test_sequence_linear_hankel_bridge.py',
+                   'tools/test_sequence_linear_hankel_bridge.mjs',
+                   'website/assets/sequence-linear-hankel.mjs',
+                   'research/sequence-closed-forms/RATIONAL_HANKEL_TAILS.md',
+                   'research/sequence-closed-forms/LINEAR_WEIGHT_RECURRENCE.md',
+                   'research/sequence-closed-forms/RATIONAL_HANKEL_REVIEW.md',
+                   'research/sequence-closed-forms/RATIONAL_HANKEL_LITERATURE.md']
+    source_files+=['research/sequence-closed-forms/RATIONAL_HANKEL_REPRODUCE.md']
     with ZipFile(site.output/'assets/sequence-formula-source.zip','w',ZIP_DEFLATED) as bundle:
         for name in source_files:
-            info=ZipInfo(name,date_time=(2026,11,15,0,0,0));info.compress_type=ZIP_DEFLATED;info.external_attr=0o100644<<16;bundle.writestr(info,(site.root/name).read_text(encoding='utf-8').encode('utf-8'))
-        info=ZipInfo('README.txt',date_time=(2026,11,15,0,0,0));info.compress_type=ZIP_DEFLATED;info.external_attr=0o100644<<16
-        bundle.writestr(info,'Exact formula catalogue. Python 3.10+ standard library. The browser arithmetic and cross-language checks also require Node.js 24. Text sources use UTF-8/LF for portable reproduction.\nRun: python tools/sequence_formula_catalogue.py --id KFOR-S-catalan-03-01\nExport all records: python tools/sequence_formula_catalogue.py --output records.json\nCheck closed-form formulas: python -B -m unittest discover -s tools -p \"test_sequence_closed_forms*.py\" -v\nCheck weighted binomial recurrence: python -B -m unittest discover -s tools -p test_sequence_closed_forms_central.py -v\nCheck algebraic-kernel examples: python -B -m unittest discover -s tools -p test_sequence_algebraic_kernel_examples.py -v\nPrint worked example terms: python tools/sequence_algebraic_kernel_examples.py\nCheck browser arithmetic: node --test tools/test_sequence_closed_forms_core.mjs\nCheck indexed calculator presets: python -B -m unittest discover -s tools -p test_sequence_closed_form_handoffs.py -v\nCompare Python and JavaScript: python -B -m unittest discover -s tools -p test_sequence_differential_hankel_bridge.py -v\nScalar records store 24 terms beginning at their explicit offsets, except standard k-bonacci records, which store 48. Coefficient triangles store complete rows n=0..12, including zeros. Triangle j is a flat cell index. Its row and column are n and k. Parameter records are not claims of novelty or pairwise distinctness.\n\nReproduce finite OEIS comparisons using the retained snapshot:\nThe comparison receipt and updater are included. The two bulk gzip files are separate downloads, not duplicated in this source ZIP. Download https://komorebip.github.io/Operation-KOMOREBI/assets/oeis/stripped.gz and https://komorebip.github.io/Operation-KOMOREBI/assets/oeis/names.gz. Place both files in research/oeis-snapshot/ beside the included snapshot.json. That file records the required byte counts and SHA-256 hashes; the updater rejects different bytes before scanning.\nRun: python tools/update_sequence_library_oeis.py --source research/oeis-snapshot --output reproduced-oeis-comparison.json\nThe reproduction timestamp changes. Compare the snapshot hashes, catalogue_terms_sha256, matches and total_matches with manifests/sequence-library-oeis.json. Comparisons use the first eight stored terms at every exported position and extend each hit. Export positions are not mathematical offsets; finite hits are not proofs of infinite identity or novelty.\n')
+            info=ZipInfo(name,date_time=(2026,11,15,0,0,0));info.create_system=3;info.compress_type=ZIP_DEFLATED;info.external_attr=0o100644<<16;bundle.writestr(info,(site.root/name).read_text(encoding='utf-8').encode('utf-8'))
+        info=ZipInfo('README.txt',date_time=(2026,11,15,0,0,0));info.create_system=3;info.compress_type=ZIP_DEFLATED;info.external_attr=0o100644<<16
+        bundle.writestr(info,'Exact formula catalogue. Python 3.10+ standard library. The browser arithmetic and cross-language checks also require Node.js 24. Text sources use UTF-8/LF for portable reproduction.\nRun: python tools/sequence_formula_catalogue.py --id KFOR-S-catalan-03-01\nExport all records: python tools/sequence_formula_catalogue.py --output records.json\nCheck closed-form formulas: python -B -m unittest discover -s tools -p \"test_sequence_closed_forms*.py\" -v\nCheck weighted binomial recurrence: python -B -m unittest discover -s tools -p test_sequence_closed_forms_central.py -v\nCheck algebraic-kernel examples: python -B -m unittest discover -s tools -p test_sequence_algebraic_kernel_examples.py -v\nPrint worked example terms: python tools/sequence_algebraic_kernel_examples.py\nCheck browser arithmetic: node --test tools/test_sequence_closed_forms_core.mjs\nCheck indexed calculator presets: python -B -m unittest discover -s tools -p test_sequence_closed_form_handoffs.py -v\nCompare Python and JavaScript: python -B -m unittest discover -s tools -p test_sequence_differential_hankel_bridge.py -v\nRational Hankel proofs and reproduction: research/sequence-closed-forms/RATIONAL_HANKEL_REPRODUCE.md\nVerify rational Hankel certificates: python -B tools/verify_sequence_rational_hankel.py --output rational-hankel-checks.json\nVerify the uniform linear-weight identity: python -B tools/verify_sequence_linear_hankel.py --output linear-hankel-certificate.json\nCompare linear-weight Python and BigInt values: python -B -m unittest discover -s tools -p test_sequence_linear_hankel_bridge.py -v\nScalar records store 24 terms beginning at their explicit offsets, except standard k-bonacci records, which store 48. Coefficient triangles store complete rows n=0..12, including zeros. Triangle j is a flat cell index. Its row and column are n and k. Parameter records are not claims of novelty or pairwise distinctness.\n\nReproduce finite OEIS comparisons using the retained snapshot:\nThe comparison receipt and updater are included. The two bulk gzip files are separate downloads, not duplicated in this source ZIP. Download https://komorebip.github.io/Operation-KOMOREBI/assets/oeis/stripped.gz and https://komorebip.github.io/Operation-KOMOREBI/assets/oeis/names.gz. Place both files in research/oeis-snapshot/ beside the included snapshot.json. That file records the required byte counts and SHA-256 hashes; the updater rejects different bytes before scanning.\nRun: python tools/update_sequence_library_oeis.py --source research/oeis-snapshot --output reproduced-oeis-comparison.json\nThe reproduction timestamp changes. Compare the snapshot hashes, catalogue_terms_sha256, matches and total_matches with manifests/sequence-library-oeis.json. Comparisons use the first eight stored terms at every exported position and extend each hit. Export positions are not mathematical offsets; finite hits are not proofs of infinite identity or novelty.\n')
     generalized=generalized_catalogue(entries)
     site.write('assets/sequence-generalized-data.json',json.dumps(generalized,ensure_ascii=False,separators=(',',':'))+'\n')
     scripts=['math-display.mjs','sequence-research-ui.mjs','sequence-reading-theme.mjs','sequence-oeis-core.mjs','sequence-family-core.mjs','sequence-transfer-core.mjs','sequence-math.mjs','sequence-graph-core.mjs','sequence-modular-core.mjs','sequence-discovery-core.mjs','sequence-notebook-core.mjs','sequence-research-worker.mjs','sequence-research-common.mjs','sequence-oeis-worker.mjs','sequence-oeis-client.mjs','sequence-comparison-chart.mjs','sequence-chart-labels.mjs','sequence-workbench-core.mjs','sequence-comparison-certificate.mjs','sequence-certificate-inspection.mjs','sequence-workbench.mjs','sequence-triangle-core.mjs','sequence-triangle.mjs','sequence-transfers.mjs','sequence-families-ui.mjs','sequence-connections-ui.mjs','sequence-identification-ui.mjs','sequence-modular-ui.mjs','sequence-notebooks-ui.mjs','sequence-library-membership.mjs','sequence-research-studio.mjs','sequence-library-search.mjs','sequence-inspection-links.mjs','sequence-differential-hankel.mjs','sequence-closed-forms-core.mjs','sequence-closed-forms-worker.mjs','sequence-closed-forms-ui.mjs','sequence-library.js']
+    scripts.append('sequence-linear-hankel.mjs')
     for name in scripts:
         content=(site.root/'website/assets'/name).read_text(encoding='utf-8')
         content=content.replace('__OEIS_TERMS_SHA256__',snapshot['stripped_sha256']).replace('__OEIS_NAMES_SHA256__',snapshot['names_sha256'])
@@ -490,6 +502,19 @@ def build(site,atlas):
       <p><a href="sequence-library.html?cf-version=1&cf-mode=differential_moments&cf-start=0&cf-count=10&cf-a0=1&cf-a1=1&cf-a2=0&cf-a3=0&cf-c0=1&cf-c1=2&cf-c2=1&cf-c3=0#closed-calculator-panel">Calculate the exact moment sequence and its generating function</a> ·
       <a href="sequence-differential-hankel.html#math-proof-algebraic-ordinary-generating-function-for-every-finite-differential-operator">Read the complete generating-function derivation</a>.</p>
       </details>
+      <details id="rational-hankel-theorem"><summary>Rational Hankel generating functions and a uniform order-nine recurrence</summary>
+      <p>Every fixed polynomial weight and finite constant-coefficient differential
+      operator in this calculus gives a Hankel determinant sequence with a rational
+      generating function. The proof uses a boundary-safe finite-difference
+      congruence and a stationary signed transfer; all zero minors are included.</p>
+      <p>For the unperturbed linear weight P(m)=a+bm, the explicit identity is</p>
+      <pre tabindex="0" role="region" aria-label="Uniform linear-weight Hankel recurrence">[(S-2a)(S^2-4(a-b)S+4a^2)]^3 W_n = 0, n &gt;= 1.</pre>
+      <p>The order is nine generically, with possible reductions at exceptional
+      parameters. The separated Gram rank 2(D+r) is sharp for nonzero inputs.
+      A single rational coefficient kernel also produces every underlying moment.</p>
+      <p><a href="sequence-rational-hankel.html">Read the proofs, explicit numerator, and exact certificates</a> ·
+      <a href="sequence-library.html?cf-version=1&amp;cf-mode=linear_hankel&amp;cf-start=0&amp;cf-count=12&amp;cf-a0=1&amp;cf-a1=1#closed-calculator-panel">Calculate the linear-weight Hankel sequence</a>.</p>
+      </details>
       <details><summary>Six formulas recovered from source papers</summary>
       <p>The documented reductions cover Bernoulli four-block tangents, four-block
       Euler convolutions, integer Meixner–Pollaczek polynomials, beta-moment
@@ -659,6 +684,7 @@ def build(site,atlas):
         '<nav class="sl-tool-back" aria-label="Differential Hankel research routes">'
         '<a href="sequence-library.html#sequence-research-desk">Sequence research desk</a> · '
         '<a href="sequence-closed-forms.html#differential-hankel-theorem">Closed Forms collection</a> · '
+        '<a href="sequence-rational-hankel.html">Rational Hankel continuation</a> · '
         '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/research/sequence-closed-forms/FINITE_DIFFERENTIAL_HANKEL.md">Versioned source</a></nav>'
         '<section id="differential-hankel" class="sl-math-reading-intro"><h2>Reproduce the worked example</h2>'
         r'<p>For <span class="arithmatex">\(P(m)=1+m\)</span> and <span class="arithmatex">\(\mathcal D=1+2\partial_x+\partial_x^2\)</span>, the first exact determinants are '
@@ -684,6 +710,72 @@ def build(site,atlas):
                             work_ids=[],url='sequence-differential-hankel.html',
                             text='Chebyshev higher derivatives exact finite operator rank 2(D+r) '
                                  'quasiseparable Hankel moments polynomial weight proof and calculator'))
+
+    # Preserve complete source proofs in the static page, including without JS.
+    from sequence_rational_hankel import linear_hankel_determinants
+    rational_note=(site.root/'research/sequence-closed-forms/RATIONAL_HANKEL_TAILS.md').read_text(encoding='utf-8')
+    linear_note=(site.root/'research/sequence-closed-forms/LINEAR_WEIGHT_RECURRENCE.md').read_text(encoding='utf-8')
+    presets=[
+        ('Linear weight, a=1 and b=1',1,1),
+        ('Initial zero minors, a=0 and b=1',0,1),
+        ('Constant weight, a=2 and b=0',2,0),
+    ]
+    preset_rows=[]
+    for label,a,b in presets:
+        link=('sequence-library.html?cf-version=1&amp;cf-mode=linear_hankel'
+              '&amp;cf-start=0&amp;cf-count=12&amp;cf-a0='+str(a)+'&amp;cf-a1='+str(b)+
+              '#closed-calculator-panel')
+        terms=', '.join(str(x) for x in linear_hankel_determinants(a,b,7))
+        preset_rows.append('<tr><th scope="row"><a href="'+link+'">'+e(label)+
+                           '</a></th><td><code>'+e(terms)+'</code></td></tr>')
+    rational_page=(
+        closed_css+page_heading('Rational Hankel generating functions',
+            'General finite differential families, sharp rank, a common rational moment kernel, and an explicit linear-weight recurrence.',
+            'research','rational-hankel')+
+        '<nav class="sl-tool-back" aria-label="Hankel reading routes">'
+        '<a href="sequence-library.html#sequence-proof-path">Sequence proof index</a> · '
+        '<a href="sequence-differential-hankel.html">Differential Hankel foundations</a> · '
+        '<a href="sequence-central-binomial.html#math-proof-8-classical-coefficient-transfer">Binomial coefficient transfer</a></nav>'
+        '<section id="rational-hankel" class="sl-math-reading-intro"><h2>From moments to determinant recurrences</h2>'
+        '<p>The moment index and determinant size describe different sequences. '
+        'The moment generating function is algebraic. For every fixed polynomial '
+        'weight and finite constant-coefficient differential operator, the Hankel '
+        'determinants also have a rational generating function, by the separate proof below.</p>'
+        '<p>For the identity operator and a linear weight, one explicit order-nine '
+        'recurrence works at every parameter. Its general bound includes exceptional '
+        'cases with smaller minimal order and initial zero minors.</p>'
+        '<nav aria-label="Rational Hankel sections"><a href="#rational-hankel-proof">General proof</a> · '
+        '<a href="#linear-weight-proof">Linear-weight formula</a> · '
+        '<a href="#rational-hankel-evidence">Review and reproduction</a></nav>'
+        '<div class="sar-scroll" tabindex="0" role="region" aria-label="Worked Hankel determinant examples">'
+        '<table><caption>Exact determinants W₀ through W₇; choose a row to calculate further</caption>'
+        '<thead><tr><th scope="col">Weight</th><th scope="col">Exact determinants</th></tr></thead>'
+        '<tbody>'+''.join(preset_rows)+'</tbody></table></div></section>'
+        '<article id="rational-hankel-proof" class="sl-math-manuscript" aria-label="General rational Hankel proof">'
+        +mathematical_reading_fragment(rational_note,include_outline=True)+'</article>'
+        '<section id="linear-weight-proof" class="sl-math-manuscript" aria-label="Uniform linear-weight theorem">'
+        '<h2>Explicit linear-weight recurrence and numerator</h2>'
+        +mathematical_reading_fragment(linear_note,include_outline=True,id_prefix='linear-proof-')+'</section>'
+        '<section id="rational-hankel-evidence" class="sl-math-reading-intro"><h2>Review and reproduction</h2>'
+        '<p>The general result has a written proof and exact implementation checks. '
+        'The linear-weight theorem additionally uses a complete degree-18 '
+        'polynomial-identity certificate. Its nineteen full transfer-vector checks '
+        'cover the uniform identity by the proved degree bound. '
+        'The review is a project self-review; historical novelty is unassessed.</p>'
+        '<p><a download href="assets/sequence-formula-source.zip">Download proofs, exact solvers, and verifiers</a> · '
+        '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/research/sequence-closed-forms/RATIONAL_HANKEL_REVIEW.md">Read the self-review</a> · '
+        '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/research/sequence-closed-forms/RATIONAL_HANKEL_LITERATURE.md">Read the literature scope</a></p>'
+        '<p>The large transfer bound establishes existence; it is not an efficiency '
+        'claim. The existing Schur calculator remains available for higher-order '
+        'differential examples.</p></section>'
+    )
+    site.page('sequence-rational-hankel.html','Sequence Library · Rational Hankel generating functions',
+              wrap(rational_page,page_kind='rational-hankel'))
+    site.search.append(dict(title='Rational Hankel generating functions and linear-weight recurrences',
+        group='Collection',kind='Mathematical derivations',work_ids=[],
+        url='sequence-rational-hankel.html',
+        text='rational OGF constant coefficient recurrence Hankel polynomial weight finite differential '
+             'sharp rank common rational kernel order nine a+bm singular minors exact certificate'))
 
     central_note=(site.root/'research/sequence-closed-forms/CENTRAL_BINOMIAL_RECURRENCE.md').read_text(encoding='utf-8')
     central_reading=mathematical_reading_fragment(central_note,include_outline=True)
@@ -749,6 +841,8 @@ def build(site,atlas):
         '<article id="central-binomial-reading" class="sl-math-manuscript" aria-label="Weighted binomial sums: complete article">'
         +central_reading+'</article>'
         +central_examples+
+        '<p class="sl-tool-back"><a href="sequence-rational-hankel.html">'
+        'Continue to the common rational moment kernel and Hankel determinant recurrences</a>.</p>'
         '<p class="sl-tool-back"><a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/research/sequence-closed-forms/ALGEBRAIC_KERNEL_EXAMPLES.md">'
         'Read the complete example source</a> · <a download href="assets/sequence-formula-source.zip">'
         'Download all derivations and exact checks</a></p>'

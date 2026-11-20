@@ -107,6 +107,24 @@ class MathematicalReadingTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             mathematical_reading_fragment('# Example\n\n'+chr(96)*3+'python\nprint(1)')
 
+    def test_rational_hankel_proofs_keep_math_tables_and_separate_heading_ids(self):
+        import re
+        source=(ROOT/'research/sequence-closed-forms/RATIONAL_HANKEL_TAILS.md').read_text(encoding='utf-8')
+        linear=(ROOT/'research/sequence-closed-forms/LINEAR_WEIGHT_RECURRENCE.md').read_text(encoding='utf-8')
+        full=mathematical_reading_fragment(source,include_outline=True)
+        other=mathematical_reading_fragment(linear,include_outline=True,id_prefix='linear-proof-')
+        self.assertEqual(full.count('class="arithmatex sl-math-display"'),source.count(r'\['))
+        self.assertEqual(other.count('class="arithmatex sl-math-display"'),linear.count(r'\['))
+        self.assertIn('<th scope="col">',other)
+        self.assertEqual(other.count('<th scope="row">'),10)
+        self.assertIn('aria-label="Scrollable mathematical table"',other)
+        self.assertIn('sequence-rational-hankel.html#rational-hankel-proof',other)
+        self.assertIn('sequence-differential-hankel.html',full)
+        ids=re.findall(r' id="([^"]+)"',full+other)
+        self.assertEqual(len(ids),len(set(ids)))
+        with self.assertRaises(ValueError):
+            mathematical_reading_fragment('| a | b |\n| --- | --- |\n| one |')
+
     def test_inline_math_is_typeset_without_processing_code(self):
         raw=r'For \(x<y\), use `\(source\)` and **exact** arithmetic.'
         content=mathematical_reading_fragment(raw)

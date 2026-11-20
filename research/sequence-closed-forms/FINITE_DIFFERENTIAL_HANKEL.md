@@ -112,7 +112,12 @@ h(z)R(z)M'(z)=
 }
 \]
 
-Consequently the moments satisfy a finite-width recurrence with polynomial coefficients in the index. If \(R(0)=0\), the leading coefficient of that recurrence can vanish at the initial indices, so it must be interpreted with the exact initial moments rather than divided through blindly. No assertion is made that the **Hankel determinant sequence** of an arbitrary polynomial \(P\) has a rational generating function.
+Consequently the moments satisfy a finite-width recurrence with polynomial coefficients in the index. If \(R(0)=0\), the leading coefficient of that recurrence can vanish at the initial indices, so it must be interpreted with the exact initial moments rather than divided through blindly.
+
+This moment derivation alone does not prove rationality of the **Hankel
+determinant sequence**. The subsequent [rational Hankel theorem](RATIONAL_HANKEL_TAILS.md)
+establishes that separate result for every fixed polynomial weight and finite
+constant-coefficient differential operator, including singular minors.
 
 ### Removing singular starts: a universal forward recurrence
 

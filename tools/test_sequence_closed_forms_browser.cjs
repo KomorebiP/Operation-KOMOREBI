@@ -8,6 +8,7 @@ const base=process.argv[2]||'http://127.0.0.1:8846/';
 const output=process.argv[3]||'.sequence-checks/reports/closed-forms-browser';
 fs.mkdirSync(output,{recursive:true});
 const url=name=>new URL(name,base).href;
+const clipboardText=async page=>(await page.evaluate(()=>navigator.clipboard.readText())).replace(/\r\n/g,'\n');
 async function fit(page,staticOnly=false){
   if(!staticOnly)await page.evaluate(async()=>{await document.fonts.ready;await new Promise(ok=>requestAnimationFrame(()=>requestAnimationFrame(ok)));});
   const dims=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,client:document.documentElement.clientWidth}));
@@ -25,7 +26,8 @@ async function valueRows(page){
   return page.locator('#cf-table-values tr td code').allTextContents();
 }
 (async()=>{
-  const browser=await chromium.launch({headless:true});
+  const browser=await chromium.launch({headless:true,
+    ...(process.env.PLAYWRIGHT_EXECUTABLE_PATH?{executablePath:process.env.PLAYWRIGHT_EXECUTABLE_PATH}:{})});
   const report={status:'running',widths:[],errors:[],noJavaScript:false};
   try{
     for(const width of [1440,390,320]){
@@ -37,7 +39,7 @@ async function valueRows(page){
       const panel=page.locator('#closed-calculator-panel');
       assert.equal(await panel.evaluate(node=>node.open),false,'Worksheet should be collapsed on arrival');
       await openCalculator(page);
-      assert.equal(await page.locator('#cf-mode option').count(),11);
+      assert.equal(await page.locator('#cf-mode option').count(),12);
       assert.deepEqual((await valueRows(page)).slice(0,12),
         ['1','0','1','0','1','1','1','2','1','3','2','4']);
       await fit(page);
@@ -60,7 +62,7 @@ async function valueRows(page){
       assert.match(centralFormula,/n >= 3/);
       assert.equal(await page.locator('#cf-central-proof').getAttribute('href'),'sequence-central-binomial.html');
       await page.locator('#cf-central-copy').click();
-      assert.equal(await page.evaluate(()=>navigator.clipboard.readText()),centralFormula+'\n');
+      assert.equal(await clipboardText(page),centralFormula+'\n');
       await fit(page);
       await page.locator('#cf-central').screenshot({path:path.join(output,'central-binomial-formulas-'+width+'.png')});
       if(width===320){
@@ -98,7 +100,7 @@ async function valueRows(page){
       await page.locator('#cf-calculate').click();
       assert.deepEqual(await valueRows(page),['1','2','4','8','16','32','64','128']);
       await page.locator('#cf-link').click();
-      const centralLink=await page.evaluate(()=>navigator.clipboard.readText());
+      const centralLink=await clipboardText(page);
       assert.equal(new URL(centralLink).searchParams.get('cf-mode'),'central_binomial');
       assert.equal(new URL(centralLink).searchParams.get('cf-r'),'-1');
       const centralRestored=await context.newPage();
@@ -167,7 +169,7 @@ async function valueRows(page){
       await page.locator('#cf-parity-formula').focus();
       assert.notEqual(await page.locator('#cf-parity-formula').evaluate(el=>getComputedStyle(el).outlineStyle),'none');
       await page.locator('#cf-parity-copy').click();
-      assert.equal(await page.evaluate(()=>navigator.clipboard.readText()),parityFormula+'\n');
+      assert.equal(await clipboardText(page),parityFormula+'\n');
       await fit(page);
       await page.locator('#cf-parity').screenshot({path:path.join(output,'moment-formulas-'+width+'.png')});
       if(width===320){
@@ -183,7 +185,7 @@ async function valueRows(page){
       assert.match(await page.locator('#cf-ogf-info').textContent(),
         /Numerator degree ≤ 6/);
       await page.locator('#cf-ogf-copy').click();
-      assert.match(await page.evaluate(()=>navigator.clipboard.readText()),
+      assert.match(await clipboardText(page),
         /M\(z\) =/);
       // A newer copy on the same calculation supersedes a pending old one.
       await page.evaluate(()=>{
@@ -256,7 +258,7 @@ async function valueRows(page){
       assert.match(downloaded,/family,index,exact_integer,parameters/);
 
       await page.locator('#cf-link').click();
-      const shared=await page.evaluate(()=>navigator.clipboard.readText());
+      const shared=await clipboardText(page);
       assert.equal(new URL(shared).searchParams.get('cf-version'),'1');
       assert.equal(new URL(shared).searchParams.get('cf-v'),'12');
       assert.ok(shared.includes('cf-count=2'));

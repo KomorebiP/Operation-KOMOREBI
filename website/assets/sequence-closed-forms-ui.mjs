@@ -14,6 +14,7 @@ const modes=[
   ['beta_hankel','Beta-binomial Hankel determinants'],
   ['differential_hankel','Higher-order differential Hankel determinants'],
   ['differential_moments','Differential moments and algebraic generating functions'],
+  ['linear_hankel','Linear-weight Hankel: rational generating function'],
   ['meixner','Meixner–Pollaczek integer polynomials']
 ];
 const descriptions={
@@ -40,6 +41,7 @@ const subtitle={
   beta_hankel:'Hankel transforms of integer unnormalized moments. Determinants vanish above support rank L+1.',
   differential_hankel:'Choose P(m)=a₀+a₁m+a₂m(m−1)+a₃m(m−1)(m−2) and Dₓ=c₀+c₁∂ₓ+c₂∂ₓ²+c₃∂ₓ³. Coefficients are preserved when switching to differential moments.',
   differential_moments:'Compute the exact moments μₙ=F_P[Dₓxⁿ] and their algebraic generating function. Coefficients are preserved when switching to differential Hankel determinants.',
+  linear_hankel:'Compute Hankel determinants for P(m)=a₀+a₁m and Dₓ=1 with the uniform order-nine recurrence. Zero and signed weights are supported.',
   meixner:'Integer polynomial specializations of the classical Meixner–Pollaczek recurrence.'
 };
 function node(tag,text){
@@ -144,7 +146,7 @@ export function mountClosedFormsCalculator(root,{href=location.href}={}){
   ogfRegion.tabIndex=0;ogfRegion.setAttribute('role','region');
   ogfRegion.setAttribute('aria-label','Exact moment generating-function formula');
   const ogfCode=node('code');ogfRegion.append(ogfCode);
-  const ogfHelp=node('p','The numerator is computed exactly from the displayed parameters. A polynomial-weighted differential moment sequence has an algebraic generating function; that fact alone does not imply a rational generating function for its Hankel determinants.');
+  const ogfHelp=node('p');
   ogfHelp.className='cf-note';
   const ogfActions=node('div');ogfActions.className='cf-actions';
   const ogfCopy=node('button','Copy generating function');ogfCopy.type='button';
@@ -163,6 +165,17 @@ export function mountClosedFormsCalculator(root,{href=location.href}={}){
   const parityCopy=node('button','Copy moment formulas');parityCopy.type='button';parityCopy.id='cf-parity-copy';
   parityActions.append(parityCopy);
   parity.append(parityTitle,parityInfo,parityRegion,parityHelp,parityActions);
+  const kernel=node('details');kernel.id='cf-kernel';kernel.className='cf-formulas';kernel.hidden=true;
+  const kernelRegion=node('pre');kernelRegion.id='cf-kernel-formula';kernelRegion.className='cf-formula';
+  kernelRegion.tabIndex=0;kernelRegion.setAttribute('role','region');
+  kernelRegion.setAttribute('aria-label','Common rational coefficient-transfer kernel');
+  const kernelCode=node('code');kernelRegion.append(kernelCode);
+  const kernelHelp=node('p','This coefficient formula produces the underlying moments. The separate Hankel rationality theorem concerns determinants formed from those moments.');
+  kernelHelp.className='cf-note';
+  const kernelLink=node('a','Read the rational-kernel and Hankel proofs');
+  kernelLink.href='sequence-rational-hankel.html';
+  const kernelCopy=node('button','Copy rational kernel');kernelCopy.type='button';kernelCopy.id='cf-kernel-copy';
+  kernel.append(node('summary','One common rational kernel for the moments'),kernelRegion,kernelHelp,kernelLink,kernelCopy);
   const central=node('details');central.id='cf-central';central.className='cf-formulas';central.hidden=true;
   const centralTitle=node('summary','Definition, generating function, and universal recurrence');
   const centralInfo=node('p');centralInfo.id='cf-central-info';centralInfo.className='cf-note';
@@ -189,7 +202,7 @@ export function mountClosedFormsCalculator(root,{href=location.href}={}){
   fallback.rows=4;
   const warning=node('p','Spreadsheet programs may round large integers. Import the exact_integer column as text.');
   warning.className='cf-note';
-  result.append(resultTitle,explain,region,exports,warning,central,parity,ogf,method,fallback);
+  result.append(resultTitle,explain,region,exports,warning,central,parity,ogf,kernel,method,fallback);
   root.append(form,status,result);
   let latest=null,latestView=null,renderedMode='',generation=0,copyGeneration=0,pendingWorker=null,pendingFallback=null;
   function rawValues(){
@@ -274,7 +287,7 @@ export function mountClosedFormsCalculator(root,{href=location.href}={}){
     cancelPending();latest=null;latestView=null;result.hidden=true;fallback.hidden=true;
   }
   function render(data){
-    if(renderedMode!==data.mode){ogf.open=false;parity.open=false;central.open=false;}
+    if(renderedMode!==data.mode){ogf.open=false;parity.open=false;central.open=false;kernel.open=false;}
     renderedMode=data.mode;
     latest=data;latestView={mode:data.mode,start:data.start,count:data.count,...data.parameters};
     body.replaceChildren();
@@ -310,10 +323,22 @@ export function mountClosedFormsCalculator(root,{href=location.href}={}){
             ', multiplied by 2m+1.');
     }
     ogf.hidden=!data.generatingFunction;
+    kernel.hidden=!data.canonicalKernel;
+    if(data.canonicalKernel)kernelCode.textContent=data.canonicalKernel.expression;
     if(data.generatingFunction){
       const evidence=data.generatingFunction;
       ogfCode.textContent=evidence.expression;
-      ogfInfo.textContent='Numerator degree ≤ '+evidence.degreeBound+
+      const hankel=evidence.kind==='rational-hankel';
+      ogfTitle.textContent=hankel?'Exact rational Hankel generating function and recurrence':
+        'Exact algebraic moment generating function';
+      ogfRegion.setAttribute('aria-label',hankel?'Exact Hankel generating function and recurrence':
+        'Exact moment generating-function formula');
+      ogfHelp.textContent=hankel?
+        'These are Hankel determinant coefficients. The general recurrence has order nine; exceptional parameters can reduce its minimal order. The formula includes W₀=1 and every zero minor.':
+        'The numerator is computed exactly from the displayed parameters. This is the algebraic generating function of the underlying moments. The rational Hankel generating function follows from the separate stationary-transfer proof.';
+      ogfInfo.textContent=hankel?
+        'Uniform recurrence order ≤ 9 from n=1. The denominator has constant term 1, including at zero weights.':
+        'Numerator degree ≤ '+evidence.degreeBound+
         '; effective polynomial weight degree '+evidence.weightDegree+
         '; effective differential order '+evidence.operatorOrder+'. '+
         (evidence.initialZeroMoments===null
@@ -404,6 +429,13 @@ export function mountClosedFormsCalculator(root,{href=location.href}={}){
   ogfCopy.addEventListener('click',()=>{
     if(!latest?.generatingFunction)return;
     doCopy(latest.generatingFunction.expression+'\n','the generating function');
+  });
+  kernelCopy.addEventListener('click',()=>{
+    if(!latest?.canonicalKernel)return;
+    doCopy(latest.canonicalKernel.expression+'\n','the rational kernel',kernelCopy);
+  });
+  kernel.addEventListener('toggle',()=>{
+    if(!kernel.open){copyGeneration++;fallback.hidden=true;}
   });
   parityCopy.addEventListener('click',()=>{
     if(!latest?.momentClosedForms)return;
