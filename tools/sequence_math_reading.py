@@ -137,3 +137,57 @@ def mathematical_reading_fragment(source, *, include_outline=False):
                         '<nav aria-label="Proof sections"><ul>'+''.join(outline)+
                         '</ul></nav></details>')
     return '\n'.join(result)
+
+
+def mathematical_example_gallery(source):
+    """Render the 23 source examples as native, keyboard-operable disclosures.
+
+    Equations remain in the static HTML, including when JavaScript is disabled.
+    The source heading order is checked so a missing example fails the build.
+    """
+    headings=list(re.finditer(r'^## Example (\d+)\. (.+)$',source,re.MULTILINE))
+    if [int(item[1]) for item in headings]!=list(range(1,24)):
+        raise ValueError('The algebraic-kernel gallery must contain examples 1 through 23')
+    groups={
+        1:('kernel-classical','Classical and multistep kernels',
+           'Examples 1–6 change the coefficient kernel itself.'),
+        7:('kernel-dyadic','Two-position blocks',
+           'Examples 7–13 develop the original family and its special parameters.'),
+        14:('kernel-blocks','Larger blocks and independent weights',
+            'Examples 14–20 use three, four, and five positions per block.'),
+        21:('kernel-weighted','Polynomial and Fibonacci weights',
+            'Examples 21–23 weight the block index beyond a single geometric factor.'),
+    }
+    parts=[
+        '<section id="kernel-examples" class="sl-math-manuscript sl-kernel-gallery" '
+        'aria-labelledby="kernel-examples-heading">',
+        '<h2 id="kernel-examples-heading">23 worked examples</h2>',
+        mathematical_reading_fragment(source[:headings[0].start()]),
+        '<nav class="sl-binomial-jumps" aria-label="Example groups">'
+        +''.join('<a href="#'+key+'">'+title+'</a>'
+                 for key,title,_ in groups.values())+'</nav>',
+        '<div class="sl-example-controls" hidden>'
+        '<button type="button" data-example-action="open">Expand all examples</button>'
+        '<button type="button" data-example-action="close">Collapse all examples</button>'
+        '</div>',
+    ]
+    for index,heading in enumerate(headings):
+        number=int(heading[1])
+        if number in groups:
+            if index:
+                parts.append('</section>')
+            key,title,description=groups[number]
+            parts.append('<section class="sl-example-group" aria-labelledby="'+key+'">'
+                         '<h3 id="'+key+'">'+title+'</h3><p>'+description+'</p>')
+        end=headings[index+1].start() if index+1<len(headings) else len(source)
+        body=source[heading.end():end].strip()
+        parts.append(
+            '<details id="kernel-example-'+str(number)+'" class="sl-kernel-example">'
+            '<summary><span class="sl-example-number">Example '+str(number)+'</span> '
+            +_inline(heading[2])+'</summary>'
+            '<div class="sl-example-body">'
+            +mathematical_reading_fragment(body)
+            +'<p class="sl-example-permalink"><a href="#kernel-example-'+str(number)+'">'
+             'Link to this example</a></p></div></details>')
+    parts.append('</section></section>')
+    return '\n'.join(parts)

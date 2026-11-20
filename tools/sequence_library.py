@@ -179,11 +179,15 @@ def build(site,atlas):
     source_files=['tools/'+name+'.py' for name in ['sequence_formula_catalogue','sequence_library','sequence_archive','sequence_closed_forms','sequence_closed_forms_extended','sequence_polynomial_hankel','sequence_differential_hankel','sequence_math_reading','sequence_research_tables','sequence_linear_research','sequence_research_notes','sequence_generalized','sequence_archive_families','sequence_atlas','sequence_atlas_reference','sequence_atlas_reading','sequence_atlas_study','sequence_atlas_index']]+[REGISTRY_PATH,'manifests/sequence-generalized-sources.json','research/sequence-connections/IDENTITIES.md','research/sequence-connections/sources/komorebi-math-families.py','research/sequence-closed-forms/IDENTITIES.md','research/sequence-closed-forms/COLLECTION_II_ADDITIONS.md','research/sequence-closed-forms/POLYNOMIAL_HANKEL_STRUCTURE.md','research/sequence-closed-forms/FINITE_DIFFERENTIAL_HANKEL.md','tools/test_sequence_closed_forms.py','tools/test_sequence_closed_forms_extended.py','tools/test_sequence_polynomial_hankel.py','tools/test_sequence_differential_hankel.py','tools/test_sequence_differential_hankel_bridge.py','tools/test_sequence_differential_hankel_bridge.mjs','tools/test_sequence_math_reading.py','tools/test_sequence_closed_forms_core.mjs','website/assets/sequence-closed-forms-core.mjs','website/assets/sequence-differential-hankel.mjs','website/assets/sequence-closed-forms-worker.mjs']
     source_files+=['tools/update_sequence_library_oeis.py','manifests/sequence-library-oeis.json','research/oeis-snapshot/snapshot.json','research/sequence-archive/candidate_registry.json']
     source_files+=['tools/sequence_central_binomial.py','tools/test_sequence_closed_forms_central.py','research/sequence-closed-forms/CENTRAL_BINOMIAL_RECURRENCE.md','tools/test_sequence_closed_form_handoffs.py','tools/test_sequence_closed_form_handoffs.mjs']
+    source_files+=['research/sequence-closed-forms/ALGEBRAIC_KERNEL_EXAMPLES.md',
+                   'tools/sequence_algebraic_kernel_examples.py',
+                   'tools/test_sequence_algebraic_kernel_examples.py',
+                   'website/assets/sequence-binomial-reading.mjs']
     with ZipFile(site.output/'assets/sequence-formula-source.zip','w',ZIP_DEFLATED) as bundle:
         for name in source_files:
             info=ZipInfo(name,date_time=(2026,11,15,0,0,0));info.compress_type=ZIP_DEFLATED;info.external_attr=0o100644<<16;bundle.writestr(info,(site.root/name).read_text(encoding='utf-8').encode('utf-8'))
         info=ZipInfo('README.txt',date_time=(2026,11,15,0,0,0));info.compress_type=ZIP_DEFLATED;info.external_attr=0o100644<<16
-        bundle.writestr(info,'Exact formula catalogue. Python 3.10+ standard library. The browser arithmetic and cross-language checks also require Node.js 24. Text sources use UTF-8/LF for portable reproduction.\nRun: python tools/sequence_formula_catalogue.py --id KFOR-S-catalan-03-01\nExport all records: python tools/sequence_formula_catalogue.py --output records.json\nCheck closed-form formulas: python -B -m unittest discover -s tools -p \"test_sequence_closed_forms*.py\" -v\nCheck weighted binomial recurrence: python -B -m unittest discover -s tools -p test_sequence_closed_forms_central.py -v\nCheck browser arithmetic: node --test tools/test_sequence_closed_forms_core.mjs\nCheck indexed calculator presets: python -B -m unittest discover -s tools -p test_sequence_closed_form_handoffs.py -v\nCompare Python and JavaScript: python -B -m unittest discover -s tools -p test_sequence_differential_hankel_bridge.py -v\nScalar records store 24 terms beginning at their explicit offsets, except standard k-bonacci records, which store 48. Coefficient triangles store complete rows n=0..12, including zeros. Triangle j is a flat cell index. Its row and column are n and k. Parameter records are not claims of novelty or pairwise distinctness.\n\nReproduce finite OEIS comparisons using the retained snapshot:\nThe comparison receipt and updater are included. The two bulk gzip files are separate downloads, not duplicated in this source ZIP. Download https://komorebip.github.io/Operation-KOMOREBI/assets/oeis/stripped.gz and https://komorebip.github.io/Operation-KOMOREBI/assets/oeis/names.gz. Place both files in research/oeis-snapshot/ beside the included snapshot.json. That file records the required byte counts and SHA-256 hashes; the updater rejects different bytes before scanning.\nRun: python tools/update_sequence_library_oeis.py --source research/oeis-snapshot --output reproduced-oeis-comparison.json\nThe reproduction timestamp changes. Compare the snapshot hashes, catalogue_terms_sha256, matches and total_matches with manifests/sequence-library-oeis.json. Comparisons use the first eight stored terms at every exported position and extend each hit. Export positions are not mathematical offsets; finite hits are not proofs of infinite identity or novelty.\n')
+        bundle.writestr(info,'Exact formula catalogue. Python 3.10+ standard library. The browser arithmetic and cross-language checks also require Node.js 24. Text sources use UTF-8/LF for portable reproduction.\nRun: python tools/sequence_formula_catalogue.py --id KFOR-S-catalan-03-01\nExport all records: python tools/sequence_formula_catalogue.py --output records.json\nCheck closed-form formulas: python -B -m unittest discover -s tools -p \"test_sequence_closed_forms*.py\" -v\nCheck weighted binomial recurrence: python -B -m unittest discover -s tools -p test_sequence_closed_forms_central.py -v\nCheck algebraic-kernel examples: python -B -m unittest discover -s tools -p test_sequence_algebraic_kernel_examples.py -v\nPrint worked example terms: python tools/sequence_algebraic_kernel_examples.py\nCheck browser arithmetic: node --test tools/test_sequence_closed_forms_core.mjs\nCheck indexed calculator presets: python -B -m unittest discover -s tools -p test_sequence_closed_form_handoffs.py -v\nCompare Python and JavaScript: python -B -m unittest discover -s tools -p test_sequence_differential_hankel_bridge.py -v\nScalar records store 24 terms beginning at their explicit offsets, except standard k-bonacci records, which store 48. Coefficient triangles store complete rows n=0..12, including zeros. Triangle j is a flat cell index. Its row and column are n and k. Parameter records are not claims of novelty or pairwise distinctness.\n\nReproduce finite OEIS comparisons using the retained snapshot:\nThe comparison receipt and updater are included. The two bulk gzip files are separate downloads, not duplicated in this source ZIP. Download https://komorebip.github.io/Operation-KOMOREBI/assets/oeis/stripped.gz and https://komorebip.github.io/Operation-KOMOREBI/assets/oeis/names.gz. Place both files in research/oeis-snapshot/ beside the included snapshot.json. That file records the required byte counts and SHA-256 hashes; the updater rejects different bytes before scanning.\nRun: python tools/update_sequence_library_oeis.py --source research/oeis-snapshot --output reproduced-oeis-comparison.json\nThe reproduction timestamp changes. Compare the snapshot hashes, catalogue_terms_sha256, matches and total_matches with manifests/sequence-library-oeis.json. Comparisons use the first eight stored terms at every exported position and extend each hit. Export positions are not mathematical offsets; finite hits are not proofs of infinite identity or novelty.\n')
     generalized=generalized_catalogue(entries)
     site.write('assets/sequence-generalized-data.json',json.dumps(generalized,ensure_ascii=False,separators=(',',':'))+'\n')
     scripts=['math-display.mjs','sequence-research-ui.mjs','sequence-reading-theme.mjs','sequence-oeis-core.mjs','sequence-family-core.mjs','sequence-transfer-core.mjs','sequence-math.mjs','sequence-graph-core.mjs','sequence-modular-core.mjs','sequence-discovery-core.mjs','sequence-notebook-core.mjs','sequence-research-worker.mjs','sequence-research-common.mjs','sequence-oeis-worker.mjs','sequence-oeis-client.mjs','sequence-comparison-chart.mjs','sequence-chart-labels.mjs','sequence-workbench-core.mjs','sequence-comparison-certificate.mjs','sequence-certificate-inspection.mjs','sequence-workbench.mjs','sequence-triangle-core.mjs','sequence-triangle.mjs','sequence-transfers.mjs','sequence-families-ui.mjs','sequence-connections-ui.mjs','sequence-identification-ui.mjs','sequence-modular-ui.mjs','sequence-notebooks-ui.mjs','sequence-library-membership.mjs','sequence-research-studio.mjs','sequence-library-search.mjs','sequence-inspection-links.mjs','sequence-differential-hankel.mjs','sequence-closed-forms-core.mjs','sequence-closed-forms-worker.mjs','sequence-closed-forms-ui.mjs','sequence-library.js']
@@ -644,7 +648,7 @@ def build(site,atlas):
 
     # Full mathematical reading page from the same versioned source as GitHub.
     # A dependency-free renderer keeps preview and release output consistent.
-    from sequence_math_reading import mathematical_reading_fragment
+    from sequence_math_reading import mathematical_reading_fragment, mathematical_example_gallery
     note=(site.root/'research/sequence-closed-forms/FINITE_DIFFERENTIAL_HANKEL.md').read_text(encoding='utf-8')
     full_note=mathematical_reading_fragment(note,include_outline=True)
     differential_hankel_page=(
@@ -683,37 +687,77 @@ def build(site,atlas):
 
     central_note=(site.root/'research/sequence-closed-forms/CENTRAL_BINOMIAL_RECURRENCE.md').read_text(encoding='utf-8')
     central_reading=mathematical_reading_fragment(central_note,include_outline=True)
+    example_note=(site.root/'research/sequence-closed-forms/ALGEBRAIC_KERNEL_EXAMPLES.md').read_text(encoding='utf-8')
+    central_examples=mathematical_example_gallery(example_note)
+    binomial_script=(site.root/'website/assets/sequence-binomial-reading.mjs').read_bytes()
+    site.write('assets/sequence-binomial-reading.mjs',binomial_script.decode('utf-8'))
+    binomial_script_url='assets/sequence-binomial-reading.mjs?v='+hashlib.sha256(binomial_script).hexdigest()[:12]
     central_example=('sequence-library.html?cf-version=1&amp;cf-mode=central_binomial'
                      '&amp;cf-start=0&amp;cf-count=12&amp;cf-r=4#closed-calculator-panel')
     central_page=(
         closed_css+
-        page_heading('A uniform recurrence for weighted binomial rows',
-            'One proof for every complex parameter, with exact examples and established OEIS connections.',
+        page_heading('Weighted binomial sums',
+            'A uniform recurrence, algebraic generating functions, and 23 worked examples.',
             'research','central-binomial')+
         '<nav class="sl-tool-back" aria-label="Weighted binomial research routes">'
         '<a href="sequence-closed-forms.html#central-binomial-recurrence">Closed Forms collection</a> · '
         '<a href="generalized-families/GF-CF-CENTRAL-BINOMIAL.html">Family and indexed examples</a> · '
         '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/research/sequence-closed-forms/CENTRAL_BINOMIAL_RECURRENCE.md">Versioned proof source</a></nav>'
+        '<nav class="sl-binomial-jumps" aria-label="Reading routes">'
+        '<a href="#math-proof-1-definition-and-universal-recurrence">Theorem and proof</a>'
+        '<a href="#math-proof-9-arbitrary-block-lengths-and-residue-weights">Larger block family</a>'
+        '<a href="#kernel-examples">23 examples</a>'
+        '<a href="#binomial-attribution">What was already known</a>'
+        '<a href="#math-proof-7-exact-computation-and-reproduction">Code and checks</a></nav>'
         '<section id="central-binomial" class="sl-math-reading-intro"><h2>Start with the r=4 example</h2>'
         '<p>The values begin 1, −3, 14, −57, 246, −1038, 4424. '
-        'The same recurrence construction covers every complex parameter. '
-        'The exact browser calculator accepts integer r from −12 through 12 and indices from 0 through 160.</p>'
+        'The first part of this page proves one recurrence for every complex parameter r. '
+        'The second part allows arbitrary block lengths and independent weights, then develops polynomial and Fibonacci weights.</p>'
+        '<p>The browser calculator evaluates the original two-position family for integer r from −12 through 12 '
+        'and indices from 0 through 160. The larger families have written formulas, worked values, and exact Python checks below.</p>'
         '<p><a href="'+central_example+'">Calculate and export the r=4 sequence</a> · '
         '<a href="sequence-families/KFOR-CF-CB-4.html">Read its exact stored terms and three formulas</a> · '
         '<a download href="assets/sequence-formula-source.zip">Download the proof, code and tests</a></p></section>'
+        '<section id="binomial-attribution" class="sl-binomial-status" aria-labelledby="binomial-status-heading">'
+        '<h2 id="binomial-status-heading">What was already known, and what is proved here</h2>'
+        '<p>The mathematical claims below have written derivations. Historical priority is a separate question. '
+        'This page does not claim the first discovery of the family, the classical identity, or the recorded recurrences.</p>'
+        '<table><caption>Attribution and scope of the results</caption>'
+        '<thead><tr><th scope="col">Result</th><th scope="col">Status</th></tr></thead><tbody>'
+        '<tr><th scope="row">Coefficient transfer</th><td>Classical Lagrange inversion. '
+        '<a href="https://arxiv.org/html/1609.05988v1#S2.SS1">Gessel, equations (2.1.4) and (2.1.6)</a>.</td></tr>'
+        '<tr><th scope="row">Original family and Catalan construction</th><td>Established in '
+        '<a href="https://oeis.org/A107430">A107430</a>, <a href="https://oeis.org/A127361">A127361</a>, '
+        'and <a href="https://oeis.org/A127363">A127363</a>.</td></tr>'
+        '<tr><th scope="row">The r=2 recurrence</th><td>Already proved by '
+        '<a href="https://arxiv.org/html/2608.22053v2#S7">Easwar, Theorem 7.1</a>. Recovered here.</td></tr>'
+        '<tr><th scope="row">The r=4 recurrence</th><td>Recorded by Mathar in A127363 and, with alternating signs, '
+        'by Kotesovec in <a href="https://oeis.org/A133444">A133444</a>. Proved by the argument below. No first-proof claim.</td></tr>'
+        '<tr><th scope="row">The all-r recurrence</th><td>Derived and proved here for every complex r. '
+        'It extends the fixed-parameter statement. Historical priority has not been established.</td></tr>'
+        '<tr><th scope="row">Arbitrary blocks and further weights</th><td>Explicit applications of the classical identity, '
+        'with derivations and worked examples. No novelty claim.</td></tr>'
+        '</tbody></table><p><a href="#math-proof-6-oeis-connections-and-attribution">'
+        'Read the exact source comparison and the r=4 sign change</a>.</p></section>'
         '<article id="central-binomial-reading" class="sl-math-manuscript" aria-label="Full weighted binomial recurrence proof">'
         +central_reading+'</article>'
+        +central_examples+
+        '<p class="sl-tool-back"><a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/research/sequence-closed-forms/ALGEBRAIC_KERNEL_EXAMPLES.md">'
+        'Read the complete example source</a> · <a download href="assets/sequence-formula-source.zip">'
+        'Download all derivations and exact checks</a></p>'
         '<nav class="sl-tool-back" aria-label="Return to sequence research">'
         '<a href="sequence-library.html#sequence-proof-path">Return to proof and verification index</a></nav>'
+        '<script type="module" src="'+binomial_script_url+'"></script>'
     )
     site.page('sequence-central-binomial.html',
-              'Sequence Library · A uniform recurrence for weighted binomial rows',
+              'Sequence Library · Weighted binomial sums and algebraic generating functions',
               wrap(central_page,page_kind='central-binomial'))
-    site.search.append(dict(title='A uniform recurrence for weighted binomial rows',
+    site.search.append(dict(title='Weighted binomial sums and algebraic generating functions',
                             group='Collection',kind='Mathematical derivations',
                             work_ids=[],url='sequence-central-binomial.html',
                             text='A107430 A127363 A133444 A127361 Mathar Kotesovec Easwar '
-                                 'all complex parameters central binomial Catalan generating function recurrence proof'))
+                                 'all complex parameters central binomial Catalan generating function recurrence proof '
+                                 'Lagrange inversion Gessel arbitrary blocks residue weights polynomial Fibonacci 23 worked examples'))
 
     for filename,title,description,section_id,page_kind in [
         ('sequence-connections.html','Sequence connections',

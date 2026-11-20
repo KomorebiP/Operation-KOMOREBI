@@ -1,0 +1,103 @@
+// Reading, equation layout, and native disclosure checks for the expanded note.
+// Author: Komorebi P.
+const {chromium}=require('playwright');
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const base=process.argv[2]||'http://127.0.0.1:8846/';
+const output=process.argv[3]||'.sequence-checks/reports/binomial-reading';
+fs.mkdirSync(output,{recursive:true});
+const url=new URL('sequence-central-binomial.html',base).href;
+const report={status:'running',widths:[],errors:[],noJavaScript:false};
+
+async function ready(page){
+  await page.waitForFunction(()=>document.documentElement.dataset.mathDisplayReady==='true');
+  await page.evaluate(async()=>{
+    await window.MathJax?.startup?.promise;
+    await window.KomorebiMath?.ready;
+    await document.fonts.ready;
+  });
+}
+async function layout(page){
+  return page.evaluate(()=>({
+    page:{scroll:document.documentElement.scrollWidth,client:document.documentElement.clientWidth},
+    equationOverflow:[...document.querySelectorAll('.sl-math-display')].filter(
+      node=>node.getBoundingClientRect().width>0&&node.scrollWidth>node.clientWidth+2
+    ).map(node=>({width:node.clientWidth,scroll:node.scrollWidth,
+      tex:node.querySelector('mjx-assistive-mml')?.textContent||node.textContent})),
+    mathErrors:[...document.querySelectorAll('[data-mml-node="merror"],[data-mjx-error]')]
+      .map(node=>node.textContent),
+  }));
+}
+(async()=>{
+  const browser=await chromium.launch({headless:true,
+    ...(process.env.KOMOREBI_CHROMIUM_PATH?{executablePath:process.env.KOMOREBI_CHROMIUM_PATH}:{})});
+  try{
+    for(const width of [1440,390,320]){
+      const context=await browser.newContext({viewport:{width,height:960}});
+      const page=await context.newPage();
+      page.on('pageerror',error=>report.errors.push({width,message:error.message}));
+      const response=await page.goto(url);
+      assert.equal(response.ok(),true);
+      await ready(page);
+      assert.equal(await page.locator('main h1').count(),1);
+      assert.equal(await page.locator('.sl-kernel-example').count(),23);
+      assert.equal(await page.locator('.sl-kernel-example[open]').count(),0);
+      const brokenTargets=await page.evaluate(()=>[...document.querySelectorAll(
+        '.sl-binomial-jumps a,.sl-proof-outline a,.sl-example-permalink a'
+      )].filter(link=>link.hash&&!document.getElementById(link.hash.slice(1))).map(link=>link.hash));
+      assert.deepEqual(brokenTargets,[]);
+      await page.locator('[data-example-action="open"]').click();
+      assert.equal(await page.locator('.sl-kernel-example[open]').count(),23);
+      const measured=await layout(page);
+      report.widths.push({width,...measured});
+      assert.ok(measured.page.scroll<=measured.page.client+1,'Horizontal page overflow');
+      assert.deepEqual(measured.mathErrors,[]);
+      await page.locator('#math-proof-1-definition-and-universal-recurrence').scrollIntoViewIfNeeded();
+      await page.screenshot({path:path.join(output,'theorem-'+width+'.png')});
+      await page.locator('#kernel-example-20').screenshot({path:path.join(output,'weighted-example-'+width+'.png')});
+      await page.locator('#kernel-example-23').screenshot({path:path.join(output,'fibonacci-example-'+width+'.png')});
+      await page.locator('[data-example-action="close"]').click();
+      assert.equal(await page.locator('.sl-kernel-example[open]').count(),0);
+      await page.locator('#kernel-example-1 > summary').focus();
+      await page.keyboard.press('Enter');
+      assert.equal(await page.locator('#kernel-example-1').evaluate(node=>node.open),true);
+      await page.evaluate(()=>window.dispatchEvent(new Event('beforeprint')));
+      assert.equal(await page.locator('.sl-kernel-example[open]').count(),23);
+      await page.evaluate(()=>window.dispatchEvent(new Event('afterprint')));
+      assert.equal(await page.locator('.sl-kernel-example[open]').count(),1);
+      await page.goto(url+'#kernel-example-20');
+      await ready(page);
+      assert.equal(await page.locator('#kernel-example-20').evaluate(node=>node.open),true);
+      if(width===320){
+        await page.evaluate(()=>document.documentElement.style.fontSize='200%');
+        const enlarged=await layout(page);
+        assert.ok(enlarged.page.scroll<=enlarged.page.client+1,'Enlarged text overflows the page');
+        await page.locator('#kernel-example-20').screenshot({path:path.join(output,'weighted-example-enlarged-320.png')});
+      }
+      await context.close();
+    }
+    const context=await browser.newContext({javaScriptEnabled:false,viewport:{width:320,height:960}});
+    const page=await context.newPage();
+    await page.goto(url);
+    assert.equal(await page.locator('.sl-example-controls').isVisible(),false);
+    await page.locator('#kernel-example-20 > summary').click();
+    assert.equal(await page.locator('#kernel-example-20').evaluate(node=>node.open),true);
+    assert.ok((await page.locator('#kernel-example-20').textContent()).includes('10'));
+    const staticLayout=await layout(page);
+    assert.ok(staticLayout.page.scroll<=staticLayout.page.client+1);
+    report.noJavaScript=true;
+    await context.close();
+    assert.deepEqual(report.errors,[]);
+    // Report all narrow-screen equations before failing, so a line-break repair
+    // can be made from the hosted evidence without weakening this reading gate.
+    const overflow=report.widths.flatMap(item=>item.equationOverflow.map(
+      formula=>({width:item.width,...formula})));
+    assert.deepEqual(overflow,[],'Equations should fit without horizontal scrolling at ordinary text size');
+    report.status='passed';
+  }finally{
+    await browser.close();
+    fs.writeFileSync(path.join(output,'report.json'),JSON.stringify(report,null,2)+'\n');
+    console.log(JSON.stringify(report));
+  }
+})().catch(error=>{console.error(error);process.exit(1);});
