@@ -161,6 +161,60 @@ async function textContrast(page){
       }
       await context.close();
     }
+    report.conjectureWidths=[];
+    const conjectureUrl=new URL('sequence-conjecture-applications.html',base).href;
+    for(const width of [1440,390,320]){
+      const ctxt=await browser.newContext({viewport:{width,height:960}});
+      const page=await ctxt.newPage();
+      page.on('pageerror',error=>report.errors.push({width,kind:'conjecture',message:error.message}));
+      const response=await page.goto(conjectureUrl);
+      assert.equal(response.ok(),true);
+      await ready(page);
+      assert.equal(await page.locator('main h1').count(),1);
+      assert.equal(await page.locator('article#conjecture-reading').count(),1);
+      assert.ok(await page.locator('#conjecture-reading .sl-math-display').count()>=40);
+      const missing=await page.evaluate(()=>[...document.querySelectorAll(
+        '.sl-binomial-jumps a,.sl-proof-outline a'
+      )].filter(a=>a.hash&&!document.getElementById(a.hash.slice(1)))
+        .map(a=>a.hash));
+      assert.deepEqual(missing,[]);
+      await settleLayout(page);
+      const measure=await layout(page);
+      report.conjectureWidths.push({width,...measure});
+      assert.ok(measure.page.scroll<=measure.page.client+1,'Conjecture page horizontal overflow');
+      assert.deepEqual(measure.mathErrors,[],'Conjecture page MathJax errors');
+      assert.deepEqual(measure.inlineOverflow,[],'Conjecture page inline math overflow');
+      assert.deepEqual(measure.equationOverflow,[],'Conjecture page equations should fit');
+      const palette=await page.evaluate(()=>({
+        link:getComputedStyle(document.documentElement).getPropertyValue('--sq-link').trim(),
+        ink:getComputedStyle(document.documentElement).getPropertyValue('--sq-ink').trim(),
+      }));
+      assert.equal(palette.link.toLowerCase(),'#185a43','Keep site green');
+      assert.equal(palette.ink.toLowerCase(),'#222222','Keep neutral text');
+      await page.locator('#math-proof-6-weighted-euler-divisibility-as-a-local-jet-condition').scrollIntoViewIfNeeded();
+      await page.screenshot({path:path.join(output,'conjecture-theorem-'+width+'.png')});
+      if(width===390){
+        await page.locator('#sq-page-theme').selectOption('dark');
+        await settleLayout(page);
+        const dark=await layout(page);
+        assert.ok(dark.page.scroll<=dark.page.client+1);
+        assert.deepEqual(dark.mathErrors,[]);
+        await page.screenshot({path:path.join(output,'conjecture-dark-390.png')});
+      }
+      await ctxt.close();
+    }
+    // The source-driven article stays readable when client scripts are disabled.
+    {
+      const ctxt=await browser.newContext({javaScriptEnabled:false,viewport:{width:320,height:960}});
+      const p=await ctxt.newPage();
+      await p.goto(conjectureUrl);
+      assert.equal(await p.locator('article#conjecture-reading').count(),1);
+      assert.ok((await p.locator('article#conjecture-reading').textContent())
+        .includes('The precise open Euler conjecture'));
+      const measure=await layout(p);
+      assert.ok(measure.page.scroll<=measure.page.client+1);
+      await ctxt.close();
+    }
     const context=await browser.newContext({javaScriptEnabled:false,viewport:{width:320,height:960}});
     const page=await context.newPage();
     await page.goto(url);
