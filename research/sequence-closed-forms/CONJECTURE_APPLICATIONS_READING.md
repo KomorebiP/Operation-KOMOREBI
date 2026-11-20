@@ -29,7 +29,10 @@ The Euler up/down numbers count alternating permutations and are defined by
 Their initial values are
 
 \[
-1,\ 1,\ 1,\ 2,\ 5,\ 16,\ 61,\ 272,\ 1385,\ldots
+\begin{gathered}
+1,\ 1,\ 1,\ 2,\ 5,\\
+16,\ 61,\ 272,\ 1385,\ldots
+\end{gathered}
 \]
 
 For a positive integer \(q\), let \(s(q)\) denote the least preperiod and \(d(q)\) the least eventual period of the sequence \(E_n\bmod q\).
@@ -44,8 +47,10 @@ and establishes a divisibility criterion for \(s(p^r)\). His Conjecture 6.5 asks
 
 \[
 \boxed{
-s(p^r)\ge r-2
-\qquad(p\text{ odd prime},\ r\ge2).
+\begin{gathered}
+s(p^r)\ge r-2,\\
+p\text{ odd},\quad r\ge2.
+\end{gathered}
 }
 \]
 
@@ -150,14 +155,13 @@ Summing its coefficients in the ordinary generating variable \(x\) yields a seco
 
 \[
 \boxed{
-\begin{aligned}
-\sum_{n\ge1}E_nx^n
-&=\frac{2i}{1-\omega^q}\\
-&\quad\times
+\begin{gathered}
+\sum_{n\ge1}E_nx^n\\
+=\frac{2i}{1-\omega^q}
 \sum_{k=1}^{q}\omega^k
-\frac{ikx}{1-ikx}
+\frac{ikx}{1-ikx}\\
 \pmod q.
-\end{aligned}
+\end{gathered}
 }
 \]
 
@@ -170,14 +174,14 @@ Although the separate summands use \(i\), the sum represents elements of the sca
 For an odd prime \(p\), define
 
 \[
-\begin{aligned}
-L_r&=p^{r-1}\operatorname{lcm}(p-1,4),\\
-\varepsilon_{p,n}&=
+L_r=p^{r-1}\operatorname{lcm}(p-1,4).
+\]
+\[
+\varepsilon_{p,n}=
 \begin{cases}
 1,&p\equiv1\pmod4,\\
 (-1)^{n+1},&p\equiv3\pmod4.
 \end{cases}
-\end{aligned}
 \]
 
 **Theorem 5.1 (period-jump congruence).** For every \(r\ge1\) and \(n\ge1\),
@@ -400,12 +404,13 @@ This elementary corollary extends the recorded fixed-prime computations to compo
 For positive integers \(d,h\), define the size-\((n+1)\) determinant
 
 \[
-\begin{aligned}
+\begin{gathered}
 H_n(d,h)
-&=\det\left[
+=\det\left[
 \frac1{d(i+j)+h}
-\right]_{0\le i,j\le n}.
-\end{aligned}
+\right]\\
+(0\le i,j\le n).
+\end{gathered}
 \]
 
 The classical Cauchy identity gives
