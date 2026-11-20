@@ -10,7 +10,7 @@ algebraic generating functions for arbitrary block lengths, geometric block
 weights, and independent weights within each block. Polynomial weights and
 weight sequences satisfying linear recurrences with constant coefficients
 give further algebraic families. The proofs include degenerate parameters
-and zero weights. Twenty-three worked examples illustrate the formulas.
+and zero weights. Thirty-two worked examples illustrate the formulas.
 
 Sections 1 through 5 prove and explain the original recurrence. Section 6
 records the historical context, and Section 7 gives the reproduction commands.
@@ -416,8 +416,10 @@ identifications above.
 The block-example checks compare the defining finite sums with independently
 expanded formal generating functions. They include nonzero and zero weights,
 negative and rational parameters, and the polynomial weights in Examples 21
-and 22. The example source and exact arithmetic are included in the same
-downloadable source bundle as the original recurrence.
+and 22. Each of Examples 24 through 32 is checked through \(n=23\),
+including its twelve printed initial terms and worked calculations.
+The example source and exact arithmetic are included in the same downloadable
+source bundle as the original recurrence.
 
 ## 8. Classical coefficient transfer
 
@@ -488,6 +490,8 @@ is used.
 
 ## 9. Arbitrary block lengths and residue weights
 
+### Reading the parameters
+
 Choose a positive integer \(d\), complex parameters \(r,q\), and complex
 weights \(w_0,\ldots,w_{d-1}\). The index \(k\bmod d\) is the remainder
 in \(\{0,\ldots,d-1\}\). Define
@@ -506,6 +510,18 @@ coefficient, \(q\) weights the block index, and \(w_j\) weights the
 position within each block. The original family has
 \(d=2,q=1,w_0=w_1=1\). The new block weight \(q\) is distinct from
 \(Q=r^2+1\) in the original recurrence.
+
+The indices have different roles:
+
+- \(n\) is the output index. The sum for \(A_n\) has \(n+1\) terms, indexed by \(k\).
+- \(m_k=\lfloor k/d\rfloor\) is the block number of the current summand, starting at zero.
+- \(j=k-dm_k\) is its position within the block, with \(0\le j<d\).
+- \(q^{m_k}\) multiplies the whole block. The separate factor \(w_j\) chooses or weights a position within it.
+- \((-r)^{n-k}\) weights the distance from \(k\) to the output index \(n\).
+
+The block number depends on \(k\), not just on \(n\). When \(r=0\),
+every term except \(k=n\) vanishes, so the remaining block number is
+\(\lfloor n/d\rfloor\).
 
 Put
 
@@ -578,6 +594,87 @@ This also explains why an auxiliary algebraic series is a closed form:
 the branch is specified exactly by \(T(0)=0\), and no numerical root
 selection is required.
 
+### Using the formula
+
+**Step 1. Choose the weights.** Fix \(d,r,q\) and the \(d\) numbers
+\(w_0,\ldots,w_{d-1}\). Form the polynomial \(W\) from those residue
+weights. Zero weights simply omit the corresponding positions.
+
+**Step 2. Determine the auxiliary series.** Solve
+\(T=x(1+qT^d)\) as a formal series with constant term zero. To compute
+coefficients through \(A_N\), start with \(T=0\), repeatedly substitute
+into the right side, and discard powers above \(x^N\) after each step.
+Each substitution fixes at least one further coefficient, so this process
+terminates to the requested precision.
+
+**Step 3. Substitute and expand.** Put \(V=qT^d\) into the boxed
+formula. The coefficient of \(x^n\) is \(A_n\). The factors in the
+denominator have constant term one, so formal series division is defined.
+
+For a concrete choice, take \(d=3\), \(q=2\), \(r=1\), and
+\(\mathbf w=(1,2,3)\). Then
+
+\[
+\begin{aligned}
+W(t)&=1+2t+3t^2,\\
+T&=x(1+2T^3),\\
+T&=x+2x^4+12x^7\\
+&\quad+96x^{10}+O(x^{13}).
+\end{aligned}
+\]
+
+The formula gives
+
+\[
+\begin{aligned}
+G(x)&=\frac{(1+2T^3)W(T)}
+{(1-4T^3)(1+T)},\\
+G(x)&=1+x+2x^2+4x^3\\
+&\quad+10x^4+18x^5+O(x^6).
+\end{aligned}
+\]
+
+Here is the complete finite-sum calculation of \(A_4\). In the last
+column, \(c_k\) denotes the contribution of index \(k\):
+
+\[
+\begin{array}{c|c|c|r}
+k&m_k&j&c_k\\\hline
+0&0&0&1\\
+1&0&1&-2\\
+2&0&2&3\\
+3&1&0&-8\\
+4&1&1&16
+\end{array}
+\]
+
+The first block contributes all three positions. The second contributes
+only positions zero and one, because the sum stops at \(k=4\).
+For instance, the last two contributions are
+
+\[
+\begin{aligned}
+c_3&=1\cdot2\cdot\binom41\cdot(-1)\\
+&=-8,\\
+c_4&=2\cdot2\cdot\binom41=16.
+\end{aligned}
+\]
+
+Adding all five contributions gives
+
+\[
+\begin{aligned}
+A_4&=1-2+3\\
+&\quad-8+16\\
+&=10.
+\end{aligned}
+\]
+
+This agrees with the coefficient of \(x^4\) in \(G\).
+Example 20 continues this sequence. The computation
+shows exactly where the block weight, residue weight, binomial coefficient,
+and sign enter.
+
 ### Boundary cases
 
 - If \(d=1\), then \(A_n=w_0(q-r)^n\).
@@ -613,6 +710,12 @@ not a claim about the minimal order of a recurrence using consecutive indices.
 
 ## 10. Polynomial weights and recurrence weights
 
+The geometric weight \(q^m\) changes by the same factor whenever the
+block number increases by one. A weight defined by a recurrence can depend
+on several preceding block values. This allows polynomial multiples,
+Fibonacci and Pell numbers, periodic choices, and finite initial corrections.
+The weight can also be chosen independently for each position in a block.
+
 ### Polynomial weights
 
 Let \(P\) be a polynomial with complex coefficients. Replacing a block
@@ -640,7 +743,21 @@ Differentiating the equation for \(T\) gives
 Consequently, every fixed polynomial weight still gives a rational function
 of \(T\). Its generating function is algebraic and retains the degree
 bound of at most \(d\). Examples 21 and 22 write out the results for
-\(P(m)=m+1\) and \(P(m)=m\).
+\(P(m)=m+1\) and \(P(m)=m\). The later examples include higher
+polynomial weights and combinations with nonzero \(r\).
+
+For example, \(s_m=(m+1)q^m\) satisfies
+
+\[
+\begin{aligned}
+s_{m+2}&=2q\,s_{m+1}-q^2s_m,\\
+s_0&=1,\qquad s_1=2q.
+\end{aligned}
+\]
+
+It is obtained by applying \(1+D_q\) to the geometric-weight generating
+function. This gives a direct connection between polynomial weights and the
+recurrence formulation below, including the degenerate case \(q=0\).
 
 ### Weights satisfying a constant-coefficient recurrence
 
@@ -696,6 +813,11 @@ The binomial coefficient is a polynomial in \(\ell\), so this series is
 rational. At \(r=0\), it is a single monomial. A finite sum of algebraic
 series is algebraic, which proves the corollary. The constant term follows
 directly from the defining sum at \(n=0\).
+
+Finite support here refers to the weight sequence. When \(r\ne0\),
+even finitely many nonzero weights can contribute to infinitely many output
+terms. Example 29 shows this distinction through an explicit rational
+generating function and an alternating linear tail.
 
 ### Fibonacci weights
 

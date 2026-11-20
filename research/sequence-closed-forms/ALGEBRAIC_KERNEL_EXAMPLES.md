@@ -1,15 +1,28 @@
-# Twenty-three worked algebraic-kernel examples
+# Thirty-two worked algebraic-kernel examples
 
 Author: Komorebi P.
 
 Each example gives its defining sequence, generating function, first terms,
 and a worked calculation. We write \(G(x)=\sum_{n\ge0}a_nx^n\),
 and the auxiliary series \(T\) is the unique solution of its stated equation
-with \(T(0)=0\). The same convention applies to the indexed auxiliary series
-in Example 23. The square root of a series with constant term one is taken
+with \(T(0)=0\). The same convention applies to each indexed auxiliary series.
+The square root of a series with constant term one is taken
 to have constant term one. Each displayed list begins at \(n=0\) and
 continues across its line breaks. The examples specialize the coefficient
 transfer identity and the block formulas proved in the main manuscript.
+
+Examples 24–32 apply the recurrence weight corollary in Section 10. A
+sequence of block weights can replace the geometric weight, and each
+residue can have its own sequence. Polynomial weights lead to derivatives,
+characteristic roots lead to finite sums of algebraic series, and weights
+of finite support give rational corrections.
+
+The block formulas and weight constructions in Section 10 establish these
+identities for every admissible index. The accompanying exact checks compare
+the defining sums with independent generating function expansions for
+\(0\le n\le23\) in all nine of these
+specializations. These finite checks also verify their displayed lists
+and worked values.
 
 ## Example 1. The binomial theorem
 
@@ -869,3 +882,604 @@ a_{12}&=F_4\binom{12}{4}\\
 This generating function is algebraic because it is a finite linear
 combination of algebraic series. The degree bound for a single block weight
 does not automatically apply to this combination.
+
+## Example 24. Squaring the block index
+
+Take \(d=2\), \(r=0\), and unit residue weights. With
+\(m=\lfloor n/2\rfloor\), define
+
+\[
+a_n=m^2\binom nm.
+\]
+
+The geometric block weight is replaced by \(m^2\). Applying
+\(D_q^2\), where \(D_q=q\partial_q\), to the block generating function
+and then setting \(q=1\) gives an explicit rational expression in \(T\).
+Put
+
+\[
+\begin{aligned}
+T&=x(1+T^2),\\
+v&=T^2,\\
+A&=2+8v+2v^2,\\
+B={}&3+13v\\
+&-5v^2+v^3,\\
+R&=A+TB.
+\end{aligned}
+\]
+
+Then
+
+\[
+G(x)=\frac{v(1+v)R}{(1-v)^5}.
+\]
+
+The first terms are
+
+\[
+\begin{gathered}
+0,\ 0,\ 2,\ 3,\ 24,\ 40,\\
+180,\ 315,\ 1120,\ 2016,\\
+6300,\ 11550,\ldots
+\end{gathered}
+\]
+
+At \(n=8\), the block index is four:
+
+\[
+\begin{aligned}
+a_8&=4^2\binom84\\
+&=16\cdot70\\
+&=1120.
+\end{aligned}
+\]
+
+The second application of \(D_q\) differentiates the implicit series as
+well as the explicit occurrences of \(q\). It produces the square \(m^2\).
+
+## Example 25. Falling factorial weights on one residue
+
+Take \(d=3\), \(r=0\), and \(\mathbf w=(1,0,0)\). Replace the
+geometric block weight by \(p_m=m(m-1)\). Thus
+
+\[
+\begin{aligned}
+a_{3m}&=p_m\binom{3m}{m},\\
+a_{3m+1}&=0,\\
+a_{3m+2}&=0.
+\end{aligned}
+\]
+
+For this weight the appropriate operator is \(q^2\partial_q^2\).
+Apply it before setting \(q=1\). With
+
+\[
+\begin{aligned}
+T&=x(1+T^3),\\
+v&=T^3,\\
+B&=6v^2(1+v),
+\end{aligned}
+\]
+
+the generating function is
+
+\[
+G(x)=\frac{B(5-v)}{(1-2v)^5}.
+\]
+
+The first terms are
+
+\[
+\begin{gathered}
+0,\ 0,\ 0,\ 0,\ 0,\ 0,\\
+30,\ 0,\ 0,\ 504,\ 0,\ 0,\ldots
+\end{gathered}
+\]
+
+At \(n=12\), the block index is four and the weight is \(4\cdot3=12\):
+
+\[
+\begin{aligned}
+a_{12}&=12\binom{12}{4}\\
+&=12\cdot495\\
+&=5940.
+\end{aligned}
+\]
+
+The residue weight removes two positions from each block. The falling
+factorial removes the first two block indices as well.
+The distinction between \(D_q^2\) and \(q^2\partial_q^2\) accounts for
+the different weights in Examples 24 and 25.
+
+## Example 26. Lucas weights
+
+Define the Lucas sequence by
+
+\[
+\begin{aligned}
+L_0&=2,\qquad L_1=1,\\
+L_{m+2}&=L_{m+1}+L_m.
+\end{aligned}
+\]
+
+Take \(d=2\), \(r=0\), and unit residue weights. For
+\(m=\lfloor n/2\rfloor\), let
+
+\[
+a_n=L_m\binom nm.
+\]
+
+The characteristic roots give
+
+\[
+\begin{aligned}
+\varphi&=(1+\sqrt5)/2,\\
+\psi&=(1-\sqrt5)/2,\\
+L_m&=\varphi^m+\psi^m.
+\end{aligned}
+\]
+
+For each \(\lambda\in\{\varphi,\psi\}\), define
+
+\[
+\begin{aligned}
+T_\lambda&=x(1+\lambda T_\lambda^2),\\
+S_\lambda&=\sqrt{1-4\lambda x^2},\\
+H_\lambda&=\frac{1+T_\lambda}{S_\lambda}.
+\end{aligned}
+\]
+
+Then
+
+\[
+G(x)=H_\varphi+H_\psi.
+\]
+
+The first terms are
+
+\[
+\begin{gathered}
+2,\ 2,\ 2,\ 3,\ 18,\ 30,\\
+80,\ 140,\ 490,\ 882,\\
+2772,\ 5082,\ldots
+\end{gathered}
+\]
+
+The recurrence gives \(L_4=4+3=7\), so
+
+\[
+\begin{aligned}
+a_8&=7\binom84\\
+&=7\cdot70\\
+&=490.
+\end{aligned}
+\]
+
+The two characteristic roots contribute with the same sign. The constant
+term is two because the initial Lucas weight is two.
+
+## Example 27. Pell weights
+
+Define the Pell sequence by
+
+\[
+\begin{aligned}
+P_0&=0,\qquad P_1=1,\\
+P_{m+2}&=2P_{m+1}+P_m.
+\end{aligned}
+\]
+
+Take \(d=3\), \(r=0\), and unit residue weights. Put
+\(m=\lfloor n/3\rfloor\) and
+
+\[
+a_n=P_m\binom nm.
+\]
+
+Write
+
+\[
+\begin{aligned}
+\alpha&=1+\sqrt2,\\
+\beta&=1-\sqrt2,\\
+P_m&=\frac{\alpha^m-\beta^m}{2\sqrt2}.
+\end{aligned}
+\]
+
+For \(\lambda=\alpha\) or \(\lambda=\beta\), define
+
+\[
+\begin{aligned}
+T_\lambda&=x(1+\lambda T_\lambda^3),\\
+V_\lambda&=\lambda T_\lambda^3,\\
+W(t)&=1+t+t^2,\\
+H_\lambda&=\frac{(1+V_\lambda)W(T_\lambda)}
+{1-2V_\lambda}.
+\end{aligned}
+\]
+
+The resulting generating function is
+
+\[
+G(x)=\frac{H_\alpha-H_\beta}{2\sqrt2}.
+\]
+
+The first terms are
+
+\[
+\begin{gathered}
+0,\ 0,\ 0,\ 3,\ 4,\ 5,\\
+30,\ 42,\ 56,\ 420,\\
+600,\ 825,\ldots
+\end{gathered}
+\]
+
+The Pell recurrence gives \(P_3=2\cdot2+1=5\), so
+
+\[
+\begin{aligned}
+a_9&=5\binom93\\
+&=5\cdot84\\
+&=420.
+\end{aligned}
+\]
+
+This changes the characteristic roots of the weight recurrence while
+retaining the same three-position block construction.
+
+## Example 28. Selecting every third block
+
+Let \(s_0=1\), \(s_1=s_2=0\), and \(s_{m+3}=s_m\).
+Thus \(s_m=1\) exactly when three divides \(m\). Take \(d=2\),
+\(r=0\), and unit residue weights. With \(m=\lfloor n/2\rfloor\),
+
+\[
+a_n=s_m\binom nm.
+\]
+
+Choose a primitive cube root of unity \(\zeta\), so that
+\(\zeta^2+\zeta+1=0\). The periodic weight is
+
+\[
+s_m=\frac{1+\zeta^m+\zeta^{2m}}{3}.
+\]
+
+For each \(\lambda\in\{1,\zeta,\zeta^2\}\), define
+
+\[
+\begin{aligned}
+T_\lambda&=x(1+\lambda T_\lambda^2),\\
+S_\lambda&=\sqrt{1-4\lambda x^2},\\
+H_\lambda&=\frac{1+T_\lambda}{S_\lambda}.
+\end{aligned}
+\]
+
+Then
+
+\[
+G(x)=\frac{H_1+H_\zeta+H_{\zeta^2}}{3}.
+\]
+
+The first terms are
+
+\[
+\begin{gathered}
+1,\ 1,\ 0,\ 0,\ 0,\ 0,\\
+20,\ 35,\ 0,\ 0,\ 0,\ 0,\ldots
+\end{gathered}
+\]
+
+At \(n=12\), the block index is six. Since \(\zeta^6=1\),
+
+\[
+\begin{aligned}
+s_6&=(1+1+1)/3=1,\\
+a_{12}&=1\cdot\binom{12}{6}\\
+&=924.
+\end{aligned}
+\]
+
+The nonzero terms occur at indices congruent to zero or one modulo six.
+This filter acts on the block index while retaining both positions within
+each selected block.
+
+## Example 29. A weight of finite support
+
+Take \(d=3\), \(r=1\), and unit residue weights. Define
+
+\[
+\begin{aligned}
+s_0&=1,\qquad s_1=2,\\
+s_m&=0\qquad(m\ge2),\\
+m_k&=\lfloor k/3\rfloor,\\
+c_{n,k}&=s_{m_k}\binom n{m_k},\\
+a_n&=\sum_{k=0}^{n}c_{n,k}(-1)^{n-k}.
+\end{aligned}
+\]
+
+Only the first two blocks contribute. Summing these finitely many block
+contributions gives a rational generating function. Define
+
+\[
+\begin{aligned}
+N(x)={}&1+2x+2x^2\\
+&+7x^3+12x^4\\
+&+16x^5+8x^6.
+\end{aligned}
+\]
+
+Then
+
+\[
+G(x)=\frac{N(x)}{(1+x)^2}.
+\]
+
+No auxiliary algebraic series is needed in this rational case.
+The first terms are
+
+\[
+\begin{gathered}
+1,\ 0,\ 1,\ 5,\ 1,\ 9,\\
+-11,\ 13,\ -15,\ 17,\\
+-19,\ 21,\ldots
+\end{gathered}
+\]
+
+For example, at \(n=7\) the six active positions give
+
+\[
+\begin{aligned}
+a_7={}&-1+1-1\\
+&+14-14+14\\
+={}&13.
+\end{aligned}
+\]
+
+For \(n\ge5\), both active blocks are complete, and their contributions
+simplify to
+
+\[
+a_n=(-1)^n(1-2n).
+\]
+
+The weight sequence satisfies \(s_{m+2}=0\), a recurrence with zero as
+its only characteristic root. This is the finite correction in the
+recurrence weight corollary. Finite support in the block weights can
+therefore produce an infinite rational sequence when \(r\ne0\).
+
+## Example 30. Different recurrence weights on the two residues
+
+Take \(d=2\) and \(r=0\). Give the even residue Fibonacci weights and
+the odd residue Lucas weights. Their initial conditions are
+
+\[
+\begin{aligned}
+F_0&=0,\qquad F_1=1,\\
+L_0&=2,\qquad L_1=1.
+\end{aligned}
+\]
+
+Both sequences satisfy \(u_{m+2}=u_{m+1}+u_m\). Define
+
+\[
+\begin{aligned}
+a_{2m}&=F_m\binom{2m}{m},\\
+a_{2m+1}&=L_m\binom{2m+1}{m}.
+\end{aligned}
+\]
+
+Use the roots
+
+\[
+\begin{aligned}
+\varphi&=(1+\sqrt5)/2,\\
+\psi&=(1-\sqrt5)/2.
+\end{aligned}
+\]
+
+The corresponding exponential forms are
+
+\[
+\begin{aligned}
+F_m&=\frac{\varphi^m-\psi^m}{\sqrt5},\\
+L_m&=\varphi^m+\psi^m.
+\end{aligned}
+\]
+
+For \(\lambda=\varphi\) or \(\lambda=\psi\), put
+
+\[
+\begin{aligned}
+T_\lambda&=x(1+\lambda T_\lambda^2),\\
+S_\lambda&=\sqrt{1-4\lambda x^2},\\
+U_\lambda&=\frac{1}{S_\lambda}.
+\end{aligned}
+\]
+
+The even-residue generating function is \(U_\lambda\), and the
+odd-residue generating function is \(T_\lambda U_\lambda\). Therefore
+
+\[
+\begin{aligned}
+G(x)={}&\frac{U_\varphi-U_\psi}{\sqrt5}\\
+&+T_\varphi U_\varphi\\
+&+T_\psi U_\psi.
+\end{aligned}
+\]
+
+The first terms are
+
+\[
+\begin{gathered}
+0,\ 2,\ 2,\ 3,\ 6,\ 30,\\
+40,\ 140,\ 210,\ 882,\\
+1260,\ 5082,\ldots
+\end{gathered}
+\]
+
+At block index three, the two positions use different weights:
+
+\[
+\begin{aligned}
+a_6&=2\binom63\\
+&=2\cdot20=40,\\
+a_7&=4\binom73\\
+&=4\cdot35=140.
+\end{aligned}
+\]
+
+The two residue sequences are chosen independently. They need not share
+the same initial conditions, even when they obey the same recurrence.
+
+## Example 31. A combined recurrence weight with nonzero r
+
+Let \(F_0=0\), \(F_1=1\), and \(F_{m+2}=F_{m+1}+F_m\). Set
+
+\[
+s_m=F_m+2^m.
+\]
+
+Take \(d=3\), \(r=1\), and unit residue weights. The defining sum is
+
+\[
+\begin{aligned}
+m_k&=\lfloor k/3\rfloor,\\
+c_{n,k}&=s_{m_k}\binom n{m_k},\\
+a_n&=\sum_{k=0}^{n}c_{n,k}(-1)^{n-k}.
+\end{aligned}
+\]
+
+Write
+
+\[
+\begin{aligned}
+\varphi&=(1+\sqrt5)/2,\\
+\psi&=(1-\sqrt5)/2.
+\end{aligned}
+\]
+
+For each \(\lambda\in\{\varphi,\psi,2\}\), define
+
+\[
+\begin{aligned}
+T_\lambda&=x(1+\lambda T_\lambda^3),\\
+V_\lambda&=\lambda T_\lambda^3,\\
+W(t)&=1+t+t^2,\\
+D_\lambda&=(1-2V_\lambda)(1+T_\lambda),\\
+H_\lambda&=\frac{(1+V_\lambda)W(T_\lambda)}
+{D_\lambda}.
+\end{aligned}
+\]
+
+Then
+
+\[
+\begin{aligned}
+G(x)={}&\frac{H_\varphi-H_\psi}{\sqrt5}\\
+&+H_2.
+\end{aligned}
+\]
+
+The first terms are
+
+\[
+\begin{gathered}
+1,\ 0,\ 1,\ 8,\ 1,\ 14,\\
+58,\ 20,\ 117,\ 686,\\
+196,\ 1407,\ldots
+\end{gathered}
+\]
+
+Here \(s_0=1\) and \(s_1=3\). The full sum at \(n=5\) is
+
+\[
+\begin{aligned}
+a_5={}&-1+1-1\\
+&+15-15+15\\
+={}&14.
+\end{aligned}
+\]
+
+The Fibonacci part contributes two characteristic roots and the geometric
+part contributes a third. The resulting generating function remains algebraic.
+The nonzero value of \(r\) combines contributions from several positions,
+as the worked sum shows.
+
+## Example 32. A repeated characteristic root
+
+Define the weight sequence by
+
+\[
+\begin{aligned}
+s_0&=1,\qquad s_1=4,\\
+s_{m+2}&=4s_{m+1}-4s_m.
+\end{aligned}
+\]
+
+Its characteristic polynomial is \((z-2)^2\), and its explicit form is
+
+\[
+s_m=(m+1)2^m.
+\]
+
+Take \(d=2\), \(r=1\), and unit residue weights. Define
+
+\[
+\begin{aligned}
+m_k&=\lfloor k/2\rfloor,\\
+c_{n,k}&=s_{m_k}\binom n{m_k},\\
+a_n&=\sum_{k=0}^{n}c_{n,k}(-1)^{n-k}.
+\end{aligned}
+\]
+
+The alternating signs cancel within each consecutive pair, leaving
+
+\[
+\begin{aligned}
+a_{2m}&=s_m\binom{2m}{m},\\
+a_{2m+1}&=0.
+\end{aligned}
+\]
+
+With
+
+\[
+\begin{aligned}
+T&=x(1+2T^2),\\
+S&=\sqrt{1-8x^2},
+\end{aligned}
+\]
+
+the generating function is
+
+\[
+G(x)=\frac{1-4x^2}{S^3}.
+\]
+
+This also follows by applying \(1+q\partial_q\) to
+\((1-4qx^2)^{-1/2}\) before setting \(q=2\).
+
+The first terms are
+
+\[
+\begin{gathered}
+1,\ 0,\ 8,\ 0,\ 72,\ 0,\\
+640,\ 0,\ 5600,\ 0,\\
+48384,\ 0,\ldots
+\end{gathered}
+\]
+
+At \(n=4\), the weights in the three blocks are \(1\), \(4\), and
+\(12\). The five summands give
+
+\[
+\begin{aligned}
+a_4={}&1-1+16\\
+&-16+72\\
+={}&72.
+\end{aligned}
+\]
+
+A repeated characteristic root contributes a polynomial factor in the
+block index. This example combines that factor with a geometric weight
+and exact cancellation between the two residues.

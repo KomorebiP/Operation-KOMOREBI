@@ -648,7 +648,7 @@ def build(site,atlas):
 
     # Full mathematical reading page from the same versioned source as GitHub.
     # A dependency-free renderer keeps preview and release output consistent.
-    from sequence_math_reading import mathematical_reading_fragment, mathematical_example_gallery
+    from sequence_math_reading import mathematical_reading_fragment, mathematical_example_gallery, KERNEL_EXAMPLE_COUNT
     note=(site.root/'research/sequence-closed-forms/FINITE_DIFFERENTIAL_HANKEL.md').read_text(encoding='utf-8')
     full_note=mathematical_reading_fragment(note,include_outline=True)
     differential_hankel_page=(
@@ -697,17 +697,18 @@ def build(site,atlas):
     central_page=(
         closed_css+
         page_heading('Weighted binomial sums',
-            'Uniform recurrences and algebraic generating functions, with complete proofs and 23 worked examples.',
+            f'Uniform recurrences and algebraic generating functions, with complete proofs and {KERNEL_EXAMPLE_COUNT} worked examples.',
             'research','central-binomial')+
         '<nav class="sl-tool-back" aria-label="Weighted binomial research routes">'
         '<a href="sequence-closed-forms.html#central-binomial-recurrence">Closed Forms collection</a> · '
         '<a href="generalized-families/GF-CF-CENTRAL-BINOMIAL.html">Family and indexed examples</a> · '
         '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/research/sequence-closed-forms/CENTRAL_BINOMIAL_RECURRENCE.md">Source manuscript</a></nav>'
         '<nav class="sl-binomial-jumps" aria-label="Reading routes">'
+        '<a href="#math-proof-using-the-formula">Start with a calculation</a>'
         '<a href="#math-proof-1-definition-and-universal-recurrence">Theorem and proof</a>'
         '<a href="#math-proof-9-arbitrary-block-lengths-and-residue-weights">Larger block family</a>'
         '<a href="#math-proof-10-polynomial-weights-and-recurrence-weights">Further weights</a>'
-        '<a href="#kernel-examples">23 examples</a>'
+        f'<a href="#kernel-examples">{KERNEL_EXAMPLE_COUNT} examples</a>'
         '<a href="#binomial-attribution">Historical context</a>'
         '<a href="#math-proof-7-exact-computation-and-reproduction">Reproduction</a>'
         '<a href="#math-proof-11-references">References</a></nav>'
@@ -715,7 +716,10 @@ def build(site,atlas):
         '<p>At r=4, the sequence begins 1, −3, 14, −57, 246, −1038, 4424. '
         'One recurrence covers every complex value of r. The general construction allows arbitrary block lengths, '
         'independent residue weights, and weights satisfying a linear recurrence with constant coefficients. '
-        'The article develops these results and illustrates them in 23 worked examples.</p>'
+        f'The article develops these results and illustrates them in {KERNEL_EXAMPLE_COUNT} worked examples.</p>'
+        '<p>For a first reading, start with the <a href="#math-proof-reading-the-parameters">parameter guide</a> '
+        'and <a href="#math-proof-using-the-formula">worked substitution</a>. '
+        'The examples then show how the same formula handles familiar sequences, larger blocks, and different weight rules.</p>'
         '<p>The browser calculator evaluates the original two-position family for integer r from −12 through 12 '
         'and indices from 0 through 160. The larger families have written formulas, worked values, and exact Python checks below.</p>'
         '<p><a href="'+central_example+'">Calculate and export the r=4 sequence</a> · '
@@ -760,7 +764,7 @@ def build(site,atlas):
                             work_ids=[],url='sequence-central-binomial.html',
                             text='A107430 A127363 A133444 A127361 Mathar Kotesovec Easwar '
                                  'all complex parameters central binomial Catalan generating function recurrence proof '
-                                 'Lagrange inversion Gessel arbitrary blocks residue weights polynomial Fibonacci 23 worked examples'))
+                                 f'Lagrange inversion Gessel arbitrary blocks residue weights polynomial Fibonacci Lucas Pell periodic finite support {KERNEL_EXAMPLE_COUNT} worked examples'))
 
     for filename,title,description,section_id,page_kind in [
         ('sequence-connections.html','Sequence connections',

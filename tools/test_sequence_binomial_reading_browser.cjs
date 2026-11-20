@@ -50,6 +50,36 @@ async function layout(page){
       .map(node=>node.textContent),
   }));
 }
+async function textContrast(page){
+  return page.evaluate(()=>{
+    const rgb=value=>(value.match(/[\d.]+/g)||[]).map(Number);
+    const luminance=color=>color.slice(0,3).map(value=>{
+      const c=value/255;return c<=.04045?c/12.92:((c+.055)/1.055)**2.4;
+    }).reduce((sum,value,i)=>sum+value*[.2126,.7152,.0722][i],0);
+    const background=node=>{
+      const layers=[];
+      for(let current=node;current;current=current.parentElement){
+        const color=rgb(getComputedStyle(current).backgroundColor);
+        layers.push(color);
+        if(color.length===3||color[3]===1)break;
+      }
+      // System Highlight can be translucent in forced-color mode. Composite
+      // every layer instead of treating a translucent control as transparent.
+      return layers.reverse().reduce((surface,color)=>{
+        const alpha=color[3]??1;
+        return color.slice(0,3).map((value,i)=>value*alpha+surface[i]*(1-alpha));
+      },[255,255,255]);
+    };
+    return ['body','.sl-math-display','.sl-example-number','.sl-kernel-example>summary',
+      '.sl-example-body p','.sl-binomial-jumps a','#sq-scheme-green','#sq-page-theme'].map(selector=>{
+      const node=document.querySelector(selector),style=getComputedStyle(node);
+      const color=rgb(style.color),surface=background(node),alpha=color[3]??1;
+      const foreground=color.slice(0,3).map((value,i)=>value*alpha+surface[i]*(1-alpha));
+      const a=luminance(foreground),b=luminance(surface);
+      return {selector,foreground,surface,ratio:(Math.max(a,b)+.05)/(Math.min(a,b)+.05)};
+    });
+  });
+}
 (async()=>{
   const browser=await chromium.launch({headless:true,
     ...(process.env.KOMOREBI_CHROMIUM_PATH?{executablePath:process.env.KOMOREBI_CHROMIUM_PATH}:{})});
@@ -62,7 +92,7 @@ async function layout(page){
       assert.equal(response.ok(),true);
       await ready(page);
       assert.equal(await page.locator('main h1').count(),1);
-      assert.equal(await page.locator('.sl-kernel-example').count(),23);
+      assert.equal(await page.locator('.sl-kernel-example').count(),32);
       assert.equal(await page.locator('.sl-kernel-example[open]').count(),0);
       // Leading [x^n] must remain coefficient extraction, not an AMS layout option.
       const residueProof=page.locator('.sl-math-display').filter({hasText:'Res'});
@@ -74,7 +104,7 @@ async function layout(page){
       )].filter(link=>link.hash&&!document.getElementById(link.hash.slice(1))).map(link=>link.hash));
       assert.deepEqual(brokenTargets,[]);
       await page.locator('[data-example-action="open"]').click();
-      assert.equal(await page.locator('.sl-kernel-example[open]').count(),23);
+      assert.equal(await page.locator('.sl-kernel-example[open]').count(),32);
       await settleLayout(page);
       const measured=await layout(page);
       report.widths.push({width,...measured});
@@ -84,13 +114,38 @@ async function layout(page){
       await page.screenshot({path:path.join(output,'theorem-'+width+'.png')});
       await page.locator('#kernel-example-20').screenshot({path:path.join(output,'weighted-example-'+width+'.png')});
       await page.locator('#kernel-example-23').screenshot({path:path.join(output,'fibonacci-example-'+width+'.png')});
+      await page.locator('#kernel-example-32').screenshot({path:path.join(output,'repeated-root-example-'+width+'.png')});
+      if(width===390){
+        report.palettes=[];
+        for(const [scheme,theme,system]of [
+          ['green','light','light'],['green','dark','light'],
+          ['green','system','dark'],['mono','dark','dark'],['mono','light','light']
+        ]){
+          await page.emulateMedia({colorScheme:system});
+          await page.locator('#sq-scheme-'+scheme).click();
+          await page.locator('#sq-page-theme').selectOption(theme);
+          const pairs=await textContrast(page);
+          report.palettes.push({scheme,theme,system,pairs});
+          assert.ok(pairs.every(pair=>pair.ratio>=4.5),'Reading text contrast in '+scheme+'/'+theme);
+          if(scheme==='green'&&theme==='dark'){
+            await page.locator('#kernel-example-32').screenshot({path:path.join(output,'repeated-root-dark-390.png')});
+          }
+        }
+        await page.locator('#sq-scheme-green').click();
+        await page.locator('#sq-page-theme').selectOption('light');
+        assert.equal(await page.locator('#sq-scheme-green').textContent(),'Ink & blue');
+        await page.emulateMedia({forcedColors:'active'});
+        report.forcedColors=await textContrast(page);
+        assert.ok(report.forcedColors.every(pair=>pair.ratio>=4.5));
+        await page.emulateMedia({forcedColors:'none',colorScheme:'light'});
+      }
       await page.locator('[data-example-action="close"]').click();
       assert.equal(await page.locator('.sl-kernel-example[open]').count(),0);
       await page.locator('#kernel-example-1 > summary').focus();
       await page.keyboard.press('Enter');
       assert.equal(await page.locator('#kernel-example-1').evaluate(node=>node.open),true);
       await page.evaluate(()=>window.dispatchEvent(new Event('beforeprint')));
-      assert.equal(await page.locator('.sl-kernel-example[open]').count(),23);
+      assert.equal(await page.locator('.sl-kernel-example[open]').count(),32);
       await page.evaluate(()=>window.dispatchEvent(new Event('afterprint')));
       assert.equal(await page.locator('.sl-kernel-example[open]').count(),1);
       await page.goto(url+'#kernel-example-20');
