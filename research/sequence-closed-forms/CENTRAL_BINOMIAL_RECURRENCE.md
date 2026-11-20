@@ -2,20 +2,22 @@
 
 Author: Komorebi P.
 Date: 19 November 2026.
+Edition: Final reading edition.
 
-This note proves a recurrence for every complex parameter in an established
-family of binomial row polynomials. It then derives an algebraic generating
-function for arbitrary block lengths, residue weights, and a second scalar
-weight. Polynomial and Fibonacci weights give further applications.
+**Abstract.** We prove a uniform recurrence for an established family of
+binomial row polynomials, valid for every complex parameter. We then derive
+algebraic generating functions for arbitrary block lengths, geometric block
+weights, and independent weights within each block. Polynomial weights and
+weight sequences satisfying linear recurrences with constant coefficients
+give further algebraic families. The proofs include degenerate parameters
+and zero weights. Twenty-three worked examples illustrate the formulas.
 
 Sections 1 through 5 prove and explain the original recurrence. Section 6
-identifies the prior results precisely. Sections 8 through 10 develop the
-larger family from classical Lagrange inversion. The worked-example gallery
-following this note contains 23 complete specializations.
-
-The written arguments establish identities for all admissible parameters
-and indices. Finite computations are additional checks. An identity derived
-here is not, by that fact alone, a claim of historical priority.
+records the historical context, and Section 7 gives the reproduction commands.
+Sections 8 through 10 develop the larger family from classical Lagrange
+inversion. The worked examples follow the article. All generating functions
+are interpreted as formal power series, so the arguments require no analytic
+convergence assumptions.
 
 ## 1. Definition and universal recurrence
 
@@ -39,7 +41,8 @@ a_3(r)&=-r^3+r^2-3r+3.
 \end{aligned}
 \]
 
-**Theorem.** Put \(Q=r^2+1\) and write \(a_j=a_j(r)\). For every
+**Theorem (uniform recurrence).** Put \(Q=r^2+1\) and write
+\(a_j=a_j(r)\). For every
 \(r\in\mathbb C\) and every integer \(n\ge3\),
 
 \[
@@ -53,8 +56,8 @@ a_3(r)&=-r^3+r^2-3r+3.
 }
 \]
 
-For each \(n\), this is an identity in \(\mathbb Z[r]\). It therefore
-specializes to every complex parameter, rather than only integer examples.
+For each \(n\ge3\), this is an identity in \(\mathbb Z[r]\). It therefore
+specializes to every complex parameter.
 At \(r\ne0\), the displayed recurrence and the first three values determine
 the sequence forward. At \(r=0\), the coefficient of \(a_n\) vanishes.
 The identity still holds, and the defining sum gives the values directly.
@@ -209,7 +212,8 @@ four-term formula is not asserted at \(n=1\).
 
 ## 4. The Catalan generating function
 
-Let \(C(z)\) be the Catalan series, defined without a singular constant term by
+Let \(C(z)\) be the Catalan series. The expression below has constant term
+one and satisfies the Catalan functional equation:
 
 \[
 \begin{aligned}
@@ -316,7 +320,7 @@ rational parameters and supplies the coefficient polynomial in \(r\).
 
 The established triangle [OEIS A107430](https://oeis.org/A107430) has
 \(T(n,k)=\binom n{\lfloor k/2\rfloor}\). Its recorded row-polynomial
-specializations use \(x=-r\) in our notation. The six stored examples are:
+specializations use \(x=-r\) in our notation. Six specializations are:
 
 - \(r=-1\): [A000079](https://oeis.org/A000079).
 - \(r=0\): [A001405](https://oeis.org/A001405).
@@ -337,17 +341,15 @@ g(x)\longmapsto \frac{g(t)}{S}.
 \end{gathered}
 \]
 
-Taking \(g(t)=(1+t)/(1+rt)\) gives the expression in Section 4. This page
-supplies its uniform derivation. The entry author dates do not date every
-formula subsequently added to those entries.
+Taking \(g(t)=(1+t)/(1+rt)\) gives the expression in Section 4, which
+supplies its uniform derivation.
 
-Rohun Easwar proves the \(r=2\) recurrence in Theorem 7.1 of
-[An application of Jacobi's residue formula and proofs of some other conjectures on binomial coefficients](https://arxiv.org/html/2608.22053v2#S7),
-arXiv:2608.22053v2, 25 August 2026. That theorem concerns the fixed parameter
-\(r=2\). The present note derives the displayed recurrence uniformly in
-\(r\).
+Rohun Easwar proves the \(r=2\) recurrence in
+[Theorem 7.1](https://arxiv.org/html/2608.22053v2#S7) of the paper listed in
+Section 11. That theorem concerns the fixed parameter \(r=2\).
+The recurrence in Section 1 holds uniformly in \(r\).
 
-The retrieved A127363 entry labels the \(r=4\) recurrence a conjecture and
+A127363 records the \(r=4\) recurrence as a conjecture and
 credits R. J. Mathar, 24 November 2012. An equivalent recurrence was already
 recorded for [A133444](https://oeis.org/A133444), credited to Vaclav Kotesovec,
 20 October 2012. Its terms are \(c_n=(-1)^n a_n(4)\). Substituting this sign
@@ -365,26 +367,22 @@ To see the equivalence explicitly, the recurrence recorded for A133444 is
 
 Substitute \(c_j=(-1)^j a_j(4)\) and divide by \((-1)^n\). Bringing all
 terms to the left gives the recurrence in Section 5. Thus the statement was
-already recorded under a different sign convention. The proof here verifies
-it without asserting that this is its first proof.
+already recorded under a different sign convention. Sections 2 and 3
+provide a proof as a specialization of the uniform recurrence.
 
 The coefficient-transfer identity in Section 8 is classical Lagrange
-inversion. It appears as equations (2.1.4) and (2.1.6) of
-[Ira M. Gessel, Lagrange Inversion](https://arxiv.org/html/1609.05988v1#S2.SS1),
-arXiv:1609.05988v1, 20 September 2016. Gessel's symbols \(\psi,R,f\)
+inversion. It appears as
+[equations (2.1.4) and (2.1.6) in Gessel's survey](https://arxiv.org/html/1609.05988v1#S2.SS1).
+Gessel's symbols \(\psi,R,f\)
 correspond to \(F,\Phi,T\) below.
 
-**What is established here.** The all-\(r\) recurrence has a written proof.
-The block formula is an explicit consequence of classical Lagrange inversion.
-The polynomial and Fibonacci weight formulas are further applications.
-The 23 examples include classical sequences and specializations of these
-identities. They are not 23 claims of new discoveries.
-
-**What has not been established.** No exhaustive priority search has been
-completed for the all-\(r\) recurrence or the block and weighted formulas.
-A conjecture label in one OEIS entry does not establish that a statement is
-historically unresolved. These source and notation checks were made on
-19 November 2026, America/Chicago.
+**Scope.** This article proves the uniform recurrence and derives the block
+and weighted formulas as explicit applications of classical coefficient
+transfer. The examples include classical sequences and specializations of
+these identities. Historical priority for the generalizations has not been
+established, and no first-discovery or first-proof claim is made. In particular,
+a conjecture label in one OEIS entry does not establish that a statement is
+historically unresolved.
 
 ## 7. Exact computation and reproduction
 
@@ -394,6 +392,9 @@ formula. The four-term identity is checked separately. Exact polynomial
 coefficient checks and the written proof cover different obligations: a finite
 test verifies its stated range, while Sections 2 through 4 prove the identity
 for every parameter and every admissible index.
+
+Python 3.10 or later is required. The Python programs use only the standard
+library. The JavaScript arithmetic check uses Node.js 24.
 
 From the repository or the extracted formula source bundle, run:
 
@@ -406,11 +407,11 @@ python tools/sequence_formula_catalogue.py --id KFOR-CF-CB-4
 ```
 
 The catalogue command exports the exact record as JSON. The source bundle
-includes the proof, generator, tests, and browser arithmetic. Integer records
-have 24 stored terms beginning at index zero. Their OEIS comparisons use the
+includes both manuscripts, the generators, the tests, and the browser
+arithmetic. The six integer specializations listed in Section 6 have 24 stored
+terms beginning at index zero. Their OEIS comparisons use the
 retained snapshot and report finite agreement separately from the source
 identifications above.
-
 
 The block-example checks compare the defining finite sums with independently
 expanded formal generating functions. They include nonzero and zero weights,
@@ -440,7 +441,7 @@ There is a unique formal series \(T(x)\), with \(T(0)=0\), satisfying
 T=x\Phi(T).
 \]
 
-**Classical identity.**
+**Theorem (classical coefficient transfer).**
 
 \[
 \boxed{G(x)=\frac{F(T)}{1-x\Phi'(T)}.}
@@ -522,7 +523,7 @@ The polynomial \(W\) has degree at most \(d-1\). The notation includes
 the zero polynomial. All powers with exponent zero have value one, including
 when the base is zero.
 
-**Block theorem.**
+**Theorem (weighted blocks).**
 
 \[
 \boxed{
@@ -612,7 +613,10 @@ not a claim about the minimal order of a recurrence using consecutive indices.
 
 ## 10. Polynomial weights and recurrence weights
 
-Let \(P\) be any polynomial. Replacing a block weight \(q^m\) with
+### Polynomial weights
+
+Let \(P\) be a polynomial with complex coefficients. Replacing a block
+weight \(q^m\) with
 \(P(m)q^m\) corresponds to the differential operator
 
 \[
@@ -638,17 +642,50 @@ of \(T\). Its generating function is algebraic and retains the degree
 bound of at most \(d\). Examples 21 and 22 write out the results for
 \(P(m)=m+1\) and \(P(m)=m\).
 
-More generally, each residue can have its own weight sequence \(s_j(m)\)
-satisfying a linear recurrence with constant coefficients. Over
-\(\mathbb C\), such a sequence is a finite sum of terms
+### Weights satisfying a constant-coefficient recurrence
+
+Fix a positive integer \(d\) and \(r\in\mathbb C\). For each
+\(0\le j<d\), let \(s_j(m)\), \(m\ge0\), be a sequence of complex
+numbers satisfying a homogeneous linear recurrence with constant
+coefficients. Explicitly, for some integer \(h_j\ge1\) and constants
+\(c_{j,0},\ldots,c_{j,h_j-1}\), assume
+
+\[
+\begin{gathered}
+s_j(m+h_j)\\
+=\sum_{\ell=0}^{h_j-1}c_{j,\ell}s_j(m+\ell),\\
+m\ge0.
+\end{gathered}
+\]
+
+Replace the entire weight \(w_jq^m\) from Section 9 by \(s_j(m)\).
+Define
+
+\[
+\begin{aligned}
+m_k&=\lfloor k/d\rfloor,\\
+\sigma_k&=s_{k\bmod d}(m_k),\\
+A_n^{\mathbf s}&=\sum_{k=0}^n
+\sigma_k\binom n{m_k}(-r)^{n-k},\\
+G_{\mathbf s}(x)&=\sum_{n\ge0}A_n^{\mathbf s}x^n.
+\end{aligned}
+\]
+
+**Corollary (recurrence weights).** The generating function
+\(G_{\mathbf s}\) is algebraic over \(\mathbb C(x)\). Its constant
+term is \(s_0(0)\).
+
+**Proof.** Over \(\mathbb C\), a sequence satisfying such a recurrence
+is a finite sum of terms
 \(P(m)\lambda^m\), together with a possible finitely supported part.
 The nonzero characteristic roots give the exponential terms. Zero roots
 account for finite initial corrections.
 
-Each exponential-polynomial term is handled by the preceding construction
-with \(q=\lambda\). A finite-support correction also gives a rational
-generating function: for each fixed block index \(m\) and residue \(j\), the contribution is a
-scalar multiple of
+Each exponential-polynomial term in residue \(j\) is handled by the
+preceding construction with \(W(t)=t^j\), followed by the specialization
+\(q=\lambda\). A finite-support correction also gives a rational
+generating function: for each fixed block index \(m\) and residue \(j\),
+the contribution is a scalar multiple of
 
 \[
 x^{dm+j}\sum_{\ell\ge0}
@@ -657,9 +694,21 @@ x^{dm+j}\sum_{\ell\ge0}
 
 The binomial coefficient is a polynomial in \(\ell\), so this series is
 rational. At \(r=0\), it is a single monomial. A finite sum of algebraic
-series is algebraic. This proves the claimed extension.
+series is algebraic, which proves the corollary. The constant term follows
+directly from the defining sum at \(n=0\).
 
-**Fibonacci example.** Write
+### Fibonacci weights
+
+Let the Fibonacci numbers be defined by
+
+\[
+\begin{aligned}
+F_0&=0,\qquad F_1=1,\\
+F_{m+2}&=F_{m+1}+F_m,\qquad m\ge0.
+\end{aligned}
+\]
+
+Their closed form is
 
 \[
 \begin{aligned}
@@ -684,9 +733,60 @@ This is an algebraic generating function, with two different auxiliary
 series. The single-parameter degree bound \(d\) does not automatically
 apply to this combination. Example 23 gives the complete specialization.
 
-Finally, algebraic generating functions have coefficient sequences satisfying
-linear recurrences with polynomial coefficients. The construction proves
-that such a recurrence exists. Determining a useful explicit recurrence,
-its minimal order, or a new determinant identity requires a separate
-calculation or proof. The four-term recurrence in Section 1 is one explicit
-instance, not a universal order claim for all the weighted families.
+### Polynomial recurrences from algebraicity
+
+Every algebraic generating function constructed above has coefficients
+satisfying a nontrivial linear recurrence with polynomial coefficients for
+all sufficiently large indices. The following argument proves this
+consequence directly.
+
+Let \(G(x)=\sum_{n\ge0}A_nx^n\) be algebraic over \(\mathbb C(x)\).
+The field \(E=\mathbb C(x,G)\) has finite degree
+\(e=[E:\mathbb C(x)]\). Let \(M(x,y)\) be the irreducible minimal
+polynomial of \(G\) over \(\mathbb C(x)\). Characteristic zero implies
+\(M_y(x,G)\ne0\), where subscripts denote partial derivatives.
+Differentiating \(M(x,G)=0\) gives
+
+\[
+G'=-\frac{M_x(x,G)}{M_y(x,G)}\in E.
+\]
+
+Differentiating a rational expression in \(x\) and \(G\) therefore stays
+in \(E\). The \(e+1\) elements
+\(G,G',\ldots,G^{(e)}\) are linearly dependent over \(\mathbb C(x)\).
+After clearing denominators, this gives
+
+\[
+\sum_{j=0}^{e}p_j(x)G^{(j)}(x)=0,
+\]
+
+where the \(p_j\) are polynomials, not all zero. Let \(L\) be the largest
+degree among the nonzero \(p_j\). For \(n\ge L\) and
+\(0\le\ell\le L\),
+
+\[
+\begin{gathered}
+\left[x^n\right]x^\ell G^{(j)}(x)\\
+=\left(\prod_{h=1}^{j}(n-\ell+h)\right)
+A_{n-\ell+j}.
+\end{gathered}
+\]
+
+An empty product has value one. Expanding each \(p_j\) and comparing
+coefficients therefore gives a polynomial recurrence. It is nontrivial:
+for a fixed shift \(j-\ell\), terms with different \(j\) have different
+polynomial degrees in \(n\), so the leading nonzero term cannot cancel
+identically.
+
+This establishes existence for every family proved algebraic in this
+article. The explicit coefficients and the order of the recurrence depend
+on the family. The bound \(e\) on the differential equation's order does
+not by itself bound the number of consecutive coefficient indices in the
+resulting recurrence. The four-term recurrence in Section 1 is one explicit
+instance.
+
+## 11. References
+
+- Ira M. Gessel. [Lagrange Inversion](https://arxiv.org/abs/1609.05988v1). arXiv:1609.05988v1, 20 September 2016. Equations (2.1.4) and (2.1.6).
+- Rohun Easwar. [An application of Jacobi's residue formula and proofs of some other conjectures on binomial coefficients](https://arxiv.org/abs/2608.22053v2). arXiv:2608.22053v2, 25 August 2026. Theorem 7.1.
+- The On-Line Encyclopedia of Integer Sequences. [A107430](https://oeis.org/A107430), [A000079](https://oeis.org/A000079), [A001405](https://oeis.org/A001405), [A126869](https://oeis.org/A126869), [A127361](https://oeis.org/A127361), [A127362](https://oeis.org/A127362), [A127363](https://oeis.org/A127363), and [A133444](https://oeis.org/A133444). Accessed 19 November 2026. The recurrence attributions and the change of sign are detailed in Section 6.

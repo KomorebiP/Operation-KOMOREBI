@@ -3,11 +3,13 @@
 Author: Komorebi P.
 
 Each example gives its defining sequence, generating function, first terms,
-and a calculation. In every example, \(G(x)=\sum_{n\ge0}a_nx^n\),
-and the auxiliary series \(T\) is the unique solution with \(T(0)=0\).
-Square roots have constant term one. Each displayed list begins at \(n=0\)
-and continues across its line breaks. These are illustrations of the
-proved formulas, not twenty-three claims of novelty.
+and a worked calculation. We write \(G(x)=\sum_{n\ge0}a_nx^n\),
+and the auxiliary series \(T\) is the unique solution of its stated equation
+with \(T(0)=0\). The same convention applies to the indexed auxiliary series
+in Example 23. The square root of a series with constant term one is taken
+to have constant term one. Each displayed list begins at \(n=0\) and
+continues across its line breaks. The examples specialize the coefficient
+transfer identity and the block formulas proved in the main manuscript.
 
 ## Example 1. The binomial theorem
 
@@ -75,7 +77,7 @@ The first terms are
 \]
 
 For example, \(a_4=\binom84=70\). This recovers a classical generating
-function from the coefficient-transfer formula.
+function from the coefficient transfer identity.
 
 ## Example 3. Varying the upper binomial index
 
@@ -139,7 +141,7 @@ The first terms are
 \end{gathered}
 \]
 
-At \(n=4\), the three contributions are \(1+12+6=19\). This shows how
+At \(n=4\), the three terms of the sum give \(1+12+6=19\). This shows how
 multinomial coefficients enter the same construction.
 
 ## Example 5. Two different step sizes in one kernel
@@ -182,8 +184,8 @@ a_8&=\frac{8!}{4!4!}+\frac{8!}{1!2!5!}\\
 \end{aligned}
 \]
 
-This kernel combines steps of sizes two and three. It illustrates the
-coefficient-transfer theorem beyond the single block-length construction.
+This kernel combines steps of sizes two and three within the same
+coefficient transfer identity.
 
 ## Example 6. Changing the numerator independently
 
@@ -260,8 +262,8 @@ a_3(3)={}&-27+9\\
 \end{aligned}
 \]
 
-The four-term recurrence in the main proof is an identity between these
-polynomials and holds for every complex parameter.
+The four-term recurrence in the main manuscript is an identity between these
+polynomials and holds for every complex value of the parameter.
 
 ## Example 8. The rational specialization r=-1
 
@@ -336,7 +338,7 @@ a_4={}&1-1+4\\
 \end{aligned}
 \]
 
-The zeros on odd indices are an exact consequence of the even generating function.
+The zeros at odd indices are a consequence of the even generating function.
 
 ## Example 10. The r=2 recurrence
 
@@ -379,7 +381,7 @@ a_4={}&16-8+16\\
 \end{aligned}
 \]
 
-Easwar proves this fixed-parameter recurrence in Theorem 7.1 of
+Easwar proves this recurrence in Theorem 7.1 of
 [arXiv:2608.22053v2](https://arxiv.org/html/2608.22053v2#S7).
 The main theorem on this page treats \(r\) as a free parameter.
 
@@ -425,10 +427,10 @@ a_4={}&256-64\\
 \end{aligned}
 \]
 
-The uniform proof verifies this recorded recurrence. An equivalent recurrence
-was recorded for the sign-changed sequence in A133444, so the conjecture label
-on A127363 alone does not establish historical priority. See the page's
-attribution section for the exact correspondence.
+The uniform proof verifies this recurrence. An equivalent recurrence is
+recorded for the sign-changed sequence in
+[OEIS A133444](https://oeis.org/A133444). The attribution section explains
+its correspondence with [A127363](https://oeis.org/A127363).
 
 ## Example 12. Opposite signs on the two residue classes
 
@@ -510,7 +512,7 @@ Set \(d=3\), \(r=0\), \(q=1\), and \(w_0=w_1=w_2=1\). Then
 a_n=\binom n{\lfloor n/3\rfloor}.
 \]
 
-With \(T=x(1+T^3)\), put \(W(T)=1+T+T^2\). The exact generating
+With \(T=x(1+T^3)\), put \(W(T)=1+T+T^2\). The generating
 function is
 
 \[
@@ -526,8 +528,8 @@ The first terms are
 \end{gathered}
 \]
 
-For example, \(a_9=\binom93=84\). The step-three recurrence in the
-main proof propagates each residue class separately.
+For example, \(a_9=\binom93=84\). The recurrence on each residue class
+in the main manuscript advances the index by three.
 
 ## Example 15. Three-position blocks with r=1
 
@@ -552,7 +554,7 @@ The first terms are
 \end{gathered}
 \]
 
-The complete sum at \(n=4\) gives
+The sum at \(n=4\) gives
 
 \[
 \begin{aligned}
@@ -562,7 +564,7 @@ a_4={}&1-1+1\\
 \end{aligned}
 \]
 
-In contrast with \(r=0\), several positions contribute to each coefficient.
+In this calculation, several positions contribute to the same coefficient.
 
 ## Example 16. A three-residue contrast at r=2
 
@@ -605,7 +607,7 @@ Zero weights can remove entire classes from the defining sum.
 
 ## Example 17. Four-position blocks
 
-Set \(d=4\), \(r=0\), \(q=1\), and all four residue weights to one.
+Take \(d=4\), \(r=0\), and \(q=1\), with all four residue weights equal to one.
 Then
 
 \[
@@ -705,7 +707,7 @@ a_{10}&=2^2\binom{10}{2}\\
 \end{aligned}
 \]
 
-The construction works at arbitrary positive block lengths, with no restriction
+The construction works for arbitrary positive block lengths, with no restriction
 to square roots.
 
 ## Example 20. All the block parameters active
@@ -749,7 +751,7 @@ a_4={}&1-2+3\\
 \end{aligned}
 \]
 
-This combines a block weight, unequal residue weights, and a nonzero \(r\).
+This combines a block weight, unequal residue weights, and a nonzero value of \(r\).
 
 ## Example 21. Three-position blocks weighted by m+1
 
@@ -759,9 +761,9 @@ Let \(m=\lfloor n/3\rfloor\) and consider
 a_n=(m+1)\binom nm.
 \]
 
-Applying \(1+q\partial_q\) to the three-position block family
-and then setting \(q=1\) gives the following explicit expression.
-Use \(T=x(1+T^3)\), put \(v=T^3\), and define
+Applying \(1+q\partial_q\) to the corresponding three-position block
+generating function and then setting \(q=1\) gives the following expression.
+Use \(T=x(1+T^3)\), put \(v=T^3\), and define the auxiliary polynomial
 
 \[
 \begin{aligned}
@@ -798,8 +800,9 @@ Let \(m=\lfloor n/2\rfloor\) and define
 a_n=m\binom nm.
 \]
 
-With \(T=x(1+T^2)\), put \(P(T)=2+3T-T^3\). Application of
-\(q\partial_q\) to the two-position family yields
+With \(T=x(1+T^2)\), define the auxiliary polynomial \(P(T)=2+3T-T^3\).
+Applying \(q\partial_q\) to the corresponding two-position block generating
+function and then setting \(q=1\) gives
 
 \[
 G(x)=\frac{T^2(1+T^2)P(T)}{(1-T^2)^3}.
@@ -815,7 +818,7 @@ The first terms are
 \]
 
 For example, \(a_8=4\binom84=280\). The multiplier depends on the
-block number, so fixed residue weights alone cannot produce this weighting.
+block index, so fixed residue weights alone cannot produce this weighting.
 
 ## Example 23. Fibonacci weights on the block index
 
