@@ -8,7 +8,7 @@ The three canonical repositories are public:
 
 | Repository | Role |
 |---|---|
-| [Operation-KOMOREBI](https://github.com/KomorebiP/Operation-KOMOREBI) | Realization Calculus, Komorebi Space, papers, companion volumes, formal developments, experiments, and additional software. |
+| [The Komorebi Program](https://github.com/KomorebiP/Operation-KOMOREBI) | Realization Calculus, Komorebi Space, papers, companion volumes, formal developments, experiments, and additional software. |
 | [komorebi-math](https://github.com/KomorebiP/komorebi-math) | Python library, **beta / work in progress**. |
 | [polyphase-float](https://github.com/KomorebiP/polyphase-float) | C numerical library, **beta / work in progress**. |
 

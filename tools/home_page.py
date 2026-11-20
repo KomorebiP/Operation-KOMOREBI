@@ -89,7 +89,7 @@ def entry_slides():
         '<a class="button button-secondary" href="'+secondary_target+'">'+secondary_link+'</a></div></section>'
         for key, label, description, target, link, secondary_target, secondary_link in entries)
     return ('<div class="home-copy home-entry-showcase" aria-label="Ways into the collection">'
-            '<div class="home-entry-feature"><p class="home-kicker">The Komorebi research collection</p>'
+            '<div class="home-entry-feature"><p class="home-kicker">The Komorebi Program</p>'
             '<h1 id="home-title">Explore the ideas.<br><em>Follow the evidence.</em></h1>'
             '<div class="home-entry-panels">'+panels+'</div>'
             '<div class="home-slide-controls home-entry-controls" hidden>'
@@ -134,7 +134,7 @@ def home_page():
 <div class="home-future-links"><a href="collection/FUTURE_DEVELOPMENTS.html#main-research-directions">Research directions</a><a href="collection/FUTURE_DEVELOPMENTS.html#refining-the-current-work">Refining the current work</a><a href="collection/FUTURE_DEVELOPMENTS.html#website-and-github-accessibility-and-use">Website and GitHub improvements</a></div></section>
 <div class="home-notes"><details class="home-more"><summary>Explore the collections and how they connect</summary>
 <div class="home-collection-list"><h2>Three repositories, one place to begin</h2><dl>
-<dt><a href="collection/index.html">Operation KOMOREBI</a></dt><dd>Papers, books, research programs, formal sources, and evidence.</dd>
+<dt><a href="collection/index.html">The Komorebi Program</a></dt><dd>Papers, books, research programs, formal sources, and evidence.</dd>
 <dt><a href="math/index.html">Komorebi Math</a></dt><dd>A Python library for finite mathematical constructions and inspectable certificates.</dd>
 <dt><a href="polyphase/index.html">Polyphase Float</a></dt><dd>A C library for arbitrary-precision binary floating-point arithmetic.</dd></dl>
 <h3>What connects the work?</h3><p>Describe an object in parts, transfer operations through those parts, and account for what a change of representation preserves or loses.</p>

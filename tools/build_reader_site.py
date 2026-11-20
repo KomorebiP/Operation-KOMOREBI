@@ -383,14 +383,14 @@ class Site:
 <link rel="icon" type="image/svg+xml" sizes="any" href="'''+brand_assets['favicon.svg']+'''">
 <link rel="icon" type="image/png" sizes="32x32" href="'''+brand_assets['favicon-32.png']+'''">
 <link rel="apple-touch-icon" sizes="180x180" href="'''+brand_assets['apple-touch-icon.png']+'''">
-<title>'''+esc(title)+''' · Komorebi</title><link rel="stylesheet" href="'''+self.rel('assets/reader.css',path)+'?v='+hashlib.sha256((self.root/'website/assets/reader.css').read_bytes()).hexdigest()[:12]+'''">
+<title>'''+esc(title)+''' · The Komorebi Program</title><link rel="stylesheet" href="'''+self.rel('assets/reader.css',path)+'?v='+hashlib.sha256((self.root/'website/assets/reader.css').read_bytes()).hexdigest()[:12]+'''">
 <link rel="stylesheet" href="'''+self.rel('assets/open-research.css',path)+'?v='+hashlib.sha256((self.root/'website/assets/open-research.css').read_bytes()).hexdigest()[:12]+'''">
 <link rel="stylesheet" href="'''+self.rel('assets/side-reader.css',path)+'?v='+hashlib.sha256((self.root/'website/assets/side-reader.css').read_bytes()).hexdigest()[:12]+'''">
 <link rel="stylesheet" href="'''+self.rel('assets/math-display.css',path)+'?v='+hashlib.sha256((self.root/'website/assets/math-display.css').read_bytes()).hexdigest()[:12]+'''">
 <script type="module" src="'''+self.rel('assets/math-display.mjs',path)+'?v='+hashlib.sha256((self.root/'website/assets/math-display.mjs').read_bytes()).hexdigest()[:12]+'''"></script>
 <script defer src="'''+self.rel('assets/mathjax-config.js',path)+'''"></script>'''+mathjax_extra+'''<script defer src="'''+self.rel('assets/mathjax/tex-svg-full.js',path)+'''"></script>
 '''+search_script+'''<script defer src="'''+self.rel('assets/reader.js',path)+'?v='+hashlib.sha256((self.root/'website/assets/reader.js').read_bytes()).hexdigest()[:12]+'''"></script>'''+glossary_script+operator_script+chapter_help_script+home_assets+reading_list_assets+'''</head><body class="open-research'''+(' smith-chart-page' if path=='smith-chart.html' else '')+(' home-page' if path == 'index.html' else '')+(' reading-page' if reading_page else '')+(' work-page' if work_page else '')+(' visual-reading' if visual_page else '')+'''">
-<a class="skip-link" href="#main">Skip to main content</a><header class="site-header"><a class="brand" href="'''+root+'''" aria-label="Komorebi home"><span class="brand-wordmark"><img class="brand-logo" src="'''+brand_assets['komorebi-logo.svg']+'''" alt="Komorebi" width="1320" height="240"><span class="brand-fallback" aria-hidden="true">Komorebi</span><small>Mathematics · proofs · software</small></span></a>'''+nav_html+'''</header>
+<a class="skip-link" href="#main">Skip to main content</a><header class="site-header"><a class="brand" href="'''+root+'''" aria-label="The Komorebi Program home"><span class="brand-wordmark"><img class="brand-logo" src="'''+brand_assets['komorebi-logo.svg']+'''" alt="Komorebi" width="1320" height="240"><span class="brand-fallback" aria-hidden="true">The Komorebi Program</span><small>The Komorebi Program</small></span></a>'''+nav_html+'''</header>
 <main id="main" tabindex="-1">'''+body+'''</main><footer><div class="footer-inner"><nav class="footer-links" aria-label="Project information">'''+source_html+'''<a href="'''+self.rel('collection/PROJECT_STATEMENT.html',path)+'''">Project and authorship statement</a><a href="'''+self.rel('collection/ACCESSIBILITY.html',path)+'''">Accessibility and reporting problems</a><a href="'''+self.rel('sitemap.html',path)+'''">Sitemap</a></nav><a class="footer-github" href="https://github.com/'''+REPOSITORY+'''">Return to GitHub <span aria-hidden="true">↗</span></a></div></footer></body></html>'''
         self.write(path,doc)
     def collect_documents(self):
@@ -676,7 +676,7 @@ class Site:
         for r in self.bundle_records:
             body+='<section id="'+r['work']+'"><h3>'+e(r['title'])+'</h3><p><a download href="'+r['url']+'">Download reading ZIP</a> · '+f'{r["archive_bytes"]/1048576:.1f}'+' MB · '+str(len(r['files']))+' selected files · <a href="downloads.html?work='+r['work']+'#build-a-zip">Choose files</a></p><details><summary>Contents and checksum</summary><ul>'+''.join('<li>'+e(x['path'])+'</li>' for x in r['files'])+'</ul><p>ZIP SHA-256: <code>'+r['archive_sha256']+'</code></p></details><p><a href="collection/works/'+r['work']+'.html">Work, limits, and evidence</a></p></section>'
         self.page('downloads.html','Choose your downloads',body+'</div>')
-        self.page('404.html','Page not found','<h1>This page could not be found</h1><p>Use the <a href="'+BASE_URL+'">Komorebi starting page</a>, <a href="'+BASE_URL+'search.html">search</a>, or <a href="'+BASE_URL+'works.html">work index</a> to find the current page.</p>')
+        self.page('404.html','Page not found','<h1>This page could not be found</h1><p>Use the <a href="'+BASE_URL+'">The Komorebi Program starting page</a>, <a href="'+BASE_URL+'search.html">search</a>, or <a href="'+BASE_URL+'works.html">work index</a> to find the current page.</p>')
     def claim_index(self):
         render_claim_index(self)
     def smith_chart_lab(self):

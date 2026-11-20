@@ -217,7 +217,7 @@ def package(root, artifacts):
     (root/'delivery-report.json').write_text(json.dumps(report, indent=2)+'\n', encoding='utf-8')
     (artifacts/'delivery-manifest.json').write_text(json.dumps(manifest, indent=2)+'\n', encoding='utf-8')
     (artifacts/'SHA256SUMS.txt').write_text(''.join(record['sha256']+'  '+record['asset']+'\n' for record in records.values()), encoding='utf-8')
-    (artifacts/'RELEASE.md').write_text('Reader downloads for Operation-KOMOREBI revision `'+revision+'`.\n\n'
+    (artifacts/'RELEASE.md').write_text('Reader downloads for The Komorebi Program revision `'+revision+'`.\n\n'
         'These are the byte-identical reading ZIPs and raw JSON exports validated before Pages packaging. '
         'The site retains its reading content and serves compressed copies of interactive indexes. '
         'Archive contents, source bytes, and SHA-256 identities are preserved.\n', encoding='utf-8')

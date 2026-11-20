@@ -84,7 +84,7 @@ def catalogue(site):
             continue
         text = file.read_text(encoding='utf-8')
         title = re.search(r'<title>(.*?)</title>', text, re.S)
-        pages[path] = html.unescape(title[1]).removesuffix(' · Komorebi')
+        pages[path] = html.unescape(title[1]).removesuffix(' · The Komorebi Program')
     entries = []
     seen = set()
     for row in site.search:

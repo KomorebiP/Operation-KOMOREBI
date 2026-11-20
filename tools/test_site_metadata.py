@@ -35,9 +35,9 @@ class MetadataTests(unittest.TestCase):
     def test_metadata_escapes_titles_and_prose_without_inventing_markup(self):
         title='α < β & "quoted"'
         text='A reader can inspect "quoted" assumptions & comparisons in this deliberately literal description of the current page.'
-        page=Page('<head><title>α &lt; β &amp; "quoted" · Komorebi</title>'+head_metadata('read/a.html',title,'<p>'+text.replace('&','&amp;')+'</p>')+'</head>')
+        page=Page('<head><title>α &lt; β &amp; "quoted" · The Komorebi Program</title>'+head_metadata('read/a.html',title,'<p>'+text.replace('&','&amp;')+'</p>')+'</head>')
         meta=dict(page.metadata)
-        self.assertEqual(meta['og:title'],title+' · Komorebi')
+        self.assertEqual(meta['og:title'],title+' · The Komorebi Program')
         self.assertEqual(meta['description'],text)
         self.assertEqual(meta['og:description'],text)
         self.assertEqual(meta['og:url'],BASE_URL+'read/a.html')

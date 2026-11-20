@@ -1,8 +1,8 @@
-# Realization Calculus and Komorebi Space
+# The Komorebi Program
 
 **Komorebi P. · Work in progress**
 
-Komorebi studies how mathematical objects can be represented in parts, transformed through those parts, and reconstructed. It asks what a change of representation preserves, what it loses, and how the difference can be measured.
+The Komorebi Program studies how mathematical objects can be represented in parts, transformed through those parts, and reconstructed. It asks what a change of representation preserves, what it loses, and how the difference can be measured.
 
 Realization Calculus develops the mathematics of decomposition, transfer, refinement, and reconstruction. Komorebi Space provides a setting for comparing realizations and the conditions under which they are compatible.
 

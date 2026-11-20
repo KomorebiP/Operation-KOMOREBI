@@ -18,7 +18,7 @@ DESCRIPTIONS = {
     'chemistry-responses.html': 'Explore H10-derived energy scans with reusable action caches. Compare Krylov and nine-state responses, pointwise error bounds, and reproducible evidence.',
     'chemistry-lab.html': 'Recover a nine-state Hamiltonian with three probes, explore exact ambiguity witnesses and conditional error disks, and inspect reproducible chemistry certificates.',
     'sequences.html': 'Search integer sequences and formulas, compare published families, explore exact modular plots, and follow the source derivations.',
-    'index.html': 'Explore mathematical papers, visual guides, recorded proofs, and executable examples in the Komorebi collection.',
+    'index.html': 'Explore mathematical papers, visual guides, recorded proofs, and executable examples in The Komorebi Program.',
     'sitemap.html': 'Browse every Komorebi reader page by section, including papers, books, visual guides, collection records, Lean proofs, and software documentation.',
     'collection/START_HERE.html': 'Start with a worked calculation, choose a reading route, and learn how to interpret the collection’s claims and evidence.',
     'collection/OPERATOR_AUDIT.html': 'A worked operator reference covering maps, algebra, packets, transfer, recovery, and stability, with definitions, examples, exercises, and a practical checklist.',
@@ -117,7 +117,7 @@ def description(path, title, body):
     start = body.find('<article id="chapter-text"')
     paragraphs = Paragraphs(body[start:] if start >= 0 else body).paragraphs
     return compact(paragraphs[0] if paragraphs else
-                   title+'. Read this page and its source links in the Komorebi collection.')
+                   title+'. Read this page and its source links in The Komorebi Program.')
 
 
 @lru_cache(maxsize=1)
@@ -138,7 +138,7 @@ def head_metadata(path, title, body, root=None):
     if not indexable(path):
         tags.append('<meta name="robots" content="noindex,follow">')
     properties = {
-        'og:site_name': 'Komorebi', 'og:type': 'website', 'og:title': title+' · Komorebi',
+        'og:site_name': 'The Komorebi Program', 'og:type': 'website', 'og:title': title+' · The Komorebi Program',
         'og:description': summary, 'og:url': url, 'og:image': image_url,
         'og:image:type': 'image/jpeg', 'og:image:width': image['width'],
         'og:image:height': image['height'], 'og:image:alt': image['alt'],
@@ -202,7 +202,7 @@ def publish_navigation(site):
         return '<ol>'+''.join('<li><a data-reading-entry data-sitemap-entry href="'+
             e(quote(path, safe='/'), quote=True)+'">'+e(titles[path])+'</a></li>' for path in ordered)+'</ol>'
     body = ('<div class="reading-contents-index"><h1>Sitemap</h1>'
-            '<p class="lede">Find your way around the Komorebi collection.</p>'
+            '<p class="lede">Find your way around The Komorebi Program.</p>'
             '<p>Browse pages by section. Open a paper or book to see its chapters, visual guides, and source readers.</p>')
     if 'search.html' in site.discovery_pages:
         body += '<p>Looking for a particular term? <a href="search.html">Search the collection</a>.</p>'
@@ -250,7 +250,7 @@ def verify(root, pages):
         assert meta['og:description'] == meta['description']
         assert meta['og:title'] == ''.join(page.head_title)
         assert meta['og:url'] == canonical_url(path)
-        assert meta['og:site_name'] == 'Komorebi' and meta['og:type'] == 'website'
+        assert meta['og:site_name'] == 'The Komorebi Program' and meta['og:type'] == 'website'
         assert meta['og:image'] == image_url and meta['og:image:type'] == 'image/jpeg'
         assert (meta['og:image:width'], meta['og:image:height']) == ('1200', '630')
         assert meta['og:image:alt'] == meta['twitter:image:alt'] == record['alt']

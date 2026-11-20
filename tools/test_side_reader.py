@@ -45,7 +45,7 @@ class SideReaderTests(unittest.TestCase):
             for name in ['read/work/main.html','collection/works/work.html','assets/pdfjs/web/viewer.html','side-by-side.html','404.html','sitemap.html']:
                 target=root/name
                 target.parent.mkdir(parents=True,exist_ok=True)
-                target.write_text('<title>A &amp; B · Komorebi</title>',encoding='utf-8')
+                target.write_text('<title>A &amp; B · The Komorebi Program</title>',encoding='utf-8')
             site=SimpleNamespace(output=root,revision='a'*40,
                 search=[dict(url='read/work/main.html#L3',title='A claim',kind='Claims',work_ids=['work'],text='Source text'),
                         dict(url='missing.html',title='Missing')],

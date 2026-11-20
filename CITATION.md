@@ -25,7 +25,7 @@ The [component index](docs/COMPONENT_INDEX.md) locates source editions. The [rec
 
 When discussing the collection as a whole, use:
 
-> Komorebi P. *Realization Calculus and Komorebi Space (Operation-KOMOREBI).* GitHub research collection. Work in progress.
+> Komorebi P. *The Komorebi Program: Realization Calculus and Komorebi Space.* GitHub research collection. Work in progress.
 
 Add the [repository URL](https://github.com/KomorebiP/Operation-KOMOREBI), the full commit you used, and your access date. For a component-specific claim, add the particular work and locator rather than relying on this collection-level attribution alone.
 

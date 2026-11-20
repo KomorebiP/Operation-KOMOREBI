@@ -220,11 +220,11 @@ class Renderer:
         if self.browser:
             self.outputs.update(self.browser.render())
         page='README.md'; w=lambda i,t=None:self.work(i,page,t)
-        text='''# Realization Calculus and Komorebi Space
+        text='''# The Komorebi Program
 
 **Komorebi P. · Work in progress**
 
-Komorebi studies how mathematical objects can be represented in parts, transformed through those parts, and reconstructed. It asks what a change of representation preserves, what it loses, and how the difference can be measured.
+The Komorebi Program studies how mathematical objects can be represented in parts, transformed through those parts, and reconstructed. It asks what a change of representation preserves, what it loses, and how the difference can be measured.
 
 Realization Calculus develops the mathematics of decomposition, transfer, refinement, and reconstruction. Komorebi Space provides a setting for comparing realizations and the conditions under which they are compatible.
 
@@ -493,7 +493,7 @@ A successful file-integrity check identifies exact source bytes. A separate repl
 
 **Realization Calculus and Komorebi Space · Komorebi P.**
 
-Komorebi studies how mathematical structure behaves when its description changes. Decomposing an object, changing coordinates, or forming an abstraction can make a problem easier to approach. The question is whether that description retains enough information for the task, and how to account for what is lost.
+The Komorebi Program studies how mathematical structure behaves when its description changes. Decomposing an object, changing coordinates, or forming an abstraction can make a problem easier to approach. The question is whether that description retains enough information for the task, and how to account for what is lost.
 
 Realization Calculus develops decomposition, transfer, refinement, and reconstruction through packets, seeds, coordinates, and explicit residuals. Komorebi Space provides a setting for comparing realizations, their compatibility conditions, and the obstructions to moving between them.
 
@@ -658,7 +658,7 @@ The three canonical repositories are public:
 
 | Repository | Role |
 |---|---|
-| [Operation-KOMOREBI]({REPO_URL}) | Realization Calculus, Komorebi Space, papers, companion volumes, formal developments, experiments, and additional software. |
+| [The Komorebi Program]({REPO_URL}) | Realization Calculus, Komorebi Space, papers, companion volumes, formal developments, experiments, and additional software. |
 | [komorebi-math](https://github.com/KomorebiP/komorebi-math) | Python library, **beta / work in progress**. |
 | [polyphase-float](https://github.com/KomorebiP/polyphase-float) | C numerical library, **beta / work in progress**. |
 
