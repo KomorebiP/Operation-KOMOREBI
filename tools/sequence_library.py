@@ -719,7 +719,7 @@ def build(site,atlas):
         f'The article develops these results and illustrates them in {KERNEL_EXAMPLE_COUNT} worked examples.</p>'
         '<p>For a first reading, start with the <a href="#math-proof-reading-the-parameters">parameter guide</a> '
         'and <a href="#math-proof-using-the-formula">worked substitution</a>. '
-        'The examples then show how the same formula handles familiar sequences, larger blocks, and different weight rules.</p>'
+        'The examples apply the method to familiar sequences, larger blocks, and different weight rules.</p>'
         '<p>The browser calculator evaluates the original two-position family for integer r from −12 through 12 '
         'and indices from 0 through 160. The larger families have written formulas, worked values, and exact Python checks below.</p>'
         '<p><a href="'+central_example+'">Calculate and export the r=4 sequence</a> · '

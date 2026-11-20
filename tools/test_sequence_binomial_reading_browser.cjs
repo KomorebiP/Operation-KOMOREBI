@@ -133,7 +133,7 @@ async function textContrast(page){
         }
         await page.locator('#sq-scheme-green').click();
         await page.locator('#sq-page-theme').selectOption('light');
-        assert.equal(await page.locator('#sq-scheme-green').textContent(),'Ink & blue');
+        assert.equal(await page.locator('#sq-scheme-green').textContent(),'Site green');
         await page.emulateMedia({forcedColors:'active'});
         report.forcedColors=await textContrast(page);
         assert.ok(report.forcedColors.every(pair=>pair.ratio>=4.5));
