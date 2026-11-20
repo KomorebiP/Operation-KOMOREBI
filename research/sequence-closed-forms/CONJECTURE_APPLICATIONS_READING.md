@@ -142,12 +142,14 @@ Summing its coefficients in the ordinary generating variable \(x\) yields a seco
 
 \[
 \boxed{
+\begin{aligned}
 \sum_{n\ge1}E_nx^n
-=
-\frac{2i}{1-\omega^q}
-\sum_{k=1}^{q}
-\omega^k\frac{ikx}{1-ikx}
+&=\frac{2i}{1-\omega^q}\\
+&\quad\times
+\sum_{k=1}^{q}\omega^k
+\frac{ikx}{1-ikx}
 \pmod q.
+\end{aligned}
 }
 \]
 
@@ -410,11 +412,12 @@ When \(\gcd(d,h)=1\), its reduced numerator is
 
 \[
 \boxed{
+\begin{aligned}
 \operatorname{num}H_n(d,h)
-=
-\prod_{p\mid d}
-p^{\,n(n+1)v_p(d)
-+2\sum_{k=1}^{n}v_p(k!)}.
+&=\prod_{p\mid d}p^{e_p},\\
+e_p&=n(n+1)v_p(d)\\
+&\quad+2\sum_{k=1}^{n}v_p(k!).
+\end{aligned}
 }
 \]
 
@@ -423,7 +426,10 @@ This contains the prime-step numerator conjecture recorded in OEIS A122251. It a
 For an arbitrary positive shift, set
 
 \[
-g=\gcd(d,h),\qquad D=d/g,\qquad N=n+1.
+\begin{aligned}
+g&=\gcd(d,h),\\
+D&=d/g,\qquad N=n+1.
+\end{aligned}
 \]
 
 Then the complete result is
@@ -433,10 +439,10 @@ Then the complete result is
 \begin{aligned}
 \operatorname{num}H_n(d,h)
 &=\prod_{p\mid D}p^{f_p},\\
-f_p&=\max\Bigl(0,\,
-nN\,v_p(D)\\
-&\qquad+2\sum_{k=1}^{n}v_p(k!)
--Nv_p(g)\Bigr).
+f_p&=\max(0,\rho_p),\\
+\rho_p&=nN\,v_p(D)\\
+&\quad+2\sum_{k=1}^{n}v_p(k!)\\
+&\quad-Nv_p(g).
 \end{aligned}
 }
 \]
@@ -448,10 +454,10 @@ For fixed \(d,n\), this depends on \(h\) only through \(\gcd(d,h)\).
 Selecting rows \(a+si\) and columns \(b+tj\) from a Cauchy–Hankel matrix with base step \(d\) gives entries
 
 \[
-M_{ij}
-=
-\frac1{dsi+dtj+H},
-\qquad H=h+d(a+b).
+\begin{aligned}
+M_{ij}&=\frac1{dsi+dtj+H},\\
+H&=h+d(a+b).
+\end{aligned}
 \]
 
 When \(s=t=w\), the preceding numerator formula applies with effective step \(dw\) and shift \(H\). For unequal strides, the inverse-Cauchy localization theorem in the base manuscript shows that every prime in the reduced numerator of \(\det M\) divides \(dst\).
@@ -479,16 +485,17 @@ a_n(u,v)
 \quad(n\ge1),
 \]
 
-with \(a_0=0\). The exact terminating sum is
+with \(a_0=0\). The exact terminating sum can be written compactly by taking
+\(j_k=n-1-mk\) and \(h_k=(m-1)k+1\):
 
 \[
 \boxed{
+\begin{aligned}
 a_n(u,v)
-=
-\sum_{k=0}^{\lfloor(n-1)/m\rfloor}
-\frac{n!\,
-u^{n-1-mk}v^k}
-{k!(n-1-mk)!((m-1)k+1)!}.
+&=\sum_{k=0}^{\lfloor(n-1)/m\rfloor}\\
+&\quad\frac{n!}{k!\,j_k!\,h_k!}
+u^{j_k}v^k.
+\end{aligned}
 }
 \]
 
@@ -503,11 +510,11 @@ Classical Lagrange coefficient transfer gives the algebraic generating function
 
 \[
 \boxed{
-G(x)=\sum_{n\ge0}a_nx^n
-=
-xT'(x)
-=
-\frac{T}{1-x(u+mvT^{m-1})}.
+\begin{aligned}
+G(x)&=\sum_{n\ge0}a_nx^n\\
+&=xT'(x)\\
+&=\frac{T}{1-x(u+mvT^{m-1})}.
+\end{aligned}
 }
 \]
 
