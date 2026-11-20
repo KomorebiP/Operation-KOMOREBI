@@ -13,6 +13,29 @@ ROOT=Path(__file__).resolve().parents[1]
 
 
 class MathematicalReadingTests(unittest.TestCase):
+    def test_conjecture_reading_source_has_complete_math_and_status_boundaries(self):
+        import re
+        source=(ROOT/'research/sequence-closed-forms/CONJECTURE_APPLICATIONS_READING.md').read_text(encoding='utf-8')
+        content=mathematical_reading_fragment(source,include_outline=True)
+        self.assertNotIn('<h1',content)
+        self.assertEqual(source.count(r'\['),source.count(r'\]'))
+        self.assertGreaterEqual(source.count(r'\['),40)
+        self.assertEqual(content.count('class="arithmatex sl-math-display"'),source.count(r'\['))
+        self.assertIn('math-proof-4-finite-spectral-packets-for-every-odd-modulus',content)
+        self.assertIn('math-proof-6-weighted-euler-divisibility-as-a-local-jet-condition',content)
+        self.assertIn('math-proof-7-the-precise-open-euler-conjecture',content)
+        self.assertIn('math-proof-9-companion-result-hankel-numerators-and-arithmetic-submatrices',content)
+        self.assertIn('math-proof-12-sources-and-attribution',content)
+        self.assertIn('**not proved**' if False else '<strong>not proved</strong>',content.lower())
+        self.assertIn('Historical',content) if 'Historical' in source else self.assertIn('priority',content)
+        self.assertIn('https://arxiv.org/abs/2608.27058',content)
+        self.assertIn('https://oeis.org/A122251',content)
+        self.assertIn('https://komorebip.github.io/Operation-KOMOREBI/sequence-central-binomial.html',content)
+        targets=re.findall(r'<a href="#(math-proof-[^"]+)"',content)
+        headings=re.findall(r'<h[23] id="(math-proof-[^"]+)"',content)
+        self.assertEqual(targets,headings)
+        self.assertEqual(len(targets),12)
+
     def test_central_binomial_proof_retains_all_equations_and_attribution(self):
         source=(ROOT/'research/sequence-closed-forms/CENTRAL_BINOMIAL_RECURRENCE.md').read_text(encoding='utf-8')
         content=mathematical_reading_fragment(source,include_outline=True)
