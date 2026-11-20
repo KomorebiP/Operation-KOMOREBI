@@ -57,16 +57,24 @@ async function textContrast(page){
       const c=value/255;return c<=.04045?c/12.92:((c+.055)/1.055)**2.4;
     }).reduce((sum,value,i)=>sum+value*[.2126,.7152,.0722][i],0);
     const background=node=>{
+      const layers=[];
       for(let current=node;current;current=current.parentElement){
         const color=rgb(getComputedStyle(current).backgroundColor);
-        if(color.length===3||color[3]===1)return color;
+        layers.push(color);
+        if(color.length===3||color[3]===1)break;
       }
-      return [255,255,255];
+      // System Highlight can be translucent in forced-color mode. Composite
+      // every layer instead of treating a translucent control as transparent.
+      return layers.reverse().reduce((surface,color)=>{
+        const alpha=color[3]??1;
+        return color.slice(0,3).map((value,i)=>value*alpha+surface[i]*(1-alpha));
+      },[255,255,255]);
     };
     return ['body','.sl-math-display','.sl-example-number','.sl-kernel-example>summary',
       '.sl-example-body p','.sl-binomial-jumps a','#sq-scheme-green','#sq-page-theme'].map(selector=>{
       const node=document.querySelector(selector),style=getComputedStyle(node);
-      const foreground=rgb(style.color),surface=background(node);
+      const color=rgb(style.color),surface=background(node),alpha=color[3]??1;
+      const foreground=color.slice(0,3).map((value,i)=>value*alpha+surface[i]*(1-alpha));
       const a=luminance(foreground),b=luminance(surface);
       return {selector,foreground,surface,ratio:(Math.max(a,b)+.05)/(Math.min(a,b)+.05)};
     });
@@ -127,7 +135,8 @@ async function textContrast(page){
         await page.locator('#sq-page-theme').selectOption('light');
         assert.equal(await page.locator('#sq-scheme-green').textContent(),'Ink & blue');
         await page.emulateMedia({forcedColors:'active'});
-        assert.ok((await textContrast(page)).every(pair=>pair.ratio>=4.5));
+        report.forcedColors=await textContrast(page);
+        assert.ok(report.forcedColors.every(pair=>pair.ratio>=4.5));
         await page.emulateMedia({forcedColors:'none',colorScheme:'light'});
       }
       await page.locator('[data-example-action="close"]').click();
