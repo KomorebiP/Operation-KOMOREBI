@@ -19,7 +19,7 @@ class ExactCalculatorHandoffTests(unittest.TestCase):
     def test_all_closed_form_parameter_presets_match_retained_integer_windows(self):
         records=[row for row in expanded_catalogue()
                  if row.get('closed_form_collection')]
-        self.assertEqual(len(records),35)
+        self.assertEqual(len(records),41)
         cases=[]
         for row in records:
             self.assertIn('calculator',row,row['id'])
@@ -31,7 +31,7 @@ class ExactCalculatorHandoffTests(unittest.TestCase):
                 'calculator':row['calculator'],
                 'expected':values[:12],
             })
-        self.assertEqual(len({case['id'] for case in cases}),35)
+        self.assertEqual(len({case['id'] for case in cases}),41)
         runner=subprocess.run(
             ['node',str(ROOT/'tools/test_sequence_closed_form_handoffs.mjs')],
             input=json.dumps(cases,separators=(',',':')),text=True,
@@ -39,10 +39,10 @@ class ExactCalculatorHandoffTests(unittest.TestCase):
         )
         self.assertEqual(runner.returncode,0,runner.stderr or runner.stdout)
         report=json.loads(runner.stdout)
-        self.assertEqual(report['records'],35)
-        self.assertEqual(report['checked_integer_values'],420)
+        self.assertEqual(report['records'],41)
+        self.assertEqual(report['checked_integer_values'],492)
         self.assertTrue(report['all_exact'])
-        self.assertEqual(len(report['modes']),8)
+        self.assertEqual(len(report['modes']),9)
 
 
 if __name__=='__main__':

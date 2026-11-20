@@ -1,0 +1,269 @@
+{
+  "schema_version": 2,
+  "claim_id": "CENTRAL-BINOMIAL-FINITE-CHECKS-2026-11-19",
+  "repository": {
+    "commit": "78724549951666b1d5c19e79de99a3f75dd91be7",
+    "dirty": true
+  },
+  "command": [
+    "python3",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tools",
+    "-p",
+    "test_sequence_closed_forms_central.py",
+    "-v"
+  ],
+  "environment": {
+    "software": [
+      {
+        "name": "runner-python",
+        "version": "3.12.14"
+      },
+      {
+        "name": "CPython",
+        "version": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]"
+      },
+      {
+        "name": "Python standard library unittest, fractions, and math",
+        "version": "3.12.14"
+      }
+    ],
+    "hardware": "Linux-6.18.57-x86_64-with-glibc2.41"
+  },
+  "mathematics": {
+    "assertion_tested": "The nine tests in test_sequence_closed_forms_central.py verify the exact finite comparisons, recurrence residuals, polynomial identities, boundary values, validation behavior, and six catalogue records specified in bounds. They corroborate the implementation on these explicit finite sets.",
+    "coefficient_domain": "Exact integers Z, rational numbers Q via fractions.Fraction, polynomials Z[r] as ascending integer coefficient lists, and Gaussian integers Z[i] as integer pairs. No floating-point arithmetic is used for mathematical comparisons.",
+    "conventions": "a_n(r)=sum_{k=0}^n binom(n,floor(k/2))*(-r)^(n-k); zero-based n; last is inclusive; 0^0=1; polynomial entry j is the coefficient of r^j; (u,v) means u+v*i. At r=0 the constructor uses binom(n,floor(n/2)) directly. Direct sum and first-order recurrence share math.comb; the polynomial check constructs Pascal rows by integer addition independently of math.comb.",
+    "inputs": [
+      {
+        "path": "tools/test_sequence_closed_forms_central.py",
+        "role": "Executed nine-test suite and independent polynomial/Gaussian-integer operations."
+      },
+      {
+        "path": "tools/sequence_central_binomial.py",
+        "role": "Direct finite sum, first-order exact constructor, polynomial constructor, and six-record/family factories under test."
+      },
+      {
+        "path": "tools/sequence_formula_catalogue.py",
+        "role": "Locally imported record and variant factories used by the catalogue/family test; other construction functions in this file are not called."
+      }
+    ],
+    "bounds": {
+      "integer_grid": {
+        "r_min": -12,
+        "r_max": 12,
+        "r_step": 1,
+        "n_min": 0,
+        "n_max": 160,
+        "term_comparisons": 4025,
+        "residual_n_min": 3,
+        "residual_n_max": 160,
+        "four_term_residuals": 3950
+      },
+      "rational_grid": {
+        "r": [
+          "-3/2",
+          "1/2",
+          "7/3"
+        ],
+        "n_min": 0,
+        "n_max": 40,
+        "term_comparisons": 123,
+        "residual_n_min": 3,
+        "residual_n_max": 40,
+        "four_term_residuals": 114
+      },
+      "polynomial_identities": {
+        "coefficient_construction_n_min": 0,
+        "coefficient_construction_n_max": 32,
+        "residual_n_min": 3,
+        "residual_n_max": 32,
+        "identities": 30,
+        "zero_coefficient_slots": 585
+      },
+      "imaginary_boundaries": {
+        "r": [
+          "+i",
+          "-i"
+        ],
+        "n_min": 0,
+        "n_max": 40,
+        "term_comparisons": 82,
+        "residual_n_min": 3,
+        "residual_n_max": 40,
+        "reduced_recurrence_residuals": 76
+      },
+      "real_boundaries": {
+        "r": [
+          -1,
+          0,
+          1
+        ],
+        "n_min": 0,
+        "n_max": 64,
+        "term_comparisons": 195
+      },
+      "initial_values": {
+        "n_min": 0,
+        "n_max": 3,
+        "r": [
+          "-4",
+          "-1",
+          "0",
+          "1",
+          "4",
+          "2/3"
+        ],
+        "hand_polynomials": 4,
+        "worked_r4_n_min": 0,
+        "worked_r4_n_max": 11
+      },
+      "catalogue": {
+        "r": [
+          -1,
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "records": 6,
+        "terms_per_record": 24,
+        "offset": 0,
+        "representations_per_record": 3,
+        "families": 1
+      },
+      "input_validation": "Reject negative indices; reject bool, float, Fraction, string, and None as indices; reject bool, float (including NaN and infinity), complex, string, Decimal, and None parameters. Exact Fraction(0) and index-zero boundaries are covered.",
+      "test_methods": 9,
+      "enumeration": "Every element of the stated integer/rational/index grids is tested; there is no random sampling."
+    },
+    "non_claims": [
+      "Finite successful tests do not prove the recurrence for every n or every complex r; the universal proof is a separate derivation.",
+      "The n=3..32 polynomial identities hold for all r for each of these finitely many n; they do not establish the identity for higher n.",
+      "This run does not establish historical priority, completeness of the literature, or new OEIS identifications.",
+      "This run does not test browser behavior, other suites, performance at untested bounds, or general complex floating-point evaluation."
+    ],
+    "dependency_closure": "All executed local Python source is covered by the three declared source/test artifacts. sequence_formula_catalogue is loaded lazily for record/variant; those factories use only standard-library functionality and do not invoke the file's other local imports. Source URLs in catalogue records are strings, not fetched dependencies. The contract is also pinned. Runner and validator are cloud-skill helpers recorded separately in the interpreted manifest."
+  },
+  "randomness": {
+    "used": false,
+    "generator": "",
+    "seed": null
+  },
+  "run": {
+    "started_at": "2026-11-20T01:29:35.588188+00:00",
+    "runtime_seconds": 0.37281,
+    "exit_status": 0,
+    "status": "completed",
+    "timeout_seconds": 30.0,
+    "max_output_bytes": 1048576,
+    "resource_limits": {
+      "memory_bytes": 1073741824,
+      "cpu_seconds": 20,
+      "max_cores": 1,
+      "max_threads": 1
+    },
+    "missing_results": [],
+    "invalid_results": []
+  },
+  "execution_artifacts": [
+    "tools/test_sequence_closed_forms_central.py",
+    "tools/sequence_central_binomial.py",
+    "tools/sequence_formula_catalogue.py",
+    "research/sequence-closed-forms/central-recurrence-checks/contract.json"
+  ],
+  "input_artifacts": [
+    {
+      "path": "tools/test_sequence_closed_forms_central.py",
+      "sha256": "ffc36cce74b0901064ddd8294920208e079f61c3aced81d43ef52001b74db979",
+      "sha256_after": "ffc36cce74b0901064ddd8294920208e079f61c3aced81d43ef52001b74db979"
+    },
+    {
+      "path": "tools/sequence_central_binomial.py",
+      "sha256": "cda4d5421074449eabba3f20fd1a1972caed6b1ced69d56886378f36215230fb",
+      "sha256_after": "cda4d5421074449eabba3f20fd1a1972caed6b1ced69d56886378f36215230fb"
+    },
+    {
+      "path": "tools/sequence_formula_catalogue.py",
+      "sha256": "1588866a3cd5c0986990d6b8b121c3dc30ea50205d0f2ca5e246561986e1f5f9",
+      "sha256_after": "1588866a3cd5c0986990d6b8b121c3dc30ea50205d0f2ca5e246561986e1f5f9"
+    },
+    {
+      "path": "research/sequence-closed-forms/central-recurrence-checks/contract.json",
+      "sha256": "f14a73d72b435636edeea8fcff11b3c5414161cef2e9b9aef564aed915909087",
+      "sha256_after": "f14a73d72b435636edeea8fcff11b3c5414161cef2e9b9aef564aed915909087"
+    }
+  ],
+  "output_directory": "research/sequence-closed-forms/central-recurrence-checks/run-2026-11-19",
+  "declared_results": [],
+  "outputs": [
+    {
+      "path": "research/sequence-closed-forms/central-recurrence-checks/run-2026-11-19/stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "kind": "log"
+    },
+    {
+      "path": "research/sequence-closed-forms/central-recurrence-checks/run-2026-11-19/stderr.txt",
+      "sha256": "23b57dff8d1034fe80400cb5f389028d41fe32395774314ca8d36153eb5f6710",
+      "kind": "log"
+    }
+  ],
+  "checks": [
+    {
+      "check": "input hashes unchanged",
+      "passed": true
+    },
+    {
+      "check": "process exited successfully within enforced limits",
+      "passed": true
+    },
+    {
+      "check": "declared result files are present and regular",
+      "passed": true
+    },
+    {
+      "check": "All nine named unittest methods report ok; the suite reports OK with no skips",
+      "passed": true
+    },
+    {
+      "check": "Static inspection confirms the explicit exhaustive finite loops and counts recorded in mathematics.bounds",
+      "passed": true
+    },
+    {
+      "check": "Static inspection confirms exact arithmetic for the mathematical comparisons and the declared three-file local source dependency closure",
+      "passed": true
+    }
+  ],
+  "result": "Implementation and finite assertion verified in the stated range.",
+  "residual_risks": [
+    "Command success does not establish the mathematical interpretation.",
+    "Only listed input artifacts are pinned; external dependencies need recorded versions.",
+    "The thread cap uses conventional environment variables; a child program may ignore them.",
+    "The POSIX CPU-time limit is per process, not an aggregate descendant budget.",
+    "The pinned source hashes describe the working tree at this run; changing any declared input requires a new run record for the changed version."
+  ],
+  "interpretation": {
+    "reviewed_at": "2026-11-20T01:30:14.783159+00:00",
+    "status": "implementation-and-finite-assertion-verified",
+    "scope": "The documented central nine-test suite only; no additional broad computation was run.",
+    "evidence": "The captured log records all nine tests as passing. The bounds were audited against the actual loops, polynomial operations, Gaussian-integer operations, validation cases, and catalogue assertions.",
+    "independence": "The first-order construction is compared with the direct finite sum. Both use math.comb. The polynomial residual check builds binomial rows independently by Pascal addition. This is an implementation-agent review, not an independent human review or a rerun on a second machine.",
+    "universal_proof": "The finite run is corroboration. The theorem for every n and complex r is established separately in the source derivation; that proof is not a computational dependency or a conclusion of these tests."
+  },
+  "provenance_helpers": [
+    {
+      "resource": "skill://plugins_6a9174204a0481918ca3798d69d2e227/computation-audit/scripts/run_experiment.py",
+      "sha256": "8427aa93971e1a47bfc516aef05820ea606925af1cfbe5510c398fa29568908c",
+      "role": "Materialized cloud-skill helper; temporary path is outside the repository"
+    },
+    {
+      "resource": "skill://plugins_6a9174204a0481918ca3798d69d2e227/computation-audit/scripts/validate_manifest.py",
+      "sha256": "0bfa3794c070a466c423483be75892a36832eaf7dea03ce8810338e8d6cbf817",
+      "role": "Materialized cloud-skill helper; temporary path is outside the repository"
+    }
+  ]
+}

@@ -141,7 +141,7 @@ class SequenceAtlasTests(unittest.TestCase):
             self.assertIn('sequence-redirect.mjs',handoff)
             for anchor in ('find','catalogue','saved','explorer','discover','connections','reference'):
                 self.assertIn('id="'+anchor+'"',handoff)
-            self.assertEqual(result['library']['entries'],2327)
+            self.assertEqual(result['library']['entries'],2333)
             # One research entry point, without duplicating the exact catalogue.
             research_desk=(site.output/'sequence-library.html').read_text(encoding='utf-8')
             self.assertIn('id="sequence-research-desk"',research_desk)

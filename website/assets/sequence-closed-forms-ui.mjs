@@ -4,6 +4,7 @@ import {MODE_DEFAULTS,MODE_LIMITS,MODE_FIELDS,computeExactWindow,
         exactWindowCSV,exactViewURL,readExactView} from './sequence-closed-forms-core.mjs';
 
 const modes=[
+  ['central_binomial','Central binomial sums and universal recurrence'],
   ['sparse','Sparse two-delay coefficients'],
   ['padovan','Padovan generating-function powers'],
   ['fourblock','Four-block logarithmic polynomials'],
@@ -29,6 +30,7 @@ const descriptions={
   c2:['Second derivative c₂',-12,12],c3:['Third derivative c₃',-12,12]
 };
 const subtitle={
+  central_binomial:'Evaluate the floor-index binomial sum and its universal recurrence. The proof covers every complex r; this worksheet calculates integer r from −12 to 12 exactly, including r=0.',
   sparse:'C(n) is a coefficient of (1-u z^p-v z^q)^(-r). Negative integer powers and zero weights are supported.',
   padovan:'The coefficient of ((1-z²)/(1-z²-z³))^h. The h=1 sequence begins 1, 0, 0, 1.',
   fourblock:'T_m(a) is indexed from m=1, with underlying analytic exponent 4m-1.',
@@ -79,7 +81,9 @@ export function mountClosedFormsCalculator(root,{href=location.href}={}){
     const grid=node('div');grid.className='cf-grid';
     for(const key of MODE_FIELDS[mode]){
       const [title,min,max]=descriptions[key];
-      const field=numberField(key,key==='a'&&mode.startsWith('beta_')?'Positive shape a':title,
+      const caption=key==='a'&&mode.startsWith('beta_')?'Positive shape a':
+        key==='r'&&mode==='central_binomial'?'Parameter r':title;
+      const field=numberField(key,caption,
         min,max,MODE_DEFAULTS[mode][key]);
       // The same symbolic parameter may occur in multiple families.
       field.input.id='cf-'+mode+'-'+key;
@@ -159,6 +163,22 @@ export function mountClosedFormsCalculator(root,{href=location.href}={}){
   const parityCopy=node('button','Copy moment formulas');parityCopy.type='button';parityCopy.id='cf-parity-copy';
   parityActions.append(parityCopy);
   parity.append(parityTitle,parityInfo,parityRegion,parityHelp,parityActions);
+  const central=node('details');central.id='cf-central';central.className='cf-formulas';central.hidden=true;
+  const centralTitle=node('summary','Definition, generating function, and universal recurrence');
+  const centralInfo=node('p');centralInfo.id='cf-central-info';centralInfo.className='cf-note';
+  const centralRegion=node('pre');centralRegion.id='cf-central-formula';centralRegion.className='cf-formula';
+  centralRegion.tabIndex=0;centralRegion.setAttribute('role','region');
+  centralRegion.setAttribute('aria-label','Central binomial definition, generating function, and recurrence');
+  const centralCode=node('code');centralRegion.append(centralCode);
+  const centralHelp=node('p','The finite sum defines every index. The four-term identity holds for n≥3 and every complex parameter. Its leading coefficient vanishes at r=0, where the direct binomial formula supplies the values.');
+  centralHelp.className='cf-note';
+  const centralProof=node('p'),centralProofLink=node('a','Read the full proof and worked specializations');
+  centralProofLink.href='sequence-central-binomial.html';centralProofLink.id='cf-central-proof';
+  centralProof.append(centralProofLink);
+  const centralActions=node('div');centralActions.className='cf-actions';
+  const centralCopy=node('button','Copy sequence formulas');centralCopy.type='button';centralCopy.id='cf-central-copy';
+  centralActions.append(centralCopy);
+  central.append(centralTitle,centralInfo,centralRegion,centralHelp,centralProof,centralActions);
   const exports=node('div');exports.className='cf-actions';
   const csv=node('button','Download exact CSV');csv.type='button';csv.id='cf-download';
   const copy=node('button','Copy exact values');copy.type='button';copy.id='cf-copy';
@@ -169,7 +189,7 @@ export function mountClosedFormsCalculator(root,{href=location.href}={}){
   fallback.rows=4;
   const warning=node('p','Spreadsheet programs may round large integers. Import the exact_integer column as text.');
   warning.className='cf-note';
-  result.append(resultTitle,explain,region,exports,warning,parity,ogf,method,fallback);
+  result.append(resultTitle,explain,region,exports,warning,central,parity,ogf,method,fallback);
   root.append(form,status,result);
   let latest=null,latestView=null,renderedMode='',generation=0,copyGeneration=0,pendingWorker=null,pendingFallback=null;
   function rawValues(){
@@ -254,7 +274,7 @@ export function mountClosedFormsCalculator(root,{href=location.href}={}){
     cancelPending();latest=null;latestView=null;result.hidden=true;fallback.hidden=true;
   }
   function render(data){
-    if(renderedMode!==data.mode){ogf.open=false;parity.open=false;}
+    if(renderedMode!==data.mode){ogf.open=false;parity.open=false;central.open=false;}
     renderedMode=data.mode;
     latest=data;latestView={mode:data.mode,start:data.start,count:data.count,...data.parameters};
     body.replaceChildren();
@@ -268,6 +288,15 @@ export function mountClosedFormsCalculator(root,{href=location.href}={}){
       ' through '+(data.start+data.count-1)+'.';
     explain.textContent=data.description;
     verified.textContent=data.verification;
+    central.hidden=!data.centralFormulas;
+    if(data.centralFormulas){
+      const evidence=data.centralFormulas;
+      centralCode.textContent=evidence.expression;
+      centralInfo.textContent='Calculated parameter: r='+evidence.parameter+'. '+
+        (evidence.zeroParameter
+          ? 'The direct central binomial specialization is used at r=0.'
+          : 'The exact recurrence and the independent defining sum agree at every calculated index.');
+    }
     parity.hidden=!data.momentClosedForms;
     if(data.momentClosedForms){
       const evidence=data.momentClosedForms;
@@ -354,10 +383,11 @@ export function mountClosedFormsCalculator(root,{href=location.href}={}){
     for(const key of MODE_FIELDS[modeSelect.value])controls[modeSelect.value+':'+key].value=values[key];
     sync();calculate();
   });
-  async function doCopy(text,label){
+  async function doCopy(text,label,source=null){
     const id=generation,copyId=++copyGeneration;
     const current=()=>id===generation&&copyId===copyGeneration&&root.isConnected&&
-      !root.closest('details:not([open])');
+      !root.closest('details:not([open])')&&
+      (!source||(source.isConnected&&!source.closest('details:not([open])')));
     fallback.hidden=true;
     try{
       if(!navigator.clipboard?.writeText)throw Error('Clipboard permission is unavailable.');
@@ -378,6 +408,13 @@ export function mountClosedFormsCalculator(root,{href=location.href}={}){
   parityCopy.addEventListener('click',()=>{
     if(!latest?.momentClosedForms)return;
     doCopy(latest.momentClosedForms.expression+'\n','the moment formulas');
+  });
+  centralCopy.addEventListener('click',()=>{
+    if(!latest?.centralFormulas)return;
+    doCopy(latest.centralFormulas.expression+'\n','the sequence formulas',centralCopy);
+  });
+  central.addEventListener('toggle',()=>{
+    if(!central.open){copyGeneration++;fallback.hidden=true;}
   });
   copy.addEventListener('click',()=>{
     if(!latest)return;

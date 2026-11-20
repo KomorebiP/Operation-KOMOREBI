@@ -20,10 +20,10 @@ class SequenceLibraryTests(unittest.TestCase):
                            'manifests/sequence-library-oeis.json').read_text())
         covered=verified_oeis_coverage(entries,receipt)
         self.assertEqual(covered,{entry['id'] for entry in entries})
-        self.assertEqual(len(covered),2327)
+        self.assertEqual(len(covered),2333)
         closed=[entry for entry in entries if entry.get('closed_form_collection')]
-        self.assertEqual(len(closed),35)
-        self.assertEqual(sum(bool(receipt['matches'][entry['id']]) for entry in closed),11)
+        self.assertEqual(len(closed),41)
+        self.assertEqual(sum(bool(receipt['matches'][entry['id']]) for entry in closed),17)
         for identifier,reference,length in (
                 ('KFOR-CF-PAD-1','A000931',24),
                 ('KFOR-CF-JET-00','A163865',24),
@@ -118,11 +118,12 @@ class SequenceLibraryTests(unittest.TestCase):
         from sequence_library import calculator_link
         entries=library_entries(catalogue())
         linked=[item for item in entries if item.get('calculator_url')]
-        self.assertEqual(len(linked),35)
+        self.assertEqual(len(linked),41)
         self.assertEqual({item['closed_form_family'] for item in linked},{
             'GF-CF-SPARSE','GF-CF-PADOVAN','GF-CF-FOUR-BLOCK',
             'GF-CF-WEIGHTED-HANKEL','GF-CF-BETA-MOMENTS',
-            'GF-CF-BETA-HANKEL','GF-CF-BINOMIAL-JETS','GF-CF-MEIXNER'})
+            'GF-CF-BETA-HANKEL','GF-CF-BINOMIAL-JETS','GF-CF-MEIXNER',
+            'GF-CF-CENTRAL-BINOMIAL'})
         for item in linked:
             url=item['calculator_url']
             parsed=urlparse(url)
@@ -157,12 +158,12 @@ class SequenceLibraryTests(unittest.TestCase):
         self.assertEqual(beta['calculator']['a'],1)
 
     def test_complete_parameter_windows_and_independent_formulas(self):
-        report=checks();self.assertEqual(report['records'],2199);self.assertEqual(report['terms'],56779)
+        report=checks();self.assertEqual(report['records'],2205);self.assertEqual(report['terms'],56923)
         self.assertEqual(report['checks']['source_index_maps'],55939)
 
     def test_unified_records_preserve_old_ids_offsets_and_formula_types(self):
-        entries=library_entries(catalogue());self.assertEqual(len(entries),2327);self.assertEqual(len({x['id'] for x in entries}),2327)
-        self.assertEqual(sum(len(x['formulas']) for x in entries),7108)
+        entries=library_entries(catalogue());self.assertEqual(len(entries),2333);self.assertEqual(len({x['id'] for x in entries}),2333)
+        self.assertEqual(sum(len(x['formulas']) for x in entries),7126)
         self.assertTrue(all(len(x['terms'])==(sum(x['triangle']['row_lengths']) if x.get('triangle') else 48 if x['id'].startswith('KFOR-KB-') else 24) for x in expanded_catalogue()))
         self.assertTrue(any(x['offset']==2 for x in entries))
         for kind in ['reciprocal','catalan','central-binomial']:
@@ -173,8 +174,8 @@ class SequenceLibraryTests(unittest.TestCase):
         from sequence_library import source_degree
         entries=library_entries(catalogue())
         formulas=[item for item in entries if item['collection']=='formulas']
-        self.assertEqual(len(formulas),2199)
-        self.assertEqual(sum(len(item['terms']) for item in formulas),56779)
+        self.assertEqual(len(formulas),2205)
+        self.assertEqual(sum(len(item['terms']) for item in formulas),56923)
         by_id={item['id']:item for item in formulas}
         for item in formulas:
             degrees=[source_degree(item,item['offset']+i) for i in range(len(item['terms']))]

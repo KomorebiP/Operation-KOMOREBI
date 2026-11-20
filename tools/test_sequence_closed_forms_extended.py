@@ -257,7 +257,7 @@ class ClosedFormsExtendedTests(unittest.TestCase):
         from sequence_closed_forms import closed_form_catalogue
         from sequence_formula_catalogue import expanded_catalogue
         all_entries=expanded_catalogue()
-        self.assertEqual(len(all_entries),2199)
+        self.assertEqual(len(all_entries),2205)
         self.assertEqual(len({r['id'] for r in all_entries}),len(all_entries))
         by_id={x['id']:x for x in all_entries}
         self.assertEqual(len(by_id['KFOR-CF-W-0-1']['formulas']),3)

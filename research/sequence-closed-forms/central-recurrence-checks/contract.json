@@ -1,0 +1,140 @@
+{
+  "claim_id": "CENTRAL-BINOMIAL-FINITE-CHECKS-2026-11-19",
+  "author": "Komorebi P.",
+  "software": [
+    {
+      "name": "CPython",
+      "version": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]"
+    },
+    {
+      "name": "Python standard library unittest, fractions, and math",
+      "version": "3.12.14"
+    }
+  ],
+  "execution_artifacts": [
+    "tools/test_sequence_closed_forms_central.py",
+    "tools/sequence_central_binomial.py",
+    "tools/sequence_formula_catalogue.py",
+    "research/sequence-closed-forms/central-recurrence-checks/contract.json"
+  ],
+  "mathematics": {
+    "assertion_tested": "The nine tests in test_sequence_closed_forms_central.py verify the exact finite comparisons, recurrence residuals, polynomial identities, boundary values, validation behavior, and six catalogue records specified in bounds. They corroborate the implementation on these explicit finite sets.",
+    "coefficient_domain": "Exact integers Z, rational numbers Q via fractions.Fraction, polynomials Z[r] as ascending integer coefficient lists, and Gaussian integers Z[i] as integer pairs. No floating-point arithmetic is used for mathematical comparisons.",
+    "conventions": "a_n(r)=sum_{k=0}^n binom(n,floor(k/2))*(-r)^(n-k); zero-based n; last is inclusive; 0^0=1; polynomial entry j is the coefficient of r^j; (u,v) means u+v*i. At r=0 the constructor uses binom(n,floor(n/2)) directly. Direct sum and first-order recurrence share math.comb; the polynomial check constructs Pascal rows by integer addition independently of math.comb.",
+    "inputs": [
+      {
+        "path": "tools/test_sequence_closed_forms_central.py",
+        "role": "Executed nine-test suite and independent polynomial/Gaussian-integer operations."
+      },
+      {
+        "path": "tools/sequence_central_binomial.py",
+        "role": "Direct finite sum, first-order exact constructor, polynomial constructor, and six-record/family factories under test."
+      },
+      {
+        "path": "tools/sequence_formula_catalogue.py",
+        "role": "Locally imported record and variant factories used by the catalogue/family test; other construction functions in this file are not called."
+      }
+    ],
+    "bounds": {
+      "integer_grid": {
+        "r_min": -12,
+        "r_max": 12,
+        "r_step": 1,
+        "n_min": 0,
+        "n_max": 160,
+        "term_comparisons": 4025,
+        "residual_n_min": 3,
+        "residual_n_max": 160,
+        "four_term_residuals": 3950
+      },
+      "rational_grid": {
+        "r": [
+          "-3/2",
+          "1/2",
+          "7/3"
+        ],
+        "n_min": 0,
+        "n_max": 40,
+        "term_comparisons": 123,
+        "residual_n_min": 3,
+        "residual_n_max": 40,
+        "four_term_residuals": 114
+      },
+      "polynomial_identities": {
+        "coefficient_construction_n_min": 0,
+        "coefficient_construction_n_max": 32,
+        "residual_n_min": 3,
+        "residual_n_max": 32,
+        "identities": 30,
+        "zero_coefficient_slots": 585
+      },
+      "imaginary_boundaries": {
+        "r": [
+          "+i",
+          "-i"
+        ],
+        "n_min": 0,
+        "n_max": 40,
+        "term_comparisons": 82,
+        "residual_n_min": 3,
+        "residual_n_max": 40,
+        "reduced_recurrence_residuals": 76
+      },
+      "real_boundaries": {
+        "r": [
+          -1,
+          0,
+          1
+        ],
+        "n_min": 0,
+        "n_max": 64,
+        "term_comparisons": 195
+      },
+      "initial_values": {
+        "n_min": 0,
+        "n_max": 3,
+        "r": [
+          "-4",
+          "-1",
+          "0",
+          "1",
+          "4",
+          "2/3"
+        ],
+        "hand_polynomials": 4,
+        "worked_r4_n_min": 0,
+        "worked_r4_n_max": 11
+      },
+      "catalogue": {
+        "r": [
+          -1,
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "records": 6,
+        "terms_per_record": 24,
+        "offset": 0,
+        "representations_per_record": 3,
+        "families": 1
+      },
+      "input_validation": "Reject negative indices; reject bool, float, Fraction, string, and None as indices; reject bool, float (including NaN and infinity), complex, string, Decimal, and None parameters. Exact Fraction(0) and index-zero boundaries are covered.",
+      "test_methods": 9,
+      "enumeration": "Every element of the stated integer/rational/index grids is tested; there is no random sampling."
+    },
+    "non_claims": [
+      "Finite successful tests do not prove the recurrence for every n or every complex r; the universal proof is a separate derivation.",
+      "The n=3..32 polynomial identities hold for all r for each of these finitely many n; they do not establish the identity for higher n.",
+      "This run does not establish historical priority, completeness of the literature, or new OEIS identifications.",
+      "This run does not test browser behavior, other suites, performance at untested bounds, or general complex floating-point evaluation."
+    ],
+    "dependency_closure": "All executed local Python source is covered by the three declared source/test artifacts. sequence_formula_catalogue is loaded lazily for record/variant; those factories use only standard-library functionality and do not invoke the file's other local imports. Source URLs in catalogue records are strings, not fetched dependencies. The contract is also pinned. Runner and validator are cloud-skill helpers recorded separately in the interpreted manifest."
+  },
+  "randomness": {
+    "used": false,
+    "generator": "",
+    "seed": null
+  }
+}

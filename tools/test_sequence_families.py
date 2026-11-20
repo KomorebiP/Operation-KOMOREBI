@@ -34,10 +34,10 @@ class GeneralizedFamiliesTests(unittest.TestCase):
             for heading in source['headings']:
                 self.assertLessEqual(heading['line'], len(text.splitlines()))
         definitions = family_definitions()
-        self.assertEqual(len(definitions), 45)
+        self.assertEqual(len(definitions), 46)
         self.assertEqual(sum(bool(f['engine']) for f in definitions), 10)
         self.assertEqual(sum(f['family_type']=='analytic family' for f in definitions),13)
-        self.assertEqual(sum(f['family_type']=='discrete construction' for f in definitions),21)
+        self.assertEqual(sum(f['family_type']=='discrete construction' for f in definitions),22)
         self.assertEqual(sum(f['family_type']=='reference collection' for f in definitions),1)
         self.assertTrue(all(f['source'].startswith('https://github.com/') and '#L' in f['source'] for f in definitions))
         self.assertTrue(all('record_ids' not in family for family in definitions))
@@ -76,9 +76,9 @@ class GeneralizedFamiliesTests(unittest.TestCase):
         self.assertIsNone(reference['engine'])
 
     def test_complete_record_coverage_does_not_offer_unsupported_section_parents(self):
-        self.assertEqual(len(self.entries),2327)
+        self.assertEqual(len(self.entries),2333)
         self.assertTrue(all(membership(entry) for entry in self.entries))
-        self.assertEqual(self.data['record_coverage'],dict(records=2327,assigned=2327))
+        self.assertEqual(self.data['record_coverage'],dict(records=2333,assigned=2333))
         expected={
             'KSEQ-000027':('naturals',['0','1','2','3','4','5','6','7']),
             'KSEQ-000028':('odd',['1','3','5','7','9','11','13','15']),
@@ -147,10 +147,10 @@ class GeneralizedFamiliesTests(unittest.TestCase):
             def page(self,path,title,body):self.pages[path]=body
         site=Site()
         build_pages(site,self.data,lambda body,*args,**kwargs:body)
-        self.assertEqual(len(site.pages),46)
+        self.assertEqual(len(site.pages),47)
         exported=json.loads(site.files['assets/sequence-generalized-data.json'])
         index=list(csv.DictReader(io.StringIO(site.files['assets/sequence-generalized-index.csv'])))
-        self.assertEqual(len(index),45)
+        self.assertEqual(len(index),46)
         self.assertEqual({row['id'] for row in index},{family['id'] for family in exported['families']})
         for family in exported['families']:
             body=site.pages[family['url']]
