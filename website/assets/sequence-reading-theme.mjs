@@ -8,7 +8,7 @@ if(typeof document!=='undefined'){
   const root=document.querySelector('.sl-library,.sequence-atlas,.sar');
   if(root&&!document.getElementById('sq-page-theme')){
     const binomialReading=root.dataset.page==='central-binomial';
-    const colorSchemeName=binomialReading?'Ink & blue':'Site green';
+    const colorSchemeName='Site green';
     const storage={getItem:key=>localStorage.getItem(key),setItem:(key,value)=>localStorage.setItem(key,value)},system=matchMedia('(prefers-color-scheme:dark)');
     let theme=readPageTheme(storage),scheme=readPageScheme(storage);
     const apply=()=>{document.documentElement.dataset.sequenceTheme=theme;document.documentElement.dataset.sequenceScheme=scheme;};apply();

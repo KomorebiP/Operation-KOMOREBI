@@ -17,9 +17,9 @@ residue can have its own sequence. Polynomial weights lead to derivatives,
 characteristic roots lead to finite sums of algebraic series, and weights
 of finite support give rational corrections.
 
-The block formulas and weight constructions in Section 10 establish these
-identities for every admissible index. The accompanying exact checks compare
-the defining sums with independent generating function expansions for
+The block formulas in Section 9 and the weight constructions in Section 10
+establish these identities for every admissible index. The accompanying exact
+checks compare the defining sums with independent generating function expansions for
 \(0\le n\le23\) in all nine of these
 specializations. These finite checks also verify their displayed lists
 and worked values.
@@ -1244,8 +1244,9 @@ a_n=(-1)^n(1-2n).
 
 The weight sequence satisfies \(s_{m+2}=0\), a recurrence with zero as
 its only characteristic root. This is the finite correction in the
-recurrence weight corollary. Finite support in the block weights can
-therefore produce an infinite rational sequence when \(r\ne0\).
+recurrence weight corollary. Finite support in the block weights can therefore
+produce a sequence with infinitely many nonzero terms and a rational
+generating function when \(r\ne0\).
 
 ## Example 30. Different recurrence weights on the two residues
 
@@ -1296,8 +1297,9 @@ U_\lambda&=\frac{1}{S_\lambda}.
 \end{aligned}
 \]
 
-The even-residue generating function is \(U_\lambda\), and the
-odd-residue generating function is \(T_\lambda U_\lambda\). Therefore
+For the geometric block weight \(\lambda^m\), the even-residue generating
+function is \(U_\lambda\), and the odd-residue generating function is
+\(T_\lambda U_\lambda\). Therefore
 
 \[
 \begin{aligned}
@@ -1432,7 +1434,7 @@ a_n&=\sum_{k=0}^{n}c_{n,k}(-1)^{n-k}.
 \end{aligned}
 \]
 
-The alternating signs cancel within each consecutive pair, leaving
+The two summands in each complete block cancel, leaving
 
 \[
 \begin{aligned}

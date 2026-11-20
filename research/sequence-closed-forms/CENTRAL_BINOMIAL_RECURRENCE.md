@@ -320,7 +320,8 @@ rational parameters and supplies the coefficient polynomial in \(r\).
 
 The established triangle [OEIS A107430](https://oeis.org/A107430) has
 \(T(n,k)=\binom n{\lfloor k/2\rfloor}\). Its recorded row-polynomial
-specializations use \(x=-r\) in our notation. Six specializations are:
+specializations evaluate the row variable at \(-r\) in our notation.
+Six specializations are:
 
 - \(r=-1\): [A000079](https://oeis.org/A000079).
 - \(r=0\): [A001405](https://oeis.org/A001405).
@@ -341,8 +342,8 @@ g(x)\longmapsto \frac{g(t)}{S}.
 \end{gathered}
 \]
 
-Taking \(g(t)=(1+t)/(1+rt)\) gives the expression in Section 4, which
-supplies its uniform derivation.
+Taking \(g(t)=(1+t)/(1+rt)\) gives the generating function derived
+uniformly in Section 4.
 
 Rohun Easwar proves the \(r=2\) recurrence in
 [Theorem 7.1](https://arxiv.org/html/2608.22053v2#S7) of the paper listed in
@@ -579,8 +580,8 @@ Substitution gives the theorem.
 algebraic degree over \(\mathbb C(x)\) is at most \(d\). This is an
 upper bound. Cancellation and special parameter values can lower the degree.
 
-An explicit polynomial equation for \(G\) can be obtained by eliminating
-\(T\) from the two equations below. Write \(y=G(x)\):
+To obtain a polynomial equation for \(G\), write \(y=G(x)\), substitute
+\(V=qT^d\), and eliminate \(T\) from the two equations below:
 
 \[
 \begin{gathered}
@@ -743,8 +744,8 @@ Differentiating the equation for \(T\) gives
 Consequently, every fixed polynomial weight still gives a rational function
 of \(T\). Its generating function is algebraic and retains the degree
 bound of at most \(d\). Examples 21 and 22 write out the results for
-\(P(m)=m+1\) and \(P(m)=m\). The later examples include higher
-polynomial weights and combinations with nonzero \(r\).
+\(P(m)=m+1\) and \(P(m)=m\). Examples 24 and 25 treat quadratic
+weights, and Example 32 combines a polynomial weight with nonzero \(r\).
 
 For example, \(s_m=(m+1)q^m\) satisfies
 
@@ -755,9 +756,10 @@ s_0&=1,\qquad s_1=2q.
 \end{aligned}
 \]
 
-It is obtained by applying \(1+D_q\) to the geometric-weight generating
-function. This gives a direct connection between polynomial weights and the
-recurrence formulation below, including the degenerate case \(q=0\).
+The generating function for sums with these weights is obtained by applying
+\(1+D_q\) to the generating function in Section 9. This gives a direct
+connection between polynomial weights and the recurrence formulation below,
+including the degenerate case \(q=0\).
 
 ### Weights satisfying a constant-coefficient recurrence
 
