@@ -13,6 +13,22 @@ ROOT=Path(__file__).resolve().parents[1]
 
 
 class MathematicalReadingTests(unittest.TestCase):
+    def test_central_binomial_proof_retains_all_equations_and_attribution(self):
+        source=(ROOT/'research/sequence-closed-forms/CENTRAL_BINOMIAL_RECURRENCE.md').read_text(encoding='utf-8')
+        content=mathematical_reading_fragment(source,include_outline=True)
+        self.assertNotIn('<h1',content)
+        self.assertEqual(content.count('class="arithmatex sl-math-display"'),source.count(r'\['))
+        self.assertGreaterEqual(source.count(r'\['),18)
+        self.assertIn('math-proof-1-definition-and-universal-recurrence',content)
+        self.assertIn('math-proof-2-an-elementary-relation-from-pascal-s-identity',content)
+        self.assertIn('math-proof-6-oeis-connections-and-attribution',content)
+        self.assertIn('integral domain',content)
+        self.assertIn('https://oeis.org/A133444',content)
+        self.assertIn('https://arxiv.org/html/2608.22053v2#S7',content)
+        self.assertIn('test_sequence_closed_forms_central.py',content)
+        self.assertIn('test_sequence_closed_form_handoffs.py',content)
+        self.assertEqual(content.count('class="sl-math-proof-code"'),1)
+
     def test_math_note_is_complete_and_readable(self):
         source=(ROOT/'research/sequence-closed-forms/FINITE_DIFFERENTIAL_HANKEL.md').read_text(encoding='utf-8')
         content=mathematical_reading_fragment(source)

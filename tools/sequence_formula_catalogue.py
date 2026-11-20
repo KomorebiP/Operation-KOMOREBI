@@ -223,6 +223,8 @@ def expanded_catalogue():
     entries+=closed_form_catalogue()
     from sequence_closed_forms_extended import extended_catalogue,append_proved_representations
     entries+=extended_catalogue()
+    from sequence_central_binomial import central_binomial_catalogue
+    entries+=central_binomial_catalogue()
     append_proved_representations(entries)
     assert len({x['id'] for x in entries})==len(entries)
     return entries

@@ -37,7 +37,7 @@ async function valueRows(page){
       const panel=page.locator('#closed-calculator-panel');
       assert.equal(await panel.evaluate(node=>node.open),false,'Worksheet should be collapsed on arrival');
       await openCalculator(page);
-      assert.equal(await page.locator('#cf-mode option').count(),10);
+      assert.equal(await page.locator('#cf-mode option').count(),11);
       assert.deepEqual((await valueRows(page)).slice(0,12),
         ['1','0','1','0','1','1','1','2','1','3','2','4']);
       await fit(page);
@@ -47,7 +47,91 @@ async function valueRows(page){
       assert.deepEqual((await valueRows(page)).slice(0,4),['1','34','11056','14873104']);
       assert.equal(await page.locator('#cf-start').inputValue(),'1');
 
+      await page.selectOption('#cf-mode','central_binomial');
+      assert.deepEqual((await valueRows(page)).slice(0,8),
+        ['1','-3','14','-57','246','-1038','4424','-18777']);
+      assert.equal(await page.locator('#cf-central_binomial-r-label').textContent(),'Parameter r');
+      assert.equal(await page.locator('#cf-central').isVisible(),true);
+      assert.equal(await page.locator('#cf-central').evaluate(el=>el.open),false);
+      await page.locator('#cf-central > summary').focus();await page.keyboard.press('Enter');
+      const centralFormula=await page.locator('#cf-central-formula').textContent();
+      assert.match(centralFormula,/^r = 4\n/);
+      assert.match(centralFormula,/G_r\(x\)/);
+      assert.match(centralFormula,/n >= 3/);
+      assert.equal(await page.locator('#cf-central-proof').getAttribute('href'),'sequence-central-binomial.html');
+      await page.locator('#cf-central-copy').click();
+      assert.equal(await page.evaluate(()=>navigator.clipboard.readText()),centralFormula+'\n');
+      await fit(page);
+      await page.locator('#cf-central').screenshot({path:path.join(output,'central-binomial-formulas-'+width+'.png')});
+      if(width===320){
+        await page.evaluate(()=>document.documentElement.style.fontSize='200%');
+        await fit(page);
+        await page.locator('#cf-central').screenshot({path:path.join(output,'central-binomial-formulas-enlarged-320.png')});
+        await page.evaluate(()=>document.documentElement.style.removeProperty('font-size'));
+      }
+      await page.locator('#cf-central_binomial-r').fill('0');
+      assert.equal(await page.locator('#cf-central-copy').isVisible(),false,'Parameter edits must hide stale central formulas');
+      await page.locator('#cf-count').fill('8');
+      await page.locator('#cf-calculate').click();
+      assert.deepEqual(await valueRows(page),['1','1','2','3','6','10','20','35']);
+      assert.match(await page.locator('#cf-central-info').textContent(),/direct central binomial specialization/);
+      assert.match(await page.locator('#cf-verification').textContent(),/without division by r/);
+      // Closing and reopening a disclosure invalidates its pending copy.
+      await page.evaluate(()=>{
+        window.__centralOriginalClipboard=navigator.clipboard;window.__centralRequests=[];
+        Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:text=>
+          new Promise((resolve,reject)=>window.__centralRequests.push({text,resolve,reject}))}});
+      });
+      await page.locator('#cf-central-copy').click();
+      await page.locator('#cf-central > summary').click();
+      await page.locator('#cf-central > summary').click();
+      await page.locator('#cf-central_binomial-r').focus();
+      await page.evaluate(async()=>{
+        window.__centralRequests[0].reject(new Error('Delayed central formula copy rejection'));
+        await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+      });
+      assert.equal(await page.locator('#cf-fallback').isVisible(),false);
+      assert.equal(await page.evaluate(()=>document.activeElement.id),'cf-central_binomial-r');
+      await page.evaluate(()=>Object.defineProperty(navigator,'clipboard',{
+        configurable:true,value:window.__centralOriginalClipboard}));
+      await page.locator('#cf-central_binomial-r').fill('-1');
+      await page.locator('#cf-calculate').click();
+      assert.deepEqual(await valueRows(page),['1','2','4','8','16','32','64','128']);
+      await page.locator('#cf-link').click();
+      const centralLink=await page.evaluate(()=>navigator.clipboard.readText());
+      assert.equal(new URL(centralLink).searchParams.get('cf-mode'),'central_binomial');
+      assert.equal(new URL(centralLink).searchParams.get('cf-r'),'-1');
+      const centralRestored=await context.newPage();
+      centralRestored.on('pageerror',error=>report.errors.push({width,message:error.message}));
+      await centralRestored.goto(centralLink);
+      await centralRestored.locator('#cf-mode').waitFor();
+      assert.equal(await centralRestored.locator('#cf-central_binomial-r').inputValue(),'-1');
+      assert.deepEqual(await valueRows(centralRestored),['1','2','4','8','16','32','64','128']);
+      await fit(centralRestored);await centralRestored.close();
+      const centralCSVPromise=page.waitForEvent('download');
+      await page.locator('#cf-download').click();
+      const centralCSV=await centralCSVPromise;
+      const centralCSVName=path.join(output,'central-binomial-'+width+'.csv');
+      await centralCSV.saveAs(centralCSVName);
+      assert.ok(fs.readFileSync(centralCSVName,'utf8').includes('"central_binomial","7","128"'));
+      await page.locator('#cf-central_binomial-r').fill('13');
+      await page.locator('#cf-calculate').click();
+      assert.match(await page.locator('#cf-status').textContent(),/Parameter r must be between -12 and 12/);
+      assert.equal(await page.locator('#cf-results').isVisible(),false);
+      await page.locator('#cf-reset').click();
+      assert.equal(await page.locator('#cf-central_binomial-r').inputValue(),'4');
+      assert.equal(await page.locator('#cf-count').inputValue(),'12');
+      const centralProof=await context.newPage();
+      centralProof.on('pageerror',error=>report.errors.push({width,message:error.message}));
+      const centralResponse=await centralProof.goto(url('sequence-central-binomial.html'));
+      assert.equal(centralResponse.ok(),true);
+      assert.equal(await centralProof.locator('main h1').count(),1);
+      assert.equal(await centralProof.locator('.sl-math-display').count()>=3,true);
+      assert.equal(await centralProof.locator('a[href*="cf-mode=central_binomial"]').count()>=1,true);
+      await fit(centralProof);await centralProof.close();
+
       await page.selectOption('#cf-mode','jet');
+      assert.equal(await page.locator('#cf-central').isVisible(),false);
       await page.locator('#cf-jet-d').fill('0');
       await page.locator('#cf-calculate').click();
       assert.deepEqual((await valueRows(page)).slice(0,7),
@@ -240,7 +324,7 @@ async function valueRows(page){
       await sourceRecord.close();
       await desk.close();
 
-      report.widths.push({width,exactIntegers:true,plotIndependence:true,downloads:true,
+      report.widths.push({width,exactIntegers:true,centralBinomial:true,plotIndependence:true,downloads:true,
         links:true,invalidLinkRejected:true,overflow:false});
       await context.close();
     }
@@ -258,6 +342,12 @@ async function valueRows(page){
     assert.equal(await page.locator('#differential-hankel-reading').count(),1);
     assert.equal(await page.locator('.sl-math-display').count()>=12,true);
     assert.equal(await page.locator('#math-proof-algebraic-ordinary-generating-function-for-every-finite-differential-operator').count(),1);
+    await fit(page,true);
+    const centralNoJs=await page.goto(url('sequence-central-binomial.html'));
+    assert.equal(centralNoJs.ok(),true);
+    assert.equal(await page.locator('main h1').count(),1);
+    assert.equal(await page.locator('.sl-math-display').count()>=3,true);
+    assert.equal(await page.locator('a[href*="cf-mode=central_binomial"]').count()>=1,true);
     await fit(page,true);
     await page.goto(url('sequence-library.html'));
     assert.equal(await page.locator('#sequence-research-desk').count(),1);

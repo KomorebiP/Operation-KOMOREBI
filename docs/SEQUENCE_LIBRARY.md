@@ -1,8 +1,8 @@
 # Unified sequence and formula library
 
-`sequence-library.html` searches 2,327 local records: the original 38 KSEQ
-entries, 90 recovered KOM records, and 2,199 KFOR parameter records. It indexes
-7,108 recorded representations, including term formulas, finite sums,
+`sequence-library.html` searches 2,333 local records: the original 38 KSEQ
+entries, 90 recovered KOM records, and 2,205 KFOR parameter records. It indexes
+7,126 recorded representations, including term formulas, finite sums,
 recurrences, generating functions, and hypergeometric coefficient formulas.
 These counts describe records and representations, not distinct infinite
 sequences or new discoveries.
@@ -104,7 +104,7 @@ pagination and shared links preserve applied state. Clear removes the query
 and filters while retaining the Integer records or Generalized families scope.
 Result CSVs export the complete filtered set rather than only the current page.
 
-Saved entries use the existing browser-local saved-list key across all 2,327
+Saved entries use the existing browser-local saved-list key across all 2,333
 records, with a 500-record limit. Scoped writes from the older atlas preserve
 records from other collections. The saved filter uses the recipient's own list
 when sharing a search. If browser storage is unavailable, the current session still works.
@@ -951,7 +951,7 @@ node tools/test_sequence_math_browser.cjs http://127.0.0.1:8846/ OUTPUT_DIRECTOR
 
 ## Closed Forms Collections II and III (19 November 2026)
 
-The focused [closed forms reading page](https://komorebip.github.io/Operation-KOMOREBI/sequence-closed-forms.html) includes 35
+The initial [closed forms reading page](https://komorebip.github.io/Operation-KOMOREBI/sequence-closed-forms.html) publication included 35
 KFOR-CF records under eight indexed constructions: sparse two-delay coefficients,
 Padovan generating-function powers, four-block logarithmic coefficients,
 weighted Hankel determinants, beta-binomial ordinary moments, beta-binomial Hankel determinants, weighted binomial jets and
@@ -1004,7 +1004,7 @@ The canonical entry point is [Sequence Library](https://komorebip.github.io/Oper
 The earlier split between Search and Closed Forms is resolved through one
 research workflow: **Find**, **Calculate**, **Investigate**, and **Verify**.
 
-Search remains the primary index of 2,327 integer records and 7,108
+Search remains the primary index of 2,333 integer records and 7,126
 representations. The exact calculator appears below the search results in an
 initially collapsed disclosure. The same engine is also available on the
 focused Closed Forms reading page, without a second implementation or
@@ -1023,7 +1023,7 @@ an algorithm or historical novelty claim exists.
 
 ### Recalculate an indexed closed-form record
 
-All 35 curated KFOR-CF integer records now contain an explicit
+All 41 curated KFOR-CF integer records now contain an explicit
 `calculator` parameter object and a canonical `calculator_url` in
 their JSON records. Search results offer **Calculate exact** when
 the metadata is present. Each static formula page links to the
@@ -1031,12 +1031,12 @@ same central calculator with the recorded source parameters and
 original index. The mapping is generated from source parameters,
 not inferred by parsing mathematical prose.
 
-The eight exact integer modes used by these indexed records are sparse two-delay coefficients,
+The nine exact integer modes used by these indexed records are sparse two-delay coefficients,
 Padovan generating-function powers, four-block logarithmic
 polynomials, polynomially weighted binomial transforms, weighted
 Hankel determinants, unnormalized beta-binomial moments,
-unnormalized beta-binomial Hankel determinants, and integer
-Meixner–Pollaczek polynomials.
+unnormalized beta-binomial Hankel determinants, integer
+Meixner–Pollaczek polynomials, and weighted central binomial sums.
 
 The modes preserve their distinct index and normalization
 conventions. Four-block coefficients begin at m=1, while the
@@ -1064,9 +1064,10 @@ and source notes remain accessible.
 
 Source formulations and proof qualifications are recorded in
 `research/sequence-closed-forms/IDENTITIES.md` and
-`research/sequence-closed-forms/COLLECTION_II_ADDITIONS.md`.
-The exact integer generators are `tools/sequence_closed_forms.py`
-and `tools/sequence_closed_forms_extended.py`. The browser
+`research/sequence-closed-forms/COLLECTION_II_ADDITIONS.md`, with the weighted
+binomial recurrence in `research/sequence-closed-forms/CENTRAL_BINOMIAL_RECURRENCE.md`.
+The exact generators are `tools/sequence_closed_forms.py`,
+`tools/sequence_closed_forms_extended.py`, and `tools/sequence_central_binomial.py`. The browser
 engine and worksheet are
 `website/assets/sequence-closed-forms-core.mjs` and
 `website/assets/sequence-closed-forms-ui.mjs`.
@@ -1074,14 +1075,15 @@ engine and worksheet are
 Exact and browser regressions run in
 `tools/test_sequence_closed_forms.py`,
 `tools/test_sequence_closed_forms_extended.py`,
+`tools/test_sequence_closed_forms_central.py`,
 `tools/test_sequence_closed_forms_core.mjs`,
 `tools/test_sequence_closed_forms_browser.cjs`,
 `tools/test_sequence_library.py`, and `tools/test_sequence_atlas.py`.
 
 An existing A-number stated in a source is distinguished from a
-locally checked bulk match. The comparison manifest now covers all 2,327
-records against the retained snapshot. Its 2,292 earlier comparison results
-are preserved, and the 35 closed-form records have checked status derived
+locally checked bulk match. The comparison manifest now covers all 2,333
+records against the retained snapshot. Its 2,327 earlier comparison results
+are preserved, and all 41 closed-form records have checked status derived
 from their validated receipt membership. A finite hit does not establish
 an infinite identity, and no hit does not establish novelty. Existing record
 receipts continue to hash exact indexed terms, not rounded chart values.
@@ -1094,6 +1096,59 @@ extends each hit through the available local terms, and retains up to 50
 ranked hits per record with the uncapped count. Export positions remain
 distinct from mathematical offsets.
 
+
+## Weighted binomial recurrence (19 November 2026)
+
+The existing Closed Forms collection now includes
+[A uniform recurrence for weighted binomial rows](https://komorebip.github.io/Operation-KOMOREBI/sequence-central-binomial.html).
+Its source is `research/sequence-closed-forms/CENTRAL_BINOMIAL_RECURRENCE.md`,
+by Komorebi P. The note proves the four-term recurrence for every complex
+parameter r and every integer n at least 3, starting from the defining
+finite sum. It supplies the initial polynomials, an elementary first-order
+inhomogeneous relation, a Catalan generating function, and explicit treatment
+of r=0, r=±1 and r=±i. The universal conclusion follows from the written
+algebraic proof, independently of the finite software checks.
+
+The result appears in the main library's proof section and the focused
+Closed Forms collection. The full proof page links back to the shared
+calculator, source, family and indexed examples. The family
+`GF-CF-CENTRAL-BINOMIAL` adds six records for r=-1,0,1,2,3,4, with 24 exact
+terms and three representations each. This brings the current collection
+to 2,333 records, 7,126 representations, 46 generalized families and
+41 indexed closed-form calculator presets.
+
+The `central_binomial` calculator accepts every integer r from -12 through
+12 and indices 0 through 160, with at most 32 displayed rows. It computes
+with exact BigInt arithmetic, checks the defining sum and four-term
+identity, and exposes copyable formulas, CSV export and reproducible
+links. At r=0 it uses the direct middle binomial coefficient. The Python
+module `tools/sequence_central_binomial.py` also accepts exact rational
+parameters and returns coefficient polynomials in r.
+
+Attribution is deliberately conservative. A107430 records the underlying
+binomial triangle. A127363 labels the r=4 recurrence a Mathar conjecture,
+while the equivalent recurrence for its sign-adjusted sequence A133444
+was already recorded by Kotesovec in 2012. Easwar's arXiv:2608.22053v2,
+Theorem 7.1, concerns r=2. The new note presents a uniform derivation and
+does not claim historical priority or a newly resolved open conjecture.
+Primary-source links and dates are included in the proof.
+
+The final mathematical review found the proof valid as written at SHA-256
+`ee9fa6717cf591b911653a4eb9e67f4d14dcb1d54f9b51c2fce7b870d2d2d933`.
+Focused Python checks cover 4,025 integer parameter/index pairs,
+123 rational pairs, 30 coefficientwise polynomial identities, and exact
+Gaussian-integer checks at r=±i. The JavaScript suite checks all 4,025
+supported parameter/index pairs. The existing cross-language preset check
+now compares 492 exact values across all 41 indexed presets and nine modes.
+Commands are in the proof note and the downloadable source package.
+The bounded Python run, exact ranges, input hashes and successful result
+are recorded in `research/sequence-closed-forms/central-recurrence-checks/`.
+
+The retained OEIS comparison was rerun for the six additions. Each stated
+canonical A-number matches all 24 stored terms at export position zero.
+All 2,327 earlier comparison results remain unchanged. The manifest now
+covers all 2,333 records; 17 of the 41 closed-form records have finite hits.
+These finite comparisons do not supply the infinite sequence identities.
 
 ## Polynomial-weighted Hankel structure
 

@@ -3,6 +3,7 @@
 import {structuredDifferentialHankel} from './sequence-differential-hankel.mjs';
 export {structuredDifferentialHankel} from './sequence-differential-hankel.mjs';
 export const MODE_LIMITS=Object.freeze({
+  central_binomial:{maxIndex:160,maxCount:32},
   sparse:{maxIndex:96,maxCount:32},
   padovan:{maxIndex:96,maxCount:32},
   fourblock:{maxIndex:32,maxCount:24},
@@ -15,6 +16,7 @@ export const MODE_LIMITS=Object.freeze({
   meixner:{maxIndex:96,maxCount:32}
 });
 export const MODE_DEFAULTS=Object.freeze({
+  central_binomial:{mode:'central_binomial',start:'0',count:'12',r:'4'},
   sparse:{mode:'sparse',start:'0',count:'12',p:'2',q:'5',r:'1',u:'1',v:'1'},
   padovan:{mode:'padovan',start:'0',count:'12',h:'1'},
   fourblock:{mode:'fourblock',start:'1',count:'10',a:'0'},
@@ -27,6 +29,7 @@ export const MODE_DEFAULTS=Object.freeze({
   meixner:{mode:'meixner',start:'0',count:'12',s:'1',twox:'2'}
 });
 export const MODE_FIELDS=Object.freeze({
+  central_binomial:['r'],
   sparse:['p','q','r','u','v'],
   padovan:['h'],
   fourblock:['a'],
@@ -58,6 +61,78 @@ export function binomial(n,k){
   let result=1n;
   for(let j=1;j<=k;j++)result=result*BigInt(n-j+1)/BigInt(j);
   return result;
+}
+function centralBinomialParameter(r){
+  if(typeof r==='bigint')return r;
+  if(!Number.isSafeInteger(r))throw Error('The central binomial parameter must be an exact integer.');
+  return BigInt(r);
+}
+function centralBinomialIndex(n){
+  if(!Number.isInteger(n)||n<0||n>160)
+    throw Error('The central binomial index must be between 0 and 160.');
+}
+export function centralBinomialSum(n,r){
+  centralBinomialIndex(n);
+  const R=centralBinomialParameter(r);
+  // Horner evaluation of the defining polynomial. Consecutive binomial
+  // coefficients occur twice, so this needs no powers or recurrence in n.
+  let value=0n,choose=1n;
+  for(let k=0;k<=n;k++){
+    if(k>0&&k%2===0){
+      const j=k/2;
+      choose=choose*BigInt(n-j+1)/BigInt(j);
+    }
+    value=-R*value+choose;
+  }
+  return value;
+}
+export function centralBinomialCoefficients(r,last){
+  centralBinomialIndex(last);
+  const R=centralBinomialParameter(r),B=R*R+1n,values=[1n];
+  let middle=1n;
+  for(let n=1;n<=last;n++){
+    // middle is binom(n-1,floor((n-1)/2)). The r=0 specialization
+    // uses its defining central binomial values without division by r.
+    const nextMiddle=n%2
+      ? middle*BigInt(2*n)/BigInt(n+1) : 2n*middle;
+    if(R===0n)values.push(nextMiddle);
+    else{
+      const numerator=(R+1n)*middle-B*values[n-1];
+      if(numerator%R!==0n)
+        throw Error('The central binomial recurrence failed its exact divisibility check.');
+      values.push(numerator/R);
+    }
+    middle=nextMiddle;
+  }
+  for(let n=0;n<=last;n++){
+    if(values[n]!==centralBinomialSum(n,R))
+      throw Error('The central binomial recurrence disagrees with the defining sum at index '+n+'.');
+    if(n>=3){
+      const N=BigInt(n);
+      const residual=R*N*values[n]+(B*N-2n*R)*values[n-1]
+        -(4n*R*(N-2n)+2n*B)*values[n-2]-4n*B*(N-2n)*values[n-3];
+      if(residual!==0n)
+        throw Error('The universal central binomial recurrence failed at index '+n+'.');
+    }
+  }
+  return values;
+}
+export function centralBinomialFormulas(r){
+  const R=centralBinomialParameter(r);
+  return {
+    parameter:R.toString(),
+    zeroParameter:R===0n,
+    expression:'r = '+R+'\n\n'+
+      'a_n(r) = sum_(k=0)^n binom(n,floor(k/2))*(-r)^(n-k), n >= 0.\n'+
+      'a_0 = 1; a_1 = 1-r; a_2 = r^2-r+2.\n\n'+
+      'C(t) = sum_(m>=0) binom(2m,m)*t^m/(m+1), C(0) = 1.\n'+
+      'G_r(x) = (1+x*C(x^2))/(sqrt(1-4*x^2)*(1+r*x*C(x^2))).\n'+
+      'The formal square root has constant term 1.\n\n'+
+      'r*n*a_n + ((r^2+1)*n-2*r)*a_(n-1)\n'+
+      '  - (4*r*(n-2)+2*(r^2+1))*a_(n-2)\n'+
+      '  - 4*(r^2+1)*(n-2)*a_(n-3) = 0, n >= 3.\n\n'+
+      'At r = 0: a_n = binom(n,floor(n/2)); use this formula without dividing by r.'
+  };
 }
 export function falling(n,d){
   if(d<0)throw Error('Falling-factorial order must be nonnegative.');
@@ -411,8 +486,18 @@ function validatedWindow(raw){
 }
 export function computeExactWindow(raw){
   const {mode,start,count,last,params}=validatedWindow(raw);
-  let values,description,verification,generatingFunction,momentClosedForms;
+  let values,description,verification,generatingFunction,momentClosedForms,centralFormulas;
   switch(mode){
+    case 'central_binomial':{
+      values=centralBinomialCoefficients(params.r,last);
+      centralFormulas=centralBinomialFormulas(params.r);
+      description='a_n(r) = sum_(k=0)^n binom(n,floor(k/2))*(-r)^(n-k). The universal recurrence holds for every complex r; this calculator evaluates integer parameters exactly.';
+      verification=(params.r===0
+        ? 'The r=0 values use binom(n,floor(n/2)), without division by r.'
+        : 'Values use the exact first-order inhomogeneous recurrence, with an integer divisibility check.')+
+        ' Every calculated prefix value is checked against the defining finite sum and, from index 3, the universal four-term recurrence.';
+      break;
+    }
     case 'sparse':{
       const {p,q,r,u,v}=params;
       values=sparseCoefficients(p,q,r,u,v,last);
@@ -512,7 +597,8 @@ export function computeExactWindow(raw){
   return {mode,start,count,parameters:params,
     rows:values.slice(start,last+1).map((value,j)=>({index:start+j,value:value.toString()})),
     description,verification,...(generatingFunction?{generatingFunction}:{}),
-    ...(momentClosedForms?{momentClosedForms}:{})};
+    ...(momentClosedForms?{momentClosedForms}:{}),
+    ...(centralFormulas?{centralFormulas}:{})};
 }
 function csvQuote(value){
   const s=String(value);

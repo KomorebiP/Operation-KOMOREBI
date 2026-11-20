@@ -2,7 +2,8 @@
 // Author: Komorebi P.
 import assert from 'node:assert/strict';
 import {test} from 'node:test';
-import {MODE_LIMITS,binomial,falling,sparseCoefficients,padovanCoefficients,
+import {MODE_LIMITS,MODE_DEFAULTS,binomial,falling,sparseCoefficients,padovanCoefficients,
+  centralBinomialSum,centralBinomialCoefficients,centralBinomialFormulas,
   fourBlockCoefficients,betaMomentCoefficients,betaHankelCoefficients,
   polynomialDifferentialMoment,differentialHankel,structuredDifferentialHankel,differentialMomentGeneratingFunction,
   differentialMomentsFromAlgebraicRecurrence,
@@ -36,6 +37,72 @@ function directJet(n,d,lambda,c){
   }
   return J(n)+BigInt(c)*BigInt(n)*J(n-1);
 }
+test('central binomial sums and both recurrences agree throughout the integer calculator domain',()=>{
+  // All 25 supported integer parameters and every index 0..160.
+  // This reference evaluates the displayed powers and binomial coefficients;
+  // production uses a first-order recurrence checked by a Horner sum.
+  for(let r=-12;r<=12;r++){
+    const values=centralBinomialCoefficients(r,160),R=BigInt(r),B=R*R+1n;
+    for(let n=0;n<=160;n++){
+      let direct=0n;
+      for(let k=0;k<=n;k++)direct+=binomial(n,Math.floor(k/2))*(-R)**BigInt(n-k);
+      assert.equal(values[n],direct,'Defining sum mismatch r='+r+', n='+n);
+      assert.equal(centralBinomialSum(n,r),direct);
+      if(n>=1)assert.equal(R*values[n]+B*values[n-1],
+        (R+1n)*binomial(n-1,Math.floor((n-1)/2)));
+      if(n>=3){
+        const N=BigInt(n);
+        assert.equal(R*N*values[n]+(B*N-2n*R)*values[n-1]
+          -(4n*R*(N-2n)+2n*B)*values[n-2]-4n*B*(N-2n)*values[n-3],0n);
+      }
+    }
+  }
+});
+test('central binomial specializations preserve zeros, signs and exact integer inputs',()=>{
+  const negative=centralBinomialCoefficients(-1,80);
+  const zero=centralBinomialCoefficients(0,80);
+  const one=centralBinomialCoefficients(1,80);
+  for(let n=0;n<=80;n++){
+    assert.equal(negative[n],2n**BigInt(n));
+    assert.equal(zero[n],binomial(n,Math.floor(n/2)));
+    assert.equal(one[n],n%2?0n:binomial(n,n/2));
+  }
+  for(const [r,expected] of [
+    [2,['1','-1','4','-7','22','-46']],
+    [3,['1','-2','8','-24','84','-272']],
+    [4,['1','-3','14','-57','246','-1038','4424','-18777']]
+  ])assert.deepEqual(centralBinomialCoefficients(r,expected.length-1).map(String),expected);
+  const huge=2n**70n;
+  assert.deepEqual(centralBinomialCoefficients(huge,2),[1n,1n-huge,huge*huge-huge+2n]);
+  assert.throws(()=>centralBinomialCoefficients(Number.MAX_SAFE_INTEGER+1,5),/exact integer/);
+  assert.throws(()=>centralBinomialCoefficients(0.5,5),/exact integer/);
+  assert.throws(()=>centralBinomialCoefficients(4,161),/between 0 and 160/);
+  assert.throws(()=>centralBinomialSum(-1,4),/between 0 and 160/);
+});
+test('central binomial windows, formula exports and links retain the calculated parameter',()=>{
+  assert.deepEqual(MODE_LIMITS.central_binomial,{maxIndex:160,maxCount:32});
+  assert.deepEqual(MODE_DEFAULTS.central_binomial,
+    {mode:'central_binomial',start:'0',count:'12',r:'4'});
+  const raw={mode:'central_binomial',start:'144',count:'17',r:'-12'};
+  const report=computeExactWindow(raw);
+  assert.equal(report.rows[0].index,144);assert.equal(report.rows.at(-1).index,160);
+  assert.equal(report.rows.at(-1).value,String(centralBinomialSum(160,-12)));
+  assert.ok(exactWindowCSV(report).includes(report.rows.at(-1).value));
+  assert.deepEqual(readExactView(exactViewURL('https://example.test/sequence-library.html',raw)),raw);
+  assert.equal(report.centralFormulas.parameter,'-12');
+  assert.match(report.centralFormulas.expression,/r = -12\n/);
+  assert.match(report.centralFormulas.expression,/n >= 3/);
+  assert.match(report.centralFormulas.expression,/constant term 1/);
+  assert.equal(report.generatingFunction,undefined,'Moment-specific OGF metadata must stay separate');
+  const zero=computeExactWindow({...raw,start:'0',count:'8',r:'0'});
+  assert.deepEqual(zero.rows.map(row=>row.value),['1','1','2','3','6','10','20','35']);
+  assert.equal(zero.centralFormulas.zeroParameter,true);
+  assert.match(zero.verification,/without division by r/);
+  assert.deepEqual(zero.centralFormulas,centralBinomialFormulas(0));
+  assert.throws(()=>computeExactWindow({...raw,r:'13'}),/between -12 and 12/);
+  assert.throws(()=>computeExactWindow({...raw,r:'0.5'}),/integer/);
+  assert.throws(()=>computeExactWindow({...raw,start:'160',count:'2'}),/last index/);
+});
 test('exact two-delay recurrence matches independent finite compositions',()=>{
   for(const [p,q,r,u,v] of [
     [2,3,1,1,1],[2,5,1,1,1],[3,3,3,2,-2],

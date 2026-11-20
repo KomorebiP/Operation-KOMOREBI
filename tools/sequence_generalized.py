@@ -92,7 +92,8 @@ def family_definitions():
                 expression='L_N(n)=Nn T_N(n-1), n>=1; L_N(0)=0',source=item['source']))
     from sequence_closed_forms import closed_form_families
     from sequence_closed_forms_extended import extended_families
-    return result+closed_form_families()+extended_families()
+    from sequence_central_binomial import central_binomial_families
+    return result+closed_form_families()+extended_families()+central_binomial_families()
 
 
 def catalogue(entries):
