@@ -9,8 +9,9 @@ sequences or new discoveries.
 
 The homepage search and main navigation both lead to the complete library. Collection
 buttons show the scope and count before filtering. The 38 curated generators
-are a subset that can compute additional terms; they are not the size of the
-library. Plotting and term generation are available in `sequence-explorer.html`. Existing
+can compute additional terms. The full library also includes stored records
+from other collections. Plotting and term generation for those 38 generators
+are available in `sequence-explorer.html`. Existing
 `sequences.html` search links open the library, while saved plot links retain
 their settings in the generator interface. Research-archive searches also use
 the library, with the archive collection filter applied.
@@ -19,7 +20,7 @@ Search results show the review status, collection, exact term preview at
 its recorded offset, highlighted term matches, and a compact source-formula
 excerpt. The complete defining expression remains in an expandable disclosure,
 with exact source text preserved. Opening a result with multiple recorded formulas
-reveals one native representation selector. The selected variant displays its
+reveals a formula selector. The selected variant displays its
 recorded formula type, exact expression, explanatory note when supplied, and
 linked derivation source. Selecting another variant changes only the visible
 formula, not the stored terms, definition, indexes, or CSV/JSON exports.
@@ -69,7 +70,7 @@ the current scope explicit; copying a link leaves the result count visible.
 
 The Math display selector at the bottom of each page offers Typeset math and Plain text. Its
 preference persists across pages and tabs where browser storage is available.
-Readers retain their original TeX; sequence formulas retain their original
+Readers retain their original TeX. Sequence formulas retain their original
 plain-text source. A bounded notation parser supplies a display transcription,
 without changing exact data, program code, or formula exports. Unsupported
 source notation remains literal. Typeset formulas can scroll within their
@@ -89,14 +90,19 @@ Each KFOR page has the shared exact-window plot controls, equivalent
 representations, a no-JavaScript exact table, JSON/CSV/indexed-text exports, and
 finite OEIS comparisons. The complete static index works without JavaScript.
 The generator ZIP reproduces the mathematical records using the Python standard
-library. It retains the defining registry source. Legacy KSEQ/KOM exact exports
-remain preserved; formula metadata is added separately and in page content.
+library. It includes the defining source notes and the closed-form tests with
+their dependencies. Each record's reproduction panel links to that record's
+construction source and gives a command to regenerate its JSON. Family pages
+distinguish generating a sample record from verifying the formulas.
+Legacy KSEQ/KOM exact exports remain preserved. Formula metadata is added
+separately and in page content.
 
 Search uses AND, quoted phrases, OR via `|`, exclusions, exact integer patterns
 and `?`. Fields include `formula:`, `representation:`, `collection:`, `n:`
 (spacing N), `j:`, `r:`, and `x:`. All formula variants are indexed. Filters,
-pagination and shared links preserve applied state. Result CSVs export the
-complete filtered set rather than only the current page.
+pagination and shared links preserve applied state. Clear removes the query
+and filters while retaining the Integer records or Generalized families scope.
+Result CSVs export the complete filtered set rather than only the current page.
 
 Saved entries use the existing browser-local saved-list key across all 2,327
 records, with a 500-record limit. Scoped writes from the older atlas preserve
@@ -576,8 +582,8 @@ classifications, b-files and offsets are preserved.
 The three additional curated seeds for natural numbers, odd numbers and
 partition numbers belong to the universal coefficient-section definition.
 They link to that definition because those parents are not offered by the
-browser's exact multisection controls. All 2,292 indexed integer records now
-have a family or reference assignment without extending the supported engines.
+browser's exact multisection controls. All of the original 2,292 indexed integer
+records have a family or reference assignment without extending the supported engines.
 
 The new source binding pins the archived generator to commit
 `96ef8755314fe6bfa3c5ca76b1d61e20f3c1e510` with its normalized SHA-256. The
@@ -959,10 +965,12 @@ The new records do not alter existing mathematical coefficients, record IDs or
 index conventions. The four-block records start at m=1 and use source degree
 4m-1. The beta-binomial integer records use unnormalized moments U_n rather
 than rational probability moments M_n; their Hankel determinants are scaled
-by (a+b)_L^N. The old pinned OEIS manifest is deliberately checked only
-against its original 2,292 records. New records explicitly show "Not yet
-compared" in their OEIS panels, rather than incorrectly reporting no matches.
-Each new entry nevertheless has its own exact local SHA-256 record receipt.
+by (a+b)_L^N. The retained OEIS snapshot from 15 November 2026 now has
+comparison receipts for all 2,327 records, including these 35 additions.
+Eleven additions have finite prefix matches and 24 have no contiguous
+eight-term match in that export. Some hits reflect a shared initial block
+of zeros, which the affected record pages explain. Every entry also has
+its own exact local SHA-256 record receipt.
 
 Definitions and mathematical qualifications are in
 `research/sequence-closed-forms/IDENTITIES.md`. Reproducible exact tests are
@@ -1071,11 +1079,20 @@ Exact and browser regressions run in
 `tools/test_sequence_library.py`, and `tools/test_sequence_atlas.py`.
 
 An existing A-number stated in a source is distinguished from a
-locally checked bulk match. The pinned historical OEIS manifest
-still covers only its original 2,292 records. New closed-form
-records show **OEIS bulk comparison pending** rather than using
-missing matches as evidence of novelty. Existing record receipts
-continue to hash exact indexed terms, not rounded chart values.
+locally checked bulk match. The comparison manifest now covers all 2,327
+records against the retained snapshot. Its 2,292 earlier comparison results
+are preserved, and the 35 closed-form records have checked status derived
+from their validated receipt membership. A finite hit does not establish
+an infinite identity, and no hit does not establish novelty. Existing record
+receipts continue to hash exact indexed terms, not rounded chart values.
+
+The generator ZIP includes the comparison updater, complete comparison
+manifest, and snapshot metadata. Its README gives the reproduction command
+and identifies the separately downloadable retained terms and names files.
+The comparison uses eight exact starting terms at every exported position,
+extends each hit through the available local terms, and retains up to 50
+ranked hits per record with the uncapped count. Export positions remain
+distinct from mathematical offsets.
 
 
 ## Polynomial-weighted Hankel structure
@@ -1235,8 +1252,9 @@ satisfies an explicit finite-width forward recurrence of order at most
 2(D+r)-ell+2, where ell is the index of its first nonzero moment.
 No division by a singular coefficient is made.
 
-The browser computes each selected moment both from this algebraic
-forward recurrence and from its independent defining finite sum.
+The browser computes each selected moment from this algebraic
+forward recurrence and checks it against both its defining finite sum
+and the explicit parity formulas below.
 The calculator displays the initial zero count and recurrence-order
 bound alongside the generating-function numerator. This statement concerns
 **moments**, not an arbitrary polynomial-weight Hankel determinant
@@ -1268,13 +1286,55 @@ The full algebraic derivation is available on the
 and in the versioned
 `research/sequence-closed-forms/FINITE_DIFFERENTIAL_HANKEL.md` source.
 
+## Explicit formulas for even and odd moments
+
+Theorem 1C in the same proof source gives two polynomials for every finite
+differential operator. For parity \(\varepsilon\in\{0,1\}\), define
+
+\[
+Q_\varepsilon(t)=\sum_{\substack{s\ge0\\2s+\varepsilon\le r}}
+c_{2s+\varepsilon}\bigl(t^{\underline s}\bigr)^2P(t-s).
+\]
+
+Then, for every integer \(m\ge0\),
+
+\[
+\mu_{2m}=\binom{2m}{m}Q_0(m),\qquad
+\mu_{2m+1}=(2m+1)\binom{2m}{m}Q_1(m).
+\]
+
+This representation computes a selected moment with one binomial coefficient
+and one polynomial evaluation. It preserves initial and isolated zeros.
+For the example above, \(Q_0(m)=m^3+m+1\) and \(Q_1(m)=2m+2\).
+The proof also determines each nonzero polynomial's exact degree and leading
+coefficient, identifies its nonnegative integer roots with the zero moments
+in that parity, and gives a first-order recurrence. That recurrence must not
+be divided through at a polynomial root. The explicit formula still applies
+there.
+
+Both differential calculation modes include a collapsed **Closed formulas
+for even and odd moments** panel. It displays the expanded integer
+polynomials and offers **Copy moment formulas**. In the determinant mode,
+the panel describes the underlying moments. Changing parameters hides old
+formulas along with the old result table and exports.
+
+The Python implementation returns exact rational coefficients through
+`moment_parity_polynomials` and evaluates a selected moment through
+`parity_monomial_moment`. The independent JavaScript implementation uses
+BigInt. Regression checks compare both polynomial coefficient lists and
+their exact values against the defining moments, including absent parities,
+zero operators, high derivative orders, and zeros followed by nonzero terms.
+The construction, proof, and implementations remain in the existing
+collection and its source archive. The catalogue retains its existing
+records, offsets, and defining integer data.
+
 ## Calculator usability and proof reading (19 November 2026)
 
 Editing a numeric input immediately hides the previous calculation and its
 exports. The result table, CSV, copied values, and reproducible link all refer
-to one completed calculation. The differential moment and differential Hankel
-views preserve their shared coefficients when switching modes or restoring
-defaults.
+to one completed calculation. Switching between the differential moment and
+differential Hankel views preserves their shared coefficients. Restore defaults
+resets both views to their shared defaults.
 
 Differential determinants above size 12 run in a module worker. The calculator
 announces progress, exposes its busy state, and allows parameter changes to
@@ -1299,7 +1359,7 @@ archive includes the JavaScript solver dependencies and the Python-to-Node
 comparison programs needed to reproduce the differential calculations.
 
 The focused browser audit is `tools/test_sequence_accessibility_browser.cjs`.
-It complements the existing closed-form and sequence-workspace checks; its
+It complements the existing closed-form and sequence-workspace checks. Its
 scope is the calculator and differential proof page, not a whole-site
 accessibility certification.
 
@@ -1307,5 +1367,6 @@ Independent verification includes the standard-library Python
 implementation of the rational numerator and differential equation,
 the browser polynomial calculation, direct moments at many integer
 and rational parameter specializations, and the existing structured
-Hankel determinant tests. This continuation does not add new
-OEIS comparisons or assert historical novelty.
+Hankel determinant tests. The separate finite OEIS comparison now covers
+all indexed records. Historical novelty and full formula/offset review
+remain unassessed by those finite comparisons.

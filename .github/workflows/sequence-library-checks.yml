@@ -99,11 +99,12 @@ jobs:
           python -m http.server 8846 --bind 127.0.0.1 --directory .sequence-checks/site > .sequence-checks/reports/server.log 2>&1 &
           sequence_server_pid=$!
           trap 'kill "$sequence_server_pid"' EXIT
+          node tools/test_sequence_search_accessibility_browser.cjs http://127.0.0.1:8846/ .sequence-checks/reports/search-accessibility-browser 2>&1 | tee .sequence-checks/reports/search-accessibility-browser.log
           node tools/test_sequence_accessibility_browser.cjs http://127.0.0.1:8846/ .sequence-checks/reports/accessibility-browser 2>&1 | tee .sequence-checks/reports/accessibility-browser.log
           node tools/test_sequence_family_completion.cjs http://127.0.0.1:8846/ .sequence-checks/reports/browser 2>&1 | tee .sequence-checks/reports/browser.log
           node -e "const assert=require('node:assert/strict'),r=require('./.sequence-checks/reports/browser/report.json');assert.equal(r.status,'passed');assert.deepEqual(r.widths.map(x=>x.width),[1440,390,320]);assert.equal(r.noJavaScript,true);"
-          node tools/test_sequence_transfer_browser.cjs http://127.0.0.1:8846/ .sequence-checks/reports/transfer-browser
-          node tools/test_sequence_math_browser.cjs http://127.0.0.1:8846/ .sequence-checks/reports/math-browser 2>&1 | tee .sequence-checks/reports/transfer-browser.log
+          node tools/test_sequence_transfer_browser.cjs http://127.0.0.1:8846/ .sequence-checks/reports/transfer-browser 2>&1 | tee .sequence-checks/reports/transfer-browser.log
+          node tools/test_sequence_math_browser.cjs http://127.0.0.1:8846/ .sequence-checks/reports/math-browser 2>&1 | tee .sequence-checks/reports/math-browser.log
           node tools/test_sequence_usability_browser.cjs http://127.0.0.1:8846/ .sequence-checks/reports/usability-browser 2>&1 | tee .sequence-checks/reports/usability-browser.log
           node tools/test_sequence_annotations_browser.cjs http://127.0.0.1:8846/ .sequence-checks/reports/chart-annotations 2>&1 | tee .sequence-checks/reports/chart-annotations.log
           node tools/test_sequence_closed_forms_browser.cjs http://127.0.0.1:8846/ .sequence-checks/reports/closed-forms-browser 2>&1 | tee .sequence-checks/reports/closed-forms-browser.log

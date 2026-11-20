@@ -192,6 +192,45 @@ class ReaderProofreadingTests(unittest.TestCase):
             documents=dict(source_revision='test',files=[dict(repository_path=source,file_url=source) for source in ['book.tex','included.tex']])
             self.assertEqual(verify(root,documents,{'read/test/one.html':Page(markup)})['notes'],1)
 
+    def test_verification_distinguishes_heading_ids_from_editorial_note_markers(self):
+        data,read,_=self.fixture()
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder)
+            def write(path,text):
+                target=root/path;target.parent.mkdir(parents=True,exist_ok=True);target.write_text(text,encoding='utf-8')
+            reader=SimpleNamespace(proofreading_notes=data['notes'],proofreading_record=data,rendered_proofreading_notes=[],
+                site=SimpleNamespace(revision='test',rel=lambda target,page:target.split('/')[-1] if '#' in target else target,write=write))
+            note=render(reader,'read/test/one.html','L2')
+            markup='<article id="chapter-text"><section id="L2"></section>'+note+'<section id="L3"></section></article>'
+            headings='<h2 id="proofreading-and-reproducibility">Proofreading and reproducibility</h2>'
+            write('read/test/one.html',markup+headings);publish(reader)
+            (root/'book.tex').write_bytes(read('book.tex'))
+            write('documents/readable-chapters.json',json.dumps([dict(source='book.tex',url='read/test/one.html',nodes=[dict(id='L2',line=2,end_line=2),dict(id='L3',line=3,end_line=3)])]))
+            documents=dict(source_revision='test',files=[dict(repository_path='book.tex',file_url='book.tex')])
+            pages={'read/test/one.html':Page(markup+headings),'docs/audit.html':Page(headings)}
+            self.assertEqual(verify(root,documents,pages)['notes'],1)
+
+            changed_notes={
+                'missing note':markup.replace(note,''),
+                'heading replaces note':markup.replace(note,'<h2 id="proofreading-test-note">Ordinary heading</h2>'),
+                'missing marker':markup.replace(' data-proofreading-note="test-note"',''),
+                'wrong note id':markup.replace('id="proofreading-test-note"','id="different-id"'),
+                'duplicate note':markup+note,
+            }
+            for label,changed in changed_notes.items():
+                write('read/test/one.html',changed)
+                with self.subTest(case=label),self.assertRaises(AssertionError):
+                    verify(root,documents,{'read/test/one.html':Page(changed)})
+            write('read/test/one.html',markup+headings)
+            for extra in [
+                '<aside id="proofreading-unknown" data-proofreading-note="unknown"></aside>',
+                '<aside data-proofreading-note="unknown"></aside>',
+                '<aside id="different-id" data-proofreading-note="unknown"></aside>',
+                '<aside class="extra proofreading-note" id="proofreading-unknown"></aside>',
+            ]:
+                with self.subTest(extra=extra),self.assertRaisesRegex(AssertionError,'Unrecorded proofreading note'):
+                    verify(root,documents,{**pages,'read/other.html':Page(extra)})
+
     def test_abstract_note_follows_the_retained_abstract(self):
         data,read,_=self.fixture()
         data['notes'][0].update(page='read/test/index.html',placement='abstract')

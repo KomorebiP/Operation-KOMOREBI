@@ -224,6 +224,64 @@ function _effectiveExactCoefficients(values){
     return BigInt(value);
   }));
 }
+function exactPolynomialText(values,variable){
+  let output='';
+  values.forEach((value,k)=>{
+    if(value===0n)return;
+    const negative=value<0n,amount=negative?-value:value;
+    const factor=k===0?'':(k===1?variable:variable+'^'+k);
+    const term=factor?(amount===1n?factor:String(amount)+'*'+factor):String(amount);
+    if(output)output+=negative?' - ':' + ';
+    else if(negative)output+='-';
+    output+=term;
+  });
+  return output||'0';
+}
+export function differentialMomentParityPolynomials(weights,operator){
+  // Q_e(m) = sum_s c_(2s+e) falling(m,s)^2 P(m-s).
+  // Expand the falling factors directly in ordinary powers of m.
+  const a=_effectiveExactCoefficients(weights),c=_effectiveExactCoefficients(operator);
+  const polynomials=[[0n],[0n]];
+  let fallingSquare=[1n];
+  for(let s=0;2*s<c.length;s++){
+    if(s>0){
+      const factor=[-BigInt(s-1),1n];
+      fallingSquare=exactPolynomialProduct(fallingSquare,exactPolynomialProduct(factor,factor));
+    }
+    let shifted=[0n],basis=[1n];
+    for(let d=0;d<a.length;d++){
+      while(shifted.length<basis.length)shifted.push(0n);
+      basis.forEach((value,j)=>{shifted[j]+=a[d]*value;});
+      basis=exactPolynomialProduct(basis,[-BigInt(s+d),1n]);
+    }
+    const term=exactPolynomialProduct(fallingSquare,shifted);
+    for(let parity=0;parity<2;parity++){
+      const coefficient=c[2*s+parity]||0n,target=polynomials[parity];
+      while(target.length<term.length)target.push(0n);
+      term.forEach((value,j)=>{target[j]+=coefficient*value;});
+    }
+  }
+  return polynomials.map(trimmedPolynomial);
+}
+export function differentialMomentFromParity(n,weights,operator,polynomials=null){
+  if(!Number.isSafeInteger(n)||n<0)throw Error('The moment index must be nonnegative.');
+  const parity=n%2,m=Math.floor(n/2),x=BigInt(m);
+  const coefficients=(polynomials||differentialMomentParityPolynomials(weights,operator))[parity];
+  let value=0n;
+  for(let j=coefficients.length-1;j>=0;j--)value=value*x+coefficients[j];
+  return binomial(2*m,m)*value*(parity?BigInt(2*m+1):1n);
+}
+export function differentialMomentParityFormula(weights,operator){
+  const [even,odd]=differentialMomentParityPolynomials(weights,operator);
+  const degree=values=>values.length===1&&values[0]===0n?null:values.length-1;
+  return {
+    even:even.map(String),odd:odd.map(String),evenDegree:degree(even),oddDegree:degree(odd),
+    expression:'mu_(2m) = binom(2m,m) * ('+exactPolynomialText(even,'m')+')\n'+
+      'mu_(2m+1) = (2m+1) * binom(2m,m) * ('+exactPolynomialText(odd,'m')+')\n'+
+      'For every integer m >= 0.',
+    meaning:'These formulas describe the underlying moments, with the same polynomial weight and differential operator as the calculation.'
+  };
+}
 export function differentialMomentGeneratingFunction(weights,operator){
   // Exact universal algebraic OGF for polynomially weighted moments.
   // M(z)=R(z)/(1-4z^2)^(D+r+1/2), deg R<=2(D+r).
@@ -258,25 +316,12 @@ export function differentialMomentGeneratingFunction(weights,operator){
   const initialZeroMoments=R.findIndex(value=>value!==0n);
   if(R.length>twiceExponent)
     throw Error('The moment generating numerator exceeded its derived degree bound.');
-  function polynomialText(values){
-    let output='';
-    values.forEach((value,k)=>{
-      if(value===0n)return;
-      const negative=value<0n,amount=negative?-value:value;
-      const factor=k===0?'':(k===1?'z':'z^'+k);
-      const term=factor?(amount===1n?factor:String(amount)+'*'+factor):String(amount);
-      if(output)output+=negative?' - ':' + ';
-      else if(negative)output+='-';
-      output+=term;
-    });
-    return output||'0';
-  }
   return {
     numerator:R.map(String),twiceExponent,degreeBound:2*(D+r),
     weightDegree:D,operatorOrder:r,
     initialZeroMoments:initialZeroMoments<0?null:initialZeroMoments,
     regularizedRecurrenceOrderBound:initialZeroMoments<0?0:2*(D+r)-initialZeroMoments+2,
-    expression:'M(z) = ('+polynomialText(R)+') / (1-4z^2)^('+twiceExponent+'/2)',
+    expression:'M(z) = ('+exactPolynomialText(R,'z')+') / (1-4z^2)^('+twiceExponent+'/2)',
     meaning:'M(z) = sum_(n>=0) F_P[D_x x^n] z^n. The numerator is computed by finite integer polynomial arithmetic.'
   };
 }
@@ -366,7 +411,7 @@ function validatedWindow(raw){
 }
 export function computeExactWindow(raw){
   const {mode,start,count,last,params}=validatedWindow(raw);
-  let values,description,verification,generatingFunction;
+  let values,description,verification,generatingFunction,momentClosedForms;
   switch(mode){
     case 'sparse':{
       const {p,q,r,u,v}=params;
@@ -433,6 +478,7 @@ export function computeExactWindow(raw){
           throw Error('The structured solver disagrees with the independent direct determinant at size '+n+'.');
       }
       generatingFunction=differentialMomentGeneratingFunction(weights,operator);
+      momentClosedForms=differentialMomentParityFormula(weights,operator);
       description='Higher-order differential Hankel: P(m)=sum_(d=0)^3 a_d falling(m,d), L[p]=sum_(k=0)^3 c_k F_P[p^(k)].';
       verification='Exact Chebyshev–Schur calculation with singular-block lookahead. This calculation is independently checked by direct fraction-free determinants through size '+Math.min(last,12)+'. The separated-block rank is at most 2(degree(P)+operator order).';
       break;
@@ -441,14 +487,18 @@ export function computeExactWindow(raw){
       const weights=[params.a0,params.a1,params.a2,params.a3];
       const operator=[params.c0,params.c1,params.c2,params.c3];
       generatingFunction=differentialMomentGeneratingFunction(weights,operator);
+      momentClosedForms=differentialMomentParityFormula(weights,operator);
+      const parityPolynomials=[momentClosedForms.even.map(BigInt),momentClosedForms.odd.map(BigInt)];
       values=differentialMomentsFromAlgebraicRecurrence(
         weights,operator,last,generatingFunction);
       for(let n=0;n<=last;n++){
         if(values[n]!==polynomialDifferentialMoment(n,weights,operator))
           throw Error('The algebraic recurrence disagrees with the independent direct moment sum at index '+n+'.');
+        if(values[n]!==differentialMomentFromParity(n,weights,operator,parityPolynomials))
+          throw Error('The algebraic recurrence disagrees with the parity closed formula at index '+n+'.');
       }
       description='Underlying polynomial-weighted differential moments mu_n = F_P[D_x x^n], using the same parameters as the differential Hankel family.';
-      verification='Exact algebraic forward recurrence independently checked against the direct finite moment sums, including singular initial blocks.';
+      verification='Exact algebraic forward recurrence checked against both the direct finite moment sums and the closed formulas for even and odd indices, including initial and interior zeros.';
       break;
     }
     case 'meixner':{
@@ -461,7 +511,8 @@ export function computeExactWindow(raw){
   }
   return {mode,start,count,parameters:params,
     rows:values.slice(start,last+1).map((value,j)=>({index:start+j,value:value.toString()})),
-    description,verification,...(generatingFunction?{generatingFunction}:{})};
+    description,verification,...(generatingFunction?{generatingFunction}:{}),
+    ...(momentClosedForms?{momentClosedForms}:{})};
 }
 function csvQuote(value){
   const s=String(value);

@@ -18,6 +18,7 @@ from sequence_differential_hankel import (
     first_nonzero_moment, structured_differential_hankel,
     algebraic_moment_generating_function, algebraic_moment_differential_equation,
     regularized_moment_ode, moments_from_algebraic_recurrence,
+    moment_parity_polynomials, parity_monomial_moment,
 )
 from sequence_polynomial_hankel import (
     structured_hankel_prefixes, power_to_falling,
@@ -105,6 +106,83 @@ def matrix_rank(matrix):
 
 
 class DifferentialHankelTests(unittest.TestCase):
+    def test_parity_polynomials_match_direct_monomial_definition(self):
+        weights=([1],[0,1],[1,1],[-2,1],[0,0,1],
+                 [2,-3,0,1],[0],
+                 [F(1,3),F(-2,5),F(3,7)],[1,0,0])
+        operators=([1],[0,1],[1,2,1],[0,0,1],
+                   [1,0,-2,3],[0,0,0,0,0,0,1,2],
+                   [0],[0,0,0],
+                   [F(2,7),F(-3,8),0,F(1,5)],[1,2,0,0])
+        for a in weights:
+            for c in operators:
+                polynomials=moment_parity_polynomials(a,c)
+                self.assertEqual(len(polynomials),2)
+                for polynomial in polynomials:
+                    self.assertTrue(polynomial)
+                    self.assertTrue(all(isinstance(value,F) for value in polynomial))
+                    self.assertTrue(len(polynomial)==1 or polynomial[-1]!=0)
+                for n in range(82):
+                    m,parity=divmod(n,2)
+                    value=sum(coefficient*m**j for j,coefficient
+                              in enumerate(polynomials[parity]))
+                    predicted=comb(2*m,m)*((2*m+1) if parity else 1)*value
+                    self.assertEqual(predicted,derivative_monomial_moment(n,a,c),
+                                     (a,c,n))
+                for n in (0,1,2,7,33,80,81):
+                    self.assertEqual(parity_monomial_moment(n,a,c),
+                                     derivative_monomial_moment(n,a,c),(a,c,n))
+        self.assertEqual(moment_parity_polynomials([1,1],[1,2,1]),
+                         ((F(1),F(1),F(0),F(1)),(F(2),F(2))))
+        self.assertEqual(parity_monomial_moment(-1,[1],[1]),F(0))
+        with self.assertRaises(ValueError):
+            parity_monomial_moment(F(1,2),[1],[1])
+        for a,c in (([],[1]),([1],[])):
+            with self.assertRaises(ValueError):
+                moment_parity_polynomials(a,c)
+
+    def test_parity_polynomial_exact_degrees_and_leading_coefficients(self):
+        for a in ([1],[-2,1],[1,-3,0,2],[0,0,0,3],
+                  [F(-1,2),F(3,7),F(-2,5)],[3,2,0,0],[0]):
+            for c in ([1],[0,1],[0,0,1,0,0,-3],
+                      [1,2,0,-2,3,0,0,1],
+                      [0,0,0,0,0,0,0,0,0,F(2,5)],
+                      [2,-1,0,0],[0,0,0]):
+                q=moment_parity_polynomials(a,c)
+                degree=max((d for d,value in enumerate(a) if value),default=None)
+                for parity in (0,1):
+                    active=[k for k in range(parity,len(c),2) if c[k]]
+                    if degree is None or not active:
+                        self.assertEqual(q[parity],(F(0),))
+                        continue
+                    k=max(active)
+                    self.assertEqual(len(q[parity])-1,degree+k-parity)
+                    self.assertEqual(q[parity][-1],a[degree]*c[k])
+
+    def test_parity_recurrences_include_isolated_and_initial_zeros(self):
+        cases=(([1,1],[1,2,1]),([-2,1],[1,1]),
+               ([0,0,0,1],[0,0,0,0,0,0,0,2]),
+               ([2,-3,1],[1,-2,3,0,0,1]),
+               ([F(1,2),F(-2,3)],[F(2,5),F(3,7),0,F(-1,2)]),
+               ([0],[1,2,3]),([1],[0,0]),([1],[0,1]))
+        for a,c in cases:
+            q=moment_parity_polynomials(a,c)
+            for parity in (0,1):
+                value=lambda m:sum(v*m**j for j,v in enumerate(q[parity]))
+                for m in range(45):
+                    previous=derivative_monomial_moment(2*m+parity,a,c)
+                    following=derivative_monomial_moment(2*m+2+parity,a,c)
+                    self.assertEqual(
+                        (m+1)*value(m)*following,
+                        2*(2*m+2*parity+1)*value(m+1)*previous,
+                        (a,c,parity,m))
+                    self.assertEqual(previous==0,value(m)==0,(a,c,parity,m))
+        # These isolated roots do not justify dividing the recurrence by Q(2).
+        for parity in (0,1):
+            self.assertNotEqual(parity_monomial_moment(2+parity,[-2,1],[1,1]),0)
+            self.assertEqual(parity_monomial_moment(4+parity,[-2,1],[1,1]),0)
+            self.assertNotEqual(parity_monomial_moment(6+parity,[-2,1],[1,1]),0)
+
     def test_universal_algebraic_ogf_matches_independent_direct_moments(self):
         weights=([1],[0,1],[1,1],[2,-3,1],[0,0,1],
                  [1,0,2,-1],[0],

@@ -161,6 +161,68 @@ def _trim_polynomial(values):
     return tuple(values)
 
 
+def moment_parity_polynomials(weights, differential):
+    """Return the two ordinary-power polynomials for even and odd moments.
+
+    The returned (Q0, Q1) are trimmed tuples of Fraction coefficients in
+    ascending powers of m. They satisfy, for every integer m >= 0,
+
+        L[x^(2m)]   = binom(2m,m) * Q0(m),
+        L[x^(2m+1)] = (2m+1) * binom(2m,m) * Q1(m).
+
+    Qe(m) = sum_s c[2s+e] * (m falling s)^2 * P(m-s).
+    Each sum is a polynomial identity; terms with s > m vanish through
+    the falling factor, without evaluating binomial coefficients at
+    negative indices. This construction uses neither an OGF nor a
+    recurrence. Zero polynomials are represented as (Fraction(0),).
+    """
+    a=_weights(weights)
+    c=_operator(differential)
+    branches=[[Fraction(0)],[Fraction(0)]]
+    falling=[Fraction(1)]
+    for s in range((len(c)+1)//2):
+        if s:
+            falling=_polynomial_product(falling,[-Fraction(s-1),Fraction(1)])
+        coefficients=[c[2*s],c[2*s+1] if 2*s+1<len(c) else Fraction(0)]
+        if not any(coefficients):
+            continue
+        shifted=[Fraction(0)]*len(a)
+        shifted_falling=[Fraction(1)]
+        for d,coefficient in enumerate(a):
+            if d:
+                shifted_falling=_polynomial_product(
+                    shifted_falling,[-Fraction(s+d-1),Fraction(1)])
+            for j,value in enumerate(shifted_falling):
+                shifted[j]+=coefficient*value
+        term=_polynomial_product(_polynomial_product(falling,falling),shifted)
+        for parity,coefficient in enumerate(coefficients):
+            if not coefficient:
+                continue
+            branches[parity]+=[Fraction(0)]*(len(term)-len(branches[parity]))
+            for j,value in enumerate(term):
+                branches[parity][j]+=coefficient*value
+    return tuple(_trim_polynomial(branch) for branch in branches)
+
+
+def parity_monomial_moment(n, weights, differential):
+    """Evaluate a moment by its parity polynomial and one binomial factor.
+
+    Negative integer indices return zero, as in derivative_monomial_moment.
+    No division by a polynomial value is used, including at its roots.
+    """
+    if not isinstance(n,int):
+        raise ValueError("Moment index must be an integer")
+    if n<0:
+        return Fraction(0)
+    parity=n%2
+    m=n//2
+    polynomial=moment_parity_polynomials(weights,differential)[parity]
+    value=Fraction(0)
+    for coefficient in reversed(polynomial):
+        value=value*m+coefficient
+    return comb(2*m,m)*((2*m+1) if parity else 1)*value
+
+
 def algebraic_moment_generating_function(weights, differential):
     """Return (numerator coefficients, twice denominator exponent).
 

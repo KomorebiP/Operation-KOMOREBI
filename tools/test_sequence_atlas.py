@@ -184,7 +184,7 @@ class SequenceAtlasTests(unittest.TestCase):
             direct=(site.output/'sequence-families/KFOR-CF-JET-01.html').read_text(encoding='utf-8')
             self.assertIn('cf-mode=jet',direct)
             self.assertIn('cf-lambda=1',direct)
-            self.assertIn('Recalculate this sequence in the unified exact workspace',direct)
+            self.assertIn('Calculate exact values with these parameters',direct)
 
             self.assertIn('<noscript>',main)
             self.assertIn('CC BY-SA 4.0',main)
