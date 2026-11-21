@@ -68,6 +68,7 @@ jobs:
           python -B tools/verify_sequence_exceptional_hankel.py --certificate verification/sequence-library/hankel-compression/exceptional-certificate.json --output .sequence-checks/reports/exceptional-orders.json
           python -B tools/verify_sequence_interior_hankel.py --coefficients verification/sequence-library/hankel-compression/interior-coefficients.json --certificate verification/sequence-library/hankel-compression/interior-certificate.json --output .sequence-checks/reports/interior-orders.json
           python -B -m unittest discover -s tools -p 'test_sequence_hankel_orders.py' -v 2>&1 | tee .sequence-checks/reports/interior-order-engine.log
+          python -B -m unittest discover -s tools -p 'test_sequence_final_edition.py' -v 2>&1 | tee .sequence-checks/reports/final-edition.log
           node --test tools/test_sequence_hankel_orders.mjs 2>&1 | tee .sequence-checks/reports/interior-order-core.log
           python -B -m unittest discover -s tools -p 'test_sequence_families.py' -v 2>&1 | tee .sequence-checks/reports/family-tests.log
           python -B -m unittest discover -s tools -p 'test_sequence_library.py' -v 2>&1 | tee .sequence-checks/reports/library-tests.log
@@ -119,6 +120,7 @@ jobs:
           node tools/test_sequence_annotations_browser.cjs http://127.0.0.1:8846/ .sequence-checks/reports/chart-annotations 2>&1 | tee .sequence-checks/reports/chart-annotations.log
           node tools/test_sequence_closed_forms_browser.cjs http://127.0.0.1:8846/ .sequence-checks/reports/closed-forms-browser 2>&1 | tee .sequence-checks/reports/closed-forms-browser.log
           node tools/test_sequence_hankel_compression_browser.cjs http://127.0.0.1:8846/ .sequence-checks/reports/hankel-compression-browser 2>&1 | tee .sequence-checks/reports/hankel-compression-browser.log
+          node tools/test_sequence_final_browser.cjs http://127.0.0.1:8846/ .sequence-checks/reports/final-edition-browser 2>&1 | tee .sequence-checks/reports/final-edition-browser.log
       - name: Preserve browser evidence
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a

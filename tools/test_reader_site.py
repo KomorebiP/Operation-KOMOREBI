@@ -40,6 +40,41 @@ def manuscript_table_fixtures(root,work):
             if node['kind'] in {'table','longtable','tabularx'}:yield spec,node,chapter
 
 
+class FinalEditionDownloadTests(unittest.TestCase):
+    def populate(self, root):
+        source = Path(__file__).resolve().parents[1]/'research/sequence-closed-forms/final-edition/v1.0'
+        folder = root/'assets'; folder.mkdir(exist_ok=True)
+        for suffix, name in [('pdf','PAPER.pdf'),('html','PAPER.html'),('md','PAPER.md'),('json','ARTIFACTS.json')]:
+            (folder/('weighted-central-binomial-hankel-v1.0.'+suffix)).write_bytes((source/name).read_bytes())
+
+    def test_frozen_download_is_authenticated_separately_from_site_chrome(self):
+        from check_reader_site import check_final_edition_downloads, FINAL_EDITION_HTML
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory); self.populate(root)
+            report=check_final_edition_downloads(root)
+            self.assertTrue(report['source_hashes_match'])
+            self.assertEqual(report['authenticated_downloads'],3)
+            self.assertEqual(report['static_math_expressions'],638)
+            self.assertEqual(report['url'],FINAL_EDITION_HTML)
+            page=Page((root/FINAL_EDITION_HTML).read_text(encoding='utf-8'))
+            self.assertTrue(page.skip)
+            self.assertEqual(page.navigation,0)
+
+    def test_changed_download_or_receipt_is_rejected(self):
+        from check_reader_site import check_final_edition_downloads
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory)
+            for suffix in ['pdf','html','md','json']:
+                with self.subTest(suffix=suffix):
+                    self.populate(root)
+                    path=root/('assets/weighted-central-binomial-hankel-v1.0.'+suffix)
+                    if suffix=='json':
+                        receipt=json.loads(path.read_bytes()); receipt['edition']='modified'
+                        path.write_text(json.dumps(receipt),encoding='utf-8')
+                    else:path.write_bytes(path.read_bytes()+b'changed')
+                    with self.assertRaises(AssertionError):check_final_edition_downloads(root)
+
+
 class ReaderSiteTests(unittest.TestCase):
     def test_live_special_functions_guidance_uses_current_repository_links(self):
         paths=['monographs/special-functions/current/README.md',

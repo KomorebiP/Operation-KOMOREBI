@@ -33,7 +33,7 @@ async function fit(page,staticOnly=false){
       const page=await context.newPage();page.on('pageerror',error=>report.errors.push({width,message:error.message}));
       assert.ok((await page.goto(url('sequence-hankel-compression.html'))).ok());
       await fit(page);assert.equal(await page.locator('main h1').count(),1);
-      assert.equal(await page.locator('mjx-merror').count(),0);
+      assert.equal(await page.locator('mjx-merror, merror, [data-mml-node="merror"]').count(),0);
       assert.ok(await page.locator('mjx-container').count()>35);
       assert.ok((await page.locator('#hankel-compression-intro').textContent()).includes('uniform bound is optimal'));
       assert.ok(await page.locator('#sharp-quadratic-proof mjx-container').count()>25);
