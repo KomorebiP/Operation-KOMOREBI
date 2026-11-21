@@ -16,9 +16,9 @@ async function main(){
       await p.locator('#cr-energy').evaluate(x=>{x.value='40';x.dispatchEvent(new Event('input',{bubbles:true}));});
       const before=(await cert(p)).settings,url=await p.locator('#cr-link').getAttribute('href');await p.goto(new URL(url,base).href);await p.locator('#cr-explorer').waitFor({state:'visible'});assert.deepEqual((await cert(p)).settings,before);
       const pending=p.waitForEvent('download');await p.locator('#cr-download').click();const download=await pending,target=path.join(out,name+'-certificate.json');await download.saveAs(target);assert.deepEqual(JSON.parse(fs.readFileSync(target)),await cert(p));
-      await p.locator('#cr-reset').click();await p.locator('.cr-controls').evaluate(x=>window.scrollTo(0,x.getBoundingClientRect().top+scrollY-35));await settled(p);await p.screenshot({path:path.join(out,name+'-scan.png')});
+      await p.locator('#cr-reset').click();await p.locator('#cr-explorer .cr-controls').evaluate(x=>window.scrollTo(0,x.getBoundingClientRect().top+scrollY-35));await settled(p);await p.screenshot({path:path.join(out,name+'-scan.png')});
       await p.locator('#cr-reduction').evaluate(x=>window.scrollTo(0,x.getBoundingClientRect().top+scrollY-35));await p.screenshot({path:path.join(out,name+'-reduction.png')});
-      for(const summary of await p.locator('.cr-page details>summary').all()){await summary.focus();await p.keyboard.press('Enter');}
+      for(const summary of await p.locator('.cr-page details>summary:visible').all()){await summary.focus();await p.keyboard.press('Enter');}
       await settled(p);assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'expanded overflow');assert.equal(await p.locator('.cr-page table:not(:has(caption))').count(),0);
       for(const table of await p.locator('.cr-table').all())if(await table.evaluate(x=>x.scrollWidth>x.clientWidth+3)){await table.focus();await p.keyboard.press('ArrowRight');await p.waitForTimeout(100);assert.ok(await table.evaluate(x=>x.scrollLeft>0));}
       if(name==='narrow'){await p.evaluate(()=>document.documentElement.style.fontSize='200%');await settled(p);assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'enlarged text overflow');}

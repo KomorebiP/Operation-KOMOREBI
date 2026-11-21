@@ -1,0 +1,52 @@
+{
+  "checkpoint": "CHEM-STAGE16-CONTINUOUS-01",
+  "base_revision": "f3da1097aa4faacd2c1201b48e015de07ee4b045",
+  "predecessor": "CHEM-STAGE15-PRACTICAL-01, published in PR 235 at 79bd1f1f77071867feb85e3a43584d50f93e428c",
+  "target": "Turn sampled response certificates into continuous-energy enclosures and improve the unresolved eta=0.01 scan without changing the fixed finite Hamiltonian or supplied source.",
+  "completion_criteria": [
+    "Self-contained audited interpolation theorem with exact finite implementation checks",
+    "Continuous enclosures and model-comparison bounds over a declared whole energy interval",
+    "A bounded larger-cache experiment and adaptive-energy refinement for eta=0.01, preserving unresolved cases honestly",
+    "Integrate verified results into the existing response explorer, retain Stage 15 evidence, and complete CI/deployment/live verification"
+  ],
+  "routes": [
+    {
+      "id": "R16-A",
+      "status": "completed_with_declared_scope",
+      "mechanism": "Extend the polynomial cache to 512 actions and compare 256/512 on the same 41 narrow-broadening samples",
+      "discriminator": "Does truncation error fall below the declared 0.1 inverse-Hartree precision budget, or is it still dominant?",
+      "failure_meaning": "The polynomial prefix needs a changed budget or method; it does not refute convergence or the old recovery theorem",
+      "outcome": "512 actions reduced the maximum original-grid radius from 0.4991642771690414 at 256 columns to 1.7398080847301682e-6 at 512 columns in the same blocked implementation; allocation failures are retained separately."
+    },
+    {
+      "id": "R16-B",
+      "status": "completed_with_declared_scope",
+      "mechanism": "Use the exact resolvent divided-difference identity and endpoint response strength to enclose linear interpolation throughout every energy cell",
+      "discriminator": "Exact scalar/matrix identities, pointwise inclusion checks, and whole-interval sign separation using current data",
+      "failure_meaning": "Reject or restrict the candidate inequality before any continuous-band publication",
+      "outcome": "Analytic Hermitian interpolation implication established with project self-review; 324 exact matrix identities/inclusions and a nonnormal counterexample checked. Existing endpoint data give 840 continuous cells with no new H actions; eta=0.1, k=128 separates both models throughout the interval by more than 0.02365 per Hartree."
+    },
+    {
+      "id": "R16-C",
+      "status": "completed_with_declared_scope",
+      "mechanism": "Refine energy cells using the continuous certificate while reusing a prepared immutable Q/HQ cache",
+      "discriminator": "Meet the stated absolute display tolerance on all cells with zero new H actions during mesh refinement; report evaluated energies separately from actions",
+      "failure_meaning": "Retain sampled certificates and the precise unresolved cells; change cache order or tolerance transparently",
+      "outcome": "Prepared-cache refinement from 41 to 166 nodes gives 165 cells with maximum radius 0.09734338705557741 per Hartree, below the 0.1 budget; 125 extra energy evaluations use zero additional H actions."
+    }
+  ],
+  "conventions": "Same exact symmetry-completed real H10-derived (5,4) ion operator and stored real source bits as Stage 15; fixed approximate neutral energy is only a coordinate. Positive eta; energy interval E0+[0.30,0.70] Hartree.",
+  "resource_contract": "Individual runs bounded by wall-clock and log caps, one-thread environment request; at most 768 trial columns and 2049 mesh nodes in this phase, no full dense 52920-square H. Windows memory is controlled through fixed array dimensions, not an OS limit.",
+  "claim_policy": "Analytic interpolation theorem is distinct from finite tests. Inherited endpoint FP certificates remain conditional on their binary64 primitive model and guards. No exact neutral source, basis-set, continuum, experimental accuracy, novelty or optimized-speed claim.",
+  "phase_status": "research_and_local_implementation_complete_publication_pending",
+  "active_evidence": [
+    "verification/chemistry-stage16/intervals-001/manifest.json",
+    "verification/chemistry-stage16/audit-003/manifest.json",
+    "verification/chemistry-stage16/narrow-003/manifest.json"
+  ],
+  "handoff": {
+    "publication": "Await PR checks, merge, Pages deployment and live revision/asset/browser verification. Delivery status is recorded separately after those checks.",
+    "next_research": "Compare optimized rational or block methods, or study narrower broadening/stricter precision; physical source, finite-basis and experimental accuracy remain open.",
+    "review": "Project self-review only; no independent or proof-assistant review."
+  }
+}
