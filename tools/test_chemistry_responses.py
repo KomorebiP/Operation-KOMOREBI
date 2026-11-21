@@ -55,7 +55,7 @@ class ChemistryResponsesTests(unittest.TestCase):
             site=fixture_site(Path(directory));result=build(site)
             self.assertEqual(result['samples'],984)
             body=(site.output/'chemistry-responses.html').read_text(encoding='utf-8');page=Page(body)
-            check_search_targets(site.search,{'chemistry-responses.html':page,'read/computational-chemistry/continuous.html':Page((site.output/'read/computational-chemistry/continuous.html').read_text(encoding='utf-8'))})
+            check_search_targets(site.search,{'chemistry-responses.html':page,**{path:Page((site.output/path).read_text(encoding='utf-8')) for path in ['read/computational-chemistry/continuous.html','read/computational-chemistry/precision-planning.html']}})
             for phrase in ['37.506%','52,920','conditional','without JavaScript','Scan and certificates','Three reduced-model actions','73 small-model columns']:
                 self.assertIn(phrase,body)
             self.assertIn(hashlib.sha256((ROOT/DATA).read_bytes()).hexdigest(),body)
