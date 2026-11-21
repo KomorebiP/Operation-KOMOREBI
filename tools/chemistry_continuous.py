@@ -5,7 +5,7 @@ import markdown
 from chemistry_continuous_data import AREA,DATA,build as build_data,replay
 
 PROOF='read/computational-chemistry/continuous.html'
-def add(site,body):
+def add(site,body,polynomial=None):
     raw=(site.root/DATA).read_bytes();data=json.loads(raw)
     if raw!=(json.dumps(build_data(site.root),separators=(',',':'))+'\n').encode():raise ValueError('Stale continuous fixture')
     digest=hashlib.sha256(raw).hexdigest();site.write('assets/chemistry/continuous-v1.json',raw.decode())
@@ -16,6 +16,7 @@ def add(site,body):
     core=(site.root/'website/assets/chemistry-continuous-core.mjs').read_text(encoding='utf-8').replace("'./chemistry-lab-core.mjs'","'./"+asset(shared).removeprefix('assets/')+"'")
     site.write('assets/chemistry-continuous-core.mjs',core)
     script=(site.root/'website/assets/chemistry-continuous.js').read_text(encoding='utf-8').replace("'./chemistry-continuous-core.mjs'","'./"+asset('chemistry-continuous-core.mjs',core.encode()).removeprefix('assets/')+"'")
+    if polynomial:script=script.replace("'./chemistry-polynomial-core.mjs'","'./"+polynomial['core_source'].removeprefix('assets/')+"'")
     site.write('assets/chemistry-continuous.js',script);site.write('assets/chemistry-continuous.css',(site.root/'website/assets/chemistry-continuous.css').read_text(encoding='utf-8'))
     package=replay(site.root);target=site.output/'assets/chemistry/stage16-replay.zip';target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(package);package_hash=hashlib.sha256(package).hexdigest()
     for name in ['CONTINUOUS_RESPONSES.md','SELF_REVIEW.json']:
@@ -43,6 +44,11 @@ Radius valid throughout the cell: max(r₀,r₁) + C/4</pre><p>The browser check
 <details><summary>Calculation and resource record</summary><p>The 512-action calculation used temporary file-backed basis arrays and bounded contraction buffers after the first allocation attempts failed. The blocked implementation applies the same exact operator and retains the same arithmetic error cap. Separate exact tests cover 73 small-model and nine full-target columns, 32 prepared-cache response inclusions, and 324 interpolation identities and disk inclusions.</p><p>The new run took approximately '''+f"{n['timings']['total_seconds']:.1f}"+''' seconds on this Windows environment with a one-thread request. Timings from different implementations are not an optimized-solver comparison. The failed attempts, source snapshots, active execution manifests and regeneration commands are retained.</p></details>
 <div class="cr-actions"><a href="assets/chemistry/stage16-replay.zip" download>Download the continuous-response replay</a><a href="assets/chemistry/continuous-v1.json">Inspect continuous certificate data</a></div><p class="cr-small">Continuous replay SHA-256: <code class="cr-hash">'''+package_hash+'''</code></p><p>These bounds cover the declared finite Hamiltonian and fixed supplied source/reference. Neutral-source accuracy, basis error and physical prediction remain separate obligations.</p></section><script type="module" src="'''+asset('chemistry-continuous.js',script.encode())+'''"></script>'''
     anchor='<section class="cr-panel" id="cr-reduction">'
+    if polynomial:
+        section=section.replace('id="cc-lab"','id="cc-lab" data-polynomial-source="'+polynomial['data_source']+'" data-polynomial-sha256="'+polynomial['data_sha256']+'"')
+        section=section.replace('<div id="cc-explorer" hidden>','<p id="cc-poly-status" role="status">Loading the optional polynomial bounds.</p><button id="cc-poly-retry" type="button" hidden>Retry polynomial bounds</button><div id="cc-explorer" hidden>')
+        section=section.replace('<figure class="cr-figure">','<div class="cp-method"><label for="cc-method">Interpolation method</label><select id="cc-method"><option value="linear">Linear — two saved values</option><option value="polynomial" disabled>Local polynomial — up to cubic</option></select></div><figure class="cr-figure">',1)
+        section=section.replace('</select></div></div>\n<div class="cp-method">','</select></div><div class="cp-method">').replace('Local polynomial — up to cubic</option></select></div><figure','Local polynomial — up to cubic</option></select></div></div><figure')
     if body.count(anchor)!=1:raise ValueError('Missing response-reader insertion point')
     body=body.replace(anchor,section+anchor).replace('02 / Test the small model','03 / Test the small model').replace('03 / Keep the assumptions with the answer','04 / Keep the assumptions with the answer').replace('sampled energies per broadening','initial grid energies').replace('<a href="#cr-reduction">Check the reduction</a>','<a href="#cr-continuous">Between the samples</a><a href="#cr-reduction">Check the reduction</a>')
     site.search.append(dict(title='Continuous chemistry response certificates',group='Collection',kind='Examples',work_ids=[],url='chemistry-responses.html#cr-continuous',text='Continuous energy error bands interpolation all energies whole interval adaptive mesh 512 action cache source Krylov Hermitian resolvent exact fractions replay'))
