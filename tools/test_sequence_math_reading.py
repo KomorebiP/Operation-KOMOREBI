@@ -132,6 +132,22 @@ class MathematicalReadingTests(unittest.TestCase):
         self.assertIn(r'<code>\(source\)</code>',content)
         self.assertEqual(content.count('<span class="arithmatex">'),1)
 
+    def test_compression_proofs_preserve_displays_and_disjoint_section_ids(self):
+        import re
+        parity=(ROOT/'research/sequence-closed-forms/PARITY_HANKEL_RECURRENCES.md').read_text(encoding='utf-8')
+        mixed=(ROOT/'research/sequence-closed-forms/MIXED_HANKEL_RECURRENCE.md').read_text(encoding='utf-8')
+        rendered=[]
+        for source,prefix in [(parity,'parity-proof-'),(mixed,'mixed-proof-')]:
+            content=mathematical_reading_fragment(source,include_outline=True,id_prefix=prefix)
+            self.assertEqual(content.count('class="arithmatex sl-math-display"'),source.count(r'\['))
+            self.assertNotIn('<h1',content)
+            targets=re.findall(r'href="#([^"]+)"',content)
+            for target in targets:self.assertEqual(content.count('id="'+target+'"'),1)
+            rendered.append(content)
+        ids=re.findall(r' id="([^"]+)"',''.join(rendered))
+        self.assertEqual(len(ids),len(set(ids)))
+        self.assertIn('sequence-rational-hankel.html#rational-hankel-proof',rendered[0])
+
 
 if __name__=='__main__':
     unittest.main()

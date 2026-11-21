@@ -22,6 +22,10 @@ def _inline(raw):
     def link(match):
         href=match[2]
         local_notes={
+            'PARITY_HANKEL_RECURRENCES.md':'sequence-hankel-compression.html#parity-compression-proof',
+            'MIXED_HANKEL_RECURRENCE.md':'sequence-hankel-compression.html#mixed-recurrence-proof',
+            'HANKEL_COMPRESSION_REVIEW.md':('https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/'
+                                           'research/sequence-closed-forms/HANKEL_COMPRESSION_REVIEW.md'),
             'RATIONAL_HANKEL_TAILS.md':'sequence-rational-hankel.html#rational-hankel-proof',
             'LINEAR_WEIGHT_RECURRENCE.md':'sequence-rational-hankel.html#linear-weight-proof',
             'FINITE_DIFFERENTIAL_HANKEL.md':'sequence-differential-hankel.html',
