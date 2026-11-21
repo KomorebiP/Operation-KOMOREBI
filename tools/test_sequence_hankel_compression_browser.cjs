@@ -26,6 +26,9 @@ async function fit(page,staticOnly=false){
       await fit(page);assert.equal(await page.locator('main h1').count(),1);
       assert.equal(await page.locator('mjx-merror').count(),0);
       assert.ok(await page.locator('mjx-container').count()>35);
+      assert.ok((await page.locator('#hankel-compression-intro').textContent()).includes('uniform bound is optimal'));
+      assert.ok(await page.locator('#sharp-quadratic-proof mjx-container').count()>25);
+      assert.ok(await page.locator('#uniform-mixed-proof mjx-container').count()>25);
       const ids=await page.locator('[id]').evaluateAll(nodes=>nodes.map(node=>node.id));
       assert.equal(new Set(ids).size,ids.length);
       for(const href of await page.locator('a[href^="#"]').evaluateAll(nodes=>nodes.map(node=>node.getAttribute('href'))))
@@ -56,6 +59,8 @@ async function fit(page,staticOnly=false){
     const page=await context.newPage();assert.ok((await page.goto(url('sequence-hankel-compression.html'))).ok());
     assert.ok(await page.locator('#parity-compression-proof').textContent());
     assert.ok(await page.locator('#mixed-recurrence-proof').textContent());
+    assert.ok((await page.locator('#sharp-quadratic-proof').textContent()).includes('Theorem K'));
+    assert.ok((await page.locator('#uniform-mixed-proof').textContent()).includes('Theorem L'));
     assert.equal(await page.locator('#hankel-compression-intro tbody tr').count(),2);
     assert.ok(await page.locator('.sl-math-display').count()>25);await fit(page,true);
     report.noJavaScript=true;await context.close();assert.deepEqual(report.errors,[]);report.status='passed';
