@@ -51,5 +51,8 @@ class PaperTests(unittest.TestCase):
         self.assertEqual(receipt['math_errors'],0)
         self.assertEqual(receipt['offline_automatic_requests'],0)
         self.assertEqual(receipt['localhost_links'],[])
+        html=(ROOT/EDITION/'PAPER.html').read_text(encoding='utf-8')
+        self.assertIn('href="#main"',html)
+        self.assertIn('id="main"',html)
 
 if __name__=='__main__':unittest.main()

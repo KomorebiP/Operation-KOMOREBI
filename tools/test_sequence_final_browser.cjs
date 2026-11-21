@@ -59,6 +59,10 @@ try{
  const asset=await staticContext.newPage();const requests=[];await asset.route('**/*',route=>{const u=route.request().url();if(u===url('assets/weighted-central-binomial-hankel-v1.0.html'))return route.continue();requests.push(u);return route.abort();});
  assert.ok((await asset.goto(url('assets/weighted-central-binomial-hankel-v1.0.html'))).ok());await fit(asset,false);
  assert.equal(await asset.locator('mjx-container').count(),638);assert.equal(await asset.locator('script').count(),0);assert.deepEqual(requests,[]);
+ await asset.keyboard.press('Tab');
+ assert.equal(await asset.locator('.sf-skip').evaluate(x=>x===document.activeElement),true);
+ await asset.keyboard.press('Enter');
+ assert.equal(await asset.locator('#main').evaluate(x=>x===document.activeElement),true);
  await asset.evaluate(()=>document.documentElement.style.fontSize='200%');await fit(asset,false);
  report.offlineHTML=true;
  step('Frozen download hashes');

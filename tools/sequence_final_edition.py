@@ -147,9 +147,12 @@ def print_html(root, mathjax_url):
     return ('<!DOCTYPE html>\n<html lang="en"><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
             '<title>Weighted central-binomial Hankel determinants - Final edition 1.0</title>'
-            '<style>html{font-size:17px}body{margin:3rem 5%;background:#fff;font-family:Georgia,serif;font-size:1rem}'+css+'</style>'
+            '<style>html{font-size:17px}body{margin:3rem 5%;background:#fff;font-family:Georgia,serif;font-size:1rem}'
+            '.sf-skip{position:absolute;left:1rem;top:-10rem}.sf-skip:focus{top:1rem;padding:.5rem;background:white;color:#111;z-index:10;outline:2px solid}'
+            '@media print{.sf-skip{display:none}}'+css+'</style>'
             '<script>window.MathJax='+json.dumps(config)+'</script><script defer src="'+escape(mathjax_url,quote=True)+'"></script>'
-            '</head><body><main class="sf-paper"><h1>Weighted central-binomial Hankel determinants</h1>'
+            '</head><body><a class="sf-skip" href="#main">Skip to paper content</a>'
+            '<main id="main" tabindex="-1" class="sf-paper"><h1>Weighted central-binomial Hankel determinants</h1>'
             +content+'</main></body></html>\n')
 
 def verify_artifacts(root):
