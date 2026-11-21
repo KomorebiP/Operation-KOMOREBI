@@ -248,15 +248,38 @@ def check_image_sources(documents):
             assert sources[record['source']]['sha256']==record['source_sha256'],record['source']
 
 
+FINAL_EDITION_HTML = 'assets/weighted-central-binomial-hankel-v1.0.html'
+
+
+def check_final_edition_downloads(root):
+    """Authenticate frozen paper downloads before checking site-page chrome."""
+    source = Path(__file__).resolve().parents[1]/'research/sequence-closed-forms/final-edition/v1.0/ARTIFACTS.json'
+    receipt = json.loads(source.read_bytes())
+    base = 'assets/weighted-central-binomial-hankel-v1.0.'
+    assert json.loads((root/(base+'json')).read_bytes()) == receipt, 'Final-edition artifact receipt changed'
+    for suffix, name in [('pdf', 'PAPER.pdf'), ('html', 'PAPER.html'), ('md', 'PAPER.md')]:
+        assert hashlib.sha256((root/(base+suffix)).read_bytes()).hexdigest() == receipt['files'][name], (name, 'Frozen final-edition download changed')
+    text = (root/FINAL_EDITION_HTML).read_text(encoding='utf-8')
+    page = Page(text)
+    assert page.language == 'en' and page.title and (page.h1, page.main) == (1, 1) and page.skip
+    assert len(page.ids) == len(set(page.ids)) and page.images_without_alt == 0
+    assert '<script' not in text.lower() and text.count('<mjx-container') == 638
+    for target in page.links:
+        if target.startswith('#'):assert unquote(target[1:]) in page.ids, (FINAL_EDITION_HTML, target)
+    return dict(edition=receipt['edition'], url=FINAL_EDITION_HTML,
+                authenticated_downloads=3, source_hashes_match=True, static_math_expressions=638)
+
+
 def inspect_site(root, *, compact_html=False, delivery_artifacts=None):
     files={p.relative_to(root).as_posix() for p in root.rglob('*') if p.is_file()}
     from jspace_lab import APP_URL as JSPACE_APP_URL, verify as verify_jspace_lab
     jspace_lab = verify_jspace_lab(root)
+    final_edition = check_final_edition_downloads(root)
     # The pinned third-party viewer has its own interface and localization markup.
     # Verify its integrity separately, while checking every link into it below.
-    # Only the authenticated, unchanged lab asset keeps its original interface.
-    # Its reader-site entry still receives all ordinary accessibility/link checks.
-    pages={p:Page((root/p).read_text(encoding='utf-8')) for p in files if p.endswith('.html') and not p.startswith('assets/pdfjs/') and p != JSPACE_APP_URL}
+    # Only authenticated frozen assets keep their original standalone interface.
+    # Their reader-site entries still receive all accessibility and link checks.
+    pages={p:Page((root/p).read_text(encoding='utf-8')) for p in files if p.endswith('.html') and not p.startswith('assets/pdfjs/') and p not in {JSPACE_APP_URL, FINAL_EDITION_HTML}}
     from site_metadata import verify as verify_metadata
     discovery=verify_metadata(root,pages)
     links=0;fragments=0
@@ -509,7 +532,7 @@ def inspect_site(root, *, compact_html=False, delivery_artifacts=None):
     site_bytes=sum(p.stat().st_size for p in root.rglob('*') if p.is_file())
     print('Published site bytes:',site_bytes,flush=True)
     assert site_bytes < 1024**3, 'Published reader site exceeds GitHub Pages size limit: '+str(site_bytes)
-    return dict(status='PASS',delivery=delivery,html_pages=len(pages),local_links=links,fragments=fragments,discovery=discovery,jspace_lab=jspace_lab,euler_worked_examples=euler_cases,factorial_worked_examples=factorial_cases,wavelet_worked_examples=wavelet_cases,stirling_worked_examples=stirling_cases,roots_newton_worked_examples=roots_newton_cases,
+    return dict(status='PASS',delivery=delivery,html_pages=len(pages),local_links=links,fragments=fragments,discovery=discovery,jspace_lab=jspace_lab,final_edition=final_edition,euler_worked_examples=euler_cases,factorial_worked_examples=factorial_cases,wavelet_worked_examples=wavelet_cases,stirling_worked_examples=stirling_cases,roots_newton_worked_examples=roots_newton_cases,
                 quantum_worked_examples=quantum_cases,search_pages=len(index),search_catalog=search_catalog,reading_bundles=len(bundles),checked_bundle_files=zipped_files,download_selection=download_selection,side_reader=side_reader,
                 reading_documents=len(documents['files']),pdfs=pdf_count,editorial_editions=len(editions),readable_math_expressions=readable_math,paper_vii=paper_vii,atlas=atlas,paper_i_atlas=paper_i_atlas,core_worked_atlases=core_worked_atlases,paper_viii_atlas=paper_viii_atlas,paper_ix_atlas=paper_ix_atlas,paper_x_atlas=paper_x_atlas,paper_xi_atlas=paper_xi_atlas,paper_xii_atlas=paper_xii_atlas,paper_v_atlas=paper_v_atlas,paper_vi_atlas=paper_vi_atlas,paper_vii_atlas=paper_vii_atlas,notation=notation,special_functions=special_functions,reading_navigation=reading_navigation,
                 proofreading=proofreading,copyediting=copyediting,reading_links=reading_links,statement_navigation=statement_navigation,reference_previews=reference_previews,reading_paths=reading_paths,lean_reader=lean_reader,lean_playground=lean_playground,lean_execution=lean_execution,large_signal_atlas=large_signal_atlas,special_functions_atlas=special_functions_atlas,physics_visual=physics_visual,physics_companions=physics_companions,physics_discovery=physics_discovery,scope='Static navigation, HTML structure and ZIP source identities. Not WCAG certification or mathematical review.')
