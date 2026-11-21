@@ -6,6 +6,13 @@ from chemistry_responses import build
 from test_computational_chemistry import fixture_site
 ROOT=Path(__file__).resolve().parents[1]
 class BudgetTests(unittest.TestCase):
+    def test_complete_frontier_qualification_rejects_omitted_rows(self):
+        from qualify_frontiers import qualify
+        import copy
+        plans=json.loads(payload());data=json.loads((ROOT/'website/assets/chemistry/continuous-v1.json').read_bytes())
+        g=next(g for g in plans['groups'] if len(g['frontier'])>2)
+        g['frontier'].pop(1)
+        with self.assertRaises(AssertionError):qualify(plans,data)
     def test_frontiers_reproduce_from_the_recorded_endpoint_data(self):
         self.assertEqual((ROOT/DATA).read_bytes(),payload())
         with tempfile.TemporaryDirectory() as temp:

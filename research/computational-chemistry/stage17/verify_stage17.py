@@ -1,7 +1,7 @@
 """Saved-byte provenance check; this does not repeat the mathematical audit."""
 import hashlib,json
 from pathlib import Path
-V=Path('verification/chemistry-stage17');ACTIVE=['study-001','audit-001']
+V=Path('verification/chemistry-stage17');ACTIVE=['study-001','audit-001','qualify-001']
 def sha(raw):return hashlib.sha256(raw).hexdigest()
 def verify(root=Path('.')):
     records=[]

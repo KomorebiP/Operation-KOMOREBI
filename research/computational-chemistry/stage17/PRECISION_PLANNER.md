@@ -55,7 +55,11 @@ The finite study also compares greedy plans with optimal plans at three preset t
 
 ## Computation and review
 
-The study evaluates all 30,915 forward pairs across the 22 curves, producing 717 nondominated rows. For every row, an independent threshold shortest-path calculation checks its minimum node count, both at its declared radius and immediately below it on the common 18-decimal lattice: 1,434 threshold checks. These checks are over the complete saved node pools, not a sample of edges.
+The study evaluates all 30,915 forward pairs across the 22 curves, producing 717 nondominated rows. For every row, a threshold shortest-path calculation checks its minimum node count at the declared radius and checks that using no more nodes cannot meet a radius one common 18-decimal lattice unit below it: 1,434 threshold checks. These checks are over the complete saved node pools, not a sample of edges.
+
+A separate qualification uses those same 1,434 thresholds to compare the advertised frontier's choice with a threshold shortest-path calculation, including the choices between listed rows. It also checks that the first row uses two nodes, the node counts increase, the radii decrease, and every listed path realizes its declared radius. This detects an omitted intermediate frontier row as well as an incorrect listed plan.
+
+These finite checks cover every positive tolerance for the declared graph. Its edge weights are multiples of u=10^-18. For consecutive frontier radii A>B, the admissible graph at any tolerance in [B,A) is contained in the graph at A-u and contains the graph at B. The minimum node count is nonincreasing as tolerance increases. If the advertised next node count agrees with the shortest-path calculation at both B and A-u, it agrees throughout that interval. Below the last radius the checked graph is infeasible, and remains so at smaller tolerances. Above the first radius the direct two-node path qualifies and no one-node plan is permitted. This argument concerns the finite rounded graph; it does not assume monotonicity of exact-q minimax values.
 
 A separate seeded audit enumerates all 3,048 paths in 168 small weighted graphs, compares 10,584 threshold queries, checks 64 sharp-maximum cases and 6,464 rational points on their quadratics, and retains the abstract greedy counterexample. The small graphs are sampled; the paths within each chosen graph are exhaustive.
 
@@ -76,6 +80,7 @@ Fresh output directories reproduce the finite calculations:
 ```text
 python -B research/computational-chemistry/stage17/budget_study.py --output fresh-budget-study
 python -B research/computational-chemistry/stage17/audit_planner.py --output fresh-planner-audit
+python -B research/computational-chemistry/stage17/qualify_frontiers.py --output fresh-frontier-qualification
 ```
 
 The recorded environment used Python 3.12.14. The study took approximately 8.0 seconds on the recorded Windows environment; this is not an optimized-solver benchmark. The provenance runner bounded each run by 180 seconds and 1 MiB of logs. The manual commands above do not impose that runner limit. No Hamiltonian action is performed by this phase.
