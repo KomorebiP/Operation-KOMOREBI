@@ -179,6 +179,10 @@ def build(site,atlas):
     source_files=['tools/'+name+'.py' for name in ['sequence_formula_catalogue','sequence_library','sequence_archive','sequence_closed_forms','sequence_closed_forms_extended','sequence_polynomial_hankel','sequence_differential_hankel','sequence_math_reading','sequence_research_tables','sequence_linear_research','sequence_research_notes','sequence_generalized','sequence_archive_families','sequence_atlas','sequence_atlas_reference','sequence_atlas_reading','sequence_atlas_study','sequence_atlas_index']]+[REGISTRY_PATH,'manifests/sequence-generalized-sources.json','research/sequence-connections/IDENTITIES.md','research/sequence-connections/sources/komorebi-math-families.py','research/sequence-closed-forms/IDENTITIES.md','research/sequence-closed-forms/COLLECTION_II_ADDITIONS.md','research/sequence-closed-forms/POLYNOMIAL_HANKEL_STRUCTURE.md','research/sequence-closed-forms/FINITE_DIFFERENTIAL_HANKEL.md','tools/test_sequence_closed_forms.py','tools/test_sequence_closed_forms_extended.py','tools/test_sequence_polynomial_hankel.py','tools/test_sequence_differential_hankel.py','tools/test_sequence_differential_hankel_bridge.py','tools/test_sequence_differential_hankel_bridge.mjs','tools/test_sequence_math_reading.py','tools/test_sequence_closed_forms_core.mjs','website/assets/sequence-closed-forms-core.mjs','website/assets/sequence-differential-hankel.mjs','website/assets/sequence-closed-forms-worker.mjs']
     source_files+=['tools/update_sequence_library_oeis.py','manifests/sequence-library-oeis.json','research/oeis-snapshot/snapshot.json','research/sequence-archive/candidate_registry.json']
     source_files+=['tools/sequence_central_binomial.py','tools/test_sequence_closed_forms_central.py','research/sequence-closed-forms/CENTRAL_BINOMIAL_RECURRENCE.md','tools/test_sequence_closed_form_handoffs.py','tools/test_sequence_closed_form_handoffs.mjs']
+    source_files+=['research/sequence-closed-forms/CONJECTURE_APPLICATIONS_READING.md',
+                   'tools/sequence_euler_spectral_jet.py',
+                   'tools/sequence_arithmetic_subminors.py',
+                   'tools/test_sequence_conjecture_applications.py']
     source_files+=['research/sequence-closed-forms/ALGEBRAIC_KERNEL_EXAMPLES.md',
                    'tools/sequence_algebraic_kernel_examples.py',
                    'tools/test_sequence_algebraic_kernel_examples.py',
@@ -442,6 +446,9 @@ def build(site,atlas):
       <a href="sequence-library.html?cf-version=1&amp;cf-mode=central_binomial&amp;cf-start=0&amp;cf-count=12&amp;cf-r=4#closed-calculator-panel">Calculate the r=4 example</a> ·
       <a href="generalized-families/GF-CF-CENTRAL-BINOMIAL.html">Explore the family and its six examples</a>.</p>
       </details>
+      <details id="euler-jet-obstruction"><summary>Euler preperiods and p-adic jet obstructions</summary>
+      <p>A finite spectral expression works for Euler up/down numbers modulo every odd integer. A prime-power period-jump congruence reduces the open global preperiod bound to the exact statement that no ordinary Eulerian polynomial lies in the third power of the ideal (p,t^2+1) for odd p. The equivalence is proved; global nonmembership remains open.</p>
+      <p><a href="sequence-conjecture-applications.html#conjecture-applications">Read the complete Euler spectral and jet proofs</a>.</p></details>
       <details><summary>Universal Hankel 4F3 and real-zero theorem</summary>
       <p>The A163865 Hankel determinant is independent of the binomial-shift parameter.
       The empty determinant equals 1. For N at least 1 and arbitrary complex c:</p>
@@ -607,6 +614,7 @@ def build(site,atlas):
         '<details class="sl-topic-disclosure"><summary>Open source notes and exact verification programs</summary>'
         '<p><a href="sequence-closed-forms.html#closed-theorems">Full Closed Forms reading page</a> · '
         '<a href="sequence-central-binomial.html">Weighted binomial recurrence proof</a> · '
+        '<a href="sequence-conjecture-applications.html">Conjecture applications and Eulerian jets</a> · '
         '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/research/sequence-closed-forms/COLLECTION_II_ADDITIONS.md">'
         'Complete mathematical supplement</a> · '
         '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/tools/test_sequence_closed_forms_extended.py">'
@@ -1071,6 +1079,7 @@ def build(site,atlas):
         '<nav class="sl-tool-back" aria-label="Weighted binomial research routes">'
         '<a href="sequence-closed-forms.html#central-binomial-recurrence">Closed Forms collection</a> · '
         '<a href="generalized-families/GF-CF-CENTRAL-BINOMIAL.html">Family and indexed examples</a> · '
+        '<a href="sequence-conjecture-applications.html">Euler jets and conjecture applications</a> · '
         '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/research/sequence-closed-forms/CENTRAL_BINOMIAL_RECURRENCE.md">Source manuscript</a></nav>'
         '<nav class="sl-binomial-jumps" aria-label="Reading routes">'
         '<a href="#math-proof-using-the-formula">Start with a calculation</a>'
@@ -1136,6 +1145,56 @@ def build(site,atlas):
                             text='A107430 A127363 A133444 A127361 Mathar Kotesovec Easwar '
                                  'all complex parameters central binomial Catalan generating function recurrence proof '
                                  f'Lagrange inversion Gessel arbitrary blocks residue weights polynomial Fibonacci Lucas Pell periodic finite support {KERNEL_EXAMPLE_COUNT} worked examples'))
+
+    # Standalone source-linked conjecture reading edition. The page separates
+    # proved equivalences, finite exact certificates, and the open global claim.
+    conjecture_note=(site.root/'research/sequence-closed-forms/CONJECTURE_APPLICATIONS_READING.md').read_text(encoding='utf-8')
+    conjecture_reading=mathematical_reading_fragment(conjecture_note,include_outline=True)
+    conjecture_page=(
+        closed_css+
+        page_heading('Conjecture applications and Eulerian jets',
+            'Exact spectral formulas, prime-power preperiod obstructions, arithmetic Hankel numerators, and algebraic kernel families.',
+            'research','conjecture-applications')+
+        '<nav class="sl-tool-back" aria-label="Conjecture reading routes">'
+        '<a href="sequence-closed-forms.html#euler-jet-obstruction">Closed Forms collection</a> · '
+        '<a href="sequence-central-binomial.html">Weighted binomial theorem</a> · '
+        '<a download href="assets/sequence-formula-source.zip">Download source and exact checks</a> · '
+        '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/research/sequence-closed-forms/CONJECTURE_APPLICATIONS_READING.md">Versioned article</a></nav>'
+        '<nav class="sl-binomial-jumps" aria-label="Conjecture sections">'
+        '<a href="#math-proof-1-results-and-evidence-boundaries">Status and scope</a>'
+        '<a href="#math-proof-4-finite-spectral-packets-for-every-odd-modulus">Finite spectra</a>'
+        '<a href="#math-proof-5-an-exact-prime-power-period-jump">Period jump</a>'
+        '<a href="#math-proof-6-weighted-euler-divisibility-as-a-local-jet-condition">Jet theorem</a>'
+        '<a href="#math-proof-7-the-precise-open-euler-conjecture">Open conjecture</a>'
+        '<a href="#math-proof-9-companion-result-hankel-numerators-and-arithmetic-submatrices">Hankel results</a>'
+        '<a href="#math-proof-10-companion-result-algebraic-coefficient-kernels">Kernels</a>'
+        '<a href="#math-proof-11-verification-scope-and-reproduction">Verification</a></nav>'
+        '<section id="conjecture-applications" class="sl-math-reading-intro">'
+        '<h2>Proved reductions, explicit certificates, and the remaining gap</h2>'
+        '<p>The spectral and weighted-jet statements below have written proofs, '
+        'and the exact test records give their tested ranges. The global inequality '
+        '<span class="arithmatex">\\(s(p^r)\\ge r-2\\)</span> remains open. '
+        'The equivalent statement about the ideal <span class="arithmatex">\\((p,t^2+1)^3\\)</span> '
+        'is a reformulation, not a resolution.</p>'
+        '<p>The companion sections connect this arithmetic analysis to the earlier '
+        'Hankel numerator and algebraic coefficient-kernel results. '
+        '<a href="#math-proof-12-sources-and-attribution">See primary sources and attribution</a>.</p>'
+        '</section>'
+        '<article id="conjecture-reading" class="sl-math-manuscript" '
+        'aria-label="Complete conjecture applications mathematical reading edition">'
+        +conjecture_reading+'</article>'
+        '<nav class="sl-tool-back" aria-label="Return to the sequence library">'
+        '<a href="sequence-closed-forms.html#euler-jet-obstruction">Return to closed-form results</a> · '
+        '<a href="sequence-library.html#sequence-proof-path">Proof and verification index</a></nav>'
+    )
+    site.page('sequence-conjecture-applications.html',
+              'Sequence Library · Eulerian jets and conjecture applications',
+              wrap(conjecture_page,page_kind='conjecture-applications'))
+    site.search.append(dict(title='Conjecture applications: Eulerian jets and Hankel numerators',
+                            group='Collection',kind='Mathematical derivations',
+                            work_ids=[],url='sequence-conjecture-applications.html',
+                            text='Euler up down numbers period preperiod Gulec p-adic jet Eulerian polynomial spectral odd modulus '
+                                 'Hankel Cauchy numerator algebraic kernel proof conjecture'))
 
     for filename,title,description,section_id,page_kind in [
         ('sequence-connections.html','Sequence connections',
