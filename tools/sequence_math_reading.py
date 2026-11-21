@@ -22,6 +22,7 @@ def _inline(raw):
     def link(match):
         href=match[2]
         local_notes={
+            'INTERIOR_ORDERS.md':'sequence-hankel-compression.html#interior-orders-proof',
             'EXCEPTIONAL_ORDERS.md':'sequence-hankel-compression.html#exceptional-orders-proof',
             'SHARP_QUADRATIC.md':'sequence-hankel-compression.html#sharp-quadratic-proof',
             'UNIFORM_MIXED_RECURRENCE.md':'sequence-hankel-compression.html#uniform-mixed-proof',

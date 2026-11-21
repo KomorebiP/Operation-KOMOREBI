@@ -66,6 +66,9 @@ jobs:
         run: |
           mkdir -p .sequence-checks/reports
           python -B tools/verify_sequence_exceptional_hankel.py --certificate verification/sequence-library/hankel-compression/exceptional-certificate.json --output .sequence-checks/reports/exceptional-orders.json
+          python -B tools/verify_sequence_interior_hankel.py --coefficients verification/sequence-library/hankel-compression/interior-coefficients.json --certificate verification/sequence-library/hankel-compression/interior-certificate.json --output .sequence-checks/reports/interior-orders.json
+          python -B -m unittest discover -s tools -p 'test_sequence_hankel_orders.py' -v 2>&1 | tee .sequence-checks/reports/interior-order-engine.log
+          node --test tools/test_sequence_hankel_orders.mjs 2>&1 | tee .sequence-checks/reports/interior-order-core.log
           python -B -m unittest discover -s tools -p 'test_sequence_families.py' -v 2>&1 | tee .sequence-checks/reports/family-tests.log
           python -B -m unittest discover -s tools -p 'test_sequence_library.py' -v 2>&1 | tee .sequence-checks/reports/library-tests.log
           python -B -m unittest discover -s tools -p 'test_sequence_closed_forms.py' -v 2>&1 | tee .sequence-checks/reports/closed-forms-tests.log
