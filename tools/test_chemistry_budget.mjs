@@ -1,10 +1,11 @@
 import assert from 'node:assert/strict';import fs from 'node:fs';
-import {validate,select,options,certificate,defaults,tolerance,settings,str,q,sharp,edge,strip} from '../website/assets/chemistry-budget-core.mjs';
+import {validate,select,options,certificate,defaults,tolerance,settings,permalink,str,q,sharp,edge,strip} from '../website/assets/chemistry-budget-core.mjs';
 const read=p=>JSON.parse(fs.readFileSync(new URL(p,import.meta.url))),plans=read('../website/assets/chemistry/planner-v1.json'),data=read('../website/assets/chemistry/continuous-v1.json');
 assert.equal(validate(plans,data),717);
 for(const [text,expected]of [['0.1','1/10'],['0.10','1/10'],['1/100','1/100'],['1e-3','1/1000'],['.25','1/4'],['2e2','200']])assert.equal(str(tolerance(text)),expected);
 for(const bad of ['0','-1','NaN','1/0','Infinity','<img>','.'])assert.throws(()=>tolerance(bad));
 assert.deepEqual(settings(''),defaults);assert.equal(settings('?bpeta=1%2F2&bptol=0.01&bpgoal=energies').objective,'energies');
+for(const input of ['1e-90','1e99','0.10','1.'+'2'.repeat(60)+'e-99']){const state={...defaults,tolerance:input},saved=new URL(permalink(state),'https://example.test/'),restored=settings(saved.search);assert.equal(str(tolerance(restored.tolerance)),str(tolerance(input)));}
 let p=select(plans,defaults);assert.equal(p.group.order,32);assert.equal(p.plan.nodes,14);p=select(plans,{...defaults,objective:'energies'});assert.equal(p.group.order,64);assert.equal(p.plan.nodes,13);
 assert.equal(select(plans,{...defaults,tolerance:'.001'}),null);assert.equal(select(plans,{...defaults,eta:'1/100'}).plan.nodes,166);
 let checks=0;

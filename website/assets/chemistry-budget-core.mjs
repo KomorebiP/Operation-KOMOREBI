@@ -18,6 +18,10 @@ export function settings(search){
   const p=new URLSearchParams(search),s={...defaults};if(['1/100','1/10','1/2'].includes(p.get('bpeta')))s.eta=p.get('bpeta');if(['actions','energies'].includes(p.get('bpgoal')))s.objective=p.get('bpgoal');
   if(p.has('bptol')){try{tolerance(p.get('bptol'));s.tolerance=p.get('bptol');}catch{}}return s;
 }
+export function permalink(state){
+  tolerance(state.tolerance);
+  return 'chemistry-responses.html?'+new URLSearchParams({bpeta:state.eta,bptol:state.tolerance.trim(),bpgoal:state.objective}).toString()+'#cr-plan';
+}
 export function sharp(r0,r1,C){
   if(!le(Z,r0)||!le(Z,r1)||!le(Z,C))throw Error('Invalid nonnegative radius');const delta=sub(r1,r0);
   return !C.n||le(C,abs(delta))?max(r0,r1):add(add(div(add(r0,r1),q(2)),div(C,q(4))),div(mul(delta,delta),mul(q(4),C)));
