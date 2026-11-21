@@ -221,11 +221,20 @@ def build(site,atlas):
                    'tools/verify_sequence_exceptional_hankel.py',
                    'verification/sequence-library/hankel-compression/exceptional-certificate.json',
                    'verification/sequence-library/hankel-compression/exceptional-replay.json']
+    source_files+=['research/sequence-closed-forms/INTERIOR_ORDERS.md',
+                   'research/sequence-closed-forms/INTERIOR_ORDERS_REVIEW.md',
+                   'research/sequence-closed-forms/INTERIOR_ORDERS_REPRODUCE.md',
+                   'tools/sequence_hankel_orders.py','tools/verify_sequence_interior_hankel.py',
+                   'tools/test_sequence_hankel_orders.py','tools/test_sequence_hankel_orders.mjs',
+                   'website/assets/sequence-hankel-orders-core.mjs','website/assets/sequence-hankel-orders-ui.mjs',
+                   'verification/sequence-library/hankel-compression/interior-coefficients.json',
+                   'verification/sequence-library/hankel-compression/interior-certificate.json',
+                   'verification/sequence-library/hankel-compression/interior-replay.json']
     with ZipFile(site.output/'assets/sequence-formula-source.zip','w',ZIP_DEFLATED) as bundle:
         for name in source_files:
             info=ZipInfo(name,date_time=(2026,11,15,0,0,0));info.create_system=3;info.compress_type=ZIP_DEFLATED;info.external_attr=0o100644<<16;bundle.writestr(info,(site.root/name).read_text(encoding='utf-8').encode('utf-8'))
         info=ZipInfo('README.txt',date_time=(2026,11,15,0,0,0));info.create_system=3;info.compress_type=ZIP_DEFLATED;info.external_attr=0o100644<<16
-        bundle.writestr(info,'Exact formula catalogue. Python 3.10+ standard library. The browser arithmetic and cross-language checks also require Node.js 24. Text sources use UTF-8/LF for portable reproduction.\nRun: python tools/sequence_formula_catalogue.py --id KFOR-S-catalan-03-01\nExport all records: python tools/sequence_formula_catalogue.py --output records.json\nCheck closed-form formulas: python -B -m unittest discover -s tools -p \"test_sequence_closed_forms*.py\" -v\nCheck weighted binomial recurrence: python -B -m unittest discover -s tools -p test_sequence_closed_forms_central.py -v\nCheck algebraic-kernel examples: python -B -m unittest discover -s tools -p test_sequence_algebraic_kernel_examples.py -v\nPrint worked example terms: python tools/sequence_algebraic_kernel_examples.py\nCheck browser arithmetic: node --test tools/test_sequence_closed_forms_core.mjs\nCheck indexed calculator presets: python -B -m unittest discover -s tools -p test_sequence_closed_form_handoffs.py -v\nCompare Python and JavaScript: python -B -m unittest discover -s tools -p test_sequence_differential_hankel_bridge.py -v\nRational Hankel proofs and reproduction: research/sequence-closed-forms/RATIONAL_HANKEL_REPRODUCE.md\nVerify rational Hankel certificates: python -B tools/verify_sequence_rational_hankel.py --output rational-hankel-checks.json\nVerify the uniform linear-weight identity: python -B tools/verify_sequence_linear_hankel.py --output linear-hankel-certificate.json\nCompare linear-weight Python and BigInt values: python -B -m unittest discover -s tools -p test_sequence_linear_hankel_bridge.py -v\nParity, quadratic, and mixed certificates: follow the five standard-library commands in research/sequence-closed-forms/HANKEL_COMPRESSION_REPRODUCE.md\nSharp uniform quadratic bound: python -B tools/verify_sequence_sharp_quadratic.py --output sharp-quadratic.json; proof and instructions in research/sequence-closed-forms/SHARP_QUADRATIC_REPRODUCE.md\nUniform mixed-linear bound: python -B tools/verify_sequence_uniform_mixed.py --sample-certificate verification/sequence-library/hankel-compression/mixed-certificate.json --output uniform-mixed.json\nCoordinate-boundary classification: python -B tools/verify_sequence_exceptional_hankel.py --certificate verification/sequence-library/hankel-compression/exceptional-certificate.json --output exceptional-orders.json; proof and instructions in research/sequence-closed-forms/EXCEPTIONAL_ORDERS_REPRODUCE.md\nScalar records store 24 terms beginning at their explicit offsets, except standard k-bonacci records, which store 48. Coefficient triangles store complete rows n=0..12, including zeros. Triangle j is a flat cell index. Its row and column are n and k. Parameter records are not claims of novelty or pairwise distinctness.\n\nReproduce finite OEIS comparisons using the retained snapshot:\nThe comparison receipt and updater are included. The two bulk gzip files are separate downloads, not duplicated in this source ZIP. Download https://komorebip.github.io/Operation-KOMOREBI/assets/oeis/stripped.gz and https://komorebip.github.io/Operation-KOMOREBI/assets/oeis/names.gz. Place both files in research/oeis-snapshot/ beside the included snapshot.json. That file records the required byte counts and SHA-256 hashes; the updater rejects different bytes before scanning.\nRun: python tools/update_sequence_library_oeis.py --source research/oeis-snapshot --output reproduced-oeis-comparison.json\nThe reproduction timestamp changes. Compare the snapshot hashes, catalogue_terms_sha256, matches and total_matches with manifests/sequence-library-oeis.json. Comparisons use the first eight stored terms at every exported position and extend each hit. Export positions are not mathematical offsets; finite hits are not proofs of infinite identity or novelty.\n')
+        bundle.writestr(info,'Exact formula catalogue. Python 3.10+ standard library. The browser arithmetic and cross-language checks also require Node.js 24. Text sources use UTF-8/LF for portable reproduction.\nRun: python tools/sequence_formula_catalogue.py --id KFOR-S-catalan-03-01\nExport all records: python tools/sequence_formula_catalogue.py --output records.json\nCheck closed-form formulas: python -B -m unittest discover -s tools -p \"test_sequence_closed_forms*.py\" -v\nCheck weighted binomial recurrence: python -B -m unittest discover -s tools -p test_sequence_closed_forms_central.py -v\nCheck algebraic-kernel examples: python -B -m unittest discover -s tools -p test_sequence_algebraic_kernel_examples.py -v\nPrint worked example terms: python tools/sequence_algebraic_kernel_examples.py\nCheck browser arithmetic: node --test tools/test_sequence_closed_forms_core.mjs\nCheck indexed calculator presets: python -B -m unittest discover -s tools -p test_sequence_closed_form_handoffs.py -v\nCompare Python and JavaScript: python -B -m unittest discover -s tools -p test_sequence_differential_hankel_bridge.py -v\nRational Hankel proofs and reproduction: research/sequence-closed-forms/RATIONAL_HANKEL_REPRODUCE.md\nVerify rational Hankel certificates: python -B tools/verify_sequence_rational_hankel.py --output rational-hankel-checks.json\nVerify the uniform linear-weight identity: python -B tools/verify_sequence_linear_hankel.py --output linear-hankel-certificate.json\nCompare linear-weight Python and BigInt values: python -B -m unittest discover -s tools -p test_sequence_linear_hankel_bridge.py -v\nParity, quadratic, and mixed certificates: follow the five standard-library commands in research/sequence-closed-forms/HANKEL_COMPRESSION_REPRODUCE.md\nSharp uniform quadratic bound: python -B tools/verify_sequence_sharp_quadratic.py --output sharp-quadratic.json; proof and instructions in research/sequence-closed-forms/SHARP_QUADRATIC_REPRODUCE.md\nUniform mixed-linear bound: python -B tools/verify_sequence_uniform_mixed.py --sample-certificate verification/sequence-library/hankel-compression/mixed-certificate.json --output uniform-mixed.json\nCoordinate-boundary classification: python -B tools/verify_sequence_exceptional_hankel.py --certificate verification/sequence-library/hankel-compression/exceptional-certificate.json --output exceptional-orders.json; proof and instructions in research/sequence-closed-forms/EXCEPTIONAL_ORDERS_REPRODUCE.md\nComplete nonzero mixed-family orders: follow research/sequence-closed-forms/INTERIOR_ORDERS_REPRODUCE.md; standard-library replay and exact normalized-parameter classifier are included.\nScalar records store 24 terms beginning at their explicit offsets, except standard k-bonacci records, which store 48. Coefficient triangles store complete rows n=0..12, including zeros. Triangle j is a flat cell index. Its row and column are n and k. Parameter records are not claims of novelty or pairwise distinctness.\n\nReproduce finite OEIS comparisons using the retained snapshot:\nThe comparison receipt and updater are included. The two bulk gzip files are separate downloads, not duplicated in this source ZIP. Download https://komorebip.github.io/Operation-KOMOREBI/assets/oeis/stripped.gz and https://komorebip.github.io/Operation-KOMOREBI/assets/oeis/names.gz. Place both files in research/oeis-snapshot/ beside the included snapshot.json. That file records the required byte counts and SHA-256 hashes; the updater rejects different bytes before scanning.\nRun: python tools/update_sequence_library_oeis.py --source research/oeis-snapshot --output reproduced-oeis-comparison.json\nThe reproduction timestamp changes. Compare the snapshot hashes, catalogue_terms_sha256, matches and total_matches with manifests/sequence-library-oeis.json. Comparisons use the first eight stored terms at every exported position and extend each hit. Export positions are not mathematical offsets; finite hits are not proofs of infinite identity or novelty.\n')
     generalized=generalized_catalogue(entries)
     site.write('assets/sequence-generalized-data.json',json.dumps(generalized,ensure_ascii=False,separators=(',',':'))+'\n')
     scripts=['math-display.mjs','sequence-research-ui.mjs','sequence-reading-theme.mjs','sequence-oeis-core.mjs','sequence-family-core.mjs','sequence-transfer-core.mjs','sequence-math.mjs','sequence-graph-core.mjs','sequence-modular-core.mjs','sequence-discovery-core.mjs','sequence-notebook-core.mjs','sequence-research-worker.mjs','sequence-research-common.mjs','sequence-oeis-worker.mjs','sequence-oeis-client.mjs','sequence-comparison-chart.mjs','sequence-chart-labels.mjs','sequence-workbench-core.mjs','sequence-comparison-certificate.mjs','sequence-certificate-inspection.mjs','sequence-workbench.mjs','sequence-triangle-core.mjs','sequence-triangle.mjs','sequence-transfers.mjs','sequence-families-ui.mjs','sequence-connections-ui.mjs','sequence-identification-ui.mjs','sequence-modular-ui.mjs','sequence-notebooks-ui.mjs','sequence-library-membership.mjs','sequence-research-studio.mjs','sequence-library-search.mjs','sequence-inspection-links.mjs','sequence-differential-hankel.mjs','sequence-closed-forms-core.mjs','sequence-closed-forms-worker.mjs','sequence-closed-forms-ui.mjs','sequence-library.js']
@@ -541,7 +550,7 @@ def build(site,atlas):
       A single rational coefficient kernel also produces every underlying moment.</p>
       <p><a href="sequence-rational-hankel.html">Read the proofs, explicit numerator, and exact certificates</a> ·
       <a href="sequence-library.html?cf-version=1&amp;cf-mode=linear_hankel&amp;cf-start=0&amp;cf-count=12&amp;cf-a0=1&amp;cf-a1=1#closed-calculator-panel">Calculate the linear-weight Hankel sequence</a>.</p>
-      <p><a href="sequence-hankel-compression.html">Continue to uniform bounds 63 and 112 and the complete coordinate-boundary classification</a>.</p>
+      <p><a href="sequence-hankel-compression.html">Continue to uniform bounds 63 and 112 and the complete mixed-family order classification</a>.</p>
       </details>
       <details><summary>Six formulas recovered from source papers</summary>
       <p>The documented reductions cover Bernoulli four-block tangents, four-block
@@ -811,6 +820,62 @@ def build(site,atlas):
     sharp_note=(site.root/'research/sequence-closed-forms/SHARP_QUADRATIC.md').read_text(encoding='utf-8')
     uniform_mixed_note=(site.root/'research/sequence-closed-forms/UNIFORM_MIXED_RECURRENCE.md').read_text(encoding='utf-8')
     exceptional_note=(site.root/'research/sequence-closed-forms/EXCEPTIONAL_ORDERS.md').read_text(encoding='utf-8')
+    interior_note=(site.root/'research/sequence-closed-forms/INTERIOR_ORDERS.md').read_text(encoding='utf-8')
+    from sequence_hankel_orders import normalized_terms
+    order_coefficients=(site.root/'verification/sequence-library/hankel-compression/interior-coefficients.json').read_text(encoding='utf-8')
+    site.write('assets/sequence-hankel-orders.json',order_coefficients)
+    order_core=(site.root/'website/assets/sequence-hankel-orders-core.mjs').read_text(encoding='utf-8')
+    site.write('assets/sequence-hankel-orders-core.mjs',order_core)
+    order_ui=(site.root/'website/assets/sequence-hankel-orders-ui.mjs').read_text(encoding='utf-8').replace(
+        "'./sequence-hankel-orders-core.mjs'","'./sequence-hankel-orders-core.mjs?v="+hashlib.sha256(order_core.encode('utf-8')).hexdigest()[:12]+"'")
+    site.write('assets/sequence-hankel-orders-ui.mjs',order_ui)
+    order_script_url='assets/sequence-hankel-orders-ui.mjs?v='+hashlib.sha256(order_ui.encode('utf-8')).hexdigest()[:12]
+    order_data_url='assets/sequence-hankel-orders.json?v='+hashlib.sha256(order_coefficients.encode('utf-8')).hexdigest()[:12]
+    order_presets=[('Order 98','1','1'),('Generic 112','1','4'),('Full collision 105','1','-36'),
+                   ('Correction 104','8/9','-16/9'),('Both collisions 97','2','-144'),
+                   ('Two collisions 84','2','-36/5'),('Double root 88','2/15','8/3'),
+                   ('Two double roots 69','10/9','-400/9')]
+    order_buttons=''.join('<button type="button" data-order-t="'+t+'" data-order-q="'+q+
+        '" aria-pressed="'+('true' if (t,q)==('1','1') else 'false')+'">'+label+'</button>' for label,t,q in order_presets)
+    order_terms=''.join('<tr><th scope="row">'+str(n)+'</th><td><code>'+e(str(value))+'</code></td></tr>'
+                        for n,value in enumerate(normalized_terms(1,1,8)))
+    order_explorer=(
+        '<style>.sho-fields{display:grid;grid-template-columns:1fr 1fr;gap:1rem}'
+        '.sho-controls fieldset{min-width:0;max-width:100%;margin:1rem 0;padding:1rem;border:1px solid currentColor;border-radius:.4rem}'
+        '.sho-fields label{display:grid;gap:.35rem;min-width:0}.sho-fields input{box-sizing:border-box;width:100%;min-width:0;min-height:2.75rem}'
+        '.sho-controls button{min-height:2.75rem;max-width:100%;white-space:normal}.sho-presets{flex-wrap:wrap}'
+        '#sho-order{display:block;font-size:1.2em;font-weight:700;margin:1rem 0}'
+        '#sho-detail{overflow-wrap:anywhere}'
+        '@media(max-width:600px){.sho-fields{grid-template-columns:1fr}}</style>'
+        '<section id="interior-order-calculator" class="sl-math-reading-intro" data-hankel-orders data-coefficients="'+order_data_url+'">'
+        '<h2>Find the exact minimal order</h2>'
+        '<p>Theorem N completes the parameters with a,b,u,v all nonzero. Normalize '
+        't=b/a and q=(v/u)². The theorem uses exact polynomial gcds to cover simple '
+        'and repeated roots, including every collision. Its proof applies over '
+        'characteristic-zero fields; this explorer accepts rational t,q.</p>'
+        '<p id="sho-help">Enter nonzero integers, fractions, or finite decimals, '
+        'with at most 32 digits in the reduced numerator and denominator. '
+        'Negative q represents a quadratic extension containing √q. '
+        '<a href="#exceptional-orders-proof">Use Theorem M for the coordinate boundary</a>.</p>'
+        '<form id="sho-form" class="sho-controls" novalidate hidden><fieldset><legend>Normalized parameters</legend>'
+        '<div class="sho-fields"><label for="sho-t">Weight ratio t=b/a<input id="sho-t" name="ho-t" type="text" maxlength="70" value="1" required aria-describedby="sho-help" aria-errormessage="sho-error"></label>'
+        '<label for="sho-q">Squared operator ratio q=(v/u)²<input id="sho-q" name="ho-q" type="text" maxlength="70" value="1" required aria-describedby="sho-help" aria-errormessage="sho-error"></label></div></fieldset>'
+        '<div class="sp-actions"><button type="submit">Calculate exact order</button></div>'
+        '<fieldset><legend>Certified examples</legend><div class="sp-actions sho-presets">'+order_buttons+'</div></fieldset></form>'
+        '<p id="sho-error" role="alert" hidden></p><div id="sho-results">'
+        '<output id="sho-order" for="sho-t sho-q" form="sho-form" role="status" aria-live="polite" data-order="98">Minimal eventual order 98.</output>'
+        '<p id="sho-detail">t=1, q=1. The quartic has four simple roots; h=14 distinct '
+        'exponential bases. The recurrence starts at N=1; W₀=1 is retained separately.</p>'
+        '<div class="sar-scroll" tabindex="0" role="region" aria-label="Exact normalized determinants">'
+        '<table><caption>Normalized W₀ through W₇, with a=u=1 and v²=q</caption>'
+        '<thead><tr><th scope="col">N</th><th scope="col">Wₙ</th></tr></thead>'
+        '<tbody id="sho-terms">'+order_terms+'</tbody></table></div>'
+        '<p><a id="sho-link" href="sequence-hankel-compression.html?ho-t=1&amp;ho-q=1#interior-order-calculator">Link to this calculation</a> · '
+        '<a href="#interior-orders-proof">Read the full order rule and proof</a></p></div>'
+        '<p>The worked example and complete tables remain readable without JavaScript. '
+        'The algebraic triple-root case has order 64 and is derived in '
+        '<a href="#interior-proof-6-the-two-remaining-multiplicity-types">the remaining multiplicity cases</a>.</p></section>'
+    )
     compression_presets=[
         ('Quadratic weight P(m)=1+m²', [1,1,1,0], [1,0,0,0], '63'),
         ('Mixed weight/operator P(m)=1+m, D=1+2∂ₓ', [1,1,0,0], [1,2,0,0], '112'),
@@ -846,7 +911,7 @@ def build(site,atlas):
             '</a></th><td>'+order+'</td><td><code>'+e(terms)+'</code></td></tr>')
     compression_page=(
         closed_css+page_heading('Smaller Hankel transfers and exact recurrences',
-            'Optimal uniform bounds: 63 for quadratic weights, 112 for linear weights with first-order operators.',
+            'Optimal uniform bounds 63 and 112, with the complete mixed linear-family order classification.',
             'research','hankel-compression-intro')+
         '<nav class="sl-tool-back" aria-label="Hankel continuation routes">'
         '<a href="sequence-rational-hankel.html">General rationality and linear-weight theorem</a> · '
@@ -869,8 +934,9 @@ def build(site,atlas):
         'orders can be smaller.</p>'
         '<p>Theorem M now classifies every parameter on the coordinate boundary '
         'abuv=0, including all intersections, over characteristic-zero fields. '
-        'The minimal orders range from zero to 42. The fully nonzero '
-        'exceptional locus remains open.</p>'
+        'The boundary orders range from zero to 42. Theorem N now completes '
+        'the fully nonzero parameters with an exact gcd-based rule. Together '
+        'they classify every parameter in the mixed linear family.</p>'
         '<p>The mixed example includes a zero second determinant. Its certificate '
         'checks all 12,870 state coordinates over the integers. The quadratic '
         'example has a separate product-state certificate; neither result rests '
@@ -879,6 +945,8 @@ def build(site,atlas):
         '<a href="#uniform-mixed-proof">Uniform mixed-family proof</a> · '
         '<a href="#boundary-examples">Boundary examples</a> · '
         '<a href="#exceptional-orders-proof">Complete boundary classification</a> · '
+        '<a href="#interior-order-calculator">Exact order explorer</a> · '
+        '<a href="#interior-orders-proof">Complete nonzero classification</a> · '
         '<a href="#parity-compression-proof">Earlier parity and quadratic proofs</a> · '
         '<a href="#mixed-recurrence-proof">Mixed recurrence proof</a> · '
         '<a href="#compression-reproduction">Reproduce the certificates</a></nav>'
@@ -886,6 +954,7 @@ def build(site,atlas):
         '<table><caption>Exact determinants W₀ through W₇; choose an example to calculate further</caption>'
         '<thead><tr><th scope="col">Example</th><th scope="col">Minimal eventual order</th>'
         '<th scope="col">Exact determinants</th></tr></thead><tbody>'+''.join(compression_rows)+'</tbody></table></div></section>'
+        +order_explorer+
         '<article id="sharp-quadratic-proof" class="sl-math-manuscript" aria-label="Sharp uniform quadratic recurrence proof">'
         '<h2>The sharp uniform quadratic bound</h2>'
         +mathematical_reading_fragment(sharp_note,include_outline=True,id_prefix='sharp-proof-')+'</article>'
@@ -909,6 +978,9 @@ def build(site,atlas):
         '<article id="exceptional-orders-proof" class="sl-math-manuscript" aria-label="Complete coordinate-boundary minimal-order proof">'
         '<h2>The complete coordinate-boundary classification</h2>'
         +mathematical_reading_fragment(exceptional_note,include_outline=True,id_prefix='exceptional-proof-')+'</article>'
+        '<article id="interior-orders-proof" class="sl-math-manuscript" aria-label="Complete nonzero-parameter minimal-order proof">'
+        '<h2>The complete nonzero-parameter classification</h2>'
+        +mathematical_reading_fragment(interior_note,include_outline=True,id_prefix='interior-proof-')+'</article>'
         '<article id="parity-compression-proof" class="sl-math-manuscript" aria-label="Parity compression and quadratic recurrence proofs">'
         '<h2>The earlier compression and order-126 argument</h2>'
         '<p>The following source is preserved from the preceding edition. Its '
@@ -938,6 +1010,14 @@ def build(site,atlas):
         'identities, and 947 direct determinant comparisons. The written '
         'smaller-recurrence and degree-bound arguments supply infinite coverage. '
         'See <code>research/sequence-closed-forms/EXCEPTIONAL_ORDERS_REPRODUCE.md</code>.</p>'
+        '<p>Replay Theorem N with <code>python -B tools/verify_sequence_interior_hankel.py '
+        '--coefficients verification/sequence-library/hankel-compression/interior-coefficients.json '
+        '--certificate verification/sequence-library/hankel-compression/interior-certificate.json '
+        '--output interior-orders.json</code>. It checks 45 degree-complete '
+        'characteristic nodes, eight noncollision Bezout identities, ten exact '
+        'reduced GFs, confluence regressions and 2,732 direct determinants. '
+        'Its universal coverage comes from the written collision and confluence '
+        'proof. Instructions are in <code>research/sequence-closed-forms/INTERIOR_ORDERS_REPRODUCE.md</code>.</p>'
         '<p>Download the source ZIP and run the five commands in '
         '<code>research/sequence-closed-forms/HANKEL_COMPRESSION_REPRODUCE.md</code>. '
         'Python 3.10+ and its standard library suffice. The replayers reconstruct '
@@ -951,15 +1031,18 @@ def build(site,atlas):
         '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/research/sequence-closed-forms/SHARP_QUADRATIC_REVIEW.md">Read the sharp-theorem self-review</a> · '
         '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/research/sequence-closed-forms/UNIFORM_MIXED_REVIEW.md">Read the uniform mixed-family self-review</a> · '
         '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/research/sequence-closed-forms/EXCEPTIONAL_ORDERS_REVIEW.md">Read the boundary-classification self-review</a> · '
+        '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/research/sequence-closed-forms/INTERIOR_ORDERS_REVIEW.md">Read the interior-classification self-review</a> · '
         '<a href="https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/research/sequence-closed-forms/HANKEL_COMPRESSION_REVIEW.md">Read the earlier self-review</a> · '
         '<a href="https://raw.githubusercontent.com/KomorebiP/Operation-KOMOREBI/main/research/sequence-closed-forms/retained-sources/sequence-formula-source-595aa4a6.zip">Retained previous compression edition</a> · '
         '<a href="https://raw.githubusercontent.com/KomorebiP/Operation-KOMOREBI/main/research/sequence-closed-forms/retained-sources/sequence-formula-source-15a218cb.zip">Retained uniform-theorem edition</a> · '
+        '<a href="https://raw.githubusercontent.com/KomorebiP/Operation-KOMOREBI/main/research/sequence-closed-forms/retained-sources/sequence-formula-source-5ab2d295.zip">Retained boundary-classification edition</a> · '
         '<a href="https://raw.githubusercontent.com/KomorebiP/Operation-KOMOREBI/main/research/sequence-closed-forms/retained-sources/sequence-formula-source-f3da1097.zip">Retained rationality edition</a></p>'
         '<p>Review provenance is project self-review. Independent review, Lean '
-        'formalization, and historical novelty are unassessed. Minimal orders '
-        'on exceptional fully nonzero mixed parameters, and general higher-degree or '
-        'higher-order mixed operators, remain open. The sharp '
+        'formalization, and historical novelty are unassessed. Pointwise '
+        'quadratic-weight orders and general higher-degree or '
+        'higher-order mixed families remain open. The sharp '
         'quadratic bound does not assert minimal order 63 at every parameter.</p></section>'
+        '<script type="module" src="'+order_script_url+'"></script>'
     )
     site.page('sequence-hankel-compression.html','Sequence Library · Hankel compression and exact recurrences',
               wrap(compression_page,page_kind='hankel-compression'))
@@ -968,6 +1051,7 @@ def build(site,atlas):
         text='quadratic polynomial weights parity even odd finite differential operators '
              'sharp uniform recurrence bounds 63 112 mixed linear first order generic minimality '
              'coordinate boundary exceptional minimal orders 42 26 18 28 12 7 Theorem M '
+             'complete interior classification Theorem N polynomial gcd confluent roots 98 105 104 97 84 88 69 64 '
              'formal moments orthogonal polynomials nine sixteen exponential bases resultant Newton identity'))
 
     central_note=(site.root/'research/sequence-closed-forms/CENTRAL_BINOMIAL_RECURRENCE.md').read_text(encoding='utf-8')
