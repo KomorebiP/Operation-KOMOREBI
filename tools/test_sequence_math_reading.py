@@ -137,8 +137,9 @@ class MathematicalReadingTests(unittest.TestCase):
         parity=(ROOT/'research/sequence-closed-forms/PARITY_HANKEL_RECURRENCES.md').read_text(encoding='utf-8')
         mixed=(ROOT/'research/sequence-closed-forms/MIXED_HANKEL_RECURRENCE.md').read_text(encoding='utf-8')
         sharp=(ROOT/'research/sequence-closed-forms/SHARP_QUADRATIC.md').read_text(encoding='utf-8')
+        uniform=(ROOT/'research/sequence-closed-forms/UNIFORM_MIXED_RECURRENCE.md').read_text(encoding='utf-8')
         rendered=[]
-        for source,prefix in [(parity,'parity-proof-'),(mixed,'mixed-proof-'),(sharp,'sharp-proof-')]:
+        for source,prefix in [(parity,'parity-proof-'),(mixed,'mixed-proof-'),(sharp,'sharp-proof-'),(uniform,'uniform-mixed-proof-')]:
             content=mathematical_reading_fragment(source,include_outline=True,id_prefix=prefix)
             self.assertEqual(content.count('class="arithmatex sl-math-display"'),source.count(r'\['))
             self.assertNotIn('<h1',content)
