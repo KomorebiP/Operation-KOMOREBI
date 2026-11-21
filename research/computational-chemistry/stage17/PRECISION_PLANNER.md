@@ -26,7 +26,7 @@ To prove (1), put d=r1-r0. For C>0,
     r(t) = r0 + (d+C)t - C t^2
          = r0 + (d+C)^2/(4C) - C(t-(d+C)/(2C))^2.
 
-The vertex lies strictly inside [0,1] exactly when |d|<C. In that case the displayed vertex value expands to the second expression in (1). Otherwise the maximum occurs at an endpoint. If C=0 the radius is linear and the endpoint rule applies. Equality |d|=C is covered by either formula. This also handles zero radii and unequal endpoint radii.
+The vertex lies strictly inside [0,1] exactly when |d|<C. In that case the displayed vertex value expands to the second expression in (1). Otherwise the maximum occurs at an endpoint. If C=0 the radius is linear and the endpoint rule applies. For C>0, equality |d|=C is covered by either formula. This also handles zero radii and unequal endpoint radii.
 
 The expression is nondecreasing in C because r(t) is pointwise nondecreasing in C. Therefore replacing C by a rational upper bound preserves validity. The implementation first rounds the Stage 16 coefficient upward to 18 decimal places, evaluates (1) exactly, and rounds the result upward to 18 decimal places. This final rational number is the declared edge weight. It is at most the correspondingly rounded older max(r0,r1)+C/4 bound.
 
