@@ -43,7 +43,8 @@ def _inline(raw):
         if href=='POLYNOMIAL_HANKEL_STRUCTURE.md':
             href=('https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/'
                   'research/sequence-closed-forms/POLYNOMIAL_HANKEL_STRUCTURE.md')
-        if not (local or href.startswith('https://') or href.startswith('http://')):
+        if not (local or re.fullmatch(r'#[A-Za-z][A-Za-z0-9_.:-]*',href)
+                or href.startswith('https://') or href.startswith('http://')):
             return escape(match[0])
         return reserve('<a href="'+escape(href,quote=True)+'">'+escape(match[1])+'</a>')
 
@@ -122,7 +123,8 @@ def mathematical_reading_fragment(source, *, include_outline=False, id_prefix='m
             if stripped==r'\]':
                 result.append('<div class="arithmatex sl-math-display" tabindex="0" '
                               'role="region" aria-label="Displayed mathematical equation">'
-                              +escape('\n'.join(math))+'</div>')
+                              +escape(re.sub(r'(\\tag\{[^{}]*\})(\s*)(\\end\{aligned\})',
+                                             r'\3\2\1','\n'.join(math)))+'</div>')
                 math=[]
                 in_math=False
             continue
