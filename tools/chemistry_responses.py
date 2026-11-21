@@ -48,6 +48,8 @@ def build(site):
 <details class="cr-panel"><summary>Keyboard and reading help</summary><p>Tab moves between controls. Use the arrow keys to change the selected options and energy sample. The sample link includes the current settings so you can return to the same sample. The certificate download retains its data identity and assumptions. Graphs have a text description and a sample readout. Tables and certificate blocks can be focused and scrolled with arrow keys. Static results and the full sample table remain available without JavaScript.</p><p>No data are uploaded. This is a recorded calculation explorer, not a molecular simulation running in your browser.</p></details></div><script type="module" src="'''+asset('chemistry-responses.js',script.encode())+'''"></script>'''
     from chemistry_continuous import add as add_continuous
     body,continuous=add_continuous(site,body)
+    from chemistry_budget import add as add_budget
+    body,planner=add_budget(site,body)
     site.page(PAGE,'Computational chemistry: reusable response scans',body,'https://github.com/KomorebiP/Operation-KOMOREBI/blob/'+site.revision+'/research/computational-chemistry/stage15/RESPONSE_CERTIFICATES.md')
     site.search.append(dict(title='Computational chemistry: reusable response scans',group='Collection',kind='Examples',work_ids=[],url=PAGE,text='H10 52920 determinants reusable Hamiltonian actions source Krylov Lanczos response energy scan residual certificate error bounds finite model nine states coupling leakage practical computational chemistry'))
-    return dict(samples=len(data['points']),data_sha256=digest,replay_sha256=hashlib.sha256(package).hexdigest(),replay_bytes=len(package),physical_accuracy_claim=False,continuous=continuous)
+    return dict(samples=len(data['points']),data_sha256=digest,replay_sha256=hashlib.sha256(package).hexdigest(),replay_bytes=len(package),physical_accuracy_claim=False,continuous=continuous,planner=planner)
