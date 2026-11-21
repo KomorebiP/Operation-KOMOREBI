@@ -138,8 +138,9 @@ class MathematicalReadingTests(unittest.TestCase):
         mixed=(ROOT/'research/sequence-closed-forms/MIXED_HANKEL_RECURRENCE.md').read_text(encoding='utf-8')
         sharp=(ROOT/'research/sequence-closed-forms/SHARP_QUADRATIC.md').read_text(encoding='utf-8')
         uniform=(ROOT/'research/sequence-closed-forms/UNIFORM_MIXED_RECURRENCE.md').read_text(encoding='utf-8')
+        exceptional=(ROOT/'research/sequence-closed-forms/EXCEPTIONAL_ORDERS.md').read_text(encoding='utf-8')
         rendered=[]
-        for source,prefix in [(parity,'parity-proof-'),(mixed,'mixed-proof-'),(sharp,'sharp-proof-'),(uniform,'uniform-mixed-proof-')]:
+        for source,prefix in [(parity,'parity-proof-'),(mixed,'mixed-proof-'),(sharp,'sharp-proof-'),(uniform,'uniform-mixed-proof-'),(exceptional,'exceptional-proof-')]:
             content=mathematical_reading_fragment(source,include_outline=True,id_prefix=prefix)
             self.assertEqual(content.count('class="arithmatex sl-math-display"'),source.count(r'\['))
             self.assertNotIn('<h1',content)
