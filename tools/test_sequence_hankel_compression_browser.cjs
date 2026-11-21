@@ -6,6 +6,14 @@ const base=process.argv[2]||'http://127.0.0.1:8859/';
 const output=process.argv[3]||'.compression-checks/browser';
 fs.mkdirSync(output,{recursive:true});
 const url=name=>new URL(name,base).href;
+const boundaryValues=[
+  ['1','0','-1','0','2916','0','-9610000','0'],
+  ['1','0','-9','0','15876','0','-291600','0'],
+  ['1','0','-9','0','72900','0','-357210000','0'],
+  ['1','0','0','-8','1680','-271488','-2874880','1840174080'],
+  ['1','1','1','-14','-100','56','6112','58304'],
+  ['1','1','6','-36','360','-1200','5600','-15680'],
+];
 async function fit(page,staticOnly=false){
   if(!staticOnly)await page.evaluate(async()=>{
     if(window.MathJax?.startup?.promise)await window.MathJax.startup.promise;
@@ -29,6 +37,11 @@ async function fit(page,staticOnly=false){
       assert.ok((await page.locator('#hankel-compression-intro').textContent()).includes('uniform bound is optimal'));
       assert.ok(await page.locator('#sharp-quadratic-proof mjx-container').count()>25);
       assert.ok(await page.locator('#uniform-mixed-proof mjx-container').count()>25);
+      assert.ok(await page.locator('#exceptional-orders-proof mjx-container').count()>70);
+      assert.equal(await page.locator('#exceptional-proof-1-statement-and-complete-boundary-table').count(),1);
+      const boundaries=await page.locator('#boundary-examples tbody th a').evaluateAll(nodes=>nodes.map(node=>node.href));
+      assert.equal(boundaries.length,6);
+      assert.deepEqual(await page.locator('#boundary-examples tbody tr td:nth-child(2)').allTextContents(),['42','26','18','28','12','7']);
       const ids=await page.locator('[id]').evaluateAll(nodes=>nodes.map(node=>node.id));
       assert.equal(new Set(ids).size,ids.length);
       for(const href of await page.locator('a[href^="#"]').evaluateAll(nodes=>nodes.map(node=>node.getAttribute('href'))))
@@ -36,19 +49,22 @@ async function fit(page,staticOnly=false){
       const examples=await page.locator('#hankel-compression-intro tbody th a').evaluateAll(nodes=>nodes.map(node=>node.href));
       assert.equal(examples.length,2);
       await page.locator('#hankel-compression-intro').screenshot({path:path.join(output,'reading-'+width+'.png')});
+      await page.locator('#exceptional-proof-1-statement-and-complete-boundary-table').scrollIntoViewIfNeeded();
+      await page.screenshot({path:path.join(output,'boundary-'+width+'.png')});
       const outline=page.locator('#parity-compression-proof .sl-proof-outline>summary');
       await outline.focus();await page.keyboard.press('Enter');
       assert.equal(await page.locator('#parity-compression-proof .sl-proof-outline').evaluate(node=>node.open),true);
       await page.locator('#parity-proof-4-uniform-full-sequence-order-at-most-126').scrollIntoViewIfNeeded();
       await fit(page);
       if(width===320){await page.evaluate(()=>document.documentElement.style.fontSize='200%');await fit(page);}
-      for(const [i,preset] of examples.entries()){
+      for(const [i,preset] of [...examples,...boundaries].entries()){
         const worksheet=await context.newPage();worksheet.on('pageerror',error=>report.errors.push({width,message:error.message}));
         await worksheet.goto(preset);await worksheet.locator('#cf-mode').waitFor({state:'visible'});
         await worksheet.waitForFunction(()=>document.querySelectorAll('#cf-table-values tr').length===12);
         const values=await worksheet.locator('#cf-table-values tr td code').allTextContents();
-        assert.deepEqual(values.slice(0,8),i===0?['1','1','4','56','-1400','234000','92664000','13067049600']:
-          ['1','1','0','-256','44536','3886128','-567844864','-82121781248']);
+        const expected=i===0?['1','1','4','56','-1400','234000','92664000','13067049600']:
+          i===1?['1','1','0','-256','44536','3886128','-567844864','-82121781248']:boundaryValues[i-2];
+        assert.deepEqual(values.slice(0,8),expected);
         assert.equal(await worksheet.locator('#cf-differential_hankel-c2').inputValue(),'0');
         await fit(worksheet);await worksheet.close();
       }
@@ -61,6 +77,8 @@ async function fit(page,staticOnly=false){
     assert.ok(await page.locator('#mixed-recurrence-proof').textContent());
     assert.ok((await page.locator('#sharp-quadratic-proof').textContent()).includes('Theorem K'));
     assert.ok((await page.locator('#uniform-mixed-proof').textContent()).includes('Theorem L'));
+    assert.ok((await page.locator('#exceptional-orders-proof').textContent()).includes('Theorem M'));
+    assert.equal(await page.locator('#boundary-examples tbody tr').count(),6);
     assert.equal(await page.locator('#hankel-compression-intro tbody tr').count(),2);
     assert.ok(await page.locator('.sl-math-display').count()>25);await fit(page,true);
     report.noJavaScript=true;await context.close();assert.deepEqual(report.errors,[]);report.status='passed';
